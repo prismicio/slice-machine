@@ -1,4 +1,4 @@
-import { Flex, Button, Spinner, Text } from "theme-ui";
+import { Flex, Button, Spinner } from "theme-ui";
 import { FiUpload } from "react-icons/fi";
 
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
@@ -97,31 +97,36 @@ function VariationScreenshot({
     <>
       <Flex sx={{ p: 2, pt: 0, minHeight: "48px" }}>
         <Button
-          variant="buttons.secondarySmall"
-          sx={{ fontSize: "14px", lineHeight: "24px" }}
+          variant="white"
+          sx={{
+            p: 2,
+            px: 3,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+            marginRight: 2,
+          }}
           onClick={openSimulator}
           disabled={isCheckingSimulatorSetup}
         >
-          <Text sx={{ color: "greyIcon" }}>
-            {isCheckingSimulatorSetup ? (
-              <Spinner
-                data-cy="builder-save-button-spinner"
-                color="#F7F7F7"
-                size={20}
-                mr={2}
-              />
-            ) : (
-              <AiOutlineEye
-                size={16}
-                style={{
-                  marginRight: "8px",
-                  position: "relative",
-                  top: "3px",
-                }}
-              />
-            )}
-          </Text>
-          <Text>Capture screenshot from Slice Simulator</Text>
+          {isCheckingSimulatorSetup ? (
+            <Spinner
+              data-cy="builder-save-button-spinner"
+              color="#1A1523"
+              size={24}
+              mr={2}
+            />
+          ) : (
+            <AiOutlineEye
+              size={24}
+              style={{
+                marginRight: "8px",
+                position: "relative",
+              }}
+            />
+          )}
+          Capture screenshot from Slice Simulator
         </Button>
         {maybeScreenshot ? (
           <Renderer>
@@ -129,7 +134,6 @@ function VariationScreenshot({
               <FiUpload
                 style={{
                   position: "relative",
-                  top: "3px",
                   marginRight: "8px",
                   fontSize: "14px",
                 }}

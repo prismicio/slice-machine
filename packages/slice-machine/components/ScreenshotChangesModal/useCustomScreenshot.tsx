@@ -34,7 +34,14 @@ export default function useCustomScreenshot({
           <Label
             htmlFor="input-file"
             variant="buttons.white"
-            sx={{ p: 2, px: 3, display: "flex", justifyContent: "center" }}
+            sx={{
+              p: 2,
+              px: 3,
+              display: "flex",
+              justifyContent: "center",
+              flex: 1,
+              alignItems: "center",
+            }}
           >
             {children || "Select file"}
           </Label>
