@@ -26,12 +26,13 @@ export function* generateSliceScreenshotSaga({
     const response = (yield call(generateSliceScreenshotApiClient, {
       libraryName: component.from,
       sliceName: component.model.name,
-      variationId: variationId,
+      variationId,
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
 
     yield put(
       generateSliceScreenshotCreator.success({
+        variationId,
         screenshot: response.data.screenshot,
         component,
       })

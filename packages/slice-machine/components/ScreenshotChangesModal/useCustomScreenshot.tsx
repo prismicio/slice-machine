@@ -17,9 +17,11 @@ export default function useCustomScreenshot({
 }: CSProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   const handleFile = (file: File | undefined) => {
-    if (inputFile?.current && file) {
+    if (file) {
       onHandleFile(variationID, slice, file);
-      inputFile.current.value = "";
+      if (inputFile?.current) {
+        inputFile.current.value = "";
+      }
     }
   };
 
