@@ -80,7 +80,7 @@ export default function Simulator() {
       />
       <ScreenshotPreviewModal
         sliceName={Router.router?.query.sliceName as string}
-        screenshotUrl={component.screenshots[variation.id].url}
+        screenshotUrl={component.screenshots[variation.id]?.url}
       />
     </Flex>
   );
