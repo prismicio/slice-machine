@@ -1,4 +1,4 @@
-import { Flex } from "theme-ui";
+import { Flex, Button, Spinner, Text } from "theme-ui";
 import { FiUpload } from "react-icons/fi";
 
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
@@ -12,6 +12,12 @@ import { isLoading } from "@src/modules/loading";
 
 import EmptyState from "./EmptyState";
 import DefaultView from "./Default";
+import { AiOutlineEye } from "react-icons/ai";
+import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
+import IframeRenderer from "@components/Simulator/components/IframeRenderer";
+import { Size } from "@components/Simulator/components/ScreenSizes";
+import { selectSimulatorUrl } from "@src/modules/environment";
+import { useMemo } from "react";
 
 enum ScreenshotView {
   Default = 1,
@@ -37,15 +43,22 @@ function VariationScreenshot({
   variationID: string;
   slice: ComponentUI;
 }): JSX.Element {
-  const { isLoadingScreenshot } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      isLoadingScreenshot: isLoading(
-        state,
-        LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
-      ),
-    })
-  );
-  const { generateSliceCustomScreenshot } = useSliceMachineActions();
+  const {
+    isLoadingScreenshot,
+    isWaitingForIframeCheck,
+    simulatorUrl,
+    isCheckingSimulatorSetup,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    isLoadingScreenshot: isLoading(
+      state,
+      LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
+    ),
+    isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
+    simulatorUrl: selectSimulatorUrl(state),
+    isCheckingSimulatorSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
+  }));
+  const { generateSliceCustomScreenshot, checkSimulatorSetup } =
+    useSliceMachineActions();
   const maybeScreenshot = slice.screenshots[variationID];
 
   const ViewRenderer = maybeScreenshot
@@ -58,9 +71,58 @@ function VariationScreenshot({
     onHandleFile: generateSliceCustomScreenshot,
   });
 
+  const sliceView = useMemo(
+    () =>
+      slice
+        ? [
+            {
+              sliceID: slice.model.id,
+              variationID: variationID,
+            },
+          ]
+        : null,
+    [slice.model.id, variationID]
+  );
+
+  if (!sliceView) return <></>;
+
+  const openSimulator = () =>
+    checkSimulatorSetup(true, () =>
+      window.open(
+        `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`
+      )
+    );
+
   return (
     <>
       <Flex sx={{ p: 2, pt: 0, minHeight: "48px" }}>
+        <Button
+          variant="buttons.secondarySmall"
+          sx={{ fontSize: "14px", lineHeight: "24px" }}
+          onClick={openSimulator}
+          disabled={isCheckingSimulatorSetup}
+        >
+          <Text sx={{ color: "greyIcon" }}>
+            {isCheckingSimulatorSetup ? (
+              <Spinner
+                data-cy="builder-save-button-spinner"
+                color="#F7F7F7"
+                size={20}
+                mr={2}
+              />
+            ) : (
+              <AiOutlineEye
+                size={16}
+                style={{
+                  marginRight: "8px",
+                  position: "relative",
+                  top: "3px",
+                }}
+              />
+            )}
+          </Text>
+          <Text>Capture screenshot from Slice Simulator</Text>
+        </Button>
         {maybeScreenshot ? (
           <Renderer>
             <>
@@ -83,6 +145,14 @@ function VariationScreenshot({
         screenshot={maybeScreenshot}
         isLoadingScreenshot={isLoadingScreenshot}
       />
+      {isWaitingForIframeCheck && (
+        <IframeRenderer
+          dryRun
+          size={Size.FULL}
+          simulatorUrl={simulatorUrl}
+          sliceView={sliceView}
+        />
+      )}
     </>
   );
 }
