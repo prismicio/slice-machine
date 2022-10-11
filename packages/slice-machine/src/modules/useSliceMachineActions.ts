@@ -126,6 +126,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openRenameCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+  const openScreenshotPreviewModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
+  const closeScreenshotPreviewModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -474,8 +478,10 @@ const useSliceMachineActions = () => {
     );
 
   // Toaster store
-  const openToaster = (message: string, type: ToasterType) =>
-    dispatch(openToasterCreator({ message, type }));
+  const openToaster = (
+    message: string,
+    type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
+  ) => dispatch(openToasterCreator({ message, type }));
 
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {
@@ -553,6 +559,8 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
     closeRenameCustomTypeModal,
+    openScreenshotPreviewModal,
+    closeScreenshotPreviewModal,
     openCreateSliceModal,
     closeCreateSliceModal,
     openRenameSliceModal,

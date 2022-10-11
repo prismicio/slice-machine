@@ -50,6 +50,14 @@ describe("[Selected Slice sagas]", () => {
           })
         );
 
+      saga.next().put(
+        generateSliceScreenshotCreator.success({
+          screenshot: response.screenshot,
+          component: dummySliceState,
+          variationId: dummyModelVariationID,
+        })
+      );
+
       saga.next().isDone();
     });
     it("should open a error toaster on internal error", () => {

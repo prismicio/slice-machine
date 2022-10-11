@@ -15,7 +15,6 @@ import * as IO from "../../../../lib/io";
 
 export interface ScreenshotResults {
   screenshot: ScreenshotUI | null;
-  failure: Error | null;
 }
 
 export async function generateScreenshotAndRemoveCustom(
@@ -42,12 +41,10 @@ export async function generateScreenshotAndRemoveCustom(
 
     return {
       screenshot: result,
-      failure: null,
     };
-  } catch (err) {
+  } catch {
     return {
       screenshot: null,
-      failure: err as Error,
     };
   }
 }
