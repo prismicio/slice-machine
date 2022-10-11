@@ -108,7 +108,7 @@ export const ConstraintForm: React.FC<{
       <TexField
         prefix={prefix}
         name="name"
-        label="Name${requiredChar}"
+        label={`Name${requiredChar}`}
         placeholder="main"
         onChangeSetField={createSetField("name")}
         sx={{ mb: 3 }}
