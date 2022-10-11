@@ -6,7 +6,7 @@ import SliceMachineIconButton, {
   SliceMachineIconButtonProps,
 } from "@components/SliceMachineIconButton";
 import { FormFieldInput } from "@components/FormFields";
-import { useField } from "formik";
+import { FieldMetaProps, useField } from "formik";
 
 type ThumbnailButtonProps = Pick<
   SliceMachineIconButtonProps,
@@ -86,45 +86,32 @@ export const ConstraintForm: React.FC<{
   if (!display) {
     return null;
   }
-  const requiredChar = required ? "*" : "";
-  const [field, _meta, helpers] = useField(prefix);
 
-  const createSetField =
-    (key: string, fn = (v: string): number | string => v) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      helpers.setTouched(true);
-      const cast = fn(e.target.value);
-      const value =
-        e.target.type === "number"
-          ? typeof cast === "number" && isNaN(cast)
-            ? null
-            : cast
-          : cast;
-      helpers.setValue({ ...field.value, [key]: value });
-    };
+  const [_field, meta] = useField(prefix);
+
+  const requiredChar = required ? "*" : "";
+  const nameFieldName = `${prefix}.name`;
+  const widthFieldName = `${prefix}.width`;
+  const heightFieldName = `${prefix}.height`;
 
   return (
     <Fragment>
       <TexField
-        prefix={prefix}
-        name="name"
+        name={nameFieldName}
         label={`Name${requiredChar}`}
         placeholder="main"
-        onChangeSetField={createSetField("name")}
         sx={{ mb: 3 }}
+        isConstraint={prefix === "config.constraint"}
+        meta={meta}
       />
       <NumberField
-        prefix={prefix}
-        name="width"
-        onChangeSetField={createSetField("width", parseInt)}
+        name={widthFieldName}
         label={`Width (px)${requiredChar}`}
         placeholder=" "
         sx={{ mb: 3 }}
       />
       <NumberField
-        prefix={prefix}
-        name="height"
-        onChangeSetField={createSetField("height", parseInt)}
+        name={heightFieldName}
         label={`Height (px)${requiredChar}`}
         placeholder=" "
       />
@@ -133,54 +120,53 @@ export const ConstraintForm: React.FC<{
 };
 
 const TexField: React.FC<{
-  prefix: string;
   name: string;
   label: string;
   placeholder: string;
-  onChangeSetField: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isConstraint: boolean;
+  meta: FieldMetaProps<string>;
   sx?: ThemeUIStyleObject;
-}> = ({ prefix, name, label, placeholder, onChangeSetField, ...props }) => {
-  const fieldName = `${prefix}.${name}`;
+}> = ({ name, label, placeholder, meta, isConstraint, ...props }) => {
+  const [field] = useField<string>(name);
 
-  const [field, meta] = useField<string>(fieldName);
   return (
     <FormFieldInput
       {...props}
-      fieldName={fieldName}
+      fieldName={name}
       meta={meta}
       formField={{ label, placeholder }}
       field={
-        prefix === "config.constraint"
+        isConstraint
           ? { value: "main", readOnly: true }
-          : { value: field.value, onChange: onChangeSetField }
+          : { value: field.value }
       }
-      variant={prefix === "config.constraint" ? "disabled" : "primary"}
+      variant={isConstraint ? "disabled" : "primary"}
     />
   );
 };
 
 const NumberField: React.FC<{
-  prefix: string;
   name: string;
   label: string;
   placeholder: string;
-  onChangeSetField: (e: React.ChangeEvent<HTMLInputElement>) => void;
   sx?: ThemeUIStyleObject;
-}> = ({ prefix, name, label, placeholder, onChangeSetField, ...props }) => {
-  const fieldName = `${prefix}.${name}`;
-
-  const [field, meta] = useField<number>(fieldName);
-
+}> = ({ name, label, placeholder, ...props }) => {
+  const [field, meta] = useField<string>(name);
   return (
     <FormFieldInput
       {...props}
-      fieldName={fieldName}
-      meta={meta}
+      fieldName={name}
       formField={{ label, placeholder }}
+      meta={meta}
       field={{
+        min: 0,
         type: "number",
         value: field.value || "",
-        onChange: onChangeSetField,
+        onKeyDown: (event) => {
+          if (event.key === "e" || event.key === "-" || event.key === "+") {
+            event.preventDefault();
+          }
+        },
       }}
     />
   );
