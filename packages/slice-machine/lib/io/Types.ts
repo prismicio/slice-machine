@@ -42,7 +42,7 @@ const generateAndWriteTypes = (env: BackendEnvironment) => {
 };
 
 export function getFromPackage(
-  key: "dependencies" | "devDependencies",
+  key: string,
   packageJson: JsonPackage | null
 ): Record<string, string> {
   if (
