@@ -16,7 +16,11 @@ export const generateSliceScreenshotCreator = createAsyncAction(
     component: ComponentUI;
     screenDimensions: ScreenDimensions;
   },
-  { screenshot: ScreenshotUI | null; component: ComponentUI }
+  {
+    variationId: string;
+    screenshot: ScreenshotUI | null;
+    component: ComponentUI;
+  }
 >();
 
 export const generateSliceCustomScreenshotCreator = createAsyncAction(
