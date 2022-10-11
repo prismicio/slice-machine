@@ -44,6 +44,7 @@ describe("[Selected Slice sagas]", () => {
         })
         .put(
           generateSliceScreenshotCreator.success({
+            variationId: dummyModelVariationID,
             screenshot: response.screenshot,
             component: dummySliceState,
           })
