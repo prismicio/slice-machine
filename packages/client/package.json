@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@prismicio/types-internal": "^0.2.8",
-    "@slicemachine/core": "1.1.14-dev.0",
+    "@slicemachine/core": "1.1.14-dev.9",
     "axios": "^0.27.2",
     "form-data": "^3.0.0",
     "fp-ts": "^2.11.5",
