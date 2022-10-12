@@ -1,4 +1,4 @@
-import { Flex, Button, Spinner } from "theme-ui";
+import { Flex } from "theme-ui";
 import { FiUpload } from "react-icons/fi";
 
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
@@ -18,6 +18,7 @@ import IframeRenderer from "@components/Simulator/components/IframeRenderer";
 import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { useMemo } from "react";
+import { Button } from "@components/Button";
 
 enum ScreenshotView {
   Default = 1,
@@ -99,35 +100,15 @@ function VariationScreenshot({
         <Button
           variant="white"
           sx={{
-            p: 2,
-            px: 3,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
             flex: 1,
             marginRight: 2,
           }}
           onClick={openSimulator}
-          disabled={isCheckingSimulatorSetup}
-        >
-          {isCheckingSimulatorSetup ? (
-            <Spinner
-              data-cy="builder-save-button-spinner"
-              color="#1A1523"
-              size={24}
-              mr={2}
-            />
-          ) : (
-            <AiOutlineEye
-              size={24}
-              style={{
-                marginRight: "8px",
-                position: "relative",
-              }}
-            />
-          )}
-          Capture screenshot from Slice Simulator
-        </Button>
+          isLoading={isCheckingSimulatorSetup}
+          Icon={AiOutlineEye}
+          label={"Capture screenshot from Slice Simulator"}
+          spinnerColor={"#1A1523"}
+        />
         {maybeScreenshot ? (
           <Renderer>
             <>

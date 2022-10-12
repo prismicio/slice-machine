@@ -15,6 +15,7 @@ export type ButtonProps = {
   sx?: ThemeUIStyleObject;
   "data-cy"?: string;
   variant?: string;
+  spinnerColor?: string;
 };
 
 // Small helper to allow us to target spinner and icon in the CY
@@ -34,6 +35,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   onClick,
   sx = {},
   variant = "primary",
+  spinnerColor = "grey01",
   ...rest
 }) => (
   <ThemeUIButton
@@ -56,7 +58,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       <>
         <Spinner
           size={16}
-          color="grey01"
+          color={spinnerColor}
           data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
         />
         {Icon && label}
