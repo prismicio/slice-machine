@@ -60,6 +60,10 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
         if (cased !== sliceName.trim()) {
           return { sliceName: "Value has to be PascalCased" };
         }
+        // See: #599
+        if (sliceName.match(/^\d/)) {
+          return { sliceName: "Value cannot start with a number" };
+        }
         if (RESERVED_SLICE_NAME.includes(sliceName)) {
           return {
             sliceName: `${sliceName} is reserved for Slice Machine use`,

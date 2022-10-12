@@ -12,7 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
-    "@prismicio/client": "^6.4.1",
+    "@prismicio/client": "^6.7.1",
     "@prismicio/helpers": "^2.2.0",
     "@prismicio/next": "^0.1.2",
     "@prismicio/react": "^2.2.0",
@@ -27,6 +27,7 @@
     "styled-jsx": "^5.0.2"
   },
   "devDependencies": {
+    "@prismicio/types": "^0.2.3",
     "autoprefixer": "^10.4.4",
     "eslint": "^8.12.0",
     "eslint-config-next": "^12.1.4",

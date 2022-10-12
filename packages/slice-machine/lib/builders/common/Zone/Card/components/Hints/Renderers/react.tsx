@@ -1,10 +1,28 @@
 import React from "react";
 import CodeBlock, { Item, RenderHintBaseFN, WidgetsType } from "../CodeBlock";
 
-const wrapRepeatable = (code: string): string =>
-  `
-{ slice?.items?.map((item, i) => ${code}) }
-`;
+const wrapRepeatable = (code: string): string => {
+  // const lines = code.split("\n").join("\n   ");
+  const lines = code.split("\n");
+
+  const commentRegex = /^\/\*/;
+
+  const commentsLines = lines.filter((line) => {
+    return commentRegex.test(line);
+  });
+
+  const codeLines = lines.filter((line) => {
+    return !commentRegex.test(line);
+  });
+
+  return `${commentsLines.join("\n")}
+{
+  slice?.items?.map((item, i) =>
+    ${codeLines.join("\n   ")}
+  )
+}
+`.trim();
+};
 
 const createDefaultField =
   (tag = "span") =>

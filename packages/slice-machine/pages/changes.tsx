@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Button, Spinner, Text } from "theme-ui";
+import { Box, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
 import { MdLoop } from "react-icons/md";
@@ -11,6 +11,7 @@ import {
   NoChangesPage,
   OfflinePage,
 } from "@components/ChangesEmptyPage";
+import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
@@ -102,8 +103,9 @@ const changes: React.FunctionComponent = () => {
         <Header
           ActionButton={
             <Button
+              label="Push Changes"
               onClick={handlePush}
-              data-cy="push-changes"
+              isLoading={isSyncing}
               disabled={
                 numberOfChanges === 0 ||
                 !isOnline ||
@@ -111,20 +113,9 @@ const changes: React.FunctionComponent = () => {
                 authStatus === AuthStatus.FORBIDDEN ||
                 isSyncing
               }
-              sx={{
-                minWidth: "120px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              {isSyncing ? (
-                <Spinner color="#FFF" size={14} />
-              ) : (
-                <MdLoop size={18} />
-              )}
-              <span>Push Changes</span>
-            </Button>
+              Icon={MdLoop}
+              data-cy="push-changes"
+            />
           }
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"

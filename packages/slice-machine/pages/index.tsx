@@ -1,10 +1,11 @@
 import React, { Fragment } from "react";
-import { Flex, Button, Link as ThemeLink, Spinner, Text } from "theme-ui";
+import { Flex, Link as ThemeLink, Text } from "theme-ui";
 
-import Container from "components/Container";
-import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";
-import Header from "components/Header";
-import EmptyState from "components/EmptyState";
+import Container from "@components/Container";
+import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
+import Header from "@components/Header";
+import EmptyState from "@components/EmptyState";
+import { Button } from "@components/Button";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   selectCustomTypeCount,
@@ -16,6 +17,7 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
 import { CustomTypeTable } from "@components/CustomTypeTable/ctPage";
+import { GoPlus } from "react-icons/go";
 import { VIDEO_WHAT_ARE_CUSTOM_TYPES } from "../lib/consts";
 
 const CustomTypes: React.FunctionComponent = () => {
@@ -37,18 +39,13 @@ const CustomTypes: React.FunctionComponent = () => {
         ActionButton={
           customTypeCount > 0 ? (
             <Button
-              data-cy="create-ct"
+              label="Create a Custom Type"
               onClick={openCreateCustomTypeModal}
-              sx={{
-                minWidth: "171px",
-              }}
-            >
-              {isCreatingCustomType ? (
-                <Spinner color="#FFF" size={14} />
-              ) : (
-                "Create a Custom Type"
-              )}
-            </Button>
+              isLoading={isCreatingCustomType}
+              disabled={isCreatingCustomType}
+              Icon={GoPlus}
+              data-cy="create-ct"
+            />
           ) : undefined
         }
         MainBreadcrumb={

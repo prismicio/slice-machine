@@ -1,10 +1,11 @@
 import { FiLink2, FiImage, FiCode, FiList } from "react-icons/fi";
 import { BsListOl } from "react-icons/bs";
+import React from "react";
+import { IconType } from "react-icons/lib";
 
 const Icon =
-  (v) =>
+  (v: React.ReactNode): IconType =>
   ({ size }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return <span style={{ fontSize: size }}>{v}</span>;
   };
 
