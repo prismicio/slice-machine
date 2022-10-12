@@ -78,10 +78,12 @@ export default function Simulator() {
         simulatorUrl={simulatorUrl}
         sliceView={sliceView}
       />
-      <ScreenshotPreviewModal
-        sliceName={Router.router?.query.sliceName as string}
-        screenshotUrl={component.screenshots[variation.id]?.url}
-      />
+      {!!component.screenshots[variation.id]?.url && (
+        <ScreenshotPreviewModal
+          sliceName={Router.router?.query.sliceName as string}
+          screenshotUrl={component.screenshots[variation.id]?.url}
+        />
+      )}
     </Flex>
   );
 }
