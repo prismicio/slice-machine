@@ -204,14 +204,17 @@ const ScreenshotChangesModal = ({
               maxHeight: "90%",
             }}
           >
-            <Views
-              variationID={variationSelector.variationID}
-              slice={
-                slices.find(
-                  (s) => s.model.id === variationSelector.sliceID
-                ) as ComponentUI
-              }
-            />
+            {(() => {
+              const slice = slices.find(
+                (s) => s.model.id === variationSelector.sliceID
+              );
+              return slice ? (
+                <Views
+                  variationID={variationSelector.variationID}
+                  slice={slice}
+                />
+              ) : null;
+            })()}
           </Box>
         </Box>
       </Card>

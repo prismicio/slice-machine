@@ -16,7 +16,7 @@ const sharedFlexSx = {
   width: "100%",
 };
 
-const UploadIcon = ({ isActive }: { isActive: boolean }) => (
+const UploadIcon = ({ isActive }: { isActive: boolean }): JSX.Element => (
   <Flex
     sx={{
       p: 1,
@@ -38,7 +38,7 @@ const EmptyState = ({
   variationID,
   slice,
   isLoadingScreenshot,
-}: ViewRendererProps) => {
+}: ViewRendererProps): JSX.Element => {
   const [isDragActive, setIsDragActive] = useState(false);
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
 

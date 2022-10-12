@@ -36,7 +36,7 @@ function VariationScreenshot({
 }: {
   variationID: string;
   slice: ComponentUI;
-}) {
+}): JSX.Element {
   const { isLoadingScreenshot } = useSelector(
     (state: SliceMachineStoreType) => ({
       isLoadingScreenshot: isLoading(
