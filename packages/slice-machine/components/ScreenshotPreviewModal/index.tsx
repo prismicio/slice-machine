@@ -9,7 +9,7 @@ import Card from "@components/Card";
 
 type ScreenshotModalProps = {
   sliceName: string;
-  screenshotUrl: string;
+  screenshotUrl?: string;
 };
 
 // For displaying the screenshot preview in the slice simulator after the user has taken a screenshot
