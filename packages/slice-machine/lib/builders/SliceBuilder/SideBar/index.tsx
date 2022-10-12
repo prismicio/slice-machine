@@ -1,7 +1,9 @@
-import React, { memo } from "react";
-import type Models from "@slicemachine/core/build/models";
+import React from "react";
+
 import { Box, Button, Spinner, Text } from "theme-ui";
 import Link from "next/link";
+
+import UpdateScreenshotButton from "@components/UpdateScreenshotButton";
 
 import Card from "@components/Card";
 
@@ -20,8 +22,9 @@ import {
 } from "@src/modules/environment";
 import { createStorybookUrl } from "@src/utils/storybook";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-
-const MemoizedImagePreview = memo(ScreenshotPreview);
+import type Models from "@slicemachine/core/build/models";
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
+import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 
 type SideBarProps = {
   component: ComponentUI;
@@ -41,6 +44,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 }) => {
   const { screenshots } = component;
 
+  const { openScreenshotsModal } = useScreenshotChangesModal();
   const { checkSimulatorSetup } = useSliceMachineActions();
 
   const router = useRouter();
@@ -69,7 +73,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       }}
     >
       <Card bg="headSection" bodySx={{ p: 0 }} footerSx={{ p: 0 }}>
-        <MemoizedImagePreview
+        <ScreenshotPreview
           src={screenshots[variation.id]?.url}
           screenshotProperties={{
             isLoading: imageLoading,
@@ -79,6 +83,13 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           }}
         />
       </Card>
+      <UpdateScreenshotButton
+        sx={{
+          mt: 3,
+          width: "100%",
+        }}
+        onUpdateScreenshot={openScreenshotsModal}
+      />
       <Button
         data-testid="open-set-up-simulator"
         disabled={!isSimulatorAvailableForFramework}
@@ -136,6 +147,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           </Button>
         </Link>
       )}
+      <ScreenshotChangesModal slices={[component]} />
     </Box>
   );
 };

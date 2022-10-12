@@ -6,6 +6,10 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
 import { refreshStateCreator } from "../environment";
+import {
+  generateSliceCustomScreenshotCreator,
+  generateSliceScreenshotCreator,
+} from "../screenshots/actions";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -18,7 +22,9 @@ export type SelectedSliceActions =
   | ActionType<typeof saveSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>
-  | ActionType<typeof refreshStateCreator>;
+  | ActionType<typeof refreshStateCreator>
+  | ActionType<typeof generateSliceScreenshotCreator>
+  | ActionType<typeof generateSliceCustomScreenshotCreator>;
 
 export const initSliceStoreCreator =
   createAction("SLICE/INIT")<SelectedSliceStoreType>();

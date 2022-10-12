@@ -26,6 +26,8 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
+import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 
 const CreateSliceButton = ({
   onClick,
@@ -48,6 +50,10 @@ const CreateSliceButton = ({
 const SlicesIndex: React.FunctionComponent = () => {
   const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
     useSliceMachineActions();
+
+  const { modalPayload, onOpenModal } = useScreenshotChangesModal();
+
+  const { sliceFn, defaultVariationSelector } = modalPayload;
 
   const {
     isCreateSliceModalOpen,
@@ -79,13 +85,8 @@ const SlicesIndex: React.FunctionComponent = () => {
   const { modelsStatuses, authStatus, isOnline } =
     useModelStatus(frontendSlices);
 
-  const sliceCount = (libraries || []).reduce((count, lib) => {
-    if (!lib) {
-      return count;
-    }
-
-    return count + lib.components.length;
-  }, 0);
+  const slices = (libraries || []).map((l) => l.components).flat();
+  const sliceCount = slices.length;
 
   return (
     <>
@@ -203,6 +204,14 @@ const SlicesIndex: React.FunctionComponent = () => {
                               authStatus,
                               isOnline,
                             },
+                            onUpdateScreenshot: (e: React.MouseEvent) => {
+                              e.preventDefault();
+                              onOpenModal({
+                                sliceFn: (s: ComponentUI[]) => [
+                                  s.find((e) => e.model.id === slice.model.id)!,
+                                ],
+                              });
+                            },
                             showActions: true,
                           });
                         }}
@@ -217,14 +226,20 @@ const SlicesIndex: React.FunctionComponent = () => {
         </Box>
       </Container>
       {localLibraries && localLibraries.length > 0 && (
-        <CreateSliceModal
-          isCreatingSlice={isCreatingSlice}
-          isOpen={isCreateSliceModalOpen}
-          close={closeCreateSliceModal}
-          libraries={localLibraries}
-          remoteSlices={remoteSlices}
-          onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
-        />
+        <>
+          <ScreenshotChangesModal
+            slices={sliceFn(slices)}
+            defaultVariationSelector={defaultVariationSelector}
+          />
+          <CreateSliceModal
+            isCreatingSlice={isCreatingSlice}
+            isOpen={isCreateSliceModalOpen}
+            close={closeCreateSliceModal}
+            libraries={localLibraries}
+            remoteSlices={remoteSlices}
+            onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
+          />
+        </>
       )}
     </>
   );

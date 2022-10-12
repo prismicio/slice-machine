@@ -17,9 +17,9 @@ import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
-import { Button } from "theme-ui";
-import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
+import UpdateScreenshotButton from "@components/UpdateScreenshotButton";
 
 const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -62,33 +62,20 @@ const SliceVariations = ({
 
 const SliceScreenshotUpdate: React.FC<{
   slice: ComponentUI;
-  visible?: boolean;
-}> = ({ visible }) =>
-  visible ? (
-    <Flex
-      mt={1}
-      sx={{
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: 3,
-        borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-      }}
-    >
-      <Button onClick={() => ({})} variant="buttons.secondarySmall">
-        <Text sx={{ color: "greyIcon" }}>
-          <AiOutlineCamera
-            size={16}
-            style={{
-              marginRight: "8px",
-              position: "relative",
-              top: "3px",
-            }}
-          />
-        </Text>
-        <Text sx={{ lineHeight: "24px" }}>Update screenshot</Text>
-      </Button>
-    </Flex>
-  ) : null;
+  onUpdateScreenshot: (e: React.MouseEvent) => void;
+}> = ({ onUpdateScreenshot }) => (
+  <Flex
+    mt={1}
+    sx={{
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: 3,
+      borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+    }}
+  >
+    <UpdateScreenshotButton onUpdateScreenshot={onUpdateScreenshot} />
+  </Flex>
+);
 
 const SliceDescription = ({
   slice,
@@ -140,16 +127,10 @@ const SliceDescription = ({
   </Flex>
 );
 
-const ScreenshotMissingBanner = ({
-  visible,
-  slice,
-}: {
-  visible?: boolean;
-  slice: ComponentUI;
-}) => {
+const ScreenshotMissingBanner = ({ slice }: { slice: ComponentUI }) => {
   const missingScreenshots = countMissingScreenshots(slice);
 
-  if (!visible || !missingScreenshots) {
+  if (!missingScreenshots) {
     return null;
   }
 
@@ -183,6 +164,7 @@ export const SharedSlice = {
 
     thumbnailHeightPx = "290px",
     wrapperType = WrapperType.clickable,
+    onUpdateScreenshot,
     sx,
   }: {
     showActions?: boolean;
@@ -196,6 +178,7 @@ export const SharedSlice = {
       | React.FC<{ slice: ComponentUI }>;
     Wrapper?: React.FC<{ link?: { as: string }; slice: ComponentUI }>;
     wrapperType?: WrapperType;
+    onUpdateScreenshot?: (e: React.MouseEvent) => void;
     thumbnailHeightPx?: string;
     sx?: ThemeUIStyleObject;
   }) {
@@ -229,13 +212,18 @@ export const SharedSlice = {
                 height: thumbnailHeightPx,
               }}
             />
-            <ScreenshotMissingBanner slice={slice} visible={showActions} />
+            {showActions ? <ScreenshotMissingBanner slice={slice} /> : null}
             <Flex
               sx={{
                 flexDirection: "column",
               }}
             >
-              <SliceScreenshotUpdate slice={slice} visible={showActions} />
+              {onUpdateScreenshot ? (
+                <SliceScreenshotUpdate
+                  slice={slice}
+                  onUpdateScreenshot={onUpdateScreenshot}
+                />
+              ) : null}
               <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
             </Flex>
           </Flex>

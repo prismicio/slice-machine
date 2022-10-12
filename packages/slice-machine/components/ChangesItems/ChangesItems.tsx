@@ -1,8 +1,6 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { Box, Button, Text } from "theme-ui";
 import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
-
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
@@ -17,10 +15,9 @@ import { SyncError } from "@src/models/SyncError";
 import { ApiError } from "@src/models/ApiError";
 import { ErrorBanner } from "./ErrorBanner";
 
-import ScreenshotChangesModal, {
-  SliceVariationSelector,
-} from "@components/ScreenshotChangesModal";
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
+import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
@@ -28,11 +25,6 @@ interface ChangesItemsProps extends ModelStatusInformation {
   changesPushed: string[];
   syncError: SyncError | null;
 }
-
-type ModalPayload = {
-  sliceFn: (s: ComponentUI[]) => ComponentUI[];
-  defaultVariationSelector?: SliceVariationSelector;
-};
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
   unSyncedCustomTypes,
@@ -43,21 +35,9 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   authStatus,
   isOnline,
 }) => {
-  const { openScreenshotsModal } = useSliceMachineActions();
-
   const { customTypeError, slicesError } = getSyncErrors(syncError);
 
-  const [modalPayload, setModalPayload] = useState<{
-    sliceFn: (s: ComponentUI[]) => ComponentUI[];
-    defaultVariationSelector?: SliceVariationSelector;
-  }>({
-    sliceFn: (s: ComponentUI[]) => s,
-  });
-
-  const onOpenModal = (payload: ModalPayload) => {
-    setModalPayload(payload);
-    openScreenshotsModal();
-  };
+  const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
   const { sliceFn, defaultVariationSelector } = modalPayload;
 
@@ -118,15 +98,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 )}
                 <Button
                   variant="darkSmall"
-                  sx={{ mr: 2 }}
-                  onClick={() =>
-                    onOpenModal({ sliceFn: (s: ComponentUI[]) => [s[0]] })
-                  }
-                >
-                  w/ first slice (example)
-                </Button>
-                <Button
-                  variant="darkSmall"
                   onClick={() => onOpenModal({ sliceFn: (s) => s })}
                 >
                   <AiFillCamera
@@ -158,6 +129,14 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   status: modelsStatuses.slices[slice.model.id],
                   authStatus,
                   isOnline,
+                },
+                onUpdateScreenshot: (e: React.MouseEvent) => {
+                  e.preventDefault();
+                  onOpenModal({
+                    sliceFn: (s: ComponentUI[]) => [
+                      s.find((e) => e.model.id === slice.model.id)!,
+                    ],
+                  });
                 },
                 sx: changesPushed.includes(slice.model.id)
                   ? { animation: "fadeout .4s linear forwards" }
