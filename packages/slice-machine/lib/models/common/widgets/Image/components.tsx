@@ -90,14 +90,11 @@ export const ConstraintForm: React.FC<{
   const [_field, meta] = useField(prefix);
 
   const requiredChar = required ? "*" : "";
-  const nameFieldName = `${prefix}.name`;
-  const widthFieldName = `${prefix}.width`;
-  const heightFieldName = `${prefix}.height`;
 
   return (
     <Fragment>
       <TexField
-        name={nameFieldName}
+        name={`${prefix}.name`}
         label={`Name${requiredChar}`}
         placeholder="main"
         sx={{ mb: 3 }}
@@ -105,13 +102,13 @@ export const ConstraintForm: React.FC<{
         meta={meta}
       />
       <NumberField
-        name={widthFieldName}
+        name={`${prefix}.width`}
         label={`Width (px)${requiredChar}`}
         placeholder=" "
         sx={{ mb: 3 }}
       />
       <NumberField
-        name={heightFieldName}
+        name={`${prefix}.height`}
         label={`Height (px)${requiredChar}`}
         placeholder=" "
       />
