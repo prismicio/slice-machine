@@ -39,7 +39,7 @@ const SliceMachineIconButton: React.FunctionComponent<
   label,
   Icon,
   error = null,
-  size = 18,
+  size = 16,
   fitButton = false,
   active = false,
   useActive = false,
