@@ -27,7 +27,10 @@
     "form-data": "^3.0.0",
     "fp-ts": "^2.11.5",
     "io-ts": "^2.2.16",
-    "mime": "^2.5.2"
+    "io-ts-types": "^0.5.16",
+    "mime": "^2.5.2",
+    "monocle-ts": "^2.0.0",
+    "newtype-ts": "^0.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
