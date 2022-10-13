@@ -38,6 +38,7 @@
     "start-slicemachine": "bin/start.js"
   },
   "dependencies": {
+    "@babel/core": "^7",
     "@babel/register": "^7.17.7",
     "@prismicio/api-renderer": "^0.1.7",
     "@prismicio/mocks": "^0.1.8",
@@ -95,7 +96,6 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@babel/core": "^7",
     "@prismicio/slice-simulator-com": "^0.3.0",
     "@reach/menu-button": "^0.16.2",
     "@svgr/webpack": "^5.4.0",

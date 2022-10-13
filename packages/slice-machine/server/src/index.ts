@@ -1,6 +1,6 @@
 import cors from "cors";
 
-require("@babel/register");
+require("@babel/register"); // TODO: do we still need this?
 
 console.log("\nLaunching server...");
 
