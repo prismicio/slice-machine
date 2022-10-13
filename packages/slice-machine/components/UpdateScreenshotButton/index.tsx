@@ -8,7 +8,7 @@ const UpdateScreenshotButton = ({
   onUpdateScreenshot: (e: React.MouseEvent) => void;
   sx?: ThemeUIStyleObject;
 }) => (
-  <Button onClick={onUpdateScreenshot} variant="secondarySmall" sx={sx}>
+  <Button onClick={onUpdateScreenshot} variant="white" sx={sx}>
     <Text sx={{ color: "greyIcon" }}>
       <AiOutlineCamera
         size={16}
@@ -19,7 +19,7 @@ const UpdateScreenshotButton = ({
         }}
       />
     </Text>
-    <Text sx={{ lineHeight: "24px" }}>Update screenshot</Text>
+    <Text sx={{ lineHeight: "24px", fontSize: "12px" }}>Update screenshot</Text>
   </Button>
 );
 

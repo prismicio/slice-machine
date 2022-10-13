@@ -29,18 +29,11 @@ import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal"
 type SideBarProps = {
   component: ComponentUI;
   variation: Models.VariationSM;
-  imageLoading: boolean;
-  onScreenshot: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onHandleFile: (file: any) => void;
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
   component,
   variation,
-  imageLoading,
-  onScreenshot,
-  onHandleFile,
 }) => {
   const { screenshots } = component;
 
@@ -72,24 +65,17 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         flexBasis: "sidebar",
       }}
     >
-      <Card bg="headSection" bodySx={{ p: 0 }} footerSx={{ p: 0 }}>
-        <ScreenshotPreview
-          src={screenshots[variation.id]?.url}
-          screenshotProperties={{
-            isLoading: imageLoading,
-            isDisabled: !isSimulatorAvailableForFramework,
-            onScreenshot: onScreenshot,
-            onCustomScreenshot: onHandleFile,
-          }}
-        />
+      <Card
+        bg="headSection"
+        bodySx={{ p: 0 }}
+        Footer={() => (
+          <UpdateScreenshotButton onUpdateScreenshot={openScreenshotsModal} />
+        )}
+        footerSx={{ padding: 2 }}
+        sx={{ overflow: "hidden" }}
+      >
+        <ScreenshotPreview src={screenshots[variation.id]?.url} />
       </Card>
-      <UpdateScreenshotButton
-        sx={{
-          mt: 3,
-          width: "100%",
-        }}
-        onUpdateScreenshot={openScreenshotsModal}
-      />
       <Button
         data-testid="open-set-up-simulator"
         disabled={!isSimulatorAvailableForFramework}
