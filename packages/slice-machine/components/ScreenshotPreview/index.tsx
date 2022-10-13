@@ -16,7 +16,7 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const MemoedImage = memo<{ src: string | undefined }>(({ src }) => (
-  <Image src={src} alt="Preview image" />
+  <Image src={src} alt="Preview image" sx={{ maxHeight: "100%" }} />
 ));
 
 interface ScreenshotPreviewProps {
