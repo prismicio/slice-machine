@@ -8,45 +8,42 @@ const MemoedImage = memo<{ src: string | undefined }>(({ src }) => (
 
 interface ScreenshotPreviewProps {
   src?: string;
-  sx?: ThemeUIStyleObject;
+  sx: { height: string } & ThemeUIStyleObject;
 }
 
 export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
   src,
-  sx = { height: "290px" },
+  sx,
 }) => {
   return (
-    <div>
-      <Flex
-        sx={{
-          position: "relative",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-          backgroundImage: "url(/pattern.png)",
-          backgroundColor: "headSection",
-          backgroundRepeat: "repeat",
-          backgroundSize: "20px",
-          borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-          borderRadius: "4px 4px 0 0",
-          ...sx,
-        }}
-      >
-        {src ? (
-          <MemoedImage src={src} />
-        ) : (
-          <Text
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <MdInfoOutline />
-            You have no screenshot yet.
-          </Text>
-        )}
-      </Flex>
-    </div>
+    <Flex
+      sx={{
+        position: "relative",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        backgroundImage: "url(/pattern.png)",
+        backgroundColor: "headSection",
+        backgroundRepeat: "repeat",
+        backgroundSize: "20px",
+        borderRadius: "4px",
+        ...sx,
+      }}
+    >
+      {src ? (
+        <MemoedImage src={src} />
+      ) : (
+        <Text
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <MdInfoOutline />
+          You have no screenshot yet.
+        </Text>
+      )}
+    </Flex>
   );
 };

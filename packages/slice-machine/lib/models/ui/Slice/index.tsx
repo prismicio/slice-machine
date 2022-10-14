@@ -219,6 +219,8 @@ export const SharedSlice = {
               src={screenshotUrl}
               sx={{
                 height: thumbnailHeightPx,
+                borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+                borderRadius: "4px 4px 0 0",
               }}
             />
             {showActions ? <ScreenshotMissingBanner slice={slice} /> : null}
@@ -266,7 +268,13 @@ export const NonSharedSlice = {
       <Wrapper link={undefined}>
         {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
         <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
-          <ScreenshotPreview sx={{ height: thumbnailHeightPx }} />
+          <ScreenshotPreview
+            sx={{
+              height: thumbnailHeightPx,
+              borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+              borderRadius: "4px 4px 0 0",
+            }}
+          />
           <Flex
             mt={3}
             sx={{ alignItems: "center", justifyContent: "space-between" }}

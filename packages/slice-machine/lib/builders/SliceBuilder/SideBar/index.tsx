@@ -74,7 +74,14 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         footerSx={{ padding: 2 }}
         sx={{ overflow: "hidden" }}
       >
-        <ScreenshotPreview src={screenshots[variation.id]?.url} />
+        <ScreenshotPreview
+          src={screenshots[variation.id]?.url}
+          sx={{
+            height: "290px",
+            borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+            borderRadius: "4px 4px 0 0",
+          }}
+        />
       </Card>
       <Button
         data-testid="open-set-up-simulator"
