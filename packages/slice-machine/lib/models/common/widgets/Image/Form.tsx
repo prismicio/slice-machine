@@ -37,6 +37,9 @@ const FormFields = {
             name: "Thumbnails",
             message: "Must set name and width or height at minimum",
             test: function (value) {
+              if (!value.name) {
+                return false;
+              }
               const hasWidth = typeof value.width === "number" && value.width;
               const hasHeight =
                 typeof value.height === "number" && value.height;
