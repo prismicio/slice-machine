@@ -132,6 +132,13 @@ function ModalCard<Values>({
                       type="submit"
                       disabled={!isValid || isSubmitting || isLoading}
                       isLoading={isLoading}
+                      sx={{
+                        fontWeight: "400",
+                        paddingBlock: "8px",
+                        paddingInline: "16px",
+                        fontSize: "14px",
+                        borderRadius: "4px",
+                      }}
                     />
                   </Flex>
                 ) : null
