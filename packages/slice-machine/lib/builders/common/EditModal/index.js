@@ -243,6 +243,13 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
                     type="submit"
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     disabled={!isValid && isSubmitting}
+                    sx={{
+                      fontWeight: "400",
+                      paddingBlock: "8px",
+                      paddingInline: "16px",
+                      fontSize: "14px",
+                      borderRadius: "4px",
+                    }}
                   >
                     Save
                   </Button>
