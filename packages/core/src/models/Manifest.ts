@@ -29,7 +29,7 @@ const apiEndpoint = new t.Type<string>(
     }
 
     const regx = new RegExp(
-      "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9](.cdn)?.(prismic.io|wroom.io|wroom.test)/api/v2/?$",
+      "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9](.cdn)?.(prismic.io|wroom.io|wroom.test|wroom-qa.com)/api/v2/?$",
       "gi"
     );
     const result = regx.test(input);

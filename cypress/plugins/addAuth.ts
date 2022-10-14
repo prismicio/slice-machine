@@ -4,10 +4,10 @@ import path from "path";
 import axios from "axios";
 
 // File called from the cypress setup in cypress-setup.sh
-const [, , EMAIL, PASSWORD, CYPRESS_URL = "prismic.io"] = process.argv;
+const [, , EMAIL, PASSWORD, PRISMIC_URL = "https://wroom.io"] = process.argv;
 
 axios
-  .post(`https://${CYPRESS_URL}/authentication/signin`, {
+  .post(`${PRISMIC_URL}/authentication/signin`, {
     email: EMAIL,
     password: PASSWORD,
   })
@@ -16,7 +16,7 @@ axios
     fs.promises.writeFile(
       path.join(os.homedir(), ".prismic"),
       JSON.stringify({
-        base: `https://${CYPRESS_URL}/`,
+        base: `${PRISMIC_URL}/`,
         cookies: cookies,
       })
     );

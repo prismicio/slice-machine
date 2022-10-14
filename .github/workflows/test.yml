@@ -51,5 +51,5 @@ jobs:
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-          CYPRESS_URL: ${{ secrets.CYPRESS_URL }}
+          PRISMIC_URL: ${{ secrets.PRISMIC_URL }}
         run: npm i && npm run test:e2e

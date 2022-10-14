@@ -9,15 +9,15 @@ const [
   ,
   DOMAIN_NAME = "repository-cypress",
   PASSWORD = process.env.PASSWORD || "",
-  CYPRESS_URL = process.env.CYPRESS_URL,
+  PRISMIC_URL = process.env.PRISMIC_URL,
 ] = process.argv;
 
 const appMode =
-  CYPRESS_URL === "wroom.io"
+  PRISMIC_URL === "https://wroom.io"
     ? ApplicationMode.STAGE
-    : CYPRESS_URL === "wroom.test"
-    ? ApplicationMode.DEV
-    : ApplicationMode.PROD;
+    : PRISMIC_URL === "https://prismic.io"
+    ? ApplicationMode.PROD
+    : ApplicationMode.DEV;
 
 const client = new InitClient(
   appMode,
