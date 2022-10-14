@@ -207,9 +207,10 @@ const SlicesIndex: React.FunctionComponent = () => {
                             onUpdateScreenshot: (e: React.MouseEvent) => {
                               e.preventDefault();
                               onOpenModal({
-                                sliceFn: (s: ComponentUI[]) => [
-                                  s.find((e) => e.model.id === slice.model.id)!,
-                                ],
+                                sliceFn: (s: ComponentUI[]) =>
+                                  s.filter(
+                                    (e) => e.model.id === slice.model.id
+                                  ),
                               });
                             },
                             showActions: true,

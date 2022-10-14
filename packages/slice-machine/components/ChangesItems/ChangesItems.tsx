@@ -133,9 +133,8 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 onUpdateScreenshot: (e: React.MouseEvent) => {
                   e.preventDefault();
                   onOpenModal({
-                    sliceFn: (s: ComponentUI[]) => [
-                      s.find((e) => e.model.id === slice.model.id)!,
-                    ],
+                    sliceFn: (s: ComponentUI[]) =>
+                      s.filter((e) => e.model.id === slice.model.id),
                   });
                 },
                 sx: changesPushed.includes(slice.model.id)
