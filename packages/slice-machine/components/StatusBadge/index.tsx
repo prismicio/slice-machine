@@ -30,7 +30,6 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     <>
       <Text data-for={`${modelId}-tooltip`} data-tip>
         <Badge
-          mr="2"
           variant={status}
           sx={{
             padding: "4px 8px;",

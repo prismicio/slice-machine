@@ -1,5 +1,6 @@
-import { Button, Text, ThemeUIStyleObject } from "theme-ui";
+import { ThemeUIStyleObject } from "theme-ui";
 import { AiOutlineCamera } from "react-icons/ai";
+import { Button } from "@components/Button";
 
 const UpdateScreenshotButton = ({
   onUpdateScreenshot,
@@ -8,19 +9,13 @@ const UpdateScreenshotButton = ({
   onUpdateScreenshot: (e: React.MouseEvent) => void;
   sx?: ThemeUIStyleObject;
 }) => (
-  <Button onClick={onUpdateScreenshot} variant="white" sx={sx}>
-    <Text sx={{ color: "greyIcon" }}>
-      <AiOutlineCamera
-        size={16}
-        style={{
-          marginRight: "8px",
-          position: "relative",
-          top: "3px",
-        }}
-      />
-    </Text>
-    <Text sx={{ lineHeight: "24px", fontSize: "12px" }}>Update screenshot</Text>
-  </Button>
+  <Button
+    onClick={onUpdateScreenshot}
+    variant="secondarySmall"
+    sx={{ fontWeight: "bold", ...sx }}
+    Icon={AiOutlineCamera}
+    label="Update screenshot"
+  />
 );
 
 export default UpdateScreenshotButton;
