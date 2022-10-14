@@ -52,8 +52,9 @@ jobs:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
           PRISMIC_URL: ${{ secrets.PRISMIC_URL }}
-          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT}}
-          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT}}
-          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT}}
-          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT}}
+          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
+          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
+          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
+          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
+          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: npm i && npm run test:e2e
