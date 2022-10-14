@@ -15,6 +15,7 @@ import { validateManifest } from "./validateManifest";
 import { startSMServer } from "./startSMServer";
 import { validateSession } from "./validateSession";
 import { validateModels } from "./validateModels";
+import { validateGenerateTypes } from "./validateGenerateTypes";
 
 async function run(): Promise<void> {
   const cwd: string = process.cwd(); // project running the script
@@ -35,6 +36,8 @@ async function run(): Promise<void> {
     manifest: manifest.content,
   });
   if (!areModelsValid) return process.exit(0);
+
+  validateGenerateTypes({ cwd });
 
   const framework = NodeUtils.Framework.defineFramework({
     cwd,

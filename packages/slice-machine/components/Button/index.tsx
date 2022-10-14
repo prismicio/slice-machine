@@ -2,39 +2,72 @@ import React from "react";
 
 import { Button as ThemeUIButton, Spinner } from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
+import { IconType } from "react-icons";
 
-export type SliceMachineButtonProps = {
-  form?: string;
+export type ButtonProps = {
+  label: string;
+  Icon?: IconType;
   type?: "submit" | "reset" | "button";
+  form?: string;
   isLoading?: boolean;
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   sx?: ThemeUIStyleObject;
+  "data-cy"?: string;
+  variant?: string;
 };
 
-const Button: React.FunctionComponent<SliceMachineButtonProps> = ({
-  isLoading = false,
-  children,
-  onClick,
-  form,
+// Small helper to allow us to target spinner and icon in the CY
+const cyIdBuilder = (dataCy: string | undefined, id: string) => {
+  if (dataCy) return `${dataCy}-${id}`;
+  return "";
+};
+
+// If you don't use an icon, don't forget to pass a min-width property so the button doesn't change width on loading.
+export const Button: React.FunctionComponent<ButtonProps> = ({
+  label,
+  Icon,
   type,
-  disabled,
+  form,
+  isLoading = false,
+  disabled = false,
+  onClick,
   sx = {},
-}) => {
-  return (
-    <ThemeUIButton
-      sx={{
-        alignSelf: "flex-start",
-        ...sx,
-      }}
-      form={form}
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {isLoading ? <Spinner color="#F7F7F7" size={14} mr={2} /> : children}
-    </ThemeUIButton>
-  );
-};
-
-export default Button;
+  variant = "primary",
+  ...rest
+}) => (
+  <ThemeUIButton
+    sx={{
+      ...sx,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "8px",
+      ...(isLoading ? { cursor: "wait !important" } : {}), // without important, the hover effect has priority
+    }}
+    type={type}
+    form={form}
+    disabled={disabled}
+    onClick={!isLoading ? onClick : undefined}
+    variant={variant}
+    {...rest}
+  >
+    {isLoading ? (
+      <>
+        <Spinner
+          size={16}
+          color="grey01"
+          data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
+        />
+        {Icon && label}
+      </>
+    ) : (
+      <>
+        {Icon && (
+          <Icon size={16} data-cy={cyIdBuilder(rest["data-cy"], "icon")} />
+        )}
+        {label}
+      </>
+    )}
+  </ThemeUIButton>
+);

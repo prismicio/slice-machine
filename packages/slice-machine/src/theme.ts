@@ -1,4 +1,4 @@
-import { darken, lighten } from "@theme-ui/color";
+import { darken, lighten, alpha } from "@theme-ui/color";
 
 import { Theme } from "theme-ui";
 
@@ -12,7 +12,7 @@ const AppTheme = (): Theme =>
       hoverBackground: "#f2f2f2",
       background: "#FFF",
       backgroundClear: "#FFF",
-      primary: "#6E52FF",
+      primary: "#5D40F7",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
       changesWarning: {
@@ -76,7 +76,6 @@ const AppTheme = (): Theme =>
         orange: "#EA6D46",
         green: "#3AB97A",
       },
-
       modes: {
         dark: {
           text: "#fff",
@@ -118,6 +117,7 @@ const AppTheme = (): Theme =>
       body: 400,
       heading: 500,
       label: 500,
+      bold: 600,
       display: 900,
     },
     lineHeights: {
@@ -233,35 +233,40 @@ const AppTheme = (): Theme =>
     buttons: {
       primary: {
         color: "white",
-        fontSize: 1,
-        fontWeight: "body",
-        bg: "primary",
-        boxShadow:
-          "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+        fontSize: 0,
+        fontWeight: "bold",
+        lineHeight: "16px",
+
+        padding: "7px 15px", // 7 px + 1 border
+        borderRadius: "2px",
         userSelect: "none",
+
+        bg: alpha("primary", 0.9),
+        borderColor: "primary",
+        borderStyle: "solid",
+        borderWidth: "1px",
+
         transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
+
         "&:hover": {
-          bg: darken("primary", 0.02),
           cursor: "pointer",
-          boxShadow:
-            "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+          bg: "primary",
         },
+
         "&:focus": {
-          boxShadow: "0 0 0 1px #fff, 0 0 0 3px rgb(110, 82, 255, 1)",
-          bg: darken("primary", 0.02),
+          boxShadow: "0px 0px 0px 1px var(--theme-ui-colors-primary)", // little hack
+          borderColor: "white",
+          bg: "primary",
           outline: "none",
         },
+
         "&:disabled": {
-          bg: lighten("primary", 0.2),
-        },
-        "&:active": {
-          boxShadow:
-            "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
-          bg: darken("primary", 0.05),
-          borderColor: darken("primary", 0.08),
-          outline: "none",
+          cursor: "not-allowed",
+          bg: alpha("primary", 0.5),
+          borderColor: "transparent",
         },
       },
+
       screenSize: {
         p: 0,
         display: "flex",

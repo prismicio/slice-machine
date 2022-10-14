@@ -16,8 +16,6 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = await getEnv();
   const { model, mockConfig } = req.body;
 
-  const modelPath = CustomTypesPaths(env.cwd).customType(model.id).model();
-
   const mockPath = GeneratedCustomTypesPaths(env.cwd)
     .customType(model.id)
     .mock();
@@ -29,7 +27,9 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
     value: mockConfig,
   });
 
+  const modelPath = CustomTypesPaths(env.cwd).customType(model.id).model();
   IO.CustomType.writeCustomType(modelPath, model);
+
   const mocked = await mock(
     model,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
@@ -37,5 +37,8 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
   );
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   Files.write(mockPath, mocked as object);
+
+  IO.Types.upsert(env);
+
   return {};
 }

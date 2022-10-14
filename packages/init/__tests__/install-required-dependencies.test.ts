@@ -38,7 +38,9 @@ describe("install required dependency", () => {
     stderr.stop();
 
     expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith(`yarn add -D ${CONSTS.SM_PACKAGE_NAME}`);
+    expect(spy).toHaveBeenCalledWith(
+      `yarn add -D ${CONSTS.SM_PACKAGE_NAME} ${CONSTS.PRISMIC_TYPES}`
+    );
 
     expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
@@ -46,7 +48,7 @@ describe("install required dependency", () => {
     );
   });
 
-  test("it should use npm to install Slice Machine", async () => {
+  test("it should use npm to install Slice Machine and `@prismicio/types`", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
@@ -68,7 +70,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      `npm install --save-dev ${CONSTS.SM_PACKAGE_NAME}`
+      `npm install --save-dev ${CONSTS.SM_PACKAGE_NAME} ${CONSTS.PRISMIC_TYPES}`
     );
 
     expect(stderr.output).toContain("Installing Slice Machine");

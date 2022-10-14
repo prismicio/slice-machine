@@ -1,6 +1,6 @@
 import React from "react";
 import { MdHorizontalSplit } from "react-icons/md";
-import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
+import { Box, Flex, Text, Link } from "theme-ui";
 import Container from "components/Container";
 
 import CreateSliceModal from "components/Forms/CreateSliceModal";
@@ -25,27 +25,11 @@ import {
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
+import { Button } from "@components/Button";
+import { GoPlus } from "react-icons/go";
 import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-
-const CreateSliceButton = ({
-  onClick,
-  loading,
-}: {
-  onClick: () => void;
-  loading: boolean;
-}) => (
-  <Button
-    onClick={onClick}
-    data-cy="create-slice"
-    sx={{
-      minWidth: "120px",
-    }}
-  >
-    {loading ? <Spinner color="#FFF" size={14} /> : "Create a Slice"}
-  </Button>
-);
 
 const SlicesIndex: React.FunctionComponent = () => {
   const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
@@ -107,9 +91,13 @@ const SlicesIndex: React.FunctionComponent = () => {
           <Header
             ActionButton={
               localLibraries?.length != 0 && sliceCount != 0 ? (
-                <CreateSliceButton
+                <Button
+                  label="Create a Slice"
                   onClick={openCreateSliceModal}
-                  loading={isCreatingSlice}
+                  isLoading={isCreatingSlice}
+                  disabled={isCreatingSlice}
+                  Icon={GoPlus}
+                  data-cy="create-slice"
                 />
               ) : undefined
             }
