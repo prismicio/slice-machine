@@ -100,8 +100,8 @@ function VariationScreenshot({
         <Button
           variant="white"
           sx={{
-            flex: 1,
             marginRight: 2,
+            px: 2,
           }}
           onClick={openSimulator}
           isLoading={isCheckingSimulatorSetup}

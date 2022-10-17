@@ -36,11 +36,11 @@ export default function useCustomScreenshot({
             variant="buttons.white"
             sx={{
               p: 2,
-              px: 3,
+              px: 0,
               display: "flex",
               justifyContent: "center",
-              flex: 1,
               alignItems: "center",
+              width: 200,
             }}
           >
             {children || "Select file"}

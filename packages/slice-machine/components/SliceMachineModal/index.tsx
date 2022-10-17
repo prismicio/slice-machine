@@ -6,7 +6,7 @@ const SliceMachineModal: React.FunctionComponent<Modal.Props> = (props) => {
     content: {
       padding: "0px 0px 40px 0px",
       top: "10%",
-      maxWidth: "900px",
+      maxWidth: "950px",
       margin: "auto",
       border: "0",
       background: "0",
