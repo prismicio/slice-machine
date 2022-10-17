@@ -52,13 +52,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   component,
   variation,
 }) => {
-  const {
-    openToaster,
-    generateSliceScreenshot,
-    generateSliceCustomScreenshot,
-    saveSlice,
-    checkSimulatorSetup,
-  } = useSliceMachineActions();
+  const { openToaster, saveSlice } = useSliceMachineActions();
   const { simulatorUrl, isWaitingForIframeCheck, isTouched, remoteSlice } =
     useSelector((store: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(store),
@@ -104,19 +98,6 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
 
   if (!variation || !sliceView) return null;
 
-  const onTakingSliceScreenshot = () => {
-    checkSimulatorSetup(true, () =>
-      generateSliceScreenshot(variation.id, component, {
-        width: 1200,
-        height: 600,
-      })
-    );
-  };
-
-  const onTakingSliceCustomScreenshot = (file: Blob) => {
-    generateSliceCustomScreenshot(variation.id, component, file);
-  };
-
   const onSaveSlice = () => {
     saveSlice(component, setData);
   };
@@ -142,15 +123,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
       />
       <FlexEditor
         sx={{ py: 4 }}
-        SideBar={
-          <SideBar
-            component={component}
-            variation={variation}
-            onScreenshot={onTakingSliceScreenshot}
-            onHandleFile={onTakingSliceCustomScreenshot}
-            imageLoading={data.imageLoading}
-          />
-        }
+        SideBar={<SideBar component={component} variation={variation} />}
       >
         <FieldZones mockConfig={component.mockConfig} variation={variation} />
       </FlexEditor>
