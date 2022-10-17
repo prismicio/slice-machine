@@ -42,11 +42,13 @@ const EmptyState = ({
   const [isDragActive, setIsDragActive] = useState(false);
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
 
-  const { Renderer, handleFile } = useCustomScreenshot({
-    slice,
-    variationID,
-    onHandleFile: generateSliceCustomScreenshot,
-  });
+  const { FileInputRenderer, fileInputProps, handleFile } = useCustomScreenshot(
+    {
+      onHandleFile: (file: File) => {
+        generateSliceCustomScreenshot(variationID, slice, file);
+      },
+    }
+  );
 
   const handleDrop = (e: React.DragEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -103,7 +105,7 @@ const EmptyState = ({
             <>
               <UploadIcon isActive={isDragActive} />
               <Text sx={{ my: 2 }}>Drop file to upload or ...</Text>
-              <Renderer />
+              <FileInputRenderer {...fileInputProps} />
               <Text sx={{ color: "greyIcon", mt: 1 }}>
                 Maximum file size: 128Mb
               </Text>

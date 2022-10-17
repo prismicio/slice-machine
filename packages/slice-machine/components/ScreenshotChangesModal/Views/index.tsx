@@ -30,13 +30,10 @@ const viewRenderer = {
   [ScreenshotView.EmptyState]: EmptyState,
 };
 
-function VariationScreenshot({
-  variationID,
-  slice,
-}: {
+const VariationScreenshot: React.FC<{
   variationID: string;
   slice: ComponentUI;
-}): JSX.Element {
+}> = ({ variationID, slice }) => {
   const { isLoadingScreenshot } = useSelector(
     (state: SliceMachineStoreType) => ({
       isLoadingScreenshot: isLoading(
@@ -52,17 +49,17 @@ function VariationScreenshot({
     ? viewRenderer[ScreenshotView.Default]
     : viewRenderer[ScreenshotView.EmptyState];
 
-  const { Renderer } = useCustomScreenshot({
-    slice,
-    variationID,
-    onHandleFile: generateSliceCustomScreenshot,
+  const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
+    onHandleFile: (file: File) => {
+      generateSliceCustomScreenshot(variationID, slice, file);
+    },
   });
 
   return (
     <>
       <Flex sx={{ p: 2, pt: 0, minHeight: "48px" }}>
         {maybeScreenshot ? (
-          <Renderer>
+          <FileInputRenderer {...fileInputProps}>
             <>
               <FiUpload
                 style={{
@@ -74,7 +71,7 @@ function VariationScreenshot({
               />
               Upload new screenshot
             </>
-          </Renderer>
+          </FileInputRenderer>
         ) : null}
       </Flex>
       <ViewRenderer
@@ -85,6 +82,6 @@ function VariationScreenshot({
       />
     </>
   );
-}
+};
 
 export default VariationScreenshot;

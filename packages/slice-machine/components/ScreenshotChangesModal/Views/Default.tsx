@@ -1,6 +1,8 @@
-import { Image, Text, Flex, Spinner } from "theme-ui";
+import { Text, Flex, Spinner } from "theme-ui";
 
 import { ViewRendererProps } from "./";
+
+import { ScreenshotPreview } from "@components/ScreenshotPreview";
 
 export default function DefaultView({
   screenshot,
@@ -23,7 +25,7 @@ export default function DefaultView({
           <Text sx={{ my: 2 }}>Uploading file ...</Text>
         </Flex>
       ) : (
-        <Image
+        <ScreenshotPreview
           src={screenshot.url}
           sx={{ width: "auto", height: "auto", maxHeight: "100%" }}
         />
