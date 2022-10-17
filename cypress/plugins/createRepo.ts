@@ -9,16 +9,15 @@ const [
   ,
   DOMAIN_NAME = "repository-cypress",
   PASSWORD = process.env.PASSWORD || "",
-  PRISMIC_URL = process.env.PRISMIC_URL,
   MODE = process.env.MODE,
 ] = process.argv;
 
 const appMode =
   MODE === "STAGE"
     ? ApplicationMode.STAGE
-    : MODE === "PROD"
-    ? ApplicationMode.PROD
-    : ApplicationMode.DEV;
+    : MODE === "DEV"
+    ? ApplicationMode.DEV
+    : ApplicationMode.PROD;
 
 const client = new InitClient(
   appMode,
