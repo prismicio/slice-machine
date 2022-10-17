@@ -4,7 +4,7 @@ import path from "path";
 import axios from "axios";
 
 // File called from the cypress setup in cypress-setup.sh
-const [, , EMAIL, PASSWORD, PRISMIC_URL = "https://wroom.io"] = process.argv;
+const [, , EMAIL, PASSWORD] = process.argv;
 
 axios
   .post(`${PRISMIC_URL}/authentication/signin`, {
