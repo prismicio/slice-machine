@@ -8,7 +8,7 @@ const MemoedImage = memo<{ src: string | undefined }>(({ src }) => (
 
 interface ScreenshotPreviewProps {
   src?: string;
-  sx: { height: string } & ThemeUIStyleObject;
+  sx: { height: string | number } & ThemeUIStyleObject;
 }
 
 export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({

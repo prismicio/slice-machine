@@ -17,9 +17,9 @@ import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
-import UpdateScreenshotButton from "@components/UpdateScreenshotButton";
+import { Button } from "@components/Button";
 
 const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -73,7 +73,13 @@ const SliceScreenshotUpdate: React.FC<{
       borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
     }}
   >
-    <UpdateScreenshotButton onUpdateScreenshot={onUpdateScreenshot} />
+    <Button
+      onClick={onUpdateScreenshot}
+      variant="secondarySmall"
+      sx={{ fontWeight: "bold" }}
+      Icon={AiOutlineCamera}
+      label="Update screenshot"
+    />
   </Flex>
 );
 

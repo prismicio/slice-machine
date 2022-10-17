@@ -1,9 +1,7 @@
 import React from "react";
 
-import { Box, Button, Spinner, Text } from "theme-ui";
+import { Box, Spinner, Text, Button as ThemeButton } from "theme-ui";
 import Link from "next/link";
-
-import UpdateScreenshotButton from "@components/UpdateScreenshotButton";
 
 import Card from "@components/Card";
 
@@ -25,6 +23,8 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import type Models from "@slicemachine/core/build/models";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { Button } from "@components/Button";
+import { AiOutlineCamera } from "react-icons/ai";
 
 type SideBarProps = {
   component: ComponentUI;
@@ -69,7 +69,13 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         bg="headSection"
         bodySx={{ p: 0 }}
         Footer={() => (
-          <UpdateScreenshotButton onUpdateScreenshot={openScreenshotsModal} />
+          <Button
+            onClick={openScreenshotsModal}
+            variant="secondarySmall"
+            sx={{ fontWeight: "bold" }}
+            Icon={AiOutlineCamera}
+            label="Update screenshot"
+          />
         )}
         footerSx={{ padding: 2 }}
         sx={{ overflow: "hidden" }}
@@ -83,7 +89,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           }}
         />
       </Card>
-      <Button
+      <ThemeButton
         data-testid="open-set-up-simulator"
         disabled={!isSimulatorAvailableForFramework}
         onClick={() =>
@@ -97,7 +103,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         sx={{ cursor: "pointer", width: "100%", mt: 3 }}
       >
         {isCheckingSimulatorSetup ? <Spinner size={12} /> : "Preview Slice"}
-      </Button>
+      </ThemeButton>
       {!isSimulatorAvailableForFramework && (
         <Text
           as="p"
@@ -135,9 +141,9 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             variationId: variation.id,
           })}
         >
-          <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
+          <ThemeButton variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
             Open Storybook
-          </Button>
+          </ThemeButton>
         </Link>
       )}
       <ScreenshotChangesModal slices={[component]} />
