@@ -216,12 +216,11 @@ const AppTheme = (): Theme =>
     buttons: {
       primary: {
         color: "white",
-        fontSize: 0,
-        fontWeight: "bold",
-        lineHeight: "16px",
-
-        padding: "7px 15px", // 7 px + 1 border
-        borderRadius: "2px",
+        fontSize: 1,
+        fontWeight: "body",
+        lineHeight: "24px",
+        padding: "7px 15px",
+        borderRadius: "4px",
         userSelect: "none",
 
         bg: alpha("primary", 0.9),

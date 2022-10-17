@@ -60,8 +60,8 @@ const CustomTypeHeader = () => {
               sx={{
                 cursor: "pointer",
                 color: theme.colors?.icons,
-                height: 32,
-                width: 32,
+                height: 40,
+                width: 40,
               }}
               onClick={openRenameCustomTypeModal}
               style={{
