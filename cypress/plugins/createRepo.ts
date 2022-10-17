@@ -10,12 +10,13 @@ const [
   DOMAIN_NAME = "repository-cypress",
   PASSWORD = process.env.PASSWORD || "",
   PRISMIC_URL = process.env.PRISMIC_URL,
+  MODE = process.env.MODE,
 ] = process.argv;
 
 const appMode =
-  PRISMIC_URL === "https://wroom.io"
+  MODE === "STAGE"
     ? ApplicationMode.STAGE
-    : PRISMIC_URL === "https://prismic.io"
+    : MODE === "PROD"
     ? ApplicationMode.PROD
     : ApplicationMode.DEV;
 
