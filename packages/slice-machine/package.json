@@ -121,7 +121,7 @@
     "@types/probe-image-size": "^7.0.1",
     "@types/prompts": "^2.0.14",
     "@types/puppeteer": "^5.4.3",
-    "@types/react": "^17.0.2",
+    "@types/react": "17.0.2",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-modal": "^3.12.0",
     "@types/react-redux": "^7.1.20",
