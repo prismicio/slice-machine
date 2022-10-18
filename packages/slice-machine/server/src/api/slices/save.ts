@@ -64,6 +64,8 @@ export async function handler(
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
 
+  IO.Types.upsert(env);
+
   console.log("[slice/save]: Slice was saved!");
 
   await onSaveSlice(env);

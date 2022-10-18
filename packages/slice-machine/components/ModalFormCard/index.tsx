@@ -2,7 +2,7 @@ import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { Formik, Form, FormikErrors, FormikTouched } from "formik";
 import { Flex, Heading, Close, Box, Button as ThemeButton } from "theme-ui";
-import Button from "@components/Button";
+import { Button } from "@components/Button";
 
 import Card from "../Card";
 import { SetStateAction } from "react";
@@ -127,13 +127,19 @@ function ModalCard<Values>({
                       Cancel
                     </ThemeButton>
                     <Button
+                      label={buttonLabel}
                       form={formId}
                       type="submit"
                       disabled={!isValid || isSubmitting || isLoading}
                       isLoading={isLoading}
-                    >
-                      {buttonLabel}
-                    </Button>
+                      sx={{
+                        fontWeight: "400",
+                        paddingBlock: "8px",
+                        paddingInline: "16px",
+                        fontSize: "14px",
+                        borderRadius: "4px",
+                      }}
+                    />
                   </Flex>
                 ) : null
               }

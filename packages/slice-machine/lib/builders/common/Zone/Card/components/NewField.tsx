@@ -224,7 +224,18 @@ const NewField: React.FC<NewField> = ({
               >
                 Cancel
               </Button>
-              <Button sx={{ ml: 2 }} type="submit">
+              <Button
+                sx={{
+                  fontWeight: "400",
+                  paddingBlock: "8px",
+                  paddingInline: "16px",
+                  fontSize: "14px",
+                  borderRadius: "4px",
+                  lineHeight: "21px",
+                  ml: 2,
+                }}
+                type="submit"
+              >
                 Add
               </Button>
             </Box>

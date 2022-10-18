@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Flex, Text, useThemeUI } from "theme-ui";
 
 import Header from "@components/Header";
-import SaveButton from "@components/SaveButton";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { MdModeEdit, MdSpaceDashboard } from "react-icons/md";
@@ -16,6 +15,8 @@ import { isSelectedCustomTypeTouched } from "@src/modules/selectedCustomType";
 
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { AiFillSave } from "react-icons/ai";
+import { Button } from "@components/Button";
 
 const CustomTypeHeader = () => {
   const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
@@ -59,8 +60,8 @@ const CustomTypeHeader = () => {
               sx={{
                 cursor: "pointer",
                 color: theme.colors?.icons,
-                height: 36,
-                width: 36,
+                height: 40,
+                width: 40,
               }}
               onClick={openRenameCustomTypeModal}
               style={{
@@ -70,12 +71,13 @@ const CustomTypeHeader = () => {
                 marginRight: "8px",
               }}
             />
-            <SaveButton
-              isSaving={isSavingCustomType}
-              hasPendingModifications={hasPendingModifications}
-              onClick={() => {
-                !isSavingCustomType && saveCustomType();
-              }}
+            <Button
+              label="Save to File System"
+              isLoading={isSavingCustomType}
+              disabled={!hasPendingModifications || isSavingCustomType}
+              onClick={saveCustomType}
+              Icon={AiFillSave}
+              data-cy="builder-save-button"
             />
           </Flex>
         }

@@ -20,8 +20,8 @@ const defaultActiveSx = (active: boolean, hasError: boolean | null): object => {
       };
 };
 
-type SliceMachineIconButtonProps = IconButtonProps & {
-  label: string;
+export type SliceMachineIconButtonProps = IconButtonProps & {
+  label?: string;
   size?: number;
   error?: boolean;
   fitButton?: boolean;
@@ -39,7 +39,7 @@ const SliceMachineIconButton: React.FunctionComponent<
   label,
   Icon,
   error = null,
-  size = 18,
+  size = 16,
   fitButton = false,
   active = false,
   useActive = false,
