@@ -47,7 +47,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
     }}
     type={type}
     form={form}
-    disabled={disabled}
+    disabled={disabled || isLoading}
     onClick={!isLoading ? onClick : undefined}
     variant={variant}
     {...rest}

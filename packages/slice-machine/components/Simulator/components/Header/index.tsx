@@ -9,7 +9,6 @@ import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import { useMemo } from "react";
-import ScreenshotButton from "@components/ScreenshotButton";
 import IframeRenderer from "../IframeRenderer";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
@@ -18,6 +17,8 @@ import { selectSimulatorUrl } from "@src/modules/environment";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { Button } from "@components/Button";
+import { AiFillCamera } from "react-icons/ai";
 
 type PropTypes = {
   Model: ComponentUI;
@@ -131,10 +132,11 @@ const Header: React.FunctionComponent<PropTypes> = ({
           flexDirection: "column",
         }}
       >
-        <ScreenshotButton
+        <Button
           onClick={onTakingSliceScreenshot}
+          label="Take a screenshot"
           isLoading={isSavingScreenshot}
-          isDisabled={isSavingScreenshot}
+          Icon={AiFillCamera}
         />
         {isWaitingForIframeCheck && (
           <IframeRenderer
