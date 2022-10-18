@@ -36,9 +36,11 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           {SecondaryBreadcrumb ? SecondaryBreadcrumb : null}
         </Box>
       </Flex>
-      <Flex mt={3} sx={{ alignItems: "center" }}>
-        <Flex sx={{ alignItems: "center" }}>{children ? children : null}</Flex>
-      </Flex>
+      {children ? (
+        <Flex mt={3} sx={{ alignItems: "center" }}>
+          <Flex sx={{ alignItems: "center" }}>{children}</Flex>
+        </Flex>
+      ) : null}
     </Flex>
     {ActionButton ? ActionButton : null}
   </Flex>

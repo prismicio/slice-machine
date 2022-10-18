@@ -98,7 +98,6 @@ const Header: React.FC<{
           </Box>
           <Flex sx={{ flexDirection: "row", alignItems: "center" }}>
             <SliceMachineIconButton
-              size={22}
               Icon={MdModeEdit}
               label="Edit slice name"
               data-cy="edit-slice-name"
@@ -109,6 +108,8 @@ const Header: React.FC<{
                 backgroundColor: "#F3F5F7",
                 border: "1px solid #3E3E4826",
                 marginRight: "8px",
+                width: 40,
+                height: 40,
               }}
             />
             <Button
