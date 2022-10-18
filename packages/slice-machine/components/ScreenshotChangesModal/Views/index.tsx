@@ -87,7 +87,8 @@ const VariationScreenshot: React.FC<{
   const openSimulator = () =>
     checkSimulatorSetup(true, () =>
       window.open(
-        `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`
+        `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
+        slice.model.id
       )
     );
 
@@ -104,7 +105,6 @@ const VariationScreenshot: React.FC<{
           isLoading={isCheckingSimulatorSetup}
           Icon={AiOutlineEye}
           label={"Capture screenshot from Slice Simulator"}
-          spinnerColor={"#1A1523"}
         />
         {maybeScreenshot ? (
           <FileInputRenderer {...fileInputProps}>

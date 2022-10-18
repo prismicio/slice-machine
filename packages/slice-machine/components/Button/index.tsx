@@ -15,13 +15,21 @@ export type ButtonProps = {
   sx?: ThemeUIStyleObject;
   "data-cy"?: string;
   variant?: string;
-  spinnerColor?: string;
 };
 
 // Small helper to allow us to target spinner and icon in the CY
 const cyIdBuilder = (dataCy: string | undefined, id: string) => {
   if (dataCy) return `${dataCy}-${id}`;
   return "";
+};
+
+const spinnerColor = (variant: string) => {
+  switch (variant) {
+    case "white":
+      return "#1A1523";
+    default:
+      return "grey01";
+  }
 };
 
 // If you don't use an icon, don't forget to pass a min-width property so the button doesn't change width on loading.
@@ -35,7 +43,6 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   onClick,
   sx = {},
   variant = "primary",
-  spinnerColor = "grey01",
   ...rest
 }) => (
   <ThemeUIButton
@@ -58,7 +65,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       <>
         <Spinner
           size={16}
-          color={spinnerColor}
+          color={spinnerColor(variant)}
           data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
         />
         {Icon && label}
