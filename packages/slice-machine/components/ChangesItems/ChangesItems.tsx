@@ -39,7 +39,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
-  const { sliceFn, defaultVariationSelector } = modalPayload;
+  const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
   return (
     <>
@@ -98,7 +98,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 )}
                 <Button
                   variant="darkSmall"
-                  onClick={() => onOpenModal({ sliceFn: (s) => s })}
+                  onClick={() => onOpenModal({ sliceFilterFn: (s) => s })}
                 >
                   <AiFillCamera
                     style={{
@@ -133,7 +133,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 onUpdateScreenshot: (e: React.MouseEvent) => {
                   e.preventDefault();
                   onOpenModal({
-                    sliceFn: (s: ComponentUI[]) =>
+                    sliceFilterFn: (s: ComponentUI[]) =>
                       s.filter((e) => e.model.id === slice.model.id),
                   });
                 },
@@ -144,7 +144,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             }}
           />
           <ScreenshotChangesModal
-            slices={sliceFn(unSyncedSlices)}
+            slices={sliceFilterFn(unSyncedSlices)}
             defaultVariationSelector={defaultVariationSelector}
           />
         </>

@@ -4,7 +4,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SliceVariationSelector } from "@components/ScreenshotChangesModal";
 
 type ModalPayload = {
-  sliceFn: (s: ComponentUI[]) => ComponentUI[];
+  sliceFilterFn: (s: ComponentUI[]) => ComponentUI[];
   defaultVariationSelector?: SliceVariationSelector;
 };
 
@@ -18,7 +18,7 @@ export const useScreenshotChangesModal = (): Payload => {
   const { openScreenshotsModal } = useSliceMachineActions();
 
   const [modalPayload, setModalPayload] = useState<ModalPayload>({
-    sliceFn: (s: ComponentUI[]) => s,
+    sliceFilterFn: (s: ComponentUI[]) => s,
   });
 
   const onOpenModal = (payload: ModalPayload) => {

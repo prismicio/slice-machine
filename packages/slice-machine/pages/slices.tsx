@@ -37,7 +37,7 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
-  const { sliceFn, defaultVariationSelector } = modalPayload;
+  const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
   const {
     isCreateSliceModalOpen,
@@ -195,7 +195,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                             onUpdateScreenshot: (e: React.MouseEvent) => {
                               e.preventDefault();
                               onOpenModal({
-                                sliceFn: (s: ComponentUI[]) =>
+                                sliceFilterFn: (s: ComponentUI[]) =>
                                   s.filter(
                                     (e) => e.model.id === slice.model.id
                                   ),
@@ -217,7 +217,7 @@ const SlicesIndex: React.FunctionComponent = () => {
       {localLibraries && localLibraries.length > 0 && (
         <>
           <ScreenshotChangesModal
-            slices={sliceFn(slices)}
+            slices={sliceFilterFn(slices)}
             defaultVariationSelector={defaultVariationSelector}
           />
           <CreateSliceModal
