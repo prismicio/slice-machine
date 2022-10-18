@@ -137,7 +137,9 @@ const SliceDescription = ({
   </Flex>
 );
 
-const ScreenshotMissingBanner = ({ slice }: { slice: ComponentUI }) => {
+const ScreenshotMissingBanner: React.FC<{ slice: ComponentUI }> = ({
+  slice,
+}) => {
   const missingScreenshots = countMissingScreenshots(slice);
 
   if (!missingScreenshots) {
