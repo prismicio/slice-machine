@@ -210,7 +210,11 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
                   ...component,
                   screenshots: {
                     ...component.screenshots,
-                    [variationId]: screenshot,
+                    ...(screenshot
+                      ? {
+                          [variationId]: screenshot,
+                        }
+                      : {}),
                   },
                 }
               : c

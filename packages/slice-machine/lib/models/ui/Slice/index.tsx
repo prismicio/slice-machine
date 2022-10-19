@@ -17,9 +17,9 @@ import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
-import { Button } from "theme-ui";
 import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
+import { Button } from "@components/Button";
 
 const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -52,7 +52,7 @@ const SliceVariations = ({
   return !hideVariations ? (
     <>
       {variations ? (
-        <Text sx={{ fontSize: 0, color: "textClear", flexShrink: 0 }}>
+        <Text sx={{ fontSize: 14, color: "textClear", flexShrink: 0 }}>
           {variations.length} variation{variations.length > 1 ? "s" : ""}
         </Text>
       ) : null}
@@ -62,33 +62,26 @@ const SliceVariations = ({
 
 const SliceScreenshotUpdate: React.FC<{
   slice: ComponentUI;
-  visible?: boolean;
-}> = ({ visible }) =>
-  visible ? (
-    <Flex
-      mt={1}
-      sx={{
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: 3,
-        borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-      }}
-    >
-      <Button onClick={() => ({})} variant="buttons.secondarySmall">
-        <Text sx={{ color: "greyIcon" }}>
-          <AiOutlineCamera
-            size={16}
-            style={{
-              marginRight: "8px",
-              position: "relative",
-              top: "3px",
-            }}
-          />
-        </Text>
-        <Text sx={{ lineHeight: "24px" }}>Update screenshot</Text>
-      </Button>
-    </Flex>
-  ) : null;
+  onUpdateScreenshot: (e: React.MouseEvent) => void;
+}> = ({ onUpdateScreenshot }) => (
+  <Flex
+    mt={1}
+    sx={{
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: 3,
+      borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+    }}
+  >
+    <Button
+      onClick={onUpdateScreenshot}
+      variant="secondarySmall"
+      sx={{ fontWeight: "bold" }}
+      Icon={AiOutlineCamera}
+      label="Update screenshot"
+    />
+  </Flex>
+);
 
 const SliceDescription = ({
   slice,
@@ -110,7 +103,11 @@ const SliceDescription = ({
     }}
   >
     <Flex>
-      <TextWithTooltip text={slice.model.name} as="h6" />
+      <TextWithTooltip
+        text={slice.model.name}
+        as="h6"
+        sx={{ fontWeight: "600 !important" }}
+      />
     </Flex>
     <Flex
       sx={{
@@ -140,16 +137,12 @@ const SliceDescription = ({
   </Flex>
 );
 
-const ScreenshotMissingBanner = ({
-  visible,
+const ScreenshotMissingBanner: React.FC<{ slice: ComponentUI }> = ({
   slice,
-}: {
-  visible?: boolean;
-  slice: ComponentUI;
 }) => {
   const missingScreenshots = countMissingScreenshots(slice);
 
-  if (!visible || !missingScreenshots) {
+  if (!missingScreenshots) {
     return null;
   }
 
@@ -157,7 +150,6 @@ const ScreenshotMissingBanner = ({
     <Flex
       sx={{
         position: "absolute",
-        borderRadius: "4px 4px 0 0",
         alignItems: "center",
         justifyContent: "center",
         padding: 2,
@@ -166,10 +158,11 @@ const ScreenshotMissingBanner = ({
         width: "100%",
         fontSize: "12px",
         lineHeight: "16px",
+        fontWeight: "600",
       }}
     >
-      <AiOutlineExclamationCircle style={{ marginRight: "8px" }} />{" "}
-      {missingScreenshots} / {slice.model.variations.length} screenshots missing
+      <AiOutlineExclamationCircle size={16} style={{ marginRight: "8px" }} />{" "}
+      {missingScreenshots}/{slice.model.variations.length} screenshots missing
     </Flex>
   );
 };
@@ -183,6 +176,7 @@ export const SharedSlice = {
 
     thumbnailHeightPx = "290px",
     wrapperType = WrapperType.clickable,
+    onUpdateScreenshot,
     sx,
   }: {
     showActions?: boolean;
@@ -196,6 +190,7 @@ export const SharedSlice = {
       | React.FC<{ slice: ComponentUI }>;
     Wrapper?: React.FC<{ link?: { as: string }; slice: ComponentUI }>;
     wrapperType?: WrapperType;
+    onUpdateScreenshot?: (e: React.MouseEvent) => void;
     thumbnailHeightPx?: string;
     sx?: ThemeUIStyleObject;
   }) {
@@ -217,25 +212,37 @@ export const SharedSlice = {
           aria-pressed="false"
           sx={{
             border: (t) => `1px solid ${t.colors?.borders as string}`,
-            boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
             borderRadius: "6px",
+            overflow: "hidden",
             ...defaultSx(sx),
           }}
         >
-          <Flex sx={{ position: "relative", flexDirection: "column" }}>
+          <Flex
+            sx={{
+              position: "relative",
+              flexDirection: "column",
+            }}
+          >
             <ScreenshotPreview
               src={screenshotUrl}
               sx={{
                 height: thumbnailHeightPx,
+                borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+                borderRadius: "4px 4px 0 0",
               }}
             />
-            <ScreenshotMissingBanner slice={slice} visible={showActions} />
+            {showActions ? <ScreenshotMissingBanner slice={slice} /> : null}
             <Flex
               sx={{
                 flexDirection: "column",
               }}
             >
-              <SliceScreenshotUpdate slice={slice} visible={showActions} />
+              {onUpdateScreenshot ? (
+                <SliceScreenshotUpdate
+                  slice={slice}
+                  onUpdateScreenshot={onUpdateScreenshot}
+                />
+              ) : null}
               <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
             </Flex>
           </Flex>
@@ -269,7 +276,13 @@ export const NonSharedSlice = {
       <Wrapper link={undefined}>
         {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
         <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
-          <ScreenshotPreview sx={{ height: thumbnailHeightPx }} />
+          <ScreenshotPreview
+            sx={{
+              height: thumbnailHeightPx,
+              borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+              borderRadius: "4px 4px 0 0",
+            }}
+          />
           <Flex
             mt={3}
             sx={{ alignItems: "center", justifyContent: "space-between" }}

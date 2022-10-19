@@ -1,6 +1,6 @@
-import React, { memo } from "react";
-import type Models from "@slicemachine/core/build/models";
-import { Box, Button, Spinner, Text } from "theme-ui";
+import React from "react";
+
+import { Box, Spinner, Text, Button as ThemeButton } from "theme-ui";
 import Link from "next/link";
 
 import Card from "@components/Card";
@@ -20,27 +20,24 @@ import {
 } from "@src/modules/environment";
 import { createStorybookUrl } from "@src/utils/storybook";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-
-const MemoizedImagePreview = memo(ScreenshotPreview);
+import type Models from "@slicemachine/core/build/models";
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
+import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { Button } from "@components/Button";
+import { AiOutlineCamera } from "react-icons/ai";
 
 type SideBarProps = {
   component: ComponentUI;
   variation: Models.VariationSM;
-  imageLoading: boolean;
-  onScreenshot: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onHandleFile: (file: any) => void;
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
   component,
   variation,
-  imageLoading,
-  onScreenshot,
-  onHandleFile,
 }) => {
   const { screenshots } = component;
 
+  const { openScreenshotsModal } = useScreenshotChangesModal();
   const { checkSimulatorSetup } = useSliceMachineActions();
 
   const router = useRouter();
@@ -68,18 +65,31 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         flexBasis: "sidebar",
       }}
     >
-      <Card bg="headSection" bodySx={{ p: 0 }} footerSx={{ p: 0 }}>
-        <MemoizedImagePreview
+      <Card
+        bg="headSection"
+        bodySx={{ p: 0 }}
+        Footer={() => (
+          <Button
+            onClick={openScreenshotsModal}
+            variant="secondarySmall"
+            sx={{ fontWeight: "bold" }}
+            Icon={AiOutlineCamera}
+            label="Update screenshot"
+          />
+        )}
+        footerSx={{ padding: 2 }}
+        sx={{ overflow: "hidden" }}
+      >
+        <ScreenshotPreview
           src={screenshots[variation.id]?.url}
-          screenshotProperties={{
-            isLoading: imageLoading,
-            isDisabled: !isSimulatorAvailableForFramework,
-            onScreenshot: onScreenshot,
-            onCustomScreenshot: onHandleFile,
+          sx={{
+            height: "290px",
+            borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+            borderRadius: "4px 4px 0 0",
           }}
         />
       </Card>
-      <Button
+      <ThemeButton
         data-testid="open-set-up-simulator"
         disabled={!isSimulatorAvailableForFramework}
         onClick={() =>
@@ -93,7 +103,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         sx={{ cursor: "pointer", width: "100%", mt: 3 }}
       >
         {isCheckingSimulatorSetup ? <Spinner size={12} /> : "Preview Slice"}
-      </Button>
+      </ThemeButton>
       {!isSimulatorAvailableForFramework && (
         <Text
           as="p"
@@ -131,11 +141,12 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             variationId: variation.id,
           })}
         >
-          <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
+          <ThemeButton variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
             Open Storybook
-          </Button>
+          </ThemeButton>
         </Link>
       )}
+      <ScreenshotChangesModal slices={[component]} />
     </Box>
   );
 };

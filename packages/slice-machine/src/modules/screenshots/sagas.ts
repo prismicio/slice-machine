@@ -26,7 +26,7 @@ export function* generateSliceScreenshotSaga({
     const response = (yield call(generateSliceScreenshotApiClient, {
       libraryName: component.from,
       sliceName: component.model.name,
-      variationId: variationId,
+      variationId,
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
 
@@ -44,9 +44,9 @@ export function* generateSliceScreenshotSaga({
 
     yield put(
       generateSliceScreenshotCreator.success({
+        variationId,
         screenshot: response.data.screenshot,
         component,
-        variationId,
       })
     );
   } catch (e) {
@@ -62,41 +62,17 @@ export function* generateSliceScreenshotSaga({
 export function* generateSliceCustomScreenshotSaga({
   payload,
 }: ReturnType<typeof generateSliceCustomScreenshotCreator.request>) {
-  const { variationId, component, setData, file } = payload;
+  const { variationId, component, file } = payload;
   try {
     const form = new FormData();
     form.append("file", file);
     form.append("libraryName", component.from);
     form.append("sliceName", component.model.name);
     form.append("variationId", variationId);
-    setData({
-      loading: true,
-      done: false,
-      error: null,
-      status: null,
-      imageLoading: true,
-    });
     const response = (yield call(
       generateSliceCustomScreenshotApiClient,
       form
     )) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
-    if (response.status > 209) {
-      return setData({
-        loading: false,
-        done: true,
-        status: response.status,
-        imageLoading: false,
-        error: "Internal Error: Custom screenshot not saved",
-      });
-    }
-    setData({
-      loading: false,
-      done: true,
-      error: null,
-      status: response.status,
-      message: "New screenshot added!",
-      imageLoading: false,
-    });
     yield put(
       generateSliceCustomScreenshotCreator.success({
         variationId,
