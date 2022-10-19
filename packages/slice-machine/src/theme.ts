@@ -234,6 +234,7 @@ const AppTheme = (): Theme =>
       primary: {
         color: "white",
         fontSize: 1,
+        fontFamily: "body",
         fontWeight: "body",
         lineHeight: "24px",
         padding: "7px 15px",
@@ -268,6 +269,7 @@ const AppTheme = (): Theme =>
 
       screenSize: {
         p: 0,
+        fontFamily: "body",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -281,6 +283,7 @@ const AppTheme = (): Theme =>
       },
       secondary: {
         bg: "secondary",
+        fontFamily: "body",
         fontWeight: "body",
         fontSize: "1",
         color: "textClear",
@@ -306,6 +309,7 @@ const AppTheme = (): Theme =>
         pr: 2,
         pb: 1,
         pt: 1,
+        fontFamily: "body",
         fontSize: "12px",
         fontWeight: "body",
       },
@@ -315,6 +319,7 @@ const AppTheme = (): Theme =>
         boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
         borderRadius: "6px",
         color: "#1A1523",
+        fontFamily: "body",
         fontSize: "12px",
         lineHeight: "16px",
         pl: 2,
@@ -333,6 +338,7 @@ const AppTheme = (): Theme =>
       darkSmall: {
         borderRadius: "4px",
         color: "white",
+        fontFamily: "body",
         fontSize: "12px",
         fontWeight: "body",
         bg: "text",
@@ -350,6 +356,7 @@ const AppTheme = (): Theme =>
         color: "text",
         fontSize: "12px",
         fontWeight: "body",
+        fontFamily: "body",
         bg: "white",
         boxShadow:
           "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
@@ -365,6 +372,7 @@ const AppTheme = (): Theme =>
         borderRadius: "4px",
         color: "error",
         fontSize: "16px",
+        fontFamily: "body",
         fontWeight: "body",
         bg: "grey02",
         boxShadow:
@@ -381,6 +389,7 @@ const AppTheme = (): Theme =>
         bg: "#D6CEFC",
         fontSize: "1",
         color: "white",
+        fontFamily: "body",
         cursor: "not-allowed",
         borderColor: "transparent",
       },
@@ -388,6 +397,7 @@ const AppTheme = (): Theme =>
         bg: "#F9F9FA",
         fontSize: "1",
         color: "#C9D0D8",
+        fontFamily: "body",
         cursor: "not-allowed",
         border: "1px solid",
         borderColor: "1px solid rgba(62, 62, 72, 0.15)",
@@ -395,11 +405,13 @@ const AppTheme = (): Theme =>
       transparent: {
         background: "transparent",
         border: "none",
+        fontFamily: "body",
         p: 1,
         color: "primary",
         cursor: "pointer",
       },
       selectIcon: {
+        fontFamily: "body",
         "&:hover": {
           cursor: "pointer",
         },
@@ -408,6 +420,7 @@ const AppTheme = (): Theme =>
         },
       },
       textButton: {
+        fontFamily: "body",
         border: "none",
         color: "primary",
         background: "transparent",
@@ -422,6 +435,7 @@ const AppTheme = (): Theme =>
         },
       },
       close: {
+        fontFamily: "body",
         color: "icons",
         "&:hover": {
           bg: "rgba(0,0,0,0.08)",
@@ -432,6 +446,7 @@ const AppTheme = (): Theme =>
         },
       },
       icon: {
+        fontFamily: "body",
         "&:hover": {
           bg: "rgba(0,0,0,0.08)",
         },
@@ -440,6 +455,7 @@ const AppTheme = (): Theme =>
         },
       },
       round: {
+        fontFamily: "body",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -451,6 +467,7 @@ const AppTheme = (): Theme =>
         border: "1px solid #DCDBDD",
         boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
         borderRadius: "6px",
+        fontFamily: "body",
         fontWeight: "600",
         fontSize: 1,
         px: 3,
