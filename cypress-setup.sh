@@ -14,12 +14,12 @@ else
   _PRISMIC_REPO=$REPOSITORY
 fi
 
-if [[ "$PRISMIC_URL" == 'https://wroom.io' ]]; then 
-  MODE="stage"
-elif [[ "$PRISMIC_URL" == 'https://prismic.io' ]]; then
-  MODE="prod"
-else
+if [[ "$PRISMIC_URL" == 'https://wroom-qa.com' ]] || [[ "$PRISMIC_URL" == 'http://wroom.test' ]] ; then 
   MODE="dev"
+elif [[ "$PRISMIC_URL" == 'https://wroom.io' ]]; then
+  MODE="stage"
+else
+  MODE="prod"
 fi
 
 rm -rf e2e-projects/cypress-next-app \

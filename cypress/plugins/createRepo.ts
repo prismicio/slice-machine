@@ -2,25 +2,15 @@ import { InitClient } from "../../packages/init/src/utils/client";
 import { ApplicationMode } from "../../packages/client/src/models/ApplicationMode";
 import { PrismicSharedConfigManager } from "../../packages/core/src/prismic/SharedConfig";
 import { Frameworks } from "../../packages/core/src/models/Framework";
+import getApplicationMode from "../../packages/slice-machine/lib/env/getApplicationMode";
 
 // File called from the cypress setup in cypress-setup.sh
-const [
-  ,
-  ,
-  DOMAIN_NAME = "repository-cypress",
-  PASSWORD = process.env.PASSWORD || "",
-  MODE = process.env.MODE,
-] = process.argv;
+const [, , DOMAIN_NAME, PASSWORD, PRISMIC_URL] = process.argv;
 
-const appMode =
-  MODE === "STAGE"
-    ? ApplicationMode.STAGE
-    : MODE === "DEV"
-    ? ApplicationMode.DEV
-    : ApplicationMode.PROD;
+const applicationMode: ApplicationMode = getApplicationMode(PRISMIC_URL);
 
 const client = new InitClient(
-  appMode,
+  applicationMode,
   null,
   PrismicSharedConfigManager.getAuth()
 );
@@ -36,7 +26,7 @@ const deleteAndCreate = async () => {
 
   await client.createRepository(DOMAIN_NAME, Frameworks.next).catch((e) => {
     console.warn(
-      `could not create repo: ${DOMAIN_NAME} in ${appMode}: ${e.status}: ${e.message}`
+      `could not create repo: ${DOMAIN_NAME} in ${applicationMode}: ${e.status}: ${e.message}`
     );
     process.exit(1);
   });
