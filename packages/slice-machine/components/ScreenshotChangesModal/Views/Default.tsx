@@ -27,7 +27,7 @@ export default function DefaultView({
       ) : (
         <ScreenshotPreview
           src={screenshot.url}
-          sx={{ width: "auto", height: "auto", maxHeight: "100%" }}
+          sx={{ width: "100%", height: "100%", maxHeight: "100%" }}
         />
       )}
     </>
