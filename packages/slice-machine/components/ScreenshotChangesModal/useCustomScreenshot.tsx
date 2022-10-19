@@ -21,7 +21,14 @@ const FileInputRenderer: React.FC<HandleFileProp> = ({
     <Label
       htmlFor="input-file"
       variant="buttons.white"
-      sx={{ p: 2, px: 3, display: "flex", justifyContent: "center" }}
+      sx={{
+        p: 2,
+        px: 0,
+        display: "flex",
+        justifyContent: "center",
+        width: 200,
+        alignItems: "center",
+      }}
     >
       {children || "Select file"}
     </Label>

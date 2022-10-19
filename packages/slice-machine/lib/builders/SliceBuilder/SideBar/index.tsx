@@ -94,7 +94,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         disabled={!isSimulatorAvailableForFramework}
         onClick={() =>
           checkSimulatorSetup(true, () =>
-            window.open(`${router.asPath}/simulator`)
+            window.open(`${router.asPath}/simulator`, component.model.id)
           )
         }
         variant={

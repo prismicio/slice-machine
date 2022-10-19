@@ -23,6 +23,15 @@ const cyIdBuilder = (dataCy: string | undefined, id: string) => {
   return "";
 };
 
+const spinnerColor = (variant: string) => {
+  switch (variant) {
+    case "white":
+      return "#1A1523";
+    default:
+      return "grey01";
+  }
+};
+
 // If you don't use an icon, don't forget to pass a min-width property so the button doesn't change width on loading.
 export const Button: React.FunctionComponent<ButtonProps> = ({
   label,
@@ -56,7 +65,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       <>
         <Spinner
           size={16}
-          color="grey01"
+          color={spinnerColor(variant)}
           data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
         />
         {Icon && label}
