@@ -27,7 +27,8 @@
   "dependencies": {
     "consola": "^2.11.3",
     "deepmerge": "^4.2.2",
-    "expect.js": "^0.3.1"
+    "expect.js": "^0.3.1",
+    "node-fetch": "^3.2.10"
   },
   "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d",
   "devDependencies": {

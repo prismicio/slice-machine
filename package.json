@@ -26,9 +26,11 @@
     "bump:alpha": "lerna version prerelease --preid $npm_config_preid --no-changelog --exact --yes --no-private",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --no-verify-access --yes",
     "bump:production": "lerna version --conventional-graduate --exact --no-private",
-    "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package"
+    "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
+    "depcheck": "depcheck --skip-missing; lerna run depcheck"
   },
   "devDependencies": {
+    "depcheck": "^1.4.3",
     "husky": "^7.0.2",
     "lerna": "^3.22.1",
     "lint-staged": "^11.1.2",
@@ -38,8 +40,6 @@
     "cypress": "^9.5.4",
     "cypress-localstorage-commands": "^1.7.0",
     "cypress-wait-until": "^1.7.2",
-    "jest": "^25.5.1",
-    "node-fetch": "^2.6.1",
     "start-server-and-test": "^1.14.0"
   },
   "lint-staged": {
