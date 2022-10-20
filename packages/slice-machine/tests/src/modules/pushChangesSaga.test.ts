@@ -35,30 +35,41 @@ import { ApiError } from "@src/models/ApiError";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { EventNames } from "@src/tracking/types";
+import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const stubSlice: ComponentUI = {
   model: {
     name: "MySlice",
     id: "my-slice",
+    type: SlicesTypes.SharedSlice,
+    variations: [],
   },
   from: "slices",
-} as ComponentUI;
+  href: "",
+  mockConfig: {},
+  pathToSlice: "",
+  fileName: "",
+  extension: "",
+  screenshots: {},
+};
 
-const stubSlice2 = {
+const stubSlice2: ComponentUI = {
   ...stubSlice,
   model: {
+    ...stubSlice.model,
     name: "AnotherSlice",
     id: "some-slice2",
   },
-} as ComponentUI;
+};
 
-const stubSlice3 = {
+const stubSlice3: ComponentUI = {
   ...stubSlice,
   model: {
+    ...stubSlice.model,
     name: "SomeSlice",
     id: "some-slice",
   },
-} as ComponentUI;
+};
 
 const stubCustomType: CustomTypeSM = {
   id: "wooooo",
@@ -183,6 +194,7 @@ describe("[pashSaga module]", () => {
       expect(trackerResult.props.duration).toBeLessThanOrEqual(
         moreThanTotalTime
       );
+      expect(trackerResult.props.missingScreenshots).toEqual(0);
     });
 
     test("when there's a 403 error while pushing a slice it should stop and open the login model", async () => {
