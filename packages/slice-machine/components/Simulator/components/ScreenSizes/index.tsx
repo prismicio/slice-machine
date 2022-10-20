@@ -33,12 +33,10 @@ export const iframeSizes = {
   },
   [Size.TABLET]: {
     width: "50vw",
-    pt: 4,
     height: "calc(600px)",
   },
   [Size.PHONE]: {
     width: "340px",
-    pt: 4,
     height: "calc(600px)",
   },
 };

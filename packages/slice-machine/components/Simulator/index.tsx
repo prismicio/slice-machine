@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { Flex } from "theme-ui";
+import { Box, Flex } from "theme-ui";
 
 import Header from "./components/Header";
-import { Size } from "./components/ScreenSizes";
 import IframeRenderer from "./components/IframeRenderer";
 import Tracker from "@src/tracking/client";
 import { useSelector } from "react-redux";
@@ -16,6 +15,11 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import Router from "next/router";
 import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
+import { Toolbar } from "./components/Toolbar";
+import {
+  ScreenSizeOptions,
+  ScreenSizes,
+} from "./components/Toolbar/ScreensizeInput";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
@@ -45,11 +49,17 @@ export default function Simulator() {
     void Tracker.get().trackOpenSliceSimulator(framework, version);
   }, []);
 
-  const [state, setState] = useState({ size: Size.FULL });
+  const [screenWidth, setScreenWidth] = useState(
+    ScreenSizes[ScreenSizeOptions.DESKTOP].width
+  );
+  const [screenHeight, setScreenHeight] = useState(
+    ScreenSizes[ScreenSizeOptions.DESKTOP].height
+  );
 
-  const handleScreenSizeChange = (screen: { size: Size }) => {
-    setState({ ...state, size: screen.size });
-  };
+  const handleScreenWidthChange = (newScreenWidth: number) =>
+    setScreenWidth(newScreenWidth);
+  const handleScreenHeightChange = (newScreenHeight: number) =>
+    setScreenHeight(newScreenHeight);
 
   if (!component || !variation) {
     return <div />;
@@ -70,14 +80,33 @@ export default function Simulator() {
       <Header
         Model={component}
         variation={variation}
-        handleScreenSizeChange={handleScreenSizeChange}
-        size={state.size}
+        screenWidth={screenWidth}
+        screenHeight={screenHeight}
       />
-      <IframeRenderer
-        size={state.size}
-        simulatorUrl={simulatorUrl}
-        sliceView={sliceView}
-      />
+      <Box
+        sx={{
+          flex: 1,
+          bg: "grey01",
+          p: 3,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Toolbar
+          Model={component}
+          variation={variation}
+          handleScreenWidthChange={handleScreenWidthChange}
+          handleScreenHeightChange={handleScreenHeightChange}
+          width={screenWidth}
+          height={screenHeight}
+        />
+        <IframeRenderer
+          screenWidth={screenWidth}
+          screenHeight={screenHeight}
+          simulatorUrl={simulatorUrl}
+          sliceView={sliceView}
+        />
+      </Box>
       {!!component.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
           sliceName={Router.router?.query.sliceName as string}

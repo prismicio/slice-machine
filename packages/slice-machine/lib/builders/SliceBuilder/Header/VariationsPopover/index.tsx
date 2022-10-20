@@ -4,18 +4,18 @@ import { Popover } from "react-tiny-popover";
 
 import MenuList from "./MenuList";
 
-import { Button, Box, ThemeUICSSObject } from "theme-ui";
+import { Button, Box, ThemeUICSSObject, ThemeUIStyleObject } from "theme-ui";
 
 import { RiArrowDropDownLine } from "react-icons/ri";
 
 const VarationsPopover: React.FunctionComponent<{
   buttonSx?: ThemeUICSSObject;
   defaultValue?: Models.VariationSM;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onNewVariation?: Function;
+  onNewVariation?: () => void;
   variations: ReadonlyArray<Models.VariationSM>;
   onChange: (selected: Models.VariationSM) => void;
-}> = ({ buttonSx, defaultValue, variations, onNewVariation, onChange }) => {
+  sx?: ThemeUIStyleObject;
+}> = ({ buttonSx, defaultValue, variations, onNewVariation, onChange, sx }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [current, setCurrent] = useState<Models.VariationSM>(
     defaultValue || variations[0]
@@ -52,7 +52,7 @@ const VarationsPopover: React.FunctionComponent<{
   );
 
   return (
-    <div>
+    <Box sx={sx}>
       <Popover
         align="start"
         isOpen={isOpen}
@@ -85,7 +85,7 @@ const VarationsPopover: React.FunctionComponent<{
           {current.name} <RiArrowDropDownLine size="24px" />
         </Button>
       </Popover>
-    </div>
+    </Box>
   );
 };
 
