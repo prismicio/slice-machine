@@ -185,6 +185,7 @@ export interface ChangesPushed extends BaseTrackingEvent {
     total: number;
     duration: number;
     errors: number;
+    missingScreenshots: number;
   };
 }
 
