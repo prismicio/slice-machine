@@ -1,11 +1,9 @@
 ignores: [
+  "babel-plugin-module-resolver",
   "nodemon",
   "rollup",
   "@svgr/webpack",
   "monocle-ts",
   "newtype-ts",
-  "esbuild",
-  "babel-plugin-module-resolver",
-  "typescript-is",
 ]
 skip - missing: true
