@@ -1,12 +1,11 @@
 ignores: [
+  "nodemon",
+  "rollup",
+  "@svgr/webpack",
   "monocle-ts",
   "newtype-ts",
-  "@svgr/webpack",
-  "@types/*",
   "esbuild",
   "babel-plugin-module-resolver",
-  "rollup",
   "typescript-is",
-  "nodemon"
 ]
 skip - missing: true
