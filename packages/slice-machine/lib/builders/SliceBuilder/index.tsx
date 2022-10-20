@@ -15,7 +15,6 @@ import IframeRenderer from "@components/Simulator/components/IframeRenderer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSimulatorUrl } from "@src/modules/environment";
-import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 import { useRouter } from "next/router";
 import {
@@ -131,9 +130,10 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
       {isWaitingForIframeCheck && (
         <IframeRenderer
           dryRun
-          size={Size.FULL}
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
+          screenHeight={1000}
+          screenWidth={8000}
         />
       )}
     </Box>

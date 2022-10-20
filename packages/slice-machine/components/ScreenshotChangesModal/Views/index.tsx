@@ -15,7 +15,6 @@ import DefaultView from "./Default";
 import { AiOutlineEye } from "react-icons/ai";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 import IframeRenderer from "@components/Simulator/components/IframeRenderer";
-import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { useMemo } from "react";
 import { Button } from "@components/Button";
@@ -130,9 +129,10 @@ const VariationScreenshot: React.FC<{
       {isWaitingForIframeCheck && (
         <IframeRenderer
           dryRun
-          size={Size.FULL}
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
+          screenHeight={1000}
+          screenWidth={8000}
         />
       )}
     </>
