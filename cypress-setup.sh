@@ -2,7 +2,7 @@
 # set -x
 if [[ -z "$EMAIL" || -z "$PASSWORD" || -z "$PRISMIC_URL" ]]; then
   echo "[ERROR] Please set EMAIL PASSWORD PRISMIC_URL environments variables"
-  echo 'EMAIL="email@example.com" PASSWORD="guest" PRISMIC_URL="https://prismic.io REPOSITORY="my-repo" npm run test:e2e:dev'
+  echo 'EMAIL="email@example.com" PASSWORD="guest" PRISMIC_URL="https://prismic.io" REPOSITORY="my-repo" npm run test:e2e:dev'
   echo $EMAIL $PASSWORD $PRISMIC_URL $REPOSITORY
   exit 1
 fi 
