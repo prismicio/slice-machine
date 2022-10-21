@@ -45,7 +45,12 @@ const EmptyState = ({
   const { FileInputRenderer, fileInputProps, handleFile } = useCustomScreenshot(
     {
       onHandleFile: (file: File) => {
-        generateSliceCustomScreenshot(variationID, slice, file);
+        generateSliceCustomScreenshot(
+          variationID,
+          slice,
+          file,
+          isDragActive ? "dragAndDrop" : "upload"
+        );
       },
     }
   );

@@ -17,11 +17,12 @@ import {
   generateSliceCustomScreenshotApiClient,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import Tracker from "@src/tracking/client";
 
 export function* generateSliceScreenshotSaga({
   payload,
 }: ReturnType<typeof generateSliceScreenshotCreator.request>) {
-  const { component, variationId, screenDimensions } = payload;
+  const { component, variationId, screenDimensions, method } = payload;
   try {
     const response = (yield call(generateSliceScreenshotApiClient, {
       libraryName: component.from,
@@ -41,6 +42,11 @@ export function* generateSliceScreenshotSaga({
         type: ToasterType.SCREENSHOT_CAPTURED,
       })
     );
+
+    void Tracker.get().trackScreenshotTaken({
+      type: "automatic",
+      method: method,
+    });
 
     yield put(
       generateSliceScreenshotCreator.success({
@@ -62,7 +68,7 @@ export function* generateSliceScreenshotSaga({
 export function* generateSliceCustomScreenshotSaga({
   payload,
 }: ReturnType<typeof generateSliceCustomScreenshotCreator.request>) {
-  const { variationId, component, file } = payload;
+  const { variationId, component, file, method } = payload;
   try {
     const form = new FormData();
     form.append("file", file);
@@ -73,6 +79,12 @@ export function* generateSliceCustomScreenshotSaga({
       generateSliceCustomScreenshotApiClient,
       form
     )) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
+
+    void Tracker.get().trackScreenshotTaken({
+      type: "custom",
+      method: method,
+    });
+
     yield put(
       generateSliceCustomScreenshotCreator.success({
         variationId,

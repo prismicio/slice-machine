@@ -65,7 +65,12 @@ const Header: React.FunctionComponent<PropTypes> = ({
   const { generateSliceScreenshot } = useSliceMachineActions();
 
   const onTakingSliceScreenshot = () => {
-    generateSliceScreenshot(variation.id, Model, deviceToDimensions(size));
+    generateSliceScreenshot(
+      variation.id,
+      Model,
+      deviceToDimensions(size),
+      "fromSimulator"
+    );
   };
 
   const { isWaitingForIframeCheck, simulatorUrl, isSavingScreenshot } =
