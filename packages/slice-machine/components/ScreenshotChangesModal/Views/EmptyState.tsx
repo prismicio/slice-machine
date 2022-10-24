@@ -55,9 +55,16 @@ const EmptyState = ({
     setIsDragActive(false);
     const maybeFile = e.dataTransfer.files?.[0];
     if (maybeFile) {
+      console.log({ maybeFile });
       if (acceptedImagesTypes.find((t) => `image/${t}` === maybeFile.type)) {
-        handleFile(maybeFile);
+        if (maybeFile.size > 128000000) {
+          return alert(`File is too big. Max file size: 128Mo.`);
+        }
+        return handleFile(maybeFile);
       }
+      return alert(
+        `Only files of type ${acceptedImagesTypes.join(", ")} are accepted.`
+      );
     }
   };
 
