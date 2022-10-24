@@ -1,20 +1,12 @@
-import { useState } from "react";
 import { Flex, Spinner, Text } from "theme-ui";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
 import { ViewRendererProps } from "./";
-import { acceptedImagesTypes } from "@lib/consts";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import useCustomScreenshot from "../useCustomScreenshot";
-
-const sharedFlexSx = {
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%",
-  width: "100%",
-};
+import DropZone from "../DropZone";
 
 const UploadIcon = ({ isActive }: { isActive: boolean }): JSX.Element => (
   <Flex
@@ -39,56 +31,21 @@ const EmptyState = ({
   slice,
   isLoadingScreenshot,
 }: ViewRendererProps): JSX.Element => {
-  const [isDragActive, setIsDragActive] = useState(false);
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
 
-  const { FileInputRenderer, fileInputProps, handleFile } = useCustomScreenshot(
-    {
-      onHandleFile: (file: File) => {
-        generateSliceCustomScreenshot(variationID, slice, file);
-      },
-    }
-  );
+  const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
+    onHandleFile: (file: File) => {
+      generateSliceCustomScreenshot(variationID, slice, file);
+    },
+  });
 
-  const handleDrop = (e: React.DragEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setIsDragActive(false);
-    const maybeFile = e.dataTransfer.files?.[0];
-    if (maybeFile) {
-      if (acceptedImagesTypes.find((t) => `image/${t}` === maybeFile.type)) {
-        handleFile(maybeFile);
-      }
-    }
+  const handleValidDrop = (file: File) => {
+    generateSliceCustomScreenshot(variationID, slice, file);
   };
 
-  const createHandleDrag =
-    (bool: boolean) => (e: React.DragEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      setIsDragActive(bool);
-    };
-
   return (
-    <Flex
-      sx={{
-        p: 3,
-        ...sharedFlexSx,
-        bg: "secondary",
-        borderRadius: "6px",
-      }}
-    >
-      <Flex
-        as="form"
-        sx={{
-          ...sharedFlexSx,
-          borderRadius: "4px",
-          border: isDragActive ? "1px dashed #6E56CF" : "1px dashed #DCDBDD",
-        }}
-        onDragEnter={createHandleDrag(true)}
-        onDragLeave={createHandleDrag(false)}
-        onDragOver={createHandleDrag(true)}
-        onSubmit={(e) => e.preventDefault()}
-        onDrop={handleDrop}
-      >
+    <DropZone isVisible onHandleDrop={handleValidDrop}>
+      {({ isDragActive }) => (
         <Flex
           sx={{
             justifyContent: "center",
@@ -112,8 +69,8 @@ const EmptyState = ({
             </>
           )}
         </Flex>
-      </Flex>
-    </Flex>
+      )}
+    </DropZone>
   );
 };
 

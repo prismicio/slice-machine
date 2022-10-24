@@ -2,14 +2,24 @@ import { Text, Flex, Spinner } from "theme-ui";
 
 import { ViewRendererProps } from "./";
 
+import DropZone from "../DropZone";
+
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 export default function DefaultView({
+  slice,
   screenshot,
+  variationID,
   isLoadingScreenshot,
 }: ViewRendererProps) {
+  const { generateSliceCustomScreenshot } = useSliceMachineActions();
+  const handleValidDrop = (file: File) => {
+    generateSliceCustomScreenshot(variationID, slice, file);
+  };
+
   return (
-    <>
+    <DropZone onHandleDrop={handleValidDrop}>
       {isLoadingScreenshot ? (
         <Flex
           sx={{
@@ -30,6 +40,6 @@ export default function DefaultView({
           sx={{ width: "100%", height: "100%", maxHeight: "100%" }}
         />
       )}
-    </>
+    </DropZone>
   );
 }
