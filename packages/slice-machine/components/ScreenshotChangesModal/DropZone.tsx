@@ -24,10 +24,10 @@ const DropZone: React.FC<DropZoneProps> = ({
 }) => {
   const [isDragActive, setIsDragActive] = useState(false);
 
-  const handleDrop = (e: React.DragEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const handleDrop = (event: React.DragEvent<HTMLInputElement>) => {
+    event.preventDefault();
     setIsDragActive(false);
-    const maybeFile = e.dataTransfer.files?.[0];
+    const maybeFile = event.dataTransfer.files?.[0];
     if (maybeFile) {
       if (imageTypes.find((t) => `image/${t}` === maybeFile.type)) {
         if (maybeFile.size > 128000000) {
