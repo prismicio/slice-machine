@@ -1,6 +1,8 @@
 import { ReactNode, useState } from "react";
 import { Flex } from "theme-ui";
 import { acceptedImagesTypes } from "@lib/consts";
+import { ToasterType } from "@src/modules/toaster";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const sharedFlexSx = {
   justifyContent: "center",
@@ -22,6 +24,7 @@ const DropZone: React.FC<DropZoneProps> = ({
   isVisible = false,
   imageTypes = acceptedImagesTypes,
 }) => {
+  const { openToaster } = useSliceMachineActions();
   const [isDragActive, setIsDragActive] = useState(false);
 
   const handleDrop = (event: React.DragEvent<HTMLInputElement>) => {
@@ -31,11 +34,17 @@ const DropZone: React.FC<DropZoneProps> = ({
     if (maybeFile) {
       if (imageTypes.find((t) => `image/${t}` === maybeFile.type)) {
         if (maybeFile.size > 128000000) {
-          return alert(`File is too big. Max file size: 128Mo.`);
+          return openToaster(
+            "File is too big. Max file size: 128Mo.",
+            ToasterType.SCREENSHOT_FAILED
+          );
         }
         return onHandleDrop(maybeFile);
       }
-      return alert(`Only files of type ${imageTypes.join(", ")} are accepted.`);
+      return openToaster(
+        `Only files of type ${imageTypes.join(", ")} are accepted.`,
+        ToasterType.SCREENSHOT_FAILED
+      );
     }
   };
 
