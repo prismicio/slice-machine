@@ -39,9 +39,9 @@
   },
   "dependencies": {
     "@babel/register": "^7.17.7",
-    "@prismicio/api-renderer": "^0.1.7",
-    "@prismicio/mocks": "^0.1.8",
-    "@prismicio/types-internal": "^0.3.0",
+    "@prismicio/api-renderer": "^1.0.0",
+    "@prismicio/mocks": "^1.1.2",
+    "@prismicio/types-internal": "^1.1.1",
     "@slicemachine/client": "1.1.14",
     "@slicemachine/core": "1.1.14",
     "@svgr/webpack": "^5.4.0",
