@@ -67,10 +67,6 @@ const SimpleWidgetContent /*: t.Type<SimpleWidgetContentT>*/ = t.union([
   IntegrationFieldsContent,
   StructuredTextContentC,
   ImageContent,
-  t.type({
-    __TYPE__: t.literal(GroupItemContentType),
-    value: GeoPointContent,
-  }),
   GeoPointContent, // weird that geo has now __TYPE__
   EmbedContent,
   t.type({
