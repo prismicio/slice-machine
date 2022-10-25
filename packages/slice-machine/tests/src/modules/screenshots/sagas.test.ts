@@ -7,12 +7,30 @@ import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
+import { setupServer } from "msw/lib/node";
+import { rest, ResponseComposition, RestContext, RestRequest } from "msw";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
+
+const server = setupServer();
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+const makeTrackerSpy = () =>
+  jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+    return res(ctx.json({}));
+  });
+
+const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
+  server.use(rest.post("http://localhost/api/s", spy));
 
 describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
     it("should call the api and dispatch the success action", () => {
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker); // warnings happen without this
+
       const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
@@ -20,6 +38,7 @@ describe("[Selected Slice sagas]", () => {
           variationId: dummyModelVariationID,
           component: dummySliceState,
           screenDimensions,
+          method: "fromSimulator",
         })
       );
 
@@ -60,6 +79,9 @@ describe("[Selected Slice sagas]", () => {
       saga.next().isDone();
     });
     it("should open a error toaster on internal error", () => {
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker); // warnings happen without this
+
       const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
@@ -67,6 +89,7 @@ describe("[Selected Slice sagas]", () => {
           variationId: dummyModelVariationID,
           component: dummySliceState,
           screenDimensions,
+          method: "fromSimulator",
         })
       ).next();
 

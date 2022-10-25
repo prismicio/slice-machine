@@ -65,7 +65,7 @@ const VariationScreenshot: React.FC<{
 
   const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
     onHandleFile: (file: File) => {
-      generateSliceCustomScreenshot(variationID, slice, file);
+      generateSliceCustomScreenshot(variationID, slice, file, "upload");
     },
   });
 
