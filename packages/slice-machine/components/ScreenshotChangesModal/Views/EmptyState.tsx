@@ -1,30 +1,11 @@
 import { Flex, Spinner, Text } from "theme-ui";
-import { AiOutlineCloudUpload } from "react-icons/ai";
 
 import { ViewRendererProps } from "./";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import useCustomScreenshot from "../useCustomScreenshot";
-import DropZone from "../DropZone";
-
-const UploadIcon = ({ isActive }: { isActive: boolean }): JSX.Element => (
-  <Flex
-    sx={{
-      p: 1,
-      borderRadius: "50%",
-      bg: isActive ? "#F1EEFE" : "#EDECEE",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "48px",
-      height: "48px",
-    }}
-  >
-    <AiOutlineCloudUpload
-      style={{ color: isActive ? "#6E56CF" : "#6F6E77", fontSize: "34px" }}
-    />
-  </Flex>
-);
+import DropZone, { UploadIcon } from "../DropZone";
 
 const EmptyState = ({
   variationID,

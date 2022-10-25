@@ -9,7 +9,6 @@ export enum ToasterType {
   ERROR = "error",
   INFO = "info",
   LOADING = "loading",
-  SCREENSHOT_FAILED = "screenshot_failed",
   SCREENSHOT_CAPTURED = "screenshot_captured",
 }
 

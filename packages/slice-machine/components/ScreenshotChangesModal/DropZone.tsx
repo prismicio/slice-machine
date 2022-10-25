@@ -3,13 +3,7 @@ import { Flex } from "theme-ui";
 import { acceptedImagesTypes } from "@lib/consts";
 import { ToasterType } from "@src/modules/toaster";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-
-const sharedFlexSx = {
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%",
-  width: "100%",
-};
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 interface DropZoneProps {
   isVisible?: boolean;
@@ -17,6 +11,28 @@ interface DropZoneProps {
   imageTypes?: string[];
   children: ReactNode | ((options: { isDragActive: boolean }) => ReactNode);
 }
+
+export const UploadIcon = ({
+  isActive,
+}: {
+  isActive: boolean;
+}): JSX.Element => (
+  <Flex
+    sx={{
+      p: 1,
+      borderRadius: "50%",
+      bg: isActive ? "#F1EEFE" : "#EDECEE",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "48px",
+      height: "48px",
+    }}
+  >
+    <AiOutlineCloudUpload
+      style={{ color: isActive ? "#6E56CF" : "#6F6E77", fontSize: "34px" }}
+    />
+  </Flex>
+);
 
 const DropZone: React.FC<DropZoneProps> = ({
   children,
@@ -35,15 +51,15 @@ const DropZone: React.FC<DropZoneProps> = ({
       if (imageTypes.find((t) => `image/${t}` === maybeFile.type)) {
         if (maybeFile.size > 128000000) {
           return openToaster(
-            "File is too big. Max file size: 128Mo.",
-            ToasterType.SCREENSHOT_FAILED
+            "File is too big. Max file size: 128Mb.",
+            ToasterType.ERROR
           );
         }
         return onHandleDrop(maybeFile);
       }
       return openToaster(
         `Only files of type ${imageTypes.join(", ")} are accepted.`,
-        ToasterType.SCREENSHOT_FAILED
+        ToasterType.ERROR
       );
     }
   };
@@ -56,9 +72,10 @@ const DropZone: React.FC<DropZoneProps> = ({
 
   return (
     <Flex
+      variant="boxes.centered"
       sx={{
         p: 2,
-        ...sharedFlexSx,
+        position: "relative",
         ...(isVisible || isDragActive
           ? {
               bg: "secondary",
@@ -69,8 +86,8 @@ const DropZone: React.FC<DropZoneProps> = ({
     >
       <Flex
         as="form"
+        variant="boxes.centered"
         sx={{
-          ...sharedFlexSx,
           ...(isVisible || isDragActive
             ? {
                 borderRadius: "4px",

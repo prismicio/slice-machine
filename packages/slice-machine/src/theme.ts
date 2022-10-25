@@ -159,6 +159,10 @@ const AppTheme = (): Theme =>
         marginLeft: 2,
         marginBottom: "0!important",
       },
+      secondary: {
+        color: "greyIcon",
+        fontSize: 1,
+      },
       pre: {
         fontSize: 1,
         fontWeight: "400",
@@ -228,6 +232,15 @@ const AppTheme = (): Theme =>
         bg: "transparent",
         border: "none",
         borderColor: "borders",
+      },
+    },
+    boxes: {
+      centered: {
+        height: "100%",
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
       },
     },
     buttons: {
