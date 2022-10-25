@@ -18,6 +18,10 @@ import IframeRenderer from "@components/Simulator/components/IframeRenderer";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { useMemo } from "react";
 import { Button } from "@components/Button";
+import {
+  ScreenSizeOptions,
+  ScreenSizes,
+} from "@components/Simulator/components/Toolbar/ScreensizeInput";
 
 enum ScreenshotView {
   Default = 1,
@@ -131,8 +135,7 @@ const VariationScreenshot: React.FC<{
           dryRun
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
-          screenHeight={1000}
-          screenWidth={8000}
+          screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
         />
       )}
     </>

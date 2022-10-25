@@ -25,6 +25,10 @@ import { VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
+import {
+  ScreenSizeOptions,
+  ScreenSizes,
+} from "@components/Simulator/components/Toolbar/ScreensizeInput";
 
 export type SliceBuilderState = {
   imageLoading: boolean;
@@ -132,8 +136,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
           dryRun
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
-          screenHeight={1000}
-          screenWidth={8000}
+          screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
         />
       )}
     </Box>

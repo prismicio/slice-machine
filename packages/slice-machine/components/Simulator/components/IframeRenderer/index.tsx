@@ -6,6 +6,7 @@ import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import { SliceView } from "../..";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SetupError } from "../SetupError";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
@@ -47,16 +48,14 @@ function useSimulatorClient(): readonly [
 }
 
 type IframeRendererProps = {
-  screenWidth: number;
-  screenHeight: number;
+  screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
   sliceView: SliceView;
   dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
-  screenWidth,
-  screenHeight,
+  screenDimensions,
   simulatorUrl,
   sliceView,
   dryRun = false,
@@ -89,7 +88,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, screenWidth, screenHeight, sliceView]);
+  }, [client, screenDimensions, sliceView]);
 
   return (
     <Box
@@ -122,8 +121,8 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             margin: "0 auto",
             overflow: "auto",
             alignContent: "center",
-            width: screenWidth,
-            height: screenHeight,
+            width: screenDimensions.width,
+            height: screenDimensions.height,
             ...(dryRun
               ? {
                   position: "absolute",

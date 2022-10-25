@@ -1,3 +1,4 @@
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { Flex, Input, Label, ThemeUIStyleObject } from "theme-ui";
 
 export enum ScreenSizeOptions {
@@ -7,7 +8,7 @@ export enum ScreenSizeOptions {
   CUSTOM = "Custom",
 }
 
-export const ScreenSizes: Record<string, { width: number; height: number }> = {
+export const ScreenSizes: Record<string, ScreenDimensions> = {
   [ScreenSizeOptions.DESKTOP]: {
     width: 1200,
     height: 800,
