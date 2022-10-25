@@ -321,9 +321,9 @@ describe("MockSlice", () => {
   test("allFieldSliceModel", () => {
     const model = Slices.toSM({ ...allFieldSliceModel });
     const mock = MockSlice(model, {});
-    console.dir({ mock }, { depth: null });
+    // console.dir({ mock }, { depth: null });
     const result = SharedSliceContent.decode(mock);
-    console.dir(result, { depth: null });
+    // console.dir(result, { depth: null });
     expect(isRight(result)).toBeTruthy();
   });
 });
