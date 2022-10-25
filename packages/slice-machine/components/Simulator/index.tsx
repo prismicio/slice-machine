@@ -20,6 +20,7 @@ import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
@@ -49,17 +50,9 @@ export default function Simulator() {
     void Tracker.get().trackOpenSliceSimulator(framework, version);
   }, []);
 
-  const [screenWidth, setScreenWidth] = useState(
-    ScreenSizes[ScreenSizeOptions.DESKTOP].width
+  const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
+    ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
-  const [screenHeight, setScreenHeight] = useState(
-    ScreenSizes[ScreenSizeOptions.DESKTOP].height
-  );
-
-  const handleScreenWidthChange = (newScreenWidth: number) =>
-    setScreenWidth(newScreenWidth);
-  const handleScreenHeightChange = (newScreenHeight: number) =>
-    setScreenHeight(newScreenHeight);
 
   if (!component || !variation) {
     return <div />;
@@ -80,8 +73,7 @@ export default function Simulator() {
       <Header
         Model={component}
         variation={variation}
-        screenWidth={screenWidth}
-        screenHeight={screenHeight}
+        screenDimensions={screenDimensions}
       />
       <Box
         sx={{
@@ -95,14 +87,11 @@ export default function Simulator() {
         <Toolbar
           Model={component}
           variation={variation}
-          handleScreenWidthChange={handleScreenWidthChange}
-          handleScreenHeightChange={handleScreenHeightChange}
-          width={screenWidth}
-          height={screenHeight}
+          handleScreenSizeChange={setScreenDimensions}
+          screenDimensions={screenDimensions}
         />
         <IframeRenderer
-          screenWidth={screenWidth}
-          screenHeight={screenHeight}
+          screenDimensions={screenDimensions}
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
         />

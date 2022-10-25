@@ -13,19 +13,18 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { Button } from "@components/Button";
 import { AiFillCamera } from "react-icons/ai";
 import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 type PropTypes = {
   Model: ComponentUI;
   variation: Models.VariationSM;
-  screenWidth: number;
-  screenHeight: number;
+  screenDimensions: ScreenDimensions;
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
   Model,
   variation,
-  screenWidth,
-  screenHeight,
+  screenDimensions,
 }) => {
   const { generateSliceScreenshot } = useSliceMachineActions();
 
@@ -34,8 +33,8 @@ const Header: React.FunctionComponent<PropTypes> = ({
       variation.id,
       Model,
       {
-        width: screenWidth,
-        height: screenHeight,
+        width: screenDimensions.width,
+        height: screenDimensions.height,
       },
       "fromSimulator"
     );
@@ -96,8 +95,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
           dryRun
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
-          screenHeight={1000}
-          screenWidth={8000}
+          screenDimensions={screenDimensions}
         />
       )}
     </Box>

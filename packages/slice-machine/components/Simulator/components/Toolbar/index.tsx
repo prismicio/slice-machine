@@ -12,6 +12,7 @@ import {
 import router from "next/router";
 import * as Links from "@lib/builders/SliceBuilder/links";
 import { useState } from "react";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 const redirect = (
   model: ComponentUI,
@@ -34,19 +35,15 @@ const redirect = (
 type ToolbarProps = {
   Model: ComponentUI;
   variation: VariationSM;
-  handleScreenWidthChange: (newScreenWidth: number) => void;
-  handleScreenHeightChange: (newScreenHeight: number) => void;
-  width: number;
-  height: number;
+  handleScreenSizeChange: (screenDimensions: ScreenDimensions) => void;
+  screenDimensions: ScreenDimensions;
 };
 
 export const Toolbar: React.FC<ToolbarProps> = ({
   Model,
   variation,
-  handleScreenWidthChange,
-  handleScreenHeightChange,
-  width,
-  height,
+  handleScreenSizeChange,
+  screenDimensions,
 }) => {
   const [isSizeEditable, setIsSizeEditable] = useState(false);
 
@@ -57,8 +54,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     }
     setIsSizeEditable(false);
     const dimensions = ScreenSizes[selected];
-    handleScreenWidthChange(dimensions.width);
-    handleScreenHeightChange(dimensions.height);
+    handleScreenSizeChange(dimensions);
   };
 
   return (
@@ -79,9 +75,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         />
         <ScreensizeInput
           label="W"
-          startValue={width}
+          startValue={screenDimensions.width}
           onChange={(sizeEvent) => {
-            handleScreenWidthChange(Number(sizeEvent.target.value));
+            handleScreenSizeChange({
+              ...screenDimensions,
+              width: Number(sizeEvent.target.value),
+            });
           }}
           isActive={isSizeEditable}
           sx={{ mx: 2 }}
@@ -89,9 +88,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         <RiCloseLine size={16} color="#6F6E77" />
         <ScreensizeInput
           label="H"
-          startValue={height}
+          startValue={screenDimensions.height}
           onChange={(sizeEvent) => {
-            handleScreenHeightChange(Number(sizeEvent.target.value));
+            handleScreenSizeChange({
+              ...screenDimensions,
+              height: Number(sizeEvent.target.value),
+            });
           }}
           isActive={isSizeEditable}
           sx={{ ml: 2 }}
