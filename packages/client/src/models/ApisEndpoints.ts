@@ -25,17 +25,19 @@ export const StageApisEndpoints: ApisEndpoints = {
 };
 
 export const DevApisEndpoints = (): ApisEndpoints => {
+  const wroomApi: string | undefined = process.env.wroom_endpoint;
   const authenticationApi: string | undefined =
     process.env.authentication_server_endpoint;
   const modelsApi: string | undefined = process.env.customtypesapi_endpoint;
   const usersApi: string | undefined = process.env.user_service_endpoint;
   const aclApi: string | undefined = process.env.acl_provider_endpoint;
 
-  if (!authenticationApi || !modelsApi || !usersApi || !aclApi) {
+  if (!wroomApi || !authenticationApi || !modelsApi || !usersApi || !aclApi) {
     // providing relevant instructions
     console.error(`
       It seems you're trying to use Slice Machine in DEV mode without all the environment variables
       Here are the required environment variables
+      - Wroom API: ${wroomApi ? "👍" : "⛔️"}
       - Authentication API: ${authenticationApi ? "👍" : "⛔️"}
       - Custom Type API: ${modelsApi ? "👍" : "⛔️"}
       - Users API: ${usersApi ? "👍" : "⛔️"}
@@ -46,7 +48,7 @@ export const DevApisEndpoints = (): ApisEndpoints => {
   }
 
   return {
-    Wroom: "http://wroom.test/",
+    Wroom: addTrailingSlash(wroomApi),
     Authentication: addTrailingSlash(authenticationApi),
     Models: addTrailingSlash(modelsApi),
     Users: addTrailingSlash(usersApi),

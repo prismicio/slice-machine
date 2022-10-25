@@ -324,8 +324,7 @@ const AppTheme = (): Theme =>
         lineHeight: "16px",
         pl: 2,
         pr: 2,
-        pb: "6px",
-        pt: "6px",
+        py: "5px",
         cursor: "pointer",
         "&:hover": {
           background: "#F4F2F4",
