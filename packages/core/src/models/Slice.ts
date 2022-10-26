@@ -224,3 +224,9 @@ const SharedSliceContentItem /*: t.Type<SharedSliceContentT> */ = t.type({
 
 export const SharedSliceContent = t.array(SharedSliceContentItem);
 export type SharedSliceContent = t.TypeOf<typeof SharedSliceContent>;
+export const SliceOrEditorMock = t.union([
+  SharedSliceContentItem,
+  VariationMock,
+]);
+export const SliceOrEditorMocks = t.array(SliceOrEditorMock);
+export type SliceOrEditorMocks = t.TypeOf<typeof SliceOrEditorMocks>;
