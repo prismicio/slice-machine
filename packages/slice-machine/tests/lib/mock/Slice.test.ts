@@ -4,101 +4,13 @@ import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/s
 import { SliceSM, Slices } from "@slicemachine/core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
-import * as t from "io-ts";
 import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
-
 import {
-  GroupItemContentType,
-  EmptyContent,
-  UIDContent,
-  EmptyContentType,
-  UIDContentType,
-} from "@prismicio/types-internal/lib/documents/widgets";
-import {
-  SeparatorContent,
-  BooleanContent,
-  IntegrationFieldsContent,
-  StructuredTextContent,
-  ImageContent,
   GeoPointContent,
-  EmbedContent,
-  SeparatorContentType,
-  StructuredTextContentType,
+  StructuredTextContent,
 } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
-import { SharedSliceContentType } from "@prismicio/types-internal/lib/documents/widgets/slices";
-import { FieldContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/FieldContent";
-import { LinkContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link/LinkContent";
-import { BooleanContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/BooleanContent";
-
-const SeparatorContentC: t.Type<SeparatorContent> = t.type({
-  __TYPE__: t.literal(SeparatorContentType),
-});
-
-const StructuredTextContentC = t.type({
-  __TYPE__: t.literal(StructuredTextContentType),
-  value: StructuredTextContent,
-});
-
-const FieldTypes: Record<string, null> = [
-  "Text",
-  "Date",
-  "Timestamp",
-  "Color",
-  "Number",
-  "Range",
-  "Select",
-].reduce((acc, curr) => {
-  return { ...acc, [curr]: null };
-}, {}); // this causes some issues
-
-const FieldContentC = t.type({
-  __TYPE__: t.literal(FieldContentType),
-  type: t.keyof(FieldTypes),
-  value: t.string,
-});
-
-const EmptyContentC: t.Type<EmptyContent> = t.type({
-  __TYPE__: t.literal(EmptyContentType),
-  type: t.string,
-});
-
-const SimpleWidgetContent /*: t.Type<SimpleWidgetContentT>*/ = t.union([
-  IntegrationFieldsContent,
-  StructuredTextContentC,
-  ImageContent,
-  GeoPointContent, // weird that geo has now __TYPE__
-  EmbedContent,
-  t.type({
-    __TYPE__: t.literal(LinkContentType),
-    value: LinkContent,
-  }),
-  t.type({
-    __TYPE__: t.literal(UIDContentType),
-    value: UIDContent,
-  }),
-  SeparatorContentC,
-  FieldContentC,
-  t.type({
-    __TYPE__: t.literal(BooleanContentType),
-    value: BooleanContent,
-  }),
-  EmptyContentC,
-]);
-
-const GroupItemContent /*: t.Type<GroupItemContentT> */ = t.type({
-  __TYPE__: t.literal(GroupItemContentType),
-  value: t.array(t.tuple([t.string, SimpleWidgetContent])),
-});
-
-const SharedSliceContentItem /*: t.Type<SharedSliceContentT> */ = t.type({
-  variation: t.string,
-  primary: t.record(t.string, SimpleWidgetContent),
-  items: t.array(GroupItemContent),
-  __TYPE__: t.literal(SharedSliceContentType),
-});
-
-const SharedSliceContent = t.array(SharedSliceContentItem);
+import { SharedSliceContent } from "@slicemachine/core/build/models/Slice";
 
 jest.mock("lorem-ipsum", () => {
   return {
@@ -124,7 +36,7 @@ describe("MockSlice", () => {
       },
     };
 
-    const got = StructuredTextContentC.decode(text.title);
+    const got = StructuredTextContent.decode(text.title.value);
     expect(isRight(got)).toBeTruthy();
 
     const link = {

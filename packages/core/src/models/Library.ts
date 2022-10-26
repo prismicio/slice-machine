@@ -1,4 +1,4 @@
-import { SliceMock, SliceSM } from "./Slice";
+import { SharedSliceContent, SliceMock, SliceSM } from "./Slice";
 import type { LibraryMeta } from "../libraries";
 
 export type { LibraryMeta } from "../libraries";
@@ -9,7 +9,7 @@ export interface ComponentInfo {
   screenshots: {
     [variationId: string]: Screenshot;
   };
-  mock?: SliceMock;
+  mock?: SliceMock | SharedSliceContent;
 }
 
 export const ComponentInfo = {
