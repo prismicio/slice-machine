@@ -5,7 +5,7 @@ import MenuList from "./MenuList";
 
 import { Button, Box, ThemeUICSSObject } from "theme-ui";
 
-import { RiArrowDropDownFill } from "react-icons/ri";
+import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 
 type DropDownMenuProps = {
   options: string[];
@@ -51,25 +51,18 @@ export const DropDownMenu: React.FunctionComponent<DropDownMenuProps> = ({
             onChange={handleChange}
           />
         )}
-        containerClassName={"variationSelectorContainer"}
       >
         <Button
-          sx={{
-            fontSize: 14,
-            p: "3px",
-            pl: 2,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderRadius: "6px",
-            border: "1px solid #DCDBDD",
-            fontWeight: "bold",
-            ...buttonSx,
-          }}
-          variant="secondary"
+          sx={buttonSx}
+          variant="dropDownButton"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {current} <RiArrowDropDownFill size="24px" />
+          {current}{" "}
+          {!isOpen ? (
+            <RiArrowDropDownFill size="24px" />
+          ) : (
+            <RiArrowDropUpFill size="24px" />
+          )}
         </Button>
       </Popover>
     </Box>

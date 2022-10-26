@@ -302,6 +302,33 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
       },
+      dropDownButton: {
+        fontSize: "1",
+        p: "3px",
+        pl: 2,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderRadius: "6px",
+        border: "1px solid #DCDBDD",
+        fontWeight: "bold",
+        bg: "secondary",
+        fontFamily: "body",
+        color: "textClear",
+        "&:hover": {
+          bg: darken("secondary", 0.02),
+          cursor: "pointer",
+        },
+        "&:focus": {
+          bg: darken("secondary", 0.05),
+          borderColor: darken("secondary", 0.15),
+          outline: "none",
+        },
+        "&:active": {
+          bg: darken("secondary", 0.06),
+          outline: "none",
+        },
+      },
       small: {
         bg: "primary",
         borderRadius: "4px",

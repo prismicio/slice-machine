@@ -67,7 +67,13 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           onChange={(v) => redirect(Model, v, true)}
         />
       ) : null}
-      <Flex sx={{ alignItems: "center" }}>
+      <Flex
+        sx={{
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "flex-end",
+        }}
+      >
         <DropDownMenu
           options={Object.values(ScreenSizeOptions)}
           onChange={dropDownChangeHandler}
