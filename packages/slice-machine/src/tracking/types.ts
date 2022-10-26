@@ -170,6 +170,7 @@ export interface ScreenshotTaken extends BaseTrackingEvent {
   name: EventNames.ScreenshotTaken;
   props: {
     type: "custom" | "automatic";
+    method: "fromSimulator" | "upload" | "dragAndDrop";
   };
 }
 

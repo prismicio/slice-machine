@@ -80,6 +80,7 @@ import { changesPushCreator } from "./pushChangesSaga";
 import { SyncError } from "@src/models/SyncError";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { ScreenshotTaken } from "@src/tracking/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -388,13 +389,15 @@ const useSliceMachineActions = () => {
   const generateSliceScreenshot = (
     variationId: string,
     component: ComponentUI,
-    screenDimensions: ScreenDimensions
+    screenDimensions: ScreenDimensions,
+    method: ScreenshotTaken["props"]["method"]
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
         variationId,
         component,
         screenDimensions,
+        method,
       })
     );
   };
@@ -402,13 +405,15 @@ const useSliceMachineActions = () => {
   const generateSliceCustomScreenshot = (
     variationId: string,
     component: ComponentUI,
-    file: Blob
+    file: Blob,
+    method: ScreenshotTaken["props"]["method"]
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator.request({
         variationId,
         component,
         file,
+        method,
       })
     );
   };

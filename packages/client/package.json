@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/client",
-  "version": "1.1.15-dev-screenshotv2.1",
+  "version": "1.1.15-dev-screenshotv2.3",
   "main": "./build/index.js",
   "engines": {
     "node": ">=14"
@@ -18,11 +18,12 @@
     "audit": "better-npm-audit audit -l high -p",
     "prepublishOnly": "npm run test && npm run build",
     "audit-fix": "npm audit fix",
-    "test": "jest"
+    "test": "jest",
+    "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
     "@prismicio/types-internal": "^0.2.8",
-    "@slicemachine/core": "1.1.15-dev-screenshotv2.1",
+    "@slicemachine/core": "1.1.15-dev-screenshotv2.3",
     "axios": "^0.27.2",
     "form-data": "^3.0.0",
     "fp-ts": "^2.11.5",
@@ -35,10 +36,10 @@
     "@types/jest": "^27.0.2",
     "@types/mime": "^2.0.3",
     "@types/node": "^16.10.5",
-    "@types/uniqid": "^5.3.2",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "better-npm-audit": "^3.4.0",
+    "depcheck": "^1.4.3",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",

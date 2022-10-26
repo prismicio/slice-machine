@@ -16,12 +16,12 @@ const EmptyState = ({
 
   const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
     onHandleFile: (file: File) => {
-      generateSliceCustomScreenshot(variationID, slice, file);
+      generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
     },
   });
 
   const handleValidDrop = (file: File) => {
-    generateSliceCustomScreenshot(variationID, slice, file);
+    generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
   };
 
   return (
