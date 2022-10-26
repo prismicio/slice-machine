@@ -15,8 +15,13 @@ const EmptyState = ({
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
 
   const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
-    onHandleFile: (file: File) => {
-      generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
+    onHandleFile: (file: File, isDragActive: boolean) => {
+      generateSliceCustomScreenshot(
+        variationID,
+        slice,
+        file,
+        isDragActive ? "dragAndDrop" : "upload"
+      );
     },
   });
 
@@ -43,7 +48,10 @@ const EmptyState = ({
             <>
               <UploadIcon isActive={isDragActive} />
               <Text sx={{ my: 2 }}>Drop file to upload or ...</Text>
-              <FileInputRenderer {...fileInputProps} />
+              <FileInputRenderer
+                {...fileInputProps}
+                isDragActive={isDragActive}
+              />
               <Text sx={{ color: "greyIcon", mt: 1 }}>
                 Maximum file size: 128Mb
               </Text>

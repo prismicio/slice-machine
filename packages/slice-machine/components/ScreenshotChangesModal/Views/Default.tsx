@@ -15,7 +15,7 @@ export default function DefaultView({
 }: ViewRendererProps) {
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
   const handleValidDrop = (file: File) => {
-    generateSliceCustomScreenshot(variationID, slice, file);
+    generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
   };
 
   return (
