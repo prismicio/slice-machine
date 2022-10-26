@@ -40,6 +40,8 @@ jobs:
           user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: lerna run test
+      - name: Dependency Checks
+        run: npm run depcheck
       - name: Prettier
         run: npm run prettier:check
       - name: Linting

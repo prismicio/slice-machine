@@ -15,7 +15,8 @@
     "prepublishOnly": "npm run test && npm run build",
     "test": "jest",
     "tsc": "tsc --project tsconfig.json --noEmit",
-    "watch": "tsc --project tsconfig.json --noEmit --watch"
+    "watch": "tsc --project tsconfig.json --noEmit --watch",
+    "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
@@ -53,6 +54,7 @@
     "@typescript-eslint/parser": "^5.10.0",
     "babel-jest": "^27.0.2",
     "better-npm-audit": "^3.4.0",
+    "depcheck": "^1.4.3",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
