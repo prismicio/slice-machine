@@ -107,7 +107,7 @@ const VariationScreenshot: React.FC<{
           label={"Capture screenshot from Slice Simulator"}
         />
         {maybeScreenshot ? (
-          <FileInputRenderer {...fileInputProps}>
+          <FileInputRenderer {...fileInputProps} isDragActive={false}>
             <>
               <FiUpload
                 style={{
