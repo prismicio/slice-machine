@@ -5,10 +5,7 @@ import { SliceSM, Slices } from "@slicemachine/core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
-import {
-  GeoPointContent,
-  StructuredTextContent,
-} from "@prismicio/types-internal/lib/documents/widgets/nestable";
+import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
 import { SharedSliceContent } from "@slicemachine/core/build/models/Slice";
 
@@ -28,17 +25,25 @@ jest.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
 });
 
 describe("MockSlice", () => {
-  test("parse primary", () => {
-    const text = {
-      title: {
-        __TYPE__: "StructuredTextContent",
-        value: [{ type: "heading1", content: { text: "Woo" } }],
+  test("empty mock", () => {
+    const item: SharedSliceContent = [
+      {
+        variation: "default",
+        primary: {
+          title: {
+            __TYPE__: "StructuredTextContent",
+            value: [{ type: "heading1", content: { text: "Woo" } }],
+          },
+        },
+        items: [],
+        __TYPE__: "SharedSliceContent",
       },
-    };
+    ];
 
-    const got = StructuredTextContent.decode(text.title.value);
-    expect(isRight(got)).toBeTruthy();
-
+    const result = SharedSliceContent.decode(item);
+    expect(isRight(result)).toBeTruthy();
+  });
+  test("parse primary", () => {
     const link = {
       "link-2": {
         __TYPE__: "LinkContent",
@@ -124,6 +129,7 @@ describe("MockSlice", () => {
 
     expect(result).toEqual(wanted);
     const decoded = SharedSliceContent.decode(result);
+    // console.dir({ result, decoded }, { depth: null });
     expect(isRight(decoded)).toBeTruthy();
     // needs to be readable by core/mocks/models SliceMock
   });
