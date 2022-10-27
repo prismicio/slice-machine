@@ -52,7 +52,14 @@ const SliceVariations = ({
   return !hideVariations ? (
     <>
       {variations ? (
-        <Text sx={{ fontSize: 14, color: "textClear", flexShrink: 0 }}>
+        <Text
+          sx={{
+            fontSize: 14,
+            color: "textClear",
+            flexShrink: 0,
+            lineHeight: "24px",
+          }}
+        >
           {variations.length} variation{variations.length > 1 ? "s" : ""}
         </Text>
       ) : null}
@@ -71,6 +78,7 @@ const SliceScreenshotUpdate: React.FC<{
       justifyContent: "space-between",
       padding: 3,
       borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+      mt: 0,
     }}
   >
     <Button
@@ -106,14 +114,17 @@ const SliceDescription = ({
       <TextWithTooltip
         text={slice.model.name}
         as="h6"
-        sx={{ fontWeight: "600 !important" }}
+        sx={{
+          fontWeight: "600 !important",
+          maxWidth: "80%",
+          lineHeight: "24px !important",
+        }}
       />
     </Flex>
     <Flex
       sx={{
-        alignItems: "baseline;",
-        justifyContent: "space-between;",
-        mt: "5px",
+        alignItems: "center",
+        justifyContent: "space-between",
       }}
     >
       <SliceVariations
@@ -173,8 +184,6 @@ export const SharedSlice = {
     slice,
     Wrapper,
     StatusOrCustom,
-
-    thumbnailHeightPx = "290px",
     wrapperType = WrapperType.clickable,
     onUpdateScreenshot,
     sx,
@@ -188,10 +197,13 @@ export const SharedSlice = {
           isOnline: boolean;
         }
       | React.FC<{ slice: ComponentUI }>;
-    Wrapper?: React.FC<{ link?: { as: string }; slice: ComponentUI }>;
+    Wrapper?: React.FC<{
+      link?: { as: string };
+      slice: ComponentUI;
+      sx?: ThemeUIStyleObject;
+    }>;
     wrapperType?: WrapperType;
     onUpdateScreenshot?: (e: React.MouseEvent) => void;
-    thumbnailHeightPx?: string;
     sx?: ThemeUIStyleObject;
   }) {
     const defaultVariation = ComponentUI.variation(slice);
@@ -206,12 +218,23 @@ export const SharedSlice = {
     const screenshotUrl = slice?.screenshots?.[variationId]?.url;
 
     return (
-      <CardWrapper link={link} slice={slice}>
+      <CardWrapper
+        link={link}
+        slice={slice}
+        sx={{
+          borderColor: (t) => t.colors?.borders,
+          "&:focus": {
+            borderColor: "bordersFocused",
+          },
+        }}
+      >
         <Themecard
           role="button"
           aria-pressed="false"
           sx={{
-            border: (t) => `1px solid ${t.colors?.borders as string}`,
+            borderColor: "inherit",
+            borderWidth: "1px",
+            borderStyle: "solid",
             borderRadius: "6px",
             overflow: "hidden",
             ...defaultSx(sx),
@@ -226,7 +249,7 @@ export const SharedSlice = {
             <ScreenshotPreview
               src={screenshotUrl}
               sx={{
-                height: thumbnailHeightPx,
+                height: "198px",
                 borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
                 borderRadius: "4px 4px 0 0",
               }}
