@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Popover } from "react-tiny-popover";
 
 import MenuList from "./MenuList";
@@ -9,30 +9,23 @@ import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 
 type DropDownMenuProps = {
   options: string[];
+  currentValue: string;
   onChange: (selected: string) => void;
   buttonSx?: ThemeUICSSObject;
-  defaultValue?: string;
 };
 
+// Note: This is a controlled component that requires its state to be managed via the currentValue prop
 export const DropDownMenu: React.FunctionComponent<DropDownMenuProps> = ({
   buttonSx,
-  defaultValue,
+  currentValue,
   options,
   onChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [current, setCurrent] = useState<string>(defaultValue || options[0]);
-
-  useEffect(() => {
-    if (defaultValue) {
-      setCurrent(defaultValue);
-    }
-  }, [defaultValue]);
 
   const TRANSITION_DURATION = 200; //ms
   const handleChange = function (variation: string) {
     setIsOpen(false);
-    setCurrent(variation);
     setTimeout(() => onChange(variation), TRANSITION_DURATION + 10); // time to properly close the popover with transition
   };
 
@@ -46,7 +39,7 @@ export const DropDownMenu: React.FunctionComponent<DropDownMenuProps> = ({
         padding={2}
         content={() => (
           <MenuList
-            defaultValue={current}
+            defaultValue={currentValue}
             options={options}
             onChange={handleChange}
           />
@@ -57,7 +50,7 @@ export const DropDownMenu: React.FunctionComponent<DropDownMenuProps> = ({
           variant="dropDownButton"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {current}{" "}
+          {currentValue}{" "}
           {!isOpen ? (
             <RiArrowDropDownFill size="24px" />
           ) : (

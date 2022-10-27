@@ -27,7 +27,6 @@ type ScreensizeInputProps = {
   label: "H" | "W";
   startValue: number;
   onChange: (sizeEvent: React.ChangeEvent<HTMLInputElement>) => void;
-  isActive: boolean;
   sx?: ThemeUIStyleObject;
 };
 
@@ -35,7 +34,6 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
   label,
   startValue,
   onChange,
-  isActive,
   sx,
 }) => {
   return (
@@ -58,7 +56,6 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
           fontSize: "14px",
           alignItems: "center",
           justifyContent: "center",
-          "&:hover": { cursor: isActive ? "default" : "not-allowed" },
           position: "absolute",
           ml: "1px",
         }}
@@ -69,7 +66,6 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
       <Input
         type="number"
         name={`${label}-screensize-input`}
-        disabled={!isActive}
         sx={{
           width: 80,
           height: 32,
@@ -80,9 +76,7 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
             WebkitAppearance: "none",
             margin: 0,
           },
-          "&:hover": { cursor: isActive ? "default" : "not-allowed" },
           color: "greyIcon",
-          backgroundColor: isActive ? "white" : "grey07",
           textAlign: "center",
           paddingLeft: 26,
         }}

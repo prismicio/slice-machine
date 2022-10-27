@@ -45,16 +45,32 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   handleScreenSizeChange,
   screenDimensions,
 }) => {
-  const [isSizeEditable, setIsSizeEditable] = useState(false);
+  const [selectedDropdown, setSelectedDropdown] = useState<string>(
+    ScreenSizeOptions.DESKTOP
+  );
 
   const dropDownChangeHandler = (selected: string) => {
+    setSelectedDropdown(selected);
     if (selected === ScreenSizeOptions.CUSTOM) {
-      setIsSizeEditable(true);
       return;
     }
-    setIsSizeEditable(false);
     const dimensions = ScreenSizes[selected];
     handleScreenSizeChange(dimensions);
+  };
+
+  const screenSizeChangeHandler = (newScreenDimensions: ScreenDimensions) => {
+    const matchingIndex = Object.values(ScreenSizes).findIndex(
+      (dimension) =>
+        JSON.stringify(dimension) === JSON.stringify(newScreenDimensions)
+    );
+
+    const newDropDownState =
+      matchingIndex < 0
+        ? ScreenSizeOptions.CUSTOM
+        : Object.keys(ScreenSizes)[matchingIndex];
+
+    setSelectedDropdown(newDropDownState);
+    handleScreenSizeChange(newScreenDimensions);
   };
 
   return (
@@ -78,17 +94,17 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           options={Object.values(ScreenSizeOptions)}
           onChange={dropDownChangeHandler}
           buttonSx={{ alignSelf: "start" }}
+          currentValue={selectedDropdown}
         />
         <ScreensizeInput
           label="W"
           startValue={screenDimensions.width}
           onChange={(sizeEvent) => {
-            handleScreenSizeChange({
+            screenSizeChangeHandler({
               ...screenDimensions,
               width: Number(sizeEvent.target.value),
             });
           }}
-          isActive={isSizeEditable}
           sx={{ mx: 2 }}
         />
         <RiCloseLine size={16} color="#6F6E77" />
@@ -96,12 +112,11 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           label="H"
           startValue={screenDimensions.height}
           onChange={(sizeEvent) => {
-            handleScreenSizeChange({
+            screenSizeChangeHandler({
               ...screenDimensions,
               height: Number(sizeEvent.target.value),
             });
           }}
-          isActive={isSizeEditable}
           sx={{ ml: 2 }}
         />
       </Flex>
