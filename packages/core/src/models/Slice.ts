@@ -13,7 +13,6 @@ import {
   EmptyContentType,
   GroupItemContentType,
   UIDContent,
-  UIDContentType,
 } from "@prismicio/types-internal/lib/documents/widgets";
 import {
   BooleanContent,
@@ -23,12 +22,11 @@ import {
   IntegrationFieldsContent,
   type SeparatorContent,
   SeparatorContentType,
-  StructuredTextContent,
+  // StructuredTextContent,
+  Blocks,
+  Links,
   StructuredTextContentType,
 } from "@prismicio/types-internal/lib/documents/widgets/nestable";
-import { BooleanContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/BooleanContent";
-import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
-import { LinkContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link/LinkContent";
 import { SharedSliceContentType } from "@prismicio/types-internal/lib/documents/widgets/slices";
 
 const IMAGE_PLACEHOLDER_URL =
@@ -155,11 +153,6 @@ const SeparatorContentC: t.Type<SeparatorContent> = t.type({
   __TYPE__: t.literal(SeparatorContentType),
 });
 
-const StructuredTextContentC = t.type({
-  __TYPE__: t.literal(StructuredTextContentType),
-  value: StructuredTextContent,
-});
-
 const FieldTypes: Record<string, null> = [
   "Text",
   "Date",
@@ -183,31 +176,22 @@ const EmptyContentC: t.Type<EmptyContent> = t.type({
   type: t.string,
 });
 
-const SimpleWidgetContent /* t.Type<SimpleWidgetContentT> */ = t.union([
+export const SimpleWidgetContent /* t.Type<SimpleWidgetContentT> */ = t.union([
   IntegrationFieldsContent,
-  StructuredTextContentC,
+  // StructuredTextContent,
   ImageContent,
-  t.type({
-    __TYPE__: t.literal(GroupItemContentType),
-    value: GeoPointContent,
-  }),
   GeoPointContent, // weird that geo has no __TYPE__
   EmbedContent,
-  t.type({
-    __TYPE__: t.literal(LinkContentType),
-    value: LinkContent,
-  }),
-  t.type({
-    __TYPE__: t.literal(UIDContentType),
-    value: UIDContent,
-  }),
+  Links.Link,
+  BooleanContent,
+  UIDContent,
   SeparatorContentC,
+  EmptyContentC,
   FieldContentC,
   t.type({
-    __TYPE__: t.literal(BooleanContentType),
-    value: BooleanContent,
+    __TYPE__: t.literal(StructuredTextContentType),
+    value: t.array(Blocks.Block),
   }),
-  EmptyContentC,
 ]);
 
 const GroupItemContent /*: t.Type<GroupItemContentT> */ = t.type({
@@ -221,6 +205,22 @@ const SharedSliceContentItem /*: t.Type<SharedSliceContentT> */ = t.type({
   items: t.array(GroupItemContent),
   __TYPE__: t.literal(SharedSliceContentType),
 });
+
+type SharedSliceContentItem = t.TypeOf<typeof SharedSliceContentItem>;
+
+// const f: SharedSliceContentItem = {
+//   variation: 'default',
+//   primary: {
+//     title: {
+//       __TYPE__: 'StructuredTextContent',
+//       value: [
+//           { type: 'heading1', content: { text: 'Woo' } }
+//       ]
+//     },
+//   },
+//   items: [],
+//   __TYPE__: "SharedSliceContent",
+// }
 
 export const SharedSliceContent = t.array(SharedSliceContentItem);
 export type SharedSliceContent = t.TypeOf<typeof SharedSliceContent>;

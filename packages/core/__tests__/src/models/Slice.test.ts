@@ -1,5 +1,14 @@
-import { Slices, SliceSM } from "../../../src/models/Slice";
+import {
+  Slices,
+  SliceSM,
+  SimpleWidgetContent,
+} from "../../../src/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import {
+  StructuredTextContent,
+  Blocks,
+} from "@prismicio/types-internal/lib/documents/widgets/nestable";
+import { isLeft, isRight } from "fp-ts/lib/Either";
 
 const sliceObject = {
   id: "all_fields",
@@ -547,4 +556,33 @@ describe("Slice", () => {
     const result = Slices.fromSM(sliceArray);
     expect(result).toMatchObject(sliceObject);
   });
+});
+
+describe("SimpleWidgetCotent", () => {
+  test("StructuredTextContent", () => {
+    const block = Blocks.Block.decode({
+      type: "heading1",
+      content: { text: "Woo" },
+    });
+    if (isLeft(block)) {
+      console.dir(block.left, { depth: null });
+    }
+    expect(isRight(block)).toBeTruthy();
+
+    const item: StructuredTextContent = {
+      __TYPE__: "StructuredTextContent",
+      value: [{ type: "heading1", content: { text: "Woo" } }],
+    };
+
+    const result = SimpleWidgetContent.decode(item);
+    expect(isRight(result)).toBeTruthy();
+
+    // const result = StructuredTextContent.decode(item)
+    // if(isLeft(result)) {
+    //   console.dir(result.left, {depth: null})
+    // }
+    // expect(isRight(result)).toBeTruthy()
+  });
+
+  test.todo("IntegrationFieldsContent");
 });
