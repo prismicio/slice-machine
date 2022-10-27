@@ -95,9 +95,11 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       sx={{
         flex: 1,
         backgroundColor: "white",
+        minWidth: "fit-content",
         height: "100%",
         border: "1px solid #DCDBDD",
         borderRadius: 8,
+        overflow: "hidden",
         ...(dryRun ? { visibility: "hidden" } : {}),
       }}
     >

@@ -10,16 +10,16 @@ export enum ScreenSizeOptions {
 
 export const ScreenSizes: Record<string, ScreenDimensions> = {
   [ScreenSizeOptions.DESKTOP]: {
-    width: 1200,
+    width: 1280,
     height: 800,
   },
   [ScreenSizeOptions.TABLET]: {
-    width: 1024,
-    height: 800,
+    width: 1080,
+    height: 810,
   },
   [ScreenSizeOptions.MOBILE]: {
-    width: 400,
-    height: 850,
+    width: 390,
+    height: 844,
   },
 };
 

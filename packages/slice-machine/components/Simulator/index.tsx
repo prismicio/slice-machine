@@ -90,11 +90,13 @@ export default function Simulator() {
           handleScreenSizeChange={setScreenDimensions}
           screenDimensions={screenDimensions}
         />
-        <IframeRenderer
-          screenDimensions={screenDimensions}
-          simulatorUrl={simulatorUrl}
-          sliceView={sliceView}
-        />
+        <Flex style={{ flex: 1, overflow: "scroll" }}>
+          <IframeRenderer
+            screenDimensions={screenDimensions}
+            simulatorUrl={simulatorUrl}
+            sliceView={sliceView}
+          />
+        </Flex>
       </Box>
       {!!component.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
