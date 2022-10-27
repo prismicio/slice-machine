@@ -6,16 +6,18 @@ import { acceptedImagesTypes } from "@lib/consts";
 type HandleFileProp = {
   inputFile: React.RefObject<HTMLInputElement>;
   children?: React.ReactNode;
-  handleFile: (file: File | undefined) => void;
+  handleFile: (file: File | undefined, isDragActive: boolean) => void;
+  isDragActive: boolean;
 };
 type CustomScreenshotProps = {
-  onHandleFile: (file: File) => void;
+  onHandleFile: (file: File, isDragActive: boolean) => void;
 };
 
 const FileInputRenderer: React.FC<HandleFileProp> = ({
   inputFile,
   handleFile,
   children,
+  isDragActive,
 }) => (
   <>
     <Label
@@ -38,9 +40,9 @@ const FileInputRenderer: React.FC<HandleFileProp> = ({
       ref={inputFile}
       style={{ display: "none" }}
       accept={acceptedImagesTypes.map((type) => `image/${type}`).join(",")}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        handleFile(e.target.files?.[0])
-      }
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFile(e.target.files?.[0], isDragActive);
+      }}
     />
   </>
 );
@@ -59,9 +61,9 @@ export default function useCustomScreenshot({
   onHandleFile,
 }: CustomScreenshotProps): CustomScreenshotPayload {
   const inputFile = useRef<HTMLInputElement>(null);
-  const handleFile = (file: File | undefined) => {
+  const handleFile = (file: File | undefined, isDragActive: boolean) => {
     if (file) {
-      onHandleFile(file);
+      onHandleFile(file, isDragActive);
       if (inputFile?.current) {
         inputFile.current.value = "";
       }
