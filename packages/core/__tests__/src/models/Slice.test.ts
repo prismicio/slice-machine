@@ -6,9 +6,17 @@ import {
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import {
   StructuredTextContent,
+  IntegrationFieldsContent,
   Blocks,
+  BooleanContent,
+  SeparatorContent,
+  FieldContent,
 } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { isLeft, isRight } from "fp-ts/lib/Either";
+import {
+  EmptyContent,
+  UIDContent,
+} from "@prismicio/types-internal/lib/documents/widgets";
 
 const sliceObject = {
   id: "all_fields",
@@ -561,6 +569,7 @@ describe("Slice", () => {
 describe("SimpleWidgetCotent", () => {
   test("StructuredTextContent", () => {
     const block = Blocks.Block.decode({
+      // check more block types
       type: "heading1",
       content: { text: "Woo" },
     });
@@ -576,13 +585,123 @@ describe("SimpleWidgetCotent", () => {
 
     const result = SimpleWidgetContent.decode(item);
     expect(isRight(result)).toBeTruthy();
-
-    // const result = StructuredTextContent.decode(item)
-    // if(isLeft(result)) {
-    //   console.dir(result.left, {depth: null})
-    // }
-    // expect(isRight(result)).toBeTruthy()
   });
 
-  test.todo("IntegrationFieldsContent");
+  test("IntegrationFieldsContent", () => {
+    const item: IntegrationFieldsContent = {
+      __TYPE__: "IntegrationFieldsContent",
+      value: "some string",
+    };
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+
+  test("ImageContent", () => {
+    const item /*: ImageContent */ = {
+      __TYPE__: "ImageContent",
+      origin: {
+        id: "",
+        url: "",
+        width: 0,
+        height: 0,
+      },
+      width: 0,
+      height: 0,
+      edit: {
+        zoom: 0,
+        crop: { x: 0, y: 0 },
+        background: "",
+      },
+      url: "",
+      credits: "",
+      alt: "",
+      provider: "",
+      thumbnails: {
+        foo: {
+          origin: {
+            id: "",
+            url: "",
+            width: 0,
+            height: 0,
+          },
+          width: 0,
+          height: 0,
+          edit: {
+            zoom: 0,
+            crop: { x: 0, y: 0 },
+            background: "",
+          },
+          url: "",
+          credits: "",
+          alt: "",
+          provider: "",
+        },
+      },
+    };
+
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+  test("GeoPointContent", () => {
+    const item /* : GeoPointContent */ = {
+      position: { lat: 48.8583736, lng: 2.2922926 },
+      __TYPE__: "GeoPointContent",
+    };
+
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+  test("EmbedContent", () => {
+    const item /*: EmbedContent */ = {
+      __TYPE__: "EmbedContent",
+      embed_url: "",
+      type: "",
+      // more optional props
+    };
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+  test("Links.Link", () => {
+    // add other types of links
+    const item /*: Links.LinkContent */ = {
+      __TYPE__: "LinkContent",
+      value: { url: "http://twitter.com", __TYPE__: "ExternalLink" },
+    };
+
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+  test("BooleanContent", () => {
+    const item: BooleanContent = {
+      __TYPE__: "BooleanContent",
+      value: true,
+    };
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+
+  test("UIDContent", () => {
+    const item: UIDContent = {
+      __TYPE__: "UIDContent",
+      value: "wooo",
+    };
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+
+  test("SeparatorContent", () => {
+    const item: SeparatorContent = {
+      __TYPE__: "SeparatorContent",
+    };
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+  test("EmptyContent", () => {
+    const item: EmptyContent = {
+      __TYPE__: "EmptyContent",
+      type: "woo",
+    };
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
+  test("FieldContent", () => {
+    const item: FieldContent = {
+      __TYPE__: "FieldContent",
+      value: "foo",
+      type: "Text",
+    };
+
+    expect(isRight(SimpleWidgetContent.decode(item))).toBeTruthy();
+  });
 });

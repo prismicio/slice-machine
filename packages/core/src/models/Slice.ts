@@ -9,25 +9,23 @@ import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
 import { FieldContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/FieldContent";
 import {
-  EmptyContent,
   EmptyContentType,
   GroupItemContentType,
-  UIDContent,
+  UIDContentType,
 } from "@prismicio/types-internal/lib/documents/widgets";
 import {
-  BooleanContent,
   EmbedContent,
   GeoPointContent,
   ImageContent,
-  IntegrationFieldsContent,
-  type SeparatorContent,
   SeparatorContentType,
-  // StructuredTextContent,
   Blocks,
   Links,
   StructuredTextContentType,
 } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { SharedSliceContentType } from "@prismicio/types-internal/lib/documents/widgets/slices";
+import { IntegrationFieldsContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/IntegrationFieldsContent";
+import { BooleanContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/BooleanContent";
+import { LinkContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link/LinkContent";
 
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
@@ -149,10 +147,6 @@ export const Slices = {
   },
 };
 
-const SeparatorContentC: t.Type<SeparatorContent> = t.type({
-  __TYPE__: t.literal(SeparatorContentType),
-});
-
 const FieldTypes: Record<string, null> = [
   "Text",
   "Date",
@@ -165,41 +159,50 @@ const FieldTypes: Record<string, null> = [
   return { ...acc, [curr]: null };
 }, {}); // this causes some issues
 
-const FieldContentC = t.type({
-  __TYPE__: t.literal(FieldContentType),
-  type: t.keyof(FieldTypes),
-  value: t.string,
-});
-
-const EmptyContentC: t.Type<EmptyContent> = t.type({
-  __TYPE__: t.literal(EmptyContentType),
-  type: t.string,
-});
-
-export const SimpleWidgetContent /* t.Type<SimpleWidgetContentT> */ = t.union([
-  IntegrationFieldsContent,
-  // StructuredTextContent,
+export const SimpleWidgetContent = t.union([
   ImageContent,
   GeoPointContent, // weird that geo has no __TYPE__
   EmbedContent,
-  Links.Link,
-  BooleanContent,
-  UIDContent,
-  SeparatorContentC,
-  EmptyContentC,
-  FieldContentC,
+  t.type({
+    __TYPE__: t.literal(SeparatorContentType),
+  }),
+  t.type({
+    __TYPE__: t.literal(EmptyContentType),
+    type: t.string,
+  }),
+  t.type({
+    __TYPE__: t.literal(FieldContentType),
+    type: t.keyof(FieldTypes),
+    value: t.string,
+  }),
   t.type({
     __TYPE__: t.literal(StructuredTextContentType),
     value: t.array(Blocks.Block),
   }),
+  t.type({
+    __TYPE__: t.literal(IntegrationFieldsContentType),
+    value: t.string,
+  }),
+  t.type({
+    __TYPE__: t.literal(BooleanContentType),
+    value: t.boolean,
+  }),
+  t.type({
+    __TYPE__: t.literal(UIDContentType),
+    value: t.string,
+  }),
+  t.type({
+    __TYPE__: t.literal(LinkContentType),
+    value: Links.Link,
+  }),
 ]);
 
-const GroupItemContent /*: t.Type<GroupItemContentT> */ = t.type({
+const GroupItemContent = t.type({
   __TYPE__: t.literal(GroupItemContentType),
   value: t.array(t.tuple([t.string, SimpleWidgetContent])),
 });
 
-const SharedSliceContentItem /*: t.Type<SharedSliceContentT> */ = t.type({
+const SharedSliceContentItem = t.type({
   variation: t.string,
   primary: t.record(t.string, SimpleWidgetContent),
   items: t.array(GroupItemContent),
@@ -207,20 +210,6 @@ const SharedSliceContentItem /*: t.Type<SharedSliceContentT> */ = t.type({
 });
 
 type SharedSliceContentItem = t.TypeOf<typeof SharedSliceContentItem>;
-
-// const f: SharedSliceContentItem = {
-//   variation: 'default',
-//   primary: {
-//     title: {
-//       __TYPE__: 'StructuredTextContent',
-//       value: [
-//           { type: 'heading1', content: { text: 'Woo' } }
-//       ]
-//     },
-//   },
-//   items: [],
-//   __TYPE__: "SharedSliceContent",
-// }
 
 export const SharedSliceContent = t.array(SharedSliceContentItem);
 export type SharedSliceContent = t.TypeOf<typeof SharedSliceContent>;
