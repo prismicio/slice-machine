@@ -146,7 +146,13 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           </ThemeButton>
         </Link>
       )}
-      <ScreenshotChangesModal slices={[component]} />
+      <ScreenshotChangesModal
+        slices={[component]}
+        defaultVariationSelector={{
+          sliceID: component.model.id,
+          variationID: variation.id,
+        }}
+      />
     </Box>
   );
 };
