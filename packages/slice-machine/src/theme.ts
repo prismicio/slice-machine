@@ -329,6 +329,10 @@ const AppTheme = (): Theme =>
           bg: darken("secondary", 0.06),
           outline: "none",
         },
+        "&:disabled": {
+          cursor: "not-allowed",
+          color: alpha("textClear", 0.6),
+        },
       },
       small: {
         bg: "primary",

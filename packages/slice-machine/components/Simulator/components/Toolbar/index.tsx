@@ -75,14 +75,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <Flex sx={{ flexDirection: "row", justifyContent: "space-between", mb: 3 }}>
-      {Model.model.variations.length > 1 ? (
-        <VarationsPopover
-          buttonSx={{ p: 1 }}
-          defaultValue={variation}
-          variations={Model.model.variations}
-          onChange={(v) => redirect(Model, v, true)}
-        />
-      ) : null}
+      <VarationsPopover
+        defaultValue={variation}
+        variations={Model.model.variations}
+        onChange={(v) => redirect(Model, v, true)}
+        disabled={Model.model.variations.length <= 1}
+      />
       <Flex
         sx={{
           alignItems: "center",
