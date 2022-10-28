@@ -78,7 +78,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 ) && (
                   <Text
                     sx={{
-                      mr: 2,
+                      mr: 3,
                       color: "warning02",
                       fontSize: "12px",
                       lineHeight: "16px",

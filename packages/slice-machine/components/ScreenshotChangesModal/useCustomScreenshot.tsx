@@ -30,6 +30,7 @@ const FileInputRenderer: React.FC<HandleFileProp> = ({
         justifyContent: "center",
         width: 200,
         alignItems: "center",
+        flex: 1,
       }}
     >
       {children || "Select file"}
