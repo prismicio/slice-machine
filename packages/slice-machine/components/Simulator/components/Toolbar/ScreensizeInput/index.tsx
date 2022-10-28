@@ -47,7 +47,7 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
         sx={{
           backgroundColor: "grey07",
           border: "transparent",
-          borderRight: "1px solid #DCDBDD",
+          borderRight: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
           borderRadius: "6px 0px 0px 6px",
           width: 26,
           height: 30,

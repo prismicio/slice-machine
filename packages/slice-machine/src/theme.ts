@@ -69,6 +69,7 @@ const AppTheme = (): Theme =>
       sidebar: "#F1F1F4",
       link: "#5163BA",
       choggleBox: "#5163BA",
+      darkBorder: "#DCDBDD",
       code: {
         border: "#DFE1E5",
         blue: "#3B41BD",

@@ -15,7 +15,7 @@ const MenuList: React.FunctionComponent<{
         overflow: "auto",
         display: "flex",
         borderRadius: "6px",
-        border: `1px solid #DCDBDD`,
+        border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         boxShadow: "0 10px 10px rgba(0, 0, 0, 0.05)",
         maxHeight: 340,
         minWidth: 180,
