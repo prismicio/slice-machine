@@ -3,10 +3,10 @@ import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 import { Box, Flex } from "theme-ui";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
-import { Size, iframeSizes } from "../ScreenSizes";
 import { SliceView } from "../..";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SetupError } from "../SetupError";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
@@ -48,14 +48,14 @@ function useSimulatorClient(): readonly [
 }
 
 type IframeRendererProps = {
-  size: Size;
+  screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
   sliceView: SliceView;
   dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
-  size,
+  screenDimensions,
   simulatorUrl,
   sliceView,
   dryRun = false,
@@ -88,46 +88,67 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, size, sliceView]);
+  }, [client, screenDimensions, sliceView]);
 
   return (
     <Box
       sx={{
-        flex: "1",
-        bg: "grey01",
+        flex: 1,
+        backgroundColor: "white",
+        minWidth: "fit-content",
+        height: "100%",
+        border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
+        borderRadius: 8,
+        overflow: "hidden",
         ...(dryRun ? { visibility: "hidden" } : {}),
       }}
     >
       <Flex
         sx={{
+          height: "100%",
+          backgroundImage: "url(/pattern.png)",
+          backgroundColor: "headSection",
+          backgroundRepeat: "repeat",
+          backgroundSize: "10px",
+          border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
+          width: "fit-content",
+          mx: "auto",
+          flexDirection: "column",
           justifyContent: "center",
-          borderTop: "1px solid #F1F1F1",
-          margin: "0 auto",
-          overflow: "auto",
-          ...iframeSizes[size],
-          ...(dryRun
-            ? {
-                position: "absolute",
-                top: "0",
-                width: "0",
-                height: "0",
-              }
-            : {}),
         }}
       >
-        {simulatorUrl ? (
-          <iframe
-            ref={ref}
-            src={simulatorUrl}
-            style={{
-              border: "none",
-              height: "100%",
-              width: "100%",
-            }}
-          />
-        ) : (
-          <SetupError />
-        )}
+        <Flex
+          sx={{
+            justifyContent: "center",
+            margin: "0 auto",
+            overflow: "auto",
+            alignContent: "center",
+            width: screenDimensions.width,
+            height: screenDimensions.height,
+            ...(dryRun
+              ? {
+                  position: "absolute",
+                  top: "0",
+                  width: "0",
+                  height: "0",
+                }
+              : {}),
+          }}
+        >
+          {simulatorUrl ? (
+            <iframe
+              ref={ref}
+              src={simulatorUrl}
+              style={{
+                border: "none",
+                height: "100%",
+                width: "100%",
+              }}
+            />
+          ) : (
+            <SetupError />
+          )}
+        </Flex>
       </Flex>
     </Box>
   );

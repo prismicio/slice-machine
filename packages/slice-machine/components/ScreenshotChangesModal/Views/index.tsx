@@ -15,10 +15,13 @@ import DefaultView from "./Default";
 import { AiOutlineEye } from "react-icons/ai";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 import IframeRenderer from "@components/Simulator/components/IframeRenderer";
-import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { useMemo } from "react";
 import { Button } from "@components/Button";
+import {
+  ScreenSizeOptions,
+  ScreenSizes,
+} from "@components/Simulator/components/Toolbar/ScreensizeInput";
 
 enum ScreenshotView {
   Default = 1,
@@ -130,9 +133,9 @@ const VariationScreenshot: React.FC<{
       {isWaitingForIframeCheck && (
         <IframeRenderer
           dryRun
-          size={Size.FULL}
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
+          screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
         />
       )}
     </>
