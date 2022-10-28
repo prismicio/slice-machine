@@ -3,11 +3,8 @@ import * as Models from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import { useMemo } from "react";
-import IframeRenderer from "../IframeRenderer";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
-import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
-import { selectSimulatorUrl } from "@src/modules/environment";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { Button } from "@components/Button";
@@ -40,15 +37,14 @@ const Header: React.FunctionComponent<PropTypes> = ({
     );
   };
 
-  const { isWaitingForIframeCheck, simulatorUrl, isSavingScreenshot } =
-    useSelector((store: SliceMachineStoreType) => ({
-      simulatorUrl: selectSimulatorUrl(store),
-      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(store),
+  const { isSavingScreenshot } = useSelector(
+    (store: SliceMachineStoreType) => ({
       isSavingScreenshot: isLoading(
         store,
         LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
       ),
-    }));
+    })
+  );
 
   const sliceView = useMemo(
     () =>
@@ -90,14 +86,6 @@ const Header: React.FunctionComponent<PropTypes> = ({
         isLoading={isSavingScreenshot}
         Icon={AiFillCamera}
       />
-      {isWaitingForIframeCheck && (
-        <IframeRenderer
-          dryRun
-          simulatorUrl={simulatorUrl}
-          sliceView={sliceView}
-          screenDimensions={screenDimensions}
-        />
-      )}
     </Box>
   );
 };
