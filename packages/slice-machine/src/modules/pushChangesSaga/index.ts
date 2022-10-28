@@ -12,7 +12,11 @@ import {
 } from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "../loading";
-import { pushCustomTypeCreator, pushSliceCreator } from "./actions";
+import {
+  pushCustomTypeCreator,
+  pushSliceCreator,
+  syncChangeCreator,
+} from "./actions";
 import { openToasterCreator, ToasterType } from "../toaster";
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
@@ -243,6 +247,9 @@ export function* changesPushSaga({
 
   // close the custom toaster
   yield closeSyncToaster();
+
+  // Send global success event
+  yield put(syncChangeCreator());
 
   // Display success toaster
   yield put(

@@ -14,4 +14,5 @@ export type UserContextStoreType = {
   };
   hasSeenTutorialsTooTip: boolean;
   authStatus: AuthStatus;
+  lastSyncChange: number | null;
 };

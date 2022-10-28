@@ -17,6 +17,7 @@ import { isModalOpen } from "@src/modules/modal";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
+  getLastSyncChange,
   userHasDoneTheOnboarding,
   userHasSendAReview,
 } from "@src/modules/userContext";
@@ -24,16 +25,16 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import Tracker from "@src/tracking/client";
-import { selectCustomTypeCount } from "@src/modules/availableCustomTypes";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getLibraries } from "@src/modules/slices";
 
 Modal.setAppElement("#__next");
 
-const ratingSelectable = [1, 2, 3, 4, 5, 6, 7];
+const ratingSelectable = [1, 2, 3, 4, 5];
 
 const SelectReviewComponent = ({ field, form }: FieldProps) => {
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
       {ratingSelectable.map((rating, index) => (
         <Button
           variant="secondary"
@@ -65,16 +66,18 @@ const ReviewModal: React.FunctionComponent = () => {
     isLoginModalOpen,
     hasSendAReview,
     hasDoneTheOnboarding,
-    customTypeCount,
+    customTypes,
     libraries,
+    lastSyncChange,
   } = useSelector((store: SliceMachineStoreType) => ({
     env: getEnvironment(store),
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
     isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
     hasSendAReview: userHasSendAReview(store),
     hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
-    customTypeCount: selectCustomTypeCount(store),
+    customTypes: selectAllCustomTypes(store),
     libraries: getLibraries(store),
+    lastSyncChange: getLastSyncChange(store),
   }));
 
   const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =
@@ -83,15 +86,25 @@ const ReviewModal: React.FunctionComponent = () => {
   const sliceCount =
     libraries && libraries.length
       ? libraries.reduce((count, lib) => {
-          if (!lib) {
-            return count;
-          }
-
+          if (!lib) return count;
           return count + lib.components.length;
         }, 0)
       : 0;
 
-  const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
+  const hasSliceWithinCustomType = customTypes.some((customType) =>
+    customType.local.tabs.some(
+      (tab) => tab.sliceZone && tab.sliceZone?.value.length > 0
+    )
+  );
+
+  const hasPushedAnHourAgo =
+    lastSyncChange && Date.now() - lastSyncChange >= 3600000;
+
+  const userHasCreatedEnoughContent =
+    sliceCount >= 1 &&
+    customTypes.length >= 1 &&
+    hasSliceWithinCustomType &&
+    hasPushedAnHourAgo;
 
   const onSendAReview = (rating: number, comment: string): void => {
     startLoadingReview();
@@ -110,7 +123,7 @@ const ReviewModal: React.FunctionComponent = () => {
   return (
     <SliceMachineModal
       isOpen={
-        userHasCreateEnoughContent && !hasSendAReview && hasDoneTheOnboarding
+        userHasCreatedEnoughContent && !hasSendAReview && hasDoneTheOnboarding
       }
       shouldCloseOnOverlayClick={false}
       onRequestClose={() => skipReview()}
@@ -182,8 +195,8 @@ const ReviewModal: React.FunctionComponent = () => {
                 }}
               >
                 <Text variant={"xs"} as={"p"} sx={{ maxWidth: 302, mb: 3 }}>
-                  Overall, how difficult was your first experience using
-                  Slicemachine?
+                  Overall, how satisfied or dissatisfied are you with your first
+                  experience with Slice Machine?
                 </Text>
                 <Box
                   mb={2}
@@ -194,10 +207,10 @@ const ReviewModal: React.FunctionComponent = () => {
                   }}
                 >
                   <Text variant={"xs"} as={"p"}>
-                    Very difficult
+                    Very unsatisfied
                   </Text>
                   <Text variant={"xs"} as={"p"}>
-                    Very easy
+                    Very statisfied
                   </Text>
                 </Box>
                 <Field name={"rating"} component={SelectReviewComponent} />
@@ -205,12 +218,12 @@ const ReviewModal: React.FunctionComponent = () => {
                   name={"comment"}
                   type="text"
                   placeholder={
-                    "Sorry about that! What did you find the most difficult?"
+                    "Sorry about that! What did you find unsatisfactory?"
                   }
                   as={Textarea}
                   autoComplete="off"
                   className={
-                    values.rating >= 5 || values.rating === 0 ? "hidden" : ""
+                    values.rating > 3 || values.rating === 0 ? "hidden" : ""
                   }
                   sx={{
                     height: 80,
