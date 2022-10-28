@@ -7,7 +7,7 @@ const AppTheme = (): Theme =>
     initialColorModeName: "light",
     colors: {
       text: "#25252D",
-      textClear: "#4E4E55",
+      textClear: "#6F6E77",
       grayLight: "#E8E8ED",
       hoverBackground: "#f2f2f2",
       background: "#FFF",
@@ -55,7 +55,8 @@ const AppTheme = (): Theme =>
       grey05: "#667587",
       grey07: "#F9F8F9",
       greyTransparent: "rgba(37, 37, 45, 0.4)",
-      borders: "#C9D0D8",
+      borders: "#E4E2E4",
+      bordersFocused: "#6E56CF",
       deep: "#0E2150",
       deep1: "#A0ADE7",
       lightGreen: "#EBF8F1",

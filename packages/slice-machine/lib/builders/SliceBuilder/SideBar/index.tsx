@@ -83,7 +83,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         <ScreenshotPreview
           src={screenshots[variation.id]?.url}
           sx={{
-            height: "290px",
+            height: "198px",
             borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
             borderRadius: "4px 4px 0 0",
           }}
