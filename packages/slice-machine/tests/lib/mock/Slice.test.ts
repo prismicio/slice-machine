@@ -1,13 +1,12 @@
 import "@testing-library/jest-dom";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SliceSM, Slices } from "@slicemachine/core/build/models";
+import { SliceSM, Slices, SliceMock } from "@slicemachine/core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
 import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
-import { SharedSliceContent } from "@slicemachine/core/build/models/Slice";
 
 jest.mock("lorem-ipsum", () => {
   return {
@@ -26,7 +25,7 @@ jest.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
 
 describe("MockSlice", () => {
   test("empty mock", () => {
-    const item: SharedSliceContent = [
+    const item: SliceMock = [
       {
         variation: "default",
         primary: {
@@ -40,7 +39,7 @@ describe("MockSlice", () => {
       },
     ];
 
-    const result = SharedSliceContent.decode(item);
+    const result = SliceMock.decode(item);
     expect(isRight(result)).toBeTruthy();
   });
   test("parse primary", () => {
@@ -128,7 +127,7 @@ describe("MockSlice", () => {
     const result = MockSlice(model, mockConfig);
 
     expect(result).toEqual(wanted);
-    const decoded = SharedSliceContent.decode(result);
+    const decoded = SliceMock.decode(result);
     // console.dir({ result, decoded }, { depth: null });
     expect(isRight(decoded)).toBeTruthy();
     // needs to be readable by core/mocks/models SliceMock
@@ -228,7 +227,7 @@ describe("MockSlice", () => {
 
     const result = MockSlice(model, mockConfig);
     expect(result).toEqual(wanted);
-    const decoded = SharedSliceContent.decode(result);
+    const decoded = SliceMock.decode(result);
     expect(isRight(decoded)).toBeTruthy();
   });
 
@@ -236,7 +235,7 @@ describe("MockSlice", () => {
     const model = Slices.toSM({ ...allFieldSliceModel });
     const mock = MockSlice(model, {});
     // console.dir({ mock }, { depth: null });
-    const result = SharedSliceContent.decode(mock);
+    const result = SliceMock.decode(mock);
     // console.dir(result, { depth: null });
     expect(isRight(result)).toBeTruthy();
   });

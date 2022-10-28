@@ -30,6 +30,70 @@ import { LinkContentType } from "@prismicio/types-internal/lib/documents/widgets
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
 
+const FieldTypes: Record<string, null> = [
+  "Text",
+  "Date",
+  "Timestamp",
+  "Color",
+  "Number",
+  "Range",
+  "Select",
+].reduce((acc, curr) => {
+  return { ...acc, [curr]: null };
+}, {}); // this causes some issues
+
+export const SimpleWidgetContent = t.union([
+  ImageContent,
+  GeoPointContent, // weird that geo has no __TYPE__
+  EmbedContent,
+  t.type({
+    __TYPE__: t.literal(SeparatorContentType),
+  }),
+  t.type({
+    __TYPE__: t.literal(EmptyContentType),
+    type: t.string,
+  }),
+  t.type({
+    __TYPE__: t.literal(FieldContentType),
+    type: t.keyof(FieldTypes),
+    value: t.string,
+  }),
+  t.type({
+    __TYPE__: t.literal(StructuredTextContentType),
+    value: t.array(Blocks.Block),
+  }),
+  t.type({
+    __TYPE__: t.literal(IntegrationFieldsContentType),
+    value: t.string,
+  }),
+  t.type({
+    __TYPE__: t.literal(BooleanContentType),
+    value: t.boolean,
+  }),
+  t.type({
+    __TYPE__: t.literal(UIDContentType),
+    value: t.string,
+  }),
+  t.type({
+    __TYPE__: t.literal(LinkContentType),
+    value: Links.Link,
+  }),
+]);
+
+const GroupItemContent = t.type({
+  __TYPE__: t.literal(GroupItemContentType),
+  value: t.array(t.tuple([t.string, SimpleWidgetContent])),
+});
+
+export const VariationMock = t.type({
+  variation: t.string,
+  primary: t.record(t.string, SimpleWidgetContent),
+  items: t.array(GroupItemContent),
+  __TYPE__: t.literal(SharedSliceContentType),
+});
+
+export type VariationMock = t.TypeOf<typeof VariationMock>;
+
 export enum WidgetsArea {
   Primary = "primary",
   Items = "items",
@@ -50,16 +114,8 @@ export const VariationSM = t.intersection([
     display: t.string,
   }),
 ]);
+
 export type VariationSM = t.TypeOf<typeof VariationSM>;
-
-export const VariationMock = t.type({
-  variation: t.string,
-  slice_type: t.string,
-  items: t.array(t.unknown),
-  primary: t.record(t.string, t.unknown),
-});
-
-export type VariationMock = t.TypeOf<typeof VariationMock>;
 
 export const SliceMock = t.array(VariationMock);
 export type SliceMock = t.TypeOf<typeof SliceMock>;
@@ -146,76 +202,3 @@ export const Slices = {
     );
   },
 };
-
-const FieldTypes: Record<string, null> = [
-  "Text",
-  "Date",
-  "Timestamp",
-  "Color",
-  "Number",
-  "Range",
-  "Select",
-].reduce((acc, curr) => {
-  return { ...acc, [curr]: null };
-}, {}); // this causes some issues
-
-export const SimpleWidgetContent = t.union([
-  ImageContent,
-  GeoPointContent, // weird that geo has no __TYPE__
-  EmbedContent,
-  t.type({
-    __TYPE__: t.literal(SeparatorContentType),
-  }),
-  t.type({
-    __TYPE__: t.literal(EmptyContentType),
-    type: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(FieldContentType),
-    type: t.keyof(FieldTypes),
-    value: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(StructuredTextContentType),
-    value: t.array(Blocks.Block),
-  }),
-  t.type({
-    __TYPE__: t.literal(IntegrationFieldsContentType),
-    value: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(BooleanContentType),
-    value: t.boolean,
-  }),
-  t.type({
-    __TYPE__: t.literal(UIDContentType),
-    value: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(LinkContentType),
-    value: Links.Link,
-  }),
-]);
-
-const GroupItemContent = t.type({
-  __TYPE__: t.literal(GroupItemContentType),
-  value: t.array(t.tuple([t.string, SimpleWidgetContent])),
-});
-
-const SharedSliceContentItem = t.type({
-  variation: t.string,
-  primary: t.record(t.string, SimpleWidgetContent),
-  items: t.array(GroupItemContent),
-  __TYPE__: t.literal(SharedSliceContentType),
-});
-
-type SharedSliceContentItem = t.TypeOf<typeof SharedSliceContentItem>;
-
-export const SharedSliceContent = t.array(SharedSliceContentItem);
-export type SharedSliceContent = t.TypeOf<typeof SharedSliceContent>;
-export const SliceOrEditorMock = t.union([
-  SharedSliceContentItem,
-  VariationMock,
-]);
-export const SliceOrEditorMocks = t.array(SliceOrEditorMock);
-export type SliceOrEditorMocks = t.TypeOf<typeof SliceOrEditorMocks>;

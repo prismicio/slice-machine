@@ -1,8 +1,8 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import * as t from "io-ts";
-import { SliceOrEditorMock } from "./Slice";
+import { VariationMock } from "./Slice";
 
-export const ComponentMocksRecord = t.record(t.string, SliceOrEditorMock);
+export const ComponentMocksRecord = t.record(t.string, VariationMock);
 export type ComponentMocksRecord = t.TypeOf<typeof ComponentMocksRecord>;
 
 export const ComponentMeta = t.type({
