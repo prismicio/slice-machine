@@ -25,7 +25,7 @@ export const ScreenSizes: Record<string, ScreenDimensions> = {
 
 type ScreensizeInputProps = {
   label: "H" | "W";
-  startValue: number;
+  startValue: string;
   onChange: (sizeEvent: React.ChangeEvent<HTMLInputElement>) => void;
   sx?: ThemeUIStyleObject;
 };
@@ -64,7 +64,7 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
         {label}
       </Label>
       <Input
-        type="tel" // Prevents leading 0 from being displayed after the input is cleared
+        type="number"
         name={`${label}-screensize-input`}
         sx={{
           width: 80,
