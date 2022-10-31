@@ -1,9 +1,5 @@
 name: 'Cache node modules'
 description: 'Cache node modules'
-outputs:
-  cache-hit:
-    description: 'True if cache was hit, false otherwise'
-    value: ${{ steps.restore-cache.outputs.cache-hit }}
 runs:
   using: 'composite'
   steps:
@@ -15,6 +11,6 @@ runs:
           node_modules
           */*/node_modules
           ~/.cache/Cypress
-        key: abcd-${{ runner.os }}-lerna-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-lerna-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          abcd-${{ runner.os }}-lerna-
+          ${{ runner.os }}-lerna-
