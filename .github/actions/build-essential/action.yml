@@ -5,4 +5,4 @@ runs:
   steps:
     - name: Build essential packages used by others
       shell: bash
-      run: npm run build-essential && npm run build --prefix packages/init && npm run build --prefix packages/slice-machine
+      run: npm run build-essential

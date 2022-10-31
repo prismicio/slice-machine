@@ -111,6 +111,8 @@ jobs:
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/build-essential
+      - name: Install slice-machine and init
+        run: npm run build --prefix packages/init && npm run build --prefix packages/slice-machine
       - name: Running End to End tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
