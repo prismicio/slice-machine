@@ -64,7 +64,7 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
         {label}
       </Label>
       <Input
-        type="number"
+        type="tel" // Prevents leading 0 from being displayed after the input is cleared
         name={`${label}-screensize-input`}
         sx={{
           width: 80,
@@ -82,6 +82,12 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
         }}
         onChange={onChange}
         value={startValue}
+        min="0"
+        onKeyDown={(event) => {
+          if (event.key === "e" || event.key === "-" || event.key === "+") {
+            event.preventDefault();
+          }
+        }}
       />
     </Flex>
   );
