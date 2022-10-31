@@ -149,13 +149,12 @@ const ScreenshotChangesModal = ({
     >
       <Card
         radius={"0px"}
-        bodySx={{ p: 0, bg: "#FFF", position: "relative", height: "100%" }}
-        sx={{ border: "none", height: "60vh" }}
+        bodySx={{ p: 0, bg: "#FFF", position: "relative", height: "404px" }}
+        sx={{ border: "none", height: "469px" }}
         Header={({ radius }: { radius: string | number }) => (
           <Flex
             sx={{
               p: "16px",
-              pl: 4,
               alignItems: "center",
               justifyContent: "space-between",
               borderTopLeftRadius: radius,
