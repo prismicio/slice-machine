@@ -79,30 +79,6 @@ jobs:
       - name: Audit
         run: lerna run audit
 
-  build-init:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Build slice machine init
-        working-directory: ./packages/init
-        run: npm run build
-
-  build-ui:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Build and export slice machine UI
-        working-directory: ./packages/slice-machine
-        run: npm run build && npm run export-build
-
   e2e-tests:
     needs: install-deps
     runs-on: [ubuntu-latest]
@@ -111,8 +87,12 @@ jobs:
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/build-essential
-      - name: Install slice-machine and init
-        run: npm run build --prefix packages/init && npm run build --prefix packages/slice-machine
+      - name: Build slice machine init
+        working-directory: ./packages/init
+        run: npm run build
+      - name: Build and export slice machine UI
+        working-directory: ./packages/slice-machine
+        run: npm run build && npm run export-build
       - name: Running End to End tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
