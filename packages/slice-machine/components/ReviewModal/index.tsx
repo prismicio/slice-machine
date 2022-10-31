@@ -91,14 +91,15 @@ const ReviewModal: React.FunctionComponent = () => {
         }, 0)
       : 0;
 
-  const hasSliceWithinCustomType = customTypes.some((customType) =>
+  const hasSliceWithinCustomType: boolean = customTypes.some((customType) =>
     customType.local.tabs.some(
       (tab) => tab.sliceZone && tab.sliceZone?.value.length > 0
     )
   );
 
-  const hasPushedAnHourAgo =
-    lastSyncChange && Date.now() - lastSyncChange >= 3600000;
+  const hasPushedAnHourAgo = Boolean(
+    lastSyncChange && Date.now() - lastSyncChange >= 3600000
+  );
 
   const userHasCreatedEnoughContent =
     sliceCount >= 1 &&
