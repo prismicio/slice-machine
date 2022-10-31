@@ -96,7 +96,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         />
         <ScreensizeInput
           label="W"
-          startValue={screenDimensions.width}
+          startValue={screenDimensions.width.toString()}
           onChange={(sizeEvent) => {
             screenSizeChangeHandler({
               ...screenDimensions,
@@ -108,7 +108,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         <RiCloseLine size={16} color="#6F6E77" />
         <ScreensizeInput
           label="H"
-          startValue={screenDimensions.height}
+          startValue={screenDimensions.height.toString()}
           onChange={(sizeEvent) => {
             screenSizeChangeHandler({
               ...screenDimensions,

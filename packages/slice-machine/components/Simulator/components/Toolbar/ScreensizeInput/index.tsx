@@ -25,7 +25,7 @@ export const ScreenSizes: Record<string, ScreenDimensions> = {
 
 type ScreensizeInputProps = {
   label: "H" | "W";
-  startValue: number;
+  startValue: string;
   onChange: (sizeEvent: React.ChangeEvent<HTMLInputElement>) => void;
   sx?: ThemeUIStyleObject;
 };
@@ -82,6 +82,12 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
         }}
         onChange={onChange}
         value={startValue}
+        min="0"
+        onKeyDown={(event) => {
+          if (event.key === "e" || event.key === "-" || event.key === "+") {
+            event.preventDefault();
+          }
+        }}
       />
     </Flex>
   );
