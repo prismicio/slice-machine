@@ -36,6 +36,8 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
   onChange,
   sx,
 }) => {
+  const disabledCharacters = ["e", "-", "+", ",", "."];
+
   return (
     <Flex
       sx={{
@@ -84,7 +86,7 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
         value={startValue}
         min="0"
         onKeyDown={(event) => {
-          if (event.key === "e" || event.key === "-" || event.key === "+") {
+          if (disabledCharacters.includes(event.key)) {
             event.preventDefault();
           }
         }}
