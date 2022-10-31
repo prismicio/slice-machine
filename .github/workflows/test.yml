@@ -3,7 +3,7 @@ name: test
 on: [push]
 
 jobs:
-  build:
+  install-deps:
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
@@ -14,23 +14,15 @@ jobs:
       - name: List all dependencies
         shell: bash
         run: npm list
-      - name: Build essential packages used by others
-        run: npm run build-essential
 
   unit-tests:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
-      - name: Install dependencies
-        run: npm i
-      - name: List all dependencies
-        shell: bash
-        run: npm list
-      - name: Build essential packages used by others
-        run: npm run build-essential
+      - uses: ./.github/actions/build-essential
       - name: Running functional and unit tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
@@ -44,74 +36,81 @@ jobs:
         run: lerna run test
   
   dep-check:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Dependency Checks
         run: npm run depcheck
   
   prettier:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Prettier
         run: npm run prettier:check
   
   linting:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Linting
         run: lerna run lint
 
   audit:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Audit
         run: lerna run audit
 
   build-init:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Build slice machine init
         working-directory: ./packages/init
         run: npm run build
 
   build-ui:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine
         run: npm run build && npm run export-build
 
   e2e-tests:
-    needs: build
+    needs: install-deps
     runs-on: [ubuntu-latest]
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Running End to End tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
