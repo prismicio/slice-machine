@@ -4,16 +4,18 @@ import React from "react";
 import { Box, Text } from "theme-ui";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { useModelStatus } from "@src/hooks/useModelStatus";
+import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 
 export const CustomTypeTable: React.FC<{
   customTypes: FrontEndCustomType[];
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
 
-  const firstColumnWidth = "33%";
-  const secondColumnWidth = "33%";
-  const thirdColumnWidth = "17%";
-  const fourthColumnWidth = "17%";
+  const firstColumnWidth = "27%";
+  const secondColumnWidth = "27%";
+  const thirdColumnWidth = "20%";
+  const fourthColumnWidth = "20%";
+  const fifthColumnWidth = "6%";
 
   return (
     <Box
@@ -36,6 +38,7 @@ export const CustomTypeTable: React.FC<{
           <Box as={"th"} sx={{ width: fourthColumnWidth }}>
             Status
           </Box>
+          <Box as={"th"} sx={{ width: fifthColumnWidth }} />
         </tr>
       </thead>
       <tbody>
@@ -67,6 +70,9 @@ export const CustomTypeTable: React.FC<{
                   data-for={`${customType.local.id}-tooltip`}
                   data-tip
                 />
+              </Box>
+              <Box as={"td"} style={{ width: fifthColumnWidth }}>
+                <KebabMenuDropdown />
               </Box>
             </tr>
           </Link>

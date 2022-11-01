@@ -338,6 +338,7 @@ const AppTheme = (): Theme =>
           bg: darken("secondary", 0.05),
           borderColor: darken("secondary", 0.15),
           outline: "none",
+          boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08);",
         },
         "&:active": {
           bg: darken("secondary", 0.06),

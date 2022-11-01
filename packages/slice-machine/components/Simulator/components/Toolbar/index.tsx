@@ -1,4 +1,4 @@
-import { DropDownMenu } from "@components/DropDownMenu";
+import { DropDownSelector } from "@components/DropDownSelector";
 import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { VariationSM } from "@slicemachine/core/build/models";
@@ -88,7 +88,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           justifyContent: "flex-end",
         }}
       >
-        <DropDownMenu
+        <DropDownSelector
           options={Object.values(ScreenSizeOptions)}
           onChange={dropDownChangeHandler}
           buttonSx={{ alignSelf: "start" }}
