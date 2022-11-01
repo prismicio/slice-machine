@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Flex } from "theme-ui";
+import { MenuOption } from ".";
 
 const MenuItem: React.FunctionComponent<{
   value: string;
@@ -23,14 +24,10 @@ const MenuItem: React.FunctionComponent<{
   );
 };
 
-type MenuOption = {
-  displayName: string;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-};
-
 export const KebabMenuList: React.FunctionComponent<{
   menuOptions: MenuOption[];
-}> = ({ menuOptions }) => {
+  closeMenu: () => void;
+}> = ({ menuOptions, closeMenu }) => {
   return (
     <Box
       sx={{
@@ -51,7 +48,13 @@ export const KebabMenuList: React.FunctionComponent<{
       <Flex sx={{ p: 0, flexDirection: "column" }}>
         {menuOptions.map((option) => {
           return (
-            <MenuItem value={option.displayName} onClick={option.onClick} />
+            <MenuItem
+              value={option.displayName}
+              onClick={(event) => {
+                closeMenu();
+                option.onClick(event);
+              }}
+            />
           );
         })}
       </Flex>

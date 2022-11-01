@@ -72,7 +72,24 @@ export const CustomTypeTable: React.FC<{
                 />
               </Box>
               <Box as={"td"} style={{ width: fifthColumnWidth }}>
-                <KebabMenuDropdown />
+                <KebabMenuDropdown
+                  menuOptions={[
+                    {
+                      displayName: "Rename",
+                      onClick: (event) => {
+                        event.stopPropagation();
+                        alert("Renaming");
+                      },
+                    },
+                    {
+                      displayName: "Delete",
+                      onClick: (event) => {
+                        event.stopPropagation();
+                        alert("Deleting");
+                      },
+                    },
+                  ]}
+                />
               </Box>
             </tr>
           </Link>

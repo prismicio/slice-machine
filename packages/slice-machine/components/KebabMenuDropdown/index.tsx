@@ -4,7 +4,18 @@ import { Popover } from "react-tiny-popover";
 import { Box, Button } from "theme-ui";
 import { KebabMenuList } from "./KebabMenuList";
 
-export const KebabMenuDropdown: React.FC = () => {
+export type MenuOption = {
+  displayName: string;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+};
+
+type KebabMenuDropdownProps = {
+  menuOptions: MenuOption[];
+};
+
+export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
+  menuOptions,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -17,24 +28,8 @@ export const KebabMenuDropdown: React.FC = () => {
         padding={2}
         content={() => (
           <KebabMenuList
-            menuOptions={[
-              {
-                displayName: "Rename",
-                onClick: (event) => {
-                  event.stopPropagation();
-                  setIsOpen(false);
-                  alert("Renaming");
-                },
-              },
-              {
-                displayName: "Delete",
-                onClick: (event) => {
-                  event.stopPropagation();
-                  setIsOpen(false);
-                  alert("Deleting");
-                },
-              },
-            ]}
+            menuOptions={menuOptions}
+            closeMenu={() => setIsOpen(false)}
           />
         )}
       >
