@@ -11,15 +11,6 @@ import { FieldsSM } from "./Fields";
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
 
-export const VariationMock = t.type({
-  variation: t.string,
-  slice_type: t.string,
-  items: t.array(t.unknown),
-  primary: t.record(t.string, t.unknown),
-});
-
-export type VariationMock = t.TypeOf<typeof VariationMock>;
-
 export enum WidgetsArea {
   Primary = "primary",
   Items = "items",
@@ -42,9 +33,6 @@ export const VariationSM = t.intersection([
 ]);
 
 export type VariationSM = t.TypeOf<typeof VariationSM>;
-
-export const SliceMock = t.array(VariationMock);
-export type SliceMock = t.TypeOf<typeof SliceMock>;
 
 export const SliceSM = t.intersection([
   t.type({

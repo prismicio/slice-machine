@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SliceSM, Slices, SliceMock } from "@slicemachine/core/build/models";
+import { SliceSM, Slices } from "@slicemachine/core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
-import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
+// import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
 import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
 
@@ -24,24 +24,6 @@ jest.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
 });
 
 describe("MockSlice", () => {
-  test("empty mock", () => {
-    const item: SliceMock = [
-      {
-        variation: "default",
-        primary: {
-          title: {
-            __TYPE__: "StructuredTextContent",
-            value: [{ type: "heading1", content: { text: "Woo" } }],
-          },
-        },
-        items: [],
-        slice_type: "SharedSliceContent",
-      },
-    ];
-
-    const result = SliceMock.decode(item);
-    expect(isRight(result)).toBeTruthy();
-  });
   test("parse primary", () => {
     const link = {
       "link-2": {
@@ -127,7 +109,8 @@ describe("MockSlice", () => {
     const result = MockSlice(model, mockConfig);
 
     expect(result).toEqual(wanted);
-    // const decoded = SliceMock.decode(result); TODO: check the codec we use for SharedSliceContent[]
+    // TODO: check the codec we use for SharedSliceContent[]
+    // const decoded = SliceMock.decode(result);
     // expect(isRight(decoded)).toBeTruthy();
     // needs to be readable by core/mocks/models SliceMock
   });
@@ -226,14 +209,17 @@ describe("MockSlice", () => {
 
     const result = MockSlice(model, mockConfig);
     expect(result).toEqual(wanted);
-    // const decoded = SliceMock.decode(result); // TODO: check with the mock reader that this is valid
+    // TODO: check with the mock reader that this is valid
+    // const decoded = SliceMock.decode(result);
     // expect(isRight(decoded)).toBeTruthy();
   });
 
-  test.skip("allFieldSliceModel", () => {
-    const model = Slices.toSM({ ...allFieldSliceModel });
-    const mock = MockSlice(model, {});
-    const result = SliceMock.decode(mock); // change slice mock to the codec for SharedSliceContent[]
-    expect(isRight(result)).toBeTruthy();
-  });
+  // change slice mock to the codec for SharedSliceContent[]
+  // test.skip("allFieldSliceModel", () => {
+  //   const model = Slices.toSM({ ...allFieldSliceModel });
+  //   const mock = MockSlice(model, {});
+  //
+  //   const result = SliceMock.decode(mock);
+  //   expect(isRight(result)).toBeTruthy();
+  // });
 });
