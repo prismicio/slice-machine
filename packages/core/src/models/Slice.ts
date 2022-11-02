@@ -7,89 +7,15 @@ import {
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
-import { FieldContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/FieldContent";
-import {
-  EmptyContentType,
-  GroupItemContentType,
-  UIDContentType,
-} from "@prismicio/types-internal/lib/documents/widgets";
-import {
-  EmbedContent,
-  GeoPointContent,
-  ImageContent,
-  SeparatorContentType,
-  Blocks,
-  Links,
-  StructuredTextContentType,
-} from "@prismicio/types-internal/lib/documents/widgets/nestable";
-import { SharedSliceContentType } from "@prismicio/types-internal/lib/documents/widgets/slices";
-import { IntegrationFieldsContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/IntegrationFieldsContent";
-import { BooleanContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/BooleanContent";
-import { LinkContentType } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link/LinkContent";
 
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
 
-const FieldTypes: Record<string, null> = [
-  "Text",
-  "Date",
-  "Timestamp",
-  "Color",
-  "Number",
-  "Range",
-  "Select",
-].reduce((acc, curr) => {
-  return { ...acc, [curr]: null };
-}, {}); // this causes some issues
-
-export const SimpleWidgetContent = t.union([
-  ImageContent,
-  GeoPointContent, // weird that geo has no __TYPE__
-  EmbedContent,
-  t.type({
-    __TYPE__: t.literal(SeparatorContentType),
-  }),
-  t.type({
-    __TYPE__: t.literal(EmptyContentType),
-    type: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(FieldContentType),
-    type: t.keyof(FieldTypes),
-    value: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(StructuredTextContentType),
-    value: t.array(Blocks.Block),
-  }),
-  t.type({
-    __TYPE__: t.literal(IntegrationFieldsContentType),
-    value: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(BooleanContentType),
-    value: t.boolean,
-  }),
-  t.type({
-    __TYPE__: t.literal(UIDContentType),
-    value: t.string,
-  }),
-  t.type({
-    __TYPE__: t.literal(LinkContentType),
-    value: Links.Link,
-  }),
-]);
-
-const GroupItemContent = t.type({
-  __TYPE__: t.literal(GroupItemContentType),
-  value: t.array(t.tuple([t.string, SimpleWidgetContent])),
-});
-
 export const VariationMock = t.type({
   variation: t.string,
-  primary: t.record(t.string, SimpleWidgetContent),
-  items: t.array(GroupItemContent),
-  __TYPE__: t.literal(SharedSliceContentType),
+  slice_type: t.string,
+  items: t.array(t.unknown),
+  primary: t.record(t.string, t.unknown),
 });
 
 export type VariationMock = t.TypeOf<typeof VariationMock>;
