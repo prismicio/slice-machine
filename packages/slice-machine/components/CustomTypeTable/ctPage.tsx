@@ -78,14 +78,12 @@ export const CustomTypeTable: React.FC<{
                       displayName: "Rename",
                       onClick: (event) => {
                         event.stopPropagation();
-                        alert("Renaming");
                       },
                     },
                     {
                       displayName: "Delete",
                       onClick: (event) => {
                         event.stopPropagation();
-                        alert("Deleting");
                       },
                     },
                   ]}
