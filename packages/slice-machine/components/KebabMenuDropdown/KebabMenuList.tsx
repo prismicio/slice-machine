@@ -2,10 +2,11 @@ import React from "react";
 import { Box, Flex } from "theme-ui";
 import { MenuOption } from ".";
 
-const MenuItem: React.FunctionComponent<{
-  value: string;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-}> = ({ value, onClick }) => {
+const MenuItem: React.FunctionComponent<MenuOption> = ({
+  displayName,
+  onClick,
+  dataCy,
+}) => {
   return (
     <Box
       sx={{
@@ -18,8 +19,9 @@ const MenuItem: React.FunctionComponent<{
         },
       }}
       onClick={onClick}
+      data-cy={dataCy}
     >
-      {value}
+      {displayName}
     </Box>
   );
 };
@@ -27,9 +29,11 @@ const MenuItem: React.FunctionComponent<{
 export const KebabMenuList: React.FunctionComponent<{
   menuOptions: MenuOption[];
   closeMenu: () => void;
-}> = ({ menuOptions, closeMenu }) => {
+  dataCy?: string;
+}> = ({ menuOptions, closeMenu, dataCy }) => {
   return (
     <Box
+      data-cy={dataCy}
       sx={{
         py: 0,
         flexDirection: "column",
@@ -49,11 +53,12 @@ export const KebabMenuList: React.FunctionComponent<{
         {menuOptions.map((option) => {
           return (
             <MenuItem
-              value={option.displayName}
+              displayName={option.displayName}
               onClick={(event) => {
                 closeMenu();
                 option.onClick(event);
               }}
+              dataCy={option.dataCy}
             />
           );
         })}

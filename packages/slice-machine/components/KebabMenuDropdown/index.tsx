@@ -7,14 +7,17 @@ import { KebabMenuList } from "./KebabMenuList";
 export type MenuOption = {
   displayName: string;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  dataCy?: string;
 };
 
 type KebabMenuDropdownProps = {
   menuOptions: MenuOption[];
+  dataCy?: string;
 };
 
 export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
   menuOptions,
+  dataCy,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,6 +33,7 @@ export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
           <KebabMenuList
             menuOptions={menuOptions}
             closeMenu={() => setIsOpen(false)}
+            dataCy={dataCy && `${dataCy}-dropdown`}
           />
         )}
       >
@@ -44,6 +48,7 @@ export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
             event.stopPropagation();
             setIsOpen(!isOpen);
           }}
+          data-cy={dataCy}
         >
           <BsThreeDotsVertical color="#6F6E77" size={16} />
         </Button>
