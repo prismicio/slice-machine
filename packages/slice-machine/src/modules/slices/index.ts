@@ -21,12 +21,12 @@ import { SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
+import { saveSliceCreator } from "../selectedSlice/actions";
+import { pushSliceCreator } from "../pushChangesSaga/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
-  saveSliceCreator,
-} from "../selectedSlice/actions";
-import { pushSliceCreator } from "../pushChangesSaga/actions";
+} from "../screenshots/actions";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
 
@@ -198,14 +198,26 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
     case getType(generateSliceScreenshotCreator.success):
     case getType(generateSliceCustomScreenshotCreator.success): {
-      const { component } = action.payload;
+      const { component, screenshot, variationId } = action.payload;
 
       const newLibraries = state.libraries.map((library) => {
         if (library.name !== component.from) return library;
         return {
           ...library,
           components: library.components.map((c) =>
-            c.model.id === component.model.id ? component : c
+            c.model.id === component.model.id
+              ? {
+                  ...component,
+                  screenshots: {
+                    ...component.screenshots,
+                    ...(screenshot
+                      ? {
+                          [variationId]: screenshot,
+                        }
+                      : {}),
+                  },
+                }
+              : c
           ),
         };
       });

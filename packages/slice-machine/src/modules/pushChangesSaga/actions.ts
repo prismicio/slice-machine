@@ -1,4 +1,4 @@
-import { createAsyncAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
@@ -25,3 +25,5 @@ export const pushSliceCreator = createAsyncAction(
     component: ComponentUI;
   }
 >();
+
+export const syncChangeCreator = createAction("SYNC_CHANGE_SUCCESS")();

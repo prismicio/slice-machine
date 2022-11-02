@@ -3,44 +3,90 @@ name: test
 on: [push]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        node-version: [16.x]
+  install-deps:
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Restore cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-lerna-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-lerna-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
+      - uses: ./.github/actions/restore-cache
+      - uses: ./.github/actions/setup-node
       - name: Install dependencies
         run: npm i
-      - name: Build essential packages used by others
-        run: npm run build-essential
+      - name: List all dependencies
+        shell: bash
+        run: npm list
+
+  unit-tests:
+    needs: install-deps
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/restore-cache
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Running functional and unit tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
           REPO_URL: ${{ secrets.REPO_URL }}
+          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
+          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
+          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
+          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
+          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: lerna run test
+  
+  dep-check:
+    needs: install-deps
+    runs-on: [ubuntu-latest]
+    steps: 
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/restore-cache
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
+      - name: Dependency Checks
+        run: npm run depcheck
+  
+  prettier:
+    needs: install-deps
+    runs-on: [ubuntu-latest]
+    steps: 
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/restore-cache
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Prettier
         run: npm run prettier:check
+  
+  linting:
+    needs: install-deps
+    runs-on: [ubuntu-latest]
+    steps: 
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/restore-cache
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Linting
         run: lerna run lint
+
+  audit:
+    needs: install-deps
+    runs-on: [ubuntu-latest]
+    steps: 
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/restore-cache
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Audit
         run: lerna run audit
+
+  e2e-tests:
+    needs: install-deps
+    runs-on: [ubuntu-latest]
+    steps: 
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/restore-cache
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/build-essential
       - name: Build slice machine init
         working-directory: ./packages/init
         run: npm run build
@@ -51,5 +97,10 @@ jobs:
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-          CYPRESS_URL: ${{ secrets.CYPRESS_URL }}
+          PRISMIC_URL: ${{ secrets.PRISMIC_URL }}
+          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
+          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
+          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
+          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
+          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: npm i && npm run test:e2e

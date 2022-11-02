@@ -8,6 +8,7 @@ module.exports = {
   moduleNameMapper: {
     "^lib(.*)$": "<rootDir>/lib$1",
     "^src(.*)$": "<rootDir>/src$1",
+    "^tests(.*)$": "<rootDir>/tests$1",
     "^components(.*)$": "<rootDir>/components$1",
   },
   transform: {

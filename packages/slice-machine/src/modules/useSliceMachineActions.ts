@@ -58,8 +58,6 @@ import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
   deleteSliceWidgetMockCreator,
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
   initSliceStoreCreator,
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
@@ -67,6 +65,10 @@ import {
   saveSliceCreator,
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
+import {
+  generateSliceCustomScreenshotCreator,
+  generateSliceScreenshotCreator,
+} from "./screenshots/actions";
 import {
   pushCustomTypeCreator,
   pushSliceCreator,
@@ -77,6 +79,8 @@ import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 import { changesPushCreator } from "./pushChangesSaga";
 import { SyncError } from "@src/models/SyncError";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { ScreenshotTaken } from "@src/tracking/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -103,6 +107,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeScreenshotsModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
+  const openScreenshotsModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const closeCreateSliceModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openCreateSliceModal = () =>
@@ -119,6 +127,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openRenameCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+  const openScreenshotPreviewModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
+  const closeScreenshotPreviewModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -375,13 +387,17 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
+    variationId: string,
     component: ComponentUI,
-    setData: (data: any) => void
+    screenDimensions: ScreenDimensions,
+    method: ScreenshotTaken["props"]["method"]
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
+        variationId,
         component,
-        setData,
+        screenDimensions,
+        method,
       })
     );
   };
@@ -389,15 +405,15 @@ const useSliceMachineActions = () => {
   const generateSliceCustomScreenshot = (
     variationId: string,
     component: ComponentUI,
-    setData: (data: any) => void,
-    file: Blob
+    file: Blob,
+    method: ScreenshotTaken["props"]["method"]
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator.request({
         variationId,
         component,
-        setData,
         file,
+        method,
       })
     );
   };
@@ -467,8 +483,10 @@ const useSliceMachineActions = () => {
     );
 
   // Toaster store
-  const openToaster = (message: string, type: ToasterType) =>
-    dispatch(openToasterCreator({ message, type }));
+  const openToaster = (
+    message: string,
+    type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
+  ) => dispatch(openToasterCreator({ message, type }));
 
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {
@@ -493,6 +511,8 @@ const useSliceMachineActions = () => {
     openSetupDrawer,
     refreshState,
     finishOnboarding,
+    closeScreenshotsModal,
+    openScreenshotsModal,
     openLoginModal,
     closeLoginModal,
     startLoadingLogin,
@@ -544,6 +564,8 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
     closeRenameCustomTypeModal,
+    openScreenshotPreviewModal,
+    closeScreenshotPreviewModal,
     openCreateSliceModal,
     closeCreateSliceModal,
     openRenameSliceModal,
