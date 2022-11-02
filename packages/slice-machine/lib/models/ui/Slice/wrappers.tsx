@@ -1,12 +1,14 @@
-import { Link as ThemeLink } from "theme-ui";
+import { Link as ThemeLink, ThemeUIStyleObject } from "theme-ui";
 import Link from "next/link";
 
 export const LinkCardWrapper = ({
   link,
   children,
+  sx,
 }: {
   link: { as: string } | undefined;
   children: React.ReactNode;
+  sx?: ThemeUIStyleObject;
 }) => {
   //TODO: make the redirection through "connected-next-router" so that the router location is synched with redux
   return (
@@ -15,6 +17,7 @@ export const LinkCardWrapper = ({
         sx={{
           textDecoration: "none",
           color: "inherit",
+          ...sx,
         }}
         as="a"
       >

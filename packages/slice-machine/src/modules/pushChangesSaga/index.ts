@@ -12,7 +12,11 @@ import {
 } from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "../loading";
-import { pushCustomTypeCreator, pushSliceCreator } from "./actions";
+import {
+  pushCustomTypeCreator,
+  pushSliceCreator,
+  syncChangeCreator,
+} from "./actions";
 import { openToasterCreator, ToasterType } from "../toaster";
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
@@ -28,6 +32,7 @@ import { SyncError } from "@src/models/SyncError";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import Tracker from "@src/tracking/client";
+import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 
 const startTimer =
   (startTime = Date.now()) =>
@@ -65,6 +70,10 @@ export function* changesPushSaga({
   const customTypesDeleted = 0;
   let errors = 0;
   const endTimer = startTimer();
+  const missingScreenshots: number = unSyncedSlices.reduce(
+    (sum: number, slice: ComponentUI) => sum + countMissingScreenshots(slice),
+    0
+  );
 
   const sendTracking = () =>
     Tracker.get().trackChangesPushed({
@@ -77,6 +86,7 @@ export function* changesPushSaga({
       errors,
       total: totalNumberOfChanges,
       duration: endTimer(),
+      missingScreenshots,
     });
 
   // Open the custom toaster
@@ -237,6 +247,9 @@ export function* changesPushSaga({
 
   // close the custom toaster
   yield closeSyncToaster();
+
+  // Send global success event
+  yield put(syncChangeCreator());
 
   // Display success toaster
   yield put(

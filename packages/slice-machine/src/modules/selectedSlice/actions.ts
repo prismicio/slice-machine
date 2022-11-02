@@ -5,6 +5,11 @@ import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
+import { refreshStateCreator } from "../environment";
+import {
+  generateSliceCustomScreenshotCreator,
+  generateSliceScreenshotCreator,
+} from "../screenshots/actions";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -14,11 +19,12 @@ export type SelectedSliceActions =
   | ActionType<typeof removeSliceWidgetCreator>
   | ActionType<typeof updateSliceWidgetMockCreator>
   | ActionType<typeof deleteSliceWidgetMockCreator>
-  | ActionType<typeof generateSliceScreenshotCreator>
-  | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof saveSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
-  | ActionType<typeof renameSliceCreator>;
+  | ActionType<typeof renameSliceCreator>
+  | ActionType<typeof refreshStateCreator>
+  | ActionType<typeof generateSliceScreenshotCreator>
+  | ActionType<typeof generateSliceCustomScreenshotCreator>;
 
 export const initSliceStoreCreator =
   createAction("SLICE/INIT")<SelectedSliceStoreType>();
@@ -70,32 +76,6 @@ export const deleteSliceWidgetMockCreator = createAction(
   widgetArea: Models.WidgetsArea;
   newKey: string;
 }>();
-
-export const generateSliceScreenshotCreator = createAsyncAction(
-  "SLICE/TAKE_SCREENSHOT.REQUEST",
-  "SLICE/TAKE_SCREENSHOT.RESPONSE",
-  "SLICE/TAKE_SCREENSHOT.FAILURE"
-)<
-  {
-    component: ComponentUI;
-    setData: (data: any) => void;
-  },
-  { component: ComponentUI }
->();
-
-export const generateSliceCustomScreenshotCreator = createAsyncAction(
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT.REQUEST",
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT.RESPONSE",
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT.FAILURE"
-)<
-  {
-    variationId: string;
-    component: ComponentUI;
-    setData: (data: any) => void;
-    file: Blob;
-  },
-  { component: ComponentUI }
->();
 
 export const saveSliceCreator = createAsyncAction(
   "SLICE/SAVE.REQUEST",

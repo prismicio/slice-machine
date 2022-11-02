@@ -1,18 +1,21 @@
 import { ScreenshotUI } from "./ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/models";
 
-export type Screenshots = Record<VariationSM["id"], ScreenshotUI>;
-
+export interface ScreenDimensions {
+  width: number;
+  height: number;
+}
 export interface ScreenshotRequest {
   libraryName: string;
   sliceName: string;
+  variationId: string;
+  screenDimensions: ScreenDimensions;
 }
 
 export interface ScreenshotResponse {
   err: Error | null;
   reason: string | null;
   warning?: string | null;
-  screenshots: Screenshots;
+  screenshot: ScreenshotUI | null;
 }
 
 export type TmpFile = File & { path: string };

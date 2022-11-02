@@ -1,5 +1,5 @@
 import { FieldArray } from "formik";
-import { Checkbox } from "theme-ui";
+import { Checkbox, Box } from "theme-ui";
 
 import { SharedSlice } from "@lib/models/ui/Slice";
 
@@ -20,14 +20,11 @@ const UpdateSliceZoneModalList: React.FC<{
         defineElementKey={(slice: ComponentUI) => slice.model.name}
         renderElem={(slice: ComponentUI) => {
           return SharedSlice.render({
-            bordered: true,
-            thumbnailHeightPx: "220px",
             slice: slice,
-            Wrapper: ({ slice, children }) => {
+            Wrapper: ({ slice, children, sx }) => {
               return (
-                <div
+                <Box
                   data-testid="slicezone-modal-item"
-                  style={{ cursor: "pointer" }}
                   onClick={() => {
                     const isInSliceZone = values.sliceKeys.includes(
                       slice.model.id
@@ -40,17 +37,26 @@ const UpdateSliceZoneModalList: React.FC<{
                     arrayHelpers.push(slice.model.id);
                   }}
                   key={`${slice.from}-${slice.model.name}`}
+                  sx={{
+                    cursor: "pointer",
+                    ...sx,
+                  }}
                 >
                   {children}
-                </div>
+                </Box>
               );
             },
             StatusOrCustom: ({ slice }: { slice: ComponentUI }) => {
               const isInSliceZone = values.sliceKeys.includes(slice.model.id);
-              return isInSliceZone ? (
-                <Checkbox value="true" defaultChecked />
-              ) : (
-                <Checkbox value="false" />
+
+              return (
+                <Checkbox
+                  value={isInSliceZone ? "true" : "false"}
+                  defaultChecked={isInSliceZone}
+                  sx={{
+                    mr: 0,
+                  }}
+                />
               );
             },
           });
