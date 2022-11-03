@@ -28,8 +28,21 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
   return (
     <>
-      <Text data-for={`${modelId}-tooltip`} data-tip>
-        <Badge mr="2" variant={status}>
+      <Text
+        data-for={`${modelId}-tooltip`}
+        data-tip
+        sx={{
+          display: "flex",
+        }}
+      >
+        <Badge
+          variant={status}
+          sx={{
+            padding: "4px 8px;",
+            borderRadius: "6px;",
+            lineHeight: "16px",
+          }}
+        >
           {displayName}
         </Badge>
       </Text>

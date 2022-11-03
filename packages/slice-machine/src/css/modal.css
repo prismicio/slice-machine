@@ -19,7 +19,9 @@ body {
 }
 
 /* Review modal animation   */
-
+.ReactModal__Overlay {
+  z-index: 1;
+}
 .ReviewModal .ReactModal__Overlay {
   opacity: 0;
   transform: translateX(100px);

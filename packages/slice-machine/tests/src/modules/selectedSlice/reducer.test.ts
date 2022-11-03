@@ -12,7 +12,11 @@ import {
 import { Models } from "@slicemachine/core";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { getSelectedSliceDummyData } from "./utils";
+import {
+  getSelectedSliceDummyData,
+  getRefreshStateCreatorPayloadData,
+} from "./utils";
+import { refreshStateCreator } from "@src/modules/environment";
 
 const { dummyModelVariationID, dummyMockConfig, dummySliceState } =
   getSelectedSliceDummyData();
@@ -169,6 +173,39 @@ describe("[Selected Slice module]", () => {
       expect(variations?.length).toEqual(preVariations.length + 1);
       expect(variations?.at(-1)?.id).toEqual("new-variation");
       expect(variations?.at(-1)?.name).toEqual("New Variation");
+    });
+
+    it("should update the selected slice screenshots given STATE/REFRESH.RESPONSE action if the component is found", () => {
+      const action = refreshStateCreator(
+        getRefreshStateCreatorPayloadData(
+          dummySliceState.from,
+          dummySliceState.model.id
+        )
+      );
+
+      const newState = selectedSliceReducer(dummySliceState, action);
+
+      expect(newState?.screenshots).toEqual({
+        "default-slice": {
+          hash: "f92c69c60df8fd8eb42902bfb6574776",
+          path: "updated-screenshot-path",
+          url: "http://localhost:9999/api/__preview?q=default-slice",
+        },
+      });
+    });
+
+    it("should do nothing given STATE/REFRESH.RESPONSE action if the component is not found", () => {
+      const action = refreshStateCreator(
+        getRefreshStateCreatorPayloadData(
+          "unknown-livrary",
+          dummySliceState.model.id
+        )
+      );
+
+      const newState = selectedSliceReducer(dummySliceState, action);
+
+      expect(newState?.screenshots).toEqual({});
+      expect(newState).toEqual(dummySliceState);
     });
   });
 });

@@ -7,7 +7,7 @@ const AppTheme = (): Theme =>
     initialColorModeName: "light",
     colors: {
       text: "#25252D",
-      textClear: "#4E4E55",
+      textClear: "#6F6E77",
       grayLight: "#E8E8ED",
       hoverBackground: "#f2f2f2",
       background: "#FFF",
@@ -15,18 +15,27 @@ const AppTheme = (): Theme =>
       primary: "#5D40F7",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
+      changesWarning: {
+        background: "#FFECC7",
+        color: "#5C0C17",
+      },
+      greyIcon: "#6F6E77",
+      missingScreenshotBanner: {
+        color: "#5C0C17",
+        bg: "#FFECC7",
+      },
       badge: {
         new: {
-          bg: "#C2EFC899",
-          color: "#32A943",
+          bg: "#DBEDDB",
+          color: "#05644D",
         },
         modified: {
-          bg: "#FDF4EC",
-          color: "#F2994A",
+          bg: "#FFECC7",
+          color: "#5C0C17",
         },
         synced: {
-          bg: "#EFECFF",
-          color: "#5B3DF5",
+          bg: "#F1EEFE",
+          color: "#5842C3",
         },
         unknown: {
           bg: "#F3F5F7",
@@ -44,8 +53,10 @@ const AppTheme = (): Theme =>
       grey02: "#E6E6EA",
       grey04: "#9AA4AF",
       grey05: "#667587",
+      grey07: "#F9F8F9",
       greyTransparent: "rgba(37, 37, 45, 0.4)",
-      borders: "#C9D0D8",
+      borders: "#E4E2E4",
+      bordersFocused: "#6E56CF",
       deep: "#0E2150",
       deep1: "#A0ADE7",
       lightGreen: "#EBF8F1",
@@ -55,9 +66,11 @@ const AppTheme = (): Theme =>
       success: "#3AB97A",
       headSection: "#fff",
       warning: "#E67E22",
+      warning02: "#ED811C",
       sidebar: "#F1F1F4",
       link: "#5163BA",
       choggleBox: "#5163BA",
+      darkBorder: "#DCDBDD",
       code: {
         border: "#DFE1E5",
         blue: "#3B41BD",
@@ -148,12 +161,22 @@ const AppTheme = (): Theme =>
         marginLeft: 2,
         marginBottom: "0!important",
       },
+      secondary: {
+        color: "greyIcon",
+        fontSize: 1,
+      },
       pre: {
         fontSize: 1,
         fontWeight: "400",
         color: "textClear",
         bg: "grey01",
         p: "2px",
+      },
+      heading: {
+        fontWeight: "500",
+      },
+      grey: {
+        color: "#4E4E55",
       },
     },
     badges: {
@@ -213,10 +236,20 @@ const AppTheme = (): Theme =>
         borderColor: "borders",
       },
     },
+    boxes: {
+      centered: {
+        height: "100%",
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      },
+    },
     buttons: {
       primary: {
         color: "white",
         fontSize: 1,
+        fontFamily: "body",
         fontWeight: "body",
         lineHeight: "24px",
         padding: "7px 15px",
@@ -251,6 +284,7 @@ const AppTheme = (): Theme =>
 
       screenSize: {
         p: 0,
+        fontFamily: "body",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -264,6 +298,7 @@ const AppTheme = (): Theme =>
       },
       secondary: {
         bg: "secondary",
+        fontFamily: "body",
         fontWeight: "body",
         fontSize: "1",
         color: "textClear",
@@ -282,6 +317,37 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
       },
+      dropDownButton: {
+        fontSize: "1",
+        p: "3px",
+        pl: 2,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderRadius: "6px",
+        border: "1px solid #DCDBDD",
+        fontWeight: "bold",
+        bg: "secondary",
+        fontFamily: "body",
+        color: "textClear",
+        "&:hover": {
+          bg: darken("secondary", 0.02),
+          cursor: "pointer",
+        },
+        "&:focus": {
+          bg: darken("secondary", 0.05),
+          borderColor: darken("secondary", 0.15),
+          outline: "none",
+        },
+        "&:active": {
+          bg: darken("secondary", 0.06),
+          outline: "none",
+        },
+        "&:disabled": {
+          cursor: "not-allowed",
+          color: alpha("textClear", 0.6),
+        },
+      },
       small: {
         bg: "primary",
         borderRadius: "4px",
@@ -289,13 +355,35 @@ const AppTheme = (): Theme =>
         pr: 2,
         pb: 1,
         pt: 1,
+        fontFamily: "body",
         fontSize: "12px",
         fontWeight: "body",
       },
-
+      secondarySmall: {
+        background: "#FFFFFF",
+        border: "1px solid #DCDBDD",
+        boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        borderRadius: "6px",
+        color: "#1A1523",
+        fontFamily: "body",
+        fontSize: "12px",
+        lineHeight: "16px",
+        pl: 2,
+        pr: 2,
+        py: "5px",
+        cursor: "pointer",
+        "&:hover": {
+          background: "#F4F2F4",
+        },
+        "&:active": {
+          background: "#F4F2F4",
+          boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+        },
+      },
       darkSmall: {
         borderRadius: "4px",
         color: "white",
+        fontFamily: "body",
         fontSize: "12px",
         fontWeight: "body",
         bg: "text",
@@ -313,6 +401,7 @@ const AppTheme = (): Theme =>
         color: "text",
         fontSize: "12px",
         fontWeight: "body",
+        fontFamily: "body",
         bg: "white",
         boxShadow:
           "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
@@ -328,6 +417,7 @@ const AppTheme = (): Theme =>
         borderRadius: "4px",
         color: "error",
         fontSize: "16px",
+        fontFamily: "body",
         fontWeight: "body",
         bg: "grey02",
         boxShadow:
@@ -344,6 +434,7 @@ const AppTheme = (): Theme =>
         bg: "#D6CEFC",
         fontSize: "1",
         color: "white",
+        fontFamily: "body",
         cursor: "not-allowed",
         borderColor: "transparent",
       },
@@ -351,6 +442,7 @@ const AppTheme = (): Theme =>
         bg: "#F9F9FA",
         fontSize: "1",
         color: "#C9D0D8",
+        fontFamily: "body",
         cursor: "not-allowed",
         border: "1px solid",
         borderColor: "1px solid rgba(62, 62, 72, 0.15)",
@@ -358,11 +450,13 @@ const AppTheme = (): Theme =>
       transparent: {
         background: "transparent",
         border: "none",
+        fontFamily: "body",
         p: 1,
         color: "primary",
         cursor: "pointer",
       },
       selectIcon: {
+        fontFamily: "body",
         "&:hover": {
           cursor: "pointer",
         },
@@ -371,6 +465,7 @@ const AppTheme = (): Theme =>
         },
       },
       textButton: {
+        fontFamily: "body",
         border: "none",
         color: "primary",
         background: "transparent",
@@ -385,6 +480,7 @@ const AppTheme = (): Theme =>
         },
       },
       close: {
+        fontFamily: "body",
         color: "icons",
         "&:hover": {
           bg: "rgba(0,0,0,0.08)",
@@ -395,6 +491,7 @@ const AppTheme = (): Theme =>
         },
       },
       icon: {
+        fontFamily: "body",
         "&:hover": {
           bg: "rgba(0,0,0,0.08)",
         },
@@ -403,10 +500,23 @@ const AppTheme = (): Theme =>
         },
       },
       round: {
+        fontFamily: "body",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "50%",
+      },
+      white: {
+        bg: "#FFF",
+        color: "#1A1523",
+        border: "1px solid #DCDBDD",
+        boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        borderRadius: "6px",
+        fontFamily: "body",
+        fontWeight: "600",
+        fontSize: 1,
+        px: 3,
+        cursor: "pointer",
       },
     },
     success: {

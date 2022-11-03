@@ -10,14 +10,14 @@ import { Frameworks } from "@slicemachine/core/build/models";
 export function validateEnv(
   framework: Frameworks,
   simulatorUrl: string | undefined
-) {
+): ScreenshotResponse | undefined {
   if (!simulatorIsSupported(framework)) {
     const reason = "Could not generate preview: framework is not supported";
 
     return {
       err: new Error(reason),
       reason,
-      screenshots: {},
+      screenshot: null,
     };
   }
   if (!simulatorUrl) {
@@ -27,7 +27,7 @@ export function validateEnv(
     return {
       err: new Error(reason),
       reason,
-      screenshots: {},
+      screenshot: null,
     };
   }
 }
@@ -35,6 +35,8 @@ export function validateEnv(
 export default async function handler({
   libraryName,
   sliceName,
+  variationId,
+  screenDimensions,
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
   const { env } = await getEnv();
 
@@ -47,34 +49,29 @@ export default async function handler({
   }
 
   try {
-    const { screenshots, failure } = await generateScreenshotAndRemoveCustom(
+    const { screenshot } = await generateScreenshotAndRemoveCustom(
       env,
       libraryName,
-      sliceName
+      sliceName,
+      variationId,
+      screenDimensions
     );
 
-    if (failure.length > 0) {
-      const message:
-        | string
-        | null = `Could not generate screenshots for variations: ${failure
-        .map((f) => f.variationId)
-        .join(" | ")}`;
-
-      /* We display an error if no screenshot has been taken */
-      const isError = Object.keys(screenshots).length === 0;
-
+    // We display an error if no screenshot has been taken
+    if (!screenshot) {
+      const message = `Could not generate screenshot for variation ${variationId}`;
       return {
-        err: isError ? new Error(message) : null,
-        reason: isError ? message : null,
-        warning: isError ? null : message,
-        screenshots,
+        err: new Error(message),
+        reason: message,
+        warning: null,
+        screenshot,
       };
     }
 
     return {
       err: null,
       reason: null,
-      screenshots,
+      screenshot,
     };
   } catch (e) {
     const crashMessage =
@@ -83,7 +80,7 @@ export default async function handler({
       err: new Error(crashMessage),
       reason: crashMessage,
       warning: null,
-      screenshots: {},
+      screenshot: null,
     };
   }
 }

@@ -40,7 +40,6 @@ export const SlicesList: React.FC<SlicesListProps> = ({
       }
       return SharedSlice.render({
         slice: slice.payload as ComponentUI,
-        bordered: true,
         StatusOrCustom: {
           status:
             modelsStatuses.slices[(slice.payload as ComponentUI).model.id],

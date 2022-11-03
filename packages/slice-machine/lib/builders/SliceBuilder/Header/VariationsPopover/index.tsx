@@ -4,18 +4,27 @@ import { Popover } from "react-tiny-popover";
 
 import MenuList from "./MenuList";
 
-import { Button, Box, ThemeUICSSObject } from "theme-ui";
+import { Button, Box, ThemeUICSSObject, ThemeUIStyleObject } from "theme-ui";
 
-import { RiArrowDropDownLine } from "react-icons/ri";
+import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 
 const VarationsPopover: React.FunctionComponent<{
   buttonSx?: ThemeUICSSObject;
   defaultValue?: Models.VariationSM;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onNewVariation?: Function;
+  onNewVariation?: () => void;
   variations: ReadonlyArray<Models.VariationSM>;
   onChange: (selected: Models.VariationSM) => void;
-}> = ({ buttonSx, defaultValue, variations, onNewVariation, onChange }) => {
+  sx?: ThemeUIStyleObject;
+  disabled?: boolean;
+}> = ({
+  buttonSx,
+  defaultValue,
+  variations,
+  onNewVariation,
+  onChange,
+  sx,
+  disabled,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [current, setCurrent] = useState<Models.VariationSM>(
     defaultValue || variations[0]
@@ -52,7 +61,7 @@ const VarationsPopover: React.FunctionComponent<{
   );
 
   return (
-    <div>
+    <Box sx={sx}>
       <Popover
         align="start"
         isOpen={isOpen}
@@ -71,21 +80,21 @@ const VarationsPopover: React.FunctionComponent<{
       >
         <Button
           sx={{
-            fontSize: 14,
-            p: 2,
-            pl: 3,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
             ...buttonSx,
           }}
-          variant="secondary"
+          variant="dropDownButton"
           onClick={() => setIsOpen(!isOpen)}
+          disabled={disabled}
         >
-          {current.name} <RiArrowDropDownLine size="24px" />
+          {current.name}{" "}
+          {!isOpen ? (
+            <RiArrowDropDownFill size="24px" />
+          ) : (
+            <RiArrowDropUpFill size="24px" />
+          )}
         </Button>
       </Popover>
-    </div>
+    </Box>
   );
 };
 

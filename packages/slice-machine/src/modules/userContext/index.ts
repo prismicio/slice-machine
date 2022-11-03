@@ -7,6 +7,7 @@ import {
 } from "@src/modules/userContext/types";
 import { refreshStateCreator } from "../environment";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
+import { syncChangeCreator } from "../pushChangesSaga/actions";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
@@ -19,6 +20,7 @@ const initialState: UserContextStoreType = {
   },
   hasSeenTutorialsTooTip: false,
   authStatus: AuthStatus.UNKNOWN,
+  lastSyncChange: null,
 };
 
 // Actions Creators
@@ -45,6 +47,7 @@ type userContextActions = ActionType<
   | typeof updatesViewedCreator
   | typeof hasSeenTutorialsTooTipCreator
   | typeof refreshStateCreator
+  | typeof syncChangeCreator
 >;
 
 // Selectors
@@ -62,6 +65,10 @@ export const getUpdatesViewed = (
 export const userHashasSeenTutorialsTooTip = (
   state: SliceMachineStoreType
 ): boolean => state.userContext.hasSeenTutorialsTooTip || false;
+
+export const getLastSyncChange = (
+  state: SliceMachineStoreType
+): number | null => state.userContext.lastSyncChange;
 
 // Reducer
 export const userContextReducer: Reducer<
@@ -98,6 +105,13 @@ export const userContextReducer: Reducer<
         authStatus: getAuthStatus(action.payload.clientError),
       };
     }
+    case getType(syncChangeCreator): {
+      return {
+        ...state,
+        lastSyncChange: Date.now(),
+      };
+    }
+
     default:
       return state;
   }

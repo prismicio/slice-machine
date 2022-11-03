@@ -1,0 +1,16 @@
+name: 'Cache node modules'
+description: 'Cache node modules'
+runs:
+  using: 'composite'
+  steps:
+    - name: Restore cache
+      id: restore-cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          node_modules
+          */*/node_modules
+          ~/.cache/Cypress
+        key: ${{ runner.os }}-lerna-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-lerna-
