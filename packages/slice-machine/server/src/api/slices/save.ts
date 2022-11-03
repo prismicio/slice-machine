@@ -62,7 +62,14 @@ export async function handler(
   }
 
   console.log("[slice/save]: Generating stories");
-  Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
+  Storybook.generateStories(
+    appRoot,
+    env.framework,
+    env.cwd,
+    from,
+    sliceName,
+    smModel
+  );
 
   IO.Types.upsert(env);
 
