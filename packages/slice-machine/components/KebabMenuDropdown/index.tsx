@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Popover } from "react-tiny-popover";
-import { Box, Button } from "theme-ui";
+import { Box, Button, useThemeUI } from "theme-ui";
 import { KebabMenuList } from "./KebabMenuList";
 
 export type MenuOption = {
@@ -17,6 +17,8 @@ export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
   menuOptions,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { theme } = useThemeUI();
 
   return (
     <Box>
@@ -45,7 +47,10 @@ export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
             setIsOpen(!isOpen);
           }}
         >
-          <BsThreeDotsVertical color="#6F6E77" size={16} />
+          <BsThreeDotsVertical
+            color={theme.colors?.greyIcon as string}
+            size={16}
+          />
         </Button>
       </Popover>
     </Box>
