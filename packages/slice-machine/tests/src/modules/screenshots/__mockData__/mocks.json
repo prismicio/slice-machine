@@ -22,13 +22,14 @@
                 "__TYPE__": "DocumentLink"
               }
             }
-          ], [
+          ],
+          [
             "link",
             {
               "__TYPE__": "LinkContent",
               "value": {
                 "url": "https://slicemachine.dev",
-                "__TYPE__":"ExternalLink",
+                "__TYPE__": "ExternalLink",
                 "type": "web"
               }
             }
