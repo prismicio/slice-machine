@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@babel/register": "^7.17.7",
-    "@prismicio/api-renderer": "^1.0.0",
     "@prismicio/mocks": "^1.1.2",
     "@prismicio/types-internal": "^1.1.1",
     "@slicemachine/client": "1.1.15",
