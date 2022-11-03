@@ -10,14 +10,16 @@ import { FormikErrors } from "formik";
 import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import { useMemo } from "react";
 
 interface RenameCustomTypeModalProps {
-  customTypeName: string;
+  customTypes: FrontEndCustomType[];
   customTypeId: string;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
-  customTypeName,
+  customTypes,
   customTypeId,
 }) => {
   const { renameCustomType, closeRenameCustomTypeModal } =
@@ -38,6 +40,13 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
     customTypeLabels: selectAllCustomTypeLabels(store),
     isRenamingCustomType: isLoading(store, LoadingKeysEnum.RENAME_CUSTOM_TYPE),
   }));
+
+  const customTypeName = useMemo(() => {
+    return (
+      customTypes.find((customType) => customType.local.id === customTypeId)
+        ?.local.label || ""
+    );
+  }, [customTypeId]);
 
   return (
     <ModalFormCard

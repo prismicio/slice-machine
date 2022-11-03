@@ -12,8 +12,7 @@ export const CustomTypeTable: React.FC<{
   customTypes: FrontEndCustomType[];
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
-  const [renameCustomTypeName, setRenameCustomTypeName] = useState<string>("");
-  const [renameCustomTypeId, setRenameCustomTypeId] = useState<string>("");
+  const [customTypeIdToRename, setCustomTypeIdToRename] = useState<string>("");
 
   const firstColumnWidth = "27%";
   const secondColumnWidth = "27%";
@@ -91,8 +90,7 @@ export const CustomTypeTable: React.FC<{
                         displayName: "Rename",
                         onClick: (event) => {
                           event.stopPropagation();
-                          setRenameCustomTypeName(customType.local.label || "");
-                          setRenameCustomTypeId(customType.local.id);
+                          setCustomTypeIdToRename(customType.local.id);
                           openRenameCustomTypeModal();
                         },
                         dataCy: "ct-rename-menu-option",
@@ -112,8 +110,8 @@ export const CustomTypeTable: React.FC<{
         </tbody>
       </Box>
       <RenameCustomTypeModal
-        customTypeName={renameCustomTypeName}
-        customTypeId={renameCustomTypeId}
+        customTypes={customTypes}
+        customTypeId={customTypeIdToRename}
       />
     </>
   );
