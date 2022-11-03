@@ -6,11 +6,11 @@ import {
 import {
   SharedSliceMockConfig,
   VariationMockConfig,
-  generateSliceMock,
-  renderSliceMock,
+  SharedSliceMock,
 } from "@prismicio/mocks";
 import { buildFieldsMockConfig } from "./LegacyMockConfig";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 
 function buildVariationMockConfig(
   model: Variation,
@@ -61,8 +61,9 @@ export function buildSliceMockConfig(
 export default function MockSlice(
   smModel: SliceSM,
   legacyMockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
-): unknown[] {
+): Array<SharedSliceContent> {
   const model = Slices.fromSM(smModel);
+
   const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
   const sliceModel: SharedSlice = {
     ...model,
@@ -74,7 +75,5 @@ export default function MockSlice(
     }),
     type: SlicesTypes.SharedSlice,
   };
-  return sliceMockConfig.map((sc) =>
-    generateSliceMock(sliceModel, sc)(renderSliceMock)
-  );
+  return sliceMockConfig.map((sc) => SharedSliceMock.generate(sliceModel, sc));
 }

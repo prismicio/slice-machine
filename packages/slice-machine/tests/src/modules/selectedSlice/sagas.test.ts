@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { testSaga } from "redux-saga-test-plan";
 import { saveSliceSaga } from "../../../../src/modules/selectedSlice/sagas";
 import { getSelectedSliceDummyData } from "./utils";

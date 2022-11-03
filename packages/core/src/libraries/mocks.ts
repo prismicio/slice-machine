@@ -1,8 +1,6 @@
 import path from "path";
-import { isRight } from "fp-ts/Either";
-
 import { Files } from "../node-utils";
-import { SliceMock } from "../models";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 
 export function createPathToMock({
   path: filePath,
@@ -24,15 +22,17 @@ export function resolvePathsToMock({
   paths: ReadonlyArray<string>;
   from: string;
   sliceName: string;
-}): { path: string; value: SliceMock | undefined } | undefined {
+}): { path: string; value: SharedSliceContent[] | undefined } | undefined {
   const possiblePaths = paths.map((base) =>
     createPathToMock({ path: base, from, sliceName })
   );
-  return Files.readFirstOf<SliceMock | undefined>(possiblePaths)(
+  return Files.readFirstOf<SharedSliceContent[] | undefined>(possiblePaths)(
     (v: string) => {
-      const res = SliceMock.decode(JSON.parse(v));
-      if (isRight(res)) {
-        return res.right;
+      try {
+        const res = JSON.parse(v) as unknown as SharedSliceContent[];
+        return res;
+      } catch {
+        return undefined;
       }
     }
   );
