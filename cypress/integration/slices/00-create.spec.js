@@ -70,18 +70,14 @@ describe("Create Slices", () => {
         const got =
           librariesState["slices"].components["test_slice"].mocks.default;
 
-        expect(got.primary.description[0].text).to.exist
-        expect(
-          got.primary.description[0].text
-        ).to.equal(
+        expect(got.primary.description[0].text).to.exist;
+        expect(got.primary.description[0].text).to.equal(
           want.primary.description.value[0].content.text
-        )
-        expect(got.primary.title[0].text).to.exist
-        expect(
-          got.primary.title[0].text
-        ).to.equal(
+        );
+        expect(got.primary.title[0].text).to.exist;
+        expect(got.primary.title[0].text).to.equal(
           want.primary.title.value[0].content.text
-        )
+        );
       });
 
     // remove widget
