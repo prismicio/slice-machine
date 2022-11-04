@@ -42,6 +42,8 @@
 	"dependencies": {
 		"@prismicio/types": "^0.2.3",
 		"@slicemachine/plugin-kit": "^0.1.2",
+		"busboy": "^1.6.0",
+		"devalue": "^4.2.0",
 		"fp-ts": "^2.13.1",
 		"h3": "^0.8.6",
 		"io-ts": "^2.2.19",
@@ -52,6 +54,8 @@
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^8.1.0",
+		"@types/busboy": "^1.5.0",
+		"@types/formidable": "^2.0.5",
 		"@typescript-eslint/eslint-plugin": "~5.41.0",
 		"@typescript-eslint/parser": "^5.41.0",
 		"@vitest/coverage-c8": "^0.24.3",

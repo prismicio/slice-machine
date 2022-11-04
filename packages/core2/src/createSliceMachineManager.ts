@@ -39,7 +39,7 @@ function assertPluginsInitialized(
 ): asserts pluginRunner is NonNullable<typeof pluginRunner> {
 	if (pluginRunner == undefined) {
 		throw new Error(
-			"Plugins have not yet been initialized. Run `Client.prototype.initPlugins()` before re-calling this method.",
+			"Plugins have not yet been initialized. Run `SliceMachineManager.prototype.initPlugins()` before re-calling this method.",
 		);
 	}
 }
@@ -50,13 +50,13 @@ type OnlyHookErrors<
 		| Promise<{ errors: HookError[] }>,
 > = Pick<Awaited<THookResult>, "errors">;
 
-// TODO: Understand why `Pick` must be used directly in the return type rather
-// than using `OnlyHookErrors`.
-const onlyHookErrors = <THookResult extends { errors: HookError[] }>(
-	hookResult: THookResult,
-): Pick<Awaited<THookResult>, "errors"> => {
-	return { errors: hookResult.errors };
-};
+// // TODO: Understand why `Pick` must be used directly in the return type rather
+// // than using `OnlyHookErrors`.
+// const onlyHookErrors = <THookResult extends { errors: HookError[] }>(
+// 	hookResult: THookResult,
+// ): Pick<Awaited<THookResult>, "errors"> => {
+// 	return { errors: hookResult.errors };
+// };
 
 // type UseFirstHookDataElement<THookFn extends HookFn> = Omit<
 // 	Awaited<CallHookReturnType<THookFn>>,
@@ -75,68 +75,68 @@ const onlyHookErrors = <THookResult extends { errors: HookError[] }>(
 // 	};
 // };
 
-export const createClient = (): Client => {
-	return new Client();
+export const createSliceMachineManager = (): SliceMachineManager => {
+	return new SliceMachineManager();
 };
 
-type ClientPushSliceArgs = {
+type SliceMachineManagerPushSliceArgs = {
 	libraryID: string;
 	sliceID: string;
 };
 
-type ClientReadSliceLibraryReturnType = {
+type SliceMachineManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[] | undefined;
 	errors: HookError[];
 };
 
-type ClientReadSliceReturnType = {
+type SliceMachineManagerReadSliceReturnType = {
 	model: SharedSliceModel | undefined;
 	errors: HookError[];
 };
 
-type ClientUpdateSliceScreenshotArgs = {
+type SliceMachineManagerUpdateSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
 	data: Buffer;
 };
 
-type ClientCaptureSliceScreenshotArgs = {
+type SliceMachineManagerCaptureSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
 };
 
-type ClientCaptureSliceScreenshotReturnType = {
+type SliceMachineManagerCaptureSliceScreenshotReturnType = {
 	data: Buffer;
 };
 
-type ClientReadSliceScreenshotArgs = {
+type SliceMachineManagerReadSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
 };
 
-type ClientReadSliceScreenshotReturnType = {
+type SliceMachineManagerReadSliceScreenshotReturnType = {
 	data: Buffer | undefined;
 	errors: HookError[];
 };
 
-type ClientReadCustomTypeLibraryReturnType = {
+type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[] | undefined;
 	errors: HookError[];
 };
 
-type ClientReadCustomTypeReturnType = {
+type SliceMachineManagerReadCustomTypeReturnType = {
 	model: CustomTypeModel | undefined;
 	errors: HookError[];
 };
 
-type ClientPushCustomTypeArgs = {
+type SliceMachineManagerPushCustomTypeArgs = {
 	id: string;
 };
 
-export class Client {
+export class SliceMachineManager {
 	private _pluginRunner: SliceMachinePluginRunner | undefined;
 	private _projectConfig: SliceMachineConfig | undefined;
 
@@ -175,10 +175,14 @@ export class Client {
 			throw new Error(`Invalid config. ${errors}`);
 		}
 
-		// Allow cached config reading using `Client.prototype.getProjectConfig()`.
+		// Allow cached config reading using `SliceMachineManager.prototype.getProjectConfig()`.
 		this._projectConfig = value;
 
 		return value;
+	}
+
+	async setProjectConfig(projectConfig: SliceMachineConfig): Promise<void> {
+		this._projectConfig = projectConfig;
 	}
 
 	async initPlugins(): Promise<void> {
@@ -191,7 +195,7 @@ export class Client {
 
 	async readSliceLibrary(
 		args: SliceLibraryReadHookData,
-	): Promise<ClientReadSliceLibraryReturnType> {
+	): Promise<SliceMachineManagerReadSliceLibraryReturnType> {
 		assertPluginsInitialized(this._pluginRunner);
 
 		const hookResult = await this._pluginRunner.callHook(
@@ -212,10 +216,14 @@ export class Client {
 
 		const hookResult = await this._pluginRunner.callHook("slice:create", args);
 
-		return onlyHookErrors(hookResult);
+		return {
+			errors: hookResult.errors,
+		};
 	}
 
-	async readSlice(args: SliceReadHookData): Promise<ClientReadSliceReturnType> {
+	async readSlice(
+		args: SliceReadHookData,
+	): Promise<SliceMachineManagerReadSliceReturnType> {
 		assertPluginsInitialized(this._pluginRunner);
 
 		const hookResult = await this._pluginRunner.callHook("slice:read", args);
@@ -233,7 +241,9 @@ export class Client {
 
 		const hookResult = await this._pluginRunner.callHook("slice:update", args);
 
-		return onlyHookErrors(hookResult);
+		return {
+			errors: hookResult.errors,
+		};
 	}
 
 	// TODO: Disallow until Slices can be deleted.
@@ -244,18 +254,20 @@ export class Client {
 
 		const hookResult = await this._pluginRunner.callHook("slice:delete", args);
 
-		return onlyHookErrors(hookResult);
+		return {
+			errors: hookResult.errors,
+		};
 	}
 
-	async pushSlice(_args: ClientPushSliceArgs): Promise<void> {
+	async pushSlice(_args: SliceMachineManagerPushSliceArgs): Promise<void> {
 		assertPluginsInitialized(this._pluginRunner);
 
 		// TODO: Push Slice to Prismic.
 	}
 
 	async readSliceScreenshot(
-		args: ClientReadSliceScreenshotArgs,
-	): Promise<ClientReadSliceScreenshotReturnType> {
+		args: SliceMachineManagerReadSliceScreenshotArgs,
+	): Promise<SliceMachineManagerReadSliceScreenshotReturnType> {
 		assertPluginsInitialized(this._pluginRunner);
 
 		const hookResult = await this._pluginRunner.callHook("slice:asset:read", {
@@ -271,7 +283,7 @@ export class Client {
 	}
 
 	async updateSliceScreenshot(
-		args: ClientUpdateSliceScreenshotArgs,
+		args: SliceMachineManagerUpdateSliceScreenshotArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
 		assertPluginsInitialized(this._pluginRunner);
 
@@ -284,12 +296,14 @@ export class Client {
 			},
 		});
 
-		return onlyHookErrors(hookResult);
+		return {
+			errors: hookResult.errors,
+		};
 	}
 
 	async captureSliceScreenshot(
-		args: ClientCaptureSliceScreenshotArgs,
-	): Promise<ClientCaptureSliceScreenshotReturnType> {
+		args: SliceMachineManagerCaptureSliceScreenshotArgs,
+	): Promise<SliceMachineManagerCaptureSliceScreenshotReturnType> {
 		const projectConfig = await this.getProjectConfig();
 
 		const { data } = await captureSliceSimulatorScreenshot({
@@ -306,7 +320,7 @@ export class Client {
 
 	async readCustomTypeLibrary(
 		args: CustomTypeLibraryReadHookData,
-	): Promise<ClientReadCustomTypeLibraryReturnType> {
+	): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
 		assertPluginsInitialized(this._pluginRunner);
 
 		const hookResult = await this._pluginRunner.callHook(
@@ -330,12 +344,14 @@ export class Client {
 			args,
 		);
 
-		return onlyHookErrors(hookResult);
+		return {
+			errors: hookResult.errors,
+		};
 	}
 
 	async readCustomType(
 		args: CustomTypeReadHookData,
-	): Promise<ClientReadCustomTypeReturnType> {
+	): Promise<SliceMachineManagerReadCustomTypeReturnType> {
 		assertPluginsInitialized(this._pluginRunner);
 
 		const hookResult = await this._pluginRunner.callHook(
@@ -359,7 +375,9 @@ export class Client {
 			args,
 		);
 
-		return onlyHookErrors(hookResult);
+		return {
+			errors: hookResult.errors,
+		};
 	}
 
 	// TODO: Disallow until Custom Types can be deleted.
@@ -373,10 +391,14 @@ export class Client {
 			args,
 		);
 
-		return onlyHookErrors(hookResult);
+		return {
+			errors: hookResult.errors,
+		};
 	}
 
-	async pushCustomType(_args: ClientPushCustomTypeArgs): Promise<void> {
+	async pushCustomType(
+		_args: SliceMachineManagerPushCustomTypeArgs,
+	): Promise<void> {
 		assertPluginsInitialized(this._pluginRunner);
 
 		// TODO: Push CustomType to Prismic.
