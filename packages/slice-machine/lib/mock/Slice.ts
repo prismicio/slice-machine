@@ -1,6 +1,5 @@
 import {
   SharedSlice,
-  SlicesTypes,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import {
@@ -65,15 +64,5 @@ export default function MockSlice(
   const model = Slices.fromSM(smModel);
 
   const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
-  const sliceModel: SharedSlice = {
-    ...model,
-    variations: model.variations.map((v) => {
-      return {
-        ...v,
-        imageUrl: "",
-      } as Variation;
-    }),
-    type: SlicesTypes.SharedSlice,
-  };
-  return sliceMockConfig.map((sc) => SharedSliceMock.generate(sliceModel, sc));
+  return sliceMockConfig.map((sc) => SharedSliceMock.generate(model, sc));
 }
