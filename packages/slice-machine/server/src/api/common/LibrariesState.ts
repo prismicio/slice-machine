@@ -4,6 +4,7 @@ import probe from "probe-image-size";
 import { Slices } from "@slicemachine/core/build/models/Slice";
 import { handleLibraryPath } from "@slicemachine/core/build/libraries";
 import { LibrariesStatePath, Files } from "@slicemachine/core/build/node-utils";
+import { renderSliceMock } from "@prismicio/mocks";
 
 const DEFAULT_IMAGE_DIMENSIONS = {
   width: undefined,
@@ -66,18 +67,19 @@ function getImageDimensions(imagePath: string | undefined) {
 export function formatComponent(
   slice: Models.Component
 ): Models.LibrariesState.Component {
+  const model = Slices.fromSM(slice.model);
   return {
     library: slice.from,
     id: slice.model.id,
     name: slice.model.name,
     description: slice.model.description,
-    model: Slices.fromSM(slice.model),
+    model: model,
     mocks: (
       slice.mock || []
     ).reduce<Models.LibrariesState.ComponentMocksRecord>(
       (acc, variationMock) => ({
         ...acc,
-        [variationMock.variation]: variationMock,
+        [variationMock.variation]: renderSliceMock(model, variationMock),
       }),
       {}
     ),
