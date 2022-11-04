@@ -1,5 +1,6 @@
+// puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { Viewport } from "puppeteer";
-import fetch from "node-fetch";
+import * as http from "node:http";
 
 import type { SliceMachineConfig } from "../types";
 
@@ -12,10 +13,20 @@ const DEFAULT_VIEWPORT: Viewport = {
 
 const ROOT_SELECTOR = "#root";
 
-const testURLAccess = async (url: string) => {
-	const res = await fetch(url);
+const testURLAccess = async (url: string): Promise<boolean> => {
+	return new Promise<boolean>((resolve, reject) => {
+		http
+			.get(url, (res) => {
+				const ok = Boolean(
+					res.statusCode && res.statusCode >= 200 && res.statusCode < 300,
+				);
 
-	return res.ok;
+				resolve(ok);
+			})
+			.on("error", (error) => {
+				reject(error);
+			});
+	});
 };
 
 type CaptureSliceSimulatorScreenshotArgs = {

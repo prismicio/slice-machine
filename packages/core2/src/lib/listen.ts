@@ -14,26 +14,24 @@ export const listen = async (
 	server: Server,
 	config: ListenConfig = {},
 ): Promise<ListeningServer> => {
-	const address = await new Promise<AddressInfo>((resolve) => {
+	await new Promise<void>((resolve) => {
 		server.once("listening", () => {
-			resolve(server.address() as AddressInfo);
+			resolve();
 		});
 
 		server.listen({ port: config.port });
 	});
 
-	const close = async () => {
-		await new Promise<void>((resolve) => {
-			server.once("close", () => {
-				resolve();
-			});
-
-			server.close();
-		});
-	};
-
 	return {
-		address,
-		close,
+		address: server.address() as AddressInfo,
+		close: async () => {
+			await new Promise<void>((resolve) => {
+				server.once("close", () => {
+					resolve();
+				});
+
+				server.close();
+			});
+		},
 	};
 };

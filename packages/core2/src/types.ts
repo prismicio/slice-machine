@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 
-export const Plugin = t.intersection([
+export const SliceMachinePlugin = t.intersection([
 	t.type({
 		meta: t.type({
 			name: t.string,
@@ -12,31 +12,33 @@ export const Plugin = t.intersection([
 		defaultOptions: t.UnknownRecord,
 	}),
 ]);
-export type Plugin = t.TypeOf<typeof Plugin>;
+export type SliceMachinePlugin = t.TypeOf<typeof SliceMachinePlugin>;
 
-export const PluginRegistration = t.union([
+export const SliceMachineConfigPluginRegistration = t.union([
 	t.string,
-	Plugin,
+	SliceMachinePlugin,
 	t.intersection([
 		t.type({
-			resolve: t.union([t.string, Plugin]),
+			resolve: t.union([t.string, SliceMachinePlugin]),
 		}),
 		t.partial({
 			options: t.UnknownRecord,
 		}),
 	]),
 ]);
-export type PluginRegistration = t.TypeOf<typeof PluginRegistration>;
+export type SliceMachineConfigPluginRegistration = t.TypeOf<
+	typeof SliceMachineConfigPluginRegistration
+>;
 
 export const SliceMachineConfig = t.intersection([
 	t.type({
 		repositoryName: t.string,
-		adapter: PluginRegistration,
+		adapter: SliceMachineConfigPluginRegistration,
 	}),
 	t.partial({
 		libraries: t.array(t.string),
 		localSliceSimulatorURL: t.string,
-		plugins: t.array(PluginRegistration),
+		plugins: t.array(SliceMachineConfigPluginRegistration),
 	}),
 ]);
 export type SliceMachineConfig = t.TypeOf<typeof SliceMachineConfig>;
