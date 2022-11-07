@@ -11,17 +11,17 @@ import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
-import { useMemo } from "react";
 
 interface RenameCustomTypeModalProps {
-  customTypes: FrontEndCustomType[];
-  customTypeId: string;
+  customType?: FrontEndCustomType;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
-  customTypes,
-  customTypeId,
+  customType,
 }) => {
+  const customTypeName = customType?.local.label ?? "";
+  const customTypeId = customType?.local.id ?? "";
+
   const { renameCustomType, closeRenameCustomTypeModal } =
     useSliceMachineActions();
 
@@ -40,13 +40,6 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
     customTypeLabels: selectAllCustomTypeLabels(store),
     isRenamingCustomType: isLoading(store, LoadingKeysEnum.RENAME_CUSTOM_TYPE),
   }));
-
-  const customTypeName = useMemo(() => {
-    return (
-      customTypes.find((customType) => customType.local.id === customTypeId)
-        ?.local.label || ""
-    );
-  }, [customTypeId]);
 
   return (
     <ModalFormCard
