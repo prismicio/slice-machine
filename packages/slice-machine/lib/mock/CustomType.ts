@@ -6,7 +6,6 @@ import {
   DocumentMockConfig,
   DocWidgetMockConfig,
   generateDocumentMock,
-  renderDocumentMock,
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
 import { buildWidgetMockConfig } from "./LegacyMockConfig";
