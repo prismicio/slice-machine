@@ -10,7 +10,10 @@ import {
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
 import { buildWidgetMockConfig } from "./LegacyMockConfig";
-import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
+import {
+  WidgetContent,
+  WidgetKey,
+} from "@prismicio/types-internal/lib/documents/widgets";
 import {
   CustomTypes,
   CustomTypeSM,
@@ -40,15 +43,18 @@ function buildDocumentMockConfig(
 export default function MockCustomType(
   model: CustomTypeSM,
   legacyMockConfig: CustomTypeMockConfig
-) {
+): Partial<Record<string, WidgetContent>> {
   const prismicModel = CustomTypes.fromSM(model);
   const documentMockConfig = buildDocumentMockConfig(
     prismicModel,
     legacyMockConfig
   );
+
   return generateDocumentMock(
     prismicModel,
-    {},
+    {}, // TBD: should we add shared slices?
     documentMockConfig
-  )(renderDocumentMock);
+  )((_customTypes, _sharedSlices, mock) => mock) as Partial<
+    Record<string, WidgetContent>
+  >;
 }
