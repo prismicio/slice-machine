@@ -1,6 +1,6 @@
 import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
-import React from "react";
+import React, { useCallback } from "react";
 import { Box, Text } from "theme-ui";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { useModelStatus } from "@src/hooks/useModelStatus";
@@ -16,6 +16,9 @@ export const CustomTypeTable: React.FC<{
   const thirdColumnWidth = "20%";
   const fourthColumnWidth = "20%";
   const fifthColumnWidth = "6%";
+
+  // eslint-disable-next-line
+  const noop = useCallback(() => {}, []);
 
   return (
     <Box
@@ -76,15 +79,11 @@ export const CustomTypeTable: React.FC<{
                   menuOptions={[
                     {
                       displayName: "Rename",
-                      onClick: (event) => {
-                        event.stopPropagation();
-                      },
+                      onClick: noop,
                     },
                     {
                       displayName: "Delete",
-                      onClick: (event) => {
-                        event.stopPropagation();
-                      },
+                      onClick: noop,
                     },
                   ]}
                 />

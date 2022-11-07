@@ -20,6 +20,7 @@ import { AuthStatus } from "@src/modules/userContext/types";
 import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { Button } from "@components/Button";
+import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 
 const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -87,6 +88,22 @@ const SliceScreenshotUpdate: React.FC<{
       sx={{ fontWeight: "bold" }}
       Icon={AiOutlineCamera}
       label="Update screenshot"
+    />
+    <KebabMenuDropdown
+      menuOptions={[
+        {
+          displayName: "Rename",
+          // TODO remove when action is implemented
+          // eslint-disable-next-line
+          onClick: () => {},
+        },
+        {
+          displayName: "Delete",
+          // TODO remove when action is implemented
+          // eslint-disable-next-line
+          onClick: () => {},
+        },
+      ]}
     />
   </Flex>
 );

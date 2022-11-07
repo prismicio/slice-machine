@@ -9,7 +9,8 @@ const MenuItem: React.FunctionComponent<{
   return (
     <Box
       sx={{
-        p: 2,
+        py: 2,
+        px: 3,
         cursor: "pointer",
         fontSize: "14px",
         borderRadius: 0,
@@ -31,7 +32,7 @@ export const KebabMenuList: React.FunctionComponent<{
   return (
     <Box
       sx={{
-        py: 0,
+        py: 1,
         flexDirection: "column",
         backgroundColor: "headSection",
         overflow: "auto",
@@ -52,6 +53,7 @@ export const KebabMenuList: React.FunctionComponent<{
               value={option.displayName}
               onClick={(event) => {
                 closeMenu();
+                event.preventDefault();
                 option.onClick(event);
               }}
             />
