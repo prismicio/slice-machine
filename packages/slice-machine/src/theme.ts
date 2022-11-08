@@ -44,6 +44,7 @@ const AppTheme = (): Theme =>
       },
       codeBlockBorder: "#545454",
       secondary: "#F9FAFB",
+      red: "#CB2431",
       highlight: "hsl(10, 40%, 90%)",
       purple: "#5B3DF5",
       muted: "#F9F9FB",
@@ -314,6 +315,30 @@ const AppTheme = (): Theme =>
         },
         "&:active": {
           bg: darken("secondary", 0.06),
+          outline: "none",
+        },
+      },
+      red: {
+        bg: "red",
+        fontFamily: "body",
+        fontWeight: "bold",
+        fontSize: "1",
+        color: "#F1EEFE",
+        px: "16px",
+        py: "8px",
+        borderRadius: "6px",
+        border: `1px solid #C61926`,
+        "&:hover": {
+          bg: darken("red", 0.05),
+          cursor: "pointer",
+        },
+        "&:focus": {
+          bg: darken("red", 0.05),
+          borderColor: darken("red", 0.15),
+          outline: "none",
+        },
+        "&:active": {
+          bg: darken("red", 0.06),
           outline: "none",
         },
       },
