@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.9",
-    "@prismicio/types-internal": "^1.1.1",
+    "@prismicio/types-internal": "^1.4.1",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",
     "io-ts": "^2.2.16",
