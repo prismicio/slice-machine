@@ -1,44 +1,35 @@
-import * as t from "io-ts";
-
-export const SliceMachinePlugin = t.intersection([
-	t.type({
-		meta: t.type({
-			name: t.string,
-		}),
-		// TODO: `t.Function` is deprecated. Replace with a custom primative.
-		setup: t.Function,
-	}),
-	t.partial({
-		defaultOptions: t.UnknownRecord,
-	}),
-]);
-export type SliceMachinePlugin = t.TypeOf<typeof SliceMachinePlugin>;
-
-export const SliceMachineConfigPluginRegistration = t.union([
-	t.string,
+import {
 	SliceMachinePlugin,
-	t.intersection([
-		t.type({
-			resolve: t.union([t.string, SliceMachinePlugin]),
-		}),
-		t.partial({
-			options: t.UnknownRecord,
-		}),
-	]),
-]);
-export type SliceMachineConfigPluginRegistration = t.TypeOf<
-	typeof SliceMachineConfigPluginRegistration
->;
+	SliceMachinePluginOptions,
+} from "@slicemachine/plugin-kit";
 
-export const SliceMachineConfig = t.intersection([
-	t.type({
-		repositoryName: t.string,
-		adapter: SliceMachineConfigPluginRegistration,
-	}),
-	t.partial({
-		libraries: t.array(t.string),
-		localSliceSimulatorURL: t.string,
-		plugins: t.array(SliceMachineConfigPluginRegistration),
-	}),
-]);
-export type SliceMachineConfig = t.TypeOf<typeof SliceMachineConfig>;
+/**
+ * A string, object, or instance representing a registered plugin.
+ *
+ * @typeParam TSliceMachinePluginOptions - User-provided options for the plugin.
+ */
+export type SliceMachineConfigPluginRegistration<
+	TSliceMachinePluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
+> =
+	| string
+	| SliceMachinePlugin
+	| {
+			resolve: string | SliceMachinePlugin;
+			options?: TSliceMachinePluginOptions;
+	  };
+
+/**
+ * Slice Machine configuration from `slicemachine.config.js`.
+ */
+export type SliceMachineConfig = {
+	// TODO: Is `_latest` necessary? Can we deprecate it?
+	_latest: string;
+	// TODO: Can we make `apiEndpoint` optional?
+	apiEndpoint?: string;
+	// NOTE: This is a new property.
+	repositoryName: string;
+	localSliceSimulatorURL?: string;
+	libraries?: string[];
+	adapter: SliceMachineConfigPluginRegistration;
+	plugins?: SliceMachineConfigPluginRegistration[];
+};

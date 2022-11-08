@@ -44,6 +44,7 @@
     "@prismicio/types-internal": "^0.3.0",
     "@slicemachine/client": "1.1.15",
     "@slicemachine/core": "1.1.15",
+    "@slicemachine/core2": "0.1.0",
     "@svgr/webpack": "^5.4.0",
     "analytics-node": "^6.1.0",
     "axios": "^0.26.0",

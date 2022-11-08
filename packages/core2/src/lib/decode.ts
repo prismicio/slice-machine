@@ -3,7 +3,7 @@ import { formatValidationErrors } from "io-ts-reporters";
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 
-type DecodeReturnType<A> =
+export type DecodeReturnType<A> =
 	| {
 			value: undefined;
 			errors: string[];

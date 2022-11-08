@@ -20,19 +20,18 @@ import {
 	SliceReadHookData,
 	SliceUpdateHook,
 	SliceUpdateHookData,
+	createSliceMachinePluginRunner,
 } from "@slicemachine/plugin-kit";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { captureSliceSimulatorScreenshot } from "./lib/captureSliceSimulatorScreenshot";
 
-import { decode } from "./lib/decode";
+import { captureSliceSimulatorScreenshot } from "./lib/captureSliceSimulatorScreenshot";
+import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
 import { loadModuleWithJiti } from "./lib/loadModuleWithJiti";
+import { locateFileUpward } from "./lib/findFileUpward";
 
 import { SliceMachineConfig } from "./types";
-
-declare const createSliceMachinePluginRunner: (args: {
-	projectConfig: SliceMachineConfig;
-}) => SliceMachinePluginRunner;
+import { SLICE_MACHINE_CONFIG_FILENAMES } from "./constants";
 
 function assertPluginsInitialized(
 	pluginRunner: SliceMachinePluginRunner | undefined,
@@ -137,38 +136,49 @@ type SliceMachineManagerPushCustomTypeArgs = {
 };
 
 export class SliceMachineManager {
-	private _pluginRunner: SliceMachinePluginRunner | undefined;
-	private _projectConfig: SliceMachineConfig | undefined;
+	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined;
+	private _sliceMachineConfig: SliceMachineConfig | undefined;
+	private _sliceMachineRoot: string | undefined;
 
-	async getProjectConfig(): Promise<SliceMachineConfig> {
-		if (this._projectConfig) {
-			return this._projectConfig;
+	async getProjectRoot(): Promise<string> {
+		if (this._sliceMachineRoot) {
+			return this._sliceMachineRoot;
+		}
+
+		return locateFileUpward(SLICE_MACHINE_CONFIG_FILENAMES);
+	}
+
+	async getSliceMachineConfig(): Promise<SliceMachineConfig> {
+		if (this._sliceMachineConfig) {
+			return this._sliceMachineConfig;
 		} else {
-			return await this.loadProjectConfig();
+			return await this.loadSliceMachineConfig();
 		}
 	}
 
-	async loadProjectConfig(): Promise<SliceMachineConfig> {
-		let config: SliceMachineConfig | undefined;
+	async loadSliceMachineConfig(): Promise<SliceMachineConfig> {
+		const projectRoot = await this.getProjectRoot();
 
-		for (const configPath of [
-			"slicemachine.config.ts",
-			"slicemachine.config.js",
-		]) {
+		let configModule: unknown | undefined;
+
+		for (const configFileName of SLICE_MACHINE_CONFIG_FILENAMES) {
+			const configFilePath = path.resolve(projectRoot, configFileName);
+
 			try {
-				await fs.access(configPath);
-				config = loadModuleWithJiti(path.resolve(configPath));
+				await fs.access(configFilePath);
+				configModule = loadModuleWithJiti(path.resolve(configFileName));
 			} catch {
 				// noop
 			}
 		}
 
-		if (!config) {
+		if (!configModule) {
 			// TODO: Write a more friendly and useful message.
 			throw new Error("No config found.");
 		}
 
-		const { value, errors } = decode(SliceMachineConfig, config);
+		const { value: sliceMachineConfig, errors } =
+			decodeSliceMachineConfig(configModule);
 
 		if (errors) {
 			// TODO: Write a more friendly and useful message.
@@ -176,29 +186,31 @@ export class SliceMachineManager {
 		}
 
 		// Allow cached config reading using `SliceMachineManager.prototype.getProjectConfig()`.
-		this._projectConfig = value;
+		this._sliceMachineConfig = sliceMachineConfig;
 
-		return value;
-	}
-
-	async setProjectConfig(projectConfig: SliceMachineConfig): Promise<void> {
-		this._projectConfig = projectConfig;
+		return sliceMachineConfig;
 	}
 
 	async initPlugins(): Promise<void> {
-		const projectConfig = await this.getProjectConfig();
+		const projectRoot = await this.getProjectRoot();
+		const sliceMachineConfig = await this.getSliceMachineConfig();
 
-		this._pluginRunner = createSliceMachinePluginRunner({ projectConfig });
+		this._sliceMachinePluginRunner = createSliceMachinePluginRunner({
+			project: {
+				root: projectRoot,
+				config: sliceMachineConfig,
+			},
+		});
 
-		await this._pluginRunner.init();
+		await this._sliceMachinePluginRunner.init();
 	}
 
 	async readSliceLibrary(
 		args: SliceLibraryReadHookData,
 	): Promise<SliceMachineManagerReadSliceLibraryReturnType> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook(
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"slice-library:read",
 			args,
 		);
@@ -212,9 +224,12 @@ export class SliceMachineManager {
 	async createSlice(
 		args: SliceCreateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceCreateHook>>> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook("slice:create", args);
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:create",
+			args,
+		);
 
 		return {
 			errors: hookResult.errors,
@@ -224,9 +239,12 @@ export class SliceMachineManager {
 	async readSlice(
 		args: SliceReadHookData,
 	): Promise<SliceMachineManagerReadSliceReturnType> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook("slice:read", args);
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:read",
+			args,
+		);
 
 		return {
 			model: hookResult.data[0]?.model,
@@ -237,9 +255,12 @@ export class SliceMachineManager {
 	async updateSlice(
 		args: SliceUpdateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook("slice:update", args);
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:update",
+			args,
+		);
 
 		return {
 			errors: hookResult.errors,
@@ -250,9 +271,12 @@ export class SliceMachineManager {
 	async deleteSlice(
 		args: SliceDeleteHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceDeleteHook>>> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook("slice:delete", args);
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:delete",
+			args,
+		);
 
 		return {
 			errors: hookResult.errors,
@@ -260,7 +284,7 @@ export class SliceMachineManager {
 	}
 
 	async pushSlice(_args: SliceMachineManagerPushSliceArgs): Promise<void> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
 		// TODO: Push Slice to Prismic.
 	}
@@ -268,13 +292,16 @@ export class SliceMachineManager {
 	async readSliceScreenshot(
 		args: SliceMachineManagerReadSliceScreenshotArgs,
 	): Promise<SliceMachineManagerReadSliceScreenshotReturnType> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook("slice:asset:read", {
-			libraryID: args.libraryID,
-			sliceID: args.sliceID,
-			assetID: `screenshot-${args.variationID}`,
-		});
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:asset:read",
+			{
+				libraryID: args.libraryID,
+				sliceID: args.sliceID,
+				assetID: `screenshot-${args.variationID}`,
+			},
+		);
 
 		return {
 			data: hookResult.data[0]?.data,
@@ -285,16 +312,19 @@ export class SliceMachineManager {
 	async updateSliceScreenshot(
 		args: SliceMachineManagerUpdateSliceScreenshotArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook("slice:asset:update", {
-			libraryID: args.libraryID,
-			sliceID: args.sliceID,
-			asset: {
-				id: `screenshot-${args.variationID}`,
-				data: args.data,
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:asset:update",
+			{
+				libraryID: args.libraryID,
+				sliceID: args.sliceID,
+				asset: {
+					id: `screenshot-${args.variationID}`,
+					data: args.data,
+				},
 			},
-		});
+		);
 
 		return {
 			errors: hookResult.errors,
@@ -304,7 +334,7 @@ export class SliceMachineManager {
 	async captureSliceScreenshot(
 		args: SliceMachineManagerCaptureSliceScreenshotArgs,
 	): Promise<SliceMachineManagerCaptureSliceScreenshotReturnType> {
-		const projectConfig = await this.getProjectConfig();
+		const projectConfig = await this.getSliceMachineConfig();
 
 		const { data } = await captureSliceSimulatorScreenshot({
 			sliceID: args.sliceID,
@@ -321,9 +351,9 @@ export class SliceMachineManager {
 	async readCustomTypeLibrary(
 		args: CustomTypeLibraryReadHookData,
 	): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook(
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"custom-type-library:read",
 			args,
 		);
@@ -337,9 +367,9 @@ export class SliceMachineManager {
 	async createCustomType(
 		args: CustomTypeCreateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeCreateHook>>> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook(
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"custom-type:create",
 			args,
 		);
@@ -352,9 +382,9 @@ export class SliceMachineManager {
 	async readCustomType(
 		args: CustomTypeReadHookData,
 	): Promise<SliceMachineManagerReadCustomTypeReturnType> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook(
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"custom-type:read",
 			args,
 		);
@@ -368,9 +398,9 @@ export class SliceMachineManager {
 	async updateCustomType(
 		args: CustomTypeUpdateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook(
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"custom-type:update",
 			args,
 		);
@@ -384,9 +414,9 @@ export class SliceMachineManager {
 	async deleteCustomType(
 		args: CustomTypeDeleteHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeDeleteHook>>> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		const hookResult = await this._pluginRunner.callHook(
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"custom-type:delete",
 			args,
 		);
@@ -399,7 +429,7 @@ export class SliceMachineManager {
 	async pushCustomType(
 		_args: SliceMachineManagerPushCustomTypeArgs,
 	): Promise<void> {
-		assertPluginsInitialized(this._pluginRunner);
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
 		// TODO: Push CustomType to Prismic.
 	}
