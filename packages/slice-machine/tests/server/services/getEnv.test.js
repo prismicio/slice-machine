@@ -280,8 +280,9 @@ describe("getEnv", () => {
     process.env.customtypesapi_endpoint = "foo";
     process.env.user_service_endpoint = "foo";
     process.env.acl_provider_endpoint = "foo";
+    process.env.wroom_endpoint = "foo";
 
-    const exitSpy = jest.spyOn(process, "exit");
+    const exitSpy = jest.spyOn(process, "exit").mockImplementation((_) => _);
     fs.reset();
     fs.use(
       Volume.fromJSON(
