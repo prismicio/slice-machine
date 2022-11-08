@@ -88,6 +88,7 @@ export const CustomTypeTable: React.FC<{
                 </Box>
                 <Box as={"td"} style={{ width: fifthColumnWidth }}>
                   <KebabMenuDropdown
+                    dataCy="edit-custom-type-menu"
                     menuOptions={[
                       {
                         displayName: "Rename",

@@ -56,8 +56,7 @@ type CustomTypesActions =
   | ActionType<typeof createCustomTypeCreator>
   | ActionType<typeof renameCustomTypeCreator>
   | ActionType<typeof saveCustomTypeCreator>
-  | ActionType<typeof pushCustomTypeCreator>
-  | ActionType<typeof renameCustomTypeCreator>;
+  | ActionType<typeof pushCustomTypeCreator>;
 
 // Selectors
 export const selectAllCustomTypes = (
