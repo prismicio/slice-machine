@@ -67,7 +67,7 @@ export default {
     // the output type should be Mocks but it's not typed yet
     const mocks = Files.readEntity<ComponentMocks>(
       mocksPath,
-      (payload: any) => {
+      (payload: unknown) => {
         return getOrElseW(() => new Error("Invalid SharedSlice mocks"))(
           ComponentMocks.decode(payload)
         );

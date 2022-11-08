@@ -26,7 +26,7 @@ export function generate(
         .library(c.from)
         .slice(c.model.name)
         .mocks();
-      const mocks = Files.readEntityFromFile<ComponentMocks>(
+      const currentMocks = Files.readEntityFromFile<ComponentMocks>(
         mocksPath,
         (payload: unknown) => {
           return getOrElseW(() => new Error("Invalid component mocks."))(
@@ -35,7 +35,7 @@ export function generate(
         }
       );
 
-      if (!mocks || mocks instanceof Error) {
+      if (!currentMocks || currentMocks instanceof Error) {
         const mocks: ComponentMocks = mock(
           c.model,
           SliceMockConfig.getSliceMockConfig(

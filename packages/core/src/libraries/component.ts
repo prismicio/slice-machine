@@ -169,7 +169,7 @@ export function getComponentInfo(
   const mocks = (() => {
     const resolvedMocks = Files.readEntityFromFile<ComponentMocks>(
       path.join(basePath, from, sliceName, "mocks.json"),
-      (payload: any) => {
+      (payload: unknown) => {
         return getOrElseW(() => new Error("Invalid SharedSlice mocks"))(
           ComponentMocks.decode(payload)
         );
