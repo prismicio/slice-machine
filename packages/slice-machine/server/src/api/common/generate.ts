@@ -1,10 +1,8 @@
 import mock from "../../../../lib/mock/Slice";
-import * as LibrariesState from "./LibrariesState";
 
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
 import { ComponentUI } from "../../../../lib/models/common/ComponentUI";
-import { GeneratedPaths } from "../../../../lib/models/paths";
 import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
 import { getConfig as getGobalMockConfig } from "../../../../lib/mock/misc/fs";
 import { ComponentMocks } from "@slicemachine/core/build/models/Library";
@@ -46,11 +44,10 @@ export function generate(
           )
         );
         Files.writeJson(
-          GeneratedPaths(env.cwd).library(c.from).slice(c.model.name).mocks(),
+          CustomPaths(env.cwd).library(c.from).slice(c.model.name).mocks(),
           mocks
         );
       }
     });
   } catch (e) {}
-  LibrariesState.generateState(env);
 }
