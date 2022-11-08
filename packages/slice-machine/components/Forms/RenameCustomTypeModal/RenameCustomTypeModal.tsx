@@ -10,16 +10,18 @@ import { FormikErrors } from "formik";
 import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 
 interface RenameCustomTypeModalProps {
-  customTypeName: string;
-  customTypeId: string;
+  customType?: FrontEndCustomType;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
-  customTypeName,
-  customTypeId,
+  customType,
 }) => {
+  const customTypeName = customType?.local.label ?? "";
+  const customTypeId = customType?.local.id ?? "";
+
   const { renameCustomType, closeRenameCustomTypeModal } =
     useSliceMachineActions();
 

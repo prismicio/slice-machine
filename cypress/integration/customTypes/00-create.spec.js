@@ -36,17 +36,26 @@ describe("Custom Types specs", () => {
     cy.readFile(type).should("contains", name);
 
     //edit custom type name
-    cy.get('[data-cy="edit-custom-type"]').click();
-    cy.get("[data-cy=rename-custom-type-modal]").should("be.visible");
+    cy.visit("/");
+    cy.waitUntil(() => cy.get("[data-cy=edit-custom-type-menu]")).then(
+      () => true
+    );
+
+    cy.get('[data-cy="edit-custom-type-menu"]').click();
+
+    cy.get("[data-cy=edit-custom-type-menu-dropdown]").should("be.visible");
+
+    cy.get('[data-cy="ct-rename-menu-option"]').click();
+
     cy.get('[data-cy="custom-type-name-input"]').should("have.value", name);
     cy.get('[data-cy="custom-type-name-input"]')
       .clear()
       .type(`${name} - Edited`);
     cy.get("[data-cy=rename-custom-type-modal]").submit();
     cy.get("[data-cy=rename-custom-type-modal]").should("not.exist");
-    cy.get('[data-cy="custom-type-secondary-breadcrumb"]').contains(
-      `/ ${name} - Edited`
-    );
+
+    cy.get(`[data-cy="custom-type-${id}-label"]`).contains("Edited");
+
     cy.readFile(type).should("contains", `${name} - Edited`);
   });
 
