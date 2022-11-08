@@ -43,7 +43,7 @@ export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
             boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
           }}
           onClick={(event) => {
-            event.stopPropagation();
+            event.preventDefault();
             setIsOpen(!isOpen);
           }}
         >
