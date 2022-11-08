@@ -29,7 +29,7 @@ export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
         align="end"
         isOpen={isOpen}
         onClickOutside={() => setIsOpen(false)}
-        positions={["bottom"]}
+        positions={["bottom", "top"]}
         padding={2}
         content={() => (
           <KebabMenuList
