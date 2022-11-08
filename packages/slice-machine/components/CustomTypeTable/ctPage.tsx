@@ -1,6 +1,6 @@
 import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Box, Text } from "theme-ui";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { useModelStatus } from "@src/hooks/useModelStatus";
@@ -22,6 +22,9 @@ export const CustomTypeTable: React.FC<{
   const fifthColumnWidth = "6%";
 
   const { openRenameCustomTypeModal } = useSliceMachineActions();
+
+  // eslint-disable-next-line
+  const noop = useCallback(() => {}, []);
 
   return (
     <>
@@ -85,12 +88,10 @@ export const CustomTypeTable: React.FC<{
                 </Box>
                 <Box as={"td"} style={{ width: fifthColumnWidth }}>
                   <KebabMenuDropdown
-                    dataCy="edit-custom-type-menu"
                     menuOptions={[
                       {
                         displayName: "Rename",
-                        onClick: (event) => {
-                          event.stopPropagation();
+                        onClick: () => {
                           setCustomTypeToRename(customType);
                           openRenameCustomTypeModal();
                         },
@@ -98,9 +99,7 @@ export const CustomTypeTable: React.FC<{
                       },
                       {
                         displayName: "Delete",
-                        onClick: (event) => {
-                          event.stopPropagation();
-                        },
+                        onClick: noop,
                       },
                     ]}
                   />
