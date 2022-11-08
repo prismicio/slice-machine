@@ -110,7 +110,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         onRemoveSharedSlice(key);
       });
     }
-  }, [notFound]);
+  }, [JSON.stringify(notFound)]);
 
   const sharedSlicesInSliceZone = slicesInSliceZone
     .filter((e) => e.type === SlicesTypes.SharedSlice)
