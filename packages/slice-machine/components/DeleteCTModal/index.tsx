@@ -102,7 +102,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             />
             <Button
               label="Delete Locally"
-              variant="red"
+              variant="danger"
               onClick={() => closeDeleteCustomTypeModal()}
             />
           </Flex>

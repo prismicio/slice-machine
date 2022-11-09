@@ -44,7 +44,7 @@ const AppTheme = (): Theme =>
       },
       codeBlockBorder: "#545454",
       secondary: "#F9FAFB",
-      red: "#CB2431",
+      danger: "#CB2431",
       highlight: "hsl(10, 40%, 90%)",
       purple: "#5B3DF5",
       muted: "#F9F9FB",
@@ -319,8 +319,8 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
       },
-      red: {
-        bg: "red",
+      danger: {
+        bg: "danger",
         fontFamily: "body",
         fontWeight: "bold",
         fontSize: "1",
@@ -330,16 +330,16 @@ const AppTheme = (): Theme =>
         borderRadius: "6px",
         border: `1px solid #C61926`,
         "&:hover": {
-          bg: darken("red", 0.05),
+          bg: darken("danger", 0.05),
           cursor: "pointer",
         },
         "&:focus": {
-          bg: darken("red", 0.05),
-          borderColor: darken("red", 0.15),
+          bg: darken("danger", 0.05),
+          borderColor: darken("danger", 0.15),
           outline: "none",
         },
         "&:active": {
-          bg: darken("red", 0.06),
+          bg: darken("danger", 0.06),
           outline: "none",
         },
       },
