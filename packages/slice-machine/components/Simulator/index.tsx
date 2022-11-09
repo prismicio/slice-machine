@@ -1,4 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  SharedSliceEditor,
+  defaultSharedSliceContent,
+} from "@prismicio/editor-fields";
 
 import { Box, Flex } from "theme-ui";
 
@@ -21,6 +25,13 @@ import {
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { Slices } from "@slicemachine/core/build/models";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
+import { renderSliceMock } from "@prismicio/mocks";
+
+import { ThemeProvider } from "@prismicio/editor-ui";
+
+import throttle from "lodash.throttle";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
@@ -58,22 +69,53 @@ export default function Simulator() {
     return <div />;
   }
 
-  const sliceView = useMemo(
-    () => [
-      {
-        sliceID: component.model.id,
-        variationID: variation.id,
-      },
-    ],
-    [component.model.id, variation.id]
+  const sharedSlice = useMemo(
+    () => Slices.fromSM(component.model),
+    [component.model]
   );
 
+  const initialContent = useMemo<SharedSliceContent>(
+    () =>
+    component?.mock?.[0] as unknown as SharedSliceContent || defaultSharedSliceContent(variation.id),
+    [component.mock, variation.id]
+  );
+
+  const [editorContent, setContent] = useState(initialContent);
+  const initialApiContent = useMemo(
+    () =>
+      renderSliceMock(sharedSlice, editorContent) as {
+        id: string;
+        [k: string]: unknown;
+      },
+    []
+  );
+
+  const [prevVariationId, setPrevVariationId] = useState(variation.id);
+  if (variation.id !== prevVariationId) {
+    setContent(initialContent);
+    setPrevVariationId(variation.id);
+  }
+
+  const apiContent = useMemo(
+    () =>
+      throttle(() => {
+        return {
+          ...(renderSliceMock(sharedSlice, editorContent) as object),
+          id: initialApiContent.id,
+        };
+      }, 10000),
+    [sharedSlice, editorContent, initialContent]
+  );
+
+  const [isDisplayEditor, toggleIsDisplayEditor] = useState(true);
+
   return (
-    <Flex sx={{ height: "100vh", flexDirection: "column" }}>
+    <Flex sx={{ flexDirection: "column", height: "100vh" }}>
       <Header
-        Model={component}
+        slice={component}
         variation={variation}
-        screenDimensions={screenDimensions}
+        isDisplayEditor={isDisplayEditor}
+        toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
       />
       <Box
         sx={{
@@ -84,18 +126,50 @@ export default function Simulator() {
           flexDirection: "column",
         }}
       >
-        <Toolbar
-          Model={component}
-          variation={variation}
-          handleScreenSizeChange={setScreenDimensions}
-          screenDimensions={screenDimensions}
-        />
-        <Flex style={{ flex: 1, overflow: "scroll" }}>
-          <IframeRenderer
-            screenDimensions={screenDimensions}
-            simulatorUrl={simulatorUrl}
-            sliceView={sliceView}
-          />
+        <Flex
+          sx={{
+            flex: 1,
+            flexDirection: "row",
+            position: "relative",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+            }}
+          >
+            <Toolbar
+              slice={component}
+              variation={variation}
+              handleScreenSizeChange={setScreenDimensions}
+              screenDimensions={screenDimensions}
+            />
+            <IframeRenderer
+              apiContent={apiContent()}
+              screenDimensions={screenDimensions}
+              simulatorUrl={simulatorUrl}
+            />
+          </Box>
+          <Box
+            sx={{
+              height: "100%",
+              overflowY: "scroll",
+              marginLeft: isDisplayEditor ? "16px" : "0px",
+              visibility: isDisplayEditor ? "visible" : "hidden",
+              width: isDisplayEditor ? "400px" : "0",
+              transition: "visibility 0s linear",
+            }}
+          >
+            <ThemeProvider>
+              <SharedSliceEditor
+                content={editorContent}
+                onContentChange={setContent}
+                sharedSlice={sharedSlice}
+              />
+            </ThemeProvider>
+          </Box>
         </Flex>
       </Box>
       {!!component.screenshots[variation.id]?.url && (

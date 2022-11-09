@@ -26,7 +26,7 @@ function useSimulatorClient(): readonly [
         setClient(clientRef.current);
         const reconnect = async () => {
           setClient(undefined);
-          await clientRef.current?.connect(true);
+          await clientRef.current?.connect({}, true);
           setClient(clientRef.current);
         };
         observerRef.current = new MutationObserver((mutations) => {
@@ -48,17 +48,19 @@ function useSimulatorClient(): readonly [
 }
 
 type IframeRendererProps = {
+  apiContent?: unknown;
+  sliceView?: SliceView;
   screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
-  sliceView: SliceView;
   dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
+  apiContent,
   screenDimensions,
   simulatorUrl,
-  sliceView,
   dryRun = false,
+  sliceView,
 }) => {
   const [client, ref] = useSimulatorClient();
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
@@ -79,8 +81,14 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
 
     const updateSliceZone = async () => {
-      await client.setSliceZoneFromSliceIDs(sliceView);
+      if (sliceView) {
+        // When used outside of the simulator atm
+        await client.setSliceZoneFromSliceIDs(sliceView);
+      } else {
+        await client.setSliceZone([apiContent as any]);
+      }
     };
+
     updateSliceZone()
       .then(() => {
         connectToSimulatorSuccess();
@@ -88,15 +96,13 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, screenDimensions, sliceView]);
+  }, [client, screenDimensions, sliceView, apiContent]);
 
   return (
     <Box
       sx={{
-        flex: 1,
+        width: "100%",
         backgroundColor: "white",
-        minWidth: "fit-content",
-        height: "100%",
         border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         borderRadius: 8,
         overflow: "hidden",
@@ -111,7 +117,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           backgroundRepeat: "repeat",
           backgroundSize: "10px",
           border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
-          width: "fit-content",
           mx: "auto",
           flexDirection: "column",
           justifyContent: "center",
