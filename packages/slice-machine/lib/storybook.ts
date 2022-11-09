@@ -1,14 +1,16 @@
 import path from "path";
 import TemplateEngine from "ejs";
-
+import { getOrElseW } from "fp-ts/Either";
 import Files from "./utils/files";
 import { CustomPaths, GeneratedPaths } from "./models/paths";
 import { Models } from "@slicemachine/core";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 import { renderSliceMock } from "@prismicio/mocks";
 import { createStorybookId } from "./utils/str";
-import { SliceSM } from "@slicemachine/core/build/models";
-import { Slices } from "@slicemachine/core/build/models";
+import {
+  Slices,
+  SliceSM,
+  ComponentMocks,
+} from "@slicemachine/core/build/models";
 
 const Paths = {
   nuxtTemplate: (appRoot: string) =>
@@ -57,24 +59,22 @@ export default {
       return;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const generatedMocksPath = GeneratedPaths(cwd)
-      .library(libraryName)
-      .slice(sliceName)
-      .mocks();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const customMocksPath = CustomPaths(cwd)
+    const mocksPath = CustomPaths(cwd)
       .library(libraryName)
       .slice(sliceName)
       .mocks();
 
     // the output type should be Mocks but it's not typed yet
-    const mocks = Files.readFirstOf<
-      SharedSliceContent[],
-      Record<string, unknown>
-    >([customMocksPath, generatedMocksPath])((value: string) => {
-      return JSON.parse(value) as unknown as SharedSliceContent[];
-    });
-    if (!mocks) {
+    const mocks = Files.readEntity<ComponentMocks>(
+      mocksPath,
+      (payload: unknown) => {
+        return getOrElseW(() => new Error("Invalid SharedSlice mocks"))(
+          ComponentMocks.decode(payload)
+        );
+      }
+    );
+
+    if (!mocks || mocks instanceof Error) {
       console.error(`No mocks available, cannot generate stories`);
       return;
     }
@@ -89,7 +89,7 @@ export default {
 
     const template = Files.readString(templatePath);
 
-    const withPascalizedIds = (mocks.value || []).map((mock) => {
+    const withPascalizedIds = (mocks || []).map((mock) => {
       const shareSlice = Slices.fromSM(sliceModel);
       // TODO: have a codec or type for api format
       const apiMock = renderSliceMock(shareSlice, mock) as Record<

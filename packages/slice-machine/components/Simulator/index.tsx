@@ -26,10 +26,11 @@ import {
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { Slices } from "@slicemachine/core/build/models";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
+
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
 
 import throttle from "lodash.throttle";
 
@@ -76,7 +77,8 @@ export default function Simulator() {
 
   const initialContent = useMemo<SharedSliceContent>(
     () =>
-    component?.mock?.[0] as unknown as SharedSliceContent || defaultSharedSliceContent(variation.id),
+      component.mock?.[0] ||
+      (defaultSharedSliceContent(variation.id) as SharedSliceContent),
     [component.mock, variation.id]
   );
 
@@ -103,7 +105,7 @@ export default function Simulator() {
           ...(renderSliceMock(sharedSlice, editorContent) as object),
           id: initialApiContent.id,
         };
-      }, 10000),
+      }, 100),
     [sharedSlice, editorContent, initialContent]
   );
 
@@ -156,16 +158,24 @@ export default function Simulator() {
             sx={{
               height: "100%",
               overflowY: "scroll",
-              marginLeft: isDisplayEditor ? "16px" : "0px",
-              visibility: isDisplayEditor ? "visible" : "hidden",
-              width: isDisplayEditor ? "400px" : "0",
+              ...(isDisplayEditor
+                ? {
+                    marginLeft: "16px",
+                    visibility: "visible",
+                    width: "400px",
+                  }
+                : {
+                    marginLeft: "0px",
+                    visibility: "hidden",
+                    width: "0",
+                  }),
               transition: "visibility 0s linear",
             }}
           >
             <ThemeProvider>
               <SharedSliceEditor
                 content={editorContent}
-                onContentChange={setContent}
+                onContentChange={(c) => setContent(c as SharedSliceContent)}
                 sharedSlice={sharedSlice}
               />
             </ThemeProvider>
