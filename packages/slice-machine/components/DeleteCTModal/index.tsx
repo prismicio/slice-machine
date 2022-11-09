@@ -42,6 +42,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           borderRadius: "0px",
         },
       }}
+      onRequestClose={closeDeleteCustomTypeModal}
     >
       <Card
         radius={"0px"}
