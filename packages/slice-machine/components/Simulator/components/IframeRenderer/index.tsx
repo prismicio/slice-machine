@@ -85,6 +85,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
         // When used outside of the simulator atm
         await client.setSliceZoneFromSliceIDs(sliceView);
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await client.setSliceZone([apiContent as any]);
       }
     };
