@@ -48,7 +48,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
         radius={"0px"}
         bodySx={{
           p: 0,
-          bg: "#FFF",
+          bg: "white",
           position: "relative",
           height: "100%",
           padding: 16,
@@ -80,12 +80,12 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
         )}
         Footer={() => (
           <Flex
-            style={{
+            sx={{
               justifyContent: "flex-end",
               height: 64,
               alignItems: "center",
               paddingRight: 16,
-              borderTop: "1px solid #DCDBDD",
+              borderTop: (t) => `1px solid ${String(t.colors?.darkBorders)}`,
               backgroundColor: "white",
             }}
           >
@@ -96,7 +96,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
               sx={{
                 mr: "10px",
                 fontWeight: "bold",
-                color: "#1A1523",
+                color: "grey12",
                 borderRadius: 6,
               }}
             />

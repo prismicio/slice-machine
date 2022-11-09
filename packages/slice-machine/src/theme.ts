@@ -55,6 +55,7 @@ const AppTheme = (): Theme =>
       grey04: "#9AA4AF",
       grey05: "#667587",
       grey07: "#F9F8F9",
+      grey12: "#1A1523",
       greyTransparent: "rgba(37, 37, 45, 0.4)",
       borders: "#E4E2E4",
       bordersFocused: "#6E56CF",

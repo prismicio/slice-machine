@@ -131,7 +131,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
   const closeScreenshotPreviewModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-
   const openDeleteCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
   const closeDeleteCustomTypeModal = () =>

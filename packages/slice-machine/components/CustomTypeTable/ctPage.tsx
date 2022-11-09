@@ -13,9 +13,7 @@ export const CustomTypeTable: React.FC<{
   customTypes: FrontEndCustomType[];
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
-  const [customTypeToRename, setCustomTypeToRename] =
-    useState<FrontEndCustomType>();
-  const [customTypeToDelete, setCustomTypeToDelete] =
+  const [customTypeToEdit, setCustomTypeToEdit] =
     useState<FrontEndCustomType>();
 
   const firstColumnWidth = "27%";
@@ -94,7 +92,7 @@ export const CustomTypeTable: React.FC<{
                       {
                         displayName: "Rename",
                         onClick: () => {
-                          setCustomTypeToRename(customType);
+                          setCustomTypeToEdit(customType);
                           openRenameCustomTypeModal();
                         },
                         dataCy: "ct-rename-menu-option",
@@ -102,7 +100,7 @@ export const CustomTypeTable: React.FC<{
                       {
                         displayName: "Delete",
                         onClick: () => {
-                          setCustomTypeToDelete(customType);
+                          setCustomTypeToEdit(customType);
                           openDeleteCustomTypeModal();
                         },
                       },
@@ -114,8 +112,8 @@ export const CustomTypeTable: React.FC<{
           ))}
         </tbody>
       </Box>
-      <RenameCustomTypeModal customType={customTypeToRename} />
-      <DeleteCustomTypeModal customType={customTypeToDelete} />
+      <RenameCustomTypeModal customType={customTypeToEdit} />
+      <DeleteCustomTypeModal customType={customTypeToEdit} />
     </>
   );
 };
