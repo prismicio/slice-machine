@@ -54,7 +54,6 @@ export const renameSliceCreator = createAsyncAction(
     sliceId: string;
     newSliceName: string;
     libName: string;
-    variationId: string;
   },
   {
     sliceId: string;

@@ -141,7 +141,6 @@ const Header: React.FC<{
             sliceId={component.model.id}
             sliceName={component.model.name}
             libName={component.from}
-            variationId={variation.id}
             data-cy="rename-slice-modal"
           />
         </Flex>

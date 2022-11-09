@@ -15,14 +15,12 @@ interface RenameSliceModalProps {
   sliceName: string;
   sliceId: string;
   libName: string;
-  variationId: string;
 }
 
 export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
   sliceName,
   sliceId,
   libName,
-  variationId,
 }) => {
   const { renameSlice, closeRenameSliceModal } = useSliceMachineActions();
   const { isRenameSliceModalOpen, localLibs, remoteLibs } = useSelector(
@@ -34,7 +32,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
   );
 
   const handleOnSubmit = (values: { sliceName: string }) => {
-    renameSlice(sliceId, values.sliceName, libName, variationId);
+    renameSlice(sliceId, values.sliceName, libName);
   };
 
   return (
