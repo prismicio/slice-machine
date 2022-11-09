@@ -2,7 +2,7 @@
   // TS Config used to build the common code to both frontend and backend of the application.
   "compilerOptions": {
     "target": "ES2019",
-    "module": "commonjs",
+    "module": "ESNext",
     "allowJs": true,
     "outDir": "../build",
     "removeComments": true,

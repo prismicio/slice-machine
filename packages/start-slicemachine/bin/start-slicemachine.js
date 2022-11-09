@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
 void (async () => {
-  const mod = await import("../build/scripts/start2/index.js");
+  const mod = await import("../dist/index.cjs");
   await mod.default();
 })();

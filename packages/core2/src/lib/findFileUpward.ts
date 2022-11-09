@@ -34,7 +34,7 @@ export const locateFileUpward = async (
 
 	if (startDir === stopDir) {
 		throw new Error(
-			`Could not locate \`${filePathOrPaths}\` between \`${stopDir}\` and \`${stopDir}\`.`,
+			`Could not locate \`${filePathOrPaths}\` between \`${startDir}\` and \`${stopDir}\`.`,
 		);
 	}
 

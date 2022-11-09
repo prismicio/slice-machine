@@ -35,5 +35,5 @@
     }
   },
   "exclude": ["node_modules", "templates", "tests/project", "build"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts", "**/*.js"]
 }

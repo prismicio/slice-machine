@@ -1,0 +1,30 @@
+{
+  "name": "start-slicemachine",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "bin": {
+    "start-slicemachine": "./bin/start-slicemachine.js"
+  },
+  "dependencies": {
+    "@slicemachine/core2": "0.1.0"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^8.1.0",
+    "@typescript-eslint/eslint-plugin": "~5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "@vitest/coverage-c8": "^0.24.3",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "prettier-plugin-jsdoc": "^0.4.2",
+    "size-limit": "^8.1.0",
+    "typescript": "^4.8.4",
+    "vite": "^3.2.1",
+    "vite-plugin-sdk": "^0.0.5",
+    "vitest": "^0.24.3"
+  }
+}

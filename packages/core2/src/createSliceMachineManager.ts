@@ -145,7 +145,13 @@ export class SliceMachineManager {
 			return this._sliceMachineRoot;
 		}
 
-		return locateFileUpward(SLICE_MACHINE_CONFIG_FILENAMES);
+		const sliceMachineConfigFilePath = await locateFileUpward(
+			SLICE_MACHINE_CONFIG_FILENAMES,
+		);
+
+		this._sliceMachineRoot = path.dirname(sliceMachineConfigFilePath);
+
+		return this._sliceMachineRoot;
 	}
 
 	async getSliceMachineConfig(): Promise<SliceMachineConfig> {
@@ -219,6 +225,12 @@ export class SliceMachineManager {
 			sliceIDs: hookResult.data[0]?.sliceIDs,
 			errors: hookResult.errors,
 		};
+	}
+
+	async readAllSlices() {
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
+
+		return await this._sliceMachinePluginRunner.rawActions.readAllSliceModels();
 	}
 
 	async createSlice(
