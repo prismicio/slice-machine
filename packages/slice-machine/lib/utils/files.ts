@@ -140,6 +140,9 @@ const Files = {
       });
     } catch (e) {}
   },
+  removeDirectory(src: string) {
+    fs.rmSync(src, { recursive: true, force: true });
+  },
 };
 
 export default Files;
