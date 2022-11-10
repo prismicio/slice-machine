@@ -35,6 +35,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
       shouldCloseOnOverlayClick={true}
       contentLabel={"Screenshot Preview"}
       portalClassName={"ScreenshotPreviewModal"}
+      onRequestClose={closeScreenshotPreviewModal}
     >
       <Card
         radius={"0px"}

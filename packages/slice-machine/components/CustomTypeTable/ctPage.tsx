@@ -1,18 +1,19 @@
 import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { Box, Text } from "theme-ui";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
+import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
 
 export const CustomTypeTable: React.FC<{
   customTypes: FrontEndCustomType[];
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
-  const [customTypeToRename, setCustomTypeToRename] =
+  const [customTypeToEdit, setCustomTypeToEdit] =
     useState<FrontEndCustomType>();
 
   const firstColumnWidth = "27%";
@@ -21,10 +22,8 @@ export const CustomTypeTable: React.FC<{
   const fourthColumnWidth = "20%";
   const fifthColumnWidth = "6%";
 
-  const { openRenameCustomTypeModal } = useSliceMachineActions();
-
-  // eslint-disable-next-line
-  const noop = useCallback(() => {}, []);
+  const { openRenameCustomTypeModal, openDeleteCustomTypeModal } =
+    useSliceMachineActions();
 
   return (
     <>
@@ -93,14 +92,17 @@ export const CustomTypeTable: React.FC<{
                       {
                         displayName: "Rename",
                         onClick: () => {
-                          setCustomTypeToRename(customType);
+                          setCustomTypeToEdit(customType);
                           openRenameCustomTypeModal();
                         },
                         dataCy: "ct-rename-menu-option",
                       },
                       {
                         displayName: "Delete",
-                        onClick: noop,
+                        onClick: () => {
+                          setCustomTypeToEdit(customType);
+                          openDeleteCustomTypeModal();
+                        },
                       },
                     ]}
                   />
@@ -110,7 +112,8 @@ export const CustomTypeTable: React.FC<{
           ))}
         </tbody>
       </Box>
-      <RenameCustomTypeModal customType={customTypeToRename} />
+      <RenameCustomTypeModal customType={customTypeToEdit} />
+      <DeleteCustomTypeModal customType={customTypeToEdit} />
     </>
   );
 };

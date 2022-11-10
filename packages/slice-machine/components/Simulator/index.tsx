@@ -14,13 +14,13 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import Router from "next/router";
-import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { Toolbar } from "./components/Toolbar";
 import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
