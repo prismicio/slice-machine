@@ -143,7 +143,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                         s.filter((e) => e.model.id === slice.model.id),
                     });
                   },
-                  // TODO fixme
                   openRenameModale: (slice: ComponentUI) => {
                     setSliceForRename(slice);
                     openRenameSliceModal();

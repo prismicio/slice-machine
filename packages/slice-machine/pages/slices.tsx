@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Text, Link } from "theme-ui";
 import Container from "components/Container";

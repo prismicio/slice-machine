@@ -105,10 +105,12 @@ const SliceCardActions: React.FC<{
         />
       )}
       <KebabMenuDropdown
+        dataCy="slice-action-icon"
         menuOptions={[
           {
             displayName: "Rename",
             onClick: onRenameClick,
+            dataCy: "slice-action-rename",
           },
           {
             displayName: "Delete",

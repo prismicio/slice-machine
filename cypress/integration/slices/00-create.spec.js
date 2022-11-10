@@ -78,18 +78,18 @@ describe("Create Slices", () => {
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
     // edit slice name
-    cy.get('[data-cy="edit-slice-name"]').click();
+    cy.visit(`/slices`);
+    cy.waitUntil(() => cy.get("[data-cy=slice-action-icon]"));
+
+    cy.get('[data-cy="slice-action-icon"]').click();
+    cy.get("[data-cy=slice-action-rename]").should("be.visible");
+    cy.get("[data-cy=slice-action-rename]").click();
+
     cy.get("[data-cy=rename-slice-modal]").should("be.visible");
     cy.get('[data-cy="slice-name-input"]').should("have.value", sliceName);
     cy.get('[data-cy="slice-name-input"]').clear().type(`${editedSliceName}`);
     cy.get("[data-cy=rename-slice-modal]").submit();
-    cy.location("pathname", { timeout: 20000 }).should(
-      "eq",
-      `/${lib}/${editedSliceName}/default`
-    );
     cy.get("[data-cy=rename-slice-modal]").should("not.exist");
-    cy.get('[data-cy="slice-and-variation-name-header"]').contains(
-      `/ ${editedSliceName} / Default`
-    );
+    cy.contains(editedSliceName).should("exist");
   });
 });
