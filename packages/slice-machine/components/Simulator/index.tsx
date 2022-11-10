@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   SharedSliceEditor,
   defaultSharedSliceContent,
@@ -32,10 +32,31 @@ import { ThemeProvider } from "@prismicio/editor-ui";
 
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
 
-import throttle from "lodash.throttle";
+// import throttle from "lodash.throttle";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
+
+const IframeWrapper: React.FC<{
+  sharedSlice: SharedSlice;
+  screenDimensions: ScreenDimensions;
+  editorContent: SharedSliceContent;
+  simulatorUrl?: string;
+}> = ({ sharedSlice, editorContent, screenDimensions, simulatorUrl }) => {
+  const content = renderSliceMock(sharedSlice, editorContent);
+
+  return (
+    <IframeRenderer
+      apiContent={content}
+      screenDimensions={screenDimensions}
+      simulatorUrl={simulatorUrl}
+    />
+  );
+};
+
+// With out this too may re-renders are done and things break.
+const IframeMemo = React.memo(IframeWrapper);
 
 export default function Simulator() {
   const { component } = useSelector((store: SliceMachineStoreType) => ({
@@ -83,14 +104,14 @@ export default function Simulator() {
   );
 
   const [editorContent, setContent] = useState(initialContent);
-  const initialApiContent = useMemo(
-    () =>
-      renderSliceMock(sharedSlice, editorContent) as {
-        id: string;
-        [k: string]: unknown;
-      },
-    []
-  );
+  // const initialApiContent = useMemo(
+  //   () =>
+  //     renderSliceMock(sharedSlice, editorContent) as {
+  //       id: string;
+  //       [k: string]: unknown;
+  //     },
+  //   []
+  // );
 
   const [prevVariationId, setPrevVariationId] = useState(variation.id);
   if (variation.id !== prevVariationId) {
@@ -98,16 +119,16 @@ export default function Simulator() {
     setPrevVariationId(variation.id);
   }
 
-  const apiContent = useMemo(
-    () =>
-      throttle(() => {
-        return {
-          ...(renderSliceMock(sharedSlice, editorContent) as object),
-          id: initialApiContent.id,
-        };
-      }, 100),
-    [sharedSlice, editorContent, initialContent]
-  );
+  // const apiContent = useMemo(
+  //   () =>
+  //     throttle(() => {
+  //       return {
+  //         ...(renderSliceMock(sharedSlice, editorContent) as object),
+  //         id: initialApiContent.id,
+  //       };
+  //     }, 100),
+  //   [sharedSlice, editorContent, initialContent]
+  // );
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(true);
 
@@ -148,10 +169,11 @@ export default function Simulator() {
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
             />
-            <IframeRenderer
-              apiContent={apiContent()}
+            <IframeMemo
               screenDimensions={screenDimensions}
+              editorContent={editorContent}
               simulatorUrl={simulatorUrl}
+              sharedSlice={sharedSlice}
             />
           </Box>
           <Box
