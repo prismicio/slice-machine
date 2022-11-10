@@ -8,6 +8,11 @@ export {
 } from "./createRPCServer";
 
 export {
+	CreateRPCRouterArgs,
+	createRPCMiddleware,
+} from "./createRPCMiddleware";
+
+export {
 	CreateRPCClientArgs,
 	FetchLike,
 	RPCClient,

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 void (async () => {
-  const mod = await import("../dist/index.cjs");
-  await mod.default();
+	// eslint-disable-next-line
+	const mod = await import("../dist/index.cjs");
+	// eslint-disable-next-line
+	await mod.default();
 })();

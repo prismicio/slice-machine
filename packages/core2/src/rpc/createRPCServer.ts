@@ -58,6 +58,7 @@ const readProcedureArgs = <TProcedureArgs extends Record<string, unknown>>(
 
 export type CreateRPCServerArgs<TProcedures extends Procedures> = {
 	procedures: TProcedures;
+	basePath?: string;
 };
 
 export const createRPCServer = <TProcedures extends Procedures>(
@@ -76,14 +77,17 @@ export type RPCServerStartReturnType = {
 
 export type RCPServerConstructorArgs<TProcedures extends Procedures> = {
 	procedures: TProcedures;
+	basePath?: string;
 };
 
 export class RPCServer<TProcedures extends Procedures> {
 	private _procedures: TProcedures;
+	private _basePath?: string;
 	private _server: Server;
 
 	constructor(args: RCPServerConstructorArgs<TProcedures>) {
 		this._procedures = args.procedures;
+		this._basePath = this._basePath;
 		this._server = this._createServer();
 	}
 
@@ -110,9 +114,10 @@ export class RPCServer<TProcedures extends Procedures> {
 
 		for (const name in this._procedures) {
 			const procedure = this._procedures[name];
+			const route = this._basePath ? `${this._basePath}/${name}` : name;
 
 			app.use(
-				`/${name}`,
+				route,
 				eventHandler(async (event): Promise<ProcedureCallServerReturnType> => {
 					const procedureArgs = await readProcedureArgs(event);
 

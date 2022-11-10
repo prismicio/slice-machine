@@ -54,14 +54,14 @@ const PrismicUserProfile = t.exact(
 		lastName: t.string,
 	}),
 );
-type PrismicUserProfile = t.TypeOf<typeof PrismicUserProfile>;
+export type PrismicUserProfile = t.TypeOf<typeof PrismicUserProfile>;
 
 type CreatePrismicAuthManager = ConstructorParameters<
 	typeof PrismicAuthManager
 >[0];
 
 export const createPrismicAuthManager = (
-	args: CreatePrismicAuthManager,
+	args: CreatePrismicAuthManager = {},
 ): PrismicAuthManager => {
 	return new PrismicAuthManager(args);
 };
@@ -86,10 +86,16 @@ const checkIsLoggedIn = (
 		>
 	>;
 } => {
-	return (
-		!authState.cookies[AUTH_COOKIE_KEY] ||
-		!authState.cookies[SESSION_COOKIE_KEY]
+	return Boolean(
+		authState.cookies[AUTH_COOKIE_KEY] && authState.cookies[SESSION_COOKIE_KEY],
 	);
+};
+
+const parseCookies = (cookies: string): Record<string, string> => {
+	return cookie.parse(cookies, {
+		// Don't escape any values.
+		decode: (value) => value,
+	});
 };
 
 export class PrismicAuthManager {
@@ -118,7 +124,7 @@ export class PrismicAuthManager {
 		authState.base = APIEndpoints.PrismicWroom;
 		authState.cookies = {
 			...authState.cookies,
-			...cookie.parse(args.cookies.join(COOKIE_SEPARATOR)),
+			...parseCookies(args.cookies.join(COOKIE_SEPARATOR)),
 		};
 
 		if (checkIsLoggedIn(authState)) {
@@ -175,13 +181,18 @@ export class PrismicAuthManager {
 		});
 		const json = await res.json();
 
-		const { value: profile, errors } = decode(PrismicUserProfile, json);
+		if (res.ok) {
+			const { value: profile, error } = decode(PrismicUserProfile, json);
 
-		if (errors) {
-			throw new Error(`Failed to decode profile: ${errors.join(", ")}`);
+			if (error) {
+				throw new Error(`Failed to decode profile: ${error.errors.join(", ")}`);
+			}
+
+			return profile;
+		} else {
+			// TODO: Provide a better error
+			throw new Error(`Failed to get profile: ${JSON.stringify(json)}`);
 		}
-
-		return profile;
 	}
 
 	private async _readPersistedAuthState(): Promise<PrismicAuthState> {
@@ -207,14 +218,19 @@ export class PrismicAuthManager {
 
 		// Decode cookies into a record for convenience.
 		if ("cookies" in rawAuthState) {
-			rawAuthState.cookies = cookie.parse(rawAuthState.cookies);
+			// TODO: Something about the return value doesn't seem
+			// right. Properties like `Path` and `SameSite` are
+			// returned as top-level properties.
+			rawAuthState.cookies = parseCookies(rawAuthState.cookies);
 		}
 
-		const { value: authState, errors } = decode(PrismicAuthState, rawAuthState);
+		const { value: authState, error } = decode(PrismicAuthState, rawAuthState);
 
-		if (errors) {
+		if (error) {
 			throw new Error(
-				`Failed to parse Prismic authentication state: ${errors.join(", ")}`,
+				`Failed to parse Prismic authentication state: ${error.errors.join(
+					", ",
+				)}`,
 			);
 		}
 

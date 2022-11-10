@@ -1,35 +1,36 @@
 import * as t from "io-ts";
-import { formatValidationErrors } from "io-ts-reporters";
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 
-export type DecodeReturnType<A> =
-	| {
-			value: undefined;
-			errors: string[];
-	  }
+import { DecodeError } from "./DecodeError";
+
+export type DecodeReturnType<A, _O, I> =
 	| {
 			value: A;
-			errors: undefined;
+			error: undefined;
+	  }
+	| {
+			value: undefined;
+			error: DecodeError<I>;
 	  };
 
 export const decode = <A, O, I>(
-	type: t.Type<A, O, I>,
+	codec: t.Type<A, O, I>,
 	input: I,
-): DecodeReturnType<A> => {
+): DecodeReturnType<A, O, I> => {
 	return pipe(
-		type.decode(input),
+		codec.decode(input),
 		E.foldW(
 			(errors) => {
 				return {
 					value: undefined,
-					errors: formatValidationErrors(errors),
+					error: new DecodeError({ input, errors }),
 				};
 			},
 			(value) => {
 				return {
 					value,
-					errors: undefined,
+					error: undefined,
 				};
 			},
 		),

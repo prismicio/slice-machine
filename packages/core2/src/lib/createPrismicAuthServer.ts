@@ -3,7 +3,7 @@ import { createServer, Server } from "node:http";
 import { AddressInfo } from "node:net";
 import { createApp, eventHandler, readBody, toNodeListener } from "h3";
 
-import type { PrismicAuthManager } from "../createPrismicAuthStateManager";
+import type { PrismicAuthManager } from "../createPrismicAuthManager";
 
 import { decode } from "./decode";
 
@@ -76,10 +76,10 @@ export class PrismicAuthServer {
 			"/auth",
 			eventHandler(async (event) => {
 				const body = readBody(event);
-				const { value, errors } = decode(PrismicAuthRequest, body);
+				const { value, error } = decode(PrismicAuthRequest, body);
 
-				if (errors) {
-					throw new Error(`Invalid auth payload: ${errors.join(", ")}`);
+				if (error) {
+					throw new Error(`Invalid auth payload: ${error.errors.join(", ")}`);
 				}
 
 				await this._prismicAuthManager.login({

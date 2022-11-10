@@ -1,3 +1,4 @@
+import * as t from "io-ts";
 import { CustomTypeModel, SharedSliceModel } from "@prismicio/types";
 import {
 	CallHookReturnType,
@@ -5,7 +6,6 @@ import {
 	CustomTypeCreateHookData,
 	CustomTypeDeleteHook,
 	CustomTypeDeleteHookData,
-	CustomTypeLibraryReadHookData,
 	CustomTypeReadHookData,
 	CustomTypeUpdateHook,
 	CustomTypeUpdateHookData,
@@ -24,6 +24,7 @@ import {
 } from "@slicemachine/plugin-kit";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import { CustomTypes } from "@prismicio/types-internal";
 
 import { captureSliceSimulatorScreenshot } from "./lib/captureSliceSimulatorScreenshot";
 import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
@@ -32,6 +33,13 @@ import { locateFileUpward } from "./lib/findFileUpward";
 
 import { SliceMachineConfig } from "./types";
 import { SLICE_MACHINE_CONFIG_FILENAMES } from "./constants";
+import { decode } from "./lib/decode";
+import { DecodeError } from "./lib/DecodeError";
+import { bufferCodec } from "./lib/bufferCodec";
+import {
+	createPrismicAuthManager,
+	PrismicAuthManager,
+} from "./createPrismicAuthManager";
 
 function assertPluginsInitialized(
 	pluginRunner: SliceMachinePluginRunner | undefined,
@@ -42,6 +50,99 @@ function assertPluginsInitialized(
 		);
 	}
 }
+
+// const withDecodeError = <
+// 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// 	TDecodeError extends DecodeError<any>,
+// 	TError extends Error,
+// >(
+// 	decodeError?: TDecodeError,
+// 	errors?: TError[],
+// ): (TDecodeError | TError)[] => {
+// 	return [decodeError, ...(errors || [])].filter(
+// 		(error): error is NonNullable<typeof error> => Boolean(error),
+// 	);
+// };
+
+// type MaybeArray<T> = T | T[];
+
+// const concatArr = <TElement1, TElement2, TElement3, TElement4, TElement5>(
+// 	element1?: MaybeArray<TElement1>,
+// 	element2?: MaybeArray<TElement2>,
+// 	element3?: MaybeArray<TElement3>,
+// 	element4?: MaybeArray<TElement4>,
+// 	element5?: MaybeArray<TElement5>,
+// ): (TElement1 | TElement2 | TElement3 | TElement4 | TElement5)[] => {
+// 	const elements = [element1, element2, element3, element4, element5];
+//
+// 	const res: (TElement1 | TElement2 | TElement3 | TElement4 | TElement5)[] = [];
+//
+// 	for (const element of elements) {
+// 		if (Array.isArray(element)) {
+// 			for (const subelement of element) {
+// 				res.push(subelement);
+// 			}
+// 		} else if (element) {
+// 			res.push(element);
+// 		}
+// 	}
+//
+// 	return res;
+// };
+
+const decodeHookResult = <
+	A,
+	O,
+	I,
+	THookResult extends Awaited<CallHookReturnType>,
+>(
+	codec: t.Type<A, O, I>,
+	hookResult: THookResult,
+) => {
+	const data: A[] = [];
+	const errors: DecodeError<I>[] = [];
+
+	for (const dataElement of hookResult.data) {
+		const { value, error } = decode(codec, dataElement);
+
+		if (error) {
+			errors.push(error);
+		} else {
+			data.push(value);
+		}
+	}
+
+	return {
+		data,
+		errors: [...errors, ...hookResult.errors],
+	};
+};
+
+// function concatErrors<TError1, TError2, TError3, TError4, TError5>(
+// 	error1?: MaybeArray<TError1>,
+// 	error2?: MaybeArray<TError2>,
+// 	error3?: MaybeArray<TError3>,
+// 	error4?: MaybeArray<TError4>,
+// 	error5?: MaybeArray<TError5>,
+// ): (TError1 | TError2 | TError3 | TError4 | TError5)[] {
+// 	return [error1, error2, error3, error4, error5]
+// 		.flat()
+// 		.filter((error): error is NonNullable<typeof error> => Boolean(error));
+// }
+
+// const concatErrors = <TError extends Error>(
+// 	...errors: (undefined | TError | TError[])[]
+// ): TError[] => {
+// 	const res: TError[] = [];
+//
+// 	for (const error of errors.flat()) {
+// 		if (error) {
+// 			res.push(error);
+// 		}
+// 	}
+//
+// 	return res;
+// };
 
 type OnlyHookErrors<
 	THookResult extends
@@ -85,12 +186,29 @@ type SliceMachineManagerPushSliceArgs = {
 
 type SliceMachineManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[] | undefined;
-	errors: HookError[];
+	errors: (DecodeError | HookError)[];
+};
+
+type SliceMachineManagerReadAllSlicesForLibraryArgs = {
+	libraryID: string;
+};
+
+type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
+	models: { model: SharedSliceModel }[];
+	errors: (DecodeError | HookError)[];
+};
+
+type SliceMachineManagerReadAllSlicesReturnType = {
+	models: {
+		libraryID: string;
+		model: SharedSliceModel;
+	}[];
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadSliceReturnType = {
 	model: SharedSliceModel | undefined;
-	errors: HookError[];
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerUpdateSliceScreenshotArgs = {
@@ -118,17 +236,22 @@ type SliceMachineManagerReadSliceScreenshotArgs = {
 
 type SliceMachineManagerReadSliceScreenshotReturnType = {
 	data: Buffer | undefined;
-	errors: HookError[];
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[] | undefined;
-	errors: HookError[];
+	errors: (DecodeError | HookError)[];
+};
+
+type SliceMachineManagerReadAllCustomTypeReturnType = {
+	models: { model: CustomTypeModel }[];
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadCustomTypeReturnType = {
 	model: CustomTypeModel | undefined;
-	errors: HookError[];
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerPushCustomTypeArgs = {
@@ -139,6 +262,27 @@ export class SliceMachineManager {
 	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined;
 	private _sliceMachineConfig: SliceMachineConfig | undefined;
 	private _sliceMachineRoot: string | undefined;
+	private _prismicAuthStateManager: PrismicAuthManager =
+		createPrismicAuthManager();
+
+	// TODO: Replace with a middleware creator. We need to inject the logic
+	// into a shared HTTP server, not spawn a new server.
+	createPrismicAuthServer =
+		this._prismicAuthStateManager.createPrismicAuthServer.bind(
+			this._prismicAuthStateManager,
+		);
+	login = this._prismicAuthStateManager.login.bind(
+		this._prismicAuthStateManager,
+	);
+	logout = this._prismicAuthStateManager.logout.bind(
+		this._prismicAuthStateManager,
+	);
+	checkIsLoggedIn = this._prismicAuthStateManager.checkIsLoggedIn.bind(
+		this._prismicAuthStateManager,
+	);
+	getProfile = this._prismicAuthStateManager.getProfile.bind(
+		this._prismicAuthStateManager,
+	);
 
 	async getProjectRoot(): Promise<string> {
 		if (this._sliceMachineRoot) {
@@ -183,12 +327,12 @@ export class SliceMachineManager {
 			throw new Error("No config found.");
 		}
 
-		const { value: sliceMachineConfig, errors } =
+		const { value: sliceMachineConfig, error } =
 			decodeSliceMachineConfig(configModule);
 
-		if (errors) {
+		if (error) {
 			// TODO: Write a more friendly and useful message.
-			throw new Error(`Invalid config. ${errors}`);
+			throw new Error(`Invalid config. ${error.errors.join(", ")}`);
 		}
 
 		// Allow cached config reading using `SliceMachineManager.prototype.getProjectConfig()`.
@@ -216,21 +360,85 @@ export class SliceMachineManager {
 	): Promise<SliceMachineManagerReadSliceLibraryReturnType> {
 		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
+		// TODO: Should validation happen at the `callHook` level?
+		// Including validation at the hook level would ensure
+		// hook-based actions are validated.
 		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"slice-library:read",
 			args,
 		);
+		const { data, errors } = decodeHookResult(
+			t.type({
+				id: t.string,
+				sliceIDs: t.array(t.string),
+			}),
+			hookResult,
+		);
 
 		return {
-			sliceIDs: hookResult.data[0]?.sliceIDs,
-			errors: hookResult.errors,
+			sliceIDs: data[0]?.sliceIDs,
+			errors,
 		};
 	}
 
-	async readAllSlices() {
+	async readAllSlicesForLibrary(
+		args: SliceMachineManagerReadAllSlicesForLibraryArgs,
+	): Promise<SliceMachineManagerReadAllSlicesForLibraryReturnType> {
 		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		return await this._sliceMachinePluginRunner.rawActions.readAllSliceModels();
+		const res: SliceMachineManagerReadAllSlicesForLibraryReturnType = {
+			models: [],
+			errors: [],
+		};
+
+		const { sliceIDs, errors } = await this.readSliceLibrary({
+			libraryID: args.libraryID,
+		});
+		res.errors = [...res.errors, ...errors];
+
+		if (sliceIDs) {
+			for (const sliceID of sliceIDs) {
+				const { model, errors } = await this.readSlice({
+					libraryID: args.libraryID,
+					sliceID,
+				});
+				res.errors = [...res.errors, ...errors];
+
+				if (model) {
+					res.models.push({ model });
+				}
+			}
+		}
+
+		return res;
+	}
+
+	async readAllSlices(): Promise<SliceMachineManagerReadAllSlicesReturnType> {
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
+
+		const sliceMachineConfig = await this.getSliceMachineConfig();
+		const libraryIDs = sliceMachineConfig.libraries || [];
+
+		const res: SliceMachineManagerReadAllSlicesReturnType = {
+			models: [],
+			errors: [],
+		};
+
+		for (const libraryID of libraryIDs) {
+			const { models, errors } = await this.readAllSlicesForLibrary({
+				libraryID,
+			});
+			res.errors = [...res.errors, ...errors];
+
+			for (const model of models) {
+				res.models.push({
+					libraryID,
+					model: model.model,
+				});
+			}
+		}
+
+		return res;
 	}
 
 	async createSlice(
@@ -257,10 +465,16 @@ export class SliceMachineManager {
 			"slice:read",
 			args,
 		);
+		const { data, errors } = decodeHookResult(
+			t.type({
+				model: CustomTypes.Widgets.Slices.SharedSlice,
+			}),
+			hookResult,
+		);
 
 		return {
-			model: hookResult.data[0]?.model,
-			errors: hookResult.errors,
+			model: data[0]?.model,
+			errors,
 		};
 	}
 
@@ -314,10 +528,16 @@ export class SliceMachineManager {
 				assetID: `screenshot-${args.variationID}`,
 			},
 		);
+		const { data, errors } = decodeHookResult(
+			t.type({
+				data: bufferCodec,
+			}),
+			hookResult,
+		);
 
 		return {
-			data: hookResult.data[0]?.data,
-			errors: hookResult.errors,
+			data: data[0]?.data,
+			errors,
 		};
 	}
 
@@ -360,20 +580,49 @@ export class SliceMachineManager {
 		};
 	}
 
-	async readCustomTypeLibrary(
-		args: CustomTypeLibraryReadHookData,
-	): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
+	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
 		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
 		const hookResult = await this._sliceMachinePluginRunner.callHook(
 			"custom-type-library:read",
-			args,
+			undefined,
+		);
+		const { data, errors } = decodeHookResult(
+			t.type({
+				ids: t.array(t.string),
+			}),
+			hookResult,
 		);
 
 		return {
-			ids: hookResult.data[0]?.ids,
-			errors: hookResult.errors,
+			ids: data[0]?.ids,
+			errors,
 		};
+	}
+
+	async readAllCustomTypes(): Promise<SliceMachineManagerReadAllCustomTypeReturnType> {
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
+
+		const res: SliceMachineManagerReadAllCustomTypeReturnType = {
+			models: [],
+			errors: [],
+		};
+
+		const { ids, errors } = await this.readCustomTypeLibrary();
+		res.errors = [...res.errors, ...errors];
+
+		if (ids) {
+			for (const id of ids) {
+				const { model, errors } = await this.readCustomType({ id });
+				res.errors = [...res.errors, ...errors];
+
+				if (model) {
+					res.models.push({ model });
+				}
+			}
+		}
+
+		return res;
 	}
 
 	async createCustomType(
@@ -400,10 +649,16 @@ export class SliceMachineManager {
 			"custom-type:read",
 			args,
 		);
+		const { data, errors } = decodeHookResult(
+			t.type({
+				model: CustomTypes.CustomType,
+			}),
+			hookResult,
+		);
 
 		return {
-			model: hookResult.data[0]?.model,
-			errors: hookResult.errors,
+			model: data[0]?.model,
+			errors,
 		};
 	}
 

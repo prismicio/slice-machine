@@ -9,13 +9,13 @@ export type SliceMachineManagerClient = RPCClient<
 >;
 
 export type CreateSliceMachineManagerClient = {
-	port: number;
+	serverURL: string;
 };
 
 export const createSliceMachineManagerClient = (
 	args: CreateSliceMachineManagerClient,
 ): SliceMachineManagerClient => {
 	return createRPCClient({
-		serverURL: `http://localhost:${args.port}`,
+		serverURL: args.serverURL,
 	});
 };

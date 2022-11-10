@@ -18,18 +18,18 @@ export const SLICE_MACHINE_USER_AGENT = "slice-machine";
 export const APIEndpoints =
 	process.env.SM_ENV === ApplicationMode.STAGE
 		? ({
+				PrismicWroom: "https://wroom.io/",
+				PrismicAuthentication: "https://auth.wroom.io/",
+				PrismicModels: "https://customtypes.wroom.io/",
+				PrismicUser: "https://user.wroom.io/",
+				AwsAclProvider:
+					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
+		  } as const)
+		: ({
 				PrismicWroom: "https://prismic.io/",
 				PrismicAuthentication: "https://auth.prismic.io/",
 				PrismicModels: "https://customtypes.prismic.io/",
 				PrismicUser: "https://user.internal-prismic.io/",
 				AwsAclProvider:
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
-		  } as const)
-		: ({
-				PrismicWroom: "https://wroom.io/",
-				PrismicAuthentication: "https://auth.wroom.io/",
-				PrismicModels: "https://customtypes.wroom.io/",
-				PrismicUsers: "https://user.wroom.io/",
-				AwsAclProvider:
-					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
 		  } as const);

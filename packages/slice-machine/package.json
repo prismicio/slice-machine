@@ -35,16 +35,13 @@
     "audit-fix": "npm audit fix",
     "depcheck": "depcheck --config=.depcheckrc"
   },
-  "bin": {
-    "start-slicemachine": "bin/start.js"
-  },
   "dependencies": {
     "@babel/register": "^7.17.7",
     "@prismicio/mocks": "^0.1.8",
     "@prismicio/types-internal": "^0.3.0",
     "@slicemachine/client": "1.1.15",
     "@slicemachine/core": "1.1.15",
-    "@slicemachine/core2": "0.1.0",
+    "@slicemachine/core2": "^0.1.0",
     "@svgr/webpack": "^5.4.0",
     "analytics-node": "^6.1.0",
     "axios": "^0.26.0",
@@ -83,6 +80,7 @@
     "semver": "^7.3.2",
     "serve-static": "^1.14.1",
     "slash": "3.0.0",
+    "start-slicemachine": "^0.1.0",
     "uuid": "^8.3.2",
     "yup": "^0.32.9"
   },
