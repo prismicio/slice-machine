@@ -24,19 +24,20 @@ import { listen } from "./lib/listen";
 const createSliceMachineServer = async (
 	manager: SliceMachineManager
 ): Promise<Server> => {
-	const projectRoot = await manager.getProjectRoot();
-	const require = createRequire(path.join(projectRoot, "index.js"));
-	const sliceMachineUIDir = require.resolve("slice-machine-ui/package.json");
-	const sliceMachineOutDir = path.resolve(
-		path.dirname(sliceMachineUIDir),
-		"out"
-	);
-
 	const app = createApp();
 
 	app.use(
 		"/_manager",
 		fromNodeMiddleware(createSliceMachineManagerMiddleware({ manager }))
+	);
+	// TODO: Remove once tracking is implemented in `core2`
+	app.use(
+		"/api/s",
+		eventHandler(() => {
+			// noop
+
+			return {};
+		})
 	);
 
 	if (process.env.NODE_ENV === "development") {
@@ -51,17 +52,21 @@ const createSliceMachineServer = async (
 			})
 		);
 		app.use(router);
+		//
 		// app.use(
 		// 	"/**",
 		// 	eventHandler((event) => {
 		// 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		// 		const target = event.req.url!;
+		// 		const target = new URL(event.req.url!, "http://localhost:3000");
 		//
-		// 		return sendProxy(event, target);
+		// 		return sendProxy(event, target.toString());
 		// 	})
 		// );
-		// app.use("/", proxy("http://localhost:3000") as NodeListener);
+		// app.use(fromNodeMiddleware(proxy("http://localhost:3000") as NodeListener));
 	} else {
+		const sliceMachineDir = await manager.locateSliceMachineDir();
+		const sliceMachineOutDir = path.resolve(sliceMachineDir, "out");
+
 		app.use(fromNodeMiddleware(serveStatic(sliceMachineOutDir)));
 	}
 

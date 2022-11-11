@@ -12,7 +12,7 @@ export type PackageChangelog = {
 	versions: PackageVersion[];
 };
 
-type PackageVersion = {
+export type PackageVersion = {
 	versionNumber: string;
 	releaseNote: string | null;
 	kind: typeof VersionKind[keyof typeof VersionKind] | null;

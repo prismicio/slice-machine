@@ -1,5 +1,9 @@
 import * as t from "io-ts";
-import { CustomTypeModel, SharedSliceModel } from "@prismicio/types";
+import {
+	CustomTypeModel,
+	SharedSlice,
+	SharedSliceModel,
+} from "@prismicio/types";
 import {
 	CallHookReturnType,
 	CustomTypeCreateHook,
@@ -24,6 +28,7 @@ import {
 } from "@slicemachine/plugin-kit";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import { createRequire } from "node:module";
 import { CustomTypes } from "@prismicio/types-internal";
 
 import { DecodeError } from "./lib/DecodeError";
@@ -31,17 +36,26 @@ import { bufferCodec } from "./lib/bufferCodec";
 import { captureSliceSimulatorScreenshot } from "./lib/captureSliceSimulatorScreenshot";
 import { decode } from "./lib/decode";
 import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
+import { fetchGitHubReleaseBodyForRelease } from "./lib/fetchGitHubReleaseBodyForRelease";
+import { fetchNPMPackageVersions } from "./lib/fetchNPMPackageVersions";
 import { loadModuleWithJiti } from "./lib/loadModuleWithJiti";
 import { locateFileUpward } from "./lib/findFileUpward";
 
-import { PackageChangelog, PackageManager, SliceMachineConfig } from "./types";
-import { SLICE_MACHINE_CONFIG_FILENAMES } from "./constants";
+import {
+	PackageChangelog,
+	PackageManager,
+	PackageVersion,
+	SliceMachineConfig,
+} from "./types";
+import {
+	SLICE_MACHINE_CONFIG_FILENAMES,
+	SLICE_MACHINE_NPM_PACKAGE_NAME,
+} from "./constants";
 import {
 	createPrismicAuthManager,
 	PrismicAuthManager,
 	PrismicUserProfile,
 } from "./createPrismicAuthManager";
-import { props } from "cypress/types/bluebird";
 
 function assertPluginsInitialized(
 	pluginRunner: SliceMachinePluginRunner | undefined,
@@ -272,11 +286,60 @@ type SliceMachineManagerGetStateReturnType = {
 		framework: any;
 		sliceMachineAPIUrl: string;
 	};
-	libraries: [];
+	libraries: {
+		name: string;
+		path: string;
+		isLocal: boolean;
+		components: {
+			from: string;
+			href: string;
+			pathToSlice: string;
+			fileName: string | null;
+			extension: string | null;
+			model: Omit<CustomTypes.Widgets.Slices.SharedSlice, "variations"> & {
+				variations: (Omit<
+					CustomTypes.Widgets.Slices.SharedSlice["variations"][number],
+					"primary" | "items"
+				> & {
+					primary: {
+						key: string;
+						value: NonNullable<
+							CustomTypes.Widgets.Slices.SharedSlice["variations"][number]["primary"]
+						>[string];
+					}[];
+					items: {
+						key: string;
+						value: NonNullable<
+							CustomTypes.Widgets.Slices.SharedSlice["variations"][number]["items"]
+						>[string];
+					}[];
+				})[];
+			};
+			screenshots: Record<
+				string,
+				{
+					path: string;
+					hash: string;
+				}
+			>;
+			mock?: SharedSlice;
+		}[];
+		meta: {
+			name?: string;
+			version?: string;
+			isNodeModule: boolean;
+			isDownloaded: boolean;
+			isManual: boolean;
+		};
+	}[];
 	customTypes: [];
 	remoteCustomTypes: [];
 	remoteSlices: [];
 	clientError?: any;
+};
+
+type SliceMachineManagerGetReleaseNotesForVersionArgs = {
+	version: string;
 };
 
 export class SliceMachineManager {
@@ -380,20 +443,99 @@ export class SliceMachineManager {
 	// potential source of bugs due to data inconsistency. SM UI relies on
 	// it heavily, so removal will require significant effort.
 	async getState(): Promise<SliceMachineManagerGetStateReturnType> {
+		const sliceMachineConfig = await this.getSliceMachineConfig();
+
 		let profile: PrismicUserProfile | undefined;
 		const isLoggedIn = await this.checkIsLoggedIn();
 		if (isLoggedIn) {
 			profile = await this.getProfile();
 		}
 
+		const currentVersion = await this.getRunningSliceMachineVersion();
+		const allStableVersions = await this.getAllStableSliceMachineVersions();
+		const latestNonBreakingVersion = ""; // TODO
+		const updateAvailable = false; // TODO
+		const versions = await Promise.all(
+			allStableVersions.map(async (version): Promise<PackageVersion> => {
+				// TODO: I was rate limited :(
+				// const releaseNotes = await this.getReleaseNotesForVersion({ version });
+				const releaseNotes = undefined;
+
+				return {
+					versionNumber: version,
+					releaseNote: releaseNotes ?? null,
+					// TODO
+					kind: "MINOR",
+				};
+			}),
+		);
+
+		const libraries: SliceMachineManagerGetStateReturnType["libraries"] = [];
+		for (const libraryID of sliceMachineConfig.libraries || []) {
+			const { sliceIDs } = await this.readSliceLibrary({ libraryID });
+
+			if (sliceIDs) {
+				const components: SliceMachineManagerGetStateReturnType["libraries"][number]["components"] =
+					[];
+
+				for (const sliceID of sliceIDs) {
+					const { model } = await this.readSlice({ libraryID, sliceID });
+
+					if (model) {
+						const reshapedModel = {
+							...model,
+							variations: model.variations.map((variation) => {
+								return {
+									...variation,
+									primary: Object.entries(variation.primary || {}).map(
+										([key, fieldModel]) => {
+											return { key, value: fieldModel };
+										},
+									),
+									items: Object.entries(variation.items || {}).map(
+										([key, fieldModel]) => {
+											return { key, value: fieldModel };
+										},
+									),
+								};
+							}),
+						};
+
+						components.push({
+							from: libraryID,
+							href: libraryID.replace(/\//g, "--"),
+							pathToSlice: "pathToSlice",
+							fileName: "fileName",
+							extension: "extension",
+							model: reshapedModel,
+							screenshots: {},
+						});
+					}
+				}
+
+				libraries.push({
+					name: libraryID,
+					path: libraryID,
+					isLocal: true, // TODO: Do we still support node_modules-based libraries?
+					components,
+					meta: {
+						// TODO: Do we still support node_modules-based libraries?
+						isNodeModule: false,
+						isDownloaded: false,
+						isManual: true,
+					},
+				});
+			}
+		}
+
 		// TODO: Populate this object.
 		return {
 			env: {
 				changelog: {
-					currentVersion: "",
-					latestNonBreakingVersion: "",
-					updateAvailable: false,
-					versions: [],
+					currentVersion,
+					latestNonBreakingVersion,
+					updateAvailable,
+					versions,
 				},
 				framework: "",
 				manifest: {},
@@ -405,12 +547,47 @@ export class SliceMachineManager {
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
 			},
-			libraries: [],
+			libraries,
 			customTypes: [],
 			remoteCustomTypes: [],
 			remoteSlices: [],
 			clientError: undefined,
 		};
+	}
+
+	async getAllStableSliceMachineVersions(): Promise<string[]> {
+		const versions = await fetchNPMPackageVersions({
+			packageName: SLICE_MACHINE_NPM_PACKAGE_NAME,
+		});
+
+		return versions.filter((version) => {
+			// Exclude tagged versions (e.g. `1.0.0-alpha.0`).
+			// Exclude versions < 0.1.0 (e.g. `0.0.1`).
+			return /^\d+\.[1-9]\d*\.\d+$/.test(version);
+		});
+	}
+
+	async getRunningSliceMachineVersion(): Promise<string> {
+		const sliceMachineDir = await this.locateSliceMachineDir();
+
+		const sliceMachinePackageJSONContents = await fs.readFile(
+			path.join(sliceMachineDir, "package.json"),
+			"utf8",
+		);
+
+		// TODO: Validate the contents? This code currently assumes a
+		// well-formed document.
+		const json = JSON.parse(sliceMachinePackageJSONContents);
+
+		return json.version;
+	}
+
+	async getReleaseNotesForVersion(
+		args: SliceMachineManagerGetReleaseNotesForVersionArgs,
+	): Promise<string | undefined> {
+		return await fetchGitHubReleaseBodyForRelease({
+			tag: args.version,
+		});
 	}
 
 	async readSliceLibrary(
@@ -757,5 +934,18 @@ export class SliceMachineManager {
 		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
 		// TODO: Push CustomType to Prismic.
+	}
+
+	// TODO: Should this be renamed to `locateSliceMachineUIDir()` (note
+	// the addition of "UI")?
+	async locateSliceMachineDir(): Promise<string> {
+		const projectRoot = await this.getProjectRoot();
+
+		const require = createRequire(path.join(projectRoot, "index.js"));
+		const sliceMachinePackageJSONPath = require.resolve(
+			`${SLICE_MACHINE_NPM_PACKAGE_NAME}/package.json`,
+		);
+
+		return path.dirname(sliceMachinePackageJSONPath);
 	}
 }

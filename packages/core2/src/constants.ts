@@ -1,3 +1,8 @@
+/**
+ * Slice Machine's published NPM package name.
+ */
+export const SLICE_MACHINE_NPM_PACKAGE_NAME = "slice-machine-ui";
+
 export const SLICE_MACHINE_CONFIG_FILENAMES = [
 	"slicemachine.config.ts",
 	"slicemachine.config.js",
