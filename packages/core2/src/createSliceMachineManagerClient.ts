@@ -8,12 +8,12 @@ export type SliceMachineManagerClient = RPCClient<
 	ExtractProcedures<SliceMachineManagerServer>
 >;
 
-export type CreateSliceMachineManagerClient = {
+export type CreateSliceMachineManagerClientArgs = {
 	serverURL: string;
 };
 
 export const createSliceMachineManagerClient = (
-	args: CreateSliceMachineManagerClient,
+	args: CreateSliceMachineManagerClientArgs,
 ): SliceMachineManagerClient => {
 	return createRPCClient({
 		serverURL: args.serverURL,

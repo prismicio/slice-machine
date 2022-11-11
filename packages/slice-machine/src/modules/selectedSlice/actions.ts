@@ -65,6 +65,7 @@ export const updateSliceWidgetMockCreator = createAction(
   widgetArea: Models.WidgetsArea;
   previousKey: string;
   newKey: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockValue: any;
 }>();
 
@@ -84,6 +85,7 @@ export const saveSliceCreator = createAsyncAction(
 )<
   {
     component: ComponentUI;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setData: (data: any) => void;
   },
   {

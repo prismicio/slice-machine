@@ -26,20 +26,22 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { CustomTypes } from "@prismicio/types-internal";
 
+import { DecodeError } from "./lib/DecodeError";
+import { bufferCodec } from "./lib/bufferCodec";
 import { captureSliceSimulatorScreenshot } from "./lib/captureSliceSimulatorScreenshot";
+import { decode } from "./lib/decode";
 import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
 import { loadModuleWithJiti } from "./lib/loadModuleWithJiti";
 import { locateFileUpward } from "./lib/findFileUpward";
 
-import { SliceMachineConfig } from "./types";
+import { PackageChangelog, PackageManager, SliceMachineConfig } from "./types";
 import { SLICE_MACHINE_CONFIG_FILENAMES } from "./constants";
-import { decode } from "./lib/decode";
-import { DecodeError } from "./lib/DecodeError";
-import { bufferCodec } from "./lib/bufferCodec";
 import {
 	createPrismicAuthManager,
 	PrismicAuthManager,
+	PrismicUserProfile,
 } from "./createPrismicAuthManager";
+import { props } from "cypress/types/bluebird";
 
 function assertPluginsInitialized(
 	pluginRunner: SliceMachinePluginRunner | undefined,
@@ -258,6 +260,25 @@ type SliceMachineManagerPushCustomTypeArgs = {
 	id: string;
 };
 
+type SliceMachineManagerGetStateReturnType = {
+	env: {
+		shortId?: string;
+		intercomHash?: string;
+		manifest: any;
+		repo: string;
+		changelog: PackageChangelog;
+		packageManager: PackageManager;
+		mockConfig: any;
+		framework: any;
+		sliceMachineAPIUrl: string;
+	};
+	libraries: [];
+	customTypes: [];
+	remoteCustomTypes: [];
+	remoteSlices: [];
+	clientError?: any;
+};
+
 export class SliceMachineManager {
 	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined;
 	private _sliceMachineConfig: SliceMachineConfig | undefined;
@@ -353,6 +374,43 @@ export class SliceMachineManager {
 		});
 
 		await this._sliceMachinePluginRunner.init();
+	}
+
+	// TODO: Remove this global-state method. It is expensive and a
+	// potential source of bugs due to data inconsistency. SM UI relies on
+	// it heavily, so removal will require significant effort.
+	async getState(): Promise<SliceMachineManagerGetStateReturnType> {
+		let profile: PrismicUserProfile | undefined;
+		const isLoggedIn = await this.checkIsLoggedIn();
+		if (isLoggedIn) {
+			profile = await this.getProfile();
+		}
+
+		// TODO: Populate this object.
+		return {
+			env: {
+				changelog: {
+					currentVersion: "",
+					latestNonBreakingVersion: "",
+					updateAvailable: false,
+					versions: [],
+				},
+				framework: "",
+				manifest: {},
+				mockConfig: {},
+				packageManager: "npm",
+				repo: "repo",
+				// TODO: Don't hardcode this!
+				sliceMachineAPIUrl: "http://localhost:9999",
+				intercomHash: profile?.intercomHash,
+				shortId: profile?.shortId,
+			},
+			libraries: [],
+			customTypes: [],
+			remoteCustomTypes: [],
+			remoteSlices: [],
+			clientError: undefined,
+		};
 	}
 
 	async readSliceLibrary(

@@ -55,6 +55,6 @@ export const createRPCMiddleware = <TProcedures extends Procedures>(
 	return defineNodeMiddleware(async (req, res) => {
 		const event = createEvent(req, res);
 
-		await router.handler(event);
+		return await router.handler(event);
 	});
 };

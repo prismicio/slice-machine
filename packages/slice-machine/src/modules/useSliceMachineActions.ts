@@ -355,6 +355,7 @@ const useSliceMachineActions = () => {
     widgetArea: Models.WidgetsArea,
     previousKey: string,
     newKey: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockValue: any
   ) => {
     dispatch(
@@ -418,7 +419,11 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const saveSlice = (component: ComponentUI, setData: (data: any) => void) => {
+  const saveSlice = (
+    component: ComponentUI,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setData: (data: any) => void
+  ) => {
     dispatch(
       saveSliceCreator.request({
         component,

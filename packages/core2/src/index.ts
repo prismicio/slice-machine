@@ -15,10 +15,4 @@ export {
 	createSliceMachineManagerMiddleware,
 } from "./createSliceMachineManagerMiddleware";
 
-export {
-	CreateSliceMachineManagerClient,
-	SliceMachineManagerClient,
-	createSliceMachineManagerClient,
-} from "./createSliceMachineManagerClient";
-
 export type { PrismicUserProfile } from "./createPrismicAuthManager";

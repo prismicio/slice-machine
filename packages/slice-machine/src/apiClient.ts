@@ -14,6 +14,7 @@ import {
   ScreenshotResponse,
 } from "../lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { managerClient } from "./managerClient";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -25,8 +26,9 @@ const defaultAxiosConfig = {
 
 /** State Routes **/
 
-export const getState = (): Promise<AxiosResponse<ServerState>> => {
-  return axios.get<ServerState>("/api/state", defaultAxiosConfig);
+export const getState = async (): Promise<ServerState> => {
+  return await managerClient.getState();
+  // return axios.get<ServerState>("/api/state", defaultAxiosConfig);
 };
 
 /** Custom Type Routes **/

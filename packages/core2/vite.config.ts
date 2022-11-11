@@ -7,6 +7,14 @@ export default defineConfig({
 			internalDependencies: ["fp-ts", "devalue", "node-fetch"],
 		}),
 	],
+	build: {
+		lib: {
+			entry: {
+				index: "./src/index.ts",
+				client: "./src/client.ts",
+			},
+		},
+	},
 	test: {
 		coverage: {
 			reporter: ["lcovonly", "text"],

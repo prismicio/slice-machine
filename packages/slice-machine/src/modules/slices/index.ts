@@ -243,9 +243,7 @@ export function* createSliceSaga({
     name: payload.sliceName,
     library: payload.libName,
   });
-  const { data: serverState } = (yield call(getState)) as SagaReturnType<
-    typeof getState
-  >;
+  const serverState = (yield call(getState)) as SagaReturnType<typeof getState>;
   yield put(createSliceCreator.success({ libraries: serverState.libraries }));
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const addr = `/${payload.libName.replace(/\//g, "--")}/${

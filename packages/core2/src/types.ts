@@ -3,6 +3,27 @@ import {
 	SliceMachinePluginOptions,
 } from "@slicemachine/plugin-kit";
 
+export type PackageManager = "npm" | "yarn";
+
+export type PackageChangelog = {
+	currentVersion: string;
+	updateAvailable: boolean;
+	latestNonBreakingVersion: string | null;
+	versions: PackageVersion[];
+};
+
+type PackageVersion = {
+	versionNumber: string;
+	releaseNote: string | null;
+	kind: typeof VersionKind[keyof typeof VersionKind] | null;
+};
+
+export const VersionKind = {
+	MAJOR: "MAJOR",
+	MINOR: "MINOR",
+	PATCH: "PATCH",
+} as const;
+
 /**
  * A string, object, or instance representing a registered plugin.
  *

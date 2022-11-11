@@ -7,8 +7,17 @@ import {
 import { createServer, Server } from "node:http";
 import { createRequire } from "node:module";
 import * as path from "node:path";
-import { createApp, fromNodeMiddleware, toNodeListener } from "h3";
+import {
+	createApp,
+	fromNodeMiddleware,
+	toNodeListener,
+	NodeListener,
+	sendProxy,
+	eventHandler,
+	createRouter,
+} from "h3";
 import serveStatic from "serve-static";
+import proxy from "express-http-proxy";
 
 import { listen } from "./lib/listen";
 
@@ -24,11 +33,37 @@ const createSliceMachineServer = async (
 	);
 
 	const app = createApp();
-	app.use(fromNodeMiddleware(serveStatic(sliceMachineOutDir)));
+
 	app.use(
 		"/_manager",
 		fromNodeMiddleware(createSliceMachineManagerMiddleware({ manager }))
 	);
+
+	if (process.env.NODE_ENV === "development") {
+		const router = createRouter();
+		router.add(
+			"/**",
+			eventHandler((event) => {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const target = new URL(event.req.url!, "http://localhost:3000");
+
+				return sendProxy(event, target.toString());
+			})
+		);
+		app.use(router);
+		// app.use(
+		// 	"/**",
+		// 	eventHandler((event) => {
+		// 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// 		const target = event.req.url!;
+		//
+		// 		return sendProxy(event, target);
+		// 	})
+		// );
+		// app.use("/", proxy("http://localhost:3000") as NodeListener);
+	} else {
+		app.use(fromNodeMiddleware(serveStatic(sliceMachineOutDir)));
+	}
 
 	return createServer(toNodeListener(app));
 };

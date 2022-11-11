@@ -72,7 +72,9 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     }: {
       apiId: string;
       newKey: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockValue: any;
     }) => {
       if (mockValue) {

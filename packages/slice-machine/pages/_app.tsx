@@ -56,7 +56,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
 
   useEffect(() => {
     async function getInitialState() {
-      const { data: serverState } = await getState();
+      const serverState = await getState();
       setServerState(serverState);
     }
     void getInitialState();

@@ -10,16 +10,31 @@
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
 	"type": "module",
+	"sideEffects": false,
 	"exports": {
 		".": {
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.js"
+		},
+		"./client": {
+			"require": "./dist/client.cjs",
+			"import": "./dist/client.js"
 		},
 		"./package.json": "./package.json"
 	},
 	"main": "dist/index.cjs",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"dist/index.d.ts"
+			],
+			"client": [
+				"dist/client.d.ts"
+			]
+		}
+	},
 	"files": [
 		"dist",
 		"src"
