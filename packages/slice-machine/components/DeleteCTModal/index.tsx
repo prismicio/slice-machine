@@ -103,7 +103,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             />
             <Button
               label="Delete Locally"
-              variant="red"
+              variant="danger"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={async () => {
                 await deleteCustomType(customType?.local.id as string);
