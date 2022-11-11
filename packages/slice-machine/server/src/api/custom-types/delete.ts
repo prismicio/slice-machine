@@ -7,7 +7,6 @@ import { getBackendState } from "../state";
 import { RequestWithEnv } from "../http/common";
 import { DeleteCustomTypeQuery } from "../../../../lib/models/common/CustomType";
 import { remove as removeCtsFromMockConfig } from "../../../../lib/mock/misc/fs";
-import getEnv from "../services/getEnv";
 
 export default async function handler(
   req: RequestWithEnv
@@ -16,7 +15,6 @@ export default async function handler(
 > {
   const state = await getBackendState(req.errors, req.env);
   const { id } = req.query as DeleteCustomTypeQuery;
-  const { env } = await getEnv();
   const ctFolder = CustomTypesPaths(state.env.cwd).customType(id).folder();
   const customTypeAssetsFolder = GeneratedCustomTypesPaths(state.env.cwd)
     .customType(id)
@@ -25,7 +23,7 @@ export default async function handler(
   try {
     IO.CustomType.deleteCustomType(ctFolder);
   } catch (err) {
-    console.error(`[custom-type/delete] Error: ${err as string}`);
+    console.error(`[custom-type/delete] ${err as string}`);
     return {
       err: err,
       reason: "We couldn't delete your custom type. Check your terminal.",
@@ -50,7 +48,7 @@ export default async function handler(
   }
 
   try {
-    removeCtsFromMockConfig(env.cwd, { key: id, prefix: "_cts" });
+    removeCtsFromMockConfig(state.env.cwd, { key: id, prefix: "_cts" });
   } catch (err) {
     console.error(
       `[custom-type/delete] Could not delete your custom type from the mock-config.json`
