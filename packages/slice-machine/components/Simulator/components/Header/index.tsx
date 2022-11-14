@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import router from "next/router";
 import { Text, Flex, Switch, Label } from "theme-ui";
 
@@ -42,22 +41,6 @@ const Header: React.FunctionComponent<PropTypes> = ({
   isDisplayEditor,
   toggleIsDisplayEditor,
 }) => {
-  
-  const sliceView = useMemo(
-    () =>
-    slice && variation
-        ? [
-            {
-              sliceID: slice.model.id,
-              variationID: variation.id,
-            },
-          ]
-        : null,
-    [slice.model.id, variation?.id]
-  );
-
-  if (!sliceView) return null;
-
   return (
     <Flex
       sx={{
@@ -83,16 +66,17 @@ const Header: React.FunctionComponent<PropTypes> = ({
         />
       </Flex>
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
-      <Flex sx={{ alignItems: "center", justifyContent: "space-around" }}>
-        <Flex sx={{ alignItems: "center" }}>
-          <Label htmlFor="show-mock-editor">Show the mock editor</Label>
-          <Switch id="show-mock-editor" checked={isDisplayEditor} onChange={toggleIsDisplayEditor} />
+        <Flex sx={{ alignItems: "center", justifyContent: "space-around" }}>
+          <Flex sx={{ alignItems: "center" }}>
+            <Label htmlFor="show-mock-editor">Show the mock editor</Label>
+            <Switch
+              id="show-mock-editor"
+              checked={isDisplayEditor}
+              onChange={toggleIsDisplayEditor}
+            />
+          </Flex>
         </Flex>
-      </Flex>
-        <Button
-          onClick={() => console.log("todo")}
-          label="Save mock"
-        />
+        <Button onClick={() => console.log("todo")} label="Save mock" />
       </Flex>
     </Flex>
   );

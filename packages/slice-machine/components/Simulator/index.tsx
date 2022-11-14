@@ -32,10 +32,7 @@ import { ThemeProvider } from "@prismicio/editor-ui";
 
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
 
-import throttle from "lodash.throttle";
-
-export type SliceView = SliceViewItem[];
-export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
+import useThrottle from "@src/hooks/useThrottle";
 
 export default function Simulator() {
   const { component } = useSelector((store: SliceMachineStoreType) => ({
@@ -91,23 +88,19 @@ export default function Simulator() {
       },
     []
   );
+  const apiContent = useThrottle(
+    {
+      ...(renderSliceMock(sharedSlice, editorContent) as object),
+      id: initialApiContent.id,
+    },
+    800
+  );
 
   const [prevVariationId, setPrevVariationId] = useState(variation.id);
   if (variation.id !== prevVariationId) {
     setContent(initialContent);
     setPrevVariationId(variation.id);
   }
-
-  const apiContent = useMemo(
-    () =>
-      throttle(() => {
-        return {
-          ...(renderSliceMock(sharedSlice, editorContent) as object),
-          id: initialApiContent.id,
-        };
-      }, 100),
-    [sharedSlice, editorContent, initialContent]
-  );
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(true);
 
@@ -149,7 +142,7 @@ export default function Simulator() {
               screenDimensions={screenDimensions}
             />
             <IframeRenderer
-              apiContent={apiContent()}
+              apiContent={apiContent}
               screenDimensions={screenDimensions}
               simulatorUrl={simulatorUrl}
             />

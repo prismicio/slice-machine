@@ -65,7 +65,6 @@
     "io-ts-reporters": "^2.0.1",
     "io-ts-types": "^0.5.16",
     "lodash": "^4.17.21",
-    "lodash.throttle": "^4.1.1",
     "mime": "^2.5.2",
     "module-alias": "^2.2.2",
     "monocle-ts": "^2.0.0",

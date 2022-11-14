@@ -3,7 +3,6 @@ import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 import { Box, Flex } from "theme-ui";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
-import { SliceView } from "../..";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SetupError } from "../SetupError";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
@@ -49,7 +48,6 @@ function useSimulatorClient(): readonly [
 
 type IframeRendererProps = {
   apiContent?: unknown;
-  sliceView?: SliceView;
   screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
   dryRun?: boolean;
@@ -60,7 +58,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   screenDimensions,
   simulatorUrl,
   dryRun = false,
-  sliceView,
 }) => {
   const [client, ref] = useSimulatorClient();
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
@@ -81,13 +78,8 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
 
     const updateSliceZone = async () => {
-      if (sliceView) {
-        // When used outside of the simulator atm
-        await client.setSliceZoneFromSliceIDs(sliceView);
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await client.setSliceZone([apiContent as any]);
-      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await client.setSliceZone([apiContent as any]);
     };
 
     updateSliceZone()
@@ -97,7 +89,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, screenDimensions, sliceView, apiContent]);
+  }, [client, screenDimensions, apiContent]);
 
   return (
     <Box
