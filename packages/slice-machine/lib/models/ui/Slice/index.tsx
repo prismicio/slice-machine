@@ -72,13 +72,14 @@ const SliceCardActions: React.FC<{
   slice: ComponentUI;
   actions?: {
     onUpdateScreenshot: (e: React.MouseEvent) => void;
-    openRenameModale: (slice: ComponentUI) => void;
+    openRenameModale?: (slice: ComponentUI) => void;
   };
 }> = ({ actions, slice }) => {
-  const onRenameClick = useCallback(
-    () => actions?.openRenameModale(slice),
-    [actions, slice]
-  );
+  const onRenameClick = useCallback(() => {
+    if (actions?.openRenameModale) {
+      actions.openRenameModale(slice);
+    }
+  }, [actions, slice]);
 
   if (!actions) {
     return null;
@@ -95,31 +96,32 @@ const SliceCardActions: React.FC<{
         mt: 0,
       }}
     >
-      {actions.onUpdateScreenshot && (
-        <Button
-          onClick={actions.onUpdateScreenshot}
-          variant="secondarySmall"
-          sx={{ fontWeight: "bold" }}
-          Icon={AiOutlineCamera}
-          label="Update screenshot"
+      <Button
+        onClick={actions.onUpdateScreenshot}
+        variant="secondarySmall"
+        sx={{ fontWeight: "bold" }}
+        Icon={AiOutlineCamera}
+        label="Update screenshot"
+      />
+
+      {actions.openRenameModale && (
+        <KebabMenuDropdown
+          dataCy="slice-action-icon"
+          menuOptions={[
+            {
+              displayName: "Rename",
+              onClick: onRenameClick,
+              dataCy: "slice-action-rename",
+            },
+            {
+              displayName: "Delete",
+              // TODO remove when action is implemented
+              // eslint-disable-next-line
+              onClick: () => {},
+            },
+          ]}
         />
       )}
-      <KebabMenuDropdown
-        dataCy="slice-action-icon"
-        menuOptions={[
-          {
-            displayName: "Rename",
-            onClick: onRenameClick,
-            dataCy: "slice-action-rename",
-          },
-          {
-            displayName: "Delete",
-            // TODO remove when action is implemented
-            // eslint-disable-next-line
-            onClick: () => {},
-          },
-        ]}
-      />
     </Flex>
   );
 };
@@ -237,7 +239,7 @@ export const SharedSlice = {
     wrapperType?: WrapperType;
     actions?: {
       onUpdateScreenshot: (e: React.MouseEvent) => void;
-      openRenameModale: (slice: ComponentUI) => void;
+      openRenameModale?: (slice: ComponentUI) => void;
     };
     sx?: ThemeUIStyleObject;
   }) {

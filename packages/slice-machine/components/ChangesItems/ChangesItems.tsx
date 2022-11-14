@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { Box, Button, Text } from "theme-ui";
 import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 
@@ -18,8 +18,6 @@ import { ErrorBanner } from "./ErrorBanner";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
@@ -42,9 +40,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
-
-  const [sliceForRename, setSliceForRename] = useState<ComponentUI>();
-  const { openRenameSliceModal } = useSliceMachineActions();
 
   return (
     <>
@@ -143,10 +138,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                         s.filter((e) => e.model.id === slice.model.id),
                     });
                   },
-                  openRenameModale: (slice: ComponentUI) => {
-                    setSliceForRename(slice);
-                    openRenameSliceModal();
-                  },
                 },
                 sx: changesPushed.includes(slice.model.id)
                   ? { animation: "fadeout .4s linear forwards" }
@@ -157,12 +148,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
           <ScreenshotChangesModal
             slices={sliceFilterFn(unSyncedSlices)}
             defaultVariationSelector={defaultVariationSelector}
-          />
-          <RenameSliceModal
-            sliceId={sliceForRename?.model.id ?? ""}
-            sliceName={sliceForRename?.model.name ?? ""}
-            libName={sliceForRename?.from ?? ""}
-            data-cy="rename-slice-modal"
           />
         </>
       )}
