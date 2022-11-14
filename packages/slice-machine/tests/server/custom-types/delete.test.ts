@@ -31,6 +31,8 @@ describe("Delete Custom Type files", () => {
   beforeEach(() => {
     console.warn = jest.fn();
     console.error = jest.fn();
+    // @ts-expect-error don't need the right type for mocking purposes
+    jest.spyOn(fs, "lstatSync").mockReturnValue(true);
   });
   afterAll(() => {
     console.warn = warn;
@@ -45,8 +47,6 @@ describe("Delete Custom Type files", () => {
         _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
       })
     );
-    // @ts-expect-error don't need the right type for mocking purposes
-    jest.spyOn(fs, "lstatSync").mockReturnValue(true);
 
     const result = await deleteCT(mockRequest);
 
@@ -129,18 +129,18 @@ describe("Delete Custom Type files", () => {
 
     const result = await deleteCT(mockRequest);
 
-    expect(mockRmSync).toHaveBeenCalled();
-    expect(mockRmSync).toHaveBeenCalled();
     expect(mockRmSync).toHaveBeenCalledTimes(2);
 
-    expect(mockReadFileSync).not.toBeCalled();
-    expect(mockWriteFileSync).not.toBeCalled();
+    expect(mockReadFileSync).toHaveBeenCalled();
+    expect(mockWriteFileSync).toHaveBeenCalled();
 
+    expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
-      "[custom-type/delete] Could not delete your custom type assets files in /test/.slicemachine/assets/customtypes/unwanted-ct"
+      `[custom-type/delete] Could not delete your custom type assets files.\n`,
+      `To resolve this, manually delete the directory /test/.slicemachine/assets/customtypes/unwanted-ct`
     );
     expect(result).toStrictEqual({
-      err: Error("Couldn't remove custom type"),
+      err: {},
       reason:
         "Something went wrong when deleting your Custom Type. Check your terminal.",
       status: "500",
@@ -160,25 +160,22 @@ describe("Delete Custom Type files", () => {
         _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
       })
     );
-    // @ts-expect-error don't need the right type for mocking purposes
-    jest.spyOn(fs, "lstatSync").mockReturnValue(true);
 
     const result = await deleteCT(mockRequest);
 
-    expect(mockRmSync).toHaveBeenCalled();
-    expect(mockRmSync).toHaveBeenCalled();
     expect(mockRmSync).toHaveBeenCalledTimes(2);
 
     expect(mockReadFileSync).toBeCalled();
-
     expect(mockWriteFileSync).toBeCalled();
 
     expect(console.error).toHaveBeenCalledWith(
-      "[custom-type/delete] Could not delete your custom type from the mock-config.json"
+      `[custom-type/delete] Could not delete your custom from the mock-config.json.\n`,
+      `To resolve this, manually remove the ${CUSTOM_TYPE_TO_DELETE} field in /test/.slicemachine/mock-config.json`
     );
+    expect(console.error).toHaveBeenCalledTimes(1);
 
     expect(result).toStrictEqual({
-      err: Error("couldn't update file"),
+      err: {},
       reason:
         "Something went wrong when deleting your Custom Type. Check your terminal.",
       status: "500",
