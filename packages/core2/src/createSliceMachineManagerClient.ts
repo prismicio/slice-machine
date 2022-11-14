@@ -2,10 +2,10 @@ import { createRPCClient, ExtractProcedures, RPCClient } from "./rpc";
 
 // !!! Never import anything other than types from
 // !!! `./createSliceMachineManagerServer` in this file.
-import type { SliceMachineManagerServer } from "./createSliceMachineManagerServer";
+import type { SliceMachineManagerMiddleware } from "./createSliceMachineManagerMiddleware";
 
 export type SliceMachineManagerClient = RPCClient<
-	ExtractProcedures<SliceMachineManagerServer>
+	ExtractProcedures<SliceMachineManagerMiddleware>
 >;
 
 export type CreateSliceMachineManagerClientArgs = {

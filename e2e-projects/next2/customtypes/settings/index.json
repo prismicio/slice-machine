@@ -27,10 +27,7 @@
         "type": "Image",
         "config": {
           "label": "Profile Picture",
-          "constraint": {
-            "width": 2000,
-            "height": 2000
-          },
+          "constraint": { "width": 2000, "height": 2000 },
           "thumbnails": []
         }
       },

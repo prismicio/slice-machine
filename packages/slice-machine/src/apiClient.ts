@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { Slices } from "@slicemachine/core/build/models";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import {
@@ -8,7 +9,10 @@ import {
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@slicemachine/core/build/models/CustomType";
 import {
   ScreenshotRequest,
   ScreenshotResponse,
@@ -27,22 +31,60 @@ const defaultAxiosConfig = {
 /** State Routes **/
 
 export const getState = async (): Promise<ServerState> => {
-  return await managerClient.getState();
-  // return axios.get<ServerState>("/api/state", defaultAxiosConfig);
+  const rawState = await managerClient.getState();
+
+  // `rawState` from the client contains non-SM-specific models. We need to
+  // transform the data to something SM recognizes.
+  const state = {
+    ...rawState,
+    libraries: rawState.libraries.map((library) => {
+      return {
+        ...library,
+        components: library.components.map((component) => {
+          return {
+            ...component,
+            model: Slices.toSM(component.model),
+          };
+        }),
+      };
+    }),
+    customTypes: rawState.customTypes.map((customTypeModel) => {
+      return CustomTypes.toSM(customTypeModel);
+    }),
+    remoteCustomTypes: rawState.remoteCustomTypes.map(
+      (remoteCustomTypeModel) => {
+        return CustomTypes.toSM(remoteCustomTypeModel);
+      }
+    ),
+    remoteSlices: rawState.remoteSlices.map((remoteSliceModel) => {
+      return Slices.toSM(remoteSliceModel);
+    }),
+  };
+
+  return state;
 };
 
 /** Custom Type Routes **/
 
-export const saveCustomType = (
+export const saveCustomType = async (
   customType: CustomTypeSM,
   mockConfig: CustomTypeMockConfig
 ): Promise<AxiosResponse> => {
-  const requestBody: SaveCustomTypeBody = {
-    model: customType,
-    mockConfig: mockConfig,
-  };
+  await managerClient.updateCustomTypeMocksConfig({
+    customTypeID: customType.id,
+    mocksConfig: mockConfig,
+  });
 
-  return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
+  return await managerClient.updateCustomType({
+    model: CustomTypes.fromSM(customType),
+  });
+
+  // const requestBody: SaveCustomTypeBody = {
+  //   model: customType,
+  //   mockConfig: mockConfig,
+  // };
+  //
+  // return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
 };
 
 export const renameCustomType = (
@@ -61,13 +103,10 @@ export const renameCustomType = (
   );
 };
 
-export const pushCustomType = (
-  customTypeId: string
-): Promise<AxiosResponse> => {
-  return axios.get(
-    `/api/custom-types/push?id=${customTypeId}`,
-    defaultAxiosConfig
-  );
+export const pushCustomType = async (customTypeId: string): Promise<void> => {
+  await managerClient.pushCustomType({
+    id: customTypeId,
+  });
 };
 
 /** Slice Routes **/
@@ -111,27 +150,35 @@ export const generateSliceCustomScreenshotApiClient = (
   return axios.post("/api/custom-screenshot", requestBody, defaultAxiosConfig);
 };
 
-export const saveSliceApiClient = (
+export const saveSliceApiClient = async (
   component: ComponentUI
-): Promise<AxiosResponse<Record<string, never>>> => {
-  const requestBody = {
-    sliceName: component.model.name,
-    from: component.from,
-    model: component.model,
-    mockConfig: component.mockConfig,
-  };
-  return axios.post("/api/slices/save", requestBody, defaultAxiosConfig);
+): Promise<Awaited<ReturnType<typeof managerClient["updateSlice"]>>> => {
+  await managerClient.updateSliceMocksConfig({
+    libraryID: component.from,
+    sliceID: component.model.id,
+    mocksConfig: component.mockConfig,
+  });
+
+  return await managerClient.updateSlice({
+    libraryID: component.from,
+    model: Slices.fromSM(component.model),
+  });
 };
 
-export const pushSliceApiClient = (
+export const pushSliceApiClient = async (
   component: ComponentUI
 ): Promise<Record<string, string | null>> => {
-  return axios
-    .get<Record<string, string | null>>(
-      `/api/slices/push?sliceName=${component.model.name}&from=${component.from}`,
-      defaultAxiosConfig
-    )
-    .then((response) => response.data);
+  return await managerClient.pushSlice({
+    libraryID: component.from,
+    sliceID: component.model.id,
+  });
+
+  // return axios
+  //   .get<Record<string, string | null>>(
+  //     `/api/slices/push?sliceName=${component.model.name}&from=${component.from}`,
+  //     defaultAxiosConfig
+  //   )
+  //   .then((response) => response.data);
 };
 
 /** Auth Routes **/

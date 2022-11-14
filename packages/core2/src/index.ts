@@ -3,16 +3,19 @@ export {
 	createSliceMachineManager,
 } from "./createSliceMachineManager";
 
-// TODO: Server can probably be removed.
-export {
-	CreateSliceMachineManagerServerArgs,
-	SliceMachineManagerServer,
-	createSliceMachineManagerServer,
-} from "./createSliceMachineManagerServer";
-
 export {
 	CreateSliceMachineManagerMiddlewareArgs,
 	createSliceMachineManagerMiddleware,
 } from "./createSliceMachineManagerMiddleware";
 
-export type { PrismicUserProfile } from "./createPrismicAuthManager";
+export {
+	PrismicAuthManager,
+	PrismicUserProfile,
+	createPrismicAuthManager,
+} from "./createPrismicAuthManager";
+
+export {
+	CreatePrismicAuthManagerMiddlewareArgs,
+	PrismicAuthCheckStatusResponse,
+	createPrismicAuthManagerMiddleware,
+} from "./createPrismicAuthManagerMiddleware";

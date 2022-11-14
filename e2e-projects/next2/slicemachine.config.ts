@@ -1,6 +1,6 @@
 const config = {
   _latest: "1.0.0",
-  repositoryName: "nextjs-starter-prismic-blog",
+  repositoryName: "slicemachine-dev-mule",
   libraries: ["./slices"],
   adapter: "@slicemachine/adapter-next",
 };

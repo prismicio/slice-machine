@@ -1,15 +1,11 @@
 import * as t from "io-ts";
 import * as fs from "node:fs/promises";
+import * as path from "node:path";
 import * as os from "node:os";
 import fetch from "node-fetch";
 import cookie from "cookie";
 
-import {
-	createPrismicAuthServer,
-	PrismicAuthServer,
-} from "./lib/createPrismicAuthServer";
 import { decode } from "./lib/decode";
-import { locateFileUpward } from "./lib/findFileUpward";
 import { serializeCookies } from "./lib/serializeCookies";
 
 import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "./constants";
@@ -68,7 +64,6 @@ export const createPrismicAuthManager = (
 
 type PrismicAuthManagerConstructorArgs = {
 	scopedDirectory?: string;
-	persistedAuthStateFileName?: string;
 };
 
 type PrismicAuthManagerLoginArgs = {
@@ -109,9 +104,7 @@ export class PrismicAuthManager {
 		this.scopedDirectory = scopedDirectory;
 	}
 
-	async createPrismicAuthServer(): Promise<PrismicAuthServer> {
-		return createPrismicAuthServer({ prismicAuthManager: this });
-	}
+	// TODO: Method to refresh the current authentication token.
 
 	// TODO: Make the `cookies` argument more explicit. What are these
 	// mysterious cookies?
@@ -150,12 +143,6 @@ export class PrismicAuthManager {
 		await this._writePersistedAuthState(authState);
 	}
 
-	async checkIsLoggedIn(): Promise<boolean> {
-		const authState = await this._readPersistedAuthState();
-
-		return checkIsLoggedIn(authState);
-	}
-
 	/**
 	 * @param authenticationToken - An optional authentication token used to fetch
 	 *   a specific user profile. If no authentication token is provided, the
@@ -163,13 +150,7 @@ export class PrismicAuthManager {
 	 */
 	async getProfile(authenticationToken?: string): Promise<PrismicUserProfile> {
 		if (!authenticationToken) {
-			const authState = await this._readPersistedAuthState();
-
-			if (!checkIsLoggedIn(authState)) {
-				throw new Error("Not logged in.");
-			}
-
-			authenticationToken = authState.cookies[AUTH_COOKIE_KEY];
+			authenticationToken = await this.getAuthenticationToken();
 		}
 
 		const url = new URL("/profile", APIEndpoints.PrismicUser);
@@ -195,6 +176,22 @@ export class PrismicAuthManager {
 		}
 	}
 
+	async getAuthenticationToken(): Promise<string> {
+		const authState = await this._readPersistedAuthState();
+
+		if (!checkIsLoggedIn(authState)) {
+			throw new Error("Not logged in.");
+		}
+
+		return authState.cookies[AUTH_COOKIE_KEY];
+	}
+
+	async checkIsLoggedIn(): Promise<boolean> {
+		const authState = await this._readPersistedAuthState();
+
+		return checkIsLoggedIn(authState);
+	}
+
 	private async _readPersistedAuthState(): Promise<PrismicAuthState> {
 		const authStateFilePath = await this._getPersistedAuthStateFilePath();
 
@@ -205,8 +202,12 @@ export class PrismicAuthManager {
 		} catch {
 			// Write a default persisted state if it doesn't already exist.
 
+			const defaultStateFileContents = {
+				...DEFAULT_PERSISTED_AUTH_STATE,
+				cookies: serializeCookies(DEFAULT_PERSISTED_AUTH_STATE.cookies),
+			};
 			authStateFileContents = JSON.stringify(
-				DEFAULT_PERSISTED_AUTH_STATE,
+				defaultStateFileContents,
 				null,
 				"\t",
 			);
@@ -261,8 +262,6 @@ export class PrismicAuthManager {
 	}
 
 	private async _getPersistedAuthStateFilePath(): Promise<string> {
-		return await locateFileUpward(PERSISTED_AUTH_STATE_FILE_NAME, {
-			startDir: this.scopedDirectory,
-		});
+		return path.resolve(this.scopedDirectory, PERSISTED_AUTH_STATE_FILE_NAME);
 	}
 }

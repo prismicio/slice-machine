@@ -3,23 +3,23 @@ import { NodeMiddleware } from "h3";
 import { SliceMachineManager } from "./createSliceMachineManager";
 import {
 	ProceduresFromInstance,
-	RPCServer,
+	RPCMiddleware,
 	proceduresFromInstance,
 	createRPCMiddleware,
 } from "./rpc";
 
-export type SliceMachineManagerServer = RPCServer<
+export type SliceMachineManagerMiddleware = RPCMiddleware<
 	ProceduresFromInstance<SliceMachineManager>
 >;
 
 export type CreateSliceMachineManagerMiddlewareArgs = {
-	manager: SliceMachineManager;
+	sliceMachineManager: SliceMachineManager;
 };
 
 export const createSliceMachineManagerMiddleware = (
 	args: CreateSliceMachineManagerMiddlewareArgs,
 ): NodeMiddleware => {
 	return createRPCMiddleware({
-		procedures: proceduresFromInstance(args.manager),
+		procedures: proceduresFromInstance(args.sliceMachineManager),
 	});
 };

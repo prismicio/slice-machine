@@ -26,10 +26,12 @@ import {
 	SliceUpdateHookData,
 	createSliceMachinePluginRunner,
 } from "@slicemachine/plugin-kit";
+import * as prismicCustomTypesCilent from "@prismicio/custom-types-client";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { createRequire } from "node:module";
 import { CustomTypes } from "@prismicio/types-internal";
+import fetch from "node-fetch";
 
 import { DecodeError } from "./lib/DecodeError";
 import { bufferCodec } from "./lib/bufferCodec";
@@ -53,7 +55,6 @@ import {
 } from "./constants";
 import {
 	createPrismicAuthManager,
-	PrismicAuthManager,
 	PrismicUserProfile,
 } from "./createPrismicAuthManager";
 
@@ -255,6 +256,38 @@ type SliceMachineManagerReadSliceScreenshotReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
+type SliceMachineManagerReadSliceMocksArgs = {
+	libraryID: string;
+	sliceID: string;
+};
+
+type SliceMachineManagerReadSliceMocksReturnType = {
+	mocks?: SharedSlice[];
+	errors: HookError[];
+};
+
+type SliceMachineManagerReadSliceMocksConfigArgs = {
+	libraryID: string;
+	sliceID: string;
+};
+
+type SliceMachineManagerReadSliceMocksConfigArgsReturnType = {
+	// TODO
+	mocksConfig?: Record<string, unknown>;
+	errors: HookError[];
+};
+
+type SliceMachineManagerUpdateSliceMocksConfigArgs = {
+	libraryID: string;
+	sliceID: string;
+	// TODO
+	mocksConfig?: Record<string, unknown>;
+};
+
+type SliceMachineManagerUpdateSliceMocksConfigArgsReturnType = {
+	errors: HookError[];
+};
+
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[] | undefined;
 	errors: (DecodeError | HookError)[];
@@ -272,6 +305,26 @@ type SliceMachineManagerReadCustomTypeReturnType = {
 
 type SliceMachineManagerPushCustomTypeArgs = {
 	id: string;
+};
+
+type SliceMachineManagerReadCustomTypeMocksConfigArgs = {
+	customTypeID: string;
+};
+
+type SliceMachineManagerReadCustomTypeMocksConfigArgsReturnType = {
+	// TODO
+	mocksConfig?: Record<string, unknown>;
+	errors: HookError[];
+};
+
+type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
+	customTypeID: string;
+	// TODO
+	mocksConfig?: Record<string, unknown>;
+};
+
+type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {
+	errors: HookError[];
 };
 
 type SliceMachineManagerGetStateReturnType = {
@@ -296,25 +349,7 @@ type SliceMachineManagerGetStateReturnType = {
 			pathToSlice: string;
 			fileName: string | null;
 			extension: string | null;
-			model: Omit<CustomTypes.Widgets.Slices.SharedSlice, "variations"> & {
-				variations: (Omit<
-					CustomTypes.Widgets.Slices.SharedSlice["variations"][number],
-					"primary" | "items"
-				> & {
-					primary: {
-						key: string;
-						value: NonNullable<
-							CustomTypes.Widgets.Slices.SharedSlice["variations"][number]["primary"]
-						>[string];
-					}[];
-					items: {
-						key: string;
-						value: NonNullable<
-							CustomTypes.Widgets.Slices.SharedSlice["variations"][number]["items"]
-						>[string];
-					}[];
-				})[];
-			};
+			model: CustomTypes.Widgets.Slices.SharedSlice;
 			screenshots: Record<
 				string,
 				{
@@ -322,7 +357,8 @@ type SliceMachineManagerGetStateReturnType = {
 					hash: string;
 				}
 			>;
-			mock?: SharedSlice;
+			mock?: SharedSlice[];
+			mockConfig: Record<string, unknown>;
 		}[];
 		meta: {
 			name?: string;
@@ -332,10 +368,10 @@ type SliceMachineManagerGetStateReturnType = {
 			isManual: boolean;
 		};
 	}[];
-	customTypes: [];
-	remoteCustomTypes: [];
-	remoteSlices: [];
-	clientError?: any;
+	customTypes: CustomTypes.CustomType[];
+	remoteCustomTypes: CustomTypes.CustomType[];
+	remoteSlices: CustomTypes.Widgets.Slices.SharedSlice[];
+	clientError?: { message: string; status: number };
 };
 
 type SliceMachineManagerGetReleaseNotesForVersionArgs = {
@@ -346,27 +382,15 @@ export class SliceMachineManager {
 	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined;
 	private _sliceMachineConfig: SliceMachineConfig | undefined;
 	private _sliceMachineRoot: string | undefined;
-	private _prismicAuthStateManager: PrismicAuthManager =
-		createPrismicAuthManager();
 
-	// TODO: Replace with a middleware creator. We need to inject the logic
-	// into a shared HTTP server, not spawn a new server.
-	createPrismicAuthServer =
-		this._prismicAuthStateManager.createPrismicAuthServer.bind(
-			this._prismicAuthStateManager,
-		);
-	login = this._prismicAuthStateManager.login.bind(
-		this._prismicAuthStateManager,
+	prismicAuthManager = createPrismicAuthManager();
+
+	login = this.prismicAuthManager.login.bind(this.prismicAuthManager);
+	logout = this.prismicAuthManager.logout.bind(this.prismicAuthManager);
+	checkIsLoggedIn = this.prismicAuthManager.checkIsLoggedIn.bind(
+		this.prismicAuthManager,
 	);
-	logout = this._prismicAuthStateManager.logout.bind(
-		this._prismicAuthStateManager,
-	);
-	checkIsLoggedIn = this._prismicAuthStateManager.checkIsLoggedIn.bind(
-		this._prismicAuthStateManager,
-	);
-	getProfile = this._prismicAuthStateManager.getProfile.bind(
-		this._prismicAuthStateManager,
-	);
+	getProfile = this.prismicAuthManager.getProfile.bind(this.prismicAuthManager);
 
 	async getProjectRoot(): Promise<string> {
 		if (this._sliceMachineRoot) {
@@ -458,6 +482,9 @@ export class SliceMachineManager {
 		const versions = await Promise.all(
 			allStableVersions.map(async (version): Promise<PackageVersion> => {
 				// TODO: I was rate limited :(
+				// Rather than making a request or each
+				// version, we can make one request for all (at
+				// least to some paginated amount).
 				// const releaseNotes = await this.getReleaseNotesForVersion({ version });
 				const releaseNotes = undefined;
 
@@ -479,36 +506,30 @@ export class SliceMachineManager {
 					[];
 
 				for (const sliceID of sliceIDs) {
-					const { model } = await this.readSlice({ libraryID, sliceID });
+					const { model } = await this.readSlice({
+						libraryID,
+						sliceID,
+					});
+					const { mocks } = await this.readSliceMocks({
+						libraryID,
+						sliceID,
+					});
+					const { mocksConfig } = await this.readSliceMocksConfig({
+						libraryID,
+						sliceID,
+					});
 
 					if (model) {
-						const reshapedModel = {
-							...model,
-							variations: model.variations.map((variation) => {
-								return {
-									...variation,
-									primary: Object.entries(variation.primary || {}).map(
-										([key, fieldModel]) => {
-											return { key, value: fieldModel };
-										},
-									),
-									items: Object.entries(variation.items || {}).map(
-										([key, fieldModel]) => {
-											return { key, value: fieldModel };
-										},
-									),
-								};
-							}),
-						};
-
 						components.push({
 							from: libraryID,
 							href: libraryID.replace(/\//g, "--"),
 							pathToSlice: "pathToSlice",
 							fileName: "fileName",
 							extension: "extension",
-							model: reshapedModel,
+							model,
 							screenshots: {},
+							mock: mocks,
+							mockConfig: mocksConfig || {},
 						});
 					}
 				}
@@ -528,7 +549,34 @@ export class SliceMachineManager {
 			}
 		}
 
-		// TODO: Populate this object.
+		const customTypes: SliceMachineManagerGetStateReturnType["customTypes"] =
+			[];
+		const { ids: customTypeIDs } = await this.readCustomTypeLibrary();
+		if (customTypeIDs) {
+			for (const customTypeID of customTypeIDs) {
+				const { model } = await this.readCustomType({ id: customTypeID });
+
+				if (model) {
+					customTypes.push(model);
+				}
+			}
+		}
+
+		const remoteCustomTypes: SliceMachineManagerGetStateReturnType["remoteCustomTypes"] =
+			isLoggedIn ? await this.fetchRemoteCustomTypes() : [];
+
+		const remoteSlices: SliceMachineManagerGetStateReturnType["remoteSlices"] =
+			isLoggedIn ? await this.fetchRemoteSlices() : [];
+
+		// SM UI detects if a user is logged out by looking at
+		// `clientError`. Here, we simulate what the old core does by
+		// returning an `ErrorWithStatus`-like object if the user is
+		// not logged in.
+		const clientError: SliceMachineManagerGetStateReturnType["clientError"] =
+			isLoggedIn
+				? undefined
+				: { message: "Could not fetch slices", status: 401 };
+
 		return {
 			env: {
 				changelog: {
@@ -540,18 +588,20 @@ export class SliceMachineManager {
 				framework: "",
 				manifest: {},
 				mockConfig: {},
+				// TODO: Don't hardcode this!
 				packageManager: "npm",
-				repo: "repo",
+				// TODO: Don't hardcode this!
+				repo: sliceMachineConfig.repositoryName,
 				// TODO: Don't hardcode this!
 				sliceMachineAPIUrl: "http://localhost:9999",
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
 			},
 			libraries,
-			customTypes: [],
-			remoteCustomTypes: [],
-			remoteSlices: [],
-			clientError: undefined,
+			customTypes,
+			remoteCustomTypes,
+			remoteSlices,
+			clientError,
 		};
 	}
 
@@ -744,10 +794,50 @@ export class SliceMachineManager {
 		};
 	}
 
-	async pushSlice(_args: SliceMachineManagerPushSliceArgs): Promise<void> {
+	/**
+	 * @returns Record of uploaded screenshot URLs.
+	 */
+	async pushSlice(
+		args: SliceMachineManagerPushSliceArgs,
+	): Promise<Record<string, string | undefined>> {
 		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		// TODO: Push Slice to Prismic.
+		// TODO: Handle errors
+		const { model } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.sliceID,
+		});
+
+		if (model) {
+			const authenticationToken =
+				await this.prismicAuthManager.getAuthenticationToken();
+
+			const sliceMachineConfig = await this.getSliceMachineConfig();
+
+			// TODO: Create a single shared client.
+			const client = prismicCustomTypesCilent.createClient({
+				repositoryName: sliceMachineConfig.repositoryName,
+				token: authenticationToken,
+				fetch,
+			});
+
+			try {
+				// Check if Slice already exists on the repository.
+				await client.getSharedSliceByID(args.sliceID);
+
+				// If it exists on the repository, update it.
+				await client.updateSharedSlice(model);
+			} catch (error) {
+				if (error instanceof prismicCustomTypesCilent.NotFoundError) {
+					// If the Slice doesn't exist on the repository, insert it.
+					await client.insertSharedSlice(model);
+				}
+			}
+		}
+
+		// TODO: Handle uploading screenshots to S3 and return URLs for each.
+
+		return {};
 	}
 
 	async readSliceScreenshot(
@@ -812,6 +902,88 @@ export class SliceMachineManager {
 
 		return {
 			data,
+		};
+	}
+
+	async readSliceMocks(
+		args: SliceMachineManagerReadSliceMocksArgs,
+	): Promise<SliceMachineManagerReadSliceMocksReturnType> {
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
+
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:asset:read",
+			{
+				libraryID: args.libraryID,
+				sliceID: args.sliceID,
+				assetID: `mocks.json`,
+			},
+		);
+		const data = hookResult.data[0]?.data;
+
+		// TODO: Validate the returned mocks.
+
+		if (data) {
+			return {
+				mocks: JSON.parse(data.toString()),
+				errors: hookResult.errors,
+			};
+		} else {
+			return {
+				mocks: [],
+				errors: hookResult.errors,
+			};
+		}
+	}
+
+	async readSliceMocksConfig(
+		args: SliceMachineManagerReadSliceMocksConfigArgs,
+	): Promise<SliceMachineManagerReadSliceMocksConfigArgsReturnType> {
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
+
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:asset:read",
+			{
+				libraryID: args.libraryID,
+				sliceID: args.sliceID,
+				assetID: "mocks.config.json",
+			},
+		);
+		const data = hookResult.data[0]?.data;
+
+		// TODO: Validate the returned data.
+
+		if (data) {
+			return {
+				mocksConfig: JSON.parse(data.toString()),
+				errors: hookResult.errors,
+			};
+		} else {
+			return {
+				mocksConfig: undefined,
+				errors: hookResult.errors,
+			};
+		}
+	}
+
+	async updateSliceMocksConfig(
+		args: SliceMachineManagerUpdateSliceMocksConfigArgs,
+	): Promise<SliceMachineManagerUpdateSliceMocksConfigArgsReturnType> {
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
+
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"slice:asset:update",
+			{
+				libraryID: args.libraryID,
+				sliceID: args.sliceID,
+				asset: {
+					id: "mocks.config.json",
+					data: Buffer.from(JSON.stringify(args.mocksConfig, null, "\t")),
+				},
+			},
+		);
+
+		return {
+			errors: hookResult.errors,
 		};
 	}
 
@@ -929,11 +1101,119 @@ export class SliceMachineManager {
 	}
 
 	async pushCustomType(
-		_args: SliceMachineManagerPushCustomTypeArgs,
+		args: SliceMachineManagerPushCustomTypeArgs,
 	): Promise<void> {
+		// TODO: Handle errors
+		const { model } = await this.readCustomType({ id: args.id });
+
+		if (model) {
+			const authenticationToken =
+				await this.prismicAuthManager.getAuthenticationToken();
+
+			const sliceMachineConfig = await this.getSliceMachineConfig();
+
+			// TODO: Create a single shared client.
+			const client = prismicCustomTypesCilent.createClient({
+				repositoryName: sliceMachineConfig.repositoryName,
+				token: authenticationToken,
+				fetch,
+			});
+
+			try {
+				// Check if Custom Type already exists on the repository.
+				await client.getCustomTypeByID(args.id);
+
+				// If it exists on the repository, update it.
+				await client.updateCustomType(model);
+			} catch (error) {
+				if (error instanceof prismicCustomTypesCilent.NotFoundError) {
+					// If it doesn't exist on the repository, insert it.
+					await client.insertCustomType(model);
+				}
+			}
+		}
+	}
+
+	async readCustomTypeMocksConfig(
+		args: SliceMachineManagerReadCustomTypeMocksConfigArgs,
+	): Promise<SliceMachineManagerReadCustomTypeMocksConfigArgsReturnType> {
 		assertPluginsInitialized(this._sliceMachinePluginRunner);
 
-		// TODO: Push CustomType to Prismic.
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"custom-type:asset:read",
+			{
+				customTypeID: args.customTypeID,
+				assetID: "mocks.config.json",
+			},
+		);
+		const data = hookResult.data[0]?.data;
+
+		// TODO: Validate the returned data.
+
+		if (data) {
+			return {
+				mocksConfig: JSON.parse(data.toString()),
+				errors: hookResult.errors,
+			};
+		} else {
+			return {
+				mocksConfig: undefined,
+				errors: hookResult.errors,
+			};
+		}
+	}
+
+	async updateCustomTypeMocksConfig(
+		args: SliceMachineManagerUpdateCustomTypeMocksConfigArgs,
+	): Promise<SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType> {
+		assertPluginsInitialized(this._sliceMachinePluginRunner);
+
+		const hookResult = await this._sliceMachinePluginRunner.callHook(
+			"custom-type:asset:update",
+			{
+				customTypeID: args.customTypeID,
+				asset: {
+					id: "mocks.config.json",
+					data: Buffer.from(JSON.stringify(args.mocksConfig, null, "\t")),
+				},
+			},
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
+	}
+
+	async fetchRemoteCustomTypes(): Promise<CustomTypeModel[]> {
+		const authenticationToken =
+			await this.prismicAuthManager.getAuthenticationToken();
+
+		const sliceMachineConfig = await this.getSliceMachineConfig();
+
+		// TODO: Create a single shared client.
+		const client = prismicCustomTypesCilent.createClient({
+			repositoryName: sliceMachineConfig.repositoryName,
+			token: authenticationToken,
+			fetch,
+		});
+
+		return await client.getAllCustomTypes();
+	}
+
+	async fetchRemoteSlices(): Promise<SharedSliceModel[]> {
+		const authenticationToken =
+			await this.prismicAuthManager.getAuthenticationToken();
+
+		const sliceMachineConfig = await this.getSliceMachineConfig();
+
+		// TODO: Create a single shared client.
+		const client = prismicCustomTypesCilent.createClient({
+			repositoryName: sliceMachineConfig.repositoryName,
+			token: authenticationToken,
+			fetch,
+		});
+
+		return await client.getAllSharedSlices();
 	}
 
 	// TODO: Should this be renamed to `locateSliceMachineUIDir()` (note

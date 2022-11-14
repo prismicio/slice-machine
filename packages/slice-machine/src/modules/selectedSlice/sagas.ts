@@ -33,24 +33,24 @@ export function* saveSliceSaga({
       saveSliceApiClient,
       component
     )) as SagaReturnType<typeof saveSliceApiClient>;
-    if (response.status > 209) {
+    if (response.errors.length > 0) {
       return setData({
         loading: false,
         done: true,
-        error: response.data.err,
-        status: response.status,
-        message: response.data.reason,
+        error: response.errors,
+        // status: response.status,
+        // message: response.data.reason,
       });
     }
     setData({
       loading: false,
       done: true,
       error: null,
-      warning: !!response.data.warning,
-      status: response.status,
-      message:
-        response.data.warning ||
-        "Models & mocks have been generated successfully!",
+      // warning: !!response.data.warning,
+      // status: response.status,
+      // message:
+      //   response.data.warning ||
+      //   "Models & mocks have been generated successfully!",
     });
 
     yield put(saveSliceCreator.success({ component }));

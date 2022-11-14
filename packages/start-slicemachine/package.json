@@ -11,12 +11,14 @@
 	},
 	"dependencies": {
 		"@slicemachine/core2": "0.1.0",
+		"cors": "^2.8.5",
 		"express-http-proxy": "^1.6.3",
 		"h3": "^0.8.6",
 		"serve-static": "^1.15.0"
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^8.1.0",
+		"@types/cors": "^2.8.12",
 		"@types/express-http-proxy": "^1.6.3",
 		"@types/serve-static": "^1.15.0",
 		"@typescript-eslint/eslint-plugin": "~5.41.0",

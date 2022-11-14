@@ -1,18 +1,13 @@
 import { useEffect } from "react";
 
-// import ServerState from "@lib/models/server/ServerState";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import useSwr from "swr";
-// import axios, { AxiosResponse } from "axios";
-import { managerClient } from "@src/managerClient";
-
-// const fetcher = (url: string): Promise<ServerState> =>
-//   axios.get(url).then((res: AxiosResponse<ServerState>) => res.data);
+import { getState } from "@src/apiClient";
 
 const useServerState = () => {
   const { refreshState } = useSliceMachineActions();
   const { data: serverState } = useSwr("getState", async () => {
-    return await managerClient.getState();
+    return await getState();
   });
 
   useEffect(() => {

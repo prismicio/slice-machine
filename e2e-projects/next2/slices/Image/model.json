@@ -13,11 +13,7 @@
       "primary": {
         "image": {
           "type": "Image",
-          "config": {
-            "label": "Image",
-            "constraint": {},
-            "thumbnails": []
-          }
+          "config": { "label": "Image", "constraint": {}, "thumbnails": [] }
         },
         "caption": {
           "type": "StructuredText",
@@ -41,11 +37,7 @@
       "primary": {
         "image": {
           "type": "Image",
-          "config": {
-            "label": "Image",
-            "constraint": {},
-            "thumbnails": []
-          }
+          "config": { "label": "Image", "constraint": {}, "thumbnails": [] }
         },
         "caption": {
           "type": "StructuredText",

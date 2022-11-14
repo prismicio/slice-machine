@@ -1,4 +1,4 @@
-import { RPCServer } from "./createRPCServer";
+import { RPCMiddleware } from "./createRPCMiddleware";
 
 export type Procedures = Record<
 	string,
@@ -21,5 +21,5 @@ export type ProcedureCallServerReturnType =
 
 export type ExtractProcedures<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TRPCServer extends RPCServer<Procedures>,
-> = TRPCServer extends RPCServer<infer TProcedures> ? TProcedures : never;
+	TRPCServer extends RPCMiddleware<Procedures>,
+> = TRPCServer extends RPCMiddleware<infer TProcedures> ? TProcedures : never;

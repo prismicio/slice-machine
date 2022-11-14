@@ -1,14 +1,6 @@
 export {
-	CreateRPCServerArgs,
-	RCPServerConstructorArgs,
-	RPCServer,
-	RPCServerStartArgs,
-	RPCServerStartReturnType,
-	createRPCServer,
-} from "./createRPCServer";
-
-export {
 	CreateRPCRouterArgs,
+	RPCMiddleware,
 	createRPCMiddleware,
 } from "./createRPCMiddleware";
 

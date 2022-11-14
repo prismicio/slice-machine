@@ -11,13 +11,17 @@ import { serialize } from "./lib/serialize";
 
 import { ProcedureCallServerReturnType, Procedures } from "./types";
 
+export type RPCMiddleware<TProcedures extends Procedures> = NodeMiddleware & {
+	_procedures: TProcedures;
+};
+
 export type CreateRPCRouterArgs<TProcedures extends Procedures> = {
 	procedures: TProcedures;
 };
 
 export const createRPCMiddleware = <TProcedures extends Procedures>(
 	args: CreateRPCRouterArgs<TProcedures>,
-): NodeMiddleware => {
+): RPCMiddleware<TProcedures> => {
 	const router = createRouter();
 
 	for (const name in args.procedures) {
@@ -52,9 +56,13 @@ export const createRPCMiddleware = <TProcedures extends Procedures>(
 		);
 	}
 
-	return defineNodeMiddleware(async (req, res) => {
+	const middleware = defineNodeMiddleware(async (req, res) => {
 		const event = createEvent(req, res);
 
 		return await router.handler(event);
-	});
+	}) as RPCMiddleware<TProcedures>;
+
+	middleware._procedures = args.procedures;
+
+	return middleware;
 };
