@@ -22,6 +22,8 @@ import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
 
+import sentryHandler from "./sentry";
+
 import { RequestWithEnv, WithEnv } from "./http/common";
 import {
   ScreenshotRequest,
@@ -297,6 +299,24 @@ router.post(
       .then(() => res.json());
   })
 );
+
+// Sentry Proxy
+// The Sentry client send a POST request with a plaintext body
+// Not supported by express by default
+router.use(function (req, _ /* res */, next) {
+  if (req.is("text/*")) {
+    req.body = "";
+    req.setEncoding("utf8");
+    req.on("data", function (chunk) {
+      req.body += chunk;
+    });
+    req.on("end", next);
+  } else {
+    next();
+  }
+});
+// eslint-disable-next-line @typescript-eslint/no-misused-promises,
+router.post("/sentry", WithEnv(sentryHandler));
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
 router.use("*", async function (req: express.Request, res: express.Response) {

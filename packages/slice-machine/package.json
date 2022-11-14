@@ -42,6 +42,7 @@
     "@babel/register": "^7.17.7",
     "@prismicio/mocks": "^0.1.8",
     "@prismicio/types-internal": "^0.3.0",
+    "@sentry/nextjs": "^7.19.0",
     "@slicemachine/client": "1.1.15",
     "@slicemachine/core": "1.1.15",
     "@svgr/webpack": "^5.4.0",
