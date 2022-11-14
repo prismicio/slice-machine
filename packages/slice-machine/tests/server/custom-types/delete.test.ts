@@ -169,7 +169,7 @@ describe("Delete Custom Type files", () => {
     expect(mockWriteFileSync).toBeCalled();
 
     expect(console.error).toHaveBeenCalledWith(
-      `[custom-type/delete] Could not delete your custom from the mock-config.json.\n`,
+      `[custom-type/delete] Could not delete your custom type from the mock-config.json.\n`,
       `To resolve this, manually remove the ${CUSTOM_TYPE_TO_DELETE} field in /test/.slicemachine/mock-config.json`
     );
     expect(console.error).toHaveBeenCalledTimes(1);
