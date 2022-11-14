@@ -72,12 +72,12 @@ const SliceCardActions: React.FC<{
   slice: ComponentUI;
   actions?: {
     onUpdateScreenshot: (e: React.MouseEvent) => void;
-    openRenameModale?: (slice: ComponentUI) => void;
+    openRenameModal?: (slice: ComponentUI) => void;
   };
 }> = ({ actions, slice }) => {
   const onRenameClick = useCallback(() => {
-    if (actions?.openRenameModale) {
-      actions.openRenameModale(slice);
+    if (actions?.openRenameModal) {
+      actions.openRenameModal(slice);
     }
   }, [actions, slice]);
 
@@ -104,7 +104,7 @@ const SliceCardActions: React.FC<{
         label="Update screenshot"
       />
 
-      {actions.openRenameModale && (
+      {actions.openRenameModal && (
         <KebabMenuDropdown
           dataCy="slice-action-icon"
           menuOptions={[
@@ -239,7 +239,7 @@ export const SharedSlice = {
     wrapperType?: WrapperType;
     actions?: {
       onUpdateScreenshot: (e: React.MouseEvent) => void;
-      openRenameModale?: (slice: ComponentUI) => void;
+      openRenameModal?: (slice: ComponentUI) => void;
     };
     sx?: ThemeUIStyleObject;
   }) {

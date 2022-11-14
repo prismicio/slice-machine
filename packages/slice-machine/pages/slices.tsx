@@ -209,7 +209,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                                     ),
                                 });
                               },
-                              openRenameModale: (slice: ComponentUI) => {
+                              openRenameModal: (slice: ComponentUI) => {
                                 setSliceForRename(slice);
                                 openRenameSliceModal();
                               },
