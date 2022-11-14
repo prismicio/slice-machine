@@ -9,7 +9,8 @@ import Card from "@components/Card";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
-import { deleteCustomType } from "@src/apiClient";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 type ScreenshotModalProps = {
   customType?: FrontEndCustomType;
@@ -18,16 +19,21 @@ type ScreenshotModalProps = {
 export const DeleteCustomTypeModal: React.FunctionComponent<
   ScreenshotModalProps
 > = ({ customType }) => {
-  const { isDeleteCustomTypeModalOpen } = useSelector(
+  const { isDeleteCustomTypeModalOpen, isDeletingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
       isDeleteCustomTypeModalOpen: isModalOpen(
         store,
         ModalKeysEnum.DELETE_CUSTOM_TYPE
       ),
+      isDeletingCustomType: isLoading(
+        store,
+        LoadingKeysEnum.DELETE_CUSTOM_TYPE
+      ),
     })
   );
 
-  const { closeDeleteCustomTypeModal } = useSliceMachineActions();
+  const { closeDeleteCustomTypeModal, deleteCustomType } =
+    useSliceMachineActions();
 
   const { theme } = useThemeUI();
 
@@ -104,11 +110,14 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <Button
               label="Delete Locally"
               variant="danger"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={async () => {
-                await deleteCustomType(customType?.local.id as string);
-                closeDeleteCustomTypeModal();
-              }}
+              isLoading={isDeletingCustomType}
+              onClick={() =>
+                deleteCustomType(
+                  customType?.local.id ?? "",
+                  customType?.local.label ?? ""
+                )
+              }
+              sx={{ minHeight: 39, minWidth: 129 }}
             />
           </Flex>
         )}

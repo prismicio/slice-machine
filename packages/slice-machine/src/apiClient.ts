@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import {
+  DeleteCustomTypeResponse,
   RenameCustomTypeBody,
   SaveCustomTypeBody,
 } from "@models/common/CustomType";
@@ -71,7 +72,7 @@ export const deleteCustomType = (
 export const pushCustomType = (
   customTypeId: string
 ): Promise<AxiosResponse> => {
-  return axios.get(
+  return axios.get<DeleteCustomTypeResponse>(
     `/api/custom-types/push?id=${customTypeId}`,
     defaultAxiosConfig
   );

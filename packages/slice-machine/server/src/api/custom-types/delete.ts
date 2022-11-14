@@ -6,15 +6,16 @@ import {
 import * as IO from "../../../../lib/io";
 import { getBackendState } from "../state";
 import { RequestWithEnv } from "../http/common";
-import { DeleteCustomTypeQuery } from "../../../../lib/models/common/CustomType";
+import {
+  DeleteCustomTypeQuery,
+  DeleteCustomTypeResponse,
+} from "../../../../lib/models/common/CustomType";
 import { remove as removeCtsFromMockConfig } from "../../../../lib/mock/misc/fs";
 import path, { resolve } from "path";
 
 export default async function handler(
   req: RequestWithEnv
-): Promise<
-  { err: unknown; reason: string; status: string } | Record<string, unknown>
-> {
+): Promise<DeleteCustomTypeResponse> {
   const state = await getBackendState(req.errors, req.env);
   const { id } = req.query as DeleteCustomTypeQuery;
   const ctFolder = CustomTypesPaths(state.env.cwd).customType(id).folder();
@@ -29,7 +30,7 @@ export default async function handler(
     return {
       err: err,
       reason: "We couldn't delete your custom type. Check your terminal.",
-      status: "500",
+      status: 500,
       type: "error",
     };
   }
@@ -90,7 +91,7 @@ export default async function handler(
         err: {},
         reason:
           "Something went wrong when deleting your Custom Type. Check your terminal.",
-        status: "500",
+        status: 500,
         type: "warning",
       }
     : {};

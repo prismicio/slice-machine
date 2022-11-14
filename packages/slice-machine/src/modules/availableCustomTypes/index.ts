@@ -6,7 +6,11 @@ import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { renameCustomType, saveCustomType } from "@src/apiClient";
+import {
+  deleteCustomType,
+  renameCustomType,
+  saveCustomType,
+} from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
@@ -19,6 +23,8 @@ import {
 } from "@src/normalizers/customType";
 import { saveCustomTypeCreator } from "../selectedCustomType/actions";
 import { pushCustomTypeCreator } from "../pushChangesSaga/actions";
+import axios from "axios";
+import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -51,12 +57,27 @@ export const renameCustomTypeCreator = createAsyncAction(
   }
 >();
 
+export const deleteCustomTypeCreator = createAsyncAction(
+  "CUSTOM_TYPES/DELETE.REQUEST",
+  "CUSTOM_TYPES/DELETE.RESPONSE",
+  "CUSTOM_TYPES/DELETE.FAILURE"
+)<
+  {
+    customTypeId: string;
+    customTypeName: string;
+  },
+  {
+    customTypeId: string;
+  }
+>();
+
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createCustomTypeCreator>
   | ActionType<typeof renameCustomTypeCreator>
   | ActionType<typeof saveCustomTypeCreator>
-  | ActionType<typeof pushCustomTypeCreator>;
+  | ActionType<typeof pushCustomTypeCreator>
+  | ActionType<typeof deleteCustomTypeCreator>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -161,6 +182,15 @@ export const availableCustomTypesReducer: Reducer<
         [id]: newCustomType,
       };
     }
+
+    case getType(deleteCustomTypeCreator.success): {
+      const id = action.payload.customTypeId;
+
+      delete state[id];
+
+      return state;
+    }
+
     default:
       return state;
   }
@@ -226,6 +256,49 @@ export function* renameCustomTypeSaga({
   }
 }
 
+export function* deleteCustomTypeSaga({
+  payload,
+}: ReturnType<typeof deleteCustomTypeCreator.request>) {
+  try {
+    yield call(deleteCustomType, payload.customTypeId);
+    yield put(deleteCustomTypeCreator.success(payload));
+    yield put(
+      modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE })
+    );
+    yield put(
+      openToasterCreator({
+        message: `Successfully deleted Custom Type “${payload.customTypeName}”`,
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE })
+    );
+    if (axios.isAxiosError(e)) {
+      const apiResponse = e.response?.data as DeleteCustomTypeResponse;
+      console.log(apiResponse);
+      yield put(
+        openToasterCreator({
+          message: apiResponse.reason,
+          type:
+            apiResponse.type === "error"
+              ? ToasterType.ERROR
+              : ToasterType.WARNING,
+        })
+      );
+    } else {
+      yield put(
+        openToasterCreator({
+          message:
+            "An unexpected error happened while deleting your custom type.",
+          type: ToasterType.ERROR,
+        })
+      );
+    }
+  }
+}
+
 // Saga watchers
 function* handleCustomTypeRequests() {
   yield takeLatest(
@@ -235,6 +308,10 @@ function* handleCustomTypeRequests() {
   yield takeLatest(
     getType(renameCustomTypeCreator.request),
     withLoader(renameCustomTypeSaga, LoadingKeysEnum.RENAME_CUSTOM_TYPE)
+  );
+  yield takeLatest(
+    getType(deleteCustomTypeCreator.request),
+    withLoader(deleteCustomTypeSaga, LoadingKeysEnum.DELETE_CUSTOM_TYPE)
   );
 }
 
