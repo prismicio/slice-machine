@@ -9,7 +9,7 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { createSlice, getState } from "@src/apiClient";
+import { createSlice, getState, renameSlice } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
@@ -54,7 +54,6 @@ export const renameSliceCreator = createAsyncAction(
     sliceId: string;
     newSliceName: string;
     libName: string;
-    variationId: string;
   },
   {
     sliceId: string;
@@ -269,9 +268,41 @@ function* handleSliceRequests() {
   );
 }
 
+export function* renameSliceSaga({
+  payload,
+}: ReturnType<typeof renameSliceCreator.request>) {
+  const { libName, sliceId, newSliceName } = payload;
+  try {
+    yield call(renameSlice, sliceId, newSliceName, libName);
+    yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
+    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+    yield put(
+      openToasterCreator({
+        message: "Slice name updated",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Slice name not saved",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
+}
+
+function* watchRenameSlice() {
+  yield takeLatest(
+    getType(renameSliceCreator.request),
+    withLoader(renameSliceSaga, LoadingKeysEnum.RENAME_SLICE)
+  );
+}
+
 // Saga Exports
 export function* watchSliceSagas() {
   yield fork(handleSliceRequests);
+  yield fork(watchRenameSlice);
 }
 
 export const renamedComponentUI = (

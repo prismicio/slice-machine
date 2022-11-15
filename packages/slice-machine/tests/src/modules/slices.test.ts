@@ -10,10 +10,12 @@ import {
   createSliceCreator,
   renameScreenshots,
   renameModel,
+  renameSliceSaga,
+  renameSliceCreator,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
 
-import { createSlice, getState } from "@src/apiClient";
+import { createSlice, getState, renameSlice } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
@@ -88,6 +90,46 @@ describe("[Slices module]", () => {
       saga.next().put(
         openToasterCreator({
           message: "Slice saved",
+          type: ToasterType.SUCCESS,
+        })
+      );
+      saga.next().isDone();
+    });
+  });
+
+  describe("[renameSliceSaga]", () => {
+    it("should call the api and dispatch the good actions", () => {
+      const actionPayload = {
+        sliceId: "MySlice",
+        libName: "MyLib/Components",
+        newSliceName: "MyNewSlice",
+      };
+      const saga = testSaga(
+        renameSliceSaga,
+        renameSliceCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(
+          renameSlice,
+          actionPayload.sliceId,
+          actionPayload.newSliceName,
+          actionPayload.libName
+        );
+      saga.next().put(
+        renameSliceCreator.success({
+          libName: actionPayload.libName,
+          sliceId: actionPayload.sliceId,
+          newSliceName: actionPayload.newSliceName,
+        })
+      );
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+      saga.next().put(
+        openToasterCreator({
+          message: "Slice name updated",
           type: ToasterType.SUCCESS,
         })
       );

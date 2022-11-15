@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Text, Link } from "theme-ui";
 import Container from "components/Container";
@@ -30,10 +30,15 @@ import { GoPlus } from "react-icons/go";
 import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
-    useSliceMachineActions();
+  const {
+    openCreateSliceModal,
+    closeCreateSliceModal,
+    createSlice,
+    openRenameSliceModal,
+  } = useSliceMachineActions();
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
@@ -71,6 +76,8 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const slices = (libraries || []).map((l) => l.components).flat();
   const sliceCount = slices.length;
+
+  const [sliceForRename, setSliceForRename] = useState<ComponentUI>();
 
   return (
     <>
@@ -192,14 +199,20 @@ const SlicesIndex: React.FunctionComponent = () => {
                               authStatus,
                               isOnline,
                             },
-                            onUpdateScreenshot: (e: React.MouseEvent) => {
-                              e.preventDefault();
-                              onOpenModal({
-                                sliceFilterFn: (s: ComponentUI[]) =>
-                                  s.filter(
-                                    (e) => e.model.id === slice.model.id
-                                  ),
-                              });
+                            actions: {
+                              onUpdateScreenshot: (e: React.MouseEvent) => {
+                                e.preventDefault();
+                                onOpenModal({
+                                  sliceFilterFn: (s: ComponentUI[]) =>
+                                    s.filter(
+                                      (e) => e.model.id === slice.model.id
+                                    ),
+                                });
+                              },
+                              openRenameModal: (slice: ComponentUI) => {
+                                setSliceForRename(slice);
+                                openRenameSliceModal();
+                              },
                             },
                             showActions: true,
                           });
@@ -230,6 +243,12 @@ const SlicesIndex: React.FunctionComponent = () => {
           />
         </>
       )}
+      <RenameSliceModal
+        sliceId={sliceForRename?.model.id ?? ""}
+        sliceName={sliceForRename?.model.name ?? ""}
+        libName={sliceForRename?.from ?? ""}
+        data-cy="rename-slice-modal"
+      />
     </>
   );
 };

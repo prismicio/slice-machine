@@ -9,12 +9,8 @@ import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { saveSliceCreator } from "./actions";
-import { saveSliceApiClient, renameSlice } from "@src/apiClient";
+import { saveSliceApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { renameSliceCreator } from "../slices";
-import { modalCloseCreator } from "../modal";
-import { ModalKeysEnum } from "../modal/types";
-import { push } from "connected-next-router";
 
 export function* saveSliceSaga({
   payload,
@@ -64,49 +60,14 @@ export function* saveSliceSaga({
   }
 }
 
-export function* renameSliceSaga({
-  payload,
-}: ReturnType<typeof renameSliceCreator.request>) {
-  const { libName, sliceId, newSliceName } = payload;
-  try {
-    yield call(renameSlice, sliceId, newSliceName, libName);
-    yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
-    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
-    const addr = `/${payload.libName.replace(/\//g, "--")}/${
-      payload.newSliceName
-    }/${payload.variationId}`;
-    yield put(push(addr));
-    yield put(
-      openToasterCreator({
-        message: "Slice name updated",
-        type: ToasterType.SUCCESS,
-      })
-    );
-  } catch (e) {
-    yield put(
-      openToasterCreator({
-        message: "Internal Error: Slice name not saved",
-        type: ToasterType.ERROR,
-      })
-    );
-  }
-}
-
 function* watchSaveSlice() {
   yield takeLatest(
     getType(saveSliceCreator.request),
     withLoader(saveSliceSaga, LoadingKeysEnum.SAVE_SLICE)
   );
 }
-function* watchRenameSlice() {
-  yield takeLatest(
-    getType(renameSliceCreator.request),
-    withLoader(renameSliceSaga, LoadingKeysEnum.RENAME_SLICE)
-  );
-}
 
 // Saga Exports
 export function* selectedSliceSagas() {
   yield fork(watchSaveSlice);
-  yield fork(watchRenameSlice);
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Theme,
   Text,
@@ -68,46 +68,63 @@ const SliceVariations = ({
   ) : null;
 };
 
-const SliceScreenshotUpdate: React.FC<{
+const SliceCardActions: React.FC<{
   slice: ComponentUI;
-  onUpdateScreenshot: (e: React.MouseEvent) => void;
-}> = ({ onUpdateScreenshot }) => (
-  <Flex
-    mt={1}
-    sx={{
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: 3,
-      borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-      mt: 0,
-    }}
-  >
-    <Button
-      onClick={onUpdateScreenshot}
-      variant="secondarySmall"
-      sx={{ fontWeight: "bold" }}
-      Icon={AiOutlineCamera}
-      label="Update screenshot"
-    />
-    <KebabMenuDropdown
-      menuOptions={[
-        {
-          displayName: "Rename",
-          // TODO remove when action is implemented
-          // eslint-disable-next-line
-          onClick: () => {},
-        },
-        {
-          displayName: "Delete",
-          // TODO remove when action is implemented
-          // eslint-disable-next-line
-          onClick: () => {},
-        },
-      ]}
-    />
-  </Flex>
-);
+  actions?: {
+    onUpdateScreenshot: (e: React.MouseEvent) => void;
+    openRenameModal?: (slice: ComponentUI) => void;
+  };
+}> = ({ actions, slice }) => {
+  const onRenameClick = useCallback(() => {
+    if (actions?.openRenameModal) {
+      actions.openRenameModal(slice);
+    }
+  }, [actions, slice]);
 
+  if (!actions) {
+    return null;
+  }
+
+  return (
+    <Flex
+      mt={1}
+      sx={{
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 3,
+        borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+        mt: 0,
+      }}
+    >
+      <Button
+        onClick={actions.onUpdateScreenshot}
+        variant="secondarySmall"
+        sx={{ fontWeight: "bold" }}
+        Icon={AiOutlineCamera}
+        label="Update screenshot"
+      />
+
+      {actions.openRenameModal && (
+        <KebabMenuDropdown
+          dataCy="slice-action-icon"
+          menuOptions={[
+            {
+              displayName: "Rename",
+              onClick: onRenameClick,
+              dataCy: "slice-action-rename",
+            },
+            {
+              displayName: "Delete",
+              // TODO remove when action is implemented
+              // eslint-disable-next-line
+              onClick: () => {},
+            },
+          ]}
+        />
+      )}
+    </Flex>
+  );
+};
 const SliceDescription = ({
   slice,
   StatusOrCustom,
@@ -202,7 +219,7 @@ export const SharedSlice = {
     Wrapper,
     StatusOrCustom,
     wrapperType = WrapperType.clickable,
-    onUpdateScreenshot,
+    actions,
     sx,
   }: {
     showActions?: boolean;
@@ -220,7 +237,10 @@ export const SharedSlice = {
       sx?: ThemeUIStyleObject;
     }>;
     wrapperType?: WrapperType;
-    onUpdateScreenshot?: (e: React.MouseEvent) => void;
+    actions?: {
+      onUpdateScreenshot: (e: React.MouseEvent) => void;
+      openRenameModal?: (slice: ComponentUI) => void;
+    };
     sx?: ThemeUIStyleObject;
   }) {
     const defaultVariation = ComponentUI.variation(slice);
@@ -277,12 +297,7 @@ export const SharedSlice = {
                 flexDirection: "column",
               }}
             >
-              {onUpdateScreenshot ? (
-                <SliceScreenshotUpdate
-                  slice={slice}
-                  onUpdateScreenshot={onUpdateScreenshot}
-                />
-              ) : null}
+              <SliceCardActions slice={slice} actions={actions} />
               <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
             </Flex>
           </Flex>

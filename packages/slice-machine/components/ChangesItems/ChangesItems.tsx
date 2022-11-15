@@ -130,12 +130,14 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   authStatus,
                   isOnline,
                 },
-                onUpdateScreenshot: (e: React.MouseEvent) => {
-                  e.preventDefault();
-                  onOpenModal({
-                    sliceFilterFn: (s: ComponentUI[]) =>
-                      s.filter((e) => e.model.id === slice.model.id),
-                  });
+                actions: {
+                  onUpdateScreenshot: (e: React.MouseEvent) => {
+                    e.preventDefault();
+                    onOpenModal({
+                      sliceFilterFn: (s: ComponentUI[]) =>
+                        s.filter((e) => e.model.id === slice.model.id),
+                    });
+                  },
                 },
                 sx: changesPushed.includes(slice.model.id)
                   ? { animation: "fadeout .4s linear forwards" }

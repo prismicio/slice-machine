@@ -54,6 +54,7 @@ export const KebabMenuList: React.FunctionComponent<{
         {menuOptions.map((option) => {
           return (
             <MenuItem
+              key={option.displayName}
               displayName={option.displayName}
               onClick={(event) => {
                 closeMenu();

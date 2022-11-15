@@ -457,15 +457,13 @@ const useSliceMachineActions = () => {
   const renameSlice = (
     sliceId: string,
     newSliceName: string,
-    libName: string,
-    variationId: string
+    libName: string
   ) =>
     dispatch(
       renameSliceCreator.request({
         sliceId,
         newSliceName,
         libName,
-        variationId,
       })
     );
 
