@@ -130,14 +130,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           }}
           sx={{ ml: 2 }}
         />
-        </Flex>
-        <Button
-          onClick={onTakingSliceScreenshot}
-          label="Take a screenshot"
-          isLoading={isSavingScreenshot}
-          Icon={AiFillCamera}
-          variant="secondary"
-        />
+      </Flex>
+      <Button
+        onClick={onTakingSliceScreenshot}
+        label="Take a screenshot"
+        isLoading={isSavingScreenshot}
+        Icon={AiFillCamera}
+        variant="secondary"
+      />
     </Flex>
   );
 };

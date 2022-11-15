@@ -21,7 +21,6 @@ export async function generateScreenshotAndRemoveCustom(
   sliceName: string,
   variationId: string,
   screenDimensions: ScreenDimensions,
-  baseUrl: string,
   href: string
 ): Promise<ScreenshotResults> {
   try {
@@ -31,7 +30,6 @@ export async function generateScreenshotAndRemoveCustom(
       sliceName,
       variationId,
       screenDimensions,
-      baseUrl,
       href
     );
 
@@ -53,10 +51,9 @@ async function generateForVariation(
   sliceName: string,
   variationId: string,
   screenDimensions: ScreenDimensions,
-  baseUrl: string,
   href: string
 ): Promise<ScreenshotUI> {
-  const screenshotUrl = `${baseUrl}/${href}/${sliceName}/${variationId}/screenshot`;
+  const screenshotUrl = `${env.baseUrl}/${href}/${sliceName}/${variationId}/screenshot`;
 
   const pathToFile = NodeUtils.GeneratedPaths(env.cwd)
     .library(libraryName)

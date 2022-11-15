@@ -28,7 +28,6 @@ export function* generateSliceScreenshotSaga({
       libraryName: component.from,
       sliceName: component.model.name,
       href: component.href,
-      baseUrl: window.location.origin,
       variationId,
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;

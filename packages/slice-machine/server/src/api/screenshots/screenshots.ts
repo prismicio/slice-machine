@@ -38,7 +38,6 @@ export default async function handler({
   sliceName,
   variationId,
   screenDimensions,
-  baseUrl,
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
   const { env } = await getEnv();
 
@@ -57,7 +56,6 @@ export default async function handler({
       sliceName,
       variationId,
       screenDimensions,
-      baseUrl,
       href
     );
 
