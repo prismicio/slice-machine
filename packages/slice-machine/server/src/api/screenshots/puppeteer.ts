@@ -49,7 +49,6 @@ const generateScreenshot = async (
 ): Promise<void> => {
   // Create an incognito context to isolate screenshots.
   const context = await browser.createIncognitoBrowserContext();
-  // Create a new page in the context.
   const page = await context.newPage();
   await page.setViewport({
     width: screenDimensions.width,
@@ -66,8 +65,9 @@ const generateScreenshot = async (
       waitUntil: "networkidle2",
     });
 
-    await page.waitForSelector("#root", { timeout: 10000 });
-    const element = await page.$("#root");
+    await page.waitForSelector("#__iframe-ready", { timeout: 5000 });
+    const element = await page.$("#__iframe-renderer");
+
     if (element) {
       await element.screenshot({
         path: pathToFile,
@@ -78,6 +78,8 @@ const generateScreenshot = async (
           y: 0,
         },
       });
+    } else {
+      console.error("Could not find Simulator iframe (#__iframe-renderer).");
     }
 
     await context.close();

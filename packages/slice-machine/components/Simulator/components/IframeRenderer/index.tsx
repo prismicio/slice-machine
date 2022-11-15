@@ -1,6 +1,7 @@
 import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
 import { Box, Flex } from "theme-ui";
+import { ThemeUIStyleObject } from "@theme-ui/css";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -51,6 +52,7 @@ type IframeRendererProps = {
   screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
   dryRun?: boolean;
+  sx?: ThemeUIStyleObject;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
@@ -58,8 +60,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   screenDimensions,
   simulatorUrl,
   dryRun = false,
+  sx,
 }) => {
   const [client, ref] = useSimulatorClient();
+
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
   useEffect((): void => {
@@ -100,6 +104,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
         borderRadius: 8,
         overflow: "hidden",
         ...(dryRun ? { visibility: "hidden" } : {}),
+        ...sx,
       }}
     >
       <Flex
@@ -133,8 +138,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
               : {}),
           }}
         >
+          {client?.connected ? <div id="__iframe-ready" /> : null}
           {simulatorUrl ? (
             <iframe
+              id="__iframe-renderer"
               ref={ref}
               src={simulatorUrl}
               style={{

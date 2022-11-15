@@ -5,7 +5,7 @@ import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopove
 import * as Models from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-import { Button } from "@components/Button";
+// import { Button } from "@components/Button";
 import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
 
 import * as Links from "@lib/builders/SliceBuilder/links";
@@ -67,8 +67,8 @@ const Header: React.FunctionComponent<PropTypes> = ({
       </Flex>
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
         <Flex sx={{ alignItems: "center", justifyContent: "space-around" }}>
-          <Flex sx={{ alignItems: "center" }}>
-            <Label htmlFor="show-mock-editor">Show the mock editor</Label>
+          <Flex sx={{ alignItems: "center", mr: 4 }}>
+            <Label htmlFor="show-mock-editor">Editor</Label>
             <Switch
               id="show-mock-editor"
               checked={isDisplayEditor}
@@ -76,7 +76,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
             />
           </Flex>
         </Flex>
-        <Button onClick={() => console.log("todo")} label="Save mock" />
+        {/* <Button onClick={() => console.log("todo")} label="Save mock" /> */}
       </Flex>
     </Flex>
   );

@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  SharedSliceEditor,
-  defaultSharedSliceContent,
-} from "@prismicio/editor-fields";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { SharedSliceEditor } from "@prismicio/editor-fields";
+
+import { defaultSharedSliceContent } from "@src/utils/editor";
 
 import { Box, Flex } from "theme-ui";
 
@@ -88,19 +87,20 @@ export default function Simulator() {
       },
     []
   );
-  const apiContent = useThrottle(
-    {
+
+  const renderSliceMockCb = useCallback(
+    () => () => ({
+      // cast as object because type is unknown
       ...(renderSliceMock(sharedSlice, editorContent) as object),
       id: initialApiContent.id,
-    },
-    800
+    }),
+    [sharedSlice, editorContent, initialApiContent]
   );
 
-  const [prevVariationId, setPrevVariationId] = useState(variation.id);
-  if (variation.id !== prevVariationId) {
-    setContent(initialContent);
-    setPrevVariationId(variation.id);
-  }
+  const apiContent = useThrottle(renderSliceMockCb, 800, [
+    sharedSlice,
+    editorContent,
+  ]);
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(true);
 

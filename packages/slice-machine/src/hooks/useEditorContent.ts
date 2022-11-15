@@ -1,5 +1,5 @@
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { defaultSharedSliceContent } from "@prismicio/editor-fields";
+import { defaultSharedSliceContent } from "@src/utils/editor";
 import { renderSliceMock } from "@prismicio/mocks";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 import { Slices } from "@slicemachine/core/build/models";

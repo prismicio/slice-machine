@@ -8,10 +8,8 @@ import {
   ScreenshotUI,
 } from "../../../../lib/models/common/ComponentUI";
 import { ScreenDimensions } from "../../../../lib/models/common/Screenshots";
-import { SliceSM } from "@slicemachine/core/build/models";
-import { hash } from "@slicemachine/core/build/utils/str";
 
-import * as IO from "../../../../lib/io";
+import { hash } from "@slicemachine/core/build/utils/str";
 
 export interface ScreenshotResults {
   screenshot: ScreenshotUI | null;
@@ -22,19 +20,19 @@ export async function generateScreenshotAndRemoveCustom(
   libraryName: string,
   sliceName: string,
   variationId: string,
-  screenDimensions: ScreenDimensions
+  screenDimensions: ScreenDimensions,
+  baseUrl: string,
+  href: string
 ): Promise<ScreenshotResults> {
-  const slice = IO.Slice.readSlice(
-    NodeUtils.CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
-  );
-
   try {
     const result = await generateForVariation(
       env,
       libraryName,
-      slice,
+      sliceName,
       variationId,
-      screenDimensions
+      screenDimensions,
+      baseUrl,
+      href
     );
 
     removeCustomScreenshot(env, libraryName, sliceName, variationId);
@@ -52,20 +50,17 @@ export async function generateScreenshotAndRemoveCustom(
 async function generateForVariation(
   env: BackendEnvironment,
   libraryName: string,
-  slice: SliceSM,
+  sliceName: string,
   variationId: string,
-  screenDimensions: ScreenDimensions
+  screenDimensions: ScreenDimensions,
+  baseUrl: string,
+  href: string
 ): Promise<ScreenshotUI> {
-  const screenshotUrl = `${
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    env.manifest.localSliceSimulatorURL
-  }?lid=${encodeURIComponent(libraryName)}&sid=${encodeURIComponent(
-    slice.id
-  )}&vid=${encodeURIComponent(variationId)}`;
+  const screenshotUrl = `${baseUrl}/${href}/${sliceName}/${variationId}/screenshot`;
 
   const pathToFile = NodeUtils.GeneratedPaths(env.cwd)
     .library(libraryName)
-    .slice(slice.name)
+    .slice(sliceName)
     .variation(variationId)
     .preview();
 
