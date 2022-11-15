@@ -107,18 +107,20 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 borderRadius: 6,
               }}
             />
-            <Button
-              label="Delete Locally"
-              variant="danger"
-              isLoading={isDeletingCustomType}
-              onClick={() =>
-                deleteCustomType(
-                  customType?.local.id ?? "",
-                  customType?.local.label ?? ""
-                )
-              }
-              sx={{ minHeight: 39, minWidth: 129 }}
-            />
+            {customType?.local && (
+              <Button
+                label="Delete Locally"
+                variant="danger"
+                isLoading={isDeletingCustomType}
+                onClick={() =>
+                  deleteCustomType(
+                    customType?.local.id,
+                    customType?.local.label ?? ""
+                  )
+                }
+                sx={{ minHeight: 39, minWidth: 129 }}
+              />
+            )}
           </Flex>
         )}
       >
