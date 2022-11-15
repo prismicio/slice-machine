@@ -25,6 +25,7 @@ import { saveCustomTypeCreator } from "../selectedCustomType/actions";
 import { pushCustomTypeCreator } from "../pushChangesSaga/actions";
 import axios from "axios";
 import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
+import { omit } from "lodash";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -184,11 +185,7 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(deleteCustomTypeCreator.success): {
-      const id = action.payload.customTypeId;
-
-      delete state[id];
-
-      return state;
+      return omit(state, action.payload.customTypeId);
     }
 
     default:
@@ -263,21 +260,14 @@ export function* deleteCustomTypeSaga({
     yield call(deleteCustomType, payload.customTypeId);
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE })
-    );
-    yield put(
       openToasterCreator({
         message: `Successfully deleted Custom Type “${payload.customTypeName}”`,
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
-    yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE })
-    );
     if (axios.isAxiosError(e)) {
       const apiResponse = e.response?.data as DeleteCustomTypeResponse;
-      console.log(apiResponse);
       yield put(
         openToasterCreator({
           message: apiResponse.reason,
@@ -297,6 +287,7 @@ export function* deleteCustomTypeSaga({
       );
     }
   }
+  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
 }
 
 // Saga watchers

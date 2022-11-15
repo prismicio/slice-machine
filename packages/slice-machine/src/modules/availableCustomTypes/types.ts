@@ -5,4 +5,6 @@ export type FrontEndCustomType = {
   remote?: CustomTypeSM;
 };
 
-export type AvailableCustomTypesStoreType = Record<string, FrontEndCustomType>;
+export type AvailableCustomTypesStoreType = Readonly<
+  Record<string, FrontEndCustomType>
+>;

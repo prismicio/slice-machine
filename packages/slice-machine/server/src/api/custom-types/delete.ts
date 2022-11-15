@@ -4,7 +4,6 @@ import {
   MocksConfig,
 } from "../../../../lib/models/paths";
 import * as IO from "../../../../lib/io";
-import { getBackendState } from "../state";
 import { RequestWithEnv } from "../http/common";
 import {
   DeleteCustomTypeQuery,
@@ -16,10 +15,9 @@ import path, { resolve } from "path";
 export default async function handler(
   req: RequestWithEnv
 ): Promise<DeleteCustomTypeResponse> {
-  const state = await getBackendState(req.errors, req.env);
   const { id } = req.query as DeleteCustomTypeQuery;
-  const ctFolder = CustomTypesPaths(state.env.cwd).customType(id).folder();
-  const customTypeAssetsFolder = GeneratedCustomTypesPaths(state.env.cwd)
+  const ctFolder = CustomTypesPaths(req.env.cwd).customType(id).folder();
+  const customTypeAssetsFolder = GeneratedCustomTypesPaths(req.env.cwd)
     .customType(id)
     .folder();
 
@@ -53,12 +51,12 @@ export default async function handler(
   // eslint-disable-next-line @typescript-eslint/require-await
   const updateMockConfig = async () => {
     try {
-      removeCtsFromMockConfig(state.env.cwd, { key: id, prefix: "_cts" });
+      removeCtsFromMockConfig(req.env.cwd, { key: id, prefix: "_cts" });
     } catch (err) {
       console.error(
         `[custom-type/delete] Could not delete your custom type from the mock-config.json.\n`,
         `To resolve this, manually remove the ${id} field in ${resolve(
-          MocksConfig(state.env.cwd)
+          MocksConfig(req.env.cwd)
         )}`
       );
       throw err;
@@ -68,12 +66,12 @@ export default async function handler(
   // eslint-disable-next-line @typescript-eslint/require-await
   const updatedTypes = async () => {
     try {
-      IO.Types.upsert(state.env);
+      IO.Types.upsert(req.env);
     } catch (err) {
       console.error(
         `[custom-type/delete] Could not update the project types.\n`,
         `You can manually delete these in ${resolve(
-          path.join(state.env.cwd, ".slicemachine", "prismicio.d.ts")
+          path.join(req.env.cwd, ".slicemachine", "prismicio.d.ts")
         )}`
       );
       throw err;
