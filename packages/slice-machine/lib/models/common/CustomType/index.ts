@@ -12,6 +12,10 @@ export interface RenameCustomTypeBody {
   newCustomTypeName: string;
 }
 
+export type DeleteCustomTypeQuery = {
+  id: string;
+};
+
 export const CustomType = {
   getSliceZones(ct: CustomTypeSM): ReadonlyArray<SlicesSM | null> {
     return ct.tabs.map((t) => t.sliceZone || null);

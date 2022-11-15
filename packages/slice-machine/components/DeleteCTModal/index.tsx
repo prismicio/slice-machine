@@ -9,6 +9,7 @@ import Card from "@components/Card";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
+import { deleteCustomType } from "@src/apiClient";
 
 type ScreenshotModalProps = {
   customType?: FrontEndCustomType;
@@ -103,7 +104,11 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <Button
               label="Delete Locally"
               variant="danger"
-              onClick={() => closeDeleteCustomTypeModal()}
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={async () => {
+                await deleteCustomType(customType?.local.id as string);
+                closeDeleteCustomTypeModal();
+              }}
             />
           </Flex>
         )}

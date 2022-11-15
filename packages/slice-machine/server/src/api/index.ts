@@ -17,6 +17,7 @@ import state from "./state";
 import checkSimulator from "./simulator";
 import saveCustomType from "./custom-types/save";
 import renameCustomType from "./custom-types/rename";
+import deleteCustomType from "./custom-types/delete";
 import { handler as pushCustomType } from "./custom-types/push";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
@@ -202,6 +203,23 @@ router.patch(
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await renameCustomType(req);
+
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
+    }
+
+    return res.status(200).json(payload);
+  })
+);
+
+router.delete(
+  "/custom-types/delete",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await deleteCustomType(req);
 
     if (isApiError(payload)) {
       return res.status(payload.status).json(payload);

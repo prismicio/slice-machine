@@ -7,6 +7,7 @@ export const paths = (cwd: string, prefix: string) => ({
     model: (): string =>
       path.join(paths(cwd, prefix).value(), id, "index.json"),
     mock: (): string => path.join(paths(cwd, prefix).value(), id, "mocks.json"),
+    folder: (): string => path.join(paths(cwd, prefix).value(), id),
   }),
   library: (libraryName: string) => ({
     value: (): string => path.join(paths(cwd, prefix).value(), libraryName),

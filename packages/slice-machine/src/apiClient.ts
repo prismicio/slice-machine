@@ -59,6 +59,15 @@ export const renameCustomType = (
   );
 };
 
+export const deleteCustomType = (
+  customTypeId: string
+): Promise<AxiosResponse> => {
+  return axios.delete(
+    `/api/custom-types/delete?id=${customTypeId}`,
+    defaultAxiosConfig
+  );
+};
+
 export const pushCustomType = (
   customTypeId: string
 ): Promise<AxiosResponse> => {

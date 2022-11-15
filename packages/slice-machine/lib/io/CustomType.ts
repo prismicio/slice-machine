@@ -19,3 +19,7 @@ export function renameCustomType(path: string, newCustomTypeName: string) {
   customType.label = newCustomTypeName;
   writeCustomType(path, customType);
 }
+
+export function deleteCustomType(path: string) {
+  Files.removeDirectory(path);
+}
