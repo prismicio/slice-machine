@@ -16,12 +16,12 @@ import { AiOutlineEye } from "react-icons/ai";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 import IframeRenderer from "@components/Simulator/components/IframeRenderer";
 import { selectSimulatorUrl } from "@src/modules/environment";
-import { useMemo } from "react";
 import { Button } from "@components/Button";
 import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "@components/Simulator/components/Toolbar/ScreensizeInput";
+import useEditorContentOnce from "@src/hooks/useEditorContent";
 
 enum ScreenshotView {
   Default = 1,
@@ -72,21 +72,6 @@ const VariationScreenshot: React.FC<{
     },
   });
 
-  const sliceView = useMemo(
-    () =>
-      slice
-        ? [
-            {
-              sliceID: slice.model.id,
-              variationID: variationID,
-            },
-          ]
-        : null,
-    [slice.model.id, variationID]
-  );
-
-  if (!sliceView) return <></>;
-
   const openSimulator = () =>
     checkSimulatorSetup(true, () =>
       window.open(
@@ -94,6 +79,11 @@ const VariationScreenshot: React.FC<{
         slice.model.id
       )
     );
+
+  const { apiContent } = useEditorContentOnce({
+    slice,
+    variationID,
+  });
 
   return (
     <>
@@ -134,7 +124,7 @@ const VariationScreenshot: React.FC<{
         <IframeRenderer
           dryRun
           simulatorUrl={simulatorUrl}
-          sliceView={sliceView}
+          apiContent={apiContent}
           screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
         />
       )}

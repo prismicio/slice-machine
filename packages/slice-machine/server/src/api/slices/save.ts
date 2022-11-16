@@ -1,6 +1,6 @@
 /** global variable define in server/src/index.js **/
 declare let appRoot: string;
-import { CustomPaths, GeneratedPaths } from "../../../../lib/models/paths";
+import { CustomPaths } from "../../../../lib/models/paths";
 import Storybook from "../../../../lib/storybook";
 
 import mock from "../../../../lib/mock/Slice";
@@ -54,9 +54,7 @@ export async function handler(
       SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
     );
     Files.write(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      CustomPaths(env.cwd).library(from).slice(sliceName).mocks(),
       mocks
     );
   }

@@ -45,6 +45,7 @@ describe("[Selected Slice sagas]", () => {
       saga.next().call(generateSliceScreenshotApiClient, {
         sliceName: dummySliceState.model.name,
         libraryName: dummySliceState.from,
+        href: dummySliceState.href,
         variationId: dummyModelVariationID,
         screenDimensions,
       });
