@@ -4,6 +4,7 @@ import { getOrElseW } from "fp-ts/Either";
 import Files from "./utils/files";
 import { CustomPaths, GeneratedPaths } from "./models/paths";
 import { Models } from "@slicemachine/core";
+import { sliceMockPath } from "@slicemachine/core/build/node-utils/paths";
 import { renderSliceMock } from "@prismicio/mocks";
 import { createStorybookId } from "./utils/str";
 import {
@@ -59,10 +60,7 @@ export default {
       return;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const mocksPath = CustomPaths(cwd)
-      .library(libraryName)
-      .slice(sliceName)
-      .mocks();
+    const mocksPath = sliceMockPath(cwd, libraryName, sliceName);
 
     // the output type should be Mocks but it's not typed yet
     const mocks = Files.readEntity<ComponentMocks>(

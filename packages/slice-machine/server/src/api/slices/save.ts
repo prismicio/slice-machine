@@ -1,6 +1,7 @@
 /** global variable define in server/src/index.js **/
 declare let appRoot: string;
-import { CustomPaths, GeneratedPaths } from "../../../../lib/models/paths";
+import { sliceMockPath } from "@slicemachine/core/build/node-utils/paths";
+import { CustomPaths } from "../../../../lib/models/paths";
 import Storybook from "../../../../lib/storybook";
 
 import mock from "../../../../lib/mock/Slice";
@@ -39,26 +40,17 @@ export async function handler(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
   IO.Slice.writeSlice(modelPath, smModel);
 
-  const hasCustomMocks = Files.exists(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    CustomPaths(env.cwd).library(from).slice(sliceName).mocks()
-  );
+  const hasCustomMocks = Files.exists(sliceMockPath(env.cwd, from, sliceName));
 
   if (!hasCustomMocks) {
     console.log("[slice/save]: Generating mocks");
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const mocks = mock(
       smModel,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
     );
-    Files.write(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      mocks
-    );
+    Files.write(sliceMockPath(env.cwd, from, sliceName), mocks);
   }
 
   console.log("[slice/save]: Generating stories");
