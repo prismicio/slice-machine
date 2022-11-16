@@ -64,6 +64,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           p: 0,
         }}
         sx={{ border: "none", borderRadius: "0px" }}
+        borderFooter
         Header={() => (
           <Flex
             sx={{
@@ -109,7 +110,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             />
             {customType?.local && (
               <Button
-                label="Delete Locally"
+                label="Delete"
                 variant="danger"
                 isLoading={isDeletingCustomType}
                 onClick={() =>
@@ -118,7 +119,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                     customType?.local.label ?? ""
                   )
                 }
-                sx={{ minHeight: 39, minWidth: 129 }}
+                sx={{ minHeight: 39, minWidth: 78 }}
               />
             )}
           </Flex>
@@ -126,9 +127,19 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
       >
         <Text>
           This action will delete the{" "}
-          <Text sx={{ fontWeight: "bold" }}>“{customType?.local.label}”</Text>{" "}
-          Custom Type in your local project. It will be deleted from your
-          repository in the next sync.
+          <Text sx={{ fontWeight: "bold" }}>
+            `customtypes/{customType?.local.id}/`
+          </Text>
+          directory and update associated files in the{" "}
+          <Text sx={{ fontWeight: "bold" }}>`.slicemachine/`</Text>
+          directory.
+        </Text>
+        <br />
+        <Text>
+          The next time you push changes to Prismic, the{" "}
+          <Text sx={{ fontWeight: "bold" }}>"{customType?.local.label}"</Text>{" "}
+          Custom Type and any associated Documents will be deleted from your
+          repository.
         </Text>
       </Card>
     </SliceMachineModal>
