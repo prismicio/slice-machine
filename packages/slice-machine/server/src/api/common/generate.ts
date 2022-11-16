@@ -20,7 +20,6 @@ export function generate(
     );
 
     components.forEach((c) => {
-      sliceMockPath(env.cwd, c.from, c.model.name);
       const mocksPath = sliceMockPath(env.cwd, c.from, c.model.name);
       const currentMocks = Files.readEntityFromFile<ComponentMocks>(
         mocksPath,

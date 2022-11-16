@@ -59,10 +59,8 @@ export default {
     )
       return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const mocksPath = sliceMockPath(cwd, libraryName, sliceName);
 
-    // the output type should be Mocks but it's not typed yet
     const mocks = Files.readEntity<ComponentMocks>(
       mocksPath,
       (payload: unknown) => {
