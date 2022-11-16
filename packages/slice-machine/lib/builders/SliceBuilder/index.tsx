@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 
 import { handleRemoteResponse } from "@src/modules/toaster/utils";
 
@@ -29,6 +29,7 @@ import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "@components/Simulator/components/Toolbar/ScreensizeInput";
+import useEditorContentOnce from "@src/hooks/useEditorContent";
 
 export type SliceBuilderState = {
   imageLoading: boolean;
@@ -86,20 +87,12 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     }
   }, [data]);
 
-  const sliceView = useMemo(
-    () =>
-      component && variation
-        ? [
-            {
-              sliceID: component.model.id,
-              variationID: variation.id,
-            },
-          ]
-        : null,
-    [component.model.id, variation?.id]
-  );
+  if (!variation) return null;
 
-  if (!variation || !sliceView) return null;
+  const { apiContent } = useEditorContentOnce({
+    slice: component,
+    variationID: variation.id,
+  });
 
   const onSaveSlice = () => {
     saveSlice(component, setData);
@@ -135,7 +128,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         <IframeRenderer
           dryRun
           simulatorUrl={simulatorUrl}
-          sliceView={sliceView}
+          apiContent={apiContent}
           screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
         />
       )}

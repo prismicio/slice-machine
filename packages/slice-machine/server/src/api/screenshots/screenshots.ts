@@ -33,6 +33,7 @@ export function validateEnv(
 }
 
 export default async function handler({
+  href,
   libraryName,
   sliceName,
   variationId,
@@ -54,7 +55,8 @@ export default async function handler({
       libraryName,
       sliceName,
       variationId,
-      screenDimensions
+      screenDimensions,
+      href
     );
 
     // We display an error if no screenshot has been taken

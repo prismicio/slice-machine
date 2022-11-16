@@ -86,7 +86,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7",
-    "@prismicio/slice-simulator-com": "^0.3.0",
+    "@prismicio/editor-fields": "^0.1.0-rc.3",
+    "@prismicio/editor-ui": "^0.1.0-rc.1",
+    "@prismicio/slice-simulator-com": "^0.4.0",
     "@reach/menu-button": "^0.16.2",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/jest-dom": "^5.15.0",
