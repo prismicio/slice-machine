@@ -4,22 +4,26 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
+import path from "path";
 
-export function readCustomType(path: string): CustomTypeSM {
-  const ct: CustomType = Files.readJson(path);
+export function readCustomType(src: string): CustomTypeSM {
+  const ct: CustomType = Files.readJson(src);
   return CustomTypes.toSM(ct);
 }
 
-export function writeCustomType(path: string, customType: CustomTypeSM) {
-  Files.write(path, CustomTypes.fromSM(customType));
+export function writeCustomType(src: string, customType: CustomTypeSM) {
+  Files.write(src, CustomTypes.fromSM(customType));
 }
 
-export function renameCustomType(path: string, newCustomTypeName: string) {
-  const customType = readCustomType(path);
+export function renameCustomType(src: string, newCustomTypeName: string) {
+  const customType = readCustomType(src);
   customType.label = newCustomTypeName;
-  writeCustomType(path, customType);
+  writeCustomType(src, customType);
 }
 
-export function deleteCustomType(path: string) {
-  Files.removeDirectory(path);
+export function deleteCustomType(src: string) {
+  Files.hasReadWritePermissions(src);
+  const files = Files.readDirectory(src);
+  files.forEach((file) => Files.hasReadWritePermissions(path.join(src, file)));
+  Files.removeDirectory(src);
 }

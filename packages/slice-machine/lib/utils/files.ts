@@ -143,6 +143,8 @@ const Files = {
   removeDirectory(src: string) {
     fs.rmSync(src, { recursive: true, force: true });
   },
+  hasReadWritePermissions: (src: string) =>
+    fs.accessSync(src, fs.constants.R_OK | fs.constants.W_OK),
 };
 
 export default Files;
