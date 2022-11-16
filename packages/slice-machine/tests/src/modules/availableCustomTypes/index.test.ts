@@ -4,6 +4,8 @@ import {
   availableCustomTypesReducer,
   renameCustomTypeCreator,
   renameCustomTypeSaga,
+  deleteCustomTypeSaga,
+  deleteCustomTypeCreator,
 } from "@src/modules/availableCustomTypes";
 import { pushCustomTypeCreator } from "@src/modules/pushChangesSaga/actions";
 import { testSaga } from "redux-saga-test-plan";
@@ -12,13 +14,18 @@ import { refreshStateCreator } from "@src/modules/environment";
 import "@testing-library/jest-dom";
 
 import { dummyServerState } from "../__mocks__/serverState";
-import { renameCustomType, saveCustomType } from "@src/apiClient";
+import {
+  deleteCustomType,
+  renameCustomType,
+  saveCustomType,
+} from "@src/apiClient";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import axios, { AxiosError } from "axios";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -145,6 +152,41 @@ describe("[Available Custom types module]", () => {
           remote: existingCustomType,
         },
       });
+    });
+
+    it("should update the custom types state given CUSTOM_TYPES/DELETE.SUCCESS action", () => {
+      const customTypeIdToDelete = "id";
+      const mockCustomTypeToDelete: CustomTypeSM = {
+        id: "id",
+        label: "lama",
+        repeatable: false,
+        status: true,
+        tabs: [
+          {
+            key: "Main",
+            value: [],
+          },
+        ],
+      };
+
+      const originalState = { ...dummyCustomTypesState };
+
+      originalState[customTypeIdToDelete] = {
+        local: mockCustomTypeToDelete,
+      };
+      mockCustomTypeToDelete.id = "another_ct";
+      originalState["another_ct"] = { local: mockCustomTypeToDelete };
+
+      const action = deleteCustomTypeCreator.success({
+        customTypeId: customTypeIdToDelete,
+      });
+
+      const result = availableCustomTypesReducer(originalState, action);
+
+      const expectState = { ...originalState };
+      delete expectState[customTypeIdToDelete];
+
+      expect(result).toEqual(expectState);
     });
   });
 
@@ -294,6 +336,88 @@ describe("[Available Custom types module]", () => {
           type: ToasterType.ERROR,
         })
       );
+      saga.next().isDone();
+    });
+  });
+
+  describe("[deleteCustomTypeSaga]", () => {
+    it("should call the api and dispatch the good actions on success", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        customTypeName: "name",
+      };
+      const saga = testSaga(
+        deleteCustomTypeSaga,
+        deleteCustomTypeCreator.request(actionPayload)
+      );
+
+      saga.next().call(deleteCustomType, actionPayload.customTypeId);
+      saga.next().put(deleteCustomTypeCreator.success(actionPayload));
+      saga.next().put(
+        openToasterCreator({
+          message: `Successfully deleted Custom Type “${actionPayload.customTypeName}”`,
+          type: ToasterType.SUCCESS,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on unknown failure", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        customTypeName: "name",
+      };
+      const saga = testSaga(
+        deleteCustomTypeSaga,
+        deleteCustomTypeCreator.request(actionPayload)
+      );
+
+      saga.next().call(deleteCustomType, actionPayload.customTypeId);
+      saga.throw(new Error()).put(
+        openToasterCreator({
+          message:
+            "An unexpected error happened while deleting your custom type.",
+          type: ToasterType.ERROR,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on an API error", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        customTypeName: "name",
+      };
+      const saga = testSaga(
+        deleteCustomTypeSaga,
+        deleteCustomTypeCreator.request(actionPayload)
+      );
+
+      jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
+
+      const err = Error() as AxiosError;
+      // @ts-expect-error Ignoring the type error since we only need these properties to test
+      err.response = {
+        data: { reason: "Could not delete custom type", type: "error" },
+      };
+
+      saga.next().call(deleteCustomType, actionPayload.customTypeId);
+      saga.throw(err).put(
+        openToasterCreator({
+          message: "Could not delete custom type",
+          type: ToasterType.ERROR,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
       saga.next().isDone();
     });
   });

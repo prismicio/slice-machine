@@ -9,7 +9,8 @@ import Card from "@components/Card";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
-import { deleteCustomType } from "@src/apiClient";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 type ScreenshotModalProps = {
   customType?: FrontEndCustomType;
@@ -18,16 +19,21 @@ type ScreenshotModalProps = {
 export const DeleteCustomTypeModal: React.FunctionComponent<
   ScreenshotModalProps
 > = ({ customType }) => {
-  const { isDeleteCustomTypeModalOpen } = useSelector(
+  const { isDeleteCustomTypeModalOpen, isDeletingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
       isDeleteCustomTypeModalOpen: isModalOpen(
         store,
         ModalKeysEnum.DELETE_CUSTOM_TYPE
       ),
+      isDeletingCustomType: isLoading(
+        store,
+        LoadingKeysEnum.DELETE_CUSTOM_TYPE
+      ),
     })
   );
 
-  const { closeDeleteCustomTypeModal } = useSliceMachineActions();
+  const { closeDeleteCustomTypeModal, deleteCustomType } =
+    useSliceMachineActions();
 
   const { theme } = useThemeUI();
 
@@ -58,6 +64,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           p: 0,
         }}
         sx={{ border: "none", borderRadius: "0px" }}
+        borderFooter
         Header={() => (
           <Flex
             sx={{
@@ -101,23 +108,38 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 borderRadius: 6,
               }}
             />
-            <Button
-              label="Delete Locally"
-              variant="danger"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={async () => {
-                await deleteCustomType(customType?.local.id as string);
-                closeDeleteCustomTypeModal();
-              }}
-            />
+            {customType?.local && (
+              <Button
+                label="Delete"
+                variant="danger"
+                isLoading={isDeletingCustomType}
+                onClick={() =>
+                  deleteCustomType(
+                    customType?.local.id,
+                    customType?.local.label ?? ""
+                  )
+                }
+                sx={{ minHeight: 39, minWidth: 78 }}
+              />
+            )}
           </Flex>
         )}
       >
         <Text>
           This action will delete the{" "}
-          <Text sx={{ fontWeight: "bold" }}>“{customType?.local.label}”</Text>{" "}
-          Custom Type in your local project. It will be deleted from your
-          repository in the next sync.
+          <Text sx={{ fontWeight: "bold" }}>
+            `customtypes/{customType?.local.id}/`
+          </Text>
+          directory and update associated files in the{" "}
+          <Text sx={{ fontWeight: "bold" }}>`.slicemachine/`</Text>
+          directory.
+        </Text>
+        <br />
+        <Text>
+          The next time you push changes to Prismic, the{" "}
+          <Text sx={{ fontWeight: "bold" }}>"{customType?.local.label}"</Text>{" "}
+          Custom Type and any associated Documents will be deleted from your
+          repository.
         </Text>
       </Card>
     </SliceMachineModal>

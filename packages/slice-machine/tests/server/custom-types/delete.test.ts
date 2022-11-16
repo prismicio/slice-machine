@@ -108,7 +108,7 @@ describe("Delete Custom Type files", () => {
     expect(result).toStrictEqual({
       err: Error("Couldn't remove custom type"),
       reason: "We couldn't delete your custom type. Check your terminal.",
-      status: "500",
+      status: 500,
       type: "error",
     });
   });
@@ -143,7 +143,7 @@ describe("Delete Custom Type files", () => {
       err: {},
       reason:
         "Something went wrong when deleting your Custom Type. Check your terminal.",
-      status: "500",
+      status: 500,
       type: "warning",
     });
   });
@@ -178,7 +178,7 @@ describe("Delete Custom Type files", () => {
       err: {},
       reason:
         "Something went wrong when deleting your Custom Type. Check your terminal.",
-      status: "500",
+      status: 500,
       type: "warning",
     });
   });

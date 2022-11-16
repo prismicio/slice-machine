@@ -21,6 +21,7 @@ import {
 import ServerState from "@models/server/ServerState";
 import {
   createCustomTypeCreator,
+  deleteCustomTypeCreator,
   renameCustomTypeCreator,
 } from "./availableCustomTypes";
 import { createSliceCreator, renameSliceCreator } from "./slices";
@@ -163,6 +164,13 @@ const useSliceMachineActions = () => {
       renameCustomTypeCreator.request({
         customTypeId,
         newCustomTypeName,
+      })
+    );
+  const deleteCustomType = (customTypeId: string, customTypeName: string) =>
+    dispatch(
+      deleteCustomTypeCreator.request({
+        customTypeId,
+        customTypeName,
       })
     );
 
@@ -523,6 +531,7 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     createCustomType,
     renameCustomType,
+    deleteCustomType,
     initCustomTypeStore,
     saveCustomType,
     pushCustomType,
