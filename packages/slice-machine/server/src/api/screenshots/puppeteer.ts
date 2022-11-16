@@ -58,14 +58,11 @@ const generateScreenshot = async (
   try {
     Files.mkdir(path.dirname(pathToFile), { recursive: true });
 
-    /* We use the waitUntil option in order for the component to be rendered properly.
-     ** The value networkidle2 is required because Nuxt has an open socket with Webpack.
-     */
     await page.goto(screenshotUrl, {
-      waitUntil: "networkidle2",
+      waitUntil: "load",
     });
 
-    await page.waitForSelector("#__iframe-ready", { timeout: 5000 });
+    await page.waitForSelector("#__iframe-ready", { timeout: 10000 });
     const element = await page.$("#__iframe-renderer");
 
     if (element) {
@@ -85,6 +82,7 @@ const generateScreenshot = async (
     await context.close();
     return;
   } catch (error) {
+    console.error(error);
     await context.close();
     throw error;
   }
