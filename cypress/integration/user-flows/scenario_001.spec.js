@@ -90,8 +90,8 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.get('[data-cy="add-new-field"]').first().click();
     cy.get("[data-cy='Key Text']").click();
 
-    cy.get("[data-cy=new-field-name-input]").clear()
-    cy.wait(500)
+    cy.get("[data-cy=new-field-name-input]").clear();
+    cy.wait(500);
     cy.get("[data-cy=new-field-name-input]").type("Key Text Field");
 
     cy.get("[data-cy=new-field-id-input]").should(
