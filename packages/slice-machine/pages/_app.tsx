@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { type FC, type ReactNode, useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import configureStore from "../src/redux/store";
 import App, { AppContext } from "next/app";
@@ -36,7 +36,11 @@ import { getState } from "../src/apiClient";
 import { normalizeFrontendCustomTypes } from "../src/normalizers/customType";
 import Router from "next/router";
 
-const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
+type RemoveDarkModeProps = Readonly<{
+  children?: ReactNode;
+}>;
+
+const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
   const { setColorMode } = useThemeUI();
   useEffect(() => {
     if (setColorMode) {

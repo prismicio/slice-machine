@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { type FC, type ReactNode, useRef } from "react";
 import { Flex, Text } from "theme-ui";
 import { MdArrowBackIos, MdCheck } from "react-icons/md";
 import { ThemeUIStyleObject } from "@theme-ui/css";
@@ -9,10 +9,11 @@ type StepSectionProps = {
   title: string;
   isOpen: boolean;
   onOpenStep: () => void;
+  children?: ReactNode;
   status?: null | "ok" | "ko";
 };
 
-const StepSection: React.FunctionComponent<StepSectionProps> = ({
+const StepSection: FC<StepSectionProps> = ({
   title,
   stepNumber,
   isOpen,

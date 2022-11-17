@@ -198,6 +198,7 @@ export const SharedSlice = {
         }
       | React.FC<{ slice: ComponentUI }>;
     Wrapper?: React.FC<{
+      children?: React.ReactNode;
       link?: { as: string };
       slice: ComponentUI;
       sx?: ThemeUIStyleObject;

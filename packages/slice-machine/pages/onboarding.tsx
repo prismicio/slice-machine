@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { type FC, type ReactNode, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -30,7 +30,7 @@ import {
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
-const Video: React.FC<{
+const Video: FC<{
   publicId: string;
 }> = ({ publicId }) => {
   const { version, framework } = useSelector(
@@ -107,7 +107,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => {
     </>
   );
 };
-const BuildSlicesSlide: React.FC = () => (
+const BuildSlicesSlide: FC = () => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
@@ -116,7 +116,7 @@ const BuildSlicesSlide: React.FC = () => (
   </>
 );
 
-const CreatePageTypesSlide: React.FC = () => (
+const CreatePageTypesSlide: FC = () => (
   <>
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
@@ -125,7 +125,7 @@ const CreatePageTypesSlide: React.FC = () => (
   </>
 );
 
-const PushPagesSlide: React.FC = () => (
+const PushPagesSlide: FC = () => (
   <>
     <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
@@ -136,7 +136,11 @@ const PushPagesSlide: React.FC = () => (
   </>
 );
 
-const OnboardingGrid: React.FunctionComponent = ({ children }) => {
+type OnboardingGridProps = Readonly<{
+  children?: ReactNode;
+}>;
+
+const OnboardingGrid: FC<OnboardingGridProps> = ({ children }) => {
   return (
     <Grid
       sx={{

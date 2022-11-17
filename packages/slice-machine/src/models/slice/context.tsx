@@ -1,4 +1,4 @@
-import React from "react";
+import type { FC, ReactNode } from "react";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { useSelector } from "react-redux";
@@ -7,7 +7,11 @@ import { getLibraries } from "@src/modules/slices";
 import Router from "next/router";
 import { replace } from "connected-next-router";
 
-export const SliceHandler: React.FC = ({ children }) => {
+type Props = Readonly<{
+  children?: ReactNode | ((slice: ComponentUI) => ReactNode);
+}>;
+
+export const SliceHandler: FC<Props> = ({ children }) => {
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
     libraries: getLibraries(state),
   }));
