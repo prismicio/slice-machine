@@ -63,6 +63,12 @@ describe("Delete Custom Type files", () => {
       }),
     });
 
+    expect(readCustomTypesFiles()).toStrictEqual([CUSTOM_TYPE_TO_DELETE]);
+    expect(readAssetsFiles()).toStrictEqual([CUSTOM_TYPE_TO_DELETE]);
+    expect(readMockConfig()).toStrictEqual({
+      _cts: { "ct-2": { name: "bar" }, "unwanted-ct": { name: "foo" } },
+    });
+
     const result = await deleteCT(mockRequest);
 
     expect(readCustomTypesFiles()).toStrictEqual([]);
@@ -84,6 +90,13 @@ describe("Delete Custom Type files", () => {
         _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
       }),
     });
+
+    expect(readCustomTypesFiles()).toStrictEqual(["test.json"]);
+    expect(readAssetsFiles()).toStrictEqual([CUSTOM_TYPE_TO_DELETE]);
+    expect(readMockConfig()).toStrictEqual({
+      _cts: { "ct-2": { name: "bar" }, "unwanted-ct": { name: "foo" } },
+    });
+
     const result = await deleteCT(mockRequest);
 
     expect(readCustomTypesFiles()).toStrictEqual(["test.json"]);
@@ -114,6 +127,12 @@ describe("Delete Custom Type files", () => {
         _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
       }),
       "/test/.slicemachine/assets/customtypes/test.json": "",
+    });
+
+    expect(readCustomTypesFiles()).toStrictEqual([CUSTOM_TYPE_TO_DELETE]);
+    expect(readAssetsFiles()).toStrictEqual(["test.json"]);
+    expect(readMockConfig()).toStrictEqual({
+      _cts: { "ct-2": { name: "bar" }, "unwanted-ct": { name: "foo" } },
     });
 
     const result = await deleteCT(mockRequest);
@@ -149,6 +168,10 @@ describe("Delete Custom Type files", () => {
           _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
         }),
     });
+
+    expect(readCustomTypesFiles()).toStrictEqual([CUSTOM_TYPE_TO_DELETE]);
+    expect(readAssetsFiles()).toStrictEqual([CUSTOM_TYPE_TO_DELETE]);
+    expect(readMockConfig()).toStrictEqual({});
 
     const result = await deleteCT(mockRequest);
 
