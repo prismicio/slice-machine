@@ -22,8 +22,8 @@ export function renameCustomType(src: string, newCustomTypeName: string) {
 }
 
 export function deleteCustomType(src: string) {
-  Files.hasReadWritePermissions(src);
+  Files.hasWritePermissions(src);
   const files = Files.readDirectory(src);
-  files.forEach((file) => Files.hasReadWritePermissions(path.join(src, file)));
+  files.forEach((file) => Files.hasWritePermissions(path.join(src, file)));
   Files.removeDirectory(src);
 }

@@ -5,8 +5,11 @@ import fs from "fs";
 import { RequestWithEnv } from "server/src/api/http/common";
 
 jest.mock(`fs`, () => {
-  const { vol } = jest.requireActual("memfs");
-  return vol;
+  const { vol, createFsFromVolume } = jest.requireActual("memfs");
+  const newFs = createFsFromVolume(vol);
+  newFs["rmSync"] = vol["rmSync"].bind(vol);
+  newFs["realpathSync"] = vol["realpathSync"].bind(vol);
+  return newFs;
 });
 
 jest.mock("../../../server/src/api/common/LibrariesState", () => {
@@ -22,34 +25,45 @@ describe("Delete Custom Type files", () => {
     errors: {},
     query: { id: CUSTOM_TYPE_TO_DELETE },
   } as unknown as RequestWithEnv;
-  const warn = console.warn;
   const error = console.error;
+  let mockRmSync: jest.SpyInstance;
+  let mockWriteFileSync: jest.SpyInstance;
+  let mockReadFileSync: jest.SpyInstance;
+  let mockAccessSync: jest.SpyInstance;
   afterEach(() => {
     vol.reset();
     jest.restoreAllMocks();
   });
   beforeEach(() => {
-    console.warn = jest.fn();
     console.error = jest.fn();
-    // @ts-expect-error don't need the right type for mocking purposes
-    jest.spyOn(fs, "lstatSync").mockReturnValue(true);
+    mockRmSync = jest.spyOn(fs, "rmSync");
+    mockWriteFileSync = jest.spyOn(fs, "writeFileSync");
+    mockReadFileSync = jest.spyOn(fs, "readFileSync");
+    mockAccessSync = jest.spyOn(fs, "accessSync");
   });
   afterAll(() => {
-    console.warn = warn;
     console.error = error;
   });
 
-  it("should delete all the custom type files", async () => {
-    const mockRmSync = jest.spyOn(fs, "rmSync");
-    const mockWriteFileSync = jest.spyOn(fs, "writeFileSync");
-    const mockReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(
-      JSON.stringify({
+  it("should delete and update all the custom type files", async () => {
+    vol.fromJSON({
+      "/test/customtypes/unwanted-ct/index.json": JSON.stringify({
         _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
-      })
-    );
+      }),
+      "/test/.slicemachine/assets/customtypes/unwanted-ct/mocks.json":
+        JSON.stringify({
+          _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
+        }),
+      "/test/.slicemachine/mock-config.json": JSON.stringify({
+        _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
+      }),
+    });
 
     const result = await deleteCT(mockRequest);
 
+    expect(mockRmSync).toHaveBeenCalled();
+
+    expect(mockRmSync).toHaveBeenCalledTimes(2);
     expect(mockRmSync).toHaveBeenCalledWith(
       `/test/customtypes/${CUSTOM_TYPE_TO_DELETE}`,
       {
@@ -64,7 +78,6 @@ describe("Delete Custom Type files", () => {
         recursive: true,
       }
     );
-    expect(mockRmSync).toHaveBeenCalledTimes(2);
 
     expect(mockReadFileSync).toBeCalled();
 
@@ -78,35 +91,24 @@ describe("Delete Custom Type files", () => {
   });
 
   it("should log and return an error if the custom types deletion fails", async () => {
-    const mockRmSync = jest.spyOn(fs, "rmSync").mockImplementation(() => {
-      throw new Error("Couldn't remove custom type");
-    });
-    const mockWriteFileSync = jest.spyOn(fs, "writeFileSync");
-    const mockReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(
-      JSON.stringify({
-        _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
-      })
-    );
-
     const result = await deleteCT(mockRequest);
 
-    expect(mockRmSync).toHaveBeenCalledWith(
-      `/test/customtypes/${CUSTOM_TYPE_TO_DELETE}`,
-      {
-        force: true,
-        recursive: true,
-      }
+    expect(mockAccessSync).toHaveBeenCalledTimes(1);
+    expect(mockAccessSync).toHaveBeenCalledWith(
+      "/test/customtypes/unwanted-ct",
+      fs.constants.W_OK
     );
-    expect(mockRmSync).toHaveBeenCalledTimes(1);
 
     expect(mockReadFileSync).not.toBeCalled();
     expect(mockWriteFileSync).not.toBeCalled();
 
     expect(console.error).toHaveBeenCalledWith(
-      "[custom-type/delete] Error: Couldn't remove custom type"
+      "[custom-type/delete] Error: ENOENT: no such file or directory, access '/test/customtypes/unwanted-ct'"
     );
     expect(result).toStrictEqual({
-      err: Error("Couldn't remove custom type"),
+      err: Error(
+        "ENOENT: no such file or directory, access '/test/customtypes/unwanted-ct'"
+      ),
       reason: "We couldn't delete your custom type. Check your terminal.",
       status: 500,
       type: "error",
@@ -114,22 +116,35 @@ describe("Delete Custom Type files", () => {
   });
 
   it("should log and return a warning if the custom type asset deletion fails", async () => {
-    const mockRmSync = jest
-      .spyOn(fs, "rmSync")
-      .mockImplementationOnce(() => {})
-      .mockImplementationOnce(() => {
-        throw new Error("Couldn't remove custom type");
-      });
-    const mockWriteFileSync = jest.spyOn(fs, "writeFileSync");
-    const mockReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(
-      JSON.stringify({
+    vol.fromJSON({
+      "/test/.slicemachine/mock-config.json": JSON.stringify({
         _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
-      })
-    );
+      }),
+      "/test/customtypes/unwanted-ct/index.json": JSON.stringify({
+        _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
+      }),
+    });
 
     const result = await deleteCT(mockRequest);
 
-    expect(mockRmSync).toHaveBeenCalledTimes(2);
+    expect(mockAccessSync).toHaveBeenCalledTimes(3);
+    expect(mockAccessSync).toHaveBeenNthCalledWith(
+      1,
+      "/test/customtypes/unwanted-ct",
+      fs.constants.W_OK
+    );
+    expect(mockAccessSync).toHaveBeenNthCalledWith(
+      2,
+      "/test/customtypes/unwanted-ct/index.json",
+      fs.constants.W_OK
+    );
+    expect(mockAccessSync).toHaveBeenNthCalledWith(
+      3,
+      "/test/.slicemachine/assets/customtypes/unwanted-ct",
+      fs.constants.W_OK
+    );
+
+    expect(mockRmSync).toHaveBeenCalledTimes(1);
 
     expect(mockReadFileSync).toHaveBeenCalled();
     expect(mockWriteFileSync).toHaveBeenCalled();
@@ -149,24 +164,23 @@ describe("Delete Custom Type files", () => {
   });
 
   it("should log and return a warning if the mock-config update fails", async () => {
-    const mockRmSync = jest.spyOn(fs, "rmSync");
-    const mockWriteFileSync = jest
-      .spyOn(fs, "writeFileSync")
-      .mockImplementationOnce(() => {
-        throw new Error("couldn't update file");
-      });
-    const mockReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(
-      JSON.stringify({
+    vol.fromJSON({
+      "/test/.slicemachine/mock-config.json": JSON.stringify({}),
+      "/test/customtypes/unwanted-ct/index.json": JSON.stringify({
         _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
-      })
-    );
+      }),
+      "/test/.slicemachine/assets/customtypes/unwanted-ct/mocks.json":
+        JSON.stringify({
+          _cts: { "unwanted-ct": { name: "foo" }, "ct-2": { name: "bar" } },
+        }),
+    });
 
     const result = await deleteCT(mockRequest);
 
     expect(mockRmSync).toHaveBeenCalledTimes(2);
 
     expect(mockReadFileSync).toBeCalled();
-    expect(mockWriteFileSync).toBeCalled();
+    expect(mockWriteFileSync).not.toBeCalled();
 
     expect(console.error).toHaveBeenCalledWith(
       `[custom-type/delete] Could not delete your custom type from the mock-config.json.\n`,
