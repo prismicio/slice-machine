@@ -1,8 +1,7 @@
 import { type FC, type ReactNode } from "react";
-import { Flex, Text } from "theme-ui";
+import { type ThemeUIStyleObject, Flex, Text } from "theme-ui";
 
 import { RiErrorWarningLine } from "react-icons/ri";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 
 type WarningSectionProps = {
   title: string;

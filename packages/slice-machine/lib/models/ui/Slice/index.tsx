@@ -6,9 +6,9 @@ import {
   Heading,
   Flex,
   Badge,
-  ThemeUICSSObject,
+  type ThemeUIStyleObject,
+  type ThemeUICSSObject,
 } from "theme-ui";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 import { ComponentUI } from "../../common/ComponentUI";
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";

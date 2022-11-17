@@ -1,7 +1,6 @@
 import { type FC, type ReactNode, useRef } from "react";
-import { Flex, Text } from "theme-ui";
+import { type ThemeUIStyleObject, Flex, Text } from "theme-ui";
 import { MdArrowBackIos, MdCheck } from "react-icons/md";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 import WarningBadge from "./WarningBadge";
 
 type StepSectionProps = {

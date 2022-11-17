@@ -1,7 +1,11 @@
 import Link from "next/link";
 import type { FC, ReactElement, ReactNode } from "react";
-import { Flex, Box, Link as ThemeLink } from "theme-ui";
-import { ThemeUIStyleObject } from "@theme-ui/css";
+import {
+  type ThemeUIStyleObject,
+  Flex,
+  Box,
+  Link as ThemeLink,
+} from "theme-ui";
 
 type HeaderProps = {
   ActionButton?: ReactElement;
