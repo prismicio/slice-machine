@@ -268,6 +268,8 @@ export function* deleteCustomTypeSaga({
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const apiResponse = e.response?.data as DeleteCustomTypeResponse;
+      if (apiResponse.type === "warning")
+        yield put(deleteCustomTypeCreator.success(payload));
       yield put(
         openToasterCreator({
           message: apiResponse.reason,

@@ -420,5 +420,37 @@ describe("[Available Custom types module]", () => {
         .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
       saga.next().isDone();
     });
+    it("should call the api and dispatch the good actions on an API warning", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        customTypeName: "name",
+      };
+      const saga = testSaga(
+        deleteCustomTypeSaga,
+        deleteCustomTypeCreator.request(actionPayload)
+      );
+
+      jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
+
+      const err = Error() as AxiosError;
+      // @ts-expect-error Ignoring the type error since we only need these properties to test
+      err.response = {
+        data: { reason: "Could not delete custom type", type: "warning" },
+      };
+
+      saga.next().call(deleteCustomType, actionPayload.customTypeId);
+      saga.throw(err).put(deleteCustomTypeCreator.success(actionPayload));
+      saga.next().put(
+        openToasterCreator({
+          message: "Could not delete custom type",
+          type: ToasterType.WARNING,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+      saga.next().isDone();
+    });
   });
 });
