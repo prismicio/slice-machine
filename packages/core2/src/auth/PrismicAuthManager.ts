@@ -5,10 +5,10 @@ import * as os from "node:os";
 import fetch from "node-fetch";
 import cookie from "cookie";
 
-import { decode } from "./lib/decode";
-import { serializeCookies } from "./lib/serializeCookies";
+import { decode } from "../lib/decode";
+import { serializeCookies } from "../lib/serializeCookies";
 
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "./constants";
+import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
 
 const COOKIE_SEPARATOR = "; ";
 const AUTH_COOKIE_KEY = "prismic-auth";
@@ -51,16 +51,6 @@ const PrismicUserProfile = t.exact(
 	}),
 );
 export type PrismicUserProfile = t.TypeOf<typeof PrismicUserProfile>;
-
-type CreatePrismicAuthManager = ConstructorParameters<
-	typeof PrismicAuthManager
->[0];
-
-export const createPrismicAuthManager = (
-	args: CreatePrismicAuthManager = {},
-): PrismicAuthManager => {
-	return new PrismicAuthManager(args);
-};
 
 type PrismicAuthManagerConstructorArgs = {
 	scopedDirectory?: string;

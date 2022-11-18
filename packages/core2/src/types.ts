@@ -1,4 +1,5 @@
 import {
+	HookError,
 	SliceMachinePlugin,
 	SliceMachinePluginOptions,
 } from "@slicemachine/plugin-kit";
@@ -54,3 +55,9 @@ export type SliceMachineConfig = {
 	adapter: SliceMachineConfigPluginRegistration;
 	plugins?: SliceMachineConfigPluginRegistration[];
 };
+
+export type OnlyHookErrors<
+	THookResult extends
+		| { errors: HookError[] }
+		| Promise<{ errors: HookError[] }>,
+> = Pick<Awaited<THookResult>, "errors">;

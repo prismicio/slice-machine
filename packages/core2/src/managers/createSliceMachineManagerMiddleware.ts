@@ -1,6 +1,7 @@
 import { NodeMiddleware } from "h3";
 
-import { SliceMachineManager } from "./createSliceMachineManager";
+import { SliceMachineManager } from "./managers/SliceMachineManager";
+
 import {
 	ProceduresFromInstance,
 	RPCMiddleware,
