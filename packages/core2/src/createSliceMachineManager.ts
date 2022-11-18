@@ -568,7 +568,7 @@ export class SliceMachineManager {
 		const remoteSlices: SliceMachineManagerGetStateReturnType["remoteSlices"] =
 			isLoggedIn ? await this.fetchRemoteSlices() : [];
 
-		// SM UI detects if a user is logged out by looking at
+		// TODO: SM UI detects if a user is logged out by looking at
 		// `clientError`. Here, we simulate what the old core does by
 		// returning an `ErrorWithStatus`-like object if the user is
 		// not logged in.
