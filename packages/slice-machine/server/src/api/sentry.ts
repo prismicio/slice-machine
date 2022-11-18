@@ -5,10 +5,10 @@ import * as url from "url";
 import express from "express";
 import axios from "axios";
 import { RequestWithEnv } from "./http/common";
+import { nextConfig as sentryNextConfig } from "../../../lib/env/sentry";
 
-// TODO Need these values
-const sentryHost = "";
-const knownProjectIds = [""];
+const sentryHost = sentryNextConfig.host;
+const knownProjectIds = [`/${sentryNextConfig.projectId}`];
 
 async function handler(req: RequestWithEnv, res: express.Response) {
   try {
