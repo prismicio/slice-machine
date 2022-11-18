@@ -21,7 +21,7 @@ const FormFields = {
 };
 
 type FormProps = {
-  config: { label: string; select: string; customtypes: string[] };
+  config: { label: string; select: string; customtypes?: string[] };
   id: string;
   // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
@@ -45,13 +45,15 @@ const WidgetForm = ({
   }));
 
   const selectValues = formValues.config.customtypes
-    .map((id) => {
-      const ct = customTypes.find(
-        (frontendCustomType) => frontendCustomType.local.id === id
-      );
-      return ct ? { value: ct.local.id, label: ct.local.label } : ct;
-    })
-    .filter((val): val is SelectValueType => val !== undefined);
+    ? formValues.config.customtypes
+        .map((id) => {
+          const ct = customTypes.find(
+            (frontendCustomType) => frontendCustomType.local.id === id
+          );
+          return ct ? { value: ct.local.id, label: ct.local.label } : ct;
+        })
+        .filter((val): val is SelectValueType => val !== undefined)
+    : null;
 
   return (
     <FlexGrid>
