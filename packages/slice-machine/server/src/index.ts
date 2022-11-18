@@ -1,7 +1,5 @@
 import cors from "cors";
 
-require("@babel/register");
-
 console.log("\nLaunching server...");
 
 import os from "os";
