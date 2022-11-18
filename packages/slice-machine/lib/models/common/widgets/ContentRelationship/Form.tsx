@@ -10,15 +10,20 @@ import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { FormikProps } from "formik";
 
 const FormFields = {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   label: DefaultFields.label,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   id: DefaultFields.id,
   customtypes: {
     validate: () => yup.array().of(yup.string()),
   },
+};
+
+type FormProps = {
+  config: { label: string; select: string; customtypes: string[] };
+  id: string;
+  // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
 
 const WidgetForm = ({
@@ -26,7 +31,7 @@ const WidgetForm = ({
   values: formValues,
   fields,
   setFieldValue,
-}) => {
+}: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
   const customTypes = useSelector(selectAllCustomTypes);
 
   const options = customTypes.map((ct) => ({
@@ -34,15 +39,15 @@ const WidgetForm = ({
     label: ct.local.label,
   }));
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
   const selectValues = formValues.config.customtypes
-    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      formValues.config.customtypes.map((id) => {
-        const ct = customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === id
-        );
-        return { value: ct?.local.id, label: ct?.local.label };
-      })
+    ? formValues.config.customtypes
+        .map((id) => {
+          const ct = customTypes.find(
+            (frontendCustomType) => frontendCustomType.local.id === id
+          );
+          return { value: ct?.local.id, label: ct?.local.label };
+        })
+        .filter((val) => val.value !== undefined && val.label !== undefined)
     : null;
 
   return (
@@ -53,11 +58,8 @@ const WidgetForm = ({
           <Col key={key}>
             <WidgetFormField
               fieldName={createFieldNameFromKey(key)}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               formField={field}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={fields}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               initialValues={initialValues}
             />
           </Col>
@@ -78,15 +80,12 @@ const WidgetForm = ({
             options={options}
             onChange={(v) => {
               if (v) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 setFieldValue(
                   "config.customtypes",
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                   v.map(({ value }) => value)
                 );
               }
             }}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
             value={selectValues}
             theme={(theme) => {
               return {
