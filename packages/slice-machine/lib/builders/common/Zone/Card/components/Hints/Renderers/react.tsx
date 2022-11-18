@@ -74,7 +74,7 @@ const codeByWidgetType = (
     handleLinkCode(fieldText, useKey),
 
   [Widgets.UID?.TYPE_NAME]: (fieldText: string) =>
-    `<span>{{ ${fieldText} }}</span>`,
+    `<span>{ ${fieldText} }</span>`,
 
   [Widgets.StructuredText?.TYPE_NAME]: (fieldText: string, useKey?: boolean) =>
     `/* import { PrismicRichText } from '@prismicio/react' */
