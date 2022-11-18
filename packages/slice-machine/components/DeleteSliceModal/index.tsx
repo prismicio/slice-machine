@@ -6,40 +6,29 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 
-type DeleteCTModalProps = {
-  customType?: FrontEndCustomType;
+type DeleteSliceModalProps = {
+  sliceId: string;
+  sliceName: string;
+  libName: string;
 };
 
-export const DeleteCustomTypeModal: React.FunctionComponent<
-  DeleteCTModalProps
-> = ({ customType }) => {
-  const { isDeleteCustomTypeModalOpen, isDeletingCustomType } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isDeleteCustomTypeModalOpen: isModalOpen(
-        store,
-        ModalKeysEnum.DELETE_CUSTOM_TYPE
-      ),
-      isDeletingCustomType: isLoading(
-        store,
-        LoadingKeysEnum.DELETE_CUSTOM_TYPE
-      ),
-    })
-  );
+export const DeleteSliceModal: React.FunctionComponent<
+  DeleteSliceModalProps
+> = ({ sliceName, libName }) => {
+  const { isSliceModalOpen } = useSelector((store: SliceMachineStoreType) => ({
+    isSliceModalOpen: isModalOpen(store, ModalKeysEnum.DELETE_SLICE),
+  }));
 
-  const { closeDeleteCustomTypeModal, deleteCustomType } =
-    useSliceMachineActions();
+  const { closeDeleteSliceModal } = useSliceMachineActions();
 
   const { theme } = useThemeUI();
 
   return (
     <SliceMachineModal
-      isOpen={isDeleteCustomTypeModalOpen}
+      isOpen={isSliceModalOpen}
       shouldCloseOnOverlayClick={true}
       style={{
         content: {
@@ -47,7 +36,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           borderRadius: "0px",
         },
       }}
-      onRequestClose={closeDeleteCustomTypeModal}
+      onRequestClose={closeDeleteSliceModal}
     >
       <Card
         radius={"0px"}
@@ -78,10 +67,10 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 color={theme.colors?.greyIcon as string}
               />
               <Heading sx={{ fontSize: "14px", fontWeight: "bold", ml: 1 }}>
-                Delete Custom Type
+                Delete Slice
               </Heading>
             </Flex>
-            <Close type="button" onClick={() => closeDeleteCustomTypeModal()} />
+            <Close type="button" onClick={closeDeleteSliceModal} />
           </Flex>
         )}
         Footer={() => (
@@ -98,7 +87,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <Button
               label="Cancel"
               variant="secondary"
-              onClick={() => closeDeleteCustomTypeModal()}
+              onClick={() => closeDeleteSliceModal()}
               sx={{
                 mr: "10px",
                 fontWeight: "bold",
@@ -106,38 +95,31 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 borderRadius: 6,
               }}
             />
-            {customType?.local && (
-              <Button
-                label="Delete"
-                variant="danger"
-                isLoading={isDeletingCustomType}
-                onClick={() =>
-                  deleteCustomType(
-                    customType?.local.id,
-                    customType?.local.label ?? ""
-                  )
-                }
-                sx={{ minHeight: 39, minWidth: 78 }}
-              />
-            )}
+            <Button
+              label="Delete"
+              variant="danger"
+              sx={{ minHeight: 39, minWidth: 78 }}
+            />
           </Flex>
         )}
       >
         <Text>
           This action will delete the{" "}
           <Text sx={{ fontWeight: "bold" }}>
-            `customtypes/{customType?.local.id}/`
+            `{libName}/{sliceName}/`
           </Text>
           directory and update associated files in the{" "}
           <Text sx={{ fontWeight: "bold" }}>`.slicemachine/`</Text>
-          directory.
+          directory. It will also remove the Slice from the Slice Zones of any
+          Custom Types that use it.
         </Text>
         <br />
         <Text>
           The next time you push changes to Prismic, the{" "}
-          <Text sx={{ fontWeight: "bold" }}>"{customType?.local.label}"</Text>{" "}
-          Custom Type and any associated Documents will be deleted from your
-          repository.
+          <Text sx={{ fontWeight: "bold" }}>"{sliceName}"</Text> Slice will be
+          deleted from your repository, and users will no longer be able to add
+          it to Documents. You will need to manually remove it from any
+          Documents that currently use it.
         </Text>
       </Card>
     </SliceMachineModal>

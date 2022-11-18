@@ -136,6 +136,10 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
   const closeDeleteCustomTypeModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+  const openDeleteSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+  const closeDeleteSliceModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -579,6 +583,8 @@ const useSliceMachineActions = () => {
     closeScreenshotPreviewModal,
     openDeleteCustomTypeModal,
     closeDeleteCustomTypeModal,
+    openDeleteSliceModal,
+    closeDeleteSliceModal,
     openCreateSliceModal,
     closeCreateSliceModal,
     openRenameSliceModal,

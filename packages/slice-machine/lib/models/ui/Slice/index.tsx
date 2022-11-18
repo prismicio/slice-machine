@@ -73,11 +73,17 @@ const SliceCardActions: React.FC<{
   actions?: {
     onUpdateScreenshot: (e: React.MouseEvent) => void;
     openRenameModal?: (slice: ComponentUI) => void;
+    openDeleteModal?: (slice: ComponentUI) => void;
   };
 }> = ({ actions, slice }) => {
   const onRenameClick = useCallback(() => {
     if (actions?.openRenameModal) {
       actions.openRenameModal(slice);
+    }
+  }, [actions, slice]);
+  const onDeleteClick = useCallback(() => {
+    if (actions?.openDeleteModal) {
+      actions.openDeleteModal(slice);
     }
   }, [actions, slice]);
 
@@ -115,9 +121,7 @@ const SliceCardActions: React.FC<{
             },
             {
               displayName: "Delete",
-              // TODO remove when action is implemented
-              // eslint-disable-next-line
-              onClick: () => {},
+              onClick: onDeleteClick,
             },
           ]}
         />
@@ -240,6 +244,7 @@ export const SharedSlice = {
     actions?: {
       onUpdateScreenshot: (e: React.MouseEvent) => void;
       openRenameModal?: (slice: ComponentUI) => void;
+      openDeleteModal?: (slice: ComponentUI) => void;
     };
     sx?: ThemeUIStyleObject;
   }) {
