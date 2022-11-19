@@ -1,12 +1,12 @@
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
-import { CustomTypesManager } from "./CustomTypesManager";
 
-import { PluginsManager } from "./PluginsManager";
-import { ProjectManager } from "./ProjectManager";
 import { SliceMachineManager } from "./SliceMachineManager";
-import { SlicesManager } from "./SlicesManager";
-import { UserManager } from "./UserManager";
-import { VersionsManger } from "./VersionsManager";
+import { CustomTypesManager } from "./_CustomTypesManager";
+import { PluginsManager } from "./_PluginsManager";
+import { ProjectManager } from "./_ProjectManager";
+import { SlicesManager } from "./_SlicesManager";
+import { UserManager } from "./_UserManager";
+import { VersionsManger } from "./_VersionsManager";
 
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;

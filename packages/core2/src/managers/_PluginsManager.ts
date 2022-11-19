@@ -1,6 +1,6 @@
 import { createSliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 
-import { BaseManager } from "./BaseManager";
+import { BaseManager } from "./_BaseManager";
 
 export class PluginsManager extends BaseManager {
 	async initPlugins(): Promise<void> {

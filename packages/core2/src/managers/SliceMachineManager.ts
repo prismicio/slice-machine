@@ -1,14 +1,14 @@
 import { CustomTypes } from "@prismicio/types-internal";
 
-import { PrismicUserProfile } from "../createPrismicAuthManager";
+import { PrismicUserProfile } from "../auth/PrismicAuthManager";
 import { PackageChangelog, PackageManager, PackageVersion } from "../types";
 
-import { CustomTypesManager } from "./CustomTypesManager";
-import { PluginsManager } from "./PluginsManager";
-import { ProjectManager } from "./ProjectManager";
-import { SlicesManager } from "./SlicesManager";
-import { UserManager } from "./UserManager";
-import { VersionsManger } from "./VersionsManager";
+import { CustomTypesManager } from "./_CustomTypesManager";
+import { PluginsManager } from "./_PluginsManager";
+import { ProjectManager } from "./_ProjectManager";
+import { SlicesManager } from "./_SlicesManager";
+import { UserManager } from "./_UserManager";
+import { VersionsManger } from "./_VersionsManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {

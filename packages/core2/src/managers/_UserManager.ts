@@ -1,6 +1,6 @@
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
-import { BaseManager } from "./BaseManager";
+import { BaseManager } from "./_BaseManager";
 
 export class UserManager extends BaseManager {
 	private prismicAuthManager = createPrismicAuthManager();

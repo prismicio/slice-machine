@@ -12,7 +12,7 @@ import {
 } from "../constants";
 import { SliceMachineConfig } from "../types";
 
-import { BaseManager } from "./BaseManager";
+import { BaseManager } from "./_BaseManager";
 
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;

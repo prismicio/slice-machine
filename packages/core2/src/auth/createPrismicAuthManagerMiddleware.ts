@@ -8,8 +8,9 @@ import {
 	readBody,
 } from "h3";
 
-import { PrismicAuthManager } from "./createPrismicAuthManager";
-import { decode } from "./lib/decode";
+import { decode } from "../lib/decode";
+
+import { PrismicAuthManager } from "./PrismicAuthManager";
 
 const PrismicAuthRequest = t.type({
 	email: t.string,

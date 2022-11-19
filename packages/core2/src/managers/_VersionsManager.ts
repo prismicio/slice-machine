@@ -3,7 +3,7 @@ import { fetchNPMPackageVersions } from "../lib/fetchNPMPackageVersions";
 
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../constants";
 
-import { BaseManager } from "./BaseManager";
+import { BaseManager } from "./_BaseManager";
 
 type SliceMachineManagerGetReleaseNotesForVersionArgs = {
 	version: string;

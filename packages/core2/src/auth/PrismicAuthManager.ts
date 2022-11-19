@@ -90,7 +90,7 @@ export class PrismicAuthManager {
 
 	constructor({
 		scopedDirectory = os.homedir(),
-	}: PrismicAuthManagerConstructorArgs) {
+	}: PrismicAuthManagerConstructorArgs = {}) {
 		this.scopedDirectory = scopedDirectory;
 	}
 

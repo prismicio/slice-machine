@@ -23,7 +23,7 @@ import { decodeHookResult } from "../lib/decodeHookResult";
 
 import { OnlyHookErrors } from "../types";
 
-import { BaseManager } from "./BaseManager";
+import { BaseManager } from "./_BaseManager";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[] | undefined;

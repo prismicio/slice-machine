@@ -1,13 +1,13 @@
 import { NodeMiddleware } from "h3";
 
-import { SliceMachineManager } from "./managers/SliceMachineManager";
-
 import {
 	ProceduresFromInstance,
 	RPCMiddleware,
 	proceduresFromInstance,
 	createRPCMiddleware,
-} from "./rpc";
+} from "../rpc";
+
+import { SliceMachineManager } from "./SliceMachineManager";
 
 export type SliceMachineManagerMiddleware = RPCMiddleware<
 	ProceduresFromInstance<SliceMachineManager>

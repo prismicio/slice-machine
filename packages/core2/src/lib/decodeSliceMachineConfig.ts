@@ -1,28 +1,16 @@
 import * as t from "io-ts";
-import { SliceMachineConfig as SliceMachineConfigCodec } from "../types";
-import { decode, DecodeReturnType } from "./decode";
 
-const FunctionCodec = new t.Type<
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	Function,
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	Function,
-	unknown
->(
-	"function",
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	(input: unknown): input is Function => typeof input === "function",
-	(input, context) =>
-		typeof input === "function" ? t.success(input) : t.failure(input, context),
-	t.identity,
-);
+import { SliceMachineConfig } from "../types";
+
+import { decode, DecodeReturnType } from "./decode";
+import { functionCodec } from "./functionCodec";
 
 const SliceMachinePluginCodec = t.intersection([
 	t.type({
 		meta: t.type({
 			name: t.string,
 		}),
-		setup: FunctionCodec,
+		setup: functionCodec,
 	}),
 	t.partial({
 		defaultOptions: t.UnknownRecord,
@@ -60,14 +48,10 @@ const SliceMachineConfigCodec = t.intersection([
 // internals.
 export const decodeSliceMachineConfig = (
 	input: unknown,
-): DecodeReturnType<
-	SliceMachineConfigCodec,
-	SliceMachineConfigCodec,
-	unknown
-> => {
+): DecodeReturnType<SliceMachineConfig, SliceMachineConfig, unknown> => {
 	return decode(SliceMachineConfigCodec, input) as DecodeReturnType<
-		SliceMachineConfigCodec,
-		SliceMachineConfigCodec,
+		SliceMachineConfig,
+		SliceMachineConfig,
 		unknown
 	>;
 };

@@ -1,4 +1,4 @@
-import { SliceMachineManager } from "./managers/SliceMachineManager";
+import { SliceMachineManager } from "./SliceMachineManager";
 
 export const createSliceMachineManager = (): SliceMachineManager => {
 	return new SliceMachineManager();

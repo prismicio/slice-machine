@@ -5,7 +5,7 @@ type CreatePrismicAuthManager = ConstructorParameters<
 >[0];
 
 export const createPrismicAuthManager = (
-	args: CreatePrismicAuthManager = {},
+	args?: CreatePrismicAuthManager,
 ): PrismicAuthManager => {
 	return new PrismicAuthManager(args);
 };
