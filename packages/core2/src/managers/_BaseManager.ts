@@ -11,10 +11,29 @@ import { VersionsManger } from "./_VersionsManager";
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;
 
-	protected sliceMachinePluginRunner: SliceMachinePluginRunner | undefined;
-
 	constructor(sliceMachineManager: SliceMachineManager) {
 		this._sliceMachineManager = sliceMachineManager;
+	}
+
+	protected get sliceMachinePluginRunner():
+		| SliceMachinePluginRunner
+		| undefined {
+		// @ts-expect-error - _sliceMachinePluginRunner is private. We
+		// are intentially ignoring its privacy to allow Manager
+		// classes to access a shared plugin runner via protected
+		// getters and setters.
+		return this._sliceMachineManager._sliceMachinePluginRunner;
+	}
+
+	protected set sliceMachinePluginRunner(
+		sliceMachinePluginRunner: SliceMachinePluginRunner | undefined,
+	) {
+		// @ts-expect-error - _sliceMachinePluginRunner is private. We
+		// are intentially ignoring its privacy to allow Manager
+		// classes to access a shared plugin runner via protected
+		// getters and setters.
+		this._sliceMachineManager._sliceMachinePluginRunner =
+			sliceMachinePluginRunner;
 	}
 
 	// Protected instance prevents circular intellisense

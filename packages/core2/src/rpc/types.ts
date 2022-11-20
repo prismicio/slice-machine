@@ -3,7 +3,27 @@ import { RPCMiddleware } from "./createRPCMiddleware";
 export type Procedures = Record<
 	string,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	Procedure<any>
+	| Procedure<any>
+	| Record<
+			string,
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			| Procedure<any>
+			| Record<
+					string,
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					| Procedure<any>
+					| Record<
+							string,
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any
+							| Procedure<any>
+							| Record<
+									string,
+									// eslint-disable-next-line @typescript-eslint/no-explicit-any
+									Procedure<any>
+							  >
+					  >
+			  >
+	  >
 >;
 
 export type Procedure<TArgs extends Record<string, unknown>> = (

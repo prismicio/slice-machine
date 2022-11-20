@@ -2,9 +2,9 @@ import { Procedure } from "./types";
 
 export type ProceduresFromInstance<TProceduresClass> = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[P in keyof TProceduresClass as TProceduresClass[P] extends Procedure<any>
-		? P
-		: never]: TProceduresClass[P];
+	[P in keyof TProceduresClass]: TProceduresClass[P] extends Procedure<any>
+		? TProceduresClass[P]
+		: ProceduresFromInstance<TProceduresClass[P]>;
 };
 
 export const proceduresFromInstance = <TProceduresInstance>(
@@ -23,6 +23,10 @@ export const proceduresFromInstance = <TProceduresInstance>(
 
 		if (typeof value === "function") {
 			res[key as keyof typeof res] = value.bind(proceduresInstance);
+		} else if (typeof value === "object") {
+			res[key as keyof typeof res] = proceduresFromInstance(
+				value,
+			) as typeof res[keyof typeof res];
 		}
 	}
 

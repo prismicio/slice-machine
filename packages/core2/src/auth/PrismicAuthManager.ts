@@ -61,6 +61,10 @@ type PrismicAuthManagerLoginArgs = {
 	cookies: string[];
 };
 
+type GetProfileForAuthenticationTokenArgs = {
+	authenticationToken: string;
+};
+
 const checkIsLoggedIn = (
 	authState: PrismicAuthState,
 ): authState is PrismicAuthState & {
@@ -112,7 +116,9 @@ export class PrismicAuthManager {
 
 		if (checkIsLoggedIn(authState)) {
 			const authenticationToken = authState.cookies[AUTH_COOKIE_KEY];
-			const profile = await this.getProfile(authenticationToken);
+			const profile = await this.getProfileForAuthenticationToken({
+				authenticationToken,
+			});
 
 			authState.shortId = profile.shortId;
 			authState.intercomHash = profile.intercomHash;
@@ -133,20 +139,19 @@ export class PrismicAuthManager {
 		await this._writePersistedAuthState(authState);
 	}
 
-	/**
-	 * @param authenticationToken - An optional authentication token used to fetch
-	 *   a specific user profile. If no authentication token is provided, the
-	 *   persisted auth state's token will be used.
-	 */
-	async getProfile(authenticationToken?: string): Promise<PrismicUserProfile> {
-		if (!authenticationToken) {
-			authenticationToken = await this.getAuthenticationToken();
-		}
+	async getProfile(): Promise<PrismicUserProfile> {
+		const authenticationToken = await this.getAuthenticationToken();
 
+		return await this.getProfileForAuthenticationToken({ authenticationToken });
+	}
+
+	async getProfileForAuthenticationToken(
+		args: GetProfileForAuthenticationTokenArgs,
+	): Promise<PrismicUserProfile> {
 		const url = new URL("/profile", APIEndpoints.PrismicUser);
 		const res = await fetch(url.toString(), {
 			headers: {
-				Authorization: `Bearer ${authenticationToken}`,
+				Authorization: `Bearer ${args.authenticationToken}`,
 				"User-Agent": SLICE_MACHINE_USER_AGENT,
 			},
 		});
@@ -176,6 +181,10 @@ export class PrismicAuthManager {
 		return authState.cookies[AUTH_COOKIE_KEY];
 	}
 
+	// TODO: This function should check if the token has not expired, not
+	// only if it exists. This may be done by accessing the profile
+	// endpoint and checking the status code, but the endpoint is slow.
+	// Is there a faster endpoint? Maybe the token refresh endpoint?
 	async checkIsLoggedIn(): Promise<boolean> {
 		const authState = await this._readPersistedAuthState();
 

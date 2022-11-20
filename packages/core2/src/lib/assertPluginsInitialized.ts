@@ -5,7 +5,7 @@ export function assertPluginsInitialized(
 ): asserts pluginRunner is NonNullable<typeof pluginRunner> {
 	if (pluginRunner == undefined) {
 		throw new Error(
-			"Plugins have not yet been initialized. Run `SliceMachineManager.prototype.initPlugins()` before re-calling this method.",
+			"Plugins have not yet been initialized. Run `SliceMachineManager.plugins.prototype.initPlugins()` before re-calling this method.",
 		);
 	}
 }

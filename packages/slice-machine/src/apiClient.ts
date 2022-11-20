@@ -70,12 +70,12 @@ export const saveCustomType = async (
   customType: CustomTypeSM,
   mockConfig: CustomTypeMockConfig
 ): Promise<AxiosResponse> => {
-  await managerClient.updateCustomTypeMocksConfig({
+  await managerClient.customTypes.updateCustomTypeMocksConfig({
     customTypeID: customType.id,
     mocksConfig: mockConfig,
   });
 
-  return await managerClient.updateCustomType({
+  return await managerClient.customTypes.updateCustomType({
     model: CustomTypes.fromSM(customType),
   });
 
@@ -104,7 +104,7 @@ export const renameCustomType = (
 };
 
 export const pushCustomType = async (customTypeId: string): Promise<void> => {
-  await managerClient.pushCustomType({
+  await managerClient.customTypes.pushCustomType({
     id: customTypeId,
   });
 };
@@ -153,13 +153,13 @@ export const generateSliceCustomScreenshotApiClient = (
 export const saveSliceApiClient = async (
   component: ComponentUI
 ): Promise<Awaited<ReturnType<typeof managerClient["updateSlice"]>>> => {
-  await managerClient.updateSliceMocksConfig({
+  await managerClient.slices.updateSliceMocksConfig({
     libraryID: component.from,
     sliceID: component.model.id,
     mocksConfig: component.mockConfig,
   });
 
-  return await managerClient.updateSlice({
+  return await managerClient.slices.updateSlice({
     libraryID: component.from,
     model: Slices.fromSM(component.model),
   });
@@ -168,7 +168,7 @@ export const saveSliceApiClient = async (
 export const pushSliceApiClient = async (
   component: ComponentUI
 ): Promise<Record<string, string | null>> => {
-  return await managerClient.pushSlice({
+  return await managerClient.slices.pushSlice({
     libraryID: component.from,
     sliceID: component.model.id,
   });

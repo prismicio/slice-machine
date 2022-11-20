@@ -3,7 +3,7 @@ import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 import { BaseManager } from "./_BaseManager";
 
 export class UserManager extends BaseManager {
-	private prismicAuthManager = createPrismicAuthManager();
+	prismicAuthManager = createPrismicAuthManager();
 
 	login = this.prismicAuthManager.login.bind(this.prismicAuthManager);
 	logout = this.prismicAuthManager.logout.bind(this.prismicAuthManager);
@@ -11,4 +11,11 @@ export class UserManager extends BaseManager {
 		this.prismicAuthManager,
 	);
 	getProfile = this.prismicAuthManager.getProfile.bind(this.prismicAuthManager);
+	getProfileForAuthenticationToken =
+		this.prismicAuthManager.getProfileForAuthenticationToken.bind(
+			this.prismicAuthManager,
+		);
+	getAuthenticationToken = this.prismicAuthManager.getAuthenticationToken.bind(
+		this.prismicAuthManager,
+	);
 }

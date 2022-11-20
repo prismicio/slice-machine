@@ -1,23 +1,72 @@
 import { expect, it } from "vitest";
 import { Blob } from "node:buffer";
 import fetch from "node-fetch";
+import { createApp, fromNodeMiddleware, toNodeListener } from "h3";
+import { createServer, Server } from "node:http";
+import type { AddressInfo } from "node:net";
 
 import {
-	ExtractProcedures,
 	createRPCClient,
-	createRPCServer,
+	createRPCMiddleware,
 	proceduresFromInstance,
 } from "../src/rpc";
 
-it("creates an rpc server", async () => {
-	const ping = (args: { input: string }) => ({ pong: args.input });
-	const server = createRPCServer({
-		procedures: { ping },
-	});
-	const { port } = await server.open();
+type ListeningServer = {
+	address: AddressInfo;
+	close: () => Promise<void>;
+};
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+type ListenConfig = {
+	port?: number;
+};
+
+export const listen = async (
+	server: Server,
+	config: ListenConfig = {},
+): Promise<ListeningServer> => {
+	await new Promise<void>((resolve) => {
+		server.once("listening", () => {
+			resolve();
+		});
+
+		server.listen({ port: config.port });
+	});
+
+	return {
+		address: server.address() as AddressInfo,
+		close: async () => {
+			await new Promise<void>((resolve) => {
+				server.once("close", () => {
+					resolve();
+				});
+
+				server.close();
+			});
+		},
+	};
+};
+
+type CreateRPCTestServerArgs = {
+	procedures: Parameters<typeof createRPCMiddleware>[0]["procedures"];
+};
+
+const createRPCTestServer = (args: CreateRPCTestServerArgs) => {
+	const app = createApp();
+
+	const rpcMiddleware = createRPCMiddleware({ procedures: args.procedures });
+	app.use(fromNodeMiddleware(rpcMiddleware));
+
+	return createServer(toNodeListener(app));
+};
+
+it("creates an rpc server", async () => {
+	const procedures = {
+		ping: (args: { input: string }) => ({ pong: args.input }),
+	};
+	const server = await listen(createRPCTestServer({ procedures }));
+
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -29,14 +78,11 @@ it("creates an rpc server", async () => {
 });
 
 it("supports procedures without arguments", async () => {
-	const ping = () => "pong";
-	const server = createRPCServer({
-		procedures: { ping },
-	});
-	const { port } = await server.open();
+	const procedures = { ping: () => "pong" };
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -48,14 +94,11 @@ it("supports procedures without arguments", async () => {
 });
 
 it("supports procedures without return values", async () => {
-	const ping = () => void 0;
-	const server = createRPCServer({
-		procedures: { ping },
-	});
-	const { port } = await server.open();
+	const procedures = { ping: () => void 0 };
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -67,16 +110,14 @@ it("supports procedures without return values", async () => {
 });
 
 it("supports procedures using JavaScript data structures", async () => {
-	const dateDiff = (args: { a: Date; b: Date }) => {
-		return args.b.getTime() - args.a.getTime();
+	const procedures = {
+		dateDiff: (args: { a: Date; b: Date }) =>
+			args.b.getTime() - args.a.getTime(),
 	};
-	const server = createRPCServer({
-		procedures: { dateDiff },
-	});
-	const { port } = await server.open();
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -91,16 +132,13 @@ it("supports procedures using JavaScript data structures", async () => {
 });
 
 it("supports procedures with file arguments", async () => {
-	const ping = (args: { file: Buffer }) => {
-		return args.file.toString();
+	const procedures = {
+		ping: (args: { file: Buffer }) => args.file.toString(),
 	};
-	const server = createRPCServer({
-		procedures: { ping },
-	});
-	const { port } = await server.open();
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -121,14 +159,11 @@ it("supports procedures from class instances", async () => {
 			return this.pong;
 		}
 	}
-	const procedures = new PingProcedures();
-	const server = createRPCServer({
-		procedures: proceduresFromInstance(procedures),
-	});
-	const { port } = await server.open();
+	const procedures = proceduresFromInstance(new PingProcedures());
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -139,17 +174,32 @@ it("supports procedures from class instances", async () => {
 	expect(res).toStrictEqual("pong");
 });
 
-it("does not support procedures with file return values", async () => {
-	const ping = () => {
-		return Buffer.from("pong");
+it("supports namespaced procedures", async () => {
+	const procedures = {
+		sports: {
+			ping: () => "pong",
+		},
 	};
-	const server = createRPCServer({
-		procedures: { ping },
-	});
-	const { port } = await server.open();
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
+		fetch,
+	});
+
+	const res = await client.sports.ping();
+
+	await server.close();
+
+	expect(res).toBe("pong");
+});
+
+it("does not support procedures with file return values", async () => {
+	const procedures = { ping: () => Buffer.from("pong") };
+	const server = await listen(createRPCTestServer({ procedures }));
+
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -161,16 +211,11 @@ it("does not support procedures with file return values", async () => {
 });
 
 it("does not support function arguments", async () => {
-	const ping = (args: { fn: () => void }) => {
-		return args.fn();
-	};
-	const server = createRPCServer({
-		procedures: { ping },
-	});
-	const { port } = await server.open();
+	const procedures = { ping: (args: { fn: () => void }) => args.fn() };
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 
@@ -184,16 +229,11 @@ it("does not support function arguments", async () => {
 });
 
 it("does not support function return values", async () => {
-	const ping = () => {
-		return () => void 0;
-	};
-	const server = createRPCServer({
-		procedures: { ping },
-	});
-	const { port } = await server.open();
+	const procedures = { ping: () => () => void 0 };
+	const server = await listen(createRPCTestServer({ procedures }));
 
-	const client = createRPCClient<ExtractProcedures<typeof server>>({
-		serverURL: `http://localhost:${port}`,
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
 		fetch,
 	});
 

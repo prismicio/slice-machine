@@ -1,7 +1,8 @@
 import { CustomTypes } from "@prismicio/types-internal";
+import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 
-import { PrismicUserProfile } from "../auth/PrismicAuthManager";
 import { PackageChangelog, PackageManager, PackageVersion } from "../types";
+import { PrismicUserProfile } from "../auth/PrismicAuthManager";
 
 import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
@@ -58,6 +59,9 @@ type SliceMachineManagerGetStateReturnType = {
 };
 
 export class SliceMachineManager {
+	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined =
+		undefined;
+
 	user = new UserManager(this);
 	project = new ProjectManager(this);
 	plugins = new PluginsManager(this);

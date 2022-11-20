@@ -181,9 +181,7 @@ export class CustomTypesManager extends BaseManager {
 		const { model } = await this.readCustomType({ id: args.id });
 
 		if (model) {
-			const authenticationToken =
-				await this.prismicAuthManager.getAuthenticationToken();
-
+			const authenticationToken = await this.user.getAuthenticationToken();
 			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 			// TODO: Create a single shared client.
@@ -259,12 +257,9 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async fetchRemoteCustomTypes(): Promise<CustomTypes.CustomType[]> {
-		const authenticationToken =
-			await this.prismicAuthManager.getAuthenticationToken();
-
+		const authenticationToken = await this.user.getAuthenticationToken();
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
-		// TODO: Create a single shared client.
 		const client = prismicCustomTypesCilent.createClient({
 			repositoryName: sliceMachineConfig.repositoryName,
 			token: authenticationToken,

@@ -287,10 +287,8 @@ export class SlicesManager extends BaseManager {
 		});
 
 		if (model) {
-			const authenticationToken =
-				await this.prismicAuthManager.getAuthenticationToken();
-
-			const sliceMachineConfig = await this.getSliceMachineConfig();
+			const authenticationToken = await this.user.getAuthenticationToken();
+			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 			// TODO: Create a single shared client.
 			const client = prismicCustomTypesCilent.createClient({
@@ -466,12 +464,9 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async fetchRemoteSlices(): Promise<CustomTypes.Widgets.Slices.SharedSlice[]> {
-		const authenticationToken =
-			await this.prismicAuthManager.getAuthenticationToken();
-
+		const authenticationToken = await this.user.getAuthenticationToken();
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
-		// TODO: Create a single shared client.
 		const client = prismicCustomTypesCilent.createClient({
 			repositoryName: sliceMachineConfig.repositoryName,
 			token: authenticationToken,

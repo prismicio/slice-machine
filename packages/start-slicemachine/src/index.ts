@@ -15,10 +15,10 @@ type FetchProfileArgs = {
 const fetchProfile = async (
 	args: FetchProfileArgs
 ): Promise<PrismicUserProfile | undefined> => {
-	const isLoggedIn = await args.sliceMachineManager.checkIsLoggedIn();
+	const isLoggedIn = await args.sliceMachineManager.user.checkIsLoggedIn();
 
 	if (isLoggedIn) {
-		return await args.sliceMachineManager.getProfile();
+		return await args.sliceMachineManager.user.getProfile();
 	}
 };
 
@@ -30,17 +30,18 @@ const validateEnvironment = async (
 	args: ValidateEnvironmentArgs
 ): Promise<void> => {
 	// Validate Slice Machine config.
-	await args.sliceMachineManager.loadSliceMachineConfig();
+	await args.sliceMachineManager.project.loadSliceMachineConfig();
 
 	// Validate Slice models.
-	const allSlices = await args.sliceMachineManager.readAllSlices();
+	const allSlices = await args.sliceMachineManager.slices.readAllSlices();
 	if (allSlices.errors.length > 0) {
 		// TODO: Provide better error message.
 		throw new Error(allSlices.errors.join(", "));
 	}
 
 	// Validate Custom Type models.
-	const allCustomTypes = await args.sliceMachineManager.readAllCustomTypes();
+	const allCustomTypes =
+		await args.sliceMachineManager.customTypes.readAllCustomTypes();
 	if (allCustomTypes.errors.length > 0) {
 		// TODO: Provide better error message.
 		throw new Error(allCustomTypes.errors.join(", "));
@@ -51,7 +52,7 @@ const run = async (): Promise<void> => {
 	const sliceMachineManager = createSliceMachineManager();
 	const server = await createSliceMachineServer({ sliceMachineManager });
 
-	await sliceMachineManager.initPlugins();
+	await sliceMachineManager.plugins.initPlugins();
 
 	await validateEnvironment({ sliceMachineManager });
 
