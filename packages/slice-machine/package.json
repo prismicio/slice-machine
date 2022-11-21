@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@babel/register": "^7.17.7",
-    "@prismicio/mocks": "^1.4.1",
-    "@prismicio/types-internal": "^1.4.1",
+    "@prismicio/mocks": "^1.5.0",
+    "@prismicio/types-internal": "1.5.1",
     "@slicemachine/client": "1.1.15",
     "@slicemachine/core": "1.1.15",
     "@svgr/webpack": "^5.4.0",

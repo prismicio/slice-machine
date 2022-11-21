@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 import { SliceSM } from "./Slice";
 import type { LibraryMeta } from "../libraries";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 export type { LibraryMeta } from "../libraries";
 

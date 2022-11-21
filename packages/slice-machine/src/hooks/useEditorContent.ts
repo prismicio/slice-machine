@@ -1,7 +1,7 @@
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { defaultSharedSliceContent } from "@src/utils/editor";
 import { renderSliceMock } from "@prismicio/mocks";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { Slices } from "@slicemachine/core/build/models";
 
 function useEditorContentOnce({
@@ -11,9 +11,8 @@ function useEditorContentOnce({
   variationID: string;
   slice: ComponentUI;
 }) {
-  const editorContent =
-    slice.mock?.[0] ||
-    (defaultSharedSliceContent(variationID) as SharedSliceContent);
+  const editorContent: SharedSliceContent =
+    slice.mock?.[0] || defaultSharedSliceContent(variationID);
 
   const apiContent = {
     ...(renderSliceMock(Slices.fromSM(slice.model), editorContent) as object),
