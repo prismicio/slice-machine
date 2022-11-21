@@ -57,17 +57,13 @@ const nextPlugins = [
 ];
 
 if (process.env.NODE_ENV !== "development") {
-  if (
-    !process.env.SENTRY_PROJECT ||
-    !process.env.SENTRY_ORG ||
-    !process.env.SENTRY_AUTH_TOKEN
-  ) {
+  if (!process.env.SENTRY_PROJECT || !process.env.SENTRY_AUTH_TOKEN) {
     console.warn("⚠️ Creating a production build with no Sentry config");
     console.warn(
       "⚠️ A release won't be created and the sourcemap won't be uploaded"
     );
     console.warn(
-      "⚠️ To fix this add SENTRY_PROJECT, SENTRY_ORG and SENTRY_AUTH_TOKEN to your environment"
+      "⚠️ To fix this add SENTRY_PROJECT and SENTRY_AUTH_TOKEN to your environment"
     );
     console.warn(
       "⚠️ Details can be found on https://docs.sentry.io/product/cli/configuration/#configuration-values"
