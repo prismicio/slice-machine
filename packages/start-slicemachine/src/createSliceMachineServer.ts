@@ -2,7 +2,6 @@ import {
 	SliceMachineManager,
 	createPrismicAuthManagerMiddleware,
 	createSliceMachineManagerMiddleware,
-	createPrismicAuthManager,
 } from "@slicemachine/core2";
 import { createServer, Server } from "node:http";
 import * as path from "node:path";
@@ -41,7 +40,7 @@ export const createSliceMachineServer = async (
 		"/api",
 		fromNodeMiddleware(
 			createPrismicAuthManagerMiddleware({
-				prismicAuthManager: args.sliceMachineManager.user.prismicAuthManager,
+				prismicAuthManager: args.sliceMachineManager.getPrismicAuthManager(),
 			})
 		)
 	);

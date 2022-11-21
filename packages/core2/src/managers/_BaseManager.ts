@@ -1,4 +1,5 @@
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 
 import { SliceMachineManager } from "./SliceMachineManager";
 import { CustomTypesManager } from "./_CustomTypesManager";
@@ -15,14 +16,14 @@ export abstract class BaseManager {
 		this._sliceMachineManager = sliceMachineManager;
 	}
 
+	protected get prismicAuthManager(): PrismicAuthManager {
+		return this._sliceMachineManager.getPrismicAuthManager();
+	}
+
 	protected get sliceMachinePluginRunner():
 		| SliceMachinePluginRunner
 		| undefined {
-		// @ts-expect-error - _sliceMachinePluginRunner is private. We
-		// are intentially ignoring its privacy to allow Manager
-		// classes to access a shared plugin runner via protected
-		// getters and setters.
-		return this._sliceMachineManager._sliceMachinePluginRunner;
+		return this._sliceMachineManager.getSliceMachinePluginRunner();
 	}
 
 	protected set sliceMachinePluginRunner(

@@ -2,7 +2,10 @@ import { CustomTypes } from "@prismicio/types-internal";
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 
 import { PackageChangelog, PackageManager, PackageVersion } from "../types";
-import { PrismicUserProfile } from "../auth/PrismicAuthManager";
+import {
+	PrismicAuthManager,
+	PrismicUserProfile,
+} from "../auth/PrismicAuthManager";
 
 import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
@@ -10,6 +13,7 @@ import { ProjectManager } from "./_ProjectManager";
 import { SlicesManager } from "./_SlicesManager";
 import { UserManager } from "./_UserManager";
 import { VersionsManger } from "./_VersionsManager";
+import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -61,13 +65,53 @@ type SliceMachineManagerGetStateReturnType = {
 export class SliceMachineManager {
 	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined =
 		undefined;
+	private _prismicAuthManager: PrismicAuthManager;
 
-	user = new UserManager(this);
-	project = new ProjectManager(this);
-	plugins = new PluginsManager(this);
-	slices = new SlicesManager(this);
-	customTypes = new CustomTypesManager(this);
-	versions = new VersionsManger(this);
+	project: ProjectManager;
+	plugins: PluginsManager;
+	slices: SlicesManager;
+	customTypes: CustomTypesManager;
+	user: UserManager;
+	versions: VersionsManger;
+
+	constructor() {
+		// _prismicAuthManager must be set at least before UserManager
+		// is instantiated. It depends on the PrismicAuthManager for
+		// authentication-related methods.
+		this._prismicAuthManager = createPrismicAuthManager();
+
+		this.project = new ProjectManager(this);
+		this.plugins = new PluginsManager(this);
+		this.slices = new SlicesManager(this);
+		this.customTypes = new CustomTypesManager(this);
+		this.user = new UserManager(this);
+		this.versions = new VersionsManger(this);
+
+		// Supress a TypeScript warning about an unused property. This
+		// code will be eliminated in production builds via dead-code
+		// elimination.
+		if (process.env.NODE_ENV === "development") {
+			this._sliceMachinePluginRunner;
+		}
+	}
+
+	// The `_sliceMachinePluginRunner` property is hidden behind a function to
+	// discourage access. Using a function deliberatly breaks the pattern
+	// of other child managers that are accessible as properties, like
+	// `project`, `plugins`, etc. We do not treat SliceMachinePluginRunner
+	// as a child manager.
+	getSliceMachinePluginRunner(): SliceMachinePluginRunner | undefined {
+		return this._sliceMachinePluginRunner;
+	}
+
+	// The `_prismicAuthManager` property is hidden behind a function to
+	// discourage access. Using a function deliberatly breaks the pattern
+	// of other child managers that are accessible as properties, like
+	// `project`, `plugins`, etc. We do not treat PrismicAuthManager as a
+	// child manager.
+	getPrismicAuthManager(): PrismicAuthManager {
+		return this._prismicAuthManager;
+	}
 
 	// TODO: Remove this global-state method. It is expensive and a
 	// potential source of bugs due to data inconsistency. SM UI relies on
