@@ -9,14 +9,14 @@ import {
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
 import { buildWidgetMockConfig } from "./LegacyMockConfig";
-import {
-  WidgetContent,
-  WidgetKey,
-} from "@prismicio/types-internal/lib/documents/widgets";
+import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
+import * as Content from "@prismicio/types-internal";
+import * as Either from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
 
 function buildDocumentMockConfig(
   model: CustomType,
@@ -42,18 +42,28 @@ function buildDocumentMockConfig(
 export default function MockCustomType(
   model: CustomTypeSM,
   legacyMockConfig: CustomTypeMockConfig
-): Partial<Record<string, WidgetContent>> {
+): Content.CustomTypes.CustomType | null {
   const prismicModel = CustomTypes.fromSM(model);
   const documentMockConfig = buildDocumentMockConfig(
     prismicModel,
     legacyMockConfig
   );
 
-  return generateDocumentMock(
+  const maybeMock = generateDocumentMock(
     prismicModel,
     {}, // TBD: should we add shared slices?
     documentMockConfig
-  )((_customTypes, _sharedSlices, mock) => mock) as Partial<
-    Record<string, WidgetContent>
-  >;
+  )((_customTypes, _sharedSlices, mock) => mock);
+
+  const mock = pipe(
+    Content.CustomTypes.CustomType.decode(maybeMock),
+    Either.getOrElseW((errors) => {
+      console.error(`Could not create mock for ${model.id}`);
+      console.error(errors);
+      // const messages = errors.map((error) => error.message).join("\n")
+      // console.error(messages)
+      return null;
+    })
+  );
+  return mock;
 }

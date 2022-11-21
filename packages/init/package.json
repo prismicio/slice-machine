@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
-    "@prismicio/types-internal": "^1.5.1-alpha.1",
+    "@prismicio/types-internal": "^1.5.1",
     "@slicemachine/client": "1.1.15",
     "@slicemachine/core": "1.1.15",
     "adm-zip": "^0.5.9",

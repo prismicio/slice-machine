@@ -27,7 +27,8 @@
     "publish:alpha": "lerna publish from-package --dist-tag alpha --no-verify-access --yes",
     "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
     "bump:production": "lerna version --conventional-graduate --exact",
-    "depcheck": "depcheck --skip-missing; lerna run depcheck"
+    "depcheck": "depcheck --skip-missing; lerna run depcheck",
+    "lerna:update": "npx --yes lerna-update-wizard"
   },
   "devDependencies": {
     "depcheck": "^1.4.3",
