@@ -31,6 +31,7 @@ import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
+import { DeleteSliceModal } from "@components/DeleteSliceModal";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const {
@@ -38,6 +39,7 @@ const SlicesIndex: React.FunctionComponent = () => {
     closeCreateSliceModal,
     createSlice,
     openRenameSliceModal,
+    openDeleteSliceModal,
   } = useSliceMachineActions();
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
@@ -77,7 +79,7 @@ const SlicesIndex: React.FunctionComponent = () => {
   const slices = (libraries || []).map((l) => l.components).flat();
   const sliceCount = slices.length;
 
-  const [sliceForRename, setSliceForRename] = useState<ComponentUI>();
+  const [sliceForEdit, setSliceForEdit] = useState<ComponentUI>();
 
   return (
     <>
@@ -210,8 +212,12 @@ const SlicesIndex: React.FunctionComponent = () => {
                                 });
                               },
                               openRenameModal: (slice: ComponentUI) => {
-                                setSliceForRename(slice);
+                                setSliceForEdit(slice);
                                 openRenameSliceModal();
+                              },
+                              openDeleteModal: (slice: ComponentUI) => {
+                                setSliceForEdit(slice);
+                                openDeleteSliceModal();
                               },
                             },
                             showActions: true,
@@ -244,10 +250,15 @@ const SlicesIndex: React.FunctionComponent = () => {
         </>
       )}
       <RenameSliceModal
-        sliceId={sliceForRename?.model.id ?? ""}
-        sliceName={sliceForRename?.model.name ?? ""}
-        libName={sliceForRename?.from ?? ""}
+        sliceId={sliceForEdit?.model.id ?? ""}
+        sliceName={sliceForEdit?.model.name ?? ""}
+        libName={sliceForEdit?.from ?? ""}
         data-cy="rename-slice-modal"
+      />
+      <DeleteSliceModal
+        sliceId={sliceForEdit?.model.id ?? ""}
+        sliceName={sliceForEdit?.model.name ?? ""}
+        libName={sliceForEdit?.from ?? ""}
       />
     </>
   );
