@@ -4,10 +4,16 @@
 
 import * as Sentry from "@sentry/nextjs";
 import { nextConfig as sentryNextConfig } from "@lib/env/sentry";
+import getConfig from "next/config";
+
+const { publicRuntimeConfig } = getConfig() as {
+  publicRuntimeConfig: { sentryEnvironment: string };
+};
 
 Sentry.init({
   dsn: `https://${sentryNextConfig.publicToken}@${sentryNextConfig.host}/${sentryNextConfig.projectId}`,
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,
   tunnel: "/api/sentry",
+  environment: publicRuntimeConfig.sentryEnvironment,
 });

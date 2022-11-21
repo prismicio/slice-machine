@@ -10,6 +10,8 @@ const withVideos = require("next-videos");
 const { withSentryConfig } = require("@sentry/nextjs");
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const NodeUtils = require("@slicemachine/core/build/node-utils");
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
+const semver = require("semver");
 
 const pkg = NodeUtils.retrieveJsonPackage(path.resolve(__dirname));
 
@@ -19,6 +21,8 @@ const pkg = NodeUtils.retrieveJsonPackage(path.resolve(__dirname));
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 const RELEASE_NUMBER = pkg.content.version;
+const isStableVersion =
+  /^\d+\.\d+\.\d+$/.test(RELEASE_NUMBER) && semver.lte("0.1.0", RELEASE_NUMBER);
 
 const nextPlugins = [
   [
@@ -105,5 +109,8 @@ module.exports = withPlugins(nextPlugins, {
     // There may be a way to completely disable the server part in which case this would become redundant
     // https://github.com/getsentry/sentry-javascript/issues/6088#issuecomment-1296797294
     autoInstrumentServerFunctions: false,
+  },
+  publicRuntimeConfig: {
+    sentryEnvironment: isStableVersion ? process.env.NODE_ENV : "alpha",
   },
 });
