@@ -10,6 +10,25 @@ import { nextConfig as sentryNextConfig } from "../../../lib/env/sentry";
 const sentryHost = sentryNextConfig.host;
 const knownProjectIds = [`/${sentryNextConfig.projectId}`];
 
+// The Sentry client send a POST request with a plaintext body
+// Not supported by express by default
+export function plainTextBodyParser(
+  req: express.Request,
+  _: express.Response /* res */,
+  next: express.NextFunction
+) {
+  if (req.is("text/*")) {
+    req.body = "";
+    req.setEncoding("utf8");
+    req.on("data", function (chunk) {
+      req.body += chunk;
+    });
+    req.on("end", next);
+  } else {
+    next();
+  }
+}
+
 async function handler(req: RequestWithEnv, res: express.Response) {
   try {
     const envelope = req.body as string;

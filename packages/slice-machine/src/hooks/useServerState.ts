@@ -19,6 +19,7 @@ const useServerState = () => {
     }
 
     Sentry.setUser({ id: serverState.env.shortId });
+    Sentry.setTag("repository", serverState.env.repo);
     Sentry.setContext("Repository Data", {
       name: serverState.env.repo,
     });
