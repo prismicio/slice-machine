@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Flex, Box, Link as ThemeLink } from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
+import { Button } from "@components/Button";
 
 type HeaderProps = {
   ActionButton?: React.ReactElement;
@@ -42,6 +43,12 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         </Flex>
       ) : null}
     </Flex>
+    <Button
+      label="🔥🔥🔥 Hello Sentry 🔥🔥🔥"
+      onClick={() => {
+        throw new Error("Hello Sentry");
+      }}
+    />
     {ActionButton ? ActionButton : null}
   </Flex>
 );
