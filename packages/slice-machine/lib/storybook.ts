@@ -1,10 +1,10 @@
 import path from "path";
 import TemplateEngine from "ejs";
 
-import Files from "./utils/files";
+import Files from "@slicemachine/core/build/node-utils/files";
 import { CustomPaths, GeneratedPaths } from "./models/paths";
 import { Models } from "@slicemachine/core";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { renderSliceMock } from "@prismicio/mocks";
 import { createStorybookId } from "./utils/str";
 import { SliceSM } from "@slicemachine/core/build/models";
@@ -68,10 +68,10 @@ export default {
       .mocks();
 
     // the output type should be Mocks but it's not typed yet
-    const mocks = Files.readFirstOf<
-      SharedSliceContent[],
-      Record<string, unknown>
-    >([customMocksPath, generatedMocksPath])((value: string) => {
+    const mocks = Files.readFirstOf<SharedSliceContent[]>([
+      customMocksPath,
+      generatedMocksPath,
+    ])((value: string) => {
       return JSON.parse(value) as unknown as SharedSliceContent[];
     });
     if (!mocks) {

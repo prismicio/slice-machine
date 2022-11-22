@@ -25,7 +25,10 @@ import {
   GroupMockConfig,
   UIDMockConfig,
 } from "@prismicio/mocks";
-import { EmbedContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/EmbedContent";
+import {
+  EmbedContent,
+  EmbedContentType,
+} from "@prismicio/types-internal/lib/documents/widgets/nestable/EmbedContent";
 import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
 
 export const DefaultConfig = {
@@ -315,7 +318,14 @@ export function buildNestableMockConfig(
             if (url && oembed) return oembed;
             return;
           })();
-          return { value };
+          return {
+            value: value
+              ? {
+                  __TYPE__: EmbedContentType,
+                  ...value,
+                }
+              : value,
+          };
         }
       )(EmbedLegacyMockConfig.decode(fieldMockConfig));
     }
