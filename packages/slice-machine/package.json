@@ -17,7 +17,7 @@
     "test:watch": "jest --watch --no-coverage",
     "clean-build": "rimraf ./build/client",
     "postinstall": "node postinstall",
-    "prepublishOnly": "npm run test && npm run build",
+    "prepublishOnly": "npm run bundle",
     "dev-server": "cross-env PORT=9999 CWD=../../e2e-projects/next ENV=SM concurrently \"rollup -w -c ./rollup-server.config.js\" \"nodemon -e ts,js --watch server --watch lib --ignore build/ build/server/index.js\"",
     "build": "npm run build-scripts && npm run build-server && npm run build-next-app",
     "build-scripts": "tsc --project scripts/tsconfig.json",
