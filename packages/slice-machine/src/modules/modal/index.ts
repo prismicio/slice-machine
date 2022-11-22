@@ -4,7 +4,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { ModalStoreType, ModalKeysEnum } from "./types";
 
-const initialState: ModalStoreType = {
+export const initialState: ModalStoreType = {
   ...(mapValues(ModalKeysEnum, () => false) as Record<ModalKeysEnum, boolean>),
 };
 

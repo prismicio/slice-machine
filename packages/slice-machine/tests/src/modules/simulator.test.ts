@@ -93,13 +93,11 @@ describe("[Simulator module]", () => {
       const saga = testSaga(checkSetupSaga, setupSimulatorAction);
       saga.next().call(checkSimulatorSetup);
       const response = { data: { manifest: "ok" } };
-      saga
-        .next(response)
-        .put(
-          checkSimulatorSetupCreator.success({
-            setupStatus: { manifest: "ok" },
-          })
-        );
+      saga.next(response).put(
+        checkSimulatorSetupCreator.success({
+          setupStatus: { manifest: "ok" },
+        })
+      );
       saga.next().isDone();
     });
     it("should call the api and dispatch the failure action", () => {

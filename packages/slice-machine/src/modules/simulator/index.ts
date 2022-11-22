@@ -163,7 +163,10 @@ export function* checkSetupSaga(
 
 function* connectToSimulatorIframe() {
   yield put(connectToSimulatorIframeCreator.request());
-  const { timeout, iframeCheckKO }: {
+  const {
+    timeout,
+    iframeCheckKO,
+  }: {
     iframeCheckKO: ReturnType<typeof connectToSimulatorIframeCreator.failure>;
     timeout: CallEffect<true>;
   } = yield race({
