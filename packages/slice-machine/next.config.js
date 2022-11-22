@@ -94,17 +94,12 @@ let exportedConfig = withPlugins(
 // The main config is not passed / handled
 // It must be initialised separately
 if (process.env.NODE_ENV !== "development") {
-  if (!process.env.SENTRY_PROJECT || !process.env.SENTRY_AUTH_TOKEN) {
+  if (!process.env.SENTRY_AUTH_TOKEN) {
     console.warn("⚠️ Creating a production build with no Sentry config");
     console.warn(
       "⚠️ A release won't be created and the sourcemap won't be uploaded"
     );
-    console.warn(
-      "⚠️ To fix this add SENTRY_PROJECT and SENTRY_AUTH_TOKEN to your environment"
-    );
-    console.warn(
-      "⚠️ Details can be found on https://docs.sentry.io/product/cli/configuration/#configuration-values"
-    );
+    console.warn("⚠️ To fix this add SENTRY_AUTH_TOKEN to your environment");
   } else {
     const sentryWebpackPluginOptions = {
       // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -121,6 +116,8 @@ if (process.env.NODE_ENV !== "development") {
       // The Sentry webpack plugin always ignores some files when uploading sourcemaps
       // We actually need them (because of the static export?) to get the complete trace in Sentry
       ignore: [],
+
+      configFile: "sentry-next.properties",
     };
 
     exportedConfig = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
