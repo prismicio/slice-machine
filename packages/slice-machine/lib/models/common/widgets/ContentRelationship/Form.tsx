@@ -11,6 +11,7 @@ import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { FormikProps } from "formik";
+import { useEffect } from "react";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -54,6 +55,16 @@ const WidgetForm = ({
         })
         .filter((val): val is SelectValueType => val !== undefined)
     : null;
+
+  // removes deleted custom type from initial values on first render
+  useEffect(
+    () =>
+      setFieldValue(
+        "config.customtypes",
+        selectValues?.map(({ value }) => value)
+      ),
+    []
+  );
 
   return (
     <FlexGrid>
