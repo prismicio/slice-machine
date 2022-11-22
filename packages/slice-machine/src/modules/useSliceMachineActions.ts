@@ -12,9 +12,6 @@ import {
 } from "./userContext";
 import { refreshStateCreator } from "./environment";
 import {
-  openSetupDrawerCreator,
-  closeSetupDrawerCreator,
-  toggleSetupDrawerStepCreator,
   checkSimulatorSetupCreator,
   connectToSimulatorIframeCreator,
 } from "./simulator";
@@ -85,22 +82,15 @@ import { ScreenshotTaken } from "@src/tracking/types";
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
 
-  // Simulator module
-  const checkSimulatorSetup = (
-    withFirstVisitCheck: boolean,
-    callback?: () => void
-  ) =>
-    dispatch(
-      checkSimulatorSetupCreator.request({ withFirstVisitCheck, callback })
-    );
-  const openSetupDrawer = () => dispatch(openSetupDrawerCreator({}));
-  const closeSetupDrawer = () => dispatch(closeSetupDrawerCreator());
+  const checkSimulatorSetup = (callback?: () => void) =>
+    dispatch(checkSimulatorSetupCreator.request({ callback }));
+
+  const connectToSimulatorIframe = () =>
+    dispatch(connectToSimulatorIframeCreator.request());
   const connectToSimulatorFailure = () =>
     dispatch(connectToSimulatorIframeCreator.failure());
   const connectToSimulatorSuccess = () =>
     dispatch(connectToSimulatorIframeCreator.success());
-  const toggleSetupDrawerStep = (stepNumber: number) =>
-    dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
   // Modal module
   const closeLoginModal = () =>
@@ -131,6 +121,10 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
   const closeScreenshotPreviewModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
+  const openSimulatorSetupModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
+  const closeSimulatorSetupModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -506,9 +500,7 @@ const useSliceMachineActions = () => {
     checkSimulatorSetup,
     connectToSimulatorFailure,
     connectToSimulatorSuccess,
-    toggleSetupDrawerStep,
-    closeSetupDrawer,
-    openSetupDrawer,
+    connectToSimulatorIframe,
     refreshState,
     finishOnboarding,
     closeScreenshotsModal,
@@ -566,6 +558,8 @@ const useSliceMachineActions = () => {
     closeRenameCustomTypeModal,
     openScreenshotPreviewModal,
     closeScreenshotPreviewModal,
+    openSimulatorSetupModal,
+    closeSimulatorSetupModal,
     openCreateSliceModal,
     closeCreateSliceModal,
     openRenameSliceModal,

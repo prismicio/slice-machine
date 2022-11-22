@@ -34,13 +34,10 @@ export const modalReducer: Reducer<ModalStoreType, ModalActions> = (
 ) => {
   switch (action.type) {
     case getType(modalCloseCreator):
-      return {
-        ...state,
-        [action.payload.modalKey]: false,
-      };
+      return initialState;
     case getType(modalOpenCreator):
       return {
-        ...state,
+        ...initialState,
         [action.payload.modalKey]: true,
       };
     default:

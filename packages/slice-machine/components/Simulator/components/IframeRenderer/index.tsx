@@ -5,7 +5,6 @@ import { ThemeUIStyleObject } from "@theme-ui/css";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SetupError } from "../SetupError";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 function useSimulatorClient(): readonly [
@@ -150,9 +149,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
                 width: "100%",
               }}
             />
-          ) : (
-            <SetupError />
-          )}
+          ) : null}
         </Flex>
       </Flex>
     </Box>

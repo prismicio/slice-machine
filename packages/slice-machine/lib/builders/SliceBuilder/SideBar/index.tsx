@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Spinner, Text, Button as ThemeButton } from "theme-ui";
+import { Box, Text, Button as ThemeButton } from "theme-ui";
 import Link from "next/link";
 
 import Card from "@components/Card";
@@ -9,9 +9,7 @@ import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { isLoading } from "@src/modules/loading";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
+
 import {
   selectIsSimulatorAvailableForFramework,
   getFramework,
@@ -35,15 +33,11 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   component,
   variation,
 }) => {
-  const { screenshots } = component;
-
-  const { openScreenshotsModal } = useScreenshotChangesModal();
-  const { checkSimulatorSetup } = useSliceMachineActions();
-
   const router = useRouter();
+  const { screenshots } = component;
+  const { openScreenshotsModal } = useScreenshotChangesModal();
 
   const {
-    isCheckingSimulatorSetup,
     isSimulatorAvailableForFramework,
     linkToStorybookDocs,
     framework,
@@ -51,7 +45,6 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
     linkToStorybookDocs: getLinkToStorybookDocs(state),
-    isCheckingSimulatorSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
     isSimulatorAvailableForFramework:
       selectIsSimulatorAvailableForFramework(state),
     storybookUrl: getStorybookUrl(state),
@@ -93,16 +86,14 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         data-testid="open-set-up-simulator"
         disabled={!isSimulatorAvailableForFramework}
         onClick={() =>
-          checkSimulatorSetup(true, () =>
-            window.open(`${router.asPath}/simulator`, component.model.id)
-          )
+          window.open(`${router.asPath}/simulator`, "slice-machine-simulator")
         }
         variant={
           isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"
         }
         sx={{ cursor: "pointer", width: "100%", mt: 3 }}
       >
-        {isCheckingSimulatorSetup ? <Spinner size={12} /> : "Preview Slice"}
+        Preview Slice
       </ThemeButton>
       {!isSimulatorAvailableForFramework && (
         <Text

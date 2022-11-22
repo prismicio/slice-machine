@@ -10,26 +10,13 @@ import SideBar from "./SideBar";
 import Header from "./Header";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import SetupDrawer from "./SetupDrawer";
-import IframeRenderer from "@components/Simulator/components/IframeRenderer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectSimulatorUrl } from "@src/modules/environment";
-import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
-import { useRouter } from "next/router";
-import {
-  isSelectedSliceTouched,
-  selectCurrentSlice,
-} from "@src/modules/selectedSlice/selectors";
-import { VariationSM } from "@slicemachine/core/build/models";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
+
+import { isSelectedSliceTouched } from "@src/modules/selectedSlice/selectors";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
-import {
-  ScreenSizeOptions,
-  ScreenSizes,
-} from "@components/Simulator/components/Toolbar/ScreensizeInput";
-import useEditorContentOnce from "@src/hooks/useEditorContent";
+import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
 
 export type SliceBuilderState = {
   imageLoading: boolean;
@@ -47,27 +34,14 @@ export const initialState: SliceBuilderState = {
   status: null,
 };
 
-interface SliceBuilderProps {
-  component: ComponentUI;
-  variation: VariationSM | undefined;
-}
-
-const SliceBuilder: React.FC<SliceBuilderProps> = ({
-  component,
-  variation,
-}) => {
+const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
   const { openToaster, saveSlice } = useSliceMachineActions();
-  const { simulatorUrl, isWaitingForIframeCheck, isTouched, remoteSlice } =
-    useSelector((store: SliceMachineStoreType) => ({
-      simulatorUrl: selectSimulatorUrl(store),
-      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(store),
-      isTouched: isSelectedSliceTouched(
-        store,
-        component.from,
-        component.model.id
-      ),
-      remoteSlice: getRemoteSlice(store, component.model.id),
-    }));
+  const { isTouched, remoteSlice } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isTouched: isSelectedSliceTouched(store, slice.from, slice.model.id),
+      remoteSlice: getRemoteSlice(store, slice.model.id),
+    })
+  );
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState<SliceBuilderState>(initialState);
@@ -89,28 +63,23 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
 
   if (!variation) return null;
 
-  const { apiContent } = useEditorContentOnce({
-    slice: component,
-    variationID: variation.id,
-  });
-
   const onSaveSlice = () => {
-    saveSlice(component, setData);
+    saveSlice(slice, setData);
   };
 
   const { modelsStatuses } = useModelStatus([
     {
-      local: component.model,
+      local: slice.model,
       remote: remoteSlice,
-      localScreenshots: component.screenshots,
+      localScreenshots: slice.screenshots,
     },
   ]);
 
   return (
     <Box sx={{ flex: 1 }}>
       <Header
-        component={component}
-        status={modelsStatuses.slices[component.model.id]}
+        component={slice}
+        status={modelsStatuses.slices[slice.model.id]}
         isTouched={isTouched}
         variation={variation}
         onSave={onSaveSlice}
@@ -119,49 +88,12 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
       />
       <FlexEditor
         sx={{ py: 4 }}
-        SideBar={<SideBar component={component} variation={variation} />}
+        SideBar={<SideBar component={slice} variation={variation} />}
       >
-        <FieldZones mockConfig={component.mockConfig} variation={variation} />
+        <FieldZones mockConfig={slice.mockConfig} variation={variation} />
       </FlexEditor>
-      <SetupDrawer />
-      {isWaitingForIframeCheck && (
-        <IframeRenderer
-          dryRun
-          simulatorUrl={simulatorUrl}
-          apiContent={apiContent}
-          screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
-        />
-      )}
     </Box>
   );
 };
 
-const SliceBuilderWithRouter = () => {
-  const router = useRouter();
-  const { initSliceStore } = useSliceMachineActions();
-
-  const { component } = useSelector((store: SliceMachineStoreType) => ({
-    component: selectCurrentSlice(
-      store,
-      router.query.lib as string,
-      router.query.sliceName as string
-    ),
-  }));
-
-  if (!component) {
-    void router.replace("/");
-    return null;
-  }
-
-  useEffect(() => {
-    initSliceStore(component);
-  }, []);
-
-  const variation = component.model.variations.find(
-    (variation) => variation.id === router.query.variation
-  );
-
-  return <SliceBuilder component={component} variation={variation} />;
-};
-
-export default SliceBuilderWithRouter;
+export default SliceBuilder;

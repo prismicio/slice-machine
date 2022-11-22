@@ -13,15 +13,8 @@ import { isLoading } from "@src/modules/loading";
 import EmptyState from "./EmptyState";
 import DefaultView from "./Default";
 import { AiOutlineEye } from "react-icons/ai";
-import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
-import IframeRenderer from "@components/Simulator/components/IframeRenderer";
-import { selectSimulatorUrl } from "@src/modules/environment";
+
 import { Button } from "@components/Button";
-import {
-  ScreenSizeOptions,
-  ScreenSizes,
-} from "@components/Simulator/components/Toolbar/ScreensizeInput";
-import useEditorContentOnce from "@src/hooks/useEditorContent";
 
 enum ScreenshotView {
   Default = 1,
@@ -44,22 +37,19 @@ const VariationScreenshot: React.FC<{
   variationID: string;
   slice: ComponentUI;
 }> = ({ variationID, slice }) => {
-  const {
-    isLoadingScreenshot,
-    isWaitingForIframeCheck,
-    simulatorUrl,
-    isCheckingSimulatorSetup,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    isLoadingScreenshot: isLoading(
-      state,
-      LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
-    ),
-    isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
-    simulatorUrl: selectSimulatorUrl(state),
-    isCheckingSimulatorSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
-  }));
-  const { generateSliceCustomScreenshot, checkSimulatorSetup } =
-    useSliceMachineActions();
+  const { isLoadingScreenshot, isCheckingSimulatorSetup } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      isLoadingScreenshot: isLoading(
+        state,
+        LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
+      ),
+      isCheckingSimulatorSetup: isLoading(
+        state,
+        LoadingKeysEnum.CHECK_SIMULATOR
+      ),
+    })
+  );
+  const { generateSliceCustomScreenshot } = useSliceMachineActions();
   const maybeScreenshot = slice.screenshots[variationID];
 
   const ViewRenderer = maybeScreenshot
@@ -73,17 +63,10 @@ const VariationScreenshot: React.FC<{
   });
 
   const openSimulator = () =>
-    checkSimulatorSetup(true, () =>
-      window.open(
-        `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
-        slice.model.id
-      )
+    window.open(
+      `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
+      slice.model.id
     );
-
-  const { apiContent } = useEditorContentOnce({
-    slice,
-    variationID,
-  });
 
   return (
     <>
@@ -120,14 +103,6 @@ const VariationScreenshot: React.FC<{
         screenshot={maybeScreenshot}
         isLoadingScreenshot={isLoadingScreenshot}
       />
-      {isWaitingForIframeCheck && (
-        <IframeRenderer
-          dryRun
-          simulatorUrl={simulatorUrl}
-          apiContent={apiContent}
-          screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
-        />
-      )}
     </>
   );
 };

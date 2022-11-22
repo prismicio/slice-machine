@@ -1,4 +1,3 @@
 export type SimulatorCheckResponse = {
-  manifest: "ok" | "ko";
-  dependencies: "ok" | "ko";
+  manifest: "ko" | "ok";
 };

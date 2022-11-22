@@ -6,7 +6,7 @@ import { defaultSharedSliceContent } from "@src/utils/editor";
 import { Box, Flex } from "theme-ui";
 
 import Header from "./components/Header";
-import IframeRenderer from "./components/IframeRenderer";
+
 import Tracker from "@src/tracking/client";
 import { useSelector } from "react-redux";
 import {
@@ -15,7 +15,7 @@ import {
   selectSimulatorUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
+
 import Router from "next/router";
 import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { Toolbar } from "./components/Toolbar";
@@ -32,50 +32,86 @@ import { ThemeProvider } from "@prismicio/editor-ui";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
 
 import useThrottle from "@src/hooks/useThrottle";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { isModalOpen } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import IframeRenderer from "./components/IframeRenderer";
+import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
+import {
+  selectIsWaitingForIFrameCheck,
+  selectSetupStatus,
+} from "@src/modules/simulator";
 
-export default function Simulator() {
-  const { component } = useSelector((store: SliceMachineStoreType) => ({
-    component: selectCurrentSlice(
-      store,
-      Router.router?.query.lib as string,
-      Router.router?.query.sliceName as string
+// enum UiState {
+//   LOADING = "LOADING",
+//   LOADING_IFRAME = "LOADING_IFRAME",
+//   FAILED_SETUP = "FAILED_SETUP",
+//   FAILED_CONNECT = "FAILED_CONNECT",
+//   SUCCESS = "SUCCESS",
+// }
+
+const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
+  const { checkSimulatorSetup, connectToSimulatorIframe } =
+    useSliceMachineActions();
+  const {
+    framework,
+    version,
+    simulatorUrl,
+    manifestStatus,
+    isWaitingForIFrameCheck,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    framework: getFramework(state),
+    simulatorUrl: selectSimulatorUrl(state),
+    version: getCurrentVersion(state),
+    isCreateCustomTypeModalOpen: isModalOpen(
+      state,
+      ModalKeysEnum.SIMULATOR_SETUP
     ),
+    manifestStatus: selectSetupStatus(state).manifest,
+    isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
   }));
 
-  const variation = component?.model.variations.find(
-    (variation) => variation.id === (Router.router?.query.variation as string)
-  );
-
-  const { framework, version, simulatorUrl } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
-      simulatorUrl: selectSimulatorUrl(state),
-      version: getCurrentVersion(state),
-    })
-  );
-
   useEffect(() => {
+    checkSimulatorSetup();
     void Tracker.get().trackOpenSliceSimulator(framework, version);
   }, []);
+
+  useEffect(() => {
+    if (manifestStatus === "ok") {
+      connectToSimulatorIframe();
+    }
+  }, [manifestStatus]);
+
+  // TODO
+  isWaitingForIFrameCheck;
+
+  // TODO
+
+  // const UI_STATE: UiState = (() => {
+  //   if (manifestStatus === "ok") {
+  //     if (isWaitingForIFrameCheck) {
+  //       return UiState.LOADING_IFRAME;
+  //     }
+  //     return UiState.SUCCESS;
+  //   }
+  //   return UiState.LOADING;
+  // })();
 
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
 
-  if (!component || !variation) {
+  if (!slice || !variation) {
     return <div />;
   }
 
-  const sharedSlice = useMemo(
-    () => Slices.fromSM(component.model),
-    [component.model]
-  );
+  const sharedSlice = useMemo(() => Slices.fromSM(slice.model), [slice.model]);
 
   const initialContent = useMemo<SharedSliceContent>(
     () =>
-      component.mock?.[0] ||
+      slice.mock?.[0] ||
       (defaultSharedSliceContent(variation.id) as SharedSliceContent),
-    [component.mock, variation.id]
+    [slice.mock, variation.id]
   );
 
   const [editorContent, setContent] = useState(initialContent);
@@ -107,7 +143,7 @@ export default function Simulator() {
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
       <Header
-        slice={component}
+        slice={slice}
         variation={variation}
         isDisplayEditor={isDisplayEditor}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
@@ -136,7 +172,7 @@ export default function Simulator() {
             }}
           >
             <Toolbar
-              slice={component}
+              slice={slice}
               variation={variation}
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
@@ -175,12 +211,14 @@ export default function Simulator() {
           </Box>
         </Flex>
       </Box>
-      {!!component.screenshots[variation.id]?.url && (
+      {!!slice.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
           sliceName={Router.router?.query.sliceName as string}
-          screenshotUrl={component.screenshots[variation.id]?.url}
+          screenshotUrl={slice.screenshots[variation.id]?.url}
         />
       )}
     </Flex>
   );
-}
+};
+
+export default Simulator;
