@@ -14,9 +14,8 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
-import * as Content from "@prismicio/types-internal";
-import * as Either from "fp-ts/lib/Either";
-import { pipe } from "fp-ts/lib/function";
+import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
+import { getOrElseW } from "fp-ts/lib/Either";
 
 function buildDocumentMockConfig(
   model: CustomType,
@@ -42,28 +41,21 @@ function buildDocumentMockConfig(
 export default function MockCustomType(
   model: CustomTypeSM,
   legacyMockConfig: CustomTypeMockConfig
-): Content.CustomTypes.CustomType | null {
+): CustomTypeContent | null {
   const prismicModel = CustomTypes.fromSM(model);
   const documentMockConfig = buildDocumentMockConfig(
     prismicModel,
     legacyMockConfig
   );
 
-  const maybeMock = generateDocumentMock(
+  const mock = generateDocumentMock(
     prismicModel,
-    {}, // TBD: should we add shared slices?
+    {},
     documentMockConfig
   )((_customTypes, _sharedSlices, mock) => mock);
 
-  const mock = pipe(
-    Content.CustomTypes.CustomType.decode(maybeMock),
-    Either.getOrElseW((errors) => {
-      console.error(`Could not create mock for ${model.id}`);
-      console.error(errors);
-      // const messages = errors.map((error) => error.message).join("\n")
-      // console.error(messages)
-      return null;
-    })
-  );
-  return mock;
+  return getOrElseW(() => {
+    console.error(`Could not parse mock for ${prismicModel.id}`);
+    return null;
+  })(CustomTypeContent.decode(mock));
 }
