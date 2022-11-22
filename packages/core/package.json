@@ -15,6 +15,7 @@
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
+    "prepublishOnly": "npm run test && npm run build",
     "audit-fix": "npm audit fix",
     "test": "jest",
     "depcheck": "depcheck --config=.depcheckrc"

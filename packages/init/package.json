@@ -12,6 +12,7 @@
     "build": "npm run tsc && siroc build",
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts .",
     "lint:precommit": "eslint",
+    "prepublishOnly": "npm run test && npm run build",
     "test": "jest",
     "tsc": "tsc --project tsconfig.json --noEmit",
     "tsc:watch": "tsc --project tsconfig.json --noEmit --watch",
