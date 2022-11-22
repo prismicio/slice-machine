@@ -1,7 +1,3 @@
-/**
- * @jest-environment node
- */
-
 import {
   findPackageVersions,
   findLatestNonBreakingUpdate,
@@ -11,9 +7,6 @@ import nock from "nock";
 import { VersionKind } from "@models/common/versions";
 
 describe("findPackageVersions", () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
   test("it should return the version above 0.1.0 without non stable version", async () => {
     const versions = [
       "0.0.42",
