@@ -12,7 +12,7 @@ module.exports = async () => {
   const locales = repository.languages.map((lang) => lang.id);
 
   return {
-    reactStrictMode: false, // TODO: re-enable React's strict mode once we understand the problem with Slice Simulator.
+    reactStrictMode: true,
     i18n: {
       // These are all the locales you want to support in
       // your application
