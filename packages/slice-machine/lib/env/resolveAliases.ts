@@ -2,7 +2,7 @@ import path from "path";
 import {
   JsonPackage,
   retrieveJsonPackage,
-} from "@slicemachine/core/build/node-utils";
+} from "@prismic-beta/slicemachine-core/build/node-utils";
 import moduleAlias from "module-alias";
 
 /* eslint-disable */

@@ -1,6 +1,6 @@
-import type { Models } from "@slicemachine/core";
-import * as Prismic from "@slicemachine/core/build/prismic";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import type { Models } from "@prismic-beta/slicemachine-core";
+import * as Prismic from "@prismic-beta/slicemachine-core/build/prismic";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 import { FrameworkResult } from "./detect-framework";
 import { InitClient, logs } from "../utils";
 import Tracker from "../utils/tracker";

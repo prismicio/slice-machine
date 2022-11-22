@@ -1,6 +1,6 @@
-import { retrieveManifest } from "@slicemachine/core/build/node-utils";
+import { retrieveManifest } from "@prismic-beta/slicemachine-core/build/node-utils";
 import { migrate } from "../migration/migrate";
-import { Manifest } from "@slicemachine/core/build/models";
+import { Manifest } from "@prismic-beta/slicemachine-core/build/models";
 
 export async function handleMigration(
   cwd: string,

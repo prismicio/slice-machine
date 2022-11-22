@@ -1,5 +1,5 @@
 import { ApplicationMode } from "@slicemachine/client";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 
 export default function getApplicationMode(
   apiEndpoint: Models.Manifest["apiEndpoint"]

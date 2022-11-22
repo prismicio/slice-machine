@@ -1,5 +1,5 @@
-import { Models } from "@slicemachine/core";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import { Models } from "@prismic-beta/slicemachine-core";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 import * as inquirer from "inquirer";
 import { logs } from "../utils";
 import Tracker from "../utils/tracker";

@@ -1,8 +1,8 @@
 import * as t from "io-ts";
-import { Models } from "@slicemachine/core";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+import { Models } from "@prismic-beta/slicemachine-core";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic";
 import { Client, getAndValidateResponse } from "@slicemachine/client";
-import { parse } from "@slicemachine/core/build/utils/cookie";
+import { parse } from "@prismic-beta/slicemachine-core/build/utils/cookie";
 
 export class InitClient extends Client {
   async listRepositories(): Promise<Models.Repository[]> {

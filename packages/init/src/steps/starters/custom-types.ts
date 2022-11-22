@@ -1,5 +1,8 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { Files, CustomTypesPaths } from "@slicemachine/core/build/node-utils";
+import {
+  Files,
+  CustomTypesPaths,
+} from "@prismic-beta/slicemachine-core/build/node-utils";
 import { isLeft } from "fp-ts/lib/Either";
 import { promptToPushCustomTypes } from "./prompts";
 import { InitClient, logs } from "../../utils";

@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@prismicio/types-internal": "^1.1.1",
-    "@slicemachine/core": "1.1.15",
+    "@prismic-beta/slicemachine-core": "0.3.0-alpha.0",
     "axios": "^0.27.2",
     "form-data": "^3.0.0",
     "fp-ts": "^2.11.5",

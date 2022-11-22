@@ -5,7 +5,7 @@ import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
   CustomTypeSM,
   TabSM,
-} from "@slicemachine/core/build/models/CustomType";
+} from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 // Selectors
 export const selectCurrentCustomType = (

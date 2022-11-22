@@ -3,7 +3,7 @@ import {
   CompositeSlice,
   LegacySlice,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SlicesSM } from "@slicemachine/core/build/models/Slices";
+import { SlicesSM } from "@prismic-beta/slicemachine-core/build/models/Slices";
 import { ComponentUI } from "../ComponentUI";
 
 export type NonSharedSliceInSliceZone = {

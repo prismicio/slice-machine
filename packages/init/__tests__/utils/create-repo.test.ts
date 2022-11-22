@@ -3,7 +3,7 @@ import { describe, expect, test, jest } from "@jest/globals";
 import nock from "nock";
 import { createRepository } from "../../src/utils/create-repo";
 import { stderr, stdout } from "stdout-stderr";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 import { InitClient } from "../../src/utils";
 import { ApplicationMode } from "@slicemachine/client";
 

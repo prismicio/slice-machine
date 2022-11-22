@@ -179,6 +179,8 @@ export function getComponentInfo(
     return resolvedMocks;
   })();
 
+  if (!mocks) throw new Error("!!!!!");
+
   return {
     fileName,
     extension,

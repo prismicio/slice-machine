@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosPromise, AxiosRequestConfig } from "axios";
 import * as t from "io-ts";
 
-import { UserProfile } from "@slicemachine/core/build/models";
+import { UserProfile } from "@prismic-beta/slicemachine-core/build/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 

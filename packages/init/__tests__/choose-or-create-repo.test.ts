@@ -16,7 +16,7 @@ import {
 import { createRepository } from "../src/utils/create-repo";
 
 import nock from "nock";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 import { ApplicationMode } from "@slicemachine/client";
 import { InitClient } from "../src/utils";
 

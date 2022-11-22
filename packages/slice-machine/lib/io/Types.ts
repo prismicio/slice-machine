@@ -1,10 +1,10 @@
 import path from "path";
 import { generateTypes } from "prismic-ts-codegen";
-import { PRISMIC_TYPES } from "@slicemachine/core/build/consts";
-import { retrieveJsonPackage } from "@slicemachine/core/build/node-utils/";
+import { PRISMIC_TYPES } from "@prismic-beta/slicemachine-core/build/consts";
+import { retrieveJsonPackage } from "@prismic-beta/slicemachine-core/build/node-utils/";
 
-import { CustomTypes } from "@slicemachine/core/build/models/CustomType/index";
-import { Slices } from "@slicemachine/core/build/models/Slice";
+import { CustomTypes } from "@prismic-beta/slicemachine-core/build/models/CustomType/index";
+import { Slices } from "@prismic-beta/slicemachine-core/build/models/Slice";
 import Files from "../utils/files";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { getLocalCustomTypes } from "../utils/customTypes";

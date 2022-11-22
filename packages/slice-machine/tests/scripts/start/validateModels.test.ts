@@ -6,8 +6,8 @@ import {
 } from "../../../scripts/start/validateModels";
 import { customTypeMock } from "../../__mocks__/customType";
 import sliceMock from "../../__mocks__/sliceModel";
-import { CustomTypes } from "@slicemachine/core/build/models/CustomType/index";
-import { Slices } from "@slicemachine/core/build/models/Slice";
+import { CustomTypes } from "@prismic-beta/slicemachine-core/build/models/CustomType/index";
+import { Slices } from "@prismic-beta/slicemachine-core/build/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 

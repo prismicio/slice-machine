@@ -12,7 +12,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,

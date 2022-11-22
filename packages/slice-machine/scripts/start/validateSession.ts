@@ -1,6 +1,6 @@
-import type { Models } from "@slicemachine/core";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
-import { retrieveManifest } from "@slicemachine/core/build/node-utils";
+import type { Models } from "@prismic-beta/slicemachine-core";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic";
+import { retrieveManifest } from "@prismic-beta/slicemachine-core/build/node-utils";
 
 import { Client } from "@slicemachine/client";
 

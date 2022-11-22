@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SliceSM } from "@slicemachine/core/build/models";
+import { SliceSM } from "@prismic-beta/slicemachine-core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 // import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";

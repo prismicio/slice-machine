@@ -1,5 +1,5 @@
 import { ApplicationMode } from "@slicemachine/client";
-import Prismic from "@slicemachine/core/build/prismic";
+import Prismic from "@prismic-beta/slicemachine-core/build/prismic";
 import Tracker from "./utils/tracker";
 import {
   installRequiredDependencies,
@@ -20,7 +20,7 @@ import {
   getApplicationMode,
   InitClient,
 } from "./utils";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();

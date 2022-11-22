@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { simulatorIsSupported } from "@lib/utils";
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 import { slugify } from "@lib/utils/str";
 
 describe("simulatorIsSupported", () => {

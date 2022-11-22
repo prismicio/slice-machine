@@ -7,8 +7,11 @@ import { upload } from "../../../server/src/api/services/uploadScreenshotClient"
 import allFieldSliceObject from "../../__mocks__/sliceModel";
 import backendEnvironment from "../../__mocks__/backendEnvironment";
 import { Client, ApplicationMode } from "@slicemachine/client";
-import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
-import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
+import {
+  Slices,
+  SliceSM,
+} from "@prismic-beta/slicemachine-core/build/models/Slice";
+import { resolvePathsToScreenshot } from "@prismic-beta/slicemachine-core/build/libraries/screenshot";
 
 const allFieldSliceModel = Slices.toSM(allFieldSliceObject);
 
@@ -26,7 +29,7 @@ jest.mock("@slicemachine/client", () => {
   };
 });
 
-jest.mock("@slicemachine/core/build/libraries/screenshot", () => {
+jest.mock("@prismic-beta/slicemachine-core/build/libraries/screenshot", () => {
   return {
     resolvePathsToScreenshot: jest.fn(),
   };

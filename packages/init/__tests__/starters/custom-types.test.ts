@@ -11,7 +11,7 @@ import mock from "mock-fs";
 import inquirer from "inquirer";
 
 import { isRight } from "fp-ts/lib/Either";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { stderr } from "stdout-stderr";
 import { InitClient } from "../../src/utils";

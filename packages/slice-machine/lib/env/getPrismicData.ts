@@ -1,12 +1,12 @@
 import { ok, err, Result } from "neverthrow";
 
 import PrismicData from "../models/common/PrismicData";
-import { Utils } from "@slicemachine/core";
+import { Utils } from "@prismic-beta/slicemachine-core";
 import ErrorWithStatus from "../models/common/ErrorWithStatus";
 import {
   PrismicSharedConfigManager,
   DEFAULT_CONFIG,
-} from "@slicemachine/core/build/prismic";
+} from "@prismic-beta/slicemachine-core/build/prismic";
 
 export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {

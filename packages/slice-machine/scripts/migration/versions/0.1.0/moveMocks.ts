@@ -1,4 +1,4 @@
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 
 export function moveMocks(cwd: string, libraryName: string, sliceName: string) {
   const customMocksPath = NodeUtils.CustomPaths(cwd)

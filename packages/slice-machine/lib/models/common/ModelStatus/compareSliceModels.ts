@@ -1,4 +1,7 @@
-import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
+import {
+  Screenshot,
+  SliceSM,
+} from "@prismic-beta/slicemachine-core/build/models";
 import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
 

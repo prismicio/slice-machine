@@ -2,7 +2,7 @@ import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
 import { mocked } from "jest-mock";
 import { detectFramework } from "../src/steps";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 import { stderr } from "stdout-stderr";
 import inquirer from "inquirer";
 import { logs } from "../src/utils";

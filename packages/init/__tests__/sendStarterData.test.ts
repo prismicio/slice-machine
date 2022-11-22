@@ -11,7 +11,7 @@ import { ApplicationMode } from "@slicemachine/client";
 import { stderr } from "stdout-stderr";
 import fs from "fs";
 import path from "path";
-import { Manifest } from "@slicemachine/core/build/models";
+import { Manifest } from "@prismic-beta/slicemachine-core/build/models";
 
 const TMP_DIR = path.join(os.tmpdir(), "sm-init-starter-test");
 

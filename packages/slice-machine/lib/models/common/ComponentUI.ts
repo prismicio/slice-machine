@@ -2,7 +2,7 @@ import {
   VariationSM,
   Screenshot,
   Component,
-} from "@slicemachine/core/build/models";
+} from "@prismic-beta/slicemachine-core/build/models";
 import { BackendEnvironment } from "./Environment";
 import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
 

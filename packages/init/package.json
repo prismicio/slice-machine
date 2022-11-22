@@ -22,7 +22,7 @@
     "@hapi/hapi": "^20.2.0",
     "@prismicio/types-internal": "^1.1.1",
     "@slicemachine/client": "1.1.15",
-    "@slicemachine/core": "1.1.15",
+    "@prismic-beta/slicemachine-core": "0.3.0-alpha.0",
     "adm-zip": "^0.5.9",
     "analytics-node": "^6.0.0",
     "axios": "^0.24.0",

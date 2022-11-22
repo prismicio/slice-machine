@@ -7,7 +7,7 @@ import "@testing-library/jest-dom";
 import { expect, test } from "@jest/globals";
 import TrackerSingleton, { SMTracker } from "@src/tracking/client";
 import { EventNames } from "@src/tracking/types";
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 import { setupServer } from "msw/node";
 import { rest, RestContext } from "msw";
 

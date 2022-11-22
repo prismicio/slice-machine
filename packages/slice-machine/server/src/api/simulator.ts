@@ -1,9 +1,9 @@
-import { CONSTS } from "@slicemachine/core";
+import { CONSTS } from "@prismic-beta/slicemachine-core";
 import { simulatorIsSupported } from "../../../lib/utils";
 import { RequestWithEnv } from "./http/common";
-import { Frameworks } from "@slicemachine/core/build/models/Framework";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models/Framework";
 import { SimulatorCheckResponse } from "../../../lib/models/common/Simulator";
-import { retrieveJsonPackage } from "@slicemachine/core/build/node-utils";
+import { retrieveJsonPackage } from "@prismic-beta/slicemachine-core/build/node-utils";
 
 const {
   PREVIOUS_REACT_PACKAGE_NAME,

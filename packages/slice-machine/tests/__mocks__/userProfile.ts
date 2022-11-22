@@ -1,4 +1,4 @@
-import { UserProfile } from "@slicemachine/core/build/models";
+import { UserProfile } from "@prismic-beta/slicemachine-core/build/models";
 
 const mockUserProfile: UserProfile = {
   userId: "fakeUserId",

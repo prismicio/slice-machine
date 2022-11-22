@@ -18,7 +18,7 @@ import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 

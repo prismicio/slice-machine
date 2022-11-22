@@ -4,7 +4,7 @@ import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widget
 import {
   CustomTypeSM,
   TabField,
-} from "@slicemachine/core/build/models/CustomType";
+} from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import { renameCustomTypeCreator } from "../availableCustomTypes";
 
 export type SelectedCustomTypeActions =

@@ -3,7 +3,11 @@ import { getSlices } from ".";
 import { purge } from "../services/uploadScreenshotClient";
 import { CustomPaths } from "../../../../lib/models/paths";
 import { uploadScreenshots } from "../services/sliceService";
-import { Slices, SliceSM, VariationSM } from "@slicemachine/core/build/models";
+import {
+  Slices,
+  SliceSM,
+  VariationSM,
+} from "@prismic-beta/slicemachine-core/build/models";
 import * as IO from "../../../../lib/io";
 import { Client, ClientError } from "@slicemachine/client";
 import { RequestWithEnv } from "../http/common";

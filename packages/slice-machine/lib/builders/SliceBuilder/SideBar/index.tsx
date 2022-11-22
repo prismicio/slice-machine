@@ -20,7 +20,7 @@ import {
 } from "@src/modules/environment";
 import { createStorybookUrl } from "@src/utils/storybook";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import type Models from "@slicemachine/core/build/models";
+import type Models from "@prismic-beta/slicemachine-core/build/models";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { Button } from "@components/Button";

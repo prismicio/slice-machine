@@ -1,15 +1,18 @@
-import { Manifest, SliceSM } from "@slicemachine/core/build/models";
-import { FieldsSM } from "@slicemachine/core/build/models/Fields";
-import { TabFields } from "@slicemachine/core/build/models/CustomType";
-import * as Libraries from "@slicemachine/core/build/libraries";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import {
+  Manifest,
+  SliceSM,
+} from "@prismic-beta/slicemachine-core/build/models";
+import { FieldsSM } from "@prismic-beta/slicemachine-core/build/models/Fields";
+import { TabFields } from "@prismic-beta/slicemachine-core/build/models/CustomType";
+import * as Libraries from "@prismic-beta/slicemachine-core/build/libraries";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import { getLocalCustomTypes } from "@lib/utils/customTypes";
 import { API_ID_RETRO_COMPATIBLE_REGEX } from "@lib/consts";
 import boxen from "boxen";
 import {
   CustomPaths,
   CustomTypesPaths,
-} from "@slicemachine/core/build/node-utils";
+} from "@prismic-beta/slicemachine-core/build/node-utils";
 import chalk from "chalk";
 import path from "path";
 

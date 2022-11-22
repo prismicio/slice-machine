@@ -20,7 +20,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { VariationSM } from "@prismic-beta/slicemachine-core/build/models";
 
 type ToolbarProps = {
   slice: ComponentUI;

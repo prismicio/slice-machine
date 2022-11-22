@@ -2,7 +2,7 @@ import { expect, test } from "@jest/globals";
 import "uuid";
 
 import TrackerSingleton, { InitTracker } from "../../src/utils/tracker";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 
 type noop = () => void;
 const MockTracker = jest.fn((_, cb: noop) => cb());

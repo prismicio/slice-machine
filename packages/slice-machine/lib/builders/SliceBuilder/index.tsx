@@ -21,7 +21,7 @@ import {
   isSelectedSliceTouched,
   selectCurrentSlice,
 } from "@src/modules/selectedSlice/selectors";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { VariationSM } from "@prismic-beta/slicemachine-core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";

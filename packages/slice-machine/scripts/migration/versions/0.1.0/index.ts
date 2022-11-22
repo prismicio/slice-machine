@@ -3,8 +3,8 @@ import path from "path";
 import slash from "slash";
 import { Migration } from "../../migrate";
 
-import * as Libraries from "@slicemachine/core/build/libraries";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import * as Libraries from "@prismic-beta/slicemachine-core/build/libraries";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 import { scopePreviewToDefaultVariation } from "./scopePreviewToDefaultVariation";
 import { moveMocks } from "./moveMocks";
 import { moveStories } from "./moveStories";

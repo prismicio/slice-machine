@@ -1,5 +1,5 @@
 import boxen from "boxen";
-import { CONSTS } from "@slicemachine/core";
+import { CONSTS } from "@prismic-beta/slicemachine-core";
 import { ManifestState, ManifestInfo } from "../../lib/env/manifest";
 import chalk from "chalk";
 

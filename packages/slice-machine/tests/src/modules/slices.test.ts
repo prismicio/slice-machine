@@ -19,7 +19,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { SliceSM } from "@slicemachine/core/build/models";
+import { SliceSM } from "@prismic-beta/slicemachine-core/build/models";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";

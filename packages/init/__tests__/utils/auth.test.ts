@@ -2,7 +2,7 @@ import { describe, expect, test, afterEach, jest } from "@jest/globals";
 import * as authHelpers from "../../src/utils/auth/helpers";
 import { Auth, InitClient } from "../../src/utils";
 
-import { Endpoints } from "@slicemachine/core/build/prismic";
+import { Endpoints } from "@prismic-beta/slicemachine-core/build/prismic";
 import fs from "fs";
 import nock from "nock";
 import { ApplicationMode } from "@slicemachine/client";

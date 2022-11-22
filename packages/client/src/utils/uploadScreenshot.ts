@@ -4,7 +4,7 @@ import mime from "mime";
 import path from "path";
 import { UploadParameters } from "../models/UploadParameters";
 import { snakelize } from "./str";
-import { Files } from "@slicemachine/core/build/node-utils";
+import { Files } from "@prismic-beta/slicemachine-core/build/node-utils";
 
 function buildScreenshotKey(
   fileName: string,

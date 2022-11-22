@@ -65,6 +65,7 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
 
+  console.log({ localLibraries });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const { modelsStatuses, authStatus, isOnline } =
     useModelStatus(frontendSlices);

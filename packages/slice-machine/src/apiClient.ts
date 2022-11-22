@@ -8,7 +8,7 @@ import {
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import {
   ScreenshotRequest,
   ScreenshotResponse,

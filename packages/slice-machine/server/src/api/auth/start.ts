@@ -1,5 +1,5 @@
-import { Utils } from "@slicemachine/core";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+import { Utils } from "@prismic-beta/slicemachine-core";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic";
 
 type StartResponse = {
   err?: Error;

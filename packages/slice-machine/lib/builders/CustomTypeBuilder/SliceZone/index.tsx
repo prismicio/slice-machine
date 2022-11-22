@@ -7,7 +7,7 @@ import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 import { SlicesList } from "./List";
 import EmptyState from "./EmptyState";
-import { SlicesSM } from "@slicemachine/core/build/models/Slices";
+import { SlicesSM } from "@prismic-beta/slicemachine-core/build/models/Slices";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import {
   NonSharedSliceInSliceZone,

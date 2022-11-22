@@ -1,5 +1,8 @@
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
-import { Files, YarnLockPath } from "@slicemachine/core/build/node-utils";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic";
+import {
+  Files,
+  YarnLockPath,
+} from "@prismic-beta/slicemachine-core/build/node-utils";
 
 import {
   BackendEnvironment,

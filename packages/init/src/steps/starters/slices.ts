@@ -1,7 +1,11 @@
-import { Component, Manifest, Slices } from "@slicemachine/core/build/models";
+import {
+  Component,
+  Manifest,
+  Slices,
+} from "@prismic-beta/slicemachine-core/build/models";
 import { Acl, ClientError } from "@slicemachine/client";
 import { InitClient, logs } from "../../utils";
-import * as Libraries from "@slicemachine/core/build/libraries";
+import * as Libraries from "@prismic-beta/slicemachine-core/build/libraries";
 import { promptToPushSlices } from "./prompts";
 import { updateSlicesWithScreenshots } from "./s3";
 import { writeError } from "../../utils/logs";

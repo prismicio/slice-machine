@@ -2,7 +2,7 @@ import type {
   LibraryMeta,
   Library,
   Component,
-} from "@slicemachine/core/build/models";
+} from "@prismic-beta/slicemachine-core/build/models";
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 

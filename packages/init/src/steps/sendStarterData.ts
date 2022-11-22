@@ -1,4 +1,7 @@
-import { retrieveManifest, Files } from "@slicemachine/core/build/node-utils";
+import {
+  retrieveManifest,
+  Files,
+} from "@prismic-beta/slicemachine-core/build/node-utils";
 import path from "path";
 import fs from "fs";
 import { sendSlices } from "./starters/slices";

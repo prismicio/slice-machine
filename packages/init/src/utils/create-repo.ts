@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@prismic-beta/slicemachine-core";
 import * as logs from "./logs";
 import { InitClient } from "./client";
 import Tracker from "../utils/tracker";

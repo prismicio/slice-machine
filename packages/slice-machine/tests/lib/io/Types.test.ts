@@ -2,8 +2,8 @@
 import { describe, test, beforeEach, afterEach } from "@jest/globals";
 import { generateTypes } from "prismic-ts-codegen";
 
-import { Manifest } from "@slicemachine/core/build/models";
-import * as nodeUtils from "@slicemachine/core/build/node-utils/";
+import { Manifest } from "@prismic-beta/slicemachine-core/build/models";
+import * as nodeUtils from "@prismic-beta/slicemachine-core/build/node-utils/";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { upsert } from "../../../lib/io/Types";
 import Files from "../../../lib/utils/files";
@@ -18,10 +18,10 @@ jest.mock("prismic-ts-codegen", () => {
   return { generateTypes: jest.fn(() => MOCKED) };
 });
 // See: https://github.com/aelbore/esbuild-jest/issues/26
-jest.mock("@slicemachine/core/build/node-utils/", () => {
+jest.mock("@prismic-beta/slicemachine-core/build/node-utils/", () => {
   return {
     __esModule: true,
-    ...jest.requireActual("@slicemachine/core/build/node-utils/"),
+    ...jest.requireActual("@prismic-beta/slicemachine-core/build/node-utils/"),
   };
 });
 jest.mock("../../../lib/utils/customTypes", () => {

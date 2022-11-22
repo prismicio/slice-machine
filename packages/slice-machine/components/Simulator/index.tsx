@@ -24,7 +24,7 @@ import {
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { Slices } from "@slicemachine/core/build/models";
+import { Slices } from "@prismic-beta/slicemachine-core/build/models";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
@@ -72,9 +72,7 @@ export default function Simulator() {
   );
 
   const initialContent = useMemo<SharedSliceContent>(
-    () =>
-      component.mock?.[0] ||
-      (defaultSharedSliceContent(variation.id)),
+    () => component.mock?.[0] || defaultSharedSliceContent(variation.id),
     [component.mock, variation.id]
   );
 
@@ -155,7 +153,8 @@ export default function Simulator() {
                 ? {
                     marginLeft: "16px",
                     visibility: "visible",
-                    width: "400px",
+                    width: "500px",
+                    flexShrink: 0,
                   }
                 : {
                     marginLeft: "0px",

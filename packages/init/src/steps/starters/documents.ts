@@ -1,12 +1,12 @@
 import path from "path";
 import fs from "fs";
 import type { AxiosError } from "axios";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
 import { InitClient, logs, lsdir, lsfiles } from "../../utils";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic/SharedConfig";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic/SharedConfig";
 import Tracker from "../../utils/tracker";
 
 const SignatureFileReader = t.type({

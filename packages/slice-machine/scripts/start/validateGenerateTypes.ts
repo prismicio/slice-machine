@@ -1,8 +1,8 @@
-import { PRISMIC_TYPES } from "@slicemachine/core/build/consts";
+import { PRISMIC_TYPES } from "@prismic-beta/slicemachine-core/build/consts";
 import {
   retrieveManifest,
   retrieveJsonPackage,
-} from "@slicemachine/core/build/node-utils";
+} from "@prismic-beta/slicemachine-core/build/node-utils";
 import { logger } from "../../lib/utils/logger";
 
 type ValidateGenerateTypesParams = {

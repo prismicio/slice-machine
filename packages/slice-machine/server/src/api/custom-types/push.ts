@@ -1,7 +1,7 @@
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/models/CustomType/index";
+} from "@prismic-beta/slicemachine-core/build/models/CustomType/index";
 import { Client, ClientError } from "@slicemachine/client";
 import { CustomTypesPaths } from "../../../../lib/models/paths";
 import { RequestWithEnv } from "../http/common";

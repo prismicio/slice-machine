@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/models";
+import type Models from "@prismic-beta/slicemachine-core/build/models";
 import { SliceMockConfig } from "./MockConfig";
 
 export interface SliceBody {

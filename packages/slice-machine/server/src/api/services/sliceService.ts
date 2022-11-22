@@ -1,10 +1,13 @@
 import path from "path";
-import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
+import { resolvePathsToScreenshot } from "@prismic-beta/slicemachine-core/build/libraries/screenshot";
 
 import { upload } from "./uploadScreenshotClient";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import { ApiError } from "../../../../lib/models/server/ApiResult";
-import { SliceSM, VariationSM } from "@slicemachine/core/build/models/Slice";
+import {
+  SliceSM,
+  VariationSM,
+} from "@prismic-beta/slicemachine-core/build/models/Slice";
 
 export async function uploadScreenshots(
   env: BackendEnvironment,

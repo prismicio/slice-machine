@@ -2,7 +2,7 @@ import router from "next/router";
 import { Text, Flex, Switch, Label } from "theme-ui";
 
 import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
-import * as Models from "@slicemachine/core/build/models";
+import * as Models from "@prismic-beta/slicemachine-core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 // import { Button } from "@components/Button";

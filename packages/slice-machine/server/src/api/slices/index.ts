@@ -1,7 +1,10 @@
 import getEnv from "../services/getEnv";
 
 import type { Client, ClientError } from "@slicemachine/client";
-import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
+import {
+  Slices,
+  SliceSM,
+} from "@prismic-beta/slicemachine-core/build/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSlices = async (

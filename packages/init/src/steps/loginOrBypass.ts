@@ -1,5 +1,5 @@
-import { Models } from "@slicemachine/core";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+import { Models } from "@prismic-beta/slicemachine-core";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic";
 import { logs, Auth, InitClient } from "../utils";
 
 export async function loginOrBypass(

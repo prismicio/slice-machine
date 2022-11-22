@@ -3,14 +3,14 @@ import TemplateEngine from "ejs";
 import { getOrElseW } from "fp-ts/Either";
 import Files from "./utils/files";
 import { CustomPaths, GeneratedPaths } from "./models/paths";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 import { renderSliceMock } from "@prismicio/mocks";
 import { createStorybookId } from "./utils/str";
 import {
   Slices,
   SliceSM,
   ComponentMocks,
-} from "@slicemachine/core/build/models";
+} from "@prismic-beta/slicemachine-core/build/models";
 
 const Paths = {
   nuxtTemplate: (appRoot: string) =>

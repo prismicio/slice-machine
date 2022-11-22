@@ -1,6 +1,6 @@
 import Files from "./files";
 import { CustomTypesPaths } from "../models/paths";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType/index";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType/index";
 import glob from "glob";
 import * as IO from "../io";
 

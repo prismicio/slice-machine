@@ -1,8 +1,8 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
 import * as logs from "../logs";
-import { Utils, CONSTS } from "@slicemachine/core";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+import { Utils, CONSTS } from "@prismic-beta/slicemachine-core";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic";
 
 const { Cookie } = Utils;
 const { DEFAULT_BASE, DEFAULT_SERVER_PORT } = CONSTS;

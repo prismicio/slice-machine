@@ -1,6 +1,6 @@
 import { CustomTypeMockConfig } from "../MockConfig";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { SlicesSM } from "@slicemachine/core/build/models/Slices";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
+import { SlicesSM } from "@prismic-beta/slicemachine-core/build/models/Slices";
 
 export interface SaveCustomTypeBody {
   model: CustomTypeSM;

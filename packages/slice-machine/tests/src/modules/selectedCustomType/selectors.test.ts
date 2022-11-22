@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import jsonModel from "./__mockData__/model.json";
 import { isSelectedCustomTypeTouched } from "@src/modules/selectedCustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
-import { CustomTypes } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypes } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 const model = CustomTypes.toSM(jsonModel as unknown as CustomType);
 

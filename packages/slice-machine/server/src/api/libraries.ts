@@ -1,11 +1,14 @@
-import * as Libraries from "@slicemachine/core/build/libraries";
+import * as Libraries from "@prismic-beta/slicemachine-core/build/libraries";
 
 import { BackendEnvironment } from "../../../lib/models/common/Environment";
 
 import ErrorWithStatus from "../../../lib/models/common/ErrorWithStatus";
 
 import { LibraryUI } from "../../../lib/models/common/LibraryUI";
-import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
+import {
+  Slices,
+  SliceSM,
+} from "@prismic-beta/slicemachine-core/build/models/Slice";
 import { ClientError } from "@slicemachine/client";
 
 interface LibrariesResult {

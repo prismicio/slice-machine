@@ -2,7 +2,7 @@ import { jest, describe, afterEach, test, expect } from "@jest/globals";
 import path from "path";
 import os from "os";
 import fs from "fs";
-import { Models, CONSTS } from "@slicemachine/core";
+import { Models, CONSTS } from "@prismic-beta/slicemachine-core";
 import * as initUtils from "../src/utils";
 import { installRequiredDependencies } from "../src/steps";
 

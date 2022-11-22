@@ -7,7 +7,7 @@ import {
   ReleaseNote,
   VersionKind,
 } from "../models/common/versions";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 
 export async function getPackageChangelog(
   dependencyCwd: string

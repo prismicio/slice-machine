@@ -1,7 +1,7 @@
 import glob from "glob";
 
-import { getFormattedLibIdentifier } from "@slicemachine/core/build/libraries";
-import { SliceSM } from "@slicemachine/core/build/models/Slice";
+import { getFormattedLibIdentifier } from "@prismic-beta/slicemachine-core/build/libraries";
+import { SliceSM } from "@prismic-beta/slicemachine-core/build/models/Slice";
 
 import Files from "./files";
 import { CustomPaths } from "../models/paths";

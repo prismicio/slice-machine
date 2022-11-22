@@ -2,7 +2,7 @@ import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
   CustomTypeSM,
   TabField,
-} from "@slicemachine/core/build/models/CustomType";
+} from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 export type PoolOfFields = ReadonlyArray<{ key: string; value: TabField }>;
 

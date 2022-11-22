@@ -1,4 +1,4 @@
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 
 import NextSetupStepperConfiguration from "./next";
 import NuxtSetupStepperConfiguration from "./nuxt";

@@ -5,7 +5,7 @@ import { MdPlayCircleFilled } from "react-icons/md";
 import { Close, Flex, Paragraph } from "theme-ui";
 import style from "./VideoItem.module.css";
 import Tracker from "@src/tracking/client";
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 import { VIDEO_YOUTUBE_PLAYLIST_LINK } from "../../../../../lib/consts";
 
 type VideoItemProps = {

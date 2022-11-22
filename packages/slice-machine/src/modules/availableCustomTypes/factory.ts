@@ -1,4 +1,4 @@
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 export const createCustomType = (
   id: string,

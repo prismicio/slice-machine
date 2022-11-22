@@ -15,7 +15,7 @@ import {
   AddThumbnailButton,
   ConstraintForm,
 } from "./components";
-import { TabFields } from "@slicemachine/core/build/models/CustomType";
+import { TabFields } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 const FormFields = {
   label: DefaultFields.label,

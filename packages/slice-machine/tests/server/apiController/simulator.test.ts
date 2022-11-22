@@ -1,9 +1,9 @@
 // We mock the getEnv service
 import simulatorHandler from "../../../server/src/api/simulator";
 import "@testing-library/jest-dom";
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 import { RequestWithEnv } from "server/src/api/http/common";
 import fs from "fs";
 

@@ -1,6 +1,6 @@
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 import { Client, ApplicationMode } from "@slicemachine/client";
-import { Framework } from "@slicemachine/core/build/node-utils";
+import { Framework } from "@prismic-beta/slicemachine-core/build/node-utils";
 
 import type { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import type { ConfigErrors } from "../../../../lib/models/server/ServerState";

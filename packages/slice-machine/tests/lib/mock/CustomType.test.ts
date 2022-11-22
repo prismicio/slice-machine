@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import MockCustomType from "../../../lib/mock/CustomType";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 describe("MockCustomType", () => {
   test("use default mock when custom one is not provided", () => {

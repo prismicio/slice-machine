@@ -20,7 +20,7 @@ import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
 import { setupServer } from "msw/node";
 import { rest, RestContext } from "msw";
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 

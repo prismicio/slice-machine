@@ -5,7 +5,7 @@ import {
   resolvePathsToScreenshot,
   createPathToScreenshot,
   Extensions,
-} from "@slicemachine/core/build/libraries/screenshot";
+} from "@prismic-beta/slicemachine-core/build/libraries/screenshot";
 import {
   createScreenshotUI,
   ScreenshotUI,
@@ -14,7 +14,7 @@ import {
   TmpFile,
   CustomScreenshotRequest,
 } from "../../../../lib/models/common/Screenshots";
-import { hash } from "@slicemachine/core/build/utils/str";
+import { hash } from "@prismic-beta/slicemachine-core/build/utils/str";
 
 export default async function handler(
   file: TmpFile,

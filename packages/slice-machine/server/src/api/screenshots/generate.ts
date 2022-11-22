@@ -1,15 +1,15 @@
 import Files from "../../../../lib/utils/files";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 import Puppeteer from "./puppeteer";
-import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
+import { resolvePathsToScreenshot } from "@prismic-beta/slicemachine-core/build/libraries/screenshot";
 import {
   createScreenshotUI,
   ScreenshotUI,
 } from "../../../../lib/models/common/ComponentUI";
 import { ScreenDimensions } from "../../../../lib/models/common/Screenshots";
 
-import { hash } from "@slicemachine/core/build/utils/str";
+import { hash } from "@prismic-beta/slicemachine-core/build/utils/str";
 
 export interface ScreenshotResults {
   screenshot: ScreenshotUI | null;

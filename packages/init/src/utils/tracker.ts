@@ -1,6 +1,6 @@
 import ServerAnalytics from "analytics-node";
 import { v4 as uuidv4 } from "uuid";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 
 export enum EventType {
   DownloadLibrary = "SliceMachine Download Library",

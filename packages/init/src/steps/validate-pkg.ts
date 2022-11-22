@@ -1,4 +1,4 @@
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
 import { logs } from "../utils";
 
 export function validatePkg(cwd: string): void {

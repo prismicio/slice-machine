@@ -1,6 +1,6 @@
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@prismic-beta/slicemachine-core";
 
 export const MockLibraryInfo: (
   lib: string

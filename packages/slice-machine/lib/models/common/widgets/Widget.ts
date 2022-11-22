@@ -1,7 +1,7 @@
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
-import { TabField } from "@slicemachine/core/build/models/CustomType";
+import { TabField } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   TYPE_NAME: WidgetTypes;
   MockConfigForm?: {

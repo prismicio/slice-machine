@@ -8,8 +8,8 @@ import {
 } from "@jest/globals";
 import { configureProject } from "../src/steps";
 import type { spinner } from "../src/utils/logs";
-import NodeUtils from "@slicemachine/core/build/node-utils";
-import { Models } from "@slicemachine/core";
+import NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
+import { Models } from "@prismic-beta/slicemachine-core";
 import Tracker from "../src/utils/tracker";
 import { ApplicationMode } from "@slicemachine/client";
 import { InitClient } from "../src/utils";
@@ -57,10 +57,10 @@ jest.mock("uuid", () => ({
   v4: () => "uuid",
 }));
 
-jest.mock("@slicemachine/core/build/node-utils", () => {
+jest.mock("@prismic-beta/slicemachine-core/build/node-utils", () => {
   // fragile test problem... If I change the core now I have to manage the mocks, we could mock the fs or calls to fs and not have to deal with this issue?
   const actualCore = jest.requireActual(
-    "@slicemachine/core/build/node-utils"
+    "@prismic-beta/slicemachine-core/build/node-utils"
   ) as typeof NodeUtils;
 
   return {

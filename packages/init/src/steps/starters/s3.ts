@@ -4,7 +4,7 @@ import {
   ComponentInfo,
   VariationSM,
   SliceSM,
-} from "@slicemachine/core/build/models";
+} from "@prismic-beta/slicemachine-core/build/models";
 import { Acl, ClientError } from "@slicemachine/client";
 import { writeError } from "../../utils/logs";
 

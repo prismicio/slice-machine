@@ -3,13 +3,13 @@ import { EnvironmentStoreType } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
-import { Frameworks } from "@slicemachine/core/build/models/Framework";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
-import { SliceSM } from "@slicemachine/core/build/models";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { SliceSM } from "@prismic-beta/slicemachine-core/build/models";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import { AuthStatus } from "../userContext/types";
 

@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 import { fold } from "fp-ts/Either";
-import { Utils } from "@slicemachine/core";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+import { Utils } from "@prismic-beta/slicemachine-core";
+import { PrismicSharedConfigManager } from "@prismic-beta/slicemachine-core/build/prismic";
 
 const AuthRequest = t.type({
   email: t.string,

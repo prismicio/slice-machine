@@ -16,7 +16,7 @@ Some parts of Slicemachine are framework dependent.
 Use `autodetectFramework` to get what's identified in your package.json.
 
 ```javascript
-import { autodetectFramework } from "@slicemachine/core/build/node-utils";
+import { autodetectFramework } from "@prismic-beta/slicemachine-core/build/node-utils";
 
 (async () => {
   const framework = autodetectFramework("." /* project cwd */);
@@ -29,8 +29,8 @@ Slicemachine projects rely on an `sm.json` file to configure the behaviour of
 the plugin (`slice-machine-ui` mostly).
 
 ```javascript
-import * as Manifest from "@slicemachine/core/build/node-utils/manifest";
-import { DEFAULT_BASE } from "@slicemachine/core/build/consts";
+import * as Manifest from "@prismic-beta/slicemachine-core/build/node-utils/manifest";
+import { DEFAULT_BASE } from "@prismic-beta/slicemachine-core/build/consts";
 
 (async () => {
   const cwd = "./";
@@ -61,7 +61,7 @@ Work with `package.json` files
 import {
   retrieveJsonPackage,
   patchJsonPackage,
-} from "@slicemachine/core/build/node-utils";
+} from "@prismic-beta/slicemachine-core/build/node-utils";
 
 (async () => {
   const cwd = "./";
@@ -78,7 +78,7 @@ that hold code, Prismic Slice model, screenshots and mocks.
 Once registered, retrieve them from the Filesystem
 
 ```javascript
-import { libraries } from "@slicemachine/core/build/libraries";
+import { libraries } from "@prismic-beta/slicemachine-core/build/libraries";
 
 (async () => {
   const cwd = "./";
@@ -117,7 +117,7 @@ Helpers to interact with Prismic and Prismic Shared Config object (~/.prismic)
 Various helpers to deal with Slicemachine specifics
 
 ```javascript
-import { pascalize, snakelize } from "@slicemachine/core/build/utils";
+import { pascalize, snakelize } from "@prismic-beta/slicemachine-core/build/utils";
 
 (async () => {
   const camelName = "camelName";

@@ -2,7 +2,7 @@ import fs from "fs";
 import { Volume } from "memfs";
 
 import getEnv from "../../../server/src/api/services/getEnv";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 import { ApplicationMode } from "@slicemachine/client";
 
 import os from "os";

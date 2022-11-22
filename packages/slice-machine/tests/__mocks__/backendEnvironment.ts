@@ -1,6 +1,6 @@
 import { Client, ApplicationMode } from "@slicemachine/client";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 
 export const fakeAuthenticationToken = "fakeAuthenticationToken";
 

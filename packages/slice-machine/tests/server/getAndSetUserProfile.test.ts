@@ -3,7 +3,7 @@ import MockedBackendEnv from "../__mocks__/backendEnvironment";
 import { getAndSetUserProfile } from "../../server/src/api/services/getAndSetUserProfile";
 import { vol } from "memfs";
 import * as os from "os";
-import { PrismicSharedConfig } from "@slicemachine/core/build/models";
+import { PrismicSharedConfig } from "@prismic-beta/slicemachine-core/build/models";
 import nock from "nock";
 import path from "path";
 

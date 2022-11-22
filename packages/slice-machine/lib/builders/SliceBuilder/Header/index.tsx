@@ -9,7 +9,7 @@ import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { VariationSM } from "@prismic-beta/slicemachine-core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { Button } from "@components/Button";

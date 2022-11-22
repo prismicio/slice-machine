@@ -1,4 +1,4 @@
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 import axios from "axios";
 import { LibraryUI } from "../../lib/models/common/LibraryUI";
 import {

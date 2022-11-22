@@ -23,11 +23,11 @@ import {
   selectCurrentMockConfig,
   selectCurrentPoolOfFields,
 } from "../../../../src/modules/selectedCustomType";
-import { SlicesSM } from "@slicemachine/core/build/models/Slices";
+import { SlicesSM } from "@prismic-beta/slicemachine-core/build/models/Slices";
 import {
   TabField,
   TabFields,
-} from "@slicemachine/core/build/models/CustomType";
+} from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import Tracker from "../../../../src/tracking/client";
 
 interface TabZoneProps {

@@ -13,7 +13,7 @@ import {
 
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@prismic-beta/slicemachine-core/build/models";
 import {
   getFramework,
   getLinkToTroubleshootingDocs,

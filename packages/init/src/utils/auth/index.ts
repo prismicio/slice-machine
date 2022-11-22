@@ -1,9 +1,9 @@
-import { Utils } from "@slicemachine/core";
+import { Utils } from "@prismic-beta/slicemachine-core";
 import { startServerAndOpenBrowser } from "./helpers";
 import {
   Endpoints,
   PrismicSharedConfigManager,
-} from "@slicemachine/core/build/prismic";
+} from "@prismic-beta/slicemachine-core/build/prismic";
 import { InitClient } from "../client";
 
 async function startAuth({

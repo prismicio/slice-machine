@@ -18,7 +18,7 @@ import * as Widgets from "../../../lib/models/common/widgets";
 import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { SliceSM } from "@slicemachine/core/build/models";
+import { SliceSM } from "@prismic-beta/slicemachine-core/build/models";
 import { renamedComponentUI, renameSliceCreator } from "../slices";
 import { refreshStateCreator } from "../environment";
 import {

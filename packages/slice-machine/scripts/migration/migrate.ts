@@ -1,5 +1,5 @@
 import compareVersions from "compare-versions";
-import { Manifest } from "@slicemachine/core/build/models";
+import { Manifest } from "@prismic-beta/slicemachine-core/build/models";
 
 import MIGRATIONS from "./versions";
 import { run } from "./run";

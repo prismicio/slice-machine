@@ -3,10 +3,10 @@ import * as networkHook from "../../../src/hooks/useNetwork";
 import * as reduxHelpers from "react-redux";
 import { AuthStatus } from "@src/modules/userContext/types";
 
-import { Slices } from "@slicemachine/core/build/models/Slice";
+import { Slices } from "@prismic-beta/slicemachine-core/build/models/Slice";
 import SliceMock from "../../__mocks__/sliceModel";
 
-import { CustomTypes } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypes } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import { customTypeMock } from "../../__mocks__/customType";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 

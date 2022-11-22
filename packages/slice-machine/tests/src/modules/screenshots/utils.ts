@@ -1,6 +1,9 @@
 import jsonModel from "./__mockData__/model.json";
 import mocks from "./__mockData__/mocks.json";
-import { ComponentMocks, Slices } from "@slicemachine/core/build/models";
+import {
+  ComponentMocks,
+  Slices,
+} from "@prismic-beta/slicemachine-core/build/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 

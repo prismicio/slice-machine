@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 import glob from "glob";
 import slash from "slash";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
-import * as Libraries from "@slicemachine/core/build/libraries";
+import * as NodeUtils from "@prismic-beta/slicemachine-core/build/node-utils";
+import * as Libraries from "@prismic-beta/slicemachine-core/build/libraries";
 import { Migration } from "../../migrate";
 import prompts from "prompts";
 

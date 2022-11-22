@@ -2,7 +2,7 @@ import {
   ModelStatus,
   computeModelStatus,
 } from "@lib/models/common/ModelStatus";
-import { CustomTypes } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypes } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 import { customTypeMock } from "../../../__mocks__/customType";
 
 const model = CustomTypes.toSM(customTypeMock);

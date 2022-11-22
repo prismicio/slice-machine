@@ -14,7 +14,7 @@ import {
 } from "../../../src/modules/pushChangesSaga/syncToaster";
 import { expectSaga } from "redux-saga-test-plan";
 import { ComponentUI } from "../../../lib/models/common/ComponentUI";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@prismic-beta/slicemachine-core/build/models/CustomType";
 
 import {
   pushCustomTypeCreator,

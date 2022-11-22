@@ -2,7 +2,7 @@ import MockedBackendEnv from "../../__mocks__/backendEnvironment";
 import { MockLibraryInfo } from "../../__mocks__/libraryState";
 import onSaveSlice from "../../../server/src/api/common/hooks/onSaveSlice";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { Models } from "@slicemachine/core";
+import { Models } from "@prismic-beta/slicemachine-core";
 import { vol } from "memfs";
 
 jest.mock(`fs`, () => {
@@ -10,8 +10,10 @@ jest.mock(`fs`, () => {
   return vol;
 });
 
-jest.mock(`@slicemachine/core/build/libraries`, () => {
-  const actualCore = jest.requireActual("@slicemachine/core/build/libraries");
+jest.mock(`@prismic-beta/slicemachine-core/build/libraries`, () => {
+  const actualCore = jest.requireActual(
+    "@prismic-beta/slicemachine-core/build/libraries"
+  );
   return {
     ...actualCore,
     libraries: (cwd: string, libs: string[]) =>
