@@ -57,29 +57,6 @@ describe("Create Slices", () => {
     );
     cy.readFile(type).should("contains", sliceName);
 
-    cy.readFile(pathToMock, "utf-8")
-      .then((mock) => {
-        return cy
-          .readFile(pathToLibraryState, "utf-8")
-          .then((librariesState) => {
-            return { mock, librariesState };
-          });
-      })
-      .then(({ mock, librariesState }) => {
-        const want = mock[0];
-        const got =
-          librariesState["slices"].components["test_slice"].mocks.default;
-
-        expect(got.primary.description[0].text).to.exist;
-        expect(got.primary.description[0].text).to.equal(
-          want.primary.description.value[0].content.text
-        );
-        expect(got.primary.title[0].text).to.exist;
-        expect(got.primary.title[0].text).to.equal(
-          want.primary.title.value[0].content.text
-        );
-      });
-
     // remove widget
     cy.get("#menu-button--menu").last().click();
     cy.contains("Delete field").click();

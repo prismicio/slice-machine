@@ -33,11 +33,14 @@ const Files = {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readEntity<T>(pathToFile: string, validate: (payload: any) => Error | T) {
+  readEntity<T>(pathToFile: string, validate: (payload: unknown) => Error | T) {
     return validate(JSON.parse(this.readString(pathToFile)));
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  safeReadEntity<T>(pathToFile: string, validate: (payload: any) => null | T) {
+  safeReadEntity<T>(
+    pathToFile: string,
+    validate: (payload: unknown) => null | T
+  ) {
     try {
       const result = this.readEntity(pathToFile, validate);
       if (result instanceof Error) return null;

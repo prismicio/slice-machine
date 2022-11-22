@@ -70,9 +70,6 @@ export const CustomPaths = (cwd: string): ReturnType<typeof paths> =>
 export const PackagePaths = (cwd: string): ReturnType<typeof paths> =>
   paths(cwd, "node_modules");
 
-export const LibrariesStatePath = (cwd: string): string =>
-  path.join(cwd, ".slicemachine", "libraries-state.json");
-
 export const PrismicConfig = (cwd: string): string =>
   path.join(cwd, ".prismic");
 

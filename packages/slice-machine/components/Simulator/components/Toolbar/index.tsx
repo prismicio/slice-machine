@@ -1,46 +1,36 @@
-import { DropDownMenu } from "@components/DropDownMenu";
-import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/models";
-import { RiCloseLine } from "react-icons/ri";
+import { useState } from "react";
+
 import { Flex } from "theme-ui";
+import { RiCloseLine } from "react-icons/ri";
+import { Button } from "@components/Button";
+import { AiFillCamera } from "react-icons/ai";
+
+import { DropDownMenu } from "@components/DropDownMenu";
+
 import {
   ScreensizeInput,
   ScreenSizeOptions,
   ScreenSizes,
 } from "./ScreensizeInput";
-import router from "next/router";
-import * as Links from "@lib/builders/SliceBuilder/links";
-import { useState } from "react";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
-const redirect = (
-  model: ComponentUI,
-  variation: { id: string } | undefined,
-  isSimulator?: boolean
-): void => {
-  if (!variation) {
-    void router.push(`/${model.href}/${model.model.name}`);
-    return;
-  }
-  const params = Links.variation({
-    lib: model.href,
-    sliceName: model.model.name,
-    variationId: variation?.id,
-    isSimulator,
-  });
-  void router.push(params.href, params.as, params.options);
-};
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { VariationSM } from "@slicemachine/core/build/models";
 
 type ToolbarProps = {
-  Model: ComponentUI;
+  slice: ComponentUI;
   variation: VariationSM;
   handleScreenSizeChange: (screenDimensions: ScreenDimensions) => void;
   screenDimensions: ScreenDimensions;
 };
 
 export const Toolbar: React.FC<ToolbarProps> = ({
-  Model,
+  slice,
   variation,
   handleScreenSizeChange,
   screenDimensions,
@@ -73,19 +63,42 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     handleScreenSizeChange(newScreenDimensions);
   };
 
+  const { generateSliceScreenshot } = useSliceMachineActions();
+
+  const onTakingSliceScreenshot = () => {
+    generateSliceScreenshot(
+      variation.id,
+      slice,
+      {
+        width: screenDimensions.width,
+        height: screenDimensions.height,
+      },
+      "fromSimulator"
+    );
+  };
+
+  const { isSavingScreenshot } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isSavingScreenshot: isLoading(
+        store,
+        LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
+      ),
+    })
+  );
+
   return (
-    <Flex sx={{ flexDirection: "row", justifyContent: "space-between", mb: 3 }}>
-      <VarationsPopover
-        defaultValue={variation}
-        variations={Model.model.variations}
-        onChange={(v) => redirect(Model, v, true)}
-        disabled={Model.model.variations.length <= 1}
-      />
+    <Flex
+      sx={{
+        alignItems: "center",
+        pb: 2,
+        justifyContent: "space-between",
+        variant: "small",
+      }}
+    >
       <Flex
         sx={{
           alignItems: "center",
           flex: 1,
-          justifyContent: "flex-end",
         }}
       >
         <DropDownMenu
@@ -118,6 +131,13 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           sx={{ ml: 2 }}
         />
       </Flex>
+      <Button
+        onClick={onTakingSliceScreenshot}
+        label="Take a screenshot"
+        isLoading={isSavingScreenshot}
+        Icon={AiFillCamera}
+        variant="secondary"
+      />
     </Flex>
   );
 };

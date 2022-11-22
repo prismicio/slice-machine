@@ -10,6 +10,7 @@ import theme from "../src/theme";
 import LoadingPage from "../components/LoadingPage";
 import SliceMachineApp from "../components/App";
 
+import "@prismicio/editor-ui/dist/style.css";
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -36,6 +37,16 @@ import { getState } from "../src/apiClient";
 import { normalizeFrontendCustomTypes } from "../src/normalizers/customType";
 import Router from "next/router";
 
+import { NextPage } from "next";
+
+type NextPageWithLayout = NextPage & {
+  CustomLayout?: React.FC;
+};
+
+type AppContextWithComponentLayout = AppContext & {
+  Component: NextPageWithLayout;
+};
+
 const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
   const { setColorMode } = useThemeUI();
   useEffect(() => {
@@ -47,7 +58,10 @@ const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
   return <>{children}</>;
 };
 
-function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
+function MyApp({
+  Component,
+  pageProps,
+}: AppContextWithComponentLayout & AppInitialProps) {
   const [serverState, setServerState] = useState<ServerState | null>(null);
   const [smStore, setSMStore] = useState<{
     store: Store;
@@ -91,6 +105,8 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     setSMStore({ store, persistor });
   }, [serverState]);
 
+  const ComponentLayout = Component.CustomLayout || SliceMachineApp;
+
   return (
     <>
       <Head>
@@ -105,9 +121,9 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
               <Provider store={smStore.store}>
                 <ConnectedRouter Router={Router}>
                   <PersistGate loading={null} persistor={smStore.persistor}>
-                    <SliceMachineApp>
+                    <ComponentLayout>
                       <Component {...pageProps} />
-                    </SliceMachineApp>
+                    </ComponentLayout>
                   </PersistGate>
                 </ConnectedRouter>
               </Provider>

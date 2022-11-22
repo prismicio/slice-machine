@@ -25,11 +25,8 @@ import {
   GroupMockConfig,
   UIDMockConfig,
 } from "@prismicio/mocks";
-import {
-  EmbedContent,
-  EmbedContentType,
-} from "@prismicio/types-internal/lib/documents/widgets/nestable/EmbedContent";
 import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
+import { EmbedContent } from "@prismicio/types-internal/lib/content";
 
 export const DefaultConfig = {
   GeoPoint: null,
@@ -312,6 +309,8 @@ export function buildNestableMockConfig(
             const url = config.content
               ? (config.content as { url: string }).url
               : undefined;
+            if (!url) return;
+
             const oembed = config.content
               ? (config.content as { oembed: EmbedContent }).oembed
               : undefined;
@@ -319,12 +318,7 @@ export function buildNestableMockConfig(
             return;
           })();
           return {
-            value: value
-              ? {
-                  __TYPE__: EmbedContentType,
-                  ...value,
-                }
-              : value,
+            value,
           };
         }
       )(EmbedLegacyMockConfig.decode(fieldMockConfig));
