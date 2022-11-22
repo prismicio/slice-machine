@@ -9,7 +9,7 @@ import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box } from "theme-ui";
 
@@ -17,7 +17,8 @@ type ScreenshotType = React.FunctionComponent & {
   CustomLayout: typeof CustomLayout;
 };
 
-const CustomLayout: React.FunctionComponent = ({ children }) => <>{children}</>;
+const CustomLayout: React.FunctionComponent<{ children: ReactNode }> =
+  ({ children }) => <>{children}</>;
 
 const Screenshot: ScreenshotType = () => {
   const router = useRouter();

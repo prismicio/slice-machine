@@ -74,7 +74,7 @@ export default function Simulator() {
   const initialContent = useMemo<SharedSliceContent>(
     () =>
       component.mock?.[0] ||
-      (defaultSharedSliceContent(variation.id) as SharedSliceContent),
+      (defaultSharedSliceContent(variation.id)),
     [component.mock, variation.id]
   );
 
@@ -165,7 +165,7 @@ export default function Simulator() {
               transition: "visibility 0s linear",
             }}
           >
-            <ThemeProvider>
+            <ThemeProvider mode="light">
               <SharedSliceEditor
                 content={editorContent}
                 onContentChange={(c) => setContent(c as SharedSliceContent)}

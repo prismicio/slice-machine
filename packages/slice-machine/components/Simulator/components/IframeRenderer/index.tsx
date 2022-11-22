@@ -26,7 +26,7 @@ function useSimulatorClient(): readonly [
         setClient(clientRef.current);
         const reconnect = async () => {
           setClient(undefined);
-          await clientRef.current?.connect({}, true);
+          await clientRef.current?.connect(true);
           setClient(clientRef.current);
         };
         observerRef.current = new MutationObserver((mutations) => {

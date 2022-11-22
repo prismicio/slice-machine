@@ -1,7 +1,11 @@
-import React from "react";
+import type { FC, ReactNode } from "react";
 import { Flex } from "theme-ui";
 
-export const ChangesSectionHeader: React.FC = ({ children }) => {
+type Props = Readonly<{
+  children?: ReactNode;
+}>;
+
+export const ChangesSectionHeader: FC<Props> = ({ children }) => {
   return (
     <Flex
       sx={{

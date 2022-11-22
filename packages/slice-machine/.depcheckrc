@@ -1,5 +1,4 @@
 ignores: [
-  "babel-plugin-module-resolver",
   "nodemon",
   "rollup",
   "@svgr/webpack",
