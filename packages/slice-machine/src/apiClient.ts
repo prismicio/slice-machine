@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Slices } from "@slicemachine/core/build/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import {
@@ -88,19 +88,11 @@ export const saveCustomType = async (
 };
 
 export const renameCustomType = (
-  customTypeId: string,
-  newCustomTypeName: string
+  customType: CustomTypeSM // TODO: Don't use the SM version. Convert to
 ): Promise<AxiosResponse> => {
-  const requestBody: RenameCustomTypeBody = {
-    customTypeId,
-    newCustomTypeName,
-  };
-
-  return axios.patch(
-    `/api/custom-types/rename?id=${customTypeId}`,
-    requestBody,
-    defaultAxiosConfig
-  );
+  return managerClient.customTypes.renameCustomType({
+    model: CustomTypes.fromSM(customType),
+  });
 };
 
 export const pushCustomType = async (customTypeId: string): Promise<void> => {
@@ -125,16 +117,20 @@ export const createSlice = (
 };
 
 export const renameSlice = (
-  sliceId: string,
-  newSliceName: string,
+  slice: SliceSM,
   libName: string
 ): Promise<AxiosResponse> => {
-  const requestBody = {
-    sliceId,
-    newSliceName,
-    libName,
-  };
-  return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
+  return managerClient.slices.renameSlice({
+    libraryID: libName,
+    model: Slices.fromSM(slice),
+  });
+
+  // const requestBody = {
+  //   sliceId,
+  //   newSliceName,
+  //   libName,
+  // };
+  // return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
 export const generateSliceScreenshotApiClient = (

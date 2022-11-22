@@ -8,6 +8,8 @@ import {
 	CustomTypeDeleteHook,
 	CustomTypeDeleteHookData,
 	CustomTypeReadHookData,
+	CustomTypeRenameHook,
+	CustomTypeRenameHookData,
 	CustomTypeUpdateHook,
 	CustomTypeUpdateHookData,
 	HookError,
@@ -150,6 +152,21 @@ export class CustomTypesManager extends BaseManager {
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"custom-type:update",
+			args,
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
+	}
+
+	async renameCustomType(
+		args: CustomTypeRenameHookData,
+	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeRenameHook>>> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"custom-type:rename",
 			args,
 		);
 

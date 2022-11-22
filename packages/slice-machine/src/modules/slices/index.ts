@@ -51,15 +51,15 @@ export const renameSliceCreator = createAsyncAction(
   "SLICES/RENAME.FAILURE"
 )<
   {
-    sliceId: string;
-    newSliceName: string;
     libName: string;
+    sliceId: string;
     variationId: string;
+    newSliceName: string;
   },
   {
+    libName: string;
     sliceId: string;
     newSliceName: string;
-    libName: string;
   }
 >();
 

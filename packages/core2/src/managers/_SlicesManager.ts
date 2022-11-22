@@ -11,6 +11,8 @@ import {
 	SliceDeleteHookData,
 	SliceLibraryReadHookData,
 	SliceReadHookData,
+	SliceRenameHook,
+	SliceRenameHookData,
 	SliceUpdateHook,
 	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
@@ -248,6 +250,21 @@ export class SlicesManager extends BaseManager {
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"slice:update",
+			args,
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
+	}
+
+	async renameSlice(
+		args: SliceRenameHookData,
+	): Promise<OnlyHookErrors<CallHookReturnType<SliceRenameHook>>> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"slice:rename",
 			args,
 		);
 

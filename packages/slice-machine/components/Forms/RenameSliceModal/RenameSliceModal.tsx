@@ -34,7 +34,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
   );
 
   const handleOnSubmit = (values: { sliceName: string }) => {
-    renameSlice(sliceId, values.sliceName, libName, variationId);
+    renameSlice(libName, sliceId, variationId, values.sliceName);
   };
 
   return (

@@ -3,7 +3,7 @@ import { AvailableCustomTypesStoreType, FrontEndCustomType } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { refreshStateCreator } from "@src/modules/environment";
-import { call, fork, put, takeLatest } from "redux-saga/effects";
+import { call, fork, put, select, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { renameCustomType, saveCustomType } from "@src/apiClient";
@@ -201,11 +201,14 @@ export function* renameCustomTypeSaga({
   payload,
 }: ReturnType<typeof renameCustomTypeCreator.request>) {
   try {
-    yield call(
-      renameCustomType,
-      payload.customTypeId,
-      payload.newCustomTypeName
-    );
+    const customType = (yield select((store: SliceMachineStoreType) =>
+      selectCustomTypeById(store, payload.customTypeId)
+    )) as ReturnType<typeof selectCustomTypeById>;
+    if (!customType) {
+      throw new Error(`Custom Type "${payload.newCustomTypeName} not found.`);
+    }
+
+    yield call(renameCustomType, customType?.local);
     yield put(renameCustomTypeCreator.success(payload));
     yield put(
       modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE })

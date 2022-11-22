@@ -4,6 +4,7 @@ import {
   takeLatest,
   put,
   SagaReturnType,
+  select,
 } from "redux-saga/effects";
 import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
@@ -15,6 +16,8 @@ import { renameSliceCreator } from "../slices";
 import { modalCloseCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { push } from "connected-next-router";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectSliceById } from "./selectors";
 
 export function* saveSliceSaga({
   payload,
@@ -69,7 +72,16 @@ export function* renameSliceSaga({
 }: ReturnType<typeof renameSliceCreator.request>) {
   const { libName, sliceId, newSliceName } = payload;
   try {
-    yield call(renameSlice, sliceId, newSliceName, libName);
+    const slice = (yield select((store: SliceMachineStoreType) =>
+      selectSliceById(store, libName, sliceId)
+    )) as ReturnType<typeof selectSliceById>;
+    if (!slice) {
+      throw new Error(
+        `Slice "${payload.sliceId} in the "${payload.libName}" library not found.`
+      );
+    }
+
+    yield call(renameSlice, slice.model, libName);
     yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
     yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
