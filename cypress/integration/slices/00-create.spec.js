@@ -72,13 +72,10 @@ describe("Create Slices", () => {
         expect(got).to.deep.equal(want);
       });
 
-    // TODO: The following test no longer works because @reach/menu-button is no longer maintained (and is not compatible with React 18).
-    // Both `.trigger("mousedown")` and `.focus().type(" ")` didn't work (the menu didn't open).
-
-    // // remove widget
-    // cy.get('[data-cy="slice-menu-button"]').last().click();
-    // cy.contains("Delete field").click();
-    // cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
+    // remove widget
+    cy.get('[data-cy="slice-menu-button"]').last().click();
+    cy.contains("Delete field").click();
+    cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
     // edit slice name
     cy.get('[data-cy="edit-slice-name"]').click();
