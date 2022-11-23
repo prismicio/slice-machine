@@ -1,8 +1,10 @@
-ignores: [
-  "nodemon",
-  "rollup",
-  "@svgr/webpack",
-  "monocle-ts",
-  "newtype-ts",
-]
+ignores:
+  [
+    "@babel/plugin-proposal-private-methods",
+    "nodemon",
+    "rollup",
+    "@svgr/webpack",
+    "monocle-ts",
+    "newtype-ts",
+  ]
 skip - missing: true
