@@ -23,6 +23,7 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { Button } from "@components/Button";
 import { AiOutlineCamera } from "react-icons/ai";
+import { SIMULATOR_WINDOW_ID } from "@lib/consts";
 
 type SideBarProps = {
   component: ComponentUI;
@@ -86,7 +87,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         data-testid="open-set-up-simulator"
         disabled={!isSimulatorAvailableForFramework}
         onClick={() =>
-          window.open(`${router.asPath}/simulator`, "slice-machine-simulator")
+          window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID)
         }
         variant={
           isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"

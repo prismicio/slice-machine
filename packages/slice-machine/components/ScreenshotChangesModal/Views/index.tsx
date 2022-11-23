@@ -15,6 +15,7 @@ import DefaultView from "./Default";
 import { AiOutlineEye } from "react-icons/ai";
 
 import { Button } from "@components/Button";
+import { SIMULATOR_WINDOW_ID } from "@lib/consts";
 
 enum ScreenshotView {
   Default = 1,
@@ -65,7 +66,7 @@ const VariationScreenshot: React.FC<{
   const openSimulator = () =>
     window.open(
       `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
-      slice.model.id
+      SIMULATOR_WINDOW_ID
     );
 
   return (

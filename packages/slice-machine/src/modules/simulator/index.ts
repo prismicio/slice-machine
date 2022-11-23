@@ -88,6 +88,10 @@ export const selectIsWaitingForIFrameCheck = (
   state: SliceMachineStoreType
 ): boolean => state.simulator.isWaitingForIframeCheck;
 
+export const selectIframeStatus = (
+  state: SliceMachineStoreType
+): string | null => state.simulator.iframeStatus;
+
 // Reducer
 export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
   state = initialState,

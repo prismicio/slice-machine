@@ -3,7 +3,7 @@ import { SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
-import { Box, Flex } from "theme-ui";
+import { Box, Card, Flex } from "theme-ui";
 
 import Header from "./components/Header";
 
@@ -25,6 +25,7 @@ import {
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { Slices } from "@slicemachine/core/build/models";
+import SliceMachineModal from "@components/SliceMachineModal";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
@@ -33,22 +34,22 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields
 
 import useThrottle from "@src/hooks/useThrottle";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
+
 import IframeRenderer from "./components/IframeRenderer";
 import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
 import {
+  selectIframeStatus,
   selectIsWaitingForIFrameCheck,
   selectSetupStatus,
 } from "@src/modules/simulator";
 
-// enum UiState {
-//   LOADING = "LOADING",
-//   LOADING_IFRAME = "LOADING_IFRAME",
-//   FAILED_SETUP = "FAILED_SETUP",
-//   FAILED_CONNECT = "FAILED_CONNECT",
-//   SUCCESS = "SUCCESS",
-// }
+enum UiState {
+  LOADING_SETUP = "LOADING_SETUP",
+  LOADING_IFRAME = "LOADING_IFRAME",
+  FAILED_SETUP = "FAILED_SETUP",
+  FAILED_CONNECT = "FAILED_CONNECT",
+  SUCCESS = "SUCCESS",
+}
 
 const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const { checkSimulatorSetup, connectToSimulatorIframe } =
@@ -57,16 +58,14 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     framework,
     version,
     simulatorUrl,
+    iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
     simulatorUrl: selectSimulatorUrl(state),
     version: getCurrentVersion(state),
-    isCreateCustomTypeModalOpen: isModalOpen(
-      state,
-      ModalKeysEnum.SIMULATOR_SETUP
-    ),
+    iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
   }));
@@ -82,20 +81,17 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     }
   }, [manifestStatus]);
 
-  // TODO
-  isWaitingForIFrameCheck;
-
-  // TODO
-
-  // const UI_STATE: UiState = (() => {
-  //   if (manifestStatus === "ok") {
-  //     if (isWaitingForIFrameCheck) {
-  //       return UiState.LOADING_IFRAME;
-  //     }
-  //     return UiState.SUCCESS;
-  //   }
-  //   return UiState.LOADING;
-  // })();
+  const currentState: UiState = (() => {
+    if (manifestStatus === "ok") {
+      if (isWaitingForIFrameCheck) {
+        return UiState.LOADING_IFRAME;
+      }
+      return UiState.SUCCESS;
+    } else if (manifestStatus === "ko") {
+      return UiState.FAILED_SETUP;
+    }
+    return UiState.LOADING_SETUP;
+  })();
 
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
@@ -142,6 +138,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
+      <SliceMachineModal isOpen={currentState !== UiState.FAILED_SETUP}>
+        <Card sx={{ minHeight: "500px" }}>
+          Setup modal
+        </Card>
+      </SliceMachineModal>
       <Header
         slice={slice}
         variation={variation}
@@ -177,11 +178,15 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
             />
-            <IframeRenderer
-              apiContent={apiContent}
-              screenDimensions={screenDimensions}
-              simulatorUrl={simulatorUrl}
-            />
+            {
+              currentState !== UiState.LOADING_SETUP ? (
+                <IframeRenderer
+                  apiContent={apiContent}
+                  screenDimensions={screenDimensions}
+                  simulatorUrl={simulatorUrl}
+                />
+              ) : null
+            }
           </Box>
           <Box
             sx={{
