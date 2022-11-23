@@ -133,25 +133,27 @@ describe("replaceLegacySliceMocks", () => {
     expect(ComponentMocks.decode(result)).toBeRight();
   });
 
-  test.skip("it should replace valid mocks", () => {
-    const wanted = {
-      __TYPE__: "SharedSliceContent",
-      variation: "default-slice",
-      primary: {
-        title: { __TYPE__: "FieldContent", value: "chemical", type: "Text" },
-      },
-      items: [
-        {
-          __TYPE__: "GroupItemContent",
-          value: [
-            [
-              "subTitle",
-              { __TYPE__: "FieldContent", value: "clean", type: "Text" },
-            ],
-          ],
+  test("it should replace valid mocks", () => {
+    const wanted = [
+      {
+        __TYPE__: "SharedSliceContent",
+        variation: "default-slice",
+        primary: {
+          title: { __TYPE__: "FieldContent", value: "chemical", type: "Text" },
         },
-      ],
-    };
+        items: [
+          {
+            __TYPE__: "GroupItemContent",
+            value: [
+              [
+                "subTitle",
+                { __TYPE__: "FieldContent", value: "clean", type: "Text" },
+              ],
+            ],
+          },
+        ],
+      },
+    ];
 
     vol.fromJSON(
       {
