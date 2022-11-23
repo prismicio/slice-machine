@@ -73,7 +73,7 @@ describe("Create Slices", () => {
       });
 
     // remove widget
-    cy.get('[data-cy="slice-menu-button"]').last().trigger("mousedown");
+    cy.get('[data-cy="slice-menu-button"]').last().focus().type(" ");
     cy.contains("Delete field").click();
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
