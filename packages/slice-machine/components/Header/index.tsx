@@ -46,7 +46,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     <Button
       label="🔥🔥🔥 Hello Sentry 🔥🔥🔥"
       onClick={() => {
-        throw new Error("Hello Sentry");
+        throw new Error("Hello Sentry!");
       }}
     />
     {ActionButton ? ActionButton : null}
