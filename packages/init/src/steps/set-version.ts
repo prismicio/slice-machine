@@ -8,6 +8,7 @@ const getTheSliceMachineVersionInstalled = (
   packageJson: NodeUtils.FileContent<NodeUtils.JsonPackage>
 ) => {
   const sliceMachinePackageInstalled = Object.entries(
+    //eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     packageJson.content?.devDependencies || {}
   ).find((devDependency) => {
     if (devDependency[0] === CONSTS.SM_PACKAGE_NAME) {
@@ -20,7 +21,7 @@ const getTheSliceMachineVersionInstalled = (
   }
 
   const extractedVersion = extractVersionNumberFromSemver(
-    sliceMachinePackageInstalled[1]
+    sliceMachinePackageInstalled[1] as string
   );
 
   if (!extractedVersion) {

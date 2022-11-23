@@ -17,8 +17,9 @@ type ScreenshotType = React.FunctionComponent & {
   CustomLayout: typeof CustomLayout;
 };
 
-const CustomLayout: React.FunctionComponent<{ children: ReactNode }> =
-  ({ children }) => <>{children}</>;
+const CustomLayout: React.FunctionComponent<{ children: ReactNode }> = ({
+  children,
+}) => <>{children}</>;
 
 const Screenshot: ScreenshotType = () => {
   const router = useRouter();
