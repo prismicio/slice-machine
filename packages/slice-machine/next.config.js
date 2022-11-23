@@ -7,19 +7,4 @@ module.exports = {
     // overridden by start script
     CWD: path.resolve("tests/project"),
   },
-  // webpack: (config, { isServer }) => {
-  //   if (!isServer) {
-  //     config.resolve.fallback = {
-  //       ...config.resolve.fallback,
-  //       child_process: false,
-  //       fs: false,
-  //     };
-  //   }
-  //   config.module.rules.push({
-  //     test: /\.svg$/i,
-  //     issuer: /\.[jt]sx?$/,
-  //     use: ["@svgr/webpack"],
-  //   });
-  //   return config;
-  // },
 };
