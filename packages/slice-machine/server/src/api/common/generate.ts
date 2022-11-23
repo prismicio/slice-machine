@@ -46,8 +46,6 @@ export function replaceLegacySliceMocks(
         const mocks: ComponentMocks = mockForSlice(
           c.model,
           SliceMockConfig.getSliceMockConfig(
-            // here
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
             getGobalMockConfig(cwd),
             c.from,
             c.model.name
