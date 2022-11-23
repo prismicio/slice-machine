@@ -1,7 +1,7 @@
 import Files from "../../utils/files";
 import { MocksConfig } from "../../models/paths";
 
-export const getConfig = (cwd: string) => {
+export const getConfig = (cwd: string): Record<string, unknown> => {
   const pathToMockConfig = MocksConfig(cwd);
   if (Files.exists(pathToMockConfig)) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return

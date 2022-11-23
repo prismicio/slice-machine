@@ -38,7 +38,7 @@ export const getBackendState = async (
       );
   }
 
-  generate(env, libraries);
+  generate(env.cwd, libraries, customTypes);
 
   return {
     libraries,
