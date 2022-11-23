@@ -13,8 +13,11 @@ export const validateGenerateTypes = ({ cwd }: ValidateGenerateTypesParams) => {
   const manifest = retrieveManifest(cwd);
 
   const packageJson = retrieveJsonPackage(cwd);
+  //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const allDependencies = {
+    //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ...packageJson.content?.dependencies,
+    //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ...packageJson.content?.devDependencies,
   };
   const hasTypesPackage = PRISMIC_TYPES in allDependencies;
