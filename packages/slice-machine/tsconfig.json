@@ -32,30 +32,14 @@
     "jsx": "preserve",
     "outDir": "./build",
     "paths": {
-      "@/*": [
-        "/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@utils/*": [
-        "lib/utils/*"
-      ],
-      "@builders/*": [
-        "lib/builders/*"
-      ],
-      "@models/*": [
-        "lib/models/*"
-      ],
-      "@src/*": [
-        "src/*"
-      ],
-      "@hooks/*": [
-        "hooks/*"
-      ],
-      "@components/*": [
-        "components/*"
-      ]
+      "@/*": ["/*"],
+      "@lib/*": ["lib/*"],
+      "@utils/*": ["lib/utils/*"],
+      "@builders/*": ["lib/builders/*"],
+      "@models/*": ["lib/models/*"],
+      "@src/*": ["src/*"],
+      "@hooks/*": ["hooks/*"],
+      "@components/*": ["components/*"]
     },
     "incremental": true
   },
