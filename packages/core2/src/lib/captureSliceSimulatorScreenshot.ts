@@ -1,6 +1,6 @@
+import * as http from "node:http";
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { Viewport } from "puppeteer";
-import * as http from "node:http";
 
 import type { SliceMachineConfig } from "../types";
 

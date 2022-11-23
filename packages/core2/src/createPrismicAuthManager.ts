@@ -193,7 +193,7 @@ export class PrismicAuthManager {
 	}
 
 	private async _readPersistedAuthState(): Promise<PrismicAuthState> {
-		const authStateFilePath = await this._getPersistedAuthStateFilePath();
+		const authStateFilePath = this._getPersistedAuthStateFilePath();
 
 		let authStateFileContents: string = JSON.stringify({});
 
@@ -241,7 +241,7 @@ export class PrismicAuthManager {
 	private async _writePersistedAuthState(
 		authState: PrismicAuthState,
 	): Promise<void> {
-		const authStateFilePath = await this._getPersistedAuthStateFilePath();
+		const authStateFilePath = this._getPersistedAuthStateFilePath();
 
 		const preparedAuthState = {
 			...authState,
@@ -261,7 +261,7 @@ export class PrismicAuthManager {
 		}
 	}
 
-	private async _getPersistedAuthStateFilePath(): Promise<string> {
+	private _getPersistedAuthStateFilePath(): string {
 		return path.resolve(this.scopedDirectory, PERSISTED_AUTH_STATE_FILE_NAME);
 	}
 }

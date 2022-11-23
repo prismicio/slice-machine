@@ -8,7 +8,7 @@
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
     "prepare": "husky install",
-    "postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
+    "//postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run test",
     "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
@@ -63,5 +63,8 @@
     "**/packages/nuxt-sm/**/*": "prettier --write --ignore-unknown",
     "**/packages/vue-slicezone/**/*": "prettier --write --ignore-unknown",
     "**/packages/sm-commons/**/*": "prettier --write --ignore-unknown"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

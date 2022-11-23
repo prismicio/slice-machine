@@ -1,9 +1,17 @@
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { createRequire } from "node:module";
+
 import * as t from "io-ts";
+import fetch from "node-fetch";
+
+import { CustomTypes } from "@prismicio/types-internal";
 import {
 	CustomTypeModel,
 	SharedSlice,
 	SharedSliceModel,
 } from "@prismicio/types";
+import * as prismicCustomTypesCilent from "@prismicio/custom-types-client";
 import {
 	CallHookReturnType,
 	CustomTypeCreateHook,
@@ -26,12 +34,6 @@ import {
 	SliceUpdateHookData,
 	createSliceMachinePluginRunner,
 } from "@slicemachine/plugin-kit";
-import * as prismicCustomTypesCilent from "@prismicio/custom-types-client";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import { createRequire } from "node:module";
-import { CustomTypes } from "@prismicio/types-internal";
-import fetch from "node-fetch";
 
 import { DecodeError } from "./lib/DecodeError";
 import { bufferCodec } from "./lib/bufferCodec";
