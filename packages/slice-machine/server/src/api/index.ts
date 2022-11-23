@@ -302,7 +302,7 @@ router.post(
 
 // Sentry Proxy
 // eslint-disable-next-line @typescript-eslint/no-misused-promises,
-router.post("/sentry", plainTextBodyParser, WithEnv(sentryHandler));
+router.post("/t", plainTextBodyParser, WithEnv(sentryHandler));
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
 router.use("*", async function (req: express.Request, res: express.Response) {

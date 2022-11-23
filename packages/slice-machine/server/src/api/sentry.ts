@@ -14,7 +14,7 @@ const knownProjectIds = [`/${sentryNextConfig.projectId}`];
 // Not supported by express by default
 export function plainTextBodyParser(
   req: express.Request,
-  _: express.Response /* res */,
+  _res: express.Response,
   next: express.NextFunction
 ) {
   if (req.is("text/*")) {
