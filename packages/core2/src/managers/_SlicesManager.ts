@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import * as prismicCustomTypesCilent from "@prismicio/custom-types-client";
+import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomTypes } from "@prismicio/types-internal";
 import {
 	CallHookReturnType,
@@ -308,7 +308,7 @@ export class SlicesManager extends BaseManager {
 			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 			// TODO: Create a single shared client.
-			const client = prismicCustomTypesCilent.createClient({
+			const client = prismicCustomTypesClient.createClient({
 				repositoryName: sliceMachineConfig.repositoryName,
 				token: authenticationToken,
 				fetch,
@@ -321,7 +321,7 @@ export class SlicesManager extends BaseManager {
 				// If it exists on the repository, update it.
 				await client.updateSharedSlice(model);
 			} catch (error) {
-				if (error instanceof prismicCustomTypesCilent.NotFoundError) {
+				if (error instanceof prismicCustomTypesClient.NotFoundError) {
 					// If the Slice doesn't exist on the repository, insert it.
 					await client.insertSharedSlice(model);
 				}
@@ -484,7 +484,7 @@ export class SlicesManager extends BaseManager {
 		const authenticationToken = await this.user.getAuthenticationToken();
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
-		const client = prismicCustomTypesCilent.createClient({
+		const client = prismicCustomTypesClient.createClient({
 			repositoryName: sliceMachineConfig.repositoryName,
 			token: authenticationToken,
 			fetch,

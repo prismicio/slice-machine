@@ -171,9 +171,28 @@ export class PrismicAuthManager {
 		}
 	}
 
+	async getAuthenticationCookies(): Promise<
+		PrismicAuthState["cookies"] &
+			Required<
+				Pick<
+					PrismicAuthState["cookies"],
+					typeof AUTH_COOKIE_KEY | typeof SESSION_COOKIE_KEY
+				>
+			>
+	> {
+		const authState = await this._readPersistedAuthState();
+
+		if (!checkIsLoggedIn(authState)) {
+			throw new Error("Not logged in.");
+		}
+
+		return authState.cookies;
+	}
+
 	async getAuthenticationToken(): Promise<string> {
 		const authState = await this._readPersistedAuthState();
 
+		// TODO: Maybe we want to dedupe logic with `getAuthenticationCookies`
 		if (!checkIsLoggedIn(authState)) {
 			throw new Error("Not logged in.");
 		}
