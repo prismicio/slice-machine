@@ -139,9 +139,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
       <SliceMachineModal isOpen={currentState !== UiState.FAILED_SETUP}>
-        <Card sx={{ minHeight: "500px" }}>
-          Setup modal
-        </Card>
+        <Card sx={{ minHeight: "500px" }}>Setup modal</Card>
       </SliceMachineModal>
       <Header
         slice={slice}
@@ -178,15 +176,13 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
             />
-            {
-              currentState !== UiState.LOADING_SETUP ? (
-                <IframeRenderer
-                  apiContent={apiContent}
-                  screenDimensions={screenDimensions}
-                  simulatorUrl={simulatorUrl}
-                />
-              ) : null
-            }
+            {currentState !== UiState.LOADING_SETUP ? (
+              <IframeRenderer
+                apiContent={apiContent}
+                screenDimensions={screenDimensions}
+                simulatorUrl={simulatorUrl}
+              />
+            ) : null}
           </Box>
           <Box
             sx={{
