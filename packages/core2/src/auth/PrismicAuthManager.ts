@@ -5,10 +5,10 @@ import * as os from "node:os";
 import fetch from "node-fetch";
 import cookie from "cookie";
 
-import { decode } from "./lib/decode";
-import { serializeCookies } from "./lib/serializeCookies";
+import { decode } from "../lib/decode";
+import { serializeCookies } from "../lib/serializeCookies";
 
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "./constants";
+import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
 
 const COOKIE_SEPARATOR = "; ";
 const AUTH_COOKIE_KEY = "prismic-auth";
@@ -52,16 +52,6 @@ const PrismicUserProfile = t.exact(
 );
 export type PrismicUserProfile = t.TypeOf<typeof PrismicUserProfile>;
 
-type CreatePrismicAuthManager = ConstructorParameters<
-	typeof PrismicAuthManager
->[0];
-
-export const createPrismicAuthManager = (
-	args: CreatePrismicAuthManager = {},
-): PrismicAuthManager => {
-	return new PrismicAuthManager(args);
-};
-
 type PrismicAuthManagerConstructorArgs = {
 	scopedDirectory?: string;
 };
@@ -69,6 +59,10 @@ type PrismicAuthManagerConstructorArgs = {
 type PrismicAuthManagerLoginArgs = {
 	email: string;
 	cookies: string[];
+};
+
+type GetProfileForAuthenticationTokenArgs = {
+	authenticationToken: string;
 };
 
 const checkIsLoggedIn = (
@@ -100,7 +94,7 @@ export class PrismicAuthManager {
 
 	constructor({
 		scopedDirectory = os.homedir(),
-	}: PrismicAuthManagerConstructorArgs) {
+	}: PrismicAuthManagerConstructorArgs = {}) {
 		this.scopedDirectory = scopedDirectory;
 	}
 
@@ -122,7 +116,9 @@ export class PrismicAuthManager {
 
 		if (checkIsLoggedIn(authState)) {
 			const authenticationToken = authState.cookies[AUTH_COOKIE_KEY];
-			const profile = await this.getProfile(authenticationToken);
+			const profile = await this.getProfileForAuthenticationToken({
+				authenticationToken,
+			});
 
 			authState.shortId = profile.shortId;
 			authState.intercomHash = profile.intercomHash;
@@ -143,20 +139,19 @@ export class PrismicAuthManager {
 		await this._writePersistedAuthState(authState);
 	}
 
-	/**
-	 * @param authenticationToken - An optional authentication token used to fetch
-	 *   a specific user profile. If no authentication token is provided, the
-	 *   persisted auth state's token will be used.
-	 */
-	async getProfile(authenticationToken?: string): Promise<PrismicUserProfile> {
-		if (!authenticationToken) {
-			authenticationToken = await this.getAuthenticationToken();
-		}
+	async getProfile(): Promise<PrismicUserProfile> {
+		const authenticationToken = await this.getAuthenticationToken();
 
+		return await this.getProfileForAuthenticationToken({ authenticationToken });
+	}
+
+	async getProfileForAuthenticationToken(
+		args: GetProfileForAuthenticationTokenArgs,
+	): Promise<PrismicUserProfile> {
 		const url = new URL("/profile", APIEndpoints.PrismicUser);
 		const res = await fetch(url.toString(), {
 			headers: {
-				Authorization: `Bearer ${authenticationToken}`,
+				Authorization: `Bearer ${args.authenticationToken}`,
 				"User-Agent": SLICE_MACHINE_USER_AGENT,
 			},
 		});
@@ -186,6 +181,10 @@ export class PrismicAuthManager {
 		return authState.cookies[AUTH_COOKIE_KEY];
 	}
 
+	// TODO: This function should check if the token has not expired, not
+	// only if it exists. This may be done by accessing the profile
+	// endpoint and checking the status code, but the endpoint is slow.
+	// Is there a faster endpoint? Maybe the token refresh endpoint?
 	async checkIsLoggedIn(): Promise<boolean> {
 		const authState = await this._readPersistedAuthState();
 

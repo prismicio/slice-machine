@@ -1,21 +1,20 @@
-export {
-	SliceMachineManager,
-	createSliceMachineManager,
-} from "./createSliceMachineManager";
+// This file defines the root `@slicemachine/core` export.
+// Non-Node.js-compatible exports should be defined in `./client.ts`.
 
+export { SliceMachineManager } from "./managers/SliceMachineManager";
+export { createSliceMachineManager } from "./managers/createSliceMachineManager";
 export {
 	CreateSliceMachineManagerMiddlewareArgs,
 	createSliceMachineManagerMiddleware,
-} from "./createSliceMachineManagerMiddleware";
+} from "./managers/createSliceMachineManagerMiddleware";
 
 export {
 	PrismicAuthManager,
 	PrismicUserProfile,
-	createPrismicAuthManager,
-} from "./createPrismicAuthManager";
-
+} from "./auth/PrismicAuthManager";
+export { createPrismicAuthManager } from "./auth/createPrismicAuthManager";
 export {
 	CreatePrismicAuthManagerMiddlewareArgs,
 	PrismicAuthCheckStatusResponse,
 	createPrismicAuthManagerMiddleware,
-} from "./createPrismicAuthManagerMiddleware";
+} from "./auth/createPrismicAuthManagerMiddleware";

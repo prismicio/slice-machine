@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Slices } from "@slicemachine/core/build/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import {
@@ -70,12 +70,12 @@ export const saveCustomType = async (
   customType: CustomTypeSM,
   mockConfig: CustomTypeMockConfig
 ): Promise<AxiosResponse> => {
-  await managerClient.updateCustomTypeMocksConfig({
+  await managerClient.customTypes.updateCustomTypeMocksConfig({
     customTypeID: customType.id,
     mocksConfig: mockConfig,
   });
 
-  return await managerClient.updateCustomType({
+  return await managerClient.customTypes.updateCustomType({
     model: CustomTypes.fromSM(customType),
   });
 
@@ -88,23 +88,15 @@ export const saveCustomType = async (
 };
 
 export const renameCustomType = (
-  customTypeId: string,
-  newCustomTypeName: string
+  customType: CustomTypeSM // TODO: Don't use the SM version. Convert to
 ): Promise<AxiosResponse> => {
-  const requestBody: RenameCustomTypeBody = {
-    customTypeId,
-    newCustomTypeName,
-  };
-
-  return axios.patch(
-    `/api/custom-types/rename?id=${customTypeId}`,
-    requestBody,
-    defaultAxiosConfig
-  );
+  return managerClient.customTypes.renameCustomType({
+    model: CustomTypes.fromSM(customType),
+  });
 };
 
 export const pushCustomType = async (customTypeId: string): Promise<void> => {
-  await managerClient.pushCustomType({
+  await managerClient.customTypes.pushCustomType({
     id: customTypeId,
   });
 };
@@ -125,16 +117,20 @@ export const createSlice = (
 };
 
 export const renameSlice = (
-  sliceId: string,
-  newSliceName: string,
+  slice: SliceSM,
   libName: string
 ): Promise<AxiosResponse> => {
-  const requestBody = {
-    sliceId,
-    newSliceName,
-    libName,
-  };
-  return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
+  return managerClient.slices.renameSlice({
+    libraryID: libName,
+    model: Slices.fromSM(slice),
+  });
+
+  // const requestBody = {
+  //   sliceId,
+  //   newSliceName,
+  //   libName,
+  // };
+  // return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
 export const generateSliceScreenshotApiClient = (
@@ -153,13 +149,13 @@ export const generateSliceCustomScreenshotApiClient = (
 export const saveSliceApiClient = async (
   component: ComponentUI
 ): Promise<Awaited<ReturnType<typeof managerClient["updateSlice"]>>> => {
-  await managerClient.updateSliceMocksConfig({
+  await managerClient.slices.updateSliceMocksConfig({
     libraryID: component.from,
     sliceID: component.model.id,
     mocksConfig: component.mockConfig,
   });
 
-  return await managerClient.updateSlice({
+  return await managerClient.slices.updateSlice({
     libraryID: component.from,
     model: Slices.fromSM(component.model),
   });
@@ -168,7 +164,7 @@ export const saveSliceApiClient = async (
 export const pushSliceApiClient = async (
   component: ComponentUI
 ): Promise<Record<string, string | null>> => {
-  return await managerClient.pushSlice({
+  return await managerClient.slices.pushSlice({
     libraryID: component.from,
     sliceID: component.model.id,
   });

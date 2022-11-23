@@ -40,7 +40,7 @@ export const createSliceMachineServer = async (
 		"/api",
 		fromNodeMiddleware(
 			createPrismicAuthManagerMiddleware({
-				prismicAuthManager: args.sliceMachineManager.prismicAuthManager,
+				prismicAuthManager: args.sliceMachineManager.getPrismicAuthManager(),
 			})
 		)
 	);
@@ -71,7 +71,7 @@ export const createSliceMachineServer = async (
 		app.use(router);
 	} else {
 		const sliceMachineDir =
-			await args.sliceMachineManager.locateSliceMachineDir();
+			await args.sliceMachineManager.project.locateSliceMachineDir();
 		const sliceMachineOutDir = path.resolve(sliceMachineDir, "out");
 
 		app.use(fromNodeMiddleware(serveStatic(sliceMachineOutDir)));

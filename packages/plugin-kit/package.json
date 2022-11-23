@@ -1,0 +1,83 @@
+{
+	"name": "@slicemachine/plugin-kit",
+	"version": "0.1.7",
+	"description": "A set of helpers to develop and run Slice Machine plugins",
+	"keywords": [
+		"typescript",
+		"helpers",
+		"utils",
+		"toolbox",
+		"prismic"
+	],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/slicemachine-plugin-kit.git",
+		"directory": "packages/kit"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"format": "prettier --write .",
+		"lint": "eslint --ext .js,.ts .",
+		"prepare": "npm run build",
+		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
+		"release:alpha": "npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
+		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
+		"release:dry": "standard-version --dry-run",
+		"size": "size-limit",
+		"test": "npm run lint && npm run unit && npm run build && npm run size",
+		"unit": "vitest run --coverage",
+		"unit:watch": "vitest watch"
+	},
+	"dependencies": {
+		"@prismicio/types": "^0.2.3",
+		"common-tags": "^1.8.2",
+		"defu": "^6.1.0",
+		"prettier": "^2.7.1"
+	},
+	"devDependencies": {
+		"@prismicio/mock": "^0.1.1",
+		"@size-limit/preset-small-lib": "^8.1.0",
+		"@types/common-tags": "^1.8.1",
+		"@types/prettier": "^2.7.1",
+		"@typescript-eslint/eslint-plugin": "^5.40.1",
+		"@typescript-eslint/parser": "^5.40.1",
+		"@vitest/coverage-c8": "^0.24.3",
+		"eslint": "^8.25.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"prettier": "^2.6.2",
+		"prettier-plugin-jsdoc": "^0.4.2",
+		"size-limit": "^8.1.0",
+		"standard-version": "^9.5.0",
+		"ts-expect": "^1.3.0",
+		"typescript": "^4.8.4",
+		"vite": "^3.1.8",
+		"vite-plugin-sdk": "^0.0.5",
+		"vitest": "^0.24.3"
+	},
+	"engines": {
+		"node": ">=14.15.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

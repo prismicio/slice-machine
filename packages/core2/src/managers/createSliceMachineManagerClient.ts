@@ -1,4 +1,4 @@
-import { createRPCClient, ExtractProcedures, RPCClient } from "./rpc";
+import { createRPCClient, ExtractProcedures, RPCClient } from "../rpc";
 
 // !!! Never import anything other than types from
 // !!! `./createSliceMachineManagerServer` in this file.

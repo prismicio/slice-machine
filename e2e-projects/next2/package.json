@@ -20,7 +20,7 @@
     "typescript": "4.8.4"
   },
   "devDependencies": {
-    "@slicemachine/adapter-next": "^0.0.2",
+    "@slicemachine/adapter-next": "^0.0.3",
     "slice-machine-ui": "../../packages/slice-machine",
     "start-slicemachine": "../../packages/start-slicemachine"
   }
