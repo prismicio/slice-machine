@@ -1,6 +1,6 @@
 import path from "path";
 
-describe("Create Slices", () => {
+describe.only("Create Slices", () => {
   const root = "e2e-projects/cypress-next-app";
   const type = `${root}/.slicemachine/prismicio.d.ts`;
   const sliceName = "TestSlice";
@@ -73,8 +73,8 @@ describe("Create Slices", () => {
       });
 
     // remove widget
-    cy.get('[data-cy="slice-menu-button"]').last().focus().type(" ");
-    cy.contains("Delete field").click();
+    cy.get('[data-cy="slice-menu-button"]').last().click();
+    cy.contains("Delete field").click({ force: true });
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
     // edit slice name
