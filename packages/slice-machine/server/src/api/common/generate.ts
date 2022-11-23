@@ -22,6 +22,8 @@ export function replaceLegacySliceMocks(
   libraries: ReadonlyArray<LibraryUI>
 ): void {
   try {
+    const globalMockConfig = getGobalMockConfig(cwd);
+
     const components = libraries.reduce<ComponentUI[]>(
       (acc, curr) => [...acc, ...curr.components],
       []
@@ -46,7 +48,7 @@ export function replaceLegacySliceMocks(
         const mocks: ComponentMocks = mockForSlice(
           c.model,
           SliceMockConfig.getSliceMockConfig(
-            getGobalMockConfig(cwd),
+            globalMockConfig,
             c.from,
             c.model.name
           )
