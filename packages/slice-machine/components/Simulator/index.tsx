@@ -58,7 +58,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     framework,
     version,
     simulatorUrl,
-    iframeStatus,
+    // iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
   } = useSelector((state: SliceMachineStoreType) => ({
