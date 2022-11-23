@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "watch": "tsc --project tsconfig.json --watch",
+    "tsc": "tsc --project tsconfig.json --noEmit",
+    "tsc:watch": "tsc --project tsconfig.json --noEmit --watch",
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",

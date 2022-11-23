@@ -15,7 +15,7 @@
     "prepublishOnly": "npm run test && npm run build",
     "test": "jest",
     "tsc": "tsc --project tsconfig.json --noEmit",
-    "watch": "tsc --project tsconfig.json --noEmit --watch",
+    "tsc:watch": "tsc --project tsconfig.json --noEmit --watch",
     "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
