@@ -1,5 +1,5 @@
 import ReactTooltip from "react-tooltip";
-import { Badge, Flex, Text } from "theme-ui";
+import { Badge, Box, Flex, Text } from "theme-ui";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
 
@@ -27,12 +27,13 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   );
 
   return (
-    <>
+    <Box sx={{ height: 28, display: "flex", alignItems: "center" }}>
       <Text
         data-for={`${modelId}-tooltip`}
         data-tip
         sx={{
           display: "flex",
+          height: 24,
         }}
       >
         <Badge
@@ -65,7 +66,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           {tooltipText}
         </Flex>
       </ReactTooltip>
-    </>
+    </Box>
   );
 };
 
