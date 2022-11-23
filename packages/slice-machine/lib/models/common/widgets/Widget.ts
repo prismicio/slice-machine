@@ -23,6 +23,7 @@ export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   CustomListItem?: (props: any) => React.ReactElement;
   // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
   Form?: (props: any) => React.ReactNode;
+  prepareInitialValues?: <T extends Record<string, any>>(props: T) => T;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any

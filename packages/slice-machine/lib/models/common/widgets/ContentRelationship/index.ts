@@ -7,6 +7,8 @@ import { Widget } from "../Widget";
 import { linkConfigSchema } from "../Link";
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { useSelector } from "react-redux";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 
 /**
  * {
@@ -60,4 +62,21 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,
+  prepareInitialValues: (initialValues) => {
+    const customTypes = useSelector(selectAllCustomTypes);
+
+    if (!initialValues.customtypes) {
+      return initialValues;
+    }
+
+    return {
+      ...initialValues,
+      // eslint-disable-next-line
+      customtypes: initialValues.customtypes.filter((ct: any) =>
+        customTypes.find(
+          (frontendCustomType) => frontendCustomType.local.id === ct
+        )
+      ),
+    };
+  },
 };

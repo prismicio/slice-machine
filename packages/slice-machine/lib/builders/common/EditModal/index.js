@@ -65,7 +65,11 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ...createInitialValues(removeProp(FormFields, "id")),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    ...initialModelValues.config,
+    ...(maybeWidget.prepareInitialValues
+      ? // eslint-disable-next-line
+        maybeWidget.prepareInitialValues(initialModelValues.config)
+      : // eslint-disable-next-line
+        initialModelValues.config),
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
