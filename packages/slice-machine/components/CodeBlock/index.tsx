@@ -4,19 +4,11 @@ import hljs from "highlight.js";
 
 import { ThemeUIStyleObject } from "@theme-ui/css";
 
-export type Language = "javascript" | "bash" | "xml" | "html" | "json";
-
-const DEFAULT_LANGUAGES: Array<Language> = [
-  "javascript",
-  "bash",
-  "xml",
-  "html",
-  "json",
-];
+const DEFAULT_LANGUAGES = ["javascript", "bash", "xml", "html", "json"];
 
 const CodeBlock: React.FC<{
   children: string;
-  lang?: Language;
+  lang?: string;
   sx?: ThemeUIStyleObject;
   codeStyle?: React.CSSProperties;
 }> = ({ children, lang, sx, codeStyle }) => {

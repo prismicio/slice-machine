@@ -6,14 +6,15 @@ import {
 	PrismicAuthManager,
 	PrismicUserProfile,
 } from "../auth/PrismicAuthManager";
+import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
 import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
 import { ProjectManager } from "./_ProjectManager";
 import { SlicesManager } from "./_SlicesManager";
+import { SnippetsManger } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
 import { VersionsManger } from "./_VersionsManager";
-import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -71,6 +72,7 @@ export class SliceMachineManager {
 	plugins: PluginsManager;
 	slices: SlicesManager;
 	customTypes: CustomTypesManager;
+	snippets: SnippetsManger;
 	user: UserManager;
 	versions: VersionsManger;
 
@@ -84,6 +86,7 @@ export class SliceMachineManager {
 		this.plugins = new PluginsManager(this);
 		this.slices = new SlicesManager(this);
 		this.customTypes = new CustomTypesManager(this);
+		this.snippets = new SnippetsManger(this);
 		this.user = new UserManager(this);
 		this.versions = new VersionsManger(this);
 
