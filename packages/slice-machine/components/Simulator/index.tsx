@@ -72,9 +72,7 @@ export default function Simulator() {
   );
 
   const initialContent = useMemo<SharedSliceContent>(
-    () =>
-      component.mock?.[0] ||
-      (defaultSharedSliceContent(variation.id) as SharedSliceContent),
+    () => component.mock?.[0] || defaultSharedSliceContent(variation.id),
     [component.mock, variation.id]
   );
 
