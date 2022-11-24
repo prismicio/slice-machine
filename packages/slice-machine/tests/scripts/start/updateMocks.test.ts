@@ -211,7 +211,7 @@ describe("replaceLegacyCustomTypeMocks", () => {
       TMP_DIR
     );
 
-    replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE]);
+    replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE], []);
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
@@ -235,7 +235,7 @@ describe("replaceLegacyCustomTypeMocks", () => {
       TMP_DIR
     );
 
-    replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE]);
+    replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE], []);
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);

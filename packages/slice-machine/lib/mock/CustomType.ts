@@ -16,6 +16,7 @@ import {
 } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
 import { getOrElseW } from "fp-ts/lib/Either";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 function buildDocumentMockConfig(
   model: CustomType,
@@ -40,7 +41,8 @@ function buildDocumentMockConfig(
 
 export default function MockCustomType(
   model: CustomTypeSM,
-  legacyMockConfig: CustomTypeMockConfig
+  legacyMockConfig: CustomTypeMockConfig,
+  sharedSlices: Record<string, SharedSlice>
 ): CustomTypeContent | null {
   const prismicModel = CustomTypes.fromSM(model);
   const documentMockConfig = buildDocumentMockConfig(
@@ -50,7 +52,7 @@ export default function MockCustomType(
 
   const mock = generateDocumentMock(
     prismicModel,
-    {},
+    sharedSlices,
     documentMockConfig
   )((_customTypes, _sharedSlices, mock) => mock);
 
