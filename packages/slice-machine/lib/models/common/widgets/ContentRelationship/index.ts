@@ -48,7 +48,11 @@ const schema = yup.object().shape({
   config: contentRelationShipConfigSchema,
 });
 
-export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
+export const ContentRelationshipWidget: Widget<
+  Link,
+  typeof schema,
+  { customtypes: string[] }
+> = {
   create: (label: string) => ({
     type: WidgetTypes.Link,
     config: {
@@ -71,8 +75,7 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
 
     return {
       ...initialValues,
-      // eslint-disable-next-line
-      customtypes: initialValues.customtypes.filter((ct: any) =>
+      customtypes: initialValues.customtypes.filter((ct) =>
         customTypes.find(
           (frontendCustomType) => frontendCustomType.local.id === ct
         )
