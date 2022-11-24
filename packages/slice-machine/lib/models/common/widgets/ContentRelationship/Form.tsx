@@ -26,11 +26,6 @@ type FormProps = {
   // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
 
-type SelectValueType = {
-  value: string;
-  label: string | null | undefined;
-};
-
 const WidgetForm = ({
   initialValues,
   values: formValues,
@@ -45,14 +40,12 @@ const WidgetForm = ({
   }));
 
   const selectValues = formValues.config.customtypes
-    ? formValues.config.customtypes
-        .map((id) => {
-          const ct = customTypes.find(
-            (frontendCustomType) => frontendCustomType.local.id === id
-          );
-          return ct ? { value: ct.local.id, label: ct.local.label } : ct;
-        })
-        .filter((val): val is SelectValueType => val !== undefined)
+    ? formValues.config.customtypes.map((id) => {
+        const ct = customTypes.find(
+          (frontendCustomType) => frontendCustomType.local.id === id
+        );
+        return { value: ct?.local.id, label: ct?.local.label };
+      })
     : null;
 
   return (
