@@ -1,7 +1,9 @@
 import Files from "../../utils/files";
 import { MocksConfig } from "../../models/paths";
 
-export const getConfig = (cwd: string): Record<string, unknown> => {
+export const getConfig = (
+  cwd: string
+): Record<string, Record<string, unknown>> => {
   const pathToMockConfig = MocksConfig(cwd);
   if (Files.exists(pathToMockConfig)) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -25,7 +27,6 @@ export const insert = (
   }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { key: string; prefix: string | null; value: any }
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const config = getConfig(cwd);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const withInsert = {
@@ -34,8 +35,7 @@ export const insert = (
       ? {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
           [prefix]: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            ...config[prefix],
+            ...(prefix in config ? config[prefix] : {}),
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
             [key]: value,
           },
