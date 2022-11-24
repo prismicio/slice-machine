@@ -18,7 +18,6 @@ import {
 import { getOrElseW } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
-import getEnv from "../../server/src/api/services/getEnv";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import { getLocalCustomTypes } from "../../lib/utils/customTypes";
 
@@ -98,12 +97,13 @@ export function replaceLegacyCustomTypeMocks(
   });
 }
 
-export async function updateMocks(cwd: string): Promise<void> {
+export function updateMocks(
+  cwd: string,
+  manifestLibraries?: Array<string>
+): void {
   try {
-    const { env } = await getEnv(cwd);
-
-    if (env.manifest.libraries) {
-      const libraries = Libraries.libraries(cwd, env.manifest.libraries);
+    if (manifestLibraries) {
+      const libraries = Libraries.libraries(cwd, manifestLibraries);
       replaceLegacySliceMocks(cwd, libraries);
     }
 

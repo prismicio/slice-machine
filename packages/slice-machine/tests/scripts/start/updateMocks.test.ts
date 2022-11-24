@@ -285,7 +285,7 @@ describe("updateMocks", () => {
     vol.reset();
   });
 
-  test("it should update the mocks for slice and custom-types if they invalid", async () => {
+  test("it should update the mocks for slice and custom-types if they invalid", () => {
     const PATH_TO_CUSTOM_TYPE = path.join(
       "customtypes",
       "blog-page",
@@ -298,18 +298,13 @@ describe("updateMocks", () => {
         [PATH_TO_GLOBAL_MOCK_CONFIG]: JSON.stringify({}),
         [PATH_TO_CUSTOM_TYPE]: JSON.stringify(STUB_CUSTOM_TYPE),
         [PATH_TO_SLICE]: JSON.stringify(STUB_SLICE_MODEL),
-        "sm.json": JSON.stringify({
-          apiEndpoint: "https://marc.prismic.io/api/v2",
-          libraries: ["@/slices"],
-        }),
         [PATH_TO_MOCK_CUSTOM_TYPE]: JSON.stringify({}),
         [PATH_TO_MOCK_SLICE]: JSON.stringify({}),
-        "package.json": JSON.stringify({}),
       },
       TMP_DIR
     );
 
-    await updateMocks(TMP_DIR);
+    updateMocks(TMP_DIR, ["@/slices"]);
 
     const sliceMock = vol.readFileSync(
       path.join(TMP_DIR, PATH_TO_MOCK_SLICE),

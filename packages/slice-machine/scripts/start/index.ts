@@ -40,7 +40,7 @@ async function run(): Promise<void> {
 
   validateGenerateTypes({ cwd });
 
-  await updateMocks(cwd);
+  updateMocks(cwd, manifest.content.libraries);
 
   const framework = NodeUtils.Framework.defineFramework({
     cwd,
