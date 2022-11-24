@@ -1,10 +1,10 @@
-import mockForSlice from "../../../../lib/mock/Slice";
-import mockForCustomType from "../../../../lib/mock/CustomType";
+import mockForSlice from "../../lib/mock/Slice";
+import mockForCustomType from "../../lib/mock/CustomType";
 import {
   CustomTypeMockConfig,
   SliceMockConfig,
-} from "../../../../lib/models/common/MockConfig";
-import { getConfig as getGobalMockConfig } from "../../../../lib/mock/misc/fs";
+} from "../../lib/models/common/MockConfig";
+import { getConfig as getGobalMockConfig } from "../../lib/mock/misc/fs";
 import {
   Component,
   ComponentMocks,
@@ -18,9 +18,9 @@ import {
 import { getOrElseW } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
-import getEnv from "../services/getEnv";
+import getEnv from "../../server/src/api/services/getEnv";
 import * as Libraries from "@slicemachine/core/build/libraries";
-import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
+import { getLocalCustomTypes } from "../../lib/utils/customTypes";
 
 export function replaceLegacySliceMocks(
   cwd: string,

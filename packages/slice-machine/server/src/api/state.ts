@@ -10,7 +10,6 @@ import ServerState from "../../../lib/models/server/ServerState";
 
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
-import { updateMocks } from "./common/udpateMocks";
 import { RequestWithEnv } from "./http/common";
 import { getAndSetUserProfile } from "./services/getAndSetUserProfile";
 
@@ -37,8 +36,6 @@ export const getBackendState = async (
         console.error("[Refresh token]: Internal error : ", error.message)
       );
   }
-
-  await updateMocks(env.cwd); // TODO: move this else where
 
   return {
     libraries,

@@ -3,7 +3,7 @@ import {
   replaceLegacySliceMocks,
   replaceLegacyCustomTypeMocks,
   updateMocks,
-} from "../../../server/src/api/common/udpateMocks";
+} from "../../../scripts/start/udpateMocks";
 import path from "path";
 import {
   Component,
