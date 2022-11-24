@@ -116,21 +116,14 @@ export const createSlice = (
     .then((response: AxiosResponse<{ variationId: string }>) => response.data);
 };
 
-export const renameSlice = (
+export const renameSlice = async (
   slice: SliceSM,
   libName: string
 ): Promise<AxiosResponse> => {
-  return managerClient.slices.renameSlice({
+  return await managerClient.slices.renameSlice({
     libraryID: libName,
     model: Slices.fromSM(slice),
   });
-
-  // const requestBody = {
-  //   sliceId,
-  //   newSliceName,
-  //   libName,
-  // };
-  // return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
 export const generateSliceScreenshotApiClient = (
@@ -148,7 +141,9 @@ export const generateSliceCustomScreenshotApiClient = (
 
 export const saveSliceApiClient = async (
   component: ComponentUI
-): Promise<Awaited<ReturnType<typeof managerClient["updateSlice"]>>> => {
+): Promise<
+  Awaited<ReturnType<typeof managerClient["slices"]["updateSlice"]>>
+> => {
   await managerClient.slices.updateSliceMocksConfig({
     libraryID: component.from,
     sliceID: component.model.id,

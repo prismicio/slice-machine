@@ -42,12 +42,33 @@ type TransformProcedure<TProcedure extends Procedure<any>> = (
 		: [TransformProcedureArgs<Parameters<TProcedure>[0]>]
 ) => // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ReturnType<TProcedure> extends Promise<any>
-	? ReturnType<TProcedure>
-	: Promise<ReturnType<TProcedure>>;
+	? TransformProcedureReturnType<ReturnType<TProcedure>>
+	: TransformProcedureReturnType<Promise<ReturnType<TProcedure>>>;
 
-type TransformProcedureArgs<TArgs extends Record<string, unknown>> = {
-	[P in keyof TArgs]: TArgs[P] extends Buffer ? Blob : TArgs[P];
-};
+type TransformProcedureArgs<TArgs> = TArgs extends Record<string, unknown>
+	? {
+			[P in keyof TArgs]: TransformProcedureArgs<TArgs[P]>;
+	  }
+	: TArgs extends Buffer
+	? Blob
+	: TArgs;
+
+type TransformProcedureReturnType<TReturnType> = TReturnType extends
+	| Record<string, unknown>
+	| unknown[]
+	? {
+			[P in keyof TReturnType]: TransformProcedureReturnType<TReturnType[P]>;
+	  }
+	: TReturnType extends Buffer
+	? {
+			url: string;
+	  }
+	: TReturnType extends Error
+	? {
+			name: string;
+			message: string;
+	  }
+	: TReturnType;
 
 export type ResponseLike = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
