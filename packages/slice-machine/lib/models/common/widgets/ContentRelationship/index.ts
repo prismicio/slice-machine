@@ -48,11 +48,7 @@ const schema = yup.object().shape({
   config: contentRelationShipConfigSchema,
 });
 
-export const ContentRelationshipWidget: Widget<
-  Link,
-  typeof schema,
-  { customtypes: string[] }
-> = {
+export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Link,
     config: {
@@ -69,7 +65,7 @@ export const ContentRelationshipWidget: Widget<
   prepareInitialValues: (initialValues) => {
     const customTypes = useSelector(selectAllCustomTypes);
 
-    if (!initialValues.customtypes) {
+    if (!initialValues?.customtypes) {
       return initialValues;
     }
 
