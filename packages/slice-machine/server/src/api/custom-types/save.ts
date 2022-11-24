@@ -1,5 +1,5 @@
 import getEnv from "../services/getEnv";
-import Files from "../../../../lib/utils/files";
+import { Files } from "@slicemachine/core/build/node-utils";
 import {
   CustomTypesPaths,
   GeneratedCustomTypesPaths,
@@ -59,7 +59,7 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
     sharedSlices
   );
 
-  if (mocked) Files.write(mockPath, mocked);
+  if (mocked) Files.writeJson(mockPath, mocked);
 
   IO.Types.upsert(env);
 
