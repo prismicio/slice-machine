@@ -1,13 +1,16 @@
 import "@relmify/jest-fp-ts";
 import {
-  // generate,
   replaceLegacySliceMocks,
   replaceLegacyCustomTypeMocks,
-} from "../../../server/src/api/common/generate";
+  updateMocks,
+} from "../../../server/src/api/common/udpateMocks";
 import path from "path";
-import { ComponentMocks } from "@slicemachine/core/build/models/Library";
+import {
+  Component,
+  ComponentMocks,
+  Library,
+} from "@slicemachine/core/build/models/Library";
 import { vol } from "memfs";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
@@ -17,12 +20,9 @@ jest.mock(`fs`, () => {
 
 const TMP_DIR = "tmp";
 
-const STUB_LIBRARY_UI: LibraryUI = {
+const STUB_LIBRARY_UI: Library<Component> = {
   meta: {
     version: "bar",
-    isNodeModule: false,
-    isDownloaded: false,
-    isManual: false,
   },
   name: "slices",
   path: "slices",
@@ -30,7 +30,6 @@ const STUB_LIBRARY_UI: LibraryUI = {
   components: [
     {
       screenshots: {},
-      mockConfig: {},
       from: path.join("slices", "MySlice"),
       href: "",
       pathToSlice: "",
@@ -110,17 +109,17 @@ const PATH_TO_GLOBAL_MOCK_CONFIG = path.join(
   "mock-config.json"
 );
 
+const PATH_TO_MOCK_SLICE = path.join("slices", "MySlice", "mocks.json");
+
 describe("replaceLegacySliceMocks", () => {
   afterEach(() => {
     vol.reset();
   });
 
-  const PATH_TO_MOCK = path.join("slices", "MySlice", "mocks.json");
-
   test("it should update old/invalid slice mocks to the new format", () => {
     vol.fromJSON(
       {
-        [PATH_TO_MOCK]: JSON.stringify({}),
+        [PATH_TO_MOCK_SLICE]: JSON.stringify({}),
         [PATH_TO_GLOBAL_MOCK_CONFIG]: JSON.stringify({}),
       },
       TMP_DIR
@@ -128,7 +127,10 @@ describe("replaceLegacySliceMocks", () => {
 
     replaceLegacySliceMocks(TMP_DIR, [STUB_LIBRARY_UI]);
 
-    const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK), "utf-8");
+    const file = vol.readFileSync(
+      path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
+      "utf-8"
+    );
     const result = JSON.parse(file as string);
     expect(ComponentMocks.decode(result)).toBeRight();
   });
@@ -158,36 +160,40 @@ describe("replaceLegacySliceMocks", () => {
     vol.fromJSON(
       {
         [PATH_TO_GLOBAL_MOCK_CONFIG]: JSON.stringify({}),
-        [PATH_TO_MOCK]: JSON.stringify(wanted),
+        [PATH_TO_MOCK_SLICE]: JSON.stringify(wanted),
       },
       TMP_DIR
     );
 
     replaceLegacySliceMocks(TMP_DIR, [STUB_LIBRARY_UI]);
 
-    const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK), "utf-8");
+    const file = vol.readFileSync(
+      path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
+      "utf-8"
+    );
     const result = JSON.parse(file as string);
     expect(ComponentMocks.decode(result)).toEqualRight(wanted);
   });
 });
 
+const PATH_TO_MOCK_CUSTOM_TYPE = path.join(
+  ".slicemachine",
+  "assets",
+  "customtypes",
+  "blog-post",
+  "mocks.json"
+);
+
 describe("replaceLegacyCustomTypeMocks", () => {
   afterEach(() => {
     vol.reset();
   });
-  const PATH_TO_MOCK = path.join(
-    ".slicemachine",
-    "assets",
-    "customtypes",
-    "blog-post",
-    "mocks.json"
-  );
 
   test("it should migrate old custom-type mocks to the new format", () => {
     vol.fromJSON(
       {
         [PATH_TO_GLOBAL_MOCK_CONFIG]: JSON.stringify({}),
-        [PATH_TO_MOCK]: JSON.stringify({
+        [PATH_TO_MOCK_CUSTOM_TYPE]: JSON.stringify({
           id: "8027b84e-e405-42f3-ad5c-d636c305e99f",
           uid: "🦆",
           type: "blog-post",
@@ -207,7 +213,7 @@ describe("replaceLegacyCustomTypeMocks", () => {
 
     replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE]);
 
-    const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK));
+    const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
     expect(CustomTypeContent.decode(result)).toBeRight();
   });
@@ -224,15 +230,99 @@ describe("replaceLegacyCustomTypeMocks", () => {
     vol.fromJSON(
       {
         [PATH_TO_GLOBAL_MOCK_CONFIG]: JSON.stringify({}),
-        [PATH_TO_MOCK]: JSON.stringify(wanted),
+        [PATH_TO_MOCK_CUSTOM_TYPE]: JSON.stringify(wanted),
       },
       TMP_DIR
     );
 
     replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE]);
 
-    const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK));
+    const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
     expect(CustomTypeContent.decode(result)).toEqualRight(wanted);
+  });
+});
+
+const STUB_SLICE_MODEL = {
+  id: "my_slice",
+  type: "SharedSlice",
+  name: "MySlice",
+  description: "TestSlice",
+  variations: [
+    {
+      id: "default",
+      name: "Default",
+      docURL: "...",
+      version: "sktwi1xtmkfgx8626",
+      description: "TestSlice",
+      primary: {
+        title: {
+          type: "StructuredText",
+          config: {
+            single: "heading1",
+            label: "Title",
+            placeholder: "This is where it all begins...",
+          },
+        },
+        description: {
+          type: "StructuredText",
+          config: {
+            single: "paragraph",
+            label: "Description",
+            placeholder: "A nice description of your feature",
+          },
+        },
+      },
+      imageUrl:
+        "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+      items: {},
+    },
+  ],
+};
+
+describe("updateMocks", () => {
+  afterEach(() => {
+    vol.reset();
+  });
+
+  test("it should update the mocks for slice and custom-types if they invalid", async () => {
+    const PATH_TO_CUSTOM_TYPE = path.join(
+      "customtypes",
+      "blog-page",
+      "index.json"
+    );
+    const PATH_TO_SLICE = path.join("slices", "MySlice", "model.json");
+
+    vol.fromJSON(
+      {
+        [PATH_TO_GLOBAL_MOCK_CONFIG]: JSON.stringify({}),
+        [PATH_TO_CUSTOM_TYPE]: JSON.stringify(STUB_CUSTOM_TYPE),
+        [PATH_TO_SLICE]: JSON.stringify(STUB_SLICE_MODEL),
+        "sm.json": JSON.stringify({
+          apiEndpoint: "https://marc.prismic.io/api/v2",
+          libraries: ["@/slices"],
+        }),
+        [PATH_TO_MOCK_CUSTOM_TYPE]: JSON.stringify({}),
+        [PATH_TO_MOCK_SLICE]: JSON.stringify({}),
+        "package.json": JSON.stringify({}),
+      },
+      TMP_DIR
+    );
+
+    await updateMocks(TMP_DIR);
+
+    const sliceMock = vol.readFileSync(
+      path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
+      "utf-8"
+    );
+    expect(ComponentMocks.decode(JSON.parse(sliceMock as string))).toBeRight();
+
+    const customTypeMock = vol.readFileSync(
+      path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE),
+      "utf-8"
+    );
+    expect(
+      CustomTypeContent.decode(JSON.parse(customTypeMock as string))
+    ).toBeRight();
   });
 });

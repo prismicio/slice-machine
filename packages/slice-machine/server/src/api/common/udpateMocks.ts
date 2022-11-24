@@ -1,13 +1,15 @@
 import mockForSlice from "../../../../lib/mock/Slice";
 import mockForCustomType from "../../../../lib/mock/CustomType";
-import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
-import { ComponentUI } from "../../../../lib/models/common/ComponentUI";
 import {
   CustomTypeMockConfig,
   SliceMockConfig,
 } from "../../../../lib/models/common/MockConfig";
 import { getConfig as getGobalMockConfig } from "../../../../lib/mock/misc/fs";
-import { ComponentMocks } from "@slicemachine/core/build/models/Library";
+import {
+  Component,
+  ComponentMocks,
+  Library,
+} from "@slicemachine/core/build/models/Library";
 import {
   CustomPaths,
   Files,
@@ -16,15 +18,18 @@ import {
 import { getOrElseW } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
+import getEnv from "../services/getEnv";
+import * as Libraries from "@slicemachine/core/build/libraries";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 
 export function replaceLegacySliceMocks(
   cwd: string,
-  libraries: ReadonlyArray<LibraryUI>
+  libraries: ReadonlyArray<Library<Component>>
 ): void {
   try {
     const globalMockConfig = getGobalMockConfig(cwd);
 
-    const components = libraries.reduce<ComponentUI[]>(
+    const components = libraries.reduce<Component[]>(
       (acc, curr) => [...acc, ...curr.components],
       []
     );
@@ -93,11 +98,16 @@ export function replaceLegacyCustomTypeMocks(
   });
 }
 
-export function generate(
-  cwd: string,
-  libraries: ReadonlyArray<LibraryUI>,
-  customTypes: ReadonlyArray<CustomTypeSM>
-): void {
-  replaceLegacySliceMocks(cwd, libraries);
-  replaceLegacyCustomTypeMocks(cwd, customTypes);
+export async function updateMocks(cwd: string): Promise<void> {
+  try {
+    const { env } = await getEnv(cwd);
+
+    if (env.manifest.libraries) {
+      const libraries = Libraries.libraries(cwd, env.manifest.libraries);
+      replaceLegacySliceMocks(cwd, libraries);
+    }
+
+    const customTypes = getLocalCustomTypes(cwd);
+    replaceLegacyCustomTypeMocks(cwd, customTypes);
+  } catch {}
 }

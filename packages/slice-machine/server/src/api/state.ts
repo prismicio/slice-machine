@@ -10,7 +10,7 @@ import ServerState from "../../../lib/models/server/ServerState";
 
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
-import { generate } from "./common/generate";
+import { updateMocks } from "./common/udpateMocks";
 import { RequestWithEnv } from "./http/common";
 import { getAndSetUserProfile } from "./services/getAndSetUserProfile";
 
@@ -38,7 +38,7 @@ export const getBackendState = async (
       );
   }
 
-  generate(env.cwd, libraries, customTypes);
+  await updateMocks(env.cwd); // TODO: move this else where
 
   return {
     libraries,
