@@ -29,7 +29,9 @@ interface HintProps {
 }
 
 const Hint: React.FC<HintProps> = ({ framework, show, Widgets, ...rest }) => {
-  const Render = FrameworkRenderers[framework];
+  // TOOD: IMPORTANT!!! REMOVE "|| FrameworkRenderers["next"]" once plugin-based hints are working.
+  const Render = FrameworkRenderers[framework] || FrameworkRenderers["next"];
+  // const Render = FrameworkRenderers[framework];
 
   if (!Render) {
     console.error(`Framework "${framework}" not supported`);

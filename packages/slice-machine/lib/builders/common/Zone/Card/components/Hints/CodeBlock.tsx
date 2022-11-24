@@ -30,7 +30,7 @@ export type WidgetsType = Record<
 
 type CodeBlockProps = {
   code: string | null | undefined;
-  lang?: Language;
+  lang?: string;
 };
 const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
   const { theme } = useThemeUI();

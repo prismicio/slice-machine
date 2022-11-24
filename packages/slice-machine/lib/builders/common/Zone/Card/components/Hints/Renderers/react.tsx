@@ -1,4 +1,6 @@
+import { managerClient } from "@src/managerClient";
 import React from "react";
+import useSWR from "swr";
 import CodeBlock, { Item, RenderHintBaseFN, WidgetsType } from "../CodeBlock";
 
 const wrapRepeatable = (code: string): string => {
@@ -123,13 +125,28 @@ const toReact: React.FC<{
   renderHintBase: RenderHintBaseFN;
   isRepeatable: boolean;
 }> = ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
+  // TODO: Call `swr`'s global `mutate` function when something changes to clear the cache.
+  const { data, error, isValidating } = useSWR("foo.data.bar", async () => {
+    return await managerClient.snippets.readSnippets({
+      fieldPath: ["foo", "data", "bar"],
+      model: { type: "Image" },
+      rootModel: {},
+      rootModelType: "Slice",
+    });
+  });
+  const snippets = data?.snippets || [];
+
+  if (data == null && isValidating) {
+    return null;
+  }
+
   const hintBase = renderHintBase({ item });
 
   const maybeCodeRenderer = codeByWidgetType(Widgets)[typeName];
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : "";
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code;
 
-  return <CodeBlock code={withRepeat} />;
+  return <CodeBlock code={snippets[0].code} lang={snippets[0].language} />;
 };
 
 export default toReact;
