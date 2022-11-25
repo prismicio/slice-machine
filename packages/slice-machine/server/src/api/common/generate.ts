@@ -7,7 +7,7 @@ import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
 import { getConfig as getGobalMockConfig } from "../../../../lib/mock/misc/fs";
 import { ComponentMocks } from "@prismic-beta/slicemachine-core/build/models/Library";
 import {
-  CustomPaths,
+  sliceMockPath,
   Files,
 } from "@prismic-beta/slicemachine-core/build/node-utils";
 import { getOrElseW } from "fp-ts/lib/Either";
@@ -23,10 +23,7 @@ export function generate(
     );
 
     components.forEach((c) => {
-      const mocksPath = CustomPaths(env.cwd)
-        .library(c.from)
-        .slice(c.model.name)
-        .mocks();
+      const mocksPath = sliceMockPath(env.cwd, c.from, c.model.name);
       const currentMocks = Files.readEntityFromFile<ComponentMocks>(
         mocksPath,
         (payload: unknown) => {
@@ -46,10 +43,7 @@ export function generate(
             c.model.name
           )
         );
-        Files.writeJson(
-          CustomPaths(env.cwd).library(c.from).slice(c.model.name).mocks(),
-          mocks
-        );
+        Files.writeJson(sliceMockPath(env.cwd, c.from, c.model.name), mocks);
       }
     });
   } catch (e) {}

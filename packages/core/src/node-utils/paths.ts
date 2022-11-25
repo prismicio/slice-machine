@@ -20,7 +20,6 @@ export interface Paths {
       value: () => string;
       preview: (filename?: string) => string;
       stories: (filename?: string) => string;
-      mocks: () => string;
       model: () => string;
       variation: (variationId: string) => {
         value: () => string;
@@ -51,11 +50,6 @@ const Paths = (cwd: string, prefix: string): Paths => ({
         path.join(
           Paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
-        ),
-      mocks: () =>
-        path.join(
-          Paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
-          "mocks.json"
         ),
       model: () =>
         path.join(
@@ -107,3 +101,10 @@ export const YarnLockPath = (cwd: string): string =>
   path.join(cwd, "yarn.lock");
 export const MocksConfigPath = (cwd: string): string =>
   path.join(cwd, ".slicemachine", "mock-config.json");
+export function sliceMockPath(
+  rootPath: string,
+  libraryName: string,
+  sliceName: string
+) {
+  return path.join(rootPath, libraryName, sliceName, "mocks.json");
+}
