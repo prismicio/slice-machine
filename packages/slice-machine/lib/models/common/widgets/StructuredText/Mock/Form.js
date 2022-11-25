@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Label, Box, useThemeUI } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { useFormikContext } from "formik";
@@ -91,40 +91,42 @@ const Form = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const configValues = values[MockConfigKey]?.config || {};
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const {
+    mockConfig: {
+      config: { patternType },
+    },
+  } = values;
+  const patternTypeSet = patternType == patternTypeCheck;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+  const patternTest = !Patterns[patternType].test(options);
+  const validPattern = findValidPattern(options);
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const {
-      mockConfig: {
-        config: { patternType },
-      },
-    } = values;
-    if (
-      patternType &&
-      patternType !== patternTypeCheck &&
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      !Patterns[patternType].test(options)
-    ) {
+    if (patternType && !patternTypeSet && !patternTest) {
       onUpdate({
         key: "patternType",
         updateType: "config",
-        value: findValidPattern(options),
+        value: validPattern,
       });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setPatternTypeCheck(patternType);
     }
-  });
+  }, [patternType, patternTypeSet, patternTest, validPattern]);
 
-  const onUpdate = ({ updateType, key, value }) => {
-    setFieldValue(MockConfigKey, {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      [updateType]: {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-        ...(values[MockConfigKey]?.[updateType] || {}),
+  const onUpdate = useCallback(
+    ({ updateType, key, value }) => {
+      setFieldValue(MockConfigKey, {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        [key]: value,
-      },
-    });
-  };
+        [updateType]: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+          ...(values[MockConfigKey]?.[updateType] || {}),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          [key]: value,
+        },
+      });
+    },
+    [values, setFieldValue]
+  );
 
   const onSetPattern = (value, isPattern) => {
     onUpdate({
