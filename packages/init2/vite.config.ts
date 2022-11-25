@@ -4,8 +4,15 @@ import sdk from "vite-plugin-sdk";
 export default defineConfig({
 	build: {
 		lib: {
-			entry: ["./src/index.ts", "./src/cli.ts"],
+			entry: {
+				index: "./src/index.ts",
+				cli: "./src/cli.ts",
+			},
 		},
 	},
-	plugins: [sdk()],
+	plugins: [
+		sdk({
+			internalDependencies: ["meow", "execa"],
+		}),
+	],
 });

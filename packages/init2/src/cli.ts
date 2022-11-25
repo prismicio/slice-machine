@@ -17,13 +17,18 @@ USAGE
   $ npx @slicemachine/init
 
 OPTIONS
+  --repository, -r  Specify a Prismic repository to use
 
-  --help, -h     Display CLI help
-  --version, -v  Display CLI version
+  --help, -h        Display CLI help
+  --version, -v     Display CLI version
 `,
 	{
 		importMeta: import.meta,
 		flags: {
+			repository: {
+				type: "string",
+				alias: "r",
+			},
 			help: {
 				type: "boolean",
 				alias: "h",

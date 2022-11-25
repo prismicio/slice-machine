@@ -42,15 +42,26 @@
 		"dev": "vite build --watch"
 	},
 	"dependencies": {
-		"@slicemachine/core2": "0.1.0",
-		"meow": "^11.0.0"
+		"@antfu/ni": "^0.18.8",
+		"@lihbr/listr-update-renderer": "^0.5.2",
+		"@slicemachine/core2": "^0.1.0",
+		"chalk": "^4.1.2",
+		"execa": "^6.1.0",
+		"listr": "^0.14.3",
+		"meow": "^11.0.0",
+		"open": "^8.4.0",
+		"prompts": "^2.4.2",
+		"semver": "^7.3.8"
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^8.1.0",
-		"@typescript-eslint/eslint-plugin": "^5.43.0",
-		"@typescript-eslint/parser": "^5.43.0",
-		"@vitest/coverage-c8": "^0.25.2",
-		"eslint": "^8.27.0",
+		"@types/listr": "^0.14.4",
+		"@types/prompts": "^2.4.1",
+		"@types/semver": "^7.3.13",
+		"@typescript-eslint/eslint-plugin": "^5.44.0",
+		"@typescript-eslint/parser": "^5.44.0",
+		"@vitest/coverage-c8": "^0.25.3",
+		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
@@ -59,6 +70,6 @@
 		"typescript": "^4.9.3",
 		"vite": "^3.2.4",
 		"vite-plugin-sdk": "^0.0.6",
-		"vitest": "^0.25.2"
+		"vitest": "^0.25.3"
 	}
 }
