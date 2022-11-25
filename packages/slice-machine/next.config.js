@@ -27,7 +27,6 @@ const isStableVersion =
 console.log("********************************************");
 console.log("********************************************");
 console.log("********************************************");
-console.log(pkg.content);
 console.log("RELEASE_NUMBER: ", RELEASE_NUMBER);
 console.log("NODE_ENV: ", process.env.NODE_ENV);
 console.log("********************************************");
@@ -104,13 +103,16 @@ let exportedConfig = withPlugins(
 // The main config is not passed / handled
 // It must be initialised separately
 if (process.env.NODE_ENV !== "development") {
+  console.log("**** ✅ NODE_ENV OK ");
   if (!process.env.SENTRY_AUTH_TOKEN) {
+    console.log("**** ❌ SENTRY_AUTH_TOKEN KO");
     console.warn("⚠️ Creating a production build with no Sentry config");
     console.warn(
       "⚠️ A release won't be created and the sourcemap won't be uploaded"
     );
     console.warn("⚠️ To fix this add SENTRY_AUTH_TOKEN to your environment");
   } else {
+    console.log("**** ✅ SENTRY_AUTH_TOKEN OK");
     const sentryWebpackPluginOptions = {
       // Additional config options for the Sentry Webpack plugin. Keep in mind that
       // the following options are set automatically, and overriding them is not
@@ -118,7 +120,7 @@ if (process.env.NODE_ENV !== "development") {
       //   release, url, org, project, authToken, configFile, stripPrefix,
       //   urlPrefix, include, ignore
 
-      silent: true, // Suppresses all logs
+      // silent: true, // Suppresses all logs
 
       // For all available options, see:
       // https://github.com/getsentry/sentry-webpack-plugin#options.
