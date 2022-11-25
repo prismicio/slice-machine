@@ -24,21 +24,12 @@ const RELEASE_NUMBER = pkg.content.version;
 const isStableVersion =
   /^\d+\.\d+\.\d+$/.test(RELEASE_NUMBER) && semver.lte("0.1.0", RELEASE_NUMBER);
 
-console.log("********************************************");
-console.log("********************************************");
-console.log("********************************************");
-console.log("RELEASE_NUMBER: ", RELEASE_NUMBER);
-console.log("NODE_ENV: ", process.env.NODE_ENV);
-console.log("********************************************");
-console.log("********************************************");
-console.log("********************************************");
-
 const nextConfig = {
   distDir: "./build/client",
-  generateBuildId: () => {
-    // This controls the release number for Sentry
-    return RELEASE_NUMBER;
-  },
+  // generateBuildId: () => {
+  //   // This controls the release number for Sentry
+  //   return RELEASE_NUMBER;
+  // },
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
     // for client-side builds. (This will be the default starting in
@@ -128,6 +119,7 @@ if (process.env.NODE_ENV !== "development") {
       // The Sentry webpack plugin always ignores some files when uploading sourcemaps
       // We actually need them (because of the static export?) to get the complete trace in Sentry
       ignore: [],
+      release: RELEASE_NUMBER,
 
       configFile: "sentry-next.properties",
     };
