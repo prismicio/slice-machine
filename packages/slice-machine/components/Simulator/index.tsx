@@ -162,7 +162,8 @@ export default function Simulator() {
                 ? {
                     marginLeft: "16px",
                     visibility: "visible",
-                    width: "400px",
+                    flexShrink: 0,
+                    width: "560px",
                   }
                 : {
                     marginLeft: "0px",
