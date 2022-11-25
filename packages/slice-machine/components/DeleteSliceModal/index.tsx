@@ -103,7 +103,7 @@ export const DeleteSliceModal: React.FunctionComponent<
           </Flex>
         )}
       >
-        <Text>
+        <Text sx={{ wordWrap: "break-word" }}>
           This action will delete the{" "}
           <Text sx={{ fontWeight: "bold" }}>
             `{libName}/{sliceName}/`
@@ -114,7 +114,7 @@ export const DeleteSliceModal: React.FunctionComponent<
           Custom Types that use it.
         </Text>
         <br />
-        <Text>
+        <Text sx={{ wordWrap: "break-word" }}>
           The next time you push changes to Prismic, the{" "}
           <Text sx={{ fontWeight: "bold" }}>"{sliceName}"</Text> Slice will be
           deleted from your repository, and users will no longer be able to add
