@@ -24,6 +24,15 @@ const RELEASE_NUMBER = pkg.content.version;
 const isStableVersion =
   /^\d+\.\d+\.\d+$/.test(RELEASE_NUMBER) && semver.lte("0.1.0", RELEASE_NUMBER);
 
+console.log("********************************************");
+console.log("********************************************");
+console.log("********************************************");
+console.log(pkg.content);
+console.log(RELEASE_NUMBER);
+console.log("********************************************");
+console.log("********************************************");
+console.log("********************************************");
+
 const nextConfig = {
   distDir: "./build/client",
   generateBuildId: () => {
