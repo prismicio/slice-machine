@@ -1,6 +1,6 @@
 {
   "name": "@prismic-beta/slicemachine-core",
-  "version": "0.3.0-alpha.2",
+  "version": "0.3.0-alpha.3",
   "main": "./build/index.js",
   "engines": {
     "node": ">=14"
