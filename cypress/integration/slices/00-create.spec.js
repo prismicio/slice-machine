@@ -58,7 +58,7 @@ describe("Create Slices", () => {
     cy.readFile(type).should("contains", sliceName);
 
     // remove widget
-    cy.get("#menu-button--menu").last().click();
+    cy.get('[data-cy="slice-menu-button"]').last().click();
     cy.contains("Delete field").click();
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
