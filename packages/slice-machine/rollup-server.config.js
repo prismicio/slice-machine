@@ -1,40 +1,15 @@
 import esbuild from "rollup-plugin-esbuild";
-import SentryCli from "@sentry/cli";
+import sentryRollupPlugin from "@sentry/rollup-plugin";
 import path from "path";
 import NodeUtils from "@slicemachine/core/build/node-utils";
 
 const { SENTRY_AUTH_TOKEN } = process.env;
-
+const pkg = NodeUtils.retrieveJsonPackage(path.resolve(__dirname));
 /**
- *
- * @param options
- *
- * @returns
+ * @type string
  */
-const customSentryPlugin = (options = {}) => {
-  const { targets = [], hook = "buildEnd", enabled = false } = options; // FIX
-  return {
-    name: "custom-sentry-plugin",
-    [hook]: async () => {
-      if (!enabled) {
-        return;
-      }
-
-      const pkg = NodeUtils.retrieveJsonPackage(path.resolve(__dirname));
-      /**
-       * @type string
-       */
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      const RELEASE_NUMBER = pkg.content.version;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const cli = new SentryCli(options.configFile);
-      await cli.releases.new(RELEASE_NUMBER);
-      await cli.releases.uploadSourceMaps(RELEASE_NUMBER, {
-        include: [path.resolve(process.cwd(), "build", "server")],
-      });
-    },
-  };
-};
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+const RELEASE_NUMBER = pkg.content.version;
 
 export default {
   input: "./server/src/index.ts",
@@ -44,10 +19,6 @@ export default {
     sourcemap: true,
   },
   plugins: [
-    customSentryPlugin({
-      enabled: SENTRY_AUTH_TOKEN,
-      configFile: path.resolve(process.cwd(), "sentry-express.properties"),
-    }),
     esbuild({
       exclude: /node_modules/,
       platform: "node",
@@ -59,5 +30,25 @@ export default {
       },
       tsconfig: "./server/tsconfig.json",
     }),
+    // rollup seems to ignore `undefined` plugins
+    SENTRY_AUTH_TOKEN &&
+      sentryRollupPlugin({
+        configFile: path.resolve(process.cwd(), "sentry-express.properties"),
+
+        // Auth tokens can be obtained from https://sentry.io/settings/account/api/auth-tokens/
+        // and need `project:releases` and `org:read` scopes
+        authToken: SENTRY_AUTH_TOKEN,
+
+        // Optionally uncomment the line below to override automatic release name detection
+        release: RELEASE_NUMBER,
+
+        // Specify the directory containing build artifacts
+        include: "./build/server",
+
+        // sourcemaps don't appear to be working properly, with or without this prefix
+        // the code is not minified so error source is still readable
+        // we'll need to come back to this if we keep the express server after the plugin change
+        urlPrefix: "~/server",
+      }),
   ],
 };

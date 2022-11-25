@@ -10,8 +10,6 @@ import semver from "semver";
 export const useSentry = () => !process.env.NO_SENTRY;
 
 export const initSentry = () => {
-  // add tracing
-  // see https://docs.sentry.io/platforms/node/guides/express/#monitor-performance
   if (!useSentry()) {
     return;
   }
