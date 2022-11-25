@@ -106,6 +106,20 @@ export const renameSlice = (
   return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
+export const deleteSlice = (
+  sliceId: string,
+  libName: string
+): Promise<AxiosResponse> => {
+  const requestBody = {
+    sliceId,
+    libName,
+  };
+  return axios.delete(`/api/slices/delete`, {
+    ...defaultAxiosConfig,
+    data: requestBody,
+  });
+};
+
 export const generateSliceScreenshotApiClient = (
   params: ScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotResponse>> => {

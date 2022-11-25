@@ -9,7 +9,7 @@ const backendEnvironment: BackendEnvironment = {
   cwd: "/test",
   manifest: {
     apiEndpoint: "https://myFakeRepo.prismic.io/api/v2",
-    libraries: ["@slices"],
+    libraries: ["@/slices"],
   },
   prismicData: {},
   changelog: {
