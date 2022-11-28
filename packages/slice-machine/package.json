@@ -181,6 +181,9 @@
       "react": "$react",
       "react-dom": "$react-dom"
     },
+    "connected-next-router": {
+      "react-redux": "$react-redux"
+    },
     "react-oembed-container": {
       "react": "$react",
       "react-dom": "$react-dom"
