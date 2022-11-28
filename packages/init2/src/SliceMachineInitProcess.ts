@@ -1,9 +1,12 @@
 import chalk from "chalk";
 import { ExecaChildProcess } from "execa";
+import logSymbols from "log-symbols";
+import prompts from "prompts";
 
 import {
 	createSliceMachineManager,
 	PrismicUserProfile,
+	PrismicRepository,
 	SliceMachineManager,
 } from "@slicemachine/core2";
 
@@ -31,6 +34,7 @@ export class SliceMachineInitProcess {
 		packageManager?: packageManager.Agent;
 		installProcess?: ExecaChildProcess;
 		userProfile?: PrismicUserProfile;
+		userRepositories?: PrismicRepository[];
 		repository?: {
 			domain: string;
 			exists: boolean;
@@ -102,73 +106,115 @@ export class SliceMachineInitProcess {
 
 		await listrRun([
 			{
-				title: "Setting up Prismic...",
-				task: (_, _parentTask) =>
-					listr([
-						{
-							title: "Logging in...",
-							task: async (_, task) => {
-								try {
-									this.context.userProfile =
-										await this.manager.user.getProfile();
-								} catch {
-									// noop
-								}
+				title: "Logging in to Prismic...",
+				task: async (_, task) => {
+					try {
+						task.output = "Validating session...";
+						this.context.userProfile = await this.manager.user.getProfile();
+					} catch {
+						// noop
+					}
 
-								if (!this.context.userProfile) {
-									task.output = "Press any key to open the browser to login...";
-									await new Promise((resolve) => {
-										const initialRawMode = process.stdin.isRaw;
-										process.stdin.setRawMode(true);
-										process.stdin.once("data", (data: Buffer) => {
-											process.stdin.setRawMode(initialRawMode);
-											process.stdin.pause();
-											resolve(data.toString("utf-8"));
-										});
-									});
+					if (!this.context.userProfile) {
+						task.output = "Press any key to open the browser to login...";
+						await new Promise((resolve) => {
+							const initialRawMode = process.stdin.isRaw;
+							process.stdin.setRawMode(true);
+							process.stdin.once("data", (data: Buffer) => {
+								process.stdin.setRawMode(initialRawMode);
+								process.stdin.pause();
+								resolve(data.toString("utf-8"));
+							});
+						});
 
-									task.output = "Browser opened, waiting for you to login...";
-									await this.manager.user.browserLogin();
+						task.output = "Browser opened, waiting for you to login...";
+						await this.manager.user.browserLogin();
 
-									this.context.userProfile =
-										await this.manager.user.getProfile();
-								}
+						task.output = "Logged in! Fetching user profile...";
+						this.context.userProfile = await this.manager.user.getProfile();
+					}
 
-								task.title = `Logged in as ${chalk.cyan(
-									this.context.userProfile?.email
-								)}`;
-							},
-						},
-						{
-							title: "Selecting repository...",
-							task: async (_, task) => {
-								const userRepositories =
-									await this.manager.repository.readAll();
-
-								if (this.options.repository) {
-									const repositoryExists = userRepositories.some(
-										(repository) =>
-											repository.domain === this.options.repository
-									);
-
-									this.context.repository = {
-										domain: this.options.repository,
-										exists: repositoryExists,
-									};
-								}
-
-								task.title = `Selected repository ${chalk.cyan(
-									JSON.stringify(this.context.repository)
-								)}`;
-							},
-						},
-						{
-							title: "Creating repository...",
-							task: () => new Promise((res) => setTimeout(res, 2000)),
-						},
-					]),
+					task.title = `Logged in as ${chalk.cyan(
+						this.context.userProfile?.email
+					)}`;
+				},
 			},
 		]);
+
+		await listrRun([
+			{
+				title: "Fetching user data...",
+				task: async (_, task) => {
+					this.context.userRepositories =
+						await this.manager.repository.readAll();
+
+					task.title = "Fetched user data";
+				},
+			},
+		]);
+
+		if (this.options.repository) {
+			// TODO: Assert types
+			const repositoryExists = this.context.userRepositories!.some(
+				(repository) => repository.domain === this.options.repository
+			);
+
+			this.context.repository = {
+				domain: this.options.repository,
+				exists: repositoryExists,
+			};
+		} else {
+			if (this.context.userRepositories!.length) {
+				const maybeRepository = await prompts({
+					type: "select",
+					name: "value",
+					message:
+						"Pick a repository to connect to or choose to create a new one",
+					warn: "You are not a developer or admin of this repository",
+					choices: [
+						{
+							title: "CREATE NEW",
+							description: "Create a new Prismic repository\n",
+							value: "",
+						},
+						...this.context
+							.userRepositories!.map((repository) => {
+								const hasWriteAccess =
+									this.manager.repository.hasWriteAccess(repository);
+
+								return {
+									title: `${repository.domain}${
+										hasWriteAccess ? "" : " (Unauthorized)"
+									}`,
+									description: `Connect to ${chalk.cyan(repository.domain)}`,
+									value: repository.domain,
+									disabled: !hasWriteAccess,
+								};
+							})
+							.sort((a, b) => (a.value > b.value ? 1 : -1)),
+					],
+				});
+				// Clear prompt line, we'll recap cleanly later
+				process.stdout.moveCursor(0, -1);
+				process.stdout.clearLine(1);
+
+				if (maybeRepository.value) {
+					this.context.repository = {
+						domain: maybeRepository.value,
+						exists: true,
+					};
+				}
+			}
+
+			if (!this.context.repository) {
+				// TODO: Prompt for repository
+			}
+		}
+		console.log(
+			`${logSymbols.success} Selected repository ${chalk.cyan(
+				this.context.repository!.domain
+			)}`
+		);
 
 		await listrRun([
 			{

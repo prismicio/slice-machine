@@ -27,7 +27,7 @@ const PrismicRepository = t.type({
 		t.record(t.string, t.keyof(PrismicRepositoryRoles)),
 	]),
 });
-type PrismicRepository = t.TypeOf<typeof PrismicRepository>;
+export type PrismicRepository = t.TypeOf<typeof PrismicRepository>;
 
 type SliceMachineManagerExistsRepositoryArgs = {
 	domain: string;
@@ -73,6 +73,19 @@ export class RepositoryManager extends BaseManager {
 			return repositories;
 		} else {
 			throw new Error(`Failed to read repositories`, { cause: json });
+		}
+	}
+
+	// Should this be in manager? It's one of the few sync method
+	hasWriteAccess(repository: PrismicRepository): boolean {
+		switch (repository.role) {
+			case PrismicRepositoryRoles.SuperUser:
+			case PrismicRepositoryRoles.Owner:
+			case PrismicRepositoryRoles.Administrator:
+				return true;
+
+			default:
+				return false;
 		}
 	}
 

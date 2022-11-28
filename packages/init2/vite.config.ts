@@ -12,7 +12,7 @@ export default defineConfig({
 	},
 	plugins: [
 		sdk({
-			internalDependencies: ["meow", "execa"],
+			internalDependencies: ["execa", "meow"],
 		}),
 	],
 });

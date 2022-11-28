@@ -43,11 +43,12 @@
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.18.8",
-		"@lihbr/listr-update-renderer": "^0.5.2",
+		"@lihbr/listr-update-renderer": "^0.5.3",
 		"@slicemachine/core2": "^0.1.0",
 		"chalk": "^4.1.2",
 		"execa": "^6.1.0",
 		"listr": "^0.14.3",
+		"log-symbols": "^4.1.0",
 		"meow": "^11.0.0",
 		"prompts": "^2.4.2",
 		"semver": "^7.3.8"
