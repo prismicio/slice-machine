@@ -1,23 +1,15 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-
 import chalk from "chalk";
-import semver from "semver";
 import { ExecaChildProcess } from "execa";
 
 import {
 	createSliceMachineManager,
+	PrismicUserProfile,
 	SliceMachineManager,
 } from "@slicemachine/core2";
 
-import { Framework, FRAMEWORKS, VANILLA } from "./frameworks";
-import { listrRun } from "./lib/listr";
+import * as framework from "./framework";
+import { listr, listrRun } from "./lib/listr";
 import * as packageManager from "./lib/packageManager";
-
-const Processes = {
-	MainPackageManagerInstall: "MainPackageManagerInstall",
-} as const;
-type Processes = typeof Processes[keyof typeof Processes];
 
 export type SliceMachineInitProcessOptions = {
 	input: string[];
@@ -34,57 +26,75 @@ export class SliceMachineInitProcess {
 	protected options: SliceMachineInitProcessOptions;
 	protected manager: SliceMachineManager;
 
-	protected framework: Framework | null;
-	protected packageManager: packageManager.Agent | null;
-	protected processes: Map<Processes, ExecaChildProcess>;
+	protected context: {
+		framework?: framework.Framework;
+		packageManager?: packageManager.Agent;
+		installProcess?: ExecaChildProcess;
+		userProfile?: PrismicUserProfile;
+		repository?: {
+			domain: string;
+			exists: boolean;
+		};
+	};
 
 	constructor(options: SliceMachineInitProcessOptions) {
 		this.options = options;
 		this.manager = createSliceMachineManager();
 
-		this.framework = null;
-		this.packageManager = null;
-		this.processes = new Map();
+		this.context = {};
 	}
 
 	async run(): Promise<void> {
 		await listrRun([
 			{
-				title: "Detecting framework...",
-				task: async (_, task) => {
-					await this.detectFramework();
+				title: "Detecting environment...",
+				task: (_, parentTask) =>
+					listr([
+						{
+							title: "Detecting framework...",
+							task: async (_, task) => {
+								this.context.framework = await framework.detect();
 
-					if (this.framework) {
-						task.title = `Detected framework ${chalk.cyan(
-							this.framework.name
-						)}`;
-					} else {
-						throw new Error("Failed to detect framework");
-					}
-				},
+								task.title = `Detected framework ${chalk.cyan(
+									this.context.framework.name
+								)}`;
+							},
+						},
+						{
+							title: "Detecting package manager...",
+							task: async (_, task) => {
+								this.context.packageManager = await packageManager.detect();
+
+								task.title = `Detected package manager ${chalk.cyan(
+									this.context.packageManager
+								)}`;
+
+								parentTask.title = `Detected framework ${chalk.cyan(
+									this.context.framework?.name
+								)} and package manager ${chalk.cyan(
+									this.context.packageManager
+								)}`;
+							},
+						},
+					]),
 			},
+		]);
+
+		await listrRun([
 			{
-				title: "Begin core dependencies installation...",
+				title: "Beginning core dependencies installation...",
 				task: async (_, task) => {
-					const agent = await packageManager.detect();
-
-					if (!agent) {
-						throw new Error("Failed to detect package manager");
-					}
-
-					this.packageManager = agent;
-
-					// TODO: Support process error / watch & fail early
 					const { execaProcess } = await packageManager.install({
-						agent,
-						dependencies: this.framework?.devDependencies,
+						// TODO: Assert types
+						agent: this.context.packageManager!,
+						dependencies: this.context.framework!.devDependencies,
 						dev: true,
 					});
 
-					this.processes.set("MainPackageManagerInstall", execaProcess);
+					this.context.installProcess = execaProcess;
 
 					task.title = `Began core dependencies installation with ${chalk.cyan(
-						agent
+						this.context.packageManager
 					)} ... (running in background)`;
 				},
 			},
@@ -92,87 +102,115 @@ export class SliceMachineInitProcess {
 
 		await listrRun([
 			{
-				title: "💐 some",
-				task: () => new Promise((res) => setTimeout(res, 500)),
-			},
-			{
-				title: "👀 other",
-				task: () => new Promise((res) => setTimeout(res, 500)),
-			},
-			{
-				title: "💐 things",
-				task: () => new Promise((res) => setTimeout(res, 500)),
-			},
-			{
-				title: "👀 happening",
-				task: () => new Promise((res) => setTimeout(res, 500)),
+				title: "Setting up Prismic...",
+				task: (_, _parentTask) =>
+					listr([
+						{
+							title: "Logging in...",
+							task: async (_, task) => {
+								try {
+									this.context.userProfile =
+										await this.manager.user.getProfile();
+								} catch {
+									// noop
+								}
+
+								if (!this.context.userProfile) {
+									task.output = "Press any key to open the browser to login...";
+									await new Promise((resolve) => {
+										const initialRawMode = process.stdin.isRaw;
+										process.stdin.setRawMode(true);
+										process.stdin.once("data", (data: Buffer) => {
+											process.stdin.setRawMode(initialRawMode);
+											process.stdin.pause();
+											resolve(data.toString("utf-8"));
+										});
+									});
+
+									task.output = "Browser opened, waiting for you to login...";
+									await this.manager.user.browserLogin();
+
+									this.context.userProfile =
+										await this.manager.user.getProfile();
+								}
+
+								task.title = `Logged in as ${chalk.cyan(
+									this.context.userProfile?.email
+								)}`;
+							},
+						},
+						{
+							title: "Selecting repository...",
+							task: async (_, task) => {
+								const userRepositories =
+									await this.manager.repository.readAll();
+
+								if (this.options.repository) {
+									const repositoryExists = userRepositories.some(
+										(repository) =>
+											repository.domain === this.options.repository
+									);
+
+									this.context.repository = {
+										domain: this.options.repository,
+										exists: repositoryExists,
+									};
+								}
+
+								task.title = `Selected repository ${chalk.cyan(
+									JSON.stringify(this.context.repository)
+								)}`;
+							},
+						},
+						{
+							title: "Creating repository...",
+							task: () => new Promise((res) => setTimeout(res, 2000)),
+						},
+					]),
 			},
 		]);
 
 		await listrRun([
 			{
 				title: `Finishing core dependencies installation with ${chalk.cyan(
-					this.packageManager
+					this.context.packageManager
 				)} ...`,
 				task: async (_, task) => {
-					if (this.processes.has("MainPackageManagerInstall")) {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						const execaProcess = this.processes.get(
-							"MainPackageManagerInstall"
-						)!;
+					const updateOutput = (data: Buffer | null) => {
+						if (data instanceof Buffer) {
+							task.output = data.toString();
+						}
+					};
+					// TODO: Assert types
+					this.context.installProcess!.stdout?.on("data", updateOutput);
+					this.context.installProcess!.stderr?.on("data", updateOutput);
 
-						const updateOutput = (chunk: Buffer | null) => {
-							if (chunk instanceof Buffer) {
-								task.output = chunk.toString();
-							}
-						};
-						execaProcess.stdout?.on("data", updateOutput);
-						execaProcess.stderr?.on("data", updateOutput);
+					await this.context.installProcess;
 
-						await execaProcess;
-					}
-
-					task.title = `Core dependencies installed`;
+					task.title = `Core dependencies installed with ${chalk.cyan(
+						this.context.packageManager
+					)}`;
 				},
 			},
 		]);
-	}
 
-	async detectFramework(): Promise<void> {
-		const path = join(process.cwd(), "package.json");
-
-		let allDependencies: Record<string, string>;
-		try {
-			const pkg = JSON.parse(await readFile(path, "utf-8"));
-
-			allDependencies = {
-				...pkg.dependencies,
-				...pkg.devDependencies,
-			};
-		} catch (error) {
-			throw new Error(
-				`Failed to read project's \`package.json\` at \`${path}\``,
-				{ cause: error }
-			);
-		}
-
-		this.framework =
-			Object.values(FRAMEWORKS).find((framework) => {
-				return Object.entries(framework.compatibility).every(([pkg, range]) => {
-					if (pkg in allDependencies) {
-						// Determine lowest version possibly in use
-						const minimumVersion = semver.minVersion(allDependencies[pkg]);
-
-						// Unconventional tags, `latest`, `beta`, `dev`
-						if (!minimumVersion) {
-							return true;
-						}
-
-						return semver.satisfies(minimumVersion, range);
-					}
-
-					return false;
-				});
-			}) || VANILLA;
+		await listrRun([
+			{
+				title: "Finishing Slice Machine installation",
+				task: (_, _parentTask) =>
+					listr([
+						{
+							title: "Project (wip)",
+							task: () => new Promise((res) => setTimeout(res, 1000)),
+						},
+						{
+							title: `${chalk.cyan(
+								this.context.framework?.name
+							)} adapter (wip)`,
+							task: () => new Promise((res) => setTimeout(res, 1000)),
+						},
+					]),
+			},
+		]);
 	}
 }

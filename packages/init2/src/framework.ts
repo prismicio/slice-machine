@@ -1,3 +1,8 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
+import semver from "semver";
+
 export type Framework = {
 	/** Framework's human readable name. */
 	name: string;
@@ -57,4 +62,43 @@ export const VANILLA: Framework = {
 		...DEFAULT_DEV_DEPENDENCIES,
 		"@slicemachine/adapter-vanilla": "latest",
 	},
+};
+
+export const detect = async (): Promise<Framework> => {
+	const path = join(process.cwd(), "package.json");
+
+	let allDependencies: Record<string, string>;
+	try {
+		const pkg = JSON.parse(await readFile(path, "utf-8"));
+
+		allDependencies = {
+			...pkg.dependencies,
+			...pkg.devDependencies,
+		};
+	} catch (error) {
+		throw new Error(
+			`Failed to read project's \`package.json\` at \`${path}\``,
+			{ cause: error }
+		);
+	}
+
+	return (
+		Object.values(FRAMEWORKS).find((framework) => {
+			return Object.entries(framework.compatibility).every(([pkg, range]) => {
+				if (pkg in allDependencies) {
+					// Determine lowest version possibly in use
+					const minimumVersion = semver.minVersion(allDependencies[pkg]);
+
+					// Unconventional tags, `latest`, `beta`, `dev`
+					if (!minimumVersion) {
+						return true;
+					}
+
+					return semver.satisfies(minimumVersion, range);
+				}
+
+				return false;
+			});
+		}) || VANILLA
+	);
 };

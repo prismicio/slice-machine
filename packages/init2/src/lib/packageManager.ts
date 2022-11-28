@@ -57,7 +57,13 @@ export const install = async (
 	return { execaProcess };
 };
 
-export const detect = (): Promise<Agent | null> => {
+export const detect = async (): Promise<Agent> => {
 	// We auto install agent for now otherwise ni could cause some issues with prompt
-	return niDetect({ autoInstall: true });
+	const agent = await niDetect({ autoInstall: true });
+
+	if (!agent) {
+		throw new Error("Failed to detect project's framework");
+	}
+
+	return agent;
 };
