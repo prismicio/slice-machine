@@ -10,7 +10,7 @@ import path, { resolve } from "path";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import { MocksConfig } from "../../../../lib/models/paths";
-import { DeleteCustomTypeResponse } from "../../../../lib/models/common/CustomType";
+import { DeleteSliceResponse } from "../../../../lib/models/common/Slice";
 
 interface DeleteSliceBody {
   sliceId: string;
@@ -20,7 +20,7 @@ interface DeleteSliceBody {
 export async function deleteSlice(req: {
   body: DeleteSliceBody;
   env: BackendEnvironment;
-}): Promise<DeleteCustomTypeResponse> {
+}): Promise<DeleteSliceResponse> {
   const { env } = req;
   const { sliceId, libName } = req.body;
 
