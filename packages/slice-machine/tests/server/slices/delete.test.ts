@@ -212,8 +212,7 @@ describe("Delete slice files", () => {
 
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
-      `[slice/delete] Could not delete your slice assets files.\n`,
-      `To resolve this, manually delete the directory /test/.slicemachine/assets/slices/${SLICE_TO_DELETE_NAME}`
+      `[slice/delete] Could not delete your slice assets files. Check our troubleshooting guide here: https://prismic.io/docs/help-center`
     );
     expect(result).toStrictEqual({
       err: {},
@@ -244,8 +243,7 @@ describe("Delete slice files", () => {
     expect(readMockConfig()).toStrictEqual({});
 
     expect(console.error).toHaveBeenCalledWith(
-      `[slice/delete] Could not delete your slice from the mock-config.json.\n`,
-      `To resolve this, manually remove the ${SLICE_TO_DELETE_NAME} field in /test/.slicemachine/mock-config.json`
+      `[slice/delete] Could not delete your slice from the mock-config.json in /test/.slicemachine/mock-config.json. Check our troubleshooting guide here: https://prismic.io/docs/help-center`
     );
     expect(console.error).toHaveBeenCalledTimes(1);
 

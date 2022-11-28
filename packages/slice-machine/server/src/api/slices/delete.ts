@@ -6,7 +6,7 @@ import {
 } from "@slicemachine/core/build/node-utils/paths";
 import * as IO from "../../../../lib/io";
 import { remove as removeSliceFromMockConfig } from "../../../../lib/mock/misc/fs";
-import path, { resolve } from "path";
+import path from "path";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import { MocksConfig } from "../../../../lib/models/paths";
@@ -16,6 +16,8 @@ interface DeleteSliceBody {
   sliceId: string;
   libName: string;
 }
+
+const TROUBLESHOOTING_DOCS_LINK = "https://prismic.io/docs/help-center";
 
 export async function deleteSlice(req: {
   body: DeleteSliceBody;
@@ -72,7 +74,10 @@ export async function deleteSlice(req: {
   try {
     IO.Slice.deleteSlice(sliceDirectory.value());
   } catch (err) {
-    console.error(`[slice/delete] ${err as string}`);
+    console.error(
+      `[slice/delete] Could not delete your slice files. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`
+    );
+    console.error(err);
     return {
       err: err,
       reason: "We couldn't delete your slice. Check your terminal.",
@@ -87,8 +92,7 @@ export async function deleteSlice(req: {
       IO.Slice.deleteSlice(generatedSliceDirectory.value());
     } catch (err) {
       console.error(
-        `[slice/delete] Could not delete your slice assets files.\n`,
-        `To resolve this, manually delete the directory ${generatedSliceDirectory.value()}`
+        `[slice/delete] Could not delete your slice assets files. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`
       );
       throw err;
     }
@@ -103,10 +107,9 @@ export async function deleteSlice(req: {
       });
     } catch (err) {
       console.error(
-        `[slice/delete] Could not delete your slice from the mock-config.json.\n`,
-        `To resolve this, manually remove the ${
-          desiredSlice.model.name
-        } field in ${MocksConfig(req.env.cwd)}`
+        `[slice/delete] Could not delete your slice from the mock-config.json in ${MocksConfig(
+          req.env.cwd
+        )}. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`
       );
       throw err;
     }
@@ -118,10 +121,11 @@ export async function deleteSlice(req: {
       IO.Types.upsert(env);
     } catch (err) {
       console.error(
-        `[slice/delete] Could not update the project types.\n`,
-        `You can manually delete these in ${resolve(
-          path.join(env.cwd, ".slicemachine", "prismicio.d.ts")
-        )}`
+        `[slice/delete] Could not update the project types in ${path.join(
+          env.cwd,
+          ".slicemachine",
+          "prismicio.d.ts"
+        )}. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`
       );
       throw err;
     }
@@ -132,8 +136,7 @@ export async function deleteSlice(req: {
       await onSaveSlice(env);
     } catch (err) {
       console.error(
-        `[slice/delete] Could not update the slice libraries.\n`,
-        `You can manually resolve this in ....`
+        `[slice/delete] Could not update the slice library's index.js file. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`
       );
       throw err;
     }
