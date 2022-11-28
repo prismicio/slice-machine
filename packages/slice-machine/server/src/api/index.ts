@@ -31,6 +31,7 @@ import {
 import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
 import { isApiError } from "../../../lib/models/server/ApiResult";
 import tracking from "./tracking";
+import { deleteSlice } from "./slices/delete";
 
 router.use(
   "/__preview",
@@ -172,6 +173,22 @@ router.put(
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await renameSlice(req);
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
+    }
+
+    return res.status(200).json(payload);
+  })
+);
+
+router.delete(
+  "/slices/delete",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await deleteSlice(req);
     if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
     }

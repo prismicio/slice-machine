@@ -72,8 +72,6 @@ export default async function onSaveSlice(
   for (const lib of localLibs) {
     if (lib.components.length) {
       const { pathToSlice: relativePathToLib } = lib.components[0];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
       const file = createIndexFileForFrameWork(env, lib);
 
       const pathToLib = path.join(env.cwd, relativePathToLib);

@@ -29,10 +29,10 @@ describe("server.generateLibraryState", () => {
     const data = fs.readFileSync(pathToState, { encoding: "utf-8" });
 
     expect(JSON.parse(data)).toEqual({
-      "@slices": {
+      "@/slices": {
         components: {
           sliceId: {
-            library: "@slices",
+            library: "@/slices",
             id: "sliceId",
             description: "slice description",
             name: "SliceName",
