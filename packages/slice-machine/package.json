@@ -129,6 +129,7 @@
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "formik": "^2.1.4",
     "highlight.js": "^11.4.0",
     "jest": "^27.0.0",
