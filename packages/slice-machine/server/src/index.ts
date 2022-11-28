@@ -11,6 +11,11 @@ import bodyParser from "body-parser";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
+import {
+  addSentryPostHandler,
+  addSentryPreHandler,
+  initSentry,
+} from "./sentry-setup";
 
 declare let global: {
   appRoot: string;
@@ -20,6 +25,10 @@ global.appRoot = path.join(__dirname, "../../");
 import api from "./api";
 
 const app = express();
+
+initSentry();
+addSentryPreHandler(app);
+
 app.use(cors());
 app.use(bodyParser.json({ limit: "64mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,6 +88,8 @@ app.use("/changes", (_, res) => {
 });
 
 const PORT = process.env.PORT || "9999";
+
+addSentryPostHandler(app);
 
 app.use(
   (
