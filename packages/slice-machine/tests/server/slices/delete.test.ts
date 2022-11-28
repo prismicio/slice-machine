@@ -3,15 +3,7 @@ import { deleteSlice } from "../../../server/src/api/slices/delete";
 import backendEnvironment from "../../__mocks__/backendEnvironment";
 import { RequestWithEnv } from "server/src/api/http/common";
 
-jest.mock(`fs`, () => {
-  const { vol, createFsFromVolume } = jest.requireActual("memfs");
-  const newFs = createFsFromVolume(vol);
-  // The following is needed due to rmSync not existing on memfs
-  // Github issue link on fs-monkey: https://github.com/streamich/fs-monkey/issues/320
-  newFs["rmSync"] = vol["rmSync"].bind(vol);
-  newFs["realpathSync"] = vol["realpathSync"].bind(vol);
-  return newFs;
-});
+jest.mock("fs");
 
 jest.mock("../../../server/src/api/common/LibrariesState", () => {
   return {
