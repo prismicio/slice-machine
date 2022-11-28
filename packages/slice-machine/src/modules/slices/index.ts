@@ -9,7 +9,12 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { createSlice, getState, renameSlice } from "@src/apiClient";
+import {
+  createSlice,
+  deleteSlice,
+  getState,
+  renameSlice,
+} from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
@@ -29,6 +34,8 @@ import {
 } from "../screenshots/actions";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
+import axios from "axios";
+import { DeleteSliceResponse } from "@lib/models/common/Slice";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -62,10 +69,28 @@ export const renameSliceCreator = createAsyncAction(
   }
 >();
 
+export const deleteSliceCreator = createAsyncAction(
+  "SLICES/DELETE.REQUEST",
+  "SLICES/DELETE.RESPONSE",
+  "SLICES/DELETE.FAILURE"
+)<
+  {
+    sliceId: string;
+    sliceName: string;
+    libName: string;
+  },
+  {
+    sliceId: string;
+    sliceName: string;
+    libName: string;
+  }
+>();
+
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createSliceCreator>
   | ActionType<typeof renameSliceCreator>
+  | ActionType<typeof deleteSliceCreator>
   | ActionType<typeof saveSliceCreator>
   | ActionType<typeof pushSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
@@ -223,6 +248,22 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
+    case getType(deleteSliceCreator.success): {
+      const { libName, sliceId } = action.payload;
+      const newLibs = state.libraries.map((library) => {
+        if (library.name !== libName) return library;
+        return {
+          ...library,
+          components: library.components.filter(
+            (component) => component.model.id !== sliceId
+          ),
+        };
+      });
+      return {
+        ...state,
+        libraries: newLibs,
+      };
+    }
     default:
       return state;
   }
@@ -299,10 +340,57 @@ function* watchRenameSlice() {
   );
 }
 
+export function* deleteSliceSaga({
+  payload,
+}: ReturnType<typeof deleteSliceCreator.request>) {
+  const { libName, sliceId, sliceName } = payload;
+  try {
+    yield call(deleteSlice, sliceId, libName);
+    yield put(deleteSliceCreator.success(payload));
+    yield put(
+      openToasterCreator({
+        message: `Successfully deleted Slice “${sliceName}”`,
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      const apiResponse = e.response?.data as DeleteSliceResponse;
+      if (apiResponse.type === "warning")
+        yield put(deleteSliceCreator.success(payload));
+      yield put(
+        openToasterCreator({
+          message: apiResponse.reason,
+          type:
+            apiResponse.type === "error"
+              ? ToasterType.ERROR
+              : ToasterType.WARNING,
+        })
+      );
+    } else {
+      yield put(
+        openToasterCreator({
+          message: "An unexpected error happened while deleting your slice.",
+          type: ToasterType.ERROR,
+        })
+      );
+    }
+  }
+  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+}
+
+function* watchDeleteSlice() {
+  yield takeLatest(
+    getType(deleteSliceCreator.request),
+    withLoader(deleteSliceSaga, LoadingKeysEnum.DELETE_SLICE)
+  );
+}
+
 // Saga Exports
 export function* watchSliceSagas() {
   yield fork(handleSliceRequests);
   yield fork(watchRenameSlice);
+  yield fork(watchDeleteSlice);
 }
 
 export const renamedComponentUI = (

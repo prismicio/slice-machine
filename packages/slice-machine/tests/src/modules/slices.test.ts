@@ -12,10 +12,17 @@ import {
   renameModel,
   renameSliceSaga,
   renameSliceCreator,
+  deleteSliceSaga,
+  deleteSliceCreator,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
 
-import { createSlice, getState, renameSlice } from "@src/apiClient";
+import {
+  createSlice,
+  deleteSlice,
+  getState,
+  renameSlice,
+} from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
@@ -25,6 +32,8 @@ import { SliceSM } from "@slicemachine/core/build/models";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import axios, { AxiosError } from "axios";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 const dummySlicesState: SlicesStoreType = {
   libraries: [],
@@ -50,6 +59,44 @@ describe("[Slices module]", () => {
       expect(slicesReducer(dummySlicesState, { type: "NO.MATCH" })).toEqual(
         dummySlicesState
       );
+    });
+
+    it("should update the slice state given SLICES/DELETE.SUCCESS action", () => {
+      const sliceIdToDelete = "id";
+      const sliceNameToDelete = "slice-name";
+      const libName = "libName";
+
+      const originalState = { ...dummySlicesState };
+
+      originalState["libraries"] = [
+        {
+          name: libName,
+          isLocal: true,
+          components: [
+            { model: { id: sliceIdToDelete } },
+            { model: { id: "second-slice" } },
+          ],
+        },
+      ] as unknown as LibraryUI[];
+
+      const action = deleteSliceCreator.success({
+        sliceId: sliceIdToDelete,
+        libName,
+        sliceName: sliceNameToDelete,
+      });
+
+      const result = slicesReducer(originalState, action);
+
+      const expectState = { ...originalState };
+      expectState["libraries"] = [
+        {
+          name: libName,
+          isLocal: true,
+          components: [{ model: { id: "second-slice" } }],
+        },
+      ] as unknown as LibraryUI[];
+
+      expect(result).toEqual(expectState);
     });
   });
 
@@ -133,6 +180,131 @@ describe("[Slices module]", () => {
           type: ToasterType.SUCCESS,
         })
       );
+      saga.next().isDone();
+    });
+  });
+
+  describe("[deleteCustomTypeSaga]", () => {
+    it("should call the api and dispatch the good actions on success", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.next().put(deleteSliceCreator.success(actionPayload));
+      saga.next().put(
+        openToasterCreator({
+          message: `Successfully deleted Slice “${actionPayload.sliceName}”`,
+          type: ToasterType.SUCCESS,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on unknown failure", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.throw(new Error()).put(
+        openToasterCreator({
+          message: "An unexpected error happened while deleting your slice.",
+          type: ToasterType.ERROR,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on an API error", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
+
+      const err = Error() as AxiosError;
+      // @ts-expect-error Ignoring the type error since we only need these properties to test
+      err.response = {
+        data: { reason: "Could not delete Slice", type: "error" },
+      };
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.throw(err).put(
+        openToasterCreator({
+          message: "Could not delete Slice",
+          type: ToasterType.ERROR,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on an API warning", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
+
+      const err = Error() as AxiosError;
+      // @ts-expect-error Ignoring the type error since we only need these properties to test
+      err.response = {
+        data: { reason: "Could not delete Slice", type: "warning" },
+      };
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.throw(err).put(deleteSliceCreator.success(actionPayload));
+      saga.next().put(
+        openToasterCreator({
+          message: "Could not delete Slice",
+          type: ToasterType.WARNING,
+        })
+      );
+
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
       saga.next().isDone();
     });
   });
