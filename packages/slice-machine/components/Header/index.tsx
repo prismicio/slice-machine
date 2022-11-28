@@ -43,12 +43,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         </Flex>
       ) : null}
     </Flex>
-    <Button
-      label="🔥🔥🔥 Hello Sentry 🔥🔥🔥"
-      onClick={() => {
-        throw new Error("Hello Sentry!");
-      }}
-    />
     {ActionButton ? ActionButton : null}
   </Flex>
 );
