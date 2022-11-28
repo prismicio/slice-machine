@@ -27,7 +27,7 @@ const changes: React.FunctionComponent = () => {
     authStatus,
     isOnline,
   } = useUnSyncChanges();
-  const { pushChanges, closeScreenshotsModal } = useSliceMachineActions();
+  const { pushChanges, closeModals } = useSliceMachineActions();
 
   const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
     isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
@@ -35,7 +35,7 @@ const changes: React.FunctionComponent = () => {
 
   useEffect(() => {
     return () => {
-      closeScreenshotsModal();
+      closeModals();
     };
   }, []);
 

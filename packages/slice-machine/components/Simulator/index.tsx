@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
-import { Box, Card, Flex } from "theme-ui";
+import { Box, Card, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
@@ -42,6 +42,8 @@ import {
   selectIsWaitingForIFrameCheck,
   selectSetupStatus,
 } from "@src/modules/simulator";
+import FullPage from "./components/FullPage";
+import FailedConnect from "./components/FailedConnect";
 
 enum UiState {
   LOADING_SETUP = "LOADING_SETUP",
@@ -58,7 +60,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     framework,
     version,
     simulatorUrl,
-    // iframeStatus,
+    iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
   } = useSelector((state: SliceMachineStoreType) => ({
@@ -81,14 +83,24 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     }
   }, [manifestStatus]);
 
+  const [iframeCheckFailedOnce, setIframeCheckFailedOnce] = useState(false);
+
   const currentState: UiState = (() => {
     if (manifestStatus === "ok") {
-      if (isWaitingForIFrameCheck) {
-        return UiState.LOADING_IFRAME;
+      if (isWaitingForIFrameCheck || !iframeStatus) {
+        return iframeCheckFailedOnce
+          ? UiState.FAILED_CONNECT
+          : UiState.LOADING_IFRAME;
+      }
+      if (iframeStatus === "ko") {
+        return UiState.FAILED_CONNECT;
       }
       return UiState.SUCCESS;
     } else if (manifestStatus === "ko") {
       return UiState.FAILED_SETUP;
+    }
+    if (iframeCheckFailedOnce) {
+      return UiState.FAILED_CONNECT;
     }
     return UiState.LOADING_SETUP;
   })();
@@ -96,10 +108,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
-
-  if (!slice || !variation) {
-    return <div />;
-  }
 
   const sharedSlice = useMemo(() => Slices.fromSM(slice.model), [slice.model]);
 
@@ -134,24 +142,67 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     editorContent,
   ]);
 
-  const [isDisplayEditor, toggleIsDisplayEditor] = useState(true);
+  const [isDisplayEditor, toggleIsDisplayEditor] = useState(false);
+
+  const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
+  const iframeIntervalId = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (currentState === UiState.FAILED_SETUP) {
+      const id = setInterval(() => {
+        checkSimulatorSetup();
+      }, 3000);
+      if (!setupIntervalId.current) {
+        setupIntervalId.current = id;
+        return;
+      }
+    }
+    if (currentState === UiState.FAILED_CONNECT) {
+      setIframeCheckFailedOnce(true);
+      const id = setInterval(() => {
+        connectToSimulatorIframe();
+      }, 3000);
+      if (!iframeIntervalId.current) {
+        iframeIntervalId.current = id;
+        return;
+      }
+    }
+    if (setupIntervalId.current) {
+      clearTimeout(setupIntervalId.current);
+    }
+    if (iframeIntervalId.current) {
+      clearTimeout(iframeIntervalId.current);
+    } else if (currentState === UiState.SUCCESS) {
+      toggleIsDisplayEditor(true);
+    }
+  }, [currentState]);
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
-      <SliceMachineModal isOpen={currentState !== UiState.FAILED_SETUP}>
+      <SliceMachineModal isOpen={currentState === UiState.FAILED_SETUP}>
         <Card sx={{ minHeight: "500px" }}>Setup modal</Card>
       </SliceMachineModal>
       <Header
         slice={slice}
         variation={variation}
         isDisplayEditor={isDisplayEditor}
+        disabled={currentState !== UiState.SUCCESS}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
       />
+      {[UiState.LOADING_IFRAME, UiState.LOADING_SETUP].includes(
+        currentState
+      ) ? (
+        <FullPage>
+          <Spinner variant="styles.spinner" />
+        </FullPage>
+      ) : null}
+      {currentState === UiState.FAILED_CONNECT ? <FailedConnect /> : null}
       <Box
         sx={{
           flex: 1,
           bg: "grey01",
-          p: 3,
+          px: 3,
+          pt: 3,
           display: "flex",
           flexDirection: "column",
         }}
@@ -175,8 +226,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               variation={variation}
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
+              disabled={currentState !== UiState.SUCCESS}
             />
-            {currentState !== UiState.LOADING_SETUP ? (
+            {![UiState.LOADING_SETUP, UiState.FAILED_SETUP].includes(
+              currentState
+            ) ? (
               <IframeRenderer
                 apiContent={apiContent}
                 screenDimensions={screenDimensions}
@@ -184,32 +238,34 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               />
             ) : null}
           </Box>
-          <Box
-            sx={{
-              height: "100%",
-              overflowY: "scroll",
-              ...(isDisplayEditor
-                ? {
-                    marginLeft: "16px",
-                    visibility: "visible",
-                    width: "400px",
-                  }
-                : {
-                    marginLeft: "0px",
-                    visibility: "hidden",
-                    width: "0",
-                  }),
-              transition: "visibility 0s linear",
-            }}
-          >
-            <ThemeProvider>
-              <SharedSliceEditor
-                content={editorContent}
-                onContentChange={(c) => setContent(c as SharedSliceContent)}
-                sharedSlice={sharedSlice}
-              />
-            </ThemeProvider>
-          </Box>
+          {currentState === UiState.SUCCESS ? (
+            <Box
+              sx={{
+                height: "100%",
+                overflowY: "scroll",
+                ...(isDisplayEditor
+                  ? {
+                      marginLeft: "16px",
+                      visibility: "visible",
+                      width: "400px",
+                    }
+                  : {
+                      marginLeft: "0px",
+                      visibility: "hidden",
+                      width: "0",
+                    }),
+                transition: "visibility 0s linear",
+              }}
+            >
+              <ThemeProvider>
+                <SharedSliceEditor
+                  content={editorContent}
+                  onContentChange={(c) => setContent(c as SharedSliceContent)}
+                  sharedSlice={sharedSlice}
+                />
+              </ThemeProvider>
+            </Box>
+          ) : null}
         </Flex>
       </Box>
       {!!slice.screenshots[variation.id]?.url && (

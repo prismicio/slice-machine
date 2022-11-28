@@ -14,6 +14,7 @@ import { testSaga } from "redux-saga-test-plan";
 import {
   getFramework,
   selectIsSimulatorAvailableForFramework,
+  updateManifestCreator,
 } from "@src/modules/environment";
 
 import { modalOpenCreator } from "@src/modules/modal";
@@ -98,6 +99,7 @@ describe("[Simulator module]", () => {
           setupStatus: { manifest: "ok" },
         })
       );
+      saga.next().put(updateManifestCreator({ value: undefined }));
       saga.next().isDone();
     });
     it("should call the api and dispatch the failure action", () => {
@@ -119,8 +121,9 @@ describe("[Simulator module]", () => {
 
       saga.next().select(getFramework);
       saga.next("next").select(selectIsSimulatorAvailableForFramework);
+      saga.next(true).put(checkSimulatorSetupCreator.failure(new Error()));
       saga
-        .next(true)
+        .next()
         .put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
     });
   });

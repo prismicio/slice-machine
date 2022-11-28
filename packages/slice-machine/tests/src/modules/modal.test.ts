@@ -42,7 +42,7 @@ describe("[Modal module]", () => {
         [ModalKeysEnum.LOGIN]: true,
       };
 
-      const action = modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN });
+      const action = modalCloseCreator();
 
       const expectedState = {
         ...modalInitialState,

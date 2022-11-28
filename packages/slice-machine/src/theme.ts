@@ -68,7 +68,7 @@ const AppTheme = (): Theme =>
       warning: "#E67E22",
       warning02: "#ED811C",
       sidebar: "#F1F1F4",
-      link: "#5163BA",
+      link: "#6E56CF",
       choggleBox: "#5163BA",
       darkBorder: "#DCDBDD",
       code: {
@@ -648,6 +648,9 @@ const AppTheme = (): Theme =>
         cursor: "pointer",
         display: "inline-block",
       },
+      default: {
+        color: "link",
+      },
       invisible: {
         color: "text",
         textDecoration: "none",
@@ -765,8 +768,8 @@ const AppTheme = (): Theme =>
       },
       inlineCode: {
         fontFamily: "monospace",
-        color: "error",
-        bg: "muted",
+        color: "#6E56CF",
+        bg: "#F1EEFE",
       },
       table: {
         width: "100%",

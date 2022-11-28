@@ -177,9 +177,7 @@ export function* createCustomTypeSaga({
     );
     yield call(saveCustomType, newCustomType, {});
     yield put(createCustomTypeCreator.success({ newCustomType }));
-    yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE })
-    );
+    yield put(modalCloseCreator());
     yield put(push(`/cts/${payload.id}`));
     yield put(
       openToasterCreator({
@@ -207,9 +205,7 @@ export function* renameCustomTypeSaga({
       payload.newCustomTypeName
     );
     yield put(renameCustomTypeCreator.success(payload));
-    yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE })
-    );
+    yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
         message: "Custom type updated",

@@ -12,5 +12,8 @@ export default async function handler(
     console.error(message);
     throw new Error(message);
   }
-  return { manifest: req.env.manifest.localSliceSimulatorURL ? "ok" : "ko" };
+  return {
+    manifest: req.env.manifest.localSliceSimulatorURL ? "ok" : "ko",
+    value: req.env.manifest.localSliceSimulatorURL,
+  };
 }

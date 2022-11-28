@@ -33,6 +33,7 @@ type PropTypes = {
   variation: Models.VariationSM;
   isDisplayEditor: boolean;
   toggleIsDisplayEditor: () => void;
+  disabled: boolean;
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
@@ -40,6 +41,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
   variation,
   isDisplayEditor,
   toggleIsDisplayEditor,
+  disabled,
 }) => {
   return (
     <Flex
@@ -62,7 +64,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
           defaultValue={variation}
           variations={slice.model.variations}
           onChange={(v) => redirect(slice, v, true)}
-          disabled={slice.model.variations.length <= 1}
+          disabled={slice.model.variations.length <= 1 || disabled}
         />
       </Flex>
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
@@ -73,6 +75,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
               id="show-mock-editor"
               checked={isDisplayEditor}
               onChange={toggleIsDisplayEditor}
+              disabled={disabled}
             />
           </Flex>
         </Flex>

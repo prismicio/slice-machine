@@ -247,7 +247,7 @@ export function* createSliceSaga({
     typeof getState
   >;
   yield put(createSliceCreator.success({ libraries: serverState.libraries }));
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  yield put(modalCloseCreator());
   const addr = `/${payload.libName.replace(/\//g, "--")}/${
     payload.sliceName
   }/${variationId}`;

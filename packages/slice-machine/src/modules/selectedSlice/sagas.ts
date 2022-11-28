@@ -71,7 +71,7 @@ export function* renameSliceSaga({
   try {
     yield call(renameSlice, sliceId, newSliceName, libName);
     yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
-    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+    yield put(modalCloseCreator());
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName
     }/${payload.variationId}`;

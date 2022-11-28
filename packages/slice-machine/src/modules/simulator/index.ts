@@ -23,6 +23,7 @@ import {
   getCurrentVersion,
   getFramework,
   selectIsSimulatorAvailableForFramework,
+  updateManifestCreator,
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { withLoader } from "@src/modules/loading";
@@ -40,14 +41,6 @@ export const initialState: SimulatorStoreType = {
   },
   isWaitingForIframeCheck: false,
 };
-
-export const openSetupModalCreator = createAction(
-  "SIMULATOR/OPEN_SETUP_MODAL"
-)();
-
-export const closeSetupModalCreator = createAction(
-  "SIMULATOR/CLOSE_SETUP_MODAL"
-)();
 
 export const checkSimulatorSetupCreator = createAsyncAction(
   "SIMULATOR/CHECK_SETUP.REQUEST",
@@ -70,8 +63,6 @@ export const connectToSimulatorIframeCreator = createAsyncAction(
 )<undefined, undefined, undefined>();
 
 type SimulatorActions = ActionType<
-  | typeof openSetupModalCreator
-  | typeof closeSetupModalCreator
   | typeof connectToSimulatorIframeCreator.success
   | typeof connectToSimulatorIframeCreator.request
   | typeof connectToSimulatorIframeCreator.failure
@@ -152,6 +143,7 @@ export function* checkSetupSaga(
           setupStatus,
         })
       );
+      yield put(updateManifestCreator({ value: setupStatus.value }));
       if (action.payload.callback) {
         action.payload.callback();
       }
@@ -198,6 +190,7 @@ export function* failCheckSetupSaga() {
   if (!isPreviewAvailableForFramework) {
     return;
   }
+  yield put(checkSimulatorSetupCreator.failure(new Error()));
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 }
 

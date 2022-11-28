@@ -12,7 +12,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "dev": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/next\"",
+    "dev": "concurrently \"next dev\"",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
     "test": "jest",
     "watch-test": "jest --watch",

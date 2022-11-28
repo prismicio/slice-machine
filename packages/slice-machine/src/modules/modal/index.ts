@@ -9,9 +9,7 @@ export const initialState: ModalStoreType = {
 };
 
 // Actions Creators
-export const modalCloseCreator = createAction("MODAL/CLOSE")<{
-  modalKey: ModalKeysEnum;
-}>();
+export const modalCloseCreator = createAction("MODAL/CLOSE")();
 
 export const modalOpenCreator = createAction("MODAL/OPEN")<{
   modalKey: ModalKeysEnum;

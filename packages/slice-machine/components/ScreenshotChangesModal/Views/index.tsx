@@ -38,15 +38,11 @@ const VariationScreenshot: React.FC<{
   variationID: string;
   slice: ComponentUI;
 }> = ({ variationID, slice }) => {
-  const { isLoadingScreenshot, isCheckingSimulatorSetup } = useSelector(
+  const { isLoadingScreenshot } = useSelector(
     (state: SliceMachineStoreType) => ({
       isLoadingScreenshot: isLoading(
         state,
         LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
-      ),
-      isCheckingSimulatorSetup: isLoading(
-        state,
-        LoadingKeysEnum.CHECK_SIMULATOR
       ),
     })
   );
@@ -79,7 +75,6 @@ const VariationScreenshot: React.FC<{
             px: 2,
           }}
           onClick={openSimulator}
-          isLoading={isCheckingSimulatorSetup}
           Icon={AiOutlineEye}
           label={"Capture screenshot from Slice Simulator"}
         />

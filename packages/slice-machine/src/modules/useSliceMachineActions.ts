@@ -93,38 +93,25 @@ const useSliceMachineActions = () => {
     dispatch(connectToSimulatorIframeCreator.success());
 
   // Modal module
-  const closeLoginModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeModals = () => {
+    dispatch(modalCloseCreator());
+  };
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-  const closeScreenshotsModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const openScreenshotsModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
-  const closeCreateSliceModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openCreateSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-  const closeRenameSliceModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const openRenameSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
-  const closeCreateCustomTypeModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  const closeRenameCustomTypeModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openRenameCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-  const closeScreenshotPreviewModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
   const openSimulatorSetupModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
-  const closeSimulatorSetupModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -503,10 +490,8 @@ const useSliceMachineActions = () => {
     connectToSimulatorIframe,
     refreshState,
     finishOnboarding,
-    closeScreenshotsModal,
     openScreenshotsModal,
     openLoginModal,
-    closeLoginModal,
     startLoadingLogin,
     stopLoadingLogin,
     stopLoadingReview,
@@ -552,18 +537,13 @@ const useSliceMachineActions = () => {
     skipReview,
     setUpdatesViewed,
     setSeenTutorialsToolTip,
-    closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
-    closeRenameCustomTypeModal,
     openScreenshotPreviewModal,
-    closeScreenshotPreviewModal,
     openSimulatorSetupModal,
-    closeSimulatorSetupModal,
     openCreateSliceModal,
-    closeCreateSliceModal,
     openRenameSliceModal,
-    closeRenameSliceModal,
+    closeModals,
     openToaster,
     pushChanges,
   };
