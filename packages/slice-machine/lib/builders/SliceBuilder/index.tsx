@@ -61,8 +61,6 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
     }
   }, [data]);
 
-  if (!variation) return null;
-
   const onSaveSlice = () => {
     saveSlice(slice, setData);
   };
