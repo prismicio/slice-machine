@@ -9,7 +9,7 @@ import { decode } from "../lib/decode";
 
 const PrismicRepositoryRoles = {
 	SuperUser: "SuperUser",
-	Admin: "Administrator",
+	Administrator: "Administrator",
 	Owner: "Owner",
 	Manager: "Manager",
 	Publisher: "Publisher",

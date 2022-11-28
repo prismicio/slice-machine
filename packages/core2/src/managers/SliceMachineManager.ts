@@ -11,6 +11,7 @@ import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
 import { ProjectManager } from "./_ProjectManager";
+import { RepositoryManager } from "./_RepositoryManager";
 import { SlicesManager } from "./_SlicesManager";
 import { SnippetsManger } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
@@ -74,6 +75,7 @@ export class SliceMachineManager {
 	customTypes: CustomTypesManager;
 	snippets: SnippetsManger;
 	user: UserManager;
+	repository: RepositoryManager;
 	versions: VersionsManger;
 
 	constructor() {
@@ -88,6 +90,7 @@ export class SliceMachineManager {
 		this.customTypes = new CustomTypesManager(this);
 		this.snippets = new SnippetsManger(this);
 		this.user = new UserManager(this);
+		this.repository = new RepositoryManager(this);
 		this.versions = new VersionsManger(this);
 
 		// Supress a TypeScript warning about an unused property. This
