@@ -8,6 +8,7 @@ import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
+import { deleteSlice } from "@src/apiClient";
 
 type DeleteSliceModalProps = {
   sliceId: string;
@@ -17,7 +18,7 @@ type DeleteSliceModalProps = {
 
 export const DeleteSliceModal: React.FunctionComponent<
   DeleteSliceModalProps
-> = ({ sliceName, libName }) => {
+> = ({ sliceId, sliceName, libName }) => {
   const { isSliceModalOpen } = useSelector((store: SliceMachineStoreType) => ({
     isSliceModalOpen: isModalOpen(store, ModalKeysEnum.DELETE_SLICE),
   }));
@@ -99,6 +100,11 @@ export const DeleteSliceModal: React.FunctionComponent<
               label="Delete"
               variant="danger"
               sx={{ minHeight: 39, minWidth: 78 }}
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={async () => {
+                await deleteSlice(sliceId, libName);
+                closeDeleteSliceModal();
+              }}
             />
           </Flex>
         )}
