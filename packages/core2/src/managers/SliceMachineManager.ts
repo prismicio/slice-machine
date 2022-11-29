@@ -126,6 +126,7 @@ export class SliceMachineManager {
 		const isLoggedIn = await this.user.checkIsLoggedIn();
 		if (isLoggedIn) {
 			profile = await this.user.getProfile();
+			await this.user.refreshAuthenticationToken();
 		}
 
 		const currentVersion = await this.project.getRunningSliceMachineVersion();

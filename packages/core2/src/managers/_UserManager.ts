@@ -6,12 +6,12 @@ export class UserManager extends BaseManager {
 	checkIsLoggedIn = this.prismicAuthManager.checkIsLoggedIn.bind(
 		this.prismicAuthManager,
 	);
-	getProfile = this.prismicAuthManager.getProfile.bind(this.prismicAuthManager);
-	getProfileForAuthenticationToken =
-		this.prismicAuthManager.getProfileForAuthenticationToken.bind(
+	refreshAuthenticationToken =
+		this.prismicAuthManager.refreshAuthenticationToken.bind(
 			this.prismicAuthManager,
 		);
 	getAuthenticationToken = this.prismicAuthManager.getAuthenticationToken.bind(
 		this.prismicAuthManager,
 	);
+	getProfile = this.prismicAuthManager.getProfile.bind(this.prismicAuthManager);
 }

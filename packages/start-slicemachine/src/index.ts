@@ -2,7 +2,6 @@ import {
 	PrismicUserProfile,
 	SliceMachineManager,
 	createSliceMachineManager,
-	createPrismicAuthManager,
 } from "@slicemachine/core2";
 
 import { listen } from "./lib/listen";

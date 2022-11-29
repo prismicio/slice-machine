@@ -110,10 +110,25 @@ const createProcedureEventHandler = (args: CreateProcedureEventHandlerArgs) => {
 	return eventHandler(async (event): Promise<ProcedureCallServerReturnType> => {
 		const procedureArgs = await readProcedureArgs(event);
 
-		const res = await args.procedure(procedureArgs);
-		const preparedRes = await prepareForSerialization(res);
+		let res: unknown;
 
 		try {
+			res = await args.procedure(procedureArgs);
+		} catch (error) {
+			if (error instanceof Error) {
+				event.req.statusCode = 500;
+
+				return {
+					error: error.message,
+					cause: error,
+				};
+			} else {
+				throw error;
+			}
+		}
+
+		try {
+			const preparedRes = await prepareForSerialization(res);
 			const data = serialize(preparedRes);
 
 			return {
