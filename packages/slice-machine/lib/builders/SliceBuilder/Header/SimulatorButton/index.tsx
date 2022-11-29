@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { RefCallback, useCallback, useRef } from "react";
 import { Box, Flex, Close, Text, Link, useThemeUI } from "theme-ui";
 import { Button } from "@components/Button";
 
@@ -33,7 +33,7 @@ const SimulatorButton: React.FC<{
     })
   );
 
-  const setRef = useCallback((node) => {
+  const setRef: RefCallback<HTMLButtonElement> = useCallback((node) => {
     if (ref.current) {
       return;
     }
