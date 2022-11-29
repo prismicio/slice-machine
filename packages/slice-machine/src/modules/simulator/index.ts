@@ -1,11 +1,6 @@
 import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  ActionType,
-  createAction,
-  createAsyncAction,
-  getType,
-} from "typesafe-actions";
+import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SimulatorStoreType } from "./types";
 import {
   call,

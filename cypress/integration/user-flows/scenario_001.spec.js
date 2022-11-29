@@ -1,5 +1,6 @@
 import path from "path";
 
+/** This test needs to run AFTER create_slice. const values below are copied from there. */
 describe("I am a new SM user (with Next) who wants to create a Custom Type with fields, and then save and push it to Prismic.", () => {
   const name = "My Custom Type";
   const id = "my_custom_type";
@@ -10,7 +11,6 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
     cy.task("clearDir", path.join(appPath, "customtypes"));
-    cy.task("clearDir", path.join(appPath, "slices"));
     cy.task("clearDir", path.join(appPath, ".slicemachine"));
   });
 
@@ -20,6 +20,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: false,
       updatesViewed: {},
       hasSeenTutorialsTooTip: false,
+      hasSeenSimulatorToolTip: false,
     });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
@@ -44,6 +45,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
@@ -67,6 +69,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit(`/cts/${id}`);
     cy.waitUntil(() => cy.get('[data-testid="empty-zone-add-new-field"]'));
@@ -139,6 +142,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit(`/changes`);
 

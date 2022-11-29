@@ -59,15 +59,16 @@ const SimulatorButton: React.FC<{
         ref={ref}
         Icon={BsPlayCircle}
         label="Simulate Slice"
-        data-cy="builder-simulate-button"
+        data-testid="simulator-open-button"
         data-for={
           isSimulatorAvailableForFramework
             ? "simulator-tooltip"
             : "simulator-not-supported"
         }
-        onClick={() =>
-          window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID)
-        }
+        onClick={() => {
+          onCloseToolTip();
+          window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID);
+        }}
         disabled={!isSimulatorAvailableForFramework}
         variant={
           isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"
@@ -97,12 +98,13 @@ const SimulatorButton: React.FC<{
                   justifyContent: "space-between",
                   p: 2,
                 }}
+                data-testid="simulator-tooltip"
               >
                 <Text as="b" sx={{ color: "#FFF" }}>
                   Simulate your slices
                 </Text>
                 <Close
-                  data-testid="video-tooltip-close-button"
+                  data-testid="simulator-tooltip-close-button"
                   onClick={onCloseToolTip}
                   sx={{
                     width: "26px",
