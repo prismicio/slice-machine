@@ -54,11 +54,6 @@ export const addSentryPreHandler = (app: express.Express) => {
 
   // The request handler must be the first middleware on the app
   app.use(Sentry.Handlers.requestHandler());
-
-  // TODO remove this when tested
-  app.use("/error-demo", (_, __) => {
-    throw new Error("Hello From Express 1");
-  });
 };
 
 export const addSentryPostHandler = (app: express.Express) => {
