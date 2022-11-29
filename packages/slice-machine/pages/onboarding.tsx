@@ -202,7 +202,7 @@ function idFromStep(
   }
 }
 
-function handleTracking(props: { step: number; maxSteps: number }): void {
+function useTracking(props: { step: number; maxSteps: number }): void {
   const state = useRef(props);
 
   useEffect(() => {
@@ -248,7 +248,7 @@ export default function Onboarding(): JSX.Element {
     step: 0,
   });
 
-  handleTracking({
+  useTracking({
     ...state,
     maxSteps: STEPS.length,
   });
