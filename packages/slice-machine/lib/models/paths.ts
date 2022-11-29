@@ -23,11 +23,6 @@ export const paths = (cwd: string, prefix: string) => ({
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
         ),
-      mocks: (): string =>
-        path.join(
-          paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
-          "mocks.json"
-        ),
       model: (): string =>
         path.join(
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),

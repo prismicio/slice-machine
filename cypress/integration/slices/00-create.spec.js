@@ -15,12 +15,6 @@ describe("Create Slices", () => {
     sliceName,
     "mocks.json"
   );
-  const pathToLibraryState = path.join(
-    "e2e-projects",
-    "cypress-next-app",
-    ".slicemachine",
-    "libraries-state.json"
-  );
 
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();

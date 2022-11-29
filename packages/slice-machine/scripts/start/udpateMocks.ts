@@ -11,9 +11,9 @@ import {
   Library,
 } from "@slicemachine/core/build/models/Library";
 import {
-  CustomPaths,
   Files,
   GeneratedCustomTypesPaths,
+  sliceMockPath,
 } from "@slicemachine/core/build/node-utils";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
@@ -36,10 +36,7 @@ export function replaceLegacySliceMocks(
     );
 
     components.forEach((c) => {
-      const mocksPath = CustomPaths(cwd)
-        .library(c.from)
-        .slice(c.model.name)
-        .mocks();
+      const mocksPath = sliceMockPath(cwd, c.from, c.model.name);
 
       const currentMocks = Files.readEntityFromFile<ComponentMocks>(
         mocksPath,

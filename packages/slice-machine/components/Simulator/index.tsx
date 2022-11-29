@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
@@ -72,11 +72,20 @@ export default function Simulator() {
   );
 
   const initialContent = useMemo<SharedSliceContent>(
-    () => component.mock?.[0] || defaultSharedSliceContent(variation.id),
+    () =>
+      component.mock?.find((m) => m.variation === variation.id) ||
+      defaultSharedSliceContent(variation.id),
     [component.mock, variation.id]
   );
 
+  const previousInitialContent = useRef(initialContent);
   const [editorContent, setContent] = useState(initialContent);
+
+  if (previousInitialContent.current !== initialContent) {
+    previousInitialContent.current = initialContent;
+    setContent(initialContent);
+  }
+
   const initialApiContent = useMemo(
     () =>
       renderSliceMock(sharedSlice, editorContent) as {
@@ -153,7 +162,8 @@ export default function Simulator() {
                 ? {
                     marginLeft: "16px",
                     visibility: "visible",
-                    width: "400px",
+                    flexShrink: 0,
+                    width: "560px",
                   }
                 : {
                     marginLeft: "0px",
