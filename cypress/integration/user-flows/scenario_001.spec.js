@@ -1,6 +1,5 @@
 import path from "path";
 
-/** This test needs to run AFTER create_slice. const values below are copied from there. */
 describe("I am a new SM user (with Next) who wants to create a Custom Type with fields, and then save and push it to Prismic.", () => {
   const name = "My Custom Type";
   const id = "my_custom_type";
