@@ -178,11 +178,6 @@ function* connectToSimulatorIframe() {
 }
 
 export function* failCheckSetupSaga() {
-  const framework = (yield select(getFramework)) as ReturnType<
-    typeof getFramework
-  >;
-  // This should be used in track event
-  framework;
   const isPreviewAvailableForFramework = (yield select(
     selectIsSimulatorAvailableForFramework
   )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;

@@ -192,7 +192,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         slice={slice}
         variation={variation}
         isDisplayEditor={isDisplayEditor}
-        disabled={currentState !== UiState.SUCCESS}
+        actionsDisabled={currentState !== UiState.SUCCESS}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
       />
       {[UiState.LOADING_IFRAME, UiState.LOADING_SETUP].includes(
@@ -232,7 +232,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               variation={variation}
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
-              disabled={currentState !== UiState.SUCCESS}
+              actionsDisabled={currentState !== UiState.SUCCESS}
             />
             {![UiState.LOADING_SETUP, UiState.FAILED_SETUP].includes(
               currentState

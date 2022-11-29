@@ -133,7 +133,7 @@ describe("[Simulator module]", () => {
       const saga = testSaga(failCheckSetupSaga);
 
       saga.next().select(getFramework);
-      saga.next("next").select(selectIsSimulatorAvailableForFramework);
+      saga.next("vue").select(selectIsSimulatorAvailableForFramework);
       saga.next(false).isDone();
     });
   });
