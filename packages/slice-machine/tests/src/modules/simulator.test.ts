@@ -119,7 +119,6 @@ describe("[Simulator module]", () => {
     it("should open setup modal if checkSimulatorSetupCreator.failure action", () => {
       const saga = testSaga(failCheckSetupSaga);
 
-      saga.next().select(getFramework);
       saga.next("next").select(selectIsSimulatorAvailableForFramework);
       saga.next(true).put(checkSimulatorSetupCreator.failure(new Error()));
       saga
@@ -132,7 +131,6 @@ describe("[Simulator module]", () => {
     it("should early return if the framework doesn't support the simulator feature", () => {
       const saga = testSaga(failCheckSetupSaga);
 
-      saga.next().select(getFramework);
       saga.next("vue").select(selectIsSimulatorAvailableForFramework);
       saga.next(false).isDone();
     });
