@@ -21,6 +21,9 @@ import {
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { managerClient } from "./managerClient";
 import { SimulatorManagerReadSliceSimulatorSetupStepsReturnType } from "@slicemachine/core2/client";
+import { pascalize, snakelize } from "@lib/utils/str";
+import { CustomTypes as InternalCustomTypes } from "@prismicio/types-internal";
+import { DEFAULT_VARIATION_ID } from "@lib/consts";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -104,18 +107,48 @@ export const pushCustomType = async (customTypeId: string): Promise<void> => {
 };
 
 /** Slice Routes **/
-export const createSlice = (
+export const createSlice = async (
   sliceName: string,
   libName: string
 ): Promise<{ variationId: string }> => {
-  const requestBody: SliceBody = {
-    sliceName,
-    from: libName,
+  // TODO: This default model should probably be abstracted to a helper
+  // somewhere.
+  const model: InternalCustomTypes.Widgets.Slices.SharedSlice = {
+    id: snakelize(sliceName),
+    type: InternalCustomTypes.Widgets.Slices.SlicesTypes.SharedSlice,
+    name: sliceName,
+    description: sliceName,
+    variations: [
+      {
+        id: DEFAULT_VARIATION_ID,
+        name: pascalize(DEFAULT_VARIATION_ID),
+        // TODO: What should this be?
+        docURL: "...",
+        // TODO: What should this be?
+        version: "initial",
+        description: pascalize(DEFAULT_VARIATION_ID),
+        // TODO: What should this be? The type requires it.
+        imageUrl: "",
+      },
+    ],
   };
 
-  return axios
-    .post(`/api/slices/create`, requestBody, defaultAxiosConfig)
-    .then((response: AxiosResponse<{ variationId: string }>) => response.data);
+  const { errors } = await managerClient.slices.createSlice({
+    libraryID: libName,
+    model,
+  });
+
+  if (errors.length > 0) {
+    throw new Error(
+      `Failed to create Slice: ${errors
+        .map((error) => error.message)
+        .join("; ")}`
+    );
+  }
+
+  return {
+    variationId: model.variations[0].id,
+  };
 };
 
 export const renameSlice = async (
