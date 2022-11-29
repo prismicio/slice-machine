@@ -15,8 +15,7 @@ declare namespace Cypress {
       hasSendAReview?: boolean,
       isOnboarded?: boolean,
       viewedUpdates?: Record<string, unknown>,
-      hasSeenTutorialsTooTip?: boolean,
-      hasSeenSimulatorToolTip?: boolean
+      hasSeenTutorialsTooTip?: boolean
     ): Chainable<undefined>;
     getSliceMachineUSerContext(): Chainable<
       undefined | Record<string, unknown>

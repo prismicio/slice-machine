@@ -15,7 +15,6 @@ const AppTheme = (): Theme =>
       primary: "#5D40F7",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
-      purpleStrong: "#5842C3",
       changesWarning: {
         background: "#FFECC7",
         color: "#5C0C17",

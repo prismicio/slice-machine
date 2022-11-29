@@ -9,7 +9,6 @@ import {
   skipReviewCreator,
   updatesViewedCreator,
   hasSeenTutorialsTooTipCreator,
-  hasSeenSimulatorToolTipCreator,
 } from "./userContext";
 import { refreshStateCreator } from "./environment";
 import {
@@ -130,8 +129,6 @@ const useSliceMachineActions = () => {
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
-  const setSeenSimulatorToolTip = () =>
-    dispatch(hasSeenSimulatorToolTipCreator());
   const setSeenTutorialsToolTip = () =>
     dispatch(hasSeenTutorialsTooTipCreator());
 
@@ -540,7 +537,6 @@ const useSliceMachineActions = () => {
     skipReview,
     setUpdatesViewed,
     setSeenTutorialsToolTip,
-    setSeenSimulatorToolTip,
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
     openScreenshotPreviewModal,

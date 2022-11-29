@@ -8,6 +8,7 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { renameCustomType, saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";

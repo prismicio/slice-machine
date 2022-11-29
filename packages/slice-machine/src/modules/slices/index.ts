@@ -11,6 +11,7 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { createSlice, getState } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
 import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";

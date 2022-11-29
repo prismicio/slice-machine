@@ -14,7 +14,6 @@ describe("Duplicate Slices", () => {
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
-      hasSeenSimulatorToolTip: true,
     });
 
     // create first slice

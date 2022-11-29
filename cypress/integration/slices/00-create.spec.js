@@ -6,6 +6,21 @@ describe("Create Slices", () => {
   const sliceName = "TestSlice";
   const editedSliceName = "TestSlice2";
   const lib = "slices";
+  const pathToMock = path.join(
+    "e2e-projects",
+    "cypress-next-app",
+    ".slicemachine",
+    "assets",
+    "slices",
+    sliceName,
+    "mocks.json"
+  );
+  const pathToLibraryState = path.join(
+    "e2e-projects",
+    "cypress-next-app",
+    ".slicemachine",
+    "libraries-state.json"
+  );
 
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
@@ -21,7 +36,6 @@ describe("Create Slices", () => {
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
-      hasSeenSimulatorToolTip: true,
     });
     cy.visit(`/slices`);
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));

@@ -63,7 +63,7 @@ const VideoItem: React.FC<VideoItemProps> = ({
           id={id}
           effect="solid"
           backgroundColor="#5B3DF5"
-          clickable
+          clickable={true}
           className={style.videoTutorialsContainer}
           afterHide={handleClose}
           offset={{

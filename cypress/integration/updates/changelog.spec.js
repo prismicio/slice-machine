@@ -24,7 +24,6 @@ describe("changelog.warningBreakingChanges", () => {
         latestNonBreaking: "1.2.3",
       },
       hasSeenTutorialsTooTip: true,
-      hasSeenSimulatorToolTip: true,
     });
 
     cy.intercept("/api/state", (req) => {
@@ -54,7 +53,6 @@ describe("changelog.warningBreakingChanges", () => {
         latestNonBreaking: "1.2.3",
       },
       hasSeenTutorialsTooTip: true,
-      hasSeenSimulatorToolTip: true,
     });
 
     cy.intercept("/api/state", (req) => {

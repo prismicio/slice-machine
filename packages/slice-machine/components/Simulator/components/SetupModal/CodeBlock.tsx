@@ -3,7 +3,7 @@ import { Button, useThemeUI, Box } from "theme-ui";
 
 import { MdCheck, MdContentCopy } from "react-icons/md";
 
-import CodeBlock from "../../../CodeBlock";
+import CodeBlock from "@components/CodeBlock";
 
 const CodeBlockWithCopy: React.FC<{ children: string }> = ({ children }) => {
   const { theme } = useThemeUI();
