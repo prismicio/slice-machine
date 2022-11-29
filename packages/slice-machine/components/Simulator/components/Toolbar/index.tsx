@@ -27,7 +27,7 @@ type ToolbarProps = {
   variation: VariationSM;
   handleScreenSizeChange: (screenDimensions: ScreenDimensions) => void;
   screenDimensions: ScreenDimensions;
-  disabled: boolean;
+  actionsDisabled: boolean;
 };
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -35,7 +35,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   variation,
   handleScreenSizeChange,
   screenDimensions,
-  disabled,
+  actionsDisabled,
 }) => {
   const [selectedDropdown, setSelectedDropdown] = useState<string>(
     ScreenSizeOptions.DESKTOP
@@ -108,7 +108,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           onChange={dropDownChangeHandler}
           buttonSx={{ alignSelf: "start" }}
           currentValue={selectedDropdown}
-          disabled={disabled}
+          disabled={actionsDisabled}
         />
         <ScreensizeInput
           label="W"
@@ -119,7 +119,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
               width: Number(sizeEvent.target.value),
             });
           }}
-          disabled={disabled}
+          disabled={actionsDisabled}
           sx={{ mx: 2 }}
         />
         <RiCloseLine size={16} color="#6F6E77" />
@@ -132,7 +132,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
               height: Number(sizeEvent.target.value),
             });
           }}
-          disabled={disabled}
+          disabled={actionsDisabled}
           sx={{ ml: 2 }}
         />
       </Flex>
@@ -142,7 +142,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         isLoading={isSavingScreenshot}
         Icon={AiFillCamera}
         variant="secondary"
-        disabled={disabled}
+        disabled={actionsDisabled}
       />
     </Flex>
   );
