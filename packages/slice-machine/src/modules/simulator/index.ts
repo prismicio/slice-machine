@@ -194,7 +194,6 @@ export function* failCheckSetupSaga() {
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 }
 
-/** Example of how to track event */
 export function* trackOpenSetupModalSaga() {
   const framework: Frameworks = (yield select(getFramework)) as ReturnType<
     typeof getFramework
