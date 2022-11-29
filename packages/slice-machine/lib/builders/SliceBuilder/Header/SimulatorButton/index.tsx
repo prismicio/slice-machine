@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useRef } from "react";
 import { Box, Flex, Close, Text, Link, useThemeUI } from "theme-ui";
 import { Button } from "@components/Button";
 
@@ -22,7 +22,7 @@ const SimulatorButton: React.FC<{
   const router = useRouter();
   const { theme } = useThemeUI();
 
-  const ref = React.createRef<HTMLButtonElement>();
+  const ref = useRef<HTMLButtonElement | null>(null);
 
   const { setSeenSimulatorToolTip } = useSliceMachineActions();
 
@@ -33,15 +33,14 @@ const SimulatorButton: React.FC<{
     })
   );
 
-  useEffect(() => {
-    if (
-      ref.current &&
-      isSimulatorAvailableForFramework &&
-      !hasSeenSimulatorTooTip
-    ) {
-      const { current } = ref;
-      setTimeout(() => ReactTooltip.show(current), 5000);
+  const setRef = useCallback((node) => {
+    if (ref.current) {
+      return;
     }
+    if (node && isSimulatorAvailableForFramework && !hasSeenSimulatorTooTip) {
+      setTimeout(() => ReactTooltip.show(node), 5000);
+    }
+    ref.current = node;
   }, []);
 
   const onCloseToolTip = () => {
@@ -56,7 +55,7 @@ const SimulatorButton: React.FC<{
     <>
       <Button
         data-tip
-        ref={ref}
+        ref={setRef}
         Icon={BsPlayCircle}
         label="Simulate Slice"
         data-testid="simulator-open-button"

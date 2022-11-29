@@ -10,6 +10,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
     cy.task("clearDir", path.join(appPath, "customtypes"));
+    cy.task("clearDir", path.join(appPath, "slices"));
     cy.task("clearDir", path.join(appPath, ".slicemachine"));
   });
 
@@ -19,7 +20,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: false,
       updatesViewed: {},
       hasSeenTutorialsTooTip: false,
-      hasSeenSimulatorToolTip: false,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
