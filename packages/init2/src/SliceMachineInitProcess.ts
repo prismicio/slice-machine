@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import { ExecaChildProcess } from "execa";
 import logSymbols from "log-symbols";
-import prompts from "prompts";
 
 import {
 	createSliceMachineManager,
@@ -13,6 +12,8 @@ import {
 import * as framework from "./framework";
 import { listr, listrRun } from "./lib/listr";
 import * as packageManager from "./lib/packageManager";
+import { prompt } from "./lib/prompt";
+import * as repositoryDomain from "./lib/repositoryDomain";
 
 export type SliceMachineInitProcessOptions = {
 	input: string[];
@@ -107,16 +108,21 @@ export class SliceMachineInitProcess {
 		await listrRun([
 			{
 				title: "Logging in to Prismic...",
-				task: async (_, task) => {
+				task: async (_, parentTask) => {
 					try {
-						task.output = "Validating session...";
+						parentTask.output = "Validating session...";
 						this.context.userProfile = await this.manager.user.getProfile();
+
+						parentTask.title = `Logged in as ${chalk.cyan(
+							this.context.userProfile?.email
+						)}`;
+						parentTask.output = "";
 					} catch {
 						// noop
 					}
 
 					if (!this.context.userProfile) {
-						task.output = "Press any key to open the browser to login...";
+						parentTask.output = "Press any key to open the browser to login...";
 						await new Promise((resolve) => {
 							const initialRawMode = process.stdin.isRaw;
 							process.stdin.setRawMode(true);
@@ -127,28 +133,40 @@ export class SliceMachineInitProcess {
 							});
 						});
 
-						task.output = "Browser opened, waiting for you to login...";
+						parentTask.output = "Browser opened, waiting for you to login...";
 						await this.manager.user.browserLogin();
 
-						task.output = "Logged in! Fetching user profile...";
-						this.context.userProfile = await this.manager.user.getProfile();
+						parentTask.title = `Logged in`;
 					}
 
-					task.title = `Logged in as ${chalk.cyan(
-						this.context.userProfile?.email
-					)}`;
-				},
-			},
-		]);
+					return listr(
+						[
+							{
+								title: "Fetching user profile...",
+								task: async (_, task) => {
+									if (!this.context.userProfile) {
+										this.context.userProfile =
+											await this.manager.user.getProfile();
+									}
 
-		await listrRun([
-			{
-				title: "Fetching user data...",
-				task: async (_, task) => {
-					this.context.userRepositories =
-						await this.manager.repository.readAll();
+									parentTask.title = `Logged in as ${chalk.cyan(
+										this.context.userProfile?.email
+									)}`;
+									task.title = "Fetched user profile";
+								},
+							},
+							{
+								title: "Fetching user repositories...",
+								task: async (_, task) => {
+									this.context.userRepositories =
+										await this.manager.repository.readAll();
 
-					task.title = "Fetched user data";
+									task.title = "Fetched user repositories";
+								},
+							},
+						],
+						{ concurrent: true }
+					);
 				},
 			},
 		]);
@@ -165,9 +183,9 @@ export class SliceMachineInitProcess {
 			};
 		} else {
 			if (this.context.userRepositories!.length) {
-				const maybeRepository = await prompts({
+				const { maybeDomain } = await prompt<string, "maybeDomain">({
 					type: "select",
-					name: "value",
+					name: "maybeDomain",
 					message:
 						"Pick a repository to connect to or choose to create a new one",
 					warn: "You are not a developer or admin of this repository",
@@ -194,27 +212,133 @@ export class SliceMachineInitProcess {
 							.sort((a, b) => (a.value > b.value ? 1 : -1)),
 					],
 				});
-				// Clear prompt line, we'll recap cleanly later
-				process.stdout.moveCursor(0, -1);
-				process.stdout.clearLine(1);
 
-				if (maybeRepository.value) {
+				if (maybeDomain) {
 					this.context.repository = {
-						domain: maybeRepository.value,
+						domain: maybeDomain,
 						exists: true,
 					};
 				}
 			}
 
 			if (!this.context.repository) {
+				let suggestedName = repositoryDomain.random();
+				while (
+					await this.manager.repository.exists({ domain: suggestedName })
+				) {
+					suggestedName = repositoryDomain.random();
+				}
+
 				// TODO: Prompt for repository
+				const { domain } = await prompt<string, "domain">({
+					type: "text",
+					name: "domain",
+					// Overriden by the `onRender` function, just used as a fallback
+					message: "Choose a name for your Prismic repository",
+					initial: suggestedName,
+					onRender() {
+						const raw = this.value || this.initial || "";
+						const domain = repositoryDomain.format(raw);
+
+						const validation = repositoryDomain.validate(domain);
+
+						this.msg = chalk.reset(
+							`
+Choose a name for your Prismic repository
+
+  NAMING RULES
+${chalk[validation.NonLetterStart ? "red" : "gray"](
+	`    1. Name should ${chalk[validation.NonLetterStart ? "bold" : "cyan"](
+		"start with a letter"
+	)}`
+)}
+${chalk[validation.LessThan4 ? "red" : "gray"](
+	`    2. Name should be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
+		"4 characters long or more"
+	)}`
+)}
+${chalk[validation.MoreThan30 ? "red" : "gray"](
+	`    3. Name should be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
+		"30 characters long or less"
+	)}`
+)}
+${chalk.gray(`    4. Name will be ${chalk.cyan("kebab-cased")} automatically`)}
+
+  CONSIDERATIONS
+${chalk.gray(`    1. Once picked, your repository name cannot be changed
+    2. A display name for the repository can be configured later on`)}
+
+  PREVIEW
+${chalk.gray(`    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}
+    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}`)}
+
+${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
+						);
+					},
+					validate: async (rawDomain: string) => {
+						const validation = repositoryDomain.validate(rawDomain);
+						if (validation.hasErrors) {
+							const formattedErrors: string[] = [];
+
+							if (validation.NonLetterStart) {
+								formattedErrors.push("must start with a letter");
+							}
+							if (validation.LessThan4) {
+								formattedErrors.push("cannot be less than 4 characters long");
+							}
+							if (validation.MoreThan30) {
+								formattedErrors.push("cannot be more than 30 characters long");
+							}
+
+							return `Name ${formattedErrors.join(" and ")}`;
+						}
+
+						const domain = repositoryDomain.format(rawDomain);
+						const exists = await this.manager.repository.exists({ domain });
+						if (exists) {
+							return `Repository ${chalk.cyan(domain)} already exists`;
+						}
+
+						return true;
+					},
+				});
+
+				// Clear extra lines
+				process.stdout.moveCursor(0, -16);
+				process.stdout.clearScreenDown();
+
+				this.context.repository = {
+					domain,
+					exists: false,
+				};
 			}
 		}
+
 		console.log(
 			`${logSymbols.success} Selected repository ${chalk.cyan(
 				this.context.repository!.domain
 			)}`
 		);
+
+		if (!this.context.repository!.exists) {
+			await listrRun([
+				{
+					title: `Creating new repository ${chalk.cyan(
+						this.context.repository!.domain
+					)} ...`,
+					task: async (_, task) => {
+						await this.manager.repository.create({
+							domain: this.context.repository!.domain,
+							framework: this.context.framework!.prismicName,
+						});
+
+						task.title = `Created new reposiotry ${chalk.cyan(
+							this.context.repository!.domain
+						)}`;
+					},
+				},
+			]);
+		}
 
 		await listrRun([
 			{
@@ -231,6 +355,7 @@ export class SliceMachineInitProcess {
 					this.context.installProcess!.stdout?.on("data", updateOutput);
 					this.context.installProcess!.stderr?.on("data", updateOutput);
 
+					// TODO: try/catch with message to tell people to launch command again with repository flag
 					await this.context.installProcess;
 
 					task.title = `Core dependencies installed with ${chalk.cyan(
@@ -246,14 +371,14 @@ export class SliceMachineInitProcess {
 				task: (_, _parentTask) =>
 					listr([
 						{
-							title: "Project (wip)",
-							task: () => new Promise((res) => setTimeout(res, 1000)),
+							title: "Project setup",
+							task: () => new Promise((res) => setTimeout(res, 2000)),
 						},
 						{
 							title: `${chalk.cyan(
 								this.context.framework?.name
-							)} adapter (wip)`,
-							task: () => new Promise((res) => setTimeout(res, 1000)),
+							)} adapter setup`,
+							task: () => new Promise((res) => setTimeout(res, 2000)),
 						},
 					]),
 			},

@@ -7,6 +7,9 @@ export type Framework = {
 	/** Framework's human readable name. */
 	name: string;
 
+	/** Framework's name sent to Prismic */
+	prismicName: string;
+
 	/**
 	 * A package name/semver range map defining framework compatibility
 	 * requirements.
@@ -34,6 +37,7 @@ const DEFAULT_DEV_DEPENDENCIES: Record<string, string> = {
 export const FRAMEWORKS: Record<string, Framework> = {
 	"nuxt-2": {
 		name: "Nuxt 2",
+		prismicName: "nuxt-2",
 		compatibility: {
 			nuxt: "^2.0.0",
 		},
@@ -44,6 +48,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	"next-11-13": {
 		name: "Next.js 11-13",
+		prismicName: "next-11-13",
 		compatibility: {
 			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
 		},
@@ -57,6 +62,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 /** Vanilla package used when framework is not supported. */
 export const VANILLA: Framework = {
 	name: "vanilla (no framework)",
+	prismicName: "vanilla",
 	compatibility: {},
 	devDependencies: {
 		...DEFAULT_DEV_DEPENDENCIES,

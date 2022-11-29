@@ -4,7 +4,6 @@ import fetch, { Response } from "node-fetch";
 import { BaseManager } from "./_BaseManager";
 
 import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
-import { serializeCookies } from "../lib/serializeCookies";
 import { decode } from "../lib/decode";
 
 const PrismicRepositoryRoles = {
@@ -118,7 +117,7 @@ export class RepositoryManager extends BaseManager {
 		const body = {
 			domain: args.domain,
 			framework: args.framework, // This property appears to be optional for the API
-			// TODO: Maybe those date shouldn't be hardcoded
+			// TODO: Maybe those data shouldn't be hardcoded
 			plan: "personal", // Using any other value than "personal" requires payment
 			isAnnual: "false", // This property appears to be optional for the API
 			role: "developer", // This property appears to be optional for the API
@@ -130,8 +129,11 @@ export class RepositoryManager extends BaseManager {
 			body,
 			userAgent: "prismic-cli/sm", // Custom User Agent is required
 		});
+		const text = await res.text();
 
-		if (!res.ok) {
+		// Endpoint returns repository name on success, which must be more than 4 characters and less than 30
+		// if (!res.ok) {
+		if (!res.ok || text.length < 4 || text.length > 30) {
 			throw new Error(`Failed to create repository \`${args.domain}\``, {
 				cause: res,
 			});
@@ -204,6 +206,12 @@ export class RepositoryManager extends BaseManager {
 	}): Promise<Response> {
 		const cookies = await this.user.getAuthenticationCookies();
 
+		const extraHeaders: Record<string, string> = {};
+
+		if (args.body) {
+			extraHeaders["Content-Type"] = "application/json";
+		}
+
 		return fetch(args.url.toString(), {
 			method: args.method,
 			body: args.body ? JSON.stringify(args.body) : undefined,
@@ -211,8 +219,12 @@ export class RepositoryManager extends BaseManager {
 				// Some endpoints rely on the authorization header...
 				Authorization: `Bearer ${cookies["prismic-auth"]}`,
 				// ... and some just parse cookies
-				Cookie: serializeCookies(cookies),
+				// TODO: Refactor, temporary ugly trick to prevent escaping cookies twice
+				Cookie: Object.entries(cookies)
+					.map((keyValue) => keyValue.join("="))
+					.join("; "),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
+				...extraHeaders,
 			},
 		});
 	}
