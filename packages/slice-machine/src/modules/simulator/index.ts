@@ -168,7 +168,7 @@ function* connectToSimulatorIframe() {
   } = yield race({
     iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
     iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-    timeout: delay(10000),
+    timeout: delay(5000),
   });
   if (timeout || iframeCheckKO) {
     yield put(connectToSimulatorIframeCreator.failure());

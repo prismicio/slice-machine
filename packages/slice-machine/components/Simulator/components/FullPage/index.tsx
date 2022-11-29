@@ -10,11 +10,19 @@ const FullPage: React.FC = ({ children }) => (
       width: "100%",
       justifyContent: "center",
       alignItems: "center",
-      flexDirection: "column",
       zIndex: "1",
     }}
   >
-    {children}
+    <Flex
+      sx={{
+        marginTop: "-128px",
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      {children}
+    </Flex>
   </Flex>
 );
 
