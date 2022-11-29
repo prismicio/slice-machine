@@ -179,6 +179,12 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     }
   }, [currentState]);
 
+  useEffect(() => {
+    if (currentState === UiState.FAILED_CONNECT && !iframeCheckFailedOnce) {
+      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
+    }
+  }, [currentState]);
+
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
       <SetupModal isOpen={currentState === UiState.FAILED_SETUP} />
