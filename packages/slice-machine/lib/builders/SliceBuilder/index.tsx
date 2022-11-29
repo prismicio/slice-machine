@@ -155,14 +155,14 @@ const SliceBuilderWithRouter = () => {
     ),
   }));
 
+  useEffect(() => {
+    if (component) initSliceStore(component);
+    else void router.replace("/");
+  }, [component]);
+
   if (!component) {
-    void router.replace("/");
     return null;
   }
-
-  useEffect(() => {
-    initSliceStore(component);
-  }, []);
 
   const variation = component.model.variations.find(
     (variation) => variation.id === router.query.variation
