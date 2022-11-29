@@ -24,7 +24,11 @@ import {
   deleteCustomTypeCreator,
   renameCustomTypeCreator,
 } from "./availableCustomTypes";
-import { createSliceCreator, renameSliceCreator } from "./slices";
+import {
+  createSliceCreator,
+  deleteSliceCreator,
+  renameSliceCreator,
+} from "./slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "./toaster";
 import {
@@ -478,6 +482,14 @@ const useSliceMachineActions = () => {
         libName,
       })
     );
+  const deleteSlice = (sliceId: string, sliceName: string, libName: string) =>
+    dispatch(
+      deleteSliceCreator.request({
+        sliceId,
+        sliceName,
+        libName,
+      })
+    );
 
   const pushChanges = (
     unSyncedSlices: ReadonlyArray<ComponentUI>,
@@ -571,6 +583,7 @@ const useSliceMachineActions = () => {
     copyVariationSlice,
     createSlice,
     renameSlice,
+    deleteSlice,
     sendAReview,
     skipReview,
     setUpdatesViewed,

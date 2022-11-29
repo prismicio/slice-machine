@@ -8,7 +8,8 @@ import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
-import { deleteSlice } from "@src/apiClient";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { isLoading } from "@src/modules/loading";
 
 type DeleteSliceModalProps = {
   sliceId: string;
@@ -19,11 +20,14 @@ type DeleteSliceModalProps = {
 export const DeleteSliceModal: React.FunctionComponent<
   DeleteSliceModalProps
 > = ({ sliceId, sliceName, libName }) => {
-  const { isSliceModalOpen } = useSelector((store: SliceMachineStoreType) => ({
-    isSliceModalOpen: isModalOpen(store, ModalKeysEnum.DELETE_SLICE),
-  }));
+  const { isSliceModalOpen, isDeletingSlice } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isSliceModalOpen: isModalOpen(store, ModalKeysEnum.DELETE_SLICE),
+      isDeletingSlice: isLoading(store, LoadingKeysEnum.DELETE_SLICE),
+    })
+  );
 
-  const { closeDeleteSliceModal } = useSliceMachineActions();
+  const { closeDeleteSliceModal, deleteSlice } = useSliceMachineActions();
 
   const { theme } = useThemeUI();
 
@@ -99,12 +103,9 @@ export const DeleteSliceModal: React.FunctionComponent<
             <Button
               label="Delete"
               variant="danger"
+              isLoading={isDeletingSlice}
               sx={{ minHeight: 39, minWidth: 78 }}
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={async () => {
-                await deleteSlice(sliceId, libName);
-                closeDeleteSliceModal();
-              }}
+              onClick={() => deleteSlice(sliceId, sliceName, libName)}
             />
           </Flex>
         )}
