@@ -5,7 +5,9 @@ import { SliceMachineManager } from "./SliceMachineManager";
 import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
 import { ProjectManager } from "./_ProjectManager";
+import { SimulatorManager } from "./_SimulatorManager";
 import { SlicesManager } from "./_SlicesManager";
+import { SnippetsManager } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
 import { VersionsManger } from "./_VersionsManager";
 
@@ -53,6 +55,12 @@ export abstract class BaseManager {
 	}
 	protected get customTypes(): CustomTypesManager {
 		return this._sliceMachineManager.customTypes;
+	}
+	protected get snippets(): SnippetsManager {
+		return this._sliceMachineManager.snippets;
+	}
+	protected get simulator(): SimulatorManager {
+		return this._sliceMachineManager.simulator;
 	}
 	protected get versions(): VersionsManger {
 		return this._sliceMachineManager.versions;

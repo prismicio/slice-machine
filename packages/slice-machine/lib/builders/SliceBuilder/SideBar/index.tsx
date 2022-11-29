@@ -44,16 +44,16 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 
   const {
     isCheckingSimulatorSetup,
-    isSimulatorAvailableForFramework,
-    linkToStorybookDocs,
-    framework,
+    // isSimulatorAvailableForFramework,
+    // linkToStorybookDocs,
+    // framework,
     storybookUrl,
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
     linkToStorybookDocs: getLinkToStorybookDocs(state),
     isCheckingSimulatorSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
-    isSimulatorAvailableForFramework:
-      selectIsSimulatorAvailableForFramework(state),
+    // isSimulatorAvailableForFramework:
+    //   selectIsSimulatorAvailableForFramework(state),
     storybookUrl: getStorybookUrl(state),
   }));
 
@@ -91,19 +91,17 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       </Card>
       <ThemeButton
         data-testid="open-set-up-simulator"
-        disabled={!isSimulatorAvailableForFramework}
         onClick={() =>
           checkSimulatorSetup(true, () =>
             window.open(`${router.asPath}/simulator`, component.model.id)
           )
         }
-        variant={
-          isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"
-        }
+        variant="secondary"
         sx={{ cursor: "pointer", width: "100%", mt: 3 }}
       >
         {isCheckingSimulatorSetup ? <Spinner size={12} /> : "Preview Slice"}
       </ThemeButton>
+      {/*
       {!isSimulatorAvailableForFramework && (
         <Text
           as="p"
@@ -131,6 +129,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           ) : null}
         </Text>
       )}
+      */}
 
       {storybookUrl && (
         <Link

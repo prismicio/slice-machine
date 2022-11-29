@@ -14,11 +14,13 @@ import {
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
 import {
+  CustomScreenshotRequest,
   ScreenshotRequest,
   ScreenshotResponse,
 } from "../lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { managerClient } from "./managerClient";
+import { SimulatorManagerReadSliceSimulatorSetupStepsReturnType } from "@slicemachine/core2/client";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -129,14 +131,30 @@ export const renameSlice = async (
 export const generateSliceScreenshotApiClient = (
   params: ScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
-  return axios.post("/api/screenshot", params, defaultAxiosConfig);
+  return managerClient.slices._tempCaptureAndUpdateSliceScreenshot({
+    libraryID: params.libraryName,
+    sliceID: params.sliceId,
+    variationID: params.variationId,
+    viewport: {
+      width: params.screenDimensions.width,
+      height: params.screenDimensions.height,
+    },
+  });
+  // return axios.post("/api/screenshot", params, defaultAxiosConfig);
 };
 
 export const generateSliceCustomScreenshotApiClient = (
-  form: FormData
+  params: CustomScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotUI>> => {
-  const requestBody = form;
-  return axios.post("/api/custom-screenshot", requestBody, defaultAxiosConfig);
+  return managerClient.slices.updateSliceScreenshot({
+    libraryID: params.libraryName,
+    sliceID: params.sliceId,
+    variationID: params.variationId,
+    data: params.file,
+  });
+
+  // const requestBody = form;
+  // return axios.post("/api/custom-screenshot", requestBody, defaultAxiosConfig);
 };
 
 export const saveSliceApiClient = async (
@@ -184,6 +202,7 @@ export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
 
 /** Simulator Routes **/
 
-export const checkSimulatorSetup = (): Promise<
-  AxiosResponse<SimulatorCheckResponse>
-> => axios.get(`/api/simulator/check`);
+export const checkSimulatorSetup =
+  async (): Promise<SimulatorManagerReadSliceSimulatorSetupStepsReturnType> => {
+    return managerClient.simulator.readSliceSimulatorSetupSteps();
+  };

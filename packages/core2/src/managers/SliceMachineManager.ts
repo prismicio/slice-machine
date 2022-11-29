@@ -12,15 +12,18 @@ import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
 import { ProjectManager } from "./_ProjectManager";
 import { SlicesManager } from "./_SlicesManager";
-import { SnippetsManger } from "./_SnippetsManager";
+import { SnippetsManager } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
 import { VersionsManger } from "./_VersionsManager";
+import { SimulatorManager } from "./_SimulatorManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
 		shortId?: string;
 		intercomHash?: string;
-		manifest: any;
+		manifest: {
+			localSliceSimulatorURL?: string;
+		};
 		repo: string;
 		changelog: PackageChangelog;
 		packageManager: PackageManager;
@@ -72,7 +75,8 @@ export class SliceMachineManager {
 	plugins: PluginsManager;
 	slices: SlicesManager;
 	customTypes: CustomTypesManager;
-	snippets: SnippetsManger;
+	snippets: SnippetsManager;
+	simulator: SimulatorManager;
 	user: UserManager;
 	versions: VersionsManger;
 
@@ -86,7 +90,8 @@ export class SliceMachineManager {
 		this.plugins = new PluginsManager(this);
 		this.slices = new SlicesManager(this);
 		this.customTypes = new CustomTypesManager(this);
-		this.snippets = new SnippetsManger(this);
+		this.snippets = new SnippetsManager(this);
+		this.simulator = new SimulatorManager(this);
 		this.user = new UserManager(this);
 		this.versions = new VersionsManger(this);
 
@@ -244,7 +249,9 @@ export class SliceMachineManager {
 					versions,
 				},
 				framework: "",
-				manifest: {},
+				manifest: {
+					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
+				},
 				mockConfig: {},
 				// TODO: Don't hardcode this!
 				packageManager: "npm",

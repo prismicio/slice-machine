@@ -20,7 +20,7 @@ export default async function handler(
   file: TmpFile,
   body: CustomScreenshotRequest
 ): Promise<ScreenshotUI> {
-  const { libraryName, sliceName, variationId } = body;
+  const { libraryName, sliceId: sliceName, variationId } = body;
   const { env } = await getEnv();
 
   const maybeCustomScreenshot = resolvePathsToScreenshot({

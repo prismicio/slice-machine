@@ -1,9 +1,7 @@
 import * as path from "node:path";
 import * as fs from "node:fs/promises";
 
-const castArray = <T>(input: T | readonly T[]): T[] => {
-	return Array.isArray(input) ? input : ([input] as T[]);
-};
+import { castArray } from "./castArray";
 
 type LocateFileUpwardConfig = {
 	startDir?: string;

@@ -7,6 +7,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import {
   selectOpenedStep,
   selectSetupStatus,
+  selectSetupSteps,
   selectUserHasAtLeastOneStepMissing,
   selectUserHasConfiguredAllSteps,
 } from "@src/modules/simulator";
@@ -38,14 +39,15 @@ export default function Stepper({
     );
   }
 
-  const stepperConfiguration = getStepperConfigurationByFramework(framework);
+  // const stepperConfiguration = getStepperConfigurationByFramework(framework);
 
   const { toggleSetupDrawerStep, checkSimulatorSetup } =
     useSliceMachineActions();
   const {
     simulatorUrl,
     openedStep,
-    setupStatus,
+    setupSteps,
+    // setupStatus,
     userHasAtLeastOneStepMissing,
     userHasConfiguredAllSteps,
     linkToTroubleshootingDocs,
@@ -53,7 +55,7 @@ export default function Stepper({
   } = useSelector((state: SliceMachineStoreType) => ({
     openedStep: selectOpenedStep(state),
     isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
-    setupStatus: selectSetupStatus(state),
+    setupSteps: selectSetupSteps(state),
     simulatorUrl: selectSimulatorUrl(state),
     framework: getFramework(state),
     linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
@@ -61,31 +63,38 @@ export default function Stepper({
     userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
 
-  const stepNumberWithErrors =
-    stepperConfiguration.getStepNumberWithErrors(setupStatus);
+  // const stepNumberWithErrors =
+  //   stepperConfiguration.getStepNumberWithErrors(setupStatus);
 
   return (
     <div>
-      {stepperConfiguration.steps.map((Step, i) => {
+      {(setupSteps || []).map((step, i) => {
         return (
-          <Step
-            stepNumber={i + 1}
-            isOpen={openedStep === i + 1}
-            onOpenStep={() => toggleSetupDrawerStep(i + 1)}
-            key={`next-step-${i + 1}`}
-            linkToTroubleshootingDocs={linkToTroubleshootingDocs}
-            {...{
-              simulatorUrl,
-              openedStep,
-              setupStatus,
-              userHasAtLeastOneStepMissing,
-              userHasConfiguredAllSteps,
-              checkSimulatorSetup,
-              isCheckingSetup,
-              stepNumberWithErrors,
-            }}
-          />
+          <div key={step.title}>
+            <pre>
+              <code>{JSON.stringify(step, null, 2)}</code>
+            </pre>
+          </div>
         );
+        // return (
+        //   <Step
+        //     stepNumber={i + 1}
+        //     isOpen={openedStep === i + 1}
+        //     onOpenStep={() => toggleSetupDrawerStep(i + 1)}
+        //     key={`next-step-${i + 1}`}
+        //     linkToTroubleshootingDocs={linkToTroubleshootingDocs}
+        //     {...{
+        //       simulatorUrl,
+        //       openedStep,
+        //       setupStatus,
+        //       userHasAtLeastOneStepMissing,
+        //       userHasConfiguredAllSteps,
+        //       checkSimulatorSetup,
+        //       isCheckingSetup,
+        //       stepNumberWithErrors,
+        //     }}
+        //   />
+        // );
       })}
     </div>
   );
