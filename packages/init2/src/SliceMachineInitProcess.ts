@@ -102,23 +102,21 @@ export class SliceMachineInitProcess {
 						// Command the user used
 						let tryAgainCommand = [process.argv0, ...argv1n].join(" ");
 
-						setTimeout(() => {
-							// If the `repository` option wasn't used AND the repository was selected/created
-							if (!this.options.repository && this.context.repository) {
-								tryAgainCommand = `${tryAgainCommand} --repository=${
-									this.context.repository!.domain
-								}`;
-							}
-							console.error(
-								`\n\n${error.shortMessage}\n${error.stderr}\n\n${
-									logSymbols.error
-								} Dependency installation failed, try again with:\n\n  ${chalk.gray(
-									"$"
-								)} ${chalk.cyan(tryAgainCommand)}`
-							);
+						// If the `repository` option wasn't used AND the repository was selected/created
+						if (!this.options.repository && this.context.repository) {
+							tryAgainCommand = `${tryAgainCommand} --repository=${
+								this.context.repository!.domain
+							}`;
+						}
+						console.error(
+							`\n\n${error.shortMessage}\n${error.stderr}\n\n${
+								logSymbols.error
+							} Dependency installation failed, try again with:\n\n  ${chalk.gray(
+								"$"
+							)} ${chalk.cyan(tryAgainCommand)}`
+						);
 
-							process.exit(1);
-						}, 4000);
+						process.exit(1);
 					});
 
 					this.context.installProcess = execaProcess;
@@ -199,9 +197,7 @@ export class SliceMachineInitProcess {
 		if (this.options.repository) {
 			await listrRun([
 				{
-					title: `Options ${chalk.cyan(
-						"repository"
-					)} used, validating input...`,
+					title: `Flag ${chalk.cyan("repository")} used, validating input...`,
 					task: async (_, task) => {
 						// TODO: Assert types
 						const maybeRepository = this.context.userRepositories!.find(
@@ -230,7 +226,7 @@ export class SliceMachineInitProcess {
 
 						task.title = `Selected repository ${chalk.cyan(
 							this.options.repository
-						)} (options ${chalk.cyan("repository")} used)`;
+						)} (flag ${chalk.cyan("repository")} used)`;
 
 						this.context.repository = {
 							domain: this.options.repository!,
@@ -427,8 +423,20 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 
 					try {
 						await this.context.installProcess;
-					} catch {
-						// Noop, error catching happens when then process is started ealier
+					} catch (error) {
+						/**
+						 * Error catching happens when then process is started ealier so
+						 * that all install errors, earlier and presents, can be catched.
+						 *
+						 * Here, we force the task to wait so that it is neither marked as
+						 * done or has the opportunity to handle the error itself
+						 */
+						await new Promise(() => {
+							// If for whatever reason the process is not exited by now, we still throw the error
+							setTimeout(() => {
+								throw error;
+							}, 1000);
+						});
 					}
 
 					task.title = `Core dependencies installed with ${chalk.cyan(
