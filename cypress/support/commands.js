@@ -8,6 +8,7 @@ Cypress.Commands.add(
     isOnboarded, // boolean
     updatesViewed, // object
     hasSeenTutorialsTooTip, // boolean
+    hasSeenSimulatorToolTip, // boolean,
   }) => {
     return cy.setLocalStorage(
       "persist:root",
@@ -21,6 +22,7 @@ Cypress.Commands.add(
             ...updatesViewed,
           },
           hasSeenTutorialsTooTip,
+          hasSeenSimulatorToolTip,
         }),
       })
     );
