@@ -176,6 +176,10 @@ export class PrismicAuthManager {
 					server.close();
 
 					resolve();
+
+					event.node.res.statusCode = 200;
+
+					return h3.send(event);
 				}),
 			);
 

@@ -221,7 +221,7 @@ export class RepositoryManager extends BaseManager {
 				// ... and some just parse cookies
 				// TODO: Refactor, temporary ugly trick to prevent escaping cookies twice
 				Cookie: Object.entries(cookies)
-					.map((keyValue) => keyValue.join("="))
+					.map(([key, value]) => `${key}=${decodeURIComponent(value)}`)
 					.join("; "),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,

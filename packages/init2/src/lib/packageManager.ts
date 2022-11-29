@@ -49,11 +49,6 @@ export const install = async (
 		...args.execa,
 	});
 
-	// Fail hard if process fails
-	execaProcess.catch((error) => {
-		throw error;
-	});
-
 	return { execaProcess };
 };
 

@@ -96,6 +96,31 @@ export class SliceMachineInitProcess {
 						dev: true,
 					});
 
+					// Fail hard if process fails
+					execaProcess.catch((error) => {
+						const [_, ...argv1n] = process.argv;
+						// Command the user used
+						let tryAgainCommand = [process.argv0, ...argv1n].join(" ");
+
+						setTimeout(() => {
+							// If the `repository` option wasn't used AND the repository was selected/created
+							if (!this.options.repository && this.context.repository) {
+								tryAgainCommand = `${tryAgainCommand} --repository=${
+									this.context.repository!.domain
+								}`;
+							}
+							console.error(
+								`\n\n${error.shortMessage}\n${error.stderr}\n\n${
+									logSymbols.error
+								} Dependency installation failed, try again with:\n\n  ${chalk.gray(
+									"$"
+								)} ${chalk.cyan(tryAgainCommand)}`
+							);
+
+							process.exit(1);
+						}, 4000);
+					});
+
 					this.context.installProcess = execaProcess;
 
 					task.title = `Began core dependencies installation with ${chalk.cyan(
@@ -172,15 +197,48 @@ export class SliceMachineInitProcess {
 		]);
 
 		if (this.options.repository) {
-			// TODO: Assert types
-			const repositoryExists = this.context.userRepositories!.some(
-				(repository) => repository.domain === this.options.repository
-			);
+			await listrRun([
+				{
+					title: `Options ${chalk.cyan(
+						"repository"
+					)} used, validating input...`,
+					task: async (_, task) => {
+						// TODO: Assert types
+						const maybeRepository = this.context.userRepositories!.find(
+							(repository) => repository.domain === this.options.repository
+						);
 
-			this.context.repository = {
-				domain: this.options.repository,
-				exists: repositoryExists,
-			};
+						if (maybeRepository) {
+							if (!this.manager.repository.hasWriteAccess(maybeRepository)) {
+								throw new Error(
+									`Cannot run init command with repository ${chalk.cyan(
+										maybeRepository.domain
+									)}: you are not a developer or admin of this repository`
+								);
+							}
+						} else if (
+							await this.manager.repository.exists({
+								domain: this.options.repository!,
+							})
+						) {
+							throw new Error(
+								`Repository name ${chalk.cyan(
+									this.options.repository
+								)} is already taken`
+							);
+						}
+
+						task.title = `Selected repository ${chalk.cyan(
+							this.options.repository
+						)} (options ${chalk.cyan("repository")} used)`;
+
+						this.context.repository = {
+							domain: this.options.repository!,
+							exists: !!maybeRepository,
+						};
+					},
+				},
+			]);
 		} else {
 			if (this.context.userRepositories!.length) {
 				const { maybeDomain } = await prompt<string, "maybeDomain">({
@@ -265,12 +323,20 @@ ${chalk[validation.MoreThan30 ? "red" : "gray"](
 ${chalk.gray(`    4. Name will be ${chalk.cyan("kebab-cased")} automatically`)}
 
   CONSIDERATIONS
-${chalk.gray(`    1. Once picked, your repository name cannot be changed
-    2. A display name for the repository can be configured later on`)}
+${chalk.gray(
+	`    1. Once picked, your repository name ${chalk.cyan("cannot be changed")}`
+)}
+${chalk.gray(
+	`    2. A ${chalk.cyan(
+		"display name"
+	)} for the repository can be configured later on`
+)}
 
   PREVIEW
-${chalk.gray(`    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}
-    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}`)}
+${chalk.gray(`    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}`)}
+${chalk.gray(
+	`    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}`
+)}
 
 ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 						);
@@ -296,10 +362,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 						const domain = repositoryDomain.format(rawDomain);
 						const exists = await this.manager.repository.exists({ domain });
 						if (exists) {
-							return `Repository ${chalk.cyan(domain)} already exists`;
+							return `Repository name ${chalk.cyan(domain)} is already taken`;
 						}
 
 						return true;
+					},
+					format: (value) => {
+						return repositoryDomain.format(value);
 					},
 				});
 
@@ -312,13 +381,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 					exists: false,
 				};
 			}
-		}
 
-		console.log(
-			`${logSymbols.success} Selected repository ${chalk.cyan(
-				this.context.repository!.domain
-			)}`
-		);
+			console.log(
+				`${logSymbols.success} Selected repository ${chalk.cyan(
+					this.context.repository!.domain
+				)}`
+			);
+		}
 
 		if (!this.context.repository!.exists) {
 			await listrRun([
@@ -332,7 +401,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 							framework: this.context.framework!.prismicName,
 						});
 
-						task.title = `Created new reposiotry ${chalk.cyan(
+						this.context.repository!.exists = true;
+						task.title = `Created new repository ${chalk.cyan(
 							this.context.repository!.domain
 						)}`;
 					},
@@ -355,8 +425,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 					this.context.installProcess!.stdout?.on("data", updateOutput);
 					this.context.installProcess!.stderr?.on("data", updateOutput);
 
-					// TODO: try/catch with message to tell people to launch command again with repository flag
-					await this.context.installProcess;
+					try {
+						await this.context.installProcess;
+					} catch {
+						// Noop, error catching happens when then process is started ealier
+					}
 
 					task.title = `Core dependencies installed with ${chalk.cyan(
 						this.context.packageManager
