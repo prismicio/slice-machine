@@ -87,9 +87,10 @@ describe("Create Slices", () => {
       "eq",
       `/${lib}/${editedSliceName}/default`
     );
-    cy.get("[data-cy=rename-slice-modal]").should("not.exist");
+    cy.waitUntil(() => cy.get('[data-cy="slice-and-variation-name-header"]'));
     cy.get('[data-cy="slice-and-variation-name-header"]').contains(
       `/ ${editedSliceName} / Default`
     );
+    cy.get("[data-cy=rename-slice-modal]").should("not.exist");
   });
 });
