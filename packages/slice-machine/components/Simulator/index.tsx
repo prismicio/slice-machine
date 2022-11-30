@@ -13,7 +13,7 @@ import {
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -26,16 +26,18 @@ export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
 export default function Simulator() {
+  const router = useRouter();
+
   const { component } = useSelector((store: SliceMachineStoreType) => ({
     component: selectCurrentSlice(
       store,
-      Router.router?.query.lib as string,
-      Router.router?.query.sliceName as string
+      router.query.lib as string,
+      router.query.sliceName as string
     ),
   }));
 
   const variation = component?.model.variations.find(
-    (variation) => variation.id === (Router.router?.query.variation as string)
+    (variation) => variation.id === (router.query.variation as string)
   );
 
   const { framework, version, simulatorUrl } = useSelector(
@@ -102,7 +104,7 @@ export default function Simulator() {
       </Box>
       {!!component.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
-          sliceName={Router.router?.query.sliceName as string}
+          sliceName={router.query.sliceName as string}
           screenshotUrl={component.screenshots[variation.id]?.url}
         />
       )}

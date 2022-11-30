@@ -156,13 +156,11 @@ const SliceBuilderWithRouter = () => {
   }));
 
   useEffect(() => {
-    if (component) {
-      initSliceStore(component);
-    }
-  }, []);
+    if (component) initSliceStore(component);
+    else void router.replace("/");
+  }, [component]);
 
   if (!component) {
-    void router.replace("/");
     return null;
   }
 
