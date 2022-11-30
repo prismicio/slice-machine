@@ -53,6 +53,11 @@ const CustomTypeBuilderWithRouter = () => {
     return null;
   }
 
+  // TODO what do we want to do here? Is a redirection like above ok?
+  if (!selectedCustomType.local) {
+    return <>Oops, seems like the custom type is deleted</>;
+  }
+
   return (
     <CustomTypeBuilderWithProvider
       customType={selectedCustomType.local}

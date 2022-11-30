@@ -72,6 +72,20 @@ export const normalizeFrontendCustomTypes = (
   const { entities: localEntities } = normalizeCustomTypes(localCustomTypes);
   const { entities: remoteEntities } = normalizeCustomTypes(remoteCustomTypes);
 
+  // TODO get rid of this once design validated
+  const initialCustomType: Record<string, FrontEndCustomType> =
+    Object.entries(remoteEntities.customTypes).length > 0
+      ? {
+          test: {
+            local: undefined,
+            remote: {
+              ...Object.entries(remoteEntities.customTypes)[0][1],
+              id: "test-deleted-custom-type",
+            },
+          },
+        }
+      : {};
+
   return Object.values(localEntities.customTypes).reduce<
     Record<string, FrontEndCustomType>
   >((acc, localCustomType) => {
@@ -84,5 +98,5 @@ export const normalizeFrontendCustomTypes = (
     };
 
     return acc;
-  }, {});
+  }, initialCustomType);
 };
