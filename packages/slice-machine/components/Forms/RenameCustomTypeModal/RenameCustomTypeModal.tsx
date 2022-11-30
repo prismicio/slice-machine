@@ -10,10 +10,10 @@ import { FormikErrors } from "formik";
 import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import { LocalFrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 
 interface RenameCustomTypeModalProps {
-  customType?: FrontEndCustomType;
+  customType?: LocalFrontEndCustomType;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({

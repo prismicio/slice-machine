@@ -37,6 +37,10 @@ const AppTheme = (): Theme =>
           bg: "#F1EEFE",
           color: "#5842C3",
         },
+        deleted: {
+          bg: "rgba(203, 36, 49, 0.1)",
+          color: "#CB2431",
+        },
         unknown: {
           bg: "#F3F5F7",
           color: "#9AA4AF",
@@ -200,6 +204,13 @@ const AppTheme = (): Theme =>
         fontWeight: "body",
         color: "badge.modified.color",
         bg: "badge.modified.bg",
+        px: 1,
+        py: "1px",
+      },
+      DELETED: {
+        fontWeight: "body",
+        color: "badge.deleted.color",
+        bg: "badge.deleted.bg",
         px: 1,
         py: "1px",
       },
@@ -829,12 +840,15 @@ const AppTheme = (): Theme =>
         "thead tr.small": {
           fontSize: "12px",
         },
-        "tbody tr": {
+        "tbody tr:not(.disabled)": {
           cursor: "pointer",
           transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
           "&:hover": {
             bg: "grey01",
           },
+        },
+        "tbody tr.disabled": {
+          cursor: "not-allowed",
         },
       },
       th: {

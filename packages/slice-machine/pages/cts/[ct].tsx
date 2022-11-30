@@ -48,7 +48,7 @@ const CustomTypeBuilderWithRouter = () => {
     })
   );
 
-  if (!selectedCustomType) {
+  if (!selectedCustomType || !selectedCustomType.local) {
     void router.replace("/");
     return null;
   }

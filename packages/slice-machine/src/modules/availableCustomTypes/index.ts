@@ -1,5 +1,9 @@
 import { Reducer } from "redux";
-import { AvailableCustomTypesStoreType, FrontEndCustomType } from "./types";
+import {
+  AvailableCustomTypesStoreType,
+  FrontEndCustomType,
+  isDeletedCustomType,
+} from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -28,6 +32,7 @@ import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
 import { omit } from "lodash";
 import { deleteSliceCreator } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
+import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -99,11 +104,11 @@ export const selectAllCustomTypeLabels = (
     .flatMap((localAndRemote) => {
       return Object.values(localAndRemote);
     })
-    .reduce((acc, ct) => {
-      if (ct.label) return [...acc, ct.label];
+    .reduce<string[]>((acc, ct) => {
+      if (ct?.label) return [...acc, ct.label];
 
       return acc;
-    }, [] as string[]);
+    }, []);
 };
 
 export const selectCustomTypeById = (
@@ -160,7 +165,13 @@ export const availableCustomTypesReducer: Reducer<
     case getType(pushCustomTypeCreator.success): {
       if (!state) return state;
       const customTypeId = action.payload.customTypeId;
-      const localCustomType: CustomTypeSM = state[customTypeId].local;
+      const customType = state[customTypeId];
+
+      if (!isLocalCustomType(customType)) {
+        // You can't create a deleted custom type
+        return state;
+      }
+      const localCustomType: CustomTypeSM = customType.local;
 
       return {
         ...state,
@@ -174,10 +185,18 @@ export const availableCustomTypesReducer: Reducer<
     case getType(renameCustomTypeCreator.success): {
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
-      const newLocalCustomType = { ...state[id].local, label: newName };
+      const ct = state[id];
+      if (isDeletedCustomType(ct)) {
+        // You can't rename a deleted custom type
+        return state;
+      }
+      const newLocalCustomType = {
+        ...ct.local,
+        label: newName,
+      };
 
       const newCustomType = {
-        ...state[id],
+        ...ct,
         local: newLocalCustomType,
       };
 

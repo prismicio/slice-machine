@@ -2,13 +2,20 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import {
+  FrontEndCustomType,
+  getCustomTypeProp,
+} from "@src/modules/availableCustomTypes/types";
 import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
 import { ModelStatusInformation, useModelStatus } from "./useModelStatus";
 
-const unSyncStatuses = [ModelStatus.New, ModelStatus.Modified];
+const unSyncStatuses = [
+  ModelStatus.New,
+  ModelStatus.Modified,
+  ModelStatus.Deleted,
+];
 
 export interface UnSyncChanges extends ModelStatusInformation {
   unSyncedSlices: ComponentUI[];
@@ -43,8 +50,10 @@ export const useUnSyncChanges = (): UnSyncChanges => {
   );
   const unSyncedCustomTypes = customTypes.filter(
     (customType) =>
-      modelsStatuses.customTypes[customType.local.id] &&
-      unSyncStatuses.includes(modelsStatuses.customTypes[customType.local.id])
+      modelsStatuses.customTypes[getCustomTypeProp(customType, "id")] &&
+      unSyncStatuses.includes(
+        modelsStatuses.customTypes[getCustomTypeProp(customType, "id")]
+      )
   );
 
   return {

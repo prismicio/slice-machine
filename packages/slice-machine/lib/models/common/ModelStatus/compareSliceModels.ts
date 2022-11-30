@@ -3,10 +3,16 @@ import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
 
 export type FrontEndSliceModel = {
-  local: SliceSM;
+  local?: SliceSM;
   remote?: SliceSM;
   localScreenshots: Record<string, Screenshot>;
 };
+
+export type LocalFrontEndSliceModel = FrontEndSliceModel & { local?: SliceSM };
+
+export const isLocalSlice = (
+  s: FrontEndSliceModel
+): s is LocalFrontEndSliceModel => s.local !== undefined;
 
 export function compareSliceModels(
   models: Required<FrontEndSliceModel>
