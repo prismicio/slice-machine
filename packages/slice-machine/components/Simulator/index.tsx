@@ -58,8 +58,8 @@ export default function Simulator() {
     if (component?.model.id && variation?.id) {
       return [
         {
-          sliceID: component?.model.id,
-          variationID: variation?.id,
+          sliceID: component.model.id,
+          variationID: variation.id,
         },
       ];
     }
