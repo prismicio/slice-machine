@@ -229,30 +229,30 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               />
             ) : (
               <>
-                {[UiState.LOADING_IFRAME, UiState.LOADING_SETUP, UiState.FAILED_CONNECT].includes(
-                  currentState
-                ) ? (
+                {[
+                  UiState.LOADING_IFRAME,
+                  UiState.LOADING_SETUP,
+                  UiState.FAILED_CONNECT,
+                ].includes(currentState) ? (
                   <>
-                    {
-                      currentState === UiState.FAILED_CONNECT ? (
+                    {currentState === UiState.FAILED_CONNECT ? (
+                      <IframeRenderer
+                        apiContent={apiContent}
+                        screenDimensions={screenDimensions}
+                        simulatorUrl={simulatorUrl}
+                        dryRun
+                      />
+                    ) : (
+                      <FullPage>
+                        <Spinner variant="styles.spinner" />
                         <IframeRenderer
                           apiContent={apiContent}
                           screenDimensions={screenDimensions}
                           simulatorUrl={simulatorUrl}
                           dryRun
                         />
-                      ) : (
-                        <FullPage>
-                          <Spinner variant="styles.spinner" />
-                          <IframeRenderer
-                            apiContent={apiContent}
-                            screenDimensions={screenDimensions}
-                            simulatorUrl={simulatorUrl}
-                            dryRun
-                          />
-                        </FullPage>
-                      )
-                    }
+                      </FullPage>
+                    )}
                   </>
                 ) : null}
               </>

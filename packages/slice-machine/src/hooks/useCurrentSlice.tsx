@@ -1,3 +1,5 @@
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { VariationSM } from "@slicemachine/core/build/models";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -6,7 +8,9 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-function useCurrentSlice() {
+type UseCurrentSliceRet = { slice?: ComponentUI; variation?: VariationSM };
+
+const useCurrentSlice = (): UseCurrentSliceRet => {
   const router = useRouter();
   const { initSliceStore } = useSliceMachineActions();
 
@@ -37,6 +41,6 @@ function useCurrentSlice() {
   }
 
   return { slice, variation };
-}
+};
 
 export default useCurrentSlice;
