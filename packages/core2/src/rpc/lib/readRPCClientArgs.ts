@@ -2,19 +2,20 @@ import { H3Event, getHeaders } from "h3";
 import { Buffer } from "node:buffer";
 import busboy from "busboy";
 
-import { deserialize } from "./deserialize";
+import { ProcedureCallServerArgs } from "../types";
 
-export const readProcedureArgs = <
-	TProcedureArgs extends Record<string, unknown>,
->(
+import { deserialize } from "./deserialize";
+import { unflattenObject } from "./unflattenObject";
+
+export const readRPCClientArgs = (
 	event: H3Event,
-): Promise<TProcedureArgs> => {
+): Promise<ProcedureCallServerArgs> => {
 	return new Promise((resolve, reject) => {
 		const headers = getHeaders(event);
 
 		const bb = busboy({ headers });
 
-		const args = {} as TProcedureArgs;
+		const args = {} as Record<string, unknown>;
 
 		bb.on("file", (name, file, _info) => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,9 +26,7 @@ export const readProcedureArgs = <
 			});
 
 			file.on("close", () => {
-				args[name as keyof typeof args] = Buffer.concat(
-					chunks,
-				) as TProcedureArgs[keyof TProcedureArgs];
+				args[name as keyof typeof args] = Buffer.concat(chunks);
 			});
 		});
 
@@ -36,7 +35,9 @@ export const readProcedureArgs = <
 		});
 
 		bb.on("close", () => {
-			resolve(args);
+			const unflattenedArgs = unflattenObject(args) as ProcedureCallServerArgs;
+
+			resolve(unflattenedArgs);
 		});
 
 		bb.on("error", (error) => {

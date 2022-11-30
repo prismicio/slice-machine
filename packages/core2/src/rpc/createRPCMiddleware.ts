@@ -5,14 +5,13 @@ import {
 	eventHandler,
 	getRouterParam,
 	NodeMiddleware,
-	Router,
 } from "h3";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 import * as crypto from "node:crypto";
 
-import { readProcedureArgs } from "./lib/readProcedureArgs";
+import { readRPCClientArgs } from "./lib/readRPCClientArgs";
 import { serialize } from "./lib/serialize";
 
 import { Procedure, ProcedureCallServerReturnType, Procedures } from "./types";
@@ -101,77 +100,32 @@ const prepareForSerialization = async (input: unknown): Promise<unknown> => {
 	}
 };
 
-type CreateProcedureEventHandlerArgs = {
+type FindProcedureArgs = {
+	path: string[];
+	procedures: Procedures;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const findProcedure = (args: FindProcedureArgs): Procedure<any> | undefined => {
+	// Use a clone to prevent unwanted mutations.
+	const path = [...args.path];
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	procedure: Procedure<any>;
-};
+	let proceduresPointer: Procedures | Procedure<any> = args.procedures;
 
-const createProcedureEventHandler = (args: CreateProcedureEventHandlerArgs) => {
-	return eventHandler(async (event): Promise<ProcedureCallServerReturnType> => {
-		const procedureArgs = await readProcedureArgs(event);
+	while (path.length > 0) {
+		const pathSegment = path.shift();
 
-		let res: unknown;
-
-		try {
-			res = await args.procedure(procedureArgs);
-		} catch (error) {
-			if (error instanceof Error) {
-				event.req.statusCode = 500;
-
-				return {
-					error: error.message,
-					cause: error,
-				};
-			} else {
-				throw error;
-			}
+		if (pathSegment === undefined) {
+			return;
 		}
 
-		try {
-			const preparedRes = await prepareForSerialization(res);
-			const data = serialize(preparedRes);
+		proceduresPointer = proceduresPointer[pathSegment];
 
-			return {
-				data,
-			};
-		} catch (error) {
-			if (error instanceof Error) {
-				event.req.statusCode = 500;
-
-				return {
-					error: "Unable to serialize server response.",
-					cause: error,
-				};
-			} else {
-				throw error;
-			}
-		}
-	});
-};
-
-type RecursivelyAddProceduresFromObjectArgs<TProcedures extends Procedures> = {
-	procedures: TProcedures;
-	router: Router;
-	path?: string[];
-};
-
-const recursivelyAddProceduresToRouter = <TProcedures extends Procedures>(
-	args: RecursivelyAddProceduresFromObjectArgs<TProcedures>,
-): void => {
-	for (const name in args.procedures) {
-		const procedure = args.procedures[name];
-		const procedurePath = [...(args.path || []), name];
-
-		if (typeof procedure === "object") {
-			recursivelyAddProceduresToRouter({
-				...args,
-				procedures: procedure,
-				path: procedurePath,
-			});
-		} else {
-			const route = "/" + procedurePath.join("/");
-
-			args.router.post(route, createProcedureEventHandler({ procedure }));
+		if (typeof proceduresPointer === "function") {
+			return proceduresPointer;
+		} else if (proceduresPointer === undefined) {
+			return;
 		}
 	}
 };
@@ -185,10 +139,65 @@ export const createRPCMiddleware = <TProcedures extends Procedures>(
 ): RPCMiddleware<TProcedures> => {
 	const router = createRouter();
 
-	recursivelyAddProceduresToRouter({
-		procedures: args.procedures,
-		router,
-	});
+	router.post(
+		"/",
+		eventHandler(async (event): Promise<ProcedureCallServerReturnType> => {
+			const clientArgs = await readRPCClientArgs(event);
+
+			const procedure = findProcedure({
+				path: clientArgs.procedurePath,
+				procedures: args.procedures,
+			});
+
+			if (!procedure) {
+				throw new Error(
+					`Invalid procedure name: ${clientArgs.procedurePath.join(".")}`,
+				);
+			}
+
+			let res: unknown;
+
+			try {
+				res = await procedure(clientArgs.procedureArgs);
+			} catch (error) {
+				if (error instanceof Error) {
+					event.req.statusCode = 500;
+
+					return {
+						error: error.message,
+						cause: error,
+					};
+				} else {
+					throw error;
+				}
+			}
+
+			// TODO: Send `res` back as FormData. This lets us send
+			// back binary as Blobs, negating the need for
+			// `prepareForSerialization` and the "public buffer"
+			// tmp endpoints.
+
+			try {
+				const preparedRes = await prepareForSerialization(res);
+				const data = serialize(preparedRes);
+
+				return {
+					data,
+				};
+			} catch (error) {
+				if (error instanceof Error) {
+					event.req.statusCode = 500;
+
+					return {
+						error: "Unable to serialize server response.",
+						cause: error,
+					};
+				} else {
+					throw error;
+				}
+			}
+		}),
+	);
 
 	router.get(
 		buildPublicBufferURL(":contentDigest"),

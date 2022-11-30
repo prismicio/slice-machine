@@ -1,5 +1,5 @@
-import { coerceTrailingSlash } from "./lib/coerceTrailingSlash";
 import { deserialize } from "./lib/deserialize";
+import { flattenObject } from "./lib/flattenObject";
 import { serialize } from "./lib/serialize";
 
 import { ProcedureCallServerReturnType, Procedures, Procedure } from "./types";
@@ -19,6 +19,26 @@ const createArbitrarilyNestedFunction = <T>(
 			]);
 		},
 	}) as T;
+};
+
+const objectToFormData = (obj: Record<string, unknown> | undefined | null) => {
+	const formData = new FormData();
+
+	if (obj) {
+		const flattenedArgs = flattenObject(obj);
+
+		for (const key in flattenedArgs) {
+			const arg = flattenedArgs[key as keyof typeof obj];
+
+			if (arg instanceof Blob) {
+				formData.set(key, arg);
+			} else {
+				formData.set(key, serialize(arg));
+			}
+		}
+	}
+
+	return formData;
 };
 
 // `RPCClient` is currently a clone of `TransformProcedures`, but that could
@@ -91,24 +111,14 @@ export const createRPCClient = <TProcedures extends Procedures>(
 		args.fetch || globalThis.fetch.bind(globalThis);
 
 	return createArbitrarilyNestedFunction(async (path, fnArgs) => {
-		const procedureArgs = fnArgs[0] as Record<string, unknown>;
+		const body = objectToFormData({
+			procedurePath: path,
+			procedureArgs: fnArgs[0],
+		});
 
-		const formData = new FormData();
-		for (const procedureArgName in procedureArgs) {
-			const procedureArg =
-				procedureArgs[procedureArgName as keyof typeof procedureArgs];
-
-			if (procedureArg instanceof Blob) {
-				formData.set(procedureArgName, procedureArg);
-			} else {
-				formData.set(procedureArgName, serialize(procedureArg));
-			}
-		}
-
-		const url = coerceTrailingSlash(args.serverURL) + path.join("/");
-		const res = await resolvedFetch(url, {
+		const res = await resolvedFetch(args.serverURL, {
 			method: "POST",
-			body: formData,
+			body,
 		});
 
 		const json = (await res.json()) as ProcedureCallServerReturnType;
