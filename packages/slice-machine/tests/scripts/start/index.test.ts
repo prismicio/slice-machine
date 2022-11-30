@@ -6,10 +6,7 @@ import { vol } from "memfs";
 import os from "os";
 import pkgJson from "../../../package.json";
 
-jest.mock("fs", () => {
-  const mem = jest.requireActual("memfs");
-  return mem.vol;
-});
+jest.mock("fs");
 
 afterEach(() => {
   vol.reset();
