@@ -3,7 +3,7 @@ import { SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
-import { Box, Card, Flex, Spinner } from "theme-ui";
+import { Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
@@ -25,7 +25,6 @@ import {
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { Slices } from "@slicemachine/core/build/models";
-import SliceMachineModal from "@components/SliceMachineModal";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
@@ -44,8 +43,9 @@ import {
 } from "@src/modules/simulator";
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
+import SetupModal from "./components/SetupModal";
 
-enum UiState {
+export enum UiState {
   LOADING_SETUP = "LOADING_SETUP",
   LOADING_IFRAME = "LOADING_IFRAME",
   FAILED_SETUP = "FAILED_SETUP",
@@ -159,12 +159,14 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     }
     if (currentState === UiState.FAILED_CONNECT) {
       setIframeCheckFailedOnce(true);
-      const id = setInterval(() => {
-        connectToSimulatorIframe();
-      }, 3000);
-      if (!iframeIntervalId.current) {
-        iframeIntervalId.current = id;
-        return;
+      if (!isWaitingForIFrameCheck) {
+        const id = setInterval(() => {
+          connectToSimulatorIframe();
+        }, 3000);
+        if (!iframeIntervalId.current) {
+          iframeIntervalId.current = id;
+          return;
+        }
       }
     }
     if (setupIntervalId.current) {
@@ -177,11 +179,15 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     }
   }, [currentState]);
 
+  useEffect(() => {
+    if (currentState === UiState.FAILED_CONNECT && !iframeCheckFailedOnce) {
+      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
+    }
+  }, [currentState]);
+
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
-      <SliceMachineModal isOpen={currentState === UiState.FAILED_SETUP}>
-        <Card sx={{ minHeight: "500px" }}>Setup modal</Card>
-      </SliceMachineModal>
+      <SetupModal isOpen={currentState === UiState.FAILED_SETUP} />
       <Header
         slice={slice}
         variation={variation}

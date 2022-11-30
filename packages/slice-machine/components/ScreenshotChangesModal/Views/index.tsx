@@ -16,6 +16,7 @@ import { AiOutlineEye } from "react-icons/ai";
 
 import { Button } from "@components/Button";
 import { SIMULATOR_WINDOW_ID } from "@lib/consts";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 
 enum ScreenshotView {
   Default = 1,
@@ -38,12 +39,14 @@ const VariationScreenshot: React.FC<{
   variationID: string;
   slice: ComponentUI;
 }> = ({ variationID, slice }) => {
-  const { isLoadingScreenshot } = useSelector(
+  const { isLoadingScreenshot, isSimulatorAvailableForFramework } = useSelector(
     (state: SliceMachineStoreType) => ({
       isLoadingScreenshot: isLoading(
         state,
         LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
       ),
+      isSimulatorAvailableForFramework:
+        selectIsSimulatorAvailableForFramework(state),
     })
   );
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
@@ -68,16 +71,18 @@ const VariationScreenshot: React.FC<{
   return (
     <>
       <Flex sx={{ p: 2, pt: 0, minHeight: "48px" }}>
-        <Button
-          variant="white"
-          sx={{
-            marginRight: 2,
-            px: 2,
-          }}
-          onClick={openSimulator}
-          Icon={AiOutlineEye}
-          label={"Capture screenshot from Slice Simulator"}
-        />
+        {isSimulatorAvailableForFramework ? (
+          <Button
+            variant="white"
+            sx={{
+              marginRight: 2,
+              px: 2,
+            }}
+            onClick={openSimulator}
+            Icon={AiOutlineEye}
+            label={"Capture screenshot from Slice Simulator"}
+          />
+        ) : null}
         {maybeScreenshot ? (
           <FileInputRenderer {...fileInputProps} isDragActive={false}>
             <>

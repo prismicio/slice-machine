@@ -1,8 +1,9 @@
-import { Heading, Link, Text } from "theme-ui";
+import { Heading, Image, Link, Text } from "theme-ui";
 import FullPage from "../FullPage";
 
 const FailedConnect = () => (
   <FullPage>
+    <Image src="/iframe-not-running.png" sx={{ width: "320px" }} />
     <Heading as="h3" sx={{ color: "textClear", mb: 2 }}>
       Slice Machine can't render your Slice
     </Heading>

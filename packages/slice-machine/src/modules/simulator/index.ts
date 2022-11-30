@@ -1,11 +1,6 @@
 import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  ActionType,
-  createAction,
-  createAsyncAction,
-  getType,
-} from "typesafe-actions";
+import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SimulatorStoreType } from "./types";
 import {
   call,
@@ -168,7 +163,7 @@ function* connectToSimulatorIframe() {
   } = yield race({
     iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
     iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-    timeout: delay(10000),
+    timeout: delay(5000),
   });
   if (timeout || iframeCheckKO) {
     yield put(connectToSimulatorIframeCreator.failure());
@@ -189,7 +184,6 @@ export function* failCheckSetupSaga() {
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 }
 
-/** Example of how to track event */
 export function* trackOpenSetupModalSaga() {
   const framework: Frameworks = (yield select(getFramework)) as ReturnType<
     typeof getFramework

@@ -6,14 +6,21 @@ import { SimulatorCheckResponse } from "../../../lib/models/common/Simulator";
 export default async function handler(
   req: RequestWithEnv
 ): Promise<SimulatorCheckResponse> {
-  if (!simulatorIsSupported(req.env.framework)) {
-    const message =
-      "[api/env]: Unrecoverable error. The framework doesn't support the preview. Exiting..";
-    console.error(message);
-    throw new Error(message);
+  try {
+    if (!simulatorIsSupported(req.env.framework)) {
+      const message =
+        "[api/env]: Unrecoverable error. The framework doesn't support the preview. Exiting..";
+      console.error(message);
+      throw new Error(message);
+    }
+    return {
+      manifest: req.env.manifest.localSliceSimulatorURL ? "ok" : "ko",
+      value: req.env.manifest.localSliceSimulatorURL,
+    };
+  } catch (e) {
+    return {
+      manifest: "ko",
+      value: undefined,
+    };
   }
-  return {
-    manifest: req.env.manifest.localSliceSimulatorURL ? "ok" : "ko",
-    value: req.env.manifest.localSliceSimulatorURL,
-  };
 }

@@ -8,12 +8,20 @@ const FullPage: React.FC<{ sx?: ThemeUICSSObject }> = ({ children, sx }) => (
       width: "100%",
       justifyContent: "center",
       alignItems: "center",
-      flexDirection: "column",
       zIndex: "1",
       ...sx,
     }}
   >
-    {children}
+    <Flex
+      sx={{
+        marginTop: "-128px",
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      {children}
+    </Flex>
   </Flex>
 );
 
