@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useEffect } from "react";
+import type { FC, ReactNode } from "react";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { useSelector } from "react-redux";
@@ -49,14 +49,15 @@ export const SliceHandler: FC<Props> = ({ children }) => {
     }
   })();
 
-  useEffect(() => {
-    if (!lib) void router.replace("/");
-    else if (!slice) void router.replace("/");
-    else if (!variation) void router.replace("/");
-    // variation not in the URL but a default variation was found
-    else if (!variationParam)
-      void router.replace(`/${lib.name}/${slice.model.name}/${variation.id}`);
-  }, [lib, slice, variation, variationParam]);
+  // TODO: enabling these redirects will break the "A user can create and rename a slice" E2E test.
+  // useEffect(() => {
+  //   if (!lib) void router.replace("/");
+  //   else if (!slice) void router.replace("/");
+  //   else if (!variation) void router.replace("/");
+  //   // variation not in the URL but a default variation was found
+  //   else if (!variationParam)
+  //     void router.replace(`/${lib.name}/${slice.model.name}/${variation.id}`);
+  // }, [lib, slice, variation, variationParam]);
 
   if (!urlLib || !urlSliceName) {
     return <>{children}</>;
