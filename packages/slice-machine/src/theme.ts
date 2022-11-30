@@ -16,6 +16,7 @@ const AppTheme = (): Theme =>
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
       purpleStrong: "#5842C3",
+      whiteButtonText: "#1A1523",
       changesWarning: {
         background: "#FFECC7",
         color: "#5C0C17",

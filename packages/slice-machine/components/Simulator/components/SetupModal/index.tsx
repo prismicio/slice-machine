@@ -31,7 +31,7 @@ const TitleCard: React.FC<{
     >
       <NumberBox number={number} />
       <Box sx={{ ml: 3 }}>
-        <Heading as="h4" sx={{ color: "#1A1523" }}>
+        <Heading as="h4" sx={{ color: "whiteButtonText" }}>
           {title}
         </Heading>
         <Text as="p" sx={{ mt: 2, color: "textClear" }}>
@@ -80,7 +80,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       <Card
         bodySx={{
           p: 0,
-          bg: "#F9F8F9",
+          bg: "grey07",
           height: "480px",
         }}
         Header={({ radius }: { radius: string | number }) => (
