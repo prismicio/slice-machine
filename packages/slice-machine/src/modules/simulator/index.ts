@@ -154,6 +154,7 @@ export function* checkSetupSaga(
 
 function* connectToSimulatorIframe() {
   yield put(connectToSimulatorIframeCreator.request());
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
     timeout,
     iframeCheckKO,
