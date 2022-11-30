@@ -189,14 +189,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         actionsDisabled={currentState !== UiState.SUCCESS}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
       />
-      {[UiState.LOADING_IFRAME, UiState.LOADING_SETUP].includes(
-        currentState
-      ) ? (
-        <FullPage>
-          <Spinner variant="styles.spinner" />
-        </FullPage>
-      ) : null}
-      {currentState === UiState.FAILED_CONNECT ? <FailedConnect /> : null}
       <Box
         sx={{
           flex: 1,
@@ -228,15 +220,43 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               screenDimensions={screenDimensions}
               actionsDisabled={currentState !== UiState.SUCCESS}
             />
-            {![UiState.LOADING_SETUP, UiState.FAILED_SETUP].includes(
-              currentState
-            ) ? (
+            {currentState === UiState.FAILED_CONNECT ? <FailedConnect /> : null}
+            {currentState === UiState.SUCCESS ? (
               <IframeRenderer
                 apiContent={apiContent}
                 screenDimensions={screenDimensions}
                 simulatorUrl={simulatorUrl}
               />
-            ) : null}
+            ) : (
+              <>
+                {[UiState.LOADING_IFRAME, UiState.LOADING_SETUP, UiState.FAILED_CONNECT].includes(
+                  currentState
+                ) ? (
+                  <>
+                    {
+                      currentState === UiState.FAILED_CONNECT ? (
+                        <IframeRenderer
+                          apiContent={apiContent}
+                          screenDimensions={screenDimensions}
+                          simulatorUrl={simulatorUrl}
+                          dryRun
+                        />
+                      ) : (
+                        <FullPage>
+                          <Spinner variant="styles.spinner" />
+                          <IframeRenderer
+                            apiContent={apiContent}
+                            screenDimensions={screenDimensions}
+                            simulatorUrl={simulatorUrl}
+                            dryRun
+                          />
+                        </FullPage>
+                      )
+                    }
+                  </>
+                ) : null}
+              </>
+            )}
           </Box>
           {currentState === UiState.SUCCESS ? (
             <Box
