@@ -1,4 +1,5 @@
 import type { FC, ReactNode } from "react";
+import { useDispatch } from "react-redux";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { useSelector } from "react-redux";
@@ -12,6 +13,8 @@ type Props = Readonly<{
 }>;
 
 export const SliceHandler: FC<Props> = ({ children }) => {
+  const dispatch = useDispatch();
+
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
     libraries: getLibraries(state),
   }));
@@ -31,7 +34,7 @@ export const SliceHandler: FC<Props> = ({ children }) => {
 
   const lib = libraries?.find((l) => l?.name === libParam.replace(/--/g, "/"));
   if (!lib) {
-    void replace("/");
+    dispatch(replace("/"));
     return null;
   }
 
@@ -40,8 +43,7 @@ export const SliceHandler: FC<Props> = ({ children }) => {
   );
 
   if (!slice) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    replace("/");
+    dispatch(replace("/"));
     return null;
   }
 
@@ -60,13 +62,13 @@ export const SliceHandler: FC<Props> = ({ children }) => {
   })();
 
   if (!variation) {
-    replace("/");
+    dispatch(replace("/"));
     return null;
   }
 
   // variation not in the URL but a default variation was found
   if (!variationParam) {
-    replace(`/${lib.name}/${slice.model.name}/${variation.id}`);
+    dispatch(replace(`/${lib.name}/${slice.model.name}/${variation.id}`));
   }
 
   return <>{typeof children === "function" ? children(slice) : children}</>;
