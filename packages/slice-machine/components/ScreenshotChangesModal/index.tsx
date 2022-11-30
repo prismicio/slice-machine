@@ -124,8 +124,6 @@ const ScreenshotChangesModal = ({
   slices: ComponentUI[];
   defaultVariationSelector?: SliceVariationSelector;
 }) => {
-  if (slices.length === 0) return null;
-
   const { closeScreenshotsModal } = useSliceMachineActions();
 
   const { isOpen } = useSelector((store: SliceMachineStoreType) => ({
@@ -140,6 +138,8 @@ const ScreenshotChangesModal = ({
   useEffect(() => {
     setVariationSelector(variationSetter(defaultVariationSelector, slices));
   }, [defaultVariationSelector, isOpen]);
+
+  if (slices.length === 0) return null;
 
   return (
     <SliceMachineModal

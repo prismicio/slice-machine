@@ -48,6 +48,12 @@ const NewField: React.FC<NewField> = ({
   const fieldRef = useRef<HTMLInputElement>(null);
   const { theme } = useThemeUI();
   const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
+  useEffect(() => {
+    if (fieldRef.current) {
+      fieldRef.current.focus();
+    }
+  }, [fieldRef]);
+
   // @ts-expect-error We have to create a widget map or a service instead of using export name
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widget: AnyWidget = Widgets[widgetTypeName];
@@ -73,12 +79,6 @@ const NewField: React.FC<NewField> = ({
   };
 
   const validationSchema: AnyObjectSchema = createValidationSchema(FormFields);
-
-  useEffect(() => {
-    if (fieldRef.current) {
-      fieldRef.current.focus();
-    }
-  }, [fieldRef]);
 
   const handleLabelChange = (
     e: React.ChangeEvent<HTMLInputElement>,

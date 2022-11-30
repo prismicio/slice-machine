@@ -56,19 +56,21 @@ export default function Simulator() {
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
 
+  const sliceView = useMemo(() => {
+    if (component?.model.id && variation?.id) {
+      return [
+        {
+          sliceID: component.model.id,
+          variationID: variation.id,
+        },
+      ];
+    }
+    return [];
+  }, [component?.model.id, variation?.id]);
+
   if (!component || !variation) {
     return <div />;
   }
-
-  const sliceView = useMemo(
-    () => [
-      {
-        sliceID: component.model.id,
-        variationID: variation.id,
-      },
-    ],
-    [component.model.id, variation.id]
-  );
 
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
