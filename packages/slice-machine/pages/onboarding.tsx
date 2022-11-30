@@ -12,7 +12,7 @@ import {
   ParagraphProps,
   useThemeUI,
 } from "theme-ui";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { Video as CldVideo } from "cloudinary-react";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "../src/redux/type";
@@ -239,6 +239,8 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 }
 
 export default function Onboarding(): JSX.Element {
+  const router = useRouter();
+
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,

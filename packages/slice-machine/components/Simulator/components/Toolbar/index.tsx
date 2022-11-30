@@ -9,7 +9,7 @@ import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "./ScreensizeInput";
-import router from "next/router";
+import Router from "next/router";
 import * as Links from "@lib/builders/SliceBuilder/links";
 import { useState } from "react";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
@@ -20,7 +20,7 @@ const redirect = (
   isSimulator?: boolean
 ): void => {
   if (!variation) {
-    void router.push(`/${model.href}/${model.model.name}`);
+    void Router.push(`/${model.href}/${model.model.name}`);
     return;
   }
   const params = Links.variation({
@@ -29,7 +29,7 @@ const redirect = (
     variationId: variation?.id,
     isSimulator,
   });
-  void router.push(params.href, params.as, params.options);
+  void Router.push(params.href, params.as, params.options);
 };
 
 type ToolbarProps = {

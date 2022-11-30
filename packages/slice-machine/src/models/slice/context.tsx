@@ -1,58 +1,46 @@
-import type { FC, ReactNode } from "react";
-import { useDispatch } from "react-redux";
+import { type FC, type ReactNode, useEffect } from "react";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
-import Router from "next/router";
-import { replace } from "connected-next-router";
+import { useRouter } from "next/router";
 
 type Props = Readonly<{
   children?: ReactNode | ((slice: ComponentUI) => ReactNode);
 }>;
 
 export const SliceHandler: FC<Props> = ({ children }) => {
-  const dispatch = useDispatch();
+  const router = useRouter();
 
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
     libraries: getLibraries(state),
   }));
 
-  const urlLib = Router.router?.query?.lib;
-  const urlSliceName = Router.router?.query?.sliceName;
-  const urlVariation = Router.router?.query?.variation;
+  const urlLib = router.query.lib;
+  const urlSliceName = router.query.sliceName;
+  const urlVariation = router.query.variation;
 
-  if (!urlLib || !urlSliceName) {
-    return <>{children}</>;
-  }
-
-  const libParam: string = (() => {
+  const libParam = (() => {
     if (urlLib instanceof Array) return urlLib[0];
     else return urlLib;
   })();
 
-  const lib = libraries?.find((l) => l?.name === libParam.replace(/--/g, "/"));
-  if (!lib) {
-    dispatch(replace("/"));
-    return null;
-  }
+  const lib = libraries?.find((l) => l?.name === libParam?.replace(/--/g, "/"));
 
-  const slice = lib.components.find(
+  const slice = lib?.components.find(
     (state) => state.model.name === urlSliceName
   );
-
-  if (!slice) {
-    dispatch(replace("/"));
-    return null;
-  }
 
   const variationParam: string | undefined = (() => {
     if (urlVariation instanceof Array) return urlVariation[0];
     else return urlVariation;
   })();
+
   const variation = (() => {
-    if (variationParam) {
+    if (!slice) {
+      return undefined;
+    } else if (variationParam) {
       const maybeVariation = ComponentUI.variation(slice, variationParam);
       if (!maybeVariation) return ComponentUI.variation(slice);
       else return maybeVariation;
@@ -61,14 +49,21 @@ export const SliceHandler: FC<Props> = ({ children }) => {
     }
   })();
 
-  if (!variation) {
-    dispatch(replace("/"));
-    return null;
+  useEffect(() => {
+    if (!lib) void router.replace("/");
+    else if (!slice) void router.replace("/");
+    else if (!variation) void router.replace("/");
+    // variation not in the URL but a default variation was found
+    else if (!variationParam)
+      void router.replace(`/${lib.name}/${slice.model.name}/${variation.id}`);
+  }, [lib, slice, variation, variationParam]);
+
+  if (!urlLib || !urlSliceName) {
+    return <>{children}</>;
   }
 
-  // variation not in the URL but a default variation was found
-  if (!variationParam) {
-    dispatch(replace(`/${lib.name}/${slice.model.name}/${variation.id}`));
+  if (!lib || !slice || !variation) {
+    return null;
   }
 
   return <>{typeof children === "function" ? children(slice) : children}</>;
