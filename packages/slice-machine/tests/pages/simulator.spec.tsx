@@ -3,23 +3,26 @@
  **/
 
 import "@testing-library/jest-dom";
-import { render, fireEvent, act, screen, waitFor } from "../test-utils";
+import {
+  render,
+  fireEvent,
+  act,
+  // screen,
+  waitFor,
+} from "../test-utils";
 import { setupServer } from "msw/node";
-import { RestContext, rest } from "msw";
+import { rest, ResponseComposition, RestContext, RestRequest } from "msw";
 import { SliceSimulatorOpen } from "@src/tracking/types";
 import mockRouter from "next-router-mock";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 
 import Simulator from "../../pages/[lib]/[sliceName]/[variation]/simulator";
 import { SliceMachineStoreType } from "@src/redux/type";
-import crypto from "crypto";
+import { SaveMockBody } from "../../server/src/api/slices/save-mock";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 mockRouter.useParser(
-  createDynamicRouteParser([
-    // These paths should match those found in the `/pages` folder:
-    "/[lib]/[sliceName]/[variation]/simulator",
-  ])
+  createDynamicRouteParser(["/[lib]/[sliceName]/[variation]/simulator"])
 );
 // maybe mock simulator client
 
@@ -182,13 +185,23 @@ describe("simulator", () => {
       )
     );
 
+    const saveMockSpy = jest.fn(
+      (req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+        return req.json().then((json) => {
+          const result = SaveMockBody.decode(json);
+          if (result._tag === "Right") {
+            return res(ctx.json(json.mock));
+          }
+          return res(ctx.status(400));
+        });
+      }
+    );
+
     const App = render(<Simulator />, {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
     });
 
     await waitFor(() => expect(trackingSpy).toHaveBeenCalled());
-
-    App.debug();
 
     expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
       name: "SliceMachine Slice Simulator Open",
@@ -196,6 +209,18 @@ describe("simulator", () => {
         version: state.environment.changelog.currentVersion,
         framework: state.environment.framework,
       },
+    });
+
+    await act(async () => {
+      fireEvent.click(App.getByText("Save Mock"));
+    });
+
+    const payloadSent = await saveMockSpy.mock.lastCall?.[0].json();
+
+    expect(payloadSent).toEqual({
+      sliceName: "MySlice",
+      library: "slices",
+      mock: state.slices.libraries[0].components[0].mock,
     });
   });
 });

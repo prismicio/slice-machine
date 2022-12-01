@@ -18,20 +18,20 @@ function saveSliceMockToFileSystem(
   return Files.writeJson(path, mock);
 }
 
-const SaveMockBody = t.type({
+export const SaveMockBody = t.type({
   sliceName: t.string,
   libraryName: t.string,
   mock: ComponentMocks,
 });
 
-type SaveMockBody = t.TypeOf<typeof SaveMockBody>;
+export type SaveMockBody = t.TypeOf<typeof SaveMockBody>;
 
 const SaveMockRequest = t.type({
   env: t.type({ cwd: t.string }),
   body: SaveMockBody,
 });
 
-type SaveMockRequest = t.TypeOf<typeof SaveMockRequest>;
+export type SaveMockRequest = t.TypeOf<typeof SaveMockRequest>;
 
 export default function handler(req: SaveMockRequest, res: Response) {
   pipe(
