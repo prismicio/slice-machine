@@ -31,13 +31,12 @@ interface FormFieldValues {
   label?: string;
 }
 
-const RefInput = (
-  args: Record<string, unknown> & {
-    innerRef?: Ref<HTMLInputElement>;
-  }
-) => {
-  return <Input {...args} ref={args.innerRef} />;
-};
+const RefInput = ({
+  innerRef,
+  ...otherArgs
+}: Record<string, unknown> & {
+  innerRef?: Ref<HTMLInputElement>;
+}) => <Input {...otherArgs} ref={innerRef} />;
 
 const NewField: React.FC<NewField> = ({
   widgetTypeName,
