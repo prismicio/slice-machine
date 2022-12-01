@@ -5,7 +5,7 @@ import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopove
 import * as Models from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-// import { Button } from "@components/Button";
+import { Button } from "@components/Button";
 import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
 
 import * as Links from "@lib/builders/SliceBuilder/links";
@@ -33,6 +33,7 @@ type PropTypes = {
   variation: Models.VariationSM;
   isDisplayEditor: boolean;
   toggleIsDisplayEditor: () => void;
+  onSaveMock: () => void;
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
@@ -40,6 +41,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
   variation,
   isDisplayEditor,
   toggleIsDisplayEditor,
+  onSaveMock,
 }) => {
   return (
     <Flex
@@ -76,7 +78,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
             />
           </Flex>
         </Flex>
-        {/* <Button onClick={() => console.log("todo")} label="Save mock" /> */}
+        <Button onClick={onSaveMock} label="Save mock" />
       </Flex>
     </Flex>
   );

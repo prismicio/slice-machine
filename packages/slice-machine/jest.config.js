@@ -17,5 +17,6 @@ module.exports = {
       { configFile: "./babel.next.config.js" },
     ],
   },
+  transformIgnorePatterns: [],
   testPathIgnorePatterns: ["node_modules", "cypress"],
 };

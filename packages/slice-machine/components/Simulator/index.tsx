@@ -37,15 +37,16 @@ export default function Simulator() {
   const { component } = useSelector((store: SliceMachineStoreType) => ({
     component: selectCurrentSlice(
       store,
-      Router.router?.query.lib as string,
-      Router.router?.query.sliceName as string
+      Router.query.lib as string, // todo this is already stored
+      Router.query.sliceName as string
     ),
   }));
 
   const variation = component?.model.variations.find(
-    (variation) => variation.id === (Router.router?.query.variation as string)
+    (variation) => variation.id === (Router.query.variation as string)
   );
 
+  // useSelector called twice, for some reason
   const { framework, version, simulatorUrl } = useSelector(
     (state: SliceMachineStoreType) => ({
       framework: getFramework(state),
@@ -62,7 +63,10 @@ export default function Simulator() {
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
 
+  console.log({ component, variation, Router });
+
   if (!component || !variation) {
+    // this is a bug
     return <div />;
   }
 
@@ -118,6 +122,7 @@ export default function Simulator() {
         variation={variation}
         isDisplayEditor={isDisplayEditor}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
+        onSaveMock={() => console.log("todo")}
       />
       <Box
         sx={{
