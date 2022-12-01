@@ -59,7 +59,7 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
     sharedSlices
   );
 
-  if (mocked) Files.writeJson(mockPath, mocked);
+  Files.writeJson(mockPath, mocked);
 
   IO.Types.upsert(env);
 

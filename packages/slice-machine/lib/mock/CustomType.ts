@@ -5,7 +5,7 @@ import {
 import {
   DocumentMockConfig,
   DocWidgetMockConfig,
-  generateDocumentMock,
+  DocumentMock,
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
 import { buildWidgetMockConfig } from "./LegacyMockConfig";
@@ -14,8 +14,7 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
-import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
-import { getOrElseW } from "fp-ts/lib/Either";
+import { Document } from "@prismicio/types-internal/lib/content";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 function buildDocumentMockConfig(
@@ -43,21 +42,12 @@ export default function MockCustomType(
   model: CustomTypeSM,
   legacyMockConfig: CustomTypeMockConfig,
   sharedSlices: Record<string, SharedSlice>
-): CustomTypeContent | null {
+): Partial<Document> {
   const prismicModel = CustomTypes.fromSM(model);
   const documentMockConfig = buildDocumentMockConfig(
     prismicModel,
     legacyMockConfig
   );
 
-  const mock = generateDocumentMock(
-    prismicModel,
-    sharedSlices,
-    documentMockConfig
-  )((_customTypes, _sharedSlices, mock) => mock);
-
-  return getOrElseW(() => {
-    console.error(`Could not parse mock for ${prismicModel.id}`);
-    return null;
-  })(CustomTypeContent.decode(mock));
+  return DocumentMock.generate(prismicModel, sharedSlices, documentMockConfig);
 }

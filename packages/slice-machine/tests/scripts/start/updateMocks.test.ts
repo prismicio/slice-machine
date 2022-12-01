@@ -11,7 +11,7 @@ import {
   Library,
 } from "@slicemachine/core/build/models/Library";
 import { vol } from "memfs";
-import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
+import { Document } from "@prismicio/types-internal/lib/content";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 jest.mock(`fs`, () => {
@@ -215,7 +215,7 @@ describe("replaceLegacyCustomTypeMocks", () => {
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
-    expect(CustomTypeContent.decode(result)).toBeRight();
+    expect(Document.decode(result)).toBeRight();
   });
 
   test("it should not change valid mocks", () => {
@@ -239,7 +239,7 @@ describe("replaceLegacyCustomTypeMocks", () => {
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
-    expect(CustomTypeContent.decode(result)).toEqualRight(wanted);
+    expect(Document.decode(result)).toEqualRight(wanted);
   });
 });
 
@@ -316,8 +316,6 @@ describe("updateMocks", () => {
       path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE),
       "utf-8"
     );
-    expect(
-      CustomTypeContent.decode(JSON.parse(customTypeMock as string))
-    ).toBeRight();
+    expect(Document.decode(JSON.parse(customTypeMock as string))).toBeRight();
   });
 });
