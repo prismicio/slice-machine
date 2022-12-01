@@ -17,7 +17,7 @@ import {
 } from "@slicemachine/core/build/node-utils";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { CustomTypeContent } from "@prismicio/types-internal/lib/content";
+import { Document } from "@prismicio/types-internal/lib/content";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import { getLocalCustomTypes } from "../../lib/utils/customTypes";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
@@ -73,12 +73,12 @@ export function replaceLegacyCustomTypeMocks(
       .customType(customType.id)
       .mock();
 
-    const maybeMock = Files.readEntityFromFile<CustomTypeContent>(
+    const maybeMock = Files.readEntityFromFile<Document>(
       mocksPath,
       (payload) => {
         return getOrElseW(() => {
           return new Error("Invalid Custom Type Content Mock");
-        })(CustomTypeContent.decode(payload));
+        })(Document.decode(payload));
       }
     );
 
