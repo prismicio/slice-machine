@@ -11,6 +11,7 @@ import path from "path";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import { MocksConfig } from "../../../../lib/models/paths";
 import { DeleteSliceResponse } from "../../../../lib/models/common/Slice";
+import { removeSliceFromCustomTypes } from "../../../../lib/io/Slice";
 
 interface DeleteSliceBody {
   sliceId: string;
@@ -116,6 +117,18 @@ export async function deleteSlice(req: {
   };
 
   // eslint-disable-next-line @typescript-eslint/require-await
+  const updateCustomTypes = async () => {
+    try {
+      removeSliceFromCustomTypes(sliceId, env.cwd);
+    } catch (err) {
+      console.error(
+        `[slice/delete] Could not update the custom types using your slice. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`
+      );
+      throw err;
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/require-await
   const updateTypes = async () => {
     try {
       IO.Types.upsert(env);
@@ -145,6 +158,7 @@ export async function deleteSlice(req: {
   const settledResults = await Promise.allSettled([
     deleteAssets(),
     updateMockConfig(),
+    updateCustomTypes(),
     updateTypes(),
     updateLibraries(),
   ]);

@@ -26,6 +26,8 @@ import { pushCustomTypeCreator } from "../pushChangesSaga/actions";
 import axios from "axios";
 import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
 import { omit } from "lodash";
+import { deleteSliceCreator } from "../slices";
+import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -78,7 +80,8 @@ type CustomTypesActions =
   | ActionType<typeof renameCustomTypeCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof pushCustomTypeCreator>
-  | ActionType<typeof deleteCustomTypeCreator>;
+  | ActionType<typeof deleteCustomTypeCreator>
+  | ActionType<typeof deleteSliceCreator.success>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -186,6 +189,30 @@ export const availableCustomTypesReducer: Reducer<
 
     case getType(deleteCustomTypeCreator.success): {
       return omit(state, action.payload.customTypeId);
+    }
+
+    case getType(deleteSliceCreator.success): {
+      const sliceId = action.payload.sliceId;
+      const newCTs = Object.entries(state)
+        .map<[string, FrontEndCustomType]>(([ctName, customType]) => {
+          return [
+            ctName,
+            {
+              local: filterSliceFromCustomType(customType.local, sliceId),
+              remote: customType.remote
+                ? filterSliceFromCustomType(customType.remote, sliceId)
+                : undefined,
+            },
+          ];
+        })
+        .reduce((acc, [name, ct]) => {
+          return {
+            ...acc,
+            [name]: ct,
+          };
+        }, {});
+
+      return newCTs;
     }
 
     default:
