@@ -91,27 +91,28 @@ const Form = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const configValues = values[MockConfigKey]?.config || {};
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const {
-    mockConfig: {
-      config: { patternType },
-    },
-  } = values;
-  const patternTypeSet = patternType == patternTypeCheck;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  const patternTest = !Patterns[patternType].test(options);
-  const validPattern = findValidPattern(options);
   useEffect(() => {
-    if (patternType && !patternTypeSet && !patternTest) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const {
+      mockConfig: {
+        config: { patternType },
+      },
+    } = values;
+    if (
+      patternType &&
+      patternType !== patternTypeCheck &&
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      !Patterns[patternType].test(options)
+    ) {
       onUpdate({
         key: "patternType",
         updateType: "config",
-        value: validPattern,
+        value: findValidPattern(options),
       });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setPatternTypeCheck(patternType);
     }
-  }, [patternType, patternTypeSet, patternTest, validPattern]);
+  }, [values, patternTypeCheck, onUpdate]);
 
   const onUpdate = useCallback(
     ({ updateType, key, value }) => {
