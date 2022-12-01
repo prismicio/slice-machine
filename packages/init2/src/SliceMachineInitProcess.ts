@@ -9,9 +9,11 @@ import {
 	SliceMachineManager,
 } from "@slicemachine/core2";
 
-import * as framework from "./framework";
-import { listr, listrRun } from "./lib/listr";
+import * as framework from "./lib/framework";
+
+import { assertExists } from "./lib/assertExists";
 import * as packageManager from "./lib/packageManager";
+import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
 import * as repositoryDomain from "./lib/repositoryDomain";
 
@@ -26,21 +28,23 @@ export const createSliceMachineInitProcess = (
 	return new SliceMachineInitProcess(options);
 };
 
+type SliceMachineInitProcessContext = {
+	framework?: framework.Framework;
+	packageManager?: packageManager.Agent;
+	installProcess?: ExecaChildProcess;
+	userProfile?: PrismicUserProfile;
+	userRepositories?: PrismicRepository[];
+	repository?: {
+		domain: string;
+		exists: boolean;
+	};
+};
+
 export class SliceMachineInitProcess {
 	protected options: SliceMachineInitProcessOptions;
 	protected manager: SliceMachineManager;
 
-	protected context: {
-		framework?: framework.Framework;
-		packageManager?: packageManager.Agent;
-		installProcess?: ExecaChildProcess;
-		userProfile?: PrismicUserProfile;
-		userRepositories?: PrismicRepository[];
-		repository?: {
-			domain: string;
-			exists: boolean;
-		};
-	};
+	protected context: SliceMachineInitProcessContext;
 
 	constructor(options: SliceMachineInitProcessOptions) {
 		this.options = options;
@@ -50,7 +54,45 @@ export class SliceMachineInitProcess {
 	}
 
 	async run(): Promise<void> {
+		await this.detectEnvironment();
+		await this.beginCoreDependenciesInstallation();
+		await this.loginAndFetchUserData();
+
+		if (this.options.repository) {
+			await this.useRepositoryFlag();
+		} else {
+			await this.selectRepository();
+		}
+
+		assertExists(this.context.repository, "repository");
+		if (!this.context.repository.exists) {
+			await this.createNewRepository();
+		}
+
+		await this.finishCoreDependenciesInstallation();
+
 		await listrRun([
+			{
+				title: "Finishing Slice Machine installation",
+				task: (_, _parentTask) =>
+					listr([
+						{
+							title: "Project setup",
+							task: () => new Promise((res) => setTimeout(res, 2000)),
+						},
+						{
+							title: `${chalk.cyan(
+								this.context.framework?.name
+							)} adapter setup`,
+							task: () => new Promise((res) => setTimeout(res, 2000)),
+						},
+					]),
+			},
+		]);
+	}
+
+	protected detectEnvironment(): Promise<void> {
+		return listrRun([
 			{
 				title: "Detecting environment...",
 				task: (_, parentTask) =>
@@ -74,8 +116,9 @@ export class SliceMachineInitProcess {
 									this.context.packageManager
 								)}`;
 
+								assertExists(this.context.framework, "framework");
 								parentTask.title = `Detected framework ${chalk.cyan(
-									this.context.framework?.name
+									this.context.framework.name
 								)} and package manager ${chalk.cyan(
 									this.context.packageManager
 								)}`;
@@ -84,15 +127,19 @@ export class SliceMachineInitProcess {
 					]),
 			},
 		]);
+	}
 
-		await listrRun([
+	protected beginCoreDependenciesInstallation(): Promise<void> {
+		return listrRun([
 			{
 				title: "Beginning core dependencies installation...",
 				task: async (_, task) => {
+					assertExists(this.context.packageManager, "package manager");
+					assertExists(this.context.framework, "framework");
+
 					const { execaProcess } = await packageManager.install({
-						// TODO: Assert types
-						agent: this.context.packageManager!,
-						dependencies: this.context.framework!.devDependencies,
+						agent: this.context.packageManager,
+						dependencies: this.context.framework.devDependencies,
 						dev: true,
 					});
 
@@ -104,9 +151,7 @@ export class SliceMachineInitProcess {
 
 						// If the `repository` option wasn't used AND the repository was selected/created
 						if (!this.options.repository && this.context.repository) {
-							tryAgainCommand = `${tryAgainCommand} --repository=${
-								this.context.repository!.domain
-							}`;
+							tryAgainCommand = `${tryAgainCommand} --repository=${this.context.repository.domain}`;
 						}
 						console.error(
 							`\n\n${error.shortMessage}\n${error.stderr}\n\n${
@@ -127,8 +172,10 @@ export class SliceMachineInitProcess {
 				},
 			},
 		]);
+	}
 
-		await listrRun([
+	protected loginAndFetchUserData(): Promise<void> {
+		return listrRun([
 			{
 				title: "Logging in to Prismic...",
 				task: async (_, parentTask) => {
@@ -193,111 +240,132 @@ export class SliceMachineInitProcess {
 				},
 			},
 		]);
+	}
 
-		if (this.options.repository) {
-			await listrRun([
-				{
-					title: `Flag ${chalk.cyan("repository")} used, validating input...`,
-					task: async (_, task) => {
-						// TODO: Assert types
-						const maybeRepository = this.context.userRepositories!.find(
-							(repository) => repository.domain === this.options.repository
-						);
+	protected useRepositoryFlag(): Promise<void> {
+		return listrRun([
+			{
+				title: `Flag ${chalk.cyan("repository")} used, validating input...`,
+				task: async (_, task) => {
+					assertExists(this.context.userRepositories, "user repositories");
+					assertExists(this.options.repository, "flag `repository`");
 
-						if (maybeRepository) {
-							if (!this.manager.repository.hasWriteAccess(maybeRepository)) {
-								throw new Error(
-									`Cannot run init command with repository ${chalk.cyan(
-										maybeRepository.domain
-									)}: you are not a developer or admin of this repository`
-								);
-							}
-						} else if (
-							await this.manager.repository.exists({
-								domain: this.options.repository!,
-							})
-						) {
+					const maybeRepository = this.context.userRepositories.find(
+						(repository) => repository.domain === this.options.repository
+					);
+
+					if (maybeRepository) {
+						if (!this.manager.repository.hasWriteAccess(maybeRepository)) {
 							throw new Error(
-								`Repository name ${chalk.cyan(
-									this.options.repository
-								)} is already taken`
+								`Cannot run init command with repository ${chalk.cyan(
+									maybeRepository.domain
+								)}: you are not a developer or admin of this repository`
 							);
 						}
+					} else if (
+						await this.manager.repository.exists({
+							domain: this.options.repository,
+						})
+					) {
+						throw new Error(
+							`Repository name ${chalk.cyan(
+								this.options.repository
+							)} is already taken`
+						);
+					}
 
-						task.title = `Selected repository ${chalk.cyan(
-							this.options.repository
-						)} (flag ${chalk.cyan("repository")} used)`;
+					task.title = `Selected repository ${chalk.cyan(
+						this.options.repository
+					)} (flag ${chalk.cyan("repository")} used)`;
 
-						this.context.repository = {
-							domain: this.options.repository!,
-							exists: !!maybeRepository,
-						};
-					},
-				},
-			]);
-		} else {
-			if (this.context.userRepositories!.length) {
-				const { maybeDomain } = await prompt<string, "maybeDomain">({
-					type: "select",
-					name: "maybeDomain",
-					message:
-						"Pick a repository to connect to or choose to create a new one",
-					warn: "You are not a developer or admin of this repository",
-					choices: [
-						{
-							title: "CREATE NEW",
-							description: "Create a new Prismic repository\n",
-							value: "",
-						},
-						...this.context
-							.userRepositories!.map((repository) => {
-								const hasWriteAccess =
-									this.manager.repository.hasWriteAccess(repository);
-
-								return {
-									title: `${repository.domain}${
-										hasWriteAccess ? "" : " (Unauthorized)"
-									}`,
-									description: `Connect to ${chalk.cyan(repository.domain)}`,
-									value: repository.domain,
-									disabled: !hasWriteAccess,
-								};
-							})
-							.sort((a, b) => (a.value > b.value ? 1 : -1)),
-					],
-				});
-
-				if (maybeDomain) {
 					this.context.repository = {
-						domain: maybeDomain,
-						exists: true,
+						domain: this.options.repository,
+						exists: !!maybeRepository,
 					};
-				}
-			}
+				},
+			},
+		]);
+	}
 
-			if (!this.context.repository) {
-				let suggestedName = repositoryDomain.random();
-				while (
-					await this.manager.repository.exists({ domain: suggestedName })
-				) {
-					suggestedName = repositoryDomain.random();
-				}
+	protected async selectRepository(): Promise<void> {
+		assertExists(this.context.userRepositories, "user repositories");
 
-				// TODO: Prompt for repository
-				const { domain } = await prompt<string, "domain">({
-					type: "text",
-					name: "domain",
-					// Overriden by the `onRender` function, just used as a fallback
-					message: "Choose a name for your Prismic repository",
-					initial: suggestedName,
-					onRender() {
-						const raw = this.value || this.initial || "";
-						const domain = repositoryDomain.format(raw);
+		if (this.context.userRepositories.length) {
+			await this.trySelectExistingRepository();
+		}
 
-						const validation = repositoryDomain.validate(domain);
+		if (!this.context.repository) {
+			await this.selectNewRepository();
+		}
 
-						this.msg = chalk.reset(
-							`
+		assertExists(this.context.repository, "repository");
+		console.log(
+			`${logSymbols.success} Selected repository ${chalk.cyan(
+				this.context.repository.domain
+			)}`
+		);
+	}
+
+	protected async trySelectExistingRepository(): Promise<void> {
+		assertExists(this.context.userRepositories, "user repositories");
+
+		const { maybeDomain } = await prompt<string, "maybeDomain">({
+			type: "select",
+			name: "maybeDomain",
+			message: "Pick a repository to connect to or choose to create a new one",
+			warn: "You are not a developer or admin of this repository",
+			choices: [
+				{
+					title: "CREATE NEW",
+					description: "Create a new Prismic repository\n",
+					value: "",
+				},
+				...this.context.userRepositories
+					.map((repository) => {
+						const hasWriteAccess =
+							this.manager.repository.hasWriteAccess(repository);
+
+						return {
+							title: `${repository.domain}${
+								hasWriteAccess ? "" : " (Unauthorized)"
+							}`,
+							description: `Connect to ${chalk.cyan(repository.domain)}`,
+							value: repository.domain,
+							disabled: !hasWriteAccess,
+						};
+					})
+					.sort((a, b) => (a.value > b.value ? 1 : -1)),
+			],
+		});
+
+		if (maybeDomain) {
+			this.context.repository = {
+				domain: maybeDomain,
+				exists: true,
+			};
+		}
+	}
+
+	protected async selectNewRepository(): Promise<void> {
+		let suggestedName = repositoryDomain.random();
+		while (await this.manager.repository.exists({ domain: suggestedName })) {
+			suggestedName = repositoryDomain.random();
+		}
+
+		const { domain } = await prompt<string, "domain">({
+			type: "text",
+			name: "domain",
+			// Overriden by the `onRender` function, just used as a fallback
+			message: "Choose a name for your Prismic repository",
+			initial: suggestedName,
+			onRender() {
+				const raw = this.value || this.initial || "";
+				const domain = repositoryDomain.format(raw);
+
+				const validation = repositoryDomain.validate(domain);
+
+				this.msg = chalk.reset(
+					`
 Choose a name for your Prismic repository
 
   NAMING RULES
@@ -335,91 +403,95 @@ ${chalk.gray(
 )}
 
 ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
-						);
-					},
-					validate: async (rawDomain: string) => {
-						const validation = repositoryDomain.validate(rawDomain);
-						if (validation.hasErrors) {
-							const formattedErrors: string[] = [];
+				);
+			},
+			validate: async (rawDomain: string) => {
+				const validation = repositoryDomain.validate(rawDomain);
+				if (validation.hasErrors) {
+					const formattedErrors: string[] = [];
 
-							if (validation.NonLetterStart) {
-								formattedErrors.push("must start with a letter");
-							}
-							if (validation.LessThan4) {
-								formattedErrors.push("cannot be less than 4 characters long");
-							}
-							if (validation.MoreThan30) {
-								formattedErrors.push("cannot be more than 30 characters long");
-							}
+					if (validation.NonLetterStart) {
+						formattedErrors.push("must start with a letter");
+					}
+					if (validation.LessThan4) {
+						formattedErrors.push("cannot be less than 4 characters long");
+					}
+					if (validation.MoreThan30) {
+						formattedErrors.push("cannot be more than 30 characters long");
+					}
 
-							return `Name ${formattedErrors.join(" and ")}`;
-						}
+					return `Name ${formattedErrors.join(" and ")}`;
+				}
 
-						const domain = repositoryDomain.format(rawDomain);
-						const exists = await this.manager.repository.exists({ domain });
-						if (exists) {
-							return `Repository name ${chalk.cyan(domain)} is already taken`;
-						}
+				const domain = repositoryDomain.format(rawDomain);
+				const exists = await this.manager.repository.exists({ domain });
+				if (exists) {
+					return `Repository name ${chalk.cyan(domain)} is already taken`;
+				}
 
-						return true;
-					},
-					format: (value) => {
-						return repositoryDomain.format(value);
-					},
-				});
+				return true;
+			},
+			format: (value) => {
+				return repositoryDomain.format(value);
+			},
+		});
 
-				// Clear extra lines
-				process.stdout.moveCursor(0, -16);
-				process.stdout.clearScreenDown();
+		// Clear extra lines
+		process.stdout.moveCursor(0, -16);
+		process.stdout.clearScreenDown();
 
-				this.context.repository = {
-					domain,
-					exists: false,
-				};
-			}
+		this.context.repository = {
+			domain,
+			exists: false,
+		};
+	}
 
-			console.log(
-				`${logSymbols.success} Selected repository ${chalk.cyan(
-					this.context.repository!.domain
-				)}`
-			);
-		}
+	protected createNewRepository(): Promise<void> {
+		assertExists(this.context.repository, "repository");
 
-		if (!this.context.repository!.exists) {
-			await listrRun([
-				{
-					title: `Creating new repository ${chalk.cyan(
-						this.context.repository!.domain
-					)} ...`,
-					task: async (_, task) => {
-						await this.manager.repository.create({
-							domain: this.context.repository!.domain,
-							framework: this.context.framework!.prismicName,
-						});
+		return listrRun([
+			{
+				title: `Creating new repository ${chalk.cyan(
+					this.context.repository.domain
+				)} ...`,
+				task: async (_, task) => {
+					assertExists(this.context.repository, "repository");
+					assertExists(this.context.framework, "framework");
 
-						this.context.repository!.exists = true;
-						task.title = `Created new repository ${chalk.cyan(
-							this.context.repository!.domain
-						)}`;
-					},
+					await this.manager.repository.create({
+						domain: this.context.repository.domain,
+						framework: this.context.framework.prismicName,
+					});
+
+					this.context.repository.exists = true;
+					task.title = `Created new repository ${chalk.cyan(
+						this.context.repository.domain
+					)}`;
 				},
-			]);
-		}
+			},
+		]);
+	}
 
-		await listrRun([
+	protected finishCoreDependenciesInstallation(): Promise<void> {
+		return listrRun([
 			{
 				title: `Finishing core dependencies installation with ${chalk.cyan(
 					this.context.packageManager
 				)} ...`,
 				task: async (_, task) => {
+					assertExists(
+						this.context.installProcess,
+						"Could not resolve initial dependencies installation process"
+					);
+
 					const updateOutput = (data: Buffer | null) => {
 						if (data instanceof Buffer) {
 							task.output = data.toString();
 						}
 					};
 					// TODO: Assert types
-					this.context.installProcess!.stdout?.on("data", updateOutput);
-					this.context.installProcess!.stderr?.on("data", updateOutput);
+					this.context.installProcess.stdout?.on("data", updateOutput);
+					this.context.installProcess.stderr?.on("data", updateOutput);
 
 					try {
 						await this.context.installProcess;
@@ -443,25 +515,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 						this.context.packageManager
 					)}`;
 				},
-			},
-		]);
-
-		await listrRun([
-			{
-				title: "Finishing Slice Machine installation",
-				task: (_, _parentTask) =>
-					listr([
-						{
-							title: "Project setup",
-							task: () => new Promise((res) => setTimeout(res, 2000)),
-						},
-						{
-							title: `${chalk.cyan(
-								this.context.framework?.name
-							)} adapter setup`,
-							task: () => new Promise((res) => setTimeout(res, 2000)),
-						},
-					]),
 			},
 		]);
 	}
