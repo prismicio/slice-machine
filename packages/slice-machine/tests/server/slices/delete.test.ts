@@ -214,6 +214,39 @@ describe("Delete slice files", () => {
     expect(result).toStrictEqual({});
   });
 
+  it("should correctly update a library when there are no slices left", async () => {
+    const smallMockIndexFile = `
+    import ${SLICE_TO_DELETE_NAME} from './${SLICE_TO_DELETE_NAME}';
+
+    export {
+      ${SLICE_TO_DELETE_NAME},
+    };
+
+    export const components = {
+      ${SLICE_TO_DELETE_ID}: ${SLICE_TO_DELETE_NAME},
+    };
+    `;
+
+    vol.fromJSON({
+      [`/test/${SLICE_TO_DELETE_LIBRARY}/${SLICE_TO_DELETE_NAME}/model.json`]:
+        JSON.stringify(SLICE_TO_DELETE_MOCK),
+      [`/test/${SLICE_TO_DELETE_LIBRARY}/index.js`]:
+        JSON.stringify(smallMockIndexFile),
+      [`/test/.slicemachine/assets/${SLICE_TO_DELETE_LIBRARY}/${SLICE_TO_DELETE_NAME}/mocks.json`]:
+        JSON.stringify(SLICE_TO_DELETE_MOCKS),
+      [`/test/.slicemachine/assets/${SLICE_TO_DELETE_LIBRARY}/Slice2/mocks.json`]:
+        JSON.stringify(otherSliceMocks),
+      "/test/.slicemachine/mock-config.json": JSON.stringify(MOCK_CONFIG),
+    });
+
+    expect(readSliceFiles()).toStrictEqual([SLICE_TO_DELETE_NAME, "index.js"]);
+
+    const result = await deleteSlice(mockRequest);
+
+    expect(readSliceFiles()).toStrictEqual([]);
+    expect(result).toStrictEqual({});
+  });
+
   it("should log and return an error if the slices deletion fails", async () => {
     vol.fromJSON({
       [`/test/${SLICE_TO_DELETE_LIBRARY}/test.json`]: JSON.stringify({}),
