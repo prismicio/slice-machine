@@ -122,6 +122,21 @@ export const getFrontendSlices = (
     []
   );
 
+  // TODO get rid of this once design validated
+  const initialSlices: FrontEndSliceModel[] =
+    components.length > 0
+      ? [
+          {
+            local: undefined,
+            remote: {
+              ...(getRemoteSlice(store, components[0].model.id) as SliceSM),
+              id: "test-deleted-slice",
+            },
+            localScreenshots: {},
+          },
+        ]
+      : [];
+
   return components.reduce(
     (acc: FrontEndSliceModel[], component: ComponentUI) => {
       return [
@@ -133,7 +148,7 @@ export const getFrontendSlices = (
         },
       ];
     },
-    []
+    initialSlices
   );
 };
 

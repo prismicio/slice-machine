@@ -43,6 +43,17 @@ export const useUnSyncChanges = (): UnSyncChanges => {
     []
   );
 
+  // TODO get rid of this once design validated
+  if (components.length > 0) {
+    components.push({
+      ...components[0],
+      model: {
+        ...components[0].model,
+        id: "test-deleted-slice",
+      },
+    });
+  }
+
   const unSyncedSlices = components.filter(
     (component) =>
       modelsStatuses.slices[component.model.id] &&

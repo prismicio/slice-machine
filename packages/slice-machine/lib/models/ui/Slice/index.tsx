@@ -70,12 +70,13 @@ const SliceVariations = ({
 
 const SliceCardActions: React.FC<{
   slice: ComponentUI;
+  disableActions: boolean;
   actions?: {
     onUpdateScreenshot: (e: React.MouseEvent) => void;
     openRenameModal?: (slice: ComponentUI) => void;
     openDeleteModal?: (slice: ComponentUI) => void;
   };
-}> = ({ actions, slice }) => {
+}> = ({ actions, slice, disableActions }) => {
   const onRenameClick = useCallback(() => {
     if (actions?.openRenameModal) {
       actions.openRenameModal(slice);
@@ -108,6 +109,7 @@ const SliceCardActions: React.FC<{
         sx={{ fontWeight: "bold" }}
         Icon={AiOutlineCamera}
         label="Update screenshot"
+        disabled={disableActions}
       />
 
       {actions.openRenameModal && (
@@ -216,6 +218,16 @@ const ScreenshotMissingBanner: React.FC<{ slice: ComponentUI }> = ({
   );
 };
 
+type Status = {
+  status: ModelStatus;
+  authStatus: AuthStatus;
+  isOnline: boolean;
+};
+type StatusOrCustom = Status | React.FC<{ slice: ComponentUI }>;
+
+const isDeleted = (statusOrCustom: StatusOrCustom): boolean =>
+  "status" in statusOrCustom && statusOrCustom.status === ModelStatus.Deleted;
+
 export const SharedSlice = {
   render({
     showActions,
@@ -228,13 +240,7 @@ export const SharedSlice = {
   }: {
     showActions?: boolean;
     slice: ComponentUI;
-    StatusOrCustom:
-      | {
-          status: ModelStatus;
-          authStatus: AuthStatus;
-          isOnline: boolean;
-        }
-      | React.FC<{ slice: ComponentUI }>;
+    StatusOrCustom: StatusOrCustom;
     Wrapper?: React.FC<{
       link?: { as: string };
       slice: ComponentUI;
@@ -257,7 +263,7 @@ export const SharedSlice = {
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const screenshotUrl = slice?.screenshots?.[variationId]?.url;
+    const screenshotUrl = slice.screenshots?.[variationId]?.url;
 
     return (
       <CardWrapper
@@ -289,6 +295,7 @@ export const SharedSlice = {
             }}
           >
             <ScreenshotPreview
+              deleted={isDeleted(StatusOrCustom)}
               src={screenshotUrl}
               sx={{
                 height: "198px",
@@ -302,7 +309,11 @@ export const SharedSlice = {
                 flexDirection: "column",
               }}
             >
-              <SliceCardActions slice={slice} actions={actions} />
+              <SliceCardActions
+                slice={slice}
+                disableActions={isDeleted(StatusOrCustom)}
+                actions={actions}
+              />
               <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
             </Flex>
           </Flex>
