@@ -12,7 +12,7 @@ import { LoadingKeysEnum } from "../loading/types";
 import { saveSliceCreator } from "./actions";
 import { saveSliceApiClient, renameSlice } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { renameSliceCreator } from "../slices";
+import { renameSliceCreator, renameSliceModel } from "../slices";
 import { modalCloseCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { push } from "connected-next-router";
@@ -81,8 +81,13 @@ export function* renameSliceSaga({
       );
     }
 
-    yield call(renameSlice, slice.model, libName);
-    yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
+    const renamedSlice = renameSliceModel({
+      slice: slice.model,
+      newName: newSliceName,
+    });
+
+    yield call(renameSlice, renamedSlice, libName);
+    yield put(renameSliceCreator.success({ libName, renamedSlice }));
     yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName
@@ -95,6 +100,7 @@ export function* renameSliceSaga({
       })
     );
   } catch (e) {
+    console.error(e);
     yield put(
       openToasterCreator({
         message: "Internal Error: Slice name not saved",

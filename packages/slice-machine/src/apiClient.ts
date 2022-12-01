@@ -24,6 +24,7 @@ import { SimulatorManagerReadSliceSimulatorSetupStepsReturnType } from "@slicema
 import { pascalize, snakelize } from "@lib/utils/str";
 import { CustomTypes as InternalCustomTypes } from "@prismicio/types-internal";
 import { DEFAULT_VARIATION_ID } from "@lib/consts";
+import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -108,7 +109,7 @@ export const saveCustomType = async (
 };
 
 export const renameCustomType = (
-  customType: CustomTypeSM // TODO: Don't use the SM version. Convert to
+  customType: CustomTypeSM
 ): Promise<AxiosResponse> => {
   return managerClient.customTypes.renameCustomType({
     model: CustomTypes.fromSM(customType),
@@ -126,27 +127,7 @@ export const createSlice = async (
   sliceName: string,
   libName: string
 ): Promise<{ variationId: string }> => {
-  // TODO: This default model should probably be abstracted to a helper
-  // somewhere.
-  const model: InternalCustomTypes.Widgets.Slices.SharedSlice = {
-    id: snakelize(sliceName),
-    type: InternalCustomTypes.Widgets.Slices.SlicesTypes.SharedSlice,
-    name: sliceName,
-    description: sliceName,
-    variations: [
-      {
-        id: DEFAULT_VARIATION_ID,
-        name: pascalize(DEFAULT_VARIATION_ID),
-        // TODO: What should this be?
-        docURL: "...",
-        // TODO: What should this be?
-        version: "initial",
-        description: pascalize(DEFAULT_VARIATION_ID),
-        // TODO: What should this be? The type requires it.
-        imageUrl: "",
-      },
-    ],
-  };
+  const model = buildEmptySliceModel({ sliceName });
 
   const { errors } = await managerClient.slices.createSlice({
     libraryID: libName,

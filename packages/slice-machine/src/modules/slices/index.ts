@@ -27,7 +27,7 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
 
 // Action Creators
@@ -58,8 +58,7 @@ export const renameSliceCreator = createAsyncAction(
   },
   {
     libName: string;
-    sliceId: string;
-    newSliceName: string;
+    renamedSlice: SliceSM;
   }
 >();
 
@@ -133,14 +132,18 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: action.payload.libraries,
       };
     case getType(renameSliceCreator.success): {
-      const { libName, sliceId, newSliceName } = action.payload;
+      const { libName, renamedSlice } = action.payload;
       const newLibs = state.libraries.map((library) => {
         if (library.name !== libName) return library;
         return {
           ...library,
           components: library.components.map((component) => {
-            if (component.model.id !== sliceId) return component;
-            return renamedComponentUI(component, newSliceName);
+            if (component.model.id !== renamedSlice.id) return component;
+
+            return {
+              ...component,
+              model: renamedSlice,
+            };
           }),
         };
       });
@@ -272,36 +275,14 @@ export function* watchSliceSagas() {
   yield fork(handleSliceRequests);
 }
 
-export const renamedComponentUI = (
-  initialComponent: ComponentUI,
-  newName: string
-): ComponentUI => {
-  const { model, screenshots } = initialComponent;
+type RenameSliceModelArgs = {
+  slice: SliceSM;
+  newName: string;
+};
+
+export function renameSliceModel(args: RenameSliceModelArgs): SliceSM {
   return {
-    ...initialComponent,
-    model: renameModel(model, newName),
-    screenshots: renameScreenshots(screenshots, model.name, newName),
+    ...args.slice,
+    name: args.newName,
   };
-};
-
-export const renameScreenshots = (
-  initialScreenshots: Record<string, ScreenshotUI>,
-  prevName: string,
-  newName: string
-): Record<string, ScreenshotUI> => {
-  return Object.entries(initialScreenshots).reduce((acc, [key, screenshot]) => {
-    acc[key] = {
-      ...screenshot,
-      url: screenshot.url.replace(prevName, newName),
-      path: screenshot.path.replace(prevName, newName),
-    };
-    return acc;
-  }, {} as Record<string, ScreenshotUI>);
-};
-
-export const renameModel = (
-  initialModel: SliceSM,
-  newName: string
-): SliceSM => {
-  return { ...initialModel, name: newName };
-};
+}
