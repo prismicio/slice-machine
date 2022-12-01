@@ -71,6 +71,13 @@ const readAssetsFiles = () =>
 const readSliceFiles = () =>
   vol.readdirSync(`/test/${SLICE_TO_DELETE_LIBRARY}`);
 
+const readCustomTypeMock = () =>
+  JSON.parse(
+    vol.readFileSync("/test/customtypes/custom-type-with-slice/index.json", {
+      encoding: "utf8",
+    }) as string
+  );
+
 const MOCK_INDEX_FILE = `
 import ${SLICE_TO_DELETE_NAME} from './${SLICE_TO_DELETE_NAME}';
 import Slice2 from './Slice2';
@@ -98,6 +105,52 @@ export const components = {
 	slice-2: Slice2,
 };
 `;
+
+const CustomTypeModel = {
+  id: "custom-type-with-slice",
+  label: "Custom Type",
+  repeatable: false,
+  status: false,
+  json: {
+    Main: {
+      slices: {
+        type: "Slices",
+        fieldset: "Slice Zone",
+        config: {
+          choices: {
+            [SLICE_TO_DELETE_ID]: {
+              type: "SharedSlice",
+            },
+            "slice-2": {
+              type: "SharedSlice",
+            },
+          },
+        },
+      },
+    },
+  },
+};
+const CustomTypeModelWithoutSlice = {
+  id: "custom-type-with-slice",
+  label: "Custom Type",
+  repeatable: false,
+  status: false,
+  json: {
+    Main: {
+      slices: {
+        type: "Slices",
+        fieldset: "Slice Zone",
+        config: {
+          choices: {
+            "slice-2": {
+              type: "SharedSlice",
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 describe("Delete slice files", () => {
   const mockRequest = {
@@ -129,6 +182,8 @@ describe("Delete slice files", () => {
       [`/test/.slicemachine/assets/${SLICE_TO_DELETE_LIBRARY}/Slice2/mocks.json`]:
         JSON.stringify(otherSliceMocks),
       "/test/.slicemachine/mock-config.json": JSON.stringify(MOCK_CONFIG),
+      "/test/customtypes/custom-type-with-slice/index.json":
+        JSON.stringify(CustomTypeModel),
     });
 
     expect(readSliceFiles()).toStrictEqual([
@@ -143,6 +198,7 @@ describe("Delete slice files", () => {
         Slice2: { name: "bar" },
       },
     });
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
 
     const result = await deleteSlice(mockRequest);
 
@@ -154,6 +210,7 @@ describe("Delete slice files", () => {
         Slice2: { name: "bar" },
       },
     });
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModelWithoutSlice);
     expect(result).toStrictEqual({});
   });
 
@@ -163,11 +220,14 @@ describe("Delete slice files", () => {
       [`/test/.slicemachine/assets/${SLICE_TO_DELETE_LIBRARY}/${SLICE_TO_DELETE_NAME}/mocks.json`]:
         JSON.stringify(SLICE_TO_DELETE_MOCKS),
       "/test/.slicemachine/mock-config.json": JSON.stringify(MOCK_CONFIG),
+      "/test/customtypes/custom-type-with-slice/index.json":
+        JSON.stringify(CustomTypeModel),
     });
 
     expect(readSliceFiles()).toStrictEqual(["test.json"]);
     expect(readAssetsFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
     expect(readMockConfig()).toStrictEqual(MOCK_CONFIG);
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
 
     const result = await deleteSlice(mockRequest);
 
@@ -178,6 +238,7 @@ describe("Delete slice files", () => {
     expect(console.error).toHaveBeenCalledWith(
       `[slice/delete] When deleting slice: ${SLICE_TO_DELETE_ID}, the slice: ${SLICE_TO_DELETE_ID} was not found.`
     );
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
     expect(result).toStrictEqual({
       err: Error(
         `When deleting slice: ${SLICE_TO_DELETE_ID}, the slice: ${SLICE_TO_DELETE_ID} was not found.`
@@ -194,11 +255,14 @@ describe("Delete slice files", () => {
         JSON.stringify(SLICE_TO_DELETE_MOCK),
       [`/test/.slicemachine/assets/${SLICE_TO_DELETE_LIBRARY}/test.json`]: "",
       "/test/.slicemachine/mock-config.json": JSON.stringify(MOCK_CONFIG),
+      "/test/customtypes/custom-type-with-slice/index.json":
+        JSON.stringify(CustomTypeModel),
     });
 
     expect(readSliceFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
     expect(readAssetsFiles()).toStrictEqual(["test.json"]);
     expect(readMockConfig()).toStrictEqual(MOCK_CONFIG);
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
 
     const result = await deleteSlice(mockRequest);
 
@@ -214,6 +278,7 @@ describe("Delete slice files", () => {
     expect(console.error).toHaveBeenCalledWith(
       `[slice/delete] Could not delete your slice assets files. Check our troubleshooting guide here: https://prismic.io/docs/help-center`
     );
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModelWithoutSlice);
     expect(result).toStrictEqual({
       err: {},
       reason:
@@ -230,17 +295,21 @@ describe("Delete slice files", () => {
       [`/test/.slicemachine/assets/${SLICE_TO_DELETE_LIBRARY}/${SLICE_TO_DELETE_NAME}/mocks.json`]:
         JSON.stringify(SLICE_TO_DELETE_MOCKS),
       "/test/.slicemachine/mock-config.json": JSON.stringify({}),
+      "/test/customtypes/custom-type-with-slice/index.json":
+        JSON.stringify(CustomTypeModel),
     });
 
     expect(readSliceFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
     expect(readAssetsFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
     expect(readMockConfig()).toStrictEqual({});
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
 
     const result = await deleteSlice(mockRequest);
 
     expect(readSliceFiles()).toStrictEqual([]);
     expect(readAssetsFiles()).toStrictEqual([]);
     expect(readMockConfig()).toStrictEqual({});
+    expect(readCustomTypeMock()).toStrictEqual(CustomTypeModelWithoutSlice);
 
     expect(console.error).toHaveBeenCalledWith(
       `[slice/delete] Could not delete your slice from the mock-config.json in /test/.slicemachine/mock-config.json. Check our troubleshooting guide here: https://prismic.io/docs/help-center`
