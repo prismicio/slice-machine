@@ -18,6 +18,7 @@ import { ErrorBanner } from "./ErrorBanner";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
@@ -74,7 +75,10 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
               </Box>
               <Box>
                 {unSyncedSlices.some(
-                  (slice) => countMissingScreenshots(slice) > 0
+                  (slice) =>
+                    countMissingScreenshots(slice) > 0 &&
+                    modelsStatuses.slices[slice.model.id] !==
+                      ModelStatus.Deleted
                 ) && (
                   <Text
                     sx={{
@@ -124,7 +128,10 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
               return SharedSlice.render({
                 showActions: true,
                 slice: slice,
-                wrapperType: WrapperType.clickable,
+                wrapperType:
+                  modelsStatuses.slices[slice.model.id] !== ModelStatus.Deleted
+                    ? WrapperType.clickable
+                    : WrapperType.nonClickable,
                 StatusOrCustom: {
                   status: modelsStatuses.slices[slice.model.id],
                   authStatus,

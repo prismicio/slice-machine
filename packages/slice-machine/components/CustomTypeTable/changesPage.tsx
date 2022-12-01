@@ -90,6 +90,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
               authStatus={authStatus}
               isOnline={isOnline}
               modelsStatuses={modelsStatuses}
+              key={customType.remote.id}
             />
           )
         )}

@@ -9,9 +9,11 @@ const MemoedImage = memo<{ src: string | undefined }>(({ src }) => (
 interface ScreenshotPreviewProps {
   src?: string;
   sx: { height: string | number } & ThemeUIStyleObject;
+  deleted?: boolean;
 }
 
 export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
+  deleted = false,
   src,
   sx,
 }) => {
@@ -30,7 +32,7 @@ export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
         ...sx,
       }}
     >
-      {src ? (
+      {deleted ? null : src ? (
         <MemoedImage src={src} />
       ) : (
         <Text

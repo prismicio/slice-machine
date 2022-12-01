@@ -410,12 +410,16 @@ const AppTheme = (): Theme =>
         pr: 2,
         py: "5px",
         cursor: "pointer",
-        "&:hover": {
+        "&:hover:enabled": {
           background: "#F4F2F4",
         },
-        "&:active": {
+        "&:active:enabled": {
           background: "#F4F2F4",
           boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+        },
+        "&:disabled": {
+          cursor: "not-allowed",
+          opacity: 0.5,
         },
       },
       darkSmall: {
