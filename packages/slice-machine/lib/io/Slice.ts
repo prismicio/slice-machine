@@ -40,12 +40,9 @@ export function removeSliceFromCustomTypes(sliceId: string, cwd: string) {
   });
 }
 
-export function resetLibrary(libPath?: string) {
+export function resetLibraryIndex(libPath?: string) {
   if (libPath) {
-    const files = Files.readDirectory(libPath);
-    files.forEach((file) => {
-      Files.hasWritePermissions(path.join(libPath, file));
-      Files.remove(path.join(libPath, file));
-    });
+    Files.hasWritePermissions(path.join(libPath, "index.js"));
+    Files.remove(path.join(libPath, "index.js"));
   }
 }

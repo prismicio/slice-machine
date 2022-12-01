@@ -13,7 +13,7 @@ import { MocksConfig } from "../../../../lib/models/paths";
 import { DeleteSliceResponse } from "../../../../lib/models/common/Slice";
 import {
   removeSliceFromCustomTypes,
-  resetLibrary,
+  resetLibraryIndex,
 } from "../../../../lib/io/Slice";
 
 interface DeleteSliceBody {
@@ -149,18 +149,8 @@ export async function deleteSlice(req: {
 
   const updateLibraries = async () => {
     try {
+      resetLibraryIndex(desiredLibrary?.path);
       await onSaveSlice(env);
-      const libraries = Libraries.libraries(
-        env.cwd,
-        env.manifest.libraries ?? []
-      );
-      const isLastSliceInLib =
-        libraries.find((library) => library.name === libName)?.components
-          .length === 0;
-      if (isLastSliceInLib) {
-        const path = desiredLibrary?.path;
-        resetLibrary(path);
-      }
     } catch (err) {
       console.error(
         `[slice/delete] Could not update the slice library's index.js file. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`

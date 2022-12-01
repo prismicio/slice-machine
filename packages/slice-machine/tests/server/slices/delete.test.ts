@@ -255,16 +255,18 @@ describe("Delete slice files", () => {
       "/test/.slicemachine/mock-config.json": JSON.stringify(MOCK_CONFIG),
       "/test/customtypes/custom-type-with-slice/index.json":
         JSON.stringify(CustomTypeModel),
+      [`/test/${SLICE_TO_DELETE_LIBRARY}/index.js`]:
+        JSON.stringify(MOCK_INDEX_FILE),
     });
 
-    expect(readSliceFiles()).toStrictEqual(["test.json"]);
+    expect(readSliceFiles()).toStrictEqual(["index.js", "test.json"]);
     expect(readAssetsFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
     expect(readMockConfig()).toStrictEqual(MOCK_CONFIG);
     expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
 
     const result = await deleteSlice(mockRequest);
 
-    expect(readSliceFiles()).toStrictEqual(["test.json"]);
+    expect(readSliceFiles()).toStrictEqual(["index.js", "test.json"]);
     expect(readAssetsFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
     expect(readMockConfig()).toStrictEqual(MOCK_CONFIG);
 
@@ -290,9 +292,11 @@ describe("Delete slice files", () => {
       "/test/.slicemachine/mock-config.json": JSON.stringify(MOCK_CONFIG),
       "/test/customtypes/custom-type-with-slice/index.json":
         JSON.stringify(CustomTypeModel),
+      [`/test/${SLICE_TO_DELETE_LIBRARY}/index.js`]:
+        JSON.stringify(MOCK_INDEX_FILE),
     });
 
-    expect(readSliceFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
+    expect(readSliceFiles()).toStrictEqual([SLICE_TO_DELETE_NAME, "index.js"]);
     expect(readAssetsFiles()).toStrictEqual(["test.json"]);
     expect(readMockConfig()).toStrictEqual(MOCK_CONFIG);
     expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
@@ -330,9 +334,11 @@ describe("Delete slice files", () => {
       "/test/.slicemachine/mock-config.json": JSON.stringify({}),
       "/test/customtypes/custom-type-with-slice/index.json":
         JSON.stringify(CustomTypeModel),
+      [`/test/${SLICE_TO_DELETE_LIBRARY}/index.js`]:
+        JSON.stringify(MOCK_INDEX_FILE),
     });
 
-    expect(readSliceFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
+    expect(readSliceFiles()).toStrictEqual([SLICE_TO_DELETE_NAME, "index.js"]);
     expect(readAssetsFiles()).toStrictEqual([SLICE_TO_DELETE_NAME]);
     expect(readMockConfig()).toStrictEqual({});
     expect(readCustomTypeMock()).toStrictEqual(CustomTypeModel);
