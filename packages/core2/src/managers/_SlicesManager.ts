@@ -361,40 +361,6 @@ export class SlicesManager extends BaseManager {
 		};
 	}
 
-	// TODO: Remove this method and replace all uses with
-	// `captureSliceScreenshot` + `updateSliceScreenshot`. To make that
-	// process work seamlessly, the RPC server needs to return a Blob,
-	// maybe by sending FormData rather than JSON and manipulating on the
-	// client.
-	async _tempCaptureAndUpdateSliceScreenshot(
-		args: Omit<SliceMachineManagerUpdateSliceScreenshotArgs, "data"> &
-			Pick<SliceMachineManagerCaptureSliceScreenshotArgs, "viewport">,
-	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		const { data: screenshot } = await this.captureSliceScreenshot({
-			libraryID: args.libraryID,
-			sliceID: args.sliceID,
-			variationID: args.variationID,
-		});
-
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"slice:asset:update",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				asset: {
-					id: `screenshot-${args.variationID}`,
-					data: screenshot,
-				},
-			},
-		);
-
-		return {
-			errors: hookResult.errors,
-		};
-	}
-
 	async updateSliceScreenshot(
 		args: SliceMachineManagerUpdateSliceScreenshotArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {

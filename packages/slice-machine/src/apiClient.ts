@@ -49,6 +49,21 @@ export const getState = async (): Promise<ServerState> => {
           return {
             ...component,
             model: Slices.toSM(component.model),
+
+            // Replace screnshot Blobs with URLs.
+            screenshots: Object.fromEntries(
+              Object.entries(component.screenshots).map(
+                ([variationID, screenshot]) => {
+                  return [
+                    variationID,
+                    {
+                      ...screenshot,
+                      url: URL.createObjectURL(screenshot.data),
+                    },
+                  ];
+                }
+              )
+            ),
           };
         }),
       };
@@ -161,10 +176,10 @@ export const renameSlice = async (
   });
 };
 
-export const generateSliceScreenshotApiClient = (
+export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
-  return managerClient.slices._tempCaptureAndUpdateSliceScreenshot({
+  const screenshot = await managerClient.slices.captureSliceScreenshot({
     libraryID: params.libraryName,
     sliceID: params.sliceId,
     variationID: params.variationId,
@@ -173,6 +188,16 @@ export const generateSliceScreenshotApiClient = (
       height: params.screenDimensions.height,
     },
   });
+
+  if (screenshot.data) {
+    return await managerClient.slices.updateSliceScreenshot({
+      libraryID: params.libraryName,
+      sliceID: params.sliceId,
+      variationID: params.variationId,
+      data: screenshot.data,
+    });
+  }
+
   // return axios.post("/api/screenshot", params, defaultAxiosConfig);
 };
 

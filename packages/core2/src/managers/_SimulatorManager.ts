@@ -97,16 +97,14 @@ export class SimulatorManager extends BaseManager {
 						return res;
 					}
 
-					const validationErrors = validationMessages.filter(
-						(validationMessage) => {
-							return (
-								validationMessage.type ===
-								SliceSimulatorSetupStepValidationMessageType.Error
-							);
-						},
-					);
+					const isComplete = !validationMessages.some((validationMessage) => {
+						return (
+							validationMessage.type ===
+							SliceSimulatorSetupStepValidationMessageType.Error
+						);
+					});
 
-					res.isComplete = validationErrors.length < 1;
+					res.isComplete = isComplete;
 					res.validationMessages = validationMessages;
 				}
 

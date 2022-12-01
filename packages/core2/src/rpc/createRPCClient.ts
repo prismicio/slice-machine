@@ -1,8 +1,7 @@
-import { deserialize } from "./lib/deserialize";
-import { flattenObject } from "./lib/flattenObject";
-import { serialize } from "./lib/serialize";
+import { clientFormDataToObject } from "./lib/clientFormDataToObject";
+import { objectToClientFormData } from "./lib/objectToClientFormData";
 
-import { ProcedureCallServerReturnType, Procedures, Procedure } from "./types";
+import { Procedures, Procedure } from "./types";
 
 const createArbitrarilyNestedFunction = <T>(
 	handler: (path: string[], args: unknown[]) => unknown,
@@ -19,26 +18,6 @@ const createArbitrarilyNestedFunction = <T>(
 			]);
 		},
 	}) as T;
-};
-
-const objectToFormData = (obj: Record<string, unknown> | undefined | null) => {
-	const formData = new FormData();
-
-	if (obj) {
-		const flattenedArgs = flattenObject(obj);
-
-		for (const key in flattenedArgs) {
-			const arg = flattenedArgs[key as keyof typeof obj];
-
-			if (arg instanceof Blob) {
-				formData.set(key, arg);
-			} else {
-				formData.set(key, serialize(arg));
-			}
-		}
-	}
-
-	return formData;
 };
 
 // `RPCClient` is currently a clone of `TransformProcedures`, but that could
@@ -60,12 +39,11 @@ type TransformProcedure<TProcedure extends Procedure<any>> = (
 	...args: Parameters<TProcedure> extends []
 		? []
 		: [TransformProcedureArgs<Parameters<TProcedure>[0]>]
-) => // eslint-disable-next-line @typescript-eslint/no-explicit-any
-ReturnType<TProcedure> extends Promise<any>
-	? TransformProcedureReturnType<ReturnType<TProcedure>>
-	: TransformProcedureReturnType<Promise<ReturnType<TProcedure>>>;
+) => Promise<TransformProcedureReturnType<Awaited<ReturnType<TProcedure>>>>;
 
-type TransformProcedureArgs<TArgs> = TArgs extends Record<string, unknown>
+type TransformProcedureArgs<TArgs> = TArgs extends
+	| Record<string, unknown>
+	| unknown[]
 	? {
 			[P in keyof TArgs]: TransformProcedureArgs<TArgs[P]>;
 	  }
@@ -80,9 +58,7 @@ type TransformProcedureReturnType<TReturnType> = TReturnType extends
 			[P in keyof TReturnType]: TransformProcedureReturnType<TReturnType[P]>;
 	  }
 	: TReturnType extends Buffer
-	? {
-			url: string;
-	  }
+	? Blob
 	: TReturnType extends Error
 	? {
 			name: string;
@@ -91,8 +67,7 @@ type TransformProcedureReturnType<TReturnType> = TReturnType extends
 	: TReturnType;
 
 export type ResponseLike = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	json(): Promise<any>;
+	formData(): Promise<FormData>;
 };
 export type FetchLike = (
 	input: string,
@@ -111,7 +86,7 @@ export const createRPCClient = <TProcedures extends Procedures>(
 		args.fetch || globalThis.fetch.bind(globalThis);
 
 	return createArbitrarilyNestedFunction(async (path, fnArgs) => {
-		const body = objectToFormData({
+		const body = objectToClientFormData({
 			procedurePath: path,
 			procedureArgs: fnArgs[0],
 		});
@@ -121,13 +96,19 @@ export const createRPCClient = <TProcedures extends Procedures>(
 			body,
 		});
 
-		const json = (await res.json()) as ProcedureCallServerReturnType;
+		const formData = await res.formData();
+		const resObject = clientFormDataToObject(formData);
 
-		if ("data" in json) {
-			return deserialize(json.data);
+		if ("data" in resObject) {
+			return resObject.data;
 		} else {
-			throw new Error(json.error, {
-				cause: json.cause,
+			const errorMessage =
+				typeof resObject.error === "string"
+					? resObject.error
+					: "Procedure call failed on the server and did not provide an error message.";
+
+			throw new Error(errorMessage, {
+				cause: resObject.cause,
 			});
 		}
 	});

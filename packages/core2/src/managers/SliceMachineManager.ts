@@ -1,5 +1,6 @@
 import { CustomTypes } from "@prismicio/types-internal";
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+import * as crypto from "node:crypto";
 
 import { PackageChangelog, PackageManager, PackageVersion } from "../types";
 import {
@@ -16,6 +17,17 @@ import { SnippetsManager } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
 import { VersionsManger } from "./_VersionsManager";
 import { SimulatorManager } from "./_SimulatorManager";
+
+/**
+ * Creates a content digest for a given input.
+ *
+ * @param input - The value used to create a digest digest.
+ *
+ * @returns The content digest of `input`.
+ */
+const toContentDigest = (input: crypto.BinaryLike): string => {
+	return crypto.createHash("sha1").update(input).digest("base64");
+};
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -47,6 +59,7 @@ type SliceMachineManagerGetStateReturnType = {
 				{
 					path: string;
 					hash: string;
+					data: Buffer;
 				}
 			>;
 			mock?: CustomTypes.Widgets.Slices.SharedSlice[];
@@ -179,6 +192,23 @@ export class SliceMachineManager {
 						sliceID,
 					});
 
+					const screenshots: typeof components[number]["screenshots"] = {};
+					for (const variation of model.variations || []) {
+						const screenshot = await this.slices.readSliceScreenshot({
+							libraryID,
+							sliceID,
+							variationID: variation.id,
+						});
+
+						if (screenshot.data) {
+							screenshots[variation.id] = {
+								path: "__stub__",
+								hash: toContentDigest(screenshot.data),
+								data: screenshot.data,
+							};
+						}
+					}
+
 					if (model) {
 						components.push({
 							from: libraryID,
@@ -187,7 +217,7 @@ export class SliceMachineManager {
 							fileName: "fileName",
 							extension: "extension",
 							model,
-							screenshots: {},
+							screenshots,
 							mock: mocks,
 							mockConfig: mocksConfig || {},
 						});
