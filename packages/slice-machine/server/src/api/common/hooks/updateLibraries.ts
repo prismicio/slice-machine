@@ -59,7 +59,7 @@ const createIndexFileForFrameWork = (
   return createIndexFile(lib);
 };
 
-export default async function onSaveSlice(
+export default async function reGenerateLibrariesState(
   env: BackendEnvironment
 ): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/await-thenable
@@ -72,10 +72,8 @@ export default async function onSaveSlice(
   for (const lib of localLibs) {
     const file = createIndexFileForFrameWork(env, lib);
 
-    const pathToLib = path.join(env.cwd, lib.path);
-
     const indexFilePath =
-      findIndexFile(pathToLib) || path.join(pathToLib, "index.js");
+      findIndexFile(lib.path) || path.join(lib.path, "index.js");
     Files.write(indexFilePath, file);
   }
 
