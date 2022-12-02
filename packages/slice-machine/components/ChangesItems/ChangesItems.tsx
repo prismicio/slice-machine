@@ -43,7 +43,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
   return (
-    <>
+    <Box sx={{ pb: 4 }}>
       {unSyncedCustomTypes.length > 0 && (
         <>
           <ChangesSectionHeader>
@@ -158,7 +158,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
           />
         </>
       )}
-    </>
+    </Box>
   );
 };
 
