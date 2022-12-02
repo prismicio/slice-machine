@@ -32,7 +32,6 @@
     "@babel/core": "^7.15.8",
     "@babel/runtime": "^7.18.9",
     "@types/cookie": "^0.4.1",
-    "@types/jest": "^27.0.2",
     "@types/node": "^16.10.5",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
