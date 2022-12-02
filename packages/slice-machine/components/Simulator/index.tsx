@@ -32,6 +32,7 @@ import { ThemeProvider } from "@prismicio/editor-ui";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
 
 import useThrottle from "@src/hooks/useThrottle";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 export default function Simulator() {
   const { component } = useSelector((store: SliceMachineStoreType) => ({
@@ -41,6 +42,8 @@ export default function Simulator() {
       Router.query.sliceName as string
     ),
   }));
+
+  const { saveSliceMock } = useSliceMachineActions();
 
   const variation = component?.model.variations.find(
     (variation) => variation.id === (Router.query.variation as string)
@@ -62,8 +65,6 @@ export default function Simulator() {
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
-
-  console.log({ component, variation, Router });
 
   if (!component || !variation) {
     // this is a bug
@@ -122,7 +123,15 @@ export default function Simulator() {
         variation={variation}
         isDisplayEditor={isDisplayEditor}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
-        onSaveMock={() => console.log("todo")}
+        onSaveMock={() =>
+          saveSliceMock({
+            sliceName: component.model.name,
+            libraryName: component.from,
+            mock: (component.mock || [])
+              .filter((mock) => mock.variation !== initialContent.variation)
+              .concat(editorContent),
+          })
+        }
       />
       <Box
         sx={{

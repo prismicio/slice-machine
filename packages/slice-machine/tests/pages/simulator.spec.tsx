@@ -3,13 +3,7 @@
  **/
 
 import "@testing-library/jest-dom";
-import {
-  render,
-  fireEvent,
-  act,
-  // screen,
-  waitFor,
-} from "../test-utils";
+import { render, fireEvent, act, waitFor } from "../test-utils";
 import { setupServer } from "msw/node";
 import { rest, ResponseComposition, RestContext, RestRequest } from "msw";
 import { SliceSimulatorOpen } from "@src/tracking/types";
@@ -24,11 +18,9 @@ jest.mock("next/dist/client/router", () => require("next-router-mock"));
 mockRouter.useParser(
   createDynamicRouteParser(["/[lib]/[sliceName]/[variation]/simulator"])
 );
-// maybe mock simulator client
+// maybe mock simulator client ?
 
 const server = setupServer();
-// tracker
-// simulatorUrl
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
@@ -197,6 +189,8 @@ describe("simulator", () => {
       }
     );
 
+    server.use(rest.post("http://localhost/api/slices/mock", saveMockSpy));
+
     const App = render(<Simulator />, {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
     });
@@ -211,15 +205,21 @@ describe("simulator", () => {
       },
     });
 
+    // App.debug()
+
+    const button = App.container.querySelector('[data-cy="save-mock"]');
+    expect(button).not.toBeNull();
     await act(async () => {
-      fireEvent.click(App.getByText("Save Mock"));
+      fireEvent.click(button as Element);
     });
 
-    const payloadSent = await saveMockSpy.mock.lastCall?.[0].json();
+    await new Promise(process.nextTick);
+
+    const payloadSent = await saveMockSpy.mock.lastCall?.[0].body;
 
     expect(payloadSent).toEqual({
       sliceName: "MySlice",
-      library: "slices",
+      libraryName: "slices",
       mock: state.slices.libraries[0].components[0].mock,
     });
   });

@@ -149,11 +149,13 @@ export const checkSimulatorSetup = (): Promise<
   AxiosResponse<SimulatorCheckResponse>
 > => axios.get(`/api/simulator/check`);
 
-export const saveSliceMock = (payload: {
+export type SaveSliceMockRequest = {
   sliceName: string;
   libraryName: string;
   mock: ComponentMocks;
-}) =>
+};
+
+export const saveSliceMock = (payload: SaveSliceMockRequest) =>
   axios
     .post<ComponentMocks>("/api/slices/mock", payload)
     .then((res) => res.data);

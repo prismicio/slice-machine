@@ -19,7 +19,11 @@ import {
   CallEffect,
   SagaReturnType,
 } from "redux-saga/effects";
-import { checkSimulatorSetup, saveSliceMock } from "@src/apiClient";
+import {
+  checkSimulatorSetup,
+  saveSliceMock,
+  SaveSliceMockRequest,
+} from "@src/apiClient";
 import {
   getCurrentVersion,
   getFramework,
@@ -93,15 +97,7 @@ export const saveSliceMockCreator = createAsyncAction(
   "SIMULATOR/SAVE_MOCK.REQUEST",
   "SIMULATOR/SAVE_MOCK.SUCCESS",
   "SIMULATOR/SAVE_MOCK.FAILURE"
-)<
-  {
-    sliceName: string;
-    libraryName: string;
-    mock: ComponentMocks;
-  },
-  ComponentMocks,
-  string
->();
+)<SaveSliceMockRequest, ComponentMocks, string>();
 
 type SimulatorActions = ActionType<
   | typeof openSetupDrawerCreator
@@ -360,18 +356,20 @@ export function* saveSliceMockSaga({
     yield put(
       openToasterCreator({
         type: ToasterType.SUCCESS,
-        message: "🎉", // TODO: get design team involved
+        message: "Mock content updated",
       })
     );
     yield put(saveSliceMockCreator.success(data));
   } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Error saving content";
     yield put(
       openToasterCreator({
         type: ToasterType.ERROR,
-        message: "💩", // TODO: get design team involved
+        message: message,
       })
     );
-    yield put(saveSliceMockCreator.failure((error as Error).message));
+    yield put(saveSliceMockCreator.failure(message));
   }
 }
 

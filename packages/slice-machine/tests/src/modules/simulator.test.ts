@@ -224,7 +224,7 @@ describe("[Simulator module]", () => {
         .put(
           openToasterCreator({
             type: ToasterType.SUCCESS,
-            message: "🎉",
+            message: "Mock content updated",
           })
         )
         .put(saveSliceMockCreator.success(payload.payload.mock))
@@ -250,16 +250,16 @@ describe("[Simulator module]", () => {
         mock: [],
       });
 
+      const errorMessage = "Request failed with status code 400";
+
       await expectSaga(saveSliceMockSaga, payload)
         .put(
           openToasterCreator({
             type: ToasterType.ERROR,
-            message: "💩",
+            message: errorMessage,
           })
         )
-        .put(
-          saveSliceMockCreator.failure("Request failed with status code 400")
-        )
+        .put(saveSliceMockCreator.failure(errorMessage))
         .run();
 
       await new Promise(process.nextTick);

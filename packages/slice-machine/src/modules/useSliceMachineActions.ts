@@ -81,6 +81,8 @@ import { SyncError } from "@src/models/SyncError";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
+import { saveSliceMockCreator } from "./simulator";
+import { SaveSliceMockRequest } from "@src/apiClient";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -488,6 +490,10 @@ const useSliceMachineActions = () => {
     type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
   ) => dispatch(openToasterCreator({ message, type }));
 
+  // Simulator
+  const saveSliceMock = (payload: SaveSliceMockRequest) =>
+    dispatch(saveSliceMockCreator.request(payload));
+
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {
     dispatch(
@@ -572,6 +578,7 @@ const useSliceMachineActions = () => {
     closeRenameSliceModal,
     openToaster,
     pushChanges,
+    saveSliceMock,
   };
 };
 

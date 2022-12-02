@@ -67,7 +67,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
 
-  console.log({ client, ref, simulatorUrl });
   useEffect((): void => {
     if (!simulatorUrl) {
       connectToSimulatorFailure();

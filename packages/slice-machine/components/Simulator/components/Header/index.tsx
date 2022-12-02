@@ -87,7 +87,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
         <Button
           data-cy="save-mock"
           onClick={onSaveMock}
-          label="Save mock"
+          label="Save mock content"
           disabled={savingMock}
         />
       </Flex>
