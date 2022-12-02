@@ -26,6 +26,8 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import axios, { AxiosError } from "axios";
+import { deleteSliceCreator } from "@src/modules/slices";
+import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -187,6 +189,89 @@ describe("[Available Custom types module]", () => {
       delete expectState[customTypeIdToDelete];
 
       expect(result).toEqual(expectState);
+    });
+
+    it("should update the custom types state given SLICES/DELETE.SUCCESS action", () => {
+      const sliceToDeleteId = "slice_id";
+      const mockCustomTypeToUpdate: CustomTypeSM = {
+        id: "id",
+        label: "lama",
+        repeatable: false,
+        status: true,
+        tabs: [
+          {
+            key: "Main",
+            value: [],
+            sliceZone: {
+              key: "slices",
+              value: [
+                {
+                  key: sliceToDeleteId,
+                  value: {
+                    type: SlicesTypes.SharedSlice,
+                  },
+                },
+                {
+                  key: "slice_2",
+                  value: {
+                    type: SlicesTypes.SharedSlice,
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      const originalState = { ...dummyCustomTypesState };
+
+      originalState["id"] = {
+        local: mockCustomTypeToUpdate,
+      };
+      const action = deleteSliceCreator.success({
+        sliceId: sliceToDeleteId,
+        sliceName: "slice_name",
+        libName: "lib",
+      });
+
+      const result = availableCustomTypesReducer(
+        originalState,
+        action
+      ) as AvailableCustomTypesStoreType;
+
+      expect(
+        Object.values(result).flatMap((localAndRemote) => {
+          return Object.values(localAndRemote);
+        })
+      ).not.toContain(undefined);
+
+      expect(result).toEqual({
+        id: {
+          local: {
+            id: "id",
+            label: "lama",
+            repeatable: false,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+                sliceZone: {
+                  key: "slices",
+                  value: [
+                    {
+                      key: "slice_2",
+                      value: {
+                        type: SlicesTypes.SharedSlice,
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      });
     });
   });
 
