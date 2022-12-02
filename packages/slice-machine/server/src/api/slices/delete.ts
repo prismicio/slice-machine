@@ -8,7 +8,7 @@ import * as IO from "../../../../lib/io";
 import { remove as removeSliceFromMockConfig } from "../../../../lib/mock/misc/fs";
 import path from "path";
 
-import reGenerateLibrariesState from "../common/hooks/updateLibraries";
+import generateLibrariesIndex from "../common/hooks/updateLibraries";
 import { MocksConfig } from "../../../../lib/models/paths";
 import { DeleteSliceResponse } from "../../../../lib/models/common/Slice";
 import { removeSliceFromCustomTypes } from "../../../../lib/io/Slice";
@@ -146,7 +146,7 @@ export async function deleteSlice(req: {
 
   const updateLibraries = async () => {
     try {
-      await reGenerateLibrariesState(env);
+      await generateLibrariesIndex(env, libName);
     } catch (err) {
       console.error(
         `[slice/delete] Could not update the slice library's index.js file. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`

@@ -1,6 +1,6 @@
 import MockedBackendEnv from "../../__mocks__/backendEnvironment";
 import { MockLibraryInfo } from "../../__mocks__/libraryState";
-import reGenerateLibrariesState from "../../../server/src/api/common/hooks/updateLibraries";
+import generateLibraryIndex from "../../../server/src/api/common/hooks/updateLibraries";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { Models } from "@slicemachine/core";
 import { vol } from "memfs";
@@ -54,7 +54,7 @@ describe("updateLibraries", () => {
       framework: Models.Frameworks.next,
     };
 
-    await reGenerateLibrariesState(env);
+    await generateLibraryIndex(env, "@/slices");
 
     const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedIndexFile);
@@ -66,7 +66,7 @@ describe("updateLibraries", () => {
       framework: Models.Frameworks.svelte,
     };
 
-    await reGenerateLibrariesState(env);
+    await generateLibraryIndex(env, "@/slices");
 
     const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedSvelteIndexFile);
