@@ -70,16 +70,13 @@ export default async function onSaveSlice(
   const localLibs = libraries.filter((e) => e.isLocal);
 
   for (const lib of localLibs) {
-    if (lib.components.length) {
-      const { pathToSlice: relativePathToLib } = lib.components[0];
-      const file = createIndexFileForFrameWork(env, lib);
+    const file = createIndexFileForFrameWork(env, lib);
 
-      const pathToLib = path.join(env.cwd, relativePathToLib);
+    const pathToLib = path.join(env.cwd, lib.path);
 
-      const indexFilePath =
-        findIndexFile(pathToLib) || path.join(pathToLib, "index.js");
-      Files.write(indexFilePath, file);
-    }
+    const indexFilePath =
+      findIndexFile(pathToLib) || path.join(pathToLib, "index.js");
+    Files.write(indexFilePath, file);
   }
 
   LibrariesState.generateState(env, libraries);

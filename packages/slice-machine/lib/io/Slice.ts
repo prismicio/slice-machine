@@ -39,10 +39,3 @@ export function removeSliceFromCustomTypes(sliceId: string, cwd: string) {
     writeCustomType(modelPath, ct);
   });
 }
-
-export function resetLibraryIndex(libPath?: string) {
-  if (libPath) {
-    Files.hasWritePermissions(path.join(libPath, "index.js"));
-    Files.remove(path.join(libPath, "index.js"));
-  }
-}

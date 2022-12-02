@@ -11,10 +11,7 @@ import path from "path";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import { MocksConfig } from "../../../../lib/models/paths";
 import { DeleteSliceResponse } from "../../../../lib/models/common/Slice";
-import {
-  removeSliceFromCustomTypes,
-  resetLibraryIndex,
-} from "../../../../lib/io/Slice";
+import { removeSliceFromCustomTypes } from "../../../../lib/io/Slice";
 
 interface DeleteSliceBody {
   sliceId: string;
@@ -149,7 +146,6 @@ export async function deleteSlice(req: {
 
   const updateLibraries = async () => {
     try {
-      resetLibraryIndex(desiredLibrary?.path);
       await onSaveSlice(env);
     } catch (err) {
       console.error(
