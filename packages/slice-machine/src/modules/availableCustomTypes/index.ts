@@ -195,17 +195,18 @@ export const availableCustomTypesReducer: Reducer<
       const sliceId = action.payload.sliceId;
       const newCTs = Object.entries(state)
         .map<[string, FrontEndCustomType]>(([ctName, customType]) => {
-          return [
-            ctName,
-            {
-              local: filterSliceFromCustomType(customType.local, sliceId),
-              remote: customType.remote
-                ? filterSliceFromCustomType(customType.remote, sliceId)
-                : undefined,
-            },
-          ];
+          const newCT = customType.remote
+            ? {
+                local: filterSliceFromCustomType(customType.local, sliceId),
+                remote: filterSliceFromCustomType(customType.remote, sliceId),
+              }
+            : {
+                local: filterSliceFromCustomType(customType.local, sliceId),
+              };
+
+          return [ctName, newCT];
         })
-        .reduce((acc, [name, ct]) => {
+        .reduce<AvailableCustomTypesStoreType>((acc, [name, ct]) => {
           return {
             ...acc,
             [name]: ct,
