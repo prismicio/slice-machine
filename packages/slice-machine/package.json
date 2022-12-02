@@ -141,7 +141,6 @@
     "next-videos": "^1.4.0",
     "nock": "^13.1.4",
     "nodemon": "^2.0.15",
-    "normalizr": "^3.6.1",
     "rc-drawer": "^4.1.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-color": "^2.19.3",
