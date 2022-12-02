@@ -7,4 +7,5 @@ module.exports = {
     // overridden by start script
     CWD: path.resolve("tests/project"),
   },
+  swcMinify: true,
 };
