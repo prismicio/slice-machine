@@ -5,6 +5,7 @@ export type SimulatorStoreType = {
     openedStep: number;
   };
   isWaitingForIframeCheck: boolean;
+  savingMock: boolean;
 };
 
 export type SetupStatus = {

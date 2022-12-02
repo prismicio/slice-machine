@@ -1,4 +1,10 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import "@testing-library/jest-dom";
+import { setupServer } from "msw/node";
+import { rest, RestContext, RestRequest, ResponseComposition } from "msw";
 
 import {
   initialState,
@@ -9,13 +15,17 @@ import {
   connectToSimulatorIframeCreator,
   checkSimulatorSetupCreator,
   failCheckSetupSaga,
+  saveSliceMockSaga,
+  saveSliceMockCreator,
 } from "@src/modules/simulator";
 import { SimulatorStoreType, SetupStatus } from "@src/modules/simulator/types";
-import { testSaga } from "redux-saga-test-plan";
+import { testSaga, expectSaga } from "redux-saga-test-plan";
 import {
   getFramework,
   selectIsSimulatorAvailableForFramework,
 } from "@src/modules/environment";
+import { SaveMockBody } from "../../../server/src/api/slices/save-mock";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const dummySimulatorState: SimulatorStoreType = initialState;
 
@@ -179,6 +189,82 @@ describe("[Simulator module]", () => {
       saga.next("nuxt").select(selectIsSimulatorAvailableForFramework);
       saga.next(true).put(openSetupDrawerCreator({ stepToOpen: 5 }));
       saga.next().isDone();
+    });
+  });
+
+  describe("save mocks saga", () => {
+    const server = setupServer();
+
+    beforeAll(() => server.listen());
+    afterEach(() => server.resetHandlers());
+    afterAll(() => server.close());
+
+    test("success", async () => {
+      const saveMockSpy = jest.fn(
+        (req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+          return req.json().then((json) => {
+            const result = SaveMockBody.decode(json);
+            if (result._tag === "Right") {
+              return res(ctx.json(json.mock));
+            }
+            return res(ctx.status(400));
+          });
+        }
+      );
+
+      server.use(rest.post("/api/slices/mock", saveMockSpy));
+
+      const payload = saveSliceMockCreator.request({
+        sliceName: "MySlice",
+        libraryName: "slices",
+        mock: [],
+      });
+
+      await expectSaga(saveSliceMockSaga, payload)
+        .put(
+          openToasterCreator({
+            type: ToasterType.SUCCESS,
+            message: "🎉",
+          })
+        )
+        .put(saveSliceMockCreator.success(payload.payload.mock))
+        .run();
+
+      await new Promise(process.nextTick);
+
+      expect(saveMockSpy).toHaveBeenCalled();
+    });
+
+    test("failure", async () => {
+      const saveMockSpy = jest.fn(
+        (_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+          return res(ctx.status(400));
+        }
+      );
+
+      server.use(rest.post("/api/slices/mock", saveMockSpy));
+
+      const payload = saveSliceMockCreator.request({
+        sliceName: "MySlice",
+        libraryName: "slices",
+        mock: [],
+      });
+
+      await expectSaga(saveSliceMockSaga, payload)
+        .put(
+          openToasterCreator({
+            type: ToasterType.ERROR,
+            message: "💩",
+          })
+        )
+        .put(
+          saveSliceMockCreator.failure("Request failed with status code 400")
+        )
+        .run();
+
+      await new Promise(process.nextTick);
+
+      expect(saveMockSpy).toHaveBeenCalled();
     });
   });
 });

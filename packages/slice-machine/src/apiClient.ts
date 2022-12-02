@@ -14,6 +14,7 @@ import {
   ScreenshotResponse,
 } from "../lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentMocks } from "@slicemachine/core/build/models";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -147,3 +148,12 @@ export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
 export const checkSimulatorSetup = (): Promise<
   AxiosResponse<SimulatorCheckResponse>
 > => axios.get(`/api/simulator/check`);
+
+export const saveSliceMock = (payload: {
+  sliceName: string;
+  libraryName: string;
+  mock: ComponentMocks;
+}) =>
+  axios
+    .post<ComponentMocks>("/api/slices/mock", payload)
+    .then((res) => res.data);
