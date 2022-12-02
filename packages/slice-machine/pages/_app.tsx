@@ -66,7 +66,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   }, []);
 
   useEffect(() => {
-    if (!serverState) {
+    if (!serverState || smStore) {
       return;
     }
 
@@ -92,7 +92,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     Tracker.get().initialize(tracking);
 
     setSMStore({ store, persistor });
-  }, [serverState]);
+  }, [serverState, smStore]);
 
   return (
     <>
