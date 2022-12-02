@@ -7,8 +7,11 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { Button } from "@components/Button";
 import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
+import { useSelector } from "react-redux";
+import { selectSavingMock } from "@src/modules/simulator";
 
 import * as Links from "@lib/builders/SliceBuilder/links";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 const redirect = (
   model: ComponentUI,
@@ -43,6 +46,9 @@ const Header: React.FunctionComponent<PropTypes> = ({
   toggleIsDisplayEditor,
   onSaveMock,
 }) => {
+  const { savingMock } = useSelector((state: SliceMachineStoreType) => ({
+    savingMock: selectSavingMock(state),
+  }));
   return (
     <Flex
       sx={{
@@ -78,7 +84,12 @@ const Header: React.FunctionComponent<PropTypes> = ({
             />
           </Flex>
         </Flex>
-        <Button onClick={onSaveMock} label="Save mock" />
+        <Button
+          data-cy="save-mock"
+          onClick={onSaveMock}
+          label="Save mock"
+          disabled={savingMock}
+        />
       </Flex>
     </Flex>
   );
