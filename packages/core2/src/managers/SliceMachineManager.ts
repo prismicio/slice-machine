@@ -2,7 +2,12 @@ import { CustomTypes } from "@prismicio/types-internal";
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 import * as crypto from "node:crypto";
 
-import { PackageChangelog, PackageManager, PackageVersion } from "../types";
+import {
+	PackageChangelog,
+	PackageManager,
+	PackageVersion,
+	SliceMachineConfig,
+} from "../types";
 import {
 	PrismicAuthManager,
 	PrismicUserProfile,
@@ -39,8 +44,8 @@ type SliceMachineManagerGetStateReturnType = {
 		repo: string;
 		changelog: PackageChangelog;
 		packageManager: PackageManager;
-		mockConfig: any;
-		framework: any;
+		mockConfig: unknown;
+		framework: unknown; // TODO: Remove
 		sliceMachineAPIUrl: string;
 	};
 	libraries: {
@@ -138,18 +143,43 @@ export class SliceMachineManager {
 	// potential source of bugs due to data inconsistency. SM UI relies on
 	// it heavily, so removal will require significant effort.
 	async getState(): Promise<SliceMachineManagerGetStateReturnType> {
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const [
+			{ sliceMachineConfig, libraries },
+			{ profile, remoteCustomTypes, remoteSlices },
+			customTypes,
+			currentVersion,
+			allStableVersions,
+		] = await Promise.all([
+			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
+				const libraries = await this._getLibraries(sliceMachineConfig);
 
-		let profile: PrismicUserProfile | undefined;
-		const isLoggedIn = await this.user.checkIsLoggedIn();
-		if (isLoggedIn) {
-			profile = await this.user.getProfile();
-			await this.user.refreshAuthenticationToken();
-		}
+				return { sliceMachineConfig, libraries };
+			}),
+			this._getProfile().then(async (profile) => {
+				if (profile) {
+					const [remoteCustomTypes, remoteSlices] = await Promise.all([
+						this.customTypes.fetchRemoteCustomTypes(),
+						this.slices.fetchRemoteSlices(),
+					]);
 
-		const currentVersion = await this.project.getRunningSliceMachineVersion();
-		const allStableVersions =
-			await this.versions.getAllStableSliceMachineVersions();
+					return {
+						profile,
+						remoteCustomTypes,
+						remoteSlices,
+					};
+				} else {
+					return {
+						profile,
+						remoteCustomTypes: [],
+						remoteSlices: [],
+					};
+				}
+			}),
+			this._getCustomTypes(),
+			this.project.getRunningSliceMachineVersion(),
+			this.versions.getAllStableSliceMachineVersions(),
+		]);
+
 		const latestNonBreakingVersion = ""; // TODO
 		const updateAvailable = false; // TODO
 		const versions = await Promise.all(
@@ -170,105 +200,12 @@ export class SliceMachineManager {
 			}),
 		);
 
-		const libraries: SliceMachineManagerGetStateReturnType["libraries"] = [];
-		for (const libraryID of sliceMachineConfig.libraries || []) {
-			const { sliceIDs } = await this.slices.readSliceLibrary({ libraryID });
-
-			if (sliceIDs) {
-				const components: SliceMachineManagerGetStateReturnType["libraries"][number]["components"] =
-					[];
-
-				for (const sliceID of sliceIDs) {
-					const { model } = await this.slices.readSlice({
-						libraryID,
-						sliceID,
-					});
-					const { mocks } = await this.slices.readSliceMocks({
-						libraryID,
-						sliceID,
-					});
-					const { mocksConfig } = await this.slices.readSliceMocksConfig({
-						libraryID,
-						sliceID,
-					});
-
-					const screenshots: typeof components[number]["screenshots"] = {};
-					for (const variation of model.variations || []) {
-						const screenshot = await this.slices.readSliceScreenshot({
-							libraryID,
-							sliceID,
-							variationID: variation.id,
-						});
-
-						if (screenshot.data) {
-							screenshots[variation.id] = {
-								path: "__stub__",
-								hash: toContentDigest(screenshot.data),
-								data: screenshot.data,
-							};
-						}
-					}
-
-					if (model) {
-						components.push({
-							from: libraryID,
-							href: libraryID.replace(/\//g, "--"),
-							pathToSlice: "pathToSlice",
-							fileName: "fileName",
-							extension: "extension",
-							model,
-							screenshots,
-							mock: mocks,
-							mockConfig: mocksConfig || {},
-						});
-					}
-				}
-
-				libraries.push({
-					name: libraryID,
-					path: libraryID,
-					isLocal: true, // TODO: Do we still support node_modules-based libraries?
-					components,
-					meta: {
-						// TODO: Do we still support node_modules-based libraries?
-						isNodeModule: false,
-						isDownloaded: false,
-						isManual: true,
-					},
-				});
-			}
-		}
-
-		const customTypes: SliceMachineManagerGetStateReturnType["customTypes"] =
-			[];
-		const { ids: customTypeIDs } =
-			await this.customTypes.readCustomTypeLibrary();
-		if (customTypeIDs) {
-			for (const customTypeID of customTypeIDs) {
-				const { model } = await this.customTypes.readCustomType({
-					id: customTypeID,
-				});
-
-				if (model) {
-					customTypes.push(model);
-				}
-			}
-		}
-
-		const remoteCustomTypes: SliceMachineManagerGetStateReturnType["remoteCustomTypes"] =
-			isLoggedIn ? await this.customTypes.fetchRemoteCustomTypes() : [];
-
-		const remoteSlices: SliceMachineManagerGetStateReturnType["remoteSlices"] =
-			isLoggedIn ? await this.slices.fetchRemoteSlices() : [];
-
 		// TODO: SM UI detects if a user is logged out by looking at
 		// `clientError`. Here, we simulate what the old core does by
 		// returning an `ErrorWithStatus`-like object if the user is
 		// not logged in.
 		const clientError: SliceMachineManagerGetStateReturnType["clientError"] =
-			isLoggedIn
-				? undefined
-				: { message: "Could not fetch slices", status: 401 };
+			profile ? undefined : { message: "Could not fetch slices", status: 401 };
 
 		return {
 			env: {
@@ -298,5 +235,125 @@ export class SliceMachineManager {
 			remoteSlices,
 			clientError,
 		};
+	}
+
+	private async _getProfile(): Promise<PrismicUserProfile | undefined> {
+		let profile: PrismicUserProfile | undefined;
+
+		const isLoggedIn = await this.user.checkIsLoggedIn();
+
+		if (isLoggedIn) {
+			profile = await this.user.getProfile();
+			await this.user.refreshAuthenticationToken();
+		}
+
+		return profile;
+	}
+
+	private async _getLibraries(
+		sliceMachineConfig: SliceMachineConfig,
+	): Promise<SliceMachineManagerGetStateReturnType["libraries"]> {
+		const libraries: SliceMachineManagerGetStateReturnType["libraries"] = [];
+
+		if (sliceMachineConfig.libraries) {
+			await Promise.all(
+				sliceMachineConfig.libraries.map(async (libraryID) => {
+					const { sliceIDs } = await this.slices.readSliceLibrary({
+						libraryID,
+					});
+
+					if (sliceIDs) {
+						const components: SliceMachineManagerGetStateReturnType["libraries"][number]["components"] =
+							[];
+
+						await Promise.all(
+							sliceIDs.map(async (sliceID) => {
+								const [{ model }, { mocks }, { mocksConfig }] =
+									await Promise.all([
+										this.slices.readSlice({ libraryID, sliceID }),
+										this.slices.readSliceMocks({ libraryID, sliceID }),
+										this.slices.readSliceMocksConfig({ libraryID, sliceID }),
+									]);
+
+								if (model) {
+									const screenshots: typeof components[number]["screenshots"] =
+										{};
+									await Promise.all(
+										model.variations.map(async (variation) => {
+											const screenshot = await this.slices.readSliceScreenshot({
+												libraryID,
+												sliceID,
+												variationID: variation.id,
+											});
+
+											if (screenshot.data) {
+												screenshots[variation.id] = {
+													path: "__stub__",
+													hash: toContentDigest(screenshot.data),
+													data: screenshot.data,
+												};
+											}
+										}),
+									);
+
+									components.push({
+										from: libraryID,
+										href: libraryID.replace(/\//g, "--"),
+										pathToSlice: "pathToSlice",
+										fileName: "fileName",
+										extension: "extension",
+										model,
+										screenshots,
+										mock: mocks,
+										mockConfig: mocksConfig || {},
+									});
+								}
+							}),
+						);
+
+						libraries.push({
+							name: libraryID,
+							path: libraryID,
+							isLocal: true, // TODO: Do we still support node_modules-based libraries?
+							components,
+							meta: {
+								// TODO: Do we still support node_modules-based libraries?
+								isNodeModule: false,
+								isDownloaded: false,
+								isManual: true,
+							},
+						});
+					}
+				}),
+			);
+		}
+
+		return libraries;
+	}
+
+	private async _getCustomTypes(): Promise<
+		SliceMachineManagerGetStateReturnType["customTypes"]
+	> {
+		const customTypes: SliceMachineManagerGetStateReturnType["customTypes"] =
+			[];
+
+		const { ids: customTypeIDs } =
+			await this.customTypes.readCustomTypeLibrary();
+
+		if (customTypeIDs) {
+			await Promise.all(
+				customTypeIDs.map(async (customTypeID) => {
+					const { model } = await this.customTypes.readCustomType({
+						id: customTypeID,
+					});
+
+					if (model) {
+						customTypes.push(model);
+					}
+				}),
+			);
+		}
+
+		return customTypes;
 	}
 }

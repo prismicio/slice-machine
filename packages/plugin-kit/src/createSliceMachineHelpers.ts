@@ -8,6 +8,12 @@ import { SliceMachineProject } from "./types";
 
 type FormatOptions = {
 	prettier?: prettier.Options;
+	/**
+	 * Determines if a newline is included at the end of the formatted result.
+	 *
+	 * @defaultValue `true`
+	 */
+	includeNewlineAtEnd?: boolean;
 };
 
 /**
@@ -63,6 +69,10 @@ export class SliceMachineHelpers {
 			filepath: filePath,
 			...(options?.prettier ?? {}),
 		});
+
+		if (options?.includeNewlineAtEnd === false) {
+			formatted.replace(/[\r\n]+$/, "");
+		}
 
 		return formatted;
 	};

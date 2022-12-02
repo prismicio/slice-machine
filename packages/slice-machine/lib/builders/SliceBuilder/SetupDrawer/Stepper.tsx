@@ -1,3 +1,4 @@
+import { Box, Flex, Text } from "theme-ui";
 import { getStepperConfigurationByFramework } from "./steps";
 
 import React from "react";
@@ -20,6 +21,9 @@ import {
   getLinkToTroubleshootingDocs,
   selectSimulatorUrl,
 } from "@src/modules/environment";
+import StepSection from "./components/StepSection";
+import WarningSection from "./components/WarningSection";
+import HTMLRenderer from "@components/HTMLRenderer";
 
 interface Props {
   framework: Frameworks;
@@ -69,12 +73,63 @@ export default function Stepper({
   return (
     <div>
       {(setupSteps || []).map((step, i) => {
+        const status =
+          step.isComplete === true
+            ? "ok"
+            : step.isComplete === false
+            ? "ko"
+            : null;
+
         return (
-          <div key={step.title}>
-            <pre>
-              <code>{JSON.stringify(step, null, 2)}</code>
-            </pre>
-          </div>
+          <StepSection
+            stepNumber={i + 1}
+            title={step.title}
+            isOpen={openedStep === i + 1}
+            onOpenStep={() => toggleSetupDrawerStep(i + 1)}
+            status={status}
+          >
+            <Flex sx={{ flexDirection: "column" }}>
+              {step.validationMessages.map((validationMessage) => {
+                return (
+                  <WarningSection
+                    title={validationMessage.title}
+                    sx={{ mb: 2 }}
+                  >
+                    <HTMLRenderer html={validationMessage.message} />
+                  </WarningSection>
+                );
+              })}
+              <Text variant={"xs"} sx={{ mb: 3 }}>
+                <HTMLRenderer
+                  html={step.body}
+                  components={{
+                    pre: ({ children, ...props }) => {
+                      return (
+                        <Box
+                          as="pre"
+                          {...props}
+                          sx={{
+                            backgroundColor: "#161b22",
+                            color: "#c9d1d9",
+                            borderRadius: 8,
+                            padding: "16px 20px",
+                            overflow: "auto",
+                          }}
+                        >
+                          {children}
+                        </Box>
+                      );
+                    },
+                  }}
+                />
+              </Text>
+            </Flex>
+          </StepSection>
+          // <div key={step.title}>
+          //   <pre>
+          //     <code>{JSON.stringify(step, null, 2)}</code>
+          //   </pre>
+          // </div>
         );
         // return (
         //   <Step

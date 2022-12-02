@@ -65,13 +65,16 @@ export const captureSliceSimulatorScreenshot = async (
 	// Lazy-load Puppeteer only once it is needed.
 	const puppeteer = await import("puppeteer");
 
+	// TODO: Reuse a browser across multiple captures to reduce wait times
 	const browser = await puppeteer.launch();
-
 	const context = await browser.createIncognitoBrowserContext();
+
 	const page = await context.newPage();
 	page.setViewport(args.viewport || DEFAULT_VIEWPORT);
 
-	await page.goto(url.toString(), { waitUntil: "networkidle2" });
+	// TODO: I removed `goto`'s `{ waitUntil: "networkidle2" }` option.
+	// Good idea? Bad idea?
+	await page.goto(url.toString());
 	await page.waitForSelector(ROOT_SELECTOR, { timeout: PAGE_LOAD_TIMEOUT });
 
 	const element = await page.$(ROOT_SELECTOR);
@@ -84,8 +87,6 @@ export const captureSliceSimulatorScreenshot = async (
 	}
 
 	const data = (await element.screenshot({ encoding: "binary" })) as Buffer;
-
-	await context.close();
 
 	return {
 		data,

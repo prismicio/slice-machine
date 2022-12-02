@@ -12,6 +12,7 @@ import { decodeHookResult } from "../lib/decodeHookResult";
 import { functionCodec } from "../lib/functionCodec";
 
 import { BaseManager } from "./_BaseManager";
+import { markdownToHTML } from "../lib/markdownToHTML";
 
 const sliceSimulatorSetupStepCodec = t.intersection([
 	t.type({
@@ -71,10 +72,11 @@ export class SimulatorManager extends BaseManager {
 
 		const steps = await Promise.all(
 			data[0].map(async (step) => {
+				const bodyHTML = await markdownToHTML(step.body);
+
 				const res: SimulatorManagerReadSliceSimulatorSetupStep = {
 					title: step.title,
-					// TODO: Convert from Markdown to HTML?
-					body: step.body,
+					body: bodyHTML,
 					isComplete: undefined,
 					validationMessages: [],
 				};
@@ -104,8 +106,21 @@ export class SimulatorManager extends BaseManager {
 						);
 					});
 
+					const processedValidationMessages = await Promise.all(
+						validationMessages.map(async (validationMessage) => {
+							const messageHTML = await markdownToHTML(
+								validationMessage.message,
+							);
+
+							return {
+								...validationMessage,
+								message: messageHTML,
+							};
+						}),
+					);
+
 					res.isComplete = isComplete;
-					res.validationMessages = validationMessages;
+					res.validationMessages = processedValidationMessages;
 				}
 
 				return res;

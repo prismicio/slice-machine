@@ -345,7 +345,7 @@ export class SlicesManager extends BaseManager {
 			{
 				libraryID: args.libraryID,
 				sliceID: args.sliceID,
-				assetID: `screenshot-${args.variationID}`,
+				assetID: `screenshot-${args.variationID}.png`,
 			},
 		);
 		const { data, errors } = decodeHookResult(
@@ -372,7 +372,7 @@ export class SlicesManager extends BaseManager {
 				libraryID: args.libraryID,
 				sliceID: args.sliceID,
 				asset: {
-					id: `screenshot-${args.variationID}`,
+					id: `screenshot-${args.variationID}.png`,
 					data: args.data,
 				},
 			},

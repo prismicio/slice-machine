@@ -77,6 +77,8 @@ export const createRPCMiddleware = <TProcedures extends Procedures>(
 				res = await procedure(clientArgs.procedureArgs);
 			} catch (error) {
 				if (error instanceof Error) {
+					console.error(error);
+
 					const formData = objectToServerFormData({
 						error: error.message,
 						cause: error,

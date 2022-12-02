@@ -10,6 +10,8 @@ export default defineConfig({
 				"node-fetch",
 				"formdata-node",
 				"form-data-encoder",
+				"hast-util-to-string",
+				"@wooorm/starry-night",
 			],
 		}),
 	],
