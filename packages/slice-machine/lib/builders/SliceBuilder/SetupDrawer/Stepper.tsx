@@ -24,6 +24,10 @@ import {
 import StepSection from "./components/StepSection";
 import WarningSection from "./components/WarningSection";
 import HTMLRenderer from "@components/HTMLRenderer";
+import { CheckSetup } from "./steps/common";
+import { steps } from "./steps/nuxt";
+import SuccessSection from "./components/SuccessSection";
+import { Button } from "@components/Button";
 
 interface Props {
   framework: Frameworks;
@@ -67,8 +71,16 @@ export default function Stepper({
     userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
 
-  // const stepNumberWithErrors =
-  //   stepperConfiguration.getStepNumberWithErrors(setupStatus);
+  const stepNumbersWithErrors = (setupSteps || [])
+    .map((step, i) => {
+      return { ...step, number: i + 1 };
+    })
+    .filter((step) => {
+      return step.isComplete === false;
+    })
+    .map((step) => {
+      return step.number;
+    });
 
   return (
     <div>
@@ -100,28 +112,7 @@ export default function Stepper({
                 );
               })}
               <Text variant={"xs"} sx={{ mb: 3 }}>
-                <HTMLRenderer
-                  html={step.body}
-                  components={{
-                    pre: ({ children, ...props }) => {
-                      return (
-                        <Box
-                          as="pre"
-                          {...props}
-                          sx={{
-                            backgroundColor: "#161b22",
-                            color: "#c9d1d9",
-                            borderRadius: 8,
-                            padding: "16px 20px",
-                            overflow: "auto",
-                          }}
-                        >
-                          {children}
-                        </Box>
-                      );
-                    },
-                  }}
-                />
+                <HTMLRenderer html={step.body} />
               </Text>
             </Flex>
           </StepSection>
@@ -151,6 +142,47 @@ export default function Stepper({
         //   />
         // );
       })}
+      <StepSection
+        title="Check configuration"
+        isOpen={openedStep === steps.length}
+        onOpenStep={() => toggleSetupDrawerStep(steps.length)}
+      >
+        <Flex sx={{ flexDirection: "column", mx: -24 }}>
+          <Text variant={"xs"} sx={{ mb: 3 }}>
+            Once you’ve completed the previous steps, click the button below to
+            verify that your configuration is correct.
+          </Text>
+          {userHasAtLeastOneStepMissing && (
+            <WarningSection
+              title={"We are running into some errors"}
+              sx={{ mb: 3 }}
+            >
+              We ran into some issues while checking your configuration.
+              {stepNumbersWithErrors.length > 0 ? (
+                <>
+                  <br />
+                  Please check step {stepNumbersWithErrors.join(" and ")} for
+                  more information.
+                </>
+              ) : (
+                <> Please re-check the above steps.</>
+              )}
+            </WarningSection>
+          )}
+          {userHasConfiguredAllSteps ? (
+            <SuccessSection />
+          ) : (
+            <Button
+              label="Check configuration"
+              sx={{
+                maxWidth: 149,
+              }}
+              isLoading={isCheckingSetup}
+              onClick={() => checkSimulatorSetup(false)}
+            />
+          )}
+        </Flex>
+      </StepSection>
     </div>
   );
 }
