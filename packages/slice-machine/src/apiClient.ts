@@ -1,30 +1,23 @@
 import axios, { AxiosResponse } from "axios";
+import { SimulatorManagerReadSliceSimulatorSetupStepsReturnType } from "@slicemachine/core2/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
-import { CheckAuthStatusResponse } from "@models/common/Auth";
-import { SimulatorCheckResponse } from "@models/common/Simulator";
-import {
-  RenameCustomTypeBody,
-  SaveCustomTypeBody,
-} from "@models/common/CustomType";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { SliceBody } from "@models/common/Slice";
-import ServerState from "@models/server/ServerState";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
+
+import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import ServerState from "@models/server/ServerState";
 import {
   CustomScreenshotRequest,
   ScreenshotRequest,
   ScreenshotResponse,
-} from "../lib/models/common/Screenshots";
+} from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { managerClient } from "./managerClient";
-import { SimulatorManagerReadSliceSimulatorSetupStepsReturnType } from "@slicemachine/core2/client";
-import { pascalize, snakelize } from "@lib/utils/str";
-import { CustomTypes as InternalCustomTypes } from "@prismicio/types-internal";
-import { DEFAULT_VARIATION_ID } from "@lib/consts";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
+
+import { managerClient } from "./managerClient";
 
 const defaultAxiosConfig = {
   withCredentials: true,
