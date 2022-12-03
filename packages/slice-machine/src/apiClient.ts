@@ -41,7 +41,7 @@ export const getState = async (): Promise<ServerState> => {
 
   // `rawState` from the client contains non-SM-specific models. We need to
   // transform the data to something SM recognizes.
-  const state = {
+  const state: ServerState = {
     ...rawState,
     libraries: rawState.libraries.map((library) => {
       return {
@@ -80,6 +80,28 @@ export const getState = async (): Promise<ServerState> => {
     remoteSlices: rawState.remoteSlices.map((remoteSliceModel) => {
       return Slices.toSM(remoteSliceModel);
     }),
+    env: {
+      ...rawState.env,
+      changelog: {
+        ...rawState.env.changelog,
+        versions: rawState.env.changelog.versions.sort((a, b) => {
+          const [aMajor, aMinor, aPatch] = a.versionNumber.split(".");
+          const [bMajor, bMinor, bPatch] = b.versionNumber.split(".");
+
+          const major = Number.parseInt(bMajor) - Number.parseInt(aMajor);
+          const minor = Number.parseInt(bMinor) - Number.parseInt(aMinor);
+          const patch = Number.parseInt(bPatch) - Number.parseInt(aPatch);
+
+          if (major !== 0) {
+            return major;
+          } else if (minor !== 0) {
+            return minor;
+          } else {
+            return patch;
+          }
+        }),
+      },
+    },
   };
 
   return state;

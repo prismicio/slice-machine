@@ -1,6 +1,6 @@
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { Viewport } from "puppeteer";
-import * as http from "node:http";
+import fetch from "node-fetch";
 
 import type { SliceMachineConfig } from "../types";
 
@@ -13,20 +13,10 @@ const DEFAULT_VIEWPORT: Viewport = {
 
 const ROOT_SELECTOR = "#root";
 
-const testURLAccess = async (url: string): Promise<boolean> => {
-	return new Promise<boolean>((resolve, reject) => {
-		http
-			.get(url, (res) => {
-				const ok = Boolean(
-					res.statusCode && res.statusCode >= 200 && res.statusCode < 300,
-				);
+const checkIsURLAccessible = async (url: string): Promise<boolean> => {
+	const res = await fetch(url);
 
-				resolve(ok);
-			})
-			.on("error", (error) => {
-				reject(error);
-			});
-	});
+	return res.ok;
 };
 
 type CaptureSliceSimulatorScreenshotArgs = {
@@ -56,7 +46,7 @@ export const captureSliceSimulatorScreenshot = async (
 	url.searchParams.set("sid", args.sliceID);
 	url.searchParams.set("vid", args.variationID);
 
-	const isURLAccessible = await testURLAccess(url.toString());
+	const isURLAccessible = await checkIsURLAccessible(url.toString());
 
 	if (!isURLAccessible) {
 		throw new Error(`Slice Simulator URL is not accessible: ${url}`);

@@ -7,6 +7,7 @@ export default defineConfig({
 			internalDependencies: [
 				"fp-ts",
 				"devalue",
+				"p-limit",
 				"node-fetch",
 				"formdata-node",
 				"form-data-encoder",

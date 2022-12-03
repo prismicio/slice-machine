@@ -184,12 +184,9 @@ export class SliceMachineManager {
 		const updateAvailable = false; // TODO
 		const versions = await Promise.all(
 			allStableVersions.map(async (version): Promise<PackageVersion> => {
-				// TODO: I was rate limited :(
-				// Rather than making a request or each
-				// version, we can make one request for all (at
-				// least to some paginated amount).
-				// const releaseNotes = await this.getReleaseNotesForVersion({ version });
-				const releaseNotes = undefined;
+				const releaseNotes = await this.versions.getReleaseNotesForVersion({
+					version,
+				});
 
 				return {
 					versionNumber: version,

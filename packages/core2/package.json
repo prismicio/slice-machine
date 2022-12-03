@@ -68,6 +68,7 @@
 		"io-ts-reporters": "^2.0.1",
 		"jiti": "^1.16.0",
 		"node-fetch": "^3.2.10",
+		"p-limit": "^4.0.0",
 		"puppeteer": "^19.2.0",
 		"rehype-raw": "^6.1.1",
 		"rehype-stringify": "^9.0.3",
