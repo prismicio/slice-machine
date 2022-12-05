@@ -48,7 +48,7 @@ export default function handler(req: SaveMockRequest, res: Response) {
           body.sliceName,
           body.mock
         );
-        res.json(body.mock);
+        res.json(body);
       }
     )
   );

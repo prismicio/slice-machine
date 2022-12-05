@@ -1,4 +1,9 @@
-import { ActionType, createAsyncAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import {
   call,
   fork,
@@ -9,7 +14,7 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { createSlice, getState } from "@src/apiClient";
+import { createSlice, getState, SaveSliceMockRequest } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
@@ -29,6 +34,7 @@ import {
 } from "../screenshots/actions";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
+import { component } from "monocle-ts/lib/Traversal";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -63,6 +69,9 @@ export const renameSliceCreator = createAsyncAction(
   }
 >();
 
+export const updateSliceMock =
+  createAction("SLICE/UPDATE_MOCK")<SaveSliceMockRequest>();
+
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createSliceCreator>
@@ -70,7 +79,8 @@ type SlicesActions =
   | ActionType<typeof saveSliceCreator>
   | ActionType<typeof pushSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
-  | ActionType<typeof generateSliceCustomScreenshotCreator>;
+  | ActionType<typeof generateSliceCustomScreenshotCreator>
+  | ActionType<typeof updateSliceMock>;
 
 // Selectors
 export const getLibraries = (
@@ -224,6 +234,30 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
+
+    case getType(updateSliceMock): {
+      const { libraryName, sliceName, mock } = action.payload;
+      const libraries = state.libraries.map((lib) => {
+        if (lib.name === libraryName) {
+          return lib.components.map((component) => {
+            if (component.model.name === sliceName) {
+              return {
+                ...component,
+                mock: mock,
+              };
+            }
+            return component;
+          });
+          return lib;
+        }
+      });
+
+      return {
+        ...state,
+        libraries,
+      };
+    }
+
     default:
       return state;
   }

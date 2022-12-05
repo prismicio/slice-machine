@@ -26,6 +26,8 @@ import {
 } from "@src/modules/environment";
 import { SaveMockBody } from "../../../server/src/api/slices/save-mock";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { updateSliceMock } from "@src/modules/slices";
+import { action } from "typesafe-actions";
 
 const dummySimulatorState: SimulatorStoreType = initialState;
 
@@ -205,7 +207,7 @@ describe("[Simulator module]", () => {
           return req.json().then((json) => {
             const result = SaveMockBody.decode(json);
             if (result._tag === "Right") {
-              return res(ctx.json(json.mock));
+              return res(ctx.json(json));
             }
             return res(ctx.status(400));
           });
@@ -227,7 +229,8 @@ describe("[Simulator module]", () => {
             message: "Saved",
           })
         )
-        .put(saveSliceMockCreator.success(payload.payload.mock))
+        .put(updateSliceMock(payload.payload))
+        .put(saveSliceMockCreator.success())
         .run();
 
       await new Promise(process.nextTick);
@@ -259,7 +262,7 @@ describe("[Simulator module]", () => {
             message: errorMessage,
           })
         )
-        .put(saveSliceMockCreator.failure(errorMessage))
+        .put(saveSliceMockCreator.failure())
         .run();
 
       await new Promise(process.nextTick);

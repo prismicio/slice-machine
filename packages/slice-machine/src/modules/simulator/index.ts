@@ -38,6 +38,7 @@ import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/S
 import Tracker from "@src/tracking/client";
 import { ComponentMocks } from "@slicemachine/core/build/models";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { getLibraries, updateSliceMock } from "../slices";
 
 const NoStepSelected = 0;
 
@@ -97,7 +98,7 @@ export const saveSliceMockCreator = createAsyncAction(
   "SIMULATOR/SAVE_MOCK.REQUEST",
   "SIMULATOR/SAVE_MOCK.SUCCESS",
   "SIMULATOR/SAVE_MOCK.FAILURE"
-)<SaveSliceMockRequest, ComponentMocks, string>();
+)<SaveSliceMockRequest, undefined, undefined>();
 
 type SimulatorActions = ActionType<
   | typeof openSetupDrawerCreator
@@ -359,8 +360,8 @@ export function* saveSliceMockSaga({
         message: "Saved",
       })
     );
-    yield put(saveSliceMockCreator.success(data));
-    // TODO: ask if the state should be updated with the saved mocks
+    yield put(updateSliceMock(data));
+    yield put(saveSliceMockCreator.success());
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Error saving content";
@@ -370,7 +371,7 @@ export function* saveSliceMockSaga({
         message: message,
       })
     );
-    yield put(saveSliceMockCreator.failure(message));
+    yield put(saveSliceMockCreator.failure());
   }
 }
 

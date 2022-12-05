@@ -1,5 +1,7 @@
 import { ComponentMocks } from "@slicemachine/core/build/models";
-import saveSliceMock from "../../server/src/api/slices/save-mock";
+import saveSliceMock, {
+  SaveMockBody,
+} from "../../server/src/api/slices/save-mock";
 import path from "path";
 import { vol } from "memfs";
 import { Response } from "express";
@@ -17,7 +19,11 @@ describe("save-mock", () => {
     const TMP = "tmp";
     const library = "slices";
     const sliceName = "MySlice";
-    const content: ComponentMocks = [];
+    const payload: SaveMockBody = {
+      libraryName: library,
+      sliceName,
+      mock: [],
+    };
     vol.fromJSON({}, TMP);
     const fakeRes = {
       status: jest.fn(),
@@ -27,11 +33,7 @@ describe("save-mock", () => {
     saveSliceMock(
       {
         env: { cwd: TMP },
-        body: {
-          libraryName: library,
-          sliceName,
-          mock: content,
-        },
+        body: payload,
       },
       fakeRes
     );
@@ -40,9 +42,9 @@ describe("save-mock", () => {
       path.join(TMP, library, sliceName, "mocks.json"),
       "utf-8"
     ) as string;
-    expect(result).toEqual(JSON.stringify(content));
+    expect(result).toEqual(JSON.stringify(payload.mock));
     expect(fakeRes.status).not.toHaveBeenCalled();
-    expect(fakeRes.json).toHaveBeenCalledWith(content);
+    expect(fakeRes.json).toHaveBeenCalledWith(payload);
   });
 
   test("when given an invalid mock it should return a 400 status code", () => {

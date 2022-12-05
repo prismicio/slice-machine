@@ -157,5 +157,5 @@ export type SaveSliceMockRequest = {
 
 export const saveSliceMock = (payload: SaveSliceMockRequest) =>
   axios
-    .post<ComponentMocks>("/api/slices/mock", payload)
+    .post<SaveSliceMockRequest>("/api/slices/mock", payload)
     .then((res) => res.data);
