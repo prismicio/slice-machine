@@ -5,4 +5,4 @@ runs:
   steps:
     - name: Build essential packages used by others
       shell: bash
-      run: npm run build-essential
+      run: npm run build:essential

@@ -30,7 +30,7 @@ jobs:
           git checkout .
       - name: Build packages used by others
         run: |
-          npm run build-essential
+          npm run build:essential
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
