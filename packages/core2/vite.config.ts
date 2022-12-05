@@ -4,7 +4,7 @@ import sdk from "vite-plugin-sdk";
 export default defineConfig({
 	plugins: [
 		sdk({
-			internalDependencies: ["fp-ts", "devalue", "node-fetch"],
+			internalDependencies: ["devalue", "fp-ts", "get-port", "node-fetch"],
 		}),
 	],
 	build: {

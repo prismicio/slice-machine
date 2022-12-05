@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { ExecaChildProcess } from "execa";
+import open from "open";
 import logSymbols from "log-symbols";
 
 import {
@@ -9,13 +10,20 @@ import {
 	SliceMachineManager,
 } from "@slicemachine/core2";
 
-import * as framework from "./lib/framework";
-
-import { assertExists } from "./lib/assertExists";
-import * as packageManager from "./lib/packageManager";
+import { detectFramework, Framework } from "./lib/framework";
+import {
+	installDependencies,
+	detectPackageManager,
+	PackageManagerAgent,
+} from "./lib/packageManager";
+import {
+	getRandomRepositoryDomain,
+	formatRepositoryDomain,
+	validateRepositoryDomain,
+} from "./lib/repositoryDomain";
 import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
-import * as repositoryDomain from "./lib/repositoryDomain";
+import { assertExists } from "./lib/assertExists";
 
 export type SliceMachineInitProcessOptions = {
 	input: string[];
@@ -29,8 +37,8 @@ export const createSliceMachineInitProcess = (
 };
 
 type SliceMachineInitProcessContext = {
-	framework?: framework.Framework;
-	packageManager?: packageManager.Agent;
+	framework?: Framework;
+	packageManager?: PackageManagerAgent;
 	installProcess?: ExecaChildProcess;
 	userProfile?: PrismicUserProfile;
 	userRepositories?: PrismicRepository[];
@@ -64,7 +72,10 @@ export class SliceMachineInitProcess {
 			await this.selectRepository();
 		}
 
-		assertExists(this.context.repository, "repository");
+		assertExists(
+			this.context.repository,
+			"Repository selection must be available through context to proceed"
+		);
 		if (!this.context.repository.exists) {
 			await this.createNewRepository();
 		}
@@ -100,7 +111,7 @@ export class SliceMachineInitProcess {
 						{
 							title: "Detecting framework...",
 							task: async (_, task) => {
-								this.context.framework = await framework.detect();
+								this.context.framework = await detectFramework();
 
 								task.title = `Detected framework ${chalk.cyan(
 									this.context.framework.name
@@ -110,13 +121,16 @@ export class SliceMachineInitProcess {
 						{
 							title: "Detecting package manager...",
 							task: async (_, task) => {
-								this.context.packageManager = await packageManager.detect();
+								this.context.packageManager = await detectPackageManager();
 
 								task.title = `Detected package manager ${chalk.cyan(
 									this.context.packageManager
 								)}`;
 
-								assertExists(this.context.framework, "framework");
+								assertExists(
+									this.context.framework,
+									"Project framework must be available through context to proceed"
+								);
 								parentTask.title = `Detected framework ${chalk.cyan(
 									this.context.framework.name
 								)} and package manager ${chalk.cyan(
@@ -134,10 +148,16 @@ export class SliceMachineInitProcess {
 			{
 				title: "Beginning core dependencies installation...",
 				task: async (_, task) => {
-					assertExists(this.context.packageManager, "package manager");
-					assertExists(this.context.framework, "framework");
+					assertExists(
+						this.context.packageManager,
+						"Project package manager must be available through context to run `beginCoreDependenciesInstallation`"
+					);
+					assertExists(
+						this.context.framework,
+						"Project framework must be available through context to run `beginCoreDependenciesInstallation`"
+					);
 
-					const { execaProcess } = await packageManager.install({
+					const { execaProcess } = await installDependencies({
 						agent: this.context.packageManager,
 						dependencies: this.context.framework.devDependencies,
 						dev: true,
@@ -204,7 +224,15 @@ export class SliceMachineInitProcess {
 						});
 
 						parentTask.output = "Browser opened, waiting for you to login...";
-						await this.manager.user.browserLogin();
+						const { port, url } = await this.manager.user.getLoginSessionInfo();
+						await this.manager.user.nodeLoginSession({
+							port,
+							onListenCallback() {
+								open(url).catch((error) => {
+									throw error;
+								});
+							},
+						});
 
 						parentTask.title = `Logged in`;
 					}
@@ -247,8 +275,14 @@ export class SliceMachineInitProcess {
 			{
 				title: `Flag ${chalk.cyan("repository")} used, validating input...`,
 				task: async (_, task) => {
-					assertExists(this.context.userRepositories, "user repositories");
-					assertExists(this.options.repository, "flag `repository`");
+					assertExists(
+						this.context.userRepositories,
+						"User repositories must be available through context to run `useRepositoryFlag`"
+					);
+					assertExists(
+						this.options.repository,
+						"Flag `repository` must be set to run `useRepositoryFlag`"
+					);
 
 					const maybeRepository = this.context.userRepositories.find(
 						(repository) => repository.domain === this.options.repository
@@ -263,7 +297,7 @@ export class SliceMachineInitProcess {
 							);
 						}
 					} else if (
-						await this.manager.repository.exists({
+						await this.manager.repository.checkExists({
 							domain: this.options.repository,
 						})
 					) {
@@ -288,7 +322,10 @@ export class SliceMachineInitProcess {
 	}
 
 	protected async selectRepository(): Promise<void> {
-		assertExists(this.context.userRepositories, "user repositories");
+		assertExists(
+			this.context.userRepositories,
+			"User repositories must be available through context to run `selectRepository`"
+		);
 
 		if (this.context.userRepositories.length) {
 			await this.trySelectExistingRepository();
@@ -298,7 +335,12 @@ export class SliceMachineInitProcess {
 			await this.selectNewRepository();
 		}
 
-		assertExists(this.context.repository, "repository");
+		assertExists(
+			this.context.repository,
+			"Repository selection must be available through context to proceed"
+		);
+		// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+		// eslint-disable-next-line no-console
 		console.log(
 			`${logSymbols.success} Selected repository ${chalk.cyan(
 				this.context.repository.domain
@@ -307,7 +349,10 @@ export class SliceMachineInitProcess {
 	}
 
 	protected async trySelectExistingRepository(): Promise<void> {
-		assertExists(this.context.userRepositories, "user repositories");
+		assertExists(
+			this.context.userRepositories,
+			"User repositories must be available through context to run `trySelectExistingRepository`"
+		);
 
 		const { maybeDomain } = await prompt<string, "maybeDomain">({
 			type: "select",
@@ -347,9 +392,11 @@ export class SliceMachineInitProcess {
 	}
 
 	protected async selectNewRepository(): Promise<void> {
-		let suggestedName = repositoryDomain.random();
-		while (await this.manager.repository.exists({ domain: suggestedName })) {
-			suggestedName = repositoryDomain.random();
+		let suggestedName = getRandomRepositoryDomain();
+		while (
+			await this.manager.repository.checkExists({ domain: suggestedName })
+		) {
+			suggestedName = getRandomRepositoryDomain();
 		}
 
 		const { domain } = await prompt<string, "domain">({
@@ -360,9 +407,9 @@ export class SliceMachineInitProcess {
 			initial: suggestedName,
 			onRender() {
 				const raw = this.value || this.initial || "";
-				const domain = repositoryDomain.format(raw);
+				const domain = formatRepositoryDomain(raw);
 
-				const validation = repositoryDomain.validate(domain);
+				const validation = validateRepositoryDomain(domain);
 
 				this.msg = chalk.reset(
 					`
@@ -370,17 +417,17 @@ Choose a name for your Prismic repository
 
   NAMING RULES
 ${chalk[validation.NonLetterStart ? "red" : "gray"](
-	`    1. Name should ${chalk[validation.NonLetterStart ? "bold" : "cyan"](
+	`    1. Name must ${chalk[validation.NonLetterStart ? "bold" : "cyan"](
 		"start with a letter"
 	)}`
 )}
 ${chalk[validation.LessThan4 ? "red" : "gray"](
-	`    2. Name should be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
+	`    2. Name must be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
 		"4 characters long or more"
 	)}`
 )}
 ${chalk[validation.MoreThan30 ? "red" : "gray"](
-	`    3. Name should be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
+	`    3. Name must be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
 		"30 characters long or less"
 	)}`
 )}
@@ -406,7 +453,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 				);
 			},
 			validate: async (rawDomain: string) => {
-				const validation = repositoryDomain.validate(rawDomain);
+				const validation = validateRepositoryDomain(rawDomain);
 				if (validation.hasErrors) {
 					const formattedErrors: string[] = [];
 
@@ -414,17 +461,17 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 						formattedErrors.push("must start with a letter");
 					}
 					if (validation.LessThan4) {
-						formattedErrors.push("cannot be less than 4 characters long");
+						formattedErrors.push("must be 4 characters long or more");
 					}
 					if (validation.MoreThan30) {
-						formattedErrors.push("cannot be more than 30 characters long");
+						formattedErrors.push("must be 30 characters long or less");
 					}
 
 					return `Name ${formattedErrors.join(" and ")}`;
 				}
 
-				const domain = repositoryDomain.format(rawDomain);
-				const exists = await this.manager.repository.exists({ domain });
+				const domain = formatRepositoryDomain(rawDomain);
+				const exists = await this.manager.repository.checkExists({ domain });
 				if (exists) {
 					return `Repository name ${chalk.cyan(domain)} is already taken`;
 				}
@@ -432,7 +479,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 				return true;
 			},
 			format: (value) => {
-				return repositoryDomain.format(value);
+				return formatRepositoryDomain(value);
 			},
 		});
 
@@ -447,7 +494,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 	}
 
 	protected createNewRepository(): Promise<void> {
-		assertExists(this.context.repository, "repository");
+		assertExists(
+			this.context.repository,
+			"Repository selection must be available through context to run `createNewRepository`"
+		);
 
 		return listrRun([
 			{
@@ -455,8 +505,14 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 					this.context.repository.domain
 				)} ...`,
 				task: async (_, task) => {
-					assertExists(this.context.repository, "repository");
-					assertExists(this.context.framework, "framework");
+					assertExists(
+						this.context.repository,
+						"Repository selection must be available through context to run `createNewRepository`"
+					);
+					assertExists(
+						this.context.framework,
+						"Project framework must be available through context to run `createNewRepository`"
+					);
 
 					await this.manager.repository.create({
 						domain: this.context.repository.domain,
@@ -481,7 +537,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 				task: async (_, task) => {
 					assertExists(
 						this.context.installProcess,
-						"Could not resolve initial dependencies installation process"
+						"Initial dependencies installation process must be available through context to run `finishCoreDependenciesInstallation`"
 					);
 
 					const updateOutput = (data: Buffer | null) => {

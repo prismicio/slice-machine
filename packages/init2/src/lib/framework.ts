@@ -59,18 +59,18 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 } as const;
 
-/** Vanilla package used when framework is not supported. */
-export const VANILLA: Framework = {
-	name: "vanilla (no framework)",
-	prismicName: "vanilla",
+/** Universal package used when framework is not supported. */
+export const UNIVERSAL: Framework = {
+	name: "universal (no framework)",
+	prismicName: "universal",
 	compatibility: {},
 	devDependencies: {
 		...DEFAULT_DEV_DEPENDENCIES,
-		"@slicemachine/adapter-vanilla": "latest",
+		"@slicemachine/adapter-universal": "latest",
 	},
 };
 
-export const detect = async (): Promise<Framework> => {
+export const detectFramework = async (): Promise<Framework> => {
 	const path = join(process.cwd(), "package.json");
 
 	let allDependencies: Record<string, string>;
@@ -105,6 +105,6 @@ export const detect = async (): Promise<Framework> => {
 
 				return false;
 			});
-		}) || VANILLA
+		}) || UNIVERSAL
 	);
 };

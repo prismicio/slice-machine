@@ -5,9 +5,12 @@ import {
 	Options as ExacaOptions,
 } from "execa";
 
-export type Agent = Exclude<Awaited<ReturnType<typeof niDetect>>, null>;
+export type PackageManagerAgent = Exclude<
+	Awaited<ReturnType<typeof niDetect>>,
+	null
+>;
 
-const EXTRA_AGENT_FLAGS: Record<Agent, string[]> = {
+const EXTRA_AGENT_FLAGS: Record<PackageManagerAgent, string[]> = {
 	npm: ["--color=always", "--loglevel=info"],
 	pnpm: ["--color"], // TODO: Validate that flags are correct
 	yarn: ["--color"],
@@ -16,15 +19,15 @@ const EXTRA_AGENT_FLAGS: Record<Agent, string[]> = {
 	bun: ["--color"], // TODO: Validate that flags are correct
 };
 
-type InstallArgs = {
-	agent: Agent;
+type InstallDependenciesArgs = {
+	agent: PackageManagerAgent;
 	dependencies?: Record<string, string>;
 	dev?: boolean;
 	execa?: ExacaOptions;
 };
 
-export const install = async (
-	args: InstallArgs
+export const installDependencies = async (
+	args: InstallDependenciesArgs
 ): Promise<{ execaProcess: ExecaChildProcess }> => {
 	const commandArgs = args.dependencies
 		? Object.entries(args.dependencies).map(([pkg, range]) => `${pkg}@${range}`)
@@ -52,7 +55,7 @@ export const install = async (
 	return { execaProcess };
 };
 
-export const detect = async (): Promise<Agent> => {
+export const detectPackageManager = async (): Promise<PackageManagerAgent> => {
 	// We auto install agent for now otherwise ni could cause some issues with prompt
 	const agent = await niDetect({ autoInstall: true });
 

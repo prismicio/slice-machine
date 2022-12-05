@@ -1,4 +1,4 @@
-const ABC123 = "abcdefghijklmnopqrstuvwxyz0123456789";
+const abc123 = `abcdefghijklmnopqrstuvwxyz0123456789`;
 
 // 11 characters long or less adjectives
 const ADJECTIVES = [
@@ -48,19 +48,19 @@ const randomString = (length: number): string => {
 	let result = "";
 
 	for (let i = 0; i < length; i++) {
-		result += pickRandom(ABC123);
+		result += pickRandom(abc123);
 	}
 
 	return result;
 };
 
-export const random = (): string => {
-	return format(
+export const getRandomRepositoryDomain = (): string => {
+	return formatRepositoryDomain(
 		`${pickRandom(ADJECTIVES)}-${pickRandom(BAKERIES)}-${randomString(6)}`
 	);
 };
 
-export const format = (raw: string): string => {
+export const formatRepositoryDomain = (raw: string): string => {
 	// Lowercase anything
 	let result = raw.toLowerCase();
 
@@ -98,10 +98,10 @@ export const ValidationErrors = {
 } as const;
 type ValidationErrors = typeof ValidationErrors[keyof typeof ValidationErrors];
 
-export const validate = (
+export const validateRepositoryDomain = (
 	raw: string
 ): Record<ValidationErrors | "hasErrors", boolean> => {
-	const formatted = format(raw);
+	const formatted = formatRepositoryDomain(raw);
 
 	const errors: Record<ValidationErrors, boolean> = {
 		/**
