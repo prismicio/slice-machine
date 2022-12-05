@@ -69,38 +69,43 @@ describe("Create Slices", () => {
       `/ ${editedSliceName} / Default`
     );
 
-    // simulator 
+    // simulator
 
-    cy.fixture("slice-simulator.jsx", "utf-8").then(file => {
-      const pathToFile = path.join(root, 'pages', "slice-simulator.jsx")
-      return cy.writeFile(pathToFile, file)
-    })
+    cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
+      const pathToFile = path.join(root, "pages", "slice-simulator.jsx");
+      return cy.writeFile(pathToFile, file);
+    });
 
-    const pathToSmJson = path.join(root, "sm.json")
+    const pathToSmJson = path.join(root, "sm.json");
 
-    cy.readFile(pathToSmJson, 'utf-8').then(json => {
+    cy.readFile(pathToSmJson, "utf-8").then((json) => {
       const data = {
         ...json,
-        localSliceSimulatorURL: "http://localhost:3000/slice-simulator"
-      }
-      return cy.writeFile(pathToSmJson, JSON.stringify(data, null, 2))
-    })
+        localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
+      };
+      return cy.writeFile(pathToSmJson, JSON.stringify(data, null, 2));
+    });
 
     // stub window and set target to self
-    cy.on('window:before:load', (win) => {
-      cy.stub(win, 'open').callsFake((url) => {
-        return win.open.wrappedMethod.call(win, url, '_self');
-      })
-    })
+    cy.on("window:before:load", (win) => {
+      cy.stub(win, "open").callsFake((url) => {
+        return win.open.wrappedMethod.call(win, url, "_self");
+      });
+    });
 
-    cy.get('[data-testid=open-set-up-simulator]').click()
+    cy.get("[data-testid=open-set-up-simulator]").click();
 
-    cy.get('[contenteditable]').first().clear().type("👋")
-    
-    cy.get('[data-cy=save-mock]').click()
+    cy.get("[contenteditable]").first().clear().type("👋");
 
-    cy.wait(1000)
+    cy.get("[data-cy=save-mock]").click();
 
-    cy.readFile(pathToMock, 'utf-8').its(0).its("primary.title.value").its(0).its("content.text").should("equal", "👋")
+    cy.wait(1000);
+
+    cy.readFile(pathToMock, "utf-8")
+      .its(0)
+      .its("primary.title.value")
+      .its(0)
+      .its("content.text")
+      .should("equal", "👋");
   });
 });
