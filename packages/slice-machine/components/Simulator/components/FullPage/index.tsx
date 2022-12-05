@@ -3,7 +3,7 @@ import { Flex, ThemeUICSSObject } from "theme-ui";
 const FullPage: React.FC<{ sx?: ThemeUICSSObject }> = ({ children, sx }) => (
   <Flex
     sx={{
-      bg: "grey01",
+      bg: "grey07",
       height: "90%",
       width: "100%",
       justifyContent: "center",

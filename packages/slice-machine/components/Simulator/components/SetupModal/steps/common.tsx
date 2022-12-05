@@ -1,8 +1,12 @@
 import React from "react";
+import { IconType } from "react-icons";
 
 import { Flex, Text } from "theme-ui";
 
 import CodeBlock from "../CodeBlock";
+import { BsSquare } from "react-icons/bs";
+import { VscBracketDot } from "react-icons/vsc";
+import { AiOutlineFileText } from "react-icons/ai";
 
 export interface SetupStepperConfiguration {
   steps: React.FunctionComponent<DefaultStepCompProps>[];
@@ -20,65 +24,83 @@ export interface DefaultStepCompProps {
 
 interface InstallSliceSimulatorProps extends DefaultStepProps {
   code: string;
+  fileName?: string;
+  FileIcon?: IconType;
 }
 
 export const InstallSliceSimulator =
   ({
     code,
+    fileName,
+    FileIcon,
   }: InstallSliceSimulatorProps): React.FunctionComponent<DefaultStepCompProps> =>
   () => {
     return (
-      <Flex sx={{ flexDirection: "column" }}>
-        <Text variant={"xs"} sx={{ mb: 3 }}>
-          Slice Simulator requires the following dependencies, run the following
-          command to install them.
-        </Text>
-        <CodeBlock>{code}</CodeBlock>
+      <Flex sx={{ flexDirection: "column", height: "100%" }}>
+        <CodeBlock
+          fileName={fileName || "Terminal"}
+          FileIcon={FileIcon || BsSquare}
+        >
+          {code}
+        </CodeBlock>
       </Flex>
     );
   };
 
 interface CreatePageProps extends DefaultStepProps {
   code: string;
-  instructions: string | React.ReactElement;
+  instructions?: string | React.ReactElement;
+  fileName?: string;
+  FileIcon?: IconType;
 }
 
 export const CreatePage =
   ({
     code,
     instructions,
+    fileName,
+    FileIcon,
   }: CreatePageProps): React.FunctionComponent<DefaultStepCompProps> =>
   () => {
     return (
-      <Flex sx={{ flexDirection: "column" }}>
-        <Text variant="xs" sx={{ mb: 3 }}>
-          {instructions}
-        </Text>
-        <CodeBlock>{code}</CodeBlock>
+      <Flex sx={{ flexDirection: "column", height: "100%" }}>
+        {instructions ? (
+          <Text variant="xs" sx={{ mb: 3 }}>
+            {instructions}
+          </Text>
+        ) : null}
+        <CodeBlock
+          fileName={fileName || "slice-simulator.js"}
+          FileIcon={FileIcon || AiOutlineFileText}
+        >
+          {code}
+        </CodeBlock>
       </Flex>
     );
   };
 
 export const UpdateSmJson =
   ({
-    code = `"localSliceSimulatorURL": "http://localhost:3000/slice-simulator"`,
+    code = `{
+  "_latest": "0.3.0",
+  "apiEndpoint": "https://project.prismic.io/api/v2",
+  "libraries": [
+    "@/slices"
+  ],
+  "localSliceCanvasURL": "http://localhost:3000/slice-simulator"
+}`,
   }: DefaultStepProps): React.FunctionComponent<DefaultStepCompProps> =>
   () => {
     return (
-      <Flex sx={{ flexDirection: "column" }}>
-        <Text variant={"xs"} sx={{ mb: 3 }}>
-          Update your <Text variant={"pre"}>sm.json</Text> file with the
-          property{" "}
-          <Text as="code" variant="styles.inlineCode">
-            localSliceSimulatorURL
-          </Text>{" "}
-          in the shape of{" "}
-          <Text as="code" variant="styles.inlineCode">
-            http://localhost:PORT/PATH
-          </Text>
-          . Eg:
-        </Text>
-        <CodeBlock>{code}</CodeBlock>
+      <Flex sx={{ flexDirection: "column", height: "100%" }}>
+        <CodeBlock
+          FileIcon={VscBracketDot}
+          fileName="sm.json"
+          lang="json"
+          customCopyText={`"localSliceCanvasURL": "http://localhost:3000/slice-simulator"`}
+        >
+          {code}
+        </CodeBlock>
       </Flex>
     );
   };

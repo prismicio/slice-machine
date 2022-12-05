@@ -16,7 +16,6 @@ const CreatePageInstructions = {
   const resolver = ({ sliceName }) => Slices[sliceName];
   
   const SliceSimulatorPage = () => (<SliceSimulator
-  \t// The \`sliceZone\` prop should be a function receiving slices and rendering them using your \`SliceZone\` component.
   \tsliceZone={(props) => <SliceZone {...props} resolver={resolver} />}
   \tstate={state}
   />);

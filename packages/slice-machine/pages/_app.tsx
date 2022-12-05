@@ -22,7 +22,7 @@ import "src/css/drawer.css";
 import "src/css/toaster.css";
 import "src/css/intercom.css";
 
-import "highlight.js/styles/atom-one-dark.css";
+import "src/css/hljs.css";
 
 import ServerState from "../lib/models/server/ServerState";
 import { getIsTrackingAvailable } from "../src/modules/environment";

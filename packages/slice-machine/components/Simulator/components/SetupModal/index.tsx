@@ -31,10 +31,21 @@ const TitleCard: React.FC<{
     >
       <NumberBox number={number} />
       <Box sx={{ ml: 3 }}>
-        <Heading as="h4" sx={{ color: "whiteButtonText" }}>
+        <Heading
+          as="h4"
+          sx={{ color: "whiteButtonText", fontSize: "14px", fontWeight: "600" }}
+        >
           {title}
         </Heading>
-        <Text as="p" sx={{ mt: 2, color: "textClear" }}>
+        <Text
+          as="p"
+          sx={{
+            mt: 2,
+            color: "textClear",
+            fontSize: "13px",
+            lineHeight: "24px",
+          }}
+        >
           {excerpt}
         </Text>
       </Box>
@@ -56,6 +67,7 @@ const NumberBox: React.FC<{ number: number }> = ({ number }) => (
       bg: "grey07",
       color: "textClear",
       flexShrink: "0",
+      fontSize: "13px",
     }}
   >
     {number}
@@ -96,7 +108,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
               borderBottom: (t) => `1px solid ${String(t.colors?.borders)}`,
             }}
           >
-            <Heading sx={{ fontSize: "20px" }} as="h5">
+            <Heading sx={{ fontSize: "14px", fontWeight: "600" }} as="h5">
               Set up the simulator
             </Heading>
           </Flex>
@@ -107,7 +119,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
             <TitleCard
               number={1}
               title="install the simulator"
-              excerpt="Run this command to install the simular package via npm."
+              excerpt="Run this command to install the simulator package via npm."
             />
             <TitleCard
               number={2}

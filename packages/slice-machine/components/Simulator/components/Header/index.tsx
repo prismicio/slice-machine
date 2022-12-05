@@ -59,7 +59,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
         }}
       >
         <SliceMachineLogo height={"20px"} width={"20px"} />
-        <Text mx={2}>{slice.model.name}</Text>
+        <Text sx={{ mx: 2 }}>{slice.model.name}</Text>
         <VarationsPopover
           defaultValue={variation}
           variations={slice.model.variations}
