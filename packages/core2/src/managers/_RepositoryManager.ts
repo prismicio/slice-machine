@@ -6,6 +6,19 @@ import { BaseManager } from "./_BaseManager";
 import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
 import { decode } from "../lib/decode";
 
+const DEFAULT_REPOSITORY_SETTINGS = {
+	plan: "personal",
+	isAnnual: "false",
+	role: "developer",
+};
+
+const RepositoryUserAgents = {
+	SliceMachine: "prismic-cli/sm",
+	LegacyZero: "prismic-cli/0",
+} as const;
+type RepositoryUserAgents =
+	typeof RepositoryUserAgents[keyof typeof RepositoryUserAgents];
+
 const PrismicRepositoryRoles = {
 	SuperUser: "SuperUser",
 	Administrator: "Administrator",
@@ -88,7 +101,7 @@ export class RepositoryManager extends BaseManager {
 		}
 	}
 
-	async exists(
+	async checkExists(
 		args: SliceMachineManagerExistsRepositoryArgs,
 	): Promise<boolean> {
 		const url = new URL(
@@ -115,19 +128,16 @@ export class RepositoryManager extends BaseManager {
 		);
 
 		const body = {
+			...DEFAULT_REPOSITORY_SETTINGS,
 			domain: args.domain,
 			framework: args.framework, // This property appears to be optional for the API
-			// TODO: Maybe those data shouldn't be hardcoded
-			plan: "personal", // Using any other value than "personal" requires payment
-			isAnnual: "false", // This property appears to be optional for the API
-			role: "developer", // This property appears to be optional for the API
 		};
 
 		const res = await this._fetch({
 			url,
 			method: "POST",
 			body,
-			userAgent: "prismic-cli/sm", // Custom User Agent is required
+			userAgent: RepositoryUserAgents.SliceMachine, // Custom User Agent is required
 		});
 		const text = await res.text();
 
@@ -159,7 +169,7 @@ export class RepositoryManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: "prismic-cli/0", // Custom User Agent is required
+			userAgent: RepositoryUserAgents.LegacyZero, // Custom User Agent is required
 		});
 
 		if (!res.ok) {
@@ -185,7 +195,7 @@ export class RepositoryManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: "prismic-cli/0", // Custom User Agent is required
+			userAgent: RepositoryUserAgents.LegacyZero, // Custom User Agent is required
 		});
 
 		if (!res.ok) {
@@ -202,7 +212,7 @@ export class RepositoryManager extends BaseManager {
 		url: URL;
 		method?: "GET" | "POST";
 		body?: unknown;
-		userAgent?: string;
+		userAgent?: RepositoryUserAgents;
 	}): Promise<Response> {
 		const cookies = await this.user.getAuthenticationCookies();
 

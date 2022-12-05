@@ -8,12 +8,13 @@ import * as h3 from "h3";
 import fetch from "node-fetch";
 import cookie from "cookie";
 import cors from "cors";
-import open from "open";
+import getPort from "get-port";
 
 import { decode } from "../lib/decode";
 import { serializeCookies } from "../lib/serializeCookies";
 
 import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
+import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
 
 const COOKIE_SEPARATOR = "; ";
 const AUTH_COOKIE_KEY = "prismic-auth";
@@ -66,11 +67,15 @@ type PrismicAuthManagerLoginArgs = {
 	cookies: string[];
 };
 
-// REFACTOR: Actually, this is the same paylaod as `PrismicAuthManagerLoginArgs`(?)
-const BrowserLoginData = t.type({
-	email: t.string,
-	cookies: t.array(t.string),
-});
+type PrismicAuthManagerGetLoginSessionInfoReturnType = {
+	port: number;
+	url: string;
+};
+
+type PrismicAuthManagerNodeLoginSessionArgs = {
+	port: number;
+	onListenCallback?: () => void;
+};
 
 type GetProfileForAuthenticationTokenArgs = {
 	authenticationToken: string;
@@ -138,10 +143,28 @@ export class PrismicAuthManager {
 		await this._writePersistedAuthState(authState);
 	}
 
-	async browserLogin(): Promise<void> {
+	async getLoginSessionInfo(): Promise<PrismicAuthManagerGetLoginSessionInfoReturnType> {
+		// Pick a random port, with a preference for historic `5555`
+		const port = await getPort({ port: 5555 });
+
+		const url = new URL(
+			`/dashboard/cli/login?source=slice-machine&port=${port}`,
+			APIEndpoints.PrismicWroom,
+		).toString();
+
+		return {
+			port,
+			url,
+		};
+	}
+
+	async nodeLoginSession(
+		args: PrismicAuthManagerNodeLoginSessionArgs,
+	): Promise<void> {
 		return new Promise<void>(async (resolve) => {
 			// Timeout attempt after 3 minutes
 			const timeout = setTimeout(() => {
+				server.close();
 				throw new Error(
 					"Login timeout, server did not receive a response within a 3-minute delay",
 				);
@@ -150,37 +173,17 @@ export class PrismicAuthManager {
 			const app = h3.createApp();
 			app.use(h3.fromNodeMiddleware(cors()));
 			app.use(
-				"/",
-				h3.eventHandler(async (event) => {
-					// Ignore non-POST request
-					if (!h3.isMethod(event, "POST")) {
-						throw h3.createError({
-							statusCode: 405,
-							name: "Method Not Allowed",
-						});
-					}
-
-					const json = await h3.readBody(event);
-
-					const { value: data, error } = decode(BrowserLoginData, json);
-					if (error) {
-						throw new Error(
-							`Failed to decode browser response: ${error.errors.join(", ")}`,
-						);
-					}
-
-					await this.login(data);
-
-					// Cleanup process before resolve
-					clearTimeout(timeout);
-					server.close();
-
-					resolve();
-
-					event.node.res.statusCode = 200;
-
-					return h3.send(event);
-				}),
+				h3.fromNodeMiddleware(
+					createPrismicAuthManagerMiddleware({
+						prismicAuthManager: this,
+						onLoginCallback() {
+							// Cleanup process and resolve
+							clearTimeout(timeout);
+							server.close();
+							resolve();
+						},
+					}),
+				),
 			);
 
 			// Start server
@@ -189,15 +192,12 @@ export class PrismicAuthManager {
 				server.once("listening", () => {
 					resolve();
 				});
-				server.listen(5555);
+				server.listen(args.port);
 			});
 
-			// Open browser
-			const url = await new URL(
-				"/dashboard/cli/login?source=slice-machine",
-				APIEndpoints.PrismicWroom,
-			);
-			await open(url.toString());
+			if (args.onListenCallback) {
+				args.onListenCallback();
+			}
 		});
 	}
 
@@ -264,14 +264,9 @@ export class PrismicAuthManager {
 	}
 
 	async getAuthenticationToken(): Promise<string> {
-		const authState = await this._readPersistedAuthState();
+		const cookies = await this.getAuthenticationCookies();
 
-		// TODO: Maybe we want to dedupe logic with `getAuthenticationCookies`
-		if (!checkIsLoggedIn(authState)) {
-			throw new Error("Not logged in.");
-		}
-
-		return authState.cookies[AUTH_COOKIE_KEY];
+		return cookies[AUTH_COOKIE_KEY];
 	}
 
 	// TODO: This function should check if the token has not expired, not

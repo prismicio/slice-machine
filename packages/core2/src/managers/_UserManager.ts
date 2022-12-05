@@ -2,7 +2,10 @@ import { BaseManager } from "./_BaseManager";
 
 export class UserManager extends BaseManager {
 	login = this.prismicAuthManager.login.bind(this.prismicAuthManager);
-	browserLogin = this.prismicAuthManager.browserLogin.bind(
+	getLoginSessionInfo = this.prismicAuthManager.getLoginSessionInfo.bind(
+		this.prismicAuthManager,
+	);
+	nodeLoginSession = this.prismicAuthManager.nodeLoginSession.bind(
 		this.prismicAuthManager,
 	);
 	logout = this.prismicAuthManager.logout.bind(this.prismicAuthManager);

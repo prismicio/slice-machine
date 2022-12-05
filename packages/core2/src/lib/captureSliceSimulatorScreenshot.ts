@@ -1,4 +1,4 @@
-import * as http from "node:http";
+import fetch from "node-fetch";
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { Viewport } from "puppeteer";
 
@@ -14,19 +14,9 @@ const DEFAULT_VIEWPORT: Viewport = {
 const ROOT_SELECTOR = "#root";
 
 const testURLAccess = async (url: string): Promise<boolean> => {
-	return new Promise<boolean>((resolve, reject) => {
-		http
-			.get(url, (res) => {
-				const ok = Boolean(
-					res.statusCode && res.statusCode >= 200 && res.statusCode < 300,
-				);
+	const res = await fetch(url);
 
-				resolve(ok);
-			})
-			.on("error", (error) => {
-				reject(error);
-			});
-	});
+	return res.ok;
 };
 
 type CaptureSliceSimulatorScreenshotArgs = {
