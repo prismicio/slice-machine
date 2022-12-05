@@ -224,7 +224,7 @@ describe("[Simulator module]", () => {
         .put(
           openToasterCreator({
             type: ToasterType.SUCCESS,
-            message: "Mock content updated",
+            message: "Saved",
           })
         )
         .put(saveSliceMockCreator.success(payload.payload.mock))

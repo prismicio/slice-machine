@@ -356,7 +356,7 @@ export function* saveSliceMockSaga({
     yield put(
       openToasterCreator({
         type: ToasterType.SUCCESS,
-        message: "Mock content updated",
+        message: "Saved",
       })
     );
     yield put(saveSliceMockCreator.success(data));
