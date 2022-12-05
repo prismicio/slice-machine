@@ -12,7 +12,7 @@ import Files from "../../../../lib/utils/files";
 import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 
-import onSaveSlice from "../common/hooks/onSaveSlice";
+import generateLibrariesIndex from "../common/hooks/updateLibraries";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../../../../lib/io";
@@ -68,7 +68,7 @@ export async function handler(
 
   console.log("[slice/save]: Slice was saved!");
 
-  await onSaveSlice(env);
+  await generateLibrariesIndex(env, from);
   console.log("[slice/save]: Libraries index files regenerated!");
 
   return {};

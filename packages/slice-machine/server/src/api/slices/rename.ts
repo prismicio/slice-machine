@@ -6,7 +6,7 @@ import {
 } from "@slicemachine/core/build/node-utils/paths";
 import * as IO from "../../../../lib/io";
 import fs from "fs";
-import onSaveSlice from "../common/hooks/onSaveSlice";
+import generateLibrariesIndex from "../common/hooks/updateLibraries";
 
 interface RenameSliceBody {
   sliceId: string;
@@ -77,7 +77,7 @@ export async function renameSlice(req: {
 
   IO.Types.upsert(env);
 
-  await onSaveSlice(env);
+  await generateLibrariesIndex(env, libName);
 
   return desiredSlice;
 }

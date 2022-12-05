@@ -1,6 +1,6 @@
 import MockedBackendEnv from "../../__mocks__/backendEnvironment";
 import { MockLibraryInfo } from "../../__mocks__/libraryState";
-import onSaveSlice from "../../../server/src/api/common/hooks/onSaveSlice";
+import generateLibraryIndex from "../../../server/src/api/common/hooks/updateLibraries";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { Models } from "@slicemachine/core";
 import { vol } from "memfs";
@@ -47,16 +47,16 @@ import SliceName from './SliceName/index.svelte'
 Slices.SliceName = SliceName
 `;
 
-describe("onSaveSlice", () => {
+describe("updateLibraries", () => {
   it("should generate index.js file", async () => {
     const env: BackendEnvironment = {
       ...MockedBackendEnv,
       framework: Models.Frameworks.next,
     };
 
-    await onSaveSlice(env);
+    await generateLibraryIndex(env, "@/slices");
 
-    const index = vol.readFileSync("/test/slice1/index.js", "utf8");
+    const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedIndexFile);
   });
 
@@ -66,9 +66,9 @@ describe("onSaveSlice", () => {
       framework: Models.Frameworks.svelte,
     };
 
-    await onSaveSlice(env);
+    await generateLibraryIndex(env, "@/slices");
 
-    const index = vol.readFileSync("/test/slice1/index.js", "utf8");
+    const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedSvelteIndexFile);
   });
 });
