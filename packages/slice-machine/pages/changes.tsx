@@ -50,7 +50,6 @@ const changes: React.FunctionComponent = () => {
     if (changesPushed.length > 0) setChangesPushed([]); // reset changesPushed
     pushChanges(
       unSyncedSlices,
-      // TODO this is probably wrong
       unSyncedCustomTypes
         .filter(isLocalCustomType)
         .map((customtype) => customtype.local),

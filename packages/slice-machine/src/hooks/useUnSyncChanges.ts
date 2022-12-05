@@ -1,5 +1,4 @@
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import {
@@ -36,23 +35,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
     ...slices,
   ]);
 
-  const components: ComponentUI[] = libraries.reduce(
-    (acc: ComponentUI[], lib: LibraryUI) => {
-      return [...acc, ...lib.components];
-    },
-    []
-  );
-
-  // TODO get rid of this once design validated
-  if (components.length > 0) {
-    components.push({
-      ...components[0],
-      model: {
-        ...components[0].model,
-        id: "test-deleted-slice",
-      },
-    });
-  }
+  const components: ComponentUI[] = libraries.flatMap((lib) => lib.components);
 
   const unSyncedSlices = components.filter(
     (component) =>

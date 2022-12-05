@@ -14,6 +14,7 @@ import {
   renameSliceCreator,
   deleteSliceSaga,
   deleteSliceCreator,
+  getFrontendSlices,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
 
@@ -34,6 +35,13 @@ import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import axios, { AxiosError } from "axios";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+
+import {
+  generateComponentUI,
+  generateSliceSM,
+  generateLibraryUI,
+} from "./__mocks__/sliceStuffFactory";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 const dummySlicesState: SlicesStoreType = {
   libraries: [],
@@ -306,6 +314,68 @@ describe("[Slices module]", () => {
         .next()
         .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
       saga.next().isDone();
+    });
+  });
+
+  describe("[Selectors]", () => {
+    describe.only("getLocallyDeletedSlices", () => {
+      it("works as expected", () => {
+        const l1 = generateLibraryUI({
+          components: [
+            generateComponentUI({
+              model: generateSliceSM({ id: "1" }),
+            }),
+            generateComponentUI({
+              model: generateSliceSM({ id: "2" }),
+            }),
+            generateComponentUI({
+              model: generateSliceSM({ id: "3" }),
+            }),
+          ],
+        });
+        const l2 = generateLibraryUI({
+          components: [
+            generateComponentUI({
+              model: generateSliceSM({ id: "4" }),
+            }),
+            generateComponentUI({
+              model: generateSliceSM({ id: "5" }),
+            }),
+          ],
+        });
+
+        const remoteSlices = [
+          generateSliceSM({ id: "1" }),
+          generateSliceSM({ id: "3" }),
+          generateSliceSM({ id: "4" }),
+          generateSliceSM({ id: "6" }),
+        ];
+
+        const frontendSlices = getFrontendSlices({
+          slices: { libraries: [l1, l2], remoteSlices },
+        } as unknown as SliceMachineStoreType);
+
+        // it combines slices from all the local libraries
+        // it combines local and remote only libraries
+        // it maps the correct remote slice if found
+        expect(frontendSlices.length).toEqual(6);
+        expect(frontendSlices.map((s) => s.local?.id)).toEqual([
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          undefined,
+        ]);
+        expect(frontendSlices.map((s) => s.remote?.id)).toEqual([
+          "1",
+          undefined,
+          "3",
+          "4",
+          undefined,
+          "6",
+        ]);
+      });
     });
   });
 });
