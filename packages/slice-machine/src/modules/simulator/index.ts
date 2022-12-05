@@ -360,6 +360,7 @@ export function* saveSliceMockSaga({
       })
     );
     yield put(saveSliceMockCreator.success(data));
+    // TODO: ask if the state should be updated with the saved mocks
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Error saving content";
