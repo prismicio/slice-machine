@@ -36,9 +36,8 @@ import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
 import Tracker from "@src/tracking/client";
-import { ComponentMocks } from "@slicemachine/core/build/models";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { getLibraries, updateSliceMock } from "../slices";
+import { updateSliceMock } from "../slices";
 
 const NoStepSelected = 0;
 
