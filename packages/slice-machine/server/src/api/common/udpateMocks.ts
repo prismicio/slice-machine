@@ -1,10 +1,10 @@
-import mockForSlice from "../../lib/mock/Slice";
-import mockForCustomType from "../../lib/mock/CustomType";
+import mockForSlice from "../../../../lib/mock/Slice";
+import mockForCustomType from "../../../../lib/mock/CustomType";
 import {
   CustomTypeMockConfig,
   SliceMockConfig,
-} from "../../lib/models/common/MockConfig";
-import { getConfig as getGobalMockConfig } from "../../lib/mock/misc/fs";
+} from "../../../../lib/models/common/MockConfig";
+import { getConfig as getGobalMockConfig } from "../../../../lib/mock/misc/fs";
 import {
   Component,
   ComponentMocks,
@@ -19,11 +19,11 @@ import { getOrElseW } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { Document } from "@prismicio/types-internal/lib/content";
 import * as Libraries from "@slicemachine/core/build/libraries";
-import { getLocalCustomTypes } from "../../lib/utils/customTypes";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { Slices } from "@slicemachine/core/build/models";
 
-export function replaceLegacySliceMocks(
+export function replaceSliceApiMocksWithEditorMocks(
   cwd: string,
   libraries: ReadonlyArray<Library<Component>>
 ): void {
@@ -62,7 +62,7 @@ export function replaceLegacySliceMocks(
   } catch (e) {}
 }
 
-export function replaceLegacyCustomTypeMocks(
+export function replaceCustomTypeApiMocksWithEditorMocks(
   cwd: string,
   customTypes: ReadonlyArray<CustomTypeSM>,
   sharedSlices: Record<string, SharedSlice>
@@ -103,7 +103,7 @@ export function updateMocks(
 ): void {
   try {
     const libraries = Libraries.libraries(cwd, manifestLibraries);
-    replaceLegacySliceMocks(cwd, libraries);
+    replaceSliceApiMocksWithEditorMocks(cwd, libraries);
 
     const components = libraries.reduce<Component[]>((acc, lib) => {
       return [...acc, ...lib.components];
@@ -121,6 +121,6 @@ export function updateMocks(
     );
 
     const customTypes = getLocalCustomTypes(cwd);
-    replaceLegacyCustomTypeMocks(cwd, customTypes, sharedSlices);
+    replaceCustomTypeApiMocksWithEditorMocks(cwd, customTypes, sharedSlices);
   } catch {}
 }

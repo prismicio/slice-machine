@@ -12,11 +12,14 @@ import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
 import { RequestWithEnv } from "./http/common";
 import { getAndSetUserProfile } from "./services/getAndSetUserProfile";
+import { updateMocks } from "./common/udpateMocks";
 
 export const getBackendState = async (
   configErrors: Record<string, ServerError>,
   env: BackendEnvironment
 ) => {
+  updateMocks(env.cwd, env.manifest.libraries);
+
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
   const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env);
 
