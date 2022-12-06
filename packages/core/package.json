@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.16-dev-react-18.1",
+  "version": "1.1.16-dev-react-18.2",
   "private": false,
   "main": "./build/index.js",
   "engines": {
