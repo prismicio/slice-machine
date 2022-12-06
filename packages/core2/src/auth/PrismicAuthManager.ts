@@ -148,6 +148,10 @@ export class PrismicAuthManager {
 				},
 			});
 
+			if (!res.ok) {
+				await this.logout();
+			}
+
 			return res.ok;
 		} else {
 			return false;

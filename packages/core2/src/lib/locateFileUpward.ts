@@ -6,12 +6,22 @@ import { castArray } from "./castArray";
 type LocateFileUpwardConfig = {
 	startDir?: string;
 	stopDir?: string;
+	/**
+	 * @internal
+	 */
+	_originalStartDir?: string;
 };
 
 export const locateFileUpward = async (
 	filePathOrPaths: string | readonly string[],
-	{ startDir = process.cwd(), stopDir = "/" }: LocateFileUpwardConfig = {},
+	{
+		startDir = process.cwd(),
+		stopDir = "/",
+		_originalStartDir,
+	}: LocateFileUpwardConfig = {},
 ): Promise<string> => {
+	const originalStartDir = _originalStartDir ?? startDir;
+
 	const filePaths = castArray(filePathOrPaths);
 
 	try {
@@ -31,13 +41,18 @@ export const locateFileUpward = async (
 	}
 
 	if (startDir === stopDir) {
+		const formattedFilePaths = filePaths
+			.map((filePath) => `\`${filePath}\``)
+			.join(" or ");
+
 		throw new Error(
-			`Could not locate \`${filePathOrPaths}\` between \`${startDir}\` and \`${stopDir}\`.`,
+			`Could not locate ${formattedFilePaths} between \`${originalStartDir}\` and \`${stopDir}\`.`,
 		);
 	}
 
 	return locateFileUpward(filePathOrPaths, {
 		startDir: path.resolve(startDir, ".."),
 		stopDir,
+		_originalStartDir: originalStartDir,
 	});
 };

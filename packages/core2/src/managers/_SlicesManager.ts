@@ -17,6 +17,7 @@ import {
 	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
 import { Viewport } from "puppeteer";
+import fetch from "node-fetch";
 
 import { DecodeError } from "../lib/DecodeError";
 import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";

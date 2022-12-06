@@ -1,15 +1,17 @@
+/* eslint-disable no-console */
+
 import {
 	PrismicUserProfile,
 	SliceMachineManager,
 	createSliceMachineManager,
 } from "@slicemachine/core2";
-import boxen from "boxen";
 import chalk from "chalk";
 import open from "open";
-import { stripIndent } from "common-tags";
 
 import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
+
+const DEFAULT_SERVER_PORT = 9999;
 
 type CreateStartSliceMachineProcessArgs = ConstructorParameters<
 	typeof StartSliceMachineProcess
@@ -26,25 +28,47 @@ export type StartSliceMachineProcessConstructorArgs = {
 	port?: number;
 };
 
+/**
+ * Manages the process that runs Slice Machine's server.
+ */
 export class StartSliceMachineProcess {
-	sliceMachineManager: SliceMachineManager;
-	open: boolean;
+	/**
+	 * Determines if Slice Machine should automatically be opened once the server
+	 * starts.
+	 *
+	 * @defaultValue `false`
+	 */
+	open?: boolean;
+
+	/**
+	 * The port on which to start the Slice Machine server.
+	 *
+	 * @defaultValue `9999`
+	 */
 	port?: number;
 
-	constructor(args: StartSliceMachineProcessConstructorArgs) {
-		this.sliceMachineManager = createSliceMachineManager();
+	/**
+	 * The Slice Machine manager used for the process.
+	 */
+	private _sliceMachineManager: SliceMachineManager;
 
-		this.open = args.open;
-		this.port = args.port;
+	constructor(args: StartSliceMachineProcessConstructorArgs) {
+		this._sliceMachineManager = createSliceMachineManager();
+
+		this.open = args.open ?? false;
+		this.port = args.port ?? DEFAULT_SERVER_PORT;
 	}
 
+	/**
+	 * Runs the process.
+	 */
 	async run(): Promise<void> {
-		await this.sliceMachineManager.plugins.initPlugins();
+		await this._sliceMachineManager.plugins.initPlugins();
 
-		await this._validateEnvironment();
+		await this._validateProject();
 
 		const server = await createSliceMachineServer({
-			sliceMachineManager: this.sliceMachineManager,
+			sliceMachineManager: this._sliceMachineManager,
 		});
 		const { address } = await listen(server, { port: this.port });
 		const url = `http://localhost:${address.port}`;
@@ -53,41 +77,75 @@ export class StartSliceMachineProcess {
 			await open(url);
 		}
 
-		const currentVersion =
-			await this.sliceMachineManager.project.getRunningSliceMachineVersion();
-
-		console.info(
-			boxen(
-				stripIndent`
-				🍕 Slice Machine ${currentVersion} started.
-				   Framework:      Unknown
-				   Logged in as:   ${chalk.gray("Loading...")}
-				   Running at:     http://localhost:${address.port}
-			`,
-				{
-					padding: {
-						top: 1,
-						bottom: 1,
-						left: 4,
-						right: 5,
-					},
-					borderColor: "green",
-					borderStyle: "round",
-				}
-			)
+		console.log();
+		console.log(
+			await this._buildSliceMachineRunningLine(
+				`Running at ${chalk.magenta(url)}`,
+			),
 		);
+		console.log(this._buildLoggedInAsLine(chalk.dim("Loading...")));
+		console.log();
 
 		const profile = await this._fetchProfile();
 
-		console.info(`Logged in as: ${profile?.email || "Not logged in"}`);
+		process.stdout.moveCursor(0, -2);
+		process.stdout.clearLine(1);
+		console.log(
+			this._buildLoggedInAsLine(
+				profile
+					? `${[profile.firstName, profile.lastName]
+							.filter(Boolean)
+							.join(" ")} ${chalk.dim(`(${profile.email})`)}`
+					: chalk.dim("Not logged in"),
+			),
+		);
+		console.log();
 	}
 
-	private async _validateEnvironment(): Promise<void> {
+	/**
+	 * Returns a string with Slice Machine info formatted for the console.
+	 *
+	 * @param value - Info to display.
+	 *
+	 * @returns String to pass to the console.
+	 */
+	private async _buildSliceMachineRunningLine(value: string): Promise<string> {
+		const currentVersion =
+			await this._sliceMachineManager.project.getRunningSliceMachineVersion();
+
+		return `${chalk.bgBlack(
+			` ${chalk.bold.white("Slice Machine")} ${chalk.magenta(
+				`v${currentVersion}`,
+			)} `,
+		)} ${chalk.dim("→")} ${value}`;
+	}
+
+	/**
+	 * Returns a string with logged in Prismic user info formatted for the
+	 * console.
+	 *
+	 * @param value - User info to display.
+	 *
+	 * @returns String to pass to the console.
+	 */
+	private _buildLoggedInAsLine(value: string): string {
+		return `${chalk.bgBlack(
+			`         ${chalk.bold("Logged in as")} `,
+		)} ${chalk.dim("→")} ${value}`;
+	}
+
+	/**
+	 * Validates the project's config and content models.
+	 *
+	 * @throws Throws if a Slice model is invalid.
+	 * @throws Throws if a Custom Type model is invalid.
+	 */
+	private async _validateProject(): Promise<void> {
 		// Validate Slice Machine config.
-		await this.sliceMachineManager.project.loadSliceMachineConfig();
+		await this._sliceMachineManager.project.loadSliceMachineConfig();
 
 		// Validate Slice models.
-		const allSlices = await this.sliceMachineManager.slices.readAllSlices();
+		const allSlices = await this._sliceMachineManager.slices.readAllSlices();
 		if (allSlices.errors.length > 0) {
 			// TODO: Provide better error message.
 			throw new Error(allSlices.errors.join(", "));
@@ -95,18 +153,25 @@ export class StartSliceMachineProcess {
 
 		// Validate Custom Type models.
 		const allCustomTypes =
-			await this.sliceMachineManager.customTypes.readAllCustomTypes();
+			await this._sliceMachineManager.customTypes.readAllCustomTypes();
 		if (allCustomTypes.errors.length > 0) {
 			// TODO: Provide better error message.
 			throw new Error(allCustomTypes.errors.join(", "));
 		}
 	}
 
+	/**
+	 * Fetches the logged in Prismic user's profile. If the user is not logged in,
+	 * `undefined` is returned.
+	 *
+	 * @returns The logged in Prismic user's profile, or `undefined` if not logged
+	 *   in.
+	 */
 	private async _fetchProfile(): Promise<PrismicUserProfile | undefined> {
-		const isLoggedIn = await this.sliceMachineManager.user.checkIsLoggedIn();
+		const isLoggedIn = await this._sliceMachineManager.user.checkIsLoggedIn();
 
 		if (isLoggedIn) {
-			return await this.sliceMachineManager.user.getProfile();
+			return await this._sliceMachineManager.user.getProfile();
 		}
 	}
 }

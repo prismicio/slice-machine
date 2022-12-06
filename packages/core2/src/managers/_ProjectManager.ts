@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 
 import { decodeSliceMachineConfig } from "../lib/decodeSliceMachineConfig";
 import { loadModuleWithJiti } from "../lib/loadModuleWithJiti";
-import { locateFileUpward } from "../lib/findFileUpward";
+import { locateFileUpward } from "../lib/locateFileUpward";
 
 import {
 	SLICE_MACHINE_CONFIG_FILENAMES,
@@ -23,9 +23,21 @@ export class ProjectManager extends BaseManager {
 			return this._cachedRoot;
 		}
 
-		const sliceMachineConfigFilePath = await locateFileUpward(
-			SLICE_MACHINE_CONFIG_FILENAMES,
-		);
+		let sliceMachineConfigFilePath: string;
+		try {
+			sliceMachineConfigFilePath = await locateFileUpward(
+				SLICE_MACHINE_CONFIG_FILENAMES,
+			);
+		} catch (error) {
+			const formattedSliceMachineConfigFilePaths =
+				SLICE_MACHINE_CONFIG_FILENAMES.map(
+					(filePath) => `\`${filePath}\``,
+				).join(" or ");
+
+			throw new Error(
+				`Could not find a ${formattedSliceMachineConfigFilePaths} file. Please create a config file at the root of your project.`,
+			);
+		}
 
 		this._cachedRoot = path.dirname(sliceMachineConfigFilePath);
 
@@ -41,6 +53,9 @@ export class ProjectManager extends BaseManager {
 	}
 
 	async loadSliceMachineConfig(): Promise<SliceMachineConfig> {
+		// TODO: Reload plugins with a fresh plugin runner. Plugins may
+		// have been added or removed.
+
 		const projectRoot = await this.getRoot();
 
 		let configModule: unknown | undefined;
@@ -76,7 +91,7 @@ export class ProjectManager extends BaseManager {
 	}
 
 	async getRunningSliceMachineVersion(): Promise<string> {
-		const sliceMachineDir = await this.locateSliceMachineDir();
+		const sliceMachineDir = await this.locateSliceMachineUIDir();
 
 		const sliceMachinePackageJSONContents = await fs.readFile(
 			path.join(sliceMachineDir, "package.json"),
@@ -90,9 +105,7 @@ export class ProjectManager extends BaseManager {
 		return json.version;
 	}
 
-	// TODO: Should this be renamed to `locateSliceMachineUIDir()` (note
-	// the addition of "UI")?
-	async locateSliceMachineDir(): Promise<string> {
+	async locateSliceMachineUIDir(): Promise<string> {
 		const projectRoot = await this.getRoot();
 
 		const require = createRequire(path.join(projectRoot, "index.js"));

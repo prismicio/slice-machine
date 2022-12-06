@@ -19,27 +19,29 @@ export const proceduresFromInstance = <TProceduresInstance>(
 ): ProceduresFromInstance<TProceduresInstance> => {
 	const res = {} as ProceduresFromInstance<TProceduresInstance>;
 
-	const proto = Object.getPrototypeOf(proceduresInstance);
+	if (proceduresInstance) {
+		const proto = Object.getPrototypeOf(proceduresInstance);
 
-	const properties = [
-		...Object.getOwnPropertyNames(proceduresInstance),
-		...Object.getOwnPropertyNames(proto),
-	];
+		const properties = [
+			...Object.getOwnPropertyNames(proceduresInstance),
+			...(proto ? Object.getOwnPropertyNames(proto) : []),
+		];
 
-	for (const key of properties) {
-		const value = proceduresInstance[key as keyof typeof proceduresInstance];
+		for (const key of properties) {
+			const value = proceduresInstance[key as keyof typeof proceduresInstance];
 
-		if (key === "constructor" || config.omit?.includes(value)) {
-			continue;
-		}
+			if (key === "constructor" || config.omit?.includes(value)) {
+				continue;
+			}
 
-		if (typeof value === "function") {
-			res[key as keyof typeof res] = value.bind(proceduresInstance);
-		} else if (typeof value === "object") {
-			res[key as keyof typeof res] = proceduresFromInstance(
-				value,
-				config,
-			) as typeof res[keyof typeof res];
+			if (typeof value === "function") {
+				res[key as keyof typeof res] = value.bind(proceduresInstance);
+			} else if (typeof value === "object") {
+				res[key as keyof typeof res] = proceduresFromInstance(
+					value,
+					config,
+				) as typeof res[keyof typeof res];
+			}
 		}
 	}
 

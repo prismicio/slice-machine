@@ -14,6 +14,7 @@ import {
 	CustomTypeUpdateHookData,
 	HookError,
 } from "@slicemachine/plugin-kit";
+import fetch from "node-fetch";
 
 import { DecodeError } from "../lib/DecodeError";
 import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
