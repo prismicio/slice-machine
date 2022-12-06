@@ -40,7 +40,7 @@ import {
   generateComponentUI,
   generateSliceSM,
   generateLibraryUI,
-} from "./__mocks__/sliceStuffFactory";
+} from "./__mocks__/sliceUtilsFactory";
 import { SliceMachineStoreType } from "@src/redux/type";
 
 const dummySlicesState: SlicesStoreType = {
