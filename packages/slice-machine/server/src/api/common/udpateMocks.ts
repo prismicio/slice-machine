@@ -1,10 +1,10 @@
-import mockForSlice from "../../lib/mock/Slice";
-import mockForCustomType from "../../lib/mock/CustomType";
+import mockForSlice from "../../../../lib/mock/Slice";
+import mockForCustomType from "../../../../lib/mock/CustomType";
 import {
   CustomTypeMockConfig,
   SliceMockConfig,
-} from "../../lib/models/common/MockConfig";
-import { getConfig as getGobalMockConfig } from "../../lib/mock/misc/fs";
+} from "../../../../lib/models/common/MockConfig";
+import { getConfig as getGobalMockConfig } from "../../../../lib/mock/misc/fs";
 import {
   Component,
   ComponentMocks,
@@ -19,7 +19,7 @@ import { getOrElseW } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { Document } from "@prismicio/types-internal/lib/content";
 import * as Libraries from "@slicemachine/core/build/libraries";
-import { getLocalCustomTypes } from "../../lib/utils/customTypes";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { Slices } from "@slicemachine/core/build/models";
 
@@ -101,6 +101,8 @@ export function updateMocks(
   cwd: string,
   manifestLibraries: Array<string> = []
 ): void {
+  const str = "######## UPDATE #######";
+  console.time(str);
   try {
     const libraries = Libraries.libraries(cwd, manifestLibraries);
     replaceLegacySliceMocks(cwd, libraries);
@@ -123,4 +125,5 @@ export function updateMocks(
     const customTypes = getLocalCustomTypes(cwd);
     replaceLegacyCustomTypeMocks(cwd, customTypes, sharedSlices);
   } catch {}
+  console.timeEnd(str);
 }

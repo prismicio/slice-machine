@@ -16,7 +16,6 @@ import { startSMServer } from "./startSMServer";
 import { validateSession } from "./validateSession";
 import { validateModels } from "./validateModels";
 import { validateGenerateTypes } from "./validateGenerateTypes";
-import { updateMocks } from "./udpateMocks";
 
 async function run(): Promise<void> {
   const cwd: string = process.cwd(); // project running the script
@@ -39,8 +38,6 @@ async function run(): Promise<void> {
   if (!areModelsValid) return process.exit(0);
 
   validateGenerateTypes({ cwd });
-
-  updateMocks(cwd, manifest.content.libraries);
 
   const framework = NodeUtils.Framework.defineFramework({
     cwd,
