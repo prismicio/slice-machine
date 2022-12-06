@@ -92,7 +92,7 @@ jobs:
         run: npm run build
       - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine
-        run: npm run build && npm run export-build
+        run: npm run build
       - name: Running End to End tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
