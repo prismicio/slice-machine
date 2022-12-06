@@ -17,8 +17,7 @@ const FailedConnect = () => (
     </Text>
     <Text
       sx={{
-        color: "#86848D",
-        fontWeight: "400",
+        color: "failedConnectText",
         maxWidth: "400px",
         textAlign: "center",
         fontSize: "12px",
