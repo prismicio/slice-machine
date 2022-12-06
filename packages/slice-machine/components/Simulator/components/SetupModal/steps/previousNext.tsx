@@ -38,7 +38,8 @@ const CreatePageInstructions = {
 
 const steps = [
   InstallSliceSimulator({
-    code: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
+    npm: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
+    yarn: `yarn add next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
   }),
   CreatePage(CreatePageInstructions),
   UpdateSmJson({}),

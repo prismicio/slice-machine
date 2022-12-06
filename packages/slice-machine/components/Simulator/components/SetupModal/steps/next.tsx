@@ -31,7 +31,8 @@ export default SliceSimulatorPage;`,
 
 const steps = [
   InstallSliceSimulator({
-    code: `npm install --save @prismicio/react @prismicio/slice-simulator-react @prismicio/client@latest @prismicio/helpers`,
+    npm: `npm install --save @prismicio/react @prismicio/slice-simulator-react @prismicio/client@latest @prismicio/helpers`,
+    yarn: `yarn add @prismicio/react @prismicio/slice-simulator-react @prismicio/client@latest @prismicio/helpers`,
   }),
   CreatePage(CreatePageInstructions),
   UpdateSmJson({}),

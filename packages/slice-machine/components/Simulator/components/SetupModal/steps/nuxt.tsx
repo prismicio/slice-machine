@@ -77,7 +77,8 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = () => {
 };
 export const steps = [
   InstallSliceSimulator({
-    code: `npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue`,
+    npm: `npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue`,
+    yarn: `yarn add @nuxtjs/prismic @prismicio/slice-simulator-vue`,
   }),
   UpdateNuxtConfig,
   CreatePage({

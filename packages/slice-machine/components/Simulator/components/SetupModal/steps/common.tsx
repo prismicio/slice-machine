@@ -26,25 +26,39 @@ export interface DefaultStepCompProps {
 }
 
 interface InstallSliceSimulatorProps extends DefaultStepProps {
-  code: string;
+  npm: string;
+  yarn: string;
   fileName?: string;
   FileIcon?: IconType;
 }
 
 export const InstallSliceSimulator =
   ({
-    code,
+    npm,
+    yarn,
     fileName,
     FileIcon,
   }: InstallSliceSimulatorProps): React.FunctionComponent<DefaultStepCompProps> =>
   () => {
     return (
       <Flex sx={{ flexDirection: "column", height: "100%" }}>
+        <Text as="p" mb={2}>
+          Run this command to install the simulator package via npm:
+        </Text>
         <CodeBlock
-          fileName={fileName || "Terminal"}
+          fileName={fileName || "Terminal (npm)"}
           FileIcon={FileIcon || BsSquare}
         >
-          {code}
+          {npm}
+        </CodeBlock>
+        <Text as="p" my={2}>
+          Alternatively, you can use yarn:
+        </Text>
+        <CodeBlock
+          fileName={fileName || "Terminal (yarn)"}
+          FileIcon={FileIcon || BsSquare}
+        >
+          {yarn}
         </CodeBlock>
       </Flex>
     );
