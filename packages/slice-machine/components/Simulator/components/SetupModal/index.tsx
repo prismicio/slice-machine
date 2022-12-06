@@ -78,6 +78,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const {
     linkToTroubleshootingDocs,
     framework,
+    linkToStorybookDocs,
     isSimulatorAvailableForFramework,
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
@@ -138,6 +139,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
                   >
                     <Step
                       stepNumber={i + 1}
+                      linkToStorybookDocs={linkToStorybookDocs}
                       linkToTroubleshootingDocs={linkToTroubleshootingDocs}
                     />
                   </TabPanel>

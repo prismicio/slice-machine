@@ -22,6 +22,7 @@ interface DefaultStepProps {
 export interface DefaultStepCompProps {
   stepNumber: number;
   linkToTroubleshootingDocs: string;
+  linkToStorybookDocs: string;
 }
 
 interface InstallSliceSimulatorProps extends DefaultStepProps {

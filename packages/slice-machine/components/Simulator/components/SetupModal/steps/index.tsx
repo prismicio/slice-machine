@@ -4,6 +4,8 @@ import NextSetupStepperConfiguration from "./next";
 import NuxtSetupStepperConfiguration from "./nuxt";
 import PreviousNextStepperConfiguration from "./previousNext";
 import PreviousNuxtSetupStepperConfiguration from "./previousNuxt";
+import Unsupported from "./unsupported";
+
 import { SetupStepperConfiguration } from "./common";
 
 export const getStepperConfigurationByFramework = (
@@ -19,6 +21,6 @@ export const getStepperConfigurationByFramework = (
     case Frameworks.previousNuxt:
       return PreviousNuxtSetupStepperConfiguration;
     default:
-      throw new Error(`${framework} : doesn't support simulator`);
+      return Unsupported;
   }
 };
