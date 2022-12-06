@@ -60,62 +60,157 @@ export const getRandomRepositoryDomain = (): string => {
 	);
 };
 
-export const formatRepositoryDomain = (raw: string): string => {
+export const formatRepositoryDomain = (rawDomain: string): string => {
 	// Lowercase anything
-	let result = raw.toLowerCase();
+	let domain = rawDomain.toLowerCase();
 
 	/** Replace whitespaces and underscores with hyphens */
-	result = result.replaceAll(" ", "-").replaceAll("_", "-");
+	domain = domain.replaceAll(" ", "-").replaceAll("_", "-");
 
 	/**
 	 * Replace not allowed characters
 	 *
 	 * @see https://regex101.com/r/HbxgfM/1
 	 */
-	result = result.replace(/[^a-z1-9-]/g, "");
+	domain = domain.replace(/[^a-z1-9-]/g, "");
 
 	/**
 	 * Trim leading and trailing hyphens
 	 *
 	 * @see https://regex101.com/r/ivngfc/1
 	 */
-	result = result.replace(/(^-+)|(-+$)/g, "");
+	domain = domain.replace(/(^-+)|(-+$)/g, "");
 
 	/**
 	 * Replace multi hyphens
 	 *
 	 * @see https://regex101.com/r/t9qxh0/1
 	 */
-	result.replace(/-{2,}/g, "-");
+	domain.replace(/-{2,}/g, "-");
 
-	return result;
+	return domain;
+};
+
+const isFormattedRepositoryDomain = (
+	maybeFormattedRepositoryDomain: string
+): boolean => {
+	return (
+		maybeFormattedRepositoryDomain ===
+		formatRepositoryDomain(maybeFormattedRepositoryDomain)
+	);
+};
+
+const assertFormattedRepositoryDomain = (
+	maybeFormattedRepositoryDomain: string,
+	caller: string
+): void => {
+	if (!isFormattedRepositoryDomain(maybeFormattedRepositoryDomain)) {
+		throw new TypeError(
+			`\`${caller}()\` can only validate formatted repository domains, use the \`formatRepositoryDomain()\` first.`
+		);
+	}
 };
 
 export const ValidationErrors = {
-	NonLetterStart: "NonLetterStart",
 	LessThan4: "LessThan4",
 	MoreThan30: "MoreThan30",
+	AlreadyExists: "AlreadyExists",
 } as const;
 type ValidationErrors = typeof ValidationErrors[keyof typeof ValidationErrors];
 
+type ValidateRepositoryDomainArgs = { domain: string };
+type ValidateRepositoryDomainReturnType = Record<
+	Exclude<ValidationErrors, "AlreadyExists"> | "hasErrors",
+	boolean
+>;
 export const validateRepositoryDomain = (
-	raw: string
-): Record<ValidationErrors | "hasErrors", boolean> => {
-	const formatted = formatRepositoryDomain(raw);
+	args: ValidateRepositoryDomainArgs
+): ValidateRepositoryDomainReturnType => {
+	assertFormattedRepositoryDomain(args.domain, "validateRepositoryDomain");
 
-	const errors: Record<ValidationErrors, boolean> = {
+	const errors: Record<Exclude<ValidationErrors, "AlreadyExists">, boolean> = {
 		/**
 		 * Checks non [a-z] first character
 		 *
 		 * @see https://regex101.com/r/OBZ6UH/1
 		 */
-		[ValidationErrors.NonLetterStart]: !/^[a-z]/.test(formatted),
-		[ValidationErrors.LessThan4]: formatted.length < 4,
-		[ValidationErrors.MoreThan30]: formatted.length > 30,
+		[ValidationErrors.LessThan4]: args.domain.length < 4,
+		[ValidationErrors.MoreThan30]: args.domain.length > 30,
 	};
 
 	return {
 		...errors,
 		hasErrors: Object.values(errors).some(Boolean),
 	};
+};
+
+type ValidateRepositoryDomainAndAvailabilityArgs = {
+	domain: string;
+	existsFn: (domain: string) => boolean | Promise<boolean>;
+};
+type ValidateRepositoryDomainAndAvailabilityReturnType = Record<
+	ValidationErrors | "hasErrors",
+	boolean
+>;
+export const validateRepositoryDomainAndAvailability = async (
+	args: ValidateRepositoryDomainAndAvailabilityArgs
+): Promise<ValidateRepositoryDomainAndAvailabilityReturnType> => {
+	assertFormattedRepositoryDomain(
+		args.domain,
+		"validateRepositoryDomainAndAvailability"
+	);
+
+	const errors = validateRepositoryDomain(args);
+
+	if (!errors.hasErrors && (await args.existsFn(args.domain))) {
+		return {
+			...errors,
+			[ValidationErrors.AlreadyExists]: true,
+			hasErrors: true,
+		};
+	}
+
+	return {
+		...errors,
+		[ValidationErrors.AlreadyExists]: false,
+	};
+};
+
+type GetErrorMessageForRepositoryDomainValidationArgs = {
+	validation:
+		| ValidateRepositoryDomainReturnType
+		| ValidateRepositoryDomainAndAvailabilityReturnType;
+	displayDomain?: string;
+};
+export const getErrorMessageForRepositoryDomainValidation = (
+	args: GetErrorMessageForRepositoryDomainValidationArgs
+): string | null => {
+	if (args.validation.hasErrors) {
+		const formattedErrors: string[] = [];
+
+		if (args.validation.LessThan4) {
+			formattedErrors.push("must be 4 characters long or more");
+		}
+		if (args.validation.MoreThan30) {
+			formattedErrors.push("must be 30 characters long or less");
+		}
+		if (
+			ValidationErrors.AlreadyExists in args.validation &&
+			args.validation.AlreadyExists
+		) {
+			formattedErrors.push("is already taken");
+		}
+
+		if (!formattedErrors.length) {
+			formattedErrors.push(
+				`has unhandled errors ${JSON.stringify(args.validation)}`
+			);
+		}
+
+		return `Repository name${
+			args.displayDomain ? ` ${args.displayDomain}` : ""
+		} ${formattedErrors.join(" and ")}`;
+	}
+
+	return null;
 };

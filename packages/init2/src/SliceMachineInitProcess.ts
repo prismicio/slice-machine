@@ -20,6 +20,8 @@ import {
 	getRandomRepositoryDomain,
 	formatRepositoryDomain,
 	validateRepositoryDomain,
+	validateRepositoryDomainAndAvailability,
+	getErrorMessageForRepositoryDomainValidation,
 } from "./lib/repositoryDomain";
 import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
@@ -287,16 +289,21 @@ export class SliceMachineInitProcess {
 								)}: you are not a developer or admin of this repository`
 							);
 						}
-					} else if (
-						await this.manager.repository.checkExists({
-							domain: this.options.repository,
-						})
-					) {
-						throw new Error(
-							`Repository name ${chalk.cyan(
-								this.options.repository
-							)} is already taken`
-						);
+					} else {
+						const domain = formatRepositoryDomain(this.options.repository);
+						const validation = await validateRepositoryDomainAndAvailability({
+							domain,
+							existsFn: (domain) =>
+								this.manager.repository.checkExists({ domain }),
+						});
+						const errorMessage = getErrorMessageForRepositoryDomainValidation({
+							validation,
+							displayDomain: chalk.cyan(domain),
+						});
+
+						if (errorMessage) {
+							throw new Error(errorMessage);
+						}
 					}
 
 					task.title = `Selected repository ${chalk.cyan(
@@ -397,32 +404,26 @@ export class SliceMachineInitProcess {
 			message: "Choose a name for your Prismic repository",
 			initial: suggestedName,
 			onRender() {
-				const raw = this.value || this.initial || "";
-				const domain = formatRepositoryDomain(raw);
-
-				const validation = validateRepositoryDomain(domain);
+				const rawDomain = this.value || this.initial || "";
+				const domain = formatRepositoryDomain(rawDomain);
+				const validation = validateRepositoryDomain({ domain });
 
 				this.msg = chalk.reset(
 					`
 Choose a name for your Prismic repository
 
   NAMING RULES
-${chalk[validation.NonLetterStart ? "red" : "gray"](
-	`    1. Name must ${chalk[validation.NonLetterStart ? "bold" : "cyan"](
-		"start with a letter"
-	)}`
-)}
 ${chalk[validation.LessThan4 ? "red" : "gray"](
-	`    2. Name must be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
+	`    1. Name must be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
 		"4 characters long or more"
 	)}`
 )}
 ${chalk[validation.MoreThan30 ? "red" : "gray"](
-	`    3. Name must be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
+	`    2. Name must be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
 		"30 characters long or less"
 	)}`
 )}
-${chalk.gray(`    4. Name will be ${chalk.cyan("kebab-cased")} automatically`)}
+${chalk.gray(`    3. Name will be ${chalk.cyan("kebab-cased")} automatically`)}
 
   CONSIDERATIONS
 ${chalk.gray(
@@ -444,30 +445,17 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 				);
 			},
 			validate: async (rawDomain: string) => {
-				const validation = validateRepositoryDomain(rawDomain);
-				if (validation.hasErrors) {
-					const formattedErrors: string[] = [];
-
-					if (validation.NonLetterStart) {
-						formattedErrors.push("must start with a letter");
-					}
-					if (validation.LessThan4) {
-						formattedErrors.push("must be 4 characters long or more");
-					}
-					if (validation.MoreThan30) {
-						formattedErrors.push("must be 30 characters long or less");
-					}
-
-					return `Name ${formattedErrors.join(" and ")}`;
-				}
-
 				const domain = formatRepositoryDomain(rawDomain);
-				const exists = await this.manager.repository.checkExists({ domain });
-				if (exists) {
-					return `Repository name ${chalk.cyan(domain)} is already taken`;
-				}
+				const validation = await validateRepositoryDomainAndAvailability({
+					domain,
+					existsFn: (domain) => this.manager.repository.checkExists({ domain }),
+				});
+				const errorMessage = getErrorMessageForRepositoryDomainValidation({
+					validation,
+					displayDomain: chalk.cyan(domain),
+				});
 
-				return true;
+				return errorMessage || true;
 			},
 			format: (value) => {
 				return formatRepositoryDomain(value);
