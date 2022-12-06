@@ -87,13 +87,15 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
   }));
 
+  const setupData = getStepperConfigurationByFramework(framework);
+
   return (
     <SliceMachineModal isOpen={isOpen}>
       <Card
         bodySx={{
           p: 0,
           bg: "grey07",
-          height: "480px",
+          height: setupData.steps.length === 4 ? "640px" : "480px",
         }}
         Header={({ radius }: { radius: string | number }) => (
           <Flex
@@ -116,40 +118,31 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       >
         <Tabs defaultFocus className="react-tabs__vertical">
           <TabList className="react-tabs__vertical__tab-list">
-            <TitleCard
-              number={1}
-              title="install the simulator"
-              excerpt="Run this command to install the simulator package via npm."
-            />
-            <TitleCard
-              number={2}
-              title="Create a slice-simulator.js route"
-              excerpt="In your pages/ directory, create a file called slice-simulator.js and paste this code."
-            />
-            <TitleCard
-              number={3}
-              title="Update your sm.json"
-              excerpt="Add a property localSliceCanvasURL to your sm.json file."
-            />
+            {setupData.excerpts.map((t, i) => (
+              <TitleCard
+                number={i + 1}
+                key={t.title}
+                title={t.title}
+                excerpt={t.excerpt}
+              />
+            ))}
           </TabList>
           {isSimulatorAvailableForFramework ? (
             <>
-              {getStepperConfigurationByFramework(framework).steps.map(
-                (Step, i) => {
-                  return (
-                    <TabPanel
-                      key={`next-step-${i + 1}`}
-                      selectedClassName="react-tabs__vertical__tab-panel--selected"
-                      className="react-tabs__vertical__tab-panel"
-                    >
-                      <Step
-                        stepNumber={i + 1}
-                        linkToTroubleshootingDocs={linkToTroubleshootingDocs}
-                      />
-                    </TabPanel>
-                  );
-                }
-              )}
+              {setupData.steps.map((Step, i) => {
+                return (
+                  <TabPanel
+                    key={`next-step-${i + 1}`}
+                    selectedClassName="react-tabs__vertical__tab-panel--selected"
+                    className="react-tabs__vertical__tab-panel"
+                  >
+                    <Step
+                      stepNumber={i + 1}
+                      linkToTroubleshootingDocs={linkToTroubleshootingDocs}
+                    />
+                  </TabPanel>
+                );
+              })}
             </>
           ) : (
             <TabPanel

@@ -7,9 +7,11 @@ import CodeBlock from "../CodeBlock";
 import { BsSquare } from "react-icons/bs";
 import { VscBracketDot } from "react-icons/vsc";
 import { AiOutlineFileText } from "react-icons/ai";
+import { Excerpt } from "./excerpts";
 
 export interface SetupStepperConfiguration {
   steps: React.FunctionComponent<DefaultStepCompProps>[];
+  excerpts: Excerpt[];
 }
 
 interface DefaultStepProps {

@@ -95,11 +95,13 @@ const SimulatorButton: React.FC<{
                 sx={{
                   alignItems: "center",
                   justifyContent: "space-between",
-                  p: 2,
+                  padding: "12px 16px",
                 }}
                 data-testid="simulator-tooltip"
               >
-                <Text as="b" sx={{ color: "#FFF" }}>
+                <Text
+                  sx={{ color: "#FFF", fontSize: "12px", fontWeight: "600" }}
+                >
                   Simulate your slices
                 </Text>
                 <Close
@@ -120,26 +122,27 @@ const SimulatorButton: React.FC<{
                 >
                   Browser not supported
                 </video>
-                <Box sx={{ p: 2 }}>
-                  <Text>
+                <Box sx={{ p: "16px" }}>
+                  <Text sx={{ fontSize: "12px", lineHeight: "16px" }}>
                     Minimize context-switching by previewing your Slice
                     components in the simulator.
                   </Text>
+
+                  <Flex
+                    sx={{
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      mt: "24px",
+                    }}
+                  >
+                    <Button
+                      label="Got it"
+                      variant="xs"
+                      sx={{ cursor: "pointer" }}
+                      onClick={onCloseToolTip}
+                    />
+                  </Flex>
                 </Box>
-                <Flex
-                  sx={{
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    p: 2,
-                  }}
-                >
-                  <Button
-                    label="Got it"
-                    variant="xs"
-                    sx={{ cursor: "pointer" }}
-                    onClick={onCloseToolTip}
-                  />
-                </Flex>
               </Box>
             </ReactTooltip>
           ) : null}

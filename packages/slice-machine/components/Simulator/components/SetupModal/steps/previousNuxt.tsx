@@ -9,6 +9,13 @@ import type { DefaultStepCompProps } from "./common";
 import CodeBlock from "../CodeBlock";
 import { Flex, Text } from "theme-ui";
 import React from "react";
+import { AiOutlineFileText } from "react-icons/ai";
+import {
+  InstallExcerpt,
+  UpdateNuxtConfExcerpt,
+  CreateRouteVueExcerpt,
+  UpdateSmJsonExcerpt,
+} from "./excerpts";
 
 const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
   modules: [["@nuxtjs/prismic", {
@@ -52,11 +59,15 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = () => {
         In your <Text variant={"pre"}>nuxt.config.js</Text> file, you need to
         add at the beginning the following line:
       </Text>
-      <CodeBlock>import smConfig from "./sm.json"</CodeBlock>
+      <CodeBlock fileName="nuxt.config.js" FileIcon={AiOutlineFileText}>
+        import smConfig from "./sm.json"
+      </CodeBlock>
       <Text variant={"xs"} sx={{ my: 3 }}>
         Inside of the export statement, add these two properties
       </Text>
-      <CodeBlock>{NuxtConfigInstructions}</CodeBlock>
+      <CodeBlock fileName="nuxt.config.js" FileIcon={AiOutlineFileText}>
+        {NuxtConfigInstructions}
+      </CodeBlock>
     </Flex>
   );
 };
@@ -81,6 +92,12 @@ export const steps = [
 
 const NuxtStepper: SetupStepperConfiguration = {
   steps,
+  excerpts: [
+    InstallExcerpt,
+    UpdateNuxtConfExcerpt,
+    CreateRouteVueExcerpt,
+    UpdateSmJsonExcerpt,
+  ],
 };
 
 export default NuxtStepper;

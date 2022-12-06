@@ -5,6 +5,11 @@ import {
   SetupStepperConfiguration,
 } from "./common";
 import { Text } from "theme-ui";
+import {
+  CreateRouteJsExcerpt,
+  InstallExcerpt,
+  UpdateSmJsonExcerpt,
+} from "./excerpts";
 
 const CreatePageInstructions = {
   code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";
@@ -41,6 +46,7 @@ const steps = [
 
 const NextStepper: SetupStepperConfiguration = {
   steps,
+  excerpts: [InstallExcerpt, CreateRouteJsExcerpt, UpdateSmJsonExcerpt],
 };
 
 export default NextStepper;

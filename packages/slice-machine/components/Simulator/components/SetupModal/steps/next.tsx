@@ -4,6 +4,11 @@ import {
   UpdateSmJson,
   SetupStepperConfiguration,
 } from "./common";
+import {
+  CreateRouteJsExcerpt,
+  InstallExcerpt,
+  UpdateSmJsonExcerpt,
+} from "./excerpts";
 
 const CreatePageInstructions = {
   code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";
@@ -34,6 +39,7 @@ const steps = [
 
 const NextStepper: SetupStepperConfiguration = {
   steps,
+  excerpts: [InstallExcerpt, CreateRouteJsExcerpt, UpdateSmJsonExcerpt],
 };
 
 export default NextStepper;
