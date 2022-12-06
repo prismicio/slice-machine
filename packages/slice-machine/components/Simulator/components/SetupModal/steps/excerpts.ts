@@ -5,7 +5,7 @@ export type Excerpt = {
 
 export const InstallExcerpt = {
   title: "Install the simulator",
-  excerpt: "Run this command to install the simulator package via npm.",
+  excerpt: "Run this command to install the simulator package via npm or yarn.",
 };
 
 export const CreateRouteJsExcerpt = {
