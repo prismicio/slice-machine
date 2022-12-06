@@ -34,6 +34,7 @@ import { Persistor } from "redux-persist/es/types";
 import { ConnectedRouter } from "connected-next-router";
 import { getState } from "../src/apiClient";
 import { normalizeFrontendCustomTypes } from "../src/normalizers/customType";
+import Router from "next/router";
 
 type RemoveDarkModeProps = Readonly<{
   children?: ReactNode;
@@ -106,7 +107,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
               <LoadingPage />
             ) : (
               <Provider store={smStore.store}>
-                <ConnectedRouter>
+                <ConnectedRouter Router={Router}>
                   <PersistGate loading={null} persistor={smStore.persistor}>
                     <SliceMachineApp>
                       <Component {...pageProps} />
