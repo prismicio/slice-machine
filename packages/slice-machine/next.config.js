@@ -1,11 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require("path");
-
-module.exports = {
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
   distDir: "build/client",
-  env: {
-    // overridden by start script
-    CWD: path.resolve("tests/project"),
-  },
   swcMinify: true,
 };
+
+module.exports = nextConfig;
