@@ -55,8 +55,6 @@ export const createSliceMachineServer = async (
 		})
 	);
 
-	// TODO: Add auth middleware from `core2`
-
 	if (process.env.NODE_ENV === "development") {
 		const router = createRouter();
 		router.add(

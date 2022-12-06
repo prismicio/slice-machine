@@ -34,9 +34,9 @@ export function validateEnv(
 
 export default async function handler({
   libraryName,
-  sliceName,
+  sliceId: sliceNamesliceName,
   variationId,
-  screenDimensions,
+  viewport: screenDimensions,
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
   const { env } = await getEnv();
 

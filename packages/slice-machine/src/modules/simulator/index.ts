@@ -6,7 +6,7 @@ import {
   createAsyncAction,
   getType,
 } from "typesafe-actions";
-import { SimulatorStoreType, SetupStatus } from "./types";
+import { SimulatorStoreType } from "./types";
 import {
   call,
   fork,
@@ -27,19 +27,21 @@ import {
 import { Frameworks } from "@slicemachine/core/build/models";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
 import Tracker from "@src/tracking/client";
+import { SimulatorManagerReadSliceSimulatorSetupStep } from "@slicemachine/core2/client";
 
 const NoStepSelected = 0;
 
 export const initialState: SimulatorStoreType = {
-  setupStatus: {
-    manifest: null,
-    iframe: null,
-    dependencies: null,
-  },
+  setupSteps: null,
+  iframeStatus: null,
+  // setupStatus: {
+  //   manifest: null,
+  //   iframe: null,
+  //   dependencies: null,
+  // },
   setupDrawer: {
     isOpen: false,
     openedStep: NoStepSelected,
@@ -68,7 +70,8 @@ export const checkSimulatorSetupCreator = createAsyncAction(
     callback?: () => void;
   },
   {
-    setupStatus: SetupStatus;
+    setupSteps: NonNullable<SimulatorStoreType["setupSteps"]>;
+    iframeStatus: SimulatorStoreType["iframeStatus"];
   },
   Error
 >();
@@ -103,23 +106,34 @@ export const selectIsSetupDrawerOpen = (
 export const selectSetupStatus = (state: SliceMachineStoreType): SetupStatus =>
   state.simulator.setupStatus;
 
+export const selectSetupSteps = (
+  state: SliceMachineStoreType
+): SimulatorManagerReadSliceSimulatorSetupStep[] | null =>
+  state.simulator.setupSteps;
+
 export const selectIsWaitingForIFrameCheck = (
   state: SliceMachineStoreType
 ): boolean => state.simulator.isWaitingForIframeCheck;
 
 export const selectUserHasAtLeastOneStepMissing = (
   state: SliceMachineStoreType
-): boolean =>
-  state.simulator.setupStatus.dependencies === "ko" ||
-  state.simulator.setupStatus.iframe === "ko" ||
-  state.simulator.setupStatus.manifest === "ko";
+): boolean => {
+  return (
+    (state.simulator.setupSteps || []).some(
+      (setupStep) => setupStep.isComplete === false
+    ) || state.simulator.iframeStatus !== "ok"
+  );
+};
 
 export const selectUserHasConfiguredAllSteps = (
   state: SliceMachineStoreType
-): boolean =>
-  state.simulator.setupStatus.dependencies === "ok" &&
-  state.simulator.setupStatus.iframe === "ok" &&
-  state.simulator.setupStatus.manifest === "ok";
+): boolean => {
+  return (
+    (state.simulator.setupSteps || []).every(
+      (setupStep) => setupStep.isComplete !== false
+    ) && state.simulator.iframeStatus === "ok"
+  );
+};
 
 export const selectOpenedStep = (state: SliceMachineStoreType): number =>
   state.simulator.setupDrawer.openedStep;
@@ -149,19 +163,21 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
     case getType(connectToSimulatorIframeCreator.success):
       return {
         ...state,
-        setupStatus: {
-          ...state.setupStatus,
-          iframe: "ok",
-        },
+        iframeStatus: "ok",
+        // setupStatus: {
+        //   ...state.setupStatus,
+        //   iframe: "ok",
+        // },
         isWaitingForIframeCheck: false,
       };
     case getType(connectToSimulatorIframeCreator.failure):
       return {
         ...state,
-        setupStatus: {
-          ...state.setupStatus,
-          iframe: "ko",
-        },
+        iframeStatus: "ko",
+        // setupStatus: {
+        //   ...state.setupStatus,
+        //   iframe: "ko",
+        // },
         isWaitingForIframeCheck: false,
       };
     case getType(toggleSetupDrawerStepCreator):
@@ -178,10 +194,11 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
     case getType(checkSimulatorSetupCreator.success):
       return {
         ...state,
-        setupStatus: {
-          ...state.setupStatus,
-          ...action.payload.setupStatus,
-        },
+        setupSteps: action.payload.setupSteps,
+        // setupStatus: {
+        //   ...state.setupStatus,
+        //   ...action.payload.setupStatus,
+        // },
       };
     case getType(closeSetupDrawerCreator):
       return {
@@ -202,15 +219,18 @@ function* checkSetupSaga(
 ) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { data: setupStatus }: { data: SimulatorCheckResponse } = yield call(
-      checkSimulatorSetup
-    );
+    const { steps, errors }: Awaited<ReturnType<typeof checkSimulatorSetup>> =
+      yield call(checkSimulatorSetup);
+
+    const isOk =
+      errors.length < 1 && steps.every((step) => step.isComplete !== false);
 
     // All the backend checks are ok ask for the frontend Iframe check
-    if ("ok" === setupStatus.manifest && "ok" === setupStatus.dependencies) {
+    if (isOk) {
       yield put(
         checkSimulatorSetupCreator.success({
-          setupStatus: { iframe: null, ...setupStatus },
+          setupSteps: steps,
+          iframeStatus: null,
         })
       );
       yield put(connectToSimulatorIframeCreator.request());
@@ -248,23 +268,23 @@ function* checkSetupSaga(
         yield call(failCheckSetupSaga);
         return;
       }
+
       return;
     }
 
-    // All the backend checks are ko and the request is coming from the "start"
-    const isTheFirstTime =
-      "ko" === setupStatus.manifest &&
-      "ko" === setupStatus.dependencies &&
-      action.payload.withFirstVisitCheck;
+    // // All the backend checks are ko and the request is coming from the "start"
+    // const isTheFirstTime = !isOk && action.payload.withFirstVisitCheck;
 
-    if (isTheFirstTime) {
-      yield put(openSetupDrawerCreator({}));
-      return;
-    }
+    // if (isTheFirstTime) {
+    //   yield put(openSetupDrawerCreator({}));
+    //   return;
+    // }
 
     yield put(
       checkSimulatorSetupCreator.success({
-        setupStatus: { iframe: null, ...setupStatus },
+        setupSteps: steps,
+        iframeStatus: null,
+        // setupStatus: { iframe: null, ...setupStatus },
       })
     );
     yield call(failCheckSetupSaga);
@@ -275,22 +295,22 @@ function* checkSetupSaga(
 }
 
 export function* failCheckSetupSaga() {
-  const framework = (yield select(getFramework)) as ReturnType<
-    typeof getFramework
-  >;
-  const isPreviewAvailableForFramework = (yield select(
-    selectIsSimulatorAvailableForFramework
-  )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
+  // const framework = (yield select(getFramework)) as ReturnType<
+  //   typeof getFramework
+  // >;
 
-  if (!isPreviewAvailableForFramework) {
-    return;
-  }
-
-  const { length } = getStepperConfigurationByFramework(framework).steps;
+  // const isPreviewAvailableForFramework = (yield select(
+  //   selectIsSimulatorAvailableForFramework
+  // )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
+  //
+  // if (!isPreviewAvailableForFramework) {
+  //   return;
+  // }
+  // const { length } = getStepperConfigurationByFramework(framework).steps;
 
   yield put(
     openSetupDrawerCreator({
-      stepToOpen: length,
+      // stepToOpen: length,
     })
   );
 }

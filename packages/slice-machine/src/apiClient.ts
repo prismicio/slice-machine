@@ -1,23 +1,22 @@
 import axios, { AxiosResponse } from "axios";
+import { SimulatorManagerReadSliceSimulatorSetupStepsReturnType } from "@slicemachine/core2/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
-import { CheckAuthStatusResponse } from "@models/common/Auth";
-import { SimulatorCheckResponse } from "@models/common/Simulator";
-import {
-  RenameCustomTypeBody,
-  SaveCustomTypeBody,
-} from "@models/common/CustomType";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { SliceBody } from "@models/common/Slice";
-import ServerState from "@models/server/ServerState";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
+
+import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import ServerState from "@models/server/ServerState";
 import {
+  CustomScreenshotRequest,
   ScreenshotRequest,
   ScreenshotResponse,
-} from "../lib/models/common/Screenshots";
+} from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
+
 import { managerClient } from "./managerClient";
 
 const defaultAxiosConfig = {
@@ -35,7 +34,7 @@ export const getState = async (): Promise<ServerState> => {
 
   // `rawState` from the client contains non-SM-specific models. We need to
   // transform the data to something SM recognizes.
-  const state = {
+  const state: ServerState = {
     ...rawState,
     libraries: rawState.libraries.map((library) => {
       return {
@@ -44,6 +43,21 @@ export const getState = async (): Promise<ServerState> => {
           return {
             ...component,
             model: Slices.toSM(component.model),
+
+            // Replace screnshot Blobs with URLs.
+            screenshots: Object.fromEntries(
+              Object.entries(component.screenshots).map(
+                ([variationID, screenshot]) => {
+                  return [
+                    variationID,
+                    {
+                      ...screenshot,
+                      url: URL.createObjectURL(screenshot.data),
+                    },
+                  ];
+                }
+              )
+            ),
           };
         }),
       };
@@ -59,6 +73,28 @@ export const getState = async (): Promise<ServerState> => {
     remoteSlices: rawState.remoteSlices.map((remoteSliceModel) => {
       return Slices.toSM(remoteSliceModel);
     }),
+    env: {
+      ...rawState.env,
+      changelog: {
+        ...rawState.env.changelog,
+        versions: rawState.env.changelog.versions.sort((a, b) => {
+          const [aMajor, aMinor, aPatch] = a.versionNumber.split(".");
+          const [bMajor, bMinor, bPatch] = b.versionNumber.split(".");
+
+          const major = Number.parseInt(bMajor) - Number.parseInt(aMajor);
+          const minor = Number.parseInt(bMinor) - Number.parseInt(aMinor);
+          const patch = Number.parseInt(bPatch) - Number.parseInt(aPatch);
+
+          if (major !== 0) {
+            return major;
+          } else if (minor !== 0) {
+            return minor;
+          } else {
+            return patch;
+          }
+        }),
+      },
+    },
   };
 
   return state;
@@ -88,7 +124,7 @@ export const saveCustomType = async (
 };
 
 export const renameCustomType = (
-  customType: CustomTypeSM // TODO: Don't use the SM version. Convert to
+  customType: CustomTypeSM
 ): Promise<AxiosResponse> => {
   return managerClient.customTypes.renameCustomType({
     model: CustomTypes.fromSM(customType),
@@ -102,53 +138,84 @@ export const pushCustomType = async (customTypeId: string): Promise<void> => {
 };
 
 /** Slice Routes **/
-export const createSlice = (
+export const createSlice = async (
   sliceName: string,
   libName: string
 ): Promise<{ variationId: string }> => {
-  const requestBody: SliceBody = {
-    sliceName,
-    from: libName,
-  };
+  const model = buildEmptySliceModel({ sliceName });
 
-  return axios
-    .post(`/api/slices/create`, requestBody, defaultAxiosConfig)
-    .then((response: AxiosResponse<{ variationId: string }>) => response.data);
+  const { errors } = await managerClient.slices.createSlice({
+    libraryID: libName,
+    model,
+  });
+
+  if (errors.length > 0) {
+    throw new Error(
+      `Failed to create Slice: ${errors
+        .map((error) => error.message)
+        .join("; ")}`
+    );
+  }
+
+  return {
+    variationId: model.variations[0].id,
+  };
 };
 
-export const renameSlice = (
+export const renameSlice = async (
   slice: SliceSM,
   libName: string
 ): Promise<AxiosResponse> => {
-  return managerClient.slices.renameSlice({
+  return await managerClient.slices.renameSlice({
     libraryID: libName,
     model: Slices.fromSM(slice),
   });
-
-  // const requestBody = {
-  //   sliceId,
-  //   newSliceName,
-  //   libName,
-  // };
-  // return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
-export const generateSliceScreenshotApiClient = (
+export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
-  return axios.post("/api/screenshot", params, defaultAxiosConfig);
+  const screenshot = await managerClient.slices.captureSliceScreenshot({
+    libraryID: params.libraryName,
+    sliceID: params.sliceId,
+    variationID: params.variationId,
+    viewport: {
+      width: params.screenDimensions.width,
+      height: params.screenDimensions.height,
+    },
+  });
+
+  if (screenshot.data) {
+    return await managerClient.slices.updateSliceScreenshot({
+      libraryID: params.libraryName,
+      sliceID: params.sliceId,
+      variationID: params.variationId,
+      data: screenshot.data,
+    });
+  }
+
+  // return axios.post("/api/screenshot", params, defaultAxiosConfig);
 };
 
 export const generateSliceCustomScreenshotApiClient = (
-  form: FormData
+  params: CustomScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotUI>> => {
-  const requestBody = form;
-  return axios.post("/api/custom-screenshot", requestBody, defaultAxiosConfig);
+  return managerClient.slices.updateSliceScreenshot({
+    libraryID: params.libraryName,
+    sliceID: params.sliceId,
+    variationID: params.variationId,
+    data: params.file,
+  });
+
+  // const requestBody = form;
+  // return axios.post("/api/custom-screenshot", requestBody, defaultAxiosConfig);
 };
 
 export const saveSliceApiClient = async (
   component: ComponentUI
-): Promise<Awaited<ReturnType<typeof managerClient["updateSlice"]>>> => {
+): Promise<
+  Awaited<ReturnType<typeof managerClient["slices"]["updateSlice"]>>
+> => {
   await managerClient.slices.updateSliceMocksConfig({
     libraryID: component.from,
     sliceID: component.model.id,
@@ -189,6 +256,7 @@ export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
 
 /** Simulator Routes **/
 
-export const checkSimulatorSetup = (): Promise<
-  AxiosResponse<SimulatorCheckResponse>
-> => axios.get(`/api/simulator/check`);
+export const checkSimulatorSetup =
+  async (): Promise<SimulatorManagerReadSliceSimulatorSetupStepsReturnType> => {
+    return managerClient.simulator.readSliceSimulatorSetupSteps();
+  };

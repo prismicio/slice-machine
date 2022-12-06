@@ -22,7 +22,7 @@ type SnippetsMangerUpdateSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-export class SnippetsManger extends BaseManager {
+export class SnippetsManager extends BaseManager {
 	async readSnippets(
 		args: SnippetReadHookData,
 	): Promise<SnippetsMangerUpdateSliceReturnType> {

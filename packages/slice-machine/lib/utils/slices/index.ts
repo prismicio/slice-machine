@@ -3,9 +3,9 @@ import glob from "glob";
 import { getFormattedLibIdentifier } from "@slicemachine/core/build/libraries";
 import { SliceSM } from "@slicemachine/core/build/models/Slice";
 
-import Files from "./files";
-import { CustomPaths } from "../models/paths";
-import * as IO from "../io";
+import Files from "../files";
+import { CustomPaths } from "../../models/paths";
+import * as IO from "../../io";
 
 // Loads all Slice models from all libraries.
 export function getLocalSlices(

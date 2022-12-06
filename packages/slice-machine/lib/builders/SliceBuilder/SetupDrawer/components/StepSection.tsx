@@ -3,6 +3,7 @@ import { Flex, Text } from "theme-ui";
 import { MdArrowBackIos, MdCheck } from "react-icons/md";
 import { ThemeUIStyleObject } from "@theme-ui/css";
 import WarningBadge from "./WarningBadge";
+import TextWithInlineCode from "./TextWithInlineCode";
 
 type StepSectionProps = {
   stepNumber?: number;
@@ -62,7 +63,7 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
           <Text
             sx={{ fontWeight: 500, fontSize: 2, ...additionalStepTitleStyle }}
           >
-            {title}
+            <TextWithInlineCode>{title}</TextWithInlineCode>
           </Text>
         </Flex>
         <Flex

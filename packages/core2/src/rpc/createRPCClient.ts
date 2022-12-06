@@ -1,8 +1,7 @@
-import { coerceTrailingSlash } from "./lib/coerceTrailingSlash";
-import { deserialize } from "./lib/deserialize";
-import { serialize } from "./lib/serialize";
+import { clientFormDataToObject } from "./lib/clientFormDataToObject";
+import { objectToClientFormData } from "./lib/objectToClientFormData";
 
-import { ProcedureCallServerReturnType, Procedures, Procedure } from "./types";
+import { Procedures, Procedure } from "./types";
 
 const createArbitrarilyNestedFunction = <T>(
 	handler: (path: string[], args: unknown[]) => unknown,
@@ -40,18 +39,35 @@ type TransformProcedure<TProcedure extends Procedure<any>> = (
 	...args: Parameters<TProcedure> extends []
 		? []
 		: [TransformProcedureArgs<Parameters<TProcedure>[0]>]
-) => // eslint-disable-next-line @typescript-eslint/no-explicit-any
-ReturnType<TProcedure> extends Promise<any>
-	? ReturnType<TProcedure>
-	: Promise<ReturnType<TProcedure>>;
+) => Promise<TransformProcedureReturnType<Awaited<ReturnType<TProcedure>>>>;
 
-type TransformProcedureArgs<TArgs extends Record<string, unknown>> = {
-	[P in keyof TArgs]: TArgs[P] extends Buffer ? Blob : TArgs[P];
-};
+type TransformProcedureArgs<TArgs> = TArgs extends
+	| Record<string, unknown>
+	| unknown[]
+	? {
+			[P in keyof TArgs]: TransformProcedureArgs<TArgs[P]>;
+	  }
+	: TArgs extends Buffer
+	? Blob
+	: TArgs;
+
+type TransformProcedureReturnType<TReturnType> = TReturnType extends
+	| Record<string, unknown>
+	| unknown[]
+	? {
+			[P in keyof TReturnType]: TransformProcedureReturnType<TReturnType[P]>;
+	  }
+	: TReturnType extends Buffer
+	? Blob
+	: TReturnType extends Error
+	? {
+			name: string;
+			message: string;
+	  }
+	: TReturnType;
 
 export type ResponseLike = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	json(): Promise<any>;
+	formData(): Promise<FormData>;
 };
 export type FetchLike = (
 	input: string,
@@ -70,33 +86,29 @@ export const createRPCClient = <TProcedures extends Procedures>(
 		args.fetch || globalThis.fetch.bind(globalThis);
 
 	return createArbitrarilyNestedFunction(async (path, fnArgs) => {
-		const procedureArgs = fnArgs[0] as Record<string, unknown>;
-
-		const formData = new FormData();
-		for (const procedureArgName in procedureArgs) {
-			const procedureArg =
-				procedureArgs[procedureArgName as keyof typeof procedureArgs];
-
-			if (procedureArg instanceof Blob) {
-				formData.set(procedureArgName, procedureArg);
-			} else {
-				formData.set(procedureArgName, serialize(procedureArg));
-			}
-		}
-
-		const url = coerceTrailingSlash(args.serverURL) + path.join("/");
-		const res = await resolvedFetch(url, {
-			method: "POST",
-			body: formData,
+		const body = objectToClientFormData({
+			procedurePath: path,
+			procedureArgs: fnArgs[0],
 		});
 
-		const json = (await res.json()) as ProcedureCallServerReturnType;
+		const res = await resolvedFetch(args.serverURL, {
+			method: "POST",
+			body,
+		});
 
-		if ("data" in json) {
-			return deserialize(json.data);
+		const formData = await res.formData();
+		const resObject = clientFormDataToObject(formData);
+
+		if ("data" in resObject) {
+			return resObject.data;
 		} else {
-			throw new Error(json.error, {
-				cause: json.cause,
+			const errorMessage =
+				typeof resObject.error === "string"
+					? resObject.error
+					: "Procedure call failed on the server and did not provide an error message.";
+
+			throw new Error(errorMessage, {
+				cause: resObject.cause,
 			});
 		}
 	});

@@ -81,7 +81,7 @@ type GetProfileForAuthenticationTokenArgs = {
 	authenticationToken: string;
 };
 
-const checkIsLoggedIn = (
+const checkHasAuthenticationToken = (
 	authState: PrismicAuthState,
 ): authState is PrismicAuthState & {
 	cookies: Required<
@@ -114,12 +114,8 @@ export class PrismicAuthManager {
 		this.scopedDirectory = scopedDirectory;
 	}
 
-	// TODO: Method to refresh the current authentication token.
-
 	// TODO: Make the `cookies` argument more explicit. What are these
 	// mysterious cookies?
-	// TODO: We should also handle fetching the Intercom hash and short ID
-	// from the `/profile` endpoint and setting in the auth state.
 	async login(args: PrismicAuthManagerLoginArgs): Promise<void> {
 		const authState = await this._readPersistedAuthState();
 
@@ -130,9 +126,9 @@ export class PrismicAuthManager {
 			...parseCookies(args.cookies.join(COOKIE_SEPARATOR)),
 		};
 
-		if (checkIsLoggedIn(authState)) {
+		if (checkHasAuthenticationToken(authState)) {
 			const authenticationToken = authState.cookies[AUTH_COOKIE_KEY];
-			const profile = await this.getProfileForAuthenticationToken({
+			const profile = await this._getProfileForAuthenticationToken({
 				authenticationToken,
 			});
 
@@ -204,22 +200,97 @@ export class PrismicAuthManager {
 	async logout(): Promise<void> {
 		const authState = await this._readPersistedAuthState();
 
-		// Remove all Prismic cookies associated with the currently
-		// logged in user.
+		// Remove all Prismic cookies, short ID, and Intercom hash
+		// associated with the currently logged in user.
 		authState.cookies = {};
-
-		// TODO: Should shortID and intercomHash be cleared as well?
+		authState.shortId = undefined;
+		authState.intercomHash = undefined;
 
 		await this._writePersistedAuthState(authState);
+	}
+
+	async checkIsLoggedIn(): Promise<boolean> {
+		const authState = await this._readPersistedAuthState();
+
+		if (checkHasAuthenticationToken(authState)) {
+			const url = new URL("/validate", APIEndpoints.PrismicAuthentication);
+			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
+
+			const res = await fetch(url.toString(), {
+				headers: {
+					"User-Agent": SLICE_MACHINE_USER_AGENT,
+				},
+			});
+
+			return res.ok;
+		} else {
+			return false;
+		}
+	}
+
+	async getAuthenticationCookies(): Promise<
+		PrismicAuthState["cookies"] &
+			Required<
+				Pick<
+					PrismicAuthState["cookies"],
+					typeof AUTH_COOKIE_KEY | typeof SESSION_COOKIE_KEY
+				>
+			>
+	> {
+		const isLoggedIn = await this.checkIsLoggedIn();
+
+		if (isLoggedIn) {
+			const authState = await this._readPersistedAuthState();
+
+			if (checkHasAuthenticationToken(authState)) {
+				return authState.cookies;
+			}
+		}
+
+		throw new Error("Not logged in.");
+	}
+
+	async getAuthenticationToken(): Promise<string> {
+		const cookies = await this.getAuthenticationCookies();
+
+		return cookies[AUTH_COOKIE_KEY];
+	}
+
+	async refreshAuthenticationToken(): Promise<void> {
+		const authState = await this._readPersistedAuthState();
+
+		if (checkHasAuthenticationToken(authState)) {
+			const url = new URL("/refreshtoken", APIEndpoints.PrismicAuthentication);
+			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
+
+			const res = await fetch(url.toString(), {
+				headers: {
+					"User-Agent": SLICE_MACHINE_USER_AGENT,
+				},
+			});
+			const text = await res.text();
+
+			if (res.ok) {
+				authState.cookies[AUTH_COOKIE_KEY] = text;
+
+				await this._writePersistedAuthState(authState);
+			} else {
+				throw new Error(`Failed to refresh authentication token: ${text}`);
+			}
+		} else {
+			throw new Error("Not logged in.");
+		}
 	}
 
 	async getProfile(): Promise<PrismicUserProfile> {
 		const authenticationToken = await this.getAuthenticationToken();
 
-		return await this.getProfileForAuthenticationToken({ authenticationToken });
+		return await this._getProfileForAuthenticationToken({
+			authenticationToken,
+		});
 	}
 
-	async getProfileForAuthenticationToken(
+	private async _getProfileForAuthenticationToken(
 		args: GetProfileForAuthenticationTokenArgs,
 	): Promise<PrismicUserProfile> {
 		const url = new URL("/profile", APIEndpoints.PrismicUser);
@@ -243,40 +314,6 @@ export class PrismicAuthManager {
 			// TODO: Provide a better error
 			throw new Error(`Failed to get profile: ${JSON.stringify(json)}`);
 		}
-	}
-
-	async getAuthenticationCookies(): Promise<
-		PrismicAuthState["cookies"] &
-			Required<
-				Pick<
-					PrismicAuthState["cookies"],
-					typeof AUTH_COOKIE_KEY | typeof SESSION_COOKIE_KEY
-				>
-			>
-	> {
-		const authState = await this._readPersistedAuthState();
-
-		if (!checkIsLoggedIn(authState)) {
-			throw new Error("Not logged in.");
-		}
-
-		return authState.cookies;
-	}
-
-	async getAuthenticationToken(): Promise<string> {
-		const cookies = await this.getAuthenticationCookies();
-
-		return cookies[AUTH_COOKIE_KEY];
-	}
-
-	// TODO: This function should check if the token has not expired, not
-	// only if it exists. This may be done by accessing the profile
-	// endpoint and checking the status code, but the endpoint is slow.
-	// Is there a faster endpoint? Maybe the token refresh endpoint?
-	async checkIsLoggedIn(): Promise<boolean> {
-		const authState = await this._readPersistedAuthState();
-
-		return checkIsLoggedIn(authState);
 	}
 
 	private async _readPersistedAuthState(): Promise<PrismicAuthState> {

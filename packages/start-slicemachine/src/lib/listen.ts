@@ -25,7 +25,7 @@ export const listen = async (
 	return {
 		address: server.address() as AddressInfo,
 		close: async () => {
-			await new Promise<void>((resolve) => {
+			return await new Promise<void>((resolve) => {
 				server.once("close", () => {
 					resolve();
 				});

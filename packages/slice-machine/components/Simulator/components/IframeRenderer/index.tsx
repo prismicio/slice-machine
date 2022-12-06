@@ -85,7 +85,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .then(() => {
         connectToSimulatorSuccess();
       })
-      .catch(() => {
+      .catch((e) => {
         connectToSimulatorFailure();
       });
   }, [client, screenDimensions, sliceView]);

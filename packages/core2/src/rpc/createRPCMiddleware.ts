@@ -4,70 +4,44 @@ import {
 	defineNodeMiddleware,
 	eventHandler,
 	NodeMiddleware,
-	Router,
 } from "h3";
 
-import { readProcedureArgs } from "./lib/readProcedureArgs";
-import { serialize } from "./lib/serialize";
+import { objectToServerFormData } from "./lib/objectToServerFormData";
+import { readRPCClientArgs } from "./lib/readRPCClientArgs";
+import { sendFormData } from "./lib/sendFormData";
 
-import { ProcedureCallServerReturnType, Procedures } from "./types";
+import { Procedure, Procedures } from "./types";
 
 export type RPCMiddleware<TProcedures extends Procedures> = NodeMiddleware & {
 	_procedures: TProcedures;
 };
 
-type AddProceduresFromObjectArgs<TProcedures extends Procedures> = {
-	procedures: TProcedures;
-	router: Router;
-	path?: string[];
+type FindProcedureArgs = {
+	path: string[];
+	procedures: Procedures;
 };
 
-const addProceduresToRouter = <TProcedures extends Procedures>(
-	args: AddProceduresFromObjectArgs<TProcedures>,
-): void => {
-	for (const name in args.procedures) {
-		const procedure = args.procedures[name];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const findProcedure = (args: FindProcedureArgs): Procedure<any> | undefined => {
+	// Use a clone to prevent unwanted mutations.
+	const path = [...args.path];
 
-		if (typeof procedure === "object") {
-			addProceduresToRouter({
-				...args,
-				procedures: procedure,
-				path: [...(args.path || []), name],
-			});
-		} else {
-			const route = "/" + [...(args.path || []), name].join("/");
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let proceduresPointer: Procedures | Procedure<any> = args.procedures;
 
-			args.router.post(
-				route,
-				eventHandler(async (event): Promise<ProcedureCallServerReturnType> => {
-					const procedureArgs = await readProcedureArgs(event);
+	while (path.length > 0) {
+		const pathSegment = path.shift();
 
-					const res = await procedure(procedureArgs);
+		if (pathSegment === undefined) {
+			return;
+		}
 
-					// TODO: Convert Buffers to tmp files.
-					// Expose a special `/tmp` endpoint to
-					// read the temporary files.
+		proceduresPointer = proceduresPointer[pathSegment];
 
-					try {
-						const data = serialize(res);
-
-						return {
-							data,
-						};
-					} catch (error) {
-						if (error instanceof Error) {
-							event.req.statusCode = 500;
-
-							return {
-								error: "Unable to serialize server response.",
-								cause: error,
-							};
-						} else {
-							throw error;
-						}
-					}
-				}),
-			);
+		if (typeof proceduresPointer === "function") {
+			return proceduresPointer;
+		} else if (proceduresPointer === undefined) {
+			return;
 		}
 	}
 };
@@ -81,10 +55,65 @@ export const createRPCMiddleware = <TProcedures extends Procedures>(
 ): RPCMiddleware<TProcedures> => {
 	const router = createRouter();
 
-	addProceduresToRouter({
-		procedures: args.procedures,
-		router,
-	});
+	router.post(
+		"/",
+		eventHandler(async (event): Promise<void> => {
+			const clientArgs = await readRPCClientArgs(event);
+
+			const procedure = findProcedure({
+				path: clientArgs.procedurePath,
+				procedures: args.procedures,
+			});
+
+			if (!procedure) {
+				throw new Error(
+					`Invalid procedure name: ${clientArgs.procedurePath.join(".")}`,
+				);
+			}
+
+			let res: unknown;
+
+			try {
+				res = await procedure(clientArgs.procedureArgs);
+			} catch (error) {
+				if (error instanceof Error) {
+					console.error(error);
+
+					const formData = objectToServerFormData({
+						error: error.message,
+						cause: error,
+					});
+
+					event.res.statusCode = 500;
+
+					return await sendFormData(event, formData);
+				} else {
+					throw error;
+				}
+			}
+
+			try {
+				const formData = objectToServerFormData({
+					data: res,
+				});
+
+				return await sendFormData(event, formData);
+			} catch (error) {
+				if (error instanceof Error) {
+					const formData = objectToServerFormData({
+						error: "Unable to serialize server response.",
+						cause: error,
+					});
+
+					event.req.statusCode = 500;
+
+					return await sendFormData(event, formData);
+				} else {
+					throw error;
+				}
+			}
+		}),
+	);
 
 	const middleware = defineNodeMiddleware(async (req, res) => {
 		const event = createEvent(req, res);

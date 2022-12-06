@@ -19,7 +19,7 @@ import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SliceSM } from "@slicemachine/core/build/models";
-import { renamedComponentUI, renameSliceCreator } from "../slices";
+import { renameSliceCreator } from "../slices";
 import { refreshStateCreator } from "../environment";
 import {
   generateSliceCustomScreenshotCreator,
@@ -186,8 +186,12 @@ export const selectedSliceReducer: Reducer<
     }
     case getType(renameSliceCreator.success): {
       if (!prevState) return prevState;
-      const { newSliceName } = action.payload;
-      return renamedComponentUI(prevState, newSliceName);
+      const { renamedSlice } = action.payload;
+
+      return {
+        ...prevState,
+        model: renamedSlice,
+      };
     }
     default:
       return prevState;

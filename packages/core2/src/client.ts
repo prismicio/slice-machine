@@ -6,3 +6,8 @@ export {
 	SliceMachineManagerClient,
 	createSliceMachineManagerClient,
 } from "./managers/createSliceMachineManagerClient";
+
+export {
+	SimulatorManagerReadSliceSimulatorSetupStep,
+	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
+} from "./managers/_SimulatorManager";

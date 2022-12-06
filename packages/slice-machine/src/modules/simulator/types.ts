@@ -1,5 +1,9 @@
+import type { SimulatorManagerReadSliceSimulatorSetupStep } from "@slicemachine/core2/client";
+
 export type SimulatorStoreType = {
-  setupStatus: SetupStatus;
+  setupSteps: SimulatorManagerReadSliceSimulatorSetupStep[] | null;
+  iframeStatus: "ok" | "ko" | null;
+  // setupStatus: SetupStatus;
   setupDrawer: {
     isOpen: boolean;
     openedStep: number;
@@ -7,8 +11,8 @@ export type SimulatorStoreType = {
   isWaitingForIframeCheck: boolean;
 };
 
-export type SetupStatus = {
-  dependencies: "ok" | "ko" | null;
-  manifest: "ok" | "ko" | null;
-  iframe: "ok" | "ko" | null;
-};
+// export type SetupStatus = {
+//   dependencies: "ok" | "ko" | null;
+//   manifest: "ok" | "ko" | null;
+//   iframe: "ok" | "ko" | null;
+// };

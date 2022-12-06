@@ -3,6 +3,7 @@ const config = {
   repositoryName: "slicemachine-dev-mule",
   libraries: ["./slices"],
   adapter: "@slicemachine/adapter-next",
+  localSliceSimulatorURL: "http://localhost:8000/slice-simulator",
 };
 
 export default config;

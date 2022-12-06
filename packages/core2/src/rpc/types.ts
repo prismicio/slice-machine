@@ -30,14 +30,10 @@ export type Procedure<TArgs extends Record<string, unknown>> = (
 	args: TArgs,
 ) => unknown | Promise<unknown>;
 
-export type ProcedureCallServerReturnType =
-	| {
-			data: string;
-	  }
-	| {
-			error: string;
-			cause: unknown;
-	  };
+export type ProcedureCallServerArgs = {
+	procedurePath: string[];
+	procedureArgs: Record<string, unknown>;
+};
 
 export type ExtractProcedures<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

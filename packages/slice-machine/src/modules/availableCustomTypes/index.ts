@@ -46,8 +46,7 @@ export const renameCustomTypeCreator = createAsyncAction(
     newCustomTypeName: string;
   },
   {
-    customTypeId: string;
-    newCustomTypeName: string;
+    renamedCustomType: CustomTypeSM;
   }
 >();
 
@@ -147,13 +146,11 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(renameCustomTypeCreator.success): {
-      const id = action.payload.customTypeId;
-      const newName = action.payload.newCustomTypeName;
-      const newLocalCustomType = { ...state[id].local, label: newName };
+      const id = action.payload.renamedCustomType.id;
 
       const newCustomType = {
         ...state[id],
-        local: newLocalCustomType,
+        local: action.payload.renamedCustomType,
       };
 
       return {
@@ -208,8 +205,13 @@ export function* renameCustomTypeSaga({
       throw new Error(`Custom Type "${payload.newCustomTypeName} not found.`);
     }
 
-    yield call(renameCustomType, customType?.local);
-    yield put(renameCustomTypeCreator.success(payload));
+    const renamedCustomType = renameCustomTypeModel({
+      customType: customType.local,
+      newName: payload.newCustomTypeName,
+    });
+
+    yield call(renameCustomType, renamedCustomType);
+    yield put(renameCustomTypeCreator.success({ renamedCustomType }));
     yield put(
       modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE })
     );
@@ -244,4 +246,18 @@ function* handleCustomTypeRequests() {
 // Saga Exports
 export function* watchAvailableCustomTypesSagas() {
   yield fork(handleCustomTypeRequests);
+}
+
+type RenameCustomTypeModelArgs = {
+  customType: CustomTypeSM;
+  newName: string;
+};
+
+export function renameCustomTypeModel(
+  args: RenameCustomTypeModelArgs
+): CustomTypeSM {
+  return {
+    ...args.customType,
+    label: args.newName,
+  };
 }

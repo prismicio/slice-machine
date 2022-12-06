@@ -22,15 +22,11 @@ export class VersionsManger extends BaseManager {
 		});
 	}
 
-	// TODO: I was rate limited :(
-	// Rather than making a request or each version, we can make one
-	// request for all (at least to some paginated amount) and smartly
-	// extract the notes for the individual version.
 	async getReleaseNotesForVersion(
 		args: SliceMachineManagerGetReleaseNotesForVersionArgs,
 	): Promise<string | undefined> {
 		return await fetchGitHubReleaseBodyForRelease({
-			tag: args.version,
+			version: args.version,
 		});
 	}
 }

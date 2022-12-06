@@ -20,6 +20,7 @@ import "src/css/tabs.css";
 import "src/css/drawer.css";
 import "src/css/toaster.css";
 import "src/css/intercom.css";
+import "src/css/starry-night.css";
 
 import "highlight.js/styles/atom-one-dark.css";
 

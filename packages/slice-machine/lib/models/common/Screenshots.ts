@@ -6,9 +6,15 @@ export interface ScreenDimensions {
 }
 export interface ScreenshotRequest {
   libraryName: string;
-  sliceName: string;
+  sliceId: string;
   variationId: string;
   screenDimensions: ScreenDimensions;
+}
+export interface CustomScreenshotRequest {
+  libraryName: string;
+  sliceId: string;
+  variationId: string;
+  file: Blob;
 }
 
 export interface ScreenshotResponse {
@@ -21,6 +27,6 @@ export interface ScreenshotResponse {
 export type TmpFile = File & { path: string };
 export interface CustomScreenshotRequest {
   libraryName: string;
-  sliceName: string;
+  sliceId: string;
   variationId: string;
 }

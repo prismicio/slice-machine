@@ -16,6 +16,7 @@ import {
 	SliceUpdateHook,
 	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
+import { Viewport } from "puppeteer";
 
 import { DecodeError } from "../lib/DecodeError";
 import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
@@ -81,6 +82,7 @@ type SliceMachineManagerCaptureSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
+	viewport?: Viewport;
 };
 
 type SliceMachineManagerCaptureSliceScreenshotReturnType = {
@@ -343,7 +345,7 @@ export class SlicesManager extends BaseManager {
 			{
 				libraryID: args.libraryID,
 				sliceID: args.sliceID,
-				assetID: `screenshot-${args.variationID}`,
+				assetID: `screenshot-${args.variationID}.png`,
 			},
 		);
 		const { data, errors } = decodeHookResult(
@@ -370,7 +372,7 @@ export class SlicesManager extends BaseManager {
 				libraryID: args.libraryID,
 				sliceID: args.sliceID,
 				asset: {
-					id: `screenshot-${args.variationID}`,
+					id: `screenshot-${args.variationID}.png`,
 					data: args.data,
 				},
 			},
@@ -391,6 +393,7 @@ export class SlicesManager extends BaseManager {
 			libraryID: args.libraryID,
 			variationID: args.variationID,
 			projectConfig,
+			viewport: args.viewport,
 		});
 
 		return {

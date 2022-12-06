@@ -199,19 +199,10 @@ export class SliceMachineInitProcess {
 			{
 				title: "Logging in to Prismic...",
 				task: async (_, parentTask) => {
-					try {
-						parentTask.output = "Validating session...";
-						this.context.userProfile = await this.manager.user.getProfile();
+					parentTask.output = "Validating session...";
+					const isLoggedIn = await this.manager.user.checkIsLoggedIn();
 
-						parentTask.title = `Logged in as ${chalk.cyan(
-							this.context.userProfile?.email
-						)}`;
-						parentTask.output = "";
-					} catch {
-						// noop
-					}
-
-					if (!this.context.userProfile) {
+					if (!isLoggedIn) {
 						parentTask.output = "Press any key to open the browser to login...";
 						await new Promise((resolve) => {
 							const initialRawMode = process.stdin.isRaw;
@@ -233,19 +224,19 @@ export class SliceMachineInitProcess {
 								});
 							},
 						});
-
-						parentTask.title = `Logged in`;
+					} else {
+						parentTask.output = "";
 					}
+
+					parentTask.title = `Logged in`;
 
 					return listr(
 						[
 							{
 								title: "Fetching user profile...",
 								task: async (_, task) => {
-									if (!this.context.userProfile) {
-										this.context.userProfile =
-											await this.manager.user.getProfile();
-									}
+									this.context.userProfile =
+										await this.manager.user.getProfile();
 
 									parentTask.title = `Logged in as ${chalk.cyan(
 										this.context.userProfile?.email

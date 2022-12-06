@@ -26,7 +26,7 @@ export function* generateSliceScreenshotSaga({
   try {
     const response = (yield call(generateSliceScreenshotApiClient, {
       libraryName: component.from,
-      sliceName: component.model.name,
+      sliceId: component.model.id,
       variationId,
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
@@ -75,10 +75,12 @@ export function* generateSliceCustomScreenshotSaga({
     form.append("libraryName", component.from);
     form.append("sliceName", component.model.name);
     form.append("variationId", variationId);
-    const response = (yield call(
-      generateSliceCustomScreenshotApiClient,
-      form
-    )) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
+    const response = (yield call(generateSliceCustomScreenshotApiClient, {
+      libraryName: component.from,
+      sliceId: component.model.id,
+      variationId,
+      file,
+    })) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
 
     void Tracker.get().trackScreenshotTaken({
       type: "custom",
