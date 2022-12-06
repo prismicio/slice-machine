@@ -28,7 +28,6 @@
     "io-ts-types": "^0.5.16"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.18.9",
     "@types/cookie": "^0.4.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.5",

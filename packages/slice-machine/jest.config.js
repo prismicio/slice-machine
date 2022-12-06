@@ -24,4 +24,9 @@ module.exports = {
       },
     ],
   },
+  transformIgnorePatterns: [
+    "/node_modules/",
+    "/packages/client/",
+    "/packages/core/",
+  ],
 };
