@@ -227,6 +227,7 @@ describe("[Available Custom types module]", () => {
 
       originalState["id"] = {
         local: mockCustomTypeToUpdate,
+        remote: mockCustomTypeToUpdate,
       };
       const action = deleteSliceCreator.success({
         sliceId: sliceToDeleteId,
@@ -270,6 +271,7 @@ describe("[Available Custom types module]", () => {
               },
             ],
           },
+          remote: mockCustomTypeToUpdate,
         },
       });
     });

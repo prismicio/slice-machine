@@ -1,9 +1,14 @@
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
-export type LocalFrontEndCustomType = {
+export type NewCustomType = {
   local: CustomTypeSM;
-  remote?: CustomTypeSM;
 };
+
+export type SyncedCustomType = {
+  local: CustomTypeSM;
+  remote: CustomTypeSM;
+};
+export type LocalFrontEndCustomType = NewCustomType | SyncedCustomType;
 
 export type DeletedFrontEndCustomType = {
   local: undefined;
@@ -22,6 +27,9 @@ export const isLocalCustomType = (
 export const isDeletedCustomType = (
   ct: FrontEndCustomType
 ): ct is DeletedFrontEndCustomType => !isLocalCustomType(ct);
+
+export const isNewCustomType = (ct: FrontEndCustomType): ct is NewCustomType =>
+  isLocalCustomType(ct) && !("remote" in ct);
 
 export const getCustomTypeProp = <key extends keyof CustomTypeSM>(
   ct: FrontEndCustomType,

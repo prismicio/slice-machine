@@ -1,8 +1,11 @@
 import { Reducer } from "redux";
 import {
   AvailableCustomTypesStoreType,
+  DeletedFrontEndCustomType,
   FrontEndCustomType,
   isDeletedCustomType,
+  isNewCustomType,
+  LocalFrontEndCustomType,
 } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -214,13 +217,13 @@ export const availableCustomTypesReducer: Reducer<
       const sliceId = action.payload.sliceId;
       const newCTs = Object.entries(state)
         .map<[string, FrontEndCustomType]>(([ctName, customType]) => {
-          const newCT = customType.remote
+          const newCT = isNewCustomType(customType)
             ? {
                 local: filterSliceFromCustomType(customType.local, sliceId),
-                remote: filterSliceFromCustomType(customType.remote, sliceId),
               }
             : {
                 local: filterSliceFromCustomType(customType.local, sliceId),
+                remote: customType.remote,
               };
 
           return [ctName, newCT];
