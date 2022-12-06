@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc --project scripts/tsconfig.json && rollup -c ./rollup-server.config.js && cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export && rimraf ./build/client",
-    "start": "concurrently --prefix '{name}' --names 'next-app,dev-server' --prefix-colors 'red,yellow' 'npm run start:dev' 'npm run start:dev-server'",
+    "start": "concurrently --prefix '{name}' --names 'next-app,dev-server' --prefix-colors 'green,cyan' 'npm run start:dev' 'npm run start:dev-server'",
     "start:dev": "concurrently --prefix 'none' 'next dev' 'npm run dev --prefix ../../e2e-projects/next'",
     "start:dev-server": "cross-env PORT=9999 CWD=../../e2e-projects/next ENV=SM concurrently --prefix 'none' 'rollup -w -c ./rollup-server.config.js' 'nodemon -e ts,js --watch server --watch lib --ignore build/ build/server/index.js'",
     "test": "jest",
