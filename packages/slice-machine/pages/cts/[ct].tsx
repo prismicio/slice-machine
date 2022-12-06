@@ -56,7 +56,9 @@ const CustomTypeBuilderWithRouter = () => {
   return (
     <CustomTypeBuilderWithProvider
       customType={selectedCustomType.local}
-      remoteCustomType={selectedCustomType.remote}
+      remoteCustomType={
+        "remote" in selectedCustomType ? selectedCustomType.remote : undefined
+      }
     />
   );
 };

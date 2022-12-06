@@ -3,7 +3,10 @@ import {
   FrontEndModel,
   ModelStatus,
 } from "@lib/models/common/ModelStatus";
-import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
+import {
+  FrontEndSliceModel,
+  getSliceProp,
+} from "@lib/models/common/ModelStatus/compareSliceModels";
 import { getCustomTypeProp } from "@src/modules/availableCustomTypes/types";
 import { getAuthStatus } from "@src/modules/environment";
 import { AuthStatus } from "@src/modules/userContext/types";
@@ -48,10 +51,7 @@ export const useModelStatus = (
           return {
             slices: {
               ...acc.slices,
-              // Can we move the `id` field up? Or type better (either local or remote has to be defined)
-              [model.local?.id ??
-              model.remote?.id ??
-              "this-should-never-happen"]: status,
+              [getSliceProp(model, "id")]: status,
             },
             customTypes: acc.customTypes,
           };

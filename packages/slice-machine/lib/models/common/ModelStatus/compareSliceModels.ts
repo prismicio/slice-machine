@@ -2,11 +2,21 @@ import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
 import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
 
-export type LocalFrontEndSliceModel = {
+export type NewFrontEndSliceModel = {
   local: SliceSM;
-  remote?: SliceSM;
   localScreenshots: Record<string, Screenshot>;
 };
+
+export type SyncedFrontEndSliceModel = {
+  local: SliceSM;
+  remote: SliceSM;
+  localScreenshots: Record<string, Screenshot>;
+};
+
+export type LocalFrontEndSliceModel =
+  | NewFrontEndSliceModel
+  | SyncedFrontEndSliceModel;
+
 export type DeletedFrontEndSliceModel = {
   local: undefined;
   remote: SliceSM;
@@ -25,8 +35,13 @@ export const isDeletedSlice = (
   s: FrontEndSliceModel
 ): s is DeletedFrontEndSliceModel => !isLocalSlice(s);
 
+export const getSliceProp = <key extends keyof SliceSM>(
+  s: FrontEndSliceModel,
+  property: key
+): SliceSM[key] => (isLocalSlice(s) ? s.local[property] : s.remote[property]);
+
 export function compareSliceModels(
-  models: Required<FrontEndSliceModel>
+  models: Required<SyncedFrontEndSliceModel>
 ): ModelStatus {
   if (isDeletedSlice(models)) {
     return ModelStatus.Deleted;

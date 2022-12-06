@@ -26,9 +26,8 @@ export function computeModelStatus(
   if (!models.local) return ModelStatus.Deleted;
 
   // If there is no remote model then it's a new model created locally waiting to be pushed
-  if (!models.remote) return ModelStatus.New;
+  if (!("remote" in models) || !models.remote) return ModelStatus.New;
 
-  if ("localScreenshots" in models)
-    return compareSliceModels(models as Required<FrontEndSliceModel>);
+  if ("localScreenshots" in models) return compareSliceModels(models);
   return compareCustomTypeModels(models);
 }

@@ -1,11 +1,9 @@
 import { Reducer } from "redux";
 import {
   AvailableCustomTypesStoreType,
-  DeletedFrontEndCustomType,
   FrontEndCustomType,
   isDeletedCustomType,
   isNewCustomType,
-  LocalFrontEndCustomType,
 } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
