@@ -5,6 +5,7 @@ import { BaseManager } from "./_BaseManager";
 
 import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
 import { decode } from "../lib/decode";
+import { serializeCookies } from "../lib/serializeCookies";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -228,11 +229,7 @@ export class RepositoryManager extends BaseManager {
 			headers: {
 				// Some endpoints rely on the authorization header...
 				Authorization: `Bearer ${cookies["prismic-auth"]}`,
-				// ... and some just parse cookies
-				// TODO: Refactor, temporary ugly trick to prevent escaping cookies twice
-				Cookie: Object.entries(cookies)
-					.map(([key, value]) => `${key}=${decodeURIComponent(value)}`)
-					.join("; "),
+				Cookie: serializeCookies(cookies),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,
 			},

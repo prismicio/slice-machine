@@ -33,7 +33,12 @@ export const serializeCookies = (
 	const items: string[] = [];
 
 	for (const name in cookiesToSerialize) {
-		items.push(cookie.serialize(name, cookiesToSerialize[name]));
+		items.push(
+			cookie.serialize(name, cookiesToSerialize[name], {
+				// Cookies need be stored raw (not encoded or escaped), so that consumers can format them the way they want them to be formatted.
+				encode: (cookie) => cookie,
+			}),
+		);
 	}
 
 	return items.join(COOKIE_SEPARATOR);
