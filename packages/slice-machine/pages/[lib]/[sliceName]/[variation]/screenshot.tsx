@@ -26,6 +26,10 @@ const Screenshot: ComponentWithSliceProps = ({ slice, variation }) => {
     variationID: variation.id,
   });
 
+  if (!simulatorUrl) {
+    return null;
+  }
+
   return (
     <Box
       as="main"

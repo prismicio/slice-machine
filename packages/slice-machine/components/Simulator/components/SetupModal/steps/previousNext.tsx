@@ -5,6 +5,11 @@ import {
   SetupStepperConfiguration,
 } from "./common";
 import { Text } from "theme-ui";
+import {
+  CreateRouteJsExcerpt,
+  InstallExcerpt,
+  UpdateSmJsonExcerpt,
+} from "./excerpts";
 
 const CreatePageInstructions = {
   code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";
@@ -33,7 +38,8 @@ const CreatePageInstructions = {
 
 const steps = [
   InstallSliceSimulator({
-    code: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
+    npm: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
+    yarn: `yarn add next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
   }),
   CreatePage(CreatePageInstructions),
   UpdateSmJson({}),
@@ -41,6 +47,7 @@ const steps = [
 
 const NextStepper: SetupStepperConfiguration = {
   steps,
+  excerpts: [InstallExcerpt, CreateRouteJsExcerpt, UpdateSmJsonExcerpt],
 };
 
 export default NextStepper;

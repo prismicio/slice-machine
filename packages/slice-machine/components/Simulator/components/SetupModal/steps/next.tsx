@@ -4,6 +4,11 @@ import {
   UpdateSmJson,
   SetupStepperConfiguration,
 } from "./common";
+import {
+  CreateRouteJsExcerpt,
+  InstallExcerpt,
+  UpdateSmJsonExcerpt,
+} from "./excerpts";
 
 const CreatePageInstructions = {
   code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";
@@ -26,7 +31,8 @@ export default SliceSimulatorPage;`,
 
 const steps = [
   InstallSliceSimulator({
-    code: `npm install --save @prismicio/react @prismicio/slice-simulator-react @prismicio/client@latest @prismicio/helpers`,
+    npm: `npm install --save @prismicio/react @prismicio/slice-simulator-react @prismicio/client@latest @prismicio/helpers`,
+    yarn: `yarn add @prismicio/react @prismicio/slice-simulator-react @prismicio/client@latest @prismicio/helpers`,
   }),
   CreatePage(CreatePageInstructions),
   UpdateSmJson({}),
@@ -34,6 +40,7 @@ const steps = [
 
 const NextStepper: SetupStepperConfiguration = {
   steps,
+  excerpts: [InstallExcerpt, CreateRouteJsExcerpt, UpdateSmJsonExcerpt],
 };
 
 export default NextStepper;

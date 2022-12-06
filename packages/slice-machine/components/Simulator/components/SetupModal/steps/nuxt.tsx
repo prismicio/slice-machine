@@ -9,6 +9,13 @@ import type { DefaultStepCompProps } from "./common";
 
 import CodeBlock from "../CodeBlock";
 import { Flex, Text } from "theme-ui";
+import { AiOutlineFileText } from "react-icons/ai";
+import {
+  CreateRouteVueExcerpt,
+  InstallExcerpt,
+  UpdateNuxtConfExcerpt,
+  UpdateSmJsonExcerpt,
+} from "./excerpts";
 
 const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
   modules: [["@nuxtjs/prismic", {
@@ -22,65 +29,73 @@ const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
   `;
 
 const SliceSimulatorPageCreationInstruction = `<template>
-    <SliceSimulator v-slot="{ slices }" :state="state">
-      <SliceZone :slices="slices" :components="components" />
-    </SliceSimulator>
-  </template>
-  
-  <script>
-  import { SliceSimulator } from "@prismicio/slice-simulator-vue";
-  import { components } from "~/slices"
-  
-  import state from "~/.slicemachine/libraries-state.json";
-  
-  export default {
-    components: {
-      SliceSimulator,
-    },
-    data() {
-      return { state, components };
-    }
+  <SliceSimulator v-slot="{ slices }" :state="state">
+    <SliceZone :slices="slices" :components="components" />
+  </SliceSimulator>
+</template>
+
+<script>
+import { SliceSimulator } from "@prismicio/slice-simulator-vue";
+import { components } from "~/slices"
+
+import state from "~/.slicemachine/libraries-state.json";
+
+export default {
+  components: {
+    SliceSimulator,
+  },
+  data() {
+    return { state, components };
   }
-  </script>
+}
+</script>
   
   `;
 
 const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = () => {
   return (
-    <Flex sx={{ flexDirection: "column" }}>
+    <Flex sx={{ flexDirection: "column", height: "calc(100% - 48px)" }}>
       <Text variant={"xs"} sx={{ mb: 3 }}>
         In your <Text variant={"pre"}>nuxt.config.js</Text> file, you need to
         add at the beginning the following line:
       </Text>
-      <CodeBlock>import smConfig from "./sm.json"</CodeBlock>
+      <CodeBlock fileName="nuxt.config.js" FileIcon={AiOutlineFileText}>
+        import smConfig from "./sm.json";
+      </CodeBlock>
       <Text variant={"xs"} sx={{ my: 3 }}>
-        Inside of the export statement, add these two properties
+        Inside of the export statement, add these two properties:
       </Text>
-      <CodeBlock>{NuxtConfigInstructions}</CodeBlock>
+      <CodeBlock
+        fileName="nuxt.config.js"
+        FileIcon={AiOutlineFileText}
+        fullHeightCode
+      >
+        {NuxtConfigInstructions}
+      </CodeBlock>
     </Flex>
   );
 };
 export const steps = [
   InstallSliceSimulator({
-    code: `npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue`,
+    npm: `npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue`,
+    yarn: `yarn add @nuxtjs/prismic @prismicio/slice-simulator-vue`,
   }),
   UpdateNuxtConfig,
   CreatePage({
-    instructions: (
-      <>
-        In your "pages" directory, create a file called{" "}
-        <Text variant={"pre"}>slice-simulator.vue</Text> and add the following
-        code. This page is the route you hit to simulator and develop your
-        components.
-      </>
-    ),
     code: SliceSimulatorPageCreationInstruction,
+    fileName: "slice-simulator.vue",
   }),
   UpdateSmJson({}),
 ];
 
 const NuxtStepper: SetupStepperConfiguration = {
   steps,
+  excerpts: [
+    InstallExcerpt,
+    UpdateNuxtConfExcerpt,
+    CreateRouteVueExcerpt,
+    UpdateSmJsonExcerpt,
+  ],
 };
 
 export default NuxtStepper;

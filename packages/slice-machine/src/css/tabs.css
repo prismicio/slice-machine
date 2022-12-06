@@ -26,6 +26,8 @@
   padding: 32px;
   cursor: pointer;
   color: #bbb;
+  display: flex;
+  align-items: center;
   border-right: 1px solid #dcdbdd;
 }
 
@@ -43,6 +45,7 @@
   display: none;
   width: 570px;
   padding: 24px;
+  overflow-y: auto;
 }
 
 .react-tabs__vertical__tab-panel--selected {
