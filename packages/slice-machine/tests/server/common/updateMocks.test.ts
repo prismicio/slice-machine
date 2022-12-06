@@ -1,7 +1,7 @@
 import "@relmify/jest-fp-ts";
 import {
-  replaceLegacySliceMocks,
-  replaceLegacyCustomTypeMocks,
+  replaceSliceApiMocksWithEditorMocks,
+  replaceCustomTypeApiMocksWithEditorMocks,
   updateMocks,
 } from "../../../server/src/api/common/udpateMocks";
 import path from "path";
@@ -111,7 +111,7 @@ const PATH_TO_GLOBAL_MOCK_CONFIG = path.join(
 
 const PATH_TO_MOCK_SLICE = path.join("slices", "MySlice", "mocks.json");
 
-describe("replaceLegacySliceMocks", () => {
+describe("update mocks for slices", () => {
   afterEach(() => {
     vol.reset();
   });
@@ -125,7 +125,7 @@ describe("replaceLegacySliceMocks", () => {
       TMP_DIR
     );
 
-    replaceLegacySliceMocks(TMP_DIR, [STUB_LIBRARY_UI]);
+    replaceSliceApiMocksWithEditorMocks(TMP_DIR, [STUB_LIBRARY_UI]);
 
     const file = vol.readFileSync(
       path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
@@ -165,7 +165,7 @@ describe("replaceLegacySliceMocks", () => {
       TMP_DIR
     );
 
-    replaceLegacySliceMocks(TMP_DIR, [STUB_LIBRARY_UI]);
+    replaceSliceApiMocksWithEditorMocks(TMP_DIR, [STUB_LIBRARY_UI]);
 
     const file = vol.readFileSync(
       path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
@@ -184,7 +184,7 @@ const PATH_TO_MOCK_CUSTOM_TYPE = path.join(
   "mocks.json"
 );
 
-describe("replaceLegacyCustomTypeMocks", () => {
+describe("update CustomType mocks", () => {
   afterEach(() => {
     vol.reset();
   });
@@ -211,7 +211,7 @@ describe("replaceLegacyCustomTypeMocks", () => {
       TMP_DIR
     );
 
-    replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE], []);
+    replaceCustomTypeApiMocksWithEditorMocks(TMP_DIR, [STUB_CUSTOM_TYPE], {});
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
@@ -235,7 +235,7 @@ describe("replaceLegacyCustomTypeMocks", () => {
       TMP_DIR
     );
 
-    replaceLegacyCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE], []);
+    replaceCustomTypeApiMocksWithEditorMocks(TMP_DIR, [STUB_CUSTOM_TYPE], {});
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
