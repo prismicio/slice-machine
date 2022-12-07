@@ -1,9 +1,9 @@
 import "@relmify/jest-fp-ts";
 import {
-  replaceSliceApiMocksWithEditorMocks,
-  replaceCustomTypeApiMocksWithEditorMocks,
-  updateMocks,
-} from "../../../server/src/api/common/udpateMocks";
+  validateOrReplaceSliceMocks,
+  validateOrReplaceCustomTypeMocks,
+  validateOrReplaceMocks,
+} from "../../../server/src/api/common/validateOrReplaceMocks";
 import path from "path";
 import {
   Component,
@@ -125,7 +125,7 @@ describe("update mocks for slices", () => {
       TMP_DIR
     );
 
-    replaceSliceApiMocksWithEditorMocks(TMP_DIR, [STUB_LIBRARY_UI]);
+    validateOrReplaceSliceMocks(TMP_DIR, [STUB_LIBRARY_UI]);
 
     const file = vol.readFileSync(
       path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
@@ -165,7 +165,7 @@ describe("update mocks for slices", () => {
       TMP_DIR
     );
 
-    replaceSliceApiMocksWithEditorMocks(TMP_DIR, [STUB_LIBRARY_UI]);
+    validateOrReplaceSliceMocks(TMP_DIR, [STUB_LIBRARY_UI]);
 
     const file = vol.readFileSync(
       path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
@@ -211,7 +211,7 @@ describe("update CustomType mocks", () => {
       TMP_DIR
     );
 
-    replaceCustomTypeApiMocksWithEditorMocks(TMP_DIR, [STUB_CUSTOM_TYPE], {});
+    validateOrReplaceCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE], {});
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
@@ -235,7 +235,7 @@ describe("update CustomType mocks", () => {
       TMP_DIR
     );
 
-    replaceCustomTypeApiMocksWithEditorMocks(TMP_DIR, [STUB_CUSTOM_TYPE], {});
+    validateOrReplaceCustomTypeMocks(TMP_DIR, [STUB_CUSTOM_TYPE], {});
 
     const file = vol.readFileSync(path.join(TMP_DIR, PATH_TO_MOCK_CUSTOM_TYPE));
     const result = JSON.parse(file as string);
@@ -280,7 +280,7 @@ const STUB_SLICE_MODEL = {
   ],
 };
 
-describe("updateMocks", () => {
+describe("validateOrReplaceMocks", () => {
   afterEach(() => {
     vol.reset();
   });
@@ -304,7 +304,7 @@ describe("updateMocks", () => {
       TMP_DIR
     );
 
-    updateMocks(TMP_DIR, ["@/slices"]);
+    validateOrReplaceMocks(TMP_DIR, ["@/slices"]);
 
     const sliceMock = vol.readFileSync(
       path.join(TMP_DIR, PATH_TO_MOCK_SLICE),
