@@ -303,7 +303,9 @@ export const SharedSlice = {
                 borderRadius: "4px 4px 0 0",
               }}
             />
-            {showActions ? <ScreenshotMissingBanner slice={slice} /> : null}
+            {showActions && !isDeleted(StatusOrCustom) ? (
+              <ScreenshotMissingBanner slice={slice} />
+            ) : null}
             <Flex
               sx={{
                 flexDirection: "column",
