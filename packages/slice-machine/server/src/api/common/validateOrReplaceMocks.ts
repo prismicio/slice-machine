@@ -23,7 +23,7 @@ import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { Slices } from "@slicemachine/core/build/models";
 
-export function replaceSliceApiMocksWithEditorMocks(
+export function validateOrReplaceSliceMocks(
   cwd: string,
   libraries: ReadonlyArray<Library<Component>>
 ): void {
@@ -62,7 +62,7 @@ export function replaceSliceApiMocksWithEditorMocks(
   } catch (e) {}
 }
 
-export function replaceCustomTypeApiMocksWithEditorMocks(
+export function validateOrReplaceCustomTypeMocks(
   cwd: string,
   customTypes: ReadonlyArray<CustomTypeSM>,
   sharedSlices: Record<string, SharedSlice>
@@ -97,13 +97,13 @@ export function replaceCustomTypeApiMocksWithEditorMocks(
   });
 }
 
-export function updateMocks(
+export function validateOrReplaceMocks(
   cwd: string,
   manifestLibraries: Array<string> = []
 ): void {
   try {
     const libraries = Libraries.libraries(cwd, manifestLibraries);
-    replaceSliceApiMocksWithEditorMocks(cwd, libraries);
+    validateOrReplaceSliceMocks(cwd, libraries);
 
     const components = libraries.reduce<Component[]>((acc, lib) => {
       return [...acc, ...lib.components];
@@ -121,6 +121,6 @@ export function updateMocks(
     );
 
     const customTypes = getLocalCustomTypes(cwd);
-    replaceCustomTypeApiMocksWithEditorMocks(cwd, customTypes, sharedSlices);
+    validateOrReplaceCustomTypeMocks(cwd, customTypes, sharedSlices);
   } catch {}
 }
