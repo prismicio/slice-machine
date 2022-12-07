@@ -3,9 +3,11 @@
  */
 export const SLICE_MACHINE_NPM_PACKAGE_NAME = "slice-machine-ui";
 
+export const SLICE_MACHINE_CONFIG_JS = "slicemachine.config.js";
+export const SLICE_MACHINE_CONFIG_TS = "slicemachine.config.ts";
 export const SLICE_MACHINE_CONFIG_FILENAMES = [
-	"slicemachine.config.ts",
-	"slicemachine.config.js",
+	SLICE_MACHINE_CONFIG_JS,
+	SLICE_MACHINE_CONFIG_TS,
 ] as const;
 
 export const ApplicationMode = {
@@ -38,3 +40,5 @@ export const APIEndpoints =
 				AwsAclProvider:
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
 		  } as const);
+
+export const TS_CONFIG_FILENAME = "tsconfig.json";

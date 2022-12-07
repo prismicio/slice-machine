@@ -200,6 +200,22 @@ export class RepositoryManager extends BaseManager {
 		});
 
 		if (!res.ok) {
+			try {
+				const reason = await res.text();
+
+				// Ideally the API should throw a 409 or something like that...
+				if (reason === "Repository should not contain documents") {
+					throw new Error(
+						`Failed to push documents to repository \`${args.domain}\`, repository is not empty`,
+						{
+							cause: res,
+						},
+					);
+				}
+			} catch {
+				// Noop
+			}
+
 			throw new Error(
 				`Failed to push documents to repository \`${args.domain}\``,
 				{

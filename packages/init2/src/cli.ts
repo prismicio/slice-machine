@@ -17,10 +17,15 @@ USAGE
   $ npx @slicemachine/init
 
 OPTIONS
-  --repository, -r  Specify a Prismic repository to use
+  --repository, -r        Specify a Prismic repository to use
 
-  --help, -h        Display CLI help
-  --version, -v     Display CLI version
+  --no-push               For starters, prevent anyuthing from being pushed
+  --no-push-slices        For starters, prevent slices from being pushed
+  --no-push-custom-types  For starters, prevent custom types from being pushed
+  --no-push-documents     For starters, prevent documents from being pushed
+
+  --help, -h              Display CLI help
+  --version, -v           Display CLI version
 `,
 	{
 		importMeta: import.meta,
@@ -28,6 +33,22 @@ OPTIONS
 			repository: {
 				type: "string",
 				alias: "r",
+			},
+			push: {
+				type: "boolean",
+				default: true,
+			},
+			pushSlices: {
+				type: "boolean",
+				default: true,
+			},
+			pushCustomTypes: {
+				type: "boolean",
+				default: true,
+			},
+			pushDocuments: {
+				type: "boolean",
+				default: true,
 			},
 			help: {
 				type: "boolean",

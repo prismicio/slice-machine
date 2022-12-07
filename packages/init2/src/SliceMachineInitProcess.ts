@@ -1,7 +1,11 @@
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+
 import chalk from "chalk";
 import { ExecaChildProcess } from "execa";
 import open from "open";
 import logSymbols from "log-symbols";
+import { globby } from "globby";
 
 import {
 	createSliceMachineManager,
@@ -26,10 +30,15 @@ import {
 import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
 import { assertExists } from "./lib/assertExists";
+import { format } from "./lib/format";
 
 export type SliceMachineInitProcessOptions = {
 	input: string[];
 	repository?: string;
+	push: boolean;
+	pushSlices: boolean;
+	pushCustomTypes: boolean;
+	pushDocuments: boolean;
 } & Record<string, unknown>;
 
 export const createSliceMachineInitProcess = (
@@ -83,25 +92,9 @@ export class SliceMachineInitProcess {
 		}
 
 		await this.finishCoreDependenciesInstallation();
-
-		await listrRun([
-			{
-				title: "Finishing Slice Machine installation",
-				task: (_, _parentTask) =>
-					listr([
-						{
-							title: "Project setup",
-							task: () => new Promise((res) => setTimeout(res, 2000)),
-						},
-						{
-							title: `${chalk.cyan(
-								this.context.framework?.name
-							)} adapter setup`,
-							task: () => new Promise((res) => setTimeout(res, 2000)),
-						},
-					]),
-			},
-		]);
+		await this.upsertSliceMachineConfigurationAndInitPluginRunner();
+		await this.pushDataToPrismic();
+		await this.initializePlugins();
 	}
 
 	protected detectEnvironment(): Promise<void> {
@@ -549,6 +542,272 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 					task.title = `Core dependencies installed with ${chalk.cyan(
 						this.context.packageManager
 					)}`;
+				},
+			},
+		]);
+	}
+
+	protected upsertSliceMachineConfigurationAndInitPluginRunner(): Promise<void> {
+		return listrRun([
+			{
+				title: "Resolving Slice Machine configuration...",
+				task: async (_, parentTask) => {
+					assertExists(
+						this.context.framework,
+						"Project framework must be available through context to run `upsertSliceMachineConfiguration`"
+					);
+					assertExists(
+						this.context.repository,
+						"Repository selection must be available through context to run `upsertSliceMachineConfiguration`"
+					);
+
+					let sliceMachineConfigExists = false;
+					try {
+						await this.manager.project.getSliceMachineConfigPath();
+						sliceMachineConfigExists = true;
+					} catch {
+						// noop, config does not exists, we'll create it
+					}
+
+					if (sliceMachineConfigExists) {
+						parentTask.title = "Updating Slice Machine configuration...";
+						await this.manager.project.updateSliceMachineConfig({
+							[this.context.repository.domain]: /__PRISMIC_REPOSITORY_NAME/g,
+						});
+						parentTask.title = "Updated Slice Machine configuration";
+					} else {
+						parentTask.title = "Creating Slice Machine configuration...";
+
+						const cwd = process.cwd();
+						const sliceMachineConfigPath =
+							await this.manager.project.suggestSliceMachineConfigPath(cwd);
+
+						// Default config is the same for TypeScript and JavaScript as of today
+						const defaultSliceMachineConfig = await format(
+							`
+							export default {
+								_latest: "legacy",
+								repositoryName: "${this.context.repository.domain}",
+								adapter: "${this.context.framework.adapterName}",
+								libraries: ["./slices"],
+							};
+							`,
+							sliceMachineConfigPath
+						);
+
+						await fs.writeFile(
+							sliceMachineConfigPath,
+							defaultSliceMachineConfig,
+							"utf-8"
+						);
+
+						parentTask.title = "Created Slice Machine configuration";
+					}
+
+					return listr([
+						{
+							title: "Initializing plugin runner...",
+							task: async (_, task) => {
+								await this.manager.plugins.initPlugins();
+								task.title = "Initialized plugin runner";
+								parentTask.title = `${parentTask.title} and initialized plugin runner`;
+							},
+						},
+					]);
+				},
+			},
+		]);
+	}
+
+	protected pushDataToPrismic(): Promise<void> {
+		return listrRun([
+			{
+				title: "Pushing data to Prismic...",
+				task: (_, parentTask) =>
+					listr([
+						{
+							title: "Pushing slices...",
+							skip: () => {
+								if (!this.options.push) {
+									return `--no-push used`;
+								} else if (!this.options.pushSlices) {
+									return `--no-push-slices used`;
+								}
+							},
+							task: async (_, task) => {
+								const { libraries, errors } =
+									await this.manager.slices.readAllSliceLibraries();
+
+								if (errors.length > 0) {
+									// TODO: Provide better error message.
+									throw new Error(errors.join(", "));
+								}
+
+								const slices: { libraryID: string; sliceID: string }[] = [];
+								for (const library of libraries) {
+									if (library.sliceIDs) {
+										for (const sliceID of library.sliceIDs) {
+											slices.push({
+												libraryID: library.libraryID,
+												sliceID,
+											});
+										}
+									}
+								}
+
+								if (slices.length === 0) {
+									task.skip("No slices to push");
+
+									return;
+								}
+
+								let pushed = 0;
+								task.title = `Pushing slices... (0/${slices.length})`;
+								await Promise.all(
+									slices.map(async (slice) => {
+										await this.manager.slices.pushSlice(slice);
+										pushed++;
+										task.title = `Pushing slices... (${pushed}/${slices.length})`;
+									})
+								);
+
+								task.title = "Pushed all slices";
+							},
+						},
+						{
+							title: "Pushing custom types...",
+							skip: () => {
+								if (!this.options.push) {
+									return `--no-push used`;
+								} else if (!this.options.pushCustomTypes) {
+									return `--no-push-custom-types used`;
+								}
+							},
+							task: async (_, task) => {
+								const { ids, errors } =
+									await this.manager.customTypes.readCustomTypeLibrary();
+
+								if (errors.length > 0) {
+									// TODO: Provide better error message.
+									throw new Error(errors.join(", "));
+								}
+
+								if (!ids || ids.length === 0) {
+									task.skip("No custom types to push");
+
+									return;
+								}
+
+								let pushed = 0;
+								task.title = `Pushing custom types... (0/${ids.length})`;
+								await Promise.all(
+									ids.map(async (id) => {
+										await this.manager.customTypes.pushCustomType({ id });
+										pushed++;
+										task.title = `Pushing custom types... (${pushed}/${ids.length})`;
+									})
+								);
+
+								task.title = "Pushed all custom types";
+							},
+						},
+						{
+							title: "Pushing documents...",
+							skip: () => {
+								if (!this.options.push) {
+									return `--no-push used`;
+								} else if (!this.options.pushDocuments) {
+									return `--no-push-documents used`;
+								}
+							},
+							task: async (_, task) => {
+								assertExists(
+									this.context.repository,
+									"Repository selection must be available through context to run `pushDataToPrismic`"
+								);
+
+								const root = await this.manager.project.getRoot();
+								const documentsDirectoryPath = path.resolve(root, "documents");
+
+								try {
+									await fs.access(documentsDirectoryPath);
+								} catch {
+									parentTask.title = "Pushed data to Prismic";
+									task.skip("No documents to push");
+
+									return;
+								}
+
+								const signaturePath = path.resolve(
+									documentsDirectoryPath,
+									"index.json"
+								);
+								const rawSignature = await fs.readFile(signaturePath, "utf-8");
+								const signature: string = JSON.parse(rawSignature).signature;
+
+								const documentsGlob = await globby("*/*.json", {
+									cwd: documentsDirectoryPath,
+								});
+								if (documentsGlob.length === 0) {
+									parentTask.title = "Pushed data to Prismic";
+									task.skip("No documents to push");
+
+									return;
+								}
+
+								const documents: [string, unknown][] = await Promise.all(
+									documentsGlob.map(async (document) => {
+										const filename = path.basename(document, ".json");
+										const fileContent = await fs.readFile(
+											path.resolve(documentsDirectoryPath, document),
+											"utf-8"
+										);
+
+										return [filename, JSON.parse(fileContent)];
+									})
+								);
+
+								await this.manager.repository.pushDocuments({
+									domain: this.context.repository.domain,
+									documents: Object.fromEntries(documents),
+									signature,
+								});
+
+								task.title = "Pushed all documents";
+								parentTask.title = "Pushed data to Prismic";
+							},
+						},
+						{
+							title: "Cleaning up data push artifacts",
+							task: async (_, task) => {
+								const root = await this.manager.project.getRoot();
+								const documentsDirectoryPath = path.resolve(root, "documents");
+								try {
+									await fs.rm(documentsDirectoryPath, {
+										force: true,
+										recursive: true,
+									});
+								} catch {
+									// Noop, it's not that big of a deal if we cannot delete this directory
+								}
+
+								task.title = "Cleaned up data push artifacts";
+								parentTask.title = "Pushed data to Prismic";
+							},
+						},
+					]),
+			},
+		]);
+	}
+
+	protected initializePlugins(): Promise<void> {
+		return listrRun([
+			{
+				title: "Initializing plugins",
+				task: async (_, task) => {
+					// TODO: init hook
+
+					task.title = "Initialized plugins";
 				},
 			},
 		]);

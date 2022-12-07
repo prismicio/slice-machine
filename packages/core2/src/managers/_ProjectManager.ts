@@ -1,4 +1,5 @@
 import * as fs from "node:fs/promises";
+import { existsSync } from "node:fs";
 import * as path from "node:path";
 import { createRequire } from "node:module";
 
@@ -8,7 +9,10 @@ import { locateFileUpward } from "../lib/findFileUpward";
 
 import {
 	SLICE_MACHINE_CONFIG_FILENAMES,
+	SLICE_MACHINE_CONFIG_JS,
+	SLICE_MACHINE_CONFIG_TS,
 	SLICE_MACHINE_NPM_PACKAGE_NAME,
+	TS_CONFIG_FILENAME,
 } from "../constants";
 import { SliceMachineConfig } from "../types";
 
@@ -16,20 +20,50 @@ import { BaseManager } from "./_BaseManager";
 
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;
+	private _cachedSliceMachineConfigPath: string | undefined;
 	private _cachedSliceMachineConfig: SliceMachineConfig | undefined;
 
-	async getRoot(): Promise<string> {
-		if (this._cachedRoot) {
+	async getSliceMachineConfigPath(ignoreCache?: boolean): Promise<string> {
+		if (this._cachedSliceMachineConfigPath && !ignoreCache) {
+			return this._cachedSliceMachineConfigPath;
+		}
+
+		this._cachedSliceMachineConfigPath = await locateFileUpward(
+			SLICE_MACHINE_CONFIG_FILENAMES,
+		);
+
+		return this._cachedSliceMachineConfigPath;
+	}
+
+	async getRoot(ignoreCache?: boolean): Promise<string> {
+		if (this._cachedRoot && !ignoreCache) {
 			return this._cachedRoot;
 		}
 
-		const sliceMachineConfigFilePath = await locateFileUpward(
-			SLICE_MACHINE_CONFIG_FILENAMES,
+		const sliceMachineConfigFilePath = await this.getSliceMachineConfigPath(
+			ignoreCache,
 		);
 
 		this._cachedRoot = path.dirname(sliceMachineConfigFilePath);
 
 		return this._cachedRoot;
+	}
+
+	async suggestSliceMachineConfigPath(root: string): Promise<string> {
+		const isTypeScript = await this.checkIsTypeScript(root);
+
+		return path.resolve(
+			root,
+			isTypeScript ? SLICE_MACHINE_CONFIG_TS : SLICE_MACHINE_CONFIG_JS,
+		);
+	}
+
+	async checkIsTypeScript(rootOverwrite?: string): Promise<boolean> {
+		const root = rootOverwrite || (await this.getRoot());
+		const rootTSConfigPath = path.resolve(root, TS_CONFIG_FILENAME);
+
+		// We just care if the file exists, we don't need access to it
+		return existsSync(rootTSConfigPath);
 	}
 
 	async getSliceMachineConfig(): Promise<SliceMachineConfig> {
@@ -40,20 +74,32 @@ export class ProjectManager extends BaseManager {
 		}
 	}
 
+	// TODO: This is a temporary strategy for upading Slice Machine configuration based on string search & replace, e.g. `this.updateSliceMachineConfig({ "200629-sms-hoy": /__PRISMIC_REPOSITORY_NAME/g })` replaces all occurence of "__PRISMIC_REPOSITORY_NAME" with "200629-sms-hoy". We'll need something stronger/more convenient for starters.
+	async updateSliceMachineConfig(
+		searchAndReplaceMap: Record<string, string | RegExp>,
+	): Promise<void> {
+		const configFilePath = await this.getSliceMachineConfigPath();
+
+		let rawConfig = await fs.readFile(configFilePath, "utf-8");
+
+		for (const replacement in searchAndReplaceMap) {
+			const searchPattern = searchAndReplaceMap[replacement];
+
+			rawConfig = rawConfig.replace(searchPattern, replacement);
+		}
+
+		await fs.writeFile(configFilePath, rawConfig);
+		delete this._cachedSliceMachineConfig; // Clear config cache
+	}
+
 	async loadSliceMachineConfig(): Promise<SliceMachineConfig> {
-		const projectRoot = await this.getRoot();
-
 		let configModule: unknown | undefined;
-
-		for (const configFileName of SLICE_MACHINE_CONFIG_FILENAMES) {
-			const configFilePath = path.resolve(projectRoot, configFileName);
-
-			try {
-				await fs.access(configFilePath);
-				configModule = loadModuleWithJiti(path.resolve(configFileName));
-			} catch {
-				// noop
-			}
+		const configFilePath = await this.getSliceMachineConfigPath();
+		try {
+			await fs.access(configFilePath);
+			configModule = loadModuleWithJiti(path.resolve(configFilePath));
+		} catch {
+			// noop
 		}
 
 		if (!configModule) {

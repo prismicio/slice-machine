@@ -10,7 +10,10 @@ type LocateFileUpwardConfig = {
 
 export const locateFileUpward = async (
 	filePathOrPaths: string | readonly string[],
-	{ startDir = process.cwd(), stopDir = "/" }: LocateFileUpwardConfig = {},
+	{
+		startDir = process.cwd(),
+		stopDir = path.resolve("/"),
+	}: LocateFileUpwardConfig = {},
 ): Promise<string> => {
 	const filePaths = castArray(filePathOrPaths);
 

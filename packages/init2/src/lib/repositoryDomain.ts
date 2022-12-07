@@ -70,9 +70,9 @@ export const formatRepositoryDomain = (rawDomain: string): string => {
 	/**
 	 * Replace not allowed characters
 	 *
-	 * @see https://regex101.com/r/HbxgfM/1
+	 * @see https://regex101.com/r/f2Hr0k/1
 	 */
-	domain = domain.replace(/[^a-z1-9-]/g, "");
+	domain = domain.replace(/[^a-z0-9-]/g, "");
 
 	/**
 	 * Trim leading and trailing hyphens

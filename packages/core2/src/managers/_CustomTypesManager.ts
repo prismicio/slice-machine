@@ -1,4 +1,5 @@
 import * as t from "io-ts";
+import fetch from "node-fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomTypes } from "@prismicio/types-internal";
 import {
@@ -218,6 +219,8 @@ export class CustomTypesManager extends BaseManager {
 				if (error instanceof prismicCustomTypesClient.NotFoundError) {
 					// If it doesn't exist on the repository, insert it.
 					await client.insertCustomType(model);
+				} else {
+					throw error;
 				}
 			}
 		}

@@ -1,4 +1,5 @@
 import * as t from "io-ts";
+import fetch from "node-fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomTypes } from "@prismicio/types-internal";
 import {
@@ -30,6 +31,14 @@ import { BaseManager } from "./_BaseManager";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[] | undefined;
+	errors: (DecodeError | HookError)[];
+};
+
+type SlicesManagerReadAllSliceLibrariesReturnType = {
+	libraries: {
+		libraryID: string;
+		sliceIDs: string[] | undefined;
+	}[];
 	errors: (DecodeError | HookError)[];
 };
 
@@ -146,6 +155,32 @@ export class SlicesManager extends BaseManager {
 			sliceIDs: data[0]?.sliceIDs,
 			errors,
 		};
+	}
+
+	async readAllSliceLibraries(): Promise<SlicesManagerReadAllSliceLibrariesReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const libraryIDs = sliceMachineConfig.libraries || [];
+
+		const res: SlicesManagerReadAllSliceLibrariesReturnType = {
+			libraries: [],
+			errors: [],
+		};
+
+		for (const libraryID of libraryIDs) {
+			const { sliceIDs, errors } = await this.readSliceLibrary({
+				libraryID,
+			});
+			res.errors = [...res.errors, ...errors];
+
+			res.libraries.push({
+				libraryID,
+				sliceIDs,
+			});
+		}
+
+		return res;
 	}
 
 	async readAllSlicesForLibrary(
@@ -326,6 +361,8 @@ export class SlicesManager extends BaseManager {
 				if (error instanceof prismicCustomTypesClient.NotFoundError) {
 					// If the Slice doesn't exist on the repository, insert it.
 					await client.insertSharedSlice(model);
+				} else {
+					throw error;
 				}
 			}
 		}

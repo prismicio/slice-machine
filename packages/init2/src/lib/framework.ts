@@ -10,6 +10,9 @@ export type Framework = {
 	/** Framework's name sent to Prismic */
 	prismicName: string;
 
+	/** Package name of the adapter responsible for this framework */
+	adapterName: string;
+
 	/**
 	 * A package name/semver range map defining framework compatibility
 	 * requirements.
@@ -38,6 +41,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	"nuxt-2": {
 		name: "Nuxt 2",
 		prismicName: "nuxt-2",
+		adapterName: "@slicemachine/adapter-nuxt",
 		compatibility: {
 			nuxt: "^2.0.0",
 		},
@@ -49,6 +53,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	"next-11-13": {
 		name: "Next.js 11-13",
 		prismicName: "next-11-13",
+		adapterName: "@slicemachine/adapter-next",
 		compatibility: {
 			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
 		},
@@ -63,6 +68,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 export const UNIVERSAL: Framework = {
 	name: "universal (no framework)",
 	prismicName: "universal",
+	adapterName: "@slicemachine/adapter-universal",
 	compatibility: {},
 	devDependencies: {
 		...DEFAULT_DEV_DEPENDENCIES,
