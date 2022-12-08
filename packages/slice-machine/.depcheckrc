@@ -1,10 +1,10 @@
-ignores: [
-  "babel-plugin-module-resolver",
-  "nodemon",
-  "rollup",
-  "@svgr/webpack",
-  "monocle-ts",
-  "newtype-ts",
-  "jest-environment-jsdom",
-]
+ignores:
+  [
+    "@babel/plugin-proposal-private-methods",
+    "nodemon",
+    "rollup",
+    "monocle-ts",
+    "newtype-ts",
+    "jest-environment-jsdom",
+  ]
 skip - missing: true

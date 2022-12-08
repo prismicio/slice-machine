@@ -16,7 +16,7 @@ import {
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -24,7 +24,7 @@ import {
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { Slices } from "@slicemachine/core/build/models";
+import { Slices, VariationSM } from "@slicemachine/core/build/models";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
@@ -33,43 +33,59 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields
 
 import useThrottle from "@src/hooks/useThrottle";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 export default function Simulator() {
-  const { component } = useSelector((store: SliceMachineStoreType) => ({
-    component: selectCurrentSlice(
-      store,
-      Router.query.lib as string, // todo this is already stored
-      Router.query.sliceName as string
-    ),
-  }));
+  const router = useRouter();
 
-  const { saveSliceMock } = useSliceMachineActions();
-
-  const variation = component?.model.variations.find(
-    (variation) => variation.id === (Router.query.variation as string)
+  const { component, framework, version, simulatorUrl } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      component: selectCurrentSlice(
+        store,
+        router.query.lib as string,
+        router.query.sliceName as string
+      ),
+      framework: getFramework(store),
+      simulatorUrl: selectSimulatorUrl(store),
+      version: getCurrentVersion(store),
+    })
   );
 
-  // useSelector called twice, for some reason
-  const { framework, version, simulatorUrl } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
-      simulatorUrl: selectSimulatorUrl(state),
-      version: getCurrentVersion(state),
-    })
+  const variation = component?.model.variations.find(
+    (variation) => variation.id === (router.query.variation as string)
   );
 
   useEffect(() => {
     void Tracker.get().trackOpenSliceSimulator(framework, version);
   }, []);
 
+  if (!component || !variation) {
+    return <div />;
+  } else {
+    return (
+      <SimulatorForSlice
+        component={component}
+        variation={variation}
+        simulatorUrl={simulatorUrl}
+      />
+    );
+  }
+}
+
+type SimulatorForSliceProps = {
+  component: ComponentUI;
+  variation: VariationSM;
+  simulatorUrl?: string;
+};
+const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
+  component,
+  variation,
+  simulatorUrl,
+}) => {
+  const { saveSliceMock } = useSliceMachineActions();
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
-
-  if (!component || !variation) {
-    // this is a bug
-    return <div />;
-  }
 
   const sharedSlice = useMemo(
     () => Slices.fromSM(component.model),
@@ -199,10 +215,10 @@ export default function Simulator() {
       </Box>
       {!!component.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
-          sliceName={Router.router?.query.sliceName as string}
+          sliceName={component.model.name}
           screenshotUrl={component.screenshots[variation.id]?.url}
         />
       )}
     </Flex>
   );
-}
+};

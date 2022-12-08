@@ -347,6 +347,9 @@ const AppTheme = (): Theme =>
           cursor: "not-allowed",
           color: alpha("textClear", 0.6),
         },
+        "&>svg": {
+          pointerEvents: "none",
+        },
       },
       small: {
         bg: "primary",

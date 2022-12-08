@@ -1,7 +1,10 @@
 import React from "react";
 
-import { Button as ThemeUIButton, Spinner } from "theme-ui";
-import { ThemeUIStyleObject } from "@theme-ui/css";
+import {
+  type ThemeUIStyleObject,
+  Button as ThemeUIButton,
+  Spinner,
+} from "theme-ui";
 import { IconType } from "react-icons";
 
 export type ButtonProps = {

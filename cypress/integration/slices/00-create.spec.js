@@ -50,7 +50,7 @@ describe("Create Slices", () => {
     cy.readFile(type).should("contains", sliceName);
 
     // remove widget
-    cy.get("#menu-button--menu").last().click();
+    cy.get('[data-cy="slice-menu-button"]').first().click();
     cy.contains("Delete field").click();
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
@@ -64,10 +64,12 @@ describe("Create Slices", () => {
       "eq",
       `/${lib}/${editedSliceName}/default`
     );
-    cy.get("[data-cy=rename-slice-modal]").should("not.exist");
+    cy.waitUntil(() => cy.get('[data-cy="slice-and-variation-name-header"]'));
     cy.get('[data-cy="slice-and-variation-name-header"]').contains(
       `/ ${editedSliceName} / Default`
     );
+
+    cy.get("[data-cy=rename-slice-modal]").should("not.exist");
 
     // simulator
 
@@ -107,5 +109,6 @@ describe("Create Slices", () => {
       .its(0)
       .its("content.text")
       .should("equal", "👋");
+
   });
 });
