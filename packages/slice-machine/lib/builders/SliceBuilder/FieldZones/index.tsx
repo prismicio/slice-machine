@@ -124,6 +124,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
 
   const _onDragEnd =
     (widgetArea: Models.WidgetsArea) => (result: DropResult) => {
+      if (!result.destination) return;
       if (ensureDnDDestination(result)) {
         return;
       }

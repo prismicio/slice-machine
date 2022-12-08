@@ -6,6 +6,7 @@ import { Frameworks } from "@slicemachine/core/build/models/Framework";
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import type { DropResult } from "react-beautiful-dnd";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,10 +14,9 @@ export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   return rest;
 };
 
-export const ensureDnDDestination = (result: {
-  destination?: { droppableId: string; index: number };
-  source: { index: number; droppableId: string };
-}): result is {
+export const ensureDnDDestination = (
+  result: Pick<DropResult, "destination" | "source">
+): result is {
   destination: undefined;
   source: { index: number; droppableId: string };
 } => {
