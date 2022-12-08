@@ -2,8 +2,10 @@ import { Reducer } from "redux";
 import {
   AvailableCustomTypesStoreType,
   FrontEndCustomType,
+  getCustomTypeProp,
   isDeletedCustomType,
   isNewCustomType,
+  isSyncedCustomType,
 } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -208,7 +210,20 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(deleteCustomTypeCreator.success): {
-      return omit(state, action.payload.customTypeId);
+      const ct = state[action.payload.customTypeId];
+
+      if (isNewCustomType(ct)) {
+        return omit(state, action.payload.customTypeId);
+      }
+
+      if (isSyncedCustomType(ct)) {
+        return {
+          ...state,
+          [ct.local.id]: omit(ct, "local"),
+        };
+      }
+
+      return state;
     }
 
     case getType(deleteSliceCreator.success): {
