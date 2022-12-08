@@ -11,6 +11,3 @@ yarn.lock -diff
 *.jpeg binary
 *.gif binary
 *.ico binary
-
-# treat videos as binaries
-*.mp4 binary

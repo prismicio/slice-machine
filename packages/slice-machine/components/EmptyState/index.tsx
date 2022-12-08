@@ -1,4 +1,4 @@
-import { Button, Text, Heading, Flex, Spinner } from "theme-ui";
+import { Button, Text, Heading, Box, Spinner } from "theme-ui";
 import React from "react";
 import { Video } from "cloudinary-react";
 import { useSelector } from "react-redux";
@@ -30,9 +30,17 @@ const EmptyState: React.FunctionComponent<Props> = ({
   );
 
   return (
-    <Flex sx={{ width: "80%", flexWrap: "wrap", justifyContent: "center" }}>
-      <Flex
+    <Box
+      sx={{
+        display: "flex",
+        width: "80%",
+        flexWrap: "wrap",
+        justifyContent: "center",
+      }}
+    >
+      <Box
         sx={(theme) => ({
+          display: "flex",
           flex: 1,
           alignItems: "center",
           minWidth: "400px",
@@ -57,10 +65,11 @@ const EmptyState: React.FunctionComponent<Props> = ({
             );
           }}
         />
-      </Flex>
+      </Box>
 
-      <Flex
+      <Box
         sx={(theme) => ({
+          display: "flex",
           flexDirection: "column",
           border: `1px solid ${theme.colors?.grey02 as string}`,
           flex: 1,
@@ -68,8 +77,9 @@ const EmptyState: React.FunctionComponent<Props> = ({
           maxWidth: "70%",
         })}
       >
-        <Flex
+        <Box
           sx={(theme) => ({
+            display: "flex",
             flexDirection: "column",
             p: 4,
             borderBottom: `1px solid ${theme.colors?.grey02 as string}`,
@@ -85,9 +95,10 @@ const EmptyState: React.FunctionComponent<Props> = ({
           <Text variant="xs" sx={{ lineHeight: "24px", fontSize: "13px" }}>
             {documentationComponent}
           </Text>
-        </Flex>
-        <Flex
+        </Box>
+        <Box
           sx={{
+            display: "flex",
             p: 4,
             alignItems: "center",
           }}
@@ -115,9 +126,9 @@ const EmptyState: React.FunctionComponent<Props> = ({
             It will be stored locally and you will be able to push it to your
             repository
           </Text>
-        </Flex>
-      </Flex>
-    </Flex>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

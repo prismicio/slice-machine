@@ -29,15 +29,6 @@ export default function Stepper({
   framework,
   isSimulatorAvailableForFramework,
 }: Props): React.ReactElement {
-  if (!isSimulatorAvailableForFramework) {
-    return (
-      <p>
-        Framework {framework || "undefined"} is not supported yet. Please use
-        Storybook instead.
-      </p>
-    );
-  }
-
   const stepperConfiguration = getStepperConfigurationByFramework(framework);
 
   const { toggleSetupDrawerStep, checkSimulatorSetup } =
@@ -63,6 +54,15 @@ export default function Stepper({
 
   const stepNumberWithErrors =
     stepperConfiguration.getStepNumberWithErrors(setupStatus);
+
+  if (!isSimulatorAvailableForFramework) {
+    return (
+      <p>
+        Framework {framework || "undefined"} is not supported yet. Please use
+        Storybook instead.
+      </p>
+    );
+  }
 
   return (
     <div>

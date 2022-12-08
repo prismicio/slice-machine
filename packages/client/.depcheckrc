@@ -1,4 +1,2 @@
-ignores: [
-  "@babel/runtime",
-]
+ignores: []
 skip - missing: true

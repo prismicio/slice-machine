@@ -112,10 +112,13 @@ const variationSetter = (
   defaultVariationSelector: SliceVariationSelector | undefined,
   slices: ComponentUI[]
 ) =>
-  defaultVariationSelector || {
-    sliceID: slices[0].model.id,
-    variationID: slices[0].model.variations[0].id,
-  };
+  defaultVariationSelector ||
+  (slices.length
+    ? {
+        sliceID: slices[0].model.id,
+        variationID: slices[0].model.variations[0].id,
+      }
+    : undefined);
 
 const ScreenshotChangesModal = ({
   slices,
@@ -124,22 +127,21 @@ const ScreenshotChangesModal = ({
   slices: ComponentUI[];
   defaultVariationSelector?: SliceVariationSelector;
 }) => {
-  if (slices.length === 0) return null;
-
   const { closeScreenshotsModal } = useSliceMachineActions();
 
   const { isOpen } = useSelector((store: SliceMachineStoreType) => ({
     isOpen: isModalOpen(store, ModalKeysEnum.SCREENSHOTS),
   }));
 
-  const [variationSelector, setVariationSelector] =
-    useState<SliceVariationSelector>(
-      variationSetter(defaultVariationSelector, slices)
-    );
+  const [variationSelector, setVariationSelector] = useState(
+    variationSetter(defaultVariationSelector, slices)
+  );
 
   useEffect(() => {
     setVariationSelector(variationSetter(defaultVariationSelector, slices));
   }, [defaultVariationSelector, isOpen]);
+
+  if (slices.length === 0 || !variationSelector) return null;
 
   return (
     <SliceMachineModal

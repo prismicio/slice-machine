@@ -1,7 +1,6 @@
 import React from "react";
-import { Flex } from "theme-ui";
+import { type ThemeUIStyleObject, Flex } from "theme-ui";
 import { RiErrorWarningLine } from "react-icons/ri";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 
 type WarningBadgeProps = {
   sx: ThemeUIStyleObject;

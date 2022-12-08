@@ -1,16 +1,22 @@
 import Link from "next/link";
-import { Flex, Box, Link as ThemeLink } from "theme-ui";
-import { ThemeUIStyleObject } from "@theme-ui/css";
+import type { FC, ReactElement, ReactNode } from "react";
+import {
+  type ThemeUIStyleObject,
+  Flex,
+  Box,
+  Link as ThemeLink,
+} from "theme-ui";
 
 type HeaderProps = {
-  ActionButton?: React.ReactElement;
-  MainBreadcrumb: React.ReactElement;
-  SecondaryBreadcrumb?: React.ReactElement;
+  ActionButton?: ReactElement;
+  MainBreadcrumb: ReactElement;
+  SecondaryBreadcrumb?: ReactElement;
   breadrumbHref: string;
+  children?: ReactNode;
   sx?: ThemeUIStyleObject;
 };
 
-const Header: React.FunctionComponent<HeaderProps> = ({
+const Header: FC<HeaderProps> = ({
   ActionButton,
   MainBreadcrumb,
   SecondaryBreadcrumb,

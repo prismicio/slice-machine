@@ -1,27 +1,66 @@
-<!--- Provide a general summary of your changes in the title above -->
+## Context
 
-## Types of changes
+<!--
+Please include either
+- a ticket
+    - [Link text Here](https://link-url-here.org)
 
-<!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
+- a github issue / forum thread
+    - Fixes #
 
-- [ ] Bug fix (a non-breaking change which fixes an issue)
-- [ ] New feature (a non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to change)
+- a detailed description of the issue and it's implications
 
-## Description
+This part should always include acceptance criteria weither they are accessible on a link or written here directly.
+-->
 
-<!--- Describe your changes in detail -->
-<!--- Why is this change required? What problem does it solve? -->
-<!--- If it resolves an open issue, please link to the issue here. For example "Resolves: #137" -->
 
-## Checklist:
 
-<!--- Put an `x` in all the boxes that apply. -->
-<!--- If your change requires a documentation PR, please link it appropriately -->
-<!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 
-- [ ] My change requires a change to the documentation.
-- [ ] I have updated the documentation accordingly. (PR: #)
-- [ ] All new and existing tests are passing.
+## The Solution
 
-<!--- A cute animal picture is welcome to close your PR! -->
+<!--
+Highlight explanations where the complexity in your development is.
+Keep in mind that the reviewer might not have as much context as you do.
+This is very important to make sure the review is thorough and the reviewer understand your changes.
+-->
+
+
+
+
+## Impact / Dependencies
+
+<!--
+List all the impacts your development might have on internal and external features.
+Ideally this should have been discussed prior to this development.
+
+Link of any other PRs that are related to this development.
+They should also be referenced in the ticket for reviews.
+-->
+
+
+
+
+## Checklist before requesting a review
+- [ ] I hereby declare my code ready for review.
+- [ ] If it is a critical feature, I have added tests.
+- [ ] The CI is successful.
+- [ ] If there could backward compatibility issues, it has been discussed and planned.
+
+
+
+
+## [OPT] Preview
+
+<!--
+Visual aid of your work.
+It can either be screenshots or a video.
+This could help reviewers to get context quickly.
+-->
+
+
+
+
+<!--
+A funny animal picture is welcome to close your PR!
+You can find one here https://unsplash.com/s/photos/funny-animal-picture
+-->

@@ -1,7 +1,7 @@
 {
   "uid": {
     "__TYPE__": "UIDContent",
-    "value": "either"
+    "value": "example"
   },
   "title": {
     "__TYPE__": "StructuredTextContent",
@@ -9,7 +9,7 @@
       {
         "type": "heading1",
         "content": {
-          "text": "Daily"
+          "text": "Harbor"
         }
       }
     ]
@@ -20,7 +20,7 @@
       {
         "type": "heading1",
         "content": {
-          "text": "Range"
+          "text": "Physical"
         }
       }
     ]
@@ -31,7 +31,7 @@
       {
         "type": "paragraph",
         "content": {
-          "text": "Est laborum veniam in esse ex sunt deserunt eiusmod velit esse veniam est."
+          "text": "Nulla aute esse velit amet."
         }
       }
     ]
@@ -40,7 +40,7 @@
     "__TYPE__": "SliceContentType",
     "value": [
       {
-        "key": "content_section_centered$58a3f4e0-604d-4a31-a6f0-2f36fe17f423",
+        "key": "content_section_centered$3ceecf75-2bdb-4d67-a9d8-e48bec8f4ed5",
         "name": "content_section_centered",
         "widget": {
           "__TYPE__": "SharedSliceContent",
@@ -52,7 +52,7 @@
                 {
                   "type": "paragraph",
                   "content": {
-                    "text": "Exercitation Lorem consequat occaecat et est reprehenderit eiusmod aliquip sint sunt eiusmod pariatur consectetur. Commodo mollit incididunt qui id deserunt minim aliquip cupidatat quis quis tempor dolor magna quis."
+                    "text": "Amet culpa aliquip labore deserunt ad ad ea duis adipisicing sint irure. Quis Lorem commodo culpa aute minim et consectetur cillum."
                   }
                 }
               ]
@@ -67,7 +67,7 @@
         }
       },
       {
-        "key": "content_section_centered_embed$41d33646-5540-401a-bd04-8b3fc5ce05f3",
+        "key": "content_section_centered_embed$29989139-28dd-4437-8f5f-d43fa78f31d6",
         "name": "content_section_centered_embed",
         "widget": {
           "__TYPE__": "SharedSliceContent",
@@ -78,6 +78,8 @@
               "author_name": "Prismic",
               "author_url": "https://twitter.com/prismicio",
               "html": "<blockquote class=\"twitter-tweet\"><p lang=\"en\" dir=\"ltr\">We&#39;re launching a new <a href=\"https://twitter.com/hashtag/SliceContest?src=hash&amp;ref_src=twsrc%5Etfw\">#SliceContest</a> tomorrow along with Slice Machine upgrades.<br><br>Want to know more? Join us at tomorrow&#39;s Product Meet-up👇<a href=\"https://t.co/prYSypiAvB\">https://t.co/prYSypiAvB</a><br><br>We can&#39;t tell you any further details for now, but here&#39;s a sneak peek at the prizes👀 <a href=\"https://t.co/fV1eoGlEBh\">pic.twitter.com/fV1eoGlEBh</a></p>&mdash; Prismic (@prismicio) <a href=\"https://twitter.com/prismicio/status/1354112310252630016?ref_src=twsrc%5Etfw\">January 26, 2021</a></blockquote>\n<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>\n",
+              "width": 550,
+              "height": null,
               "type": "rich",
               "cache_age": "3153600000",
               "provider_name": "Twitter",
@@ -108,7 +110,7 @@
         }
       },
       {
-        "key": "content_section_centered_image$54c490f6-3de1-4365-bcce-524a37e136f9",
+        "key": "content_section_centered_image$f38d5833-a032-4c35-b615-6724e7b95344",
         "name": "content_section_centered_image",
         "widget": {
           "__TYPE__": "SharedSliceContent",
@@ -120,16 +122,17 @@
                 {
                   "type": "paragraph",
                   "content": {
-                    "text": "Voluptate reprehenderit nisi commodo dolor laborum irure. Eiusmod non dolore tempor fugiat veniam cillum duis minim tempor quis. Ea amet est excepteur quis anim cillum proident."
+                    "text": "Consectetur veniam culpa velit nisi aliqua non veniam proident nisi occaecat incididunt."
                   }
                 }
               ]
             },
             "image": {
-              "url": "https://images.unsplash.com/photo-1589321578146-4c1ba445cc88?fit=crop&w=900&h=500",
+              "__TYPE__": "ImageContent",
+              "url": "https://images.unsplash.com/photo-1504198070170-4ca53bb1c1fa?fit=crop&w=900&h=500",
               "origin": {
                 "id": "main",
-                "url": "https://images.unsplash.com/photo-1589321578146-4c1ba445cc88",
+                "url": "https://images.unsplash.com/photo-1504198070170-4ca53bb1c1fa",
                 "width": 900,
                 "height": 500
               },
@@ -143,9 +146,6 @@
                 },
                 "background": "transparent"
               },
-              "credits": null,
-              "alt": null,
-              "__TYPE__": "ImageContent",
               "thumbnails": {}
             }
           },
@@ -158,7 +158,7 @@
         }
       },
       {
-        "key": "separator$da971f25-2237-4b36-9bfe-e698d3a5cfef",
+        "key": "separator$0a846fc0-3f20-4b12-a297-17868d1f55bc",
         "name": "separator",
         "widget": {
           "__TYPE__": "SharedSliceContent",
@@ -173,7 +173,7 @@
         }
       },
       {
-        "key": "content_section_two_columns_with_image$49588e56-62fd-42d2-a694-2ca9bea94339",
+        "key": "content_section_two_columns_with_image$928f70ed-f089-455a-aaaf-92bde294faff",
         "name": "content_section_two_columns_with_image",
         "widget": {
           "__TYPE__": "SharedSliceContent",
@@ -185,7 +185,7 @@
                 {
                   "type": "heading1",
                   "content": {
-                    "text": "Herself"
+                    "text": "Rising"
                   }
                 }
               ]
@@ -196,14 +196,14 @@
                 {
                   "type": "paragraph",
                   "content": {
-                    "text": "Magna mollit ullamco ex in cupidatat consequat sint eu ea. Elit officia minim ipsum. Dolore duis eu cupidatat pariatur id ut voluptate."
+                    "text": "Consequat mollit esse nisi fugiat. Occaecat reprehenderit cillum ullamco fugiat adipisicing commodo quis Lorem. Laborum mollit anim velit irure officia officia esse ad."
                   }
                 }
               ]
             },
             "superTitle": {
               "__TYPE__": "FieldContent",
-              "value": "chief",
+              "value": "simply",
               "type": "Text"
             },
             "text": {
@@ -212,16 +212,17 @@
                 {
                   "type": "paragraph",
                   "content": {
-                    "text": "Do consectetur culpa commodo in est occaecat do reprehenderit aliquip culpa commodo velit proident. Sit eiusmod anim do deserunt labore magna. Consequat excepteur magna laborum aliqua voluptate do."
+                    "text": "Enim tempor laborum ex quis nostrud. Do sit minim commodo cupidatat reprehenderit ea et nostrud aute nostrud sit. Mollit duis proident velit nisi ea excepteur sit commodo reprehenderit aliqua anim elit exercitation irure commodo."
                   }
                 }
               ]
             },
             "image": {
-              "url": "https://images.unsplash.com/photo-1607582278038-6bebbd4d7b72?fit=crop&w=900&h=500",
+              "__TYPE__": "ImageContent",
+              "url": "https://images.unsplash.com/photo-1544731612-de7f96afe55f?fit=crop&w=900&h=500",
               "origin": {
                 "id": "main",
-                "url": "https://images.unsplash.com/photo-1607582278038-6bebbd4d7b72",
+                "url": "https://images.unsplash.com/photo-1544731612-de7f96afe55f",
                 "width": 900,
                 "height": 500
               },
@@ -235,9 +236,6 @@
                 },
                 "background": "transparent"
               },
-              "credits": null,
-              "alt": null,
-              "__TYPE__": "ImageContent",
               "thumbnails": {}
             },
             "caption": {
@@ -246,7 +244,7 @@
                 {
                   "type": "paragraph",
                   "content": {
-                    "text": "Quis officia ipsum sit deserunt ad id cupidatat et laboris incididunt adipisicing occaecat esse officia. Elit est aliqua elit nostrud dolore culpa et excepteur."
+                    "text": "Consequat non in id ut. Tempor esse Lorem incididunt. Ut cupidatat proident duis non eu."
                   }
                 }
               ]
@@ -264,19 +262,19 @@
   },
   "meta_title": {
     "__TYPE__": "FieldContent",
-    "value": "them",
+    "value": "exist",
     "type": "Text"
   },
   "meta_description": {
     "__TYPE__": "FieldContent",
-    "value": "caught",
+    "value": "strong",
     "type": "Text"
   },
   "canonicalLink": {
     "__TYPE__": "LinkContent",
     "value": {
       "__TYPE__": "ExternalLink",
-      "url": "https://slicemachine.dev"
+      "url": "http://twitter.com"
     }
   },
   "social_cards": {
@@ -288,10 +286,11 @@
           [
             "social_card_image",
             {
-              "url": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?fit=crop&w=900&h=500",
+              "__TYPE__": "ImageContent",
+              "url": "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?fit=crop&w=900&h=500",
               "origin": {
                 "id": "main",
-                "url": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
+                "url": "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468",
                 "width": 900,
                 "height": 500
               },
@@ -305,9 +304,6 @@
                 },
                 "background": "transparent"
               },
-              "credits": null,
-              "alt": null,
-              "__TYPE__": "ImageContent",
               "thumbnails": {}
             }
           ],
@@ -315,7 +311,7 @@
             "social_card_title",
             {
               "__TYPE__": "FieldContent",
-              "value": "refer",
+              "value": "leave",
               "type": "Text"
             }
           ],
@@ -323,7 +319,7 @@
             "social_card_description",
             {
               "__TYPE__": "FieldContent",
-              "value": "usually",
+              "value": "also",
               "type": "Text"
             }
           ]
