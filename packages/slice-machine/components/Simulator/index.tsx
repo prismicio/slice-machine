@@ -203,7 +203,7 @@ const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
               transition: "visibility 0s linear",
             }}
           >
-            <ThemeProvider>
+            <ThemeProvider mode="light">
               <SharedSliceEditor
                 content={editorContent}
                 onContentChange={(c) => setContent(c as SharedSliceContent)}
