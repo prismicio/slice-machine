@@ -25,7 +25,7 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: [
-    "/node_modules/",
+    "/node_modules/(?!connected-next-router/es)/",
     "/packages/client/",
     "/packages/core/",
   ],

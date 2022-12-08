@@ -137,7 +137,7 @@
     "memfs": "^3.2.2",
     "msw": "^0.47.2",
     "next": "^12.1.4",
-    "next-router-mock": "^0.6.7",
+    "next-router-mock": "^0.8.0",
     "nock": "^13.1.4",
     "nodemon": "^2.0.15",
     "normalizr": "^3.6.1",
