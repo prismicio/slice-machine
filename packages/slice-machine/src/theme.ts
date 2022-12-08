@@ -50,11 +50,13 @@ const AppTheme = (): Theme =>
       danger: "#CB2431",
       highlight: "hsl(10, 40%, 90%)",
       purple: "#5B3DF5",
+      purple08: "#5842C3",
       muted: "#F9F9FB",
       icons: "#8091A5",
       gray: "#F8F9FA",
       grey01: "#F3F5F7",
       grey02: "#E6E6EA",
+      grey03: "#F4F2F4",
       grey04: "#9AA4AF",
       grey05: "#667587",
       grey07: "#F9F8F9",
@@ -605,6 +607,10 @@ const AppTheme = (): Theme =>
       },
       checkbox: {
         color: "icons",
+        dark: {
+          color: "#161618",
+          cursor: "pointer",
+        },
       },
       radio: {
         color: "borders",
@@ -678,6 +684,10 @@ const AppTheme = (): Theme =>
           borderRadius: "3px",
           border: (t) => `1px solid ${String(t?.colors?.borders)}`,
         },
+        large: {
+          fontSize: 1,
+          color: "grey12",
+        },
       },
     },
     links: {
@@ -717,6 +727,14 @@ const AppTheme = (): Theme =>
         transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
         "&:hover": {
           bg: "grey02",
+        },
+      },
+      cardSmall: {
+        color: "purple08",
+        fontSize: "12px",
+        textDecoration: "none",
+        "&:hover": {
+          textDecoration: "underline",
         },
       },
     },

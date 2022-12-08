@@ -8,6 +8,7 @@ export enum ModalKeysEnum {
   SCREENSHOTS = "SCREENSHOTS",
   DELETE_CUSTOM_TYPE = "DELETE_CUSTOM_TYPE",
   DELETE_SLICE = "DELETE_SLICE",
+  DELETE_DOCUMENTS_DRAWER = "DELETE_DOCUMENTS_DRAWER",
 }
 
 export type ModalStoreType = Record<ModalKeysEnum, boolean>;

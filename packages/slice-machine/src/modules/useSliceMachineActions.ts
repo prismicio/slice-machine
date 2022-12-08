@@ -144,6 +144,14 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
   const closeDeleteSliceModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+  const openDeleteDocumentsDrawer = () =>
+    dispatch(
+      modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER })
+    );
+  const closeDeleteDocumentsDrawer = () =>
+    dispatch(
+      modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER })
+    );
 
   // Loading module
   const startLoadingReview = () =>
@@ -535,6 +543,8 @@ const useSliceMachineActions = () => {
     toggleSetupDrawerStep,
     closeSetupDrawer,
     openSetupDrawer,
+    openDeleteDocumentsDrawer,
+    closeDeleteDocumentsDrawer,
     refreshState,
     finishOnboarding,
     closeScreenshotsModal,
