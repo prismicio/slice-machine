@@ -317,7 +317,9 @@ export function buildNestableMockConfig(
             if (url && oembed) return oembed;
             return;
           })();
-          return { value };
+          return {
+            value,
+          };
         }
       )(EmbedLegacyMockConfig.decode(fieldMockConfig));
     }

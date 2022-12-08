@@ -89,6 +89,7 @@
     "@prismicio/editor-ui": "^0.1.0-rc.1",
     "@prismicio/slice-simulator-com": "^0.4.0",
     "@reach/menu-button": "^0.18.0",
+    "@relmify/jest-fp-ts": "^2.0.2",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^13.0.0",
     "@theme-ui/color": "^0.15.0",

@@ -1,7 +1,7 @@
 import path from "path";
 import TemplateEngine from "ejs";
 import { getOrElseW } from "fp-ts/Either";
-import Files from "./utils/files";
+import Files from "@slicemachine/core/build/node-utils/files";
 import { CustomPaths, GeneratedPaths } from "./models/paths";
 import { Models } from "@slicemachine/core";
 import { sliceMockPath } from "@slicemachine/core/build/node-utils/paths";
