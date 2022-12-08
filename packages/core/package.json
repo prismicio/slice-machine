@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.16-dev-react-18.4",
+  "version": "1.1.16-dev-react-18.4", 
   "private": false,
   "main": "./build/index.js",
   "engines": {
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.4.1",
+    "@types/jest": "^27.0.2",
     "@types/node": "^16.10.5",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
