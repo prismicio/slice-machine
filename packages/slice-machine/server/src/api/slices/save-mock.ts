@@ -1,5 +1,3 @@
-// needs cwd, library, slice name, and the content
-
 import { ComponentMocks } from "@slicemachine/core/build/models";
 import { sliceMockPath } from "@slicemachine/core/build/node-utils";
 import { Files } from "@slicemachine/core/build/node-utils";
