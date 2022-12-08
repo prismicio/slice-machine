@@ -95,6 +95,12 @@ function statusDisplayInformation(
         tooltipText: `This ${modelType} is in sync with the remote repository.`,
       };
 
+    case ModelStatus.Deleted:
+      return {
+        displayName: "Deleted",
+        tooltipText: `This ${modelType} has been deleted locally.`,
+      };
+
     case ModelStatus.Unknown:
       if (!isOnline) {
         return {

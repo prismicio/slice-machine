@@ -115,26 +115,49 @@ export const getRemoteSlices = (
 export const getFrontendSlices = (
   store: SliceMachineStoreType
 ): FrontEndSliceModel[] => {
-  const components: ComponentUI[] = store.slices.libraries.reduce(
-    (acc: ComponentUI[], lib: LibraryUI) => {
-      return [...acc, ...lib.components];
-    },
-    []
+  const localSlices: ComponentUI[] = store.slices.libraries.flatMap(
+    (lib) => lib.components
   );
 
-  return components.reduce(
-    (acc: FrontEndSliceModel[], component: ComponentUI) => {
-      return [
-        ...acc,
-        {
-          local: component.model,
-          remote: getRemoteSlice(store, component.model.id),
-          localScreenshots: component.screenshots,
-        },
-      ];
-    },
-    []
+  const remoteSlices: Readonly<SliceSM[]> = getRemoteSlices(store);
+
+  const allSlicesIds = new Set(
+    localSlices.map((s) => s.model.id).concat(remoteSlices.map((s) => s.id))
   );
+
+  const isFrontEndSliceModel = (
+    m: FrontEndSliceModel | undefined
+  ): m is FrontEndSliceModel => m !== undefined;
+
+  const slicesOrUndefined: Array<FrontEndSliceModel | undefined> = [
+    ...allSlicesIds,
+  ].map((id) => {
+    const l = localSlices.find((s) => s.model.id === id);
+    const r = remoteSlices.find((s) => s.id === id);
+
+    if (l === undefined) {
+      if (r !== undefined) {
+        // Remote only
+        return {
+          local: undefined,
+          remote: r,
+          localScreenshots: {},
+        };
+      }
+
+      // This should never happen but is required
+      // to avoid a cast or a ts-ignore
+      return undefined;
+    }
+
+    return {
+      local: l.model,
+      remote: r,
+      localScreenshots: l.screenshots,
+    };
+  });
+
+  return slicesOrUndefined.filter(isFrontEndSliceModel);
 };
 
 // Reducer
