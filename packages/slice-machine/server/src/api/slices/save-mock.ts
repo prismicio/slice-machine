@@ -4,7 +4,6 @@ import { Files } from "@slicemachine/core/build/node-utils";
 import * as t from "io-ts";
 import { Response } from "express";
 import { fold } from "fp-ts/Either";
-import { pipe } from "fp-ts/lib/function";
 
 function saveSliceMockToFileSystem(
   cwd: string,
