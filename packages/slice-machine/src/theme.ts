@@ -39,7 +39,6 @@ const AppTheme = (): Theme =>
         },
         deleted: {
           bg: "rgba(203, 36, 49, 0.1)",
-          color: "#CB2431",
         },
         unknown: {
           bg: "#F3F5F7",
@@ -209,7 +208,7 @@ const AppTheme = (): Theme =>
       },
       DELETED: {
         fontWeight: "body",
-        color: "badge.deleted.color",
+        color: "danger",
         bg: "badge.deleted.bg",
         px: 1,
         py: "1px",
