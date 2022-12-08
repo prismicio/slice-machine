@@ -1,5 +1,9 @@
 import axios, { AxiosResponse } from "axios";
-import { SimulatorManagerReadSliceSimulatorSetupStepsReturnType } from "@slicemachine/core2/client";
+import {
+  SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
+  SliceMachineManagerClient,
+  SliceMachineManagerPushSliceReturnType,
+} from "@slicemachine/core2/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import {
   CustomTypes,
@@ -175,15 +179,16 @@ export const renameSlice = async (
 export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
-  const screenshot = await managerClient.slices.captureSliceScreenshot({
-    libraryID: params.libraryName,
-    sliceID: params.sliceId,
-    variationID: params.variationId,
-    viewport: {
-      width: params.screenDimensions.width,
-      height: params.screenDimensions.height,
-    },
-  });
+  const screenshot =
+    await managerClient.screenshots.captureSliceSimulatorScreenshot({
+      libraryID: params.libraryName,
+      sliceID: params.sliceId,
+      variationID: params.variationId,
+      viewport: {
+        width: params.screenDimensions.width,
+        height: params.screenDimensions.height,
+      },
+    });
 
   if (screenshot.data) {
     return await managerClient.slices.updateSliceScreenshot({
@@ -230,7 +235,7 @@ export const saveSliceApiClient = async (
 
 export const pushSliceApiClient = async (
   component: ComponentUI
-): Promise<Record<string, string | null>> => {
+): Promise<ReturnType<SliceMachineManagerClient["slices"]["pushSlice"]>> => {
   return await managerClient.slices.pushSlice({
     libraryID: component.from,
     sliceID: component.model.id,
@@ -256,7 +261,6 @@ export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
 
 /** Simulator Routes **/
 
-export const checkSimulatorSetup =
-  async (): Promise<SimulatorManagerReadSliceSimulatorSetupStepsReturnType> => {
-    return managerClient.simulator.readSliceSimulatorSetupSteps();
-  };
+export const checkSimulatorSetup = async () => {
+  return await managerClient.simulator.readSliceSimulatorSetupSteps();
+};

@@ -33,7 +33,6 @@ Usage:
 Options:
     --open         Open Slice Machine automatically
     --port, -p     Specify the port on which to run Slice Machine
-    --config, -c   Specify your Slice Machine configuration file
     --help, -h     Show help text
     --version, -v  Show version
 `.trim(),

@@ -59,6 +59,7 @@
 		"busboy": "^1.6.0",
 		"cookie": "^0.5.0",
 		"devalue": "^4.2.0",
+		"file-type": "^18.0.0",
 		"form-data-encoder": "^2.1.4",
 		"formdata-node": "^5.0.0",
 		"fp-ts": "^2.13.1",

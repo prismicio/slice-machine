@@ -38,14 +38,14 @@ export class StartSliceMachineProcess {
 	 *
 	 * @defaultValue `false`
 	 */
-	open?: boolean;
+	open: boolean;
 
 	/**
 	 * The port on which to start the Slice Machine server.
 	 *
 	 * @defaultValue `9999`
 	 */
-	port?: number;
+	port: number;
 
 	/**
 	 * The Slice Machine manager used for the process.
@@ -100,6 +100,12 @@ export class StartSliceMachineProcess {
 			),
 		);
 		console.log();
+
+		// Prepare the manager for Slice Machine actions.
+		await Promise.all([
+			this._sliceMachineManager.screenshots.initBrowserContext(),
+			this._sliceMachineManager.screenshots.initS3ACL(),
+		]);
 	}
 
 	/**

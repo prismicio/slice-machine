@@ -16,16 +16,15 @@ import {
 	SliceUpdateHook,
 	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
-import { Viewport } from "puppeteer";
 import fetch from "node-fetch";
 
 import { DecodeError } from "../lib/DecodeError";
 import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
 import { bufferCodec } from "../lib/bufferCodec";
-import { captureSliceSimulatorScreenshot } from "../lib/captureSliceSimulatorScreenshot";
 import { decodeHookResult } from "../lib/decodeHookResult";
 
 import { OnlyHookErrors } from "../types";
+import { DEFAULT_SLICE_SCREENSHOT_URL } from "../constants";
 
 import { BaseManager } from "./_BaseManager";
 
@@ -52,13 +51,21 @@ type SliceMachineManagerReadAllSlicesReturnType = {
 };
 
 type SliceMachineManagerReadSliceReturnType = {
-	model: CustomTypes.Widgets.Slices.SharedSlice | undefined;
+	model: CustomTypes.Widgets.Slices.SharedSlice;
 	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerPushSliceArgs = {
 	libraryID: string;
 	sliceID: string;
+};
+
+export type SliceMachineManagerPushSliceReturnType = {
+	/**
+	 * A record of Slice variation IDs mapped to uploaded screenshot URLs.
+	 */
+	screenshotURLs: Record<string, string> | undefined;
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadSliceScreenshotArgs = {
@@ -76,17 +83,6 @@ type SliceMachineManagerUpdateSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
-	data: Buffer;
-};
-
-type SliceMachineManagerCaptureSliceScreenshotArgs = {
-	libraryID: string;
-	sliceID: string;
-	variationID: string;
-	viewport?: Viewport;
-};
-
-type SliceMachineManagerCaptureSliceScreenshotReturnType = {
 	data: Buffer;
 };
 
@@ -120,6 +116,11 @@ type SliceMachineManagerUpdateSliceMocksConfigArgs = {
 
 type SliceMachineManagerUpdateSliceMocksConfigArgsReturnType = {
 	errors: HookError[];
+};
+
+type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
+	libraryID: string;
+	model: CustomTypes.Widgets.Slices.SharedSlice;
 };
 
 export class SlicesManager extends BaseManager {
@@ -293,20 +294,30 @@ export class SlicesManager extends BaseManager {
 	}
 
 	/**
-	 * @returns Record of uploaded screenshot URLs.
+	 * @returns Record of variation IDs mapped to uploaded screenshot URLs.
 	 */
 	async pushSlice(
 		args: SliceMachineManagerPushSliceArgs,
-	): Promise<Record<string, string | undefined>> {
+	): Promise<SliceMachineManagerPushSliceReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		// TODO: Handle errors
-		const { model } = await this.readSlice({
+		const { model, errors: readSliceErrors } = await this.readSlice({
 			libraryID: args.libraryID,
 			sliceID: args.sliceID,
 		});
 
 		if (model) {
+			const modelWithScreenshots =
+				await this._updateSliceModelScreenshotsInPlace({
+					libraryID: args.libraryID,
+					model,
+				});
+
+			const { errors: updateSliceErrors } = await this.updateSlice({
+				libraryID: args.libraryID,
+				model: modelWithScreenshots,
+			});
+
 			const authenticationToken = await this.user.getAuthenticationToken();
 			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
@@ -322,18 +333,32 @@ export class SlicesManager extends BaseManager {
 				await client.getSharedSliceByID(args.sliceID);
 
 				// If it exists on the repository, update it.
-				await client.updateSharedSlice(model);
+				await client.updateSharedSlice(modelWithScreenshots);
 			} catch (error) {
 				if (error instanceof prismicCustomTypesCilent.NotFoundError) {
 					// If the Slice doesn't exist on the repository, insert it.
-					await client.insertSharedSlice(model);
+					await client.insertSharedSlice(modelWithScreenshots);
+				} else {
+					// Pass the error through if it isn't the one we were expecting.
+					throw error;
 				}
 			}
+
+			const screenshotURLs: Record<string, string> = {};
+			for (const variation of modelWithScreenshots.variations) {
+				screenshotURLs[variation.id] = variation.imageUrl;
+			}
+
+			return {
+				screenshotURLs,
+				errors: [...readSliceErrors, ...updateSliceErrors],
+			};
+		} else {
+			return {
+				screenshotURLs: undefined,
+				errors: readSliceErrors,
+			};
 		}
-
-		// TODO: Handle uploading screenshots to S3 and return URLs for each.
-
-		return {};
 	}
 
 	async readSliceScreenshot(
@@ -358,7 +383,7 @@ export class SlicesManager extends BaseManager {
 
 		return {
 			data: data[0]?.data,
-			errors,
+			errors: errors,
 		};
 	}
 
@@ -384,23 +409,23 @@ export class SlicesManager extends BaseManager {
 		};
 	}
 
-	async captureSliceScreenshot(
-		args: SliceMachineManagerCaptureSliceScreenshotArgs,
-	): Promise<SliceMachineManagerCaptureSliceScreenshotReturnType> {
-		const projectConfig = await this.project.getSliceMachineConfig();
-
-		const { data } = await captureSliceSimulatorScreenshot({
-			sliceID: args.sliceID,
-			libraryID: args.libraryID,
-			variationID: args.variationID,
-			projectConfig,
-			viewport: args.viewport,
-		});
-
-		return {
-			data,
-		};
-	}
+	// async captureSliceScreenshot(
+	// 	args: SliceMachineManagerCaptureSliceScreenshotArgs,
+	// ): Promise<SliceMachineManagerCaptureSliceScreenshotReturnType> {
+	// 	const projectConfig = await this.project.getSliceMachineConfig();
+	//
+	// 	const { data } = await captureSliceSimulatorScreenshot({
+	// 		sliceID: args.sliceID,
+	// 		libraryID: args.libraryID,
+	// 		variationID: args.variationID,
+	// 		projectConfig,
+	// 		viewport: args.viewport,
+	// 	});
+	//
+	// 	return {
+	// 		data,
+	// 	};
+	// }
 
 	async readSliceMocks(
 		args: SliceMachineManagerReadSliceMocksArgs,
@@ -495,5 +520,49 @@ export class SlicesManager extends BaseManager {
 		});
 
 		return await client.getAllSharedSlices();
+	}
+
+	private async _updateSliceModelScreenshotsInPlace(
+		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
+	): Promise<CustomTypes.Widgets.Slices.SharedSlice> {
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+
+		const variations = await Promise.all(
+			args.model.variations.map(async (variation) => {
+				const updatedVariation: CustomTypes.Widgets.Slices.Variation = {
+					...variation,
+					imageUrl: DEFAULT_SLICE_SCREENSHOT_URL,
+				};
+
+				const screenshot = await this.readSliceScreenshot({
+					libraryID: args.libraryID,
+					sliceID: args.model.id,
+					variationID: variation.id,
+				});
+
+				if (screenshot.data) {
+					const keyPrefix = [
+						sliceMachineConfig.repositoryName,
+						"shared-slices",
+						args.model.id,
+						variation.id,
+					].join("/");
+
+					const uploadedScreenshot = await this.screenshots.uploadScreenshot({
+						data: screenshot.data,
+						keyPrefix,
+					});
+
+					updatedVariation.imageUrl = uploadedScreenshot.url;
+				}
+
+				return updatedVariation;
+			}),
+		);
+
+		return {
+			...args.model,
+			variations,
+		};
 	}
 }

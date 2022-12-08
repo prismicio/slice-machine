@@ -5,10 +5,16 @@
     "node": ">=14"
   },
   "scripts": {
+    "dev":"concurrently --prefix-colors auto \"npm:dev:*\"",
+    "dev:core2":"npm --workspace @slicemachine/core2 run dev",
+    "dev:start-slicemachine":"npm --workspace start-slicemachine run dev",
+    "dev:plugin-kit":"npm --workspace @slicemachine/plugin-kit run dev",
+    "dev:slice-machine-ui":"npm --workspace slice-machine-ui run dev",
+    "dev:e2e-next-2":"cd ./e2e-projects/next2 && npm run dev -- --port 8000",
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
     "prepare": "husky install",
-    "postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
+    "//postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run test",
     "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
@@ -30,6 +36,7 @@
     "depcheck": "depcheck --skip-missing; lerna run depcheck"
   },
   "devDependencies": {
+    "concurrently": "^7.6.0",
     "depcheck": "^1.4.3",
     "husky": "^7.0.2",
     "lerna": "^3.22.1",
@@ -63,5 +70,8 @@
     "**/packages/nuxt-sm/**/*": "prettier --write --ignore-unknown",
     "**/packages/vue-slicezone/**/*": "prettier --write --ignore-unknown",
     "**/packages/sm-commons/**/*": "prettier --write --ignore-unknown"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

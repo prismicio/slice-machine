@@ -1,5 +1,7 @@
-const Image = () => {
-  return <section>This is the Image Slice</section>;
+const Image = ({ slice }) => {
+  return (
+    <section>This is the Image Slice (variation: {slice.variation})</section>
+  );
 };
 
 export default Image;

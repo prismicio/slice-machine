@@ -1,6 +1,7 @@
 import { CustomTypes } from "@prismicio/types-internal";
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
-import * as crypto from "node:crypto";
+
+import { createContentDigest } from "../lib/createContentDigest";
 
 import {
 	PackageChangelog,
@@ -17,22 +18,12 @@ import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
 import { ProjectManager } from "./_ProjectManager";
+import { ScreenshotsManager } from "./_ScreenshotsManager";
+import { SimulatorManager } from "./_SimulatorManager";
 import { SlicesManager } from "./_SlicesManager";
 import { SnippetsManager } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
 import { VersionsManger } from "./_VersionsManager";
-import { SimulatorManager } from "./_SimulatorManager";
-
-/**
- * Creates a content digest for a given input.
- *
- * @param input - The value used to create a digest digest.
- *
- * @returns The content digest of `input`.
- */
-const toContentDigest = (input: crypto.BinaryLike): string => {
-	return crypto.createHash("sha1").update(input).digest("base64");
-};
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -94,6 +85,7 @@ export class SliceMachineManager {
 	slices: SlicesManager;
 	customTypes: CustomTypesManager;
 	snippets: SnippetsManager;
+	screenshots: ScreenshotsManager;
 	simulator: SimulatorManager;
 	user: UserManager;
 	versions: VersionsManger;
@@ -109,6 +101,7 @@ export class SliceMachineManager {
 		this.slices = new SlicesManager(this);
 		this.customTypes = new CustomTypesManager(this);
 		this.snippets = new SnippetsManager(this);
+		this.screenshots = new ScreenshotsManager(this);
 		this.simulator = new SimulatorManager(this);
 		this.user = new UserManager(this);
 		this.versions = new VersionsManger(this);
@@ -286,7 +279,7 @@ export class SliceMachineManager {
 											if (screenshot.data) {
 												screenshots[variation.id] = {
 													path: "__stub__",
-													hash: toContentDigest(screenshot.data),
+													hash: createContentDigest(screenshot.data),
 													data: screenshot.data,
 												};
 											}
