@@ -89,6 +89,10 @@ export function* changesPushSaga({
       missingScreenshots,
     });
 
+  yield put(
+    modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER })
+  );
+
   // Open the custom toaster
   yield openSyncToaster(alreadySyncedChanges, totalNumberOfChanges);
 
