@@ -136,7 +136,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save @prismicio/react @prismicio/client @prismicio/slice-simulator-react @prismicio/helpers"
+      "npm install --save @prismicio/react @prismicio/next @prismicio/client @prismicio/slice-simulator-react @prismicio/helpers"
     );
 
     expect(stderr.output).toContain("Installing Slice Machine");
