@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.15",
+  "version": "1.1.16-dev-react-18.4",
   "private": false,
   "main": "./build/index.js",
   "engines": {
@@ -20,8 +20,7 @@
     "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.9",
-    "@prismicio/types-internal": "1.5.1",
+    "@prismicio/types-internal": "^1.5.2",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",
     "io-ts": "^2.2.16",
@@ -29,8 +28,6 @@
     "io-ts-types": "^0.5.16"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
-    "@babel/runtime": "^7.18.9",
     "@types/cookie": "^0.4.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.5",

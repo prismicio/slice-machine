@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const useNetwork = () => {
   const [isOnline, setNetwork] = useState(window.navigator.onLine);
 
-  const updateNetwork = () => {
+  const updateNetwork = useCallback(() => {
     setNetwork(window.navigator.onLine);
-  };
+  }, []);
 
   useEffect(() => {
     window.addEventListener("offline", updateNetwork);
@@ -14,6 +14,6 @@ export const useNetwork = () => {
       window.removeEventListener("offline", updateNetwork);
       window.removeEventListener("online", updateNetwork);
     };
-  });
+  }, [updateNetwork]);
   return isOnline;
 };

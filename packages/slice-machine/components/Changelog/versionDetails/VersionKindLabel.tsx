@@ -1,8 +1,7 @@
 import React from "react";
-import { Text } from "theme-ui";
+import { type ThemeUIStyleObject, Text } from "theme-ui";
 import { transparentize } from "@theme-ui/color";
 import { VersionKind } from "@models/common/versions";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 
 interface VersionKindLabelProps {
   versionKind: VersionKind;

@@ -21,7 +21,7 @@ import {
   isSelectedSliceTouched,
   selectCurrentSlice,
 } from "@src/modules/selectedSlice/selectors";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
@@ -88,14 +88,48 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   }, [data]);
 
   if (!variation) return null;
+  else
+    return (
+      <SliceBuilderForVariation
+        saveSlice={saveSlice.bind(null, component, setData)}
+        component={component}
+        variation={variation}
+        remoteSlice={remoteSlice}
+        simulatorUrl={simulatorUrl}
+        isWaitingForIframeCheck={isWaitingForIframeCheck}
+        isTouched={isTouched}
+        data={data}
+      />
+    );
+};
 
+type SliceBuilderForVariationProps = {
+  saveSlice: () => void;
+  component: ComponentUI;
+  variation: VariationSM;
+  remoteSlice: SliceSM | undefined;
+  simulatorUrl: string | undefined;
+  isWaitingForIframeCheck: boolean;
+  isTouched: boolean;
+  data: SliceBuilderState;
+};
+const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
+  saveSlice,
+  component,
+  variation,
+  remoteSlice,
+  simulatorUrl,
+  isWaitingForIframeCheck,
+  isTouched,
+  data,
+}) => {
   const { apiContent } = useEditorContentOnce({
     slice: component,
     variationID: variation.id,
   });
 
   const onSaveSlice = () => {
-    saveSlice(component, setData);
+    saveSlice();
   };
 
   const { modelsStatuses } = useModelStatus([
@@ -148,14 +182,14 @@ const SliceBuilderWithRouter = () => {
     ),
   }));
 
+  useEffect(() => {
+    if (component) initSliceStore(component);
+    else void router.replace("/");
+  }, [component]);
+
   if (!component) {
-    void router.replace("/");
     return null;
   }
-
-  useEffect(() => {
-    initSliceStore(component);
-  }, []);
 
   const variation = component.model.variations.find(
     (variation) => variation.id === router.query.variation
