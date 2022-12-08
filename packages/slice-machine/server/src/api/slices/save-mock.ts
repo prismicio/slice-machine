@@ -32,22 +32,18 @@ const SaveMockRequest = t.strict({
 export type SaveMockRequest = t.TypeOf<typeof SaveMockRequest>;
 
 export default function handler(req: SaveMockRequest, res: Response) {
-  pipe(
-    req,
-    (_) => SaveMockRequest.decode(_),
-    fold(
-      () => {
-        res.status(400).end();
-      },
-      ({ body, env }) => {
-        saveSliceMockToFileSystem(
-          env.cwd,
-          body.libraryName,
-          body.sliceName,
-          body.mock
-        );
-        res.json(body);
-      }
-    )
-  );
+  fold<unknown, SaveMockRequest, void>(
+    () => {
+      res.status(400).end();
+    },
+    ({ body, env }) => {
+      saveSliceMockToFileSystem(
+        env.cwd,
+        body.libraryName,
+        body.sliceName,
+        body.mock
+      );
+      res.json(body);
+    }
+  )(SaveMockRequest.decode(req));
 }
