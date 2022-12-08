@@ -109,6 +109,5 @@ describe("Create Slices", () => {
       .its(0)
       .its("content.text")
       .should("equal", "👋");
-
   });
 });
