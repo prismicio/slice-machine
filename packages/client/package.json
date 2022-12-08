@@ -31,6 +31,7 @@
     "mime": "^2.5.2"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.2",
     "@types/mime": "^2.0.3",
     "@types/node": "^16.10.5",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
