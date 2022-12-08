@@ -29,7 +29,6 @@ import {
   TabFields,
 } from "@slicemachine/core/build/models/CustomType";
 import Tracker from "../../../../src/tracking/client";
-import { DropResult } from "react-beautiful-dnd";
 
 interface TabZoneProps {
   tabId: string;
@@ -99,8 +98,10 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     addCustomTypeField(tabId, id, widget.create(label));
   };
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
+  const onDragEnd = (result: {
+    destination?: { droppableId: string; index: number };
+    source: { index: number; droppableId: string };
+  }) => {
     if (ensureDnDDestination(result)) {
       return;
     }
@@ -108,6 +109,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     reorderCustomTypeField(
       tabId,
       result.source.index,
+      // @ts-expect-error We have to change the typeGuard above to cast properly the "result" property
       result.destination.index
     );
   };
