@@ -85,4 +85,10 @@ describe("Slice IO", () => {
     );
     expect(result).toStrictEqual(customTypeModel);
   });
+
+  it("should return undefined when the model is undefined", () => {
+    const sliceIdToDelete = "slice_1";
+    const result = filterSliceFromCustomType(undefined, sliceIdToDelete);
+    expect(result).toStrictEqual(undefined);
+  });
 });

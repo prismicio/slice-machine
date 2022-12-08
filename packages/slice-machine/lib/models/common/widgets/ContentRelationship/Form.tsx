@@ -11,6 +11,7 @@ import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { FormikProps } from "formik";
+import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -32,7 +33,8 @@ const WidgetForm = ({
   fields,
   setFieldValue,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
-  const customTypes = useSelector(selectAllCustomTypes);
+  const customTypes =
+    useSelector(selectAllCustomTypes).filter(isLocalCustomType);
 
   const options = customTypes.map((ct) => ({
     value: ct.local.id,

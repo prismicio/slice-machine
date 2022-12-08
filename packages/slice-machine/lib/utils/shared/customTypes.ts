@@ -1,18 +1,24 @@
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
-export const filterSliceFromCustomType = (
-  ct: CustomTypeSM,
+export const filterSliceFromCustomType = <T extends CustomTypeSM | undefined>(
+  ct: T,
   sliceId: string
-): CustomTypeSM => ({
-  ...ct,
-  tabs: ct.tabs.map((tab) => {
-    if (!tab.sliceZone) return tab;
-    return {
-      ...tab,
-      sliceZone: {
-        ...tab.sliceZone,
-        value: tab.sliceZone?.value.filter((val) => val.key !== sliceId),
-      },
-    };
-  }),
-});
+): T => {
+  if (ct === undefined) {
+    return ct;
+  }
+
+  return {
+    ...ct,
+    tabs: ct.tabs.map((tab) => {
+      if (!tab.sliceZone) return tab;
+      return {
+        ...tab,
+        sliceZone: {
+          ...tab.sliceZone,
+          value: tab.sliceZone?.value.filter((val) => val.key !== sliceId),
+        },
+      };
+    }),
+  };
+};

@@ -92,7 +92,7 @@ const ReviewModal: React.FunctionComponent = () => {
       : 0;
 
   const hasSliceWithinCustomType: boolean = customTypes.some((customType) =>
-    customType.local.tabs.some(
+    customType.local?.tabs.some(
       (tab) => tab.sliceZone && tab.sliceZone?.value.length > 0
     )
   );

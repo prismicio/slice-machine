@@ -9,6 +9,7 @@ import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 
 /**
  * {
@@ -63,7 +64,8 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   CUSTOM_NAME: "ContentRelationship",
   Form,
   prepareInitialValues: (initialValues) => {
-    const customTypes = useSelector(selectAllCustomTypes);
+    const customTypes =
+      useSelector(selectAllCustomTypes).filter(isLocalCustomType);
 
     if (!initialValues?.customtypes) {
       return initialValues;

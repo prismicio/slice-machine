@@ -19,6 +19,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SyncError } from "@src/models/SyncError";
 import DeleteDocumentsDrawer from "@components/DeleteDocumentsDrawer";
+import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 
 const changes: React.FunctionComponent = () => {
   const {
@@ -50,7 +51,9 @@ const changes: React.FunctionComponent = () => {
     if (changesPushed.length > 0) setChangesPushed([]); // reset changesPushed
     pushChanges(
       unSyncedSlices,
-      unSyncedCustomTypes.map((customtype) => customtype.local),
+      unSyncedCustomTypes
+        .filter(isLocalCustomType)
+        .map((customtype) => customtype.local),
       modelsStatuses,
       (pushed: string | null) =>
         pushed

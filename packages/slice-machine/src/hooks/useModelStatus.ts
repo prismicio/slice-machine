@@ -3,6 +3,11 @@ import {
   FrontEndModel,
   ModelStatus,
 } from "@lib/models/common/ModelStatus";
+import {
+  FrontEndSliceModel,
+  getSliceProp,
+} from "@lib/models/common/ModelStatus/compareSliceModels";
+import { getCustomTypeProp } from "@src/modules/availableCustomTypes/types";
 import { getAuthStatus } from "@src/modules/environment";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -18,6 +23,9 @@ export interface ModelStatusInformation {
   authStatus: AuthStatus;
   isOnline: boolean;
 }
+
+const isSliceModel = (m: FrontEndModel): m is FrontEndSliceModel =>
+  "localScreenshots" in m;
 
 export const useModelStatus = (
   models: FrontEndModel[]
@@ -39,11 +47,11 @@ export const useModelStatus = (
           userHasAccessToModels
         );
 
-        if ("localScreenshots" in model) {
+        if (isSliceModel(model)) {
           return {
             slices: {
               ...acc.slices,
-              [model.local.id]: status,
+              [getSliceProp(model, "id")]: status,
             },
             customTypes: acc.customTypes,
           };
@@ -53,7 +61,7 @@ export const useModelStatus = (
           slices: acc.slices,
           customTypes: {
             ...acc.customTypes,
-            [model.local.id]: status,
+            [getCustomTypeProp(model, "id")]: status,
           },
         };
       },

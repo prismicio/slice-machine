@@ -2,7 +2,11 @@ import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Box, Text } from "theme-ui";
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import {
+  FrontEndCustomType,
+  isLocalCustomType,
+  LocalFrontEndCustomType,
+} from "@src/modules/availableCustomTypes/types";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -14,7 +18,7 @@ export const CustomTypeTable: React.FC<{
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
   const [customTypeToEdit, setCustomTypeToEdit] =
-    useState<FrontEndCustomType>();
+    useState<LocalFrontEndCustomType>();
 
   const firstColumnWidth = "27%";
   const secondColumnWidth = "27%";
@@ -51,7 +55,7 @@ export const CustomTypeTable: React.FC<{
           </tr>
         </thead>
         <tbody>
-          {customTypes.map((customType) => (
+          {customTypes.filter(isLocalCustomType).map((customType) => (
             <Link
               passHref
               href={`/cts/${customType.local.id}`}
