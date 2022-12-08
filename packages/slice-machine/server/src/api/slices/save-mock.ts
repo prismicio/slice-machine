@@ -4,6 +4,7 @@ import { Files } from "@slicemachine/core/build/node-utils";
 import * as t from "io-ts";
 import { Response } from "express";
 import { fold } from "fp-ts/Either";
+import { pipe } from "fp-ts/lib/function";
 
 function saveSliceMockToFileSystem(
   cwd: string,
@@ -31,18 +32,22 @@ const SaveMockRequest = t.strict({
 export type SaveMockRequest = t.TypeOf<typeof SaveMockRequest>;
 
 export default function handler(req: SaveMockRequest, res: Response) {
-  fold<unknown, SaveMockRequest, void>(
-    () => {
-      res.status(400).end();
-    },
-    ({ body, env }) => {
-      saveSliceMockToFileSystem(
-        env.cwd,
-        body.libraryName,
-        body.sliceName,
-        body.mock
-      );
-      res.json(body);
-    }
-  )(SaveMockRequest.decode(req));
+  pipe(
+    req,
+    (_) => SaveMockRequest.decode(_),
+    fold(
+      () => {
+        res.status(400).end();
+      },
+      ({ body, env }) => {
+        saveSliceMockToFileSystem(
+          env.cwd,
+          body.libraryName,
+          body.sliceName,
+          body.mock
+        );
+        res.json(body);
+      }
+    )
+  );
 }
