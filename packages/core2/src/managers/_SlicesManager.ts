@@ -27,6 +27,7 @@ import { OnlyHookErrors } from "../types";
 import { DEFAULT_SLICE_SCREENSHOT_URL } from "../constants";
 
 import { BaseManager } from "./_BaseManager";
+import { UnauthorizedError } from "../errors";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[] | undefined;
@@ -146,7 +147,7 @@ export class SlicesManager extends BaseManager {
 
 		return {
 			sliceIDs: data[0]?.sliceIDs,
-			errors,
+			errors: errors,
 		};
 	}
 
@@ -163,7 +164,7 @@ export class SlicesManager extends BaseManager {
 		const { sliceIDs, errors } = await this.readSliceLibrary({
 			libraryID: args.libraryID,
 		});
-		res.errors = [...res.errors, ...errors];
+		res.errors.push(...errors);
 
 		if (sliceIDs) {
 			for (const sliceID of sliceIDs) {
@@ -171,7 +172,7 @@ export class SlicesManager extends BaseManager {
 					libraryID: args.libraryID,
 					sliceID,
 				});
-				res.errors = [...res.errors, ...errors];
+				res.errors.push(...errors);
 
 				if (model) {
 					res.models.push({ model });
@@ -197,7 +198,7 @@ export class SlicesManager extends BaseManager {
 			const { models, errors } = await this.readAllSlicesForLibrary({
 				libraryID,
 			});
-			res.errors = [...res.errors, ...errors];
+			res.errors.push(...errors);
 
 			for (const model of models) {
 				res.models.push({
@@ -338,6 +339,10 @@ export class SlicesManager extends BaseManager {
 				if (error instanceof prismicCustomTypesCilent.NotFoundError) {
 					// If the Slice doesn't exist on the repository, insert it.
 					await client.insertSharedSlice(modelWithScreenshots);
+				} else if (error instanceof prismicCustomTypesCilent.ForbiddenError) {
+					throw new UnauthorizedError(
+						"You do not have access to push Slices to this Prismic repository.",
+					);
 				} else {
 					// Pass the error through if it isn't the one we were expecting.
 					throw error;
@@ -408,24 +413,6 @@ export class SlicesManager extends BaseManager {
 			errors: hookResult.errors,
 		};
 	}
-
-	// async captureSliceScreenshot(
-	// 	args: SliceMachineManagerCaptureSliceScreenshotArgs,
-	// ): Promise<SliceMachineManagerCaptureSliceScreenshotReturnType> {
-	// 	const projectConfig = await this.project.getSliceMachineConfig();
-	//
-	// 	const { data } = await captureSliceSimulatorScreenshot({
-	// 		sliceID: args.sliceID,
-	// 		libraryID: args.libraryID,
-	// 		variationID: args.variationID,
-	// 		projectConfig,
-	// 		viewport: args.viewport,
-	// 	});
-	//
-	// 	return {
-	// 		data,
-	// 	};
-	// }
 
 	async readSliceMocks(
 		args: SliceMachineManagerReadSliceMocksArgs,
@@ -547,6 +534,13 @@ export class SlicesManager extends BaseManager {
 						args.model.id,
 						variation.id,
 					].join("/");
+
+					// TODO: If the existing imageUrl
+					// property (not the prefilled efault
+					// URL) is identical to the new image
+					// (we'll need to get the image's full
+					// URL before we upload it), then don't
+					// upload anything.
 
 					const uploadedScreenshot = await this.screenshots.uploadScreenshot({
 						data: screenshot.data,

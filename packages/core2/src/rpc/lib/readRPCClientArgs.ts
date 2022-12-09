@@ -1,7 +1,6 @@
 import { H3Event, getHeaders } from "h3";
 import { Buffer } from "node:buffer";
 import busboy from "busboy";
-import util from "util";
 
 import { ProcedureCallServerArgs } from "../types";
 

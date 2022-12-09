@@ -9,7 +9,6 @@ export default defineConfig({
 				"devalue",
 				"p-limit",
 				"node-fetch",
-				"formdata-node",
 				"form-data-encoder",
 				"hast-util-to-string",
 				"@wooorm/starry-night",

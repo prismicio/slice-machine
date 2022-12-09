@@ -178,7 +178,15 @@ export const renameSlice = async (
 
 export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest
-): Promise<AxiosResponse<ScreenshotResponse>> => {
+): Promise<
+  | {
+      url: string;
+      errors: Awaited<
+        ReturnType<SliceMachineManagerClient["slices"]["updateSliceScreenshot"]>
+      >["errors"];
+    }
+  | undefined
+> => {
   const screenshot =
     await managerClient.screenshots.captureSliceSimulatorScreenshot({
       libraryID: params.libraryName,
@@ -191,12 +199,17 @@ export const generateSliceScreenshotApiClient = async (
     });
 
   if (screenshot.data) {
-    return await managerClient.slices.updateSliceScreenshot({
+    const { errors } = await managerClient.slices.updateSliceScreenshot({
       libraryID: params.libraryName,
       sliceID: params.sliceId,
       variationID: params.variationId,
       data: screenshot.data,
     });
+
+    return {
+      url: URL.createObjectURL(screenshot.data),
+      errors,
+    };
   }
 
   // return axios.post("/api/screenshot", params, defaultAxiosConfig);

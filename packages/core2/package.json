@@ -61,7 +61,6 @@
 		"devalue": "^4.2.0",
 		"file-type": "^18.0.0",
 		"form-data-encoder": "^2.1.4",
-		"formdata-node": "^5.0.0",
 		"fp-ts": "^2.13.1",
 		"h3": "^0.8.6",
 		"hast-util-to-string": "^2.0.0",
