@@ -41,4 +41,15 @@ export const APIEndpoints =
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
 		  } as const);
 
+export const Analytics =
+	process.env.SM_ENV === ApplicationMode.STAGE
+		? ({
+				// TODO: Sort tracked events in a single source, for now this points only to: https://app.segment.com/prismic/sources/slicejavascript2/settings/keys
+				SegmentKey: "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+		  } as const)
+		: ({
+				// TODO: Sort tracked events in a single source, for now this points only to: https://app.segment.com/prismic/sources/slicejavascript2/settings/keys
+				SegmentKey: "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+		  } as const);
+
 export const TS_CONFIG_FILENAME = "tsconfig.json";

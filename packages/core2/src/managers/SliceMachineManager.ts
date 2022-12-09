@@ -21,8 +21,9 @@ import { RepositoryManager } from "./_RepositoryManager";
 import { SlicesManager } from "./_SlicesManager";
 import { SnippetsManager } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
-import { VersionsManger } from "./_VersionsManager";
+import { VersionsManager } from "./_VersionsManager";
 import { SimulatorManager } from "./_SimulatorManager";
+import { AnalyticsManager } from "./_AnalyticsManager";
 
 /**
  * Creates a content digest for a given input.
@@ -98,7 +99,8 @@ export class SliceMachineManager {
 	simulator: SimulatorManager;
 	user: UserManager;
 	repository: RepositoryManager;
-	versions: VersionsManger;
+	versions: VersionsManager;
+	analytics: AnalyticsManager;
 
 	constructor() {
 		// _prismicAuthManager must be set at least before UserManager
@@ -114,7 +116,8 @@ export class SliceMachineManager {
 		this.simulator = new SimulatorManager(this);
 		this.user = new UserManager(this);
 		this.repository = new RepositoryManager(this);
-		this.versions = new VersionsManger(this);
+		this.versions = new VersionsManager(this);
+		this.analytics = new AnalyticsManager(this);
 
 		// Supress a TypeScript warning about an unused property. This
 		// code will be eliminated in production builds via dead-code
