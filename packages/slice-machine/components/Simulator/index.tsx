@@ -57,6 +57,7 @@ export default function Simulator() {
 
   useEffect(() => {
     void Tracker.get().trackOpenSliceSimulator(framework, version);
+    Tracker.get().editor.startNewSession();
   }, []);
 
   if (!component || !variation) {
@@ -132,6 +133,11 @@ const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(true);
 
+  function onContentChange(content: SharedSliceContent) {
+    Tracker.get().editor.trackWidgetUsed();
+    setContent(content);
+  }
+
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
       <Header
@@ -206,7 +212,9 @@ const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
             <ThemeProvider mode="light">
               <SharedSliceEditor
                 content={editorContent}
-                onContentChange={(c) => setContent(c as SharedSliceContent)}
+                onContentChange={(c) =>
+                  onContentChange(c as SharedSliceContent)
+                }
                 sharedSlice={sharedSlice}
               />
             </ThemeProvider>
