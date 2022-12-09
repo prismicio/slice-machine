@@ -73,29 +73,86 @@ export class SliceMachineInitProcess {
 	}
 
 	async run(): Promise<void> {
-		await this.detectEnvironment();
-		await this.beginCoreDependenciesInstallation();
-		await this.loginAndFetchUserData();
-
-		if (this.options.repository) {
-			await this.useRepositoryFlag();
-		} else {
-			await this.selectRepository();
-		}
-
-		assertExists(
-			this.context.repository,
-			"Repository selection must be available through context to proceed"
+		// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+		// eslint-disable-next-line no-console
+		console.log(
+			`\n${chalk.bgGray(` ${chalk.bold.white("Slice Machine")} `)} ${chalk.dim(
+				"→"
+			)} Init command started\n`
 		);
-		if (!this.context.repository.exists) {
-			await this.createNewRepository();
+
+		this.manager.analytics.initAnalytics();
+		await this.manager.analytics.track({
+			event: "command:init:start",
+			repository: this.options.repository,
+		});
+
+		try {
+			await this.detectEnvironment();
+
+			assertExists(
+				this.context.framework,
+				"Project framework must be available through context to proceed"
+			);
+
+			await this.beginCoreDependenciesInstallation();
+			await this.loginAndFetchUserData();
+
+			if (this.options.repository) {
+				await this.useRepositoryFlag();
+			} else {
+				await this.selectRepository();
+			}
+
+			assertExists(
+				this.context.repository,
+				"Repository selection must be available through context to proceed"
+			);
+
+			if (!this.context.repository.exists) {
+				await this.createNewRepository();
+			}
+
+			await this.finishCoreDependenciesInstallation();
+			await this.upsertSliceMachineConfigurationAndStartPluginRunner();
+			await this.pushDataToPrismic();
+			await this.initializePlugins();
+		} catch (error) {
+			await this.trackError(error);
+
+			throw error;
 		}
 
-		await this.finishCoreDependenciesInstallation();
-		await this.upsertSliceMachineConfigurationAndInitPluginRunner();
-		await this.pushDataToPrismic();
-		await this.initializePlugins();
+		await this.manager.analytics.track({
+			event: "command:init:end",
+			framework: this.context.framework.prismicName,
+			repository: this.context.repository.domain,
+			success: true,
+		});
+
+		// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+		// eslint-disable-next-line no-console
+		console.log(
+			`\n${chalk.bgGreen(` ${chalk.bold.white("Slice Machine")} `)} ${chalk.dim(
+				"→"
+			)} Init command successful!`
+		);
 	}
+
+	protected trackError = (error: unknown): Promise<void> => {
+		// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
+		const safeError = (
+			error instanceof Error ? error.message : `${error}`
+		).slice(0, 512);
+
+		return this.manager.analytics.track({
+			event: "command:init:end",
+			framework: this.context.framework?.prismicName ?? "unknown",
+			repository: this.context.repository?.domain,
+			success: false,
+			error: safeError,
+		});
+	};
 
 	protected detectEnvironment(): Promise<void> {
 		return listrRun([
@@ -159,7 +216,7 @@ export class SliceMachineInitProcess {
 					});
 
 					// Fail hard if process fails
-					execaProcess.catch((error) => {
+					execaProcess.catch(async (error) => {
 						const [_, ...argv1n] = process.argv;
 						// Command the user used
 						let tryAgainCommand = [process.argv0, ...argv1n].join(" ");
@@ -168,6 +225,8 @@ export class SliceMachineInitProcess {
 						if (!this.options.repository && this.context.repository) {
 							tryAgainCommand = `${tryAgainCommand} --repository=${this.context.repository.domain}`;
 						}
+
+						await this.trackError(error.shortMessage);
 						console.error(
 							`\n\n${error.shortMessage}\n${error.stderr}\n\n${
 								logSymbols.error
@@ -232,6 +291,15 @@ export class SliceMachineInitProcess {
 								task: async (_, task) => {
 									this.context.userProfile =
 										await this.manager.user.getProfile();
+
+									await this.manager.analytics.identify({
+										userID: this.context.userProfile.shortId,
+										intercomHash: this.context.userProfile.intercomHash,
+									});
+									await this.manager.analytics.track({
+										event: "command:init:identify",
+										repository: this.options.repository,
+									});
 
 									parentTask.title = `Logged in as ${chalk.cyan(
 										this.context.userProfile?.email
@@ -535,7 +603,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 							// If for whatever reason the process is not exited by now, we still throw the error
 							setTimeout(() => {
 								throw error;
-							}, 1000);
+							}, 5000);
 						});
 					}
 
@@ -547,7 +615,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 		]);
 	}
 
-	protected upsertSliceMachineConfigurationAndInitPluginRunner(): Promise<void> {
+	protected upsertSliceMachineConfigurationAndStartPluginRunner(): Promise<void> {
 		return listrRun([
 			{
 				title: "Resolving Slice Machine configuration...",
@@ -606,11 +674,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 
 					return listr([
 						{
-							title: "Initializing plugin runner...",
+							title: "Starting plugin runner...",
 							task: async (_, task) => {
 								await this.manager.plugins.initPlugins();
-								task.title = "Initialized plugin runner";
-								parentTask.title = `${parentTask.title} and initialized plugin runner`;
+								task.title = "Started plugin runner";
+								parentTask.title = `${parentTask.title} and started plugin runner`;
 							},
 						},
 					]);
@@ -640,7 +708,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 
 								if (errors.length > 0) {
 									// TODO: Provide better error message.
-									throw new Error(errors.join(", "));
+									throw new Error(
+										`Failed to read slice libraries: ${errors.join(", ")}`
+									);
 								}
 
 								const slices: { libraryID: string; sliceID: string }[] = [];
@@ -656,7 +726,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 								}
 
 								if (slices.length === 0) {
-									task.skip("No slices to push");
+									task.skip("No slice to push");
 
 									return;
 								}
@@ -689,11 +759,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 
 								if (errors.length > 0) {
 									// TODO: Provide better error message.
-									throw new Error(errors.join(", "));
+									throw new Error(
+										`Failed to read custom type libraries: ${errors.join(", ")}`
+									);
 								}
 
 								if (!ids || ids.length === 0) {
-									task.skip("No custom types to push");
+									task.skip("No custom type to push");
 
 									return;
 								}
@@ -733,7 +805,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 									await fs.access(documentsDirectoryPath);
 								} catch {
 									parentTask.title = "Pushed data to Prismic";
-									task.skip("No documents to push");
+									task.skip("No document to push");
 
 									return;
 								}
@@ -803,9 +875,64 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 	protected initializePlugins(): Promise<void> {
 		return listrRun([
 			{
-				title: "Initializing plugins",
+				title: "Initializing plugins...",
 				task: async (_, task) => {
+					const updateOutput = (data: Buffer | string | null) => {
+						if (data instanceof Buffer) {
+							task.output = data.toString();
+						} else if (typeof data === "string") {
+							task.output = data;
+						}
+					};
+
 					// TODO: init hook
+					const { errors } = await this.manager.plugins.dangerouslyCallHook(
+						"command:init",
+						{
+							log: updateOutput,
+							installDependencies: async (args) => {
+								assertExists(
+									this.context.packageManager,
+									"Project package manager must be available through context to run `initializePlugins`"
+								);
+
+								try {
+									const { execaProcess } = await installDependencies({
+										...args,
+										agent: this.context.packageManager,
+									});
+
+									execaProcess.stdout?.on("data", updateOutput);
+									execaProcess.stderr?.on("data", updateOutput);
+
+									await execaProcess;
+								} catch (error) {
+									if (
+										error instanceof Error &&
+										"shortMessage" in error &&
+										"stderr" in error
+									) {
+										await this.trackError(error.shortMessage);
+										console.error(
+											`\n\n${error.shortMessage}\n${error.stderr}\n\n${logSymbols.error} Plugins dependency installation failed`
+										);
+									} else {
+										await this.trackError(error);
+										console.error(error);
+									}
+
+									process.exit(1);
+								}
+							},
+						}
+					);
+
+					if (errors.length > 0) {
+						// TODO: Provide better error message.
+						throw new Error(
+							`Failed to initialize plugins: ${errors.join(", ")}`
+						);
+					}
 
 					task.title = "Initialized plugins";
 				},

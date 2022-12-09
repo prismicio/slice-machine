@@ -86,7 +86,7 @@ export const formatRepositoryDomain = (rawDomain: string): string => {
 	 *
 	 * @see https://regex101.com/r/t9qxh0/1
 	 */
-	domain.replace(/-{2,}/g, "-");
+	domain = domain.replace(/-{2,}/g, "-");
 
 	return domain;
 };
