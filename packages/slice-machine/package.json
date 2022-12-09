@@ -39,6 +39,8 @@
     "start-slicemachine": "bin/start.js"
   },
   "dependencies": {
+    "@prismicio/editor-fields": "^0.1.0",
+    "@prismicio/editor-ui": "^0.1.0",
     "@prismicio/mocks": "^1.6.0",
     "@prismicio/types-internal": "^1.5.3",
     "@slicemachine/client": "1.1.16-dev-react-18.4",
@@ -85,9 +87,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@emotion/react": "^11.10.5",
-    "@prismicio/editor-fields": "^0.1.0-rc.3",
-    "@prismicio/editor-ui": "^0.1.0-rc.1",
-    "@prismicio/slice-simulator-com": "^0.4.0",
+    "@prismicio/slice-simulator-com": "^0.4.1-alpha.0",
     "@reach/menu-button": "^0.18.0",
     "@relmify/jest-fp-ts": "^2.0.2",
     "@testing-library/jest-dom": "^5.15.0",
