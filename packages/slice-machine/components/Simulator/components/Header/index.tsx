@@ -5,10 +5,13 @@ import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopove
 import * as Models from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-// import { Button } from "@components/Button";
+import { Button } from "@components/Button";
 import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
+import { useSelector } from "react-redux";
+import { selectSavingMock } from "@src/modules/simulator";
 
 import * as Links from "@lib/builders/SliceBuilder/links";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 const redirect = (
   model: ComponentUI,
@@ -33,6 +36,7 @@ type PropTypes = {
   variation: Models.VariationSM;
   isDisplayEditor: boolean;
   toggleIsDisplayEditor: () => void;
+  onSaveMock: () => void;
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
@@ -40,7 +44,11 @@ const Header: React.FunctionComponent<PropTypes> = ({
   variation,
   isDisplayEditor,
   toggleIsDisplayEditor,
+  onSaveMock,
 }) => {
+  const { savingMock } = useSelector((state: SliceMachineStoreType) => ({
+    savingMock: selectSavingMock(state),
+  }));
   return (
     <Flex
       sx={{
@@ -76,7 +84,12 @@ const Header: React.FunctionComponent<PropTypes> = ({
             />
           </Flex>
         </Flex>
-        {/* <Button onClick={() => console.log("todo")} label="Save mock" /> */}
+        <Button
+          data-cy="save-mock"
+          onClick={onSaveMock}
+          label="Save mock content"
+          disabled={savingMock}
+        />
       </Flex>
     </Flex>
   );

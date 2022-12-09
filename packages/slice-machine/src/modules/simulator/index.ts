@@ -17,8 +17,13 @@ import {
   take,
   delay,
   CallEffect,
+  SagaReturnType,
 } from "redux-saga/effects";
-import { checkSimulatorSetup } from "@src/apiClient";
+import {
+  checkSimulatorSetup,
+  saveSliceMock,
+  SaveSliceMockRequest,
+} from "@src/apiClient";
 import {
   getCurrentVersion,
   getFramework,
@@ -31,6 +36,8 @@ import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
 import Tracker from "@src/tracking/client";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { updateSliceMock } from "../slices";
 
 const NoStepSelected = 0;
 
@@ -45,6 +52,7 @@ export const initialState: SimulatorStoreType = {
     openedStep: NoStepSelected,
   },
   isWaitingForIframeCheck: false,
+  savingMock: false,
 };
 
 // Actions Creators
@@ -85,6 +93,12 @@ export const toggleSetupDrawerStepCreator = createAction(
   stepNumber: number;
 }>();
 
+export const saveSliceMockCreator = createAsyncAction(
+  "SIMULATOR/SAVE_MOCK.REQUEST",
+  "SIMULATOR/SAVE_MOCK.SUCCESS",
+  "SIMULATOR/SAVE_MOCK.FAILURE"
+)<SaveSliceMockRequest, undefined, undefined>();
+
 type SimulatorActions = ActionType<
   | typeof openSetupDrawerCreator
   | typeof closeSetupDrawerCreator
@@ -93,6 +107,9 @@ type SimulatorActions = ActionType<
   | typeof connectToSimulatorIframeCreator.request
   | typeof connectToSimulatorIframeCreator.failure
   | typeof checkSimulatorSetupCreator.success
+  | typeof saveSliceMockCreator.request
+  | typeof saveSliceMockCreator.success
+  | typeof saveSliceMockCreator.failure
 >;
 
 // Selectors
@@ -123,6 +140,9 @@ export const selectUserHasConfiguredAllSteps = (
 
 export const selectOpenedStep = (state: SliceMachineStoreType): number =>
   state.simulator.setupDrawer.openedStep;
+
+export const selectSavingMock = (state: SliceMachineStoreType): boolean =>
+  state.simulator.savingMock;
 
 // Reducer
 export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
@@ -191,6 +211,26 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
           isOpen: false,
         },
       };
+    case getType(saveSliceMockCreator.request): {
+      return {
+        ...state,
+        savingMock: true,
+      };
+    }
+
+    case getType(saveSliceMockCreator.success): {
+      return {
+        ...state,
+        savingMock: false,
+      };
+    }
+
+    case getType(saveSliceMockCreator.failure): {
+      return {
+        ...state,
+        savingMock: false,
+      };
+    }
     default:
       return state;
   }
@@ -306,6 +346,34 @@ function* trackOpenSetupDrawerSaga() {
   void Tracker.get().trackSliceSimulatorSetup(framework, version);
 }
 
+export function* saveSliceMockSaga({
+  payload,
+}: ReturnType<typeof saveSliceMockCreator.request>): Generator {
+  try {
+    const data = (yield call(saveSliceMock, payload)) as SagaReturnType<
+      typeof saveSliceMock
+    >;
+    yield put(
+      openToasterCreator({
+        type: ToasterType.SUCCESS,
+        message: "Saved",
+      })
+    );
+    yield put(updateSliceMock(data));
+    yield put(saveSliceMockCreator.success());
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Error saving content";
+    yield put(
+      openToasterCreator({
+        type: ToasterType.ERROR,
+        message: message,
+      })
+    );
+    yield put(saveSliceMockCreator.failure());
+  }
+}
+
 // Saga watchers
 function* watchCheckSetup() {
   yield takeLatest(
@@ -315,7 +383,15 @@ function* watchCheckSetup() {
   yield takeLatest(getType(openSetupDrawerCreator), trackOpenSetupDrawerSaga);
 }
 
+function* watchSaveSliceMock() {
+  yield takeLatest(
+    getType(saveSliceMockCreator.request),
+    withLoader(saveSliceMockSaga, LoadingKeysEnum.SIMULATOR_SAVE_MOCK)
+  );
+}
+
 // Saga Exports
 export function* watchSimulatorSagas() {
   yield fork(watchCheckSetup);
+  yield fork(watchSaveSliceMock);
 }

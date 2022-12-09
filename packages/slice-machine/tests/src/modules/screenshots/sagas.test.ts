@@ -7,7 +7,7 @@ import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
-import { setupServer } from "msw/lib/node";
+import { setupServer } from "msw/node";
 import { rest, ResponseComposition, RestContext, RestRequest } from "msw";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();

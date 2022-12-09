@@ -26,7 +26,7 @@ function writeJson<T extends object>(
   value: T,
   options: { recursive: boolean } = { recursive: true }
 ): void {
-  write(pathToFile, JSON.stringify(value), options);
+  write(pathToFile, JSON.stringify(value, null, 2), options);
 }
 
 function readBuffer(pathToFile: string): Buffer {

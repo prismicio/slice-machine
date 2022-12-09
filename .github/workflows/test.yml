@@ -35,7 +35,7 @@ jobs:
           customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
           user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
-        run: lerna run test
+        run: npm run test
   
   dep-check:
     needs: install-deps

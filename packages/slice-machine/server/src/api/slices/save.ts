@@ -9,7 +9,7 @@ import {
   getConfig,
   insert as insertMockConfig,
 } from "../../../../lib/mock/misc/fs";
-import Files from "../../../../lib/utils/files";
+import { Files } from "@slicemachine/core/build/node-utils";
 import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 
@@ -35,9 +35,8 @@ export async function handler(
 
   console.log("\n\n[slice/save]: Updating slice model");
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
+
   IO.Slice.writeSlice(modelPath, smModel);
 
   const hasCustomMocks = Files.exists(sliceMockPath(env.cwd, from, sliceName));
@@ -50,7 +49,7 @@ export async function handler(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
     );
-    Files.write(sliceMockPath(env.cwd, from, sliceName), mocks);
+    Files.writeJson(sliceMockPath(env.cwd, from, sliceName), mocks);
   }
 
   console.log("[slice/save]: Generating stories");

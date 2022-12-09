@@ -1,6 +1,5 @@
 import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
-import { mocked } from "jest-mock";
 import { detectFramework } from "../src/steps";
 import { Models } from "@slicemachine/core";
 import { stderr } from "stdout-stderr";
@@ -15,7 +14,7 @@ describe("detect-framework", () => {
   });
 
   test("when supported framework is found", async () => {
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats); // linting error?
     mockedFs.readFileSync.mockReturnValue(
       JSON.stringify({
@@ -67,7 +66,11 @@ describe("detect-framework", () => {
   });
 
   test("package.json not found", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValue(undefined);
+    jest.spyOn(fs, "lstatSync").mockImplementation(() => {
+      const e = new Error() as Error & { code: string };
+      e.code = "ENOENT";
+      throw e;
+    });
 
     const exitSpy = jest
       .spyOn(process, "exit")

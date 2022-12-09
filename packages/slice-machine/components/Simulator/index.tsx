@@ -32,29 +32,27 @@ import { ThemeProvider } from "@prismicio/editor-ui";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
 
 import useThrottle from "@src/hooks/useThrottle";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 export default function Simulator() {
   const router = useRouter();
 
-  const { component } = useSelector((store: SliceMachineStoreType) => ({
-    component: selectCurrentSlice(
-      store,
-      router.query.lib as string,
-      router.query.sliceName as string
-    ),
-  }));
+  const { component, framework, version, simulatorUrl } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      component: selectCurrentSlice(
+        store,
+        router.query.lib as string,
+        router.query.sliceName as string
+      ),
+      framework: getFramework(store),
+      simulatorUrl: selectSimulatorUrl(store),
+      version: getCurrentVersion(store),
+    })
+  );
 
   const variation = component?.model.variations.find(
     (variation) => variation.id === (router.query.variation as string)
-  );
-
-  const { framework, version, simulatorUrl } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
-      simulatorUrl: selectSimulatorUrl(state),
-      version: getCurrentVersion(state),
-    })
   );
 
   useEffect(() => {
@@ -84,6 +82,7 @@ const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
   variation,
   simulatorUrl,
 }) => {
+  const { saveSliceMock } = useSliceMachineActions();
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
@@ -140,6 +139,15 @@ const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
         variation={variation}
         isDisplayEditor={isDisplayEditor}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
+        onSaveMock={() =>
+          saveSliceMock({
+            sliceName: component.model.name,
+            libraryName: component.from,
+            mock: (component.mock || [])
+              .filter((mock) => mock.variation !== initialContent.variation)
+              .concat(editorContent),
+          })
+        }
       />
       <Box
         sx={{
@@ -195,7 +203,7 @@ const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
               transition: "visibility 0s linear",
             }}
           >
-            <ThemeProvider>
+            <ThemeProvider mode="light">
               <SharedSliceEditor
                 content={editorContent}
                 onContentChange={(c) => setContent(c as SharedSliceContent)}

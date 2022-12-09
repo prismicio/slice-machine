@@ -5,8 +5,7 @@ import {
 import {
   DocumentMockConfig,
   DocWidgetMockConfig,
-  generateDocumentMock,
-  renderDocumentMock,
+  DocumentMock,
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
 import { buildWidgetMockConfig } from "./LegacyMockConfig";
@@ -15,6 +14,8 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
+import { Document } from "@prismicio/types-internal/lib/content";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 function buildDocumentMockConfig(
   model: CustomType,
@@ -39,16 +40,14 @@ function buildDocumentMockConfig(
 
 export default function MockCustomType(
   model: CustomTypeSM,
-  legacyMockConfig: CustomTypeMockConfig
-) {
+  legacyMockConfig: CustomTypeMockConfig,
+  sharedSlices: Record<string, SharedSlice>
+): Partial<Document> {
   const prismicModel = CustomTypes.fromSM(model);
   const documentMockConfig = buildDocumentMockConfig(
     prismicModel,
     legacyMockConfig
   );
-  return generateDocumentMock(
-    prismicModel,
-    {},
-    documentMockConfig
-  )(renderDocumentMock);
+
+  return DocumentMock.generate(prismicModel, sharedSlices, documentMockConfig);
 }
