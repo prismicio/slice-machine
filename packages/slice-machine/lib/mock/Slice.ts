@@ -2,13 +2,13 @@ import {
   SharedSlice,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff/SharedSlice";
 import {
   SharedSliceMockConfig,
   VariationMockConfig,
   SharedSliceMock,
 } from "@prismicio/mocks";
 import { buildFieldsMockConfig } from "./LegacyMockConfig";
-import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
 import { ComponentMocks } from "@slicemachine/core/build/models";
 
 function buildVariationMockConfig(
@@ -51,6 +51,7 @@ export function buildSliceMockConfig(
 
   return model.variations.map((v) => {
     return {
+      type: "SharedSlice",
       variation: v.id,
       variations: variationConfigs,
     };
@@ -58,13 +59,30 @@ export function buildSliceMockConfig(
 }
 
 export default function MockSlice(
-  smModel: SliceSM,
-  legacyMockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
+  sliceModel: SharedSlice,
+  legacyMockConfig: Record<string, Record<string, Record<string, unknown>>>, // not sure about this one.
+  previousMocks?: ComponentMocks | null | undefined,
+  sliceDiff?: SliceDiff | undefined
 ): ComponentMocks {
-  const model = Slices.fromSM(smModel);
-
-  const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
+  const sliceMockConfig = buildSliceMockConfig(sliceModel, legacyMockConfig);
   return sliceMockConfig.map((sc) => {
-    return SharedSliceMock.generate(model, sc);
+    const variationMock = previousMocks?.find(
+      (m) => m.variation === sc.variation
+    );
+    if (sliceDiff) {
+      if (!variationMock) return SharedSliceMock.generate(sliceModel, sc);
+
+      const patched = SharedSliceMock.patch(
+        sliceDiff,
+        sliceModel,
+        variationMock,
+        sc
+      );
+      if (!patched.ok || !patched.result)
+        return SharedSliceMock.generate(sliceModel, sc);
+      return patched.result;
+    }
+
+    return SharedSliceMock.generate(sliceModel, sc);
   });
 }

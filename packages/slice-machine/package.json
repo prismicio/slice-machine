@@ -39,8 +39,8 @@
     "start-slicemachine": "bin/start.js"
   },
   "dependencies": {
-    "@prismicio/mocks": "^1.5.0",
-    "@prismicio/types-internal": "^1.5.2",
+    "@prismicio/mocks": "^1.6.0",
+    "@prismicio/types-internal": "^1.5.3",
     "@slicemachine/client": "1.1.16-dev-react-18.4",
     "@slicemachine/core": "1.1.16-dev-react-18.4",
     "analytics-node": "^6.1.0",

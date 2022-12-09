@@ -9,20 +9,27 @@ import {
   getConfig,
   insert as insertMockConfig,
 } from "../../../../lib/mock/misc/fs";
-import { Files } from "@slicemachine/core/build/node-utils";
+import Files from "@slicemachine/core/build/node-utils/files";
 import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
-import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../../../../lib/io";
+import { ComponentMocks, Slices } from "@slicemachine/core/build/models";
+import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
+import { getOrElseW } from "fp-ts/lib/Either";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export async function handler(
   env: BackendEnvironment,
   { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
 ): Promise<Record<string, never>> {
-  onBeforeSaveSlice({ from, sliceName }, env);
+  const previousSliceModel = Files.safeReadEntity(
+    CustomPaths(env.cwd).library(from).slice(sliceName).model(),
+    (payload) => getOrElseW(() => undefined)(SharedSlice.decode(payload))
+  );
+  const sliceModel = Slices.fromSM(smModel);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const updatedMockConfig = mockConfig
@@ -36,21 +43,24 @@ export async function handler(
   console.log("\n\n[slice/save]: Updating slice model");
 
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
+  Files.write(modelPath, sliceModel);
 
-  IO.Slice.writeSlice(modelPath, smModel);
+  const sliceDiff = previousSliceModel
+    ? SliceComparator.compare(previousSliceModel, sliceModel)
+    : undefined;
 
-  const hasCustomMocks = Files.exists(sliceMockPath(env.cwd, from, sliceName));
+  const customMocks = Files.safeReadEntity(
+    sliceMockPath(env.cwd, from, sliceName),
+    (payload) => getOrElseW(() => undefined)(ComponentMocks.decode(payload))
+  );
 
-  if (!hasCustomMocks) {
-    console.log("[slice/save]: Generating mocks");
-
-    const mocks = mock(
-      smModel,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
-    );
-    Files.writeJson(sliceMockPath(env.cwd, from, sliceName), mocks);
-  }
+  const mocks = mock(
+    sliceModel,
+    SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName),
+    customMocks,
+    sliceDiff
+  );
+  Files.write(sliceMockPath(env.cwd, from, sliceName), mocks);
 
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(
