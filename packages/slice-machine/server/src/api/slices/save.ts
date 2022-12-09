@@ -43,7 +43,7 @@ export async function handler(
   console.log("\n\n[slice/save]: Updating slice model");
 
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
-  Files.write(modelPath, sliceModel);
+  Files.writeJson(modelPath, sliceModel);
 
   const sliceDiff = previousSliceModel
     ? SliceComparator.compare(previousSliceModel, sliceModel)
@@ -60,7 +60,7 @@ export async function handler(
     customMocks,
     sliceDiff
   );
-  Files.write(sliceMockPath(env.cwd, from, sliceName), mocks);
+  Files.writeJson(sliceMockPath(env.cwd, from, sliceName), mocks);
 
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(
