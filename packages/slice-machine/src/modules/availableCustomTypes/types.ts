@@ -11,7 +11,6 @@ export type SyncedCustomType = {
 export type LocalFrontEndCustomType = NewCustomType | SyncedCustomType;
 
 export type DeletedFrontEndCustomType = {
-  local: undefined;
   remote: CustomTypeSM;
 };
 
@@ -23,7 +22,7 @@ export type FrontEndCustomType =
 
 export const isLocalCustomType = (
   ct: FrontEndCustomType
-): ct is LocalFrontEndCustomType => ct.local !== undefined;
+): ct is LocalFrontEndCustomType => "local" in ct && ct.local !== undefined;
 
 export const isDeletedCustomType = (
   ct: FrontEndCustomType
@@ -34,7 +33,7 @@ export const isNewCustomType = (ct: FrontEndCustomType): ct is NewCustomType =>
 
 export const isSyncedCustomType = (
   ct: FrontEndCustomType
-): ct is SyncedCustomType => "remote" in ct && ct.local !== undefined;
+): ct is SyncedCustomType => "remote" in ct && "local" in ct;
 
 export const getCustomTypeProp = <key extends keyof CustomTypeSM>(
   ct: FrontEndCustomType,
