@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SliceSM } from "@slicemachine/core/build/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 // import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
@@ -106,7 +106,7 @@ describe("MockSlice", () => {
 
     const mockConfig = {};
 
-    const result = MockSlice(model, mockConfig);
+    const result = MockSlice(Slices.fromSM(model), mockConfig);
 
     expect(result).toEqual(wanted);
     // TODO: check the codec we use for SharedSliceContent[]
@@ -207,7 +207,7 @@ describe("MockSlice", () => {
       },
     };
 
-    const result = MockSlice(model, mockConfig);
+    const result = MockSlice(Slices.fromSM(model), mockConfig);
     expect(result).toEqual(wanted);
     // TODO: check with the mock reader that this is valid
     // const decoded = SliceMock.decode(result);

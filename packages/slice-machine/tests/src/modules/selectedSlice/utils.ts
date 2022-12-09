@@ -33,7 +33,7 @@ export const getSelectedSliceDummyData = () => {
     extension: "js",
     model: dummyModel,
     screenshots: {},
-    mock: MockSlice(dummyModel, dummyMockConfig),
+    mock: MockSlice(Slices.fromSM(dummyModel), dummyMockConfig),
     mockConfig: dummyMockConfig,
   };
 
