@@ -28,15 +28,24 @@ export function fancyName(str: Frameworks): string {
 export function detectFramework(
   pkg: JsonPackage,
   supportedFrameworks: Frameworks[] = SupportedFrameworks
-): Frameworks {
+): FrameworkWithVersion {
   const { dependencies, devDependencies, peerDependencies } = pkg;
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
 
   const frameworkEntry: Frameworks | undefined = Object.values(
     supportedFrameworks
   ).find((f) => deps[f] && deps[f].length);
-  return frameworkEntry || Frameworks.vanillajs;
+
+  return {
+    framework: frameworkEntry || Frameworks.vanillajs,
+    version: frameworkEntry ? deps[frameworkEntry] : undefined,
+  };
 }
+
+export type FrameworkWithVersion = {
+  framework: Frameworks;
+  version: string | undefined;
+};
 
 export function defineFramework({
   cwd,
@@ -46,9 +55,9 @@ export function defineFramework({
   cwd: string;
   supportedFrameworks?: Frameworks[];
   manifest?: Manifest;
-}): Frameworks {
+}): FrameworkWithVersion {
   if (manifest?.framework && isFrameworkSupported(manifest.framework))
-    return manifest.framework;
+    return { framework: manifest.framework, version: undefined };
 
   const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) {

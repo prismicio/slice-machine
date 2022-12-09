@@ -33,7 +33,12 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt, false);
+    await installRequiredDependencies(
+      fakeCWD,
+      Models.Frameworks.nuxt,
+      undefined,
+      false
+    );
 
     stderr.stop();
 
@@ -64,7 +69,12 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt, false);
+    await installRequiredDependencies(
+      fakeCWD,
+      Models.Frameworks.nuxt,
+      undefined,
+      false
+    );
 
     stderr.stop();
 
@@ -97,7 +107,12 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.react, false);
+    await installRequiredDependencies(
+      fakedir,
+      Models.Frameworks.react,
+      undefined,
+      false
+    );
 
     stderr.stop();
 
@@ -130,13 +145,56 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.next, false);
+    await installRequiredDependencies(
+      fakedir,
+      Models.Frameworks.next,
+      "13.0.4",
+      false
+    );
 
     stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       "npm install --save @prismicio/react @prismicio/next @prismicio/client @prismicio/slice-simulator-react @prismicio/helpers"
+    );
+
+    expect(stderr.output).toContain("Installing Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
+    );
+  });
+
+  test("when using an old version of next it should install react deps and next-slicezone", async () => {
+    const spy = jest
+      .spyOn(initUtils, "execCommand")
+      .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
+
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
+
+    const fakedir = path.join(os.tmpdir(), "install-deps");
+
+    stderr.start();
+
+    await installRequiredDependencies(
+      fakedir,
+      Models.Frameworks.next,
+      "12.x.x",
+      false
+    );
+
+    stderr.stop();
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      "npm install --save @prismicio/react  @prismicio/client @prismicio/slice-simulator-react @prismicio/helpers"
     );
 
     expect(stderr.output).toContain("Installing Slice Machine");
@@ -163,7 +221,12 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.svelte, false);
+    await installRequiredDependencies(
+      fakedir,
+      Models.Frameworks.svelte,
+      undefined,
+      false
+    );
 
     stderr.stop();
 
@@ -196,7 +259,12 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.nuxt, false);
+    await installRequiredDependencies(
+      fakedir,
+      Models.Frameworks.nuxt,
+      undefined,
+      false
+    );
 
     stderr.stop();
 
@@ -229,7 +297,12 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.vue, false);
+    await installRequiredDependencies(
+      fakedir,
+      Models.Frameworks.vue,
+      undefined,
+      false
+    );
 
     stderr.stop();
 
@@ -262,7 +335,12 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.vue, true);
+    await installRequiredDependencies(
+      fakedir,
+      Models.Frameworks.vue,
+      undefined,
+      true
+    );
 
     stderr.stop();
 

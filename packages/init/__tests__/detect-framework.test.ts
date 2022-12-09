@@ -32,6 +32,7 @@ describe("detect-framework", () => {
     expect(result).toEqual({
       value: Models.Frameworks.next,
       manuallyAdded: false,
+      version: "beta",
     });
   });
 

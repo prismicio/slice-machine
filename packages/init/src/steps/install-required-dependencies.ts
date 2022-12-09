@@ -17,12 +17,25 @@ const {
   PRISMIC_TYPES,
 } = CONSTS;
 
-function depsForFramework(framework: Models.Frameworks): string {
+function nextDeps(version: string | undefined): string {
+  if (version && version > "13") {
+    return PRISMIC_NEXT;
+  }
+
+  return "";
+}
+
+function depsForFramework(
+  framework: Models.Frameworks,
+  version: string | undefined
+): string {
   switch (framework) {
     case Models.Frameworks.react:
       return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${PRISMIC_HELPERS}`;
     case Models.Frameworks.next:
-      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_NEXT} ${PRISMIC_CLIENT} ${SLICE_SIMULATOR_REACT} ${PRISMIC_HELPERS}`;
+      return `${PRISMIC_REACT_PACKAGE_NAME} ${nextDeps(
+        version
+      )} ${PRISMIC_CLIENT} ${SLICE_SIMULATOR_REACT} ${PRISMIC_HELPERS}`;
     case Models.Frameworks.svelte:
       return `${PRISMIC_DOM_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
     case Models.Frameworks.nuxt:
@@ -36,6 +49,7 @@ function depsForFramework(framework: Models.Frameworks): string {
 
 async function addAndInstallDeps(
   framework: Models.Frameworks,
+  version: string | undefined,
   useYarn = false
 ): Promise<string> {
   const installDevDependencyCommand = useYarn
@@ -47,7 +61,7 @@ async function addAndInstallDeps(
     `${installDevDependencyCommand} ${SM_PACKAGE_NAME} ${PRISMIC_TYPES}`
   );
 
-  const deps = depsForFramework(framework);
+  const deps = depsForFramework(framework, version);
   if (deps) await execCommand(`${installDependencyCommand} ${deps}`);
 
   return stderr;
@@ -62,6 +76,7 @@ async function installDeps(useYarn = false): Promise<string> {
 export async function installRequiredDependencies(
   cwd: string,
   framework: Models.Frameworks,
+  version: string | undefined,
   skipDependencies: boolean
 ): Promise<void> {
   const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));
@@ -71,7 +86,7 @@ export async function installRequiredDependencies(
 
   const stderr = await (skipDependencies
     ? installDeps(yarnLock)
-    : addAndInstallDeps(framework, yarnLock));
+    : addAndInstallDeps(framework, version, yarnLock));
 
   const pathToPkg = path.join(
     NodeUtils.PackagePaths(cwd).value(),
