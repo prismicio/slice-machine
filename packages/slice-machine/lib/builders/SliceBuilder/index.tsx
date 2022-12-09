@@ -99,8 +99,6 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     [component.model.id, variation?.id]
   );
 
-  if (!variation || !sliceView) return null;
-
   const onSaveSlice = () => {
     saveSlice(component, setData);
   };
@@ -112,6 +110,8 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
       localScreenshots: component.screenshots,
     },
   ]);
+
+  if (!variation || !sliceView) return null;
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -155,14 +155,14 @@ const SliceBuilderWithRouter = () => {
     ),
   }));
 
+  useEffect(() => {
+    if (component) initSliceStore(component);
+    else void router.replace("/");
+  }, [component]);
+
   if (!component) {
-    void router.replace("/");
     return null;
   }
-
-  useEffect(() => {
-    initSliceStore(component);
-  }, []);
 
   const variation = component.model.variations.find(
     (variation) => variation.id === router.query.variation

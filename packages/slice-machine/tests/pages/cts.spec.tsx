@@ -15,7 +15,7 @@ import {
 } from "@jest/globals";
 import React from "react";
 import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
-import singletonRouter from "next/router";
+import Router from "next/router";
 import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
 import { setupServer } from "msw/node";
@@ -147,7 +147,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });
@@ -244,7 +244,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });
@@ -344,7 +344,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });
@@ -458,7 +458,7 @@ describe("Custom Type Builder", () => {
     );
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });

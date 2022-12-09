@@ -1,3 +1,7 @@
 .react-tabs__tab:focus {
   box-shadow: none;
 }
+
+.react-tabs__tab:focus::after {
+  background: transparent;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { type FC, type ReactNode, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   ParagraphProps,
   useThemeUI,
 } from "theme-ui";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { Video as CldVideo } from "cloudinary-react";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "../src/redux/type";
@@ -30,7 +30,7 @@ import {
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
-const Video: React.FC<{
+const Video: FC<{
   publicId: string;
 }> = ({ publicId }) => {
   const { version, framework } = useSelector(
@@ -107,7 +107,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => {
     </>
   );
 };
-const BuildSlicesSlide: React.FC = () => (
+const BuildSlicesSlide: FC = () => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
@@ -116,7 +116,7 @@ const BuildSlicesSlide: React.FC = () => (
   </>
 );
 
-const CreatePageTypesSlide: React.FC = () => (
+const CreatePageTypesSlide: FC = () => (
   <>
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
@@ -125,7 +125,7 @@ const CreatePageTypesSlide: React.FC = () => (
   </>
 );
 
-const PushPagesSlide: React.FC = () => (
+const PushPagesSlide: FC = () => (
   <>
     <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
@@ -136,7 +136,11 @@ const PushPagesSlide: React.FC = () => (
   </>
 );
 
-const OnboardingGrid: React.FunctionComponent = ({ children }) => {
+type OnboardingGridProps = Readonly<{
+  children?: ReactNode;
+}>;
+
+const OnboardingGrid: FC<OnboardingGridProps> = ({ children }) => {
   return (
     <Grid
       sx={{
@@ -202,7 +206,7 @@ function idFromStep(
   }
 }
 
-function handleTracking(props: { step: number; maxSteps: number }): void {
+function useTracking(props: { step: number; maxSteps: number }): void {
   const state = useRef(props);
 
   useEffect(() => {
@@ -235,6 +239,8 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 }
 
 export default function Onboarding(): JSX.Element {
+  const router = useRouter();
+
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,
@@ -248,7 +254,7 @@ export default function Onboarding(): JSX.Element {
     step: 0,
   });
 
-  handleTracking({
+  useTracking({
     ...state,
     maxSteps: STEPS.length,
   });

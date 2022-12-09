@@ -1,7 +1,6 @@
-import React, { useRef } from "react";
-import { Flex, Text } from "theme-ui";
+import { type FC, type ReactNode, useCallback } from "react";
+import { type ThemeUIStyleObject, Flex, Text } from "theme-ui";
 import { MdArrowBackIos, MdCheck } from "react-icons/md";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 import WarningBadge from "./WarningBadge";
 
 type StepSectionProps = {
@@ -9,10 +8,11 @@ type StepSectionProps = {
   title: string;
   isOpen: boolean;
   onOpenStep: () => void;
+  children?: ReactNode;
   status?: null | "ok" | "ko";
 };
 
-const StepSection: React.FunctionComponent<StepSectionProps> = ({
+const StepSection: FC<StepSectionProps> = ({
   title,
   stepNumber,
   isOpen,
@@ -20,11 +20,13 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
   children,
   status = null,
 }) => {
-  const stepSectionContainer = useRef<HTMLDivElement>(null);
-  const contentHeight: number =
-    !!stepSectionContainer && !!stepSectionContainer.current
-      ? stepSectionContainer.current.scrollHeight
-      : 0;
+  const stepSectionContainerRef = useCallback(
+    (element: HTMLElement | null) => {
+      if (element === null) return;
+      element.style.maxHeight = `${isOpen ? element.scrollHeight : 0}px`;
+    },
+    [isOpen]
+  );
 
   const additionalStepTitleStyle: ThemeUIStyleObject =
     status === "ok"
@@ -102,14 +104,13 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
         </Flex>
       </Flex>
       <Flex
-        ref={stepSectionContainer}
+        ref={stepSectionContainerRef}
         sx={{
           overflow: "hidden",
           opacity: isOpen ? 1 : 0,
           paddingX: 24,
           willChange: "max-height",
           transition: "all 0.2s ease-out",
-          maxHeight: isOpen ? contentHeight : 0,
         }}
       >
         {children}

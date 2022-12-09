@@ -1,8 +1,6 @@
 import React from "react";
-import { Flex, useThemeUI } from "theme-ui";
+import { type ThemeUIStyleObject, Flex, useThemeUI } from "theme-ui";
 import hljs from "highlight.js";
-
-import { ThemeUIStyleObject } from "@theme-ui/css";
 
 export type Language = "javascript" | "bash" | "xml" | "html" | "json";
 

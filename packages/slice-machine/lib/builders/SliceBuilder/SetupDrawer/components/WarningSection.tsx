@@ -1,19 +1,15 @@
-import React from "react";
-import { Flex, Text } from "theme-ui";
+import { type FC, type ReactNode } from "react";
+import { type ThemeUIStyleObject, Flex, Text } from "theme-ui";
 
 import { RiErrorWarningLine } from "react-icons/ri";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 
 type WarningSectionProps = {
   title: string;
   sx: ThemeUIStyleObject;
+  children?: ReactNode;
 };
 
-const WarningSection: React.FunctionComponent<WarningSectionProps> = ({
-  title,
-  sx,
-  children,
-}) => (
+const WarningSection: FC<WarningSectionProps> = ({ title, sx, children }) => (
   <Flex
     sx={{
       p: 3,
