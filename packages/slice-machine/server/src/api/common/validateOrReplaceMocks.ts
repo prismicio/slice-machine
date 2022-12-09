@@ -49,7 +49,7 @@ export function validateOrReplaceSliceMocks(
 
       if (!currentMocks || currentMocks instanceof Error) {
         const mocks: ComponentMocks = mockForSlice(
-          c.model,
+          Slices.fromSM(c.model),
           SliceMockConfig.getSliceMockConfig(
             globalMockConfig,
             c.from,
