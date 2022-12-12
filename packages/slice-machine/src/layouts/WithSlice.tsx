@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { VariationSM } from "@slicemachine/core/build/models";
 import useCurrentSlice from "@src/hooks/useCurrentSlice";
@@ -13,7 +13,7 @@ export type ComponentWithSliceProps = React.FC<{
 
 export const createComponentWithSlice = (C: ComponentWithSliceProps) => {
   const Wrapper: React.FC<{ pageProps: AppProps }> & {
-    CustomLayout?: React.FC;
+    CustomLayout?: React.FC<{ children: ReactNode }>;
   } = ({ pageProps }) => {
     const { slice, variation } = useCurrentSlice();
     if (!slice || !variation) {

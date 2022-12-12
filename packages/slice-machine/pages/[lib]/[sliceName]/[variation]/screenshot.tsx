@@ -11,11 +11,14 @@ import {
 } from "@src/layouts/WithSlice";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { FC, ReactNode } from "react";
 
 import { useSelector } from "react-redux";
 import { Box } from "theme-ui";
 
-const CustomLayout: React.FunctionComponent = ({ children }) => <>{children}</>;
+const CustomLayout: FC<{ children: ReactNode }> = ({ children }) => (
+  <>{children}</>
+);
 
 const Screenshot: ComponentWithSliceProps = ({ slice, variation }) => {
   const { simulatorUrl } = useSelector((store: SliceMachineStoreType) => ({

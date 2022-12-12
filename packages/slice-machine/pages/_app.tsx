@@ -40,7 +40,7 @@ import Router from "next/router";
 import { NextPage } from "next";
 
 type NextPageWithLayout = NextPage & {
-  CustomLayout?: React.FC;
+  CustomLayout?: React.FC<{ children: ReactNode }>;
 };
 
 type AppContextWithComponentLayout = AppContext & {
