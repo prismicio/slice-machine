@@ -1,4 +1,4 @@
-name: test
+name: test-and-deploy-alpha
 
 on: [push]
 
@@ -106,3 +106,28 @@ jobs:
           user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: npm i && npm run test:e2e
+
+  deployment:
+    runs-on: ubuntu-latest
+    needs: [e2e-tests, audit, linting, prettier, dep-check, unit-tests, install-deps]
+    if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
+    environment: alpha
+    steps: 
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-node
+      - name: Install Dependencies
+        run: |
+          npm ci
+          git checkout .
+      - uses: ./.github/actions/build-essential
+      - name: Version And Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
+          PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git checkout .
+          npm run bump:alpha --preid="${{ github.ref_name }}"
+          npm run publish:alpha
