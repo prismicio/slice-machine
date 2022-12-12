@@ -24,6 +24,8 @@ export enum EventNames {
 
   ScreenshotTaken = "SliceMachine Screenshot Taken",
   ChangesPushed = "SliceMachine Changes Pushed",
+
+  EditorWidgetUsed = "Editor Widget Used",
 }
 
 type BaseTrackingEvent = {
@@ -190,6 +192,10 @@ export interface ChangesPushed extends BaseTrackingEvent {
   };
 }
 
+export interface EditorWidgetUsed extends BaseTrackingEvent {
+  name: EventNames.EditorWidgetUsed;
+}
+
 export type TrackingEvents =
   | PageView
   | IdentifyUser
@@ -208,7 +214,8 @@ export type TrackingEvents =
   | SliceSimulatorOpen
   | SliceSimulatorSetup
   | ScreenshotTaken
-  | ChangesPushed;
+  | ChangesPushed
+  | EditorWidgetUsed;
 
 export function isTrackingEvent(
   payload: TrackingEvents
