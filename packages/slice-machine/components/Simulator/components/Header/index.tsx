@@ -37,6 +37,7 @@ type PropTypes = {
   isDisplayEditor: boolean;
   toggleIsDisplayEditor: () => void;
   onSaveMock: () => void;
+  actionsDisabled: boolean;
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
@@ -45,6 +46,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
   isDisplayEditor,
   toggleIsDisplayEditor,
   onSaveMock,
+  actionsDisabled,
 }) => {
   const { savingMock } = useSelector((state: SliceMachineStoreType) => ({
     savingMock: selectSavingMock(state),
@@ -65,12 +67,12 @@ const Header: React.FunctionComponent<PropTypes> = ({
         }}
       >
         <SliceMachineLogo height={"20px"} width={"20px"} />
-        <Text mx={2}>{slice.model.name}</Text>
+        <Text sx={{ mx: 2 }}>{slice.model.name}</Text>
         <VarationsPopover
           defaultValue={variation}
           variations={slice.model.variations}
           onChange={(v) => redirect(slice, v, true)}
-          disabled={slice.model.variations.length <= 1}
+          disabled={slice.model.variations.length <= 1 || actionsDisabled}
         />
       </Flex>
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
@@ -81,6 +83,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
               id="show-mock-editor"
               checked={isDisplayEditor}
               onChange={toggleIsDisplayEditor}
+              disabled={actionsDisabled}
             />
           </Flex>
         </Flex>

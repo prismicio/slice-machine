@@ -22,6 +22,7 @@ import {
   CreateSlice,
   ScreenshotTaken,
   ChangesPushed,
+  SliceSimulatorIsNotRunning,
 } from "./types";
 
 export class SMTracker {
@@ -160,6 +161,15 @@ export class SMTracker {
     const payload: SliceSimulatorOpen = {
       name: EventNames.SliceSimulatorOpen,
       props: { framework, version },
+    };
+
+    return this.#trackEvent(payload);
+  }
+
+  async trackSliceSimulatorIsNotRunning(framework: Frameworks): Promise<void> {
+    const payload: SliceSimulatorIsNotRunning = {
+      name: EventNames.SliceSimulatorIsNotRunning,
+      props: { framework },
     };
 
     return this.#trackEvent(payload);

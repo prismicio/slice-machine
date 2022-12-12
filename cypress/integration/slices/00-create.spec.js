@@ -28,6 +28,7 @@ describe("Create Slices", () => {
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit(`/slices`);
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));

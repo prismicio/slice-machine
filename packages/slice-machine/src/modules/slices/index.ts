@@ -16,7 +16,6 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { createSlice, getState, SaveSliceMockRequest } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
 import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -281,7 +280,7 @@ export function* createSliceSaga({
     typeof getState
   >;
   yield put(createSliceCreator.success({ libraries: serverState.libraries }));
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  yield put(modalCloseCreator());
   const addr = `/${payload.libName.replace(/\//g, "--")}/${
     payload.sliceName
   }/${variationId}`;

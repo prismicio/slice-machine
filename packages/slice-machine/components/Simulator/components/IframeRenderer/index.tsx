@@ -5,8 +5,13 @@ import { ThemeUIStyleObject } from "@theme-ui/css";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SetupError } from "../SetupError";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { useSelector } from "react-redux";
+import {
+  selectIframeStatus,
+  selectIsWaitingForIFrameCheck,
+} from "@src/modules/simulator";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
@@ -64,6 +69,13 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
 }) => {
   const [client, ref] = useSimulatorClient();
 
+  const { iframeStatus, isWaitingForIFrameCheck } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      iframeStatus: selectIframeStatus(state),
+      isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
+    })
+  );
+
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
 
@@ -94,7 +106,14 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, screenDimensions, apiContent]);
+  }, [client, screenDimensions, apiContent, simulatorUrl]);
+
+  const [iframeKey, setIframeKey] = useState(Math.random());
+  useEffect(() => {
+    if (!isWaitingForIFrameCheck && iframeStatus !== "ok") {
+      setIframeKey(Math.random());
+    }
+  }, [iframeStatus, isWaitingForIFrameCheck]);
 
   return (
     <Box
@@ -144,6 +163,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             <iframe
               id="__iframe-renderer"
               ref={ref}
+              key={iframeKey}
               src={simulatorUrl}
               style={{
                 border: "none",
@@ -151,9 +171,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
                 width: "100%",
               }}
             />
-          ) : (
-            <SetupError />
-          )}
+          ) : null}
         </Flex>
       </Flex>
     </Box>

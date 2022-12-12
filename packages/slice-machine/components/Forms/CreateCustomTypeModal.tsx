@@ -28,8 +28,7 @@ interface FormValues {
 }
 
 const CreateCustomTypeModal: React.FC = () => {
-  const { createCustomType, closeCreateCustomTypeModal } =
-    useSliceMachineActions();
+  const { createCustomType, closeModals } = useSliceMachineActions();
 
   const {
     customTypeIds,
@@ -57,7 +56,7 @@ const CreateCustomTypeModal: React.FC = () => {
       repeatable,
     });
     createCustomType(id, name, repeatable);
-    closeCreateCustomTypeModal();
+    closeModals();
     setIsIdFieldPristine(true);
   };
 
@@ -100,7 +99,7 @@ const CreateCustomTypeModal: React.FC = () => {
       formId="create-custom-type"
       buttonLabel={"Create"}
       close={() => {
-        closeCreateCustomTypeModal();
+        closeModals();
         setIsIdFieldPristine(true);
       }}
       onSubmit={createCustomTypeAndTrack}
