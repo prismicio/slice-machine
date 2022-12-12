@@ -23,10 +23,19 @@
             "allowTargetBlank": true,
             "single": "paragraph,em,strong"
           }
+        },
+        "foo": {
+          "type": "Boolean",
+          "config": {
+            "label": "Foo",
+            "default_value": false,
+            "placeholder_true": "true",
+            "placeholder_false": "false"
+          }
         }
       },
       "items": {},
-      "imageUrl": "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format"
+      "imageUrl": "https://images.prismic.io/slicemachine-dev-mule/shared-slices/image/default/twe988zQK9p4OijW2oyET22Ps6g=.png?auto=compress%2Cformat"
     },
     {
       "id": "wide",
@@ -50,7 +59,7 @@
         }
       },
       "items": {},
-      "imageUrl": "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format"
+      "imageUrl": "https://images.prismic.io/slicemachine-dev-mule/shared-slices/image/wide/xDGhbqN31RDj3OFpH+IWw48YF+w=.png?auto=compress%2Cformat"
     }
   ]
 }

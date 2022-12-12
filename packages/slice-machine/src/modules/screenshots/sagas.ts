@@ -31,14 +31,13 @@ export function* generateSliceScreenshotSaga({
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
 
-    // If screenshot is null, then no screenshots were taken
-    if (!response.data.screenshot) {
+    if (!response) {
       throw Error("No screenshot saved");
     }
 
     yield put(
       openToasterCreator({
-        url: response.data.screenshot.url,
+        url: response.url,
         type: ToasterType.SCREENSHOT_CAPTURED,
       })
     );
@@ -51,7 +50,11 @@ export function* generateSliceScreenshotSaga({
     yield put(
       generateSliceScreenshotCreator.success({
         variationId,
-        screenshot: response.data.screenshot,
+        screenshot: {
+          url: response.url,
+          path: "__stub__",
+          hash: "__stub__",
+        },
         component,
       })
     );

@@ -6,6 +6,7 @@ import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
 import { ProjectManager } from "./_ProjectManager";
 import { SimulatorManager } from "./_SimulatorManager";
+import { ScreenshotsManager } from "./_ScreenshotsManager";
 import { SlicesManager } from "./_SlicesManager";
 import { SnippetsManager } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
@@ -59,6 +60,9 @@ export abstract class BaseManager {
 	}
 	protected get snippets(): SnippetsManager {
 		return this._sliceMachineManager.snippets;
+	}
+	protected get screenshots(): ScreenshotsManager {
+		return this._sliceMachineManager.screenshots;
 	}
 	protected get simulator(): SimulatorManager {
 		return this._sliceMachineManager.simulator;

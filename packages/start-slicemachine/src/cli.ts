@@ -1,9 +1,6 @@
-import { stripIndent } from "common-tags";
 import mri from "mri";
 
 import * as pkg from "../package.json";
-
-import { createStartSliceMachineProcess } from "./StartSliceMachineProcess";
 
 type Args = {
 	open: boolean;
@@ -28,16 +25,18 @@ const args = mri<Args>(process.argv.slice(2), {
 });
 
 if (args.help) {
-	console.info(stripIndent`
-		Usage:
-		    start-slicemachine [options...]
+	console.info(
+		`
+Usage:
+    start-slicemachine [options...]
 
-		Options:
-		    --open         Open Slice Machine automatically
-		    --port, -p     A port number on which to run Slice Machine
-		    --help, -h     Show help text
-		    --version, -v  Show version
-	`);
+Options:
+    --open         Open Slice Machine automatically
+    --port, -p     Specify the port on which to run Slice Machine
+    --help, -h     Show help text
+    --version, -v  Show version
+`.trim(),
+	);
 
 	process.exit();
 }
@@ -59,9 +58,13 @@ if (args.port) {
 	}
 }
 
-const startSliceMachineProcess = createStartSliceMachineProcess({
-	open: args.open,
-	port,
-});
+import("./StartSliceMachineProcess").then(
+	({ createStartSliceMachineProcess }) => {
+		const startSliceMachineProcess = createStartSliceMachineProcess({
+			open: args.open,
+			port,
+		});
 
-startSliceMachineProcess.run();
+		startSliceMachineProcess.run();
+	},
+);

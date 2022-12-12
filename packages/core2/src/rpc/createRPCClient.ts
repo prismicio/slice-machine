@@ -1,4 +1,5 @@
 import { clientFormDataToObject } from "./lib/clientFormDataToObject";
+import { isErrorLike } from "./lib/isErrorLike";
 import { objectToClientFormData } from "./lib/objectToClientFormData";
 
 import { Procedures, Procedure } from "./types";
@@ -102,14 +103,22 @@ export const createRPCClient = <TProcedures extends Procedures>(
 		if ("data" in resObject) {
 			return resObject.data;
 		} else {
-			const errorMessage =
-				typeof resObject.error === "string"
-					? resObject.error
-					: "Procedure call failed on the server and did not provide an error message.";
+			const resError = resObject.error;
 
-			throw new Error(errorMessage, {
-				cause: resObject.cause,
-			});
+			if (isErrorLike(resError)) {
+				const error = new Error(resError.message);
+				error.name = resError.name;
+				error.stack = resError.stack;
+
+				throw error;
+			} else {
+				throw new Error(
+					"An unexpected response was received from the RPC server.",
+					{
+						cause: resObject,
+					},
+				);
+			}
 		}
 	});
 };

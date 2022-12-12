@@ -39,3 +39,9 @@ export type ExtractProcedures<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	TRPCServer extends RPCMiddleware<Procedures>,
 > = TRPCServer extends RPCMiddleware<infer TProcedures> ? TProcedures : never;
+
+export type ErrorLike = {
+	name: string;
+	message: string;
+	stack?: string;
+};

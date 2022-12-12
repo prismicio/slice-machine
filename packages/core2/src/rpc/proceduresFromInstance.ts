@@ -1,47 +1,141 @@
-import { Procedure } from "./types";
+type AppendDotPathSegment<
+	TDotPath extends string,
+	TSegment extends string,
+> = TDotPath extends "" ? TSegment : `${TDotPath}.${TSegment}`;
 
-// TODO: Omitted property names are not omitted from types, only the runtime
-// implementation.
-export type ProceduresFromInstance<TProceduresInstance> = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[P in keyof TProceduresInstance]: TProceduresInstance[P] extends Procedure<any>
-		? TProceduresInstance[P]
-		: ProceduresFromInstance<TProceduresInstance[P]>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyFunction = (...args: any[]) => any;
+type Primitives =
+	| null
+	| undefined
+	| string
+	| number
+	| boolean
+	| symbol
+	| bigint
+	| AnyFunction;
+
+type AllObjDotPaths<TObj, TDotPath extends string = ""> = TObj extends
+	| Primitives
+	| unknown[]
+	? TDotPath
+	: {
+			[P in keyof TObj]: P extends string
+				?
+						| AppendDotPathSegment<TDotPath, P>
+						| AllObjDotPaths<TObj[P], AppendDotPathSegment<TDotPath, P>>
+				: TDotPath;
+	  }[keyof TObj];
+
+type RecursiveOmitNested<
+	TObj,
+	TOmitPath extends string,
+	TDotPath extends string = "",
+> = TObj extends Primitives | unknown[]
+	? TObj
+	: {
+			[P in keyof TObj as P extends string
+				? AppendDotPathSegment<TDotPath, P> extends TOmitPath
+					? never
+					: P
+				: never]: P extends string
+				? RecursiveOmitNested<
+						TObj[P],
+						TOmitPath,
+						AppendDotPathSegment<TDotPath, P>
+				  >
+				: TObj[P];
+	  };
+
+// type OmitNested<
+// 	TObj,
+// 	TOmitPath extends AllObjDotPaths<TObj>,
+// > = RecursiveOmitNested<TObj, TOmitPath>;
+
+type OnlyProcedures<TProceduresInstance> =
+	TProceduresInstance extends AnyFunction
+		? TProceduresInstance
+		: {
+				[P in keyof TProceduresInstance as OnlyProcedures<
+					TProceduresInstance[P]
+				> extends Exclude<Primitives, AnyFunction> | Record<PropertyKey, never>
+					? never
+					: P]: OnlyProcedures<TProceduresInstance[P]>;
+		  };
+
+type _ProceduresFromInstanceConfig = {
+	omit?: readonly string[];
 };
 
-type ProceduresFromInstanceConfig = {
-	omit?: unknown[];
-};
-
-export const proceduresFromInstance = <TProceduresInstance>(
+const _proceduresFromInstance = <TProceduresInstance>(
 	proceduresInstance: TProceduresInstance,
-	config: ProceduresFromInstanceConfig = {},
-): ProceduresFromInstance<TProceduresInstance> => {
-	const res = {} as ProceduresFromInstance<TProceduresInstance>;
+	config: _ProceduresFromInstanceConfig = {},
+	path: string[] = [],
+): OnlyProcedures<TProceduresInstance> => {
+	const omit: readonly string[] = config.omit ?? [];
 
-	const proto = Object.getPrototypeOf(proceduresInstance);
+	const res = {} as OnlyProcedures<TProceduresInstance>;
 
-	const properties = [
-		...Object.getOwnPropertyNames(proceduresInstance),
-		...Object.getOwnPropertyNames(proto),
-	];
+	if (proceduresInstance) {
+		const proto = Object.getPrototypeOf(proceduresInstance);
 
-	for (const key of properties) {
-		const value = proceduresInstance[key as keyof typeof proceduresInstance];
+		const properties = [
+			...Object.getOwnPropertyNames(proceduresInstance),
+			...(proto ? Object.getOwnPropertyNames(proto) : []),
+		];
 
-		if (key === "constructor" || config.omit?.includes(value)) {
-			continue;
-		}
+		for (const key of properties) {
+			const value = proceduresInstance[key as keyof typeof proceduresInstance];
 
-		if (typeof value === "function") {
-			res[key as keyof typeof res] = value.bind(proceduresInstance);
-		} else if (typeof value === "object") {
-			res[key as keyof typeof res] = proceduresFromInstance(
-				value,
-				config,
-			) as typeof res[keyof typeof res];
+			if (key === "constructor" || omit.includes([...path, key].join("."))) {
+				continue;
+			}
+
+			if (typeof value === "function") {
+				res[key as keyof typeof res] = value.bind(proceduresInstance);
+			} else if (typeof value === "object") {
+				res[key as keyof typeof res] = _proceduresFromInstance(value, config, [
+					...path,
+					key,
+				]) as typeof res[keyof typeof res];
+			}
 		}
 	}
 
 	return res;
+};
+
+export type OmittableProcedures<TProceduresInstance> = AllObjDotPaths<
+	OnlyProcedures<TProceduresInstance>
+>;
+
+export type ProceduresFromInstance<
+	TProceduresInstance,
+	TOmitPaths extends string,
+> = RecursiveOmitNested<OnlyProcedures<TProceduresInstance>, TOmitPaths>;
+
+type ProceduresFromInstanceConfig<
+	TProceduresInstance,
+	TUnknownOmitPaths extends string,
+> = {
+	omit?: readonly (
+		| TUnknownOmitPaths
+		| OmittableProcedures<TProceduresInstance>
+	)[];
+};
+
+export const proceduresFromInstance = <
+	TProceduresInstance,
+	TUnknownOmitPaths extends string,
+>(
+	proceduresInstance: TProceduresInstance,
+	config: ProceduresFromInstanceConfig<
+		TProceduresInstance,
+		TUnknownOmitPaths
+	> = {},
+): ProceduresFromInstance<TProceduresInstance, TUnknownOmitPaths> => {
+	return _proceduresFromInstance(
+		proceduresInstance,
+		config,
+	) as ProceduresFromInstance<TProceduresInstance, TUnknownOmitPaths>;
 };

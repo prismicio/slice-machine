@@ -10,7 +10,7 @@ import { objectToServerFormData } from "./lib/objectToServerFormData";
 import { readRPCClientArgs } from "./lib/readRPCClientArgs";
 import { sendFormData } from "./lib/sendFormData";
 
-import { Procedure, Procedures } from "./types";
+import { ErrorLike, Procedure, Procedures } from "./types";
 
 export type RPCMiddleware<TProcedures extends Procedures> = NodeMiddleware & {
 	_procedures: TProcedures;
@@ -46,13 +46,24 @@ const findProcedure = (args: FindProcedureArgs): Procedure<any> | undefined => {
 	}
 };
 
+const defaultSerializeError = (error: Error): ErrorLike => {
+	return {
+		name: error.name,
+		message: error.message,
+		stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+	};
+};
+
 export type CreateRPCRouterArgs<TProcedures extends Procedures> = {
 	procedures: TProcedures;
+	serializeError?: (error: Error) => ErrorLike;
 };
 
 export const createRPCMiddleware = <TProcedures extends Procedures>(
 	args: CreateRPCRouterArgs<TProcedures>,
 ): RPCMiddleware<TProcedures> => {
+	const serializeError = args.serializeError || defaultSerializeError;
+
 	const router = createRouter();
 
 	router.post(
@@ -80,8 +91,7 @@ export const createRPCMiddleware = <TProcedures extends Procedures>(
 					console.error(error);
 
 					const formData = objectToServerFormData({
-						error: error.message,
-						cause: error,
+						error: serializeError(error),
 					});
 
 					event.res.statusCode = 500;
@@ -100,9 +110,14 @@ export const createRPCMiddleware = <TProcedures extends Procedures>(
 				return await sendFormData(event, formData);
 			} catch (error) {
 				if (error instanceof Error) {
+					console.error(error);
+
 					const formData = objectToServerFormData({
-						error: "Unable to serialize server response.",
-						cause: error,
+						error: {
+							name: "RPCError",
+							message:
+								"Unable to serialize server response. Check the server log for details.",
+						},
 					});
 
 					event.req.statusCode = 500;

@@ -4,7 +4,7 @@ import sdk from "vite-plugin-sdk";
 export default defineConfig({
 	plugins: [
 		sdk({
-			internalDependencies: ["devalue", "boxen"],
+			internalDependencies: ["devalue", "boxen", "node-fetch"],
 		}),
 	],
 	build: {

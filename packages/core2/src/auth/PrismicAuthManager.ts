@@ -15,6 +15,11 @@ import { serializeCookies } from "../lib/serializeCookies";
 
 import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
 import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
+import {
+	InternalError,
+	UnauthenticatedError,
+	UnexpectedDataError,
+} from "../errors";
 
 const COOKIE_SEPARATOR = "; ";
 const AUTH_COOKIE_KEY = "prismic-auth";
@@ -222,6 +227,10 @@ export class PrismicAuthManager {
 				},
 			});
 
+			if (!res.ok) {
+				await this.logout();
+			}
+
 			return res.ok;
 		} else {
 			return false;
@@ -275,10 +284,10 @@ export class PrismicAuthManager {
 
 				await this._writePersistedAuthState(authState);
 			} else {
-				throw new Error(`Failed to refresh authentication token: ${text}`);
+				throw new InternalError("Failed to refresh authentication token.");
 			}
 		} else {
-			throw new Error("Not logged in.");
+			throw new UnauthenticatedError();
 		}
 	}
 
@@ -306,13 +315,16 @@ export class PrismicAuthManager {
 			const { value: profile, error } = decode(PrismicUserProfile, json);
 
 			if (error) {
-				throw new Error(`Failed to decode profile: ${error.errors.join(", ")}`);
+				throw new UnexpectedDataError(
+					"Received invalid data from the Prismic user service.",
+				);
 			}
 
 			return profile;
 		} else {
-			// TODO: Provide a better error
-			throw new Error(`Failed to get profile: ${JSON.stringify(json)}`);
+			throw new InternalError(
+				"Failed to retrieve profile from the Prismic user service.",
+			);
 		}
 	}
 
@@ -343,20 +355,13 @@ export class PrismicAuthManager {
 
 		// Decode cookies into a record for convenience.
 		if ("cookies" in rawAuthState) {
-			// TODO: Something about the return value doesn't seem
-			// right. Properties like `Path` and `SameSite` are
-			// returned as top-level properties.
 			rawAuthState.cookies = parseCookies(rawAuthState.cookies);
 		}
 
 		const { value: authState, error } = decode(PrismicAuthState, rawAuthState);
 
 		if (error) {
-			throw new Error(
-				`Failed to parse Prismic authentication state: ${error.errors.join(
-					", ",
-				)}`,
-			);
+			throw new UnexpectedDataError("Prismic authentication state is invalid.");
 		}
 
 		return authState;
@@ -378,9 +383,11 @@ export class PrismicAuthManager {
 				JSON.stringify(preparedAuthState, null, 2),
 			);
 		} catch (error) {
-			throw new Error(
-				`Failed to write Prismic authentication state to the file system.`,
-				{ cause: error },
+			throw new InternalError(
+				"Failed to write Prismic authentication state to the file system.",
+				{
+					cause: error,
+				},
 			);
 		}
 	}

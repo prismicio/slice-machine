@@ -1,16 +1,45 @@
-import { NodeMiddleware } from "h3";
-
 import {
 	ProceduresFromInstance,
 	RPCMiddleware,
 	proceduresFromInstance,
 	createRPCMiddleware,
 } from "../rpc";
+import { OmittableProcedures } from "../rpc/proceduresFromInstance";
 
 import { SliceMachineManager } from "./SliceMachineManager";
 
+const defineOmits = <TObj>() => {
+	// TODO: Change this to a nicer API. Maybe return an object with a named method (e.g. `compute`)
+
+	return <TOmitPaths extends string>(
+		omit: readonly TOmitPaths[] | readonly OmittableProcedures<TObj>[],
+	): readonly Extract<TOmitPaths, OmittableProcedures<TObj>>[] => {
+		return omit as readonly Extract<TOmitPaths, OmittableProcedures<TObj>>[];
+	};
+};
+
+// TODO: Support wildcard omits that support "*._sliceMachineManager"
+const omitProcedures = defineOmits<SliceMachineManager>()([
+	"_sliceMachinePluginRunner",
+	"_prismicAuthManager",
+
+	"project._sliceMachineManager",
+	"plugins._sliceMachineManager",
+	"slices._sliceMachineManager",
+	"customTypes._sliceMachineManager",
+	"snippets._sliceMachineManager",
+	"screenshots._sliceMachineManager",
+	"simulator._sliceMachineManager",
+	"user._sliceMachineManager",
+	"versions._sliceMachineManager",
+
+	"getSliceMachinePluginRunner",
+	"getPrismicAuthManager",
+	"screenshots.browserContext",
+]);
+
 export type SliceMachineManagerMiddleware = RPCMiddleware<
-	ProceduresFromInstance<SliceMachineManager>
+	ProceduresFromInstance<SliceMachineManager, typeof omitProcedures[number]>
 >;
 
 export type CreateSliceMachineManagerMiddlewareArgs = {
@@ -19,26 +48,10 @@ export type CreateSliceMachineManagerMiddlewareArgs = {
 
 export const createSliceMachineManagerMiddleware = (
 	args: CreateSliceMachineManagerMiddlewareArgs,
-): NodeMiddleware => {
+): SliceMachineManagerMiddleware => {
 	return createRPCMiddleware({
 		procedures: proceduresFromInstance(args.sliceMachineManager, {
-			omit: [
-				// @ts-expect-error - Purposely omitting a private property.
-				args.sliceMachineManager._sliceMachinePluginRunner,
-
-				// @ts-expect-error - Purposely omitting a private property.
-				args.sliceMachineManager._prismicAuthManager,
-
-				// Any child manager could be used here to omit
-				// the shared SliceMachineManager, but we
-				// selected `user` since that manager should
-				// exist forever.
-				// @ts-expect-error - Purposely omitting a private property.
-				args.sliceMachineManager.user._sliceMachineManager,
-
-				args.sliceMachineManager.getSliceMachinePluginRunner,
-				args.sliceMachineManager.getPrismicAuthManager,
-			],
+			omit: omitProcedures,
 		}),
 	});
 };

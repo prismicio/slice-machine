@@ -7,10 +7,10 @@ import { DecodeError } from "./DecodeError";
 export type DecodeReturnType<A, _O, I> =
 	| {
 			value: A;
-			error: undefined;
+			error?: never;
 	  }
 	| {
-			value: undefined;
+			value?: never;
 			error: DecodeError<I>;
 	  };
 
@@ -23,14 +23,12 @@ export const decode = <A, O, I>(
 		E.foldW(
 			(errors) => {
 				return {
-					value: undefined,
 					error: new DecodeError({ input, errors }),
 				};
 			},
 			(value) => {
 				return {
 					value,
-					error: undefined,
 				};
 			},
 		),

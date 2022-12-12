@@ -33,6 +33,7 @@ import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import Tracker from "@src/tracking/client";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
+import { SliceMachineManagerClient } from "@slicemachine/core2/client";
 
 const startTimer =
   (startTime = Date.now()) =>
@@ -96,11 +97,15 @@ export function* changesPushSaga({
   yield all(
     unSyncedSlices.map(function* (
       slice
-    ): Generator<unknown, void, Record<string, string | null>> {
-      try {
-        // calling the API to push the Slice
-        const updatedScreenshots = yield call(pushSliceApiClient, slice);
+    ): Generator<
+      unknown,
+      void,
+      Awaited<ReturnType<typeof pushSliceApiClient>>
+    > {
+      // calling the API to push the Slice
+      const res = yield call(pushSliceApiClient, slice);
 
+      if (res.screenshotURLs) {
         // trigger fade out animation
         yield onChangesPushed(slice.model.id);
 
@@ -120,14 +125,14 @@ export function* changesPushSaga({
         yield put(
           pushSliceCreator.success({
             component: slice,
-            updatedScreenshotsUrls: updatedScreenshots,
+            updatedScreenshotsUrls: res.screenshotURLs,
           })
         );
 
         // updating the custom toaster
         alreadySyncedChanges++;
         yield updateSyncToaster(alreadySyncedChanges, totalNumberOfChanges);
-      } catch (e) {
+      } else {
         // close the custom toaster
         yield closeSyncToaster();
 

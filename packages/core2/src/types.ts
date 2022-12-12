@@ -61,3 +61,9 @@ export type OnlyHookErrors<
 		| { errors: HookError[] }
 		| Promise<{ errors: HookError[] }>,
 > = Pick<Awaited<THookResult>, "errors">;
+
+export type S3ACL = {
+	uploadEndpoint: string;
+	requiredFormDataFields: Record<string, string>;
+	imgixEndpoint: string;
+};

@@ -278,10 +278,9 @@ export class SliceMachineInitProcess {
 								});
 							},
 						});
-					} else {
-						parentTask.output = "";
 					}
 
+					parentTask.output = "";
 					parentTask.title = `Logged in`;
 
 					return listr(

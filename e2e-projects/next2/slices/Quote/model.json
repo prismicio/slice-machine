@@ -22,14 +22,11 @@
         },
         "source": {
           "type": "Text",
-          "config": {
-            "label": "Source",
-            "placeholder": "Source of the quote"
-          }
+          "config": { "label": "Source", "placeholder": "Source of the quote" }
         }
       },
       "items": {},
-      "imageUrl": "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format"
+      "imageUrl": "https://images.prismic.io/slicemachine-dev-mule/shared-slices/quote/default/iYzb6BYVE5Ti3wf6VHubF2YUcD4=.png?auto=compress%2Cformat"
     }
   ]
 }

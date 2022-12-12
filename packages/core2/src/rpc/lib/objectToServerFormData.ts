@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-import { FormData, Blob } from "formdata-node";
+import { FormData, Blob } from "node-fetch";
 
 import { flattenObject } from "./flattenObject";
 import { serialize } from "./serialize";

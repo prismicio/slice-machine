@@ -1,6 +1,7 @@
 import { CustomTypes } from "@prismicio/types-internal";
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
-import * as crypto from "node:crypto";
+
+import { createContentDigest } from "../lib/createContentDigest";
 
 import {
 	PackageChangelog,
@@ -14,27 +15,19 @@ import {
 } from "../auth/PrismicAuthManager";
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
-import { CustomTypesManager } from "./_CustomTypesManager";
 import { PluginsManager } from "./_PluginsManager";
-import { ProjectManager } from "./_ProjectManager";
+
+import { AnalyticsManager } from "./_AnalyticsManager";
+import { UserManager } from "./_UserManager";
 import { RepositoryManager } from "./_RepositoryManager";
+import { VersionsManager } from "./_VersionsManager";
+
+import { ProjectManager } from "./_ProjectManager";
+import { CustomTypesManager } from "./_CustomTypesManager";
 import { SlicesManager } from "./_SlicesManager";
 import { SnippetsManager } from "./_SnippetsManager";
-import { UserManager } from "./_UserManager";
-import { VersionsManager } from "./_VersionsManager";
+import { ScreenshotsManager } from "./_ScreenshotsManager";
 import { SimulatorManager } from "./_SimulatorManager";
-import { AnalyticsManager } from "./_AnalyticsManager";
-
-/**
- * Creates a content digest for a given input.
- *
- * @param input - The value used to create a digest digest.
- *
- * @returns The content digest of `input`.
- */
-const toContentDigest = (input: crypto.BinaryLike): string => {
-	return crypto.createHash("sha1").update(input).digest("base64");
-};
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -91,16 +84,19 @@ export class SliceMachineManager {
 		undefined;
 	private _prismicAuthManager: PrismicAuthManager;
 
-	project: ProjectManager;
 	plugins: PluginsManager;
-	slices: SlicesManager;
-	customTypes: CustomTypesManager;
-	snippets: SnippetsManager;
-	simulator: SimulatorManager;
+
+	analytics: AnalyticsManager;
 	user: UserManager;
 	repository: RepositoryManager;
 	versions: VersionsManager;
-	analytics: AnalyticsManager;
+
+	project: ProjectManager;
+	customTypes: CustomTypesManager;
+	slices: SlicesManager;
+	snippets: SnippetsManager;
+	screenshots: ScreenshotsManager;
+	simulator: SimulatorManager;
 
 	constructor() {
 		// _prismicAuthManager must be set at least before UserManager
@@ -108,16 +104,19 @@ export class SliceMachineManager {
 		// authentication-related methods.
 		this._prismicAuthManager = createPrismicAuthManager();
 
-		this.project = new ProjectManager(this);
 		this.plugins = new PluginsManager(this);
-		this.slices = new SlicesManager(this);
-		this.customTypes = new CustomTypesManager(this);
-		this.snippets = new SnippetsManager(this);
-		this.simulator = new SimulatorManager(this);
+
+		this.analytics = new AnalyticsManager(this);
 		this.user = new UserManager(this);
 		this.repository = new RepositoryManager(this);
 		this.versions = new VersionsManager(this);
-		this.analytics = new AnalyticsManager(this);
+
+		this.project = new ProjectManager(this);
+		this.customTypes = new CustomTypesManager(this);
+		this.slices = new SlicesManager(this);
+		this.snippets = new SnippetsManager(this);
+		this.screenshots = new ScreenshotsManager(this);
+		this.simulator = new SimulatorManager(this);
 
 		// Supress a TypeScript warning about an unused property. This
 		// code will be eliminated in production builds via dead-code
@@ -292,7 +291,7 @@ export class SliceMachineManager {
 											if (screenshot.data) {
 												screenshots[variation.id] = {
 													path: "__stub__",
-													hash: toContentDigest(screenshot.data),
+													hash: createContentDigest(screenshot.data),
 													data: screenshot.data,
 												};
 											}

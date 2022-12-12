@@ -11,3 +11,20 @@ export {
 	SimulatorManagerReadSliceSimulatorSetupStep,
 	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
 } from "./managers/_SimulatorManager";
+
+export { SliceMachineManagerPushSliceReturnType } from "./managers/_SlicesManager";
+
+export {
+	InternalError,
+	NotFoundError,
+	SliceMachineError,
+	UnauthenticatedError,
+	UnauthorizedError,
+	UnexpectedDataError,
+	isInternalError,
+	isNotFoundError,
+	isSliceMachineError,
+	isUnauthenticatedError,
+	isUnauthorizedError,
+	isUnexpectedDataError,
+} from "./errors";
