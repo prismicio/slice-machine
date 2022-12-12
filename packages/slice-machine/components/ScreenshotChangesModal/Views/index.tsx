@@ -13,15 +13,10 @@ import { isLoading } from "@src/modules/loading";
 import EmptyState from "./EmptyState";
 import DefaultView from "./Default";
 import { AiOutlineEye } from "react-icons/ai";
-import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
-import IframeRenderer from "@components/Simulator/components/IframeRenderer";
-import { selectSimulatorUrl } from "@src/modules/environment";
-import { useMemo } from "react";
+
 import { Button } from "@components/Button";
-import {
-  ScreenSizeOptions,
-  ScreenSizes,
-} from "@components/Simulator/components/Toolbar/ScreensizeInput";
+import { SIMULATOR_WINDOW_ID } from "@lib/consts";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 
 enum ScreenshotView {
   Default = 1,
@@ -44,22 +39,17 @@ const VariationScreenshot: React.FC<{
   variationID: string;
   slice: ComponentUI;
 }> = ({ variationID, slice }) => {
-  const {
-    isLoadingScreenshot,
-    isWaitingForIframeCheck,
-    simulatorUrl,
-    isCheckingSimulatorSetup,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    isLoadingScreenshot: isLoading(
-      state,
-      LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
-    ),
-    isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
-    simulatorUrl: selectSimulatorUrl(state),
-    isCheckingSimulatorSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
-  }));
-  const { generateSliceCustomScreenshot, checkSimulatorSetup } =
-    useSliceMachineActions();
+  const { isLoadingScreenshot, isSimulatorAvailableForFramework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      isLoadingScreenshot: isLoading(
+        state,
+        LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
+      ),
+      isSimulatorAvailableForFramework:
+        selectIsSimulatorAvailableForFramework(state),
+    })
+  );
+  const { generateSliceCustomScreenshot } = useSliceMachineActions();
   const maybeScreenshot = slice.screenshots[variationID];
 
   const ViewRenderer = maybeScreenshot
@@ -72,43 +62,27 @@ const VariationScreenshot: React.FC<{
     },
   });
 
-  const sliceView = useMemo(
-    () =>
-      slice
-        ? [
-            {
-              sliceID: slice.model.id,
-              variationID: variationID,
-            },
-          ]
-        : null,
-    [slice.model.id, variationID]
-  );
-
-  if (!sliceView) return <></>;
-
   const openSimulator = () =>
-    checkSimulatorSetup(true, () =>
-      window.open(
-        `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
-        slice.model.id
-      )
+    window.open(
+      `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
+      SIMULATOR_WINDOW_ID
     );
 
   return (
     <>
       <Flex sx={{ p: 2, pt: 0, minHeight: "48px" }}>
-        <Button
-          variant="white"
-          sx={{
-            marginRight: 2,
-            px: 2,
-          }}
-          onClick={openSimulator}
-          isLoading={isCheckingSimulatorSetup}
-          Icon={AiOutlineEye}
-          label={"Capture screenshot from Slice Simulator"}
-        />
+        {isSimulatorAvailableForFramework ? (
+          <Button
+            variant="white"
+            sx={{
+              marginRight: 2,
+              px: 2,
+            }}
+            onClick={openSimulator}
+            Icon={AiOutlineEye}
+            label={"Capture screenshot from Slice Simulator"}
+          />
+        ) : null}
         {maybeScreenshot ? (
           <FileInputRenderer {...fileInputProps} isDragActive={false}>
             <>
@@ -130,14 +104,6 @@ const VariationScreenshot: React.FC<{
         screenshot={maybeScreenshot}
         isLoadingScreenshot={isLoadingScreenshot}
       />
-      {isWaitingForIframeCheck && (
-        <IframeRenderer
-          dryRun
-          simulatorUrl={simulatorUrl}
-          sliceView={sliceView}
-          screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
-        />
-      )}
     </>
   );
 };

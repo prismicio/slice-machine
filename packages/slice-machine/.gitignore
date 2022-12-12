@@ -1,8 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Linter cache
-.caches
-
 # dependencies
 /node_modules
 /.pnp
@@ -11,21 +8,37 @@
 # testing
 /coverage
 
+# next.js
+/.next/
+/out/
 
 # production
 /build
-/out
-
-.next
 
 # misc
 .DS_Store
-.env*
+*.pem
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Linter cache
+.caches
 
 conf.json
 
@@ -36,6 +49,8 @@ tests/project/node_modules
 
 /tests/project/.slicemachine
 /tests/project/cypress/videos
+
+/tests/project/.next
 
 # Sentry
 .sentryclirc

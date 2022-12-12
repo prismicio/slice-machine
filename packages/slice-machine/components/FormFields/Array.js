@@ -83,7 +83,6 @@ const FormFieldArray = ({
                         }
                       />
                       <Button
-                        xs
                         ml={2}
                         type="button"
                         variant="secondary"

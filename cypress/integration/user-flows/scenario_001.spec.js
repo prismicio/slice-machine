@@ -20,6 +20,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: false,
       updatesViewed: {},
       hasSeenTutorialsTooTip: false,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
@@ -44,6 +45,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
@@ -67,6 +69,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit(`/cts/${id}`);
     cy.waitUntil(() => cy.get('[data-testid="empty-zone-add-new-field"]'));
@@ -90,7 +93,9 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.get('[data-cy="add-new-field"]').first().click();
     cy.get("[data-cy='Key Text']").click();
 
-    cy.get("[data-cy=new-field-name-input]").clear().type("Key Text Field");
+    cy.get("[data-cy=new-field-name-input]").clear();
+    cy.wait(500);
+    cy.get("[data-cy=new-field-name-input]").type("Key Text Field");
 
     cy.get("[data-cy=new-field-id-input]").should(
       "have.value",
@@ -137,6 +142,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit(`/changes`);
 

@@ -1,0 +1,26 @@
+{
+  "newsletter_title": {
+    "__TYPE__": "FieldContent",
+    "value": "see",
+    "type": "Text"
+  },
+  "newsletter_description": {
+    "__TYPE__": "FieldContent",
+    "value": "slightly",
+    "type": "Text"
+  },
+  "newsletter_button": {
+    "__TYPE__": "FieldContent",
+    "value": "should",
+    "type": "Text"
+  },
+  "copyright": {
+    "__TYPE__": "FieldContent",
+    "value": "stock",
+    "type": "Text"
+  },
+  "body": {
+    "__TYPE__": "SliceContentType",
+    "value": []
+  }
+}

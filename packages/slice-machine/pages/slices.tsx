@@ -32,7 +32,7 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
+  const { openCreateSliceModal, closeModals, createSlice } =
     useSliceMachineActions();
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
@@ -223,7 +223,7 @@ const SlicesIndex: React.FunctionComponent = () => {
           <CreateSliceModal
             isCreatingSlice={isCreatingSlice}
             isOpen={isCreateSliceModalOpen}
-            close={closeCreateSliceModal}
+            close={closeModals}
             libraries={localLibraries}
             remoteSlices={remoteSlices}
             onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}

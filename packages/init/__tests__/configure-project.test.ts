@@ -7,18 +7,15 @@ import {
   beforeEach,
 } from "@jest/globals";
 import { configureProject } from "../src/steps";
-import type { spinner } from "../src/utils/logs";
 import NodeUtils from "@slicemachine/core/build/node-utils";
 import { Models } from "@slicemachine/core";
 import Tracker from "../src/utils/tracker";
 import { ApplicationMode } from "@slicemachine/client";
 import { InitClient } from "../src/utils";
 
-type SpinnerReturnType = ReturnType<typeof spinner>;
-
-const startFn = jest.fn<SpinnerReturnType, string[]>();
-const successFn = jest.fn<SpinnerReturnType, string[]>();
-const failFn = jest.fn<SpinnerReturnType, string[]>();
+const startFn = jest.fn();
+const successFn = jest.fn();
+const failFn = jest.fn();
 
 const client = new InitClient(ApplicationMode.PROD, null, "theBatman");
 
@@ -59,32 +56,21 @@ jest.mock("uuid", () => ({
 
 jest.mock("@slicemachine/core/build/node-utils", () => {
   // fragile test problem... If I change the core now I have to manage the mocks, we could mock the fs or calls to fs and not have to deal with this issue?
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const actualCore = jest.requireActual(
     "@slicemachine/core/build/node-utils"
   ) as typeof NodeUtils;
 
   return {
     ...actualCore,
-    retrieveManifest: jest.fn<
-      NodeUtils.FileContent<Models.Manifest>,
-      [{ cwd: string }]
-    >(),
-    createManifest: jest.fn<
-      void,
-      [{ cwd: string; manifest: Models.Manifest }]
-    >(),
-    patchManifest: jest.fn<
-      boolean,
-      [{ cwd: string; data: Partial<Models.Manifest> }]
-    >(),
-    addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
+    retrieveManifest: jest.fn(),
+    createManifest: jest.fn(),
+    patchManifest: jest.fn(),
+    addJsonPackageSmScript: jest.fn(),
     Files: {
       ...actualCore.Files,
-      exists: jest.fn<boolean, [pathToFile: string]>(),
-      mkdir: jest.fn<
-        string | undefined,
-        [target: string, option: { recursive: boolean }]
-      >(),
+      exists: jest.fn(),
+      mkdir: jest.fn(),
     },
   };
 });

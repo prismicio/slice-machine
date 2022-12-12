@@ -1,7 +1,5 @@
 import cors from "cors";
 
-require("@babel/register");
-
 console.log("\nLaunching server...");
 
 import os from "os";
@@ -10,12 +8,12 @@ import express from "express";
 import bodyParser from "body-parser";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
-import proxy from "express-http-proxy";
 import {
   addSentryPostHandler,
   addSentryPreHandler,
   initSentry,
 } from "./sentry-setup";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 declare let global: {
   appRoot: string;
@@ -46,7 +44,12 @@ app.use("/api", api);
 // For local env (SM), all the requests are forwarded to the next dev server
 // For production, all the requests are forwarded to the next build directory
 if (process.env.ENV === "SM") {
-  app.use(proxy("localhost:3000"));
+  const proxy = createProxyMiddleware({
+    changeOrigin: true,
+    target: "http://localhost:3000",
+    ws: true,
+  });
+  app.use(proxy);
 } else {
   app.use(serveStatic(out));
 }
@@ -65,6 +68,10 @@ app.use("/warnings", (_, res) => {
 
 app.use("/:lib/:sliceName/:variation/simulator", (_, res) => {
   res.sendFile(path.join(out, "[lib]/[sliceName]/[variation]/simulator.html"));
+});
+
+app.use("/:lib/:sliceName/:variation/screenshot", (_, res) => {
+  res.sendFile(path.join(out, "[lib]/[sliceName]/[variation]/screenshot.html"));
 });
 
 app.use("/:lib/:sliceName/:variation", (_, res) => {

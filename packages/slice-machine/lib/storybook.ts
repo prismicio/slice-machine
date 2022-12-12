@@ -1,11 +1,17 @@
 import path from "path";
 import TemplateEngine from "ejs";
-
-import Files from "./utils/files";
+import { getOrElseW } from "fp-ts/Either";
+import Files from "@slicemachine/core/build/node-utils/files";
 import { CustomPaths, GeneratedPaths } from "./models/paths";
 import { Models } from "@slicemachine/core";
-
+import { sliceMockPath } from "@slicemachine/core/build/node-utils/paths";
+import { renderSliceMock } from "@prismicio/mocks";
 import { createStorybookId } from "./utils/str";
+import {
+  Slices,
+  SliceSM,
+  ComponentMocks,
+} from "@slicemachine/core/build/models";
 
 const Paths = {
   nuxtTemplate: (appRoot: string) =>
@@ -42,7 +48,8 @@ export default {
     framework: Models.Frameworks,
     cwd: string,
     libraryName: string,
-    sliceName: string
+    sliceName: string,
+    sliceModel: SliceSM
   ): void {
     if (
       Files.exists(
@@ -52,25 +59,18 @@ export default {
     )
       return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const generatedMocksPath = GeneratedPaths(cwd)
-      .library(libraryName)
-      .slice(sliceName)
-      .mocks();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const customMocksPath = CustomPaths(cwd)
-      .library(libraryName)
-      .slice(sliceName)
-      .mocks();
+    const mocksPath = sliceMockPath(cwd, libraryName, sliceName);
 
-    // the output type should be Mocks but it's not typed yet
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-    const mocks = Files.readFirstOf<any, {}>([
-      customMocksPath,
-      generatedMocksPath,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    ])((value: string) => JSON.parse(value));
-    if (!mocks) {
+    const mocks = Files.readEntity<ComponentMocks>(
+      mocksPath,
+      (payload: unknown) => {
+        return getOrElseW(() => new Error("Invalid SharedSlice mocks"))(
+          ComponentMocks.decode(payload)
+        );
+      }
+    );
+
+    if (!mocks || mocks instanceof Error) {
       console.error(`No mocks available, cannot generate stories`);
       return;
     }
@@ -85,14 +85,16 @@ export default {
 
     const template = Files.readString(templatePath);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
-    const withPascalizedIds = (mocks.value || []).map((m: any) => {
-      // use underscore to prevent invalid variable names
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-      const id = createStorybookId(m.variation || m.name);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    const withPascalizedIds = (mocks || []).map((mock) => {
+      const shareSlice = Slices.fromSM(sliceModel);
+      // TODO: have a codec or type for api format
+      const apiMock = renderSliceMock(shareSlice, mock) as Record<
+        string,
+        unknown
+      >;
+      const id = createStorybookId(mock.variation);
       return {
-        ...m,
+        ...apiMock,
         id,
       };
     });

@@ -2,11 +2,10 @@ import path from "path";
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/lib/Either";
 
-import { Screenshot, ComponentInfo } from "../models";
+import { Screenshot, ComponentInfo, ComponentMocks } from "../models";
 
 import { resolvePathsToScreenshot } from "./screenshot";
 import Files from "../node-utils/files";
-import { resolvePathsToMock } from "./mocks";
 import { Slices, VariationSM } from "../models/Slice";
 
 import Errors from "../utils/errors";
@@ -72,19 +71,6 @@ function splitExtension(str: string): {
   };
 }
 
-function fromJsonFile<T>(
-  pathToFile: string,
-  validate: (payload: unknown) => Error | T
-): T | Error | null {
-  const fullPath = path.join(pathToFile);
-  const hasFile = Files.exists(fullPath);
-
-  if (hasFile) {
-    return Files.readEntity(fullPath, validate);
-  }
-  return null;
-}
-
 /** returns component file/directory info */
 function getFileInfoFromPath(
   slicePath: string,
@@ -113,6 +99,7 @@ function getFileInfoFromPath(
 export function getComponentInfo(
   slicePath: string,
   assetsPaths: ReadonlyArray<string>,
+  basePath: string,
   from: string
 ): ComponentInfo | undefined {
   const sliceName = getComponentName(slicePath);
@@ -138,10 +125,12 @@ export function getComponentInfo(
 
   const { fileName, extension } = fileInfo;
 
-  const model = fromJsonFile(path.join(slicePath, "model.json"), (payload) =>
-    getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
-      SharedSlice.decode(payload)
-    )
+  const model = Files.readEntityFromFile(
+    path.join(slicePath, "model.json"),
+    (payload) =>
+      getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
+        SharedSlice.decode(payload)
+      )
   );
   if (!model) {
     return;
@@ -177,17 +166,24 @@ export function getComponentInfo(
     );
 
   /* This illustrates the requirement for apps to pass paths to mocks */
-  const maybeMock = resolvePathsToMock({
-    paths: assetsPaths,
-    from,
-    sliceName,
-  });
+  const mocks = (() => {
+    const resolvedMocks = Files.readEntityFromFile<ComponentMocks>(
+      path.join(basePath, from, sliceName, "mocks.json"),
+      (payload: unknown) => {
+        return getOrElseW(() => new Error("Invalid SharedSlice mocks"))(
+          ComponentMocks.decode(payload)
+        );
+      }
+    );
+    if (resolvedMocks instanceof Error) return;
+    return resolvedMocks;
+  })();
 
   return {
     fileName,
     extension,
     model: smModel,
-    mock: maybeMock?.value,
+    mock: mocks,
     screenshots,
   };
 }

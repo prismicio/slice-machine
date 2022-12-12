@@ -1,18 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require("path");
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const withPlugins = require("next-compose-plugins");
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const withCustomBabelConfigFile = require("next-plugin-custom-babel-config");
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const withVideos = require("next-videos");
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const { withSentryConfig } = require("@sentry/nextjs");
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const NodeUtils = require("@slicemachine/core/build/node-utils");
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const semver = require("semver");
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const pkg = NodeUtils.retrieveJsonPackage(path.resolve(__dirname));
 
 /**
@@ -24,12 +16,12 @@ const RELEASE_NUMBER = pkg.content.version;
 const isStableVersion =
   /^\d+\.\d+\.\d+$/.test(RELEASE_NUMBER) && semver.lte("0.1.0", RELEASE_NUMBER);
 
-const nextConfig = {
-  distDir: "./build/client",
-  // generateBuildId: () => {
-  //   // This controls the release number for Sentry
-  //   return RELEASE_NUMBER;
-  // },
+/**
+ * @type {import('next').NextConfig}
+ */
+let nextConfig = {
+  distDir: "build/client",
+  swcMinify: true,
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
     // for client-side builds. (This will be the default starting in
@@ -54,45 +46,6 @@ const nextConfig = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-let exportedConfig = withPlugins(
-  [
-    [
-      withCustomBabelConfigFile,
-      {
-        babelConfigFile: path.resolve("./babel.next.config.js"),
-        webpack5: false,
-        env: {
-          // overridden by start script
-          CWD: path.resolve("./tests/project"),
-        },
-        webpack: (config, { isServer }) => {
-          if (!isServer) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            config.node = { fs: "empty", child_process: "empty" };
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-          config.module.rules.push({
-            test: /\.svg$/,
-            issuer: {
-              test: /\.(js|ts)x?$/,
-            },
-            use: ["@svgr/webpack"],
-          });
-
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          return config;
-        },
-      },
-    ],
-    withVideos,
-  ],
-  nextConfig
-);
-
-// The Sentry plugin does not work with next-compose-plugins
-// The main config is not passed / handled
-// It must be initialised separately
 if (process.env.NODE_ENV !== "development") {
   if (!process.env.SENTRY_AUTH_TOKEN) {
     console.warn("⚠️ Creating a production build with no Sentry config");
@@ -121,9 +74,8 @@ if (process.env.NODE_ENV !== "development") {
       configFile: "sentry-next.properties",
     };
 
-    exportedConfig = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+    nextConfig = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-module.exports = exportedConfig;
+module.exports = nextConfig;

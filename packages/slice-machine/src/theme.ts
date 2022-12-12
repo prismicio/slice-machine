@@ -15,6 +15,10 @@ const AppTheme = (): Theme =>
       primary: "#5D40F7",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
+      purpleStrong: "#5842C3",
+      whiteButtonText: "#1A1523",
+      codeBlockBackground: "#32275F",
+      failedConnectText: "#86848D",
       changesWarning: {
         background: "#FFECC7",
         color: "#5C0C17",
@@ -68,7 +72,7 @@ const AppTheme = (): Theme =>
       warning: "#E67E22",
       warning02: "#ED811C",
       sidebar: "#F1F1F4",
-      link: "#5163BA",
+      link: "#6E56CF",
       choggleBox: "#5163BA",
       darkBorder: "#DCDBDD",
       code: {
@@ -346,6 +350,9 @@ const AppTheme = (): Theme =>
         "&:disabled": {
           cursor: "not-allowed",
           color: alpha("textClear", 0.6),
+        },
+        "&>svg": {
+          pointerEvents: "none",
         },
       },
       small: {
@@ -648,6 +655,9 @@ const AppTheme = (): Theme =>
         cursor: "pointer",
         display: "inline-block",
       },
+      default: {
+        color: "link",
+      },
       invisible: {
         color: "text",
         textDecoration: "none",
@@ -765,8 +775,8 @@ const AppTheme = (): Theme =>
       },
       inlineCode: {
         fontFamily: "monospace",
-        color: "error",
-        bg: "muted",
+        color: "#6E56CF",
+        bg: "#F1EEFE",
       },
       table: {
         width: "100%",

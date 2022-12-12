@@ -1,9 +1,12 @@
 import "@testing-library/jest-dom";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SliceSM, SliceMock } from "@slicemachine/core/build/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
+// import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
+import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
+import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
 
 jest.mock("lorem-ipsum", () => {
   return {
@@ -16,18 +19,48 @@ jest.mock("lorem-ipsum", () => {
   };
 });
 
+jest.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
+  return jest.fn().mockReturnValue("Woo");
+});
+
 describe("MockSlice", () => {
+  test("parse primary", () => {
+    const link = {
+      "link-2": {
+        __TYPE__: "LinkContent",
+        value: { url: "http://twitter.com", __TYPE__: "ExternalLink" },
+      },
+    };
+    const linkR = LinkContent.decode(link["link-2"].value);
+    expect(isRight(linkR)).toBeTruthy();
+
+    const geo = {
+      key: {
+        // __TYPE__: GeoPointContentType,
+        position: { lat: 48.8583736, lng: 2.2922926 },
+      },
+    };
+    const geoR = GeoPointContent.decode(geo.key);
+
+    expect(isRight(geoR)).toBeTruthy();
+  });
+
   test("when creating a slice it should return the default mock", () => {
     const wanted = [
       {
+        __TYPE__: "SharedSliceContent",
         variation: "default",
-        slice_type: "some_slice",
-        items: [],
         primary: {
-          title: [{ type: "heading1", text: "RANDOM_VALUE", spans: [] }],
-          description: [{ type: "paragraph", text: "Some text.", spans: [] }],
+          title: {
+            __TYPE__: "StructuredTextContent",
+            value: [{ type: "heading1", content: { text: "Woo" } }],
+          },
+          description: {
+            __TYPE__: "StructuredTextContent",
+            value: [{ type: "paragraph", content: { text: "Some text." } }],
+          },
         },
-        version: "sktwi1xtmkfgx8626",
+        items: [],
       },
     ];
 
@@ -73,34 +106,45 @@ describe("MockSlice", () => {
 
     const mockConfig = {};
 
-    const result = MockSlice(model, mockConfig);
-
-    // override the randomly generated value since we cannot mock it
-    // @ts-expect-error `result` is typed as unknown[]
-    result[0].primary.title[0].text = "RANDOM_VALUE";
+    const result = MockSlice(Slices.fromSM(model), mockConfig);
 
     expect(result).toEqual(wanted);
-    expect(isRight(SliceMock.decode(result))).toBeTruthy();
+    // TODO: check the codec we use for SharedSliceContent[]
+    // const decoded = SliceMock.decode(result);
+    // expect(isRight(decoded)).toBeTruthy();
     // needs to be readable by core/mocks/models SliceMock
   });
 
   test("when updating a mock with config", () => {
     const wanted = [
       {
+        __TYPE__: "SharedSliceContent",
         variation: "default",
-        slice_type: "some_slice",
-        items: [{}],
         primary: {
-          title: [{ type: "heading1", text: "RANDOM_VALUE", spans: [] }],
-          description: [{ type: "paragraph", text: "Some text.", spans: [] }],
+          title: {
+            __TYPE__: "StructuredTextContent",
+            value: [{ type: "heading1", content: { text: "Woo" } }],
+          },
+          description: {
+            __TYPE__: "StructuredTextContent",
+            value: [{ type: "paragraph", content: { text: "Some text." } }],
+          },
           image: {
-            dimensions: { width: 900, height: 500 },
-            alt: null,
-            copyright: null,
-            url: "https://images.unsplash.com/photo-1555169062-013468b47731",
+            __TYPE__: "ImageContent",
+            url: "https://images.unsplash.com/photo-1555169062-013468b47731?fit=crop&w=900&h=500",
+            origin: {
+              id: "main",
+              url: "https://images.unsplash.com/photo-1555169062-013468b47731",
+              width: 900,
+              height: 500,
+            },
+            width: 900,
+            height: 500,
+            edit: { zoom: 1, crop: { x: 0, y: 0 }, background: "transparent" },
+            thumbnails: {},
           },
         },
-        version: "sktwi1xtmkfgx8626",
+        items: [{ __TYPE__: "GroupItemContent", value: [] }],
       },
     ];
 
@@ -163,13 +207,19 @@ describe("MockSlice", () => {
       },
     };
 
-    const result = MockSlice(model, mockConfig);
-
-    // override the randomly generated value since we cannot mock it
-    // @ts-expect-error `result` is typed as unknown[]
-    result[0].primary.title[0].text = "RANDOM_VALUE";
-
+    const result = MockSlice(Slices.fromSM(model), mockConfig);
     expect(result).toEqual(wanted);
-    expect(isRight(SliceMock.decode(result))).toBeTruthy();
+    // TODO: check with the mock reader that this is valid
+    // const decoded = SliceMock.decode(result);
+    // expect(isRight(decoded)).toBeTruthy();
   });
+
+  // change slice mock to the codec for SharedSliceContent[]
+  // test.skip("allFieldSliceModel", () => {
+  //   const model = Slices.toSM({ ...allFieldSliceModel });
+  //   const mock = MockSlice(model, {});
+  //
+  //   const result = SliceMock.decode(mock);
+  //   expect(isRight(result)).toBeTruthy();
+  // });
 });

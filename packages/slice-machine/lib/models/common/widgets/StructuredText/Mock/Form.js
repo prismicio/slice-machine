@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Label, Box, useThemeUI } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { useFormikContext } from "formik";
@@ -92,7 +92,7 @@ const Form = () => {
   const configValues = values[MockConfigKey]?.config || {};
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const {
       mockConfig: {
         config: { patternType },
@@ -101,7 +101,7 @@ const Form = () => {
     if (
       patternType &&
       patternType !== patternTypeCheck &&
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       !Patterns[patternType].test(options)
     ) {
       onUpdate({
@@ -112,19 +112,22 @@ const Form = () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setPatternTypeCheck(patternType);
     }
-  });
+  }, [values, patternTypeCheck, onUpdate]);
 
-  const onUpdate = ({ updateType, key, value }) => {
-    setFieldValue(MockConfigKey, {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      [updateType]: {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-        ...(values[MockConfigKey]?.[updateType] || {}),
+  const onUpdate = useCallback(
+    ({ updateType, key, value }) => {
+      setFieldValue(MockConfigKey, {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        [key]: value,
-      },
-    });
-  };
+        [updateType]: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+          ...(values[MockConfigKey]?.[updateType] || {}),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          [key]: value,
+        },
+      });
+    },
+    [values, setFieldValue]
+  );
 
   const onSetPattern = (value, isPattern) => {
     onUpdate({

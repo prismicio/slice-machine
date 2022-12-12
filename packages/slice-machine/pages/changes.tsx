@@ -19,7 +19,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SyncError } from "@src/models/SyncError";
 
-const changes: React.FunctionComponent = () => {
+const Changes: React.FunctionComponent = () => {
   const {
     unSyncedSlices,
     unSyncedCustomTypes,
@@ -27,7 +27,7 @@ const changes: React.FunctionComponent = () => {
     authStatus,
     isOnline,
   } = useUnSyncChanges();
-  const { pushChanges, closeScreenshotsModal } = useSliceMachineActions();
+  const { pushChanges, closeModals } = useSliceMachineActions();
 
   const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
     isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
@@ -35,7 +35,7 @@ const changes: React.FunctionComponent = () => {
 
   useEffect(() => {
     return () => {
-      closeScreenshotsModal();
+      closeModals();
     };
   }, []);
 
@@ -126,4 +126,4 @@ const changes: React.FunctionComponent = () => {
   );
 };
 
-export default changes;
+export default Changes;

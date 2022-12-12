@@ -1,21 +1,32 @@
 module.exports = {
   clearMocks: true,
   collectCoverage: true,
-  coverageDirectory: "coverage",
-  globals: {
-    appRoot: "..",
-  },
+  globals: { appRoot: ".." },
   moduleNameMapper: {
-    "^lib(.*)$": "<rootDir>/lib$1",
-    "^src(.*)$": "<rootDir>/src$1",
-    "^tests(.*)$": "<rootDir>/tests$1",
-    "^components(.*)$": "<rootDir>/components$1",
+    "^@builders/(.*)$": "<rootDir>/lib/builders/$1",
+    "^@components/(.*)$": "<rootDir>/components/$1",
+    "^@lib/(.*)$": "<rootDir>/lib/$1",
+    "^@models/(.*)$": "<rootDir>/lib/models/$1",
+    "^@src/(.*)$": "<rootDir>/src/$1",
+    "^@tests/(.*)$": "<rootDir>/tests/$1",
+    "^@utils/(.*)$": "<rootDir>/lib/utils/$1",
+    "^components/(.*)$": "<rootDir>/components/$1",
+    "^lib/(.*)$": "<rootDir>/lib/$1",
+    "^tests/(.*)$": "<rootDir>/tests/$1",
   },
+  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
   transform: {
-    "\\.(js|ts|jsx|tsx)$": [
+    "^.+\\.(js|jsx|ts|tsx)$": [
       "babel-jest",
-      { configFile: "./babel.next.config.js" },
+      {
+        presets: ["next/babel"],
+        plugins: ["@babel/plugin-proposal-private-methods"],
+      },
     ],
   },
-  testPathIgnorePatterns: ["node_modules", "cypress"],
+  transformIgnorePatterns: [
+    "/node_modules/(?!connected-next-router/es)/",
+    "/packages/client/",
+    "/packages/core/",
+  ],
 };

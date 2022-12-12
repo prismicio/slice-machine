@@ -112,10 +112,13 @@ const variationSetter = (
   defaultVariationSelector: SliceVariationSelector | undefined,
   slices: ComponentUI[]
 ) =>
-  defaultVariationSelector || {
-    sliceID: slices[0].model.id,
-    variationID: slices[0].model.variations[0].id,
-  };
+  defaultVariationSelector ||
+  (slices.length
+    ? {
+        sliceID: slices[0].model.id,
+        variationID: slices[0].model.variations[0].id,
+      }
+    : undefined);
 
 const ScreenshotChangesModal = ({
   slices,
@@ -124,28 +127,27 @@ const ScreenshotChangesModal = ({
   slices: ComponentUI[];
   defaultVariationSelector?: SliceVariationSelector;
 }) => {
-  if (slices.length === 0) return null;
-
-  const { closeScreenshotsModal } = useSliceMachineActions();
+  const { closeModals } = useSliceMachineActions();
 
   const { isOpen } = useSelector((store: SliceMachineStoreType) => ({
     isOpen: isModalOpen(store, ModalKeysEnum.SCREENSHOTS),
   }));
 
-  const [variationSelector, setVariationSelector] =
-    useState<SliceVariationSelector>(
-      variationSetter(defaultVariationSelector, slices)
-    );
+  const [variationSelector, setVariationSelector] = useState(
+    variationSetter(defaultVariationSelector, slices)
+  );
 
   useEffect(() => {
     setVariationSelector(variationSetter(defaultVariationSelector, slices));
   }, [defaultVariationSelector, isOpen]);
 
+  if (slices.length === 0 || !variationSelector) return null;
+
   return (
     <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      onRequestClose={() => closeScreenshotsModal()}
+      onRequestClose={() => closeModals()}
     >
       <Card
         radius={"0px"}
@@ -163,7 +165,7 @@ const ScreenshotChangesModal = ({
             }}
           >
             <Heading sx={{ fontSize: "20px" }}>Slice screenshots</Heading>
-            <Close type="button" onClick={() => closeScreenshotsModal()} />
+            <Close type="button" onClick={() => closeModals()} />
           </Flex>
         )}
         Footer={null}

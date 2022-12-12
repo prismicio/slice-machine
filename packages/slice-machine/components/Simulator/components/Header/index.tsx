@@ -1,72 +1,61 @@
-import { Box, Text, Flex } from "theme-ui";
+import router from "next/router";
+import { Text, Flex, Switch, Label } from "theme-ui";
+
+import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
 import * as Models from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import { useMemo } from "react";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { useSelector } from "react-redux";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
+
 import { Button } from "@components/Button";
-import { AiFillCamera } from "react-icons/ai";
 import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { useSelector } from "react-redux";
+import { selectSavingMock } from "@src/modules/simulator";
+
+import * as Links from "@lib/builders/SliceBuilder/links";
+import { SliceMachineStoreType } from "@src/redux/type";
+
+const redirect = (
+  model: ComponentUI,
+  variation: { id: string } | undefined,
+  isSimulator?: boolean
+): void => {
+  if (!variation) {
+    void router.push(`/${model.href}/${model.model.name}`);
+    return;
+  }
+  const params = Links.variation({
+    lib: model.href,
+    sliceName: model.model.name,
+    variationId: variation?.id,
+    isSimulator,
+  });
+  void router.push(params.href, params.as, params.options);
+};
 
 type PropTypes = {
-  Model: ComponentUI;
+  slice: ComponentUI;
   variation: Models.VariationSM;
-  screenDimensions: ScreenDimensions;
+  isDisplayEditor: boolean;
+  toggleIsDisplayEditor: () => void;
+  onSaveMock: () => void;
+  actionsDisabled: boolean;
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
-  Model,
+  slice,
   variation,
-  screenDimensions,
+  isDisplayEditor,
+  toggleIsDisplayEditor,
+  onSaveMock,
+  actionsDisabled,
 }) => {
-  const { generateSliceScreenshot } = useSliceMachineActions();
-
-  const onTakingSliceScreenshot = () => {
-    generateSliceScreenshot(
-      variation.id,
-      Model,
-      {
-        width: screenDimensions.width,
-        height: screenDimensions.height,
-      },
-      "fromSimulator"
-    );
-  };
-
-  const { isSavingScreenshot } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isSavingScreenshot: isLoading(
-        store,
-        LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
-      ),
-    })
-  );
-
-  const sliceView = useMemo(
-    () =>
-      Model && variation
-        ? [
-            {
-              sliceID: Model.model.id,
-              variationID: variation.id,
-            },
-          ]
-        : null,
-    [Model.model.id, variation?.id]
-  );
-
-  if (!sliceView) return null;
-
+  const { savingMock } = useSelector((state: SliceMachineStoreType) => ({
+    savingMock: selectSavingMock(state),
+  }));
   return (
-    <Box
+    <Flex
       sx={{
         p: 3,
         display: "flex",
-        gridTemplateColumns: "repeat(3, 1fr)",
         gridTemplateRows: "1fr",
         borderBottom: "1px solid #F1F1F1",
         justifyContent: "space-between",
@@ -78,15 +67,34 @@ const Header: React.FunctionComponent<PropTypes> = ({
         }}
       >
         <SliceMachineLogo height={"20px"} width={"20px"} />
-        <Text mx={2}>{Model.model.name}</Text>
+        <Text sx={{ mx: 2 }}>{slice.model.name}</Text>
+        <VarationsPopover
+          defaultValue={variation}
+          variations={slice.model.variations}
+          onChange={(v) => redirect(slice, v, true)}
+          disabled={slice.model.variations.length <= 1 || actionsDisabled}
+        />
       </Flex>
-      <Button
-        onClick={onTakingSliceScreenshot}
-        label="Take a screenshot"
-        isLoading={isSavingScreenshot}
-        Icon={AiFillCamera}
-      />
-    </Box>
+      <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
+        <Flex sx={{ alignItems: "center", justifyContent: "space-around" }}>
+          <Flex sx={{ alignItems: "center", mr: 4 }}>
+            <Label htmlFor="show-mock-editor">Editor</Label>
+            <Switch
+              id="show-mock-editor"
+              checked={isDisplayEditor}
+              onChange={toggleIsDisplayEditor}
+              disabled={actionsDisabled}
+            />
+          </Flex>
+        </Flex>
+        <Button
+          data-cy="save-mock"
+          onClick={onSaveMock}
+          label="Save mock content"
+          disabled={savingMock}
+        />
+      </Flex>
+    </Flex>
   );
 };
 

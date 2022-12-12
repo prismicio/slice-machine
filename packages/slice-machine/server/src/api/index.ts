@@ -10,6 +10,7 @@ import { handler as pushSlice } from "./slices/push";
 import saveSlice from "./slices/save";
 import { renameSlice } from "./slices/rename";
 import createSlice from "./slices/create/index";
+import saveSliceMock from "./slices/save-mock";
 import screenshot from "./screenshots/screenshots";
 import customScreenshot from "./screenshots/custom-screenshots";
 import parseOembed from "./parse-oembed";
@@ -181,6 +182,13 @@ router.put(
   })
 );
 
+router.post(
+  "/slices/mock",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
+  WithEnv(async function (req: RequestWithEnv, res: express.Response) {
+    return saveSliceMock(req, res);
+  })
+);
 /** Custom Type Routing **/
 
 router.post(

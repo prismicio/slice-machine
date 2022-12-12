@@ -9,12 +9,10 @@ import {
   skipReviewCreator,
   updatesViewedCreator,
   hasSeenTutorialsTooTipCreator,
+  hasSeenSimulatorToolTipCreator,
 } from "./userContext";
 import { refreshStateCreator } from "./environment";
 import {
-  openSetupDrawerCreator,
-  closeSetupDrawerCreator,
-  toggleSetupDrawerStepCreator,
   checkSimulatorSetupCreator,
   connectToSimulatorIframeCreator,
 } from "./simulator";
@@ -81,56 +79,42 @@ import { SyncError } from "@src/models/SyncError";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
+import { saveSliceMockCreator } from "./simulator";
+import { SaveSliceMockRequest } from "@src/apiClient";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
 
-  // Simulator module
-  const checkSimulatorSetup = (
-    withFirstVisitCheck: boolean,
-    callback?: () => void
-  ) =>
-    dispatch(
-      checkSimulatorSetupCreator.request({ withFirstVisitCheck, callback })
-    );
-  const openSetupDrawer = () => dispatch(openSetupDrawerCreator({}));
-  const closeSetupDrawer = () => dispatch(closeSetupDrawerCreator());
+  const checkSimulatorSetup = (callback?: () => void) =>
+    dispatch(checkSimulatorSetupCreator.request({ callback }));
+
+  const connectToSimulatorIframe = () =>
+    dispatch(connectToSimulatorIframeCreator.request());
   const connectToSimulatorFailure = () =>
     dispatch(connectToSimulatorIframeCreator.failure());
   const connectToSimulatorSuccess = () =>
     dispatch(connectToSimulatorIframeCreator.success());
-  const toggleSetupDrawerStep = (stepNumber: number) =>
-    dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
   // Modal module
-  const closeLoginModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeModals = () => {
+    dispatch(modalCloseCreator());
+  };
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-  const closeScreenshotsModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const openScreenshotsModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
-  const closeCreateSliceModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openCreateSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-  const closeRenameSliceModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const openRenameSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
-  const closeCreateCustomTypeModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  const closeRenameCustomTypeModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openRenameCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-  const closeScreenshotPreviewModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
+  const openSimulatorSetupModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -148,6 +132,8 @@ const useSliceMachineActions = () => {
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
+  const setSeenSimulatorToolTip = () =>
+    dispatch(hasSeenSimulatorToolTipCreator());
   const setSeenTutorialsToolTip = () =>
     dispatch(hasSeenTutorialsTooTipCreator());
 
@@ -488,6 +474,10 @@ const useSliceMachineActions = () => {
     type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
   ) => dispatch(openToasterCreator({ message, type }));
 
+  // Simulator
+  const saveSliceMock = (payload: SaveSliceMockRequest) =>
+    dispatch(saveSliceMockCreator.request(payload));
+
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {
     dispatch(
@@ -506,15 +496,11 @@ const useSliceMachineActions = () => {
     checkSimulatorSetup,
     connectToSimulatorFailure,
     connectToSimulatorSuccess,
-    toggleSetupDrawerStep,
-    closeSetupDrawer,
-    openSetupDrawer,
+    connectToSimulatorIframe,
     refreshState,
     finishOnboarding,
-    closeScreenshotsModal,
     openScreenshotsModal,
     openLoginModal,
-    closeLoginModal,
     startLoadingLogin,
     stopLoadingLogin,
     stopLoadingReview,
@@ -560,18 +546,17 @@ const useSliceMachineActions = () => {
     skipReview,
     setUpdatesViewed,
     setSeenTutorialsToolTip,
-    closeCreateCustomTypeModal,
+    setSeenSimulatorToolTip,
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
-    closeRenameCustomTypeModal,
     openScreenshotPreviewModal,
-    closeScreenshotPreviewModal,
+    openSimulatorSetupModal,
     openCreateSliceModal,
-    closeCreateSliceModal,
     openRenameSliceModal,
-    closeRenameSliceModal,
+    closeModals,
     openToaster,
     pushChanges,
+    saveSliceMock,
   };
 };
 
