@@ -9,7 +9,7 @@
     "postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
-    "build:essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
+    "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
     "start:slice-machine": "npm run start --prefix packages/slice-machine",
     "audit": "lerna run audit",
     "lint": "lerna run lint",
