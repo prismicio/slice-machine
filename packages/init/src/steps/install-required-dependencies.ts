@@ -3,6 +3,8 @@ import { execCommand, logs } from "../utils";
 import { CONSTS, Models } from "@slicemachine/core";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
+import semver from "semver";
+
 const {
   PRISMIC_CLIENT,
   PRISMIC_DOM_PACKAGE_NAME,
@@ -18,7 +20,11 @@ const {
 } = CONSTS;
 
 function nextDeps(version: string | undefined): string {
-  if (version && version > "13") {
+  if (!version) return "";
+  const parsedVersion = semver.coerce(version);
+  if (parsedVersion === null) return "";
+
+  if (semver.satisfies(parsedVersion, ">=13.0.0")) {
     return PRISMIC_NEXT;
   }
 

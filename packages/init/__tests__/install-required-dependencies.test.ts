@@ -127,7 +127,7 @@ describe("install required dependency", () => {
     );
   });
 
-  test("when using next it should install next deps and next-slicezone", async () => {
+  test("when using next it should install next deps", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
