@@ -96,7 +96,7 @@ describe("Create Slices", () => {
       });
     });
 
-    cy.get("[data-testid=open-set-up-simulator]").click();
+    cy.get("[data-testid=simulator-open-button]").click();
 
     cy.get("[contenteditable]").first().clear().type("👋");
 
