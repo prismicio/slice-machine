@@ -9,6 +9,7 @@ import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { selectCustomTypeById } from "../../src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useEffect } from "react";
+import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomTypeSM;
@@ -48,7 +49,7 @@ const CustomTypeBuilderWithRouter = () => {
     })
   );
 
-  if (!selectedCustomType || !selectedCustomType.local) {
+  if (!selectedCustomType || !isLocalCustomType(selectedCustomType)) {
     void router.replace("/");
     return null;
   }

@@ -1,9 +1,12 @@
 import { Reducer } from "redux";
 import {
   AvailableCustomTypesStoreType,
+  DeletedFrontEndCustomType,
   FrontEndCustomType,
   isDeletedCustomType,
   isNewCustomType,
+  isSyncedCustomType,
+  NewCustomType,
 } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -208,23 +211,48 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(deleteCustomTypeCreator.success): {
-      return omit(state, action.payload.customTypeId);
+      const ct = state[action.payload.customTypeId];
+      if (isSyncedCustomType(ct)) {
+        const deletedCT: DeletedFrontEndCustomType = omit(ct, "local");
+        return {
+          ...state,
+          [ct.local.id]: deletedCT,
+        };
+      }
+      if (isNewCustomType(ct)) {
+        return omit(state, action.payload.customTypeId);
+      }
+
+      return state;
     }
 
     case getType(deleteSliceCreator.success): {
       const sliceId = action.payload.sliceId;
-      const newCTs = Object.entries(state)
+      const newCTs: AvailableCustomTypesStoreType = Object.entries(state)
         .map<[string, FrontEndCustomType]>(([ctName, customType]) => {
-          const newCT = isNewCustomType(customType)
-            ? {
-                local: filterSliceFromCustomType(customType.local, sliceId),
-              }
-            : {
+          if (isNewCustomType(customType)) {
+            const newCT: NewCustomType = {
+              local: filterSliceFromCustomType(customType.local, sliceId),
+            };
+            return [ctName, newCT];
+          }
+          if (isSyncedCustomType(customType)) {
+            return [
+              ctName,
+              {
                 local: filterSliceFromCustomType(customType.local, sliceId),
                 remote: customType.remote,
-              };
+              },
+            ];
+          }
 
-          return [ctName, newCT];
+          return [
+            ctName,
+            {
+              local: undefined,
+              remote: customType.remote,
+            },
+          ];
         })
         .reduce<AvailableCustomTypesStoreType>((acc, [name, ct]) => {
           return {
