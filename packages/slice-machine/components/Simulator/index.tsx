@@ -299,7 +299,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                 transition: "visibility 0s linear",
               }}
             >
-              <ThemeProvider>
+              <ThemeProvider mode="light">
                 <SharedSliceEditor
                   content={editorContent}
                   onContentChange={(c) => {
