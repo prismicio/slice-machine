@@ -1,22 +1,24 @@
 # Concepts
 
-RPCs require two pieces: a server and a client. Procedures, a fancy name for functions, are called in the client and run on the server.
+RPCs require two pieces: a server and a client. Procedures, functions with some requirements, are called in the client and run on the server.
 
-Because all procedures run on a server, you are no longer limited by what non-server environments like browser support. File system I/O, communication with private APIs, and computationally heavy tasks can now be called directly from frontends.
+Because all procedures run on a server, they are not limited by what non-server environments like browsers support. File system access, communication with private APIs, and computationally expensive tasks can be called directly from clients.
 
 ## Procedures
 
 Procedures are functions that run on a server. They can be synchronous or asynchronous, accept arguments, and return values.
 
-Because procedures are called in a client but run on a server, data must be serialized while in transit. This behavior introduces some limitations, such as not supporting functions or classes, but most JavaScript data is supported. See [Limitations](./04-limitations.md) for more details.
+Because procedures are called in a client but run on a server, data must be serialized while in transit. This behavior introduces [some limitations](./05-limitations.md), such as not supporting functions or classes, but most JavaScript data is supported.
+
+See [Procedures](./02-procedures.md) for more details.
 
 ## Server
 
 The server runs your procedure calls. It communicates with the client over HTTP using a single endpoint.
 
-Since `@slicemachine/rpc` produces an Express middleware, any Express-compatible server can be used.
+`@slicemachine/rpc` procudes an Express middleware which can be provided to any Express-compatible server.
 
-The server does not perform any runtime type checking of arguments. Instead, it assumes you are type checking your project with TypeScript. The types of your procedures are provided to the client to ensure procedure calls are provided with the correct arguments and expect the correct return types.
+The server does not perform any runtime type checking of arguments. Instead, it assumes you are type checking your project with TypeScript. Your procedures' argument and return types are provided to the client to ensure procedure calls are provided with the correct arguments and expect the correct return types.
 
 See [Server](./02-server.md) for more details.
 
