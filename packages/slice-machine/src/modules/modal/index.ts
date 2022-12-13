@@ -4,14 +4,8 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { ModalStoreType, ModalKeysEnum } from "./types";
 
-// TODO: Remove default true when transactional push is implemented
 const initialState: ModalStoreType = {
-  ...(mapValues(ModalKeysEnum, (value) =>
-    [
-      ModalKeysEnum.DELETE_DOCUMENTS_DRAWER,
-      ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
-    ].includes(value)
-  ) as Record<ModalKeysEnum, boolean>),
+  ...(mapValues(ModalKeysEnum, () => false) as Record<ModalKeysEnum, boolean>),
 };
 
 // Actions Creators

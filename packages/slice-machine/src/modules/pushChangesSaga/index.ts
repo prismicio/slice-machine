@@ -89,9 +89,21 @@ export function* changesPushSaga({
       missingScreenshots,
     });
 
-  yield put(
-    modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER })
-  );
+  // TODO: remove when transactional push is implemented
+  if (
+    unSyncedCustomTypes.some((customType) =>
+      customType.label?.startsWith("Drawer")
+    )
+  ) {
+    yield put(
+      modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER })
+    );
+    yield put(
+      modalOpenCreator({
+        modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+      })
+    );
+  }
 
   // Open the custom toaster
   yield openSyncToaster(alreadySyncedChanges, totalNumberOfChanges);
