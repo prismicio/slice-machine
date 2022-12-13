@@ -81,122 +81,7 @@ npm install @slicemachine/rpc
 
 ## Documentation
 
-To discover what's new on this package check out [the changelog][changelog].
-
-### Concepts
-
-RPCs require two pieces: a server and a client. Procedures, a fancy name for functions, are called in the client and run on the server.
-
-Because all procedures run on a server, you are no longer limited by what non-server environments like browser support. File system I/O, communication with private APIs, and computationally heavy tasks can now be called directly from frontends.
-
-### Setting up procedures on the server
-
-An HTTP server is required to use RPCs; it is the "remote" in "remote procedure calls". `@slicemachine/rpc` supports any server that accepts Express middleware, such as [Express][express], [Fastify][fastify], or [h3][h3].
-
-Use `createRPCMiddleware()` to create an Express middleware that handles RPC requests. The middleware contains code to run your procedures as well as the TypeScript types to type your client.
-
-The following example creates an RPC middleware with a `ping()` procedure. The procedure waits 1000 milliseconds before returning `"pong"`.
-
-```typescript
-import { createRPCMiddleware, ExtractProcedures } from "@slicemachine/rpc";
-
-export const middleware = createRPCMiddleware({
-	procedures: {
-		async ping() {
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-
-			return "pong";
-		},
-	},
-});
-
-// This type will be passed to the RPC client.
-export type Procedures = ExtractProcedures<typeof middleware>;
-```
-
-The exported `Procedures` type will be provided to the client to get full compile time type safety.
-
-The middleware should be added to an HTTP server and served locally (e.g. `http://localhost:3000`) or remotely (e.g. `https://example.com`). The middleware can live alongside other routes in the server.
-
-```typescript
-import express from "express";
-import { middleware } from "./rpc-middleware";
-
-const app = express();
-
-// Provide the RPC middleware created using `createRPCMiddleware`.
-app.use("/rpc", middleware);
-
-app.listen();
-```
-
-Procedures can accept named arguments using an object parameter.
-
-```typescript
-export const middleware = createRPCMiddleware({
-	procedures: {
-		add({ a, b }: { a: number; b: number }) {
-			return a + b;
-		},
-	},
-});
-```
-
-Procedures can be sync or async.
-
-```typescript
-export const middleware = createRPCMiddleware({
-	procedures: {
-		async getCatFact(): Promise<string> {
-			const res = await fetch("https://catfact.ninja/fact");
-			const json = await res.json();
-
-			return json.fact;
-		},
-		getStaticCatFact(): string {
-			return "Cats are specifically not powered by flat-six, naturally aspirated, high-revving engines.";
-		},
-	},
-});
-```
-
-Procedure return values are optional.
-
-```typescript
-export const middleware = createRPCMiddleware({
-	procedures: {
-		async wait({ ms }: { ms: number }): Promise<void> {
-			await new Promise((resolve) => setTimeout(resolve, ms));
-		},
-	},
-});
-```
-
-### Calling procedures in the client
-
-Calling procedures requires a client library. The client serializes arguments, routes requests to the RPC server, and deserializes the server's response. It provides compile time type safety by reading your procedure's types.
-
-```typescript
-// Somewhere not on a server, such as a browser.
-
-import type { Procedures } from "./path/to/your/server";
-
-const client = createRPCClient<Procedures>({
-	serverURL: "https://example.com/rpc",
-});
-
-const pong = await client.ping();
-```
-
-In the above example, `client.ping()` sends a request to the RPC server at `https://example.com/rpc` and returns the procedure's return value.
-
-The RPC client serializes arguments and return values for you, providing a [mostly 1:1 API](#limitations) between your procedure types and the client.
-
-### Limitations
-
-- **Binary data**: On the server, binary data is handled using `Buffers`s. On the client, binary is data handled using `Blobs`. `@slicemachine/rpc` converts between both automatically.
-
-- **Procedures can only accept up to one argument**: Procedures cannot accept more than one argument, but they can accept a single object argument with mulitple named properties.
+To discover what's new on this package check out [the changelog][changelog]. For full documentation, visit [the `docs` directory][docs].
 
 ## Contributing
 
@@ -237,9 +122,7 @@ limitations under the License.
 [prismic]: https://prismic.io
 [rpc-wiki]: https://en.wikipedia.org/wiki/Remote_procedure_call
 [express-middleware]: https://expressjs.com/en/guide/using-middleware.html
-[express]: https://expressjs.com/
-[fastify]: https://www.fastify.io/
-[h3]: https://github.com/unjs/h3
+[docs]: (./docs)
 
 <!-- TODO: Replace link with a more useful one if available -->
 
