@@ -87,7 +87,7 @@ To discover what's new on this package check out [the changelog][changelog].
 
 RPCs require two pieces: a server and a client. Procedures, a fancy name for functions, are called in the client and run on the server.
 
-You are no longer limited to what non-server environments like browser support. File system interaction, communication with private APIs, and computationally heavy tasks can now be called directly from clients.
+Because all procedures run on a server, you are no longer limited by what non-server environments like browser support. File system I/O, communication with private APIs, and computationally heavy tasks can now be called directly from frontends.
 
 ### Setting up procedures on the server
 
