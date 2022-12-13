@@ -9,9 +9,9 @@
 
 Simple [remote procedure calls (RPC)][rpc-wiki] in TypeScript.
 
-- 🤔 &nbsp;Fully typed procedure calls using your TypeScript types—no runtime validation needed.
-- 🥴 &nbsp;Handles binary data in both directions (think: file uploads and downloads).
-- 🙃 &nbsp;Compatible with any Express-like server.
+- 🪡 &nbsp;Fully typed procedure calls using your TypeScript types—no runtime validation needed.
+- 🖼️ &nbsp;Handles binary data in both directions (think: file uploads and downloads).
+- 🎛️ &nbsp;Compatible with any Express-like server.
 
 ## Install
 
