@@ -22,7 +22,7 @@ import "src/css/drawer.css";
 import "src/css/toaster.css";
 import "src/css/intercom.css";
 
-import "highlight.js/styles/atom-one-dark.css";
+import "src/css/hljs.css";
 
 import ServerState from "../lib/models/server/ServerState";
 import { getIsTrackingAvailable } from "../src/modules/environment";
@@ -40,7 +40,7 @@ import Router from "next/router";
 import { NextPage } from "next";
 
 type NextPageWithLayout = NextPage & {
-  CustomLayout?: React.FC;
+  CustomLayout?: React.FC<{ children: ReactNode }>;
 };
 
 type AppContextWithComponentLayout = AppContext & {

@@ -6,6 +6,7 @@ export enum EventNames {
   OnboardingSkip = "SliceMachine Onboarding Skip",
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
+  SliceSimulatorIsNotRunning = "SliceMachine Slice Simulator is not running",
   PageView = "SliceMachine Page View",
   OpenVideoTutorials = "SliceMachine Open Video Tutorials",
   CreateCustomType = "SliceMachine Custom Type Created",
@@ -92,6 +93,13 @@ export interface SliceSimulatorOpen extends BaseTrackingEvent {
   name: EventNames.SliceSimulatorOpen;
   props: {
     version: string;
+    framework: Frameworks;
+  };
+}
+
+export interface SliceSimulatorIsNotRunning extends BaseTrackingEvent {
+  name: EventNames.SliceSimulatorIsNotRunning;
+  props: {
     framework: Frameworks;
   };
 }
@@ -213,6 +221,7 @@ export type TrackingEvents =
   | CreateSlice
   | SliceSimulatorOpen
   | SliceSimulatorSetup
+  | SliceSimulatorIsNotRunning
   | ScreenshotTaken
   | ChangesPushed
   | EditorWidgetUsed;

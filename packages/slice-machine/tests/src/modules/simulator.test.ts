@@ -9,25 +9,30 @@ import { rest, RestContext, RestRequest, ResponseComposition } from "msw";
 import {
   initialState,
   simulatorReducer,
-  openSetupDrawerCreator,
-  closeSetupDrawerCreator,
-  toggleSetupDrawerStepCreator,
   connectToSimulatorIframeCreator,
   checkSimulatorSetupCreator,
   failCheckSetupSaga,
   saveSliceMockSaga,
   saveSliceMockCreator,
 } from "@src/modules/simulator";
-import { SimulatorStoreType, SetupStatus } from "@src/modules/simulator/types";
 import { testSaga, expectSaga } from "redux-saga-test-plan";
 import {
-  getFramework,
+  checkSetupSaga,
+  trackOpenSetupModalSaga,
+} from "@src/modules/simulator";
+import { SimulatorStoreType } from "@src/modules/simulator/types";
+
+import {
   selectIsSimulatorAvailableForFramework,
+  updateManifestCreator,
 } from "@src/modules/environment";
 import { SaveMockBody } from "../../../server/src/api/slices/save-mock";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { updateSliceMock } from "@src/modules/slices";
-import { action } from "typesafe-actions";
+
+import { modalOpenCreator } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { checkSimulatorSetup } from "@src/apiClient";
 
 const dummySimulatorState: SimulatorStoreType = initialState;
 
@@ -47,10 +52,8 @@ describe("[Simulator module]", () => {
 
     it("should update the state when given checkSimulatorSetupCreator.success action", () => {
       const initialState: SimulatorStoreType = dummySimulatorState;
-      const setupStatusResponse: SetupStatus = {
+      const setupStatusResponse: SimulatorStoreType["setupStatus"] = {
         manifest: "ok",
-        iframe: null,
-        dependencies: "ko",
       };
 
       const action = checkSimulatorSetupCreator.success({
@@ -75,122 +78,74 @@ describe("[Simulator module]", () => {
 
       const expectedState: SimulatorStoreType = {
         ...dummySimulatorState,
-        setupStatus: {
-          ...dummySimulatorState.setupStatus,
-          iframe: "ok",
-        },
+        iframeStatus: "ok",
       };
 
       expect(simulatorReducer(initialState, action)).toEqual(expectedState);
     });
 
-    it("should update the state when given connectToSimulatorIframeCreator.failure action", () => {
+    it("should set manifest status to ko if checkSimulatorSetupCreator.failure action", () => {
       const initialState: SimulatorStoreType = dummySimulatorState;
-
-      const action = connectToSimulatorIframeCreator.failure();
+      const action = checkSimulatorSetupCreator.failure(new Error("Error"));
 
       const expectedState: SimulatorStoreType = {
         ...dummySimulatorState,
         setupStatus: {
-          ...dummySimulatorState.setupStatus,
-          iframe: "ko",
+          manifest: "ko",
         },
       };
 
       expect(simulatorReducer(initialState, action)).toEqual(expectedState);
     });
-
-    it("should update the state when given openSetupDrawerCreator action", () => {
-      const initialState: SimulatorStoreType = dummySimulatorState;
-
-      const action = openSetupDrawerCreator({});
-
-      const expectedState: SimulatorStoreType = {
-        ...dummySimulatorState,
-        setupDrawer: {
-          ...dummySimulatorState.setupDrawer,
-          isOpen: true,
-        },
+    it("should call the api and dispatch the success action", () => {
+      const setupSimulatorAction: ReturnType<
+        typeof checkSimulatorSetupCreator.request
+      > = {
+        payload: {},
+        type: "SIMULATOR/CHECK_SETUP.REQUEST",
       };
-
-      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
-    });
-
-    it("should update the state when given openSetupDrawerCreator action with a step to open", () => {
-      const initialState: SimulatorStoreType = dummySimulatorState;
-
-      const action = openSetupDrawerCreator({ stepToOpen: 2 });
-
-      const expectedState: SimulatorStoreType = {
-        ...dummySimulatorState,
-        setupDrawer: {
-          ...dummySimulatorState.setupDrawer,
-          openedStep: 2,
-          isOpen: true,
-        },
-      };
-
-      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
-    });
-
-    it("should update the state to false when given closeSetupSimulatorDrawerCreator action", () => {
-      const initialState: SimulatorStoreType = {
-        ...dummySimulatorState,
-        setupDrawer: {
-          openedStep: 0,
-          isOpen: true,
-        },
-      };
-
-      const action = closeSetupDrawerCreator();
-
-      expect(simulatorReducer(initialState, action)).toEqual(
-        dummySimulatorState
+      const saga = testSaga(checkSetupSaga, setupSimulatorAction);
+      saga.next().call(checkSimulatorSetup);
+      const response = { data: { manifest: "ok" } };
+      saga.next(response).put(
+        checkSimulatorSetupCreator.success({
+          setupStatus: { manifest: "ok" },
+        })
       );
+      saga.next().put(updateManifestCreator({ value: undefined }));
+      saga.next().isDone();
     });
-
-    it("should update the state to false when given toggleSetupDrawerStepCreator action", () => {
-      const initialState: SimulatorStoreType = dummySimulatorState;
-
-      const action = toggleSetupDrawerStepCreator({ stepNumber: 1 });
-
-      const expectedState: SimulatorStoreType = {
-        ...dummySimulatorState,
-        setupDrawer: {
-          ...dummySimulatorState.setupDrawer,
-          openedStep: 1,
-        },
+    it("should call the api and dispatch the failure action", () => {
+      const setupSimulatorAction: ReturnType<
+        typeof checkSimulatorSetupCreator.request
+      > = {
+        payload: {},
+        type: "SIMULATOR/CHECK_SETUP.REQUEST",
       };
+      const saga = testSaga(checkSetupSaga, setupSimulatorAction);
+      saga.next().call(checkSimulatorSetup);
+      const response = { data: { manifest: "ko" } };
+      saga.next(response).call(failCheckSetupSaga);
+      saga.next().call(trackOpenSetupModalSaga);
+      saga.next().isDone();
+    });
+    it("should open setup modal if checkSimulatorSetupCreator.failure action", () => {
+      const saga = testSaga(failCheckSetupSaga);
 
-      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
-      // We check that if we call again the toggle action we go back to the initial state
-      expect(simulatorReducer(expectedState, action)).toEqual(initialState);
+      saga.next("next").select(selectIsSimulatorAvailableForFramework);
+      saga.next(true).put(checkSimulatorSetupCreator.failure(new Error()));
+      saga
+        .next()
+        .put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
     });
   });
 
   describe("[failCheckSetupSaga]", () => {
-    it("should early return if the framework don't support the simulator feature", () => {
+    it("should early return if the framework doesn't support the simulator feature", () => {
       const saga = testSaga(failCheckSetupSaga);
 
-      saga.next().select(getFramework);
-      saga.next("next").select(selectIsSimulatorAvailableForFramework);
+      saga.next("vue").select(selectIsSimulatorAvailableForFramework);
       saga.next(false).isDone();
-    });
-    it("should open the fourth step on next", () => {
-      const saga = testSaga(failCheckSetupSaga);
-
-      saga.next().select(getFramework);
-      saga.next("next").select(selectIsSimulatorAvailableForFramework);
-      saga.next(true).put(openSetupDrawerCreator({ stepToOpen: 4 }));
-      saga.next().isDone();
-    });
-    it("should open the fifth step on nuxt", () => {
-      const saga = testSaga(failCheckSetupSaga);
-
-      saga.next().select(getFramework);
-      saga.next("nuxt").select(selectIsSimulatorAvailableForFramework);
-      saga.next(true).put(openSetupDrawerCreator({ stepToOpen: 5 }));
-      saga.next().isDone();
     });
   });
 

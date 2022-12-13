@@ -1,15 +1,9 @@
 export type SimulatorStoreType = {
-  setupStatus: SetupStatus;
-  setupDrawer: {
-    isOpen: boolean;
-    openedStep: number;
+  // we use strings to check if key is defined
+  iframeStatus: "ok" | "ko" | null;
+  setupStatus: {
+    manifest: "ok" | "ko" | null;
   };
   isWaitingForIframeCheck: boolean;
   savingMock: boolean;
-};
-
-export type SetupStatus = {
-  dependencies: "ok" | "ko" | null;
-  manifest: "ok" | "ko" | null;
-  iframe: "ok" | "ko" | null;
 };

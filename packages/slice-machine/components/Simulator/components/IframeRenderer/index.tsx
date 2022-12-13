@@ -5,8 +5,13 @@ import { ThemeUIStyleObject } from "@theme-ui/css";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SetupError } from "../SetupError";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { useSelector } from "react-redux";
+import {
+  selectIframeStatus,
+  selectIsWaitingForIFrameCheck,
+} from "@src/modules/simulator";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
@@ -62,7 +67,15 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   dryRun = false,
   sx,
 }) => {
-  const [client, ref] = useSimulatorClient();
+  const [client, refCallback] = useSimulatorClient();
+  const [triggerReload, setTriggerReload] = useState<number>(1);
+
+  const { iframeStatus, isWaitingForIFrameCheck } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      iframeStatus: selectIframeStatus(state),
+      isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
+    })
+  );
 
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
@@ -94,12 +107,27 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, screenDimensions, apiContent]);
+  }, [client, screenDimensions, apiContent, simulatorUrl]);
+
+  useEffect(() => {
+    if (!isWaitingForIFrameCheck && iframeStatus !== "ok") {
+      setTriggerReload((n) => n + 1);
+    }
+  }, [iframeStatus, isWaitingForIFrameCheck]);
+
+  // const [wrapperRef, { width: containerWidth }] = useElementSize();
+
+  // const iframeScale =
+  //   screenDimensions.width > containerWidth
+  //     ? (containerWidth * 100) / screenDimensions.width
+  //     : 100;
 
   return (
     <Box
+      // ref={wrapperRef}
       sx={{
         width: "100%",
+        height: "100%",
         backgroundColor: "white",
         border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         borderRadius: 8,
@@ -127,8 +155,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             margin: "0 auto",
             overflow: "auto",
             alignContent: "center",
-            width: screenDimensions.width,
-            height: screenDimensions.height,
             ...(dryRun
               ? {
                   position: "absolute",
@@ -143,17 +169,19 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           {simulatorUrl ? (
             <iframe
               id="__iframe-renderer"
-              ref={ref}
+              ref={refCallback}
+              key={triggerReload}
               src={simulatorUrl}
               style={{
                 border: "none",
-                height: "100%",
+                // transform: `scale(${iframeScale}%)`,
+                // width: screenDimensions.width,
+                // height: screenDimensions.height,
                 width: "100%",
+                height: "100%",
               }}
             />
-          ) : (
-            <SetupError />
-          )}
+          ) : null}
         </Flex>
       </Flex>
     </Box>

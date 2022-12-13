@@ -28,6 +28,7 @@ describe("Create Slices", () => {
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: true,
     });
     cy.visit(`/slices`);
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
@@ -95,7 +96,7 @@ describe("Create Slices", () => {
       });
     });
 
-    cy.get("[data-testid=open-set-up-simulator]").click();
+    cy.get("[data-testid=simulator-open-button]").click();
 
     cy.get("[contenteditable]").first().clear().type("👋");
 

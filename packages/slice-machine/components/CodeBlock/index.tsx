@@ -17,7 +17,9 @@ const CodeBlock: React.FC<{
   lang?: Language;
   sx?: ThemeUIStyleObject;
   codeStyle?: React.CSSProperties;
-}> = ({ children, lang, sx, codeStyle }) => {
+  codeClass?: string;
+  Header?: React.FC;
+}> = ({ children, lang, sx, codeStyle, codeClass, Header }) => {
   const { theme } = useThemeUI();
   const text = lang
     ? hljs.highlight(children, { language: lang }).value
@@ -25,8 +27,9 @@ const CodeBlock: React.FC<{
 
   return (
     <Flex as="pre" sx={sx}>
+      {Header ? <Header /> : null}
       <code
-        className="hljs"
+        className={`hljs${codeClass ? ` ${codeClass}` : ""}`}
         style={{
           overflowX: "auto",
           padding: "3px 5px",

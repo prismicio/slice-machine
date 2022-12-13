@@ -23,7 +23,13 @@ export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   clientError?: ErrorWithStatus;
 }>();
 
-type EnvironmentActions = ActionType<typeof refreshStateCreator>;
+export const updateManifestCreator = createAction("STATE/UPDATE_MANIFEST")<{
+  value: string | undefined;
+}>();
+
+type EnvironmentActions = ActionType<
+  typeof refreshStateCreator | typeof updateManifestCreator
+>;
 
 // Selectors
 export const getEnvironment = (
@@ -142,6 +148,14 @@ export const environmentReducer: Reducer<
       return {
         ...state,
         ...action.payload.env,
+      };
+    case getType(updateManifestCreator):
+      return {
+        ...state,
+        manifest: {
+          ...state.manifest,
+          localSliceSimulatorURL: action.payload.value,
+        },
       };
     default:
       return state;

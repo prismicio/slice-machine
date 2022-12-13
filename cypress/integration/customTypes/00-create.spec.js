@@ -18,6 +18,7 @@ describe("Custom Types specs", () => {
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: false,
     });
     cy.visit("/");
 
@@ -72,6 +73,7 @@ describe("Custom Types specs", () => {
       isOnboarded: true,
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
+      hasSeenSimulatorToolTip: false,
     });
     cy.visit("/");
 
