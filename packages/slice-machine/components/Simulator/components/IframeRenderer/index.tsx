@@ -177,6 +177,8 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
                 // transform: `scale(${iframeScale}%)`,
                 // width: screenDimensions.width,
                 // height: screenDimensions.height,
+                width: "100%",
+                height: "100%",
               }}
             />
           ) : null}

@@ -104,7 +104,7 @@ export const UpdateSmJson =
   "libraries": [
     "@/slices"
   ],
-  "localSliceCanvasURL": "http://localhost:3000/slice-simulator"
+  "localSliceSimulatorURL": "http://localhost:3000/slice-simulator"
 }`,
   }: DefaultStepProps): React.FunctionComponent<DefaultStepCompProps> =>
   () => {
@@ -114,7 +114,7 @@ export const UpdateSmJson =
           FileIcon={VscBracketDot}
           fileName="sm.json"
           lang="json"
-          customCopyText={`"localSliceCanvasURL": "http://localhost:3000/slice-simulator"`}
+          customCopyText={`"localSliceSimulatorURL": "http://localhost:3000/slice-simulator"`}
         >
           {code}
         </CodeBlock>

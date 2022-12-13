@@ -8,6 +8,7 @@ export interface SmButtonProps extends ButtonProps {
   Icon?: IconType;
   isLoading?: boolean;
   "data-cy"?: string;
+  iconSize?: number;
 }
 
 // Small helper to allow us to target spinner and icon in the CY
@@ -37,6 +38,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
       disabled = false,
       onClick,
       sx = {},
+      iconSize = 16,
       variant = "primary",
       ...rest
     },
@@ -62,7 +64,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
       {isLoading ? (
         <>
           <Spinner
-            size={16}
+            size={iconSize}
             color={spinnerColor(variant)}
             data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
           />
@@ -71,7 +73,10 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
       ) : (
         <>
           {Icon && (
-            <Icon size={16} data-cy={cyIdBuilder(rest["data-cy"], "icon")} />
+            <Icon
+              size={iconSize}
+              data-cy={cyIdBuilder(rest["data-cy"], "icon")}
+            />
           )}
           {label}
         </>
