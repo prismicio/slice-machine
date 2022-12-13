@@ -23,7 +23,7 @@ Clients call them like typical JavaScript methods.
 ```typescript
 // src/client.ts
 
-import type { Procedures } from "./path/to/your/server";
+import type { Procedures } from "./server";
 
 const client = createRPCClient<Procedures>({
 	serverURL: "https://example.com/rpc",
@@ -51,9 +51,23 @@ export const middleware = createRPCMiddleware({
 });
 ```
 
+```typescript
+// src/client.ts
+
+import type { Procedures } from "./server";
+
+const client = createRPCClient<Procedures>({
+	serverURL: "https://example.com/rpc",
+});
+
+// Both calls are asynchronous.
+const pong = await client.pong();
+const seven = await client.add({ a: 3, b: 4 });
+```
+
 ## Asynchronicity
 
-Procedures can be synchronous or asynchronous. All client calls will be asynchronous since it requires a network request.
+Procedures can be synchronous or asynchronous. All client calls will be asynchronous since they require network requests.
 
 ```typescript
 // src/server.ts
@@ -75,18 +89,18 @@ export const middleware = createRPCMiddleware({
 
 ## Return values
 
-Procedures can optionally return values to be sent to clients.
+Procedures can optionally return values to clients.
 
 ```typescript
 // src/server.ts
 
 export const middleware = createRPCMiddleware({
 	procedures: {
-		async waitOneSecond(): Promise<void> {
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+		noop(): void {
+			// Do nothing
 		},
-		subtract({ a, b }: { a: number; b: number }) {
-			return a - b;
+		add({ a, b }: { a: number; b: number }) {
+			return a + b;
 		},
 	},
 });
@@ -102,15 +116,29 @@ Procedures can be nested arbitrarily.
 export const middleware = createRPCMiddleware({
 	procedures: {
 		math: {
-			add({ a, b }: { a: number; b: number }) {
-				return a + b;
-			},
-			subtract({ a, b }: { a: number; b: number }) {
-				return a - b;
+			basic: {
+				add({ a, b }: { a: number; b: number }) {
+					return a + b;
+				},
+				subtract({ a, b }: { a: number; b: number }) {
+					return a - b;
+				},
 			},
 		},
 	},
 });
+```
+
+```typescript
+// src/client.ts
+
+import type { Procedures } from "./server";
+
+const client = createRPCClient<Procedures>({
+	serverURL: "https://example.com/rpc",
+});
+
+const seven = await client.math.basic.add({ a: 3, b: 4 });
 ```
 
 ## Classes
@@ -137,7 +165,7 @@ export const middleware = createRPCMiddleware({
 });
 ```
 
-`proceduresFromInstance()` accepts an `omit` option to omit properties.
+`proceduresFromInstance()` accepts an `omit` option to omit properties. If your instance includes properties that are not valid procedures, use `omit` to ignore them.
 
 ```typescript
 // src/server.ts
