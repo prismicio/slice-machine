@@ -150,7 +150,10 @@ const SimulatorButton: React.FC<{
                     <Button
                       label="Got it"
                       variant="xs"
-                      sx={{ cursor: "pointer" }}
+                      sx={{
+                        cursor: "pointer",
+                        fontFamily: "body",
+                      }}
                       onClick={onCloseToolTip}
                     />
                   </Flex>
