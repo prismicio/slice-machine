@@ -215,10 +215,10 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         sx={{
           flex: 1,
           bg: "grey07",
-          px: 3,
-          pt: 3,
+          p: 3,
           display: "flex",
           flexDirection: "column",
+          height: "calc(100% - 73px)",
         }}
       >
         <Flex
@@ -230,9 +230,10 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             height: "100%",
           }}
         >
-          <Box
+          <Flex
             sx={{
               width: "100%",
+              flexDirection: "column",
             }}
           >
             <Toolbar
@@ -279,7 +280,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                 ) : null}
               </>
             )}
-          </Box>
+          </Flex>
           {currentState === UiState.SUCCESS ? (
             <Box
               sx={{
@@ -289,7 +290,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   ? {
                       marginLeft: "16px",
                       visibility: "visible",
-                      width: "400px",
                     }
                   : {
                       marginLeft: "0px",
