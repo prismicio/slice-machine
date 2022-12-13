@@ -83,7 +83,9 @@ npm install @slicemachine/rpc
 
 ## Documentation
 
-To discover what's new on this package check out [the changelog][changelog]. For full documentation, visit [the `docs` directory][docs].
+For full documentation, visit [the `docs` directory][docs].
+
+To discover what's new on this package check out [the changelog][changelog].
 
 ## Contributing
 
