@@ -126,7 +126,7 @@ limitations under the License.
 [prismic]: https://prismic.io
 [rpc-wiki]: https://en.wikipedia.org/wiki/Remote_procedure_call
 [express-middleware]: https://expressjs.com/en/guide/using-middleware.html
-[docs]: (./docs)
+[docs]: ./docs
 
 <!-- TODO: Replace link with a more useful one if available -->
 
