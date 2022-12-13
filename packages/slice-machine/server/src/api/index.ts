@@ -23,6 +23,8 @@ import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
 
+import sentryHandler, { plainTextBodyParser } from "./sentry";
+
 import { RequestWithEnv, WithEnv } from "./http/common";
 import {
   ScreenshotRequest,
@@ -305,6 +307,10 @@ router.post(
       .then(() => res.json());
   })
 );
+
+// Sentry Proxy
+// eslint-disable-next-line @typescript-eslint/no-misused-promises,
+router.post("/t", plainTextBodyParser, WithEnv(sentryHandler));
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
 router.use("*", async function (req: express.Request, res: express.Response) {

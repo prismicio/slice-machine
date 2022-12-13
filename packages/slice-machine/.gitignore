@@ -49,4 +49,8 @@ tests/project/node_modules
 
 /tests/project/.slicemachine
 /tests/project/cypress/videos
+
 /tests/project/.next
+
+# Sentry
+.sentryclirc
