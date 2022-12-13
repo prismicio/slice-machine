@@ -45,3 +45,7 @@ dist
 .env
 
 e2e-projects/cypress-next-app
+
+# TODO: Standardize
+dist
+playground/*

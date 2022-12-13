@@ -14,13 +14,12 @@
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
     "prepare": "husky install",
-    "//postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run test",
     "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
     "audit": "lerna run audit",
     "lint": "lerna run lint",
-    "lint-staged": "lint-staged",
+    "lint-staged": "exit 0 # lint-staged",
     "pretty": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "lerna run test --stream",
@@ -37,41 +36,18 @@
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
+    "cypress": "^9.5.4",
+    "cypress-localstorage-commands": "^1.7.0",
+    "cypress-wait-until": "^1.7.2",
     "depcheck": "^1.4.3",
     "husky": "^7.0.2",
     "lerna": "^3.22.1",
     "lint-staged": "^11.1.2",
-    "prettier": "^2.4.1"
-  },
-  "dependencies": {
-    "cypress": "^9.5.4",
-    "cypress-localstorage-commands": "^1.7.0",
-    "cypress-wait-until": "^1.7.2",
+    "prettier": "^2.4.1",
     "start-server-and-test": "^1.14.0"
-  },
-  "lint-staged": {
-    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/slice-machine run lint:precommit"
-    ],
-    "**/packages/core/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/core run lint:precommit"
-    ],
-    "**/packages/init/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/init run lint:precommit"
-    ],
-    "**/packages/client/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/client run lint:precommit"
-    ],
-    "**/packages/next-slicezone/**/*": "prettier --write --ignore-unknown",
-    "**/packages/nuxt-sm/**/*": "prettier --write --ignore-unknown",
-    "**/packages/vue-slicezone/**/*": "prettier --write --ignore-unknown",
-    "**/packages/sm-commons/**/*": "prettier --write --ignore-unknown"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "lint-staged": {}
 }

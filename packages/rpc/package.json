@@ -1,0 +1,57 @@
+{
+	"name": "@slicemachine/rpc",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Init Prismic Slice Machine in your project",
+	"keywords": [
+		"typescript",
+		"prismic"
+	],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/rpc"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch"
+	},
+	"dependencies": {
+		"busboy": "^1.6.0",
+		"devalue": "^4.2.0",
+		"form-data-encoder": "^2.1.4",
+		"h3": "^1.0.1"
+	},
+	"devDependencies": {
+		"@types/busboy": "^1.5.0",
+		"@typescript-eslint/eslint-plugin": "^5.46.1",
+		"@typescript-eslint/parser": "^5.46.1",
+		"@vitest/coverage-c8": "^0.25.8",
+		"eslint": "^8.29.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"prettier-plugin-jsdoc": "^0.4.2",
+		"typescript": "^4.9.4",
+		"vite": "^3.2.4",
+		"vite-plugin-sdk": "^0.0.6",
+		"vitest": "^0.25.8"
+	}
+}
