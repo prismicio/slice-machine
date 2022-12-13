@@ -3,7 +3,6 @@ import { Frameworks, SupportedFrameworks } from "../../src/models/Framework";
 import { JsonPackage } from "../../src/node-utils/pkg";
 import * as FrameworkUtils from "../../src/node-utils/framework";
 import * as fs from "fs";
-import { mocked } from "ts-jest/utils";
 import { Manifest } from "../../src/models/Manifest";
 
 jest.mock("fs");
@@ -86,7 +85,7 @@ describe("framework.defineFrameworks", () => {
       apiEndpoint: "fake api endpoint",
     };
 
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
     mockedFs.readFileSync.mockReturnValue(
@@ -123,7 +122,7 @@ describe("framework.defineFrameworks", () => {
       framework: FrameworkUtils.UnsupportedFrameWorks[0],
     };
 
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
     mockedFs.readFileSync.mockReturnValue(
@@ -144,7 +143,7 @@ describe("framework.defineFrameworks", () => {
   test("it should default to vanillajs if no manifest and the pkg json framework is unsupported", () => {
     const unsupportedFramework = FrameworkUtils.UnsupportedFrameWorks[0];
 
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
     mockedFs.readFileSync.mockReturnValue(
@@ -169,7 +168,7 @@ describe("framework.defineFrameworks", () => {
       framework: unsupportedFramework,
     };
 
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
     mockedFs.readFileSync.mockReturnValue(

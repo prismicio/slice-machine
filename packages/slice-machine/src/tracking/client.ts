@@ -296,6 +296,22 @@ export class SMTracker {
 
     return this.#trackEvent(payload);
   }
+
+  #startedNewEditorSession = false;
+  editor = {
+    startNewSession: () => {
+      this.#startedNewEditorSession = true;
+    },
+    trackWidgetUsed: () => {
+      if (!this.#startedNewEditorSession) return;
+
+      this.#startedNewEditorSession = false;
+
+      void this.#trackEvent({
+        name: EventNames.EditorWidgetUsed,
+      });
+    },
+  };
 }
 
 const Tracker = (() => {

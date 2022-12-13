@@ -22,7 +22,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Color,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: "red" });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Color,
+        value: "red",
+      });
     });
     test("invalid content", () => {
       const config = { content: 100 };
@@ -40,7 +43,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Text,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: "text sample" });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Text,
+        value: "text sample",
+      });
     });
     test("invalid content", () => {
       const config = { content: 100 };
@@ -59,6 +65,7 @@ describe("CustomTypeMockConfig", () => {
         config
       );
       expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Timestamp,
         value: new Date("2022-06-30T10:03:49.000Z"),
       });
     });
@@ -68,7 +75,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Timestamp,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: undefined });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Timestamp,
+        value: undefined,
+      });
     });
     test("invalid content", () => {
       const config = { content: 100 };
@@ -86,7 +96,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Number,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: 123 });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Number,
+        value: 123,
+      });
     });
     test("invalid content", () => {
       const config = { content: "123" };
@@ -104,7 +117,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Date,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: new Date("2022-07-15") });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Date,
+        value: new Date("2022-07-15"),
+      });
     });
     test("no content", () => {
       const config = {};
@@ -112,7 +128,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Date,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: undefined });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Date,
+        value: undefined,
+      });
     });
     test("invalid content", () => {
       const config = { content: 123 };
@@ -130,7 +149,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.GeoPoint,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: config.content });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.GeoPoint,
+        value: config.content,
+      });
     });
     test("invalid content", () => {
       const config = { content: { latitude: 1 } };
@@ -155,7 +177,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Embed,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: undefined });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Embed,
+        value: undefined,
+      });
     });
     test("valid config content provided", () => {
       const config = { content: { url: "url-test", oembed: "oembed-test" } };
@@ -163,7 +188,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Embed,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: "oembed-test" });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Embed,
+        value: "oembed-test",
+      });
     });
     test("config content without url", () => {
       const config = { content: { oembed: "oembed-test" } };
@@ -171,7 +199,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Embed,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: undefined });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Embed,
+        value: undefined,
+      });
     });
     test("config content without oembed", () => {
       const config = { content: { url: "url-test" } };
@@ -179,7 +210,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Embed,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: undefined });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Embed,
+        value: undefined,
+      });
     });
   });
   describe("WidgetTypes.BooleanField", () => {
@@ -189,7 +223,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.BooleanField,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: true });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.BooleanField,
+        value: true,
+      });
     });
     test("invalid content", () => {
       const config = { content: "true" };
@@ -211,7 +248,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Select,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: "opt2" });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Select,
+        value: "opt2",
+      });
     });
   });
   describe("WidgetTypes.Link", () => {
@@ -224,6 +264,7 @@ describe("CustomTypeMockConfig", () => {
         config
       );
       expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Link,
         value: { value: config.content },
       });
     });
@@ -234,6 +275,7 @@ describe("CustomTypeMockConfig", () => {
         config
       );
       expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Link,
         value: { value: 100 },
       });
     });
@@ -245,7 +287,10 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Image,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({ value: "content-image-test" });
+      expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.Image,
+        value: "content-image-test",
+      });
     });
     test("invalid content", () => {
       const config = { content: 100 };
@@ -270,6 +315,7 @@ describe("CustomTypeMockConfig", () => {
         config
       );
       expect(widgetMockConfig).toStrictEqual({
+        type: WidgetTypes.RichText,
         value: ["text"],
         nbBlocks: 1,
         pattern: "PARAGRAPH",
@@ -321,7 +367,11 @@ describe("buildWidgetMockConfig", () => {
       legacyWidgetMockConfig
     );
     const expectedResult = {
-      fields: { field1: { value: "red" }, field2: { value: false } },
+      type: WidgetTypes.Group,
+      fields: {
+        field1: { type: WidgetTypes.Color, value: "red" },
+        field2: { type: WidgetTypes.BooleanField, value: false },
+      },
     };
     expect(mockConfigOutput).toStrictEqual(expectedResult);
   });
@@ -350,7 +400,10 @@ describe("buildWidgetMockConfig", () => {
       widget,
       legacyWidgetMockConfig
     );
-    expect(mockConfigOutput).toStrictEqual({ value: "uid" });
+    expect(mockConfigOutput).toStrictEqual({
+      type: WidgetTypes.UID,
+      value: "uid",
+    });
   });
   test("UID widget - invalid content", () => {
     const legacyWidgetMockConfig = { content: 100 };

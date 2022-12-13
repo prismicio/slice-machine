@@ -27,6 +27,7 @@ describe("libaries/component", () => {
       const result = getComponentInfo(
         path.join(TMP, "ProductListWithCta"),
         [],
+        TMP,
         path.join(TMP, "slices")
       );
 

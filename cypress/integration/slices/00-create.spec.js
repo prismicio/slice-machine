@@ -9,17 +9,9 @@ describe("Create Slices", () => {
   const pathToMock = path.join(
     "e2e-projects",
     "cypress-next-app",
-    ".slicemachine",
-    "assets",
     "slices",
-    sliceName,
+    editedSliceName,
     "mocks.json"
-  );
-  const pathToLibraryState = path.join(
-    "e2e-projects",
-    "cypress-next-app",
-    ".slicemachine",
-    "libraries-state.json"
   );
 
   beforeEach(() => {
@@ -57,21 +49,6 @@ describe("Create Slices", () => {
     );
     cy.readFile(type).should("contains", sliceName);
 
-    cy.readFile(pathToMock, "utf-8")
-      .then((mock) => {
-        return cy
-          .readFile(pathToLibraryState, "utf-8")
-          .then((librariesState) => {
-            return { mock, librariesState };
-          });
-      })
-      .then(({ mock, librariesState }) => {
-        const want = mock[0];
-        const got =
-          librariesState["slices"].components["test_slice"].mocks.default;
-        expect(got).to.deep.equal(want);
-      });
-
     // remove widget
     cy.get('[data-cy="slice-menu-button"]').first().click();
     cy.contains("Delete field").click();
@@ -91,6 +68,46 @@ describe("Create Slices", () => {
     cy.get('[data-cy="slice-and-variation-name-header"]').contains(
       `/ ${editedSliceName} / Default`
     );
+
     cy.get("[data-cy=rename-slice-modal]").should("not.exist");
+
+    // simulator
+
+    cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
+      const pathToFile = path.join(root, "pages", "slice-simulator.jsx");
+      return cy.writeFile(pathToFile, file);
+    });
+
+    const pathToSmJson = path.join(root, "sm.json");
+
+    cy.readFile(pathToSmJson, "utf-8").then((json) => {
+      const data = {
+        ...json,
+        localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
+      };
+      return cy.writeFile(pathToSmJson, JSON.stringify(data, null, 2));
+    });
+
+    // stub window and set target to self
+    cy.on("window:before:load", (win) => {
+      cy.stub(win, "open").callsFake((url) => {
+        return win.open.wrappedMethod.call(win, url, "_self");
+      });
+    });
+
+    cy.get("[data-testid=open-set-up-simulator]").click();
+
+    cy.get("[contenteditable]").first().clear().type("👋");
+
+    cy.get("[data-cy=save-mock]").click();
+
+    cy.wait(1000);
+
+    cy.readFile(pathToMock, "utf-8")
+      .its(0)
+      .its("primary.title.value")
+      .its(0)
+      .its("content.text")
+      .should("equal", "👋");
   });
 });

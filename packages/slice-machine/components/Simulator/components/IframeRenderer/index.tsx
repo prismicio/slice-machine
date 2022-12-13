@@ -1,9 +1,9 @@
 import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
 import { Box, Flex } from "theme-ui";
+import { ThemeUIStyleObject } from "@theme-ui/css";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
-import { SliceView } from "../..";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SetupError } from "../SetupError";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
@@ -26,7 +26,7 @@ function useSimulatorClient(): readonly [
         setClient(clientRef.current);
         const reconnect = async () => {
           setClient(undefined);
-          await clientRef.current?.connect(true);
+          await clientRef.current?.connect({}, true);
           setClient(clientRef.current);
         };
         observerRef.current = new MutationObserver((mutations) => {
@@ -48,21 +48,25 @@ function useSimulatorClient(): readonly [
 }
 
 type IframeRendererProps = {
+  apiContent?: unknown;
   screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
-  sliceView: SliceView;
   dryRun?: boolean;
+  sx?: ThemeUIStyleObject;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
+  apiContent,
   screenDimensions,
   simulatorUrl,
-  sliceView,
   dryRun = false,
+  sx,
 }) => {
   const [client, ref] = useSimulatorClient();
+
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
+
   useEffect((): void => {
     if (!simulatorUrl) {
       connectToSimulatorFailure();
@@ -79,8 +83,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
 
     const updateSliceZone = async () => {
-      await client.setSliceZoneFromSliceIDs(sliceView);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await client.setSliceZone([apiContent as any]);
     };
+
     updateSliceZone()
       .then(() => {
         connectToSimulatorSuccess();
@@ -88,19 +94,18 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, screenDimensions, sliceView]);
+  }, [client, screenDimensions, apiContent]);
 
   return (
     <Box
       sx={{
-        flex: 1,
+        width: "100%",
         backgroundColor: "white",
-        minWidth: "fit-content",
-        height: "100%",
         border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         borderRadius: 8,
         overflow: "hidden",
         ...(dryRun ? { visibility: "hidden" } : {}),
+        ...sx,
       }}
     >
       <Flex
@@ -111,7 +116,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           backgroundRepeat: "repeat",
           backgroundSize: "10px",
           border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
-          width: "fit-content",
           mx: "auto",
           flexDirection: "column",
           justifyContent: "center",
@@ -135,8 +139,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
               : {}),
           }}
         >
+          {client?.connected ? <div id="__iframe-ready" /> : null}
           {simulatorUrl ? (
             <iframe
+              id="__iframe-renderer"
               ref={ref}
               src={simulatorUrl}
               style={{

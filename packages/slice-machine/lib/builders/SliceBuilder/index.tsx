@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 
 import { handleRemoteResponse } from "@src/modules/toaster/utils";
 
@@ -21,7 +21,7 @@ import {
   isSelectedSliceTouched,
   selectCurrentSlice,
 } from "@src/modules/selectedSlice/selectors";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
@@ -29,6 +29,7 @@ import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "@components/Simulator/components/Toolbar/ScreensizeInput";
+import useEditorContentOnce from "@src/hooks/useEditorContent";
 
 export type SliceBuilderState = {
   imageLoading: boolean;
@@ -86,21 +87,49 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     }
   }, [data]);
 
-  const sliceView = useMemo(
-    () =>
-      component && variation
-        ? [
-            {
-              sliceID: component.model.id,
-              variationID: variation.id,
-            },
-          ]
-        : null,
-    [component.model.id, variation?.id]
-  );
+  if (!variation) return null;
+  else
+    return (
+      <SliceBuilderForVariation
+        saveSlice={saveSlice.bind(null, component, setData)}
+        component={component}
+        variation={variation}
+        remoteSlice={remoteSlice}
+        simulatorUrl={simulatorUrl}
+        isWaitingForIframeCheck={isWaitingForIframeCheck}
+        isTouched={isTouched}
+        data={data}
+      />
+    );
+};
+
+type SliceBuilderForVariationProps = {
+  saveSlice: () => void;
+  component: ComponentUI;
+  variation: VariationSM;
+  remoteSlice: SliceSM | undefined;
+  simulatorUrl: string | undefined;
+  isWaitingForIframeCheck: boolean;
+  isTouched: boolean;
+  data: SliceBuilderState;
+};
+const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
+  saveSlice,
+  component,
+  variation,
+  remoteSlice,
+  simulatorUrl,
+  isWaitingForIframeCheck,
+  isTouched,
+  data,
+}) => {
+  const { apiContent } = useEditorContentOnce({
+    slice: component,
+    variationID: variation.id,
+  });
 
   const onSaveSlice = () => {
-    saveSlice(component, setData);
+    saveSlice();
   };
 
   const { modelsStatuses } = useModelStatus([
@@ -111,7 +140,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     },
   ]);
 
-  if (!variation || !sliceView) return null;
+  if (!variation) return null;
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -135,7 +164,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         <IframeRenderer
           dryRun
           simulatorUrl={simulatorUrl}
-          sliceView={sliceView}
+          apiContent={apiContent}
           screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
         />
       )}

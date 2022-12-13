@@ -61,6 +61,10 @@ app.use("/:lib/:sliceName/:variation/simulator", (_, res) => {
   res.sendFile(path.join(out, "[lib]/[sliceName]/[variation]/simulator.html"));
 });
 
+app.use("/:lib/:sliceName/:variation/screenshot", (_, res) => {
+  res.sendFile(path.join(out, "[lib]/[sliceName]/[variation]/screenshot.html"));
+});
+
 app.use("/:lib/:sliceName/:variation", (_, res) => {
   res.sendFile(path.join(out, "[lib]/[sliceName]/[variation].html"));
 });

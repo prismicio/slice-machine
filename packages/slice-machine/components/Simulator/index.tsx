@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { SharedSliceEditor } from "@prismicio/editor-fields";
+
+import { defaultSharedSliceContent } from "@src/utils/editor";
 
 import { Box, Flex } from "theme-ui";
 
@@ -21,63 +24,136 @@ import {
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { Slices, VariationSM } from "@slicemachine/core/build/models";
+import { renderSliceMock } from "@prismicio/mocks";
 
-export type SliceView = SliceViewItem[];
-export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
+import { ThemeProvider } from "@prismicio/editor-ui";
+
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
+
+import useThrottle from "@src/hooks/useThrottle";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 export default function Simulator() {
   const router = useRouter();
 
-  const { component } = useSelector((store: SliceMachineStoreType) => ({
-    component: selectCurrentSlice(
-      store,
-      router.query.lib as string,
-      router.query.sliceName as string
-    ),
-  }));
+  const { component, framework, version, simulatorUrl } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      component: selectCurrentSlice(
+        store,
+        router.query.lib as string,
+        router.query.sliceName as string
+      ),
+      framework: getFramework(store),
+      simulatorUrl: selectSimulatorUrl(store),
+      version: getCurrentVersion(store),
+    })
+  );
 
   const variation = component?.model.variations.find(
     (variation) => variation.id === (router.query.variation as string)
   );
 
-  const { framework, version, simulatorUrl } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
-      simulatorUrl: selectSimulatorUrl(state),
-      version: getCurrentVersion(state),
-    })
-  );
-
   useEffect(() => {
     void Tracker.get().trackOpenSliceSimulator(framework, version);
+    Tracker.get().editor.startNewSession();
   }, []);
 
+  if (!component || !variation) {
+    return <div />;
+  } else {
+    return (
+      <SimulatorForSlice
+        component={component}
+        variation={variation}
+        simulatorUrl={simulatorUrl}
+      />
+    );
+  }
+}
+
+type SimulatorForSliceProps = {
+  component: ComponentUI;
+  variation: VariationSM;
+  simulatorUrl?: string;
+};
+const SimulatorForSlice: React.FC<SimulatorForSliceProps> = ({
+  component,
+  variation,
+  simulatorUrl,
+}) => {
+  const { saveSliceMock } = useSliceMachineActions();
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
   );
 
-  const sliceView = useMemo(() => {
-    if (component?.model.id && variation?.id) {
-      return [
-        {
-          sliceID: component.model.id,
-          variationID: variation.id,
-        },
-      ];
-    }
-    return [];
-  }, [component?.model.id, variation?.id]);
+  const sharedSlice = useMemo(
+    () => Slices.fromSM(component.model),
+    [component.model]
+  );
 
-  if (!component || !variation) {
-    return <div />;
+  const initialContent = useMemo<SharedSliceContent>(
+    () =>
+      component.mock?.find((m) => m.variation === variation.id) ||
+      defaultSharedSliceContent(variation.id),
+    [component.mock, variation.id]
+  );
+
+  const previousInitialContent = useRef(initialContent);
+  const [editorContent, setContent] = useState(initialContent);
+
+  if (previousInitialContent.current !== initialContent) {
+    previousInitialContent.current = initialContent;
+    setContent(initialContent);
+  }
+
+  const initialApiContent = useMemo(
+    () =>
+      renderSliceMock(sharedSlice, editorContent) as {
+        id: string;
+        [k: string]: unknown;
+      },
+    []
+  );
+
+  const renderSliceMockCb = useCallback(
+    () => () => ({
+      // cast as object because type is unknown
+      ...(renderSliceMock(sharedSlice, editorContent) as object),
+      id: initialApiContent.id,
+    }),
+    [sharedSlice, editorContent, initialApiContent]
+  );
+
+  const apiContent = useThrottle(renderSliceMockCb, 800, [
+    sharedSlice,
+    editorContent,
+  ]);
+
+  const [isDisplayEditor, toggleIsDisplayEditor] = useState(true);
+
+  function onContentChange(content: SharedSliceContent) {
+    Tracker.get().editor.trackWidgetUsed();
+    setContent(content);
   }
 
   return (
-    <Flex sx={{ height: "100vh", flexDirection: "column" }}>
+    <Flex sx={{ flexDirection: "column", height: "100vh" }}>
       <Header
-        Model={component}
+        slice={component}
         variation={variation}
-        screenDimensions={screenDimensions}
+        isDisplayEditor={isDisplayEditor}
+        toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
+        onSaveMock={() =>
+          saveSliceMock({
+            sliceName: component.model.name,
+            libraryName: component.from,
+            mock: (component.mock || [])
+              .filter((mock) => mock.variation !== initialContent.variation)
+              .concat(editorContent),
+          })
+        }
       />
       <Box
         sx={{
@@ -88,26 +164,69 @@ export default function Simulator() {
           flexDirection: "column",
         }}
       >
-        <Toolbar
-          Model={component}
-          variation={variation}
-          handleScreenSizeChange={setScreenDimensions}
-          screenDimensions={screenDimensions}
-        />
-        <Flex style={{ flex: 1, overflow: "scroll" }}>
-          <IframeRenderer
-            screenDimensions={screenDimensions}
-            simulatorUrl={simulatorUrl}
-            sliceView={sliceView}
-          />
+        <Flex
+          sx={{
+            flex: 1,
+            flexDirection: "row",
+            position: "relative",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+            }}
+          >
+            <Toolbar
+              slice={component}
+              variation={variation}
+              handleScreenSizeChange={setScreenDimensions}
+              screenDimensions={screenDimensions}
+            />
+            <IframeRenderer
+              apiContent={apiContent}
+              screenDimensions={screenDimensions}
+              simulatorUrl={simulatorUrl}
+            />
+          </Box>
+          <Box
+            sx={{
+              height: "100%",
+              overflowY: "scroll",
+              ...(isDisplayEditor
+                ? {
+                    marginLeft: "16px",
+                    visibility: "visible",
+                    flexShrink: 0,
+                    width: "560px",
+                  }
+                : {
+                    marginLeft: "0px",
+                    visibility: "hidden",
+                    width: "0",
+                  }),
+              transition: "visibility 0s linear",
+            }}
+          >
+            <ThemeProvider mode="light">
+              <SharedSliceEditor
+                content={editorContent}
+                onContentChange={(c) =>
+                  onContentChange(c as SharedSliceContent)
+                }
+                sharedSlice={sharedSlice}
+              />
+            </ThemeProvider>
+          </Box>
         </Flex>
       </Box>
       {!!component.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
-          sliceName={router.query.sliceName as string}
+          sliceName={component.model.name}
           screenshotUrl={component.screenshots[variation.id]?.url}
         />
       )}
     </Flex>
   );
-}
+};
