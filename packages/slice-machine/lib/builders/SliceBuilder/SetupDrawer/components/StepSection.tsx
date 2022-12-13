@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useRef } from "react";
+import { type FC, type ReactNode, useCallback } from "react";
 import { type ThemeUIStyleObject, Flex, Text } from "theme-ui";
 import { MdArrowBackIos, MdCheck } from "react-icons/md";
 import WarningBadge from "./WarningBadge";
@@ -20,11 +20,13 @@ const StepSection: FC<StepSectionProps> = ({
   children,
   status = null,
 }) => {
-  const stepSectionContainer = useRef<HTMLDivElement>(null);
-  const contentHeight: number =
-    !!stepSectionContainer && !!stepSectionContainer.current
-      ? stepSectionContainer.current.scrollHeight
-      : 0;
+  const stepSectionContainerRef = useCallback(
+    (element: HTMLElement | null) => {
+      if (element === null) return;
+      element.style.maxHeight = `${isOpen ? element.scrollHeight : 0}px`;
+    },
+    [isOpen]
+  );
 
   const additionalStepTitleStyle: ThemeUIStyleObject =
     status === "ok"
@@ -102,14 +104,13 @@ const StepSection: FC<StepSectionProps> = ({
         </Flex>
       </Flex>
       <Flex
-        ref={stepSectionContainer}
+        ref={stepSectionContainerRef}
         sx={{
           overflow: "hidden",
           opacity: isOpen ? 1 : 0,
           paddingX: 24,
           willChange: "max-height",
           transition: "all 0.2s ease-out",
-          maxHeight: isOpen ? contentHeight : 0,
         }}
       >
         {children}

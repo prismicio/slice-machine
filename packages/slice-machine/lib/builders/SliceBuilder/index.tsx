@@ -140,6 +140,8 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
     },
   ]);
 
+  if (!variation) return null;
+
   return (
     <Box sx={{ flex: 1 }}>
       <Header

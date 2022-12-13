@@ -22,7 +22,7 @@
     "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
-    "@prismicio/types-internal": "^1.5.2",
+    "@prismicio/types-internal": "^1.5.3",
     "@slicemachine/core": "1.1.16-dev-mocks.0",
     "axios": "^0.27.2",
     "form-data": "^3.0.0",
