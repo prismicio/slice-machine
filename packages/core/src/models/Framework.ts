@@ -36,3 +36,5 @@ export const SupportedFrameworks: Frameworks[] = [
   Frameworks.svelte,
   Frameworks.previousNext,
 ];
+
+export type Version = string | undefined;

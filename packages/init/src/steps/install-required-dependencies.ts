@@ -1,9 +1,7 @@
 import path from "path";
-import { execCommand, logs } from "../utils";
+import { checkVersion, execCommand, logs } from "../utils";
 import { CONSTS, Models } from "@slicemachine/core";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
-
-import semver from "semver";
 
 const {
   PRISMIC_CLIENT,
@@ -19,12 +17,8 @@ const {
   PRISMIC_TYPES,
 } = CONSTS;
 
-function nextDeps(version: string | undefined): string {
-  if (!version) return "";
-  const parsedVersion = semver.coerce(version);
-  if (parsedVersion === null) return "";
-
-  if (semver.satisfies(parsedVersion, ">=13.0.0")) {
+export function nextDeps(version: Models.Version): string {
+  if (checkVersion(version, ">=13.0.0")) {
     return PRISMIC_NEXT;
   }
 
@@ -33,7 +27,7 @@ function nextDeps(version: string | undefined): string {
 
 function depsForFramework(
   framework: Models.Frameworks,
-  version: string | undefined
+  version: Models.Version
 ): string {
   switch (framework) {
     case Models.Frameworks.react:
@@ -55,7 +49,7 @@ function depsForFramework(
 
 async function addAndInstallDeps(
   framework: Models.Frameworks,
-  version: string | undefined,
+  version: Models.Version,
   useYarn = false
 ): Promise<string> {
   const installDevDependencyCommand = useYarn
@@ -82,7 +76,7 @@ async function installDeps(useYarn = false): Promise<string> {
 export async function installRequiredDependencies(
   cwd: string,
   framework: Models.Frameworks,
-  version: string | undefined,
+  version: Models.Version,
   skipDependencies: boolean
 ): Promise<void> {
   const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));

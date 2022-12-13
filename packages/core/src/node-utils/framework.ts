@@ -1,5 +1,5 @@
 import { retrieveJsonPackage, JsonPackage } from "./pkg";
-import { Frameworks, SupportedFrameworks } from "../models/Framework";
+import { Frameworks, SupportedFrameworks, Version } from "../models/Framework";
 import { Manifest } from "../models/Manifest";
 
 export { Frameworks } from "../models/Framework";
@@ -44,7 +44,7 @@ export function detectFramework(
 
 export type FrameworkWithVersion = {
   framework: Frameworks;
-  version: string | undefined;
+  version: Version;
 };
 
 export function defineFramework({

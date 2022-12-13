@@ -7,7 +7,7 @@ import Tracker from "../utils/tracker";
 export type FrameworkResult = {
   value: Models.Frameworks;
   manuallyAdded: boolean;
-  version: string | undefined;
+  version: Models.Version;
 };
 
 export async function promptForFramework(): Promise<FrameworkResult> {
