@@ -56,8 +56,9 @@ const Header: React.FunctionComponent<PropTypes> = ({
       sx={{
         p: "16px 16px 16px 24px",
         display: "flex",
+        bg: "grey07",
         gridTemplateRows: "1fr",
-        borderBottom: "1px solid #F1F1F1",
+        borderBottom: "1px solid #DCDBDD",
         justifyContent: "space-between",
       }}
     >

@@ -92,7 +92,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     <Flex
       sx={{
         alignItems: "center",
-        pb: 2,
+        pb: "16px",
         justifyContent: "space-between",
         variant: "small",
       }}

@@ -153,10 +153,12 @@ const AppTheme = (): Theme =>
         fontWeight: "400",
         color: "textClear",
         fontSize: 1,
+        fontFamily: "body",
       },
       small: {
         fontWeight: "500",
         fontSize: 2,
+        fontFamily: "body",
       },
       labelError: {
         color: "error",
