@@ -12,8 +12,7 @@ const { publicRuntimeConfig } = getConfig() as {
 
 Sentry.init({
   dsn: `https://${sentryNextConfig.publicToken}@${sentryNextConfig.host}/${sentryNextConfig.projectId}`,
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.05,
   tunnel: "/api/t",
   environment: publicRuntimeConfig.sentryEnvironment,
 });
