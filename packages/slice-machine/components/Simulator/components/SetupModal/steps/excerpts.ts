@@ -22,7 +22,7 @@ export const CreateRouteVueExcerpt = {
 
 export const UpdateSmJsonExcerpt = {
   title: "Update your sm.json",
-  excerpt: "Add a property localSliceCanvasURL to your sm.json file.",
+  excerpt: "Add a property localSliceSimulatorURL to your sm.json file.",
 };
 
 export const UpdateNuxtConfExcerpt = {

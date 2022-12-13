@@ -67,7 +67,8 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   dryRun = false,
   sx,
 }) => {
-  const [client, ref] = useSimulatorClient();
+  const [client, refCallback] = useSimulatorClient();
+  const [triggerReload, setTriggerReload] = useState<number>(1);
 
   const { iframeStatus, isWaitingForIFrameCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -108,17 +109,25 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       });
   }, [client, screenDimensions, apiContent, simulatorUrl]);
 
-  const [iframeKey, setIframeKey] = useState(Math.random());
   useEffect(() => {
     if (!isWaitingForIFrameCheck && iframeStatus !== "ok") {
-      setIframeKey(Math.random());
+      setTriggerReload((n) => n + 1);
     }
   }, [iframeStatus, isWaitingForIFrameCheck]);
 
+  // const [wrapperRef, { width: containerWidth }] = useElementSize();
+
+  // const iframeScale =
+  //   screenDimensions.width > containerWidth
+  //     ? (containerWidth * 100) / screenDimensions.width
+  //     : 100;
+
   return (
     <Box
+      // ref={wrapperRef}
       sx={{
         width: "100%",
+        height: "100%",
         backgroundColor: "white",
         border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         borderRadius: 8,
@@ -146,8 +155,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             margin: "0 auto",
             overflow: "auto",
             alignContent: "center",
-            width: screenDimensions.width,
-            height: screenDimensions.height,
             ...(dryRun
               ? {
                   position: "absolute",
@@ -162,13 +169,16 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           {simulatorUrl ? (
             <iframe
               id="__iframe-renderer"
-              ref={ref}
-              key={iframeKey}
+              ref={refCallback}
+              key={triggerReload}
               src={simulatorUrl}
               style={{
                 border: "none",
-                height: "100%",
+                // transform: `scale(${iframeScale}%)`,
+                // width: screenDimensions.width,
+                // height: screenDimensions.height,
                 width: "100%",
+                height: "100%",
               }}
             />
           ) : null}
