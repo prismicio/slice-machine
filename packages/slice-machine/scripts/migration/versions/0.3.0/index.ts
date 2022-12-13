@@ -11,7 +11,7 @@ const migration: Migration = {
       const manifest = NodeUtils.retrieveManifest(cwd);
       if (!manifest.exists || !manifest.content) return;
 
-      const framework = NodeUtils.Framework.defineFramework({ cwd });
+      const framework = NodeUtils.Framework.defineFramework({ cwd }).framework;
 
       if (
         framework !== Models.Frameworks.next &&

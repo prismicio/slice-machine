@@ -109,7 +109,7 @@ export default async function getEnv(
       framework: Framework.defineFramework({
         cwd,
         manifest: manifestInfo.content,
-      }),
+      }).framework,
       baseUrl: `http://localhost:${process.env.PORT || "9999"}`,
       client,
     },
