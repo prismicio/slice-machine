@@ -22,6 +22,7 @@ import { SliceSimulatorSetupReadHookBase } from "./hooks/sliceSimulator-setup-re
 import { SliceUpdateHookBase } from "./hooks/slice-update";
 import { SliceRenameHookBase } from "./hooks/slice-rename";
 import { SnippetReadHookBase } from "./hooks/snippet-read";
+import { CommandInitHookBase } from "./hooks/command-init";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
@@ -155,6 +156,8 @@ export const SliceMachineHookType = {
 	snippet_read: "snippet:read",
 
 	sliceSimulator_setup_read: "slice-simulator:setup:read",
+
+	command_init: "command:init",
 } as const;
 
 /**
@@ -198,4 +201,7 @@ export type SliceMachineHooks = {
 
 	// Slice Simulator
 	[SliceMachineHookType.sliceSimulator_setup_read]: Hook<SliceSimulatorSetupReadHookBase>;
+
+	// Commands
+	[SliceMachineHookType.command_init]: Hook<CommandInitHookBase>;
 };

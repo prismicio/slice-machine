@@ -179,6 +179,13 @@ export type {
 	SliceSimulatorSetupStepValidationMessage,
 } from "./hooks/sliceSimulator-setup-read";
 
+// command:init
+export type {
+	CommandInitHook,
+	CommandInitHookData,
+	CommandInitHookReturnType,
+} from "./hooks/command-init";
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Internal (for Slice Machine)

@@ -1,3 +1,6 @@
+import * as path from "node:path";
+import { createRequire } from "node:module";
+
 import defu from "defu";
 
 import { HookSystem } from "./lib";
@@ -127,14 +130,11 @@ export class SliceMachinePluginRunner {
 		let plugin: SliceMachinePlugin | undefined = undefined;
 
 		if (typeof resolve === "string") {
-			// Import plugin
-			try {
-				const raw = await import(resolve);
-				plugin = raw.default || raw;
-			} catch {
-				// If the plugin could not be imported, we will
-				// throw a custom error later.
-			}
+			// Import plugin as a file from the project
+			const raw = await createRequire(
+				path.resolve(this._project.root, "noop.js"),
+			)(resolve);
+			plugin = raw.default || raw;
 		} else {
 			plugin = resolve;
 		}

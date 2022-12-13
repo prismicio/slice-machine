@@ -9,11 +9,11 @@
     "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
   },
-  "plugins": ["@typescript-eslint", "import", "jest"],
+  "plugins": ["@typescript-eslint", "import" /*, "jest" */],
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:jest/recommended",
+    // "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    // "plugin:jest/recommended",
     "eslint-config-prettier"
   ],
   "ignorePatterns": ["build", "templates", "**/tests/**", "helpers/**"],

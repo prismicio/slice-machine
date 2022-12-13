@@ -2,13 +2,19 @@ import * as t from "io-ts";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
+import * as http from "node:http";
+
+import * as h3 from "h3";
 import fetch from "node-fetch";
 import cookie from "cookie";
+import cors from "cors";
+import getPort from "get-port";
 
 import { decode } from "../lib/decode";
 import { serializeCookies } from "../lib/serializeCookies";
 
 import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
+import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
 import {
 	InternalError,
 	UnauthenticatedError,
@@ -64,6 +70,16 @@ type PrismicAuthManagerConstructorArgs = {
 type PrismicAuthManagerLoginArgs = {
 	email: string;
 	cookies: string[];
+};
+
+type PrismicAuthManagerGetLoginSessionInfoReturnType = {
+	port: number;
+	url: string;
+};
+
+type PrismicAuthManagerNodeLoginSessionArgs = {
+	port: number;
+	onListenCallback?: () => void;
 };
 
 type GetProfileForAuthenticationTokenArgs = {
@@ -128,6 +144,64 @@ export class PrismicAuthManager {
 		await this._writePersistedAuthState(authState);
 	}
 
+	async getLoginSessionInfo(): Promise<PrismicAuthManagerGetLoginSessionInfoReturnType> {
+		// Pick a random port, with a preference for historic `5555`
+		const port = await getPort({ port: 5555 });
+
+		const url = new URL(
+			`/dashboard/cli/login?source=slice-machine&port=${port}`,
+			APIEndpoints.PrismicWroom,
+		).toString();
+
+		return {
+			port,
+			url,
+		};
+	}
+
+	async nodeLoginSession(
+		args: PrismicAuthManagerNodeLoginSessionArgs,
+	): Promise<void> {
+		return new Promise<void>(async (resolve) => {
+			// Timeout attempt after 3 minutes
+			const timeout = setTimeout(() => {
+				server.close();
+				throw new Error(
+					"Login timeout, server did not receive a response within a 3-minute delay",
+				);
+			}, 180_000);
+
+			const app = h3.createApp();
+			app.use(h3.fromNodeMiddleware(cors()));
+			app.use(
+				h3.fromNodeMiddleware(
+					createPrismicAuthManagerMiddleware({
+						prismicAuthManager: this,
+						onLoginCallback() {
+							// Cleanup process and resolve
+							clearTimeout(timeout);
+							server.close();
+							resolve();
+						},
+					}),
+				),
+			);
+
+			// Start server
+			const server = http.createServer(h3.toNodeListener(app));
+			await new Promise<void>((resolve) => {
+				server.once("listening", () => {
+					resolve();
+				});
+				server.listen(args.port);
+			});
+
+			if (args.onListenCallback) {
+				args.onListenCallback();
+			}
+		});
+	}
+
 	async logout(): Promise<void> {
 		const authState = await this._readPersistedAuthState();
 
@@ -163,6 +237,34 @@ export class PrismicAuthManager {
 		}
 	}
 
+	async getAuthenticationCookies(): Promise<
+		PrismicAuthState["cookies"] &
+			Required<
+				Pick<
+					PrismicAuthState["cookies"],
+					typeof AUTH_COOKIE_KEY | typeof SESSION_COOKIE_KEY
+				>
+			>
+	> {
+		const isLoggedIn = await this.checkIsLoggedIn();
+
+		if (isLoggedIn) {
+			const authState = await this._readPersistedAuthState();
+
+			if (checkHasAuthenticationToken(authState)) {
+				return authState.cookies;
+			}
+		}
+
+		throw new Error("Not logged in.");
+	}
+
+	async getAuthenticationToken(): Promise<string> {
+		const cookies = await this.getAuthenticationCookies();
+
+		return cookies[AUTH_COOKIE_KEY];
+	}
+
 	async refreshAuthenticationToken(): Promise<void> {
 		const authState = await this._readPersistedAuthState();
 
@@ -187,20 +289,6 @@ export class PrismicAuthManager {
 		} else {
 			throw new UnauthenticatedError();
 		}
-	}
-
-	async getAuthenticationToken(): Promise<string> {
-		const isLoggedIn = await this.checkIsLoggedIn();
-
-		if (isLoggedIn) {
-			const authState = await this._readPersistedAuthState();
-
-			if (checkHasAuthenticationToken(authState)) {
-				return authState.cookies[AUTH_COOKIE_KEY];
-			}
-		}
-
-		throw new UnauthenticatedError();
 	}
 
 	async getProfile(): Promise<PrismicUserProfile> {
@@ -241,7 +329,7 @@ export class PrismicAuthManager {
 	}
 
 	private async _readPersistedAuthState(): Promise<PrismicAuthState> {
-		const authStateFilePath = await this._getPersistedAuthStateFilePath();
+		const authStateFilePath = this._getPersistedAuthStateFilePath();
 
 		let authStateFileContents: string = JSON.stringify({});
 
@@ -282,7 +370,7 @@ export class PrismicAuthManager {
 	private async _writePersistedAuthState(
 		authState: PrismicAuthState,
 	): Promise<void> {
-		const authStateFilePath = await this._getPersistedAuthStateFilePath();
+		const authStateFilePath = this._getPersistedAuthStateFilePath();
 
 		const preparedAuthState = {
 			...authState,
@@ -304,7 +392,7 @@ export class PrismicAuthManager {
 		}
 	}
 
-	private async _getPersistedAuthStateFilePath(): Promise<string> {
+	private _getPersistedAuthStateFilePath(): string {
 		return path.resolve(this.scopedDirectory, PERSISTED_AUTH_STATE_FILE_NAME);
 	}
 }

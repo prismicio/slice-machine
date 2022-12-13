@@ -1,5 +1,9 @@
-import { createSliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+import {
+	createSliceMachinePluginRunner,
+	SliceMachinePluginRunner,
+} from "@slicemachine/plugin-kit";
 
+import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
 import { BaseManager } from "./_BaseManager";
 
 export class PluginsManager extends BaseManager {
@@ -16,4 +20,10 @@ export class PluginsManager extends BaseManager {
 
 		await this.sliceMachinePluginRunner.init();
 	}
+
+	dangerouslyCallHook: SliceMachinePluginRunner["callHook"] = (...args) => {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		return this.sliceMachinePluginRunner.callHook(...args);
+	};
 }

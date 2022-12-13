@@ -1,0 +1,81 @@
+{
+	"name": "@slicemachine/init2",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Init Prismic Slice Machine in your project",
+	"keywords": [
+		"typescript",
+		"prismic"
+	],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/init2"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./cli": {
+			"require": "./dist/cli.cjs",
+			"import": "./dist/cli.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"bin": {
+		"slicemachine-init": "./bin/slicemachine-init.js"
+	},
+	"files": [
+		"bin",
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch"
+	},
+	"dependencies": {
+		"@antfu/ni": "^0.18.8",
+		"@lihbr/listr-update-renderer": "^0.5.3",
+		"@slicemachine/core2": "^0.1.0",
+		"chalk": "^4.1.2",
+		"common-tags": "^1.8.2",
+		"execa": "^6.1.0",
+		"globby": "^13.1.2",
+		"listr": "^0.14.3",
+		"log-symbols": "^4.1.0",
+		"meow": "^11.0.0",
+		"open": "^8.4.0",
+		"prompts": "^2.4.2",
+		"prettier": "^2.8.0",
+		"semver": "^7.3.8"
+	},
+	"devDependencies": {
+		"@size-limit/preset-small-lib": "^8.1.0",
+		"@types/listr": "^0.14.4",
+		"@types/common-tags": "^1.8.1",
+		"@types/prompts": "^2.4.2",
+		"@types/prettier": "^2.7.1",
+		"@types/semver": "^7.3.13",
+		"@typescript-eslint/eslint-plugin": "^5.44.0",
+		"@typescript-eslint/parser": "^5.44.0",
+		"@vitest/coverage-c8": "^0.25.3",
+		"eslint": "^8.28.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"prettier-plugin-jsdoc": "^0.4.2",
+		"size-limit": "^8.1.0",
+		"typescript": "^4.9.3",
+		"vite": "^3.2.4",
+		"vite-plugin-sdk": "^0.0.6",
+		"vitest": "^0.25.3"
+	}
+}

@@ -8,6 +8,7 @@ export default defineConfig({
 				"fp-ts",
 				"devalue",
 				"p-limit",
+				"get-port",
 				"node-fetch",
 				"form-data-encoder",
 				"hast-util-to-string",
