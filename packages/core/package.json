@@ -20,7 +20,7 @@
     "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
-    "@prismicio/types-internal": "^1.5.2",
+    "@prismicio/types-internal": "^1.5.3",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",
     "io-ts": "^2.2.16",
