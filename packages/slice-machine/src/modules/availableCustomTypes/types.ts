@@ -11,25 +11,29 @@ export type SyncedCustomType = {
 export type LocalFrontEndCustomType = NewCustomType | SyncedCustomType;
 
 export type DeletedFrontEndCustomType = {
-  local: undefined;
   remote: CustomTypeSM;
 };
 
 // TODO whats the difference between this and packages/slice-machine/lib/models/common/ModelStatus/compareCustomTypeModels.ts::FrontEndCtModel
 export type FrontEndCustomType =
-  | LocalFrontEndCustomType
+  | NewCustomType
+  | SyncedCustomType
   | DeletedFrontEndCustomType;
 
 export const isLocalCustomType = (
   ct: FrontEndCustomType
-): ct is LocalFrontEndCustomType => ct.local !== undefined;
+): ct is LocalFrontEndCustomType => "local" in ct && ct.local !== undefined;
 
 export const isDeletedCustomType = (
   ct: FrontEndCustomType
 ): ct is DeletedFrontEndCustomType => !isLocalCustomType(ct);
 
 export const isNewCustomType = (ct: FrontEndCustomType): ct is NewCustomType =>
-  isLocalCustomType(ct) && !("remote" in ct);
+  !("remote" in ct);
+
+export const isSyncedCustomType = (
+  ct: FrontEndCustomType
+): ct is SyncedCustomType => "remote" in ct && "local" in ct;
 
 export const getCustomTypeProp = <key extends keyof CustomTypeSM>(
   ct: FrontEndCustomType,

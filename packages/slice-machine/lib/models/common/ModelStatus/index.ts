@@ -23,7 +23,7 @@ export function computeModelStatus(
 
   // If there's no local model then it's a model deleted locally waiting to be pushed
   // TODO Models created by someone else will be handled in the next iteration
-  if (!models.local) return ModelStatus.Deleted;
+  if (!("local" in models) || !models.local) return ModelStatus.Deleted;
 
   // If there is no remote model then it's a new model created locally waiting to be pushed
   if (!("remote" in models) || !models.remote) return ModelStatus.New;
