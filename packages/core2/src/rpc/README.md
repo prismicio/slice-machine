@@ -13,6 +13,8 @@ Simple [remote procedure calls (RPC)][rpc-wiki] in TypeScript.
 - 🖼️ &nbsp;Handles binary data in both directions (think: file uploads and downloads).
 - 🎛️ &nbsp;Compatible with any Express-like server.
 
+`@slicemachine/rpc` is a general-purpose RPC library and does not contain any Slice Machine-specific code.
+
 ## Install
 
 ```bash
