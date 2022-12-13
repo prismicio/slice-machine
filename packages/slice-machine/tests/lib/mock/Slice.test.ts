@@ -131,7 +131,7 @@ describe("MockSlice", () => {
           },
           image: {
             __TYPE__: "ImageContent",
-            url: "https://images.unsplash.com/photo-1555169062-013468b47731?fit=crop&w=900&h=500",
+            url: "https://images.unsplash.com/photo-1555169062-013468b47731",
             origin: {
               id: "main",
               url: "https://images.unsplash.com/photo-1555169062-013468b47731",
