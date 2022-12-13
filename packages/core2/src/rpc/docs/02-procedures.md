@@ -3,6 +3,8 @@
 Procedures are functions run on a server. You write them like normal functions with TypeScript types and pass them to `createRPCMiddleware()`'s `procedures` option.
 
 ```typescript
+// src/server.ts
+
 import { createRPCMiddleware, ExtractProcedures } from "@slicemachine/rpc";
 
 export const middleware = createRPCMiddleware({
@@ -19,6 +21,8 @@ export type Procedures = ExtractProcedures<typeof middleware>;
 Clients call them like typical JavaScript methods.
 
 ```typescript
+// src/client.ts
+
 import type { Procedures } from "./path/to/your/server";
 
 const client = createRPCClient<Procedures>({
@@ -33,6 +37,8 @@ const seven = await client.add({ a: 3, b: 4 });
 Procedures can optionally accept named arguments using an object parameter.
 
 ```typescript
+// src/server.ts
+
 export const middleware = createRPCMiddleware({
 	procedures: {
 		ping() {
@@ -50,6 +56,8 @@ export const middleware = createRPCMiddleware({
 Procedures can be synchronous or asynchronous. All client calls will be asynchronous since it requires a network request.
 
 ```typescript
+// src/server.ts
+
 export const middleware = createRPCMiddleware({
 	procedures: {
 		getCatFact(): string {
@@ -70,6 +78,8 @@ export const middleware = createRPCMiddleware({
 Procedures can optionally return values to be sent to clients.
 
 ```typescript
+// src/server.ts
+
 export const middleware = createRPCMiddleware({
 	procedures: {
 		async waitOneSecond(): Promise<void> {
@@ -87,6 +97,8 @@ export const middleware = createRPCMiddleware({
 Procedures can be nested arbitrarily.
 
 ```typescript
+// src/server.ts
+
 export const middleware = createRPCMiddleware({
 	procedures: {
 		math: {
@@ -106,6 +118,8 @@ export const middleware = createRPCMiddleware({
 Procedures can be provided as class instances using the `proceduresFromInstance()` helper.
 
 ```typescript
+// src/server.ts
+
 import { createRPCMiddleware, proceduresFromInstance } from "@slicemachine/rpc";
 
 class Math {
@@ -126,6 +140,8 @@ export const middleware = createRPCMiddleware({
 `proceduresFromInstance()` accepts an `omit` option to omit properties.
 
 ```typescript
+// src/server.ts
+
 import { createRPCMiddleware, proceduresFromInstance } from "@slicemachine/rpc";
 
 class Math {
