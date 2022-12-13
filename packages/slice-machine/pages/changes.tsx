@@ -20,6 +20,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SyncError } from "@src/models/SyncError";
 import DeleteDocumentsDrawer from "@components/DeleteDocumentsDrawer";
 import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
+import DeleteDocumentsDrawerOverLimit from "@components/DeleteDocumentsDrawer/DeleteDocumentsDrawerOverLimit";
 
 const changes: React.FunctionComponent = () => {
   const {
@@ -127,6 +128,7 @@ const changes: React.FunctionComponent = () => {
         {PageContent}
       </Box>
       <DeleteDocumentsDrawer />
+      <DeleteDocumentsDrawerOverLimit />
     </Container>
   );
 };

@@ -152,6 +152,18 @@ const useSliceMachineActions = () => {
     dispatch(
       modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER })
     );
+  const openDeleteDocumentsDrawerOverLimit = () =>
+    dispatch(
+      modalOpenCreator({
+        modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+      })
+    );
+  const closeDeleteDocumentsDrawerOverLimit = () =>
+    dispatch(
+      modalCloseCreator({
+        modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+      })
+    );
 
   // Loading module
   const startLoadingReview = () =>
@@ -545,6 +557,8 @@ const useSliceMachineActions = () => {
     openSetupDrawer,
     openDeleteDocumentsDrawer,
     closeDeleteDocumentsDrawer,
+    openDeleteDocumentsDrawerOverLimit,
+    closeDeleteDocumentsDrawerOverLimit,
     refreshState,
     finishOnboarding,
     closeScreenshotsModal,
