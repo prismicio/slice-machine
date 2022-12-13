@@ -7,10 +7,10 @@ import NodeUtils from "@slicemachine/core/build/node-utils";
 import getEnv from "./api/services/getEnv";
 import semver from "semver";
 
-export const useSentry = () => !process.env.NO_SENTRY;
+export const enableSentry = () => !process.env.NO_SENTRY;
 
 export const initSentry = () => {
-  if (!useSentry()) {
+  if (!enableSentry()) {
     return;
   }
 
@@ -48,7 +48,7 @@ export const initSentry = () => {
 };
 
 export const addSentryPreHandler = (app: express.Express) => {
-  if (!useSentry()) {
+  if (!enableSentry()) {
     return;
   }
 
@@ -57,7 +57,7 @@ export const addSentryPreHandler = (app: express.Express) => {
 };
 
 export const addSentryPostHandler = (app: express.Express) => {
-  if (!useSentry()) {
+  if (!enableSentry()) {
     return;
   }
 
