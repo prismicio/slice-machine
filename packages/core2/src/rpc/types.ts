@@ -37,8 +37,10 @@ export type ProcedureCallServerArgs = {
 
 export type ExtractProcedures<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TRPCServer extends RPCMiddleware<Procedures>,
-> = TRPCServer extends RPCMiddleware<infer TProcedures> ? TProcedures : never;
+	TRPCMiddleware extends RPCMiddleware<Procedures>,
+> = TRPCMiddleware extends RPCMiddleware<infer TProcedures>
+	? TProcedures
+	: never;
 
 export type ErrorLike = {
 	name: string;
