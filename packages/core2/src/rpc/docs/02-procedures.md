@@ -51,20 +51,6 @@ export const middleware = createRPCMiddleware({
 });
 ```
 
-```typescript
-// src/client.ts
-
-import type { Procedures } from "./server";
-
-const client = createRPCClient<Procedures>({
-	serverURL: "https://example.com/rpc",
-});
-
-// Both calls are asynchronous.
-const pong = await client.pong();
-const seven = await client.add({ a: 3, b: 4 });
-```
-
 ## Asynchronicity
 
 Procedures can be synchronous or asynchronous. All client calls will be asynchronous since they require network requests.
@@ -85,6 +71,20 @@ export const middleware = createRPCMiddleware({
 		},
 	},
 });
+```
+
+```typescript
+// src/client.ts
+
+import type { Procedures } from "./server";
+
+const client = createRPCClient<Procedures>({
+	serverURL: "https://example.com/rpc",
+});
+
+// Both calls are asynchronous.
+const catFact = await client.getCatFact();
+const randomCatFact = await client.getRandomCatFact();
 ```
 
 ## Return values
