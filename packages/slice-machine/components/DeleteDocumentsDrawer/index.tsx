@@ -9,8 +9,6 @@ import {
   Checkbox,
   ThemeUIStyleObject,
   Label,
-  Card as ThemeUICard,
-  Link,
 } from "theme-ui";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Card from "@components/Card";
@@ -19,6 +17,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
+import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 
 // TODO: replace with actual API response
 const AssociatedDocuments = [
@@ -173,37 +172,7 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
         </Text>
 
         {AssociatedDocuments.map((ctDocuments) => (
-          <ThemeUICard
-            sx={{
-              mb: 12,
-              backgroundColor: "white",
-              boxShadow: "0px 2px 1px rgba(0, 0, 0, 0.05)",
-              borderRadius: 6,
-              border: (t) => `1px solid ${String(t.colors?.borders)}`,
-              px: 16,
-              py: 2,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Flex sx={{ flexDirection: "column" }}>
-              <Text>{ctDocuments.ctName}</Text>
-              <Text
-                sx={{
-                  color: "textClear",
-                  fontSize: "12px",
-                  lineHeight: "16px",
-                }}
-              >
-                {ctDocuments.numberOfDocuments} documents
-              </Text>
-            </Flex>
-            <Link href={ctDocuments.link} target="_blank" variant="cardSmall">
-              View documents
-            </Link>
-          </ThemeUICard>
+          <AssociatedDocumentsCard ctDocuments={ctDocuments} />
         ))}
       </Card>
     </Drawer>
