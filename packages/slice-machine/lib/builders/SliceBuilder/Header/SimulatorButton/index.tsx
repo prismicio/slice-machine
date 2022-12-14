@@ -124,6 +124,7 @@ const SimulatorButton: React.FC<{
                   loop={false}
                   autoPlay={false}
                   publicId={VIDEO_SIMULATOR_TOOLTIP}
+                  poster="/simulator-video-thumbnail.png"
                   onPlay={() => {
                     void Tracker.get().trackClickOnVideoTutorials(
                       framework,

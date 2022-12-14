@@ -9,6 +9,7 @@ const Video: FC<{
   autoPlay?: boolean;
   controls?: boolean;
   loop?: boolean;
+  poster?: string;
 }> = ({
   publicId,
   onPlay,
@@ -16,6 +17,7 @@ const Video: FC<{
   autoPlay = true,
   controls = true,
   loop = true,
+  poster,
 }) => {
   return (
     <CldVideo
@@ -23,6 +25,7 @@ const Video: FC<{
       autoPlay={autoPlay}
       controls={controls}
       loop={loop}
+      poster={poster}
       style={{
         maxWidth: "100%",
         height: "auto",
