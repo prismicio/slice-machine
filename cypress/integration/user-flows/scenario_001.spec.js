@@ -131,6 +131,20 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.get("[data-cy=builder-save-button-icon]").should("be.visible");
   });
 
+  it("Links to CTs available locally", () => {
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true,
+    });
+    cy.visit(`/changes`);
+
+    cy.contains(id).click();
+
+    cy.url().should("include", `/cts/${id}`);
+  });
+
   it("Pushes changes", () => {
     cy.setupSliceMachineUserContext({
       hasSendAReview: true,
