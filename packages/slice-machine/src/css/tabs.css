@@ -44,6 +44,10 @@
   border-right: none;
 }
 
+.react-tabs__vertical__tab--selected:focus-visible {
+  outline: none !important;
+}
+
 .react-tabs__vertical__tab-panel {
   display: none;
   width: 570px;
