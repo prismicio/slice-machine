@@ -91,6 +91,7 @@ describe("configure-project", () => {
   const fakeFrameworkStats = {
     value: Models.Frameworks.react,
     manuallyAdded: false,
+    version: undefined,
   };
 
   const retrieveManifestMock = NodeUtils.retrieveManifest as jest.Mock;

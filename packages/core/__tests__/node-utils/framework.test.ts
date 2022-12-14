@@ -186,3 +186,56 @@ describe("framework.defineFrameworks", () => {
     expect(result).toEqual(Frameworks.vanillajs);
   });
 });
+
+describe("framework.defineFrameworkWithVersion", () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test("it should return the version if found", () => {
+    const fakeManifest = {
+      apiEndpoint: "fake api endpoint",
+    };
+
+    const mockedFs = mocked(fs, true);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {
+          [Frameworks.next]: "beta",
+        },
+      })
+    );
+
+    const result = FrameworkUtils.defineFrameworkWithVersion({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual({ framework: Frameworks.next, version: "beta" });
+  });
+
+  test("it should return undefined if framework is nto found", () => {
+    const fakeManifest = {
+      apiEndpoint: "fake api endpoint",
+    };
+
+    const mockedFs = mocked(fs, true);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {},
+      })
+    );
+
+    const result = FrameworkUtils.defineFrameworkWithVersion({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual({
+      framework: Frameworks.vanillajs,
+      version: undefined,
+    });
+  });
+});

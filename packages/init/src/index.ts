@@ -95,7 +95,12 @@ async function init() {
   );
 
   // Install the required dependencies in the project.
-  await installRequiredDependencies(cwd, frameworkResult.value, wasStarter);
+  await installRequiredDependencies(
+    cwd,
+    frameworkResult.value,
+    wasStarter,
+    frameworkResult.version
+  );
 
   setVersion(cwd);
 
