@@ -10,9 +10,11 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
+import { sortDocumentCards } from ".";
 
 // TODO: replace with actual API response
 const AssociatedDocuments = [
+  { ctName: "Feature", numberOfDocuments: 6, link: "https://prismic.io/" },
   { ctName: "Legals", numberOfDocuments: 2030, link: "https://prismic.io/" },
 ];
 
@@ -116,7 +118,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
           manually and then try deleting the Custom Types again.
         </Text>
 
-        {AssociatedDocuments.map((ctDocuments) => (
+        {sortDocumentCards(AssociatedDocuments).map((ctDocuments) => (
           <AssociatedDocumentsCard ctDocuments={ctDocuments} isOverLimit />
         ))}
       </Card>

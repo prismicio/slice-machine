@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Text, Card, Link } from "theme-ui";
 
-type CustomtypeDocuments = {
+export type CustomtypeDocuments = {
   ctName: string;
   numberOfDocuments: number;
   link: string;
