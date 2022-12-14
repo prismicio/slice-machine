@@ -1,9 +1,9 @@
-import { expect, it } from "vitest";
-import { Blob } from "node:buffer";
+import { expect, it, vi } from "vitest";
 import fetch from "node-fetch";
 import { createApp, fromNodeMiddleware, toNodeListener } from "h3";
 import { createServer, Server } from "node:http";
 import type { AddressInfo } from "node:net";
+import { Buffer } from "node:buffer";
 
 import {
 	createRPCClient,
@@ -131,7 +131,7 @@ it("supports procedures using JavaScript data structures", async () => {
 	expect(res).toBe(60 * 60 * 24 * 1000); // one day
 });
 
-it("supports procedures with file arguments", async () => {
+it("supports procedures with Buffer arguments", async () => {
 	const procedures = {
 		ping: (args: { file: Buffer }) => args.file.toString(),
 	};
@@ -143,12 +143,28 @@ it("supports procedures with file arguments", async () => {
 	});
 
 	const res = await client.ping({
-		file: new Blob([Buffer.from("pong")]),
+		file: new Blob(["pong"]),
 	});
 
 	await server.close();
 
 	expect(res).toBe("pong");
+});
+
+it("supports procedures with Buffer return values", async () => {
+	const procedures = { ping: () => Buffer.from("pong") };
+	const server = await listen(createRPCTestServer({ procedures }));
+
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
+		fetch,
+	});
+
+	const res = await client.ping();
+
+	await server.close();
+
+	expect(await res.text()).toBe("pong");
 });
 
 it("supports procedures from class instances", async () => {
@@ -194,22 +210,6 @@ it("supports namespaced procedures", async () => {
 	expect(res).toBe("pong");
 });
 
-it("does not support procedures with file return values", async () => {
-	const procedures = { ping: () => Buffer.from("pong") };
-	const server = await listen(createRPCTestServer({ procedures }));
-
-	const client = createRPCClient<typeof procedures>({
-		serverURL: `http://localhost:${server.address.port}`,
-		fetch,
-	});
-
-	await expect(async () => {
-		await client.ping();
-	}).rejects.toThrow(/unable to serialize server response/i);
-
-	await server.close();
-});
-
 it("does not support function arguments", async () => {
 	const procedures = { ping: (args: { fn: () => void }) => args.fn() };
 	const server = await listen(createRPCTestServer({ procedures }));
@@ -237,9 +237,67 @@ it("does not support function return values", async () => {
 		fetch,
 	});
 
+	const consoleErrorSpy = vi
+		.spyOn(globalThis.console, "error")
+		.mockImplementation(() => void 0);
+
 	await expect(async () => {
 		await client.ping();
 	}).rejects.toThrow(/unable to serialize server response/i);
+
+	consoleErrorSpy.mockRestore();
+
+	await server.close();
+});
+
+it("does not support class arguments", async () => {
+	class Foo {
+		bar() {
+			return "baz";
+		}
+	}
+
+	const procedures = { ping: (args: { foo: Foo }) => args.foo.bar() };
+	const server = await listen(createRPCTestServer({ procedures }));
+
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
+		fetch,
+	});
+
+	await expect(async () => {
+		await client.ping({
+			foo: new Foo(),
+		});
+	}).rejects.toThrow(/cannot stringify arbitrary non-POJOs/i);
+
+	await server.close();
+});
+
+it("does not support class return values", async () => {
+	class Foo {
+		bar() {
+			return "baz";
+		}
+	}
+
+	const procedures = { ping: () => new Foo() };
+	const server = await listen(createRPCTestServer({ procedures }));
+
+	const client = createRPCClient<typeof procedures>({
+		serverURL: `http://localhost:${server.address.port}`,
+		fetch,
+	});
+
+	const consoleErrorSpy = vi
+		.spyOn(globalThis.console, "error")
+		.mockImplementation(() => void 0);
+
+	await expect(async () => {
+		await client.ping();
+	}).rejects.toThrow(/unable to serialize server response/i);
+
+	consoleErrorSpy.mockRestore();
 
 	await server.close();
 });

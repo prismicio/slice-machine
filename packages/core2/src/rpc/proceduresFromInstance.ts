@@ -47,11 +47,6 @@ type RecursiveOmitNested<
 				: TObj[P];
 	  };
 
-// type OmitNested<
-// 	TObj,
-// 	TOmitPath extends AllObjDotPaths<TObj>,
-// > = RecursiveOmitNested<TObj, TOmitPath>;
-
 type OnlyProcedures<TProceduresInstance> =
 	TProceduresInstance extends AnyFunction
 		? TProceduresInstance
@@ -126,7 +121,7 @@ type ProceduresFromInstanceConfig<
 
 export const proceduresFromInstance = <
 	TProceduresInstance,
-	TUnknownOmitPaths extends string,
+	TUnknownOmitPaths extends string = never,
 >(
 	proceduresInstance: TProceduresInstance,
 	config: ProceduresFromInstanceConfig<

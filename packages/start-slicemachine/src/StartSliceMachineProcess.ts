@@ -104,7 +104,10 @@ export class StartSliceMachineProcess {
 		// Prepare the manager for Slice Machine actions.
 		await Promise.all([
 			this._sliceMachineManager.screenshots.initBrowserContext(),
-			this._sliceMachineManager.screenshots.initS3ACL(),
+			profile
+				? this._sliceMachineManager.user.refreshAuthenticationToken()
+				: undefined,
+			profile ? this._sliceMachineManager.screenshots.initS3ACL() : undefined,
 		]);
 	}
 

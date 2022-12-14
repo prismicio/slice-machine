@@ -1,6 +1,6 @@
-import { clientFormDataToObject } from "./lib/clientFormDataToObject";
+import { formDataToObject } from "./lib/formDataToObject.client";
 import { isErrorLike } from "./lib/isErrorLike";
-import { objectToClientFormData } from "./lib/objectToClientFormData";
+import { objectToFormData } from "./lib/objectToFormData.client";
 
 import { Procedures, Procedure } from "./types";
 
@@ -87,7 +87,7 @@ export const createRPCClient = <TProcedures extends Procedures>(
 		args.fetch || globalThis.fetch.bind(globalThis);
 
 	return createArbitrarilyNestedFunction(async (path, fnArgs) => {
-		const body = objectToClientFormData({
+		const body = objectToFormData({
 			procedurePath: path,
 			procedureArgs: fnArgs[0],
 		});
@@ -98,7 +98,7 @@ export const createRPCClient = <TProcedures extends Procedures>(
 		});
 
 		const formData = await res.formData();
-		const resObject = clientFormDataToObject(formData);
+		const resObject = formDataToObject(formData);
 
 		if ("data" in resObject) {
 			return resObject.data;

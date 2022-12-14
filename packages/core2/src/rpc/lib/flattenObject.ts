@@ -40,43 +40,43 @@ const isObject = (object: unknown): object is Record<PropertyKey, unknown> => {
 	return typeOf(object) === "object";
 };
 
+const recur = (
+	accumulator: Record<string, unknown>,
+	key: string,
+	value: unknown,
+): Record<string, unknown> => {
+	if (isObject(value)) {
+		const objKeys = Object.keys(value);
+		if (objKeys.length) {
+			objKeys.forEach((v) => {
+				recur(accumulator, `${key}.${v}`, value[v]);
+			});
+
+			return accumulator;
+		}
+	}
+
+	if (isArray(value)) {
+		if (value.length) {
+			value.forEach((v, i) => {
+				recur(accumulator, `${key}[${i}]`, v);
+			});
+
+			return accumulator;
+		}
+	}
+
+	accumulator[key] = value;
+
+	return accumulator;
+};
+
 export const flattenObject = (
 	obj: Record<string, unknown>,
 ): Record<string, unknown> => {
 	if (!isObject(obj)) {
 		throw new Error();
 	}
-
-	const recur = (
-		accumulator: Record<string, unknown>,
-		key: string,
-		value: unknown,
-	): Record<string, unknown> => {
-		if (isObject(value)) {
-			const objKeys = Object.keys(value);
-			if (objKeys.length) {
-				objKeys.forEach((v) => {
-					recur(accumulator, `${key}.${v}`, value[v]);
-				});
-
-				return accumulator;
-			}
-		}
-
-		if (isArray(value)) {
-			if (value.length) {
-				value.forEach((v, i) => {
-					recur(accumulator, `${key}[${i}]`, v);
-				});
-
-				return accumulator;
-			}
-		}
-
-		accumulator[key] = value;
-
-		return accumulator;
-	};
 
 	return Object.keys(obj).reduce(
 		(accumulator, key) => ({

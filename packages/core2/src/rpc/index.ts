@@ -1,5 +1,5 @@
 export {
-	CreateRPCRouterArgs,
+	CreateRPCMiddlewareArgs,
 	RPCMiddleware,
 	createRPCMiddleware,
 } from "./createRPCMiddleware";
