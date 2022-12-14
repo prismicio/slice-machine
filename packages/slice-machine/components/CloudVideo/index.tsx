@@ -31,11 +31,7 @@ const Video: FC<{
         height: "auto",
         ...style,
       }}
-      {...(onPlay
-        ? {
-            onplay,
-          }
-        : {})}
+      onPlay={onPlay}
       publicId={publicId}
     />
   );

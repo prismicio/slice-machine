@@ -11,7 +11,7 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    // There is a 5s timeout for displaying the tooltip
+    // There is a 10s timeout for displaying the tooltip
     cy.wait(10000);
 
     cy.get("[data-testid=video-tooltip]").should("exist");
@@ -38,7 +38,7 @@ describe("video tooltip", () => {
       hasSeenSimulatorToolTip: true,
     });
 
-    // There is a 5s timeout for displaying the tooltip
+    // There is a 10s timeout for displaying the tooltip
     cy.wait(10000);
 
     cy.get("[data-testid=video-tooltip]").should("not.exist");
@@ -56,7 +56,7 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    // There is a 5s timeout for displaying the tooltip
+    // There is a 10s timeout for displaying the tooltip
     cy.wait(10000);
 
     cy.get("[data-testid=video-tooltip]").should("exist");
