@@ -1,11 +1,10 @@
 import { Video as CldVideo } from "cloudinary-react";
-import { FC } from "react";
+import type { CSSProperties, FC } from "react";
 
 const Video: FC<{
   publicId: string;
   onPlay?: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  style?: Record<string, any>;
+  style?: CSSProperties;
   autoPlay?: boolean;
   controls?: boolean;
   loop?: boolean;
