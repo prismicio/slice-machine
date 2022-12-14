@@ -129,4 +129,5 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
           npm run bump:alpha --preid="${{ github.ref_name }}"
+          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           npm run publish:alpha
