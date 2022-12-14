@@ -4,15 +4,15 @@ import {
 	SliceSimulatorSetupStepValidationMessageType,
 } from "@slicemachine/plugin-kit";
 
-import { DecodeError } from "../lib/DecodeError";
-import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
-import { castArray } from "../lib/castArray";
-import { decode } from "../lib/decode";
-import { decodeHookResult } from "../lib/decodeHookResult";
-import { functionCodec } from "../lib/functionCodec";
+import { DecodeError } from "../../lib/DecodeError";
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { castArray } from "../../lib/castArray";
+import { decode } from "../../lib/decode";
+import { decodeHookResult } from "../../lib/decodeHookResult";
+import { functionCodec } from "../../lib/functionCodec";
+import { markdownToHTML } from "../../lib/markdownToHTML";
 
-import { BaseManager } from "./_BaseManager";
-import { markdownToHTML } from "../lib/markdownToHTML";
+import { BaseManager } from "../BaseManager";
 
 const sliceSimulatorSetupStepCodec = t.intersection([
 	t.type({

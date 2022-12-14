@@ -4,14 +4,14 @@ import fetch, { FormData, Blob } from "node-fetch";
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { BrowserContext, Viewport } from "puppeteer";
 
-import { checkIsURLAccessible } from "../lib/checkIsURLAccessible";
-import { createContentDigest } from "../lib/createContentDigest";
-import { decode } from "../lib/decode";
+import { checkIsURLAccessible } from "../../lib/checkIsURLAccessible";
+import { createContentDigest } from "../../lib/createContentDigest";
+import { decode } from "../../lib/decode";
 
-import { S3ACL } from "../types";
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
+import { S3ACL } from "../../types";
+import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../../constants";
 
-import { BaseManager } from "./_BaseManager";
+import { BaseManager } from "../BaseManager";
 
 const SLICE_SIMULATOR_LOAD_TIMEOUT = 10_000; // ms
 const SLICE_SIMULATOR_ROOT_SELECTOR = "#root";

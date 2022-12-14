@@ -2,16 +2,21 @@ import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 
 import { SliceMachineManager } from "./SliceMachineManager";
-import { CustomTypesManager } from "./_CustomTypesManager";
-import { PluginsManager } from "./_PluginsManager";
-import { ProjectManager } from "./_ProjectManager";
-import { SimulatorManager } from "./_SimulatorManager";
-import { ScreenshotsManager } from "./_ScreenshotsManager";
-import { SlicesManager } from "./_SlicesManager";
-import { SnippetsManager } from "./_SnippetsManager";
-import { UserManager } from "./_UserManager";
-import { VersionsManager } from "./_VersionsManager";
-import { AnalyticsManager } from "./_AnalyticsManager";
+
+import { UserManager } from "./user/UserManager";
+import { RepositoryAPIManager } from "./repositoryAPI/RepositoryAPIManager";
+
+import { PluginsManager } from "./plugins/PluginsManager";
+
+import { ProjectManager } from "./project/ProjectManager";
+import { CustomTypesManager } from "./project/CustomTypesManager";
+import { SlicesManager } from "./project/SlicesManager";
+import { SnippetsManager } from "./project/SnippetsManager";
+import { ScreenshotsManager } from "./project/ScreenshotsManager";
+import { SimulatorManager } from "./project/SimulatorManager";
+
+import { VersionsManager } from "./versions/VersionsManager";
+import { TelemetryManager } from "./telemetry/TelemetryManager";
 
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;
@@ -46,17 +51,22 @@ export abstract class BaseManager {
 	protected get user(): UserManager {
 		return this._sliceMachineManager.user;
 	}
-	protected get project(): ProjectManager {
-		return this._sliceMachineManager.project;
+	protected get repositoryAPI(): RepositoryAPIManager {
+		return this._sliceMachineManager.repositoryAPI;
 	}
+
 	protected get plugins(): PluginsManager {
 		return this._sliceMachineManager.plugins;
 	}
-	protected get slices(): SlicesManager {
-		return this._sliceMachineManager.slices;
+
+	protected get project(): ProjectManager {
+		return this._sliceMachineManager.project;
 	}
 	protected get customTypes(): CustomTypesManager {
 		return this._sliceMachineManager.customTypes;
+	}
+	protected get slices(): SlicesManager {
+		return this._sliceMachineManager.slices;
 	}
 	protected get snippets(): SnippetsManager {
 		return this._sliceMachineManager.snippets;
@@ -67,10 +77,12 @@ export abstract class BaseManager {
 	protected get simulator(): SimulatorManager {
 		return this._sliceMachineManager.simulator;
 	}
+
 	protected get versions(): VersionsManager {
 		return this._sliceMachineManager.versions;
 	}
-	protected get analytics(): AnalyticsManager {
-		return this._sliceMachineManager.analytics;
+
+	protected get telemetry(): TelemetryManager {
+		return this._sliceMachineManager.telemetry;
 	}
 }

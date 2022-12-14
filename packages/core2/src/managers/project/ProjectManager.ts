@@ -3,9 +3,9 @@ import { existsSync } from "node:fs";
 import * as path from "node:path";
 import { createRequire } from "node:module";
 
-import { decodeSliceMachineConfig } from "../lib/decodeSliceMachineConfig";
-import { loadModuleWithJiti } from "../lib/loadModuleWithJiti";
-import { locateFileUpward } from "../lib/locateFileUpward";
+import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
+import { loadModuleWithJiti } from "../../lib/loadModuleWithJiti";
+import { locateFileUpward } from "../../lib/locateFileUpward";
 
 import {
 	SLICE_MACHINE_CONFIG_FILENAMES,
@@ -13,10 +13,10 @@ import {
 	SLICE_MACHINE_CONFIG_TS,
 	SLICE_MACHINE_NPM_PACKAGE_NAME,
 	TS_CONFIG_FILENAME,
-} from "../constants";
-import { SliceMachineConfig } from "../types";
+} from "../../constants";
+import { SliceMachineConfig } from "../../types";
 
-import { BaseManager } from "./_BaseManager";
+import { BaseManager } from "../BaseManager";
 
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;

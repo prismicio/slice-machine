@@ -15,19 +15,21 @@ import {
 } from "../auth/PrismicAuthManager";
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
-import { PluginsManager } from "./_PluginsManager";
+import { UserManager } from "./user/UserManager";
+import { RepositoryAPIManager } from "./repositoryAPI/RepositoryAPIManager";
 
-import { AnalyticsManager } from "./_AnalyticsManager";
-import { UserManager } from "./_UserManager";
-import { RepositoryManager } from "./_RepositoryManager";
-import { VersionsManager } from "./_VersionsManager";
+import { PluginsManager } from "./plugins/PluginsManager";
 
-import { ProjectManager } from "./_ProjectManager";
-import { CustomTypesManager } from "./_CustomTypesManager";
-import { SlicesManager } from "./_SlicesManager";
-import { SnippetsManager } from "./_SnippetsManager";
-import { ScreenshotsManager } from "./_ScreenshotsManager";
-import { SimulatorManager } from "./_SimulatorManager";
+import { ProjectManager } from "./project/ProjectManager";
+import { CustomTypesManager } from "./project/CustomTypesManager";
+import { SlicesManager } from "./project/SlicesManager";
+import { SnippetsManager } from "./project/SnippetsManager";
+import { ScreenshotsManager } from "./project/ScreenshotsManager";
+import { SimulatorManager } from "./project/SimulatorManager";
+
+import { VersionsManager } from "./versions/VersionsManager";
+
+import { TelemetryManager } from "./telemetry/TelemetryManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -84,12 +86,10 @@ export class SliceMachineManager {
 		undefined;
 	private _prismicAuthManager: PrismicAuthManager;
 
-	plugins: PluginsManager;
-
-	analytics: AnalyticsManager;
 	user: UserManager;
-	repository: RepositoryManager;
-	versions: VersionsManager;
+	repositoryAPI: RepositoryAPIManager;
+
+	plugins: PluginsManager;
 
 	project: ProjectManager;
 	customTypes: CustomTypesManager;
@@ -98,18 +98,20 @@ export class SliceMachineManager {
 	screenshots: ScreenshotsManager;
 	simulator: SimulatorManager;
 
+	versions: VersionsManager;
+
+	telemetry: TelemetryManager;
+
 	constructor() {
 		// _prismicAuthManager must be set at least before UserManager
 		// is instantiated. It depends on the PrismicAuthManager for
 		// authentication-related methods.
 		this._prismicAuthManager = createPrismicAuthManager();
 
-		this.plugins = new PluginsManager(this);
-
-		this.analytics = new AnalyticsManager(this);
 		this.user = new UserManager(this);
-		this.repository = new RepositoryManager(this);
-		this.versions = new VersionsManager(this);
+		this.repositoryAPI = new RepositoryAPIManager(this);
+
+		this.plugins = new PluginsManager(this);
 
 		this.project = new ProjectManager(this);
 		this.customTypes = new CustomTypesManager(this);
@@ -117,6 +119,10 @@ export class SliceMachineManager {
 		this.snippets = new SnippetsManager(this);
 		this.screenshots = new ScreenshotsManager(this);
 		this.simulator = new SimulatorManager(this);
+
+		this.versions = new VersionsManager(this);
+
+		this.telemetry = new TelemetryManager(this);
 
 		// Supress a TypeScript warning about an unused property. This
 		// code will be eliminated in production builds via dead-code

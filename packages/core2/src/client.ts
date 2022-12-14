@@ -7,12 +7,12 @@ export {
 	createSliceMachineManagerClient,
 } from "./managers/createSliceMachineManagerClient";
 
-export {
+export type {
 	SimulatorManagerReadSliceSimulatorSetupStep,
 	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
-} from "./managers/_SimulatorManager";
+} from "./managers/project/SimulatorManager";
 
-export { SliceMachineManagerPushSliceReturnType } from "./managers/_SlicesManager";
+export type { SliceMachineManagerPushSliceReturnType } from "./managers/project/SlicesManager";
 
 export {
 	InternalError,

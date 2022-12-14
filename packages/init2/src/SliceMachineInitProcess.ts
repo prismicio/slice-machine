@@ -42,7 +42,7 @@ export type SliceMachineInitProcessOptions = {
 } & Record<string, unknown>;
 
 export const createSliceMachineInitProcess = (
-	options: SliceMachineInitProcessOptions
+	options: SliceMachineInitProcessOptions,
 ): SliceMachineInitProcess => {
 	return new SliceMachineInitProcess(options);
 };
@@ -77,12 +77,12 @@ export class SliceMachineInitProcess {
 		// eslint-disable-next-line no-console
 		console.log(
 			`\n${chalk.bgGray(` ${chalk.bold.white("Slice Machine")} `)} ${chalk.dim(
-				"→"
-			)} Init command started\n`
+				"→",
+			)} Init command started\n`,
 		);
 
-		this.manager.analytics.initAnalytics();
-		await this.manager.analytics.track({
+		this.manager.telemetry.initTelemetry();
+		await this.manager.telemetry.track({
 			event: "command:init:start",
 			repository: this.options.repository,
 		});
@@ -92,7 +92,7 @@ export class SliceMachineInitProcess {
 
 			assertExists(
 				this.context.framework,
-				"Project framework must be available through context to proceed"
+				"Project framework must be available through context to proceed",
 			);
 
 			await this.beginCoreDependenciesInstallation();
@@ -106,7 +106,7 @@ export class SliceMachineInitProcess {
 
 			assertExists(
 				this.context.repository,
-				"Repository selection must be available through context to proceed"
+				"Repository selection must be available through context to proceed",
 			);
 
 			if (!this.context.repository.exists) {
@@ -123,7 +123,7 @@ export class SliceMachineInitProcess {
 			throw error;
 		}
 
-		await this.manager.analytics.track({
+		await this.manager.telemetry.track({
 			event: "command:init:end",
 			framework: this.context.framework.prismicName,
 			repository: this.context.repository.domain,
@@ -134,8 +134,8 @@ export class SliceMachineInitProcess {
 		// eslint-disable-next-line no-console
 		console.log(
 			`\n${chalk.bgGreen(` ${chalk.bold.white("Slice Machine")} `)} ${chalk.dim(
-				"→"
-			)} Init command successful!`
+				"→",
+			)} Init command successful!`,
 		);
 	}
 
@@ -145,7 +145,7 @@ export class SliceMachineInitProcess {
 			error instanceof Error ? error.message : `${error}`
 		).slice(0, 512);
 
-		return this.manager.analytics.track({
+		return this.manager.telemetry.track({
 			event: "command:init:end",
 			framework: this.context.framework?.prismicName ?? "unknown",
 			repository: this.context.repository?.domain,
@@ -166,7 +166,7 @@ export class SliceMachineInitProcess {
 								this.context.framework = await detectFramework();
 
 								task.title = `Detected framework ${chalk.cyan(
-									this.context.framework.name
+									this.context.framework.name,
 								)}`;
 							},
 						},
@@ -176,17 +176,17 @@ export class SliceMachineInitProcess {
 								this.context.packageManager = await detectPackageManager();
 
 								task.title = `Detected package manager ${chalk.cyan(
-									this.context.packageManager
+									this.context.packageManager,
 								)}`;
 
 								assertExists(
 									this.context.framework,
-									"Project framework must be available through context to proceed"
+									"Project framework must be available through context to proceed",
 								);
 								parentTask.title = `Detected framework ${chalk.cyan(
-									this.context.framework.name
+									this.context.framework.name,
 								)} and package manager ${chalk.cyan(
-									this.context.packageManager
+									this.context.packageManager,
 								)}`;
 							},
 						},
@@ -202,11 +202,11 @@ export class SliceMachineInitProcess {
 				task: async (_, task) => {
 					assertExists(
 						this.context.packageManager,
-						"Project package manager must be available through context to run `beginCoreDependenciesInstallation`"
+						"Project package manager must be available through context to run `beginCoreDependenciesInstallation`",
 					);
 					assertExists(
 						this.context.framework,
-						"Project framework must be available through context to run `beginCoreDependenciesInstallation`"
+						"Project framework must be available through context to run `beginCoreDependenciesInstallation`",
 					);
 
 					const { execaProcess } = await installDependencies({
@@ -231,8 +231,8 @@ export class SliceMachineInitProcess {
 							`\n\n${error.shortMessage}\n${error.stderr}\n\n${
 								logSymbols.error
 							} Dependency installation failed, try again with:\n\n  ${chalk.gray(
-								"$"
-							)} ${chalk.cyan(tryAgainCommand)}`
+								"$",
+							)} ${chalk.cyan(tryAgainCommand)}`,
 						);
 
 						process.exit(1);
@@ -241,7 +241,7 @@ export class SliceMachineInitProcess {
 					this.context.installProcess = execaProcess;
 
 					task.title = `Began core dependencies installation with ${chalk.cyan(
-						this.context.packageManager
+						this.context.packageManager,
 					)} ... (running in background)`;
 				},
 			},
@@ -291,17 +291,17 @@ export class SliceMachineInitProcess {
 									this.context.userProfile =
 										await this.manager.user.getProfile();
 
-									await this.manager.analytics.identify({
+									await this.manager.telemetry.identify({
 										userID: this.context.userProfile.shortId,
 										intercomHash: this.context.userProfile.intercomHash,
 									});
-									await this.manager.analytics.track({
+									await this.manager.telemetry.track({
 										event: "command:init:identify",
 										repository: this.options.repository,
 									});
 
 									parentTask.title = `Logged in as ${chalk.cyan(
-										this.context.userProfile?.email
+										this.context.userProfile?.email,
 									)}`;
 									task.title = "Fetched user profile";
 								},
@@ -310,13 +310,13 @@ export class SliceMachineInitProcess {
 								title: "Fetching user repositories...",
 								task: async (_, task) => {
 									this.context.userRepositories =
-										await this.manager.repository.readAll();
+										await this.manager.repositoryAPI.readAll();
 
 									task.title = "Fetched user repositories";
 								},
 							},
 						],
-						{ concurrent: true }
+						{ concurrent: true },
 					);
 				},
 			},
@@ -330,23 +330,23 @@ export class SliceMachineInitProcess {
 				task: async (_, task) => {
 					assertExists(
 						this.context.userRepositories,
-						"User repositories must be available through context to run `useRepositoryFlag`"
+						"User repositories must be available through context to run `useRepositoryFlag`",
 					);
 					assertExists(
 						this.options.repository,
-						"Flag `repository` must be set to run `useRepositoryFlag`"
+						"Flag `repository` must be set to run `useRepositoryFlag`",
 					);
 
 					const maybeRepository = this.context.userRepositories.find(
-						(repository) => repository.domain === this.options.repository
+						(repository) => repository.domain === this.options.repository,
 					);
 
 					if (maybeRepository) {
-						if (!this.manager.repository.hasWriteAccess(maybeRepository)) {
+						if (!this.manager.repositoryAPI.hasWriteAccess(maybeRepository)) {
 							throw new Error(
 								`Cannot run init command with repository ${chalk.cyan(
-									maybeRepository.domain
-								)}: you are not a developer or admin of this repository`
+									maybeRepository.domain,
+								)}: you are not a developer or admin of this repository`,
 							);
 						}
 					} else {
@@ -354,7 +354,7 @@ export class SliceMachineInitProcess {
 						const validation = await validateRepositoryDomainAndAvailability({
 							domain,
 							existsFn: (domain) =>
-								this.manager.repository.checkExists({ domain }),
+								this.manager.repositoryAPI.checkExists({ domain }),
 						});
 						const errorMessage = getErrorMessageForRepositoryDomainValidation({
 							validation,
@@ -367,7 +367,7 @@ export class SliceMachineInitProcess {
 					}
 
 					task.title = `Selected repository ${chalk.cyan(
-						this.options.repository
+						this.options.repository,
 					)} (flag ${chalk.cyan("repository")} used)`;
 
 					this.context.repository = {
@@ -382,7 +382,7 @@ export class SliceMachineInitProcess {
 	protected async selectRepository(): Promise<void> {
 		assertExists(
 			this.context.userRepositories,
-			"User repositories must be available through context to run `selectRepository`"
+			"User repositories must be available through context to run `selectRepository`",
 		);
 
 		if (this.context.userRepositories.length) {
@@ -395,21 +395,21 @@ export class SliceMachineInitProcess {
 
 		assertExists(
 			this.context.repository,
-			"Repository selection must be available through context to proceed"
+			"Repository selection must be available through context to proceed",
 		);
 		// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
 		// eslint-disable-next-line no-console
 		console.log(
 			`${logSymbols.success} Selected repository ${chalk.cyan(
-				this.context.repository.domain
-			)}`
+				this.context.repository.domain,
+			)}`,
 		);
 	}
 
 	protected async trySelectExistingRepository(): Promise<void> {
 		assertExists(
 			this.context.userRepositories,
-			"User repositories must be available through context to run `trySelectExistingRepository`"
+			"User repositories must be available through context to run `trySelectExistingRepository`",
 		);
 
 		const { maybeDomain } = await prompt<string, "maybeDomain">({
@@ -426,7 +426,7 @@ export class SliceMachineInitProcess {
 				...this.context.userRepositories
 					.map((repository) => {
 						const hasWriteAccess =
-							this.manager.repository.hasWriteAccess(repository);
+							this.manager.repositoryAPI.hasWriteAccess(repository);
 
 						return {
 							title: `${repository.domain}${
@@ -452,7 +452,7 @@ export class SliceMachineInitProcess {
 	protected async selectNewRepository(): Promise<void> {
 		let suggestedName = getRandomRepositoryDomain();
 		while (
-			await this.manager.repository.checkExists({ domain: suggestedName })
+			await this.manager.repositoryAPI.checkExists({ domain: suggestedName })
 		) {
 			suggestedName = getRandomRepositoryDomain();
 		}
@@ -475,40 +475,41 @@ Choose a name for your Prismic repository
   NAMING RULES
 ${chalk[validation.LessThan4 ? "red" : "gray"](
 	`    1. Name must be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
-		"4 characters long or more"
-	)}`
+		"4 characters long or more",
+	)}`,
 )}
 ${chalk[validation.MoreThan30 ? "red" : "gray"](
 	`    2. Name must be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
-		"30 characters long or less"
-	)}`
+		"30 characters long or less",
+	)}`,
 )}
 ${chalk.gray(`    3. Name will be ${chalk.cyan("kebab-cased")} automatically`)}
 
   CONSIDERATIONS
 ${chalk.gray(
-	`    1. Once picked, your repository name ${chalk.cyan("cannot be changed")}`
+	`    1. Once picked, your repository name ${chalk.cyan("cannot be changed")}`,
 )}
 ${chalk.gray(
 	`    2. A ${chalk.cyan(
-		"display name"
-	)} for the repository can be configured later on`
+		"display name",
+	)} for the repository can be configured later on`,
 )}
 
   PREVIEW
 ${chalk.gray(`    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}`)}
 ${chalk.gray(
-	`    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}`
+	`    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}`,
 )}
 
-${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
+${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 				);
 			},
 			validate: async (rawDomain: string) => {
 				const domain = formatRepositoryDomain(rawDomain);
 				const validation = await validateRepositoryDomainAndAvailability({
 					domain,
-					existsFn: (domain) => this.manager.repository.checkExists({ domain }),
+					existsFn: (domain) =>
+						this.manager.repositoryAPI.checkExists({ domain }),
 				});
 				const errorMessage = getErrorMessageForRepositoryDomainValidation({
 					validation,
@@ -535,32 +536,32 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 	protected createNewRepository(): Promise<void> {
 		assertExists(
 			this.context.repository,
-			"Repository selection must be available through context to run `createNewRepository`"
+			"Repository selection must be available through context to run `createNewRepository`",
 		);
 
 		return listrRun([
 			{
 				title: `Creating new repository ${chalk.cyan(
-					this.context.repository.domain
+					this.context.repository.domain,
 				)} ...`,
 				task: async (_, task) => {
 					assertExists(
 						this.context.repository,
-						"Repository selection must be available through context to run `createNewRepository`"
+						"Repository selection must be available through context to run `createNewRepository`",
 					);
 					assertExists(
 						this.context.framework,
-						"Project framework must be available through context to run `createNewRepository`"
+						"Project framework must be available through context to run `createNewRepository`",
 					);
 
-					await this.manager.repository.create({
+					await this.manager.repositoryAPI.create({
 						domain: this.context.repository.domain,
 						framework: this.context.framework.prismicName,
 					});
 
 					this.context.repository.exists = true;
 					task.title = `Created new repository ${chalk.cyan(
-						this.context.repository.domain
+						this.context.repository.domain,
 					)}`;
 				},
 			},
@@ -571,12 +572,12 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 		return listrRun([
 			{
 				title: `Finishing core dependencies installation with ${chalk.cyan(
-					this.context.packageManager
+					this.context.packageManager,
 				)} ...`,
 				task: async (_, task) => {
 					assertExists(
 						this.context.installProcess,
-						"Initial dependencies installation process must be available through context to run `finishCoreDependenciesInstallation`"
+						"Initial dependencies installation process must be available through context to run `finishCoreDependenciesInstallation`",
 					);
 
 					const updateOutput = (data: Buffer | null) => {
@@ -607,7 +608,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 					}
 
 					task.title = `Core dependencies installed with ${chalk.cyan(
-						this.context.packageManager
+						this.context.packageManager,
 					)}`;
 				},
 			},
@@ -621,11 +622,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 				task: async (_, parentTask) => {
 					assertExists(
 						this.context.framework,
-						"Project framework must be available through context to run `upsertSliceMachineConfiguration`"
+						"Project framework must be available through context to run `upsertSliceMachineConfiguration`",
 					);
 					assertExists(
 						this.context.repository,
-						"Repository selection must be available through context to run `upsertSliceMachineConfiguration`"
+						"Repository selection must be available through context to run `upsertSliceMachineConfiguration`",
 					);
 
 					let sliceMachineConfigExists = false;
@@ -659,13 +660,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 								libraries: ["./slices"],
 							};
 							`,
-							sliceMachineConfigPath
+							sliceMachineConfigPath,
 						);
 
 						await fs.writeFile(
 							sliceMachineConfigPath,
 							defaultSliceMachineConfig,
-							"utf-8"
+							"utf-8",
 						);
 
 						parentTask.title = "Created Slice Machine configuration";
@@ -708,7 +709,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 								if (errors.length > 0) {
 									// TODO: Provide better error message.
 									throw new Error(
-										`Failed to read slice libraries: ${errors.join(", ")}`
+										`Failed to read slice libraries: ${errors.join(", ")}`,
 									);
 								}
 
@@ -737,7 +738,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 										await this.manager.slices.pushSlice(slice);
 										pushed++;
 										task.title = `Pushing slices... (${pushed}/${slices.length})`;
-									})
+									}),
 								);
 
 								task.title = "Pushed all slices";
@@ -759,7 +760,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 								if (errors.length > 0) {
 									// TODO: Provide better error message.
 									throw new Error(
-										`Failed to read custom type libraries: ${errors.join(", ")}`
+										`Failed to read custom type libraries: ${errors.join(
+											", ",
+										)}`,
 									);
 								}
 
@@ -776,7 +779,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 										await this.manager.customTypes.pushCustomType({ id });
 										pushed++;
 										task.title = `Pushing custom types... (${pushed}/${ids.length})`;
-									})
+									}),
 								);
 
 								task.title = "Pushed all custom types";
@@ -794,7 +797,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 							task: async (_, task) => {
 								assertExists(
 									this.context.repository,
-									"Repository selection must be available through context to run `pushDataToPrismic`"
+									"Repository selection must be available through context to run `pushDataToPrismic`",
 								);
 
 								const root = await this.manager.project.getRoot();
@@ -811,7 +814,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 
 								const signaturePath = path.resolve(
 									documentsDirectoryPath,
-									"index.json"
+									"index.json",
 								);
 								const rawSignature = await fs.readFile(signaturePath, "utf-8");
 								const signature: string = JSON.parse(rawSignature).signature;
@@ -831,14 +834,14 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 										const filename = path.basename(document, ".json");
 										const fileContent = await fs.readFile(
 											path.resolve(documentsDirectoryPath, document),
-											"utf-8"
+											"utf-8",
 										);
 
 										return [filename, JSON.parse(fileContent)];
-									})
+									}),
 								);
 
-								await this.manager.repository.pushDocuments({
+								await this.manager.repositoryAPI.pushDocuments({
 									domain: this.context.repository.domain,
 									documents: Object.fromEntries(documents),
 									signature,
@@ -892,7 +895,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 							installDependencies: async (args) => {
 								assertExists(
 									this.context.packageManager,
-									"Project package manager must be available through context to run `initializePlugins`"
+									"Project package manager must be available through context to run `initializePlugins`",
 								);
 
 								try {
@@ -913,7 +916,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 									) {
 										await this.trackError(error.shortMessage);
 										console.error(
-											`\n\n${error.shortMessage}\n${error.stderr}\n\n${logSymbols.error} Plugins dependency installation failed`
+											`\n\n${error.shortMessage}\n${error.stderr}\n\n${logSymbols.error} Plugins dependency installation failed`,
 										);
 									} else {
 										await this.trackError(error);
@@ -923,13 +926,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", "")
 									process.exit(1);
 								}
 							},
-						}
+						},
 					);
 
 					if (errors.length > 0) {
 						// TODO: Provide better error message.
 						throw new Error(
-							`Failed to initialize plugins: ${errors.join(", ")}`
+							`Failed to initialize plugins: ${errors.join(", ")}`,
 						);
 					}
 

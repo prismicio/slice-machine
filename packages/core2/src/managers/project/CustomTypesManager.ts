@@ -15,15 +15,14 @@ import {
 	CustomTypeUpdateHookData,
 	HookError,
 } from "@slicemachine/plugin-kit";
-import fetch from "node-fetch";
 
-import { DecodeError } from "../lib/DecodeError";
-import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
-import { decodeHookResult } from "../lib/decodeHookResult";
+import { DecodeError } from "../../lib/DecodeError";
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { decodeHookResult } from "../../lib/decodeHookResult";
 
-import { OnlyHookErrors } from "../types";
+import { OnlyHookErrors } from "../../types";
 
-import { BaseManager } from "./_BaseManager";
+import { BaseManager } from "../BaseManager";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[] | undefined;

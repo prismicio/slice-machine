@@ -18,16 +18,16 @@ import {
 	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
 
-import { DecodeError } from "../lib/DecodeError";
-import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
-import { bufferCodec } from "../lib/bufferCodec";
-import { decodeHookResult } from "../lib/decodeHookResult";
+import { DecodeError } from "../../lib/DecodeError";
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { bufferCodec } from "../../lib/bufferCodec";
+import { decodeHookResult } from "../../lib/decodeHookResult";
 
-import { OnlyHookErrors } from "../types";
-import { DEFAULT_SLICE_SCREENSHOT_URL } from "../constants";
+import { OnlyHookErrors } from "../../types";
+import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants";
+import { UnauthorizedError } from "../../errors";
 
-import { BaseManager } from "./_BaseManager";
-import { UnauthorizedError } from "../errors";
+import { BaseManager } from "../BaseManager";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[] | undefined;

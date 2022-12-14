@@ -1,11 +1,19 @@
 import * as t from "io-ts";
 import fetch, { Response } from "node-fetch";
 
-import { BaseManager } from "./_BaseManager";
+import { decode } from "../../lib/decode";
+import { serializeCookies } from "../../lib/serializeCookies";
 
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
-import { decode } from "../lib/decode";
-import { serializeCookies } from "../lib/serializeCookies";
+import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../../constants";
+
+import { BaseManager } from "../BaseManager";
+
+import {
+	PrismicRepository,
+	PrismicRepositoryRole,
+	RepositoryAPIUserAgent,
+	RepositoryAPIUserAgents,
+} from "./types";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -13,56 +21,27 @@ const DEFAULT_REPOSITORY_SETTINGS = {
 	role: "developer",
 };
 
-const RepositoryUserAgents = {
-	SliceMachine: "prismic-cli/sm",
-	LegacyZero: "prismic-cli/0",
-} as const;
-type RepositoryUserAgents =
-	typeof RepositoryUserAgents[keyof typeof RepositoryUserAgents];
-
-const PrismicRepositoryRoles = {
-	SuperUser: "SuperUser",
-	Administrator: "Administrator",
-	Owner: "Owner",
-	Manager: "Manager",
-	Publisher: "Publisher",
-	Writer: "Writer",
-	Readonly: "Readonly",
-} as const;
-type PrismicRepositoryRoles =
-	typeof PrismicRepositoryRoles[keyof typeof PrismicRepositoryRoles];
-
-const PrismicRepository = t.type({
-	domain: t.string,
-	name: t.string,
-	role: t.union([
-		t.keyof(PrismicRepositoryRoles),
-		t.record(t.string, t.keyof(PrismicRepositoryRoles)),
-	]),
-});
-export type PrismicRepository = t.TypeOf<typeof PrismicRepository>;
-
-type SliceMachineManagerExistsRepositoryArgs = {
+type RepositoryAPIManagerCheckExistsArgs = {
 	domain: string;
 };
 
-type SliceMachineManagerCreateRepositoryArgs = {
+type RepositoryAPIManagerCreateArgs = {
 	domain: string;
 	framework: string; // TODO: Type(?)
 };
 
-type SliceMachineManagerDeleteRepositoryArgs = {
+type RepositoryAPIManagerDeleteArgs = {
 	domain: string;
 	password: string;
 };
 
-type SliceMachineManagerPushDocumentsArgs = {
+type RepositoryAPIManagerPushDocumentsArgs = {
 	domain: string;
 	signature: string;
 	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
 };
 
-export class RepositoryManager extends BaseManager {
+export class RepositoryAPIManager extends BaseManager {
 	// TODO: Add methods for repository-specific actions. E.g. creating a
 	// new repository.
 
@@ -92,9 +71,9 @@ export class RepositoryManager extends BaseManager {
 	// Should this be in manager? It's one of the few sync method
 	hasWriteAccess(repository: PrismicRepository): boolean {
 		switch (repository.role) {
-			case PrismicRepositoryRoles.SuperUser:
-			case PrismicRepositoryRoles.Owner:
-			case PrismicRepositoryRoles.Administrator:
+			case PrismicRepositoryRole.SuperUser:
+			case PrismicRepositoryRole.Owner:
+			case PrismicRepositoryRole.Administrator:
 				return true;
 
 			default:
@@ -103,7 +82,7 @@ export class RepositoryManager extends BaseManager {
 	}
 
 	async checkExists(
-		args: SliceMachineManagerExistsRepositoryArgs,
+		args: RepositoryAPIManagerCheckExistsArgs,
 	): Promise<boolean> {
 		const url = new URL(
 			`/app/dashboard/repositories/${args.domain}/exists`,
@@ -122,7 +101,7 @@ export class RepositoryManager extends BaseManager {
 		}
 	}
 
-	async create(args: SliceMachineManagerCreateRepositoryArgs): Promise<void> {
+	async create(args: RepositoryAPIManagerCreateArgs): Promise<void> {
 		const url = new URL(
 			"/authentication/newrepository?app=slicemachine",
 			APIEndpoints.PrismicWroom,
@@ -138,7 +117,7 @@ export class RepositoryManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: RepositoryUserAgents.SliceMachine, // Custom User Agent is required
+			userAgent: RepositoryAPIUserAgent.SliceMachine, // Custom User Agent is required
 		});
 		const text = await res.text();
 
@@ -151,7 +130,7 @@ export class RepositoryManager extends BaseManager {
 		}
 	}
 
-	async delete(args: SliceMachineManagerDeleteRepositoryArgs): Promise<void> {
+	async delete(args: RepositoryAPIManagerDeleteArgs): Promise<void> {
 		const cookies = await this.user.getAuthenticationCookies();
 
 		const url = new URL(
@@ -170,7 +149,7 @@ export class RepositoryManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: RepositoryUserAgents.LegacyZero, // Custom User Agent is required
+			userAgent: RepositoryAPIUserAgent.LegacyZero, // Custom User Agent is required
 		});
 
 		if (!res.ok) {
@@ -181,7 +160,7 @@ export class RepositoryManager extends BaseManager {
 	}
 
 	async pushDocuments(
-		args: SliceMachineManagerPushDocumentsArgs,
+		args: RepositoryAPIManagerPushDocumentsArgs,
 	): Promise<void> {
 		const url = new URL("/starter/documents", APIEndpoints.PrismicWroom);
 		// Update hostname to include repository domain
@@ -196,7 +175,7 @@ export class RepositoryManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: RepositoryUserAgents.LegacyZero, // Custom User Agent is required
+			userAgent: RepositoryAPIUserAgent.LegacyZero, // Custom User Agent is required
 		});
 
 		if (!res.ok) {
@@ -230,7 +209,7 @@ export class RepositoryManager extends BaseManager {
 		url: URL;
 		method?: "GET" | "POST";
 		body?: unknown;
-		userAgent?: RepositoryUserAgents;
+		userAgent?: RepositoryAPIUserAgents;
 	}): Promise<Response> {
 		const cookies = await this.user.getAuthenticationCookies();
 

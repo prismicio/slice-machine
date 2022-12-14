@@ -1,9 +1,9 @@
-import { fetchGitHubReleaseBodyForRelease } from "../lib/fetchGitHubReleaseBodyForRelease";
-import { fetchNPMPackageVersions } from "../lib/fetchNPMPackageVersions";
+import { fetchGitHubReleaseBodyForRelease } from "../../lib/fetchGitHubReleaseBodyForRelease";
+import { fetchNPMPackageVersions } from "../../lib/fetchNPMPackageVersions";
 
-import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../constants";
+import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants";
 
-import { BaseManager } from "./_BaseManager";
+import { BaseManager } from "../BaseManager";
 
 type SliceMachineManagerGetReleaseNotesForVersionArgs = {
 	version: string;

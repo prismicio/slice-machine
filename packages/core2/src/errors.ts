@@ -47,7 +47,7 @@ import { HookError } from "@slicemachine/plugin-kit";
 // 	cause?: Error;
 // };
 
-export class SliceMachineError extends Error {
+export abstract class SliceMachineError extends Error {
 	_sliceMachineError = true;
 }
 export class UnauthorizedError extends SliceMachineError {}

@@ -3,8 +3,8 @@ import {
 	SliceMachinePluginRunner,
 } from "@slicemachine/plugin-kit";
 
-import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
-import { BaseManager } from "./_BaseManager";
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { BaseManager } from "../BaseManager";
 
 export class PluginsManager extends BaseManager {
 	async initPlugins(): Promise<void> {
