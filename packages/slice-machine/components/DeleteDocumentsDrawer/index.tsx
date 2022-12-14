@@ -31,20 +31,20 @@ export const sortDocumentCards = (
 
 // TODO: replace with actual API response
 const AssociatedDocuments = [
-  { ctName: "Legals", numberOfDocuments: 23, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Legals", numberOfDocuments: 23, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Legals1", numberOfDocuments: 23, link: "https://prismic.io/" },
+  { ctName: "Features1", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features2", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features3", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features4", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features5", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features6", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Legals2", numberOfDocuments: 23, link: "https://prismic.io/" },
+  { ctName: "Features7", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features8", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features9", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features10", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features11", numberOfDocuments: 6, link: "https://prismic.io/" },
+  { ctName: "Features12", numberOfDocuments: 6, link: "https://prismic.io/" },
 ];
 
 const ConfirmationDialogue: React.FC<{
@@ -182,7 +182,10 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
         </Text>
 
         {sortDocumentCards(AssociatedDocuments).map((ctDocuments) => (
-          <AssociatedDocumentsCard ctDocuments={ctDocuments} />
+          <AssociatedDocumentsCard
+            key={ctDocuments.ctName}
+            ctDocuments={ctDocuments}
+          />
         ))}
       </Card>
     </Drawer>
