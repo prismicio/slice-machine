@@ -18,33 +18,31 @@ const firstColumnWidth = "40%";
 const secondColumnWidth = "40%";
 const thirdColumnWidth = "20%";
 
-// Forward ref is required to be used with Link
 const CustomTypeChangeRow: React.FC<
   { ct: CustomTypeSM; status: ModelStatus } & ModelStatusInformation
-> = React.forwardRef(({ ct, status, authStatus, isOnline }, _ref) => (
-  <tr
-    tabIndex={0}
-    className={status === ModelStatus.Deleted ? "disabled" : undefined}
-  >
-    <Box as={"td"} style={{ width: firstColumnWidth }}>
-      <Text sx={{ fontWeight: 500 }}>{ct.label}</Text>
-    </Box>
-    <Box as={"td"} style={{ width: secondColumnWidth }}>
-      {ct.id}
-    </Box>
-    <Box as={"td"} style={{ width: thirdColumnWidth }}>
-      <StatusBadge
-        modelType="Custom Type"
-        modelId={ct.id}
-        status={status}
-        authStatus={authStatus}
-        isOnline={isOnline}
-        data-for={`${ct.id}-tooltip`}
-        data-tip
-      />
-    </Box>
-  </tr>
-));
+> = ({ ct, status, authStatus, isOnline }) => {
+  return (
+    <>
+      <Box as={"td"} style={{ width: firstColumnWidth }}>
+        <Text sx={{ fontWeight: 500 }}>{ct.label}</Text>
+      </Box>
+      <Box as={"td"} style={{ width: secondColumnWidth }}>
+        {ct.id}
+      </Box>
+      <Box as={"td"} style={{ width: thirdColumnWidth }}>
+        <StatusBadge
+          modelType="Custom Type"
+          modelId={ct.id}
+          status={status}
+          authStatus={authStatus}
+          isOnline={isOnline}
+          data-for={`${ct.id}-tooltip`}
+          data-tip
+        />
+      </Box>
+    </>
+  );
+};
 
 export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
   customTypes,
@@ -75,23 +73,28 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
               href={`/cts/${customType.local.id}`}
               key={customType.local.id}
             >
+              <tr tabIndex={0}>
+                <CustomTypeChangeRow
+                  ct={customType.local}
+                  status={modelsStatuses.customTypes[customType.local.id]}
+                  authStatus={authStatus}
+                  isOnline={isOnline}
+                  modelsStatuses={modelsStatuses}
+                  key={customType.local.id}
+                />
+              </tr>
+            </Link>
+          ) : (
+            <tr tabIndex={0} className="disabled">
               <CustomTypeChangeRow
-                ct={customType.local}
-                status={modelsStatuses.customTypes[customType.local.id]}
+                ct={customType.remote}
+                status={modelsStatuses.customTypes[customType.remote.id]}
                 authStatus={authStatus}
                 isOnline={isOnline}
                 modelsStatuses={modelsStatuses}
+                key={customType.remote.id}
               />
-            </Link>
-          ) : (
-            <CustomTypeChangeRow
-              ct={customType.remote}
-              status={modelsStatuses.customTypes[customType.remote.id]}
-              authStatus={authStatus}
-              isOnline={isOnline}
-              modelsStatuses={modelsStatuses}
-              key={customType.remote.id}
-            />
+            </tr>
           )
         )}
       </tbody>
