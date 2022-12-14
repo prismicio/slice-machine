@@ -98,8 +98,8 @@ async function init() {
   await installRequiredDependencies(
     cwd,
     frameworkResult.value,
-    frameworkResult.version,
-    wasStarter
+    wasStarter,
+    frameworkResult.version
   );
 
   setVersion(cwd);

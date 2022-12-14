@@ -17,8 +17,8 @@ const {
   PRISMIC_TYPES,
 } = CONSTS;
 
-export function nextDeps(version: Models.Version): string {
-  if (checkVersion(version, ">=13.0.0")) {
+export function nextDeps(version?: string): string {
+  if (checkVersion(">=13.0.0", version)) {
     return PRISMIC_NEXT;
   }
 
@@ -27,7 +27,7 @@ export function nextDeps(version: Models.Version): string {
 
 function depsForFramework(
   framework: Models.Frameworks,
-  version: Models.Version
+  version?: string
 ): string {
   switch (framework) {
     case Models.Frameworks.react:
@@ -49,7 +49,7 @@ function depsForFramework(
 
 async function addAndInstallDeps(
   framework: Models.Frameworks,
-  version: Models.Version,
+  version?: string,
   useYarn = false
 ): Promise<string> {
   const installDevDependencyCommand = useYarn
@@ -76,8 +76,8 @@ async function installDeps(useYarn = false): Promise<string> {
 export async function installRequiredDependencies(
   cwd: string,
   framework: Models.Frameworks,
-  version: Models.Version,
-  skipDependencies: boolean
+  skipDependencies: boolean,
+  version?: string
 ): Promise<void> {
   const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));
 

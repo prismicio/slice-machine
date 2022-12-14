@@ -36,8 +36,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakeCWD,
       Models.Frameworks.nuxt,
-      undefined,
-      false
+      false,
+      undefined
     );
 
     stderr.stop();
@@ -72,8 +72,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakeCWD,
       Models.Frameworks.nuxt,
-      undefined,
-      false
+      false,
+      undefined
     );
 
     stderr.stop();
@@ -110,8 +110,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakedir,
       Models.Frameworks.react,
-      undefined,
-      false
+      false,
+      undefined
     );
 
     stderr.stop();
@@ -148,8 +148,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakedir,
       Models.Frameworks.next,
-      "13.0.4",
-      false
+      false,
+      "13.0.4"
     );
 
     stderr.stop();
@@ -186,8 +186,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakedir,
       Models.Frameworks.next,
-      "12.x.x",
-      false
+      false,
+      "12.x.x"
     );
 
     stderr.stop();
@@ -224,8 +224,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakedir,
       Models.Frameworks.svelte,
-      undefined,
-      false
+      false,
+      undefined
     );
 
     stderr.stop();
@@ -262,8 +262,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakedir,
       Models.Frameworks.nuxt,
-      undefined,
-      false
+      false,
+      undefined
     );
 
     stderr.stop();
@@ -300,8 +300,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakedir,
       Models.Frameworks.vue,
-      undefined,
-      false
+      false,
+      undefined
     );
 
     stderr.stop();
@@ -338,8 +338,8 @@ describe("install required dependency", () => {
     await installRequiredDependencies(
       fakedir,
       Models.Frameworks.vue,
-      undefined,
-      true
+      true,
+      undefined
     );
 
     stderr.stop();
