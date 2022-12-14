@@ -37,6 +37,7 @@ coverage/
 .eslintcache
 unpubTest
 my-test-project
+dist
 
 .now
 .vercel

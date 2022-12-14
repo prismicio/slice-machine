@@ -16,7 +16,7 @@ export const locateFileUpward = async (
 	filePathOrPaths: string | readonly string[],
 	{
 		startDir = process.cwd(),
-		stopDir = "/",
+		stopDir = path.resolve("/"),
 		_originalStartDir,
 	}: LocateFileUpwardConfig = {},
 ): Promise<string> => {

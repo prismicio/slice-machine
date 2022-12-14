@@ -10,7 +10,8 @@ import { ScreenshotsManager } from "./_ScreenshotsManager";
 import { SlicesManager } from "./_SlicesManager";
 import { SnippetsManager } from "./_SnippetsManager";
 import { UserManager } from "./_UserManager";
-import { VersionsManger } from "./_VersionsManager";
+import { VersionsManager } from "./_VersionsManager";
+import { AnalyticsManager } from "./_AnalyticsManager";
 
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;
@@ -66,7 +67,10 @@ export abstract class BaseManager {
 	protected get simulator(): SimulatorManager {
 		return this._sliceMachineManager.simulator;
 	}
-	protected get versions(): VersionsManger {
+	protected get versions(): VersionsManager {
 		return this._sliceMachineManager.versions;
+	}
+	protected get analytics(): AnalyticsManager {
+		return this._sliceMachineManager.analytics;
 	}
 }

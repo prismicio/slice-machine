@@ -9,20 +9,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "baseUrl": "./",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "types": [
-      "node"
-    ],
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
     "inlineSourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -32,44 +24,17 @@
     "jsx": "preserve",
     "outDir": "./build",
     "paths": {
-      "@/*": [
-        "/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@utils/*": [
-        "lib/utils/*"
-      ],
-      "@builders/*": [
-        "lib/builders/*"
-      ],
-      "@models/*": [
-        "lib/models/*"
-      ],
-      "@src/*": [
-        "src/*"
-      ],
-      "@hooks/*": [
-        "hooks/*"
-      ],
-      "@components/*": [
-        "components/*"
-      ]
+      "@/*": ["/*"],
+      "@lib/*": ["lib/*"],
+      "@utils/*": ["lib/utils/*"],
+      "@builders/*": ["lib/builders/*"],
+      "@models/*": ["lib/models/*"],
+      "@src/*": ["src/*"],
+      "@hooks/*": ["hooks/*"],
+      "@components/*": ["components/*"]
     },
     "incremental": true
   },
-  "exclude": [
-    "node_modules",
-    "templates",
-    "tests/project",
-    "build"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.mts",
-    "**/*.js"
-  ]
+  "exclude": ["node_modules", "templates", "tests/project", "build"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts", "**/*.js"]
 }

@@ -20,3 +20,5 @@ README.md
 package.json
 package-lock.json
 e2e-projects/**
+dist
+packages/init2/playground

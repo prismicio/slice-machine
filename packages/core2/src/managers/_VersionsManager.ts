@@ -9,7 +9,7 @@ type SliceMachineManagerGetReleaseNotesForVersionArgs = {
 	version: string;
 };
 
-export class VersionsManger extends BaseManager {
+export class VersionsManager extends BaseManager {
 	async getAllStableSliceMachineVersions(): Promise<string[]> {
 		const versions = await fetchNPMPackageVersions({
 			packageName: SLICE_MACHINE_NPM_PACKAGE_NAME,
