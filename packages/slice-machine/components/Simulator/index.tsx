@@ -114,17 +114,17 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const sharedSlice = useMemo(() => Slices.fromSM(slice.model), [slice.model]);
 
   const initialContent = useMemo<SharedSliceContent>(
-    () => slice.mock?.[0] || defaultSharedSliceContent(variation.id),
+    () =>
+      slice.mock?.find((m) => m.variation === variation.id) ||
+      defaultSharedSliceContent(variation.id),
     [slice.mock, variation.id]
   );
 
-  const previousInitialContent = useRef(initialContent);
   const [editorContent, setContent] = useState(initialContent);
 
-  if (previousInitialContent.current !== initialContent) {
-    previousInitialContent.current = initialContent;
+  useEffect(() => {
     setContent(initialContent);
-  }
+  }, [variation.id, initialContent]);
 
   const initialApiContent = useMemo(
     () =>
@@ -184,13 +184,18 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     } else if (currentState === UiState.SUCCESS) {
       toggleIsDisplayEditor(true);
     }
-  }, [currentState]);
+  }, [
+    currentState,
+    checkSimulatorSetup,
+    connectToSimulatorIframe,
+    isWaitingForIFrameCheck,
+  ]);
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT && !iframeCheckFailedOnce) {
       void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
     }
-  }, [currentState]);
+  }, [currentState, framework, iframeCheckFailedOnce]);
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
