@@ -74,6 +74,9 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.visit(`/cts/${id}`);
     cy.waitUntil(() => cy.get('[data-testid="empty-zone-add-new-field"]'));
 
+    // TODO: removing this delay will make the test flaky (because of the useServerState hook).
+    cy.wait(5_000);
+
     // Add UID
     cy.get('[data-testid="empty-zone-add-new-field"]').first().click();
     cy.get("[data-cy=UID]").click();

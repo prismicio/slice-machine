@@ -38,7 +38,7 @@
     "prettier": "^2.4.1"
   },
   "dependencies": {
-    "cypress": "^9.5.4",
+    "cypress": "^12.1.0",
     "cypress-localstorage-commands": "^1.7.0",
     "cypress-wait-until": "^1.7.2",
     "start-server-and-test": "^1.14.0"
