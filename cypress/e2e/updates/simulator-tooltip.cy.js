@@ -66,6 +66,11 @@ describe("simulator tooltip", () => {
 
     cy.get("[data-testid=simulator-tooltip]").should("exist");
 
+    // Don't open the Simulator's window.
+    cy.window().then((win) => {
+      cy.stub(win, "open").as("Open");
+    });
+
     cy.get("[data-testid=simulator-open-button]").click();
 
     cy.getSliceMachineUserContext().should((data) => {
