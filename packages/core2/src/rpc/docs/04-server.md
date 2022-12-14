@@ -7,6 +7,8 @@ Use `createRPCMiddleware()` to create an Express middleware that handles RPC req
 The following example creates an RPC middleware with a `ping()` procedure. The procedure waits 1000 milliseconds before returning `"pong"`.
 
 ```typescript
+// src/rpc-middleware.ts
+
 import { createRPCMiddleware, ExtractProcedures } from "@slicemachine/rpc";
 
 export const middleware = createRPCMiddleware({
@@ -28,6 +30,8 @@ The exported `Procedures` type will be provided to the client to get full compil
 The middleware should be added to an HTTP server and served locally (e.g. `http://localhost:3000`) or remotely (e.g. `https://example.com`). The middleware can live alongside other routes in the server.
 
 ```typescript
+// src/server.ts
+
 import express from "express";
 import { middleware } from "./rpc-middleware";
 

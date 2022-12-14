@@ -3,7 +3,7 @@
 Procedures are functions run on a server. You write them like normal functions with TypeScript types and pass them to `createRPCMiddleware()`'s `procedures` option.
 
 ```typescript
-// src/server.ts
+// src/middleware.ts
 
 import { createRPCMiddleware, ExtractProcedures } from "@slicemachine/rpc";
 
@@ -23,6 +23,7 @@ Clients call them like typical JavaScript methods.
 ```typescript
 // src/client.ts
 
+import { createRPCClient } from "@slicemachine/rpc";
 import type { Procedures } from "./server";
 
 const client = createRPCClient<Procedures>({
@@ -37,7 +38,7 @@ const seven = await client.add({ a: 3, b: 4 });
 Procedures can optionally accept named arguments using an object parameter.
 
 ```typescript
-// src/server.ts
+// src/rpc-middleware.ts
 
 export const middleware = createRPCMiddleware({
 	procedures: {
@@ -56,7 +57,7 @@ export const middleware = createRPCMiddleware({
 Procedures can be synchronous or asynchronous. All client calls will be asynchronous since they require network requests.
 
 ```typescript
-// src/server.ts
+// src/rpc-middleware.ts
 
 export const middleware = createRPCMiddleware({
 	procedures: {
@@ -76,7 +77,8 @@ export const middleware = createRPCMiddleware({
 ```typescript
 // src/client.ts
 
-import type { Procedures } from "./server";
+import { createRPCClient } from "@slicemachine/rpc";
+import type { Procedures } from "./rpc-middleware";
 
 const client = createRPCClient<Procedures>({
 	serverURL: "https://example.com/rpc",
@@ -92,7 +94,7 @@ const randomCatFact = await client.getRandomCatFact();
 Procedures can optionally return values to clients.
 
 ```typescript
-// src/server.ts
+// src/rpc-middleware.ts
 
 export const middleware = createRPCMiddleware({
 	procedures: {
@@ -111,7 +113,7 @@ export const middleware = createRPCMiddleware({
 Procedures can be nested arbitrarily.
 
 ```typescript
-// src/server.ts
+// src/rpc-middleware.ts
 
 export const middleware = createRPCMiddleware({
 	procedures: {
@@ -132,7 +134,8 @@ export const middleware = createRPCMiddleware({
 ```typescript
 // src/client.ts
 
-import type { Procedures } from "./server";
+import { createRPCClient } from "@slicemachine/rpc";
+import type { Procedures } from "./rpc-middleware";
 
 const client = createRPCClient<Procedures>({
 	serverURL: "https://example.com/rpc",
@@ -146,7 +149,7 @@ const seven = await client.math.basic.add({ a: 3, b: 4 });
 Procedures can be provided as class instances using the `proceduresFromInstance()` helper.
 
 ```typescript
-// src/server.ts
+// src/rpc-middleware.ts
 
 import { createRPCMiddleware, proceduresFromInstance } from "@slicemachine/rpc";
 
@@ -168,7 +171,7 @@ export const middleware = createRPCMiddleware({
 `proceduresFromInstance()` accepts an `omit` option to omit properties. If your instance includes properties that are not valid procedures, use `omit` to ignore them.
 
 ```typescript
-// src/server.ts
+// src/rpc-middleware.ts
 
 import { createRPCMiddleware, proceduresFromInstance } from "@slicemachine/rpc";
 
