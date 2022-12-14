@@ -218,7 +218,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           p: 3,
           display: "flex",
           flexDirection: "column",
-          height: "calc(100% - 73px)",
+          height: "calc(100% - 73px - 16px)",
         }}
       >
         <Flex

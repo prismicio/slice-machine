@@ -107,7 +107,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
-  }, [client, screenDimensions, apiContent, simulatorUrl]);
+  }, [client, apiContent, simulatorUrl]);
 
   useEffect(() => {
     if (!isWaitingForIFrameCheck && iframeStatus !== "ok") {
@@ -115,30 +115,27 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
   }, [iframeStatus, isWaitingForIFrameCheck]);
 
-  // const [wrapperRef, { width: containerWidth }] = useElementSize();
-
-  // const iframeScale =
-  //   screenDimensions.width > containerWidth
-  //     ? (containerWidth * 100) / screenDimensions.width
-  //     : 100;
-
   return (
     <Box
-      // ref={wrapperRef}
       sx={{
-        width: "100%",
         height: "100%",
         backgroundColor: "white",
         border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         borderRadius: 8,
         overflow: "hidden",
-        ...(dryRun ? { visibility: "hidden" } : {}),
+        ...(dryRun
+          ? {
+              position: "absolute",
+              top: "0",
+              width: "0",
+              height: "0",
+            }
+          : {}),
         ...sx,
       }}
     >
       <Flex
         sx={{
-          height: "100%",
           backgroundImage: "url(/pattern.png)",
           backgroundColor: "headSection",
           backgroundRepeat: "repeat",
@@ -147,22 +144,16 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           mx: "auto",
           flexDirection: "column",
           justifyContent: "center",
+          overflow: "auto",
         }}
       >
         <Flex
           sx={{
             justifyContent: "center",
             margin: "0 auto",
-            overflow: "auto",
             alignContent: "center",
-            ...(dryRun
-              ? {
-                  position: "absolute",
-                  top: "0",
-                  width: "0",
-                  height: "0",
-                }
-              : {}),
+            width: screenDimensions.width,
+            height: screenDimensions.height,
           }}
         >
           {client?.connected ? <div id="__iframe-ready" /> : null}
@@ -174,9 +165,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
               src={simulatorUrl}
               style={{
                 border: "none",
-                // transform: `scale(${iframeScale}%)`,
-                // width: screenDimensions.width,
-                // height: screenDimensions.height,
                 width: "100%",
                 height: "100%",
               }}
