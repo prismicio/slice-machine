@@ -22,8 +22,10 @@ import {
   CustomtypeDocuments,
 } from "./AssociatedDocumentsCard";
 
-export const sortDocumentCards = (documents: CustomtypeDocuments[]) =>
-  documents.sort(
+export const sortDocumentCards = (
+  documents: Readonly<Array<CustomtypeDocuments>>
+) =>
+  [...documents].sort(
     (doc1, doc2) => doc2.numberOfDocuments - doc1.numberOfDocuments
   );
 
