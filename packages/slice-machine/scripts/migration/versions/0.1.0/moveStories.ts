@@ -21,7 +21,7 @@ export function moveStories(
   // create the new story
   storybook.generateStories(
     path.join(__dirname, "../../../"),
-    NodeUtils.Framework.defineFramework({ cwd }).framework,
+    NodeUtils.Framework.defineFramework({ cwd }),
     cwd,
     libraryName,
     sliceName

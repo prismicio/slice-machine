@@ -49,10 +49,11 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   spinner.start();
 
   try {
-    const { framework, version } = NodeUtils.Framework.defineFramework({
-      cwd,
-      supportedFrameworks: Object.values(Models.Frameworks),
-    });
+    const { framework, version } =
+      NodeUtils.Framework.defineFrameworkWithVersion({
+        cwd,
+        supportedFrameworks: Object.values(Models.Frameworks),
+      });
 
     spinner.stop();
 

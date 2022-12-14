@@ -37,8 +37,8 @@ describe("detect-framework", () => {
   });
 
   test("framework not found in package.json", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({ dev: 1 } as fs.Stats); // linting error?
-    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+    jest.spyOn(fs, "lstatSync").mockReturnValue({ dev: 1 } as fs.Stats); // linting error?
+    jest.spyOn(fs, "readFileSync").mockReturnValue(
       JSON.stringify({
         dependencies: {},
       })
@@ -89,8 +89,8 @@ describe("detect-framework", () => {
   });
 
   test("Unsupported framework: gatsby", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({ dev: 1 } as fs.Stats);
-    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+    jest.spyOn(fs, "lstatSync").mockReturnValue({ dev: 1 } as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValue(
       JSON.stringify({
         dependencies: {
           [Models.Frameworks.gatsby]: "beta",

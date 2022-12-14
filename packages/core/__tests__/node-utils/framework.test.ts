@@ -57,9 +57,8 @@ describe("framework.detectFramework", () => {
       },
     };
 
-    const result: FrameworkUtils.FrameworkWithVersion =
-      FrameworkUtils.detectFramework(pkg);
-    expect(result).toEqual({ framework: Frameworks.next, version: "beta" });
+    const result: Frameworks = FrameworkUtils.detectFramework(pkg);
+    expect(result).toEqual(Frameworks.next);
   });
 
   test("it should not detect an unsupported framework and fallback to vanillajs", () => {
@@ -72,9 +71,8 @@ describe("framework.detectFramework", () => {
     };
 
     // simulate supporting 0 frameworks.
-    const result: FrameworkUtils.FrameworkWithVersion =
-      FrameworkUtils.detectFramework(pkg, []);
-    expect(result).toEqual({ framework: Frameworks.vanillajs });
+    const result: Frameworks = FrameworkUtils.detectFramework(pkg, []);
+    expect(result).toEqual(Frameworks.vanillajs);
   });
 });
 
@@ -99,12 +97,11 @@ describe("framework.defineFrameworks", () => {
       })
     );
 
-    const result: FrameworkUtils.FrameworkWithVersion =
-      FrameworkUtils.defineFramework({
-        cwd: "not important",
-        manifest: fakeManifest,
-      });
-    expect(result).toEqual({ framework: Frameworks.next, version: "beta" });
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual(Frameworks.next);
   });
 
   test("it should take the framework from the manifest", () => {
@@ -113,12 +110,11 @@ describe("framework.defineFrameworks", () => {
       framework: Frameworks.next,
     };
 
-    const result: FrameworkUtils.FrameworkWithVersion =
-      FrameworkUtils.defineFramework({
-        cwd: "not important",
-        manifest: fakeManifest,
-      });
-    expect(result).toEqual({ framework: Frameworks.next });
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual(Frameworks.next);
   });
 
   test("it should take the framework from the pkg json if the one in manifest isn't supported", () => {
@@ -138,12 +134,11 @@ describe("framework.defineFrameworks", () => {
       })
     );
 
-    const result: FrameworkUtils.FrameworkWithVersion =
-      FrameworkUtils.defineFramework({
-        cwd: "not important",
-        manifest: fakeManifest,
-      });
-    expect(result).toEqual({ framework: Frameworks.next, version: "beta" });
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual(Frameworks.next);
   });
 
   test("it should default to vanillajs if no manifest and the pkg json framework is unsupported", () => {
@@ -160,11 +155,10 @@ describe("framework.defineFrameworks", () => {
       })
     );
 
-    const result: FrameworkUtils.FrameworkWithVersion =
-      FrameworkUtils.defineFramework({
-        cwd: "not important",
-      });
-    expect(result).toEqual({ framework: Frameworks.vanillajs });
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+    });
+    expect(result).toEqual(Frameworks.vanillajs);
   });
 
   test("it should default to vanillajs if package and manifest aren't good", () => {
@@ -186,11 +180,63 @@ describe("framework.defineFrameworks", () => {
       })
     );
 
-    const result: FrameworkUtils.FrameworkWithVersion =
-      FrameworkUtils.defineFramework({
-        cwd: "not important",
-        manifest: fakeManifest,
-      });
-    expect(result).toEqual({ framework: Frameworks.vanillajs });
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual(Frameworks.vanillajs);
+  });
+});
+
+describe("framework.defineFrameworkWithVersion", () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test("it should return the version if found", () => {
+    const fakeManifest = {
+      apiEndpoint: "fake api endpoint",
+    };
+
+    const mockedFs = mocked(fs, true);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {
+          [Frameworks.next]: "beta",
+        },
+      })
+    );
+
+    const result = FrameworkUtils.defineFrameworkWithVersion({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual({ framework: Frameworks.next, version: "beta" });
+  });
+
+  test("it should return undefined if framework is nto found", () => {
+    const fakeManifest = {
+      apiEndpoint: "fake api endpoint",
+    };
+
+    const mockedFs = mocked(fs, true);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {},
+      })
+    );
+
+    const result = FrameworkUtils.defineFrameworkWithVersion({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual({
+      framework: Frameworks.vanillajs,
+      version: undefined,
+    });
   });
 });

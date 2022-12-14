@@ -42,7 +42,7 @@ async function run(): Promise<void> {
   const framework = NodeUtils.Framework.defineFramework({
     cwd,
     manifest: manifest.content,
-  }).framework;
+  });
 
   const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
   const packageChangelog = await getPackageChangelog(smNodeModuleDirectory);

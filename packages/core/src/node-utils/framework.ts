@@ -28,7 +28,7 @@ export function fancyName(str: Frameworks): string {
 export function detectFramework(
   pkg: JsonPackage,
   supportedFrameworks: Frameworks[] = SupportedFrameworks
-): FrameworkWithVersion {
+): Frameworks {
   const { dependencies, devDependencies, peerDependencies } = pkg;
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
 
@@ -36,10 +36,7 @@ export function detectFramework(
     supportedFrameworks
   ).find((f) => deps[f] && deps[f].length);
 
-  return {
-    framework: frameworkEntry || Frameworks.vanillajs,
-    version: frameworkEntry ? deps[frameworkEntry] : undefined,
-  };
+  return frameworkEntry || Frameworks.vanillajs;
 }
 
 export type FrameworkWithVersion = {
@@ -55,9 +52,9 @@ export function defineFramework({
   cwd: string;
   supportedFrameworks?: Frameworks[];
   manifest?: Manifest;
-}): FrameworkWithVersion {
+}): Frameworks {
   if (manifest?.framework && isFrameworkSupported(manifest.framework))
-    return { framework: manifest.framework, version: undefined };
+    return manifest.framework;
 
   const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) {
@@ -68,4 +65,34 @@ export function defineFramework({
   }
 
   return detectFramework(pkg.content, supportedFrameworks);
+}
+
+export function defineFrameworkWithVersion({
+  cwd,
+  supportedFrameworks = SupportedFrameworks,
+  manifest,
+}: {
+  cwd: string;
+  supportedFrameworks?: Frameworks[];
+  manifest?: Manifest;
+}): FrameworkWithVersion {
+  const framework = defineFramework({ cwd, supportedFrameworks, manifest });
+
+  const pkg = retrieveJsonPackage(cwd);
+  if (!pkg.exists || !pkg.content) {
+    const message =
+      "[api/env]: Unrecoverable error. Could not find package.json. Exiting..";
+    console.error(message);
+    throw new Error(message);
+  }
+
+  const { dependencies, devDependencies, peerDependencies } = pkg.content;
+  const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
+
+  const version = deps[framework];
+
+  return {
+    framework,
+    version,
+  };
 }
