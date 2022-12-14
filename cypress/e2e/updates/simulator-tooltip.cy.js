@@ -41,6 +41,8 @@ describe("simulator tooltip", () => {
       hasSeenSimulatorToolTip: true,
     });
 
+    cy.visit(`/${lib}/${sliceName}/default`);
+
     // There is a 6s timeout for displaying the tooltip
     cy.wait(6000);
 
