@@ -23,9 +23,7 @@ npm install @slicemachine/rpc
 
 ## Quick start
 
-1.  Create an RPC Express middleware containing your procedures. A procdure is any sync or async function that accept one or no arguments.
-
-    The middleware can be used anywhere [Express middleware][express-middleware] is accepted.
+1.  Create an RPC Express middleware containing your procedures. A procedure is any sync or async function that accepts one or no arguments.
 
     ```typescript
     // src/rpc-middleware.ts

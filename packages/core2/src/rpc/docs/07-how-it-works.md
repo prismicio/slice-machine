@@ -35,13 +35,13 @@ The client is mostly a wrapper around `fetch` with serialization and deserializa
 
 `@slicemachine/rpc` uses [`FormData`][mdn-formdata] as its serialization format. `FormData` supports binary data (via [`Blob`][mdn-blob]) and strings.
 
-Non-binary data is serialized before being added to `FormData` using `devalue`. Numbers, `undefined`, `null`, objects, arrays, and more are supported using `devalue`.
+Non-binary data is serialized before being added to `FormData` using [`devalue`][devalue]. Numbers, `undefined`, `null`, objects, arrays, and more are supported using `devalue`.
 
 `FormData` is a single-level key-value serialization format which does not support nested objects. Data is flattened in transit and unflattened when received using a modified version of [`nest-deep`][nest-deep].
 
 ## Errors
 
-Thrown procedure errors are caught and serialized using a special `errors` return value. The error is detected on the client and re-thrown.
+Thrown procedure errors are caught and serialized using a special `error` return value. The error is detected on the client and re-thrown.
 
 Because `Error`s can contain arbirtary data which may not be serializable, only the following properties are preserved across the network:
 
@@ -53,11 +53,13 @@ Properties like `cause` or ones stored in custom errors are ignored.
 
 ## TypeScript
 
+`@slicemachine/rpc` relies heavily on TypeScript to provide a type safe RPC implementation. The server must be used with the client to ensure type safety.
+
 Middleware produced by `createRPCMiddleware()` holds a type reference to its procedures.
 
 ```typescript
 function createRPCMiddleware<TProcedures extends Procedures>(
-	args: CreateRPCRouterArgs<TProcedures>,
+	args: CreateRPCMiddlewareArgs<TProcedures>,
 ): RPCMiddleware<TProcedures>;
 ```
 
@@ -69,7 +71,7 @@ function createRPCClient<TProcedures extends Procedures>(
 ): RPCClient<TProcedures>;
 ```
 
-With that reference, every procedure is properly typed without additional runtime validation. If a type error occurs, your build should fail.
+With that reference, every procedure is properly typed without additional runtime validation. If a type error occurs, client builds should fail.
 
 ### Adjusting procedure types to handle network limitations
 

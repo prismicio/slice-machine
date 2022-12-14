@@ -54,13 +54,13 @@ const defaultSerializeError = (error: Error): ErrorLike => {
 	};
 };
 
-export type CreateRPCRouterArgs<TProcedures extends Procedures> = {
+export type CreateRPCMiddlewareArgs<TProcedures extends Procedures> = {
 	procedures: TProcedures;
 	serializeError?: (error: Error) => ErrorLike;
 };
 
 export const createRPCMiddleware = <TProcedures extends Procedures>(
-	args: CreateRPCRouterArgs<TProcedures>,
+	args: CreateRPCMiddlewareArgs<TProcedures>,
 ): RPCMiddleware<TProcedures> => {
 	const serializeError = args.serializeError || defaultSerializeError;
 
