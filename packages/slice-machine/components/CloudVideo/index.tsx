@@ -6,13 +6,23 @@ const Video: FC<{
   onPlay?: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   style?: Record<string, any>;
-}> = ({ publicId, onPlay, style }) => {
+  autoPlay?: boolean;
+  controls?: boolean;
+  loop?: boolean;
+}> = ({
+  publicId,
+  onPlay,
+  style,
+  autoPlay = true,
+  controls = true,
+  loop = true,
+}) => {
   return (
     <CldVideo
       cloudName="dmtf1daqp"
-      autoPlay
-      controls
-      loop
+      autoPlay={autoPlay}
+      controls={controls}
+      loop={loop}
       style={{
         maxWidth: "100%",
         height: "auto",

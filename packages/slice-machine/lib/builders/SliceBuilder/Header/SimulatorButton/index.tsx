@@ -121,6 +121,8 @@ const SimulatorButton: React.FC<{
               </Flex>
               <Box sx={{ bg: "#FFF" }}>
                 <Video
+                  loop={false}
+                  autoPlay={false}
                   publicId={VIDEO_SIMULATOR_TOOLTIP}
                   onPlay={() => {
                     void Tracker.get().trackClickOnVideoTutorials(
