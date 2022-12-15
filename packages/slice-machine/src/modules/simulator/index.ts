@@ -109,6 +109,7 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
     case getType(connectToSimulatorIframeCreator.request):
       return {
         ...state,
+        iframeStatus: null,
         isWaitingForIframeCheck: true,
       };
     case getType(connectToSimulatorIframeCreator.success):

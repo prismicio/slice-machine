@@ -73,32 +73,64 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
   }));
 
+  const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
+  const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
+
   useEffect(() => {
     checkSimulatorSetup();
     void Tracker.get().trackOpenSliceSimulator(framework, version);
     Tracker.get().editor.startNewSession();
   }, []);
 
-  useEffect(() => {
-    if (manifestStatus === "ok") {
-      connectToSimulatorIframe();
-    }
-  }, [manifestStatus]);
-
   const currentState: UiState = (() => {
+    if (manifestStatus === "ko") {
+      return UiState.FAILED_SETUP;
+    }
     if (manifestStatus === "ok") {
       if (isWaitingForIFrameCheck || !iframeStatus) {
         return UiState.LOADING_IFRAME;
       }
-      if (iframeStatus === "ko") {
+      if (iframeStatus !== "ok") {
         return UiState.FAILED_CONNECT;
       }
       return UiState.SUCCESS;
-    } else if (manifestStatus === "ko") {
-      return UiState.FAILED_SETUP;
     }
     return UiState.LOADING_SETUP;
   })();
+
+  useEffect(() => {
+    if (currentState === UiState.FAILED_SETUP && !setupIntervalId.current) {
+      const id = setInterval(() => {
+        checkSimulatorSetupCb();
+      }, 3000);
+      setupIntervalId.current = id;
+    }
+  }, [currentState]);
+
+  useEffect(() => {
+    if (manifestStatus === "ok") {
+      if (setupIntervalId.current) {
+        clearInterval(setupIntervalId.current);
+      }
+      connectToSimulatorIframe();
+    }
+  }, [manifestStatus]);
+
+  useEffect(() => {
+    if (currentState === UiState.FAILED_CONNECT) {
+      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
+    }
+  }, [currentState, framework]);
+
+  useEffect(() => {
+    if (currentState === UiState.SUCCESS) {
+      toggleIsDisplayEditor(true);
+    }
+  }, [currentState]);
+
+  const onRetrigger = () => {
+    connectToSimulatorIframe();
+  };
 
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
@@ -143,33 +175,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   ]);
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(false);
-
-  const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
-
-  const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
-
-  useEffect(() => {
-    if (currentState === UiState.FAILED_SETUP) {
-      const id = setInterval(() => {
-        checkSimulatorSetupCb();
-      }, 3000);
-      if (!setupIntervalId.current) {
-        setupIntervalId.current = id;
-        return;
-      }
-    }
-    if (setupIntervalId.current) {
-      clearTimeout(setupIntervalId.current);
-    } else if (currentState === UiState.SUCCESS) {
-      toggleIsDisplayEditor(true);
-    }
-  }, [currentState, checkSimulatorSetupCb]);
-
-  useEffect(() => {
-    if (currentState === UiState.FAILED_CONNECT) {
-      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
-    }
-  }, [currentState, framework]);
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
@@ -223,7 +228,9 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               screenDimensions={screenDimensions}
               actionsDisabled={currentState !== UiState.SUCCESS}
             />
-            {currentState === UiState.FAILED_CONNECT ? <FailedConnect /> : null}
+            {currentState === UiState.FAILED_CONNECT ? (
+              <FailedConnect onRetrigger={onRetrigger} />
+            ) : null}
             {currentState === UiState.SUCCESS ? (
               <IframeRenderer
                 apiContent={apiContent}
@@ -232,31 +239,16 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               />
             ) : (
               <>
-                {[
-                  UiState.LOADING_IFRAME,
-                  UiState.LOADING_SETUP,
-                  UiState.FAILED_CONNECT,
-                ].includes(currentState) ? (
-                  <>
-                    {currentState === UiState.FAILED_CONNECT ? (
-                      <IframeRenderer
-                        apiContent={apiContent}
-                        screenDimensions={screenDimensions}
-                        simulatorUrl={simulatorUrl}
-                        dryRun
-                      />
-                    ) : (
-                      <FullPage>
-                        <Spinner variant="styles.spinner" />
-                        <IframeRenderer
-                          apiContent={apiContent}
-                          screenDimensions={screenDimensions}
-                          simulatorUrl={simulatorUrl}
-                          dryRun
-                        />
-                      </FullPage>
-                    )}
-                  </>
+                {currentState === UiState.LOADING_IFRAME ? (
+                  <FullPage>
+                    <Spinner variant="styles.spinner" />
+                    <IframeRenderer
+                      apiContent={apiContent}
+                      screenDimensions={screenDimensions}
+                      simulatorUrl={simulatorUrl}
+                      dryRun
+                    />
+                  </FullPage>
                 ) : null}
               </>
             )}
@@ -266,6 +258,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               sx={{
                 height: "100%",
                 overflowY: "scroll",
+                width: "800px",
                 ...(isDisplayEditor
                   ? {
                       marginLeft: "16px",
