@@ -85,14 +85,10 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     }
   }, [manifestStatus]);
 
-  const [iframeCheckFailedOnce, setIframeCheckFailedOnce] = useState(false);
-
   const currentState: UiState = (() => {
     if (manifestStatus === "ok") {
       if (isWaitingForIFrameCheck || !iframeStatus) {
-        return iframeCheckFailedOnce
-          ? UiState.FAILED_CONNECT
-          : UiState.LOADING_IFRAME;
+        return UiState.LOADING_IFRAME;
       }
       if (iframeStatus === "ko") {
         return UiState.FAILED_CONNECT;
@@ -100,9 +96,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       return UiState.SUCCESS;
     } else if (manifestStatus === "ko") {
       return UiState.FAILED_SETUP;
-    }
-    if (iframeCheckFailedOnce) {
-      return UiState.FAILED_CONNECT;
     }
     return UiState.LOADING_SETUP;
   })();
@@ -152,50 +145,31 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(false);
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
-  const iframeIntervalId = useRef<NodeJS.Timeout | null>(null);
+
+  const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
 
   useEffect(() => {
     if (currentState === UiState.FAILED_SETUP) {
       const id = setInterval(() => {
-        checkSimulatorSetup();
+        checkSimulatorSetupCb();
       }, 3000);
       if (!setupIntervalId.current) {
         setupIntervalId.current = id;
         return;
       }
     }
-    if (currentState === UiState.FAILED_CONNECT) {
-      setIframeCheckFailedOnce(true);
-      if (!isWaitingForIFrameCheck) {
-        const id = setInterval(() => {
-          connectToSimulatorIframe();
-        }, 3000);
-        if (!iframeIntervalId.current) {
-          iframeIntervalId.current = id;
-          return;
-        }
-      }
-    }
     if (setupIntervalId.current) {
       clearTimeout(setupIntervalId.current);
-    }
-    if (iframeIntervalId.current) {
-      clearTimeout(iframeIntervalId.current);
     } else if (currentState === UiState.SUCCESS) {
       toggleIsDisplayEditor(true);
     }
-  }, [
-    currentState,
-    checkSimulatorSetup,
-    connectToSimulatorIframe,
-    isWaitingForIFrameCheck,
-  ]);
+  }, [currentState, checkSimulatorSetupCb]);
 
   useEffect(() => {
-    if (currentState === UiState.FAILED_CONNECT && !iframeCheckFailedOnce) {
+    if (currentState === UiState.FAILED_CONNECT) {
       void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
     }
-  }, [currentState, framework, iframeCheckFailedOnce]);
+  }, [currentState, framework]);
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
