@@ -5,11 +5,11 @@ import {
 	SnippetReadHookData,
 } from "@slicemachine/plugin-kit";
 
-import { DecodeError } from "../lib/DecodeError";
-import { assertPluginsInitialized } from "../lib/assertPluginsInitialized";
-import { decodeHookResult } from "../lib/decodeHookResult";
+import { DecodeError } from "../../lib/DecodeError";
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { decodeHookResult } from "../../lib/decodeHookResult";
 
-import { BaseManager } from "./_BaseManager";
+import { BaseManager } from "../BaseManager";
 
 const snippetCodec = t.type({
 	label: t.string,
