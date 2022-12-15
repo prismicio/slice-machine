@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Box, Flex, Text, Link as ThemeLinK, useThemeUI } from "theme-ui";
 import VariationModal from "./VariationModal";
 import Link from "next/link";
@@ -33,6 +33,11 @@ const Header: React.FC<{
 }> = ({ component, isTouched, variation, onSave, isLoading }) => {
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
+  const sliceNameRef = useRef<HTMLSpanElement>();
+  const isSliceNameOverflowing = Boolean(
+    sliceNameRef.current &&
+      sliceNameRef.current?.offsetWidth < sliceNameRef.current?.scrollWidth
+  );
 
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
@@ -65,59 +70,58 @@ const Header: React.FC<{
           minWidth: 320,
         }}
       >
-        <Flex sx={{ justifyContent: "space-between", alignItems: "start" }}>
-          <Box>
-            <Flex sx={{ flexDirection: "column" }}>
-              <Flex
-                sx={{
-                  fontSize: 4,
-                  fontWeight: "heading",
-                  alignItems: "center",
-                }}
-              >
-                <Link href="/slices" passHref>
-                  <ThemeLinK variant="invisible">
-                    <Flex sx={{ alignItems: "center" }}>
-                      <MdHorizontalSplit /> <Text ml={2}>Slices</Text>
-                    </Flex>
-                  </ThemeLinK>
-                </Link>
-                <Box sx={{ fontWeight: "thin" }} as="span">
-                  <Text ml={2} data-cy="slice-and-variation-name-header">
-                    {`/ ${component.model.name} / ${variation.name}`}
-                  </Text>
-                </Box>
-              </Flex>
-              <Flex mt={3} sx={{ alignItems: "center" }}>
+        <Flex
+          sx={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "start",
+            gap: "24px",
+          }}
+        >
+          <Flex
+            sx={{
+              fontSize: 4,
+              fontWeight: "heading",
+              alignItems: "center",
+            }}
+          >
+            <Link href="/slices" passHref>
+              <ThemeLinK variant="invisible" sx={{ flexShrink: 0 }}>
                 <Flex sx={{ alignItems: "center" }}>
-                  <VariationPopover
-                    defaultValue={variation}
-                    variations={component.model.variations}
-                    onNewVariation={() => setShowVariationModal(true)}
-                    onChange={(v) =>
-                      void router.push(
-                        ...Links.variation({
-                          lib: component.href,
-                          sliceName: component.model.name,
-                          variationId: v.id,
-                        }).all
-                      )
-                    }
-                  />
-                  <Box ml={2}>
-                    <Text variant="xs">Variation id : {variation.id}</Text>
-                  </Box>
+                  <MdHorizontalSplit /> <Text ml={2}>Slices</Text>
                 </Flex>
-              </Flex>
-            </Flex>
-          </Box>
-          <Flex sx={{ flexDirection: "row", alignItems: "center" }}>
-            <SimulatorButton
-              framework={framework}
-              isSimulatorAvailableForFramework={
-                isSimulatorAvailableForFramework
-              }
-            />
+              </ThemeLinK>
+            </Link>
+            <Box
+              ref={sliceNameRef}
+              sx={{
+                fontWeight: "thin",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+              }}
+              as="span"
+            >
+              <Text
+                sx={{
+                  ml: 2,
+                  whiteSpace: "nowrap",
+                }}
+                data-cy="slice-and-variation-name-header"
+                title={
+                  isSliceNameOverflowing ? component.model.name : undefined
+                }
+              >
+                {`/ ${component.model.name} / ${variation.name}`}
+              </Text>
+            </Box>
+          </Flex>
+          <Flex
+            sx={{
+              flexDirection: "row",
+              alignItems: "center",
+              flexShrink: 0,
+            }}
+          >
             <SliceMachineIconButton
               Icon={MdModeEdit}
               label="Edit slice name"
@@ -133,6 +137,12 @@ const Header: React.FC<{
                 height: 40,
               }}
             />
+            <SimulatorButton
+              framework={framework}
+              isSimulatorAvailableForFramework={
+                isSimulatorAvailableForFramework
+              }
+            />
             <Button
               label="Save to File System"
               isLoading={isLoading}
@@ -142,30 +152,52 @@ const Header: React.FC<{
               data-cy="builder-save-button"
             />
           </Flex>
-          <VariationModal
-            isOpen={showVariationModal}
-            onClose={() => setShowVariationModal(false)}
-            onSubmit={(id, name, copiedVariation) => {
-              copyVariationSlice(id, name, copiedVariation);
-              void router.push(
-                ...Links.variation({
-                  lib: component.href,
-                  sliceName: component.model.name,
-                  variationId: id,
-                }).all
-              );
-            }}
-            initialVariation={variation}
-            variations={component.model.variations}
-          />
-          <RenameSliceModal
-            sliceId={component.model.id}
-            sliceName={component.model.name}
-            libName={component.from}
-            variationId={variation.id}
-            data-cy="rename-slice-modal"
-          />
         </Flex>
+        <Flex mt={3} sx={{ alignItems: "center" }}>
+          <Flex sx={{ alignItems: "center" }}>
+            <VariationPopover
+              defaultValue={variation}
+              variations={component.model.variations}
+              onNewVariation={() => setShowVariationModal(true)}
+              onChange={(v) =>
+                void router.push(
+                  ...Links.variation({
+                    lib: component.href,
+                    sliceName: component.model.name,
+                    variationId: v.id,
+                  }).all
+                )
+              }
+            />
+            <Box ml={2}>
+              <Text variant="xs">Variation id : {variation.id}</Text>
+            </Box>
+          </Flex>
+        </Flex>
+
+        <VariationModal
+          isOpen={showVariationModal}
+          onClose={() => setShowVariationModal(false)}
+          onSubmit={(id, name, copiedVariation) => {
+            copyVariationSlice(id, name, copiedVariation);
+            void router.push(
+              ...Links.variation({
+                lib: component.href,
+                sliceName: component.model.name,
+                variationId: id,
+              }).all
+            );
+          }}
+          initialVariation={variation}
+          variations={component.model.variations}
+        />
+        <RenameSliceModal
+          sliceId={component.model.id}
+          sliceName={component.model.name}
+          libName={component.from}
+          variationId={variation.id}
+          data-cy="rename-slice-modal"
+        />
       </Box>
     </Flex>
   );
