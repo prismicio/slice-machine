@@ -310,5 +310,5 @@ describe("simulator", () => {
       libraryName: "slices",
       mock: expectedMock,
     });
-  }, 30000);
+  });
 });
