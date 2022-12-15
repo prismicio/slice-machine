@@ -237,7 +237,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         >
           <Flex
             sx={{
-              width: "100%",
+              flex: 2,
               height: "100%",
               flexDirection: "column",
             }}
@@ -296,6 +296,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   ? {
                       marginLeft: "16px",
                       visibility: "visible",
+                      flex: 1,
                     }
                   : {
                       marginLeft: "0px",
