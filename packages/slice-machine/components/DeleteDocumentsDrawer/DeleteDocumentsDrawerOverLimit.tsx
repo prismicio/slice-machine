@@ -119,7 +119,11 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
         </Text>
 
         {sortDocumentCards(AssociatedDocuments).map((ctDocuments) => (
-          <AssociatedDocumentsCard ctDocuments={ctDocuments} isOverLimit />
+          <AssociatedDocumentsCard
+            key={ctDocuments.ctName}
+            ctDocuments={ctDocuments}
+            isOverLimit
+          />
         ))}
       </Card>
     </Drawer>
