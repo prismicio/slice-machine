@@ -71,7 +71,7 @@ export class SliceMachineHelpers {
 		});
 
 		if (options?.includeNewlineAtEnd === false) {
-			formatted.replace(/[\r\n]+$/, "");
+			formatted = formatted.replace(/[\r\n]+$/, "");
 		}
 
 		return formatted;

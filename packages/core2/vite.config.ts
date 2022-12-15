@@ -10,7 +10,6 @@ export default defineConfig({
 				"p-limit",
 				"get-port",
 				"node-fetch",
-				"form-data-encoder",
 				"hast-util-to-string",
 				"@wooorm/starry-night",
 				"file-type",

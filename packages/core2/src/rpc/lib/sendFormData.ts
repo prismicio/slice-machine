@@ -85,11 +85,20 @@ const escape = (str: string, isFilename?: boolean) =>
 		.replace(/\r/g, "%0D")
 		.replace(/"/g, "%22");
 
-export const sendFormData = (
-	event: H3Event,
+type EncodeFormDataConfig = {
+	boundaryPrefix?: string;
+};
+
+type EncodeFormDataReturnType = {
+	headers: Record<string, string>;
+	stream: Readable;
+};
+
+const encodeFormData = (
 	formData: FormData,
-): Promise<void> => {
-	const boundary = "rpc-" + Math.random();
+	config: EncodeFormDataConfig = {},
+): EncodeFormDataReturnType => {
+	const boundary = (config.boundaryPrefix || "") + Math.random();
 	const prefix = `--${boundary}\r\nContent-Disposition: form-data;`;
 
 	async function* chunks() {
@@ -113,9 +122,23 @@ export const sendFormData = (
 		yield `--${boundary}--\r\n\r\n`;
 	}
 
-	setHeaders(event, {
-		"Content-Type": `multipart/form-data; boundary=${boundary}`,
+	return {
+		headers: {
+			"Content-Type": `multipart/form-data; boundary=${boundary}`,
+		},
+		stream: Readable.from(chunks()),
+	};
+};
+
+export const sendFormData = (
+	event: H3Event,
+	formData: FormData,
+): Promise<void> => {
+	const { headers, stream } = encodeFormData(formData, {
+		boundaryPrefix: "rpc-",
 	});
 
-	return sendStream(event, Readable.from(chunks()));
+	setHeaders(event, headers);
+
+	return sendStream(event, stream);
 };
