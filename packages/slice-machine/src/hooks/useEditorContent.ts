@@ -12,7 +12,8 @@ function useEditorContentOnce({
   slice: ComponentUI;
 }) {
   const editorContent: SharedSliceContent =
-    slice.mock?.[0] || defaultSharedSliceContent(variationID);
+    slice.mock?.find((m) => m.variation === variationID) ||
+    defaultSharedSliceContent(variationID);
 
   const apiContent = {
     ...(renderSliceMock(Slices.fromSM(slice.model), editorContent) as object),
