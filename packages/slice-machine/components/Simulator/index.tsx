@@ -237,9 +237,9 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         >
           <Flex
             sx={{
-              flex: 2,
               height: "100%",
               flexDirection: "column",
+              flex: 1,
             }}
           >
             <Toolbar
@@ -296,7 +296,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   ? {
                       marginLeft: "16px",
                       visibility: "visible",
-                      flex: 1,
+                      width: "496px",
                     }
                   : {
                       marginLeft: "0px",
