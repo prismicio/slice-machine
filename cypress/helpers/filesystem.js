@@ -1,9 +1,14 @@
-import { customTypesFolder, assetsFolder, slicesFolder, typesFile } from "../consts";
+import {
+  customTypesFolder,
+  assetsFolder,
+  slicesFolder,
+  typesFile,
+} from "../consts";
 
 export function clearProject() {
-  clearCustomTypes()
-  clearSlices()
-  clearAssets()
+  clearCustomTypes();
+  clearSlices();
+  clearAssets();
 }
 
 export function clearCustomTypes() {

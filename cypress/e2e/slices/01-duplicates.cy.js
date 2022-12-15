@@ -14,7 +14,7 @@ describe("Duplicate Slices", () => {
   });
 
   it("A user can not create two slices with the same name", () => {
-    cy.createSlice(lib, sliceId, sliceName)
+    cy.createSlice(lib, sliceId, sliceName);
 
     // do it again
     cy.visit(`/slices`);

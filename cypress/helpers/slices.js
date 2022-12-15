@@ -1,5 +1,5 @@
 import "cypress-wait-until";
-import { typesFile, sliceMockFile, libraryStateFile } from '../consts';
+import { typesFile, sliceMockFile, libraryStateFile } from "../consts";
 
 export function createSlice(lib, id, name) {
   cy.visit(`/slices`);
@@ -18,24 +18,22 @@ export function createSlice(lib, id, name) {
   cy.readFile(typesFile).should("contains", name);
 
   cy.readFile(sliceMockFile(name), "utf-8")
-  .then((mock) => {
-    return cy
-      .readFile(libraryStateFile, "utf-8")
-      .then((librariesState) => {
+    .then((mock) => {
+      return cy.readFile(libraryStateFile, "utf-8").then((librariesState) => {
         return { mock, librariesState };
       });
-  })
-  .then(({ mock, librariesState }) => {
-    const want = mock[0];
-    const got = librariesState["slices"].components[id].mocks.default;
-    expect(got).to.deep.equal(want);
-  });
-};
+    })
+    .then(({ mock, librariesState }) => {
+      const want = mock[0];
+      const got = librariesState["slices"].components[id].mocks.default;
+      expect(got).to.deep.equal(want);
+    });
+}
 
 export function renameSlice(lib, actualName, newName) {
   cy.visit(`/${lib}/${actualName}/default`);
   cy.waitUntil(() => cy.get('[data-cy="edit-slice-name"]'));
-  
+
   // edit slice name
   cy.get('[data-cy="edit-slice-name"]').click();
   cy.get("[data-cy=rename-slice-modal]").should("be.visible");

@@ -23,7 +23,10 @@ export function setSliceMachineUserContext({
   );
 }
 
-export function cleanSliceMachineUserContext(hasSendAReview = true, isOnboarded = true) {
+export function cleanSliceMachineUserContext(
+  hasSendAReview = true,
+  isOnboarded = true
+) {
   return cy.removeLocalStorage("persist:root");
 }
 

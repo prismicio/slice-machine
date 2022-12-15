@@ -10,11 +10,11 @@ describe("changelog.warningBreakingChanges", () => {
       hasSeenTutorialsTooTip: true,
     });
   });
-  
+
   function mockStateCall(releaseNote) {
     cy.intercept("/api/state", (req) => {
       req.continue((res) => {
-        res.body =  {
+        res.body = {
           ...res.body,
           env: {
             ...res.body.env,
@@ -26,7 +26,7 @@ describe("changelog.warningBreakingChanges", () => {
                 {
                   versionNumber: "1000.0.0",
                   status: "PATCH",
-                  releaseNote
+                  releaseNote,
                 },
               ],
             },
@@ -37,7 +37,9 @@ describe("changelog.warningBreakingChanges", () => {
   }
 
   it("shows warning if the selected release note has a breaking changes title.", () => {
-    mockStateCall("### Breaking Changes\n -this changes is breaking your slice machine");
+    mockStateCall(
+      "### Breaking Changes\n -this changes is breaking your slice machine"
+    );
     cy.visit("/changelog");
     cy.get("[data-testid=breaking-changes-warning]").should("exist");
   });

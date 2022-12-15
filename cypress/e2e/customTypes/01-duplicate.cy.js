@@ -32,7 +32,7 @@ describe("Duplicate custom types", () => {
 
   it("when using a id that is already in use it should warn the user", () => {
     cy.createCustomType(customTypeId, customTypeName);
-    
+
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=create-ct]")).then(() => true);
     cy.get("[data-cy=create-ct]").click();

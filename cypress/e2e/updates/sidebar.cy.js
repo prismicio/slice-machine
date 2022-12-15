@@ -1,8 +1,8 @@
-describe("update notification", () => {  
+describe("update notification", () => {
   function mockStateCall() {
     cy.intercept("/api/state", (req) => {
       req.continue((res) => {
-        res.body =  {
+        res.body = {
           ...res.body,
           env: {
             ...res.body.env,
@@ -14,7 +14,7 @@ describe("update notification", () => {
                 {
                   versionNumber: "1000.0.0",
                   status: "MAJOR",
-                  releaseNote: null
+                  releaseNote: null,
                 },
               ],
             },
@@ -31,14 +31,14 @@ describe("update notification", () => {
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
     });
-   
+
     mockStateCall();
 
     cy.visit("/");
     cy.get("[data-testid=the-red-dot]").should("exist");
     cy.contains("Learn more").click();
     cy.location("pathname", { timeout: 1000 }).should("eq", "/changelog");
-    
+
     cy.visit("/");
     cy.contains("Learn more").should("exist");
     cy.get("[data-testid=the-red-dot]").should("not.exist");
@@ -64,7 +64,7 @@ describe("update notification", () => {
       },
       hasSeenTutorialsTooTip: true,
     });
-    
+
     mockStateCall();
 
     cy.visit("/");

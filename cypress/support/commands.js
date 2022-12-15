@@ -1,11 +1,28 @@
-import { setSliceMachineUserContext, cleanSliceMachineUserContext, getSliceMachineUserContext } from "../helpers/localStorage";
-import { clearProject, clearAssets, clearCustomTypes, clearSlices, removeTypes } from "../helpers/filesystem";
-import { createCustomType, renameCustomType, addFieldToCustomType } from "../helpers/customTypes";
+import {
+  setSliceMachineUserContext,
+  cleanSliceMachineUserContext,
+  getSliceMachineUserContext,
+} from "../helpers/localStorage";
+import {
+  clearProject,
+  clearAssets,
+  clearCustomTypes,
+  clearSlices,
+  removeTypes,
+} from "../helpers/filesystem";
+import {
+  createCustomType,
+  renameCustomType,
+  addFieldToCustomType,
+} from "../helpers/customTypes";
 import { createSlice, renameSlice } from "../helpers/slices";
 
 /* -- LOCAL STORAGE -- */
 Cypress.Commands.add("setSliceMachineUserContext", setSliceMachineUserContext);
-Cypress.Commands.add("cleanSliceMachineUserContext", cleanSliceMachineUserContext);
+Cypress.Commands.add(
+  "cleanSliceMachineUserContext",
+  cleanSliceMachineUserContext
+);
 Cypress.Commands.add("getSliceMachineUserContext", getSliceMachineUserContext);
 
 /* -- PROJECT RESET -- */

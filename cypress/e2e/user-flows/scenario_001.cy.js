@@ -15,7 +15,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
     });
-  })
+  });
 
   it("Complete onboarding steps", () => {
     cy.setSliceMachineUserContext({
@@ -24,7 +24,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       updatesViewed: {},
       hasSeenTutorialsTooTip: true,
     });
-    
+
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
     cy.location("pathname", { timeout: 5000 }).should("eq", "/onboarding");
@@ -43,19 +43,29 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   it("Create a first repeatable CT", () => {
-    cy.createCustomType(customTypeId, customTypeName)
+    cy.createCustomType(customTypeId, customTypeName);
   });
 
   it("Adding fields to repeatable CT & saving", () => {
     cy.visit(`/cts/${customTypeId}`);
     cy.waitUntil(() => cy.get(`[data-cy="empty-zone-add-new-field"]`));
-    
+
     // TODO: removing this delay will make the test flaky (because of the useServerState hook)
     cy.wait(5000);
 
-    cy.addFieldToCustomType(customTypeId, 'UID', 'ID Field', 'uid', true);
-    cy.addFieldToCustomType(customTypeId, 'Key Text', 'Key Text Field', 'key_text_id');
-    cy.addFieldToCustomType(customTypeId, 'Rich Text', 'Rich Text Field', 'rich_text_id');
+    cy.addFieldToCustomType(customTypeId, "UID", "ID Field", "uid", true);
+    cy.addFieldToCustomType(
+      customTypeId,
+      "Key Text",
+      "Key Text Field",
+      "key_text_id"
+    );
+    cy.addFieldToCustomType(
+      customTypeId,
+      "Rich Text",
+      "Rich Text Field",
+      "rich_text_id"
+    );
 
     cy.get("[data-cy=builder-save-button]").should("not.be.disabled");
 

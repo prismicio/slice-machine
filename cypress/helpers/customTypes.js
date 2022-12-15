@@ -1,9 +1,9 @@
 import "cypress-wait-until";
-import { typesFile } from '../consts';
+import { typesFile } from "../consts";
 
 export function createCustomType(id, name) {
   cy.visit("/");
-  cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"))
+  cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
 
   // create custom type
   cy.get("[data-cy=empty-state-main-button]").click();
@@ -13,11 +13,11 @@ export function createCustomType(id, name) {
   cy.get("[data-cy=create-ct-modal]").submit();
   cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
   cy.readFile(typesFile).should("contains", name);
-};
+}
 
 export function renameCustomType(id, actualName, newName) {
-  cy.visit(`/cts/${id}`)
-  cy.waitUntil(() => cy.get('[data-cy="edit-custom-type"]'))
+  cy.visit(`/cts/${id}`);
+  cy.waitUntil(() => cy.get('[data-cy="edit-custom-type"]'));
 
   // rename the custom type
   cy.get('[data-cy="edit-custom-type"]').click();
@@ -34,15 +34,24 @@ export function renameCustomType(id, actualName, newName) {
   cy.readFile(typesFile).should("contains", `${newName} - Edited`);
 }
 
-export function addFieldToCustomType(id, fieldType, fieldName, fieldId, isFirstField /* boolean | undefined */) {
-  const addFieldButtonSelector = isFirstField ? "empty-zone-add-new-field" : "add-new-field"
+export function addFieldToCustomType(
+  id,
+  fieldType,
+  fieldName,
+  fieldId,
+  isFirstField /* boolean | undefined */
+) {
+  const addFieldButtonSelector = isFirstField
+    ? "empty-zone-add-new-field"
+    : "add-new-field";
 
   cy.get(`[data-cy="${addFieldButtonSelector}"]`).first().click();
   cy.get(`[data-cy='${fieldType}']`).click();
   cy.get("[data-cy=new-field-name-input]").clear().type(fieldName);
-  
+
   // API Id modification for UID field is disabled
-  if (fieldType != 'UID') cy.get("[data-cy=new-field-id-input]").clear().type(fieldId);
+  if (fieldType != "UID")
+    cy.get("[data-cy=new-field-id-input]").clear().type(fieldId);
 
   cy.get("[data-cy=new-field-form]").submit();
   cy.get("[data-cy=ct-static-zone]").within(() => {
