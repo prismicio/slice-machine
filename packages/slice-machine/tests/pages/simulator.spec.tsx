@@ -18,7 +18,17 @@ jest.mock("next/dist/client/router", () => require("next-router-mock"));
 mockRouter.useParser(
   createDynamicRouteParser(["/[lib]/[sliceName]/[variation]/simulator"])
 );
-// maybe mock simulator client ?
+// mock simulator client, it would be nice not to have to do this :/
+jest.mock("@prismicio/slice-simulator-com", () => {
+  return {
+    SimulatorClient: jest.fn().mockReturnValue({
+      connect: jest.fn().mockResolvedValue(undefined),
+      disconnect: jest.fn(),
+      connected: true,
+      setSliceZone: jest.fn().mockResolvedValue(undefined),
+    }),
+  };
+});
 
 const server = setupServer();
 beforeAll(() => server.listen());
@@ -47,13 +57,41 @@ describe("simulator", () => {
     // });
   });
 
+  document.createRange = () => {
+    // https://github.com/jsdom/jsdom/issues/3002
+    const range = new Range();
+
+    range.getBoundingClientRect = jest.fn().mockReturnValue({
+      width: 0,
+    });
+
+    range.getClientRects = () => {
+      return {
+        item: () => null,
+        length: 0,
+        [Symbol.iterator]: jest.fn(),
+      };
+    };
+
+    return range;
+  };
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   test("save mock", async () => {
+    jest.useFakeTimers();
+
     mockRouter.push("/slices/MySlice/default/simulator");
+    const HEADING_TEXT = "HEADING TEXT";
     const state = {
+      simulator: {
+        isWaitingForIframeCheck: true,
+        iframeStatus: null,
+        setupStatus: { manifest: null },
+        savingMock: false,
+      },
       environment: {
         framework: "next",
         changelog: {
@@ -88,7 +126,7 @@ describe("simulator", () => {
                           {
                             type: "heading1",
                             content: {
-                              text: "Living",
+                              text: HEADING_TEXT,
                             },
                           },
                         ],
@@ -205,6 +243,25 @@ describe("simulator", () => {
     );
 
     server.use(rest.post("http://localhost/api/slices/mock", saveMockSpy));
+    server.use(
+      rest.get(
+        state.environment.manifest.localSliceSimulatorURL,
+        (_req, res, ctx) => {
+          res(ctx.json({}));
+        }
+      )
+    );
+
+    server.use(
+      rest.get("http://localhost/api/simulator/check", (_req, res, ctx) => {
+        return res(
+          ctx.json({
+            manifest: "ok",
+            value: state.environment.manifest.localSliceSimulatorURL,
+          })
+        );
+      })
+    );
 
     const App = render(<Simulator />, {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
@@ -220,22 +277,38 @@ describe("simulator", () => {
       },
     });
 
-    // App.debug()
-
     const button = App.container.querySelector('[data-cy="save-mock"]');
     expect(button).not.toBeNull();
+
+    const input = await App.getByText(HEADING_TEXT);
+    expect(input).not.toBeNull();
+
+    await act(async () => {
+      // fireEvent.change(input as Element, {target: {value: "🎉"}})
+      // see: https://github.com/testing-library/dom-testing-library/pull/235
+      fireEvent.blur(input as Element, { target: { textContent: "🎉" } });
+    });
+
+    expect(button).not.toHaveAttribute("disabled");
+
     await act(async () => {
       fireEvent.click(button as Element);
     });
 
-    await new Promise(process.nextTick);
-
+    expect(saveMockSpy).toHaveBeenCalled();
     const payloadSent = await saveMockSpy.mock.lastCall?.[0].body;
+
+    const expectedMock = [...state.slices.libraries[0].components[0].mock];
+    expectedMock[0].primary.title.value[0].content.text = "🎉";
+    // @ts-expect-error
+    expectedMock[0].primary.title.value[0].content.spans = [];
+    // @ts-expect-error
+    expectedMock[0].primary.title.value[0].direction = "ltr";
 
     expect(payloadSent).toEqual({
       sliceName: "MySlice",
       libraryName: "slices",
-      mock: state.slices.libraries[0].components[0].mock,
+      mock: expectedMock,
     });
-  });
+  }, 30000);
 });
