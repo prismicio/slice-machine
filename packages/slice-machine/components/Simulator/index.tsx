@@ -291,6 +291,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             >
               <ThemeProvider mode="light">
                 <SharedSliceEditor
+                  /** because of a re-render issue on the richtext
+                  /* we enforce re-rendering the editor when the variation change.
+                  /* this change should be removed once the editor is fixed.
+                  */
+                  key={variation.id}
                   content={editorContent}
                   onContentChange={(c) => {
                     setEditorState(c as SharedSliceContent);
