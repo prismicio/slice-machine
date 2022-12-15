@@ -37,7 +37,7 @@ const FailedConnect = () => (
       <br /> If that doesn't work, see the&nbsp;
       <Link
         target="_blank"
-        href="https://prismic.io"
+        href="https://prismic.io/docs/slice-machine"
         sx={{
           color: "link",
         }}
