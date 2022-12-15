@@ -85,6 +85,8 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     }
   }, [manifestStatus]);
 
+  const [iframeFailedOnce, setIframeFailedOnce] = useState(false);
+
   const currentState: UiState = (() => {
     if (manifestStatus === "ok") {
       if (isWaitingForIFrameCheck || !iframeStatus) {
@@ -145,25 +147,40 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(false);
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
+  const iframeIntervalId = useRef<NodeJS.Timeout | null>(null);
 
   const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
+  const connectToSimulatorSetupCb = useCallback(
+    () => connectToSimulatorIframe(),
+    []
+  );
 
   useEffect(() => {
     if (currentState === UiState.FAILED_SETUP) {
-      const id = setInterval(() => {
+      const id = setTimeout(() => {
         checkSimulatorSetupCb();
       }, 3000);
-      if (!setupIntervalId.current) {
-        setupIntervalId.current = id;
-        return;
-      }
+      setupIntervalId.current = id;
+      return;
+    }
+    if (currentState === UiState.FAILED_CONNECT) {
+      setIframeFailedOnce(true);
+      const id = setTimeout(() => {
+        connectToSimulatorSetupCb();
+      }, 3000);
+      iframeIntervalId.current = id;
+      return;
     }
     if (setupIntervalId.current) {
-      clearTimeout(setupIntervalId.current);
-    } else if (currentState === UiState.SUCCESS) {
+      return clearTimeout(setupIntervalId.current);
+    }
+    if (iframeIntervalId.current) {
+      return clearTimeout(iframeIntervalId.current);
+    }
+    if (currentState === UiState.SUCCESS) {
       toggleIsDisplayEditor(true);
     }
-  }, [currentState, checkSimulatorSetupCb]);
+  }, [currentState, checkSimulatorSetupCb, connectToSimulatorSetupCb]);
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
@@ -223,7 +240,10 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               screenDimensions={screenDimensions}
               actionsDisabled={currentState !== UiState.SUCCESS}
             />
-            {currentState === UiState.FAILED_CONNECT ? <FailedConnect /> : null}
+            {currentState === UiState.FAILED_CONNECT ||
+            (currentState === UiState.LOADING_IFRAME && iframeFailedOnce) ? (
+              <FailedConnect />
+            ) : null}
             {currentState === UiState.SUCCESS ? (
               <IframeRenderer
                 apiContent={apiContent}
@@ -245,7 +265,8 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                         simulatorUrl={simulatorUrl}
                         dryRun
                       />
-                    ) : (
+                    ) : currentState !== UiState.LOADING_IFRAME ||
+                      !iframeFailedOnce ? (
                       <FullPage>
                         <Spinner variant="styles.spinner" />
                         <IframeRenderer
@@ -255,7 +276,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                           dryRun
                         />
                       </FullPage>
-                    )}
+                    ) : null}
                   </>
                 ) : null}
               </>
