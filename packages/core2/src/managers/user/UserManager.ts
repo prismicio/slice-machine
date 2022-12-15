@@ -1,4 +1,4 @@
-import { BaseManager } from "./_BaseManager";
+import { BaseManager } from "../BaseManager";
 
 export class UserManager extends BaseManager {
 	login = this.prismicAuthManager.login.bind(this.prismicAuthManager);

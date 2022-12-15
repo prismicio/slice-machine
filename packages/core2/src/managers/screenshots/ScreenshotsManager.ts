@@ -4,14 +4,15 @@ import fetch, { FormData, Blob } from "node-fetch";
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { BrowserContext, Viewport } from "puppeteer";
 
-import { checkIsURLAccessible } from "../lib/checkIsURLAccessible";
-import { createContentDigest } from "../lib/createContentDigest";
-import { decode } from "../lib/decode";
+import { checkIsURLAccessible } from "../../lib/checkIsURLAccessible";
+import { createContentDigest } from "../../lib/createContentDigest";
+import { decode } from "../../lib/decode";
 
-import { S3ACL } from "../types";
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
+import { S3ACL } from "../../types";
+import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 
-import { BaseManager } from "./_BaseManager";
+import { BaseManager } from "../BaseManager";
 
 const SLICE_SIMULATOR_LOAD_TIMEOUT = 10_000; // ms
 const SLICE_SIMULATOR_ROOT_SELECTOR = "#root";
@@ -86,7 +87,7 @@ export class ScreenshotsManager extends BaseManager {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 		const authenticationToken = await this.user.getAuthenticationToken();
 
-		const awsACLURL = new URL("create", APIEndpoints.AwsAclProvider);
+		const awsACLURL = new URL("create", API_ENDPOINTS.AwsAclProvider);
 		const awsACLRes = await fetch(awsACLURL.toString(), {
 			headers: {
 				Authorization: `Bearer ${authenticationToken}`,

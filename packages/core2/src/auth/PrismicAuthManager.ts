@@ -13,7 +13,8 @@ import getPort from "get-port";
 import { decode } from "../lib/decode";
 import { serializeCookies } from "../lib/serializeCookies";
 
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../constants";
+import { API_ENDPOINTS } from "../constants/API_ENDPOINTS";
+import { SLICE_MACHINE_USER_AGENT } from "../constants/SLICE_MACHINE_USER_AGENT";
 import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
 import {
 	InternalError,
@@ -125,7 +126,7 @@ export class PrismicAuthManager {
 		const authState = await this._readPersistedAuthState();
 
 		// Set the auth's URL base to the current base at runtime.
-		authState.base = APIEndpoints.PrismicWroom;
+		authState.base = API_ENDPOINTS.PrismicWroom;
 		authState.cookies = {
 			...authState.cookies,
 			...parseCookies(args.cookies.join(COOKIE_SEPARATOR)),
@@ -150,7 +151,7 @@ export class PrismicAuthManager {
 
 		const url = new URL(
 			`/dashboard/cli/login?source=slice-machine&port=${port}`,
-			APIEndpoints.PrismicWroom,
+			API_ENDPOINTS.PrismicWroom,
 		).toString();
 
 		return {
@@ -218,7 +219,7 @@ export class PrismicAuthManager {
 		const authState = await this._readPersistedAuthState();
 
 		if (checkHasAuthenticationToken(authState)) {
-			const url = new URL("/validate", APIEndpoints.PrismicAuthentication);
+			const url = new URL("/validate", API_ENDPOINTS.PrismicAuthentication);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
 
 			const res = await fetch(url.toString(), {
@@ -269,7 +270,7 @@ export class PrismicAuthManager {
 		const authState = await this._readPersistedAuthState();
 
 		if (checkHasAuthenticationToken(authState)) {
-			const url = new URL("/refreshtoken", APIEndpoints.PrismicAuthentication);
+			const url = new URL("/refreshtoken", API_ENDPOINTS.PrismicAuthentication);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
 
 			const res = await fetch(url.toString(), {
@@ -302,7 +303,7 @@ export class PrismicAuthManager {
 	private async _getProfileForAuthenticationToken(
 		args: GetProfileForAuthenticationTokenArgs,
 	): Promise<PrismicUserProfile> {
-		const url = new URL("/profile", APIEndpoints.PrismicUser);
+		const url = new URL("/profile", API_ENDPOINTS.PrismicUser);
 		const res = await fetch(url.toString(), {
 			headers: {
 				Authorization: `Bearer ${args.authenticationToken}`,
