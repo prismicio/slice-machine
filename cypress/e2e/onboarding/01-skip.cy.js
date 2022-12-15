@@ -1,6 +1,5 @@
 describe("onboarding skip", () => {
   beforeEach(() => {
-    cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
   });
 

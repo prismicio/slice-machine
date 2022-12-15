@@ -1,6 +1,5 @@
 describe("onboarding finish", () => {
   beforeEach(() => {
-    cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
   });
 
