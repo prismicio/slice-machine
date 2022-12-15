@@ -7,13 +7,6 @@ import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
-import { useSelector } from "react-redux";
-import {
-  selectIframeStatus,
-  selectIsWaitingForIFrameCheck,
-} from "@src/modules/simulator";
-import { SliceMachineStoreType } from "@src/redux/type";
-
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
   RefCallback<HTMLIFrameElement>
@@ -68,15 +61,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   dryRun = false,
   sx,
 }) => {
-  const [triggerReload, setTriggerReload] = useState<number>(1);
   const [client, refCallback] = useSimulatorClient();
-
-  const { iframeStatus, isWaitingForIFrameCheck } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      iframeStatus: selectIframeStatus(state),
-      isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
-    })
-  );
 
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
@@ -109,12 +94,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
         connectToSimulatorFailure();
       });
   }, [client, apiContent, simulatorUrl]);
-
-  useEffect(() => {
-    if (!isWaitingForIFrameCheck && iframeStatus !== "ok") {
-      setTriggerReload((n) => n + 1);
-    }
-  }, [iframeStatus, isWaitingForIFrameCheck]);
 
   return (
     <Box
@@ -163,7 +142,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
               id="__iframe-renderer"
               ref={refCallback}
               src={simulatorUrl}
-              key={triggerReload}
               style={{
                 border: "none",
                 width: "100%",
