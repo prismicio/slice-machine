@@ -4,7 +4,7 @@ import SegmentClient from "analytics-node";
 
 import { readPrismicrc } from "../../lib/prismicrc";
 
-import { APITokens } from "../../constants";
+import { API_TOKENS } from "../../constants/API_TOKENS";
 
 import { BaseManager } from "../BaseManager";
 
@@ -46,7 +46,7 @@ export class TelemetryManager extends BaseManager {
 		} catch {}
 
 		this._enabled = readPrismicrc().telemetry !== false;
-		this._segmentClient = new SegmentClient(APITokens.SegmentKey, {
+		this._segmentClient = new SegmentClient(API_TOKENS.SegmentKey, {
 			// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
 			flushAt: 1,
 			// TODO: Verify that this actually does not send data to Segment when false.

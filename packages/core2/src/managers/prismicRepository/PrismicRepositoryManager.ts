@@ -4,15 +4,16 @@ import fetch, { Response } from "node-fetch";
 import { decode } from "../../lib/decode";
 import { serializeCookies } from "../../lib/serializeCookies";
 
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../../constants";
+import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 
 import { BaseManager } from "../BaseManager";
 
 import {
 	PrismicRepository,
 	PrismicRepositoryRole,
-	RepositoryAPIUserAgent,
-	RepositoryAPIUserAgents,
+	PrismicRepositoryUserAgent,
+	PrismicRepositoryUserAgents,
 } from "./types";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
@@ -21,32 +22,32 @@ const DEFAULT_REPOSITORY_SETTINGS = {
 	role: "developer",
 };
 
-type RepositoryAPIManagerCheckExistsArgs = {
+type PrismicRepositoryManagerCheckExistsArgs = {
 	domain: string;
 };
 
-type RepositoryAPIManagerCreateArgs = {
+type PrismicRepositoryManagerCreateArgs = {
 	domain: string;
 	framework: string; // TODO: Type(?)
 };
 
-type RepositoryAPIManagerDeleteArgs = {
+type PrismicRepositoryManagerDeleteArgs = {
 	domain: string;
 	password: string;
 };
 
-type RepositoryAPIManagerPushDocumentsArgs = {
+type PrismicRepositoryManagerPushDocumentsArgs = {
 	domain: string;
 	signature: string;
 	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
 };
 
-export class RepositoryAPIManager extends BaseManager {
+export class PrismicRepositoryManager extends BaseManager {
 	// TODO: Add methods for repository-specific actions. E.g. creating a
 	// new repository.
 
 	async readAll(): Promise<PrismicRepository[]> {
-		const url = new URL("/repositories", APIEndpoints.PrismicUser);
+		const url = new URL("/repositories", API_ENDPOINTS.PrismicUser);
 		const res = await this._fetch({ url });
 		const json = await res.json();
 
@@ -82,11 +83,11 @@ export class RepositoryAPIManager extends BaseManager {
 	}
 
 	async checkExists(
-		args: RepositoryAPIManagerCheckExistsArgs,
+		args: PrismicRepositoryManagerCheckExistsArgs,
 	): Promise<boolean> {
 		const url = new URL(
 			`/app/dashboard/repositories/${args.domain}/exists`,
-			APIEndpoints.PrismicWroom,
+			API_ENDPOINTS.PrismicWroom,
 		);
 		const res = await this._fetch({ url });
 		const text = await res.text();
@@ -101,10 +102,10 @@ export class RepositoryAPIManager extends BaseManager {
 		}
 	}
 
-	async create(args: RepositoryAPIManagerCreateArgs): Promise<void> {
+	async create(args: PrismicRepositoryManagerCreateArgs): Promise<void> {
 		const url = new URL(
 			"/authentication/newrepository?app=slicemachine",
-			APIEndpoints.PrismicWroom,
+			API_ENDPOINTS.PrismicWroom,
 		);
 
 		const body = {
@@ -117,7 +118,7 @@ export class RepositoryAPIManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: RepositoryAPIUserAgent.SliceMachine, // Custom User Agent is required
+			userAgent: PrismicRepositoryUserAgent.SliceMachine, // Custom User Agent is required
 		});
 		const text = await res.text();
 
@@ -130,12 +131,12 @@ export class RepositoryAPIManager extends BaseManager {
 		}
 	}
 
-	async delete(args: RepositoryAPIManagerDeleteArgs): Promise<void> {
+	async delete(args: PrismicRepositoryManagerDeleteArgs): Promise<void> {
 		const cookies = await this.user.getAuthenticationCookies();
 
 		const url = new URL(
 			`/app/settings/delete?_=${cookies["X_XSRF"]}`, // TODO: Maybe we want to throw early if the token is no available, or get the token another way
-			APIEndpoints.PrismicWroom,
+			API_ENDPOINTS.PrismicWroom,
 		);
 		// Update hostname to include repository domain
 		url.hostname = `${args.domain}.${url.hostname}`;
@@ -149,7 +150,7 @@ export class RepositoryAPIManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: RepositoryAPIUserAgent.LegacyZero, // Custom User Agent is required
+			userAgent: PrismicRepositoryUserAgent.LegacyZero, // Custom User Agent is required
 		});
 
 		if (!res.ok) {
@@ -160,9 +161,9 @@ export class RepositoryAPIManager extends BaseManager {
 	}
 
 	async pushDocuments(
-		args: RepositoryAPIManagerPushDocumentsArgs,
+		args: PrismicRepositoryManagerPushDocumentsArgs,
 	): Promise<void> {
-		const url = new URL("/starter/documents", APIEndpoints.PrismicWroom);
+		const url = new URL("/starter/documents", API_ENDPOINTS.PrismicWroom);
 		// Update hostname to include repository domain
 		url.hostname = `${args.domain}.${url.hostname}`;
 
@@ -175,7 +176,7 @@ export class RepositoryAPIManager extends BaseManager {
 			url,
 			method: "POST",
 			body,
-			userAgent: RepositoryAPIUserAgent.LegacyZero, // Custom User Agent is required
+			userAgent: PrismicRepositoryUserAgent.LegacyZero, // Custom User Agent is required
 		});
 
 		if (!res.ok) {
@@ -209,7 +210,7 @@ export class RepositoryAPIManager extends BaseManager {
 		url: URL;
 		method?: "GET" | "POST";
 		body?: unknown;
-		userAgent?: RepositoryAPIUserAgents;
+		userAgent?: PrismicRepositoryUserAgents;
 	}): Promise<Response> {
 		const cookies = await this.user.getAuthenticationCookies();
 

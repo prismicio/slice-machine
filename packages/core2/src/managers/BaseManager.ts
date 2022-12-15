@@ -4,16 +4,16 @@ import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 import { SliceMachineManager } from "./SliceMachineManager";
 
 import { UserManager } from "./user/UserManager";
-import { RepositoryAPIManager } from "./repositoryAPI/RepositoryAPIManager";
+import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
 
 import { PluginsManager } from "./plugins/PluginsManager";
 
 import { ProjectManager } from "./project/ProjectManager";
-import { CustomTypesManager } from "./project/CustomTypesManager";
-import { SlicesManager } from "./project/SlicesManager";
-import { SnippetsManager } from "./project/SnippetsManager";
-import { ScreenshotsManager } from "./project/ScreenshotsManager";
-import { SimulatorManager } from "./project/SimulatorManager";
+import { CustomTypesManager } from "./customTypes/CustomTypesManager";
+import { SlicesManager } from "./slices/SlicesManager";
+import { SnippetsManager } from "./snippets/SnippetsManager";
+import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
+import { SimulatorManager } from "./simulator/SimulatorManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
@@ -51,8 +51,8 @@ export abstract class BaseManager {
 	protected get user(): UserManager {
 		return this._sliceMachineManager.user;
 	}
-	protected get repositoryAPI(): RepositoryAPIManager {
-		return this._sliceMachineManager.repositoryAPI;
+	protected get prismicRepository(): PrismicRepositoryManager {
+		return this._sliceMachineManager.prismicRepository;
 	}
 
 	protected get plugins(): PluginsManager {

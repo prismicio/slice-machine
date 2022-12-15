@@ -1,11 +1,11 @@
 import * as t from "io-ts";
 
-export const RepositoryAPIUserAgent = {
+export const PrismicRepositoryUserAgent = {
 	SliceMachine: "prismic-cli/sm",
 	LegacyZero: "prismic-cli/0",
 } as const;
-export type RepositoryAPIUserAgents =
-	typeof RepositoryAPIUserAgent[keyof typeof RepositoryAPIUserAgent];
+export type PrismicRepositoryUserAgents =
+	typeof PrismicRepositoryUserAgent[keyof typeof PrismicRepositoryUserAgent];
 
 export const PrismicRepositoryRole = {
 	SuperUser: "SuperUser",

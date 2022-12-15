@@ -1,6 +1,4 @@
-import { ApplicationMode } from "./ApplicationMode";
-
-export const SLICE_MACHINE_USER_AGENT = "slice-machine";
+import { APPLICATION_MODE } from "./APPLICATION_MODE";
 
 type APIEndpoints = {
 	PrismicWroom: string;
@@ -10,10 +8,10 @@ type APIEndpoints = {
 	AwsAclProvider: string;
 };
 
-export const APIEndpoints: APIEndpoints = (() => {
+export const API_ENDPOINTS: APIEndpoints = (() => {
 	switch (process.env.SM_ENV) {
-		case ApplicationMode.DEVELOPMENT:
-		case ApplicationMode.STAGING:
+		case APPLICATION_MODE.Development:
+		case APPLICATION_MODE.Staging:
 			return {
 				PrismicWroom: "https://wroom.io/",
 				PrismicAuthentication: "https://auth.wroom.io/",
@@ -23,7 +21,7 @@ export const APIEndpoints: APIEndpoints = (() => {
 					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
 			};
 
-		case ApplicationMode.PRODUCTION:
+		case APPLICATION_MODE.Production:
 		default:
 			return {
 				PrismicWroom: "https://prismic.io/",
@@ -32,23 +30,6 @@ export const APIEndpoints: APIEndpoints = (() => {
 				PrismicUser: "https://user.internal-prismic.io/",
 				AwsAclProvider:
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
-			};
-	}
-})();
-
-type APITokens = {
-	SegmentKey: string;
-};
-
-export const APITokens: APITokens = (() => {
-	switch (process.env.SM_ENV) {
-		case ApplicationMode.DEVELOPMENT:
-		case ApplicationMode.STAGING:
-		case ApplicationMode.PRODUCTION:
-		default:
-			return {
-				// TODO: Sort tracked events in a single source, for now this points only to: https://app.segment.com/prismic/sources/slicejavascript2/settings/keys
-				SegmentKey: "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
 			};
 	}
 })();

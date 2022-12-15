@@ -1,7 +1,7 @@
 // This file defines the root `@slicemachine/core` export.
 // Non-Node.js-compatible exports should be defined in `./client.ts`.
 
-export type { PrismicRepository } from "./managers/repositoryAPI/types";
+export type { PrismicRepository } from "./managers/prismicRepository/types";
 
 export { SliceMachineManager } from "./managers/SliceMachineManager";
 export { createSliceMachineManager } from "./managers/createSliceMachineManager";

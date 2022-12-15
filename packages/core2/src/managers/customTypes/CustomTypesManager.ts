@@ -20,6 +20,7 @@ import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 
+import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { OnlyHookErrors } from "../../types";
 
 import { BaseManager } from "../BaseManager";
@@ -204,6 +205,7 @@ export class CustomTypesManager extends BaseManager {
 
 			// TODO: Create a single shared client.
 			const client = prismicCustomTypesClient.createClient({
+				endpoint: API_ENDPOINTS.PrismicModels,
 				repositoryName: sliceMachineConfig.repositoryName,
 				token: authenticationToken,
 				fetch,
@@ -281,6 +283,7 @@ export class CustomTypesManager extends BaseManager {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 		const client = prismicCustomTypesClient.createClient({
+			endpoint: API_ENDPOINTS.PrismicModels,
 			repositoryName: sliceMachineConfig.repositoryName,
 			token: authenticationToken,
 			fetch,

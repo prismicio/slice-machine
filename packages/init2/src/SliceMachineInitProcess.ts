@@ -310,7 +310,7 @@ export class SliceMachineInitProcess {
 								title: "Fetching user repositories...",
 								task: async (_, task) => {
 									this.context.userRepositories =
-										await this.manager.repositoryAPI.readAll();
+										await this.manager.prismicRepository.readAll();
 
 									task.title = "Fetched user repositories";
 								},
@@ -342,7 +342,9 @@ export class SliceMachineInitProcess {
 					);
 
 					if (maybeRepository) {
-						if (!this.manager.repositoryAPI.hasWriteAccess(maybeRepository)) {
+						if (
+							!this.manager.prismicRepository.hasWriteAccess(maybeRepository)
+						) {
 							throw new Error(
 								`Cannot run init command with repository ${chalk.cyan(
 									maybeRepository.domain,
@@ -354,7 +356,7 @@ export class SliceMachineInitProcess {
 						const validation = await validateRepositoryDomainAndAvailability({
 							domain,
 							existsFn: (domain) =>
-								this.manager.repositoryAPI.checkExists({ domain }),
+								this.manager.prismicRepository.checkExists({ domain }),
 						});
 						const errorMessage = getErrorMessageForRepositoryDomainValidation({
 							validation,
@@ -426,7 +428,7 @@ export class SliceMachineInitProcess {
 				...this.context.userRepositories
 					.map((repository) => {
 						const hasWriteAccess =
-							this.manager.repositoryAPI.hasWriteAccess(repository);
+							this.manager.prismicRepository.hasWriteAccess(repository);
 
 						return {
 							title: `${repository.domain}${
@@ -452,7 +454,9 @@ export class SliceMachineInitProcess {
 	protected async selectNewRepository(): Promise<void> {
 		let suggestedName = getRandomRepositoryDomain();
 		while (
-			await this.manager.repositoryAPI.checkExists({ domain: suggestedName })
+			await this.manager.prismicRepository.checkExists({
+				domain: suggestedName,
+			})
 		) {
 			suggestedName = getRandomRepositoryDomain();
 		}
@@ -509,7 +513,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 				const validation = await validateRepositoryDomainAndAvailability({
 					domain,
 					existsFn: (domain) =>
-						this.manager.repositoryAPI.checkExists({ domain }),
+						this.manager.prismicRepository.checkExists({ domain }),
 				});
 				const errorMessage = getErrorMessageForRepositoryDomainValidation({
 					validation,
@@ -554,7 +558,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						"Project framework must be available through context to run `createNewRepository`",
 					);
 
-					await this.manager.repositoryAPI.create({
+					await this.manager.prismicRepository.create({
 						domain: this.context.repository.domain,
 						framework: this.context.framework.prismicName,
 					});
@@ -841,7 +845,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									}),
 								);
 
-								await this.manager.repositoryAPI.pushDocuments({
+								await this.manager.prismicRepository.pushDocuments({
 									domain: this.context.repository.domain,
 									documents: Object.fromEntries(documents),
 									signature,

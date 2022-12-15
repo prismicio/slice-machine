@@ -24,7 +24,8 @@ import { bufferCodec } from "../../lib/bufferCodec";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 
 import { OnlyHookErrors } from "../../types";
-import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants";
+import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
+import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
@@ -358,6 +359,7 @@ export class SlicesManager extends BaseManager {
 
 			// TODO: Create a single shared client.
 			const client = prismicCustomTypesClient.createClient({
+				endpoint: API_ENDPOINTS.PrismicModels,
 				repositoryName: sliceMachineConfig.repositoryName,
 				token: authenticationToken,
 				fetch,
@@ -535,6 +537,7 @@ export class SlicesManager extends BaseManager {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 		const client = prismicCustomTypesClient.createClient({
+			endpoint: API_ENDPOINTS.PrismicModels,
 			repositoryName: sliceMachineConfig.repositoryName,
 			token: authenticationToken,
 			fetch,

@@ -10,9 +10,9 @@ export {
 export type {
 	SimulatorManagerReadSliceSimulatorSetupStep,
 	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
-} from "./managers/project/SimulatorManager";
+} from "./managers/simulator/SimulatorManager";
 
-export type { SliceMachineManagerPushSliceReturnType } from "./managers/project/SlicesManager";
+export type { SliceMachineManagerPushSliceReturnType } from "./managers/slices/SlicesManager";
 
 export {
 	InternalError,

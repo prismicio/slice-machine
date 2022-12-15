@@ -9,7 +9,8 @@ import { createContentDigest } from "../../lib/createContentDigest";
 import { decode } from "../../lib/decode";
 
 import { S3ACL } from "../../types";
-import { APIEndpoints, SLICE_MACHINE_USER_AGENT } from "../../constants";
+import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 
 import { BaseManager } from "../BaseManager";
 
@@ -86,7 +87,7 @@ export class ScreenshotsManager extends BaseManager {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 		const authenticationToken = await this.user.getAuthenticationToken();
 
-		const awsACLURL = new URL("create", APIEndpoints.AwsAclProvider);
+		const awsACLURL = new URL("create", API_ENDPOINTS.AwsAclProvider);
 		const awsACLRes = await fetch(awsACLURL.toString(), {
 			headers: {
 				Authorization: `Bearer ${authenticationToken}`,

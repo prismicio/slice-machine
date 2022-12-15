@@ -7,14 +7,11 @@ import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
 import { loadModuleWithJiti } from "../../lib/loadModuleWithJiti";
 import { locateFileUpward } from "../../lib/locateFileUpward";
 
-import {
-	SLICE_MACHINE_CONFIG_FILENAMES,
-	SLICE_MACHINE_CONFIG_JS,
-	SLICE_MACHINE_CONFIG_TS,
-	SLICE_MACHINE_NPM_PACKAGE_NAME,
-	TS_CONFIG_FILENAME,
-} from "../../constants";
 import { SliceMachineConfig } from "../../types";
+
+import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
+import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
+import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
 
 import { BaseManager } from "../BaseManager";
 
@@ -30,13 +27,14 @@ export class ProjectManager extends BaseManager {
 
 		try {
 			this._cachedSliceMachineConfigPath = await locateFileUpward(
-				SLICE_MACHINE_CONFIG_FILENAMES,
+				Object.values(SLICE_MACHINE_CONFIG_FILENAME),
 			);
 		} catch (error) {
-			const formattedSliceMachineConfigFilePaths =
-				SLICE_MACHINE_CONFIG_FILENAMES.map(
-					(filePath) => `\`${filePath}\``,
-				).join(" or ");
+			const formattedSliceMachineConfigFilePaths = Object.values(
+				SLICE_MACHINE_CONFIG_FILENAME,
+			)
+				.map((filePath) => `\`${filePath}\``)
+				.join(" or ");
 
 			throw new Error(
 				`Could not find a ${formattedSliceMachineConfigFilePaths} file. Please create a config file at the root of your project.`,
@@ -65,7 +63,9 @@ export class ProjectManager extends BaseManager {
 
 		return path.resolve(
 			root,
-			isTypeScript ? SLICE_MACHINE_CONFIG_TS : SLICE_MACHINE_CONFIG_JS,
+			isTypeScript
+				? SLICE_MACHINE_CONFIG_FILENAME.ConfigTS
+				: SLICE_MACHINE_CONFIG_FILENAME.ConfigJS,
 		);
 	}
 

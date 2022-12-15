@@ -16,16 +16,16 @@ import {
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
 import { UserManager } from "./user/UserManager";
-import { RepositoryAPIManager } from "./repositoryAPI/RepositoryAPIManager";
+import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
 
 import { PluginsManager } from "./plugins/PluginsManager";
 
 import { ProjectManager } from "./project/ProjectManager";
-import { CustomTypesManager } from "./project/CustomTypesManager";
-import { SlicesManager } from "./project/SlicesManager";
-import { SnippetsManager } from "./project/SnippetsManager";
-import { ScreenshotsManager } from "./project/ScreenshotsManager";
-import { SimulatorManager } from "./project/SimulatorManager";
+import { CustomTypesManager } from "./customTypes/CustomTypesManager";
+import { SlicesManager } from "./slices/SlicesManager";
+import { SnippetsManager } from "./snippets/SnippetsManager";
+import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
+import { SimulatorManager } from "./simulator/SimulatorManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
 
@@ -87,7 +87,7 @@ export class SliceMachineManager {
 	private _prismicAuthManager: PrismicAuthManager;
 
 	user: UserManager;
-	repositoryAPI: RepositoryAPIManager;
+	prismicRepository: PrismicRepositoryManager;
 
 	plugins: PluginsManager;
 
@@ -109,7 +109,7 @@ export class SliceMachineManager {
 		this._prismicAuthManager = createPrismicAuthManager();
 
 		this.user = new UserManager(this);
-		this.repositoryAPI = new RepositoryAPIManager(this);
+		this.prismicRepository = new PrismicRepositoryManager(this);
 
 		this.plugins = new PluginsManager(this);
 
