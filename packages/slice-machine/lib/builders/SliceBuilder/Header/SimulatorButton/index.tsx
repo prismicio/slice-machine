@@ -18,6 +18,7 @@ import {
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
 import Tracker from "@src/tracking/client";
+import Video from "@components/CloudVideo";
 
 const SimulatorButton: React.FC<{
   framework: Frameworks;
@@ -119,10 +120,11 @@ const SimulatorButton: React.FC<{
                 />
               </Flex>
               <Box sx={{ bg: "#FFF" }}>
-                <video
-                  width="360"
-                  height="200"
-                  controls
+                <Video
+                  loop={false}
+                  autoPlay={false}
+                  publicId={VIDEO_SIMULATOR_TOOLTIP}
+                  poster="/simulator-video-thumbnail.png"
                   onPlay={() => {
                     void Tracker.get().trackClickOnVideoTutorials(
                       framework,
@@ -130,10 +132,7 @@ const SimulatorButton: React.FC<{
                       VIDEO_SIMULATOR_TOOLTIP
                     );
                   }}
-                  src="https://media.geeksforgeeks.org/wp-content/uploads/20190616234019/Canvas.move_.mp4"
-                >
-                  Browser not supported
-                </video>
+                />
                 <Box sx={{ p: "16px" }}>
                   <Text sx={{ fontSize: "12px", lineHeight: "16px" }}>
                     Minimize context-switching by previewing your Slice

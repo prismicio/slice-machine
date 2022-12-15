@@ -197,7 +197,7 @@ describe("framework.defineFrameworkWithVersion", () => {
       apiEndpoint: "fake api endpoint",
     };
 
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
     mockedFs.readFileSync.mockReturnValue(
@@ -220,7 +220,7 @@ describe("framework.defineFrameworkWithVersion", () => {
       apiEndpoint: "fake api endpoint",
     };
 
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
     mockedFs.readFileSync.mockReturnValue(

@@ -14,7 +14,7 @@ describe("simulator tooltip", () => {
 
     cy.visit(`/${lib}/${sliceName}/default`);
 
-    // There is a 5s timeout for displaying the tooltip
+    // There is a 6s timeout for displaying the tooltip
     cy.wait(6000);
 
     cy.get("[data-testid=simulator-tooltip]").should("exist");
@@ -41,7 +41,9 @@ describe("simulator tooltip", () => {
       hasSeenSimulatorToolTip: true,
     });
 
-    // There is a 5s timeout for displaying the tooltip
+    cy.visit(`/${lib}/${sliceName}/default`);
+
+    // There is a 6s timeout for displaying the tooltip
     cy.wait(6000);
 
     cy.get("[data-testid=simulator-tooltip]").should("not.exist");
@@ -59,10 +61,15 @@ describe("simulator tooltip", () => {
 
     cy.visit(`/${lib}/${sliceName}/default`);
 
-    // There is a 5s timeout for displaying the tooltip
+    // There is a 6s timeout for displaying the tooltip
     cy.wait(6000);
 
     cy.get("[data-testid=simulator-tooltip]").should("exist");
+
+    // Don't open the Simulator's window.
+    cy.window().then((win) => {
+      cy.stub(win, "open").as("Open");
+    });
 
     cy.get("[data-testid=simulator-open-button]").click();
 
