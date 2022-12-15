@@ -11,7 +11,7 @@ declare namespace Cypress {
       hasSendAReview?: boolean,
       isOnboarded?: boolean
     ): Chainable<undefined>;
-    setupSliceMachineUserContext(
+    setSliceMachineUserContext(
       hasSendAReview?: boolean,
       isOnboarded?: boolean,
       viewedUpdates?: Record<string, unknown>,
