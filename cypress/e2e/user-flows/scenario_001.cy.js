@@ -1,5 +1,3 @@
-import path from "path";
-
 const customTypeName = "My Custom Type";
 const customTypeId = "my_custom_type";
 
@@ -9,21 +7,11 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   beforeEach(() => {
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-    });
+    cy.setSliceMachineUserContext({});
   });
 
   it("Complete onboarding steps", () => {
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: false,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-    });
+    cy.setSliceMachineUserContext({ isOnboarded: false });
 
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));

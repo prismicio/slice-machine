@@ -4,12 +4,7 @@ const lib = "slices";
 
 describe("Create Slices", () => {
   beforeEach(() => {
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-    });
+    cy.setSliceMachineUserContext({});
     cy.clearProject();
   });
 

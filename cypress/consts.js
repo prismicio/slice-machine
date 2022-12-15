@@ -1,13 +1,13 @@
-export const root = "e2e-projects/cypress-next-app";
+export const ROOT = "e2e-projects/cypress-next-app";
 
-export const packageJsonFile = `${root}/package.json`;
-export const manifestFile = `${root}/sm.json`;
+export const PACKAGE_JSON_FILE = `${ROOT}/package.json`;
+export const MANIFEST_FILE = `${ROOT}/sm.json`;
 
-export const assetsFolder = `${root}/.slicemachine`;
-export const typesFile = `${assetsFolder}/prismicio.d.ts`;
-export const sliceMockFile = (sliceName) =>
-  `${assetsFolder}/assets/slices/${sliceName}/mocks.json`;
-export const libraryStateFile = `${assetsFolder}/libraries-state.json`;
+export const ASSETS_FOLDER = `${ROOT}/.slicemachine`;
+export const TYPES_FILE = `${ASSETS_FOLDER}/prismicio.d.ts`;
+export const SLICE_MOCK_FILE = (sliceName) =>
+  `${ASSETS_FOLDER}/assets/slices/${sliceName}/mocks.json`;
+export const LIBRARIY_STATE_FILE = `${ASSETS_FOLDER}/libraries-state.json`;
 
-export const customTypesFolder = `${root}/customtypes`;
-export const slicesFolder = `${root}/slices`;
+export const CUSTOM_TYPES_FOLDER = `${ROOT}/customtypes`;
+export const SLICES_FOLDER = `${ROOT}/slices`;

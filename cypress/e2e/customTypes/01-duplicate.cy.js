@@ -3,12 +3,7 @@ const customTypeId = "duplicated_custom_type";
 
 describe("Duplicate custom types", () => {
   beforeEach(() => {
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-    });
+    cy.setSliceMachineUserContext({});
     cy.clearProject();
   });
 

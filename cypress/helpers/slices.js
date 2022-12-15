@@ -1,5 +1,5 @@
 import "cypress-wait-until";
-import { typesFile, sliceMockFile, libraryStateFile } from "../consts";
+import { TYPES_FILE, SLICE_MOCK_FILE, LIBRARIY_STATE_FILE } from "../consts";
 
 export function createSlice(lib, id, name) {
   cy.visit(`/slices`);
@@ -15,13 +15,15 @@ export function createSlice(lib, id, name) {
     "eq",
     `/${lib}/${name}/default`
   );
-  cy.readFile(typesFile).should("contains", name);
+  cy.readFile(TYPES_FILE).should("contains", name);
 
-  cy.readFile(sliceMockFile(name), "utf-8")
+  cy.readFile(SLICE_MOCK_FILE(name), "utf-8")
     .then((mock) => {
-      return cy.readFile(libraryStateFile, "utf-8").then((librariesState) => {
-        return { mock, librariesState };
-      });
+      return cy
+        .readFile(LIBRARIY_STATE_FILE, "utf-8")
+        .then((librariesState) => {
+          return { mock, librariesState };
+        });
     })
     .then(({ mock, librariesState }) => {
       const want = mock[0];

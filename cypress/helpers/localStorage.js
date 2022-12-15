@@ -1,10 +1,10 @@
 import "cypress-localstorage-commands";
 
 export function setSliceMachineUserContext({
-  hasSendAReview, // boolean
-  isOnboarded, // boolean
-  updatesViewed, // object
-  hasSeenTutorialsTooTip, // boolean
+  hasSendAReview = true, // boolean
+  isOnboarded = true, // boolean
+  updatesViewed = { latest: null, latestNonBreaking: null }, // object
+  hasSeenTutorialsTooTip = true, // boolean
 }) {
   return cy.setLocalStorage(
     "persist:root",
@@ -12,21 +12,14 @@ export function setSliceMachineUserContext({
       userContext: JSON.stringify({
         hasSendAReview,
         isOnboarded,
-        updatesViewed: {
-          latest: null,
-          latestNonBreaking: null,
-          ...updatesViewed,
-        },
+        updatesViewed,
         hasSeenTutorialsTooTip,
       }),
     })
   );
 }
 
-export function cleanSliceMachineUserContext(
-  hasSendAReview = true,
-  isOnboarded = true
-) {
+export function cleanSliceMachineUserContext() {
   return cy.removeLocalStorage("persist:root");
 }
 

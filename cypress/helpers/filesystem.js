@@ -1,8 +1,8 @@
 import {
-  customTypesFolder,
-  assetsFolder,
-  slicesFolder,
-  typesFile,
+  CUSTOM_TYPES_FOLDER,
+  ASSETS_FOLDER,
+  SLICES_FOLDER,
+  TYPES_FILE,
 } from "../consts";
 
 export function clearProject() {
@@ -12,17 +12,23 @@ export function clearProject() {
 }
 
 export function clearCustomTypes() {
-  cy.task("clearDir", customTypesFolder);
+  cy.task("clearDir", CUSTOM_TYPES_FOLDER);
 }
 
 export function clearSlices() {
-  cy.task("clearDir", slicesFolder);
+  cy.task("clearDir", SLICES_FOLDER);
 }
 
 export function clearAssets() {
-  cy.task("clearDir", assetsFolder);
+  cy.task("clearDir", ASSETS_FOLDER);
 }
 
 export function removeTypes() {
-  cy.task("rmrf", typesFile);
+  cy.task("rmrf", TYPES_FILE);
+}
+
+export function modifyFile(filePath, updateContent /* (content) => content */) {
+  cy.readFile(filePath).then((content) =>
+    cy.writeFile(filePath, updateContent(content))
+  );
 }

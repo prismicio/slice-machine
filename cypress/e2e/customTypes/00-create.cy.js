@@ -1,16 +1,11 @@
-import { packageJsonFile, manifestFile } from "../../consts";
+import { PACKAGE_JSON_FILE, MANIFEST_FILE } from "../../consts";
 
 const customTypeName = "My Test";
 const customTypeId = "my_test";
 
 describe("Custom Types specs", () => {
   beforeEach(() => {
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-    });
+    cy.setSliceMachineUserContext({});
     cy.clearProject();
   });
 
@@ -20,21 +15,17 @@ describe("Custom Types specs", () => {
   });
 
   it("generates types if `generateTypes` is `true` and `@prismicio/types` is installed", () => {
-    // Stub manifest.
-    cy.readFile(manifestFile).then((manifestContents) => {
-      cy.writeFile(manifestFile, { ...manifestContents, generateTypes: true });
-    });
-
-    // Stub package.json.
-    cy.readFile(packageJsonFile).then((packageJsonContents) => {
-      cy.writeFile(packageJsonFile, {
-        ...packageJsonContents,
-        dependencies: {
-          ...packageJsonContents.dependencies,
-          "@prismicio/types": "latest",
-        },
-      });
-    });
+    cy.modifyFile(MANIFEST_FILE, (manifestContents) => ({
+      ...manifestContents,
+      generateTypes: true,
+    }));
+    cy.modifyFile(PACKAGE_JSON_FILE, (packageJsonContents) => ({
+      ...packageJsonContents,
+      dependencies: {
+        ...packageJsonContents.dependencies,
+        "@prismicio/types": "latest",
+      },
+    }));
 
     cy.createCustomType(customTypeId, customTypeName);
   });

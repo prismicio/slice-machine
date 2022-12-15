@@ -1,5 +1,5 @@
 import "cypress-wait-until";
-import { typesFile } from "../consts";
+import { TYPES_FILE } from "../consts";
 
 export function createCustomType(id, name) {
   cy.visit("/");
@@ -12,7 +12,7 @@ export function createCustomType(id, name) {
   cy.get("input[data-cy=ct-name-input]").type(name);
   cy.get("[data-cy=create-ct-modal]").submit();
   cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
-  cy.readFile(typesFile).should("contains", name);
+  cy.readFile(TYPES_FILE).should("contains", name);
 }
 
 export function renameCustomType(id, actualName, newName) {
@@ -31,7 +31,7 @@ export function renameCustomType(id, actualName, newName) {
   cy.get('[data-cy="custom-type-secondary-breadcrumb"]').contains(
     `/ ${newName} - Edited`
   );
-  cy.readFile(typesFile).should("contains", `${newName} - Edited`);
+  cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
 }
 
 export function addFieldToCustomType(

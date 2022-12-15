@@ -1,13 +1,10 @@
 describe("changelog.warningBreakingChanges", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
       updatesViewed: {
         latest: "1000.0.0",
         latestNonBreaking: "1.2.3",
       },
-      hasSeenTutorialsTooTip: true,
     });
   });
 

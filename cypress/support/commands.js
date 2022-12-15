@@ -9,6 +9,7 @@ import {
   clearCustomTypes,
   clearSlices,
   removeTypes,
+  modifyFile,
 } from "../helpers/filesystem";
 import {
   createCustomType,
@@ -31,6 +32,7 @@ Cypress.Commands.add("clearAssets", clearAssets);
 Cypress.Commands.add("clearCustomTypes", clearCustomTypes);
 Cypress.Commands.add("clearSlices", clearSlices);
 Cypress.Commands.add("removeTypes", removeTypes);
+Cypress.Commands.add("modifyFile", modifyFile);
 
 /* -- CUSTOM TYPES */
 Cypress.Commands.add("createCustomType", createCustomType);

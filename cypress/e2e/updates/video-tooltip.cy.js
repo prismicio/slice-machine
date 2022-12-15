@@ -1,12 +1,7 @@
 describe("video tooltip", () => {
   it("should display the tooltip when 'userContext.hasSeenTutorialsTooTip' is falsy and set to true when user clicks the close button", () => {
     cy.clearLocalStorage();
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: false,
-    });
+    cy.setSliceMachineUserContext({ hasSeenTutorialsTooTip: false });
 
     cy.visit("/");
 
@@ -29,12 +24,7 @@ describe("video tooltip", () => {
 
   it("should no display when hasSeenTutorialsTooTip is truthy", () => {
     cy.clearLocalStorage();
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-    });
+    cy.setSliceMachineUserContext({});
 
     // There is a 5s timeout for displaying the tooltip
     cy.wait(5000);
@@ -44,12 +34,7 @@ describe("video tooltip", () => {
 
   it("should close the tooltip when the user clicks the videos button", () => {
     cy.clearLocalStorage();
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: false,
-    });
+    cy.setSliceMachineUserContext({ hasSeenTutorialsTooTip: false });
 
     cy.visit("/");
 
@@ -74,12 +59,7 @@ describe("video tooltip", () => {
 
   it("should disappear when the user hovers over the video toolbar", () => {
     cy.clearLocalStorage();
-    cy.setSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: false,
-    });
+    cy.setSliceMachineUserContext({ hasSeenTutorialsTooTip: false });
 
     cy.visit("/");
 
