@@ -51,7 +51,7 @@
 		"unit:watch": "vitest watch"
 	},
 	"dependencies": {
-		"@prismicio/custom-types-client": "^1.0.0",
+		"@prismicio/custom-types-client": "^1.0.1",
 		"@prismicio/types": "^0.2.4",
 		"@prismicio/types-internal": "^1.5.2",
 		"@slicemachine/plugin-kit": "^0.1.7",

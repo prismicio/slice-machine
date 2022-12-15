@@ -56,7 +56,7 @@ const randomString = (length: number): string => {
 
 export const getRandomRepositoryDomain = (): string => {
 	return formatRepositoryDomain(
-		`${pickRandom(ADJECTIVES)}-${pickRandom(BAKERIES)}-${randomString(6)}`
+		`${pickRandom(ADJECTIVES)}-${pickRandom(BAKERIES)}-${randomString(6)}`,
 	);
 };
 
@@ -64,7 +64,9 @@ export const formatRepositoryDomain = (rawDomain: string): string => {
 	// Lowercase anything
 	let domain = rawDomain.toLowerCase();
 
-	/** Replace whitespaces and underscores with hyphens */
+	/**
+	 * Replace whitespaces and underscores with hyphens
+	 */
 	domain = domain.replaceAll(" ", "-").replaceAll("_", "-");
 
 	/**
@@ -92,7 +94,7 @@ export const formatRepositoryDomain = (rawDomain: string): string => {
 };
 
 const isFormattedRepositoryDomain = (
-	maybeFormattedRepositoryDomain: string
+	maybeFormattedRepositoryDomain: string,
 ): boolean => {
 	return (
 		maybeFormattedRepositoryDomain ===
@@ -102,11 +104,11 @@ const isFormattedRepositoryDomain = (
 
 const assertFormattedRepositoryDomain = (
 	maybeFormattedRepositoryDomain: string,
-	caller: string
+	caller: string,
 ): void => {
 	if (!isFormattedRepositoryDomain(maybeFormattedRepositoryDomain)) {
 		throw new TypeError(
-			`\`${caller}()\` can only validate formatted repository domains, use the \`formatRepositoryDomain()\` first.`
+			`\`${caller}()\` can only validate formatted repository domains, use the \`formatRepositoryDomain()\` first.`,
 		);
 	}
 };
@@ -124,7 +126,7 @@ type ValidateRepositoryDomainReturnType = Record<
 	boolean
 >;
 export const validateRepositoryDomain = (
-	args: ValidateRepositoryDomainArgs
+	args: ValidateRepositoryDomainArgs,
 ): ValidateRepositoryDomainReturnType => {
 	assertFormattedRepositoryDomain(args.domain, "validateRepositoryDomain");
 
@@ -153,11 +155,11 @@ type ValidateRepositoryDomainAndAvailabilityReturnType = Record<
 	boolean
 >;
 export const validateRepositoryDomainAndAvailability = async (
-	args: ValidateRepositoryDomainAndAvailabilityArgs
+	args: ValidateRepositoryDomainAndAvailabilityArgs,
 ): Promise<ValidateRepositoryDomainAndAvailabilityReturnType> => {
 	assertFormattedRepositoryDomain(
 		args.domain,
-		"validateRepositoryDomainAndAvailability"
+		"validateRepositoryDomainAndAvailability",
 	);
 
 	const errors = validateRepositoryDomain(args);
@@ -183,7 +185,7 @@ type GetErrorMessageForRepositoryDomainValidationArgs = {
 	displayDomain?: string;
 };
 export const getErrorMessageForRepositoryDomainValidation = (
-	args: GetErrorMessageForRepositoryDomainValidationArgs
+	args: GetErrorMessageForRepositoryDomainValidationArgs,
 ): string | null => {
 	if (args.validation.hasErrors) {
 		const formattedErrors: string[] = [];
@@ -203,7 +205,7 @@ export const getErrorMessageForRepositoryDomainValidation = (
 
 		if (!formattedErrors.length) {
 			formattedErrors.push(
-				`has unhandled errors ${JSON.stringify(args.validation)}`
+				`has unhandled errors ${JSON.stringify(args.validation)}`,
 			);
 		}
 

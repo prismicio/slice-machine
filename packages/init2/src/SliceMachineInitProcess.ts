@@ -452,13 +452,58 @@ export class SliceMachineInitProcess {
 	}
 
 	protected async selectNewRepository(): Promise<void> {
-		let suggestedName = getRandomRepositoryDomain();
-		while (
-			await this.manager.prismicRepository.checkExists({
-				domain: suggestedName,
-			})
-		) {
+		let suggestedName = "";
+
+		// TODO: Improve concurrency
+		const trySuggestName = async (name: string): Promise<string | void> => {
+			if (name) {
+				const formattedName = formatRepositoryDomain(name);
+
+				if (
+					!validateRepositoryDomain({ domain: formattedName }).hasErrors &&
+					!(await this.manager.prismicRepository.checkExists({
+						domain: formattedName,
+					}))
+				) {
+					return formattedName;
+				}
+			}
+		};
+
+		// 1. Try to suggest name after package name
+		try {
+			const pkgJSONPath = path.join(process.cwd(), "package.json");
+			const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
+
+			const maybeSuggestion = await trySuggestName(pkg.name);
+			if (maybeSuggestion) {
+				suggestedName = maybeSuggestion;
+			}
+		} catch {
+			// Noop
+		}
+
+		// 2. Try to suggest name after directory name
+		if (!suggestedName) {
+			const maybeSuggestion = await trySuggestName(
+				path.basename(process.cwd()),
+			);
+			if (maybeSuggestion) {
+				suggestedName = maybeSuggestion;
+			}
+		}
+
+		// 3. Use random name
+		if (!suggestedName) {
 			suggestedName = getRandomRepositoryDomain();
+
+			while (
+				await this.manager.prismicRepository.checkExists({
+					domain: suggestedName,
+				})
+			) {
+				suggestedName = getRandomRepositoryDomain();
+			}
 		}
 
 		const { domain } = await prompt<string, "domain">({
