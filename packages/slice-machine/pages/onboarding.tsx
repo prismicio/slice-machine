@@ -291,7 +291,6 @@ export default function Onboarding(): JSX.Element {
           <Button
             variant="transparent"
             onClick={finish}
-            data-cy="skip-onboarding"
             title="skip onboarding"
             tabIndex={0}
             sx={{
@@ -305,9 +304,9 @@ export default function Onboarding(): JSX.Element {
 
       {STEPS.map((Component, i) => (
         <Flex
-          hidden={i !== state.step}
           key={`step-${i + 1}`}
           sx={{
+            display: i === state.step ? "flex" : "none",
             gridArea: "content",
             alignItems: "center",
             justifyContent: "center",

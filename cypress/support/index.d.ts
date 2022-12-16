@@ -3,14 +3,6 @@
 
 declare namespace Cypress {
   interface Chainable {
-    /**
-     * Custom command to type a random PascalCased string into input elements
-     * @example cy.get('input').typeRandomPascalCase()
-     */
-    cleanSliceMachineUserContext(
-      hasSendAReview?: boolean,
-      isOnboarded?: boolean
-    ): Chainable<undefined>;
     setSliceMachineUserContext(
       hasSendAReview?: boolean,
       isOnboarded?: boolean,
@@ -20,5 +12,10 @@ declare namespace Cypress {
     getSliceMachineUSerContext(): Chainable<
       undefined | Record<string, unknown>
     >;
+  }
+
+  interface Chainer<Subject> {
+    (chainer: "be.playing"): Chainable<Subject>;
+    (chainer: "not.be.playing"): Chainable<Subject>;
   }
 }

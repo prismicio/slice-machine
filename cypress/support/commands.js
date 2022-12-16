@@ -1,6 +1,5 @@
 import {
   setSliceMachineUserContext,
-  cleanSliceMachineUserContext,
   getSliceMachineUserContext,
 } from "../helpers/localStorage";
 import {
@@ -20,10 +19,6 @@ import { createSlice, renameSlice } from "../helpers/slices";
 
 /* -- LOCAL STORAGE -- */
 Cypress.Commands.add("setSliceMachineUserContext", setSliceMachineUserContext);
-Cypress.Commands.add(
-  "cleanSliceMachineUserContext",
-  cleanSliceMachineUserContext
-);
 Cypress.Commands.add("getSliceMachineUserContext", getSliceMachineUserContext);
 
 /* -- PROJECT RESET -- */
