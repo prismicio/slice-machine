@@ -26,7 +26,7 @@ export const DeprecatedMockConfigMessage = () => {
           textAlign: "center",
         }}
       >
-        You miss something
+        Your mock data has moved
       </Text>
       <Box sx={{ height: "8px" }} />
       <Text
@@ -38,7 +38,7 @@ export const DeprecatedMockConfigMessage = () => {
           textAlign: "center",
         }}
       >
-        You can now edit directly your mock data in the Slice Simulator.
+        You can now edit directly your mock data in the new Slice Simulator.
       </Text>
       <Box sx={{ height: "24px" }} />
       <Button
