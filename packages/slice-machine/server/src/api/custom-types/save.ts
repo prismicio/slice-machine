@@ -13,7 +13,7 @@ import { SaveCustomTypeBody } from "../../../../lib/models/common/CustomType";
 import * as IO from "../../../../lib/io";
 
 export default async function handler(req: { body: SaveCustomTypeBody }) {
-  const { env } = await getEnv();
+  const { env } = getEnv();
   const { model, mockConfig } = req.body;
 
   const mockPath = GeneratedCustomTypesPaths(env.cwd)

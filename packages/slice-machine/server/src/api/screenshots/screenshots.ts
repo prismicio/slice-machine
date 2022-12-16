@@ -38,7 +38,7 @@ export default async function handler({
   variationId,
   screenDimensions,
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
-  const { env } = await getEnv();
+  const { env } = getEnv();
 
   const maybeErr = validateEnv(
     env.framework,

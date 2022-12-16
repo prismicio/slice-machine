@@ -14,6 +14,7 @@ import {
   ScreenshotResponse,
 } from "../lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { PackageChangelog } from "@lib/models/common/versions";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -147,3 +148,9 @@ export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
 export const checkSimulatorSetup = (): Promise<
   AxiosResponse<SimulatorCheckResponse>
 > => axios.get(`/api/simulator/check`);
+
+export const getChangelogApiClient = (): Promise<PackageChangelog> => {
+  return axios
+    .get<PackageChangelog>(`/api/changelog`, defaultAxiosConfig)
+    .then((response) => response.data);
+};

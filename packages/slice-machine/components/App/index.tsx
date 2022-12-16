@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
 import useSMTracker from "@src/hooks/useSMTracker";
+import { useChangelog } from "@src/hooks/useChangelog";
 
 type Props = Readonly<{
   children?: ReactNode;
@@ -27,6 +28,7 @@ const SliceMachineApp: FC<Props> = ({ children }) => {
   useSMTracker();
   useOnboardingRedirection();
   useServerState();
+  useChangelog();
 
   return (
     <>

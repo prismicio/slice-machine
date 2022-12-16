@@ -10,7 +10,7 @@ import {
   updatesViewedCreator,
   hasSeenTutorialsTooTipCreator,
 } from "./userContext";
-import { refreshStateCreator } from "./environment";
+import { getChangelogCreator, refreshStateCreator } from "./environment";
 import {
   openSetupDrawerCreator,
   closeSetupDrawerCreator,
@@ -502,6 +502,10 @@ const useSliceMachineActions = () => {
     );
   };
 
+  const getChangelog = () => {
+    dispatch(getChangelogCreator.request());
+  };
+
   return {
     checkSimulatorSetup,
     connectToSimulatorFailure,
@@ -572,6 +576,7 @@ const useSliceMachineActions = () => {
     closeRenameSliceModal,
     openToaster,
     pushChanges,
+    getChangelog,
   };
 };
 

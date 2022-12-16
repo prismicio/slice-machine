@@ -30,6 +30,7 @@ import {
 import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
 import { isApiError } from "../../../lib/models/server/ApiResult";
 import tracking from "./tracking";
+import changelog from "./changelog";
 
 router.use(
   "/__preview",
@@ -296,6 +297,19 @@ router.post(
       .catch(() => null)
       .then(() => res.json());
   })
+);
+
+router.get(
+  "/changelog",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  async function (
+    _req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await changelog();
+
+    return res.status(200).json(payload);
+  }
 );
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await

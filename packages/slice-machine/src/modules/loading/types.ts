@@ -15,4 +15,5 @@ export enum LoadingKeysEnum {
   SAVE_SLICE = "SAVE_SLICE",
   PUSH_SLICE = "PUSH_SLICE",
   CHANGES_PUSH = "CHANGES_PUSH",
+  CHANGELOG = "CHANGELOG",
 }
