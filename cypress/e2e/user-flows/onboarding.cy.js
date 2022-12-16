@@ -1,11 +1,4 @@
 describe("onboarding", () => {
-  beforeEach(() => {
-    cy.setSliceMachineUserContext({
-      hasSeenTutorialsTooTip: false,
-      isOnboarded: false,
-    });
-  });
-
   it("I am an existing SM user and I want to be guided through the product.", () => {
     cy.visit("/");
 
