@@ -26,7 +26,7 @@ export enum EventNames {
   ScreenshotTaken = "SliceMachine Screenshot Taken",
   ChangesPushed = "SliceMachine Changes Pushed",
 
-  EditorWidgetUsed = "Editor Widget Used",
+  EditorWidgetUsed = "SliceMachine Editor Widget Used",
 }
 
 type BaseTrackingEvent = {
