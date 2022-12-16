@@ -198,7 +198,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
             <Card
               borderFooter
               footerSx={{ p: 0, mb: 5 }}
-              tabs={["Field Model", "Mock config"]}
+              tabs={["Field Model", "Mock Data"]}
               Header={({ radius }) => (
                 <Flex
                   sx={{
