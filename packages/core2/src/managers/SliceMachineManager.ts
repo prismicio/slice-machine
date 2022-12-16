@@ -86,21 +86,17 @@ export class SliceMachineManager {
 		undefined;
 	private _prismicAuthManager: PrismicAuthManager;
 
-	user: UserManager;
-	prismicRepository: PrismicRepositoryManager;
-
-	plugins: PluginsManager;
-
-	project: ProjectManager;
 	customTypes: CustomTypesManager;
-	slices: SlicesManager;
-	snippets: SnippetsManager;
+	plugins: PluginsManager;
+	prismicRepository: PrismicRepositoryManager;
+	project: ProjectManager;
 	screenshots: ScreenshotsManager;
 	simulator: SimulatorManager;
-
-	versions: VersionsManager;
-
+	slices: SlicesManager;
+	snippets: SnippetsManager;
 	telemetry: TelemetryManager;
+	user: UserManager;
+	versions: VersionsManager;
 
 	constructor() {
 		// _prismicAuthManager must be set at least before UserManager

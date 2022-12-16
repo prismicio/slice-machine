@@ -1,10 +1,11 @@
 import {
+	ExtractProcedures,
+	OmittableProcedures,
 	ProceduresFromInstance,
 	RPCMiddleware,
-	proceduresFromInstance,
 	createRPCMiddleware,
-} from "../rpc";
-import { OmittableProcedures } from "../rpc/proceduresFromInstance";
+	proceduresFromInstance,
+} from "r19";
 
 import { SliceMachineManager } from "./SliceMachineManager";
 
@@ -23,15 +24,15 @@ const omitProcedures = defineOmits<SliceMachineManager>()([
 	"_sliceMachinePluginRunner",
 	"_prismicAuthManager",
 
-	"analytics._sliceMachineManager",
 	"customTypes._sliceMachineManager",
 	"plugins._sliceMachineManager",
+	"prismicRepository._sliceMachineManager",
 	"project._sliceMachineManager",
-	"repository._sliceMachineManager",
 	"screenshots._sliceMachineManager",
 	"simulator._sliceMachineManager",
 	"slices._sliceMachineManager",
 	"snippets._sliceMachineManager",
+	"telemetry._sliceMachineManager",
 	"user._sliceMachineManager",
 	"versions._sliceMachineManager",
 
@@ -43,6 +44,9 @@ const omitProcedures = defineOmits<SliceMachineManager>()([
 export type SliceMachineManagerMiddleware = RPCMiddleware<
 	ProceduresFromInstance<SliceMachineManager, typeof omitProcedures[number]>
 >;
+
+export type SliceMachineManagerProcedures =
+	ExtractProcedures<SliceMachineManagerMiddleware>;
 
 export type CreateSliceMachineManagerMiddlewareArgs = {
 	sliceMachineManager: SliceMachineManager;

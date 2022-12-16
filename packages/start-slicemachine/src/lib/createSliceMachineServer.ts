@@ -55,7 +55,7 @@ export const createSliceMachineServer = async (
 	);
 
 	app.use(
-		"/api",
+		"/api/auth",
 		fromNodeMiddleware(
 			createPrismicAuthManagerMiddleware({
 				prismicAuthManager: args.sliceMachineManager.getPrismicAuthManager(),

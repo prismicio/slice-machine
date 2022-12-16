@@ -6,7 +6,7 @@ export default defineConfig({
 		sdk({
 			internalDependencies: [
 				"fp-ts",
-				"devalue",
+				"r19",
 				"p-limit",
 				"get-port",
 				"node-fetch",
