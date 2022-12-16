@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { SliceMachineManagerClient } from "@slicemachine/core2/client";
+import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import {
   CustomTypes,

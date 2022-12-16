@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev":"concurrently --prefix-colors auto \"npm:dev:*\"",
-    "dev:core2":"npm --workspace @slicemachine/core2 run dev",
+    "dev:manager":"npm --workspace @slicemachine/manager run dev",
     "dev:start-slicemachine":"npm --workspace start-slicemachine run dev",
     "dev:plugin-kit":"npm --workspace @slicemachine/plugin-kit run dev",
     "dev:slice-machine-ui":"npm --workspace slice-machine-ui run dev",

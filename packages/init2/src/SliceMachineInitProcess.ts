@@ -12,7 +12,7 @@ import {
 	PrismicUserProfile,
 	PrismicRepository,
 	SliceMachineManager,
-} from "@slicemachine/core2";
+} from "@slicemachine/manager";
 
 import { detectFramework, Framework } from "./lib/framework";
 import {

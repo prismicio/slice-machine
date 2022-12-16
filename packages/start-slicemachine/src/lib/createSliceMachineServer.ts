@@ -2,7 +2,7 @@ import {
 	SliceMachineManager,
 	createPrismicAuthManagerMiddleware,
 	createSliceMachineManagerMiddleware,
-} from "@slicemachine/core2";
+} from "@slicemachine/manager";
 import { createServer, Server } from "node:http";
 import * as path from "node:path";
 import {

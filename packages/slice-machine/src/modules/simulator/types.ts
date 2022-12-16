@@ -1,4 +1,4 @@
-import type { SimulatorManagerReadSliceSimulatorSetupStep } from "@slicemachine/core2/client";
+import type { SimulatorManagerReadSliceSimulatorSetupStep } from "@slicemachine/manager/client";
 
 export type SimulatorStoreType = {
   setupSteps: SimulatorManagerReadSliceSimulatorSetupStep[] | null;

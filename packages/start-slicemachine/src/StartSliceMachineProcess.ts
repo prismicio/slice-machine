@@ -4,7 +4,7 @@ import {
 	PrismicUserProfile,
 	SliceMachineManager,
 	createSliceMachineManager,
-} from "@slicemachine/core2";
+} from "@slicemachine/manager";
 import chalk from "chalk";
 import open from "open";
 

@@ -30,7 +30,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
 import Tracker from "@src/tracking/client";
-import { SimulatorManagerReadSliceSimulatorSetupStep } from "@slicemachine/core2/client";
+import { SimulatorManagerReadSliceSimulatorSetupStep } from "@slicemachine/manager/client";
 
 const NoStepSelected = 0;
 
