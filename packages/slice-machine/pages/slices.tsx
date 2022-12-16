@@ -89,24 +89,28 @@ const SlicesIndex: React.FunctionComponent = () => {
           }}
         >
           <Header
-            ActionButton={
-              localLibraries?.length != 0 && sliceCount != 0 ? (
-                <Button
-                  label="Create a Slice"
-                  onClick={openCreateSliceModal}
-                  isLoading={isCreatingSlice}
-                  disabled={isCreatingSlice}
-                  Icon={GoPlus}
-                  data-cy="create-slice"
-                />
-              ) : undefined
+            link={{
+              Element: (
+                <>
+                  <MdHorizontalSplit /> <Text>Slices</Text>
+                </>
+              ),
+              href: "/slices",
+            }}
+            Actions={
+              localLibraries?.length != 0 && sliceCount != 0
+                ? [
+                    <Button
+                      label="Create a Slice"
+                      onClick={openCreateSliceModal}
+                      isLoading={isCreatingSlice}
+                      disabled={isCreatingSlice}
+                      Icon={GoPlus}
+                      data-cy="create-slice"
+                    />,
+                  ]
+                : []
             }
-            MainBreadcrumb={
-              <>
-                <MdHorizontalSplit /> <Text ml={2}>Slices</Text>
-              </>
-            }
-            breadrumbHref="/slices"
           />
           {libraries && (
             <Flex

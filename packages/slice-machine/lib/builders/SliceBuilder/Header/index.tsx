@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
-import { Box, Flex, Text, Link as ThemeLinK, useThemeUI } from "theme-ui";
+import { Box, Flex, Text, useThemeUI } from "theme-ui";
 import VariationModal from "./VariationModal";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
 import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
+import HeaderCommon from "@components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
@@ -70,58 +70,24 @@ const Header: React.FC<{
           minWidth: 320,
         }}
       >
-        <Flex
-          sx={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "start",
-            gap: "24px",
+        <HeaderCommon
+          link={{
+            Element: (
+              <>
+                <MdHorizontalSplit /> <Text>Slices</Text>
+              </>
+            ),
+            href: "/slices",
           }}
-        >
-          <Flex
-            sx={{
-              fontSize: 4,
-              fontWeight: "heading",
-              alignItems: "center",
-            }}
-          >
-            <Link href="/slices" passHref>
-              <ThemeLinK variant="invisible" sx={{ flexShrink: 0 }}>
-                <Flex sx={{ alignItems: "center" }}>
-                  <MdHorizontalSplit /> <Text ml={2}>Slices</Text>
-                </Flex>
-              </ThemeLinK>
-            </Link>
-            <Box
-              ref={sliceNameRef}
-              sx={{
-                fontWeight: "thin",
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-              }}
-              as="span"
-            >
-              <Text
-                sx={{
-                  ml: 2,
-                  whiteSpace: "nowrap",
-                }}
-                data-cy="slice-and-variation-name-header"
-                title={
-                  isSliceNameOverflowing ? component.model.name : undefined
-                }
-              >
+          subtitle={{
+            Element: (
+              <Text data-cy="slice-and-variation-name-header">
                 {`/ ${component.model.name} / ${variation.name}`}
               </Text>
-            </Box>
-          </Flex>
-          <Flex
-            sx={{
-              flexDirection: "row",
-              alignItems: "center",
-              flexShrink: 0,
-            }}
-          >
+            ),
+            title: `${component.model.name} / ${variation.name}`,
+          }}
+          Actions={[
             <SliceMachineIconButton
               Icon={MdModeEdit}
               label="Edit slice name"
@@ -132,17 +98,16 @@ const Header: React.FC<{
                 color: "#4E4E55",
                 backgroundColor: "#F3F5F7",
                 border: "1px solid #3E3E4826",
-                marginRight: "8px",
                 width: 40,
                 height: 40,
               }}
-            />
+            />,
             <SimulatorButton
               framework={framework}
               isSimulatorAvailableForFramework={
                 isSimulatorAvailableForFramework
               }
-            />
+            />,
             <Button
               label="Save to File System"
               isLoading={isLoading}
@@ -150,9 +115,10 @@ const Header: React.FC<{
               onClick={onSave}
               Icon={AiFillSave}
               data-cy="builder-save-button"
-            />
-          </Flex>
-        </Flex>
+            />,
+          ]}
+        />
+
         <Flex mt={3} sx={{ alignItems: "center" }}>
           <Flex sx={{ alignItems: "center" }}>
             <VariationPopover
