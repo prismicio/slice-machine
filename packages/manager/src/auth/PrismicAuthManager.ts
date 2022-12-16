@@ -1,26 +1,28 @@
-import * as t from "io-ts";
 import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import * as os from "node:os";
 import * as http from "node:http";
+import * as os from "node:os";
+import * as path from "node:path";
 
 import * as h3 from "h3";
-import fetch from "node-fetch";
+import * as t from "io-ts";
 import cookie from "cookie";
 import cors from "cors";
 import getPort from "get-port";
+import fetch from "node-fetch";
 
 import { decode } from "../lib/decode";
 import { serializeCookies } from "../lib/serializeCookies";
 
 import { API_ENDPOINTS } from "../constants/API_ENDPOINTS";
 import { SLICE_MACHINE_USER_AGENT } from "../constants/SLICE_MACHINE_USER_AGENT";
-import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
+
 import {
 	InternalError,
 	UnauthenticatedError,
 	UnexpectedDataError,
 } from "../errors";
+
+import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
 
 const COOKIE_SEPARATOR = "; ";
 const AUTH_COOKIE_KEY = "prismic-auth";

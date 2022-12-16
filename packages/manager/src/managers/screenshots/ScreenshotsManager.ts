@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { fileTypeFromBuffer } from "file-type";
-import fetch, { FormData, Blob } from "node-fetch";
+import fetch, { Blob, FormData } from "node-fetch";
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { BrowserContext, Viewport } from "puppeteer";
 
@@ -8,9 +8,10 @@ import { checkIsURLAccessible } from "../../lib/checkIsURLAccessible";
 import { createContentDigest } from "../../lib/createContentDigest";
 import { decode } from "../../lib/decode";
 
-import { S3ACL } from "../../types";
-import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+
+import { S3ACL } from "../../types";
 
 import { BaseManager } from "../BaseManager";
 

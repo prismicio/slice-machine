@@ -1,6 +1,5 @@
-import * as t from "io-ts";
-import fetch from "node-fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
+import * as t from "io-ts";
 import { CustomTypes } from "@prismicio/types-internal";
 import {
 	CallHookReturnType,
@@ -15,12 +14,14 @@ import {
 	CustomTypeUpdateHookData,
 	HookError,
 } from "@slicemachine/plugin-kit";
+import fetch from "node-fetch";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+
 import { OnlyHookErrors } from "../../types";
 
 import { BaseManager } from "../BaseManager";

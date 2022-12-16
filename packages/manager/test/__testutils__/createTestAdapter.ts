@@ -1,10 +1,10 @@
-import { expect } from "vitest";
 import {
-	defineSliceMachinePlugin,
 	PluginOptions,
 	SliceMachineHookTypes,
 	SliceMachinePlugin,
+	defineSliceMachinePlugin,
 } from "@slicemachine/plugin-kit";
+import { expect } from "vitest";
 
 type CreateTestAdapterArgs<TPluginOptions extends PluginOptions> = {
 	setup?: SliceMachinePlugin<TPluginOptions>["setup"];

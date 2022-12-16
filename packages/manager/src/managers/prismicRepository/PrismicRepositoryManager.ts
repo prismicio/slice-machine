@@ -4,8 +4,8 @@ import fetch, { Response } from "node-fetch";
 import { decode } from "../../lib/decode";
 import { serializeCookies } from "../../lib/serializeCookies";
 
-import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 
 import { BaseManager } from "../BaseManager";
 

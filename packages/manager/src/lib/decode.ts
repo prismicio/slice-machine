@@ -1,5 +1,5 @@
-import * as t from "io-ts";
 import * as E from "fp-ts/Either";
+import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 
 import { DecodeError } from "./DecodeError";

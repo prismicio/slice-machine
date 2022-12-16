@@ -2,7 +2,7 @@ import * as t from "io-ts";
 
 import { SliceMachineConfig } from "../types";
 
-import { decode, DecodeReturnType } from "./decode";
+import { DecodeReturnType, decode } from "./decode";
 import { functionCodec } from "./functionCodec";
 
 const SliceMachinePluginCodec = t.intersection([

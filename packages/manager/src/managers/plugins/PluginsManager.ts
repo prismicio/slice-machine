@@ -1,9 +1,10 @@
 import {
-	createSliceMachinePluginRunner,
 	SliceMachinePluginRunner,
+	createSliceMachinePluginRunner,
 } from "@slicemachine/plugin-kit";
 
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+
 import { BaseManager } from "../BaseManager";
 
 export class PluginsManager extends BaseManager {

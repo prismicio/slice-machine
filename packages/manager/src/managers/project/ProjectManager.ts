@@ -1,17 +1,17 @@
 import * as fs from "node:fs/promises";
-import { existsSync } from "node:fs";
 import * as path from "node:path";
+import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
 import { loadModuleWithJiti } from "../../lib/loadModuleWithJiti";
 import { locateFileUpward } from "../../lib/locateFileUpward";
 
-import { SliceMachineConfig } from "../../types";
-
 import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
-import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
+import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
+
+import { SliceMachineConfig } from "../../types";
 
 import { BaseManager } from "../BaseManager";
 

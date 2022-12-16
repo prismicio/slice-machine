@@ -1,10 +1,10 @@
 import * as t from "io-ts";
 import {
+	NodeMiddleware,
 	createEvent,
 	createRouter,
 	defineNodeMiddleware,
 	eventHandler,
-	NodeMiddleware,
 	readBody,
 } from "h3";
 

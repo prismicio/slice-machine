@@ -9,27 +9,24 @@ import {
 	PackageVersion,
 	SliceMachineConfig,
 } from "../types";
+
 import {
 	PrismicAuthManager,
 	PrismicUserProfile,
 } from "../auth/PrismicAuthManager";
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
-import { UserManager } from "./user/UserManager";
-import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
-
-import { PluginsManager } from "./plugins/PluginsManager";
-
-import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
-import { SlicesManager } from "./slices/SlicesManager";
-import { SnippetsManager } from "./snippets/SnippetsManager";
+import { PluginsManager } from "./plugins/PluginsManager";
+import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
+import { ProjectManager } from "./project/ProjectManager";
 import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
 import { SimulatorManager } from "./simulator/SimulatorManager";
-
-import { VersionsManager } from "./versions/VersionsManager";
-
+import { SlicesManager } from "./slices/SlicesManager";
+import { SnippetsManager } from "./snippets/SnippetsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
+import { UserManager } from "./user/UserManager";
+import { VersionsManager } from "./versions/VersionsManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {

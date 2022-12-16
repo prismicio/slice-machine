@@ -1,6 +1,6 @@
-import type { Plugin, Processor } from "unified";
-import type { Root, ElementContent } from "hast";
 import type { Grammar } from "@wooorm/starry-night";
+import type { ElementContent, Root } from "hast";
+import type { Plugin, Processor } from "unified";
 import { visit } from "unist-util-visit";
 
 type RehypeStarryNightOptions = {

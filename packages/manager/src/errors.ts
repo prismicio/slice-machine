@@ -26,7 +26,6 @@
 // 	// },
 // } as const;
 // type Errors = typeof Errors;
-
 import { HookError } from "@slicemachine/plugin-kit";
 
 // const InternalErrorCodes = {

@@ -1,22 +1,19 @@
 import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+
 import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 
 import { SliceMachineManager } from "./SliceMachineManager";
-
-import { UserManager } from "./user/UserManager";
-import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
-
-import { PluginsManager } from "./plugins/PluginsManager";
-
-import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
-import { SlicesManager } from "./slices/SlicesManager";
-import { SnippetsManager } from "./snippets/SnippetsManager";
+import { PluginsManager } from "./plugins/PluginsManager";
+import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
+import { ProjectManager } from "./project/ProjectManager";
 import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
 import { SimulatorManager } from "./simulator/SimulatorManager";
-
-import { VersionsManager } from "./versions/VersionsManager";
+import { SlicesManager } from "./slices/SlicesManager";
+import { SnippetsManager } from "./snippets/SnippetsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
+import { UserManager } from "./user/UserManager";
+import { VersionsManager } from "./versions/VersionsManager";
 
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;

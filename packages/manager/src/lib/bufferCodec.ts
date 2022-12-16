@@ -1,4 +1,5 @@
 import { Buffer } from "node:buffer";
+
 import * as t from "io-ts";
 
 export const bufferCodec = new t.Type<Buffer, Buffer, unknown>(

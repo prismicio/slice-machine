@@ -1,6 +1,5 @@
-import * as t from "io-ts";
-import fetch from "node-fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
+import * as t from "io-ts";
 import { CustomTypes } from "@prismicio/types-internal";
 import {
 	CallHookReturnType,
@@ -17,15 +16,18 @@ import {
 	SliceUpdateHook,
 	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
+import fetch from "node-fetch";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { bufferCodec } from "../../lib/bufferCodec";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 
-import { OnlyHookErrors } from "../../types";
-import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
+
+import { OnlyHookErrors } from "../../types";
+
 import { UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
