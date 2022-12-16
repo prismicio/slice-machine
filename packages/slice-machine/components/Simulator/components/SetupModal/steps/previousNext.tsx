@@ -14,17 +14,15 @@ import {
 const CreatePageInstructions = {
   code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";
   import SliceZone from "next-slicezone";
-  
-  import state from "../.slicemachine/libraries-state.json";
-  
+
   import * as Slices from "../slices";
   const resolver = ({ sliceName }) => Slices[sliceName];
-  
+
   const SliceSimulatorPage = () => (<SliceSimulator
   \tsliceZone={(props) => <SliceZone {...props} resolver={resolver} />}
-  \tstate={state}
+  \tstate={{}}
   />);
-  
+
   export default SliceSimulatorPage;`,
   instructions: (
     <>
