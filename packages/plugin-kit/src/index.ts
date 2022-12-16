@@ -192,7 +192,9 @@ export type {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-export { createSliceMachinePluginRunner } from "./createSliceMachinePluginRunner";
-export type { SliceMachinePluginRunner } from "./createSliceMachinePluginRunner";
+export {
+	createSliceMachinePluginRunner,
+	SliceMachinePluginRunner,
+} from "./createSliceMachinePluginRunner";
 
 export type { CallHookReturnType } from "./lib";

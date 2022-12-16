@@ -67,7 +67,6 @@
 		"hast-util-to-string": "^2.0.0",
 		"io-ts": "^2.2.20",
 		"io-ts-reporters": "^2.0.1",
-		"jiti": "^1.16.0",
 		"node-fetch": "^3.3.0",
 		"p-limit": "^4.0.0",
 		"puppeteer": "^19.4.0",

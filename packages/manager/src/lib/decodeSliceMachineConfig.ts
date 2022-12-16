@@ -3,26 +3,12 @@ import * as t from "io-ts";
 import { SliceMachineConfig } from "../types";
 
 import { decode, DecodeReturnType } from "./decode";
-import { functionCodec } from "./functionCodec";
-
-const SliceMachinePluginCodec = t.intersection([
-	t.type({
-		meta: t.type({
-			name: t.string,
-		}),
-		setup: functionCodec,
-	}),
-	t.partial({
-		defaultOptions: t.UnknownRecord,
-	}),
-]);
 
 const SliceMachineConfigPluginRegistrationCodec = t.union([
 	t.string,
-	SliceMachinePluginCodec,
 	t.intersection([
 		t.type({
-			resolve: t.union([t.string, SliceMachinePluginCodec]),
+			resolve: t.string,
 		}),
 		t.partial({
 			options: t.UnknownRecord,

@@ -656,14 +656,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 						// Default config is the same for TypeScript and JavaScript as of today
 						const defaultSliceMachineConfig = await format(
-							`
-							export default {
+							JSON.stringify({
+								// TODO: Update _latest to a real value
 								_latest: "legacy",
-								repositoryName: "${this.context.repository.domain}",
-								adapter: "${this.context.framework.adapterName}",
+								repositoryName: this.context.repository.domain,
+								adapter: this.context.framework.adapterName,
 								libraries: ["./slices"],
-							};
-							`,
+							}),
 							sliceMachineConfigPath,
 						);
 

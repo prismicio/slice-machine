@@ -4,7 +4,6 @@ import * as path from "node:path";
 import { createRequire } from "node:module";
 
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
-import { loadModuleWithJiti } from "../../lib/loadModuleWithJiti";
 import { locateFileUpward } from "../../lib/locateFileUpward";
 
 import { SliceMachineConfig } from "../../types";
@@ -27,17 +26,11 @@ export class ProjectManager extends BaseManager {
 
 		try {
 			this._cachedSliceMachineConfigPath = await locateFileUpward(
-				Object.values(SLICE_MACHINE_CONFIG_FILENAME),
+				SLICE_MACHINE_CONFIG_FILENAME,
 			);
 		} catch (error) {
-			const formattedSliceMachineConfigFilePaths = Object.values(
-				SLICE_MACHINE_CONFIG_FILENAME,
-			)
-				.map((filePath) => `\`${filePath}\``)
-				.join(" or ");
-
 			throw new Error(
-				`Could not find a ${formattedSliceMachineConfigFilePaths} file. Please create a config file at the root of your project.`,
+				`Could not find a ${SLICE_MACHINE_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
 			);
 		}
 
@@ -59,14 +52,7 @@ export class ProjectManager extends BaseManager {
 	}
 
 	async suggestSliceMachineConfigPath(root: string): Promise<string> {
-		const isTypeScript = await this.checkIsTypeScript(root);
-
-		return path.resolve(
-			root,
-			isTypeScript
-				? SLICE_MACHINE_CONFIG_FILENAME.ConfigTS
-				: SLICE_MACHINE_CONFIG_FILENAME.ConfigJS,
-		);
+		return path.resolve(root, SLICE_MACHINE_CONFIG_FILENAME);
 	}
 
 	async checkIsTypeScript(rootOverwrite?: string): Promise<boolean> {
@@ -109,21 +95,21 @@ export class ProjectManager extends BaseManager {
 
 		const configFilePath = await this.getSliceMachineConfigPath();
 
-		let configModule: unknown | undefined;
+		let rawConfig: unknown | undefined;
 		try {
-			await fs.access(configFilePath);
-			configModule = loadModuleWithJiti(path.resolve(configFilePath));
+			const contents = await fs.readFile(configFilePath, "utf8");
+			rawConfig = JSON.parse(contents);
 		} catch {
 			// noop
 		}
 
-		if (!configModule) {
+		if (!rawConfig) {
 			// TODO: Write a more friendly and useful message.
 			throw new Error("No config found.");
 		}
 
 		const { value: sliceMachineConfig, error } =
-			decodeSliceMachineConfig(configModule);
+			decodeSliceMachineConfig(rawConfig);
 
 		if (error) {
 			// TODO: Write a more friendly and useful message.

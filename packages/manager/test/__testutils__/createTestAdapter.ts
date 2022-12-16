@@ -1,12 +1,12 @@
-import { expect } from "vitest";
 import {
 	defineSliceMachinePlugin,
-	PluginOptions,
+	SliceMachinePluginOptions,
 	SliceMachineHookTypes,
 	SliceMachinePlugin,
 } from "@slicemachine/plugin-kit";
+import { expect } from "vitest";
 
-type CreateTestAdapterArgs<TPluginOptions extends PluginOptions> = {
+type CreateTestAdapterArgs<TPluginOptions extends SliceMachinePluginOptions> = {
 	setup?: SliceMachinePlugin<TPluginOptions>["setup"];
 	autofillRequiredHooks?: boolean;
 };
@@ -25,7 +25,9 @@ const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"slice-simulator:setup:read",
 ];
 
-export const createTestAdapter = <TPluginOptions extends PluginOptions>({
+export const createTestAdapter = <
+	TPluginOptions extends SliceMachinePluginOptions,
+>({
 	setup,
 	autofillRequiredHooks = true,
 }: CreateTestAdapterArgs<TPluginOptions> = {}): SliceMachinePlugin<TPluginOptions> => {

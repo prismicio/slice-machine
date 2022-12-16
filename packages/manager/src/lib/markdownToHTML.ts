@@ -18,7 +18,7 @@ const createRehypeStarryNight = async (): Promise<
 > => {
 	const { createStarryNight, common } = await import("@wooorm/starry-night");
 	const { default: tsxGrammar } = await import(
-		"@wooorm/starry-night/lang/source.tsx"
+		"@wooorm/starry-night/lang/source.tsx.js"
 	);
 	const { toString } = await import("hast-util-to-string");
 
