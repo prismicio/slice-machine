@@ -19,10 +19,6 @@ export function setSliceMachineUserContext({
   );
 }
 
-export function cleanSliceMachineUserContext() {
-  return cy.removeLocalStorage("persist:root");
-}
-
 export function getSliceMachineUserContext() {
   return cy
     .getLocalStorage("persist:root")
