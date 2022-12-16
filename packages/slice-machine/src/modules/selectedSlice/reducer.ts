@@ -192,10 +192,12 @@ export const selectedSliceReducer: Reducer<
     }
 
     case getType(updateSelectedSliceMocks): {
+      if (!prevState) return prevState;
       const { mocks } = action.payload;
       return {
         ...prevState,
         mock: mocks,
+        screenshots: prevState?.screenshots,
       };
     }
     default:
