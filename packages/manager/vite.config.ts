@@ -26,6 +26,9 @@ export default defineConfig({
 		coverage: {
 			reporter: ["lcovonly", "text"],
 		},
-		setupFiles: ["./test/__setup__"],
+		setupFiles: ["./test/__setup__.ts"],
+		deps: {
+			inline: true,
+		},
 	},
 });

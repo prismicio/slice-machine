@@ -46,6 +46,10 @@ export abstract class BaseManager {
 			sliceMachinePluginRunner;
 	}
 
+	protected get cwd(): string {
+		return this._sliceMachineManager.cwd;
+	}
+
 	// Protected instance prevents circular intellisense
 	// e.g. sliceMachineManager.user.user.user
 	protected get user(): UserManager {

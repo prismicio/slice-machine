@@ -14,19 +14,38 @@ import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NP
 
 import { BaseManager } from "../BaseManager";
 
+type ProjectManagerGetSliceMachineConfigPathArgs = {
+	ignoreCache?: boolean;
+};
+
+type ProjectManagerGetRootArgs = {
+	ignoreCache?: boolean;
+};
+
+type ProjectManagerCheckIsTypeScriptArgs = {
+	rootOverride?: string;
+};
+
+type ProjectManagerUpdateSliceMachineConfigArgs = {
+	searchAndReplaceMap: Record<string, string | RegExp>;
+};
+
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;
 	private _cachedSliceMachineConfigPath: string | undefined;
 	private _cachedSliceMachineConfig: SliceMachineConfig | undefined;
 
-	async getSliceMachineConfigPath(ignoreCache?: boolean): Promise<string> {
-		if (this._cachedSliceMachineConfigPath && !ignoreCache) {
+	async getSliceMachineConfigPath(
+		args?: ProjectManagerGetSliceMachineConfigPathArgs,
+	): Promise<string> {
+		if (this._cachedSliceMachineConfigPath && !args?.ignoreCache) {
 			return this._cachedSliceMachineConfigPath;
 		}
 
 		try {
 			this._cachedSliceMachineConfigPath = await locateFileUpward(
 				SLICE_MACHINE_CONFIG_FILENAME,
+				{ startDir: this.cwd },
 			);
 		} catch (error) {
 			throw new Error(
@@ -37,26 +56,33 @@ export class ProjectManager extends BaseManager {
 		return this._cachedSliceMachineConfigPath;
 	}
 
-	async getRoot(ignoreCache?: boolean): Promise<string> {
-		if (this._cachedRoot && !ignoreCache) {
+	async getRoot(args?: ProjectManagerGetRootArgs): Promise<string> {
+		if (this._cachedRoot && !args?.ignoreCache) {
 			return this._cachedRoot;
 		}
 
-		const sliceMachineConfigFilePath = await this.getSliceMachineConfigPath(
-			ignoreCache,
-		);
+		const sliceMachineConfigFilePath = await this.getSliceMachineConfigPath({
+			ignoreCache: args?.ignoreCache,
+		});
 
 		this._cachedRoot = path.dirname(sliceMachineConfigFilePath);
 
 		return this._cachedRoot;
 	}
 
-	async suggestSliceMachineConfigPath(root: string): Promise<string> {
-		return path.resolve(root, SLICE_MACHINE_CONFIG_FILENAME);
+	async suggestSliceMachineConfigPath(): Promise<string> {
+		const possibleRootPackageJSON = await locateFileUpward("package.json", {
+			startDir: this.cwd,
+		});
+		const possibleRoot = path.dirname(possibleRootPackageJSON);
+
+		return path.resolve(possibleRoot, SLICE_MACHINE_CONFIG_FILENAME);
 	}
 
-	async checkIsTypeScript(rootOverwrite?: string): Promise<boolean> {
-		const root = rootOverwrite || (await this.getRoot());
+	async checkIsTypeScript(
+		args?: ProjectManagerCheckIsTypeScriptArgs,
+	): Promise<boolean> {
+		const root = args?.rootOverride || (await this.getRoot());
 		const rootTSConfigPath = path.resolve(root, TS_CONFIG_FILENAME);
 
 		// We just care if the file exists, we don't need access to it
@@ -71,16 +97,26 @@ export class ProjectManager extends BaseManager {
 		}
 	}
 
-	// TODO: This is a temporary strategy for upading Slice Machine configuration based on string search & replace, e.g. `this.updateSliceMachineConfig({ "200629-sms-hoy": /__PRISMIC_REPOSITORY_NAME/g })` replaces all occurence of "__PRISMIC_REPOSITORY_NAME" with "200629-sms-hoy". We'll need something stronger/more convenient for starters.
+	// TODO: This is a temporary strategy for upading Slice Machine
+	// configuration based on string search & replace, e.g.
+	// `this.updateSliceMachineConfig({ "200629-sms-hoy":
+	// /__PRISMIC_REPOSITORY_NAME/g })` replaces all occurence of
+	// "__PRISMIC_REPOSITORY_NAME" with "200629-sms-hoy". We'll need
+	// something stronger/more convenient for starters.
+	//
+	// TOOD: Replace this method with something that programmatically
+	// updates `slicemachine.config.json`. Since it is now a JSON file, we
+	// can update values programmatically rather than with search and
+	// replace.
 	async updateSliceMachineConfig(
-		searchAndReplaceMap: Record<string, string | RegExp>,
+		args: ProjectManagerUpdateSliceMachineConfigArgs,
 	): Promise<void> {
 		const configFilePath = await this.getSliceMachineConfigPath();
 
 		let rawConfig = await fs.readFile(configFilePath, "utf-8");
 
-		for (const replacement in searchAndReplaceMap) {
-			const searchPattern = searchAndReplaceMap[replacement];
+		for (const replacement in args.searchAndReplaceMap) {
+			const searchPattern = args.searchAndReplaceMap[replacement];
 
 			rawConfig = rawConfig.replace(searchPattern, replacement);
 		}

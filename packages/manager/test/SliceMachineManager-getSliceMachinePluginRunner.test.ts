@@ -1,9 +1,12 @@
-import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 import { expect, it } from "vitest";
+import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+
+import { createTestPlugin } from "./__testutils__/createTestPlugin";
+import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-it("returns undefined if plugins have not been initialized", () => {
+it("returns undefined if plugins have not been initialized", async () => {
 	const manager = createSliceMachineManager();
 
 	const pluginRunner = manager.getSliceMachinePluginRunner();
@@ -12,7 +15,12 @@ it("returns undefined if plugins have not been initialized", () => {
 });
 
 it("returns plugin runner if plugins have been initialized", async () => {
-	const manager = createSliceMachineManager();
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
 
 	await manager.plugins.initPlugins();
 

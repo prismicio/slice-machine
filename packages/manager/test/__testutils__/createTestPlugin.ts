@@ -6,18 +6,19 @@ import {
 } from "@slicemachine/plugin-kit";
 import { expect } from "vitest";
 
-type CreateTestAdapterArgs<TPluginOptions extends SliceMachinePluginOptions> = {
-	setup?: SliceMachinePlugin<TPluginOptions>["setup"];
-	autofillRequiredHooks?: boolean;
-};
-
 const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
+	"slice:create",
 	"slice:read",
+	"slice:update",
+	"slice:rename",
 	"slice:asset:update",
 	"slice:asset:read",
 	"slice:asset:delete",
 	"slice-library:read",
+	"custom-type:create",
 	"custom-type:read",
+	"custom-type:update",
+	"custom-type:rename",
 	"custom-type:asset:update",
 	"custom-type:asset:read",
 	"custom-type:asset:delete",
@@ -25,18 +26,26 @@ const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"slice-simulator:setup:read",
 ];
 
-export const createTestAdapter = <
+type CreateTestPluginArgs<TPluginOptions extends SliceMachinePluginOptions> =
+	Partial<SliceMachinePlugin<TPluginOptions>> & {
+		__autofillRequiredAdapterHooks?: boolean;
+	};
+
+export const createTestPlugin = <
 	TPluginOptions extends SliceMachinePluginOptions,
 >({
 	setup,
-	autofillRequiredHooks = true,
-}: CreateTestAdapterArgs<TPluginOptions> = {}): SliceMachinePlugin<TPluginOptions> => {
+	__autofillRequiredAdapterHooks = true,
+	...plugin
+}: CreateTestPluginArgs<TPluginOptions> = {}): SliceMachinePlugin<TPluginOptions> => {
 	const state = expect.getState();
 
 	return defineSliceMachinePlugin({
+		...plugin,
 		meta: {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			name: state.currentTestName!,
+			...plugin.meta,
 		},
 		setup: async ({ hook, ...restSetupArgs }) => {
 			const hookedTypes: string[] = [];
@@ -49,7 +58,7 @@ export const createTestAdapter = <
 
 			await setup?.({ hook: spiedOnHook, ...restSetupArgs });
 
-			if (autofillRequiredHooks) {
+			if (__autofillRequiredAdapterHooks) {
 				for (const hookType of REQUIRED_ADAPTER_HOOKS) {
 					if (!hookedTypes.includes(hookType)) {
 						hook(hookType, () => {

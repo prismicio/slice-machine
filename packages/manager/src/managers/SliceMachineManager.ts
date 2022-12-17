@@ -1,28 +1,38 @@
+import { CustomTypes } from "@prismicio/types-internal";
 import {
-	PrismicAuthManager,
-	PrismicUserProfile,
-} from "../auth/PrismicAuthManager";
-import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
+	SliceMachinePlugin,
+	SliceMachinePluginRunner,
+} from "@slicemachine/plugin-kit";
+
 import { createContentDigest } from "../lib/createContentDigest";
+
 import {
 	PackageChangelog,
 	PackageManager,
 	PackageVersion,
 	SliceMachineConfig,
 } from "../types";
-import { CustomTypesManager } from "./customTypes/CustomTypesManager";
-import { PluginsManager } from "./plugins/PluginsManager";
+import {
+	PrismicAuthManager,
+	PrismicUserProfile,
+} from "../auth/PrismicAuthManager";
+import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
+
+import { UserManager } from "./user/UserManager";
 import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
+
+import { PluginsManager } from "./plugins/PluginsManager";
+
 import { ProjectManager } from "./project/ProjectManager";
-import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
-import { SimulatorManager } from "./simulator/SimulatorManager";
+import { CustomTypesManager } from "./customTypes/CustomTypesManager";
 import { SlicesManager } from "./slices/SlicesManager";
 import { SnippetsManager } from "./snippets/SnippetsManager";
-import { TelemetryManager } from "./telemetry/TelemetryManager";
-import { UserManager } from "./user/UserManager";
+import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
+import { SimulatorManager } from "./simulator/SimulatorManager";
+
 import { VersionsManager } from "./versions/VersionsManager";
-import { CustomTypes } from "@prismicio/types-internal";
-import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+
+import { TelemetryManager } from "./telemetry/TelemetryManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -74,10 +84,17 @@ type SliceMachineManagerGetStateReturnType = {
 	clientError?: { message: string; status: number };
 };
 
+type SliceMachineManagerConstructorArgs = {
+	cwd?: string;
+	nativePlugins?: Record<string, SliceMachinePlugin>;
+};
+
 export class SliceMachineManager {
 	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined =
 		undefined;
 	private _prismicAuthManager: PrismicAuthManager;
+
+	cwd: string;
 
 	customTypes: CustomTypesManager;
 	plugins: PluginsManager;
@@ -91,7 +108,7 @@ export class SliceMachineManager {
 	user: UserManager;
 	versions: VersionsManager;
 
-	constructor() {
+	constructor(args?: SliceMachineManagerConstructorArgs) {
 		// _prismicAuthManager must be set at least before UserManager
 		// is instantiated. It depends on the PrismicAuthManager for
 		// authentication-related methods.
@@ -100,7 +117,9 @@ export class SliceMachineManager {
 		this.user = new UserManager(this);
 		this.prismicRepository = new PrismicRepositoryManager(this);
 
-		this.plugins = new PluginsManager(this);
+		this.plugins = new PluginsManager(this, {
+			nativePlugins: args?.nativePlugins,
+		});
 
 		this.project = new ProjectManager(this);
 		this.customTypes = new CustomTypesManager(this);
@@ -112,6 +131,8 @@ export class SliceMachineManager {
 		this.versions = new VersionsManager(this);
 
 		this.telemetry = new TelemetryManager(this);
+
+		this.cwd = args?.cwd ?? process.cwd();
 	}
 
 	// The `_sliceMachinePluginRunner` property is hidden behind a function to

@@ -1,8 +1,4 @@
-import {
-	HookError,
-	SliceMachinePlugin,
-	SliceMachinePluginOptions,
-} from "@slicemachine/plugin-kit";
+import { HookError, SliceMachinePluginOptions } from "@slicemachine/plugin-kit";
 
 export type PackageManager = "npm" | "yarn";
 
@@ -34,9 +30,8 @@ export type SliceMachineConfigPluginRegistration<
 	TSliceMachinePluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
 > =
 	| string
-	| SliceMachinePlugin
 	| {
-			resolve: string | SliceMachinePlugin;
+			resolve: string;
 			options?: TSliceMachinePluginOptions;
 	  };
 
