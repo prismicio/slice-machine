@@ -5,6 +5,11 @@ import {
 	SliceMachinePlugin,
 } from "@slicemachine/plugin-kit";
 import { expect } from "vitest";
+import * as crypto from "node:crypto";
+
+const sha1 = (data: crypto.BinaryLike): string => {
+	return crypto.createHash("sha1").update(data).digest("hex");
+};
 
 const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"slice:create",
@@ -39,12 +44,13 @@ export const createTestPlugin = <
 	...plugin
 }: CreateTestPluginArgs<TPluginOptions> = {}): SliceMachinePlugin<TPluginOptions> => {
 	const state = expect.getState();
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const testNameDigest = sha1(state.currentTestName!);
 
 	return defineSliceMachinePlugin({
 		...plugin,
 		meta: {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			name: state.currentTestName!,
+			name: `test-plugin-${testNameDigest}`,
 			...plugin.meta,
 		},
 		setup: async ({ hook, ...restSetupArgs }) => {
