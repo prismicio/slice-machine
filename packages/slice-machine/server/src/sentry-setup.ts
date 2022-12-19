@@ -32,19 +32,18 @@ export const initSentry = () => {
   });
 
   // TODO should we refresh on getState like frontend?
-  getEnv()
-    .then((state) => {
-      Sentry.setUser({ id: state.env.prismicData.shortId });
-      // TODO is state.env.repo the same as state.env.client.repository?
-      Sentry.setTag("repository", state.env.repo);
-      Sentry.setContext("Repository Data", {
-        name: state.env.repo,
-      });
-    })
-    .catch((e) => {
-      console.error("Failed to add user data to Sentry configuration");
-      console.error(e);
+  try {
+    const state = getEnv();
+    Sentry.setUser({ id: state.env.prismicData.shortId });
+    // TODO is state.env.repo the same as state.env.client.repository?
+    Sentry.setTag("repository", state.env.repo);
+    Sentry.setContext("Repository Data", {
+      name: state.env.repo,
     });
+  } catch (e) {
+    console.error("Failed to add user data to Sentry configuration");
+    console.error(e);
+  }
 };
 
 export const addSentryPreHandler = (app: express.Express) => {
