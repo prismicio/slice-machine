@@ -1,6 +1,11 @@
 import { Reducer } from "redux";
 import { EnvironmentStoreType } from "./types";
-import { ActionType, createAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
 import { Frameworks } from "@slicemachine/core/build/models/Framework";
@@ -12,6 +17,10 @@ import { SliceSM } from "@slicemachine/core/build/models";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import { AuthStatus } from "../userContext/types";
+import { getChangelogApiClient } from "@src/apiClient";
+import { call, fork, put, takeLatest } from "redux-saga/effects";
+import { withLoader } from "../loading";
+import { LoadingKeysEnum } from "../loading/types";
 
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
@@ -27,8 +36,23 @@ export const updateManifestCreator = createAction("STATE/UPDATE_MANIFEST")<{
   value: string | undefined;
 }>();
 
+// Actions Creators
+export const getChangelogCreator = createAsyncAction(
+  "CHANGELOG.REQUEST",
+  "CHANGELOG.RESPONSE",
+  "CHANGELOG.FAILURE"
+)<
+  undefined,
+  {
+    changelog: PackageChangelog;
+  },
+  undefined
+>();
+
 type EnvironmentActions = ActionType<
-  typeof refreshStateCreator | typeof updateManifestCreator
+  | typeof refreshStateCreator
+  | typeof getChangelogCreator
+  | typeof updateManifestCreator
 >;
 
 // Selectors
@@ -61,10 +85,15 @@ export const selectIsSimulatorAvailableForFramework = (
   return simulatorIsSupported(store.environment.framework);
 };
 
-export const getChangelog = (
-  store: SliceMachineStoreType
-): PackageChangelog => {
-  return store.environment.changelog;
+export const getChangelog = (store: SliceMachineStoreType) => {
+  return (
+    store.environment.changelog ?? {
+      currentVersion: "",
+      updateAvailable: false,
+      latestNonBreakingVersion: null,
+      versions: [],
+    }
+  );
 };
 
 export const getPackageManager = (
@@ -74,8 +103,8 @@ export const getPackageManager = (
 };
 
 export const getCurrentVersion = (store: SliceMachineStoreType): string => {
-  const { currentVersion } = getChangelog(store);
-  return currentVersion;
+  const changelog = getChangelog(store);
+  return changelog?.currentVersion;
 };
 
 export const getIsTrackingAvailable = (
@@ -157,7 +186,34 @@ export const environmentReducer: Reducer<
           localSliceSimulatorURL: action.payload.value,
         },
       };
+    case getType(getChangelogCreator.success):
+      return { ...state, changelog: action.payload.changelog };
     default:
       return state;
   }
 };
+
+export function* getChangelogSaga(): Generator<
+  unknown,
+  void,
+  PackageChangelog
+> {
+  try {
+    const changelog = yield call(getChangelogApiClient);
+    yield put(getChangelogCreator.success({ changelog }));
+  } catch {
+    yield put(getChangelogCreator.failure());
+  }
+}
+
+function* watchChangelog() {
+  yield takeLatest(
+    getType(getChangelogCreator.request),
+    withLoader(getChangelogSaga, LoadingKeysEnum.CHANGELOG)
+  );
+}
+
+// Saga Exports
+export function* watchChangelogSagas() {
+  yield fork(watchChangelog);
+}

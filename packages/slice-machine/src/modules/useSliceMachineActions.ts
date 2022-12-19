@@ -11,7 +11,7 @@ import {
   hasSeenTutorialsTooTipCreator,
   hasSeenSimulatorToolTipCreator,
 } from "./userContext";
-import { refreshStateCreator } from "./environment";
+import { getChangelogCreator, refreshStateCreator } from "./environment";
 import {
   checkSimulatorSetupCreator,
   connectToSimulatorIframeCreator,
@@ -492,6 +492,10 @@ const useSliceMachineActions = () => {
     );
   };
 
+  const getChangelog = () => {
+    dispatch(getChangelogCreator.request());
+  };
+
   return {
     checkSimulatorSetup,
     connectToSimulatorFailure,
@@ -557,6 +561,7 @@ const useSliceMachineActions = () => {
     openToaster,
     pushChanges,
     saveSliceMock,
+    getChangelog,
   };
 };
 

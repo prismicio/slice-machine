@@ -31,12 +31,14 @@ describe("getEnv", () => {
     process.env = env;
   });
 
-  test("it throws if no sm.json file is found", async () => {
+  test("it throws if no sm.json file is found", () => {
     fs.use(Volume.fromJSON({}, TMP));
-    await expect(getEnv(TMP)).rejects.toThrow();
+    expect(() => {
+      getEnv(TMP);
+    }).toThrow("Could not find manifest file (./sm.json).");
   });
 
-  test("it throws if no package.json file is found", async () => {
+  test("it throws if no package.json file is found", () => {
     fs.use(
       Volume.fromJSON(
         {
@@ -45,7 +47,9 @@ describe("getEnv", () => {
         TMP
       )
     );
-    await expect(getEnv(TMP)).rejects.toThrow();
+    expect(() => {
+      getEnv(TMP);
+    }).toThrow("Cannot read properties of undefined (reading 'includes')");
   });
 
   test.skip("it fails because api endpoint is missing", async () => {
@@ -317,6 +321,8 @@ describe("getEnv", () => {
       )
     );
 
-    await expect(getEnv(TMP)).rejects.toThrow();
+    expect(() => {
+      getEnv(TMP);
+    }).toThrow("Unknown application mode for https://api-1.fake.io/api/v2");
   });
 });
