@@ -266,20 +266,13 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           {currentState === UiState.SUCCESS ? (
             <Box
               sx={{
-                height: "100%",
-                overflowY: "scroll",
-                width: "800px",
+                marginLeft: "16px",
+                maxWidth: "440px",
+                minWidth: "440px",
+                overflowY: "auto",
                 ...(isDisplayEditor
-                  ? {
-                      marginLeft: "16px",
-                      visibility: "visible",
-                    }
-                  : {
-                      marginLeft: "0px",
-                      visibility: "hidden",
-                      width: "0",
-                    }),
-                transition: "visibility 0s linear",
+                  ? { display: "flex", flexDirection: "column" }
+                  : { display: "none" }),
               }}
             >
               <ThemeProvider mode="light">
