@@ -139,6 +139,7 @@ const Header: React.FC<{
               disabled={!isTouched || isLoading}
               onClick={onSave}
               Icon={AiFillSave}
+              iconFill="white"
               data-cy="builder-save-button"
             />
           </Flex>

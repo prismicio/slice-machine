@@ -120,7 +120,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           backgroundColor: "headSection",
           backgroundRepeat: "repeat",
           backgroundSize: "10px",
-          border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
           mx: "auto",
           flexDirection: "column",
           justifyContent: "center",

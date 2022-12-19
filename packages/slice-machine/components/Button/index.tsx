@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 
 import { Button as ThemeUIButton, ButtonProps, Spinner } from "theme-ui";
 import { IconType } from "react-icons";

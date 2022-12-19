@@ -67,7 +67,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
           alignItems: "center",
         }}
       >
-        <SliceMachineLogo height={"40px"} width={"40px"} fill="#1A1523" />
+        <SliceMachineLogo height={"20px"} width={"20px"} fill="#1A1523" />
         <Text
           sx={{
             ml: 2,

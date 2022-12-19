@@ -44,6 +44,7 @@ const CustomTypes: React.FunctionComponent = () => {
               isLoading={isCreatingCustomType}
               disabled={isCreatingCustomType}
               Icon={GoPlus}
+              iconFill="#FFFFFF"
               data-cy="create-ct"
             />
           ) : undefined
