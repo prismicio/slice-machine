@@ -54,7 +54,7 @@ describe("Custom Types specs", () => {
     cy.contains("Add Tab").click();
     cy.getInputByLabel("New Tab ID").type("Foo");
     cy.get("#create-tab").contains("Save").click();
-    cy.wait(500)
+    cy.wait(500);
     // rename the tab with spaces
     cy.contains("Foo").click();
     cy.getInputByLabel("Update Tab ID").type("Foo Bar ");
