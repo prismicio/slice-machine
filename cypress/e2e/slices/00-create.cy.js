@@ -74,16 +74,13 @@ describe("Create Slices", () => {
 
     // add a variation
 
-    const getInputByLabel = (label) =>
-      cy
-        .contains("label", label)
-        .invoke("attr", "for")
-        .then((id) => cy.get("#" + id));
-
     cy.get("button").contains("Default").click();
     cy.contains("+ Add new variation").click();
-    getInputByLabel("Variation name*").type("foo");
-    getInputByLabel("Variation ID*").clear().type("bar");
+
+    cy.getInputByLabel("Variation name*").type("foo");
+    cy.getInputByLabel("Variation ID*").clear()
+    cy.getInputByLabel("Variation ID*").type("bar");
+
     cy.get("#variation-add").submit();
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
@@ -124,8 +121,8 @@ describe("Create Slices", () => {
 
     cy.get("[data-testid=simulator-open-button]").click();
 
-    cy.get("[contenteditable]").first().clear();
-    cy.get("[contenteditable]").first().type("👋");
+    cy.getInputByLabel("description").first().clear();
+    cy.getInputByLabel("description").first().type("👋");
 
     cy.get("[data-cy=save-mock]").click();
 
@@ -136,8 +133,10 @@ describe("Create Slices", () => {
 
     cy.wait(1000);
 
-    cy.get("[contenteditable]").first().clear();
-    cy.get("[contenteditable]").first().type("🎉");
+    cy.getInputByLabel("description")
+
+    cy.getInputByLabel("description").first().clear();
+    cy.getInputByLabel("description").first().type("🎉");
 
     cy.get("[data-cy=save-mock]").click();
 

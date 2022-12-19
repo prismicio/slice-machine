@@ -45,7 +45,7 @@ Cypress.Commands.add("getSliceMachineUserContext", () => {
 
 Cypress.Commands.add("getInputByLabel", (label) => {
   return cy
-    .contains(label) // .contains("label", label)
+    .contains("label", label)
     .invoke("attr", "for")
     .then((id) => {
       const selector = `#${id},[name="${id}"]`;
