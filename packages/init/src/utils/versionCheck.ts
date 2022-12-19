@@ -1,9 +1,10 @@
-import semver from "semver";
+import semverCoerce from "semver/functions/coerce";
+import semverSatisfies from "semver/functions/satisfies";
 
 export function checkVersion(threshold: string, version?: string): boolean {
   if (!version) return false;
-  const parsedVersion = semver.coerce(version);
+  const parsedVersion = semverCoerce(version);
   if (parsedVersion === null) return false;
 
-  return semver.satisfies(parsedVersion, threshold);
+  return semverSatisfies(parsedVersion, threshold);
 }

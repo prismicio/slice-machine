@@ -116,7 +116,8 @@ describe("MockSlice", () => {
   });
 
   test("when updating a mock with config", () => {
-    const wanted = [
+    // "image" is missing, see below.
+    const partial = [
       {
         __TYPE__: "SharedSliceContent",
         variation: "default",
@@ -128,20 +129,6 @@ describe("MockSlice", () => {
           description: {
             __TYPE__: "StructuredTextContent",
             value: [{ type: "paragraph", content: { text: "Some text." } }],
-          },
-          image: {
-            __TYPE__: "ImageContent",
-            url: "https://images.unsplash.com/photo-1555169062-013468b47731",
-            origin: {
-              id: "main",
-              url: "https://images.unsplash.com/photo-1555169062-013468b47731",
-              width: 900,
-              height: 500,
-            },
-            width: 900,
-            height: 500,
-            edit: { zoom: 1, crop: { x: 0, y: 0 }, background: "transparent" },
-            thumbnails: {},
           },
         },
         items: [{ __TYPE__: "GroupItemContent", value: [] }],
@@ -198,17 +185,31 @@ describe("MockSlice", () => {
 
     const mockConfig = {
       default: {
-        primary: {
-          image: {
-            content:
-              "https://images.unsplash.com/photo-1555169062-013468b47731",
-          },
-        },
+        primary: {},
       },
     };
 
     const result = MockSlice(Slices.fromSM(model), mockConfig);
-    expect(result).toEqual(wanted);
+    // "result" contains more than "partial"
+    expect(result).toMatchObject(partial);
+    // The image is random, so we check its properties instead.
+    expect(result[0].primary).toHaveProperty(
+      "image",
+      expect.objectContaining({
+        __TYPE__: "ImageContent",
+        url: expect.any(String),
+        origin: {
+          id: "main",
+          url: expect.any(String),
+          width: expect.any(Number),
+          height: expect.any(Number),
+        },
+        width: expect.any(Number),
+        height: expect.any(Number),
+        edit: { zoom: 1, crop: { x: 0, y: 0 }, background: "transparent" },
+        thumbnails: {},
+      })
+    );
     // TODO: check with the mock reader that this is valid
     // const decoded = SliceMock.decode(result);
     // expect(isRight(decoded)).toBeTruthy();
