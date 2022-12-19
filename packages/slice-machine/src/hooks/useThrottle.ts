@@ -5,7 +5,7 @@ function useThrottle<T>(
   limit: number,
   args: ReadonlyArray<unknown>
 ): T {
-  const [throttledValue, setThrottledValue] = useState(cb);
+  const [throttledValue, setThrottledValue] = useState(cb());
   const lastRan = useRef(Date.now());
 
   useEffect(() => {

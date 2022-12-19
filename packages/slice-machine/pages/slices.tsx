@@ -97,6 +97,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   isLoading={isCreatingSlice}
                   disabled={isCreatingSlice}
                   Icon={GoPlus}
+                  iconFill="#FFFFFF"
                   data-cy="create-slice"
                 />
               ) : undefined

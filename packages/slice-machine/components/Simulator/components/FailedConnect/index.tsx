@@ -1,7 +1,11 @@
 import { Image, Link, Text } from "theme-ui";
 import FullPage from "../FullPage";
 
-const FailedConnect = () => (
+import { Button } from "@components/Button";
+
+import { IoMdRefresh } from "react-icons/io";
+
+const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => (
   <FullPage>
     <Image src="/iframe-not-running.png" sx={{ width: "320px" }} />
     <Text
@@ -45,6 +49,17 @@ const FailedConnect = () => (
         troubleshooting instructions.
       </Link>
     </Text>
+    <Button
+      onClick={onRetrigger}
+      label="Refresh"
+      Icon={IoMdRefresh}
+      iconSize={20}
+      iconFill="#6F6E77"
+      variant="secondaryMedium"
+      sx={{
+        mt: "16px",
+      }}
+    />
   </FullPage>
 );
 

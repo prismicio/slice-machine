@@ -73,39 +73,64 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
   }));
 
+  const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
+  const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
+
   useEffect(() => {
     checkSimulatorSetup();
     void Tracker.get().trackOpenSliceSimulator(framework, version);
     Tracker.get().editor.startNewSession();
   }, []);
 
+  const currentState: UiState = (() => {
+    if (manifestStatus === "ko") {
+      return UiState.FAILED_SETUP;
+    }
+    if (manifestStatus === "ok") {
+      if (isWaitingForIFrameCheck || !iframeStatus) {
+        return UiState.LOADING_IFRAME;
+      }
+      if (iframeStatus !== "ok") {
+        return UiState.FAILED_CONNECT;
+      }
+      return UiState.SUCCESS;
+    }
+    return UiState.LOADING_SETUP;
+  })();
+
+  useEffect(() => {
+    if (currentState === UiState.FAILED_SETUP && !setupIntervalId.current) {
+      const id = setInterval(() => {
+        checkSimulatorSetupCb();
+      }, 3000);
+      setupIntervalId.current = id;
+    }
+  }, [currentState]);
+
   useEffect(() => {
     if (manifestStatus === "ok") {
+      if (setupIntervalId.current) {
+        clearInterval(setupIntervalId.current);
+      }
       connectToSimulatorIframe();
     }
   }, [manifestStatus]);
 
-  const [iframeCheckFailedOnce, setIframeCheckFailedOnce] = useState(false);
+  useEffect(() => {
+    if (currentState === UiState.FAILED_CONNECT) {
+      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
+    }
+  }, [currentState, framework]);
 
-  const currentState: UiState = (() => {
-    if (manifestStatus === "ok") {
-      if (isWaitingForIFrameCheck || !iframeStatus) {
-        return iframeCheckFailedOnce
-          ? UiState.FAILED_CONNECT
-          : UiState.LOADING_IFRAME;
-      }
-      if (iframeStatus === "ko") {
-        return UiState.FAILED_CONNECT;
-      }
-      return UiState.SUCCESS;
-    } else if (manifestStatus === "ko") {
-      return UiState.FAILED_SETUP;
+  useEffect(() => {
+    if (currentState === UiState.SUCCESS) {
+      toggleIsDisplayEditor(true);
     }
-    if (iframeCheckFailedOnce) {
-      return UiState.FAILED_CONNECT;
-    }
-    return UiState.LOADING_SETUP;
-  })();
+  }, [currentState]);
+
+  const onRetrigger = () => {
+    connectToSimulatorIframe();
+  };
 
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
     ScreenSizes[ScreenSizeOptions.DESKTOP]
@@ -113,35 +138,44 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   const sharedSlice = useMemo(() => Slices.fromSM(slice.model), [slice.model]);
 
-  const initialContent = useMemo<SharedSliceContent>(
-    () =>
-      slice.mock?.find((m) => m.variation === variation.id) ||
-      defaultSharedSliceContent(variation.id),
-    [slice.mock, variation.id]
+  // state used only to store updates coming from the editor
+  const [editorState, setEditorState] = useState<SharedSliceContent | null>(
+    null
   );
 
-  const [editorContent, setContent] = useState(initialContent);
+  // computed state that takes the editorState if any change
+  // for the current variation or directly the mocks
+  const editorContent = useMemo(() => {
+    if (editorState?.variation === variation.id) return editorState;
 
-  useEffect(() => {
-    setContent(initialContent);
-  }, [variation.id, initialContent]);
+    return (
+      slice.mock?.find((m) => m.variation === variation.id) ||
+      defaultSharedSliceContent(variation.id)
+    );
+  }, [editorState, variation.id]);
 
-  const initialApiContent = useMemo(
+  // this is temporary, it allows to retain the slice ID generated
+  //at first render so we don't trigger too many re-render at each content change
+  const renderedSliceId = useMemo(
     () =>
-      renderSliceMock(sharedSlice, editorContent) as {
-        id: string;
-        [k: string]: unknown;
-      },
+      (
+        renderSliceMock(sharedSlice, editorContent) as {
+          id: string;
+          [k: string]: unknown;
+        }
+      ).id,
     []
   );
 
+  // When the content change, we re-render the content but overwrite the newly
+  // generated slice ID by the initial one for render optim
   const renderSliceMockCb = useCallback(
     () => () => ({
       // cast as object because type is unknown
       ...(renderSliceMock(sharedSlice, editorContent) as object),
-      id: initialApiContent.id,
+      id: renderedSliceId,
     }),
-    [sharedSlice, editorContent, initialApiContent]
+    [sharedSlice, editorContent]
   );
 
   const apiContent = useThrottle(renderSliceMockCb, 800, [
@@ -150,52 +184,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   ]);
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(false);
-
-  const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
-  const iframeIntervalId = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    if (currentState === UiState.FAILED_SETUP) {
-      const id = setInterval(() => {
-        checkSimulatorSetup();
-      }, 3000);
-      if (!setupIntervalId.current) {
-        setupIntervalId.current = id;
-        return;
-      }
-    }
-    if (currentState === UiState.FAILED_CONNECT) {
-      setIframeCheckFailedOnce(true);
-      if (!isWaitingForIFrameCheck) {
-        const id = setInterval(() => {
-          connectToSimulatorIframe();
-        }, 3000);
-        if (!iframeIntervalId.current) {
-          iframeIntervalId.current = id;
-          return;
-        }
-      }
-    }
-    if (setupIntervalId.current) {
-      clearTimeout(setupIntervalId.current);
-    }
-    if (iframeIntervalId.current) {
-      clearTimeout(iframeIntervalId.current);
-    } else if (currentState === UiState.SUCCESS) {
-      toggleIsDisplayEditor(true);
-    }
-  }, [
-    currentState,
-    checkSimulatorSetup,
-    connectToSimulatorIframe,
-    isWaitingForIFrameCheck,
-  ]);
-
-  useEffect(() => {
-    if (currentState === UiState.FAILED_CONNECT && !iframeCheckFailedOnce) {
-      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
-    }
-  }, [currentState, framework, iframeCheckFailedOnce]);
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
@@ -207,12 +195,13 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         actionsDisabled={currentState !== UiState.SUCCESS}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
         onSaveMock={() =>
+          editorState &&
           saveSliceMock({
             sliceName: slice.model.name,
             libraryName: slice.from,
             mock: (slice.mock || [])
-              .filter((mock) => mock.variation !== initialContent.variation)
-              .concat(editorContent),
+              .filter((mock) => mock.variation !== editorState.variation)
+              .concat(editorState),
           })
         }
       />
@@ -249,7 +238,9 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               screenDimensions={screenDimensions}
               actionsDisabled={currentState !== UiState.SUCCESS}
             />
-            {currentState === UiState.FAILED_CONNECT ? <FailedConnect /> : null}
+            {currentState === UiState.FAILED_CONNECT ? (
+              <FailedConnect onRetrigger={onRetrigger} />
+            ) : null}
             {currentState === UiState.SUCCESS ? (
               <IframeRenderer
                 apiContent={apiContent}
@@ -258,31 +249,16 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               />
             ) : (
               <>
-                {[
-                  UiState.LOADING_IFRAME,
-                  UiState.LOADING_SETUP,
-                  UiState.FAILED_CONNECT,
-                ].includes(currentState) ? (
-                  <>
-                    {currentState === UiState.FAILED_CONNECT ? (
-                      <IframeRenderer
-                        apiContent={apiContent}
-                        screenDimensions={screenDimensions}
-                        simulatorUrl={simulatorUrl}
-                        dryRun
-                      />
-                    ) : (
-                      <FullPage>
-                        <Spinner variant="styles.spinner" />
-                        <IframeRenderer
-                          apiContent={apiContent}
-                          screenDimensions={screenDimensions}
-                          simulatorUrl={simulatorUrl}
-                          dryRun
-                        />
-                      </FullPage>
-                    )}
-                  </>
+                {currentState === UiState.LOADING_IFRAME ? (
+                  <FullPage>
+                    <Spinner variant="styles.spinner" />
+                    <IframeRenderer
+                      apiContent={apiContent}
+                      screenDimensions={screenDimensions}
+                      simulatorUrl={simulatorUrl}
+                      dryRun
+                    />
+                  </FullPage>
                 ) : null}
               </>
             )}
@@ -290,27 +266,25 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           {currentState === UiState.SUCCESS ? (
             <Box
               sx={{
-                height: "100%",
-                overflowY: "scroll",
+                marginLeft: "16px",
+                maxWidth: "440px",
+                minWidth: "440px",
+                overflowY: "auto",
                 ...(isDisplayEditor
-                  ? {
-                      marginLeft: "16px",
-                      visibility: "visible",
-                      width: "496px",
-                    }
-                  : {
-                      marginLeft: "0px",
-                      visibility: "hidden",
-                      width: "0",
-                    }),
-                transition: "visibility 0s linear",
+                  ? { display: "flex", flexDirection: "column" }
+                  : { display: "none" }),
               }}
             >
               <ThemeProvider mode="light">
                 <SharedSliceEditor
+                  /** because of a re-render issue on the richtext
+                  /* we enforce re-rendering the editor when the variation change.
+                  /* this change should be removed once the editor is fixed.
+                  */
+                  key={variation.id}
                   content={editorContent}
                   onContentChange={(c) => {
-                    setContent(c as SharedSliceContent);
+                    setEditorState(c as SharedSliceContent);
                     Tracker.get().editor.trackWidgetUsed();
                   }}
                   sharedSlice={sharedSlice}
