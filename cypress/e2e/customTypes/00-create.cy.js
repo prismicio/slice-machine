@@ -54,12 +54,15 @@ describe("Custom Types specs", () => {
     cy.contains("Add Tab").click();
     cy.getInputByLabel("New Tab ID").type("Foo");
     cy.get("#create-tab").contains("Save").click();
+    cy.wait(500)
     // rename the tab with spaces
     cy.contains("Foo").click();
     cy.getInputByLabel("Update Tab ID").type("Foo Bar ");
     cy.get("#create-tab").contains("Save").click();
+
     // save
     cy.contains("Save to File System").click();
+
     // check that the space has been trimmed
     cy.wait(1000);
     const pathToFModel = `${root}/customtypes/${id}/index.json`;
