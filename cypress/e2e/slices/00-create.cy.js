@@ -78,7 +78,7 @@ describe("Create Slices", () => {
     cy.contains("+ Add new variation").click();
 
     cy.getInputByLabel("Variation name*").type("foo");
-    cy.getInputByLabel("Variation ID*").clear()
+    cy.getInputByLabel("Variation ID*").clear();
     cy.getInputByLabel("Variation ID*").type("bar");
 
     cy.get("#variation-add").submit();
