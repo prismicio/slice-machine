@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Flex, Text, useThemeUI } from "theme-ui";
 
 import Header from "@components/Header";
@@ -77,6 +76,7 @@ const CustomTypeHeader = () => {
               disabled={!hasPendingModifications || isSavingCustomType}
               onClick={saveCustomType}
               Icon={AiFillSave}
+              iconFill="#FFFFFF"
               data-cy="builder-save-button"
             />
           </Flex>
