@@ -287,10 +287,7 @@ describe("CustomTypeMockConfig", () => {
         WidgetTypes.Image,
         config
       );
-      expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Image,
-        value: "content-image-test",
-      });
+      expect(widgetMockConfig).toStrictEqual(undefined);
     });
     test("invalid content", () => {
       const config = { content: 100 };

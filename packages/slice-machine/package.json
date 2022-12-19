@@ -41,7 +41,7 @@
   "dependencies": {
     "@prismicio/editor-fields": "^0.1.0",
     "@prismicio/editor-ui": "^0.1.0",
-    "@prismicio/mocks": "1.6.2",
+    "@prismicio/mocks": "1.6.3",
     "@prismicio/types-internal": "^1.5.3",
     "@sentry/node": "^7.25.0",
     "@slicemachine/client": "1.1.16-dev-alpha.10",
