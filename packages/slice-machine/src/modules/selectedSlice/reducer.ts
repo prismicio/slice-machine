@@ -197,7 +197,6 @@ export const selectedSliceReducer: Reducer<
       return {
         ...prevState,
         mock: mocks,
-        screenshots: prevState?.screenshots,
       };
     }
     default:
