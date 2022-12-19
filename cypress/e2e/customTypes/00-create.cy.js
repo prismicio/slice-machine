@@ -49,6 +49,21 @@ describe("Custom Types specs", () => {
       `/ ${name} - Edited`
     );
     cy.readFile(type).should("contains", `${name} - Edited`);
+
+    // add a tab
+    cy.contains("Add Tab").click()
+    cy.getInputByLabel("New Tab ID").type("Foo")
+    cy.get("#create-tab").contains("Save").click()
+    // rename the tab with spaces
+    cy.contains("Foo").click()
+    cy.getInputByLabel("Update Tab ID").type("Foo Bar ")
+    cy.get("#create-tab").contains("Save").click()
+    // save
+    cy.contains("Save to File System").click()
+    // check that the space has been trimmed
+    cy.wait(1000)
+    const pathToFModel = `${root}/customtypes/${id}/index.json`
+    cy.readFile(pathToFModel, "utf-8").its("json").should("have.a.property", "Foo Bar").should("not.have.a.property", "Foo Bar ")
   });
 
   it("generates types if `generateTypes` is `true` and `@prismicio/types` is installed", () => {
