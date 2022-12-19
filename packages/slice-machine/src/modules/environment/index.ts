@@ -81,7 +81,7 @@ export const selectIsSimulatorAvailableForFramework = (
 
 export const getChangelog = (store: SliceMachineStoreType) => {
   return (
-    store.environment?.changelog ?? {
+    store.environment.changelog ?? {
       currentVersion: "",
       updateAvailable: false,
       latestNonBreakingVersion: null,
