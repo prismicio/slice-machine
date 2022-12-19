@@ -138,35 +138,44 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   const sharedSlice = useMemo(() => Slices.fromSM(slice.model), [slice.model]);
 
-  const initialContent = useMemo<SharedSliceContent>(
-    () =>
-      slice.mock?.find((m) => m.variation === variation.id) ||
-      defaultSharedSliceContent(variation.id),
-    [slice.mock, variation.id]
+  // state used only to store updates coming from the editor
+  const [editorState, setEditorState] = useState<SharedSliceContent | null>(
+    null
   );
 
-  const [editorContent, setContent] = useState(initialContent);
+  // computed state that takes the editorState if any change
+  // for the current variation or directly the mocks
+  const editorContent = useMemo(() => {
+    if (editorState?.variation === variation.id) return editorState;
 
-  useEffect(() => {
-    setContent(initialContent);
-  }, [variation.id, initialContent]);
+    return (
+      slice.mock?.find((m) => m.variation === variation.id) ||
+      defaultSharedSliceContent(variation.id)
+    );
+  }, [editorState, variation.id]);
 
-  const initialApiContent = useMemo(
+  // this is temporary, it allows to retain the slice ID generated
+  //at first render so we don't trigger too many re-render at each content change
+  const renderedSliceId = useMemo(
     () =>
-      renderSliceMock(sharedSlice, editorContent) as {
-        id: string;
-        [k: string]: unknown;
-      },
+      (
+        renderSliceMock(sharedSlice, editorContent) as {
+          id: string;
+          [k: string]: unknown;
+        }
+      ).id,
     []
   );
 
+  // When the content change, we re-render the content but overwrite the newly
+  // generated slice ID by the initial one for render optim
   const renderSliceMockCb = useCallback(
     () => () => ({
       // cast as object because type is unknown
       ...(renderSliceMock(sharedSlice, editorContent) as object),
-      id: initialApiContent.id,
+      id: renderedSliceId,
     }),
-    [sharedSlice, editorContent, initialApiContent]
+    [sharedSlice, editorContent]
   );
 
   const apiContent = useThrottle(renderSliceMockCb, 800, [
@@ -186,12 +195,13 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         actionsDisabled={currentState !== UiState.SUCCESS}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
         onSaveMock={() =>
+          editorState &&
           saveSliceMock({
             sliceName: slice.model.name,
             libraryName: slice.from,
             mock: (slice.mock || [])
-              .filter((mock) => mock.variation !== initialContent.variation)
-              .concat(editorContent),
+              .filter((mock) => mock.variation !== editorState.variation)
+              .concat(editorState),
           })
         }
       />
@@ -274,9 +284,14 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             >
               <ThemeProvider mode="light">
                 <SharedSliceEditor
+                  /** because of a re-render issue on the richtext
+                  /* we enforce re-rendering the editor when the variation change.
+                  /* this change should be removed once the editor is fixed.
+                  */
+                  key={variation.id}
                   content={editorContent}
                   onContentChange={(c) => {
-                    setContent(c as SharedSliceContent);
+                    setEditorState(c as SharedSliceContent);
                     Tracker.get().editor.trackWidgetUsed();
                   }}
                   sharedSlice={sharedSlice}

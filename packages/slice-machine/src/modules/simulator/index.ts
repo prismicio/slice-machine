@@ -37,6 +37,7 @@ import { updateSliceMock } from "../slices";
 
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
+import { updateSelectedSliceMocks } from "../selectedSlice/actions";
 
 export const initialState: SimulatorStoreType = {
   iframeStatus: null,
@@ -253,6 +254,8 @@ export function* saveSliceMockSaga({
       })
     );
     yield put(updateSliceMock(data));
+
+    yield put(updateSelectedSliceMocks({ mocks: data.mock }));
     yield put(saveSliceMockCreator.success());
   } catch (error) {
     const message =
