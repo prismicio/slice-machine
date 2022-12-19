@@ -121,8 +121,8 @@ describe("Create Slices", () => {
 
     cy.get("[data-testid=simulator-open-button]").click();
 
-    cy.getInputByLabel("description").first().clear();
-    cy.getInputByLabel("description").first().type("👋");
+    cy.getInputByLabel("Description").first().clear();
+    cy.getInputByLabel("Description").first().type("👋");
 
     cy.get("[data-cy=save-mock]").click();
 
@@ -133,10 +133,8 @@ describe("Create Slices", () => {
 
     cy.wait(1000);
 
-    cy.getInputByLabel("description")
-
-    cy.getInputByLabel("description").first().clear();
-    cy.getInputByLabel("description").first().type("🎉");
+    cy.getInputByLabel("Description").first().clear();
+    cy.getInputByLabel("Description").first().type("🎉");
 
     cy.get("[data-cy=save-mock]").click();
 

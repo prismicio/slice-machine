@@ -48,7 +48,7 @@ Cypress.Commands.add("getInputByLabel", (label) => {
     .contains("label", label)
     .invoke("attr", "for")
     .then((id) => {
-      const selector = `#${id},[name="${id}"]`;
+      const selector = `[id="${id}"],[name="${id}"]`;
       return cy.get(selector);
     });
 });
