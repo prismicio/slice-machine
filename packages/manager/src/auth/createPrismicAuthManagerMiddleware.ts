@@ -12,11 +12,11 @@ import { decode } from "../lib/decode";
 
 import { PrismicAuthManager } from "./PrismicAuthManager";
 
-const PrismicAuthRequest = t.type({
+const PrismicAuthResponse = t.type({
 	email: t.string,
 	cookies: t.array(t.string),
 });
-type PrismicAuthRequest = t.TypeOf<typeof PrismicAuthRequest>;
+type PrismicAuthResponse = t.TypeOf<typeof PrismicAuthResponse>;
 
 export type PrismicAuthCheckStatusResponse =
 	| {
@@ -30,7 +30,7 @@ export type PrismicAuthCheckStatusResponse =
 
 export type CreatePrismicAuthManagerMiddlewareArgs = {
 	prismicAuthManager: PrismicAuthManager;
-	onLoginCallback?: () => void;
+	onLoginCallback?: () => void | Promise<void>;
 };
 
 export const createPrismicAuthManagerMiddleware = (
@@ -43,7 +43,7 @@ export const createPrismicAuthManagerMiddleware = (
 		"/",
 		eventHandler(async (event) => {
 			const body = await readBody(event);
-			const { value, error } = decode(PrismicAuthRequest, body);
+			const { value, error } = decode(PrismicAuthResponse, body);
 
 			if (error) {
 				throw new Error(`Invalid auth payload: ${error.errors.join(", ")}`);
@@ -55,7 +55,7 @@ export const createPrismicAuthManagerMiddleware = (
 			});
 
 			if (args.onLoginCallback) {
-				args.onLoginCallback();
+				await args.onLoginCallback();
 			}
 
 			return {};

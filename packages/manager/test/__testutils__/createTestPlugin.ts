@@ -44,14 +44,15 @@ export const createTestPlugin = <
 	...plugin
 }: CreateTestPluginArgs<TPluginOptions> = {}): SliceMachinePlugin<TPluginOptions> => {
 	const state = expect.getState();
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const testNameDigest = sha1(state.currentTestName!);
 
 	return defineSliceMachinePlugin({
 		...plugin,
 		meta: {
-			name: `test-plugin-${testNameDigest}`,
 			...plugin.meta,
+			name:
+				plugin.meta?.name ??
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				`test-plugin-${sha1(state.currentTestName!)}`,
 		},
 		setup: async ({ hook, ...restSetupArgs }) => {
 			const hookedTypes: string[] = [];

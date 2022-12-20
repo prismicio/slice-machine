@@ -13,8 +13,12 @@ const sha1 = (data: crypto.BinaryLike): string => {
 };
 
 export const createTestProject = async (
-	sliceMachineConfig: Omit<Partial<SliceMachineConfig>, "adapter"> & {
+	sliceMachineConfig: Omit<
+		Partial<SliceMachineConfig>,
+		"adapter" | "plugins"
+	> & {
 		adapter?: string | SliceMachinePlugin;
+		plugins?: (string | SliceMachinePlugin)[];
 	} = {},
 ): Promise<string> => {
 	const state = expect.getState();
@@ -34,6 +38,10 @@ export const createTestProject = async (
 			? sliceMachineConfig.adapter
 			: sliceMachineConfig.adapter?.meta.name;
 
+	const plugins = (sliceMachineConfig.plugins || []).map((plugin) => {
+		return typeof plugin === "string" ? plugin : plugin.meta.name;
+	});
+
 	await fs.writeFile(
 		path.join(root, "slicemachine.config.json"),
 		JSON.stringify({
@@ -41,6 +49,7 @@ export const createTestProject = async (
 			repositoryName: `test-repo-${testNameDigest}`,
 			...sliceMachineConfig,
 			adapter: adapterName,
+			plugins,
 		}),
 	);
 

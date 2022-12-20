@@ -1,5 +1,8 @@
 import { expect, it } from "vitest";
 
+import { createTestPlugin } from "./__testutils__/createTestPlugin";
+import { createTestProject } from "./__testutils__/createTestProject";
+
 import { CustomTypesManager } from "../src/managers/customTypes/CustomTypesManager";
 import { PluginsManager } from "../src/managers/plugins/PluginsManager";
 import { PrismicRepositoryManager } from "../src/managers/prismicRepository/PrismicRepositoryManager";
@@ -28,4 +31,35 @@ it("contains submanagers", () => {
 	expect(manager.simulator).toBeInstanceOf(SimulatorManager);
 	expect(manager.versions).toBeInstanceOf(VersionsManager);
 	expect(manager.telemetry).toBeInstanceOf(TelemetryManager);
+});
+
+it("accepts a record of native plugins for the plugin runner", async () => {
+	const commandInitHook = () => void 0;
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("debug", commandInitHook);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	const sliceMachinePluginRunner = manager.getSliceMachinePluginRunner();
+	const registeredHooksForAdapter = sliceMachinePluginRunner?.hooksForOwner(
+		adapter.meta.name,
+	);
+
+	expect(registeredHooksForAdapter).toContainEqual(
+		expect.objectContaining({
+			meta: expect.objectContaining({
+				external: commandInitHook,
+				owner: adapter.meta.name,
+				type: "debug",
+			}),
+		}),
+	);
 });

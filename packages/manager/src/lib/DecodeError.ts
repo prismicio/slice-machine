@@ -7,6 +7,7 @@ type DecodeErrorConstructorArgs<TInput = unknown> = {
 };
 
 export class DecodeError<TInput = unknown> extends Error {
+	name = "DecodeError";
 	input: TInput;
 	errors: string[];
 

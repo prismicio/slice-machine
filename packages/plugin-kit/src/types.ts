@@ -2,6 +2,7 @@ import { SliceMachineContext } from "./createSliceMachineContext";
 import { SliceMachinePlugin } from "./defineSliceMachinePlugin";
 import { Hook } from "./lib";
 
+import { CommandInitHookBase } from "./hooks/command-init";
 import { CustomTypeAssetDeleteHookBase } from "./hooks/customType-asset-delete";
 import { CustomTypeAssetReadHookBase } from "./hooks/customType-asset-read";
 import { CustomTypeAssetUpdateHookBase } from "./hooks/customType-asset-update";
@@ -9,8 +10,9 @@ import { CustomTypeCreateHookBase } from "./hooks/customType-create";
 import { CustomTypeDeleteHookBase } from "./hooks/customType-delete";
 import { CustomTypeLibraryReadHookBase } from "./hooks/customTypeLibrary-read";
 import { CustomTypeReadHookBase } from "./hooks/customType-read";
-import { CustomTypeUpdateHookBase } from "./hooks/customType-update";
 import { CustomTypeRenameHookBase } from "./hooks/customType-rename";
+import { CustomTypeUpdateHookBase } from "./hooks/customType-update";
+import { DebugHookBase } from "./hooks/debug";
 import { SliceAssetDeleteHookBase } from "./hooks/slice-asset-delete";
 import { SliceAssetReadHookBase } from "./hooks/slice-asset-read";
 import { SliceAssetUpdateHookBase } from "./hooks/slice-asset-update";
@@ -18,11 +20,10 @@ import { SliceCreateHookBase } from "./hooks/slice-create";
 import { SliceDeleteHookBase } from "./hooks/slice-delete";
 import { SliceLibraryReadHookBase } from "./hooks/sliceLibrary-read";
 import { SliceReadHookBase } from "./hooks/slice-read";
+import { SliceRenameHookBase } from "./hooks/slice-rename";
 import { SliceSimulatorSetupReadHookBase } from "./hooks/sliceSimulator-setup-read";
 import { SliceUpdateHookBase } from "./hooks/slice-update";
-import { SliceRenameHookBase } from "./hooks/slice-rename";
 import { SnippetReadHookBase } from "./hooks/snippet-read";
-import { CommandInitHookBase } from "./hooks/command-init";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
@@ -158,6 +159,8 @@ export const SliceMachineHookType = {
 	sliceSimulator_setup_read: "slice-simulator:setup:read",
 
 	command_init: "command:init",
+
+	debug: "debug",
 } as const;
 
 /**
@@ -204,4 +207,7 @@ export type SliceMachineHooks = {
 
 	// Commands
 	[SliceMachineHookType.command_init]: Hook<CommandInitHookBase>;
+
+	// Debug
+	[SliceMachineHookType.debug]: Hook<DebugHookBase>;
 };

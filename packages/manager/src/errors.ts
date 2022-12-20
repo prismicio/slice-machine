@@ -49,14 +49,29 @@ import { HookError } from "@slicemachine/plugin-kit";
 
 export abstract class SliceMachineError extends Error {
 	_sliceMachineError = true;
+	name = "SliceMachineError";
 }
-export class UnauthorizedError extends SliceMachineError {}
-export class UnauthenticatedError extends SliceMachineError {}
-export class NotFoundError extends SliceMachineError {}
-export class UnexpectedDataError extends SliceMachineError {}
-export class InternalError extends SliceMachineError {}
-export class PluginError extends SliceMachineError {}
+export class UnauthorizedError extends SliceMachineError {
+	name = "UnauthorizedError";
+}
+export class UnauthenticatedError extends SliceMachineError {
+	name = "UnauthenticatedError";
+}
+export class NotFoundError extends SliceMachineError {
+	name = "NotFoundError";
+}
+export class UnexpectedDataError extends SliceMachineError {
+	name = "UnexpectedDataError";
+}
+export class InternalError extends SliceMachineError {
+	name = "InternalError";
+}
+export class PluginError extends SliceMachineError {
+	name = "PluginError";
+}
 export class PluginHookResultError extends SliceMachineError {
+	name = "PluginHookResultError";
+
 	constructor(errors: HookError[]) {
 		super(
 			`${errors.length} error${

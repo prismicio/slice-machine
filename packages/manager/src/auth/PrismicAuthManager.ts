@@ -50,7 +50,7 @@ const PrismicAuthState = t.intersection([
 		authUrl: t.string,
 	}),
 ]);
-type PrismicAuthState = t.TypeOf<typeof PrismicAuthState>;
+export type PrismicAuthState = t.TypeOf<typeof PrismicAuthState>;
 
 const PrismicUserProfile = t.exact(
 	t.type({
@@ -349,6 +349,7 @@ export class PrismicAuthManager {
 				"\t",
 			);
 
+			await fs.mkdir(path.dirname(authStateFilePath), { recursive: true });
 			await fs.writeFile(authStateFilePath, authStateFileContents);
 		}
 

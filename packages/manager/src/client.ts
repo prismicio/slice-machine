@@ -28,3 +28,5 @@ export {
 	isUnauthorizedError,
 	isUnexpectedDataError,
 } from "./errors";
+
+export { DecodeError } from "./lib/DecodeError";

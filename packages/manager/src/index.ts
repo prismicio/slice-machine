@@ -13,6 +13,7 @@ export {
 export {
 	PrismicAuthManager,
 	PrismicUserProfile,
+	PrismicAuthState,
 } from "./auth/PrismicAuthManager";
 export { createPrismicAuthManager } from "./auth/createPrismicAuthManager";
 export {
@@ -20,3 +21,5 @@ export {
 	PrismicAuthCheckStatusResponse,
 	createPrismicAuthManagerMiddleware,
 } from "./auth/createPrismicAuthManagerMiddleware";
+
+export { DecodeError } from "./lib/DecodeError";

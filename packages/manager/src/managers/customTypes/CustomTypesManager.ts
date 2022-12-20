@@ -26,7 +26,7 @@ import { OnlyHookErrors } from "../../types";
 import { BaseManager } from "../BaseManager";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
-	ids: string[] | undefined;
+	ids: string[];
 	errors: (DecodeError | HookError)[];
 };
 
@@ -80,7 +80,7 @@ export class CustomTypesManager extends BaseManager {
 		);
 
 		return {
-			ids: data[0]?.ids,
+			ids: data[0]?.ids || [],
 			errors,
 		};
 	}
@@ -196,13 +196,15 @@ export class CustomTypesManager extends BaseManager {
 	async pushCustomType(
 		args: SliceMachineManagerPushCustomTypeArgs,
 	): Promise<void> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const authenticationToken = await this.user.getAuthenticationToken();
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+
 		// TODO: Handle errors
 		const { model } = await this.readCustomType({ id: args.id });
 
 		if (model) {
-			const authenticationToken = await this.user.getAuthenticationToken();
-			const sliceMachineConfig = await this.project.getSliceMachineConfig();
-
 			// TODO: Create a single shared client.
 			const client = prismicCustomTypesClient.createClient({
 				endpoint: API_ENDPOINTS.PrismicModels,
