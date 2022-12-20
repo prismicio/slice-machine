@@ -20,6 +20,7 @@ import {
   getFramework,
   selectIsSimulatorAvailableForFramework,
 } from "@src/modules/environment";
+import { getLibraries } from "@src/modules/slices";
 import SimulatorButton from "./SimulatorButton";
 
 const Header: React.FC<{
@@ -37,13 +38,23 @@ const Header: React.FC<{
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
 
-  const { isSimulatorAvailableForFramework, framework } = useSelector(
-    (state: SliceMachineStoreType) => ({
+  const { isSimulatorAvailableForFramework, framework, libraries } =
+    useSelector((state: SliceMachineStoreType) => ({
       isSimulatorAvailableForFramework:
         selectIsSimulatorAvailableForFramework(state),
       framework: getFramework(state),
-    })
-  );
+      libraries: getLibraries(state),
+    }));
+
+  const variationsForSlice = libraries
+    .filter((lib) => lib.isLocal)
+    .reduce<Array<string>>((acc, lib) => {
+      const variationIds = lib.components
+        .filter((slice) => slice.model.id === component.model.id)
+        .flatMap((slice) => slice.model.variations)
+        .map((v) => v.id);
+      return [...acc, ...variationIds];
+    }, []);
 
   return (
     <Flex
@@ -102,6 +113,9 @@ const Header: React.FC<{
               isSimulatorAvailableForFramework={
                 isSimulatorAvailableForFramework
               }
+              variationIsInTheFileSystem={variationsForSlice.includes(
+                variation.id
+              )}
             />,
             <Button
               label="Save to File System"
