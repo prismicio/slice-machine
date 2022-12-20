@@ -54,7 +54,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
   return (
     <Flex
       sx={{
-        p: "16px 16px 16px 24px",
+        p: "16px",
         display: "flex",
         bg: "grey07",
         gridTemplateRows: "1fr",
