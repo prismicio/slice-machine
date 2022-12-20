@@ -100,7 +100,7 @@ const Header: React.FC<{
             <SimulatorButton
               framework={framework}
               isSimulatorAvailableForFramework={
-                isSimulatorAvailableForFramework && !isTouched
+                isSimulatorAvailableForFramework
               }
               isTouched={!!isTouched}
             />,

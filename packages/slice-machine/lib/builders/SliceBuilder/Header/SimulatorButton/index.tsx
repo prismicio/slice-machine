@@ -20,13 +20,130 @@ import {
 import Tracker from "@src/tracking/client";
 import Video from "@components/CloudVideo";
 
+const SimulatorNotSupportedTooltip: React.FC<{
+  framework: Frameworks;
+  linkToStorybookDocs: string;
+}> = ({ framework, linkToStorybookDocs }) => (
+  <ReactTooltip
+    clickable
+    place="bottom"
+    effect="solid"
+    delayHide={500}
+    id="simulator-not-supported"
+  >
+    <Text as="b">Framework "{framework}" not supported</Text>
+    <Text as="p">
+      Slice Simulator does not support your framework yet.
+      <br />
+      You can{" "}
+      <Link sx={{ color: "#FFF" }} target="_blank" href={linkToStorybookDocs}>
+        install Storybook
+      </Link>{" "}
+      instead.
+    </Text>
+  </ReactTooltip>
+);
+
+const SimulatorOnboardingTooltip: React.FC<{
+  framework: Frameworks;
+  onCloseToolTip: () => void;
+  version: string;
+}> = ({ framework, onCloseToolTip, version }) => {
+  const { theme } = useThemeUI();
+  return (
+    <ReactTooltip
+      clickable
+      border={false}
+      place="bottom"
+      effect="solid"
+      id="simulator-tooltip"
+      className={style.tooltip}
+      arrowColor="#5842C3"
+      afterHide={onCloseToolTip}
+      event="none"
+      textColor={String(theme.colors?.textClear)}
+    >
+      <Flex
+        sx={{
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "12px 16px",
+        }}
+        data-testid="simulator-tooltip"
+      >
+        <Text sx={{ color: "#FFF", fontSize: "12px", fontWeight: "600" }}>
+          Simulate your slices
+        </Text>
+        <Close
+          data-testid="simulator-tooltip-close-button"
+          onClick={onCloseToolTip}
+          sx={{
+            width: "26px",
+            color: "#FFF",
+          }}
+        />
+      </Flex>
+      <Box sx={{ bg: "#FFF" }}>
+        <Video
+          loop={false}
+          autoPlay={false}
+          publicId={VIDEO_SIMULATOR_TOOLTIP}
+          poster="/simulator-video-thumbnail.png"
+          onPlay={() => {
+            void Tracker.get().trackClickOnVideoTutorials(
+              framework,
+              version,
+              VIDEO_SIMULATOR_TOOLTIP
+            );
+          }}
+        />
+        <Box sx={{ p: "16px" }}>
+          <Text sx={{ fontSize: "12px", lineHeight: "16px" }}>
+            Minimize context-switching by previewing your Slice components in
+            the simulator.
+          </Text>
+
+          <Flex
+            sx={{
+              alignItems: "center",
+              justifyContent: "flex-end",
+              mt: "24px",
+            }}
+          >
+            <Button
+              label="Got it"
+              variant="xs"
+              sx={{
+                cursor: "pointer",
+                fontFamily: "body",
+              }}
+              onClick={onCloseToolTip}
+            />
+          </Flex>
+        </Box>
+      </Box>
+    </ReactTooltip>
+  );
+};
+
+const NeedToSaveTooltip: React.FC = () => (
+  <ReactTooltip
+    clickable
+    place="bottom"
+    effect="solid"
+    delayHide={100}
+    id="needs-save"
+  >
+    Please save before running the simulator.
+  </ReactTooltip>
+);
+
 const SimulatorButton: React.FC<{
   framework: Frameworks;
   isSimulatorAvailableForFramework: boolean;
   isTouched: boolean;
 }> = ({ framework, isSimulatorAvailableForFramework, isTouched }) => {
   const router = useRouter();
-  const { theme } = useThemeUI();
 
   const ref = useRef<HTMLButtonElement | null>(null);
 
@@ -60,6 +177,8 @@ const SimulatorButton: React.FC<{
 
   const disabled = !isSimulatorAvailableForFramework || isTouched;
 
+  console.log({ isTouched, isSimulatorAvailableForFramework });
+
   return (
     <>
       <Button
@@ -71,7 +190,7 @@ const SimulatorButton: React.FC<{
         data-testid="simulator-open-button"
         data-for={
           isSimulatorAvailableForFramework
-            ? "simulator-tooltip"
+            ? "needs-save"
             : "simulator-not-supported"
         }
         onClick={() => {
@@ -82,107 +201,20 @@ const SimulatorButton: React.FC<{
         variant={disabled ? "disabledSecondary" : "secondary"}
       />
       {isSimulatorAvailableForFramework ? (
-        <>
-          {!hasSeenSimulatorTooTip ? (
-            <ReactTooltip
-              clickable
-              border={false}
-              place="bottom"
-              effect="solid"
-              id="simulator-tooltip"
-              className={style.tooltip}
-              arrowColor="#5842C3"
-              afterHide={onCloseToolTip}
-              event="none"
-              textColor={String(theme.colors?.textClear)}
-            >
-              <Flex
-                sx={{
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "12px 16px",
-                }}
-                data-testid="simulator-tooltip"
-              >
-                <Text
-                  sx={{ color: "#FFF", fontSize: "12px", fontWeight: "600" }}
-                >
-                  Simulate your slices
-                </Text>
-                <Close
-                  data-testid="simulator-tooltip-close-button"
-                  onClick={onCloseToolTip}
-                  sx={{
-                    width: "26px",
-                    color: "#FFF",
-                  }}
-                />
-              </Flex>
-              <Box sx={{ bg: "#FFF" }}>
-                <Video
-                  loop={false}
-                  autoPlay={false}
-                  publicId={VIDEO_SIMULATOR_TOOLTIP}
-                  poster="/simulator-video-thumbnail.png"
-                  onPlay={() => {
-                    void Tracker.get().trackClickOnVideoTutorials(
-                      framework,
-                      version,
-                      VIDEO_SIMULATOR_TOOLTIP
-                    );
-                  }}
-                />
-                <Box sx={{ p: "16px" }}>
-                  <Text sx={{ fontSize: "12px", lineHeight: "16px" }}>
-                    Minimize context-switching by previewing your Slice
-                    components in the simulator.
-                  </Text>
-
-                  <Flex
-                    sx={{
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      mt: "24px",
-                    }}
-                  >
-                    <Button
-                      label="Got it"
-                      variant="xs"
-                      sx={{
-                        cursor: "pointer",
-                        fontFamily: "body",
-                      }}
-                      onClick={onCloseToolTip}
-                    />
-                  </Flex>
-                </Box>
-              </Box>
-            </ReactTooltip>
-          ) : null}
-        </>
+        !hasSeenSimulatorTooTip ? (
+          <SimulatorOnboardingTooltip
+            framework={framework}
+            onCloseToolTip={onCloseToolTip}
+            version={version}
+          />
+        ) : isTouched ? (
+          <NeedToSaveTooltip />
+        ) : null
       ) : (
-        <ReactTooltip
-          clickable
-          place="bottom"
-          effect="solid"
-          delayHide={500}
-          id="simulator-not-supported"
-        >
-          <Text as="b">Framework "{framework}" not supported</Text>
-          <Text as="p">
-            Slice Simulator does not support your framework yet.
-            <br />
-            You can{" "}
-            <Link
-              sx={{ color: "#FFF" }}
-              target="_blank"
-              href={linkToStorybookDocs}
-            >
-              install Storybook
-            </Link>{" "}
-            instead.
-          </Text>
-        </ReactTooltip>
+        <SimulatorNotSupportedTooltip
+          framework={framework}
+          linkToStorybookDocs={linkToStorybookDocs}
+        />
       )}
     </>
   );
