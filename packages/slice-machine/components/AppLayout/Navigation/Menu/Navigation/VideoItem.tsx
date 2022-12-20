@@ -1,4 +1,4 @@
-import { type FC, useCallback, useRef } from "react";
+import { type FC, useCallback, useRef, RefCallback } from "react";
 import ReactTooltip from "react-tooltip";
 import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 import { MdPlayCircleFilled } from "react-icons/md";
@@ -33,24 +33,21 @@ const VideoItem: FC<VideoItemProps> = ({
     onClose();
   };
 
-  const timeoutIdRef = useRef<ReturnType<typeof setTimeout>>();
-  const tooltipRef = useCallback(
-    (target: Element | null) => {
-      clearTimeout(timeoutIdRef.current);
-      ReactTooltip.hide(target ?? undefined);
-      if (target && !hasSeenTutorialsTooTip) {
-        timeoutIdRef.current = setTimeout(() => {
-          ReactTooltip.show(target);
-        }, 5_000);
-      }
-    },
-    [hasSeenTutorialsTooTip]
-  );
+  const ref = useRef<HTMLDivElement | null>(null);
+  const setRef: RefCallback<HTMLDivElement> = useCallback((node) => {
+    if (ref.current) {
+      return;
+    }
+    if (node && !hasSeenTutorialsTooTip) {
+      setTimeout(() => ReactTooltip.show(node), 5000);
+    }
+    ref.current = node;
+  }, []);
 
   return (
     <>
       <Item
-        ref={tooltipRef}
+        ref={setRef}
         data-for={id}
         data-tip=""
         data-testid="video-toolbar"
