@@ -84,6 +84,7 @@ const Header: React.FC<{
           }}
           Actions={[
             <SliceMachineIconButton
+              key="header-edit-button"
               Icon={MdModeEdit}
               label="Edit slice name"
               data-cy="edit-slice-name"
@@ -98,6 +99,7 @@ const Header: React.FC<{
               }}
             />,
             <SimulatorButton
+              key="header-simulator-button"
               framework={framework}
               isSimulatorAvailableForFramework={
                 isSimulatorAvailableForFramework
@@ -105,6 +107,7 @@ const Header: React.FC<{
               isTouched={!!isTouched}
             />,
             <Button
+              key="header-save-button"
               label="Save to File System"
               isLoading={isLoading}
               disabled={!isTouched || isLoading}
