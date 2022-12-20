@@ -84,8 +84,8 @@ export const UNIVERSAL: Framework = {
 	},
 };
 
-export const detectFramework = async (): Promise<Framework> => {
-	const path = join(process.cwd(), "package.json");
+export const detectFramework = async (cwd: string): Promise<Framework> => {
+	const path = join(cwd, "package.json");
 
 	let allDependencies: Record<string, string>;
 	try {

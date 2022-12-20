@@ -13,6 +13,7 @@ import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
 
 import { BaseManager } from "../BaseManager";
+import { format } from "../../lib/format";
 
 type ProjectManagerGetSliceMachineConfigPathArgs = {
 	ignoreCache?: boolean;
@@ -26,8 +27,9 @@ type ProjectManagerCheckIsTypeScriptArgs = {
 	rootOverride?: string;
 };
 
-type ProjectManagerUpdateSliceMachineConfigArgs = {
-	searchAndReplaceMap: Record<string, string | RegExp>;
+type ProjectManagerWriteSliceMachineConfigArgs = {
+	config: SliceMachineConfig;
+	path?: string;
 };
 
 export class ProjectManager extends BaseManager {
@@ -70,13 +72,18 @@ export class ProjectManager extends BaseManager {
 		return this._cachedRoot;
 	}
 
-	async suggestSliceMachineConfigPath(): Promise<string> {
-		const possibleRootPackageJSON = await locateFileUpward("package.json", {
+	async suggestRoot(): Promise<string> {
+		const suggestedRootPackageJSON = await locateFileUpward("package.json", {
 			startDir: this.cwd,
 		});
-		const possibleRoot = path.dirname(possibleRootPackageJSON);
 
-		return path.resolve(possibleRoot, SLICE_MACHINE_CONFIG_FILENAME);
+		return path.dirname(suggestedRootPackageJSON);
+	}
+
+	async suggestSliceMachineConfigPath(): Promise<string> {
+		const suggestedRoot = await this.suggestRoot();
+
+		return path.resolve(suggestedRoot, SLICE_MACHINE_CONFIG_FILENAME);
 	}
 
 	async checkIsTypeScript(
@@ -97,31 +104,18 @@ export class ProjectManager extends BaseManager {
 		}
 	}
 
-	// TODO: This is a temporary strategy for upading Slice Machine
-	// configuration based on string search & replace, e.g.
-	// `this.updateSliceMachineConfig({ "200629-sms-hoy":
-	// /__PRISMIC_REPOSITORY_NAME/g })` replaces all occurence of
-	// "__PRISMIC_REPOSITORY_NAME" with "200629-sms-hoy". We'll need
-	// something stronger/more convenient for starters.
-	//
-	// TOOD: Replace this method with something that programmatically
-	// updates `slicemachine.config.json`. Since it is now a JSON file, we
-	// can update values programmatically rather than with search and
-	// replace.
-	async updateSliceMachineConfig(
-		args: ProjectManagerUpdateSliceMachineConfigArgs,
+	async writeSliceMachineConfig(
+		args: ProjectManagerWriteSliceMachineConfigArgs,
 	): Promise<void> {
-		const configFilePath = await this.getSliceMachineConfigPath();
+		const configFilePath =
+			args.path || (await this.getSliceMachineConfigPath());
 
-		let rawConfig = await fs.readFile(configFilePath, "utf-8");
+		const config = await format(
+			JSON.stringify(args.config, null, 2),
+			configFilePath,
+		);
 
-		for (const replacement in args.searchAndReplaceMap) {
-			const searchPattern = args.searchAndReplaceMap[replacement];
-
-			rawConfig = rawConfig.replace(searchPattern, replacement);
-		}
-
-		await fs.writeFile(configFilePath, rawConfig);
+		await fs.writeFile(configFilePath, config, "utf-8");
 		delete this._cachedSliceMachineConfig; // Clear config cache
 	}
 

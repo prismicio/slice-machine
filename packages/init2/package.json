@@ -46,7 +46,6 @@
 		"@lihbr/listr-update-renderer": "^0.5.3",
 		"@slicemachine/manager": "^0.1.0",
 		"chalk": "^4.1.2",
-		"common-tags": "^1.8.2",
 		"execa": "^6.1.0",
 		"globby": "^13.1.2",
 		"listr": "^0.14.3",
@@ -54,15 +53,12 @@
 		"meow": "^11.0.0",
 		"open": "^8.4.0",
 		"prompts": "^2.4.2",
-		"prettier": "^2.8.0",
 		"semver": "^7.3.8"
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^8.1.0",
 		"@types/listr": "^0.14.4",
-		"@types/common-tags": "^1.8.1",
 		"@types/prompts": "^2.4.2",
-		"@types/prettier": "^2.7.1",
 		"@types/semver": "^7.3.13",
 		"@typescript-eslint/eslint-plugin": "^5.44.0",
 		"@typescript-eslint/parser": "^5.44.0",
