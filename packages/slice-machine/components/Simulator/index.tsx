@@ -285,7 +285,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   content={editorContent}
                   onContentChange={(c) => {
                     setEditorState(c as SharedSliceContent);
-                    Tracker.get().editor.trackWidgetUsed();
+                    Tracker.get().editor.trackWidgetUsed(slice.model.id);
                   }}
                   sharedSlice={sharedSlice}
                 />

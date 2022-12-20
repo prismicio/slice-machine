@@ -202,6 +202,9 @@ export interface ChangesPushed extends BaseTrackingEvent {
 
 export interface EditorWidgetUsed extends BaseTrackingEvent {
   name: EventNames.EditorWidgetUsed;
+  props: {
+    sliceId: string;
+  };
 }
 
 export type TrackingEvents =
