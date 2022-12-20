@@ -134,7 +134,7 @@ const NeedToSaveTooltip: React.FC = () => (
     delayHide={100}
     id="simulator-button-tooltip"
   >
-    Please save before running the simulator.
+    Save your work in order to simulate
   </ReactTooltip>
 );
 
