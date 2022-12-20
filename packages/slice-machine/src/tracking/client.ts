@@ -312,13 +312,14 @@ export class SMTracker {
     startNewSession: () => {
       this.#startedNewEditorSession = true;
     },
-    trackWidgetUsed: () => {
+    trackWidgetUsed: (sliceId: string) => {
       if (!this.#startedNewEditorSession) return;
 
       this.#startedNewEditorSession = false;
 
       void this.#trackEvent({
         name: EventNames.EditorWidgetUsed,
+        props: { sliceId },
       });
     },
   };

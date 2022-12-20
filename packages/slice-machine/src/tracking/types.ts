@@ -26,7 +26,7 @@ export enum EventNames {
   ScreenshotTaken = "SliceMachine Screenshot Taken",
   ChangesPushed = "SliceMachine Changes Pushed",
 
-  EditorWidgetUsed = "Editor Widget Used",
+  EditorWidgetUsed = "SliceMachine Editor Widget Used",
 }
 
 type BaseTrackingEvent = {
@@ -202,6 +202,9 @@ export interface ChangesPushed extends BaseTrackingEvent {
 
 export interface EditorWidgetUsed extends BaseTrackingEvent {
   name: EventNames.EditorWidgetUsed;
+  props: {
+    sliceId: string;
+  };
 }
 
 export type TrackingEvents =
