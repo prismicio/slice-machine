@@ -33,6 +33,7 @@ import {
 import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
 import { isApiError } from "../../../lib/models/server/ApiResult";
 import tracking from "./tracking";
+import changelog from "./changelog";
 
 router.use(
   "/__preview",
@@ -194,12 +195,12 @@ router.post(
 router.post(
   "/custom-types/save",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  async function (
+  function (
     req: express.Request<undefined, undefined, SaveCustomTypeBody>,
     res: express.Response
-  ): Promise<Express.Response> {
+  ): Express.Response {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const payload = await saveCustomType(req);
+    const payload = saveCustomType(req);
     return res.status(200).json(payload);
   }
 );
@@ -311,6 +312,19 @@ router.post(
 // Sentry Proxy
 // eslint-disable-next-line @typescript-eslint/no-misused-promises,
 router.post("/t", plainTextBodyParser, WithEnv(sentryHandler));
+
+router.get(
+  "/changelog",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  async function (
+    _req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await changelog();
+
+    return res.status(200).json(payload);
+  }
+);
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
 router.use("*", async function (req: express.Request, res: express.Response) {

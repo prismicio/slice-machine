@@ -15,8 +15,8 @@ import * as Libraries from "@slicemachine/core/build/libraries";
 import { Component, Slices } from "@slicemachine/core/build/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
-export default async function handler(req: { body: SaveCustomTypeBody }) {
-  const { env } = await getEnv();
+export default function handler(req: { body: SaveCustomTypeBody }) {
+  const { env } = getEnv();
   const { model, mockConfig } = req.body;
 
   const mockPath = GeneratedCustomTypesPaths(env.cwd)

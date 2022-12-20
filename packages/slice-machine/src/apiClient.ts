@@ -15,6 +15,7 @@ import {
 } from "../lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ComponentMocks } from "@slicemachine/core/build/models";
+import { PackageChangelog } from "@lib/models/common/versions";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -159,3 +160,9 @@ export const saveSliceMock = (payload: SaveSliceMockRequest) =>
   axios
     .post<SaveSliceMockRequest>("/api/slices/mock", payload)
     .then((res) => res.data);
+
+export const getChangelogApiClient = (): Promise<PackageChangelog> => {
+  return axios
+    .get<PackageChangelog>(`/api/changelog`, defaultAxiosConfig)
+    .then((response) => response.data);
+};
