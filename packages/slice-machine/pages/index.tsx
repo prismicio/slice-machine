@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Flex, Link as ThemeLink, Text } from "theme-ui";
 
 import Container from "@components/Container";

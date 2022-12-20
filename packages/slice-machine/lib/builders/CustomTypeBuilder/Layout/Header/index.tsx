@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Text, useThemeUI } from "theme-ui";
+import { Text, useThemeUI } from "theme-ui";
 
 import Header from "@components/Header";
 

@@ -30,6 +30,14 @@ const server = setupServer(
   })
 );
 
+const ResizeObserverMock = jest
+  .fn<(fn: ResizeObserverCallback) => ResizeObserver>()
+  .mockImplementation(() => ({
+    disconnect: jest.fn(),
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+  }));
+
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
@@ -47,6 +55,7 @@ describe("Custom Type Builder", () => {
 
   beforeEach(async () => {
     mockRouter.setCurrentUrl("/");
+    window.ResizeObserver = ResizeObserverMock;
   });
 
   const libraries = [
