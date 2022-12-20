@@ -101,7 +101,11 @@ const Changes: React.FunctionComponent = () => {
         sx={{ flex: 1, display: "flex", flexDirection: "column" }}
       >
         <Header
-          ActionButton={
+          link={{
+            Element: <Text>Changes</Text>,
+            href: "/changes",
+          }}
+          Actions={[
             <Button
               label="Push Changes"
               onClick={handlePush}
@@ -114,11 +118,10 @@ const Changes: React.FunctionComponent = () => {
                 isSyncing
               }
               Icon={MdLoop}
+              iconFill="#FFFFFF"
               data-cy="push-changes"
-            />
-          }
-          MainBreadcrumb={<Text ml={2}>Changes</Text>}
-          breadrumbHref="/changes"
+            />,
+          ]}
         />
         {PageContent}
       </Box>

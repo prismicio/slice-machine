@@ -51,6 +51,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             variant="secondarySmall"
             sx={{ fontWeight: "bold" }}
             Icon={AiOutlineCamera}
+            iconFill="#1A1523"
             label="Update screenshot"
           />
         )}

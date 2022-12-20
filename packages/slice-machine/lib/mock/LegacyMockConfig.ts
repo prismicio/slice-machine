@@ -17,7 +17,6 @@ import {
   GeoPointMockConfig,
   BooleanMockConfig,
   SelectMockConfig,
-  ImageMockConfig,
   LinkMockConfig,
   ExternalLinkConfig,
   MediaLinkConfig,
@@ -75,13 +74,6 @@ export const NonEmptyText = new t.Type<
     ),
   (s) => s
 );
-
-export const ImageLegacyMockConfig = t.exact(
-  t.partial({
-    content: NonEmptyText,
-  })
-);
-export type ImageLegacyMockConfig = t.TypeOf<typeof ImageLegacyMockConfig>;
 
 export const RichTextLegacyMockConfig = t.exact(
   t.partial({
@@ -206,7 +198,6 @@ export const NestableLegacyMockConfig = t.union([
   SelectLegacyMockConfig,
   LinkLegacyMockConfig,
   RichTextLegacyMockConfig,
-  ImageLegacyMockConfig,
 ]);
 export type NestableLegacyMockConfig = t.TypeOf<
   typeof NestableLegacyMockConfig
@@ -371,20 +362,6 @@ export function buildNestableMockConfig(
           };
         }
       )(LinkLegacyMockConfig.decode(fieldMockConfig));
-    }
-    case WidgetTypes.Image: {
-      return fold(
-        () => {
-          console.warn(`couldn't parse the Image mock config.`);
-          return undefined;
-        },
-        (config: ImageLegacyMockConfig): ImageMockConfig => {
-          return {
-            type: WidgetTypes.Image,
-            value: config.content,
-          };
-        }
-      )(ImageLegacyMockConfig.decode(fieldMockConfig));
     }
     case WidgetTypes.RichText: {
       return fold(

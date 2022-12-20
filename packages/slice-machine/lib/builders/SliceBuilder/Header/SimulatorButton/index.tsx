@@ -63,6 +63,7 @@ const SimulatorButton: React.FC<{
         data-tip
         ref={setRef}
         Icon={BsPlayCircle}
+        iconFill="#6F6E77"
         label="Simulate Slice"
         data-testid="simulator-open-button"
         data-for={
@@ -78,9 +79,6 @@ const SimulatorButton: React.FC<{
         variant={
           isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"
         }
-        sx={{
-          mr: "8px",
-        }}
       />
       {isSimulatorAvailableForFramework ? (
         <>

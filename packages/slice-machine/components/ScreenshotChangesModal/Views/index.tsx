@@ -80,6 +80,7 @@ const VariationScreenshot: React.FC<{
             }}
             onClick={openSimulator}
             Icon={AiOutlineEye}
+            iconFill="#1A1523"
             label={"Capture screenshot from Slice Simulator"}
           />
         ) : null}
