@@ -21,7 +21,7 @@ const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
   modules: [["@nuxtjs/prismic", {
     endpoint: smConfig.apiEndpoint|| ""
   }], ["nuxt-sm"]],
-  
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: ["vue-slicezone", "nuxt-sm"]
@@ -33,20 +33,18 @@ const SliceSimulatorPageCreationInstruction = `<template>
       <SliceZone v-bind="props" />
     </SliceSimulator>
   </template>
-  
+
   <script>
   import { SliceSimulator } from "@prismicio/slice-simulator-vue";
   import SliceZone from "vue-slicezone";
-  
-  import state from "~/.slicemachine/libraries-state.json";
-  
+
   export default {
     components: {
       SliceSimulator,
       SliceZone
     },
     data() {
-      return { state };
+      return { state: {} };
     }
   }
   </script>

@@ -21,7 +21,7 @@ const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
   modules: [["@nuxtjs/prismic", {
     endpoint: smConfig.apiEndpoint|| ""
   }]],
-  
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: ["@prismicio/vue"]
@@ -38,18 +38,16 @@ const SliceSimulatorPageCreationInstruction = `<template>
 import { SliceSimulator } from "@prismicio/slice-simulator-vue";
 import { components } from "~/slices"
 
-import state from "~/.slicemachine/libraries-state.json";
-
 export default {
   components: {
     SliceSimulator,
   },
   data() {
-    return { state, components };
+    return { state: {}, components };
   }
 }
 </script>
-  
+
   `;
 
 const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = () => {
