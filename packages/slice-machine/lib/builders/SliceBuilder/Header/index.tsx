@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Box, Flex, Text, useThemeUI } from "theme-ui";
 import VariationModal from "./VariationModal";
 import { useRouter } from "next/router";
@@ -33,11 +33,6 @@ const Header: React.FC<{
 }> = ({ component, isTouched, variation, onSave, isLoading }) => {
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
-  const sliceNameRef = useRef<HTMLSpanElement>();
-  const isSliceNameOverflowing = Boolean(
-    sliceNameRef.current &&
-      sliceNameRef.current?.offsetWidth < sliceNameRef.current?.scrollWidth
-  );
 
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
