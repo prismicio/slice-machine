@@ -142,6 +142,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         isLoading={isSavingScreenshot}
         Icon={AiFillCamera}
         iconSize={20}
+        iconFill="#6F6E77"
         variant="secondary"
         disabled={actionsDisabled}
         sx={{

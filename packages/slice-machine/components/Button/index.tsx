@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 
 import { Button as ThemeUIButton, ButtonProps, Spinner } from "theme-ui";
 import { IconType } from "react-icons";
@@ -9,6 +9,7 @@ export interface SmButtonProps extends ButtonProps {
   isLoading?: boolean;
   "data-cy"?: string;
   iconSize?: number;
+  iconFill?: string;
 }
 
 // Small helper to allow us to target spinner and icon in the CY
@@ -39,6 +40,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
       onClick,
       sx = {},
       iconSize = 16,
+      iconFill,
       variant = "primary",
       ...rest
     },
@@ -75,6 +77,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
           {Icon && (
             <Icon
               size={iconSize}
+              fill={iconFill}
               data-cy={cyIdBuilder(rest["data-cy"], "icon")}
             />
           )}

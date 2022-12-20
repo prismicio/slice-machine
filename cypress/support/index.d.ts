@@ -21,5 +21,8 @@ declare namespace Cypress {
     getSliceMachineUSerContext(): Chainable<
       undefined | Record<string, unknown>
     >;
+    getInputByLabel<E extends Node = HTMLElement>(
+      label: string
+    ): Chainable<JQuery<E>>;
   }
 }

@@ -33,6 +33,7 @@ import { updateSliceMock } from "@src/modules/slices";
 import { modalOpenCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { checkSimulatorSetup } from "@src/apiClient";
+import { updateSelectedSliceMocks } from "@src/modules/selectedSlice/actions";
 
 const dummySimulatorState: SimulatorStoreType = initialState;
 
@@ -185,6 +186,7 @@ describe("[Simulator module]", () => {
           })
         )
         .put(updateSliceMock(payload.payload))
+        .put(updateSelectedSliceMocks({ mocks: payload.payload.mock }))
         .put(saveSliceMockCreator.success())
         .run();
 

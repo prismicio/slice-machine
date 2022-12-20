@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.1.16-dev-alpha.6",
+  "version": "1.1.16-dev-alpha.12",
   "description": "The easiest way to add Slice Machine to your project",
   "license": "MIT",
   "bin": {
@@ -21,8 +21,8 @@
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
     "@prismicio/types-internal": "^1.5.3",
-    "@slicemachine/client": "1.1.16-dev-alpha.6",
-    "@slicemachine/core": "1.1.16-dev-alpha.6",
+    "@slicemachine/client": "1.1.16-dev-alpha.12",
+    "@slicemachine/core": "1.1.16-dev-alpha.12",
     "adm-zip": "^0.5.9",
     "analytics-node": "^6.0.0",
     "axios": "^0.24.0",

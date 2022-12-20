@@ -71,6 +71,7 @@ const CustomTypeHeader = () => {
               color: "#4E4E55",
               backgroundColor: "#F3F5F7",
               border: "1px solid #3E3E4826",
+              marginRight: "8px",
             }}
           />,
           <Button
@@ -79,6 +80,7 @@ const CustomTypeHeader = () => {
             disabled={!hasPendingModifications || isSavingCustomType}
             onClick={saveCustomType}
             Icon={AiFillSave}
+            iconFill="#FFFFFF"
             data-cy="builder-save-button"
           />,
         ]}
