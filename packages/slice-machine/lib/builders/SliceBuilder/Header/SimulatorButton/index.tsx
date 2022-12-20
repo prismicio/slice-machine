@@ -177,29 +177,32 @@ const SimulatorButton: React.FC<{
 
   const disabled = !isSimulatorAvailableForFramework || isTouched;
 
-  console.log({ isTouched, isSimulatorAvailableForFramework });
-
   return (
     <>
-      <Button
-        data-tip
-        ref={setRef}
-        Icon={BsPlayCircle}
-        iconFill="#6F6E77"
-        label="Simulate Slice"
-        data-testid="simulator-open-button"
+      <span
+        data-tip={true}
+        data-tip-disable={false}
         data-for={
           isSimulatorAvailableForFramework
             ? "needs-save"
             : "simulator-not-supported"
         }
-        onClick={() => {
-          onCloseToolTip();
-          window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID);
-        }}
-        disabled={disabled}
-        variant={disabled ? "disabledSecondary" : "secondary"}
-      />
+      >
+        <Button
+          data-tip
+          ref={setRef}
+          Icon={BsPlayCircle}
+          iconFill="#6F6E77"
+          label="Simulate Slice"
+          data-testid="simulator-open-button"
+          onClick={() => {
+            onCloseToolTip();
+            window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID);
+          }}
+          disabled={disabled}
+          variant={disabled ? "disabledSecondary" : "secondary"}
+        />
+      </span>
       {isSimulatorAvailableForFramework ? (
         !hasSeenSimulatorTooTip ? (
           <SimulatorOnboardingTooltip
