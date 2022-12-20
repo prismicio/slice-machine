@@ -1,9 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import {
-  SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
-  SliceMachineManagerClient,
-  SliceMachineManagerPushSliceReturnType,
-} from "@slicemachine/core2/client";
+import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import {
   CustomTypes,
@@ -23,13 +19,13 @@ import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
 
 import { managerClient } from "./managerClient";
 
-const defaultAxiosConfig = {
-  withCredentials: true,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-};
+// const defaultAxiosConfig = {
+//   withCredentials: true,
+//   headers: {
+//     Accept: "application/json",
+//     "Content-Type": "application/json",
+//   },
+// };
 
 /** State Routes **/
 
@@ -264,13 +260,33 @@ export const pushSliceApiClient = async (
 
 /** Auth Routes **/
 
-export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
-  axios.post("/api/auth/start", {}, defaultAxiosConfig);
+export const startAuth = async (): Promise<void> => {
+  return await managerClient.user.logout();
 
-export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
-  axios
-    .post("/api/auth/status", {}, defaultAxiosConfig)
-    .then((r: AxiosResponse<CheckAuthStatusResponse>) => r.data);
+  // return axios.post("/api/auth/start", {}, defaultAxiosConfig);
+};
+
+export const checkAuthStatus = async (): Promise<CheckAuthStatusResponse> => {
+  const isLoggedIn = await managerClient.user.checkIsLoggedIn();
+
+  if (isLoggedIn) {
+    const profile = await managerClient.user.getProfile();
+
+    return {
+      status: "ok",
+      shortId: profile.shortId,
+      intercomHash: profile.intercomHash,
+    };
+  } else {
+    return {
+      status: "pending",
+    };
+  }
+
+  // return axios
+  //   .post("/api/auth/status", {}, defaultAxiosConfig)
+  //   .then((r: AxiosResponse<CheckAuthStatusResponse>) => r.data);
+};
 
 /** Simulator Routes **/
 

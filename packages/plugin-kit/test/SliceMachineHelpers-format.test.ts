@@ -88,3 +88,19 @@ it("uses Prettier config file relative to the filepath when it exists", async ()
 
 	await fs.rm(project.root, { recursive: true });
 });
+
+it("removes newline at end of result if `includeNewlineAtEnd` is false", async () => {
+	const adapter = createTestAdapter();
+	const project = createSliceMachineProject(adapter);
+
+	const pluginRunner = createSliceMachinePluginRunner({ project });
+	await pluginRunner.init();
+
+	const input = "* List item";
+	const filePath = path.join(project.root, "foo.md");
+
+	const res = await pluginRunner.rawHelpers.format(input, filePath, {
+		includeNewlineAtEnd: false,
+	});
+	expect(res).toBe("- List item");
+});

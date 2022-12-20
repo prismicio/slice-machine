@@ -36,7 +36,7 @@
     "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
-    "@slicemachine/core2": "^0.1.0",
+    "@slicemachine/manager": "^0.1.0",
     "start-slicemachine": "^0.1.0",
     "@babel/register": "^7.17.7",
     "@prismicio/mocks": "^0.1.8",

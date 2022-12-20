@@ -4,7 +4,7 @@ import {
 	PrismicUserProfile,
 	SliceMachineManager,
 	createSliceMachineManager,
-} from "@slicemachine/core2";
+} from "@slicemachine/manager";
 import chalk from "chalk";
 import open from "open";
 
@@ -104,7 +104,10 @@ export class StartSliceMachineProcess {
 		// Prepare the manager for Slice Machine actions.
 		await Promise.all([
 			this._sliceMachineManager.screenshots.initBrowserContext(),
-			this._sliceMachineManager.screenshots.initS3ACL(),
+			profile
+				? this._sliceMachineManager.user.refreshAuthenticationToken()
+				: undefined,
+			profile ? this._sliceMachineManager.screenshots.initS3ACL() : undefined,
 		]);
 	}
 

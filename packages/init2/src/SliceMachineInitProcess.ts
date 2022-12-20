@@ -12,7 +12,7 @@ import {
 	PrismicUserProfile,
 	PrismicRepository,
 	SliceMachineManager,
-} from "@slicemachine/core2";
+} from "@slicemachine/manager";
 
 import { detectFramework, Framework } from "./lib/framework";
 import {
@@ -689,26 +689,26 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					if (sliceMachineConfigExists) {
 						parentTask.title = "Updating Slice Machine configuration...";
 						await this.manager.project.updateSliceMachineConfig({
-							[this.context.repository.domain]: /__PRISMIC_REPOSITORY_NAME/g,
+							searchAndReplaceMap: {
+								[this.context.repository.domain]: /__PRISMIC_REPOSITORY_NAME/g,
+							},
 						});
 						parentTask.title = "Updated Slice Machine configuration";
 					} else {
 						parentTask.title = "Creating Slice Machine configuration...";
 
-						const cwd = process.cwd();
 						const sliceMachineConfigPath =
-							await this.manager.project.suggestSliceMachineConfigPath(cwd);
+							await this.manager.project.suggestSliceMachineConfigPath();
 
 						// Default config is the same for TypeScript and JavaScript as of today
 						const defaultSliceMachineConfig = await format(
-							`
-							export default {
+							JSON.stringify({
+								// TODO: Update _latest to a real value
 								_latest: "legacy",
-								repositoryName: "${this.context.repository.domain}",
-								adapter: "${this.context.framework.adapterName}",
+								repositoryName: this.context.repository.domain,
+								adapter: this.context.framework.adapterName,
 								libraries: ["./slices"],
-							};
-							`,
+							}),
 							sliceMachineConfigPath,
 						);
 
