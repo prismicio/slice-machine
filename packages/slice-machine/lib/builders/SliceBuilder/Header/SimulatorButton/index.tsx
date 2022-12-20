@@ -29,7 +29,7 @@ const SimulatorNotSupportedTooltip: React.FC<{
     place="bottom"
     effect="solid"
     delayHide={500}
-    id="simulator-not-supported"
+    id="simulator-button-tooltip"
   >
     <Text as="b">Framework "{framework}" not supported</Text>
     <Text as="p">
@@ -56,7 +56,7 @@ const SimulatorOnboardingTooltip: React.FC<{
       border={false}
       place="bottom"
       effect="solid"
-      id="simulator-tooltip"
+      id="simulator-button-tooltip"
       className={style.tooltip}
       arrowColor="#5842C3"
       afterHide={onCloseToolTip}
@@ -132,7 +132,7 @@ const NeedToSaveTooltip: React.FC = () => (
     place="bottom"
     effect="solid"
     delayHide={100}
-    id="needs-save"
+    id="simulator-button-tooltip"
   >
     Please save before running the simulator.
   </ReactTooltip>
@@ -182,15 +182,11 @@ const SimulatorButton: React.FC<{
       <span
         data-tip={true}
         data-tip-disable={false}
-        data-for={
-          isSimulatorAvailableForFramework
-            ? "needs-save"
-            : "simulator-not-supported"
-        }
+        data-for={"simulator-button-tooltip"}
+        ref={setRef}
       >
         <Button
           data-tip
-          ref={setRef}
           Icon={BsPlayCircle}
           iconFill="#6F6E77"
           label="Simulate Slice"
