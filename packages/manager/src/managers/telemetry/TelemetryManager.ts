@@ -45,7 +45,14 @@ export class TelemetryManager extends BaseManager {
 			return;
 		} catch {}
 
-		this._enabled = readPrismicrc().telemetry !== false;
+		let root: string;
+		try {
+			root = await this.project.getRoot();
+		} catch {
+			root = await this.project.suggestRoot();
+		}
+
+		this._enabled = readPrismicrc(root).telemetry !== false;
 		this._segmentClient = new SegmentClient(API_TOKENS.SegmentKey, {
 			// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
 			flushAt: 1,
