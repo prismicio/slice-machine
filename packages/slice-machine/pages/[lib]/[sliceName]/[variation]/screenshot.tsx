@@ -44,9 +44,6 @@ const Screenshot: ComponentWithSliceProps = ({ slice, variation }) => {
       }}
     >
       <IframeRenderer
-        sx={{
-          height: "100%",
-        }}
         simulatorUrl={simulatorUrl}
         apiContent={apiContent}
         screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
