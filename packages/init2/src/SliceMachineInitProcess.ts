@@ -32,16 +32,23 @@ import { prompt } from "./lib/prompt";
 import { assertExists } from "./lib/assertExists";
 
 export type SliceMachineInitProcessOptions = {
-	input: string[];
 	repository?: string;
-	push: boolean;
-	pushSlices: boolean;
-	pushCustomTypes: boolean;
-	pushDocuments: boolean;
+	push?: boolean;
+	pushSlices?: boolean;
+	pushCustomTypes?: boolean;
+	pushDocuments?: boolean;
+	cwd?: string;
 } & Record<string, unknown>;
 
+const DEFAULT_OPTIONS: SliceMachineInitProcessOptions = {
+	push: true,
+	pushSlices: true,
+	pushCustomTypes: true,
+	pushDocuments: true,
+};
+
 export const createSliceMachineInitProcess = (
-	options: SliceMachineInitProcessOptions,
+	options?: SliceMachineInitProcessOptions,
 ): SliceMachineInitProcess => {
 	return new SliceMachineInitProcess(options);
 };
@@ -64,9 +71,9 @@ export class SliceMachineInitProcess {
 
 	protected context: SliceMachineInitProcessContext;
 
-	constructor(options: SliceMachineInitProcessOptions) {
-		this.options = options;
-		this.manager = createSliceMachineManager();
+	constructor(options?: SliceMachineInitProcessOptions) {
+		this.options = { ...DEFAULT_OPTIONS, options };
+		this.manager = createSliceMachineManager({ cwd: options?.cwd });
 
 		this.context = {};
 	}
@@ -919,6 +926,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 			},
 		]);
 	}
+
+	// TODO: Add Slice Machine script to package.json
 
 	protected initializePlugins(): Promise<void> {
 		return listrRun([

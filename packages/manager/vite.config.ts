@@ -21,6 +21,9 @@ export default defineConfig({
 				client: "./src/client.ts",
 			},
 		},
+		rollupOptions: {
+			external: ["readable-web-to-node-stream"],
+		},
 	},
 	test: {
 		coverage: {
