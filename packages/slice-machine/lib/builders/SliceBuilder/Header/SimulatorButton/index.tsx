@@ -79,9 +79,6 @@ const SimulatorButton: React.FC<{
         variant={
           isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"
         }
-        sx={{
-          mr: "8px",
-        }}
       />
       {isSimulatorAvailableForFramework ? (
         <>
