@@ -23,7 +23,8 @@ import Video from "@components/CloudVideo";
 const SimulatorButton: React.FC<{
   framework: Frameworks;
   isSimulatorAvailableForFramework: boolean;
-}> = ({ framework, isSimulatorAvailableForFramework }) => {
+  isTouched: boolean;
+}> = ({ framework, isSimulatorAvailableForFramework, isTouched }) => {
   const router = useRouter();
   const { theme } = useThemeUI();
 
@@ -57,6 +58,8 @@ const SimulatorButton: React.FC<{
     }
   };
 
+  const disabled = !isSimulatorAvailableForFramework || isTouched;
+
   return (
     <>
       <Button
@@ -75,10 +78,8 @@ const SimulatorButton: React.FC<{
           onCloseToolTip();
           window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID);
         }}
-        disabled={!isSimulatorAvailableForFramework}
-        variant={
-          isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"
-        }
+        disabled={disabled}
+        variant={disabled ? "disabledSecondary" : "secondary"}
       />
       {isSimulatorAvailableForFramework ? (
         <>

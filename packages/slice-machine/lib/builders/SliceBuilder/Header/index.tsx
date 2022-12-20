@@ -100,8 +100,9 @@ const Header: React.FC<{
             <SimulatorButton
               framework={framework}
               isSimulatorAvailableForFramework={
-                isSimulatorAvailableForFramework
+                isSimulatorAvailableForFramework && !isTouched
               }
+              isTouched={!!isTouched}
             />,
             <Button
               label="Save to File System"
