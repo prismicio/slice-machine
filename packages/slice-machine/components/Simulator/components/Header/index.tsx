@@ -142,7 +142,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
           data-cy="save-mock"
           onClick={onSaveMock}
           label="Save mock content"
-          disabled={savingMock}
+          disabled={savingMock || actionsDisabled}
           sx={{
             padding: "8px 16px",
             borderRadius: "6px",
