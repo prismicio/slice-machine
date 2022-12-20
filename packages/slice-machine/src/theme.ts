@@ -389,6 +389,33 @@ const AppTheme = (): Theme =>
           boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
         },
       },
+      secondaryMedium: {
+        padding: "4px 8px",
+        borderRadius: "6px",
+        fontSize: "14px",
+        fontWeight: "bold",
+        lineHeight: "24px",
+        letterSpacing: "-0.15px",
+        color: "whiteButtonText",
+        border: "1px solid #DCDBDD",
+        backgroundColor: "white",
+        boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        cursor: "pointer",
+        "&:focus": {
+          boxShadow: "0px 0px 0px 3px rgba(124, 102, 220, 0.3)",
+          border: "1px solid #6E56CF",
+        },
+        "&:hover": {
+          backgroundColor: "#F4F2F4",
+        },
+        "&:active": {
+          backgroundColor: "#F4F2F4",
+          boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+        },
+        "&:disabled": {
+          color: "#908E96",
+        },
+      },
       darkSmall: {
         borderRadius: "4px",
         color: "white",

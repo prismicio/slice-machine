@@ -72,6 +72,32 @@ describe("Create Slices", () => {
 
     cy.get("[data-cy=rename-slice-modal]").should("not.exist");
 
+    // add a variation
+
+    const getInputByLabel = (label) =>
+      cy
+        .contains("label", label)
+        .invoke("attr", "for")
+        .then((id) => cy.get("#" + id));
+
+    cy.get("button").contains("Default").click();
+    cy.contains("+ Add new variation").click();
+    getInputByLabel("Variation name*").type("foo");
+    getInputByLabel("Variation ID*").clear().type("bar");
+    cy.get("#variation-add").submit();
+    cy.location("pathname", { timeout: 20000 }).should(
+      "eq",
+      `/${lib}/${editedSliceName}/bar`
+    );
+    cy.get("button").contains("foo").click();
+    cy.contains("Default").click();
+    cy.location("pathname", { timeout: 20000 }).should(
+      "eq",
+      `/${lib}/${editedSliceName}/default`
+    );
+
+    cy.contains("Save to File System").click();
+
     // simulator
 
     cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
@@ -98,17 +124,39 @@ describe("Create Slices", () => {
 
     cy.get("[data-testid=simulator-open-button]").click();
 
-    cy.get("[contenteditable]").first().clear().type("👋");
+    cy.get("[contenteditable]").first().clear();
+    cy.get("[contenteditable]").first().type("👋");
 
     cy.get("[data-cy=save-mock]").click();
 
     cy.wait(1000);
 
+    cy.get("button").contains("Default").click();
+    cy.contains("foo").click();
+
+    cy.wait(1000);
+
+    cy.get("[contenteditable]").first().clear();
+    cy.get("[contenteditable]").first().type("🎉");
+
+    cy.get("[data-cy=save-mock]").click();
+
+    cy.wait(1000);
+
+    cy.get("button").contains("foo").click();
+    cy.contains("Default").click();
+
     cy.readFile(pathToMock, "utf-8")
       .its(0)
-      .its("primary.title.value")
+      .its("primary.description.value")
       .its(0)
       .its("content.text")
       .should("equal", "👋");
+    cy.readFile(pathToMock, "utf-8")
+      .its(1)
+      .its("primary.description.value")
+      .its(0)
+      .its("content.text")
+      .should("equal", "🎉");
   });
 });

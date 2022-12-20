@@ -114,6 +114,7 @@ const Changes: React.FunctionComponent = () => {
                 isSyncing
               }
               Icon={MdLoop}
+              iconFill="#FFFFFF"
               data-cy="push-changes"
             />
           }

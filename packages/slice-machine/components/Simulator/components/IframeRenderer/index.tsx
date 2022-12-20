@@ -6,12 +6,6 @@ import { ThemeUIStyleObject } from "@theme-ui/css";
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { useSelector } from "react-redux";
-import {
-  selectIframeStatus,
-  selectIsWaitingForIFrameCheck,
-} from "@src/modules/simulator";
-import { SliceMachineStoreType } from "@src/redux/type";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
@@ -68,14 +62,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   sx,
 }) => {
   const [client, refCallback] = useSimulatorClient();
-  const [triggerReload, setTriggerReload] = useState<number>(1);
-
-  const { iframeStatus, isWaitingForIFrameCheck } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      iframeStatus: selectIframeStatus(state),
-      isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
-    })
-  );
 
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
@@ -109,12 +95,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       });
   }, [client, apiContent, simulatorUrl]);
 
-  useEffect(() => {
-    if (!isWaitingForIFrameCheck && iframeStatus !== "ok") {
-      setTriggerReload((n) => n + 1);
-    }
-  }, [iframeStatus, isWaitingForIFrameCheck]);
-
   return (
     <Box
       sx={{
@@ -140,7 +120,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           backgroundColor: "headSection",
           backgroundRepeat: "repeat",
           backgroundSize: "10px",
-          border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
           mx: "auto",
           flexDirection: "column",
           justifyContent: "center",
@@ -161,7 +140,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             <iframe
               id="__iframe-renderer"
               ref={refCallback}
-              key={triggerReload}
               src={simulatorUrl}
               style={{
                 border: "none",
