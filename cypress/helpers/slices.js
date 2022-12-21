@@ -8,7 +8,6 @@ import {
 
 export function createSlice(lib, id, name) {
   cy.visit(`/slices`);
-  cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
 
   // create slice
   cy.get("[data-cy=empty-state-main-button]").click();
@@ -40,7 +39,6 @@ export function createSlice(lib, id, name) {
 
 export function renameSlice(lib, actualName, newName) {
   cy.visit(`/${lib}/${actualName}/default`);
-  cy.waitUntil(() => cy.get('[data-cy="edit-slice-name"]'));
 
   // edit slice name
   cy.get('[data-cy="edit-slice-name"]').click();
@@ -52,22 +50,22 @@ export function renameSlice(lib, actualName, newName) {
     "eq",
     `/${lib}/${newName}/default`
   );
-  cy.waitUntil(() => cy.get('[data-cy="slice-and-variation-name-header"]'));
   cy.get('[data-cy="slice-and-variation-name-header"]').contains(
     `/ ${newName} / Default`
   );
   cy.get("[data-cy=rename-slice-modal]").should("not.exist");
-  cy.readFile(SLICE_MODEL(newName));
+  cy.readFile(SLICE_MODEL(newName)).then(model => {
+    expect(JSON.stringify(model)).to.contain(newName)
+  })
 }
 
 export function addStaticFieldToSlice(
   fieldType,
   fieldName,
-  fieldId,
-  isFirstField /* boolean | undefined */
+  fieldId
 ) {
   const selectors = {
-    addField: isFirstField ? "empty-Static-add-field" : "add-Static-field",
+    addField: "add-Static-field",
     fieldArea: "slice-non-repeatable-zone",
     fieldPreId: "slice.primary",
   };
@@ -78,13 +76,10 @@ export function addStaticFieldToSlice(
 export function addRepeatableFieldToSlice(
   fieldType,
   fieldName,
-  fieldId,
-  isFirstField /* boolean | undefined */
+  fieldId
 ) {
   const selectors = {
-    addField: isFirstField
-      ? "empty-Repeatable-add-field"
-      : "add-Repeatable-field",
+    addField: "add-Repeatable-field",
     fieldArea: "slice-repeatable-zone",
     fieldPreId: "slice.items[i]",
   };
@@ -95,11 +90,19 @@ export function addRepeatableFieldToSlice(
 function addFieldToSlice(selectors, fieldType, fieldName, fieldId) {
   cy.get(`[data-cy="${selectors.addField}"]`).first().click();
   cy.get(`[data-cy='${fieldType}']`).click();
-  cy.get("[data-cy=new-field-name-input]").clear().type(fieldName);
+
+  cy.get("[data-cy=new-field-name-input]").clear()
+  // waiting for the field to re-render
+  cy.wait(500);
+  cy.get("[data-cy=new-field-name-input]").type(fieldName);
 
   // API Id modification for UID field is disabled
-  if (fieldType != "UID")
-    cy.get("[data-cy=new-field-id-input]").clear().type(fieldId);
+  if (fieldType != "UID") {
+    cy.get("[data-cy=new-field-id-input]").clear();
+    // waiting for the field to re-render
+    cy.wait(500);
+    cy.get("[data-cy=new-field-id-input]").type(fieldId);
+  }
 
   cy.get("[data-cy=new-field-form]").submit();
 
@@ -107,4 +110,11 @@ function addFieldToSlice(selectors, fieldType, fieldName, fieldId) {
     cy.contains(fieldName).should("be.visible");
     cy.contains(`${selectors.fieldPreId}.${fieldId}`).should("be.visible");
   });
+}
+
+export function saveSliceModifications() {
+  cy.get("[data-cy=builder-save-button]").should("not.be.disabled");
+  cy.get("[data-cy=builder-save-button]").click();
+  cy.get("[data-cy=builder-save-button-spinner]").should("be.visible");
+  cy.get("[data-cy=builder-save-button-icon]").should("be.visible");
 }

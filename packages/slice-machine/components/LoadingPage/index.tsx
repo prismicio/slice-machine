@@ -3,7 +3,7 @@ import FullPage from "../FullPage";
 
 const LoadingPage: React.FunctionComponent = () => (
   <FullPage>
-    <Spinner variant="styles.spinner" />
+    <Spinner variant="styles.spinner" id="spinner" />
   </FullPage>
 );
 

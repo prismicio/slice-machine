@@ -44,6 +44,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         title: "Update Slice Zone",
       }}
       omitFooter={!projectHasAvailableSlices}
+      dataCy="update-slices-modal"
     >
       {projectHasAvailableSlices
         ? ({ values }) => (

@@ -11,7 +11,6 @@ describe("Duplicate custom types", () => {
     cy.createCustomType(customTypeId, customTypeName);
 
     cy.visit("/");
-    cy.waitUntil(() => cy.get("[data-cy=create-ct]")).then(() => true);
     cy.get("[data-cy=create-ct]").click();
     cy.get("[data-cy=create-ct-modal]").should("be.visible");
 
@@ -29,7 +28,6 @@ describe("Duplicate custom types", () => {
     cy.createCustomType(customTypeId, customTypeName);
 
     cy.visit("/");
-    cy.waitUntil(() => cy.get("[data-cy=create-ct]")).then(() => true);
     cy.get("[data-cy=create-ct]").click();
     cy.get("[data-cy=create-ct-modal]").should("be.visible");
 
