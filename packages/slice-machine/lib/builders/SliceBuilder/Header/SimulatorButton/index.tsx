@@ -191,7 +191,7 @@ const SimulatorButton: React.FC<{
         <Button
           data-tip
           Icon={BsPlayCircle}
-          iconFill="#6F6E77"
+          iconFill={disabled ? "#C9D0D8" : "#6F6E77"}
           label="Simulate Slice"
           data-testid="simulator-open-button"
           onClick={() => {
