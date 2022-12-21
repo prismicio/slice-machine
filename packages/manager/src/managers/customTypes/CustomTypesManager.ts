@@ -57,7 +57,7 @@ type SliceMachineManagerReadCustomTypeMocksConfigArgsReturnType = {
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
 	customTypeID: string;
 	// TODO
-	mocksConfig?: Record<string, unknown>;
+	mocksConfig: Record<string, unknown>;
 };
 
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {

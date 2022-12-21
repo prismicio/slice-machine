@@ -27,7 +27,7 @@ export function assertS3ACLInitialized(
 ): asserts s3ACL is NonNullable<typeof s3ACL> {
 	if (s3ACL == undefined) {
 		throw new Error(
-			"An S3 ACL has not yet been initialized. Run `SliceMachineManager.screenshots.prototype.initS3ACL()` before re-calling this method.",
+			"An S3 ACL has not been initialized. Run `SliceMachineManager.screenshots.prototype.initS3ACL()` before re-calling this method.",
 		);
 	}
 }
@@ -37,7 +37,7 @@ export function assertBrowserContextInitialized(
 ): asserts browserContext is NonNullable<typeof browserContext> {
 	if (browserContext == undefined) {
 		throw new Error(
-			"A browser context has not yet been initialized. Run `SliceMachineManager.screenshots.prototype.initBrowserContext()` before re-calling this method.",
+			"A browser context has not been initialized. Run `SliceMachineManager.screenshots.prototype.initBrowserContext()` before re-calling this method.",
 		);
 	}
 }
@@ -63,11 +63,11 @@ type ScreenshotsManagerUploadScreenshotReturnType = {
 };
 
 export class ScreenshotsManager extends BaseManager {
-	browserContext: BrowserContext | undefined;
-	s3ACL: S3ACL | undefined;
+	private _browserContext: BrowserContext | undefined;
+	private _s3ACL: S3ACL | undefined;
 
 	async initBrowserContext(): Promise<void> {
-		if (this.browserContext) {
+		if (this._browserContext) {
 			return;
 		}
 
@@ -76,11 +76,11 @@ export class ScreenshotsManager extends BaseManager {
 
 		const browser = await puppeteer.launch();
 
-		this.browserContext = await browser.createIncognitoBrowserContext();
+		this._browserContext = await browser.createIncognitoBrowserContext();
 	}
 
 	async initS3ACL(): Promise<void> {
-		if (this.s3ACL) {
+		if (this._s3ACL) {
 			return;
 		}
 
@@ -124,7 +124,7 @@ export class ScreenshotsManager extends BaseManager {
 			throw new Error(`Failed to create an AWS ACL: ${errorMessage}`);
 		}
 
-		this.s3ACL = {
+		this._s3ACL = {
 			uploadEndpoint: awsACL.values.url,
 			requiredFormDataFields: awsACL.values.fields,
 			imgixEndpoint: awsACL.imgixEndpoint,
@@ -136,7 +136,7 @@ export class ScreenshotsManager extends BaseManager {
 	async captureSliceSimulatorScreenshot(
 		args: ScreenshotsManagerCaptureSliceSimulatorScreenshotArgs,
 	): Promise<ScreenshotsManagerCaptureSliceSimulatorScreenshotReturnType> {
-		assertBrowserContextInitialized(this.browserContext);
+		assertBrowserContextInitialized(this._browserContext);
 
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
@@ -158,7 +158,7 @@ export class ScreenshotsManager extends BaseManager {
 			throw new Error(`Slice Simulator URL is not accessible: ${url}`);
 		}
 
-		const page = await this.browserContext.newPage();
+		const page = await this._browserContext.newPage();
 		page.setViewport(args.viewport || DEFAULT_SCREENSHOT_VIEWPORT);
 
 		// TODO: I removed `goto`'s `{ waitUntil: "networkidle2" }` option.
@@ -187,16 +187,14 @@ export class ScreenshotsManager extends BaseManager {
 	async uploadScreenshot(
 		args: ScreenshotsManagerUploadScreenshotArgs,
 	): Promise<ScreenshotsManagerUploadScreenshotReturnType> {
-		await this.initS3ACL();
-
-		assertS3ACLInitialized(this.s3ACL);
+		assertS3ACLInitialized(this._s3ACL);
 
 		const formData = new FormData();
 
-		for (const requiredFormDataFieldKey in this.s3ACL.requiredFormDataFields) {
+		for (const requiredFormDataFieldKey in this._s3ACL.requiredFormDataFields) {
 			formData.append(
 				requiredFormDataFieldKey,
-				this.s3ACL.requiredFormDataFields[requiredFormDataFieldKey],
+				this._s3ACL.requiredFormDataFields[requiredFormDataFieldKey],
 			);
 		}
 
@@ -215,13 +213,13 @@ export class ScreenshotsManager extends BaseManager {
 
 		formData.set("file", new Blob([args.data], { type: fileType?.mime }));
 
-		const res = await fetch(this.s3ACL.uploadEndpoint, {
+		const res = await fetch(this._s3ACL.uploadEndpoint, {
 			method: "POST",
 			body: formData,
 		});
 
 		if (res.ok) {
-			const url = new URL(key, this.s3ACL.imgixEndpoint);
+			const url = new URL(key, this._s3ACL.imgixEndpoint);
 			url.searchParams.set("auto", "compress,format");
 
 			return {

@@ -2,18 +2,18 @@ import { expect, it, vi } from "vitest";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
-
-import { createSliceMachineManager } from "../src";
 import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
 
-it("returns the adapter's `custom-type:read` return value", async (ctx) => {
-	const model = ctx.mockPrismic.model.customType();
+import { createSliceMachineManager } from "../src";
+
+it("returns the Slice's variation screenshot asset", async () => {
+	const imageData = Buffer.from("image-data");
 	const hookHandler = vi.fn(() => {
-		return { model };
+		return { data: imageData };
 	});
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:read", hookHandler);
+			hook("slice:asset:read", hookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -24,14 +24,20 @@ it("returns the adapter's `custom-type:read` return value", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.readCustomType({ id: model.id });
+	const res = await manager.slices.readSliceScreenshot({
+		libraryID: "foo",
+		sliceID: "bar",
+		variationID: "baz",
+	});
 
 	expect(res).toStrictEqual({
-		model,
+		data: imageData,
 		errors: [],
 	});
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
-		id: model.id,
+		libraryID: "foo",
+		sliceID: "bar",
+		assetID: `screenshot-baz.png`,
 	});
 });
 
@@ -39,8 +45,8 @@ it("validates the adapter's return value", async () => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			// @ts-expect-error - We are purposely returning an invalid value.
-			hook("custom-type:read", () => {
-				return { model: Symbol() };
+			hook("slice:asset:read", () => {
+				return { data: Symbol() };
 			});
 		},
 	});
@@ -52,28 +58,33 @@ it("validates the adapter's return value", async () => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.readCustomType({ id: "id" });
+	const res = await manager.slices.readSliceScreenshot({
+		libraryID: "foo",
+		sliceID: "bar",
+		variationID: "baz",
+	});
 
 	expect(res).toStrictEqual({
-		model: undefined,
+		data: undefined,
 		errors: [expect.objectContaining({ name: "DecodeError" })],
 	});
 });
 
-it("ignores plugins that implement `custom-type-library:read`", async (ctx) => {
-	const model = ctx.mockPrismic.model.customType();
+it("ignores plugins that implement `custom-type:read:asset`", async () => {
+	const imageData = Buffer.from("image-data");
+	const ignoredImageData = Buffer.from("ignored-image-data");
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:read", () => {
-				return { model };
+			hook("slice:asset:read", () => {
+				return { data: imageData };
 			});
 		},
 	});
 	const plugin = createTestPlugin({
 		meta: { name: "ignored-plugin" },
 		setup: ({ hook }) => {
-			hook("custom-type:read", () => {
-				return { model: ctx.mockPrismic.model.customType() };
+			hook("slice:asset:read", () => {
+				return { data: ignoredImageData };
 			});
 		},
 	});
@@ -88,10 +99,14 @@ it("ignores plugins that implement `custom-type-library:read`", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.readCustomType({ id: model.id });
+	const res = await manager.slices.readSliceScreenshot({
+		libraryID: "foo",
+		sliceID: "bar",
+		variationID: "baz",
+	});
 
 	expect(res).toStrictEqual({
-		model,
+		data: imageData,
 		errors: [],
 	});
 });
@@ -101,6 +116,10 @@ it("throws if plugins have not been initialized", async () => {
 	const manager = createSliceMachineManager({ cwd });
 
 	await expect(async () => {
-		await manager.customTypes.readCustomType({ id: "id" });
+		await manager.slices.readSliceScreenshot({
+			libraryID: "foo",
+			sliceID: "bar",
+			variationID: "baz",
+		});
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });

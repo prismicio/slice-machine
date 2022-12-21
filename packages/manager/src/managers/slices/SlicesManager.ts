@@ -31,7 +31,7 @@ import { UnauthorizedError } from "../../errors";
 import { BaseManager } from "../BaseManager";
 
 type SlicesManagerReadSliceLibraryReturnType = {
-	sliceIDs: string[] | undefined;
+	sliceIDs: string[];
 	errors: (DecodeError | HookError)[];
 };
 
@@ -155,7 +155,7 @@ export class SlicesManager extends BaseManager {
 		);
 
 		return {
-			sliceIDs: data[0]?.sliceIDs,
+			sliceIDs: data[0]?.sliceIDs ?? [],
 			errors: errors,
 		};
 	}

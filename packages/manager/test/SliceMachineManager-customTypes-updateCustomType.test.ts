@@ -2,6 +2,7 @@ import { expect, it, vi } from "vitest";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
+import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
 
 import { createSliceMachineManager } from "../src";
 
@@ -23,15 +24,7 @@ it("calls plugins' `custom-type:update` hook", async (ctx) => {
 
 	const res = await manager.customTypes.updateCustomType({ model });
 
-	expect(hookHandler).toHaveBeenCalledWith(
-		{ model },
-		expect.objectContaining({
-			actions: expect.anything(),
-			helpers: expect.anything(),
-			project: expect.anything(),
-			options: expect.anything(),
-		}),
-	);
+	expectHookHandlerToHaveBeenCalledWithData(hookHandler, { model });
 	expect(res).toStrictEqual({
 		errors: [],
 	});

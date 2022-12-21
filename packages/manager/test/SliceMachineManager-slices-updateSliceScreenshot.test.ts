@@ -6,12 +6,12 @@ import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expec
 
 import { createSliceMachineManager } from "../src";
 
-it("calls plugins' `custom-type:delete` hook", async (ctx) => {
-	const model = ctx.mockPrismic.model.customType();
+it("saves a Slice variation's screenshot as an asset", async () => {
+	const imageData = Buffer.from("image-data");
 	const hookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:delete", hookHandler);
+			hook("slice:asset:update", hookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -22,21 +22,36 @@ it("calls plugins' `custom-type:delete` hook", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.deleteCustomType({ model });
+	const res = await manager.slices.updateSliceScreenshot({
+		libraryID: "foo",
+		sliceID: "bar",
+		variationID: "baz",
+		data: imageData,
+	});
 
-	expectHookHandlerToHaveBeenCalledWithData(hookHandler, { model });
 	expect(res).toStrictEqual({
 		errors: [],
 	});
+	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
+		libraryID: "foo",
+		sliceID: "bar",
+		asset: {
+			id: `screenshot-baz.png`,
+			data: imageData,
+		},
+	});
 });
 
-it("throws if plugins have not been initialized", async (ctx) => {
+it("throws if plugins have not been initialized", async () => {
 	const cwd = await createTestProject();
 	const manager = createSliceMachineManager({ cwd });
 
 	await expect(async () => {
-		await manager.customTypes.deleteCustomType({
-			model: ctx.mockPrismic.model.customType(),
+		await manager.slices.updateSliceScreenshot({
+			libraryID: "foo",
+			sliceID: "bar",
+			variationID: "baz",
+			data: Buffer.from("image-data"),
 		});
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });

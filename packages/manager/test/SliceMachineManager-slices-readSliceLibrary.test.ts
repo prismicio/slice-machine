@@ -6,14 +6,14 @@ import { createTestProject } from "./__testutils__/createTestProject";
 import { createSliceMachineManager } from "../src";
 import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
 
-it("returns the adapter's `custom-type:read` return value", async (ctx) => {
-	const model = ctx.mockPrismic.model.customType();
+it("returns the adapter's `slice-library:read` return value", async () => {
+	const sliceIDs = ["id1", "id2"];
 	const hookHandler = vi.fn(() => {
-		return { model };
+		return { id: "foo", sliceIDs };
 	});
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:read", hookHandler);
+			hook("slice-library:read", hookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -24,14 +24,14 @@ it("returns the adapter's `custom-type:read` return value", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.readCustomType({ id: model.id });
+	const res = await manager.slices.readSliceLibrary({ libraryID: "foo" });
 
 	expect(res).toStrictEqual({
-		model,
+		sliceIDs: sliceIDs,
 		errors: [],
 	});
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
-		id: model.id,
+		libraryID: "foo",
 	});
 });
 
@@ -39,8 +39,8 @@ it("validates the adapter's return value", async () => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			// @ts-expect-error - We are purposely returning an invalid value.
-			hook("custom-type:read", () => {
-				return { model: Symbol() };
+			hook("slice-library:read", () => {
+				return { id: "foo", sliceIDs: [Symbol()] };
 			});
 		},
 	});
@@ -52,28 +52,31 @@ it("validates the adapter's return value", async () => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.readCustomType({ id: "id" });
+	const res = await manager.slices.readSliceLibrary({ libraryID: "foo" });
 
 	expect(res).toStrictEqual({
-		model: undefined,
-		errors: [expect.objectContaining({ name: "DecodeError" })],
+		sliceIDs: [],
+		errors: [
+			expect.objectContaining({
+				message: expect.stringMatching(/expecting string/i),
+			}),
+		],
 	});
 });
 
-it("ignores plugins that implement `custom-type-library:read`", async (ctx) => {
-	const model = ctx.mockPrismic.model.customType();
+it("ignores plugins that implement `slice-library:read`", async () => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:read", () => {
-				return { model };
+			hook("slice-library:read", () => {
+				return { id: "foo", sliceIDs: ["id"] };
 			});
 		},
 	});
 	const plugin = createTestPlugin({
 		meta: { name: "ignored-plugin" },
 		setup: ({ hook }) => {
-			hook("custom-type:read", () => {
-				return { model: ctx.mockPrismic.model.customType() };
+			hook("slice-library:read", () => {
+				return { id: "foo", sliceIDs: ["id2"] };
 			});
 		},
 	});
@@ -88,10 +91,10 @@ it("ignores plugins that implement `custom-type-library:read`", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.readCustomType({ id: model.id });
+	const res = await manager.slices.readSliceLibrary({ libraryID: "foo" });
 
 	expect(res).toStrictEqual({
-		model,
+		sliceIDs: ["id"],
 		errors: [],
 	});
 });
@@ -101,6 +104,6 @@ it("throws if plugins have not been initialized", async () => {
 	const manager = createSliceMachineManager({ cwd });
 
 	await expect(async () => {
-		await manager.customTypes.readCustomType({ id: "id" });
+		await manager.slices.readSliceLibrary({ libraryID: "foo" });
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });

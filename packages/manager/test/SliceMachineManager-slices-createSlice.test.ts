@@ -2,16 +2,16 @@ import { expect, it, vi } from "vitest";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
+import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
 
 import { createSliceMachineManager } from "../src";
 
-// TODO: test readCustomTypeMocksConfig
-it("", async (ctx) => {
-	const model = ctx.mockPrismic.model.customType();
+it("calls plugins' `slice:create` hook", async (ctx) => {
+	const model = ctx.mockPrismic.model.sharedSlice();
 	const hookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:create", hookHandler);
+			hook("slice:create", hookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -22,17 +22,12 @@ it("", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.createCustomType({ model });
+	const res = await manager.slices.createSlice({ libraryID: "foo", model });
 
-	expect(hookHandler).toHaveBeenCalledWith(
-		{ model },
-		expect.objectContaining({
-			actions: expect.anything(),
-			helpers: expect.anything(),
-			project: expect.anything(),
-			options: expect.anything(),
-		}),
-	);
+	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
+		libraryID: "foo",
+		model,
+	});
 	expect(res).toStrictEqual({
 		errors: [],
 	});
@@ -43,8 +38,9 @@ it("throws if plugins have not been initialized", async (ctx) => {
 	const manager = createSliceMachineManager({ cwd });
 
 	await expect(async () => {
-		await manager.customTypes.createCustomType({
-			model: ctx.mockPrismic.model.customType(),
+		await manager.slices.createSlice({
+			libraryID: "foo",
+			model: ctx.mockPrismic.model.sharedSlice(),
 		});
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });
