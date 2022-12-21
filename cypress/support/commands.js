@@ -15,18 +15,16 @@ import {
   renameCustomType,
   addFieldToCustomType,
   saveCustomTypeModifications,
-  addSlicesToCustomType
+  addSlicesToCustomType,
 } from "../helpers/customTypes";
 import {
   createSlice,
   renameSlice,
   addStaticFieldToSlice,
   addRepeatableFieldToSlice,
-  saveSliceModifications
+  saveSliceModifications,
 } from "../helpers/slices";
-import {
-  pushLocalChanges
-} from "../helpers/repository";
+import { pushLocalChanges } from "../helpers/repository";
 
 /* -- LOCAL STORAGE -- */
 Cypress.Commands.add("setSliceMachineUserContext", setSliceMachineUserContext);
@@ -44,7 +42,10 @@ Cypress.Commands.add("modifyFile", modifyFile);
 Cypress.Commands.add("createCustomType", createCustomType);
 Cypress.Commands.add("renameCustomType", renameCustomType);
 Cypress.Commands.add("addFieldToCustomType", addFieldToCustomType);
-Cypress.Commands.add("saveCustomTypeModifications", saveCustomTypeModifications);
+Cypress.Commands.add(
+  "saveCustomTypeModifications",
+  saveCustomTypeModifications
+);
 Cypress.Commands.add("addSlicesToCustomType", addSlicesToCustomType);
 
 /* -- SLICES -- */

@@ -31,20 +31,16 @@ export function renameCustomType(id, actualName, newName) {
     `/ ${newName} - Edited`
   );
   cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
-  cy.readFile(CUSTOM_TYPE_MODEL(id)).then(model => {
-    expect(JSON.stringify(model)).to.contain(newName)
-  })
+  cy.readFile(CUSTOM_TYPE_MODEL(id)).then((model) => {
+    expect(JSON.stringify(model)).to.contain(newName);
+  });
 }
 
-export function addFieldToCustomType(
-  fieldType,
-  fieldName,
-  fieldId
-) {
+export function addFieldToCustomType(fieldType, fieldName, fieldId) {
   cy.get(`[data-cy="add-Static-field"]`).first().click();
   cy.get(`[data-cy='${fieldType}']`).click();
 
-  cy.get("[data-cy=new-field-name-input]").clear()
+  cy.get("[data-cy=new-field-name-input]").clear();
   // waiting for the field to re-render
   cy.wait(500);
   cy.get("[data-cy=new-field-name-input]").type(fieldName);
@@ -64,15 +60,13 @@ export function addFieldToCustomType(
   });
 }
 
-export function addSlicesToCustomType(
-  sliceIds /* string[] */
-) {
+export function addSlicesToCustomType(sliceIds /* string[] */) {
   cy.get("[data-cy=update-slices]").click();
 
-  sliceIds.forEach(sliceId => {
+  sliceIds.forEach((sliceId) => {
     // forcing this because the input itself is invisible and an svg is displayed
     cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
-  })
+  });
 
   cy.get("[data-cy=update-slices-modal]").submit();
 }

@@ -54,16 +54,12 @@ export function renameSlice(lib, actualName, newName) {
     `/ ${newName} / Default`
   );
   cy.get("[data-cy=rename-slice-modal]").should("not.exist");
-  cy.readFile(SLICE_MODEL(newName)).then(model => {
-    expect(JSON.stringify(model)).to.contain(newName)
-  })
+  cy.readFile(SLICE_MODEL(newName)).then((model) => {
+    expect(JSON.stringify(model)).to.contain(newName);
+  });
 }
 
-export function addStaticFieldToSlice(
-  fieldType,
-  fieldName,
-  fieldId
-) {
+export function addStaticFieldToSlice(fieldType, fieldName, fieldId) {
   const selectors = {
     addField: "add-Static-field",
     fieldArea: "slice-non-repeatable-zone",
@@ -73,11 +69,7 @@ export function addStaticFieldToSlice(
   return addFieldToSlice(selectors, fieldType, fieldName, fieldId);
 }
 
-export function addRepeatableFieldToSlice(
-  fieldType,
-  fieldName,
-  fieldId
-) {
+export function addRepeatableFieldToSlice(fieldType, fieldName, fieldId) {
   const selectors = {
     addField: "add-Repeatable-field",
     fieldArea: "slice-repeatable-zone",
@@ -91,7 +83,7 @@ function addFieldToSlice(selectors, fieldType, fieldName, fieldId) {
   cy.get(`[data-cy="${selectors.addField}"]`).first().click();
   cy.get(`[data-cy='${fieldType}']`).click();
 
-  cy.get("[data-cy=new-field-name-input]").clear()
+  cy.get("[data-cy=new-field-name-input]").clear();
   // waiting for the field to re-render
   cy.wait(500);
   cy.get("[data-cy=new-field-name-input]").type(fieldName);

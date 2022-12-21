@@ -25,9 +25,9 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.saveCustomTypeModifications();
 
     cy.reload();
-    cy.contains('ID Field')
-    cy.contains('Key Text Field')
-    cy.contains('Rich Text Field')
+    cy.contains("ID Field");
+    cy.contains("Key Text Field");
+    cy.contains("Rich Text Field");
   });
 
   it("Create a Slice with multiple fields (repeatable and non-repeatable)", () => {
@@ -66,10 +66,10 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.saveSliceModifications();
 
     cy.reload();
-    cy.contains('Static Key Text Field')
-    cy.contains('Static Rich Text Field')
-    cy.contains('Repeatable Rich Text Field')
-    cy.contains('Repeatable Key Text Field')
+    cy.contains("Static Key Text Field");
+    cy.contains("Static Rich Text Field");
+    cy.contains("Repeatable Rich Text Field");
+    cy.contains("Repeatable Key Text Field");
   });
 
   it("Push the newly created custom type and slice", () => {
@@ -95,25 +95,27 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Displays and fill the satisfaction survey and the survey never reappears after", () => {
-    const lastSyncChange = Date.now() - (1000 * 60 * 60 * 2)
-    
+    const lastSyncChange = Date.now() - 1000 * 60 * 60 * 2;
+
     // Setting the context to display the survey
     cy.setSliceMachineUserContext({
       hasSendAReview: false,
-      lastSyncChange
+      lastSyncChange,
     });
 
     // Visit a page
-    cy.visit('/');
+    cy.visit("/");
 
-    cy.get('#review-form');
-    cy.get('[data-cy=review-form-score-3]').click();
-    cy.get('[data-cy=review-form-comment]').type('Cypress test - testing the comment of the survey');
-    cy.get('#review-form').submit();
+    cy.get("#review-form");
+    cy.get("[data-cy=review-form-score-3]").click();
+    cy.get("[data-cy=review-form-comment]").type(
+      "Cypress test - testing the comment of the survey"
+    );
+    cy.get("#review-form").submit();
 
     cy.reload();
-    cy.waitUntil(() => cy.get('[data-cy=create-ct]'));
+    cy.waitUntil(() => cy.get("[data-cy=create-ct]"));
 
-    cy.get('#review-form').should('not.exist');
-  })
+    cy.get("#review-form").should("not.exist");
+  });
 });
