@@ -115,7 +115,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
         display: "flex",
         height: "100%",
         justifyContent: "center",
-        overflowY: "hidden",
+        overflow: "hidden",
         ...(dryRun ? { display: "none" } : {}),
       }}
     >
