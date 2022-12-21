@@ -24,6 +24,7 @@ const AppTheme = (): Theme =>
         color: "#5C0C17",
       },
       greyIcon: "#6F6E77",
+      greyIconDisabled: "#C9D0D8",
       missingScreenshotBanner: {
         color: "#5C0C17",
         bg: "#FFECC7",
