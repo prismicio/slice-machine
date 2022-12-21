@@ -93,10 +93,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       });
   }, [client, apiContent, simulatorUrl]);
 
-  const [viewportSize, setViewportSize] = useState<ScreenDimensions>({
-    height: 0,
-    width: 0,
-  });
+  const [viewportSize, setViewportSize] = useState<ScreenDimensions>();
   const viewportRef = useElementSize(({ blockSize, inlineSize }) => {
     setViewportSize({ height: blockSize, width: inlineSize });
   }, []);
@@ -131,7 +128,9 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             minHeight: `${iframeSize.height}px`,
             minWidth: `${iframeSize.width}px`,
             overflowY: "auto",
-            transform: `scale(${getScaling(iframeSize, viewportSize)})`,
+            ...(viewportSize
+              ? { transform: `scale(${getScaling(iframeSize, viewportSize)})` }
+              : { display: "none" }),
           }}
         />
       ) : null}
