@@ -157,15 +157,18 @@ const SimulatorButton: React.FC<{
     })
   );
 
-  const setRef: RefCallback<HTMLButtonElement> = useCallback((node) => {
-    if (ref.current) {
-      return;
-    }
-    if (node && isSimulatorAvailableForFramework && !hasSeenSimulatorTooTip) {
-      setTimeout(() => ReactTooltip.show(node), 5000);
-    }
-    ref.current = node;
-  }, []);
+  const setRef: RefCallback<HTMLButtonElement> = useCallback(
+    (node) => {
+      if (ref.current) {
+        return;
+      }
+      if (node && isSimulatorAvailableForFramework && !hasSeenSimulatorTooTip) {
+        setTimeout(() => ReactTooltip.show(node), 5000);
+      }
+      ref.current = node;
+    },
+    [isSimulatorAvailableForFramework, hasSeenSimulatorTooTip]
+  );
 
   const onCloseToolTip = () => {
     setSeenSimulatorToolTip();

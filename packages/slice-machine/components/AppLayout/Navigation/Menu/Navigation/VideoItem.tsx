@@ -34,15 +34,18 @@ const VideoItem: FC<VideoItemProps> = ({
   };
 
   const ref = useRef<HTMLDivElement | null>(null);
-  const setRef: RefCallback<HTMLDivElement> = useCallback((node) => {
-    if (ref.current) {
-      return;
-    }
-    if (node && !hasSeenTutorialsTooTip) {
-      setTimeout(() => ReactTooltip.show(node), 5000);
-    }
-    ref.current = node;
-  }, []);
+  const setRef: RefCallback<HTMLDivElement> = useCallback(
+    (node) => {
+      if (ref.current) {
+        return;
+      }
+      if (node && !hasSeenTutorialsTooTip) {
+        setTimeout(() => ReactTooltip.show(node), 5000);
+      }
+      ref.current = node;
+    },
+    [hasSeenTutorialsTooTip]
+  );
 
   return (
     <>
