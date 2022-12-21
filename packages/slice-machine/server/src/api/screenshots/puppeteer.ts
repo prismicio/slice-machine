@@ -58,12 +58,9 @@ const generateScreenshot = async (
   try {
     Files.mkdir(path.dirname(pathToFile), { recursive: true });
 
-    await page.goto(
-      `${screenshotUrl}?screenWidth=${screenDimensions.width}&screenHeight=${screenDimensions.height}`,
-      {
-        waitUntil: "load",
-      }
-    );
+    await page.goto(screenshotUrl, {
+      waitUntil: "load",
+    });
 
     await page.waitForSelector("#__iframe-ready", { timeout: 10000 });
     const element = await page.$("#__iframe-renderer");

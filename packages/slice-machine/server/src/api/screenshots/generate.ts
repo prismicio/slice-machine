@@ -53,7 +53,7 @@ async function generateForVariation(
   screenDimensions: ScreenDimensions,
   href: string
 ): Promise<ScreenshotUI> {
-  const screenshotUrl = `${env.baseUrl}/${href}/${sliceName}/${variationId}/screenshot`;
+  const screenshotUrl = `${env.baseUrl}/${href}/${sliceName}/${variationId}/screenshot?screenWidth=${screenDimensions.width}&screenHeight=${screenDimensions.height}`;
 
   const pathToFile = NodeUtils.GeneratedPaths(env.cwd)
     .library(libraryName)
