@@ -1,5 +1,5 @@
 import "cypress-wait-until";
-import { TYPES_FILE } from "../consts";
+import { TYPES_FILE, CUSTOM_TYPE_MODEL } from "../consts";
 
 export function createCustomType(id, name) {
   cy.visit("/");
@@ -13,6 +13,7 @@ export function createCustomType(id, name) {
   cy.get("[data-cy=create-ct-modal]").submit();
   cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
   cy.readFile(TYPES_FILE).should("contains", name);
+  cy.readFile(CUSTOM_TYPE_MODEL(id));
 }
 
 export function renameCustomType(id, actualName, newName) {
@@ -32,18 +33,18 @@ export function renameCustomType(id, actualName, newName) {
     `/ ${newName} - Edited`
   );
   cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
+  cy.readFile(CUSTOM_TYPE_MODEL(id)).should("contains", newName);
 }
 
 export function addFieldToCustomType(
-  id,
   fieldType,
   fieldName,
   fieldId,
   isFirstField /* boolean | undefined */
 ) {
   const addFieldButtonSelector = isFirstField
-    ? "empty-zone-add-new-field"
-    : "add-new-field";
+    ? "empty-Static-add-field"
+    : "add-Static-field";
 
   cy.get(`[data-cy="${addFieldButtonSelector}"]`).first().click();
   cy.get(`[data-cy='${fieldType}']`).click();

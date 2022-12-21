@@ -96,7 +96,7 @@ const Zone = ({
                 ml={2}
                 variant="buttons.darkSmall"
                 onClick={() => enterSelectMode()}
-                data-cy="add-new-field"
+                data-cy={`add-${isRepeatable ? "Repeatable" : "Static"}-field`}
               >
                 <FaPlus
                   style={{

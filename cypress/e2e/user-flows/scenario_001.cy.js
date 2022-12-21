@@ -36,24 +36,14 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
 
   it("Adding fields to repeatable CT & saving", () => {
     cy.visit(`/cts/${customTypeId}`);
-    cy.waitUntil(() => cy.get(`[data-cy="empty-zone-add-new-field"]`));
+    cy.waitUntil(() => cy.get(`[data-cy="empty-Static-add-field"]`));
 
     // TODO: removing this delay will make the test flaky (because of the useServerState hook)
     cy.wait(5000);
 
-    cy.addFieldToCustomType(customTypeId, "UID", "ID Field", "uid", true);
-    cy.addFieldToCustomType(
-      customTypeId,
-      "Key Text",
-      "Key Text Field",
-      "key_text_id"
-    );
-    cy.addFieldToCustomType(
-      customTypeId,
-      "Rich Text",
-      "Rich Text Field",
-      "rich_text_id"
-    );
+    cy.addFieldToCustomType("UID", "ID Field", "uid", true);
+    cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
+    cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
 
     cy.get("[data-cy=builder-save-button]").should("not.be.disabled");
 

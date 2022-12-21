@@ -1,5 +1,10 @@
 import "cypress-wait-until";
-import { TYPES_FILE, SLICE_MOCK_FILE, LIBRARIY_STATE_FILE } from "../consts";
+import {
+  TYPES_FILE,
+  SLICE_MOCK_FILE,
+  LIBRARIY_STATE_FILE,
+  SLICE_MODEL,
+} from "../consts";
 
 export function createSlice(lib, id, name) {
   cy.visit(`/slices`);
@@ -30,6 +35,7 @@ export function createSlice(lib, id, name) {
       const got = librariesState["slices"].components[id].mocks.default;
       expect(got).to.deep.equal(want);
     });
+  cy.readFile(SLICE_MODEL(name));
 }
 
 export function renameSlice(lib, actualName, newName) {
@@ -51,4 +57,54 @@ export function renameSlice(lib, actualName, newName) {
     `/ ${newName} / Default`
   );
   cy.get("[data-cy=rename-slice-modal]").should("not.exist");
+  cy.readFile(SLICE_MODEL(newName));
+}
+
+export function addStaticFieldToSlice(
+  fieldType,
+  fieldName,
+  fieldId,
+  isFirstField /* boolean | undefined */
+) {
+  const selectors = {
+    addField: isFirstField ? "empty-Static-add-field" : "add-Static-field",
+    fieldArea: "slice-non-repeatable-zone",
+    fieldPreId: "slice.primary",
+  };
+
+  return addFieldToSlice(selectors, fieldType, fieldName, fieldId);
+}
+
+export function addRepeatableFieldToSlice(
+  fieldType,
+  fieldName,
+  fieldId,
+  isFirstField /* boolean | undefined */
+) {
+  const selectors = {
+    addField: isFirstField
+      ? "empty-Repeatable-add-field"
+      : "add-Repeatable-field",
+    fieldArea: "slice-repeatable-zone",
+    fieldPreId: "slice.items[i]",
+  };
+
+  return addFieldToSlice(selectors, fieldType, fieldName, fieldId);
+}
+
+function addFieldToSlice(selectors, fieldType, fieldName, fieldId) {
+  cy.get(`[data-cy="${selectors.addField}"]`).first().click();
+  cy.get(`[data-cy='${fieldType}']`).click();
+  cy.get("[data-cy=new-field-name-input]").clear().type(fieldName);
+
+  // API Id modification for UID field is disabled
+  if (fieldType != "UID")
+    cy.get("[data-cy=new-field-id-input]").clear().type(fieldId);
+
+  cy.get("[data-cy=new-field-form]").submit();
+
+  cy.get(`[data-cy=${selectors.fieldArea}]`).within(() => {
+    cy.contains(fieldName).should("be.visible");
+    cy.contains(`${selectors.fieldPreId}.${fieldId}`).should("be.visible");
+  });
 }
