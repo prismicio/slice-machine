@@ -10,7 +10,7 @@ import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nes
 
 jest.mock("lorem-ipsum", () => {
   return {
-    __edModule: true,
+    __esModule: true,
     LoremIpsum: jest.fn().mockImplementation(() => {
       return {
         generateParagraphs: jest.fn().mockReturnValue("Some text."),
