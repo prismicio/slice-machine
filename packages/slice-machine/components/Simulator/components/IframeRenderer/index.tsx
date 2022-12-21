@@ -140,16 +140,14 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   );
 };
 
-function getScaling(
+export function getScaling(
   { height: iframeHeight, width: iframeWidth }: ScreenDimensions,
   { height: viewportHeight, width: viewportWidth }: ScreenDimensions
 ): number {
-  const widthDiff = iframeWidth - viewportWidth;
-  const heightDiff = iframeHeight - viewportHeight;
-  if (iframeWidth > viewportWidth && widthDiff > heightDiff) {
-    return viewportWidth / iframeWidth;
-  } else if (iframeHeight > viewportHeight && heightDiff > widthDiff) {
-    return viewportHeight / iframeHeight;
+  if (iframeWidth > viewportWidth || iframeHeight > viewportHeight) {
+    return iframeWidth - viewportWidth > iframeHeight - viewportHeight
+      ? viewportWidth / iframeWidth
+      : viewportHeight / iframeHeight;
   } else {
     return 1;
   }
