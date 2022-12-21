@@ -3,6 +3,7 @@ import * as filesystemHelpers from "../helpers/filesystem";
 import * as customTypesHelpers from "../helpers/customTypes";
 import * as slicesHelpers from "../helpers/slices";
 import * as repositoryHelpers from "../helpers/repository";
+import * as imageHelpers from "../helpers/images";
 
 /* -- LOCAL STORAGE -- */
 Object.keys(localStorageHelpers).forEach((localStorageHelper) => {
@@ -33,6 +34,15 @@ Object.keys(slicesHelpers).forEach((slicesHelper) => {
 /* REPOSITORY */
 Object.keys(repositoryHelpers).forEach((repositoryHelper) => {
   Cypress.Commands.add(repositoryHelper, repositoryHelpers[repositoryHelper]);
+});
+
+/* IMAGES */
+Object.keys(imageHelpers).forEach((imageHelper) => {
+  Cypress.Commands.add(
+    imageHelper,
+    { prevSubject: true },
+    imageHelpers[imageHelper]
+  );
 });
 
 /* -- QUERIES -- */
