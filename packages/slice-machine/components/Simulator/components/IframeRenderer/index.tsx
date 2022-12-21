@@ -1,9 +1,9 @@
 import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
-import { Box, Flex } from "theme-ui";
-import { ThemeUIStyleObject } from "@theme-ui/css";
+import { Flex } from "theme-ui";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
+import { useElementSize } from "@src/hooks/useElementSize";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
@@ -51,17 +51,15 @@ type IframeRendererProps = {
   screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
   dryRun?: boolean;
-  sx?: ThemeUIStyleObject;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   apiContent,
-  screenDimensions,
+  screenDimensions: iframeSize,
   simulatorUrl,
   dryRun = false,
-  sx,
 }) => {
-  const [client, refCallback] = useSimulatorClient();
+  const [client, iframeRef] = useSimulatorClient();
 
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
@@ -95,63 +93,63 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       });
   }, [client, apiContent, simulatorUrl]);
 
+  const [viewportSize, setViewportSize] = useState<ScreenDimensions>();
+  const viewportRef = useElementSize(({ blockSize, inlineSize }) => {
+    setViewportSize({ height: blockSize, width: inlineSize });
+  }, []);
+
   return (
-    <Box
+    <Flex
+      ref={viewportRef}
       sx={{
-        height: "100%",
-        backgroundColor: "white",
+        alignItems: "center",
+        backgroundColor: "headSection",
+        backgroundImage: "url(/pattern.png)",
+        backgroundRepeat: "repeat",
+        backgroundSize: "10px",
         border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         borderRadius: 8,
+        display: "flex",
+        height: "100%",
+        justifyContent: "center",
         overflow: "hidden",
-        ...(dryRun
-          ? {
-              position: "absolute",
-              top: "0",
-              width: "0",
-              height: "0",
-            }
-          : {}),
-        ...sx,
+        ...(dryRun ? { display: "none" } : {}),
       }}
     >
-      <Flex
-        sx={{
-          backgroundImage: "url(/pattern.png)",
-          backgroundColor: "headSection",
-          backgroundRepeat: "repeat",
-          backgroundSize: "10px",
-          mx: "auto",
-          flexDirection: "column",
-          justifyContent: "center",
-          overflow: "auto",
-        }}
-      >
-        <Flex
-          sx={{
-            justifyContent: "center",
-            margin: "0 auto",
-            alignContent: "center",
-            width: screenDimensions.width,
-            height: screenDimensions.height,
+      {simulatorUrl ? (
+        <iframe
+          id="__iframe-renderer"
+          ref={iframeRef}
+          src={simulatorUrl}
+          style={{
+            border: "none",
+            maxHeight: `${iframeSize.height}px`,
+            maxWidth: `${iframeSize.width}px`,
+            minHeight: `${iframeSize.height}px`,
+            minWidth: `${iframeSize.width}px`,
+            overflowY: "auto",
+            ...(viewportSize
+              ? { transform: `scale(${getScaling(iframeSize, viewportSize)})` }
+              : { display: "none" }),
           }}
-        >
-          {client?.connected ? <div id="__iframe-ready" /> : null}
-          {simulatorUrl ? (
-            <iframe
-              id="__iframe-renderer"
-              ref={refCallback}
-              src={simulatorUrl}
-              style={{
-                border: "none",
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          ) : null}
-        </Flex>
-      </Flex>
-    </Box>
+        />
+      ) : null}
+      {client?.connected ? <div id="__iframe-ready" /> : null}
+    </Flex>
   );
 };
+
+export function getScaling(
+  { height: iframeHeight, width: iframeWidth }: ScreenDimensions,
+  { height: viewportHeight, width: viewportWidth }: ScreenDimensions
+): number {
+  if (iframeWidth > viewportWidth || iframeHeight > viewportHeight) {
+    return iframeWidth - viewportWidth > iframeHeight - viewportHeight
+      ? viewportWidth / iframeWidth
+      : viewportHeight / iframeHeight;
+  } else {
+    return 1;
+  }
+}
 
 export default IframeRenderer;

@@ -1,8 +1,4 @@
 import IframeRenderer from "@components/Simulator/components/IframeRenderer";
-import {
-  ScreenSizeOptions,
-  ScreenSizes,
-} from "@components/Simulator/components/Toolbar/ScreensizeInput";
 
 import useEditorContentOnce from "@src/hooks/useEditorContent";
 import {
@@ -12,7 +8,7 @@ import {
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FC, ReactNode } from "react";
-
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { Box } from "theme-ui";
 
@@ -24,6 +20,9 @@ const Screenshot: ComponentWithSliceProps = ({ slice, variation }) => {
   const { simulatorUrl } = useSelector((store: SliceMachineStoreType) => ({
     simulatorUrl: selectSimulatorUrl(store),
   }));
+  const router = useRouter();
+  const screenWidth = Number(router.query.screenWidth);
+  const screenHeight = Number(router.query.screenHeight);
 
   const { apiContent } = useEditorContentOnce({
     slice,
@@ -44,12 +43,12 @@ const Screenshot: ComponentWithSliceProps = ({ slice, variation }) => {
       }}
     >
       <IframeRenderer
-        sx={{
-          height: "100%",
-        }}
         simulatorUrl={simulatorUrl}
         apiContent={apiContent}
-        screenDimensions={ScreenSizes[ScreenSizeOptions.DESKTOP]}
+        screenDimensions={{
+          width: screenWidth,
+          height: screenHeight,
+        }}
       />
     </Box>
   );

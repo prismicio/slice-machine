@@ -1,17 +1,13 @@
 import NextLink from "next/link";
-import {
-  type FC,
-  type ReactElement,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { type FC, type ReactElement, useState } from "react";
 import {
   type ThemeUIStyleObject,
   Flex,
   Box,
   Link as ThemeLink,
 } from "theme-ui";
+
+import { useElementSize } from "@src/hooks/useElementSize";
 
 type HeaderProps = {
   link: {
@@ -28,23 +24,12 @@ type HeaderProps = {
 
 const Header: FC<HeaderProps> = ({ link, subtitle, Actions, sx }) => {
   const [overflowing, setOverflowing] = useState(false);
-  const resizeObserverRef = useRef<ResizeObserver>();
-  const subtitleRef = useCallback(
-    (element: HTMLDivElement | null) => {
-      if (element === null) {
-        resizeObserverRef.current?.disconnect();
-      } else {
-        resizeObserverRef.current = new ResizeObserver(() => {
-          setOverflowing(
-            subtitle ? element.offsetWidth < element.scrollWidth : false
-          );
-        });
-        resizeObserverRef.current.observe(element);
-      }
+  const subtitleRef = useElementSize<HTMLElement>(
+    (_size, element) => {
+      setOverflowing(!!subtitle && element.offsetWidth < element.scrollWidth);
     },
     [subtitle]
   );
-
   return (
     <Flex
       sx={{
