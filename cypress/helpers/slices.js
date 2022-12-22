@@ -113,6 +113,22 @@ function addFieldToSlice(selectors, fieldType, fieldName, fieldId) {
 }
 
 /**
+ * On the Slice builder, add a new variation through the variation modal.
+ *
+ * @param {string} variationName Name of the variation.
+ */
+export function addVariationToSlice(variationName) {
+  cy.get("[aria-label='Expand variations']").click({ force: true });
+  cy.contains("button", "Add new variation").click();
+
+  cy.get("[aria-modal]").within(() => {
+    cy.get('input[name="name"]').type(variationName);
+    cy.contains("button", "Submit").click();
+  });
+  cy.get("[aria-modal]").should("not.exist");
+}
+
+/**
  * On the Slice builder, save all changes.
  */
 export function saveSliceModifications() {
