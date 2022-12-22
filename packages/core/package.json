@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.16-dev-alpha.24",
+  "version": "1.1.16-dev-alpha.25",
   "private": false,
   "main": "./build/index.js",
   "engines": {
