@@ -338,8 +338,10 @@ const AppTheme = (): Theme =>
         fontFamily: "body",
         color: "textClear",
         "&:hover": {
-          bg: darken("secondary", 0.02),
-          cursor: "pointer",
+          "&:not([disabled])": {
+            bg: darken("secondary", 0.02),
+            cursor: "pointer",
+          },
         },
         "&:focus": {
           bg: darken("secondary", 0.05),
@@ -347,8 +349,10 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
         "&:active": {
-          bg: darken("secondary", 0.06),
-          outline: "none",
+          "&:not([disabled])": {
+            bg: darken("secondary", 0.06),
+            outline: "none",
+          },
         },
         "&:disabled": {
           cursor: "not-allowed",
@@ -395,6 +399,7 @@ const AppTheme = (): Theme =>
         borderRadius: "6px",
         fontSize: "14px",
         fontWeight: "bold",
+        fontFamily: "body",
         lineHeight: "24px",
         letterSpacing: "-0.15px",
         color: "whiteButtonText",
@@ -407,14 +412,20 @@ const AppTheme = (): Theme =>
           border: "1px solid #6E56CF",
         },
         "&:hover": {
-          backgroundColor: "#F4F2F4",
+          "&:not([disabled])": {
+            backgroundColor: "#F4F2F4",
+            cursor: "pointer",
+          },
         },
         "&:active": {
-          backgroundColor: "#F4F2F4",
-          boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+          "&:not([disabled])": {
+            backgroundColor: "#F4F2F4",
+            boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+          },
         },
         "&:disabled": {
           color: "#908E96",
+          cursor: "not-allowed",
         },
       },
       darkSmall: {
@@ -673,6 +684,34 @@ const AppTheme = (): Theme =>
           px: 1,
           borderRadius: "3px",
           border: (t) => `1px solid ${String(t?.colors?.borders)}`,
+        },
+      },
+      switch: {
+        height: "24px",
+        width: "45px",
+        bg: "#EDECEE",
+        "input:checked ~ &": {
+          bg: "#6E56CF",
+        },
+        "input ~ & > div": {
+          height: "20px",
+          width: "20px",
+          border: "1px solid #DCDBDD",
+          padding: "2px",
+          boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        },
+        "input:checked ~ & > div": {
+          height: "20px",
+          width: "20px",
+          border: "1px solid #5842C3",
+          padding: "2px",
+          boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        },
+        "input:checked ~ &:hover": {
+          bg: "#5842C3",
+        },
+        "input:checked ~ & > div:focus": {
+          boxShadow: "0px 0px 0px 3px rgba(124, 102, 220, 0.3)",
         },
       },
     },

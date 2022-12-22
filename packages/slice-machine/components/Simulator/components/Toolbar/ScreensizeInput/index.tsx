@@ -84,6 +84,16 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
           color: "greyIcon",
           textAlign: "center",
           paddingLeft: 26,
+          "&:disabled": {
+            cursor: "not-allowed",
+            "&:hover": {
+              border: "1px solid #E4E2E4",
+            },
+            "&:active": {
+              border: "1px solid #E4E2E4",
+              boxShadow: "none",
+            },
+          },
         }}
         onChange={onChange}
         value={startValue}

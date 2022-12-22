@@ -107,34 +107,6 @@ const Header: React.FunctionComponent<PropTypes> = ({
               checked={isDisplayEditor}
               onChange={toggleIsDisplayEditor}
               disabled={actionsDisabled}
-              sx={{
-                height: "24px",
-                width: "45px",
-                bg: "#EDECEE",
-                "input:checked ~ &": {
-                  bg: "#6E56CF",
-                },
-                "input ~ & > div": {
-                  height: "20px",
-                  width: "20px",
-                  border: "1px solid #DCDBDD",
-                  padding: "2px",
-                  boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
-                },
-                "input:checked ~ & > div": {
-                  height: "20px",
-                  width: "20px",
-                  border: "1px solid #5842C3",
-                  padding: "2px",
-                  boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
-                },
-                "input:checked ~ &:hover": {
-                  bg: "#5842C3",
-                },
-                "input:checked ~ & > div:focus": {
-                  boxShadow: "0px 0px 0px 3px rgba(124, 102, 220, 0.3)",
-                },
-              }}
             />
           </Flex>
         </Flex>
@@ -143,28 +115,16 @@ const Header: React.FunctionComponent<PropTypes> = ({
           onClick={onSaveMock}
           label="Save mock content"
           disabled={savingMock || actionsDisabled}
+          variant="primary"
           sx={{
-            padding: "8px 16px",
             borderRadius: "6px",
-            fontSize: "14px",
-            lineHeight: "24px",
-            letterSpacing: "-0.15px",
             color: "#F1EEFE",
+            fontWeight: "bold",
             border: "1px solid #5842C3",
             backgroundColor: "#6E56CF",
             boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
-            "&:focus": {
-              boxShadow: "0px 0px 0px 3px rgba(124, 102, 220, 0.3)",
-            },
             "&:hover": {
-              backgroundColor: "#5842C3",
-            },
-            "&:active": {
-              backgroundColor: "#5842C3",
-              boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
-            },
-            "&:disabled": {
-              opacity: "30%",
+              "&:not([disabled])": { backgroundColor: "#5842C3" },
             },
           }}
         />
