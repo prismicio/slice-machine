@@ -21,6 +21,9 @@ const cyIdBuilder = (dataCy: string | undefined, id: string) => {
 const spinnerColor = (variant: string) => {
   switch (variant) {
     case "white":
+    case "secondaryMedium":
+    case "secondarySmall":
+    case "secondary":
       return "#1A1523";
     default:
       return "grey01";
