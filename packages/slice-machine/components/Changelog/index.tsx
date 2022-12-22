@@ -15,13 +15,15 @@ export default function Changelog() {
     })
   );
 
+  const latestVersion = changelog.versions[0] || null;
+
   const [selectedVersion, setSelectedVersion] = useState<PackageVersion | null>(
-    changelog.versions[0] || null
+    latestVersion
   );
 
   useEffect(() => {
-    setSelectedVersion(changelog.versions[0]);
-  }, [JSON.stringify(changelog)]);
+    setSelectedVersion(latestVersion);
+  }, [latestVersion]);
 
   return (
     <Flex
