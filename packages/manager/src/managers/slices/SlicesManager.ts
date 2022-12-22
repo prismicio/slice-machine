@@ -337,6 +337,10 @@ export class SlicesManager extends BaseManager {
 	): Promise<SliceMachineManagerPushSliceReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		if (!(await this.user.checkIsLoggedIn())) {
+			throw new Error("Not logged in.");
+		}
+
 		const { model, errors: readSliceErrors } = await this.readSlice({
 			libraryID: args.libraryID,
 			sliceID: args.sliceID,

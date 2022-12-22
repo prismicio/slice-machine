@@ -97,6 +97,7 @@
 		"express": "^4.18.2",
 		"memfs": "^3.4.12",
 		"msw": "^0.49.2",
+		"parse-multipart-data": "^1.5.0",
 		"prettier": "^2.8.1",
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"size-limit": "^8.1.0",

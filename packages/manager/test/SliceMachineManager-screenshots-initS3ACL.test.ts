@@ -25,9 +25,11 @@ it("creates a reusable S3 ACL", async (ctx) => {
 	const authenticationToken = await manager.user.getAuthenticationToken();
 	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
 
-	const { createEndpoint } = mockAWSACLAPI(ctx, {
-		expectedPrismicRepository: sliceMachineConfig.repositoryName,
-		expectedAuthenticationToken: authenticationToken,
+	const { s3ACL } = mockAWSACLAPI(ctx, {
+		createEndpoint: {
+			expectedPrismicRepository: sliceMachineConfig.repositoryName,
+			expectedAuthenticationToken: authenticationToken,
+		},
 	});
 
 	// @ts-expect-error - Accessing an internal private property
@@ -37,8 +39,8 @@ it("creates a reusable S3 ACL", async (ctx) => {
 
 	// @ts-expect-error - Accessing an internal private property
 	expect(manager.screenshots._s3ACL).toStrictEqual({
-		uploadEndpoint: createEndpoint.uploadEndpoint,
-		requiredFormDataFields: createEndpoint.requiredFormDataFields,
-		imgixEndpoint: createEndpoint.imgixEndpoint,
+		uploadEndpoint: s3ACL.uploadEndpoint,
+		requiredFormDataFields: s3ACL.requiredFormDataFields,
+		imgixEndpoint: s3ACL.imgixEndpoint,
 	});
 });
