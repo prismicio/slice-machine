@@ -168,6 +168,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           },
           "&:disabled": {
             color: "#908E96",
+            cursor: "not-allowed",
           },
         }}
       />
