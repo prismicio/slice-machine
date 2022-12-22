@@ -6,12 +6,16 @@ import { useEffect, useState } from "react";
 import { PackageVersion } from "@models/common/versions";
 import { Navigation } from "./navigation";
 import { VersionDetails, ReleaseWarning } from "./versionDetails";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import LoadingPage from "@components/LoadingPage";
 
 export default function Changelog() {
-  const { changelog, packageManager } = useSelector(
+  const { changelog, packageManager, isChangelogLoading } = useSelector(
     (store: SliceMachineStoreType) => ({
       changelog: getChangelog(store),
       packageManager: getPackageManager(store),
+      isChangelogLoading: isLoading(store, LoadingKeysEnum.CHANGELOG),
     })
   );
 
@@ -25,7 +29,7 @@ export default function Changelog() {
     setSelectedVersion(latestVersion);
   }, [latestVersion]);
 
-  return (
+  return !isChangelogLoading ? (
     <Flex
       sx={{
         maxWidth: "1224px",
@@ -60,5 +64,7 @@ export default function Changelog() {
         />
       )}
     </Flex>
+  ) : (
+    <LoadingPage />
   );
 }
