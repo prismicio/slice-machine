@@ -2,7 +2,7 @@ import { Flex } from "theme-ui";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getChangelog, getPackageManager } from "@src/modules/environment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PackageVersion } from "@models/common/versions";
 import { Navigation } from "./navigation";
 import { VersionDetails, ReleaseWarning } from "./versionDetails";
@@ -15,10 +15,13 @@ export default function Changelog() {
     })
   );
 
-  // Null is when no version are found (edge case)
   const [selectedVersion, setSelectedVersion] = useState<PackageVersion | null>(
     changelog.versions[0] || null
   );
+
+  useEffect(() => {
+    setSelectedVersion(changelog.versions[0]);
+  }, [JSON.stringify(changelog)]);
 
   return (
     <Flex
