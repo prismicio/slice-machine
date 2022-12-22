@@ -4,18 +4,18 @@ describe("update notification", () => {
       statusCode: 200,
       body: {
         currentVersion: "0.5.0",
-          updateAvailable: true,
-          latestNonBreakingVersion: "1.2.3",
-          versions: [
-            {
-              versionNumber: "1000.0.0",
-              status: "PATCH",
-              releaseNote: null,
-            },
-          ]
-      }
+        updateAvailable: true,
+        latestNonBreakingVersion: "1.2.3",
+        versions: [
+          {
+            versionNumber: "1000.0.0",
+            status: "PATCH",
+            releaseNote: null,
+          },
+        ],
+      },
     });
-  };
+  }
 
   it("updates available and user has not seen the notification", () => {
     cy.setSliceMachineUserContext({});
