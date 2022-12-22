@@ -3,14 +3,7 @@ describe("simulator tooltip", () => {
   const lib = "slices";
   const sliceName = "DuplicateSlices";
   it("should display the tooltip when 'userContext.hasSeenSimulatorToolTip' is falsy and set to true when user clicks the close button", () => {
-    cy.clearLocalStorage();
-    cy.setupSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-      hasSeenSimulatorToolTip: false,
-    });
+    cy.setSliceMachineUserContext({ hasSeenSimulatorToolTip: false });
 
     cy.visit(`/${lib}/${sliceName}/default`);
 
@@ -32,14 +25,7 @@ describe("simulator tooltip", () => {
   });
 
   it("should not display when hasSeenSimulatorToolTip is truthy", () => {
-    cy.clearLocalStorage();
-    cy.setupSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-      hasSeenSimulatorToolTip: true,
-    });
+    cy.setSliceMachineUserContext({});
 
     cy.visit(`/${lib}/${sliceName}/default`);
 
@@ -50,14 +36,7 @@ describe("simulator tooltip", () => {
   });
 
   it("should close the tooltip when the user clicks the simulator button", () => {
-    cy.clearLocalStorage();
-    cy.setupSliceMachineUserContext({
-      hasSendAReview: true,
-      isOnboarded: true,
-      updatesViewed: {},
-      hasSeenTutorialsTooTip: true,
-      hasSeenSimulatorToolTip: false,
-    });
+    cy.setSliceMachineUserContext({ hasSeenSimulatorToolTip: false });
 
     cy.visit(`/${lib}/${sliceName}/default`);
 

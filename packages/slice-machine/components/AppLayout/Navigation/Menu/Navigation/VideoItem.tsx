@@ -75,6 +75,7 @@ const VideoItem: FC<VideoItemProps> = ({
           offset={{
             left: 80,
           }}
+          role="tooltip"
           getContent={() => (
             <Flex
               data-testid="video-tooltip"
