@@ -14,6 +14,7 @@ module.exports = {
     "^lib/(.*)$": "<rootDir>/lib/$1",
     "^tests/(.*)$": "<rootDir>/tests/$1",
   },
+  setupFiles: ["<rootDir>/tests/jest-setup.js"],
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": [
@@ -25,7 +26,7 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: [
-    "/node_modules/",
+    "/node_modules/(?!connected-next-router/es)/",
     "/packages/client/",
     "/packages/core/",
   ],

@@ -96,8 +96,13 @@ const CreateCustomtypeForm = ({
               label="Update Tab ID"
               placeholder="A label for selecting the tab (i.e. not used in the API)"
               error={errors.id}
+              onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
+                if (values.id !== event.target.value) {
+                  setFieldValue("id", event.target.value.trim());
+                }
+              }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFieldValue("id", e.target.value.trim());
+                setFieldValue("id", e.target.value);
                 setFieldValue("actionType", ActionType.UPDATE);
               }}
             />
@@ -107,7 +112,7 @@ const CreateCustomtypeForm = ({
               onClick={() => {
                 if (values.id && values.id.length) {
                   onSubmit({
-                    id: values.id,
+                    id: values.id.trim(),
                     actionType: ActionType.UPDATE,
                   });
                 }

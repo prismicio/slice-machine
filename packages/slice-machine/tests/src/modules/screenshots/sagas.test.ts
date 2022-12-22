@@ -7,7 +7,7 @@ import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
-import { setupServer } from "msw/lib/node";
+import { setupServer } from "msw/node";
 import { rest, ResponseComposition, RestContext, RestRequest } from "msw";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
@@ -45,6 +45,7 @@ describe("[Selected Slice sagas]", () => {
       saga.next().call(generateSliceScreenshotApiClient, {
         sliceName: dummySliceState.model.name,
         libraryName: dummySliceState.from,
+        href: dummySliceState.href,
         variationId: dummyModelVariationID,
         screenDimensions,
       });

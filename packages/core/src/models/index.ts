@@ -1,4 +1,3 @@
-export * as LibrariesState from "./LibrariesState";
 export * as CustomType from "./CustomType";
 export * from "./Library";
 export * from "./Repositories";
