@@ -1,32 +1,25 @@
 describe("update notification", () => {
-  function mockStateCall() {
-    cy.intercept("/api/state", (req) => {
-      req.continue((res) => {
-        res.body = {
-          ...res.body,
-          env: {
-            ...res.body.env,
-            changelog: {
-              ...res.body.env.changelog,
-              updateAvailable: true,
-              latestNonBreakingVersion: "1.2.3",
-              versions: [
-                {
-                  versionNumber: "1000.0.0",
-                  status: "MAJOR",
-                  releaseNote: null,
-                },
-              ],
+  function mockChangelogCall(releaseNote) {
+    cy.intercept("GET", "/api/changelog", {
+      statusCode: 200,
+      body: {
+        currentVersion: "0.5.0",
+          updateAvailable: true,
+          latestNonBreakingVersion: "1.2.3",
+          versions: [
+            {
+              versionNumber: "1000.0.0",
+              status: "PATCH",
+              releaseNote: null,
             },
-          },
-        };
-      });
+          ]
+      }
     });
-  }
+  };
 
   it("updates available and user has not seen the notification", () => {
     cy.setSliceMachineUserContext({});
-    mockStateCall();
+    mockChangelogCall();
 
     cy.visit("/");
     cy.get("[data-testid=the-red-dot]").should("exist");
@@ -55,7 +48,7 @@ describe("update notification", () => {
         latestNonBreaking: "1.2.3",
       },
     });
-    mockStateCall();
+    mockChangelogCall();
 
     cy.visit("/");
     cy.contains("Learn more", { timeout: 60000 }).should("exist");
@@ -69,7 +62,7 @@ describe("update notification", () => {
         latestNonBreaking: "1.2.3",
       },
     });
-    mockStateCall();
+    mockChangelogCall();
 
     cy.visit("/");
     cy.contains("Learn more").should("exist");
