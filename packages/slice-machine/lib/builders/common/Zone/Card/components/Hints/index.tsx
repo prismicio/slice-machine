@@ -18,8 +18,6 @@ const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
     return await managerClient.snippets.readSnippets({
       fieldPath: fieldPathString.split("."),
       model: item.value,
-      rootModel: {},
-      rootModelType: "Slice",
     });
   });
 

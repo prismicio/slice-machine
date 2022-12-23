@@ -42,8 +42,11 @@ beforeEach(async (ctx) => {
 
 	ctx.msw.resetHandlers();
 
+	vi.clearAllMocks();
+
 	await fs.mkdir(path.join(os.homedir()), { recursive: true });
 	await fs.rm(path.join(os.homedir(), ".prismic"), { force: true });
+	await fs.rm(path.join(os.homedir(), ".prismicrc"), { force: true });
 });
 
 afterAll(() => {

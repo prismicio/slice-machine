@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 
+import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
@@ -34,10 +35,7 @@ it("throws if the authentication API cannot refresh the token", async (ctx) => {
 	});
 	mockPrismicUserAPI(ctx);
 
-	await prismicAuthManager.login({
-		email: "name@example.com",
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
+	await prismicAuthManager.login(createPrismicAuthLoginResponse());
 
 	await expect(async () => {
 		await prismicAuthManager.refreshAuthenticationToken();

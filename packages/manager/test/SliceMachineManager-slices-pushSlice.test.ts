@@ -3,13 +3,13 @@ import { expect, it, vi } from "vitest";
 import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
+import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
+import { mockAWSACLAPI } from "./__testutils__/mockAWSACLAPI";
 import { mockCustomTypesAPI } from "./__testutils__/mockCustomTypesAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
 import { createSliceMachineManager } from "../src";
-import { mockAWSACLAPI } from "./__testutils__/mockAWSACLAPI";
-import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
 
 it("pushes a Slice using the Custom Types API", async (ctx) => {
 	const model = ctx.mockPrismic.model.sharedSlice({

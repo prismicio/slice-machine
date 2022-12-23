@@ -161,7 +161,6 @@ export type {
 } from "./hooks/customTypeLibrary-read";
 
 // snippet:read
-export { SnippetReadHookDataRootModelType } from "./hooks/snippet-read";
 export type {
 	SnippetReadHook,
 	SnippetReadHookData,

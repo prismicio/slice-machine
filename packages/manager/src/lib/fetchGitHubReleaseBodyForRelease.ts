@@ -19,7 +19,7 @@ const GitHubReleaseMetadata = t.type({
 	name: t.string,
 	body: t.union([t.null, t.string]),
 });
-type GitHubReleaseMetadata = t.TypeOf<typeof GitHubReleaseMetadata>;
+export type GitHubReleaseMetadata = t.TypeOf<typeof GitHubReleaseMetadata>;
 
 const fetchAllGitHubReleases = async (): Promise<GitHubReleaseMetadata[]> => {
 	const res = await fetch(
@@ -75,28 +75,26 @@ const fetchGitHubReleaseByVersion = async (
 	}
 };
 
-/**
- * Record of version numbers mapped to their GitHub release metadata.
- */
-const cachedReleases: Record<string, GitHubReleaseMetadata | undefined> = {};
-
 type FetchGitHubReleaseBodyForReleaseArgs = {
 	version: string;
+	cache?: Record<string, GitHubReleaseMetadata | undefined>;
 };
 
 const _fetchGitHubReleaseBodyForRelease = async (
 	args: FetchGitHubReleaseBodyForReleaseArgs,
 ): Promise<string | undefined> => {
-	if (Object.keys(cachedReleases).length < 1) {
+	const cache = args.cache || {};
+
+	if (Object.keys(cache).length < 1) {
 		const releases = await fetchAllGitHubReleases();
 
 		for (const release of releases) {
-			cachedReleases[release.name] = release;
+			cache[release.name] = release;
 		}
 	}
 
-	if (args.version in cachedReleases) {
-		const release = cachedReleases[args.version];
+	if (args.version in cache) {
+		const release = cache[args.version];
 
 		return release?.body ?? undefined;
 	} else {
@@ -105,11 +103,11 @@ const _fetchGitHubReleaseBodyForRelease = async (
 				version: args.version,
 			});
 
-			cachedReleases[args.version] = version;
+			cache[args.version] = version;
 
 			return version?.body ?? undefined;
 		} catch {
-			cachedReleases[args.version] = undefined;
+			cache[args.version] = undefined;
 
 			return undefined;
 		}

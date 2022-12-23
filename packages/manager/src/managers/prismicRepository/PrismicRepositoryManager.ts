@@ -47,7 +47,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	// new repository.
 
 	async readAll(): Promise<PrismicRepository[]> {
-		const url = new URL("/repositories", API_ENDPOINTS.PrismicUser);
+		const url = new URL("./repositories", API_ENDPOINTS.PrismicUser);
 		const res = await this._fetch({ url });
 		const json = await res.json();
 
@@ -70,6 +70,36 @@ export class PrismicRepositoryManager extends BaseManager {
 	}
 
 	// Should this be in manager? It's one of the few sync method
+	//
+	// Reply from Angelo 2022-12-22: I think it should be in manager
+	// because we shouldn't be exporting root-level utilities from this
+	// package. If we want to make it more inline with the other methods,
+	// we could simplify the API by changing its signature to the
+	// following:
+	//
+	// ```ts
+	// (repositoryName: string) => Promise<boolean>
+	// ```
+	//
+	// This method would:
+	//
+	// 1. Fetch the list of repositories for the user using `readAll()`.
+	//    The list would be cached.
+	// 2. Determine if the user has write access to the given repository.
+	//
+	// This version has the following benefits:
+	//
+	// - Does not expect the consumer to supply a repository object; it
+	//   only requires a repository name, which could be sourced from
+	//   anything (incl. the project's `sm.json`).
+	//
+	// - Similarly, it does not expect the consumer to call `readAll()`
+	//   before calling this method.
+	//
+	// - Works for repositories that the user does not have access to. For
+	//   example, I could use it to check if I have access to "qwerty",
+	//   even if I am not added as a user. The purpose of the method is
+	//   still valid: do I have write access to a given repository?
 	hasWriteAccess(repository: PrismicRepository): boolean {
 		switch (repository.role) {
 			case PrismicRepositoryRole.SuperUser:
@@ -86,7 +116,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		args: PrismicRepositoryManagerCheckExistsArgs,
 	): Promise<boolean> {
 		const url = new URL(
-			`/app/dashboard/repositories/${args.domain}/exists`,
+			`./app/dashboard/repositories/${args.domain}/exists`,
 			API_ENDPOINTS.PrismicWroom,
 		);
 		const res = await this._fetch({ url });
@@ -104,7 +134,7 @@ export class PrismicRepositoryManager extends BaseManager {
 
 	async create(args: PrismicRepositoryManagerCreateArgs): Promise<void> {
 		const url = new URL(
-			"/authentication/newrepository?app=slicemachine",
+			"./authentication/newrepository?app=slicemachine",
 			API_ENDPOINTS.PrismicWroom,
 		);
 
@@ -131,11 +161,12 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
+	// TODO: Delete this endpoint? It doesn't seem to be used (I might be wrong). - Angelo
 	async delete(args: PrismicRepositoryManagerDeleteArgs): Promise<void> {
 		const cookies = await this.user.getAuthenticationCookies();
 
 		const url = new URL(
-			`/app/settings/delete?_=${cookies["X_XSRF"]}`, // TODO: Maybe we want to throw early if the token is no available, or get the token another way
+			`./app/settings/delete?_=${cookies["X_XSRF"]}`, // TODO: Maybe we want to throw early if the token is no available, or get the token another way
 			API_ENDPOINTS.PrismicWroom,
 		);
 		// Update hostname to include repository domain
@@ -163,7 +194,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	async pushDocuments(
 		args: PrismicRepositoryManagerPushDocumentsArgs,
 	): Promise<void> {
-		const url = new URL("/starter/documents", API_ENDPOINTS.PrismicWroom);
+		const url = new URL("./starter/documents", API_ENDPOINTS.PrismicWroom);
 		// Update hostname to include repository domain
 		url.hostname = `${args.domain}.${url.hostname}`;
 
@@ -220,7 +251,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			extraHeaders["Content-Type"] = "application/json";
 		}
 
-		return fetch(args.url.toString(), {
+		return await fetch(args.url.toString(), {
 			method: args.method,
 			body: args.body ? JSON.stringify(args.body) : undefined,
 			headers: {

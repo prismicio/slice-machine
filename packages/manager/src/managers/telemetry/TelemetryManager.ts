@@ -26,7 +26,7 @@ function assertTelemetryInitialized(
 ): asserts segmentClient is NonNullable<typeof segmentClient> {
 	if (segmentClient == undefined) {
 		throw new Error(
-			"Telemetry have not yet been initialized. Run `SliceMachineManager.telemetry.prototype.initTelemetry()` before re-calling this method.",
+			"Telemetry has not been initialized. Run `SliceMachineManager.telemetry.prototype.initTelemetry()` before re-calling this method.",
 		);
 	}
 }
@@ -34,16 +34,14 @@ function assertTelemetryInitialized(
 export class TelemetryManager extends BaseManager {
 	private _enabled = false;
 	private _segmentClient: SegmentClient | undefined = undefined;
-	private _anonymousID = "";
+	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
 
 	async initTelemetry(): Promise<void> {
-		try {
-			assertTelemetryInitialized(this._segmentClient);
-
-			// Prevent further initialization
+		if (this._segmentClient) {
+			// Prevent subsequent initializations.
 			return;
-		} catch {}
+		}
 
 		this._enabled = readPrismicrc().telemetry !== false;
 		this._segmentClient = new SegmentClient(API_TOKENS.SegmentKey, {
@@ -55,47 +53,49 @@ export class TelemetryManager extends BaseManager {
 		this._anonymousID = randomUUID();
 	}
 
+	// TODO: Should `userId` be automatically populated by the logged in
+	// user? We already have their info via UserRepository.
 	track(args: TelemetryManagerTrackArgs): Promise<void> {
+		const { event, repository, ...properties } = args;
+
+		const payload: {
+			event: HumanSegmentEventTypes;
+			userId?: string;
+			anonymousId?: string;
+			properties?: Record<string, unknown>;
+			context?: {
+				groupId?: {
+					Repository?: string;
+				};
+			};
+		} = {
+			event: HumanSegmentEventType[event],
+			properties: {
+				repo: repository,
+				...properties,
+			},
+		};
+
+		if (this._userID) {
+			payload.userId = this._userID;
+		} else {
+			payload.anonymousId = this._anonymousID;
+		}
+
+		if (args.repository) {
+			payload.context ||= {};
+			payload.context.groupId ||= {};
+			payload.context.groupId.Repository = repository;
+		}
+
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
-
-			const { event, repository, ...properties } = args;
-
-			const payload: {
-				event: HumanSegmentEventTypes;
-				userId?: string;
-				anonymousId?: string;
-				properties?: Record<string, unknown>;
-				context?: {
-					groupId?: {
-						Repository?: string;
-					};
-				};
-			} = {
-				event: HumanSegmentEventType[event],
-				properties: {
-					repo: repository,
-					...properties,
-				},
-			};
-
-			if (this._userID) {
-				payload.userId = this._userID;
-			} else {
-				payload.anonymousId = this._anonymousID;
-			}
-
-			if (args.repository) {
-				payload.context ||= {};
-				payload.context.groupId ||= {};
-				payload.context.groupId.Repository = repository;
-			}
 
 			// TODO: Make sure client fails gracefully when no internet connection
 			this._segmentClient.track(payload, (maybeError?: Error) => {
 				if (maybeError) {
 					// TODO: Not sure how we want to deal with that
-					console.warn(`An error happened during Segment tracking`, maybeError);
+					console.warn(`An error occurred during Segment tracking`, maybeError);
 				}
 
 				resolve();
@@ -103,6 +103,9 @@ export class TelemetryManager extends BaseManager {
 		});
 	}
 
+	// TODO: Should `userID` and `intercomHash` be automatically populated
+	// by the logged in user? We already have their info via
+	// UserRepository.
 	identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
@@ -122,7 +125,7 @@ export class TelemetryManager extends BaseManager {
 			this._segmentClient.identify(payload, (maybeError?: Error) => {
 				if (maybeError) {
 					// TODO: Not sure how we want to deal with that
-					console.warn(`An error happened during Segment identify`, maybeError);
+					console.warn(`An error occurred during Segment identify`, maybeError);
 				}
 
 				resolve();

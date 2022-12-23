@@ -8,7 +8,7 @@ import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
 import { createSliceMachineManager } from "../src";
 
-it("refreshes the auth token in the auth state file", async (ctx) => {
+it("returns all repositories for the logged in user", async (ctx) => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -16,23 +16,42 @@ it("refreshes the auth token in the auth state file", async (ctx) => {
 		cwd,
 	});
 
-	const { refreshedToken } = mockPrismicAuthAPI(ctx);
-	mockPrismicUserAPI(ctx);
+	mockPrismicUserAPI(ctx, { repositoriesEndpoint: false });
+	mockPrismicAuthAPI(ctx);
 
-	await manager.user.login({
-		email: "name@example.com",
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
-
-	await manager.user.refreshAuthenticationToken();
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
 
 	const authenticationToken = await manager.user.getAuthenticationToken();
 
-	expect(authenticationToken).not.toBe("token");
-	expect(authenticationToken).toBe(refreshedToken);
+	const repositories = [
+		{
+			domain: "foo",
+			name: "Foo",
+			role: "Owner",
+		},
+		{
+			domain: "bar",
+			name: "Bar",
+			role: "Writer",
+		},
+	];
+
+	mockPrismicUserAPI(ctx, {
+		profileEndpoint: false,
+		repositoriesEndpoint: {
+			expectedAuthenticationToken: authenticationToken,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			repositories,
+		},
+	});
+
+	const res = await manager.prismicRepository.readAll();
+
+	expect(res).toStrictEqual(repositories);
 });
 
-it("throws if the authentication API cannot refresh the token", async (ctx) => {
+it("throws if the repository API call was unsuccessful", async (ctx) => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -40,21 +59,24 @@ it("throws if the authentication API cannot refresh the token", async (ctx) => {
 		cwd,
 	});
 
-	mockPrismicAuthAPI(ctx, {
-		refreshtokenEndpoint: {
-			isSuccessful: false,
-		},
-	});
-	mockPrismicUserAPI(ctx);
+	mockPrismicUserAPI(ctx, { repositoriesEndpoint: false });
+	mockPrismicAuthAPI(ctx);
 
 	await manager.user.login(createPrismicAuthLoginResponse());
 
+	mockPrismicUserAPI(ctx, {
+		profileEndpoint: false,
+		repositoriesEndpoint: {
+			isSuccessful: false,
+		},
+	});
+
 	await expect(async () => {
-		await manager.user.refreshAuthenticationToken();
-	}).rejects.toThrow(/failed to refresh/i);
+		await manager.prismicRepository.readAll();
+	}).rejects.toThrow(/failed to read repositories/i);
 });
 
-it("throws if the user is not logged in", async () => {
+it("throws if not logged in", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -64,7 +86,7 @@ it("throws if the user is not logged in", async () => {
 
 	await manager.user.logout();
 
-	expect(async () => {
-		await manager.user.getAuthenticationToken();
+	await expect(async () => {
+		await manager.prismicRepository.readAll();
 	}).rejects.toThrow(/not logged in/i);
 });
