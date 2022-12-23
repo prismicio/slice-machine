@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { MdTitle } from "react-icons/md";
-import { MockConfigForm } from "./Mock/Form";
 /**
 * {
      "type": "Text",
@@ -17,6 +16,7 @@ import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
 import { Text } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = DefaultFields;
@@ -44,7 +44,7 @@ export const TextWidget: Widget<Text, typeof schema> = {
       placeholder: "",
     },
   }),
-  MockConfigForm,
+  MockConfigForm: DeprecatedMockConfigMessage,
   Meta,
   schema,
   TYPE_NAME: WidgetTypes.Text,
