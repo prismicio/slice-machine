@@ -16,12 +16,12 @@ import {
 } from "../../../../lib/models/common/Screenshots";
 import { hash } from "@slicemachine/core/build/utils/str";
 
-export default async function handler(
+export default function handler(
   file: TmpFile,
   body: CustomScreenshotRequest
-): Promise<ScreenshotUI> {
+): ScreenshotUI {
   const { libraryName, sliceId: sliceName, variationId } = body;
-  const { env } = await getEnv();
+  const { env } = getEnv();
 
   const maybeCustomScreenshot = resolvePathsToScreenshot({
     paths: [env.cwd],

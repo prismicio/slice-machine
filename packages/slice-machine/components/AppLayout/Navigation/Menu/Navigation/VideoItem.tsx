@@ -1,4 +1,4 @@
-import React from "react";
+import { type FC, useCallback, useRef, RefCallback } from "react";
 import ReactTooltip from "react-tooltip";
 import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 import { MdPlayCircleFilled } from "react-icons/md";
@@ -15,13 +15,12 @@ type VideoItemProps = {
   sliceMachineVersion: string;
 };
 
-const VideoItem: React.FC<VideoItemProps> = ({
+const VideoItem: FC<VideoItemProps> = ({
   sliceMachineVersion,
   framework,
   hasSeenTutorialsTooTip,
   onClose,
 }) => {
-  const ref = React.createRef<HTMLParagraphElement>();
   const id = "video-tool-tip";
   const videoUrl = VIDEO_YOUTUBE_PLAYLIST_LINK;
 
@@ -34,17 +33,24 @@ const VideoItem: React.FC<VideoItemProps> = ({
     onClose();
   };
 
-  React.useEffect(() => {
-    if (!hasSeenTutorialsTooTip && ref.current) {
-      const currentRef = ref.current;
-      setTimeout(() => ReactTooltip.show(currentRef), 5000);
-    }
-  }, []);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const setRef: RefCallback<HTMLDivElement> = useCallback(
+    (node) => {
+      if (ref.current) {
+        return;
+      }
+      if (node && !hasSeenTutorialsTooTip) {
+        setTimeout(() => ReactTooltip.show(node), 5000);
+      }
+      ref.current = node;
+    },
+    [hasSeenTutorialsTooTip]
+  );
 
   return (
     <>
       <Item
-        ref={ref}
+        ref={setRef}
         data-for={id}
         data-tip=""
         data-testid="video-toolbar"
@@ -63,12 +69,13 @@ const VideoItem: React.FC<VideoItemProps> = ({
           id={id}
           effect="solid"
           backgroundColor="#5B3DF5"
-          clickable={true}
+          clickable
           className={style.videoTutorialsContainer}
           afterHide={handleClose}
           offset={{
             left: 80,
           }}
+          role="tooltip"
           getContent={() => (
             <Flex
               data-testid="video-tooltip"

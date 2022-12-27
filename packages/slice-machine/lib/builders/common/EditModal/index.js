@@ -28,11 +28,12 @@ if (process.env.NODE_ENV !== "test") {
 const FORM_ID = "edit-modal-form";
 
 const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
+  const { theme } = useThemeUI();
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (!data.isOpen) {
     return null;
   }
-  const { theme } = useThemeUI();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
@@ -197,7 +198,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
             <Card
               borderFooter
               footerSx={{ p: 0, mb: 5 }}
-              tabs={["Field Model", "Mock config"]}
+              tabs={["Field Model", "Mock Data"]}
               Header={({ radius }) => (
                 <Flex
                   sx={{

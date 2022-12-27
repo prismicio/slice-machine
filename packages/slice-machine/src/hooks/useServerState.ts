@@ -1,22 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
+import ServerState from "@lib/models/server/ServerState";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import useSwr from "swr";
 import { getState } from "@src/apiClient";
+import useSwr from "swr";
+import * as Sentry from "@sentry/nextjs";
 
 const useServerState = () => {
   const { refreshState } = useSliceMachineActions();
-  const { data: serverState } = useSwr("getState", async () => {
+  const handleRefreshState = useCallback(refreshState, []);
+  const { data: serverState } = useSwr<ServerState>("getState", async () => {
     return await getState();
   });
 
   useEffect(() => {
-    if (!serverState) {
-      return;
+    let canceled = false;
+    if (serverState && !canceled) {
+      handleRefreshState(serverState);
+
+      Sentry.setUser({ id: serverState.env.shortId });
+      Sentry.setTag("repository", serverState.env.repo);
+      Sentry.setContext("Repository Data", {
+        name: serverState.env.repo,
+      });
     }
 
-    refreshState(serverState);
-  }, [serverState]);
+    return () => {
+      canceled = true;
+    };
+  }, [serverState, handleRefreshState]);
 
   return;
 };

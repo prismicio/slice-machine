@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { type FC, type ReactNode, useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import configureStore from "../src/redux/store";
 import App, { AppContext } from "next/app";
@@ -10,6 +10,7 @@ import theme from "../src/theme";
 import LoadingPage from "../components/LoadingPage";
 import SliceMachineApp from "../components/App";
 
+import "@prismicio/editor-ui/style.css";
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,7 +23,7 @@ import "src/css/toaster.css";
 import "src/css/intercom.css";
 import "src/css/starry-night.css";
 
-import "highlight.js/styles/atom-one-dark.css";
+import "src/css/hljs.css";
 
 import ServerState from "../lib/models/server/ServerState";
 import { getIsTrackingAvailable } from "../src/modules/environment";
@@ -37,7 +38,21 @@ import { getState } from "../src/apiClient";
 import { normalizeFrontendCustomTypes } from "../src/normalizers/customType";
 import Router from "next/router";
 
-const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
+import { NextPage } from "next";
+
+type NextPageWithLayout = NextPage & {
+  CustomLayout?: React.FC<{ children: ReactNode }>;
+};
+
+type AppContextWithComponentLayout = AppContext & {
+  Component: NextPageWithLayout;
+};
+
+type RemoveDarkModeProps = Readonly<{
+  children?: ReactNode;
+}>;
+
+const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
   const { setColorMode } = useThemeUI();
   useEffect(() => {
     if (setColorMode) {
@@ -48,7 +63,10 @@ const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
   return <>{children}</>;
 };
 
-function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
+function MyApp({
+  Component,
+  pageProps,
+}: AppContextWithComponentLayout & AppInitialProps) {
   const [serverState, setServerState] = useState<ServerState | null>(null);
   const [smStore, setSMStore] = useState<{
     store: Store;
@@ -64,7 +82,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   }, []);
 
   useEffect(() => {
-    if (!serverState) {
+    if (!serverState || smStore) {
       return;
     }
 
@@ -90,7 +108,9 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     Tracker.get().initialize(tracking);
 
     setSMStore({ store, persistor });
-  }, [serverState]);
+  }, [serverState, smStore]);
+
+  const ComponentLayout = Component.CustomLayout || SliceMachineApp;
 
   return (
     <>
@@ -106,9 +126,9 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
               <Provider store={smStore.store}>
                 <ConnectedRouter Router={Router}>
                   <PersistGate loading={null} persistor={smStore.persistor}>
-                    <SliceMachineApp>
+                    <ComponentLayout>
                       <Component {...pageProps} />
-                    </SliceMachineApp>
+                    </ComponentLayout>
                   </PersistGate>
                 </ConnectedRouter>
               </Provider>

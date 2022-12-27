@@ -1,6 +1,8 @@
+import type { FC, ReactNode } from "react";
 import { Box, ThemeUIStyleObject } from "theme-ui";
 
 export interface CardBoxProps {
+  children?: ReactNode;
   sx?: ThemeUIStyleObject;
   withRadius: boolean;
   radius?: string;
@@ -8,7 +10,7 @@ export interface CardBoxProps {
   background?: string;
 }
 
-export const CardBox: React.FC<CardBoxProps> = ({
+export const CardBox: FC<CardBoxProps> = ({
   bg,
   background,
   sx,

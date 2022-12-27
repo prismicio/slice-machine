@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { SimulatorCheckResponse } from "@models/common/Simulator";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import {
@@ -16,16 +17,18 @@ import {
 } from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
+import { ComponentMocks } from "@slicemachine/core/build/models";
+import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
 
-// const defaultAxiosConfig = {
-//   withCredentials: true,
-//   headers: {
-//     Accept: "application/json",
-//     "Content-Type": "application/json",
-//   },
-// };
+const defaultAxiosConfig = {
+  withCredentials: true,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+};
 
 /** State Routes **/
 
@@ -290,6 +293,27 @@ export const checkAuthStatus = async (): Promise<CheckAuthStatusResponse> => {
 
 /** Simulator Routes **/
 
-export const checkSimulatorSetup = async () => {
-  return await managerClient.simulator.readSliceSimulatorSetupSteps();
+// export const checkSimulatorSetup = async () => {
+//   return await managerClient.simulator.readSliceSimulatorSetupSteps();
+// }
+
+export const checkSimulatorSetup = (): Promise<
+  AxiosResponse<SimulatorCheckResponse>
+> => axios.get(`/api/simulator/check`);
+
+export type SaveSliceMockRequest = {
+  sliceName: string;
+  libraryName: string;
+  mock: ComponentMocks;
+};
+
+export const saveSliceMock = (payload: SaveSliceMockRequest) =>
+  axios
+    .post<SaveSliceMockRequest>("/api/slices/mock", payload)
+    .then((res) => res.data);
+
+export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
+  return axios
+    .get<PackageChangelog>(`/api/changelog`, defaultAxiosConfig)
+    .then((response) => response.data);
 };

@@ -1,11 +1,11 @@
 import jsonModel from "./__mockData__/model.json";
-import mocks from "./__mockData__/mocks.json";
-import { SliceMock, Slices } from "@slicemachine/core/build/models";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import MockSlice from "@lib/mock/Slice";
+import { Slices } from "@slicemachine/core/build/models";
 import {
   SharedSlice,
   SlicesTypes,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { dummyServerState } from "../__mocks__/serverState";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
@@ -33,7 +33,7 @@ export const getSelectedSliceDummyData = () => {
     extension: "js",
     model: dummyModel,
     screenshots: {},
-    mock: mocks as SliceMock,
+    mock: MockSlice(Slices.fromSM(dummyModel), dummyMockConfig),
     mockConfig: dummyMockConfig,
   };
 

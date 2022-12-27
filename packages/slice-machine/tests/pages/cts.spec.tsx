@@ -15,7 +15,7 @@ import {
 } from "@jest/globals";
 import React from "react";
 import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
-import singletonRouter from "next/router";
+import Router from "next/router";
 import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
 import { setupServer } from "msw/node";
@@ -147,7 +147,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });
@@ -209,7 +209,7 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByTestId("empty-zone-add-new-field");
+    const addButton = screen.getByText("Add a new field");
     fireEvent.click(addButton);
 
     const richText = screen.getByText("Rich Text");
@@ -244,7 +244,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });
@@ -310,7 +310,7 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByTestId("empty-zone-add-a-new-slice");
+    const addButton = screen.getByText("Add a new Slice");
     await act(async () => {
       fireEvent.click(addButton);
     });
@@ -344,7 +344,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });
@@ -406,7 +406,7 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByTestId("empty-zone-add-new-field");
+    const addButton = screen.getByText("Add a new field");
     fireEvent.click(addButton);
 
     const richText = screen.getByText("Rich Text");
@@ -458,7 +458,7 @@ describe("Custom Type Builder", () => {
     );
     const customTypeId = "a-page";
 
-    singletonRouter.push({
+    Router.push({
       pathname: "cts/[ct]",
       query: { ct: customTypeId },
     });
@@ -520,7 +520,7 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByTestId("empty-zone-add-new-field");
+    const addButton = screen.getByText("Add a new field");
     fireEvent.click(addButton);
 
     const richText = screen.getByText("Rich Text");

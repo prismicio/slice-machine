@@ -1,64 +1,52 @@
 import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  ActionType,
-  createAction,
-  createAsyncAction,
-  getType,
-} from "typesafe-actions";
+import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SimulatorStoreType } from "./types";
 import {
   call,
   fork,
   put,
   select,
+  takeLeading,
   takeLatest,
   race,
   take,
   delay,
   CallEffect,
+  SagaReturnType,
 } from "redux-saga/effects";
-import { checkSimulatorSetup } from "@src/apiClient";
+import {
+  checkSimulatorSetup,
+  saveSliceMock,
+  SaveSliceMockRequest,
+} from "@src/apiClient";
 import {
   getCurrentVersion,
   getFramework,
   selectIsSimulatorAvailableForFramework,
+  updateManifestCreator,
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { SimulatorCheckResponse } from "@models/common/Simulator";
 
-import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
 import Tracker from "@src/tracking/client";
-import { SimulatorManagerReadSliceSimulatorSetupStep } from "@slicemachine/manager/client";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { updateSliceMock } from "../slices";
 
-const NoStepSelected = 0;
+import { modalOpenCreator } from "../modal";
+import { ModalKeysEnum } from "../modal/types";
+import { updateSelectedSliceMocks } from "../selectedSlice/actions";
 
 export const initialState: SimulatorStoreType = {
-  setupSteps: null,
   iframeStatus: null,
-  // setupStatus: {
-  //   manifest: null,
-  //   iframe: null,
-  //   dependencies: null,
-  // },
-  setupDrawer: {
-    isOpen: false,
-    openedStep: NoStepSelected,
+  setupStatus: {
+    manifest: null,
   },
   isWaitingForIframeCheck: false,
+  savingMock: false,
 };
-
-// Actions Creators
-export const openSetupDrawerCreator = createAction(
-  "SIMULATOR/OPEN_SETUP_DRAWER"
-)<{
-  stepToOpen?: number;
-}>();
-
-export const closeSetupDrawerCreator = createAction(
-  "SIMULATOR/CLOSE_SETUP_DRAWER"
-)();
 
 export const checkSimulatorSetupCreator = createAsyncAction(
   "SIMULATOR/CHECK_SETUP.REQUEST",
@@ -66,12 +54,10 @@ export const checkSimulatorSetupCreator = createAsyncAction(
   "SIMULATOR/CHECK_SETUP.FAILURE"
 )<
   {
-    withFirstVisitCheck: boolean;
     callback?: () => void;
   },
   {
-    setupSteps: NonNullable<SimulatorStoreType["setupSteps"]>;
-    iframeStatus: SimulatorStoreType["iframeStatus"];
+    setupStatus: SimulatorStoreType["setupStatus"];
   },
   Error
 >();
@@ -82,61 +68,38 @@ export const connectToSimulatorIframeCreator = createAsyncAction(
   "SIMULATOR/CONNECT_TO_SIMULATOR_IFRAME.FAILURE"
 )<undefined, undefined, undefined>();
 
-export const toggleSetupDrawerStepCreator = createAction(
-  "SIMULATOR/TOGGLE_SETUP_DRAWER_STEP"
-)<{
-  stepNumber: number;
-}>();
+export const saveSliceMockCreator = createAsyncAction(
+  "SIMULATOR/SAVE_MOCK.REQUEST",
+  "SIMULATOR/SAVE_MOCK.SUCCESS",
+  "SIMULATOR/SAVE_MOCK.FAILURE"
+)<SaveSliceMockRequest, undefined, undefined>();
 
 type SimulatorActions = ActionType<
-  | typeof openSetupDrawerCreator
-  | typeof closeSetupDrawerCreator
-  | typeof toggleSetupDrawerStepCreator
   | typeof connectToSimulatorIframeCreator.success
   | typeof connectToSimulatorIframeCreator.request
   | typeof connectToSimulatorIframeCreator.failure
   | typeof checkSimulatorSetupCreator.success
+  | typeof saveSliceMockCreator.request
+  | typeof saveSliceMockCreator.success
+  | typeof saveSliceMockCreator.failure
+  | typeof checkSimulatorSetupCreator.failure
 >;
 
 // Selectors
-export const selectIsSetupDrawerOpen = (
+export const selectSetupStatus = (
   state: SliceMachineStoreType
-): boolean => state.simulator.setupDrawer.isOpen;
-
-export const selectSetupStatus = (state: SliceMachineStoreType): SetupStatus =>
-  state.simulator.setupStatus;
-
-export const selectSetupSteps = (
-  state: SliceMachineStoreType
-): SimulatorManagerReadSliceSimulatorSetupStep[] | null =>
-  state.simulator.setupSteps;
+): SimulatorStoreType["setupStatus"] => state.simulator.setupStatus;
 
 export const selectIsWaitingForIFrameCheck = (
   state: SliceMachineStoreType
 ): boolean => state.simulator.isWaitingForIframeCheck;
 
-export const selectUserHasAtLeastOneStepMissing = (
+export const selectIframeStatus = (
   state: SliceMachineStoreType
-): boolean => {
-  return (
-    (state.simulator.setupSteps || []).some(
-      (setupStep) => setupStep.isComplete === false
-    ) || state.simulator.iframeStatus !== "ok"
-  );
-};
+): string | null => state.simulator.iframeStatus;
 
-export const selectUserHasConfiguredAllSteps = (
-  state: SliceMachineStoreType
-): boolean => {
-  return (
-    (state.simulator.setupSteps || []).every(
-      (setupStep) => setupStep.isComplete !== false
-    ) && state.simulator.iframeStatus === "ok"
-  );
-};
-
-export const selectOpenedStep = (state: SliceMachineStoreType): number =>
-  state.simulator.setupDrawer.openedStep;
+export const selectSavingMock = (state: SliceMachineStoreType): boolean =>
+  state.simulator.savingMock;
 
 // Reducer
 export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
@@ -144,178 +107,129 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
   action
 ) => {
   switch (action.type) {
-    case getType(openSetupDrawerCreator):
-      return {
-        ...state,
-        setupDrawer: {
-          ...state.setupDrawer,
-          isOpen: true,
-          ...(!!action.payload.stepToOpen
-            ? { openedStep: action.payload.stepToOpen }
-            : null),
-        },
-      };
     case getType(connectToSimulatorIframeCreator.request):
       return {
         ...state,
+        iframeStatus: null,
         isWaitingForIframeCheck: true,
       };
     case getType(connectToSimulatorIframeCreator.success):
       return {
         ...state,
         iframeStatus: "ok",
-        // setupStatus: {
-        //   ...state.setupStatus,
-        //   iframe: "ok",
-        // },
         isWaitingForIframeCheck: false,
       };
     case getType(connectToSimulatorIframeCreator.failure):
       return {
         ...state,
         iframeStatus: "ko",
-        // setupStatus: {
-        //   ...state.setupStatus,
-        //   iframe: "ko",
-        // },
         isWaitingForIframeCheck: false,
       };
-    case getType(toggleSetupDrawerStepCreator):
+    case getType(checkSimulatorSetupCreator.failure):
       return {
         ...state,
-        setupDrawer: {
-          ...state.setupDrawer,
-          openedStep:
-            state.setupDrawer.openedStep === action.payload.stepNumber
-              ? NoStepSelected
-              : action.payload.stepNumber,
+        setupStatus: {
+          ...state.setupStatus,
+          manifest: "ko",
         },
       };
     case getType(checkSimulatorSetupCreator.success):
       return {
         ...state,
-        setupSteps: action.payload.setupSteps,
-        // setupStatus: {
-        //   ...state.setupStatus,
-        //   ...action.payload.setupStatus,
-        // },
-      };
-    case getType(closeSetupDrawerCreator):
-      return {
-        ...state,
-        setupDrawer: {
-          openedStep: NoStepSelected,
-          isOpen: false,
+        setupStatus: {
+          ...state.setupStatus,
+          manifest: "ok",
         },
       };
+    case getType(saveSliceMockCreator.request): {
+      return {
+        ...state,
+        savingMock: true,
+      };
+    }
+
+    case getType(saveSliceMockCreator.success): {
+      return {
+        ...state,
+        savingMock: false,
+      };
+    }
+
+    case getType(saveSliceMockCreator.failure): {
+      return {
+        ...state,
+        savingMock: false,
+      };
+    }
     default:
       return state;
   }
 };
 
 // Sagas
-function* checkSetupSaga(
+export function* checkSetupSaga(
   action: ReturnType<typeof checkSimulatorSetupCreator.request>
 ) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { steps, errors }: Awaited<ReturnType<typeof checkSimulatorSetup>> =
-      yield call(checkSimulatorSetup);
+    const { data: setupStatus }: { data: SimulatorCheckResponse } = yield call(
+      checkSimulatorSetup
+    );
 
-    const isOk =
-      errors.length < 1 && steps.every((step) => step.isComplete !== false);
-
-    // All the backend checks are ok ask for the frontend Iframe check
-    if (isOk) {
+    if (setupStatus.manifest === "ok") {
       yield put(
         checkSimulatorSetupCreator.success({
-          setupSteps: steps,
-          iframeStatus: null,
+          setupStatus,
         })
       );
-      yield put(connectToSimulatorIframeCreator.request());
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const {
-        timeout,
-        iframeCheckKO,
-        iframeCheckOk,
-      }: {
-        iframeCheckOk: ReturnType<
-          typeof connectToSimulatorIframeCreator.success
-        >;
-        iframeCheckKO: ReturnType<
-          typeof connectToSimulatorIframeCreator.failure
-        >;
-        timeout: CallEffect<true>;
-      } = yield race({
-        iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
-        iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-        timeout: delay(10000),
-      });
-
-      if (iframeCheckOk && action.payload.callback) {
+      yield put(updateManifestCreator({ value: setupStatus.value }));
+      if (action.payload.callback) {
         action.payload.callback();
-        return;
       }
-
-      if (timeout) {
-        yield put(connectToSimulatorIframeCreator.failure());
-        yield call(failCheckSetupSaga);
-        return;
-      }
-
-      if (iframeCheckKO) {
-        yield call(failCheckSetupSaga);
-        return;
-      }
-
       return;
     }
-
-    // // All the backend checks are ko and the request is coming from the "start"
-    // const isTheFirstTime = !isOk && action.payload.withFirstVisitCheck;
-
-    // if (isTheFirstTime) {
-    //   yield put(openSetupDrawerCreator({}));
-    //   return;
-    // }
-
-    yield put(
-      checkSimulatorSetupCreator.success({
-        setupSteps: steps,
-        iframeStatus: null,
-        // setupStatus: { iframe: null, ...setupStatus },
-      })
-    );
     yield call(failCheckSetupSaga);
+    yield call(trackOpenSetupModalSaga);
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     yield put(checkSimulatorSetupCreator.failure(error as Error));
   }
 }
 
-export function* failCheckSetupSaga() {
-  // const framework = (yield select(getFramework)) as ReturnType<
-  //   typeof getFramework
-  // >;
-
-  // const isPreviewAvailableForFramework = (yield select(
-  //   selectIsSimulatorAvailableForFramework
-  // )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
-  //
-  // if (!isPreviewAvailableForFramework) {
-  //   return;
-  // }
-  // const { length } = getStepperConfigurationByFramework(framework).steps;
-
-  yield put(
-    openSetupDrawerCreator({
-      // stepToOpen: length,
-    })
-  );
+function* connectToSimulatorIframe() {
+  yield put(connectToSimulatorIframeCreator.request());
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const {
+    timeout,
+    iframeCheckKO,
+  }: {
+    iframeCheckKO: ReturnType<typeof connectToSimulatorIframeCreator.failure>;
+    timeout: CallEffect<true>;
+  } = yield race({
+    iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
+    iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
+    timeout: delay(5000),
+  });
+  if (timeout || iframeCheckKO) {
+    yield put(connectToSimulatorIframeCreator.failure());
+    return;
+  }
+  yield put(connectToSimulatorIframeCreator.success());
 }
 
-function* trackOpenSetupDrawerSaga() {
+export function* failCheckSetupSaga() {
+  const isPreviewAvailableForFramework = (yield select(
+    selectIsSimulatorAvailableForFramework
+  )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
+
+  if (!isPreviewAvailableForFramework) {
+    return;
+  }
+  yield put(checkSimulatorSetupCreator.failure(new Error()));
+  yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
+}
+
+export function* trackOpenSetupModalSaga() {
   const framework: Frameworks = (yield select(getFramework)) as ReturnType<
     typeof getFramework
   >;
@@ -326,16 +240,61 @@ function* trackOpenSetupDrawerSaga() {
   void Tracker.get().trackSliceSimulatorSetup(framework, version);
 }
 
+export function* saveSliceMockSaga({
+  payload,
+}: ReturnType<typeof saveSliceMockCreator.request>): Generator {
+  try {
+    const data = (yield call(saveSliceMock, payload)) as SagaReturnType<
+      typeof saveSliceMock
+    >;
+    yield put(
+      openToasterCreator({
+        type: ToasterType.SUCCESS,
+        message: "Saved",
+      })
+    );
+    yield put(updateSliceMock(data));
+
+    yield put(updateSelectedSliceMocks({ mocks: data.mock }));
+    yield put(saveSliceMockCreator.success());
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Error saving content";
+    yield put(
+      openToasterCreator({
+        type: ToasterType.ERROR,
+        message: message,
+      })
+    );
+    yield put(saveSliceMockCreator.failure());
+  }
+}
+
 // Saga watchers
 function* watchCheckSetup() {
-  yield takeLatest(
+  yield takeLeading(
     getType(checkSimulatorSetupCreator.request),
     withLoader(checkSetupSaga, LoadingKeysEnum.CHECK_SIMULATOR)
   );
-  yield takeLatest(getType(openSetupDrawerCreator), trackOpenSetupDrawerSaga);
+}
+
+function* watchIframeCheck() {
+  yield takeLeading(
+    getType(connectToSimulatorIframeCreator.request),
+    withLoader(connectToSimulatorIframe, LoadingKeysEnum.CHECK_SIMULATOR_IFRAME)
+  );
+}
+
+function* watchSaveSliceMock() {
+  yield takeLatest(
+    getType(saveSliceMockCreator.request),
+    withLoader(saveSliceMockSaga, LoadingKeysEnum.SIMULATOR_SAVE_MOCK)
+  );
 }
 
 // Saga Exports
 export function* watchSimulatorSagas() {
   yield fork(watchCheckSetup);
+  yield fork(watchSaveSliceMock);
+  yield fork(watchIframeCheck);
 }

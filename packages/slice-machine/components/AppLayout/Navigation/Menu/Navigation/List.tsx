@@ -1,8 +1,7 @@
 import React from "react";
-import { Box } from "theme-ui";
+import { type ThemeUIStyleObject, Box } from "theme-ui";
 import Item from "./Item";
 import { LinkProps } from "components/AppLayout/Navigation";
-import { ThemeUIStyleObject } from "@theme-ui/css";
 
 interface ItemsListProps {
   links: LinkProps[];

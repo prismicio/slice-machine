@@ -33,12 +33,13 @@ export function validateEnv(
 }
 
 export default async function handler({
+  href,
   libraryName,
   sliceId: sliceNamesliceName,
   variationId,
   viewport: screenDimensions,
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
-  const { env } = await getEnv();
+  const { env } = getEnv();
 
   const maybeErr = validateEnv(
     env.framework,
@@ -54,7 +55,8 @@ export default async function handler({
       libraryName,
       sliceName,
       variationId,
-      screenDimensions
+      screenDimensions,
+      href
     );
 
     // We display an error if no screenshot has been taken

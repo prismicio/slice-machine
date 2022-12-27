@@ -1,42 +1,50 @@
-import "cypress-localstorage-commands";
-import "cypress-wait-until";
+import {
+  setSliceMachineUserContext,
+  getSliceMachineUserContext,
+} from "../helpers/localStorage";
+import {
+  clearProject,
+  clearAssets,
+  clearCustomTypes,
+  clearSlices,
+  removeTypes,
+  modifyFile,
+} from "../helpers/filesystem";
+import {
+  createCustomType,
+  renameCustomType,
+  addFieldToCustomType,
+} from "../helpers/customTypes";
+import { createSlice, renameSlice } from "../helpers/slices";
 
-Cypress.Commands.add(
-  "setupSliceMachineUserContext",
-  ({
-    hasSendAReview, // boolean
-    isOnboarded, // boolean
-    updatesViewed, // object
-    hasSeenTutorialsTooTip, // boolean
-  }) => {
-    return cy.setLocalStorage(
-      "persist:root",
-      JSON.stringify({
-        userContext: JSON.stringify({
-          hasSendAReview,
-          isOnboarded,
-          updatesViewed: {
-            latest: null,
-            latestNonBreaking: null,
-            ...updatesViewed,
-          },
-          hasSeenTutorialsTooTip,
-        }),
-      })
-    );
-  }
-);
+/* -- LOCAL STORAGE -- */
+Cypress.Commands.add("setSliceMachineUserContext", setSliceMachineUserContext);
+Cypress.Commands.add("getSliceMachineUserContext", getSliceMachineUserContext);
 
-Cypress.Commands.add(
-  "cleanSliceMachineUserContext",
-  (hasSendAReview = true, isOnboarded = true) => {
-    return cy.removeLocalStorage("persist:root");
-  }
-);
+/* -- PROJECT RESET -- */
+Cypress.Commands.add("clearProject", clearProject);
+Cypress.Commands.add("clearAssets", clearAssets);
+Cypress.Commands.add("clearCustomTypes", clearCustomTypes);
+Cypress.Commands.add("clearSlices", clearSlices);
+Cypress.Commands.add("removeTypes", removeTypes);
+Cypress.Commands.add("modifyFile", modifyFile);
 
-Cypress.Commands.add("getSliceMachineUserContext", () => {
+/* -- CUSTOM TYPES */
+Cypress.Commands.add("createCustomType", createCustomType);
+Cypress.Commands.add("renameCustomType", renameCustomType);
+Cypress.Commands.add("addFieldToCustomType", addFieldToCustomType);
+
+/* -- SLICES -- */
+Cypress.Commands.add("createSlice", createSlice);
+Cypress.Commands.add("renameSlice", renameSlice);
+
+/* -- QUERIES -- */
+Cypress.Commands.add("getInputByLabel", (label) => {
   return cy
-    .getLocalStorage("persist:root")
-    .then((data) => JSON.parse(data))
-    .then(({ userContext }) => JSON.parse(userContext));
+    .contains("label", label)
+    .invoke("attr", "for")
+    .then((id) => {
+      const selector = `[id="${id}"],[name="${id}"]`;
+      return cy.get(selector);
+    });
 });

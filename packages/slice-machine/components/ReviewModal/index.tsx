@@ -182,11 +182,7 @@ const ReviewModal: React.FunctionComponent = () => {
                 <Heading sx={{ fontSize: "20px", mr: 4 }}>
                   Give us your opinion
                 </Heading>
-                <Close
-                  type="button"
-                  onClick={() => skipReview()}
-                  data-cy="close-review"
-                />
+                <Close type="button" onClick={() => skipReview()} />
               </Flex>
               <Flex
                 sx={{

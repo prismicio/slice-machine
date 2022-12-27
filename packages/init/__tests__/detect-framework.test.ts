@@ -1,6 +1,5 @@
 import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
-import { mocked } from "jest-mock";
 import { detectFramework } from "../src/steps";
 import { Models } from "@slicemachine/core";
 import { stderr } from "stdout-stderr";
@@ -15,7 +14,7 @@ describe("detect-framework", () => {
   });
 
   test("when supported framework is found", async () => {
-    const mockedFs = mocked(fs, true);
+    const mockedFs = jest.mocked(fs);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats); // linting error?
     mockedFs.readFileSync.mockReturnValue(
       JSON.stringify({
@@ -32,12 +31,13 @@ describe("detect-framework", () => {
     expect(result).toEqual({
       value: Models.Frameworks.next,
       manuallyAdded: false,
+      version: "beta",
     });
   });
 
   test("framework not found in package.json", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({ dev: 1 } as fs.Stats); // linting error?
-    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+    jest.spyOn(fs, "lstatSync").mockReturnValue({ dev: 1 } as fs.Stats); // linting error?
+    jest.spyOn(fs, "readFileSync").mockReturnValue(
       JSON.stringify({
         dependencies: {},
       })
@@ -67,7 +67,11 @@ describe("detect-framework", () => {
   });
 
   test("package.json not found", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValue(undefined);
+    jest.spyOn(fs, "lstatSync").mockImplementation(() => {
+      const e = new Error() as Error & { code: string };
+      e.code = "ENOENT";
+      throw e;
+    });
 
     const exitSpy = jest
       .spyOn(process, "exit")
@@ -88,8 +92,8 @@ describe("detect-framework", () => {
   });
 
   test("Unsupported framework: gatsby", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({ dev: 1 } as fs.Stats);
-    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+    jest.spyOn(fs, "lstatSync").mockReturnValue({ dev: 1 } as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValue(
       JSON.stringify({
         dependencies: {
           [Models.Frameworks.gatsby]: "beta",

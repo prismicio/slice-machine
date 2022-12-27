@@ -21,6 +21,14 @@ function write(
   else fs.writeFileSync(pathToFile, JSON.stringify(value, null, 2), _format);
 }
 
+function writeJson<T extends object>(
+  pathToFile: string,
+  value: T,
+  options: { recursive: boolean } = { recursive: true }
+): void {
+  write(pathToFile, JSON.stringify(value, null, 2), options);
+}
+
 function readBuffer(pathToFile: string): Buffer {
   return fs.readFileSync(pathToFile);
 }
@@ -51,6 +59,19 @@ function safeReadEntity<T>(
   } catch (e) {
     return null;
   }
+}
+
+function readEntityFromFile<T>(
+  pathToFile: string,
+  validate: (payload: unknown) => Error | T
+): T | Error | undefined {
+  const fullPath = path.join(pathToFile);
+  const hasFile = exists(fullPath);
+
+  if (hasFile) {
+    return readEntity(fullPath, validate);
+  }
+  return;
 }
 
 function readJson(pathToFile: string): unknown {
@@ -177,10 +198,12 @@ function readFileAndCreateHashSync(filePath: string): string {
 
 export default {
   write,
+  writeJson,
   readBuffer,
   readString,
   readEntity,
   safeReadEntity,
+  readEntityFromFile,
   readJson,
   safeReadJson,
   readFirstOf,

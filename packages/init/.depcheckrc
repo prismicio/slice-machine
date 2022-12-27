@@ -1,2 +1,4 @@
-ignores: []
+ignores: [
+  "@types/jest"
+]
 skip - missing: true

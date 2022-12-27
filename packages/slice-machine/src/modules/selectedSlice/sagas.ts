@@ -14,7 +14,6 @@ import { saveSliceApiClient, renameSlice } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { renameSliceCreator, renameSliceModel } from "../slices";
 import { modalCloseCreator } from "../modal";
-import { ModalKeysEnum } from "../modal/types";
 import { push } from "connected-next-router";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSliceById } from "./selectors";
@@ -88,7 +87,7 @@ export function* renameSliceSaga({
 
     yield call(renameSlice, renamedSlice, libName);
     yield put(renameSliceCreator.success({ libName, renamedSlice }));
-    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+    yield put(modalCloseCreator());
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName
     }/${payload.variationId}`;

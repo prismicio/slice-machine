@@ -15,11 +15,16 @@ const AppTheme = (): Theme =>
       primary: "#5D40F7",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
+      purpleStrong: "#5842C3",
+      whiteButtonText: "#1A1523",
+      codeBlockBackground: "#32275F",
+      failedConnectText: "#86848D",
       changesWarning: {
         background: "#FFECC7",
         color: "#5C0C17",
       },
       greyIcon: "#6F6E77",
+      greyIconDisabled: "#C9D0D8",
       missingScreenshotBanner: {
         color: "#5C0C17",
         bg: "#FFECC7",
@@ -68,7 +73,7 @@ const AppTheme = (): Theme =>
       warning: "#E67E22",
       warning02: "#ED811C",
       sidebar: "#F1F1F4",
-      link: "#5163BA",
+      link: "#6E56CF",
       choggleBox: "#5163BA",
       darkBorder: "#DCDBDD",
       code: {
@@ -149,10 +154,12 @@ const AppTheme = (): Theme =>
         fontWeight: "400",
         color: "textClear",
         fontSize: 1,
+        fontFamily: "body",
       },
       small: {
         fontWeight: "500",
         fontSize: 2,
+        fontFamily: "body",
       },
       labelError: {
         color: "error",
@@ -331,8 +338,10 @@ const AppTheme = (): Theme =>
         fontFamily: "body",
         color: "textClear",
         "&:hover": {
-          bg: darken("secondary", 0.02),
-          cursor: "pointer",
+          "&:not([disabled])": {
+            bg: darken("secondary", 0.02),
+            cursor: "pointer",
+          },
         },
         "&:focus": {
           bg: darken("secondary", 0.05),
@@ -340,12 +349,17 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
         "&:active": {
-          bg: darken("secondary", 0.06),
-          outline: "none",
+          "&:not([disabled])": {
+            bg: darken("secondary", 0.06),
+            outline: "none",
+          },
         },
         "&:disabled": {
           cursor: "not-allowed",
           color: alpha("textClear", 0.6),
+        },
+        "&>svg": {
+          pointerEvents: "none",
         },
       },
       small: {
@@ -378,6 +392,40 @@ const AppTheme = (): Theme =>
         "&:active": {
           background: "#F4F2F4",
           boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+        },
+      },
+      secondaryMedium: {
+        padding: "4px 8px",
+        borderRadius: "6px",
+        fontSize: "14px",
+        fontWeight: "bold",
+        fontFamily: "body",
+        lineHeight: "24px",
+        letterSpacing: "-0.15px",
+        color: "whiteButtonText",
+        border: "1px solid #DCDBDD",
+        backgroundColor: "white",
+        boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        cursor: "pointer",
+        "&:focus": {
+          boxShadow: "0px 0px 0px 3px rgba(124, 102, 220, 0.3)",
+          border: "1px solid #6E56CF",
+        },
+        "&:hover": {
+          "&:not([disabled])": {
+            backgroundColor: "#F4F2F4",
+            cursor: "pointer",
+          },
+        },
+        "&:active": {
+          "&:not([disabled])": {
+            backgroundColor: "#F4F2F4",
+            boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+          },
+        },
+        "&:disabled": {
+          color: "#908E96",
+          cursor: "not-allowed",
         },
       },
       darkSmall: {
@@ -638,6 +686,34 @@ const AppTheme = (): Theme =>
           border: (t) => `1px solid ${String(t?.colors?.borders)}`,
         },
       },
+      switch: {
+        height: "24px",
+        width: "45px",
+        bg: "#EDECEE",
+        "input:checked ~ &": {
+          bg: "#6E56CF",
+        },
+        "input ~ & > div": {
+          height: "20px",
+          width: "20px",
+          border: "1px solid #DCDBDD",
+          padding: "2px",
+          boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        },
+        "input:checked ~ & > div": {
+          height: "20px",
+          width: "20px",
+          border: "1px solid #5842C3",
+          padding: "2px",
+          boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        },
+        "input:checked ~ &:hover": {
+          bg: "#5842C3",
+        },
+        "input:checked ~ & > div:focus": {
+          boxShadow: "0px 0px 0px 3px rgba(124, 102, 220, 0.3)",
+        },
+      },
     },
     links: {
       hint: {
@@ -647,6 +723,9 @@ const AppTheme = (): Theme =>
         textDecoration: "none",
         cursor: "pointer",
         display: "inline-block",
+      },
+      default: {
+        color: "link",
       },
       invisible: {
         color: "text",
@@ -765,8 +844,8 @@ const AppTheme = (): Theme =>
       },
       inlineCode: {
         fontFamily: "monospace",
-        color: "error",
-        bg: "muted",
+        color: "#6E56CF",
+        bg: "#F1EEFE",
       },
       table: {
         width: "100%",

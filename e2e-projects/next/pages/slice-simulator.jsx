@@ -7,15 +7,13 @@ import { components as navigationComponents } from '../slices/navigation/index'
 
 const __allComponents = {  ...ecommerceComponents, ...marketingComponents, ...navigationComponents }
 
-import state from "../.slicemachine/libraries-state.json";
-
 const SliceSimulatorPage = () => {
   return (
     <SliceSimulator
       sliceZone={({ slices }) => (
         <SliceZone slices={slices} components={__allComponents} />
       )}
-      state={state}
+      state={{}}
     />
   );
 };

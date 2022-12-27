@@ -1,4 +1,4 @@
-import React from "react";
+import type { FC, ReactNode } from "react";
 
 import { SliceHandler } from "@src/models/slice/context";
 
@@ -14,8 +14,13 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
 import useSMTracker from "@src/hooks/useSMTracker";
+import { useChangelog } from "@src/hooks/useChangelog";
 
-const SliceMachineApp: React.FunctionComponent = ({ children }) => {
+type Props = Readonly<{
+  children?: ReactNode;
+}>;
+
+const SliceMachineApp: FC<Props> = ({ children }) => {
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
     libraries: getLibraries(state),
   }));
@@ -23,6 +28,7 @@ const SliceMachineApp: React.FunctionComponent = ({ children }) => {
   useSMTracker();
   useOnboardingRedirection();
   useServerState();
+  useChangelog();
 
   return (
     <>

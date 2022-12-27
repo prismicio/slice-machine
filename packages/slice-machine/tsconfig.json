@@ -30,7 +30,6 @@
       "@builders/*": ["lib/builders/*"],
       "@models/*": ["lib/models/*"],
       "@src/*": ["src/*"],
-      "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"]
     },
     "incremental": true
