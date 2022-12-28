@@ -169,7 +169,6 @@ export type {
 } from "./hooks/snippet-read";
 
 // slice-simulator-setup:read
-export { SliceSimulatorSetupStepValidationMessageType } from "./hooks/sliceSimulator-setup-read";
 export type {
 	SliceSimulatorSetupReadHook,
 	SliceSimulatorSetupReadHookData,

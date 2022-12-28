@@ -158,21 +158,6 @@ export class ProjectManager extends BaseManager {
 		return sliceMachineConfig;
 	}
 
-	async getRunningSliceMachineVersion(): Promise<string> {
-		const sliceMachineDir = await this.locateSliceMachineUIDir();
-
-		const sliceMachinePackageJSONContents = await fs.readFile(
-			path.join(sliceMachineDir, "package.json"),
-			"utf8",
-		);
-
-		// TODO: Validate the contents? This code currently assumes a
-		// well-formed document.
-		const json = JSON.parse(sliceMachinePackageJSONContents);
-
-		return json.version;
-	}
-
 	async locateSliceMachineUIDir(): Promise<string> {
 		const projectRoot = await this.getRoot();
 

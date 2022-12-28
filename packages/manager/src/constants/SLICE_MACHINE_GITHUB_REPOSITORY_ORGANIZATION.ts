@@ -1,0 +1,1 @@
+export const SLICE_MACHINE_GITHUB_REPOSITORY_ORGANIZATION = "prismicio";

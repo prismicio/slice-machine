@@ -1,4 +1,5 @@
 import { CustomTypes } from "@prismicio/types-internal";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import {
 	SliceMachinePlugin,
 	SliceMachinePluginRunner,
@@ -9,7 +10,7 @@ import { createContentDigest } from "../lib/createContentDigest";
 import {
 	PackageChangelog,
 	PackageManager,
-	PackageVersion,
+	// PackageVersion,
 	SliceMachineConfig,
 } from "../types";
 import {
@@ -42,7 +43,7 @@ type SliceMachineManagerGetStateReturnType = {
 			localSliceSimulatorURL?: string;
 		};
 		repo: string;
-		changelog: PackageChangelog;
+		changelog?: PackageChangelog;
 		packageManager: PackageManager;
 		mockConfig: unknown;
 		framework: unknown; // TODO: Remove
@@ -67,8 +68,7 @@ type SliceMachineManagerGetStateReturnType = {
 					data: Buffer;
 				}
 			>;
-			mock?: CustomTypes.Widgets.Slices.SharedSlice[];
-			mockConfig: Record<string, unknown>;
+			mock?: SharedSliceContent[];
 		}[];
 		meta: {
 			name?: string;
@@ -161,8 +161,8 @@ export class SliceMachineManager {
 			{ sliceMachineConfig, libraries },
 			{ profile, remoteCustomTypes, remoteSlices },
 			customTypes,
-			currentVersion,
-			allStableVersions,
+			// currentVersion,
+			// allStableVersions,
 		] = await Promise.all([
 			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
 				const libraries = await this._getLibraries(sliceMachineConfig);
@@ -190,26 +190,27 @@ export class SliceMachineManager {
 				}
 			}),
 			this._getCustomTypes(),
-			this.project.getRunningSliceMachineVersion(),
-			this.versions.getAllStableSliceMachineVersions(),
+			// this.versions.getRunningSliceMachineVersion(),
+			// this.versions.getAllStableSliceMachineVersions(),
 		]);
 
-		const latestNonBreakingVersion = ""; // TODO
-		const updateAvailable = false; // TODO
-		const versions = await Promise.all(
-			allStableVersions.map(async (version): Promise<PackageVersion> => {
-				const releaseNotes = await this.versions.getReleaseNotesForVersion({
-					version,
-				});
-
-				return {
-					versionNumber: version,
-					releaseNote: releaseNotes ?? null,
-					// TODO
-					kind: "MINOR",
-				};
-			}),
-		);
+		// const latestNonBreakingVersion = ""; // TODO
+		// const updateAvailable = false; // TODO
+		// const versions = await Promise.all(
+		// 	allStableVersions.map(async (version): Promise<PackageVersion> => {
+		// 		const releaseNotes =
+		// 			await this.versions.getSliceMachineReleaseNotesForVersion({
+		// 				version,
+		// 			});
+		//
+		// 		return {
+		// 			versionNumber: version,
+		// 			releaseNote: releaseNotes ?? null,
+		// 			// TODO
+		// 			kind: "MINOR",
+		// 		};
+		// 	}),
+		// );
 
 		// TODO: SM UI detects if a user is logged out by looking at
 		// `clientError`. Here, we simulate what the old core does by
@@ -220,12 +221,6 @@ export class SliceMachineManager {
 
 		return {
 			env: {
-				changelog: {
-					currentVersion,
-					latestNonBreakingVersion,
-					updateAvailable,
-					versions,
-				},
 				framework: "",
 				manifest: {
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
@@ -279,12 +274,10 @@ export class SliceMachineManager {
 
 						await Promise.all(
 							sliceIDs.map(async (sliceID) => {
-								const [{ model }, { mocks }, { mocksConfig }] =
-									await Promise.all([
-										this.slices.readSlice({ libraryID, sliceID }),
-										this.slices.readSliceMocks({ libraryID, sliceID }),
-										this.slices.readSliceMocksConfig({ libraryID, sliceID }),
-									]);
+								const [{ model }, { mocks }] = await Promise.all([
+									this.slices.readSlice({ libraryID, sliceID }),
+									this.slices.readSliceMocks({ libraryID, sliceID }),
+								]);
 
 								if (model) {
 									const screenshots: typeof components[number]["screenshots"] =
@@ -316,7 +309,6 @@ export class SliceMachineManager {
 										model,
 										screenshots,
 										mock: mocks,
-										mockConfig: mocksConfig || {},
 									});
 								}
 							}),

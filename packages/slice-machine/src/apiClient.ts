@@ -1,6 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
-import { SliceMachineManagerClient } from "@slicemachine/manager/client";
+import {
+  SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
+  SliceMachineManagerClient,
+} from "@slicemachine/manager/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import {
   CustomTypes,
@@ -22,13 +25,13 @@ import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
 
-const defaultAxiosConfig = {
-  withCredentials: true,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-};
+// const defaultAxiosConfig = {
+//   withCredentials: true,
+//   headers: {
+//     Accept: "application/json",
+//     "Content-Type": "application/json",
+//   },
+// };
 
 /** State Routes **/
 
@@ -76,28 +79,6 @@ export const getState = async (): Promise<ServerState> => {
     remoteSlices: rawState.remoteSlices.map((remoteSliceModel) => {
       return Slices.toSM(remoteSliceModel);
     }),
-    env: {
-      ...rawState.env,
-      changelog: {
-        ...rawState.env.changelog,
-        versions: rawState.env.changelog.versions.sort((a, b) => {
-          const [aMajor, aMinor, aPatch] = a.versionNumber.split(".");
-          const [bMajor, bMinor, bPatch] = b.versionNumber.split(".");
-
-          const major = Number.parseInt(bMajor) - Number.parseInt(aMajor);
-          const minor = Number.parseInt(bMinor) - Number.parseInt(aMinor);
-          const patch = Number.parseInt(bPatch) - Number.parseInt(aPatch);
-
-          if (major !== 0) {
-            return major;
-          } else if (minor !== 0) {
-            return minor;
-          } else {
-            return patch;
-          }
-        }),
-      },
-    },
   };
 
   return state;
@@ -297,9 +278,24 @@ export const checkAuthStatus = async (): Promise<CheckAuthStatusResponse> => {
 //   return await managerClient.simulator.readSliceSimulatorSetupSteps();
 // }
 
-export const checkSimulatorSetup = (): Promise<
-  AxiosResponse<SimulatorCheckResponse>
-> => axios.get(`/api/simulator/check`);
+export const checkSimulatorSetup =
+  async (): Promise<SimulatorCheckResponse> => {
+    const localSliceSimulatorURL =
+      await managerClient.simulator.getLocalSliceSimulatorURL();
+
+    return {
+      manifest: localSliceSimulatorURL ? "ok" : "ko",
+      value: localSliceSimulatorURL,
+    };
+
+    // return axios.get(`/api/simulator/check`);
+  };
+
+export const getSimulatorSetupSteps = async (): ReturnType<
+  typeof managerClient.simulator.readSliceSimulatorSetupSteps
+> => {
+  return await managerClient.simulator.readSliceSimulatorSetupSteps();
+};
 
 export type SaveSliceMockRequest = {
   sliceName: string;
@@ -307,13 +303,54 @@ export type SaveSliceMockRequest = {
   mock: ComponentMocks;
 };
 
-export const saveSliceMock = (payload: SaveSliceMockRequest) =>
-  axios
-    .post<SaveSliceMockRequest>("/api/slices/mock", payload)
-    .then((res) => res.data);
+export const saveSliceMock = async (payload: SaveSliceMockRequest) => {
+  return await managerClient.slices.updateSliceMocks({
+    libraryID: payload.libraryName,
+    sliceID: payload.sliceName,
+    mocks: payload.mock,
+  });
+
+  // return axios
+  //   .post<SaveSliceMockRequest>("/api/slices/mock", payload)
+  //   .then((res) => res.data);
+};
 
 export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
-  return axios
-    .get<PackageChangelog>(`/api/changelog`, defaultAxiosConfig)
-    .then((response) => response.data);
+  const [
+    currentVersion,
+    latestNonBreakingVersion,
+    updateAvailable,
+    versionsWithKind,
+  ] = await Promise.all([
+    managerClient.versions.getRunningSliceMachineVersion(),
+    managerClient.versions.getLatestNonBreakingSliceMachineVersion(),
+    managerClient.versions.checkIsUpdateAvailable(),
+    managerClient.versions.getAllStableSliceMachineVersionsWithKind(),
+  ]);
+
+  const versionsWithMetadata = await Promise.all(
+    versionsWithKind.map(async (versionWithKind) => {
+      const releaseNotes =
+        await managerClient.versions.getSliceMachineReleaseNotesForVersion({
+          version: versionWithKind.version,
+        });
+
+      return {
+        versionNumber: versionWithKind.version,
+        releaseNote: releaseNotes ?? null,
+        kind: versionWithKind.kind,
+      };
+    })
+  );
+
+  return {
+    currentVersion,
+    updateAvailable,
+    latestNonBreakingVersion: latestNonBreakingVersion ?? null,
+    versions: versionsWithMetadata,
+  };
+
+  // return axios
+  //   .get<PackageChangelog>(`/api/changelog`, defaultAxiosConfig)
+  //   .then((response) => response.data);
 };

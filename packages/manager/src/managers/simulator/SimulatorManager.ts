@@ -1,8 +1,6 @@
 import * as t from "io-ts";
-import {
-	HookError,
-	SliceSimulatorSetupStepValidationMessageType,
-} from "@slicemachine/plugin-kit";
+import { HookError } from "@slicemachine/plugin-kit";
+import fetch from "node-fetch";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -12,6 +10,8 @@ import { decodeHookResult } from "../../lib/decodeHookResult";
 import { functionCodec } from "../../lib/functionCodec";
 import { markdownToHTML } from "../../lib/markdownToHTML";
 
+import { UnexpectedDataError } from "../../errors";
+
 import { BaseManager } from "../BaseManager";
 
 const sliceSimulatorSetupStepCodec = t.intersection([
@@ -20,17 +20,12 @@ const sliceSimulatorSetupStepCodec = t.intersection([
 		body: t.string,
 	}),
 	t.partial({
+		description: t.string,
 		validate: functionCodec,
 	}),
 ]);
 
 const SliceSimulatorSetupStepValidationMessageCodec = t.type({
-	type: t.union([
-		// This list should contain every value from
-		// `SliceSimulatorSetupStepValidationMessageType`.
-		t.literal(SliceSimulatorSetupStepValidationMessageType.Error),
-		t.literal(SliceSimulatorSetupStepValidationMessageType.Warning),
-	]),
 	title: t.string,
 	message: t.string,
 });
@@ -40,6 +35,7 @@ type SliceSimulatorSetupStepValidationMessageCodec = t.TypeOf<
 
 export type SimulatorManagerReadSliceSimulatorSetupStep = {
 	title: string;
+	description?: string;
 	body: string;
 	/**
 	 * Determines if the step is completed.
@@ -58,6 +54,30 @@ export type SimulatorManagerReadSliceSimulatorSetupStepsReturnType = {
 };
 
 export class SimulatorManager extends BaseManager {
+	async getLocalSliceSimulatorURL(): Promise<string | undefined> {
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+
+		return sliceMachineConfig.localSliceSimulatorURL;
+	}
+
+	/**
+	 * @throws {@link UnexpectedDataError} Thrown if the project is not configured
+	 *   with a Slice Simulator URL.
+	 */
+	async checkIsLocalSliceSimulatorURLAccessible(): Promise<boolean> {
+		const localSliceSimulatorURL = await this.getLocalSliceSimulatorURL();
+
+		if (!localSliceSimulatorURL) {
+			throw new UnexpectedDataError(
+				"The project has not been configured with a Slice Simulator URL. Add a `localSliceSimulatorURL` property to your project's configuration to fix this error.",
+			);
+		}
+
+		const res = await fetch(localSliceSimulatorURL);
+
+		return res.ok;
+	}
+
 	async readSliceSimulatorSetupSteps(): Promise<SimulatorManagerReadSliceSimulatorSetupStepsReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
@@ -76,6 +96,7 @@ export class SimulatorManager extends BaseManager {
 
 				const res: SimulatorManagerReadSliceSimulatorSetupStep = {
 					title: step.title,
+					description: step.description,
 					body: bodyHTML,
 					isComplete: undefined,
 					validationMessages: [],
@@ -99,12 +120,7 @@ export class SimulatorManager extends BaseManager {
 						return res;
 					}
 
-					const isComplete = !validationMessages.some((validationMessage) => {
-						return (
-							validationMessage.type ===
-							SliceSimulatorSetupStepValidationMessageType.Error
-						);
-					});
+					const isComplete = validationMessages.length > 0;
 
 					const processedValidationMessages = await Promise.all(
 						validationMessages.map(async (validationMessage) => {

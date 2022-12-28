@@ -1,50 +1,68 @@
 [
-  {
-    "variation": "default",
-    "name": "Default",
-    "slice_type": "image",
-    "items": [],
-    "primary": {
-      "image": {
-        "dimensions": {
-          "width": 900,
-          "height": 500
-        },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.prismic.io/nextjs-starter-prismic-blog/bbde7d62-670b-4592-b76c-4047d0cf1635_jake-melara-Yh6K2eTr_FY-unsplash.jpg?w=900&h=500&fit=crop"
-      },
-      "caption": [
-        {
-          "type": "paragraph",
-          "text": "Commodo magna dolor est aute in enim do in minim excepteur pariatur duis culpa dolor. Fugiat non ipsum cupidatat proident velit aute Lorem cillum reprehenderit Lorem occaecat esse cillum. Aute aliqua dolor ad elit et.",
-          "spans": []
-        }
-      ]
-    }
-  },
-  {
-    "variation": "wide",
-    "name": "Wide",
-    "slice_type": "image",
-    "items": [],
-    "primary": {
-      "image": {
-        "dimensions": {
-          "width": 900,
-          "height": 500
-        },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=900&h=500&fit=crop"
-      },
-      "caption": [
-        {
-          "type": "paragraph",
-          "text": "Elit sunt cillum deserunt in qui culpa anim veniam amet dolore consectetur pariatur magna dolor ex.",
-          "spans": []
-        }
-      ]
-    }
-  }
+	{
+		"variation": "wide",
+		"name": "Wide",
+		"slice_type": "image",
+		"items": [],
+		"primary": {
+			"image": {
+				"dimensions": {
+					"width": 900,
+					"height": 500
+				},
+				"alt": "Placeholder image",
+				"copyright": null,
+				"url": "https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=900&h=500&fit=crop"
+			},
+			"caption": [
+				{
+					"type": "paragraph",
+					"text": "Elit sunt cillum deserunt in qui culpa anim veniam amet dolore consectetur pariatur magna dolor ex.",
+					"spans": []
+				}
+			]
+		}
+	},
+	{
+		"variation": "default",
+		"name": "Default",
+		"slice_type": "image",
+		"items": [],
+		"primary": {
+			"caption": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Foo bar baz",
+							"spans": []
+						},
+						"direction": "ltr"
+					}
+				]
+			},
+			"image": {
+				"__TYPE__": "ImageContent",
+				"url": "https://images.unsplash.com/photo-1657310217253-176cd053e07e?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzMzc0NjN8MXwxfHNlYXJjaHw4fHxmcnVpdHxlbnwwfHx8fDE2NzIxNDA5OTM&ixlib=rb-4.0.3&q=80&rect=0%2C0%2C4592%2C3444&w=4592&h=3444",
+				"origin": {
+					"id": "_gWz-xsn-_4",
+					"url": "https://images.unsplash.com/photo-1657310217253-176cd053e07e?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzMzc0NjN8MXwxfHNlYXJjaHw4fHxmcnVpdHxlbnwwfHx8fDE2NzIxNDA5OTM&ixlib=rb-4.0.3&q=80",
+					"width": 4592,
+					"height": 3444
+				},
+				"width": 4592,
+				"height": 3444,
+				"edit": {
+					"background": "transparent",
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					}
+				},
+				"thumbnails": {}
+			}
+		}
+	}
 ]

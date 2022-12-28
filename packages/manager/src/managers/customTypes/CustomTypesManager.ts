@@ -230,6 +230,7 @@ export class CustomTypesManager extends BaseManager {
 		}
 	}
 
+	// TODO: Remove
 	async readCustomTypeMocksConfig(
 		args: SliceMachineManagerReadCustomTypeMocksConfigArgs,
 	): Promise<SliceMachineManagerReadCustomTypeMocksConfigArgsReturnType> {
@@ -259,6 +260,7 @@ export class CustomTypesManager extends BaseManager {
 		}
 	}
 
+	// TODO: Remove
 	async updateCustomTypeMocksConfig(
 		args: SliceMachineManagerUpdateCustomTypeMocksConfigArgs,
 	): Promise<SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType> {

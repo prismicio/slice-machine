@@ -6,18 +6,9 @@ import type {
 } from "../types";
 
 /**
- * The type of validation result for a Slice Simulator set up step.
- */
-export const SliceSimulatorSetupStepValidationMessageType = {
-	Error: "Error",
-	Warning: "Warning",
-} as const;
-
-/**
  * An object representing validation for a Slice Simulator set up step.
  */
 export type SliceSimulatorSetupStepValidationMessage = {
-	type: typeof SliceSimulatorSetupStepValidationMessageType[keyof typeof SliceSimulatorSetupStepValidationMessageType];
 	title: string;
 	message: string;
 };
@@ -27,6 +18,7 @@ export type SliceSimulatorSetupStepValidationMessage = {
  */
 export type SliceSimulatorSetupStep = {
 	title: string;
+	description?: string;
 	body: string;
 	validate?: () => Promisable<
 		| SliceSimulatorSetupStepValidationMessage

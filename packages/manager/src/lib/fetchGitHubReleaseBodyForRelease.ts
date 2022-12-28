@@ -4,10 +4,6 @@ import pLimit from "p-limit";
 
 import { decode } from "./decode";
 
-const SLICE_MACHINE_GITHUB_REPOSITORY_ORGANIZATION = "prismicio";
-const SLICE_MACHINE_GITHUB_REPOSITORY_NAME = "slice-machine";
-const SLICE_MACHINE_GITHUB_PACKAGE_NAME = "slice-machine-ui";
-
 const GITHUB_JSON_ACCEPT_HEADER = "application/vnd.github+json";
 
 /**
@@ -21,9 +17,16 @@ const GitHubReleaseMetadata = t.type({
 });
 export type GitHubReleaseMetadata = t.TypeOf<typeof GitHubReleaseMetadata>;
 
-const fetchAllGitHubReleases = async (): Promise<GitHubReleaseMetadata[]> => {
+type FetchAllGitHubReleasesArgs = {
+	repositoryOwner: string;
+	repositoryName: string;
+};
+
+const fetchAllGitHubReleases = async (
+	args: FetchAllGitHubReleasesArgs,
+): Promise<GitHubReleaseMetadata[]> => {
 	const res = await fetch(
-		`https://api.github.com/repos/${SLICE_MACHINE_GITHUB_REPOSITORY_ORGANIZATION}/${SLICE_MACHINE_GITHUB_REPOSITORY_NAME}/releases`,
+		`https://api.github.com/repos/${args.repositoryOwner}/${args.repositoryName}/releases`,
 		{
 			headers: {
 				Accept: GITHUB_JSON_ACCEPT_HEADER,
@@ -47,20 +50,28 @@ const fetchAllGitHubReleases = async (): Promise<GitHubReleaseMetadata[]> => {
 };
 
 type FetchGitHubReleaseByVersionArgs = {
+	repositoryOwner: string;
+	repositoryName: string;
+	packageName?: string;
 	version: string;
 };
 
 const fetchGitHubReleaseByVersion = async (
 	args: FetchGitHubReleaseByVersionArgs,
 ): Promise<GitHubReleaseMetadata | undefined> => {
-	const res = await fetch(
-		`https://api.github.com/repos/${SLICE_MACHINE_GITHUB_REPOSITORY_ORGANIZATION}/${SLICE_MACHINE_GITHUB_REPOSITORY_NAME}/releases/tags/${SLICE_MACHINE_GITHUB_PACKAGE_NAME}@${args.version}`,
-		{
-			headers: {
-				Accept: GITHUB_JSON_ACCEPT_HEADER,
-			},
+	let url: string;
+
+	if (args.packageName) {
+		url = `https://api.github.com/repos/${args.repositoryOwner}/${args.repositoryName}/releases/tags/${args.packageName}@${args.version}`;
+	} else {
+		url = `https://api.github.com/repos/${args.repositoryOwner}/${args.repositoryName}/releases/tags/${args.version}`;
+	}
+
+	const res = await fetch(url, {
+		headers: {
+			Accept: GITHUB_JSON_ACCEPT_HEADER,
 		},
-	);
+	});
 
 	if (res.ok) {
 		const json = await res.json();
@@ -76,6 +87,9 @@ const fetchGitHubReleaseByVersion = async (
 };
 
 type FetchGitHubReleaseBodyForReleaseArgs = {
+	repositoryOwner: string;
+	repositoryName: string;
+	packageName?: string;
 	version: string;
 	cache?: Record<string, GitHubReleaseMetadata | undefined>;
 };
@@ -86,7 +100,10 @@ const _fetchGitHubReleaseBodyForRelease = async (
 	const cache = args.cache || {};
 
 	if (Object.keys(cache).length < 1) {
-		const releases = await fetchAllGitHubReleases();
+		const releases = await fetchAllGitHubReleases({
+			repositoryOwner: args.repositoryOwner,
+			repositoryName: args.repositoryName,
+		});
 
 		for (const release of releases) {
 			cache[release.name] = release;
@@ -100,6 +117,9 @@ const _fetchGitHubReleaseBodyForRelease = async (
 	} else {
 		try {
 			const version = await fetchGitHubReleaseByVersion({
+				repositoryOwner: args.repositoryOwner,
+				repositoryName: args.repositoryName,
+				packageName: args.packageName,
 				version: args.version,
 			});
 

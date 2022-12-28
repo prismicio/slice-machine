@@ -1,4 +1,5 @@
 import { HookError, SliceMachinePluginOptions } from "@slicemachine/plugin-kit";
+import { VERSION_KIND } from "./constants/VERSION_KIND";
 
 export type PackageManager = "npm" | "yarn";
 
@@ -12,14 +13,8 @@ export type PackageChangelog = {
 export type PackageVersion = {
 	versionNumber: string;
 	releaseNote: string | null;
-	kind: typeof VersionKind[keyof typeof VersionKind] | null;
+	kind: typeof VERSION_KIND[keyof typeof VERSION_KIND] | null;
 };
-
-export const VersionKind = {
-	MAJOR: "MAJOR",
-	MINOR: "MINOR",
-	PATCH: "PATCH",
-} as const;
 
 /**
  * A string, object, or instance representing a registered plugin.

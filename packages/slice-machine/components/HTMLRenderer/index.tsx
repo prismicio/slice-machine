@@ -1,32 +1,97 @@
-import { Box } from "theme-ui";
+import { useState, useRef } from "react";
+import { Box, Flex, Button, useThemeUI } from "theme-ui";
 import parse, {
   domToReact,
   Element,
   HTMLReactParserOptions,
 } from "html-react-parser";
+import { MdCheck, MdContentCopy } from "react-icons/md";
 
 import CodeSpan from "@components/CodeSpan";
 
-const defaultComponents: NonNullable<HTMLRendererProps["components"]> = {
-  code: ({ children }) => {
-    return <CodeSpan>{children}</CodeSpan>;
-  },
-  pre: ({ children, ...props }) => {
-    return (
-      <Box
-        as="pre"
-        {...props}
+const Pre = ({ children, ...props }: { children?: React.ReactNode }) => {
+  const { theme } = useThemeUI();
+
+  const [isCopied, setIsCopied] = useState(false);
+  const preRef = useRef<HTMLPreElement>(null);
+
+  const copy = async (): Promise<void> => {
+    if (preRef.current) {
+      await navigator.clipboard.writeText(preRef.current.innerText);
+
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1200);
+    }
+  };
+
+  return (
+    <Box
+      {...props}
+      sx={{
+        backgroundColor: "codeBlockBackground",
+        borderRadius: 8,
+      }}
+    >
+      <Flex
         sx={{
-          backgroundColor: "#161b22",
+          px: "26px",
+          py: "22px",
+          color: "#FFF",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "1px solid rgba(111, 110, 119, 0.2)",
+        }}
+      >
+        <Flex sx={{ alignItems: "center" }}>
+          {/*
+                <FileIcon size={14} style={{ marginRight: "12px" }} />
+                  {fileName}
+         */}
+        </Flex>
+        <Button
+          onClick={copy}
+          variant="transparent"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            p: 0,
+            fontSize: "12px",
+            color: "#FFF",
+          }}
+        >
+          Copy&nbsp;
+          {isCopied ? (
+            <MdCheck size={16} color={String(theme?.colors?.success)} />
+          ) : (
+            <MdContentCopy size={16} style={{ marginLeft: "8px" }} />
+          )}
+        </Button>
+      </Flex>
+      <Box
+        ref={preRef}
+        as="pre"
+        sx={{
           color: "#c9d1d9",
-          borderRadius: 8,
           padding: "16px 20px",
           overflow: "auto",
         }}
       >
         {children}
       </Box>
-    );
+    </Box>
+  );
+};
+
+const defaultComponents: NonNullable<HTMLRendererProps["components"]> = {
+  code: ({ children }) => {
+    return <CodeSpan>{children}</CodeSpan>;
+  },
+  pre: ({ children, ...props }) => {
+    return <Pre {...props}>{children}</Pre>;
   },
 };
 

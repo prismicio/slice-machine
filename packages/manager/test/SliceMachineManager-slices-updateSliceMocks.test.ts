@@ -8,7 +8,14 @@ import { createSliceMachineManager } from "../src";
 import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
 
 it("saves a Slice's mock config as an asset", async () => {
-	const mocksConfig = { baz: "qux" };
+	const mocks = [
+		{
+			__TYPE__: "SharedSliceContent" as const,
+			variation: "baz",
+			primary: {},
+			items: [],
+		},
+	];
 	const hookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
@@ -23,10 +30,10 @@ it("saves a Slice's mock config as an asset", async () => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.slices.updateSliceMocksConfig({
+	const res = await manager.slices.updateSliceMocks({
 		libraryID: "foo",
 		sliceID: "bar",
-		mocksConfig,
+		mocks,
 	});
 
 	expect(res).toStrictEqual({
@@ -36,8 +43,8 @@ it("saves a Slice's mock config as an asset", async () => {
 		libraryID: "foo",
 		sliceID: "bar",
 		asset: {
-			id: "mocks.config.json",
-			data: Buffer.from(JSON.stringify(mocksConfig, null, "\t")),
+			id: "mocks.json",
+			data: Buffer.from(JSON.stringify(mocks, null, "\t")),
 		},
 	});
 });
@@ -47,10 +54,17 @@ it("throws if plugins have not been initialized", async () => {
 	const manager = createSliceMachineManager({ cwd });
 
 	await expect(async () => {
-		await manager.slices.updateSliceMocksConfig({
+		await manager.slices.updateSliceMocks({
 			libraryID: "foo",
 			sliceID: "bar",
-			mocksConfig: { baz: "qux" },
+			mocks: [
+				{
+					__TYPE__: "SharedSliceContent" as const,
+					variation: "baz",
+					primary: {},
+					items: [],
+				},
+			],
 		});
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });

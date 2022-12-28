@@ -2,9 +2,9 @@ import { expect, it } from "vitest";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
+import { mockGitHubReleasesAPI } from "./__testutils__/mockGitHubReleasesAPI";
 
 import { createSliceMachineManager } from "../src";
-import { mockGitHubReleasesAPI } from "./__testutils__/mockGitHubReleasesAPI";
 
 it("returns release notes from GitHub for a given version", async (ctx) => {
 	const adapter = createTestPlugin();
@@ -25,7 +25,7 @@ it("returns release notes from GitHub for a given version", async (ctx) => {
 		},
 	});
 
-	const res = await manager.versions.getReleaseNotesForVersion({
+	const res = await manager.versions.getSliceMachineReleaseNotesForVersion({
 		version: "0.1.0",
 	});
 
@@ -51,7 +51,7 @@ it("returns undefined if the release does not exist", async (ctx) => {
 		},
 	});
 
-	const res = await manager.versions.getReleaseNotesForVersion({
+	const res = await manager.versions.getSliceMachineReleaseNotesForVersion({
 		version: "0.1.0",
 	});
 
@@ -74,7 +74,7 @@ it("returns undefined if the release does not have notes", async (ctx) => {
 		},
 	});
 
-	const res = await manager.versions.getReleaseNotesForVersion({
+	const res = await manager.versions.getSliceMachineReleaseNotesForVersion({
 		version: "0.1.0",
 	});
 
@@ -110,10 +110,10 @@ it("uses cached release notes to minimize network requests", async (ctx) => {
 		}
 	});
 
-	await manager.versions.getReleaseNotesForVersion({
+	await manager.versions.getSliceMachineReleaseNotesForVersion({
 		version: "0.1.0",
 	});
-	const res = await manager.versions.getReleaseNotesForVersion({
+	const res = await manager.versions.getSliceMachineReleaseNotesForVersion({
 		version: "0.2.0",
 	});
 
@@ -149,7 +149,7 @@ it("requests individual versions if not included in the initial batch request", 
 		},
 	});
 
-	const res = await manager.versions.getReleaseNotesForVersion({
+	const res = await manager.versions.getSliceMachineReleaseNotesForVersion({
 		version: "0.3.0",
 	});
 

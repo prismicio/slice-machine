@@ -9,7 +9,6 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
 import { Frameworks } from "@slicemachine/core/build/models/Framework";
-import { simulatorIsSupported } from "@lib/utils";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
@@ -80,7 +79,7 @@ export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
 
 export const selectIsSimulatorAvailableForFramework = (
-  store: SliceMachineStoreType
+  _store: SliceMachineStoreType
 ): boolean => {
   // TODO: Detect if the manager can provide set up steps, most likely from the
   // adapter (but if possible, construct the code so it is not

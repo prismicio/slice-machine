@@ -1,8 +1,9 @@
-export enum VersionKind {
-  MAJOR = "MAJOR",
-  MINOR = "MINOR",
-  PATCH = "PATCH",
-}
+export const VersionKind = {
+  MAJOR: "MAJOR",
+  MINOR: "MINOR",
+  PATCH: "PATCH",
+} as const;
+export type VersionKind = typeof VersionKind[keyof typeof VersionKind];
 
 // Model built from Npm version number and GitHub release note
 export interface PackageVersion {

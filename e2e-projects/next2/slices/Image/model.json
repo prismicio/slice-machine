@@ -23,19 +23,10 @@
             "allowTargetBlank": true,
             "single": "paragraph,em,strong"
           }
-        },
-        "foo": {
-          "type": "Boolean",
-          "config": {
-            "label": "Foo",
-            "default_value": false,
-            "placeholder_true": "true",
-            "placeholder_false": "false"
-          }
         }
       },
       "items": {},
-      "imageUrl": "https://images.prismic.io/slicemachine-dev-mule/shared-slices/image/default/twe988zQK9p4OijW2oyET22Ps6g=.png?auto=compress%2Cformat"
+      "imageUrl": "https://images.prismic.io/slicemachine-dev-mule/shared-slices/image/default/b707bdf3ccd02bda783a28d6da8c844f6d8fb3a8.png?auto=compress%2Cformat"
     },
     {
       "id": "wide",
@@ -59,7 +50,7 @@
         }
       },
       "items": {},
-      "imageUrl": "https://images.prismic.io/slicemachine-dev-mule/shared-slices/image/wide/xDGhbqN31RDj3OFpH+IWw48YF+w=.png?auto=compress%2Cformat"
+      "imageUrl": "https://images.prismic.io/slicemachine-dev-mule/shared-slices/image/wide/c431a16ea377d510e3dce1691fe216c38f1817ec.png?auto=compress%2Cformat"
     }
   ]
 }

@@ -11,13 +11,16 @@ import {
   getLinkToTroubleshootingDocs,
   selectIsSimulatorAvailableForFramework,
 } from "@src/modules/environment";
+import { selectSetupSteps } from "@src/modules/simulator";
 
-import { getStepperConfigurationByFramework } from "./steps";
+import HTMLRenderer from "@components/HTMLRenderer";
+
+import TextWithInlineCode from "./TextWithInlineCode";
 
 const TitleCard: React.FC<{
   number: number;
   title: string;
-  excerpt: string;
+  excerpt?: string;
 }> & { tabsRole: string } = ({ number, title, excerpt, ...rest }) => (
   <Tab
     className="react-tabs__vertical__tab"
@@ -30,24 +33,26 @@ const TitleCard: React.FC<{
       }}
     >
       <NumberBox number={number} />
-      <Box sx={{ ml: 3 }}>
+      <Box sx={{ ml: 3, alignSelf: "center" }}>
         <Heading
           as="h4"
           sx={{ color: "whiteButtonText", fontSize: "14px", fontWeight: "600" }}
         >
-          {title}
+          <TextWithInlineCode>{title}</TextWithInlineCode>
         </Heading>
-        <Text
-          as="p"
-          sx={{
-            mt: 2,
-            color: "textClear",
-            fontSize: "13px",
-            lineHeight: "24px",
-          }}
-        >
-          {excerpt}
-        </Text>
+        {excerpt && (
+          <Text
+            as="p"
+            sx={{
+              mt: 2,
+              color: "textClear",
+              fontSize: "13px",
+              lineHeight: "24px",
+            }}
+          >
+            <TextWithInlineCode>{excerpt}</TextWithInlineCode>
+          </Text>
+        )}
       </Box>
     </Flex>
   </Tab>
@@ -80,15 +85,19 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     framework,
     linkToStorybookDocs,
     isSimulatorAvailableForFramework,
+    setupSteps,
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
     linkToStorybookDocs: getLinkToStorybookDocs(state),
     isSimulatorAvailableForFramework:
       selectIsSimulatorAvailableForFramework(state),
     linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
+    setupSteps: selectSetupSteps(state),
   }));
 
-  const setupData = getStepperConfigurationByFramework(framework);
+  // const setupData = getStepperConfigurationByFramework(framework);
+
+  const steps = setupSteps || [];
 
   return (
     <SliceMachineModal isOpen={isOpen}>
@@ -96,7 +105,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
         bodySx={{
           p: 0,
           bg: "grey07",
-          height: setupData.steps.length === 4 ? "640px" : "480px",
+          height: steps.length === 4 ? "640px" : "480px",
         }}
         Header={({ radius }: { radius: string | number }) => (
           <Flex
@@ -119,17 +128,29 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       >
         <Tabs defaultFocus className="react-tabs__vertical">
           <TabList className="react-tabs__vertical__tab-list">
-            {setupData.excerpts.map((t, i) => (
+            {steps.map((step, i) => (
               <TitleCard
                 number={i + 1}
-                key={t.title}
-                title={t.title}
-                excerpt={t.excerpt}
+                key={step.title}
+                title={step.title}
+                excerpt={step.description}
               />
             ))}
           </TabList>
           {isSimulatorAvailableForFramework ? (
             <>
+              {steps.map((step) => {
+                return (
+                  <TabPanel
+                    key={step.title}
+                    selectedClassName="react-tabs__vertical__tab-panel--selected"
+                    className="react-tabs__vertical__tab-panel"
+                  >
+                    <HTMLRenderer html={step.body} />
+                  </TabPanel>
+                );
+              })}
+              {/*
               {setupData.steps.map((Step, i) => {
                 return (
                   <TabPanel
@@ -145,6 +166,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
                   </TabPanel>
                 );
               })}
+              */}
             </>
           ) : (
             <TabPanel
