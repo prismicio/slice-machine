@@ -1,4 +1,4 @@
-import { expect, test } from "@jest/globals";
+import { expect, test, jest, describe, afterEach } from "@jest/globals";
 import "uuid";
 
 import TrackerSingleton, { InitTracker } from "../../src/utils/tracker";

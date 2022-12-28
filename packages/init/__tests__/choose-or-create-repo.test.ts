@@ -305,7 +305,11 @@ describe("sortReposForPrompt", () => {
       { name: "qwerty", domain: "qwerty", role: Models.Roles.ADMIN },
     ];
 
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => undefined);
+    jest.spyOn(fs, "lstatSync").mockImplementationOnce(
+      () =>
+        // @ts-expect-error - Purposely returning an invalid type
+        undefined
+    );
 
     const [first, second, third] = sortReposForPrompt(
       repos,
