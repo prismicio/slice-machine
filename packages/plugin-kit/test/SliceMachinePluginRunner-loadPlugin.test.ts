@@ -1,4 +1,5 @@
 import { it, expect, vi } from "vitest";
+import * as path from "node:path";
 
 import * as adapter from "./__fixtures__/adapter";
 import * as plugin from "./__fixtures__/plugin";
@@ -9,100 +10,117 @@ import { createSliceMachinePluginRunner } from "../src";
 const project = createSliceMachineProject(adapter.valid);
 const pluginRunner = createSliceMachinePluginRunner({ project });
 
-it("loads plugin from module import", async (ctx) => {
-	vi.mock(ctx.meta.name, () => ({
-		default: plugin.valid,
-	}));
+const createRequireMock =
+	vi.fn<Parameters<typeof import("node:module")["createRequire"]>>();
 
-	// @ts-expect-error - Calling private method
-	const loadedPlugin = await pluginRunner._loadPlugin(ctx.meta.name);
-
-	expect(loadedPlugin).toMatchInlineSnapshot(`
-		{
-		  "meta": {
-		    "name": "plugin-valid",
-		  },
-		  "options": {},
-		  "resolve": "loads plugin from module import",
-		  "setup": [Function],
+type MockCreateRequireForProjectArgs = {
+	moduleID: string;
+	module: unknown;
+};
+const mockCreateRequireForProjectOnce = (
+	args: MockCreateRequireForProjectArgs,
+) => {
+	createRequireMock.mockImplementationOnce((filename) => {
+		if (
+			typeof filename === "string" &&
+			path.dirname(filename) === project.root
+		) {
+			return (moduleID: string) => {
+				if (moduleID === args.moduleID) {
+					return args.module;
+				}
+			};
 		}
-	`);
 
-	vi.unmock(ctx.meta.name);
+		throw new Error("not implemented");
+	});
+};
+
+vi.mock("module", async () => {
+	const actual: typeof import("node:module") = await vi.importActual(
+		"node:module",
+	);
+
+	return {
+		...actual,
+		createRequire: (...args: Parameters<typeof actual["createRequire"]>) => {
+			const res = createRequireMock(...args);
+
+			if (res !== undefined) {
+				return res;
+			} else {
+				return actual.createRequire(...args);
+			}
+		},
+	};
 });
 
-it("loads plugin from module import with options", async (ctx) => {
-	vi.mock(ctx.meta.name, () => ({
-		default: plugin.valid,
-	}));
+it("loads plugin from node_modules", async () => {
+	mockCreateRequireForProjectOnce({
+		moduleID: plugin.valid.meta.name,
+		module: plugin.valid,
+	});
+
+	// @ts-expect-error - Calling private method
+	const loadedPlugin = await pluginRunner._loadPlugin(plugin.valid.meta.name);
+
+	expect(loadedPlugin).toStrictEqual({
+		meta: plugin.valid.meta,
+		resolve: plugin.valid.meta.name,
+		setup: plugin.valid.setup,
+		options: {},
+	});
+});
+
+it("loads plugin from node_modules with options", async () => {
+	mockCreateRequireForProjectOnce({
+		moduleID: plugin.valid.meta.name,
+		module: plugin.valid,
+	});
+
+	const options = { foo: "bar" };
 
 	// @ts-expect-error - Calling private method
 	const loadedPlugin = await pluginRunner._loadPlugin({
-		resolve: ctx.meta.name,
-		options: { foo: "bar" },
+		resolve: plugin.valid.meta.name,
+		options,
 	});
 
-	expect(loadedPlugin).toMatchInlineSnapshot(`
-		{
-		  "meta": {
-		    "name": "plugin-valid",
-		  },
-		  "options": {
-		    "foo": "bar",
-		  },
-		  "resolve": "loads plugin from module import with options",
-		  "setup": [Function],
-		}
-	`);
-
-	vi.unmock(ctx.meta.name);
+	expect(loadedPlugin).toStrictEqual({
+		meta: plugin.valid.meta,
+		resolve: plugin.valid.meta.name,
+		setup: plugin.valid.setup,
+		options,
+	});
 });
 
 it("loads plugin from direct definition", async () => {
 	// @ts-expect-error - Calling private method
 	const loadedPlugin = await pluginRunner._loadPlugin(plugin.valid);
 
-	expect(loadedPlugin).toMatchInlineSnapshot(`
-		{
-		  "meta": {
-		    "name": "plugin-valid",
-		  },
-		  "options": {},
-		  "resolve": {
-		    "meta": {
-		      "name": "plugin-valid",
-		    },
-		    "setup": [Function],
-		  },
-		  "setup": [Function],
-		}
-	`);
+	expect(loadedPlugin).toStrictEqual({
+		meta: plugin.valid.meta,
+		resolve: plugin.valid,
+		setup: plugin.valid.setup,
+		options: {},
+	});
 });
 
 it("loads plugin from direct definition with options", async () => {
+	const options = { foo: "bar" };
+
 	// @ts-expect-error - Calling private method
 	const loadedPlugin = await pluginRunner._loadPlugin({
 		resolve: plugin.valid,
 		options: { foo: "bar" },
 	});
 
-	expect(loadedPlugin).toMatchInlineSnapshot(`
-		{
-		  "meta": {
-		    "name": "plugin-valid",
-		  },
-		  "options": {
-		    "foo": "bar",
-		  },
-		  "resolve": {
-		    "meta": {
-		      "name": "plugin-valid",
-		    },
-		    "setup": [Function],
-		  },
-		  "setup": [Function],
-		}
-	`);
+	expect(loadedPlugin).toStrictEqual({
+		meta: plugin.valid.meta,
+		resolve: plugin.valid,
+		setup: plugin.valid.setup,
+		options,
+	});
 });
 
 it("throws when plugin could not be loaded", async (ctx) => {
@@ -111,5 +129,5 @@ it("throws when plugin could not be loaded", async (ctx) => {
 	await expect(
 		// @ts-expect-error - Calling private method
 		pluginRunner._loadPlugin(nonExistentModuleName),
-	).rejects.toThrowError(`Could not load plugin: \`${ctx.meta.name}\``);
+	).rejects.toThrowError(/could not resolve plugin/i);
 });

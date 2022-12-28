@@ -1,5 +1,3 @@
-import { SharedSliceModel } from "@prismicio/types";
-
 import type {
 	ExtendSliceMachineHook,
 	SliceMachinePluginOptions,
