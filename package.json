@@ -16,7 +16,7 @@
     "prepare": "husky install",
     "//postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build && npm run test",
+    "build": "npm --workspaces --if-present run build && npm --workspaces --if-present run test",
     "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
     "audit": "lerna run audit",
     "lint": "lerna run lint",
