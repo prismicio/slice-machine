@@ -101,6 +101,7 @@ const SlicesIndex: React.FunctionComponent = () => {
               localLibraries?.length != 0 && sliceCount != 0
                 ? [
                     <Button
+                      key="create-slice"
                       label="Create a Slice"
                       onClick={openCreateSliceModal}
                       isLoading={isCreatingSlice}

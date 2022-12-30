@@ -20,6 +20,10 @@
 			"require": "./dist/client.cjs",
 			"import": "./dist/client.js"
 		},
+		"./test": {
+			"require": "./dist/test.cjs",
+			"import": "./dist/test.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"main": "dist/index.cjs",
@@ -31,7 +35,10 @@
 				"dist/index.d.ts"
 			],
 			"client": [
-				"dist/client.d.ts"
+				"dist/client/index.d.ts"
+			],
+			"test": [
+				"dist/test/index.d.ts"
 			]
 		}
 	},

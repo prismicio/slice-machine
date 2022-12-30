@@ -171,7 +171,7 @@ export function* createCustomTypeSaga({
       payload.label,
       payload.repeatable
     );
-    yield call(saveCustomType, newCustomType, {});
+    yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
     yield put(modalCloseCreator());
     yield put(push(`/cts/${payload.id}`));

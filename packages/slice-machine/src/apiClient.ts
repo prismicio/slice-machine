@@ -87,14 +87,8 @@ export const getState = async (): Promise<ServerState> => {
 /** Custom Type Routes **/
 
 export const saveCustomType = async (
-  customType: CustomTypeSM,
-  mockConfig: CustomTypeMockConfig
-): Promise<AxiosResponse> => {
-  await managerClient.customTypes.updateCustomTypeMocksConfig({
-    customTypeID: customType.id,
-    mocksConfig: mockConfig,
-  });
-
+  customType: CustomTypeSM
+): ReturnType<SliceMachineManagerClient["customTypes"]["updateCustomType"]> => {
   return await managerClient.customTypes.updateCustomType({
     model: CustomTypes.fromSM(customType),
   });
@@ -125,7 +119,12 @@ export const pushCustomType = async (customTypeId: string): Promise<void> => {
 export const createSlice = async (
   sliceName: string,
   libName: string
-): Promise<{ variationId: string }> => {
+): Promise<{
+  variationId: string;
+  errors: Awaited<
+    ReturnType<SliceMachineManagerClient["slices"]["createSlice"]>
+  >["errors"];
+}> => {
   const model = buildEmptySliceModel({ sliceName });
 
   const { errors } = await managerClient.slices.createSlice({
@@ -133,16 +132,9 @@ export const createSlice = async (
     model,
   });
 
-  if (errors.length > 0) {
-    throw new Error(
-      `Failed to create Slice: ${errors
-        .map((error) => error.message)
-        .join("; ")}`
-    );
-  }
-
   return {
     variationId: model.variations[0].id,
+    errors,
   };
 };
 
@@ -214,12 +206,6 @@ export const saveSliceApiClient = async (
 ): Promise<
   Awaited<ReturnType<typeof managerClient["slices"]["updateSlice"]>>
 > => {
-  await managerClient.slices.updateSliceMocksConfig({
-    libraryID: component.from,
-    sliceID: component.model.id,
-    mocksConfig: component.mockConfig,
-  });
-
   return await managerClient.slices.updateSlice({
     libraryID: component.from,
     model: Slices.fromSM(component.model),

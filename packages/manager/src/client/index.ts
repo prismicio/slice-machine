@@ -5,14 +5,14 @@ export {
 	CreateSliceMachineManagerClientArgs,
 	SliceMachineManagerClient,
 	createSliceMachineManagerClient,
-} from "./managers/createSliceMachineManagerClient";
+} from "../managers/createSliceMachineManagerClient";
 
 export type {
 	SimulatorManagerReadSliceSimulatorSetupStep,
 	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
-} from "./managers/simulator/SimulatorManager";
+} from "../managers/simulator/SimulatorManager";
 
-export type { SliceMachineManagerPushSliceReturnType } from "./managers/slices/SlicesManager";
+export type { SliceMachineManagerPushSliceReturnType } from "../managers/slices/SlicesManager";
 
 export {
 	InternalError,
@@ -27,6 +27,6 @@ export {
 	isUnauthenticatedError,
 	isUnauthorizedError,
 	isUnexpectedDataError,
-} from "./errors";
+} from "../errors";
 
-export { DecodeError } from "./lib/DecodeError";
+export { DecodeError } from "../lib/DecodeError";

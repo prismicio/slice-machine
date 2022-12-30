@@ -1,75 +1,29 @@
-/**
- * @jest-environment jsdom
- **/
+// @vitest-environment jsdom
 
-import "@testing-library/jest-dom";
 import {
-  jest,
   describe,
   test,
   afterEach,
   beforeEach,
   expect,
   beforeAll,
-  afterAll,
-} from "@jest/globals";
+  vi,
+} from "vitest";
 import React from "react";
-import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
 import Router from "next/router";
-import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
-import { setupServer } from "msw/node";
-import { rest, RestContext } from "msw";
+import { rest } from "msw";
 import { Frameworks } from "@slicemachine/core/build/models";
-import { handleRPCRequest } from "r19";
-import { Readable } from "node:stream";
-import { Buffer } from "node:buffer";
-import * as util from "node:util";
+import { createSliceMachineManager } from "@slicemachine/manager";
+import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
-jest.mock("next/dist/client/router", () => require("next-router-mock"));
+import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
+import { createTestPlugin } from "../__testutils__/createTestPlugin";
+import { createTestProject } from "../__testutils__/createTestProject";
 
-const streamToString = (stream: Readable): Promise<string> => {
-  const chunks: Buffer[] = [];
+import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
 
-  return new Promise<string>((resolve, reject) => {
-    stream.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
-    stream.on("error", (err) => reject(err));
-    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-  });
-};
-
-const server = setupServer(
-  rest.post("/_manager", async (req, res, ctx) => {
-    // console.log("HIIIIIIIII", util.inspect(req, { colors: true, depth: null }));
-    // try {
-    //   console.error(util.inspect(req.body, { colors: true, depth: null }));
-    // } catch (error) {
-    //   console.error(error);
-    //   throw error;
-    // }
-
-    // const decoder = new TextDecoder("utf-8");
-    // console.error(decoder.decode(body));
-    //
-    const rpcResponse = await handleRPCRequest({
-      formData: await req.arrayBuffer(),
-      procedures: {},
-    });
-
-    return res(
-      ctx.body(await streamToString(rpcResponse.stream)),
-      ctx.set(rpcResponse.headers),
-      ctx.status(rpcResponse.statusCode || 200)
-    );
-  }),
-  rest.post("/api/custom-types/save", (_, res, ctx) => {
-    return res(ctx.json({}));
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+vi.mock("next/router", () => import("next-router-mock"));
 
 describe("Custom Type Builder", () => {
   beforeAll(async () => {
@@ -79,7 +33,7 @@ describe("Custom Type Builder", () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   beforeEach(async () => {
@@ -176,11 +130,27 @@ describe("Custom Type Builder", () => {
     },
   ];
 
-  test("should send a tracking event when the user adds a field", async () => {
-    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
-      return res(ctx.json({}));
+  test("should send a tracking event when the user adds a field", async (ctx) => {
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({ adapter });
+    const manager = createSliceMachineManager({
+      nativePlugins: { [adapter.meta.name]: adapter },
+      cwd,
     });
-    server.use(rest.post("/api/s", trackingSpy));
+
+    await manager.plugins.initPlugins();
+
+    ctx.msw.use(
+      createSliceMachineManagerMSWHandler({
+        url: "http://localhost:3000/_manager",
+        sliceMachineManager: manager,
+      })
+    );
+
+    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
+      (_req, res, ctx) => res(ctx.json({}))
+    );
+    ctx.msw.use(rest.post("/api/s", trackingSpy));
 
     const customTypeId = "a-page";
 
@@ -189,7 +159,7 @@ describe("Custom Type Builder", () => {
       query: { ct: customTypeId },
     });
 
-    const App = render(<CreateCustomTypeBuilder />, {
+    render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment: {
           framework: Frameworks.next,
@@ -273,11 +243,27 @@ describe("Custom Type Builder", () => {
     });
   });
 
-  test("should send a tracking event when the user adds a slice", async () => {
-    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
-      return res(ctx.json({}));
+  test("should send a tracking event when the user adds a slice", async (ctx) => {
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({ adapter });
+    const manager = createSliceMachineManager({
+      nativePlugins: { [adapter.meta.name]: adapter },
+      cwd,
     });
-    server.use(rest.post("/api/s", trackingSpy));
+
+    await manager.plugins.initPlugins();
+
+    ctx.msw.use(
+      createSliceMachineManagerMSWHandler({
+        url: "http://localhost:3000/_manager",
+        sliceMachineManager: manager,
+      })
+    );
+
+    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
+      (_req, res, ctx) => res(ctx.json({}))
+    );
+    ctx.msw.use(rest.post("/api/s", trackingSpy));
 
     const customTypeId = "a-page";
 
@@ -293,7 +279,7 @@ describe("Custom Type Builder", () => {
       mockConfig: { _cts: { [customTypeId]: {} } },
     };
 
-    const App = render(<CreateCustomTypeBuilder />, {
+    render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment,
         availableCustomTypes: {
@@ -373,11 +359,31 @@ describe("Custom Type Builder", () => {
     });
   });
 
-  test.only("it should send a tracking event when the user saves a custom-type", async () => {
-    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
-      return res(ctx.json({}));
+  test("it should send a tracking event when the user saves a custom-type", async (ctx) => {
+    const adapter = createTestPlugin({
+      setup: ({ hook }) => {
+        hook("custom-type:update", () => void 0);
+      },
     });
-    server.use(rest.post("/api/s", trackingSpy));
+    const cwd = await createTestProject({ adapter });
+    const manager = createSliceMachineManager({
+      nativePlugins: { [adapter.meta.name]: adapter },
+      cwd,
+    });
+
+    await manager.plugins.initPlugins();
+
+    ctx.msw.use(
+      createSliceMachineManagerMSWHandler({
+        url: "http://localhost:3000/_manager",
+        sliceMachineManager: manager,
+      })
+    );
+
+    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
+      (_req, res, ctx) => res(ctx.json({}))
+    );
+    ctx.msw.use(rest.post("/api/s", trackingSpy));
 
     const customTypeId = "a-page";
 
@@ -386,7 +392,7 @@ describe("Custom Type Builder", () => {
       query: { ct: customTypeId },
     });
 
-    const App = render(<CreateCustomTypeBuilder />, {
+    render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment: {
           framework: "next",
@@ -483,16 +489,34 @@ describe("Custom Type Builder", () => {
     );
   });
 
-  test("if saving fails a it should not send the save event", async () => {
-    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
-      return res(ctx.json({}));
+  test("if saving fails a it should not send the save event", async (ctx) => {
+    const adapter = createTestPlugin({
+      setup: ({ hook }) => {
+        hook("custom-type:update", () => {
+          throw new Error("forced failure");
+        });
+      },
     });
-    server.use(
-      rest.post("/api/custom-types/save", (_, res, ctx) => {
-        return res(ctx.status(500), ctx.json({}));
-      }),
-      rest.post("/api/s", trackingSpy)
+    const cwd = await createTestProject({ adapter });
+    const manager = createSliceMachineManager({
+      nativePlugins: { [adapter.meta.name]: adapter },
+      cwd,
+    });
+
+    await manager.plugins.initPlugins();
+
+    ctx.msw.use(
+      createSliceMachineManagerMSWHandler({
+        url: "http://localhost:3000/_manager",
+        sliceMachineManager: manager,
+      })
     );
+
+    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
+      (_req, res, ctx) => res(ctx.json({}))
+    );
+    ctx.msw.use(rest.post("/api/s", trackingSpy));
+
     const customTypeId = "a-page";
 
     Router.push({
@@ -558,13 +582,19 @@ describe("Custom Type Builder", () => {
     });
 
     const addButton = screen.getByText("Add a new field");
-    fireEvent.click(addButton);
+    await act(async () => {
+      fireEvent.click(addButton);
+    });
 
     const richText = screen.getByText("Rich Text");
-    fireEvent.click(richText);
+    await act(async () => {
+      fireEvent.click(richText);
+    });
 
     const nameInput = screen.getByLabelText("label-input");
-    fireEvent.change(nameInput, { target: { value: "New Field" } });
+    await act(async () => {
+      fireEvent.change(nameInput, { target: { value: "New Field" } });
+    });
 
     const saveFieldButton = screen.getByText("Add");
 
@@ -588,7 +618,7 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveCustomType);
     });
 
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 500));
 
     expect(trackingSpy).toBeCalledTimes(1);
   });

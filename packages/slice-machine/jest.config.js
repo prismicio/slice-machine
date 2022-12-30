@@ -1,6 +1,6 @@
 module.exports = {
   clearMocks: true,
-  collectCoverage: true,
+  // collectCoverage: true,
   globals: { appRoot: ".." },
   moduleNameMapper: {
     "^@builders/(.*)$": "<rootDir>/lib/builders/$1",

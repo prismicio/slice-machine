@@ -3,7 +3,6 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 import * as crypto from "node:crypto";
-
 import type { SliceMachinePlugin } from "@slicemachine/plugin-kit";
 
 import { SliceMachineConfig } from "../../src/types";

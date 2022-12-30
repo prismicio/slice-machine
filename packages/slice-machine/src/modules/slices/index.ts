@@ -269,30 +269,42 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 export function* createSliceSaga({
   payload,
 }: ReturnType<typeof createSliceCreator.request>) {
-  const { variationId } = (yield call(
-    createSlice,
-    payload.sliceName,
-    payload.libName
-  )) as SagaReturnType<typeof createSlice>;
-  void Tracker.get().trackCreateSlice({
-    id: payload.sliceName,
-    name: payload.sliceName,
-    library: payload.libName,
-  });
-  const serverState = (yield call(getState)) as SagaReturnType<typeof getState>;
-  yield put(createSliceCreator.success({ libraries: serverState.libraries }));
-  yield put(modalCloseCreator());
-  const addr = `/${payload.libName.replace(/\//g, "--")}/${
-    payload.sliceName
-  }/${variationId}`;
-  yield put(push("/[lib]/[sliceName]/[variation]", addr));
-  yield take(LOCATION_CHANGE);
-  yield put(
-    openToasterCreator({
-      message: "Slice saved",
-      type: ToasterType.SUCCESS,
-    })
-  );
+  try {
+    const { variationId, errors }: SagaReturnType<typeof createSlice> =
+      yield call(createSlice, payload.sliceName, payload.libName);
+    if (errors.length) {
+      throw errors;
+    }
+    void Tracker.get().trackCreateSlice({
+      id: payload.sliceName,
+      name: payload.sliceName,
+      library: payload.libName,
+    });
+    const serverState = (yield call(getState)) as SagaReturnType<
+      typeof getState
+    >;
+    yield put(createSliceCreator.success({ libraries: serverState.libraries }));
+    yield put(modalCloseCreator());
+    const addr = `/${payload.libName.replace(/\//g, "--")}/${
+      payload.sliceName
+    }/${variationId}`;
+    yield put(push("/[lib]/[sliceName]/[variation]", addr));
+    yield take(LOCATION_CHANGE);
+    yield put(
+      openToasterCreator({
+        message: "Slice saved",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    // Unknown errors
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Slice not created",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
 }
 
 // Saga watchers

@@ -57,6 +57,7 @@ const CustomTypeHeader = () => {
         }}
         Actions={[
           <SliceMachineIconButton
+            key="edit-custom-type"
             Icon={MdModeEdit}
             label="Edit custom type name"
             data-cy="edit-custom-type"
@@ -75,6 +76,7 @@ const CustomTypeHeader = () => {
             }}
           />,
           <Button
+            key="builder-save-button"
             label="Save to File System"
             isLoading={isSavingCustomType}
             disabled={!hasPendingModifications || isSavingCustomType}

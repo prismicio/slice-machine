@@ -31,6 +31,10 @@ const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
 
   const snippets = data.snippets || [];
 
+  if (!snippets[0]) {
+    return null;
+  }
+
   return (
     <div style={{ display: show ? "initial" : "none" }}>
       <CodeBlock code={snippets[0].code} lang={snippets[0].language} />
