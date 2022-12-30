@@ -25,9 +25,9 @@ export const createTestProject = async (
 
   await fs.mkdir(os.tmpdir(), { recursive: true });
 
-  const root = (await fs.mkdtemp(
+  const root = await fs.mkdtemp(
     path.join(os.tmpdir(), `project-${testNameDigest}-`)
-  )) as string;
+  );
 
   await fs.writeFile(path.join(root, "package.json"), JSON.stringify({}));
 

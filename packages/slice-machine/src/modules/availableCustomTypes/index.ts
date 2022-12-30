@@ -195,9 +195,10 @@ export function* renameCustomTypeSaga({
   payload,
 }: ReturnType<typeof renameCustomTypeCreator.request>) {
   try {
-    const customType = (yield select((store: SliceMachineStoreType) =>
-      selectCustomTypeById(store, payload.customTypeId)
-    )) as ReturnType<typeof selectCustomTypeById>;
+    const customType: ReturnType<typeof selectCustomTypeById> = yield select(
+      selectCustomTypeById,
+      payload.customTypeId
+    );
     if (!customType) {
       throw new Error(`Custom Type "${payload.newCustomTypeName} not found.`);
     }

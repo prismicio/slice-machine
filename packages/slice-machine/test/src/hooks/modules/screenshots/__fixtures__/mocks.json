@@ -1,0 +1,41 @@
+[
+  {
+    "__TYPE__": "SharedSliceContent",
+    "variation": "default-slice",
+    "primary": {
+      "section_title": {
+        "__TYPE__": "FieldContent",
+        "value": "enhance real-time architectures",
+        "type": "Text"
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "link",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "id": "mock_document_id",
+                "__TYPE__": "DocumentLink"
+              }
+            }
+          ],
+          [
+            "link",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "url": "https://slicemachine.dev",
+                "__TYPE__": "ExternalLink",
+                "type": "web"
+              }
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]
