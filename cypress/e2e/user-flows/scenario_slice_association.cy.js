@@ -84,7 +84,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
     cy.get("[data-cy=update-slices-modal]").submit();
 
-    cy.saveSliceModifications();
+    cy.saveCustomTypeModifications();
 
     cy.reload();
     cy.contains(sliceName);

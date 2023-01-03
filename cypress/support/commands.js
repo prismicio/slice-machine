@@ -14,8 +14,8 @@ import {
   createCustomType,
   renameCustomType,
   addFieldToCustomType,
-  saveCustomTypeModifications,
   addSlicesToCustomType,
+  saveCustomTypeModifications,
 } from "../helpers/customTypes";
 import {
   createSlice,
