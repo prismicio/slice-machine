@@ -167,9 +167,7 @@ describe("[Available Custom types module]", () => {
         .put(
           createCustomTypeCreator.success({ newCustomType: customTypeCreated })
         );
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().put(push("/cts/id"));
       saga.next().put(
         openToasterCreator({
@@ -260,9 +258,7 @@ describe("[Available Custom types module]", () => {
           actionPayload.newCustomTypeName
         );
       saga.next().put(renameCustomTypeCreator.success(actionPayload));
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().put(
         openToasterCreator({
           message: "Custom type updated",

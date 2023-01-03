@@ -5,11 +5,10 @@ describe("Duplicate custom types", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();
+    cy.createCustomType(customTypeId, customTypeName);
   });
 
   it("when using a label that is already in use it should warn the user", () => {
-    cy.createCustomType(customTypeId, customTypeName);
-
     cy.visit("/");
     cy.get("[data-cy=create-ct]").click();
     cy.get("[data-cy=create-ct-modal]").should("be.visible");
@@ -25,8 +24,6 @@ describe("Duplicate custom types", () => {
   });
 
   it("when using a id that is already in use it should warn the user", () => {
-    cy.createCustomType(customTypeId, customTypeName);
-
     cy.visit("/");
     cy.get("[data-cy=create-ct]").click();
     cy.get("[data-cy=create-ct-modal]").should("be.visible");

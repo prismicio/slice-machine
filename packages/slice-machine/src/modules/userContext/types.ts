@@ -13,6 +13,7 @@ export type UserContextStoreType = {
     latestNonBreaking: string | null;
   };
   hasSeenTutorialsTooTip: boolean;
+  hasSeenSimulatorToolTip: boolean;
   authStatus: AuthStatus;
   lastSyncChange: number | null;
 };

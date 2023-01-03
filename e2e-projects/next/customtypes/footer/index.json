@@ -8,7 +8,8 @@
       "newsletter_title": {
         "type": "Text",
         "config": {
-          "label": "Newsletter Title"
+          "label": "Newsletter Title",
+          "placeholder": ""
         }
       },
       "newsletter_description": {

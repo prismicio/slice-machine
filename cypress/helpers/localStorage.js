@@ -4,7 +4,8 @@ export function setSliceMachineUserContext({
   hasSendAReview = true, // boolean
   isOnboarded = true, // boolean
   updatesViewed = { latest: null, latestNonBreaking: null }, // object
-  hasSeenTutorialsTooTip = true, // boolean,
+  hasSeenTutorialsTooTip = true, // boolean
+  hasSeenSimulatorToolTip = true, // boolean
   lastSyncChange = null, // number - timestamp
 }) {
   return cy.setLocalStorage(
@@ -16,6 +17,7 @@ export function setSliceMachineUserContext({
         updatesViewed,
         hasSeenTutorialsTooTip,
         lastSyncChange,
+        hasSeenSimulatorToolTip,
       }),
     })
   );

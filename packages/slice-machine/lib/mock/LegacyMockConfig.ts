@@ -17,7 +17,6 @@ import {
   GeoPointMockConfig,
   BooleanMockConfig,
   SelectMockConfig,
-  ImageMockConfig,
   LinkMockConfig,
   ExternalLinkConfig,
   MediaLinkConfig,
@@ -25,8 +24,8 @@ import {
   GroupMockConfig,
   UIDMockConfig,
 } from "@prismicio/mocks";
-import { EmbedContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/EmbedContent";
 import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
+import { EmbedContent } from "@prismicio/types-internal/lib/content";
 
 export const DefaultConfig = {
   GeoPoint: null,
@@ -75,13 +74,6 @@ export const NonEmptyText = new t.Type<
     ),
   (s) => s
 );
-
-export const ImageLegacyMockConfig = t.exact(
-  t.partial({
-    content: NonEmptyText,
-  })
-);
-export type ImageLegacyMockConfig = t.TypeOf<typeof ImageLegacyMockConfig>;
 
 export const RichTextLegacyMockConfig = t.exact(
   t.partial({
@@ -206,7 +198,6 @@ export const NestableLegacyMockConfig = t.union([
   SelectLegacyMockConfig,
   LinkLegacyMockConfig,
   RichTextLegacyMockConfig,
-  ImageLegacyMockConfig,
 ]);
 export type NestableLegacyMockConfig = t.TypeOf<
   typeof NestableLegacyMockConfig
@@ -227,6 +218,7 @@ export function buildNestableMockConfig(
         },
         (config: ColorLegacyMockConfig): ColorMockConfig => {
           return {
+            type: WidgetTypes.Color,
             value: config.content,
           };
         }
@@ -240,6 +232,7 @@ export function buildNestableMockConfig(
         },
         (config: TextLegacyMockConfig): TextMockConfig => {
           return {
+            type: WidgetTypes.Text,
             value: config.content,
           };
         }
@@ -253,6 +246,7 @@ export function buildNestableMockConfig(
         },
         (config: TimestampLegacyMockConfig): TimestampMockConfig => {
           return {
+            type: WidgetTypes.Timestamp,
             value: config.content ? new Date(config.content) : undefined,
           };
         }
@@ -266,6 +260,7 @@ export function buildNestableMockConfig(
         },
         (config: NumberLegacyMockConfig): NumberMockConfig => {
           return {
+            type: WidgetTypes.Number,
             value: config.content,
           };
         }
@@ -279,6 +274,7 @@ export function buildNestableMockConfig(
         },
         (config: DateLegacyMockConfig): DateMockConfig => {
           return {
+            type: WidgetTypes.Date,
             value: config.content ? new Date(config.content) : undefined,
           };
         }
@@ -292,6 +288,7 @@ export function buildNestableMockConfig(
         },
         (config: GeoPointLegacyMockConfig): GeoPointMockConfig => {
           return {
+            type: WidgetTypes.GeoPoint,
             value: config.content,
           };
         }
@@ -309,13 +306,15 @@ export function buildNestableMockConfig(
             const url = config.content
               ? (config.content as { url: string }).url
               : undefined;
+            if (!url) return;
+
             const oembed = config.content
               ? (config.content as { oembed: EmbedContent }).oembed
               : undefined;
             if (url && oembed) return oembed;
             return;
           })();
-          return { value };
+          return { type: WidgetTypes.Embed, value };
         }
       )(EmbedLegacyMockConfig.decode(fieldMockConfig));
     }
@@ -327,6 +326,7 @@ export function buildNestableMockConfig(
         },
         (config: BooleanLegacyMockConfig): BooleanMockConfig => {
           return {
+            type: WidgetTypes.BooleanField,
             value: config.content,
           };
         }
@@ -340,6 +340,7 @@ export function buildNestableMockConfig(
         },
         (config: SelectLegacyMockConfig): SelectMockConfig => {
           return {
+            type: WidgetTypes.Select,
             value: config.content,
           };
         }
@@ -353,6 +354,7 @@ export function buildNestableMockConfig(
         },
         (config: LinkLegacyMockConfig): LinkMockConfig => {
           return {
+            type: WidgetTypes.Link,
             value:
               typeof config.content === "object"
                 ? ({ value: config.content } as MediaLinkConfig)
@@ -360,19 +362,6 @@ export function buildNestableMockConfig(
           };
         }
       )(LinkLegacyMockConfig.decode(fieldMockConfig));
-    }
-    case WidgetTypes.Image: {
-      return fold(
-        () => {
-          console.warn(`couldn't parse the Image mock config.`);
-          return undefined;
-        },
-        (config: ImageLegacyMockConfig): ImageMockConfig => {
-          return {
-            value: config.content,
-          };
-        }
-      )(ImageLegacyMockConfig.decode(fieldMockConfig));
     }
     case WidgetTypes.RichText: {
       return fold(
@@ -382,6 +371,7 @@ export function buildNestableMockConfig(
         },
         (config: RichTextLegacyMockConfig): RichTextMockConfig => {
           return {
+            type: WidgetTypes.RichText,
             value: config.content as Array<Block>,
             nbBlocks: config.config?.blocks,
             pattern: config.config?.patternType,
@@ -400,29 +390,13 @@ export function buildNestableMockConfig(
 export function buildWidgetMockConfig(
   widget: DynamicWidget,
   legacyWidgetMockConfig?: Partial<Record<string, unknown>> | undefined
-): NestableWidgetMockConfig | GroupMockConfig | undefined {
+): NestableWidgetMockConfig | UIDMockConfig | GroupMockConfig | undefined {
   if (!legacyWidgetMockConfig) return;
   switch (widget.type) {
     // slices are specific and for now we ignore it
     case WidgetTypes.LegacySlices:
     case WidgetTypes.Slices:
       return;
-
-    case WidgetTypes.Group:
-      return fold(
-        () => {
-          console.warn(`couldn't parse the Group mock config.`);
-          return undefined;
-        },
-        (config: GroupLegacyMockConfig): GroupMockConfig => {
-          return {
-            fields: buildFieldsMockConfig(
-              widget.config?.fields || {},
-              config || {}
-            ),
-          };
-        }
-      )(GroupLegacyMockConfig.decode(legacyWidgetMockConfig));
 
     case WidgetTypes.UID:
       return fold(
@@ -432,10 +406,28 @@ export function buildWidgetMockConfig(
         },
         (config: UIDLegacyMockConfig): UIDMockConfig => {
           return {
+            type: WidgetTypes.UID,
             value: config.content,
           };
         }
       )(UIDLegacyMockConfig.decode(legacyWidgetMockConfig));
+
+    case WidgetTypes.Group:
+      return fold(
+        () => {
+          console.warn(`couldn't parse the Group mock config.`);
+          return undefined;
+        },
+        (config: GroupLegacyMockConfig): GroupMockConfig => {
+          return {
+            type: WidgetTypes.Group,
+            fields: buildFieldsMockConfig(
+              widget.config?.fields || {},
+              config || {}
+            ),
+          };
+        }
+      )(GroupLegacyMockConfig.decode(legacyWidgetMockConfig));
 
     default:
       return buildNestableMockConfig(widget.type, legacyWidgetMockConfig);

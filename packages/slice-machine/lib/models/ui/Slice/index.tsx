@@ -86,6 +86,7 @@ const SliceScreenshotUpdate: React.FC<{
       variant="secondarySmall"
       sx={{ fontWeight: "bold" }}
       Icon={AiOutlineCamera}
+      iconFill="#1A1523"
       label="Update screenshot"
     />
   </Flex>

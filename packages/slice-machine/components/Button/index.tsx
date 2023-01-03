@@ -1,24 +1,16 @@
-import React from "react";
+import { forwardRef } from "react";
 
-import {
-  type ThemeUIStyleObject,
-  Button as ThemeUIButton,
-  Spinner,
-} from "theme-ui";
+import { Button as ThemeUIButton, ButtonProps, Spinner } from "theme-ui";
 import { IconType } from "react-icons";
 
-export type ButtonProps = {
+export interface SmButtonProps extends ButtonProps {
   label: string;
   Icon?: IconType;
-  type?: "submit" | "reset" | "button";
-  form?: string;
   isLoading?: boolean;
-  disabled?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  sx?: ThemeUIStyleObject;
   "data-cy"?: string;
-  variant?: string;
-};
+  iconSize?: number;
+  iconFill?: string;
+}
 
 // Small helper to allow us to target spinner and icon in the CY
 const cyIdBuilder = (dataCy: string | undefined, id: string) => {
@@ -29,6 +21,9 @@ const cyIdBuilder = (dataCy: string | undefined, id: string) => {
 const spinnerColor = (variant: string) => {
   switch (variant) {
     case "white":
+    case "secondaryMedium":
+    case "secondarySmall":
+    case "secondary":
       return "#1A1523";
     default:
       return "grey01";
@@ -36,50 +31,62 @@ const spinnerColor = (variant: string) => {
 };
 
 // If you don't use an icon, don't forget to pass a min-width property so the button doesn't change width on loading.
-export const Button: React.FunctionComponent<ButtonProps> = ({
-  label,
-  Icon,
-  type,
-  form,
-  isLoading = false,
-  disabled = false,
-  onClick,
-  sx = {},
-  variant = "primary",
-  ...rest
-}) => (
-  <ThemeUIButton
-    sx={{
-      ...sx,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "8px",
-      ...(isLoading ? { cursor: "wait !important" } : {}), // without important, the hover effect has priority
-    }}
-    type={type}
-    form={form}
-    disabled={disabled || isLoading}
-    onClick={!isLoading ? onClick : undefined}
-    variant={variant}
-    {...rest}
-  >
-    {isLoading ? (
-      <>
-        <Spinner
-          size={16}
-          color={spinnerColor(variant)}
-          data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
-        />
-        {Icon && label}
-      </>
-    ) : (
-      <>
-        {Icon && (
-          <Icon size={16} data-cy={cyIdBuilder(rest["data-cy"], "icon")} />
-        )}
-        {label}
-      </>
-    )}
-  </ThemeUIButton>
+export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
+  (
+    {
+      label,
+      Icon,
+      type,
+      form,
+      isLoading = false,
+      disabled = false,
+      onClick,
+      sx = {},
+      iconSize = 16,
+      iconFill,
+      variant = "primary",
+      ...rest
+    },
+    ref
+  ) => (
+    <ThemeUIButton
+      ref={ref}
+      sx={{
+        ...sx,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        ...(isLoading ? { cursor: "wait !important" } : {}), // without important, the hover effect has priority
+      }}
+      type={type}
+      form={form}
+      disabled={disabled || isLoading}
+      onClick={!isLoading ? onClick : undefined}
+      variant={variant}
+      {...rest}
+    >
+      {isLoading ? (
+        <>
+          <Spinner
+            size={iconSize}
+            color={spinnerColor(variant)}
+            data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
+          />
+          {Icon && label}
+        </>
+      ) : (
+        <>
+          {Icon && (
+            <Icon
+              size={iconSize}
+              fill={iconFill}
+              data-cy={cyIdBuilder(rest["data-cy"], "icon")}
+            />
+          )}
+          {label}
+        </>
+      )}
+    </ThemeUIButton>
+  )
 );

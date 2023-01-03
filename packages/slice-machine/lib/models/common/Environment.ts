@@ -11,7 +11,6 @@ export interface BackendEnvironment {
   prismicData: PrismicData;
   manifest: Models.Manifest;
   repo: string;
-  changelog: PackageChangelog;
   mockConfig: CustomTypeMockConfig;
   framework: Models.Frameworks;
   baseUrl: string;
@@ -23,7 +22,7 @@ export interface FrontEndEnvironment {
   intercomHash?: string;
   manifest: Models.Manifest;
   repo: string;
-  changelog: PackageChangelog;
+  changelog?: PackageChangelog;
   packageManager: PackageManager;
   mockConfig: CustomTypeMockConfig;
   framework: Models.Frameworks;

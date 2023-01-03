@@ -22,6 +22,7 @@ import {
   CreateSlice,
   ScreenshotTaken,
   ChangesPushed,
+  SliceSimulatorIsNotRunning,
 } from "./types";
 
 export class SMTracker {
@@ -165,6 +166,15 @@ export class SMTracker {
     return this.#trackEvent(payload);
   }
 
+  async trackSliceSimulatorIsNotRunning(framework: Frameworks): Promise<void> {
+    const payload: SliceSimulatorIsNotRunning = {
+      name: EventNames.SliceSimulatorIsNotRunning,
+      props: { framework },
+    };
+
+    return this.#trackEvent(payload);
+  }
+
   async trackOnboardingStart(): Promise<void> {
     const payload: OnboardingStart = {
       name: EventNames.OnboardingStart,
@@ -296,6 +306,23 @@ export class SMTracker {
 
     return this.#trackEvent(payload);
   }
+
+  #startedNewEditorSession = false;
+  editor = {
+    startNewSession: () => {
+      this.#startedNewEditorSession = true;
+    },
+    trackWidgetUsed: (sliceId: string) => {
+      if (!this.#startedNewEditorSession) return;
+
+      this.#startedNewEditorSession = false;
+
+      void this.#trackEvent({
+        name: EventNames.EditorWidgetUsed,
+        props: { sliceId },
+      });
+    },
+  };
 }
 
 const Tracker = (() => {

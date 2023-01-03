@@ -44,7 +44,7 @@ const LoginModal: React.FunctionComponent = () => {
     })
   );
 
-  const { closeLoginModal, startLoadingLogin, stopLoadingLogin, openToaster } =
+  const { closeModals, startLoadingLogin, stopLoadingLogin, openToaster } =
     useSliceMachineActions();
 
   const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
@@ -74,7 +74,7 @@ const LoginModal: React.FunctionComponent = () => {
 
       openToaster("Logged in", ToasterType.SUCCESS);
       stopLoadingLogin();
-      closeLoginModal();
+      closeModals();
     } catch (e) {
       stopLoadingLogin();
       openToaster("Logging fail", ToasterType.ERROR);
@@ -85,7 +85,7 @@ const LoginModal: React.FunctionComponent = () => {
     <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      onRequestClose={closeLoginModal}
+      onRequestClose={closeModals}
       contentLabel={"login_modal"}
       style={{
         content: {
@@ -111,7 +111,7 @@ const LoginModal: React.FunctionComponent = () => {
           }}
         >
           <Heading sx={{ fontSize: "16px" }}>You're not connected</Heading>
-          <Close sx={{ p: 0 }} type="button" onClick={closeLoginModal} />
+          <Close sx={{ p: 0 }} type="button" onClick={closeModals} />
         </Flex>
         <Flex
           sx={{

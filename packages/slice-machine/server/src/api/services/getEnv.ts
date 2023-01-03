@@ -4,7 +4,6 @@ import { Framework } from "@slicemachine/core/build/node-utils";
 
 import type { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import type { ConfigErrors } from "../../../../lib/models/server/ServerState";
-import { getPackageChangelog } from "../../../../lib/env/versions";
 import { getConfig as getMockConfig } from "../../../../lib/mock/misc/fs";
 import handleManifest, {
   ManifestState,
@@ -13,9 +12,6 @@ import handleManifest, {
 
 import getPrismicData from "../../../../lib/env/getPrismicData";
 import getApplicationMode from "../../../../lib/env/getApplicationMode";
-
-// variable declared globally on the index.ts, is the cwd to SM dependency
-declare let appRoot: string;
 
 function validate(config: Models.Manifest): ConfigErrors {
   const errors: ConfigErrors = {};
@@ -51,9 +47,10 @@ function extractRepo(apiEndpoint: Models.Manifest["apiEndpoint"]): string {
   }
 }
 
-export default async function getEnv(
-  maybeCustomCwd?: string
-): Promise<{ errors: ConfigErrors; env: BackendEnvironment }> {
+export default function getEnv(maybeCustomCwd?: string): {
+  errors: ConfigErrors;
+  env: BackendEnvironment;
+} {
   const cwd = maybeCustomCwd || process.env.CWD || process.cwd();
   if (!cwd) {
     const message =
@@ -81,8 +78,6 @@ export default async function getEnv(
     throw new Error(message);
   }
 
-  const smChangelog = await getPackageChangelog(appRoot);
-
   const maybeErrors = validate(manifestInfo.content);
 
   const repository = extractRepo(manifestInfo.content.apiEndpoint);
@@ -103,7 +98,6 @@ export default async function getEnv(
       repo: repository,
       manifest: manifestInfo.content,
       prismicData: prismicData.value,
-      changelog: smChangelog,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mockConfig,
       framework: Framework.defineFramework({

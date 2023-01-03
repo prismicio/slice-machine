@@ -73,9 +73,7 @@ describe("[Slices module]", () => {
       saga
         .next({ data: serverState })
         .put(createSliceCreator.success({ libraries: serverState.libraries }));
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+      saga.next().put(modalCloseCreator());
       saga
         .next()
         .put(

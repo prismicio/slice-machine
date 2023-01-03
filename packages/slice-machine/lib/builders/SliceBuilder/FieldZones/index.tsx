@@ -124,9 +124,8 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
 
   const _onDragEnd =
     (widgetArea: Models.WidgetsArea) => (result: DropResult) => {
-      if (ensureDnDDestination(result)) {
-        return;
-      }
+      if (ensureDnDDestination(result)) return;
+
       reorderSliceWidget(
         variation.id,
         widgetArea,

@@ -9,6 +9,7 @@ export function createCustomType(id, name) {
   cy.get("[data-cy=create-ct-modal]").should("be.visible");
 
   cy.get("input[data-cy=ct-name-input]").type(name);
+  cy.get("input[data-cy=ct-id-input]").should("have.value", id);
   cy.get("[data-cy=create-ct-modal]").submit();
   cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
   cy.readFile(TYPES_FILE).should("contains", name);

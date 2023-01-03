@@ -7,6 +7,7 @@ import Tracker from "../utils/tracker";
 export type FrameworkResult = {
   value: Models.Frameworks;
   manuallyAdded: boolean;
+  version?: string;
 };
 
 export async function promptForFramework(): Promise<FrameworkResult> {
@@ -31,6 +32,7 @@ export async function promptForFramework(): Promise<FrameworkResult> {
       return {
         value: res.framework,
         manuallyAdded: true,
+        version: undefined,
       };
     });
 }
@@ -47,21 +49,22 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   spinner.start();
 
   try {
-    const maybeFramework = NodeUtils.Framework.defineFramework({
-      cwd,
-      supportedFrameworks: Object.values(Models.Frameworks),
-    });
+    const { framework, version } =
+      NodeUtils.Framework.defineFrameworkWithVersion({
+        cwd,
+        supportedFrameworks: Object.values(Models.Frameworks),
+      });
 
     spinner.stop();
 
-    if (!maybeFramework || maybeFramework === Models.Frameworks.vanillajs) {
+    if (!framework || framework === Models.Frameworks.vanillajs) {
       logs.writeError("Framework not detected");
       return await promptForFramework();
     }
 
-    const nameToPrint = NodeUtils.Framework.fancyName(maybeFramework);
+    const nameToPrint = NodeUtils.Framework.fancyName(framework);
 
-    if (!NodeUtils.Framework.isFrameworkSupported(maybeFramework)) {
+    if (!NodeUtils.Framework.isFrameworkSupported(framework)) {
       logs.writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);
@@ -70,8 +73,9 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
     logs.writeCheck(`${nameToPrint} detected`);
 
     return {
-      value: maybeFramework,
+      value: framework,
       manuallyAdded: false,
+      version,
     };
   } catch (error) {
     spinner.fail("package.json not found");

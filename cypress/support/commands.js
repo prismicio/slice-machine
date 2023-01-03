@@ -57,3 +57,14 @@ Cypress.Commands.add("saveSliceModifications", saveSliceModifications);
 
 /* REPOSITORY */
 Cypress.Commands.add("pushLocalChanges", pushLocalChanges);
+
+/* -- QUERIES -- */
+Cypress.Commands.add("getInputByLabel", (label) => {
+  return cy
+    .contains("label", label)
+    .invoke("attr", "for")
+    .then((id) => {
+      const selector = `[id="${id}"],[name="${id}"]`;
+      return cy.get(selector);
+    });
+});
