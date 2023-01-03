@@ -1,6 +1,12 @@
 import "cypress-wait-until";
 import { TYPES_FILE, CUSTOM_TYPE_MODEL } from "../consts";
 
+/**
+ * Create a Custom type and assert files are created.
+ *
+ * @param {string} id Id of the custom type.
+ * @param {string} name Name of the custom type.
+ */
 export function createCustomType(id, name) {
   cy.visit("/");
 
@@ -16,6 +22,13 @@ export function createCustomType(id, name) {
   cy.readFile(CUSTOM_TYPE_MODEL(id));
 }
 
+/**
+ * On the Custom Type builder, rename the custom type.
+ *
+ * @param {string} id Id of the custom type.
+ * @param {string} actualName Current name of the custom type.
+ * @param {string} newName New name for the custom type.
+ */
 export function renameCustomType(id, actualName, newName) {
   cy.visit(`/cts/${id}`);
 
@@ -37,6 +50,13 @@ export function renameCustomType(id, actualName, newName) {
   });
 }
 
+/**
+ * On the Custom Type builder, add static field to the custom type.
+ *
+ * @param {string} fieldType Type of field to create.
+ * @param {string} fieldName Label of the new field.
+ * @param {string} fieldId Id of the new field.
+ */
 export function addFieldToCustomType(fieldType, fieldName, fieldId) {
   cy.get(`[data-cy="add-Static-field"]`).first().click();
   cy.get(`[data-cy='${fieldType}']`).click();
@@ -61,7 +81,12 @@ export function addFieldToCustomType(fieldType, fieldName, fieldId) {
   });
 }
 
-export function addSlicesToCustomType(sliceIds /* string[] */) {
+/**
+ * On the Custom Type builder, add slices to the custom type.
+ *
+ * @param {string[]} sliceIds Ids of slices to add to the custom type.
+ */
+export function addSlicesToCustomType(sliceIds) {
   cy.get("[data-cy=update-slices]").click();
 
   sliceIds.forEach((sliceId) => {
@@ -72,6 +97,9 @@ export function addSlicesToCustomType(sliceIds /* string[] */) {
   cy.get("[data-cy=update-slices-modal]").submit();
 }
 
+/**
+ * On the Custom Type builder, save all changes.
+ */
 export function saveCustomTypeModifications() {
   cy.get("[data-cy=builder-save-button]").should("not.be.disabled");
   cy.get("[data-cy=builder-save-button]").click();

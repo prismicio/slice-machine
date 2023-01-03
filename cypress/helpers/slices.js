@@ -1,6 +1,13 @@
 import "cypress-wait-until";
 import { TYPES_FILE, SLICE_MODEL } from "../consts";
 
+/**
+ * Create a Slice and assert files are created.
+ *
+ * @param {string} lib Slice library where hte custom ype should be created.
+ * @param {string} id Id of the custom type.
+ * @param {string} name Name of the custom type.
+ */
 export function createSlice(lib, id, name) {
   cy.visit(`/slices`);
 
@@ -17,6 +24,13 @@ export function createSlice(lib, id, name) {
   cy.readFile(TYPES_FILE).should("contains", name);
 }
 
+/**
+ * Rename a Slice and assert files are modified.
+ *
+ * @param {string} lib Slice library where the slice should be created.
+ * @param {string} actualName Current name of the slice.
+ * @param {string} newName New name to use for the slice.
+ */
 export function renameSlice(lib, actualName, newName) {
   cy.visit(`/${lib}/${actualName}/default`);
 
@@ -39,6 +53,13 @@ export function renameSlice(lib, actualName, newName) {
   });
 }
 
+/**
+ * On the Slice builder, add static field to the Slice.
+ *
+ * @param {string} fieldType Type of field to create.
+ * @param {string} fieldName Label of the new field.
+ * @param {string} fieldId Id of the new field.
+ */
 export function addStaticFieldToSlice(fieldType, fieldName, fieldId) {
   const selectors = {
     addField: "add-Static-field",
@@ -49,6 +70,13 @@ export function addStaticFieldToSlice(fieldType, fieldName, fieldId) {
   return addFieldToSlice(selectors, fieldType, fieldName, fieldId);
 }
 
+/**
+ * On the Slice builder, add a repeatable field to the Slice.
+ *
+ * @param {string} fieldType Type of field to create.
+ * @param {string} fieldName Label of the new field.
+ * @param {string} fieldId Id of the new field.
+ */
 export function addRepeatableFieldToSlice(fieldType, fieldName, fieldId) {
   const selectors = {
     addField: "add-Repeatable-field",
@@ -84,6 +112,9 @@ function addFieldToSlice(selectors, fieldType, fieldName, fieldId) {
   });
 }
 
+/**
+ * On the Slice builder, save all changes.
+ */
 export function saveSliceModifications() {
   cy.get("[data-cy=builder-save-button]").should("not.be.disabled");
   cy.get("[data-cy=builder-save-button]").click();
