@@ -40,7 +40,7 @@ export function setSliceMachineUserContext({
 
 /**
  * Retrieve the user context from the local storage
-*/
+ */
 export function getSliceMachineUserContext() {
   return cy
     .getLocalStorage("persist:root")

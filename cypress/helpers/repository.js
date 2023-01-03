@@ -2,7 +2,7 @@
  * Push Changes to the Repository, assert the number of changes as well.
  *
  * @param {number} numberOfChanges number of changes that should be pushed, this number is used for assertions
-*/
+ */
 export function pushLocalChanges(numberOfChanges = 1) {
   cy.visit(`/changes`);
 
