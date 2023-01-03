@@ -42,24 +42,20 @@ export const InstallSliceSimulator =
   () => {
     return (
       <Flex sx={{ flexDirection: "column", height: "100%" }}>
-        <Text as="p" mb={2}>
-          Run this command to install the simulator package via npm:
-        </Text>
         <CodeBlock
-          fileName={fileName || "Terminal (npm)"}
+          fileName={fileName || "Terminal"}
           FileIcon={FileIcon || BsSquare}
-        >
-          {npm}
-        </CodeBlock>
-        <Text as="p" my={2}>
-          Alternatively, you can use yarn:
-        </Text>
-        <CodeBlock
-          fileName={fileName || "Terminal (yarn)"}
-          FileIcon={FileIcon || BsSquare}
-        >
-          {yarn}
-        </CodeBlock>
+          codeList={[
+            {
+              text: yarn,
+              version: "yarn",
+            },
+            {
+              text: npm,
+              version: "npm",
+            },
+          ]}
+        />
       </Flex>
     );
   };

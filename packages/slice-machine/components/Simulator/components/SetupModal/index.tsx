@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Card from "@components/Card";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { Box, Flex, Heading, Text } from "theme-ui";
@@ -88,7 +89,30 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
   }));
 
-  const setupData = getStepperConfigurationByFramework(framework);
+  const setupData = useMemo(
+    () => getStepperConfigurationByFramework(framework),
+    [framework]
+  );
+
+  const Steps = useMemo(
+    () =>
+      setupData.steps.map((Step, i) => {
+        return (
+          <TabPanel
+            key={`next-step-${i + 1}`}
+            selectedClassName="react-tabs__vertical__tab-panel--selected"
+            className="react-tabs__vertical__tab-panel"
+          >
+            <Step
+              stepNumber={i + 1}
+              linkToStorybookDocs={linkToStorybookDocs}
+              linkToTroubleshootingDocs={linkToTroubleshootingDocs}
+            />
+          </TabPanel>
+        );
+      }),
+    [setupData]
+  );
 
   return (
     <SliceMachineModal isOpen={isOpen}>
@@ -129,23 +153,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
             ))}
           </TabList>
           {isSimulatorAvailableForFramework ? (
-            <>
-              {setupData.steps.map((Step, i) => {
-                return (
-                  <TabPanel
-                    key={`next-step-${i + 1}`}
-                    selectedClassName="react-tabs__vertical__tab-panel--selected"
-                    className="react-tabs__vertical__tab-panel"
-                  >
-                    <Step
-                      stepNumber={i + 1}
-                      linkToStorybookDocs={linkToStorybookDocs}
-                      linkToTroubleshootingDocs={linkToTroubleshootingDocs}
-                    />
-                  </TabPanel>
-                );
-              })}
-            </>
+            Steps
           ) : (
             <TabPanel
               selectedClassName="react-tabs__vertical__tab-panel--selected"
