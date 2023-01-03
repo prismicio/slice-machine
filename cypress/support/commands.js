@@ -1,62 +1,33 @@
-import {
-  setSliceMachineUserContext,
-  getSliceMachineUserContext,
-} from "../helpers/localStorage";
-import {
-  clearProject,
-  clearAssets,
-  clearCustomTypes,
-  clearSlices,
-  removeTypes,
-  modifyFile,
-} from "../helpers/filesystem";
-import {
-  createCustomType,
-  renameCustomType,
-  addFieldToCustomType,
-  addSlicesToCustomType,
-  saveCustomTypeModifications,
-} from "../helpers/customTypes";
-import {
-  createSlice,
-  renameSlice,
-  addStaticFieldToSlice,
-  addRepeatableFieldToSlice,
-  saveSliceModifications,
-} from "../helpers/slices";
-import { pushLocalChanges } from "../helpers/repository";
+import * as localStorageHelpers from "../helpers/localStorage";
+import * as filesystemHelpers from "../helpers/filesystem";
+import * as customTypesHelpers from "../helpers/customTypes";
+import * as slicesHelpers from "../helpers/slices";
+import * as repositoryHelpers from "../helpers/repository";
 
 /* -- LOCAL STORAGE -- */
-Cypress.Commands.add("setSliceMachineUserContext", setSliceMachineUserContext);
-Cypress.Commands.add("getSliceMachineUserContext", getSliceMachineUserContext);
+Object.keys(localStorageHelpers).forEach(localStorageHelper => {
+  Cypress.Commands.add(localStorageHelper, localStorageHelpers[localStorageHelper]);
+})
 
 /* -- PROJECT RESET -- */
-Cypress.Commands.add("clearProject", clearProject);
-Cypress.Commands.add("clearAssets", clearAssets);
-Cypress.Commands.add("clearCustomTypes", clearCustomTypes);
-Cypress.Commands.add("clearSlices", clearSlices);
-Cypress.Commands.add("removeTypes", removeTypes);
-Cypress.Commands.add("modifyFile", modifyFile);
+Object.keys(filesystemHelpers).forEach(filesystemHelper => {
+  Cypress.Commands.add(filesystemHelper, filesystemHelpers[filesystemHelper]);
+})
 
 /* -- CUSTOM TYPES */
-Cypress.Commands.add("createCustomType", createCustomType);
-Cypress.Commands.add("renameCustomType", renameCustomType);
-Cypress.Commands.add("addFieldToCustomType", addFieldToCustomType);
-Cypress.Commands.add(
-  "saveCustomTypeModifications",
-  saveCustomTypeModifications
-);
-Cypress.Commands.add("addSlicesToCustomType", addSlicesToCustomType);
+Object.keys(customTypesHelpers).forEach(customTypesHelper => {
+  Cypress.Commands.add(customTypesHelper, customTypesHelpers[customTypesHelper]);
+})
 
 /* -- SLICES -- */
-Cypress.Commands.add("createSlice", createSlice);
-Cypress.Commands.add("renameSlice", renameSlice);
-Cypress.Commands.add("addStaticFieldToSlice", addStaticFieldToSlice);
-Cypress.Commands.add("addRepeatableFieldToSlice", addRepeatableFieldToSlice);
-Cypress.Commands.add("saveSliceModifications", saveSliceModifications);
+Object.keys(slicesHelpers).forEach(slicesHelper => {
+  Cypress.Commands.add(slicesHelper, slicesHelpers[slicesHelper]);
+})
 
 /* REPOSITORY */
-Cypress.Commands.add("pushLocalChanges", pushLocalChanges);
+Object.keys(repositoryHelpers).forEach(repositoryHelper => {
+  Cypress.Commands.add(repositoryHelper, repositoryHelpers[repositoryHelper]);
+})
 
 /* -- QUERIES -- */
 Cypress.Commands.add("getInputByLabel", (label) => {
