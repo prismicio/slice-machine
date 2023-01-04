@@ -120,7 +120,7 @@ export class SimulatorManager extends BaseManager {
 						return res;
 					}
 
-					const isComplete = validationMessages.length > 0;
+					const isComplete = validationMessages.length < 1;
 
 					const processedValidationMessages = await Promise.all(
 						validationMessages.map(async (validationMessage) => {
