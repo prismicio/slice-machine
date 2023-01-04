@@ -11,6 +11,8 @@ jobs:
       - uses: ./.github/actions/setup-node
       - name: Install dependencies
         run: npm i
+      - name: Ignore, testing CI changes
+        run: echo "Ignore, testing CI changes"
       - name: List all dependencies
         shell: bash
         run: npm list
