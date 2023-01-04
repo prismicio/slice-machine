@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { beforeAll, expect, it } from "vitest";
 import SegmentClient from "analytics-node";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -8,6 +8,17 @@ import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
+
+beforeAll(() => {
+	const originalProcessEnv = process.env;
+
+	// rc9 respects the user's configuration directory using `XDG_CONFIG_HOME`.
+	process.env.XDG_CONFIG_HOME = os.homedir();
+
+	return () => {
+		process.env = originalProcessEnv;
+	};
+});
 
 it("creates a reusable Segment client", async () => {
 	const adapter = createTestPlugin();
