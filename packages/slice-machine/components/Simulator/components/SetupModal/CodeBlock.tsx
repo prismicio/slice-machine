@@ -101,7 +101,7 @@ const CodeBlockWithCopy: React.FC<{
                 )}
               </Button>
             </Flex>
-            {codeList?.length && codeList.length > 1 ? (
+            {codeList.length > 1 ? (
               <VersionBadgeList
                 versions={codeList.map((c) => c.version)}
                 selectedVersion={currentCode.version}

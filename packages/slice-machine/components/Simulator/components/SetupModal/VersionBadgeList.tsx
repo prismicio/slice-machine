@@ -46,7 +46,7 @@ const VersionBadgeList: FC<{
       },
     }}
   >
-    {versions.map((version, i) => (
+    {versions.map((version) => (
       <VersionBadge
         key={version}
         isSelected={version === selectedVersion}
