@@ -458,5 +458,5 @@ it("throws if not logged in", async () => {
 			libraryID: "foo",
 			sliceID: "bar",
 		});
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrowError(/authenticate before trying again/i);
 });
