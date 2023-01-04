@@ -11,6 +11,7 @@ import { decode } from "../../lib/decode";
 import { S3ACL } from "../../types";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { InternalError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -71,8 +72,15 @@ export class ScreenshotsManager extends BaseManager {
 			return;
 		}
 
-		// Lazy-load Puppeteer only once it is needed.
-		const puppeteer = await import("puppeteer");
+		let puppeteer: typeof import("puppeteer");
+		try {
+			// Lazy-load Puppeteer only once it is needed.
+			puppeteer = await import("puppeteer");
+		} catch {
+			throw new InternalError(
+				"Screenshots require Puppeteer but Puppeteer was not found. Check that the `puppeteer` package is installed before trying again.",
+			);
+		}
 
 		const browser = await puppeteer.launch();
 
