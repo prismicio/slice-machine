@@ -45,7 +45,7 @@ export const InstallSliceSimulator =
         <CodeBlock
           fileName={fileName || "Terminal"}
           FileIcon={FileIcon || BsSquare}
-          codeList={[
+          code={[
             {
               text: yarn,
               version: "yarn",
@@ -85,9 +85,11 @@ export const CreatePage =
         <CodeBlock
           fileName={fileName || "slice-simulator.js"}
           FileIcon={FileIcon || AiOutlineFileText}
-        >
-          {code}
-        </CodeBlock>
+          code={{
+            text: code,
+            version: "js",
+          }}
+        />
       </Flex>
     );
   };
@@ -111,9 +113,11 @@ export const UpdateSmJson =
           fileName="sm.json"
           lang="json"
           customCopyText={`"localSliceSimulatorURL": "http://localhost:3000/slice-simulator"`}
-        >
-          {code}
-        </CodeBlock>
+          code={{
+            text: code,
+            version: "JSON",
+          }}
+        />
       </Flex>
     );
   };

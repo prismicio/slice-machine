@@ -57,9 +57,14 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = () => {
         In your <Text variant={"pre"}>nuxt.config.js</Text> file, you need to
         add at the beginning the following line:
       </Text>
-      <CodeBlock fileName="nuxt.config.js" FileIcon={AiOutlineFileText}>
-        import smConfig from "./sm.json";
-      </CodeBlock>
+      <CodeBlock
+        fileName="nuxt.config.js"
+        FileIcon={AiOutlineFileText}
+        code={{
+          text: 'import smConfig from "./sm.json";',
+          version: "js",
+        }}
+      />
       <Text variant={"xs"} sx={{ my: 3 }}>
         Inside of the export statement, add these two properties:
       </Text>
@@ -67,9 +72,11 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = () => {
         fileName="nuxt.config.js"
         FileIcon={AiOutlineFileText}
         fullHeightCode
-      >
-        {NuxtConfigInstructions}
-      </CodeBlock>
+        code={{
+          text: NuxtConfigInstructions,
+          version: "js",
+        }}
+      />
     </Flex>
   );
 };

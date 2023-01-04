@@ -13,27 +13,17 @@ type Code = {
 };
 
 const CodeBlockWithCopy: React.FC<{
-  children?: string;
-  codeList?: Code[];
+  code: Code | Code[];
   customCopyText?: string;
   fileName: string;
   FileIcon: IconType;
   lang?: Language;
   fullHeightCode?: boolean;
-}> = ({
-  children,
-  customCopyText,
-  fileName,
-  FileIcon,
-  lang,
-  fullHeightCode,
-  codeList,
-}) => {
+}> = ({ customCopyText, fileName, FileIcon, lang, fullHeightCode, code }) => {
+  const codeList = Array.isArray(code) ? code : [code];
   const { theme } = useThemeUI();
   const [isCopied, setIsCopied] = useState(false);
-  const [currentCode, setCurrentCode] = useState(() =>
-    codeList ? codeList[0] : { text: children as string, version: "" }
-  );
+  const [currentCode, setCurrentCode] = useState(codeList[0]);
 
   const copy = (): void => {
     currentCode &&
