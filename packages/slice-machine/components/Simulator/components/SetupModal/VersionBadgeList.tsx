@@ -37,11 +37,18 @@ const VersionBadgeList: FC<{
   selectedVersion: string;
   setSelectedVersion: (s: string) => void;
 }> = ({ versions, selectedVersion, setSelectedVersion }) => (
-  <Flex sx={{ maxWidth: "fit-content", p: "16px 16px 0 16px" }}>
+  <Flex
+    sx={{
+      maxWidth: "fit-content",
+      p: "16px 16px 0 16px",
+      "& > button:not(:last-child)": {
+        mr: "12px",
+      },
+    }}
+  >
     {versions.map((version, i) => (
       <VersionBadge
         key={version}
-        sx={versions[i + 1] ? { mr: "12px" } : undefined}
         isSelected={version === selectedVersion}
         onClick={() => setSelectedVersion(version)}
       >

@@ -111,7 +111,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
           </TabPanel>
         );
       }),
-    [setupData]
+    [setupData, linkToStorybookDocs, linkToTroubleshootingDocs]
   );
 
   return (
