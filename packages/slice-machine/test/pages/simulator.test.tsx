@@ -1,25 +1,14 @@
 // @vitest-environment jsdom
 
-import {
-  describe,
-  test,
-  afterEach,
-  expect,
-  beforeAll,
-  afterAll,
-  vi,
-} from "vitest";
+import { describe, test, afterEach, expect, beforeAll, vi } from "vitest";
 import { render, fireEvent, act, waitFor } from "../__testutils__";
-import { setupServer } from "msw/node";
-import { rest, ResponseComposition, RestContext, RestRequest } from "msw";
-import { SliceSimulatorOpen } from "@src/tracking/types";
+import { rest } from "msw";
 import mockRouter from "next-router-mock";
 import router from "next/router";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 
 import Simulator from "../../pages/[lib]/[sliceName]/[variation]/simulator";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { SaveMockBody } from "../../server/src/api/slices/save-mock";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
 import { createSliceMachineManager } from "@slicemachine/manager";
@@ -306,38 +295,38 @@ describe.skip("simulator", () => {
       },
     });
 
-    // const button = App.container.querySelector('[data-cy="save-mock"]');
-    // expect(button).not.toBeNull();
-    //
-    // const input = await App.getByText(HEADING_TEXT);
-    // expect(input).not.toBeNull();
-    //
-    // await act(async () => {
-    //   // fireEvent.change(input as Element, {target: {value: "🎉"}})
-    //   // see: https://github.com/testing-library/dom-testing-library/pull/235
-    //   fireEvent.blur(input as Element, { target: { textContent: "🎉" } });
-    // });
-    //
-    // expect(button).not.toHaveAttribute("disabled");
-    //
-    // await act(async () => {
-    //   fireEvent.click(button as Element);
-    // });
-    //
-    // expect(saveMockSpy).toHaveBeenCalled();
-    // const payloadSent = await saveMockSpy.mock.lastCall?.[0].body;
-    //
-    // const expectedMock = [...state.slices.libraries[0].components[0].mock];
-    // expectedMock[0].primary.title.value[0].content.text = "🎉";
-    // // @ts-expect-error
-    // expectedMock[0].primary.title.value[0].content.spans = [];
-    // // @ts-expect-error
-    // expectedMock[0].primary.title.value[0].direction = "ltr";
-    //
-    // expect(payloadSent).toEqual({
-    //   sliceName: "MySlice",
-    //   libraryName: "slices",
-    //   mock: expectedMock,
-    // });
+    const button = App.container.querySelector('[data-cy="save-mock"]');
+    expect(button).not.toBeNull();
+
+    const input = App.getByText(HEADING_TEXT);
+    expect(input).not.toBeNull();
+
+    await act(async () => {
+      // fireEvent.change(input as Element, {target: {value: "🎉"}})
+      // see: https://github.com/testing-library/dom-testing-library/pull/235
+      fireEvent.blur(input as Element, { target: { textContent: "🎉" } });
+    });
+
+    expect(button).not.toHaveAttribute("disabled");
+
+    await act(async () => {
+      fireEvent.click(button as Element);
+    });
+
+    expect(trackingSpy).toHaveBeenCalled();
+    const payloadSent = trackingSpy.mock.lastCall?.[0].body;
+
+    const expectedMock = [...state.slices.libraries[0].components[0].mock];
+    expectedMock[0].primary.title.value[0].content.text = "🎉";
+    // @ts-expect-error - Ignoring wrong type
+    expectedMock[0].primary.title.value[0].content.spans = [];
+    // @ts-expect-error - Ignoring wrong type
+    expectedMock[0].primary.title.value[0].direction = "ltr";
+
+    expect(payloadSent).toEqual({
+      sliceName: "MySlice",
+      libraryName: "slices",
+      mock: expectedMock,
+    });
   });
 });

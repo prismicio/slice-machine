@@ -1,9 +1,5 @@
-import axios, { AxiosResponse } from "axios";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
-import {
-  SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
-  SliceMachineManagerClient,
-} from "@slicemachine/manager/client";
+import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import {
   CustomTypes,
@@ -11,27 +7,17 @@ import {
 } from "@slicemachine/core/build/models/CustomType";
 
 import { CheckAuthStatusResponse } from "@models/common/Auth";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import ServerState from "@models/server/ServerState";
 import {
   CustomScreenshotRequest,
   ScreenshotRequest,
-  ScreenshotResponse,
 } from "@lib/models/common/Screenshots";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
 import { ComponentMocks } from "@slicemachine/core/build/models";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
-
-// const defaultAxiosConfig = {
-//   withCredentials: true,
-//   headers: {
-//     Accept: "application/json",
-//     "Content-Type": "application/json",
-//   },
-// };
 
 /** State Routes **/
 
@@ -103,7 +89,7 @@ export const saveCustomType = async (
 
 export const renameCustomType = (
   customType: CustomTypeSM
-): Promise<AxiosResponse> => {
+): ReturnType<SliceMachineManagerClient["customTypes"]["renameCustomType"]> => {
   return managerClient.customTypes.renameCustomType({
     model: CustomTypes.fromSM(customType),
   });
@@ -141,7 +127,7 @@ export const createSlice = async (
 export const renameSlice = async (
   slice: SliceSM,
   libName: string
-): Promise<AxiosResponse> => {
+): ReturnType<SliceMachineManagerClient["slices"]["renameSlice"]> => {
   return await managerClient.slices.renameSlice({
     libraryID: libName,
     model: Slices.fromSM(slice),
@@ -189,16 +175,13 @@ export const generateSliceScreenshotApiClient = async (
 
 export const generateSliceCustomScreenshotApiClient = (
   params: CustomScreenshotRequest
-): Promise<AxiosResponse<ScreenshotUI>> => {
+): ReturnType<SliceMachineManagerClient["slices"]["updateSliceScreenshot"]> => {
   return managerClient.slices.updateSliceScreenshot({
     libraryID: params.libraryName,
     sliceID: params.sliceId,
     variationID: params.variationId,
     data: params.file,
   });
-
-  // const requestBody = form;
-  // return axios.post("/api/custom-screenshot", requestBody, defaultAxiosConfig);
 };
 
 export const saveSliceApiClient = async (
@@ -214,26 +197,17 @@ export const saveSliceApiClient = async (
 
 export const pushSliceApiClient = async (
   component: ComponentUI
-): Promise<ReturnType<SliceMachineManagerClient["slices"]["pushSlice"]>> => {
+): ReturnType<SliceMachineManagerClient["slices"]["pushSlice"]> => {
   return await managerClient.slices.pushSlice({
     libraryID: component.from,
     sliceID: component.model.id,
   });
-
-  // return axios
-  //   .get<Record<string, string | null>>(
-  //     `/api/slices/push?sliceName=${component.model.name}&from=${component.from}`,
-  //     defaultAxiosConfig
-  //   )
-  //   .then((response) => response.data);
 };
 
 /** Auth Routes **/
 
 export const startAuth = async (): Promise<void> => {
   return await managerClient.user.logout();
-
-  // return axios.post("/api/auth/start", {}, defaultAxiosConfig);
 };
 
 export const checkAuthStatus = async (): Promise<CheckAuthStatusResponse> => {
@@ -252,17 +226,9 @@ export const checkAuthStatus = async (): Promise<CheckAuthStatusResponse> => {
       status: "pending",
     };
   }
-
-  // return axios
-  //   .post("/api/auth/status", {}, defaultAxiosConfig)
-  //   .then((r: AxiosResponse<CheckAuthStatusResponse>) => r.data);
 };
 
 /** Simulator Routes **/
-
-// export const checkSimulatorSetup = async () => {
-//   return await managerClient.simulator.readSliceSimulatorSetupSteps();
-// }
 
 export const checkSimulatorSetup =
   async (): Promise<SimulatorCheckResponse> => {
@@ -273,8 +239,6 @@ export const checkSimulatorSetup =
       manifest: localSliceSimulatorURL ? "ok" : "ko",
       value: localSliceSimulatorURL,
     };
-
-    // return axios.get(`/api/simulator/check`);
   };
 
 export const getSimulatorSetupSteps = async (): ReturnType<
@@ -297,10 +261,6 @@ export const saveSliceMock = async (
     sliceID: payload.sliceName,
     mocks: payload.mock,
   });
-
-  // return axios
-  //   .post<SaveSliceMockRequest>("/api/slices/mock", payload)
-  //   .then((res) => res.data);
 };
 
 export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
@@ -337,8 +297,4 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
     latestNonBreakingVersion: latestNonBreakingVersion ?? null,
     versions: versionsWithMetadata,
   };
-
-  // return axios
-  //   .get<PackageChangelog>(`/api/changelog`, defaultAxiosConfig)
-  //   .then((response) => response.data);
 };

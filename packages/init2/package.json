@@ -39,7 +39,14 @@
 	],
 	"scripts": {
 		"build": "vite build",
-		"dev": "vite build --watch"
+		"dev": "vite build --watch",
+		"format": "prettier --write .",
+		"lint": "eslint --ext .js,.ts .",
+		"prepare": "npm run build",
+		"size": "size-limit",
+		"test": "npm run lint && npm run unit && npm run build && npm run size",
+		"unit": "vitest run --coverage",
+		"unit:watch": "vitest watch"
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.18.8",

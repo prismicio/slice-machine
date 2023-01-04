@@ -2,17 +2,17 @@ import prompts from "prompts";
 
 type promptArgs<
 	TValue = unknown,
-	TProperty extends string = string
+	TProperty extends string = string,
 > = prompts.PromptObject<TProperty> & {
 	// Method is available, cf. docs
 	onRender?: (this: { msg: string; value?: TValue; initial?: TValue }) => void;
 };
 
 export const prompt = async <TReturn, TProperty extends string = string>(
-	question: promptArgs<TReturn, TProperty>
+	question: promptArgs<TReturn, TProperty>,
 ): Promise<Record<TProperty, TReturn>> => {
 	const answers: Record<TProperty, TReturn> = await prompts<TProperty>(
-		question
+		question,
 	);
 
 	if (!Object.keys(answers).length) {

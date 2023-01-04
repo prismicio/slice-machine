@@ -65,7 +65,7 @@ OPTIONS
 		autoHelp: false,
 		autoVersion: false,
 		allowUnknownFlags: false,
-	}
+	},
 );
 
 if (cli.flags.help) {

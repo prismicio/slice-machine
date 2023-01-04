@@ -164,7 +164,7 @@ describe("slices", () => {
     );
     ctx.msw.use(rest.post("/api/s", trackingSpy));
 
-    const App = render(<SlicesIndex />, {
+    render(<SlicesIndex />, {
       preloadedState: {
         environment,
         slices: {
@@ -326,7 +326,7 @@ describe("slices", () => {
     );
     ctx.msw.use(rest.post("/api/s", trackingSpy));
 
-    const App = render(<SlicesIndex />, {
+    render(<SlicesIndex />, {
       preloadedState: {
         environment,
         slices: {

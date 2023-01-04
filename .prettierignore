@@ -2,16 +2,12 @@
 .github/
 packages/slice-machine/.next
 packages/slice-machine/build
-packages/slice-machine/coverage
 packages/slice-machine/tests/project/
 packages/slice-machine/templates/
 packages/slice-machine/out
 packages/client/build
-packages/client/coverage
 packages/core/build
-packages/core/coverage
 packages/init/build
-packages/init/coverage
 packages/next-slicezone/dist
 packages/nuxt-sm/src/sm-resolver.js
 packages/**/package.json
@@ -22,3 +18,4 @@ package-lock.json
 e2e-projects/**
 dist
 packages/init2/playground
+coverage/

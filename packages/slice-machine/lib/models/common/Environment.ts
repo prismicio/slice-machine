@@ -1,12 +1,10 @@
 import PrismicData from "./PrismicData";
 import type { Models } from "@slicemachine/core";
-import type { Client, ApplicationMode } from "@slicemachine/client";
 import { PackageChangelog } from "./versions";
 import { PackageManager } from "./PackageManager";
 import { CustomTypeMockConfig } from "./MockConfig";
 
 export interface BackendEnvironment {
-  applicationMode: ApplicationMode;
   cwd: string;
   prismicData: PrismicData;
   manifest: Models.Manifest;
@@ -14,7 +12,6 @@ export interface BackendEnvironment {
   mockConfig: CustomTypeMockConfig;
   framework: Models.Frameworks;
   baseUrl: string;
-  client: Client;
 }
 
 export interface FrontEndEnvironment {

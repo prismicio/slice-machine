@@ -524,7 +524,7 @@ describe("Custom Type Builder", () => {
       query: { ct: customTypeId },
     });
 
-    const App = render(<CreateCustomTypeBuilder />, {
+    render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment: {
           framework: "next",

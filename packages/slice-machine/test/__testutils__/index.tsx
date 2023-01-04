@@ -15,6 +15,7 @@ export type RenderArgs = Partial<
 >;
 
 function render(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ui: any,
   {
     preloadedState,
@@ -22,7 +23,12 @@ function render(
     ...renderOptions
   }: RenderArgs = {}
 ) {
-  function Wrapper({ children }: { children: any }) {
+  function Wrapper({
+    children,
+  }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    children: any;
+  }) {
     return (
       <ThemeProvider theme={theme}>
         <BaseStyles>

@@ -4,13 +4,19 @@ import { join } from "node:path";
 import semver from "semver";
 
 export type Framework = {
-	/** Framework's human readable name. */
+	/**
+	 * Framework's human readable name.
+	 */
 	name: string;
 
-	/** Framework's name sent to Prismic */
+	/**
+	 * Framework's name sent to Prismic
+	 */
 	prismicName: string;
 
-	/** Package name of the adapter responsible for this framework */
+	/**
+	 * Package name of the adapter responsible for this framework
+	 */
 	adapterName: string;
 
 	/**
@@ -26,9 +32,9 @@ export type Framework = {
 	 * installed. Typically Slice Machine and the framework's adapter.
 	 *
 	 * @remarks
-	 *   Dependencies required to work with the framework (e.g. `@prismicio/next`
-	 *   for Next.js) should not be defined here. Those are to be defined by the
-	 *   adapter.
+	 * Dependencies required to work with the framework (e.g. `@prismicio/next`
+	 * for Next.js) should not be defined here. Those are to be defined by the
+	 * adapter.
 	 */
 	devDependencies: Record<string, string>;
 };
@@ -64,7 +70,9 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 } as const;
 
-/** Universal package used when framework is not supported. */
+/**
+ * Universal package used when framework is not supported.
+ */
 export const UNIVERSAL: Framework = {
 	name: "universal (no framework)",
 	prismicName: "universal",
@@ -90,7 +98,7 @@ export const detectFramework = async (): Promise<Framework> => {
 	} catch (error) {
 		throw new Error(
 			`Failed to read project's \`package.json\` at \`${path}\``,
-			{ cause: error }
+			{ cause: error },
 		);
 	}
 

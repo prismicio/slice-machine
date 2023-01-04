@@ -33,7 +33,6 @@ import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import Tracker from "@src/tracking/client";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
-import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 
 const startTimer =
   (startTime = Date.now()) =>

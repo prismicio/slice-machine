@@ -16,10 +16,10 @@ export const createComponentWithSlice = (C: ComponentWithSliceProps) => {
     CustomLayout?: React.FC<{ children: ReactNode }>;
   } = ({ pageProps }) => {
     const { slice, variation } = useCurrentSlice();
-    // if (!slice || !variation) {
-    //   void replace("/");
-    //   return null;
-    // }
+    if (!slice || !variation) {
+      void replace("/");
+      return null;
+    }
     return <C slice={slice} variation={variation} {...pageProps} />;
   };
   return Wrapper;

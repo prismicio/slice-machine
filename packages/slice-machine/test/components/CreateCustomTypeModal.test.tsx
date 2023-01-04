@@ -49,10 +49,7 @@ describe("CreateCustomTypeModal", () => {
     const fakeName = "testing-name";
     const fakeRepo = "foo";
 
-    // const fakeTracker = makeTrackerSpy();
-    // interceptTracker(fakeTracker);
-
-    const App = render(<CreateCustomTypeModal />, {
+    render(<CreateCustomTypeModal />, {
       preloadedState: {
         environment: {
           repo: fakeRepo,
