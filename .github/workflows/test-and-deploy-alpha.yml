@@ -88,11 +88,11 @@ jobs:
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/build-essential
       - name: Build slice machine init
-        working-directory: ./packages/init
+        working-directory: ./packages/init2
         run: npm run build
       - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine
-        run: npm run build && npm run export-build
+        run: npm run build && npm run export
       - name: Running End to End tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
