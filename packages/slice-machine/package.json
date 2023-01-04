@@ -72,7 +72,6 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@emotion/react": "^11.10.5",
     "@prismicio/slice-simulator-com": "^0.4.1",
     "@reach/menu-button": "^0.18.0",
@@ -125,8 +124,6 @@
     "memfs": "^3.4.12",
     "msw": "^0.49.2",
     "next": "^12.1.4",
-    "next-compose-plugins": "^2.2.1",
-    "next-plugin-custom-babel-config": "^1.0.4",
     "next-router-mock": "^0.8.0",
     "next-videos": "^1.4.0",
     "node-fetch": "^3.3.0",
