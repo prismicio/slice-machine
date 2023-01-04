@@ -13,8 +13,7 @@ describe("Create Slices", () => {
     cy.clearProject();
   });
 
-  // TODO: understand why this test is now flaky.
-  it.skip("A user can create and rename a slice", () => {
+  it("A user can create and rename a slice", () => {
     cy.createSlice(lib, sliceId, sliceName);
 
     // remove widget
@@ -93,13 +92,13 @@ describe("Create Slices", () => {
     cy.get("button").contains("foo").click();
     cy.contains("Default").click();
 
-    cy.readFile(SLICE_MOCK_FILE(sliceId), "utf-8")
+    cy.readFile(SLICE_MOCK_FILE(editedSliceName), "utf-8")
       .its(0)
       .its("primary.description.value")
       .its(0)
       .its("content.text")
       .should("equal", "👋");
-    cy.readFile(SLICE_MOCK_FILE(sliceId), "utf-8")
+    cy.readFile(SLICE_MOCK_FILE(editedSliceName), "utf-8")
       .its(1)
       .its("primary.description.value")
       .its(0)
