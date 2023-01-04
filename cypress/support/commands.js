@@ -1,42 +1,39 @@
-import {
-  setSliceMachineUserContext,
-  getSliceMachineUserContext,
-} from "../helpers/localStorage";
-import {
-  clearProject,
-  clearAssets,
-  clearCustomTypes,
-  clearSlices,
-  removeTypes,
-  modifyFile,
-} from "../helpers/filesystem";
-import {
-  createCustomType,
-  renameCustomType,
-  addFieldToCustomType,
-} from "../helpers/customTypes";
-import { createSlice, renameSlice } from "../helpers/slices";
+import * as localStorageHelpers from "../helpers/localStorage";
+import * as filesystemHelpers from "../helpers/filesystem";
+import * as customTypesHelpers from "../helpers/customTypes";
+import * as slicesHelpers from "../helpers/slices";
+import * as repositoryHelpers from "../helpers/repository";
 
 /* -- LOCAL STORAGE -- */
-Cypress.Commands.add("setSliceMachineUserContext", setSliceMachineUserContext);
-Cypress.Commands.add("getSliceMachineUserContext", getSliceMachineUserContext);
+Object.keys(localStorageHelpers).forEach((localStorageHelper) => {
+  Cypress.Commands.add(
+    localStorageHelper,
+    localStorageHelpers[localStorageHelper]
+  );
+});
 
 /* -- PROJECT RESET -- */
-Cypress.Commands.add("clearProject", clearProject);
-Cypress.Commands.add("clearAssets", clearAssets);
-Cypress.Commands.add("clearCustomTypes", clearCustomTypes);
-Cypress.Commands.add("clearSlices", clearSlices);
-Cypress.Commands.add("removeTypes", removeTypes);
-Cypress.Commands.add("modifyFile", modifyFile);
+Object.keys(filesystemHelpers).forEach((filesystemHelper) => {
+  Cypress.Commands.add(filesystemHelper, filesystemHelpers[filesystemHelper]);
+});
 
 /* -- CUSTOM TYPES */
-Cypress.Commands.add("createCustomType", createCustomType);
-Cypress.Commands.add("renameCustomType", renameCustomType);
-Cypress.Commands.add("addFieldToCustomType", addFieldToCustomType);
+Object.keys(customTypesHelpers).forEach((customTypesHelper) => {
+  Cypress.Commands.add(
+    customTypesHelper,
+    customTypesHelpers[customTypesHelper]
+  );
+});
 
 /* -- SLICES -- */
-Cypress.Commands.add("createSlice", createSlice);
-Cypress.Commands.add("renameSlice", renameSlice);
+Object.keys(slicesHelpers).forEach((slicesHelper) => {
+  Cypress.Commands.add(slicesHelper, slicesHelpers[slicesHelper]);
+});
+
+/* REPOSITORY */
+Object.keys(repositoryHelpers).forEach((repositoryHelper) => {
+  Cypress.Commands.add(repositoryHelper, repositoryHelpers[repositoryHelper]);
+});
 
 /* -- QUERIES -- */
 Cypress.Commands.add("getInputByLabel", (label) => {
