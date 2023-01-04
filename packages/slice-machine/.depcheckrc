@@ -1,10 +1,9 @@
 ignores:
   [
-    "@babel/plugin-proposal-private-methods",
-    "nodemon",
-    "rollup",
     "monocle-ts",
     "newtype-ts",
+    "start-slicemachine",
+    "@vitest/coverage-c8",
     "jest-environment-jsdom",
   ]
 skip - missing: true

@@ -34,7 +34,8 @@
 		"size": "size-limit",
 		"test": "npm run lint && npm run unit && npm run build && npm run size",
 		"unit": "vitest run --coverage",
-		"unit:watch": "vitest watch"
+		"unit:watch": "vitest watch",
+		"depcheck": "depcheck --config=.depcheckrc"
 	},
 	"bin": {
 		"start-slicemachine": "./bin/start-slicemachine.js"
@@ -42,7 +43,6 @@
 	"dependencies": {
 		"@slicemachine/manager": "0.1.0",
 		"chalk": "^4.1.2",
-		"common-tags": "^1.8.2",
 		"cors": "^2.8.5",
 		"h3": "^1.0.2",
 		"mri": "^1.2.0",
@@ -52,9 +52,7 @@
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^8.1.0",
-		"@types/common-tags": "^1.8.1",
 		"@types/cors": "^2.8.13",
-		"@types/express-http-proxy": "^1.6.3",
 		"@types/serve-static": "^1.15.0",
 		"@typescript-eslint/eslint-plugin": "~5.48.0",
 		"@typescript-eslint/parser": "^5.48.0",
