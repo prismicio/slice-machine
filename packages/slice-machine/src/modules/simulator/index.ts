@@ -23,6 +23,7 @@ import {
 import {
   getCurrentVersion,
   getFramework,
+  selectIsSimulatorAvailableForFramework,
   updateManifestCreator,
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/models";
@@ -234,6 +235,14 @@ function* connectToSimulatorIframe() {
 export function* failCheckSetupSaga({
   setupSteps,
 }: { setupSteps?: NonNullable<SimulatorStoreType["setupSteps"]> } = {}) {
+  const isPreviewAvailableForFramework = (yield select(
+    selectIsSimulatorAvailableForFramework
+  )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
+
+  if (!isPreviewAvailableForFramework) {
+    return;
+  }
+
   yield put(
     checkSimulatorSetupCreator.failure({
       setupSteps,
@@ -258,7 +267,12 @@ export function* saveSliceMockSaga({
   payload,
 }: ReturnType<typeof saveSliceMockCreator.request>): Generator {
   try {
-    yield call(saveSliceMock, payload);
+    const { errors } = (yield call(saveSliceMock, payload)) as Awaited<
+      ReturnType<typeof saveSliceMock>
+    >;
+    if (errors.length) {
+      throw errors;
+    }
     yield put(
       openToasterCreator({
         type: ToasterType.SUCCESS,
@@ -270,12 +284,10 @@ export function* saveSliceMockSaga({
     yield put(updateSelectedSliceMocks({ mocks: payload.mock }));
     yield put(saveSliceMockCreator.success());
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Error saving content";
     yield put(
       openToasterCreator({
         type: ToasterType.ERROR,
-        message: message,
+        message: "Error saving content",
       })
     );
     yield put(saveSliceMockCreator.failure());

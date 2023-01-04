@@ -27,7 +27,7 @@ import { decodeHookResult } from "../../lib/decodeHookResult";
 import { OnlyHookErrors } from "../../types";
 import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-import { UnauthorizedError } from "../../errors";
+import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -338,7 +338,7 @@ export class SlicesManager extends BaseManager {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		if (!(await this.user.checkIsLoggedIn())) {
-			throw new Error("Not logged in.");
+			throw new UnauthenticatedError();
 		}
 
 		const { model, errors: readSliceErrors } = await this.readSlice({

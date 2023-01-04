@@ -139,35 +139,56 @@ export function* changesPushSaga({
         // Sending failure event
         yield put(pushSliceCreator.failure({ component: slice }));
 
-        const errorStatus =
-          axios.isAxiosError(e) && e.response ? e.response.status : 500;
+        const hasInvalidModel = res.errors.includes((error) => {
+          return error.name === "DecodeError";
+        });
+        const isUnauthorized = res.errors.includes((error) => {
+          return error.name === "UnauthenticatedError";
+        });
 
-        switch (errorStatus) {
-          case 400: {
-            errors += 1;
-            stop = { type: "slice", error: ApiError.INVALID_MODEL };
-            break;
-          }
+        if (hasInvalidModel) {
+          errors += 1;
+          stop = { type: "slice", error: ApiError.INVALID_MODEL };
+        } else if (isUnauthorized) {
+          // Opening the login modal
+          yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
 
-          case 401:
-          case 403: {
-            // Opening the login modal
-            yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+          // Canceling the saga
+          yield cancel();
+        } else {
+          // Display error toaster
+          yield displayGeneralError();
 
-            // Canceling the saga
-            yield cancel();
-
-            break;
-          }
-
-          default: {
-            // Display error toaster
-            yield displayGeneralError();
-
-            // Cancel the saga as it's an unexpected error
-            yield cancel();
-          }
+          // Cancel the saga as it's an unexpected error
+          yield cancel();
         }
+
+        // switch (errorStatus) {
+        //   case 400: {
+        //     errors += 1;
+        //     stop = { type: "slice", error: ApiError.INVALID_MODEL };
+        //     break;
+        //   }
+        //
+        //   case 401:
+        //   case 403: {
+        //     // Opening the login modal
+        //     yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+        //
+        //     // Canceling the saga
+        //     yield cancel();
+        //
+        //     break;
+        //   }
+        //
+        //   default: {
+        //     // Display error toaster
+        //     yield displayGeneralError();
+        //
+        //     // Cancel the saga as it's an unexpected error
+        //     yield cancel();
+        //   }
+        // }
       }
     })
   );

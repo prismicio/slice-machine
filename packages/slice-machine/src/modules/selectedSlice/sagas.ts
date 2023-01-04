@@ -31,17 +31,15 @@ export function* saveSliceSaga({
       status: null,
       message: null,
     });
-    const response = (yield call(
+    const { errors } = (yield call(
       saveSliceApiClient,
       component
     )) as SagaReturnType<typeof saveSliceApiClient>;
-    if (response.errors.length > 0) {
+    if (errors.length > 0) {
       return setData({
         loading: false,
         done: true,
-        error: response.errors,
-        // status: response.status,
-        // message: response.data.reason,
+        error: errors,
       });
     }
     setData({

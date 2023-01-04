@@ -14,8 +14,8 @@
   "scripts": {
     "dev": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/next\"",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
-    "test": "vitest",
-    "watch-test": "jest --watch",
+    "test": "vitest run --coverage",
+    "watch-test": "vitest watch",
     "config": "tsc --showConfig",
     "clean-build": "rimraf ./build/client",
     "postinstall": "node postinstall",
@@ -153,6 +153,7 @@
     "node-fetch": "^3.3.0",
     "nodemon": "^2.0.15",
     "normalizr": "^3.6.1",
+    "parse-multipart-data": "^1.5.0",
     "rc-drawer": "^4.1.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-color": "^2.19.3",

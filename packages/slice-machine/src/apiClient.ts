@@ -289,7 +289,9 @@ export type SaveSliceMockRequest = {
   mock: ComponentMocks;
 };
 
-export const saveSliceMock = async (payload: SaveSliceMockRequest) => {
+export const saveSliceMock = async (
+  payload: SaveSliceMockRequest
+): ReturnType<SliceMachineManagerClient["slices"]["updateSliceMocks"]> => {
   return await managerClient.slices.updateSliceMocks({
     libraryID: payload.libraryName,
     sliceID: payload.sliceName,
