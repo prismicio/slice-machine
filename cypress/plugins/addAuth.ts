@@ -22,7 +22,7 @@ const main = async () => {
   const manager = createSliceMachineManager();
 
   const signInResponse = await fetch(
-    new URL("./authentication/signin", PRISMIC_URL),
+    new URL("./authentication/signin", PRISMIC_URL).toString(),
     {
       method: "post",
       body: JSON.stringify({
