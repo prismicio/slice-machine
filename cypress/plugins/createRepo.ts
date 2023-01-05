@@ -1,37 +1,37 @@
-import { InitClient } from "../../packages/init/src/utils/client";
-import { ApplicationMode } from "../../packages/client/src/models/ApplicationMode";
-import { PrismicSharedConfigManager } from "../../packages/core/src/prismic/SharedConfig";
-import { Frameworks } from "../../packages/core/src/models/Framework";
-import getApplicationMode from "../../packages/slice-machine/lib/env/getApplicationMode";
+import { createSliceMachineManager } from "../../packages/manager";
+
+const getApplicationMode = (apiEndpoint: string): string => {
+  if (apiEndpoint.includes("prismic.io")) return "production";
+  else if (apiEndpoint.includes("wroom.io")) return "staging";
+  else if (apiEndpoint.includes("wroom.test")) return "development";
+  else if (apiEndpoint.includes("wroom-qa.com")) return "development";
+  else throw new Error(`Unknown application mode for ${apiEndpoint}`);
+};
 
 // File called from the cypress setup in cypress-setup.sh
 const [, , DOMAIN_NAME, PASSWORD, PRISMIC_URL] = process.argv;
 
-const applicationMode: ApplicationMode = getApplicationMode(PRISMIC_URL);
+const applicationMode = getApplicationMode(PRISMIC_URL);
 
-const client = new InitClient(
-  applicationMode,
-  null,
-  PrismicSharedConfigManager.getAuth()
-);
+// Set the global Slice Machine environment.
+process.env.SM_ENV = applicationMode;
+
+const manager = createSliceMachineManager();
 
 const deleteAndCreate = async () => {
-  await client
-    .deleteRepository(
-      DOMAIN_NAME,
-      PASSWORD,
-      PrismicSharedConfigManager.get().cookies
-    )
-    .catch((e) => {});
+  try {
+    await manager.prismicRepository.delete({
+      domain: DOMAIN_NAME,
+      password: PASSWORD,
+    });
+  } catch {
+    // noop
+  }
 
-  await client.createRepository(DOMAIN_NAME, Frameworks.next).catch((e) => {
-    console.warn(
-      `could not create repo: ${DOMAIN_NAME} in ${applicationMode}: ${e.status}: ${e.message}`
-    );
-    process.exit(1);
+  await manager.prismicRepository.create({
+    domain: DOMAIN_NAME,
+    framework: "next",
   });
-
-  return;
 };
 
 deleteAndCreate();
