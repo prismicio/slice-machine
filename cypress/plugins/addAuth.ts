@@ -1,27 +1,14 @@
-import { createSliceMachineManager } from "../../packages/manager";
-
-const getApplicationMode = (apiEndpoint: string): string => {
-  if (apiEndpoint.includes("prismic.io")) return "production";
-  else if (apiEndpoint.includes("wroom.io")) return "staging";
-  else if (apiEndpoint.includes("wroom.test")) return "development";
-  else if (apiEndpoint.includes("wroom-qa.com")) return "development";
-  else throw new Error(`Unknown application mode for ${apiEndpoint}`);
-};
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import * as os from "node:os";
 
 // File called from the cypress setup in cypress-setup.sh
 const [, , EMAIL, PASSWORD, PRISMIC_URL] = process.argv;
 
-const applicationMode = getApplicationMode(PRISMIC_URL);
-
-// Set the global Slice Machine environment.
-process.env.SM_ENV = applicationMode;
-
 const main = async () => {
   const fetch = (await import("node-fetch")).default;
 
-  const manager = createSliceMachineManager();
-
-  const signInResponse = await fetch(
+  const res = await fetch(
     new URL("./authentication/signin", PRISMIC_URL).toString(),
     {
       method: "post",
@@ -32,10 +19,13 @@ const main = async () => {
     }
   );
 
-  await manager.user.login({
-    email: EMAIL,
-    cookies: (signInResponse.headers.get("Set-Cookie") || "").split("; "),
-  });
+  await fs.writeFile(
+    path.join(os.homedir(), ".prismic"),
+    JSON.stringify({
+      base: new URL(PRISMIC_URL).toString(),
+      cookies: res.headers.get("Set-Cookie") || "",
+    })
+  );
 };
 
 main();
