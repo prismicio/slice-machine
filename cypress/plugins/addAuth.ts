@@ -6,6 +6,8 @@ import * as os from "node:os";
 const [, , EMAIL, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
+  console.log({ SM_ENV: process.env.SM_ENV });
+
   const fetch = (await import("node-fetch")).default;
 
   const res = await fetch(
