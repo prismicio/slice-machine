@@ -16,6 +16,9 @@ const main = async () => {
         email: EMAIL,
         password: PASSWORD,
       }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
   );
 
