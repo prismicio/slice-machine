@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 import { createSliceMachineManager } from "../../packages/manager";
 
 const getApplicationMode = (apiEndpoint: string): string => {
