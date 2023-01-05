@@ -6,8 +6,6 @@ import * as os from "node:os";
 const [, , EMAIL, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
-  console.log({ SM_ENV: process.env.SM_ENV });
-
   const fetch = (await import("node-fetch")).default;
 
   const res = await fetch(
@@ -20,6 +18,10 @@ const main = async () => {
       }),
     }
   );
+
+  console.log({ res });
+  console.log({ headers: [...res.headers.entries()] });
+  console.log({ text: await res.text() });
 
   await fs.writeFile(
     path.join(os.homedir(), ".prismic"),
