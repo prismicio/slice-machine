@@ -218,6 +218,8 @@ export class PrismicAuthManager {
 	async checkIsLoggedIn(): Promise<boolean> {
 		const authState = await this._readPersistedAuthState();
 
+		console.log({ authState });
+
 		if (checkHasAuthenticationToken(authState)) {
 			const url = new URL("./validate", API_ENDPOINTS.PrismicAuthentication);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
@@ -227,6 +229,9 @@ export class PrismicAuthManager {
 					"User-Agent": SLICE_MACHINE_USER_AGENT,
 				},
 			});
+
+			console.log({ ok: res.ok });
+			console.log({ text: await res.text() });
 
 			if (!res.ok) {
 				await this.logout();
