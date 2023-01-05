@@ -34,6 +34,7 @@ const main = async () => {
   });
 
   console.log("Deleted repo successfully:", deleteRes.ok);
+  console.log("Deleted repo successfully:", deleteRes.status);
 
   const createURL = new URL("./authentication/newrepository", PRISMIC_URL);
   createURL.searchParams.set("app", "slicemachine");
@@ -59,6 +60,7 @@ const main = async () => {
   console.log("Created repo successfully:", createRes.ok, {
     text: await createRes.text(),
   });
+  console.log("Deleted repo successfully:", createRes.status);
 };
 
 main();
