@@ -237,6 +237,8 @@ export class PrismicAuthManager {
 
 			return res.ok;
 		} else {
+			console.log({ authState });
+
 			return false;
 		}
 	}
