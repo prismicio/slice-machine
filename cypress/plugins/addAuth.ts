@@ -26,7 +26,7 @@ const main = async () => {
     path.join(os.homedir(), ".prismic"),
     JSON.stringify({
       base: new URL(PRISMIC_URL).toString(),
-      cookies: res.headers.get("Set-Cookie") || "",
+      cookies: res.headers.get("Set-Cookie")?.split(", ").join("; ") || "",
     })
   );
 };

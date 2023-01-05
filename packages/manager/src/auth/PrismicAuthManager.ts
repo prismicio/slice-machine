@@ -228,17 +228,12 @@ export class PrismicAuthManager {
 				},
 			});
 
-			console.log({ ok: res.ok });
-			console.log({ text: await res.text() });
-
 			if (!res.ok) {
 				await this.logout();
 			}
 
 			return res.ok;
 		} else {
-			console.log({ authState });
-
 			return false;
 		}
 	}
