@@ -16,9 +16,9 @@ const applicationMode = getApplicationMode(PRISMIC_URL);
 // Set the global Slice Machine environment.
 process.env.SM_ENV = applicationMode;
 
-const manager = createSliceMachineManager();
+const main = async () => {
+  const manager = createSliceMachineManager();
 
-const deleteAndCreate = async () => {
   try {
     await manager.prismicRepository.delete({
       domain: DOMAIN_NAME,
@@ -34,4 +34,4 @@ const deleteAndCreate = async () => {
   });
 };
 
-deleteAndCreate();
+main();

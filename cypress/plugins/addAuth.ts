@@ -16,20 +16,24 @@ const applicationMode = getApplicationMode(PRISMIC_URL);
 // Set the global Slice Machine environment.
 process.env.SM_ENV = applicationMode;
 
-const manager = createSliceMachineManager();
+const main = async () => {
+  const manager = createSliceMachineManager();
 
-const signInResponse = await fetch(
-  new URL("./authentication/signin", PRISMIC_URL),
-  {
-    method: "post",
-    body: JSON.stringify({
-      email: EMAIL,
-      password: PASSWORD,
-    }),
-  }
-);
+  const signInResponse = await fetch(
+    new URL("./authentication/signin", PRISMIC_URL),
+    {
+      method: "post",
+      body: JSON.stringify({
+        email: EMAIL,
+        password: PASSWORD,
+      }),
+    }
+  );
 
-await manager.user.login({
-  email: EMAIL,
-  cookies: (signInResponse.headers.get("Set-Cookie") || "").split("; "),
-});
+  await manager.user.login({
+    email: EMAIL,
+    cookies: (signInResponse.headers.get("Set-Cookie") || "").split("; "),
+  });
+};
+
+main();
