@@ -27,6 +27,6 @@ rm -rf e2e-projects/cypress-next-app \
 && npx --yes vite-node ./cypress/plugins/addAuth.ts -- ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
 && npx --yes vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}"  \
 && cd e2e-projects/cypress-next-app \
-&& npx @slicemachine/init2 --repository "${_PRISMIC_REPO}" \
+&& node ../../packages/init2/bin/slicemachine-init.js --repository "${_PRISMIC_REPO}" \
 && npm i \
 && npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"node ../../packages/start-slicemachine/bin/start-slicemachine.js\""
