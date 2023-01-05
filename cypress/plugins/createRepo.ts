@@ -26,6 +26,7 @@ const main = async () => {
       password: PASSWORD,
     }),
     headers: {
+      "Content-Type": "application/json",
       "User-Agent": "prismic-cli/0",
     },
   });
@@ -46,6 +47,7 @@ const main = async () => {
       role: "developer",
     }),
     headers: {
+      "Content-Type": "application/json",
       "User-Agent": "prismic-cli/sm",
     },
   });
