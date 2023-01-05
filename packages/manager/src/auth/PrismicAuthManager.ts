@@ -150,7 +150,7 @@ export class PrismicAuthManager {
 		const port = await getPort({ port: 5555 });
 
 		const url = new URL(
-			`/dashboard/cli/login?source=slice-machine&port=${port}`,
+			`./dashboard/cli/login?source=slice-machine&port=${port}`,
 			API_ENDPOINTS.PrismicWroom,
 		).toString();
 
@@ -219,7 +219,7 @@ export class PrismicAuthManager {
 		const authState = await this._readPersistedAuthState();
 
 		if (checkHasAuthenticationToken(authState)) {
-			const url = new URL("/validate", API_ENDPOINTS.PrismicAuthentication);
+			const url = new URL("./validate", API_ENDPOINTS.PrismicAuthentication);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
 
 			const res = await fetch(url.toString(), {
@@ -227,6 +227,9 @@ export class PrismicAuthManager {
 					"User-Agent": SLICE_MACHINE_USER_AGENT,
 				},
 			});
+
+			console.log({ ok: res.ok });
+			console.log({ text: await res.text() });
 
 			if (!res.ok) {
 				await this.logout();
@@ -270,7 +273,10 @@ export class PrismicAuthManager {
 		const authState = await this._readPersistedAuthState();
 
 		if (checkHasAuthenticationToken(authState)) {
-			const url = new URL("/refreshtoken", API_ENDPOINTS.PrismicAuthentication);
+			const url = new URL(
+				"./refreshtoken",
+				API_ENDPOINTS.PrismicAuthentication,
+			);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
 
 			const res = await fetch(url.toString(), {
@@ -303,7 +309,7 @@ export class PrismicAuthManager {
 	private async _getProfileForAuthenticationToken(
 		args: GetProfileForAuthenticationTokenArgs,
 	): Promise<PrismicUserProfile> {
-		const url = new URL("/profile", API_ENDPOINTS.PrismicUser);
+		const url = new URL("./profile", API_ENDPOINTS.PrismicUser);
 		const res = await fetch(url.toString(), {
 			headers: {
 				Authorization: `Bearer ${args.authenticationToken}`,

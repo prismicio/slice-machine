@@ -22,10 +22,6 @@ const main = async () => {
     }
   );
 
-  console.log({ res });
-  console.log({ headers: [...res.headers.entries()] });
-  console.log({ text: await res.text() });
-
   await fs.writeFile(
     path.join(os.homedir(), ".prismic"),
     JSON.stringify({
