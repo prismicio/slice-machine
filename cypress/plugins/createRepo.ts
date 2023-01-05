@@ -27,6 +27,8 @@ const main = async () => {
     }),
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${prismicAuthStateCookies["prismic-auth"]}`,
+      Cookie: prismicAuthState.cookies,
       "User-Agent": "prismic-cli/0",
     },
   });
@@ -48,6 +50,8 @@ const main = async () => {
     }),
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${prismicAuthStateCookies["prismic-auth"]}`,
+      Cookie: prismicAuthState.cookies,
       "User-Agent": "prismic-cli/sm",
     },
   });
