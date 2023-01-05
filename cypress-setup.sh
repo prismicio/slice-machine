@@ -15,18 +15,18 @@ else
 fi
 
 if [[ "$PRISMIC_URL" == 'https://wroom-qa.com' ]] || [[ "$PRISMIC_URL" == 'http://wroom.test' ]] ; then 
-  MODE="dev"
+  SM_ENV="development"
 elif [[ "$PRISMIC_URL" == 'https://wroom.io' ]]; then
-  MODE="stage"
+  SM_ENV="staging"
 else
-  MODE="prod"
+  SM_ENV="production"
 fi
 
 rm -rf e2e-projects/cypress-next-app \
 && npx --yes create-next-app e2e-projects/cypress-next-app \
-&& npx --yes ts-node ./cypress/plugins/addAuth.ts ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
-&& npx --yes ts-node ./cypress/plugins/createRepo.ts "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}"  \
+&& npx --yes vite-node ./cypress/plugins/addAuth.ts -- ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
+&& npx --yes vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}"  \
 && cd e2e-projects/cypress-next-app \
-&& node ../../packages/init/build/index.js --mode "${MODE}" --repository "${_PRISMIC_REPO}" \
+&& npx @slicemachine/init2 --repository "${_PRISMIC_REPO}" \
 && npm i \
-&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"node ../../packages/slice-machine/bin/start.js\""
+&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"node ../../packages/start-slicemachine/bin/start-slicemachine.js\""
