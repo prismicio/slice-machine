@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 import { createSliceMachineManager } from "../../packages/manager";
 
 const getApplicationMode = (apiEndpoint: string): string => {
@@ -19,6 +17,8 @@ const applicationMode = getApplicationMode(PRISMIC_URL);
 process.env.SM_ENV = applicationMode;
 
 const main = async () => {
+  const fetch = (await import("node-fetch")).default;
+
   const manager = createSliceMachineManager();
 
   const signInResponse = await fetch(
