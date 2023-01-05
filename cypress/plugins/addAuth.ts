@@ -12,7 +12,7 @@ axios
     password: PASSWORD,
   })
   .then((response) => {
-    const cookies = response.headers["set-cookie"].join("; ");
+    const cookies = response.headers["set-cookie"]?.join("; ") || "";
     fs.promises.writeFile(
       path.join(os.homedir(), ".prismic"),
       JSON.stringify({
