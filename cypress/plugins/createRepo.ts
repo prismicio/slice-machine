@@ -19,7 +19,7 @@ const main = async () => {
   deleteURL.searchParams.set("_", prismicAuthStateCookies.X_XSRF);
 
   // Delete the repository.
-  await fetch(deleteURL.toString(), {
+  const deleteRes = await fetch(deleteURL.toString(), {
     method: "post",
     body: JSON.stringify({
       config: DOMAIN_NAME,
@@ -30,11 +30,13 @@ const main = async () => {
     },
   });
 
+  console.log("Deleted repo successfully:", deleteRes.ok);
+
   const createURL = new URL("./authentication/newrepository", PRISMIC_URL);
   createURL.searchParams.set("app", "slicemachine");
 
   // Create the repository.
-  await fetch(createURL.toString(), {
+  const createRes = await fetch(createURL.toString(), {
     method: "post",
     body: JSON.stringify({
       domain: DOMAIN_NAME,
@@ -46,6 +48,10 @@ const main = async () => {
     headers: {
       "User-Agent": "prismic-cli/sm",
     },
+  });
+
+  console.log("Created repo successfully:", createRes.ok, {
+    text: await createRes.text(),
   });
 };
 
