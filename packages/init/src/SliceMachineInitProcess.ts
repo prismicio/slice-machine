@@ -72,7 +72,7 @@ export class SliceMachineInitProcess {
 	protected context: SliceMachineInitProcessContext;
 
 	constructor(options?: SliceMachineInitProcessOptions) {
-		this.options = { ...DEFAULT_OPTIONS, options };
+		this.options = { ...DEFAULT_OPTIONS, ...options };
 		this.manager = createSliceMachineManager({ cwd: options?.cwd });
 
 		this.context = {};
