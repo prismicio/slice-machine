@@ -267,10 +267,10 @@ export class SliceMachineInitProcess {
 					if (!isLoggedIn) {
 						parentTask.output = "Press any key to open the browser to login...";
 						await new Promise((resolve) => {
-							const initialRawMode = process.stdin.isRaw;
-							process.stdin.setRawMode(true);
+							const initialRawMode = !!process.stdin.isRaw;
+							process.stdin.setRawMode?.(true);
 							process.stdin.once("data", (data: Buffer) => {
-								process.stdin.setRawMode(initialRawMode);
+								process.stdin.setRawMode?.(initialRawMode);
 								process.stdin.pause();
 								resolve(data.toString("utf-8"));
 							});
@@ -281,9 +281,7 @@ export class SliceMachineInitProcess {
 						await this.manager.user.nodeLoginSession({
 							port,
 							onListenCallback() {
-								open(url).catch((error) => {
-									throw error;
-								});
+								open(url);
 							},
 						});
 					}
@@ -345,8 +343,10 @@ export class SliceMachineInitProcess {
 						"Flag `repository` must be set to run `useRepositoryFlag`",
 					);
 
+					const domain = formatRepositoryDomain(this.options.repository);
+
 					const maybeRepository = this.context.userRepositories.find(
-						(repository) => repository.domain === this.options.repository,
+						(repository) => repository.domain === domain,
 					);
 
 					if (maybeRepository) {
@@ -360,7 +360,6 @@ export class SliceMachineInitProcess {
 							);
 						}
 					} else {
-						const domain = formatRepositoryDomain(this.options.repository);
 						const validation = await validateRepositoryDomainAndAvailability({
 							domain,
 							existsFn: (domain) =>
@@ -377,11 +376,11 @@ export class SliceMachineInitProcess {
 					}
 
 					task.title = `Selected repository ${chalk.cyan(
-						this.options.repository,
+						domain,
 					)} (flag ${chalk.cyan("repository")} used)`;
 
 					this.context.repository = {
-						domain: this.options.repository,
+						domain,
 						exists: !!maybeRepository,
 					};
 				},
@@ -503,15 +502,13 @@ export class SliceMachineInitProcess {
 
 		// 3. Use random name
 		if (!suggestedName) {
-			suggestedName = getRandomRepositoryDomain();
-
-			while (
+			do {
+				suggestedName = getRandomRepositoryDomain();
+			} while (
 				await this.manager.prismicRepository.checkExists({
 					domain: suggestedName,
 				})
-			) {
-				suggestedName = getRandomRepositoryDomain();
-			}
+			);
 		}
 
 		const { domain } = await prompt<string, "domain">({
@@ -581,8 +578,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		});
 
 		// Clear extra lines
-		process.stdout.moveCursor(0, -16);
-		process.stdout.clearScreenDown();
+		process.stdout.moveCursor?.(0, -16);
+		process.stdout.clearScreenDown?.();
 
 		this.context.repository = {
 			domain,

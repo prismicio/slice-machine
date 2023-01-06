@@ -11,6 +11,9 @@ const initProcess = createSliceMachineInitProcess({
 });
 
 it("detects framework and package manager", async () => {
+	// @ts-expect-error - Accessing protected property
+	expect(initProcess.context).toMatchInlineSnapshot("{}");
+
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
 		return initProcess.detectEnvironment();
