@@ -10,7 +10,6 @@ describe("Duplicate custom types", () => {
 
   it("when using a label that is already in use it should warn the user", () => {
     cy.visit("/");
-    cy.waitUntil(() => cy.get("[data-cy=create-ct]")).then(() => true);
     cy.get("[data-cy=create-ct]").click();
     cy.get("[data-cy=create-ct-modal]").should("be.visible");
 
@@ -26,7 +25,6 @@ describe("Duplicate custom types", () => {
 
   it("when using a id that is already in use it should warn the user", () => {
     cy.visit("/");
-    cy.waitUntil(() => cy.get("[data-cy=create-ct]")).then(() => true);
     cy.get("[data-cy=create-ct]").click();
     cy.get("[data-cy=create-ct-modal]").should("be.visible");
 

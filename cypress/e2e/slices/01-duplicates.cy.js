@@ -13,7 +13,6 @@ describe("Duplicate Slices", () => {
 
     // do it again
     cy.visit(`/slices`);
-    cy.waitUntil(() => cy.get("[data-cy=create-slice]"));
     cy.get("[data-cy=create-slice]").click();
     cy.get("[data-cy=create-slice-modal]").should("be.visible");
 

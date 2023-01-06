@@ -51,6 +51,7 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
               color: "white",
             },
           }}
+          data-cy={`review-form-score-${rating}`}
         >
           {rating}
         </Button>
@@ -235,6 +236,7 @@ const ReviewModal: React.FunctionComponent = () => {
                       border: "none",
                     },
                   }}
+                  data-cy="review-form-comment"
                 />
                 <Button
                   form={"review-form"}
