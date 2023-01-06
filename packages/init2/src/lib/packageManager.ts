@@ -27,7 +27,7 @@ type InstallDependenciesArgs = {
 };
 
 export const installDependencies = async (
-	args: InstallDependenciesArgs
+	args: InstallDependenciesArgs,
 ): Promise<{ execaProcess: ExecaChildProcess }> => {
 	const commandArgs = args.dependencies
 		? Object.entries(args.dependencies).map(([pkg, range]) => `${pkg}@${range}`)
@@ -43,7 +43,7 @@ export const installDependencies = async (
 
 	if (!command) {
 		throw new Error(
-			"Failed to begin dependency installation (could not parse command)"
+			"Failed to begin dependency installation (could not parse command)",
 		);
 	}
 

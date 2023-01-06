@@ -34,6 +34,14 @@
     },
     "incremental": true
   },
-  "exclude": ["node_modules", "templates", "tests/project", "build"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts", "**/*.js"]
+  "exclude": ["node_modules", "tests/project", "build"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mjs",
+    "**/*.mts",
+    "**/*.js",
+    "**/*.jsx"
+  ]
 }

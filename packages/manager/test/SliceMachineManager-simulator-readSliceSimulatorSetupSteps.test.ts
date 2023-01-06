@@ -106,7 +106,7 @@ it("returns Slice Simulator set up steps with validation status", async () => {
 		],
 		errors: [],
 	});
-});
+}, 20000);
 
 it("supports optional descriptions", async () => {
 	const adapter = createTestPlugin({

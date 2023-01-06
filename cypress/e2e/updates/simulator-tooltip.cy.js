@@ -1,6 +1,6 @@
 /** This test needs to run AFTER create_slice. const values below are copied from there. */
 describe("simulator tooltip", () => {
-  const lib = "slices";
+  const lib = ".--slices";
   const sliceName = "DuplicateSlices";
   it("should display the tooltip when 'userContext.hasSeenSimulatorToolTip' is falsy and set to true when user clicks the close button", () => {
     cy.setSliceMachineUserContext({ hasSeenSimulatorToolTip: false });

@@ -2,6 +2,7 @@ export const VersionKind = {
   MAJOR: "MAJOR",
   MINOR: "MINOR",
   PATCH: "PATCH",
+  FIRST: "FIRST",
 } as const;
 export type VersionKind = typeof VersionKind[keyof typeof VersionKind];
 

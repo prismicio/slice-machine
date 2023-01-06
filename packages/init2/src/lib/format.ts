@@ -14,7 +14,7 @@ type FormatOptions = {
 export const format = async (
 	source: string,
 	filePath: string,
-	options?: FormatOptions
+	options?: FormatOptions,
 ): Promise<string> => {
 	let formatted = stripIndent(source);
 
