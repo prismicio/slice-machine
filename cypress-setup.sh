@@ -22,11 +22,18 @@ else
   export SM_ENV="production"
 fi
 
+# TODO: Let adapters decalre their dependencies and automatically install
+# during `@slicemachine/init`. The fix may be as simple as declaring them as
+# peer dependencies. Line 37 should be removed once that functionality is
+# added.
+
 rm -rf e2e-projects/cypress-next-app \
 && npx --yes create-next-app e2e-projects/cypress-next-app \
 && npx --yes vite-node ./cypress/plugins/addAuth.ts -- ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
 && npx --yes vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}"  \
 && cd e2e-projects/cypress-next-app \
 && node ../../packages/init2/bin/slicemachine-init.js --repository "${_PRISMIC_REPO}" \
+&& npx --yes json -I -f package.json -e "this.devDependencies[\"slice-machine-ui\"]=\"../../packages/slice-machine\"" \
 && npm i \
-&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"node ../../packages/start-slicemachine/bin/start-slicemachine.js\""
+&& npm i @prismicio/client @prismicio/helpers @prismicio/react \
+&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\""

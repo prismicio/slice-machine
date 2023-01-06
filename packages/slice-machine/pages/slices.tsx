@@ -27,7 +27,7 @@ import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { Button } from "@components/Button";
 import { GoPlus } from "react-icons/go";
-import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
+import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 

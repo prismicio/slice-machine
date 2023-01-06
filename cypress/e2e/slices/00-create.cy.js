@@ -5,7 +5,7 @@ import { MANIFEST_FILE, ROOT, SLICE_MOCK_FILE } from "../../consts";
 const sliceName = "TestSlice";
 const editedSliceName = "EditedSliceName";
 const sliceId = "test_slice"; // generated automatically from the slice name
-const lib = "slices";
+const lib = ".--slices";
 
 describe("Create Slices", () => {
   beforeEach(() => {
@@ -15,6 +15,17 @@ describe("Create Slices", () => {
 
   it("A user can create and rename a slice", () => {
     cy.createSlice(lib, sliceId, sliceName);
+
+    // add widget
+    cy.get('[data-cy="empty-zone-add-new-field"]').first().click();
+    cy.get('[data-cy="Rich Text"]').first().click();
+    cy.get('[data-cy="new-field-name-input"]')
+      .first()
+      .focus()
+      .type("Description");
+    cy.get('[data-cy="new-field-form"]').first().submit();
+
+    cy.contains("Save to File System").click();
 
     // remove widget
     cy.get('[data-cy="slice-menu-button"]').first().click();

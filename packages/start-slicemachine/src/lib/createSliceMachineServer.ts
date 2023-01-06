@@ -12,10 +12,12 @@ import {
 	sendProxy,
 	eventHandler,
 	createRouter,
+	proxyRequest,
 } from "h3";
 import serveStatic from "serve-static";
 import cors from "cors";
 import fetch from "node-fetch";
+import { createStaticFileEventHandler } from "./createStaticFileEventHandler";
 
 type CreateSliceMachineServerArgs = {
 	sliceMachineManager: SliceMachineManager;
@@ -42,6 +44,7 @@ export const createSliceMachineServer = async (
 	args: CreateSliceMachineServerArgs,
 ): Promise<Server> => {
 	const app = createApp();
+	const router = createRouter();
 
 	app.use(fromNodeMiddleware(cors()));
 
@@ -64,7 +67,7 @@ export const createSliceMachineServer = async (
 	);
 
 	// TODO: Remove once tracking is implemented in `core2`
-	app.use(
+	router.add(
 		"/api/s",
 		eventHandler(() => {
 			// noop
@@ -74,26 +77,88 @@ export const createSliceMachineServer = async (
 	);
 
 	if (process.env.NODE_ENV === "development") {
-		const router = createRouter();
-		router.add(
+		router.get(
 			"/**",
 			eventHandler((event) => {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const target = new URL(event.req.url!, "http://localhost:3000");
+				const target = new URL(event.node.req.url!, "http://localhost:3000");
 
-				return sendProxy(event, target.toString(), {
+				return proxyRequest(event, target.toString(), {
 					fetch: fetch as NonNullable<Parameters<typeof sendProxy>[2]>["fetch"],
 				});
 			}),
 		);
-		app.use(router);
 	} else {
 		const sliceMachineDir =
 			await args.sliceMachineManager.project.locateSliceMachineUIDir();
 		const sliceMachineOutDir = path.resolve(sliceMachineDir, "out");
 
 		app.use(fromNodeMiddleware(serveStatic(sliceMachineOutDir)));
+
+		router.get(
+			"/changelog",
+			createStaticFileEventHandler(
+				path.join(sliceMachineOutDir, "changelog.html"),
+			),
+		);
+
+		router.add(
+			"/slices",
+			createStaticFileEventHandler(
+				path.join(sliceMachineOutDir, "slices.html"),
+			),
+		);
+
+		router.add(
+			"/onboarding",
+			createStaticFileEventHandler(
+				path.join(sliceMachineOutDir, "onboarding.html"),
+			),
+		);
+
+		router.add(
+			"/changes",
+			createStaticFileEventHandler(
+				path.join(sliceMachineOutDir, "changes.html"),
+			),
+		);
+
+		router.add(
+			"/cts/:id",
+			createStaticFileEventHandler(
+				path.join(sliceMachineOutDir, "cts/[ct].html"),
+			),
+		);
+
+		router.add(
+			"/:lib/:sliceID/:variation",
+			createStaticFileEventHandler(
+				path.join(sliceMachineOutDir, "[lib]/[sliceName]/[variation].html"),
+			),
+		);
+
+		router.add(
+			"/:lib/:sliceID/:variation/simulator",
+			createStaticFileEventHandler(
+				path.join(
+					sliceMachineOutDir,
+					"[lib]/[sliceName]/[variation]/simulator.html",
+				),
+			),
+		);
+
+		router.add(
+			"/:lib/:sliceID/:variation/screenshot",
+			createStaticFileEventHandler(
+				path.join(
+					sliceMachineOutDir,
+					"[lib]/[sliceName]/[variation]/screenshot.html",
+				),
+			),
+		);
 	}
+
+	app.use(router);
 
 	return createServer(toNodeListener(app));
 };

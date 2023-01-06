@@ -1,7 +1,7 @@
 export const ROOT = "e2e-projects/cypress-next-app";
 
 export const PACKAGE_JSON_FILE = `${ROOT}/package.json`;
-export const MANIFEST_FILE = `${ROOT}/sm.json`;
+export const MANIFEST_FILE = `${ROOT}/slicemachine.config.json`;
 
 export const ASSETS_FOLDER = `${ROOT}/.slicemachine`;
 export const TYPES_FILE = `${ASSETS_FOLDER}/prismicio.d.ts`;

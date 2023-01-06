@@ -319,17 +319,13 @@ export const selectedCustomTypeReducer: Reducer<
     }
     case getType(renameCustomTypeCreator.success): {
       if (!state) return state;
-      const newName = action.payload.newCustomTypeName;
 
       return {
         ...state,
-        model: {
-          ...state.model,
-          label: newName,
-        },
+        model: action.payload.renamedCustomType,
         initialModel: {
           ...state.initialModel,
-          label: newName,
+          label: action.payload.renamedCustomType.label,
         },
       };
     }
