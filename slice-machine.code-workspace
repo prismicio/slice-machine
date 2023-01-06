@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "./packages/plugin-kit"
+		},
+		{
+			"path": "./packages/manager",
+		},
+		{
+			"path": "./packages/start-slicemachine",
+		},
+		{
+			"path": "./packages/init",
+		},
+		{
+			"path": "./packages/slice-machine",
+			"name": "slice-machine-ui"
+		},
+		{
+			"path": ".",
+			"name": "~"
+		}
+	],
+	"settings": {}
+}
