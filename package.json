@@ -19,7 +19,7 @@
     "build": "npm --workspaces --if-present run build && npm --workspaces --if-present run test",
     "build-essential": "npm --workspace @slicemachine/core run build && npm --workspace @slicemachine/plugin-kit run build && npm --workspace @slicemachine/manager run build",
     "audit": "lerna run audit",
-    "lint": "lerna run lint",
+    "lint": "npm --workspaces --if-present run lint",
     "lint-staged": "lint-staged",
     "pretty": "prettier --write .",
     "prettier:check": "prettier --check .",
