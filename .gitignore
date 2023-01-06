@@ -25,6 +25,7 @@ composer.lock
 *.swp
 *.swo
 .metals
+*.code-workspace
 
 # Project Specific
 node_modules
