@@ -15,7 +15,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 			return {
 				PrismicWroom: "https://wroom.io/",
 				PrismicAuthentication: "https://auth.wroom.io/",
-				PrismicModels: "https://customtypes.wroom.io/",
+				PrismicModels: "https://customtypes.wroom.io/customtypes/",
 				PrismicUser: "https://user.wroom.io/",
 				AwsAclProvider:
 					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
@@ -26,7 +26,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 			return {
 				PrismicWroom: "https://prismic.io/",
 				PrismicAuthentication: "https://auth.prismic.io/",
-				PrismicModels: "https://customtypes.prismic.io/",
+				PrismicModels: "https://customtypes.prismic.io/customtypes/",
 				PrismicUser: "https://user.internal-prismic.io/",
 				AwsAclProvider:
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",

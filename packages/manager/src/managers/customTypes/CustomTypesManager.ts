@@ -24,6 +24,7 @@ import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { OnlyHookErrors } from "../../types";
 
 import { BaseManager } from "../BaseManager";
+import { UnauthorizedError } from "../../errors";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -223,6 +224,10 @@ export class CustomTypesManager extends BaseManager {
 				if (error instanceof prismicCustomTypesClient.NotFoundError) {
 					// If it doesn't exist on the repository, insert it.
 					await client.insertCustomType(model);
+				} else if (error instanceof prismicCustomTypesClient.ForbiddenError) {
+					throw new UnauthorizedError(
+						"You do not have access to push Custom Types to this Prismic repository.",
+					);
 				} else {
 					throw error;
 				}

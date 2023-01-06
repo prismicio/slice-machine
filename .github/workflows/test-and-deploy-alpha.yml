@@ -88,7 +88,7 @@ jobs:
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/build-essential
       - name: Build slice machine init
-        working-directory: ./packages/init2
+        working-directory: ./packages/init
         run: npm run build
       - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine

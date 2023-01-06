@@ -15,4 +15,12 @@ export default defineConfig({
 			internalDependencies: ["execa", "meow", "globby"],
 		}),
 	],
+	test: {
+		coverage: {
+			reporter: ["lcovonly", "text"],
+		},
+		deps: {
+			inline: true,
+		},
+	},
 });
