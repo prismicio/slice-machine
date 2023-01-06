@@ -23,3 +23,5 @@ export {
 } from "./auth/createPrismicAuthManagerMiddleware";
 
 export { DecodeError } from "./lib/DecodeError";
+
+export type { SliceMachineConfig } from "./types";

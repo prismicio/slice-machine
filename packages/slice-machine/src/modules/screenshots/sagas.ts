@@ -52,8 +52,8 @@ export function* generateSliceScreenshotSaga({
         variationId,
         screenshot: {
           url: response.url,
-          path: "__stub__",
-          hash: "__stub__",
+          path: "__TODO-REMOVE__",
+          hash: "__TODO-REMOVE__",
         },
         component,
       })

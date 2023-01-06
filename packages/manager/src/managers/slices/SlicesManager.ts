@@ -2,6 +2,7 @@ import * as t from "io-ts";
 import fetch from "node-fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomTypes } from "@prismicio/types-internal";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import {
 	CallHookReturnType,
 	HookError,
@@ -26,12 +27,12 @@ import { decodeHookResult } from "../../lib/decodeHookResult";
 import { OnlyHookErrors } from "../../types";
 import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-import { UnauthorizedError } from "../../errors";
+import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
 type SlicesManagerReadSliceLibraryReturnType = {
-	sliceIDs: string[] | undefined;
+	sliceIDs: string[];
 	errors: (DecodeError | HookError)[];
 };
 
@@ -102,7 +103,7 @@ type SliceMachineManagerReadSliceMocksArgs = {
 };
 
 type SliceMachineManagerReadSliceMocksReturnType = {
-	mocks?: CustomTypes.Widgets.Slices.SharedSlice[];
+	mocks?: SharedSliceContent[];
 	errors: HookError[];
 };
 
@@ -117,14 +118,13 @@ type SliceMachineManagerReadSliceMocksConfigArgsReturnType = {
 	errors: HookError[];
 };
 
-type SliceMachineManagerUpdateSliceMocksConfigArgs = {
+type SliceMachineManagerUpdateSliceMocksArgs = {
 	libraryID: string;
 	sliceID: string;
-	// TODO
-	mocksConfig?: Record<string, unknown>;
+	mocks: SharedSliceContent[];
 };
 
-type SliceMachineManagerUpdateSliceMocksConfigArgsReturnType = {
+type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
 	errors: HookError[];
 };
 
@@ -155,7 +155,7 @@ export class SlicesManager extends BaseManager {
 		);
 
 		return {
-			sliceIDs: data[0]?.sliceIDs,
+			sliceIDs: data[0]?.sliceIDs ?? [],
 			errors: errors,
 		};
 	}
@@ -337,6 +337,10 @@ export class SlicesManager extends BaseManager {
 	): Promise<SliceMachineManagerPushSliceReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		if (!(await this.user.checkIsLoggedIn())) {
+			throw new UnauthenticatedError();
+		}
+
 		const { model, errors: readSliceErrors } = await this.readSlice({
 			libraryID: args.libraryID,
 			sliceID: args.sliceID,
@@ -480,6 +484,29 @@ export class SlicesManager extends BaseManager {
 		}
 	}
 
+	async updateSliceMocks(
+		args: SliceMachineManagerUpdateSliceMocksArgs,
+	): Promise<SliceMachineManagerUpdateSliceMocksArgsReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"slice:asset:update",
+			{
+				libraryID: args.libraryID,
+				sliceID: args.sliceID,
+				asset: {
+					id: "mocks.json",
+					data: Buffer.from(JSON.stringify(args.mocks, null, "\t")),
+				},
+			},
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
+	}
+
+	// TODO: Remove
 	async readSliceMocksConfig(
 		args: SliceMachineManagerReadSliceMocksConfigArgs,
 	): Promise<SliceMachineManagerReadSliceMocksConfigArgsReturnType> {
@@ -508,28 +535,6 @@ export class SlicesManager extends BaseManager {
 				errors: hookResult.errors,
 			};
 		}
-	}
-
-	async updateSliceMocksConfig(
-		args: SliceMachineManagerUpdateSliceMocksConfigArgs,
-	): Promise<SliceMachineManagerUpdateSliceMocksConfigArgsReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"slice:asset:update",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				asset: {
-					id: "mocks.config.json",
-					data: Buffer.from(JSON.stringify(args.mocksConfig, null, "\t")),
-				},
-			},
-		);
-
-		return {
-			errors: hookResult.errors,
-		};
 	}
 
 	async fetchRemoteSlices(): Promise<CustomTypes.Widgets.Slices.SharedSlice[]> {

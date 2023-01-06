@@ -1,17 +1,19 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
+import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expectHookHandlerToHaveBeenCalledWithData";
 
 it("returns the adapter's `custom-type:read` return value", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
+	const hookHandler = vi.fn(() => {
+		return { model };
+	});
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:read", () => {
-				return { model };
-			});
+			hook("custom-type:read", hookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -27,6 +29,9 @@ it("returns the adapter's `custom-type:read` return value", async (ctx) => {
 	expect(res).toStrictEqual({
 		model,
 		errors: [],
+	});
+	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
+		id: model.id,
 	});
 });
 

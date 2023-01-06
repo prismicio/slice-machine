@@ -6,7 +6,7 @@ import { createValidationSchema } from "../../../../forms";
 
 import { removeProp } from "../../../../utils";
 
-import { MockConfigForm } from "./Mock/Form";
+import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 import { Widget } from "../Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
@@ -60,7 +60,7 @@ export const ImageWidget: Widget<Image, typeof schema> = {
       thumbnails: [],
     },
   }),
-  MockConfigForm,
+  MockConfigForm: DeprecatedMockConfigMessage,
   FormFields,
   TYPE_NAME: WidgetTypes.Image,
 };

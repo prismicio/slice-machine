@@ -1,13 +1,39 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import * as path from "node:path";
-import * as fs from "fs/promises";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-it.skip("returns the path to the project's Slice Machine UI directory", async () => {
+const MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH =
+	"/foo/bar/baz/slice-machine-ui/package.json";
+
+vi.mock("module", async () => {
+	const actual = (await vi.importActual(
+		"node:module",
+	)) as typeof import("node:module");
+
+	return {
+		...actual,
+		createRequire: (...args: Parameters<typeof actual["createRequire"]>) => {
+			const actualCreateRequire = actual.createRequire(...args);
+
+			return {
+				...actualCreateRequire,
+				resolve: (id: string) => {
+					if (id === "slice-machine-ui/package.json") {
+						return MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH;
+					}
+
+					return actualCreateRequire(id);
+				},
+			};
+		},
+	};
+});
+
+it("returns the path to the project's Slice Machine UI directory", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -15,18 +41,9 @@ it.skip("returns the path to the project's Slice Machine UI directory", async ()
 		cwd,
 	});
 
-	const root = await manager.project.getRoot();
-	await fs.mkdir(path.join(root, "node_modules", "slice-machine-ui"), {
-		recursive: true,
-	});
-	await fs.writeFile(
-		path.join(root, "node_modules", "slice-machine-ui", "package.json"),
-		JSON.stringify({
-			name: "slice-machine-ui",
-		}),
-	);
-
 	const sliceMachineUIDir = await manager.project.locateSliceMachineUIDir();
 
-	expect(sliceMachineUIDir).toBe("");
+	expect(sliceMachineUIDir).toBe(
+		path.dirname(MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH),
+	);
 });

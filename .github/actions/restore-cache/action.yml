@@ -11,6 +11,4 @@ runs:
           node_modules
           */*/node_modules
           ~/.cache/Cypress
-        key: ${{ runner.os }}-lerna-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-lerna-
+        key: ${{ runner.os }}-lerna-${{ hashFiles('package-lock.json', '**/package-lock.json') }}

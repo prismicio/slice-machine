@@ -43,7 +43,7 @@ export class SliceMachineHelpers {
 	}
 
 	getProject = async (): Promise<SliceMachineProject> => {
-		const configFilePath = this.joinPathFromRoot("sm.json");
+		const configFilePath = this.joinPathFromRoot("slicemachine.config.json");
 		const configContents = await fs.readFile(configFilePath, "utf8");
 		const config = JSON.parse(configContents);
 

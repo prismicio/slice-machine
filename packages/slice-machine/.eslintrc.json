@@ -11,6 +11,7 @@
   },
   "plugins": ["@typescript-eslint", "import" /*, "jest" */],
   "extends": [
+    "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     // "plugin:@typescript-eslint/recommended-requiring-type-checking",
     // "plugin:jest/recommended",

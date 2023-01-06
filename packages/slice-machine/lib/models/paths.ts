@@ -23,11 +23,6 @@ export const paths = (cwd: string, prefix: string) => ({
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
         ),
-      mocks: (): string =>
-        path.join(
-          paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
-          "mocks.json"
-        ),
       model: (): string =>
         path.join(
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
@@ -69,9 +64,6 @@ export const CustomPaths = (cwd: string): ReturnType<typeof paths> =>
 
 export const PackagePaths = (cwd: string): ReturnType<typeof paths> =>
   paths(cwd, "node_modules");
-
-export const LibrariesStatePath = (cwd: string): string =>
-  path.join(cwd, ".slicemachine", "libraries-state.json");
 
 export const PrismicConfig = (cwd: string): string =>
   path.join(cwd, ".prismic");

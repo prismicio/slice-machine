@@ -48,6 +48,18 @@ export type SliceMachineManagerMiddleware = RPCMiddleware<
 export type SliceMachineManagerProcedures =
 	ExtractProcedures<SliceMachineManagerMiddleware>;
 
+type GetSliceMachineManagerProceduresArgs = {
+	sliceMachineManager: SliceMachineManager;
+};
+
+export const getSliceMachineManagerProcedures = (
+	args: GetSliceMachineManagerProceduresArgs,
+): SliceMachineManagerProcedures => {
+	return proceduresFromInstance(args.sliceMachineManager, {
+		omit: omitProcedures,
+	});
+};
+
 export type CreateSliceMachineManagerMiddlewareArgs = {
 	sliceMachineManager: SliceMachineManager;
 };
@@ -56,8 +68,8 @@ export const createSliceMachineManagerMiddleware = (
 	args: CreateSliceMachineManagerMiddlewareArgs,
 ): SliceMachineManagerMiddleware => {
 	return createRPCMiddleware({
-		procedures: proceduresFromInstance(args.sliceMachineManager, {
-			omit: omitProcedures,
+		procedures: getSliceMachineManagerProcedures({
+			sliceMachineManager: args.sliceMachineManager,
 		}),
 	});
 };

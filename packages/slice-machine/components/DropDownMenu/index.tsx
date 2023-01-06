@@ -12,6 +12,7 @@ type DropDownMenuProps = {
   currentValue: string;
   onChange: (selected: string) => void;
   buttonSx?: ThemeUICSSObject;
+  disabled: boolean;
 };
 
 // Note: This is a controlled component that requires its state to be managed via the currentValue prop
@@ -20,6 +21,7 @@ export const DropDownMenu: React.FunctionComponent<DropDownMenuProps> = ({
   currentValue,
   options,
   onChange,
+  disabled,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,6 +51,7 @@ export const DropDownMenu: React.FunctionComponent<DropDownMenuProps> = ({
           sx={buttonSx}
           variant="dropDownButton"
           onClick={() => setIsOpen(!isOpen)}
+          disabled={disabled}
         >
           {currentValue}{" "}
           {!isOpen ? (

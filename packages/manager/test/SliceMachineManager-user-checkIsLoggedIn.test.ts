@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 
+import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
@@ -19,10 +20,7 @@ it("returns true if the user is logged in", async (ctx) => {
 	mockPrismicAuthAPI(ctx);
 	mockPrismicUserAPI(ctx);
 
-	await manager.user.login({
-		email: "name@example.com",
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
+	await manager.user.login(createPrismicAuthLoginResponse());
 
 	const res = await manager.user.checkIsLoggedIn();
 
@@ -61,10 +59,7 @@ it("returns false if the user is logged in with an expired token", async (ctx) =
 	});
 	mockPrismicUserAPI(ctx);
 
-	await manager.user.login({
-		email: "name@example.com",
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
+	await manager.user.login(createPrismicAuthLoginResponse());
 
 	const res = await manager.user.checkIsLoggedIn();
 
@@ -86,10 +81,7 @@ it("logs out the user if they are logged in with an expired token", async (ctx) 
 	});
 	mockPrismicUserAPI(ctx);
 
-	await manager.user.login({
-		email: "name@example.com",
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
+	await manager.user.login(createPrismicAuthLoginResponse());
 
 	await manager.user.checkIsLoggedIn();
 

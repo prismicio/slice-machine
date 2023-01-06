@@ -17,11 +17,11 @@ it("returns Slice Machine project metadata", async () => {
 
 	const smJSON: SliceMachineConfig = {
 		_latest: "_latest",
-		apiEndpoint: "apiEndpoint",
+		repositoryName: "repositoryName",
 		adapter: "adapter",
 	};
 	await fs.writeFile(
-		path.join(project.root, "sm.json"),
+		path.join(project.root, "slicemachine.config.json"),
 		JSON.stringify(smJSON),
 	);
 

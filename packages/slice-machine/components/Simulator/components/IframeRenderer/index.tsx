@@ -1,11 +1,10 @@
 import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
-import { Box, Flex } from "theme-ui";
+import { Flex } from "theme-ui";
 
 import { SimulatorClient } from "@prismicio/slice-simulator-com";
-import { SliceView } from "../..";
+import { useElementSize } from "@src/hooks/useElementSize";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SetupError } from "../SetupError";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 function useSimulatorClient(): readonly [
@@ -26,7 +25,7 @@ function useSimulatorClient(): readonly [
         setClient(clientRef.current);
         const reconnect = async () => {
           setClient(undefined);
-          await clientRef.current?.connect(true);
+          await clientRef.current?.connect({}, true);
           setClient(clientRef.current);
         };
         observerRef.current = new MutationObserver((mutations) => {
@@ -48,21 +47,23 @@ function useSimulatorClient(): readonly [
 }
 
 type IframeRendererProps = {
+  apiContent?: unknown;
   screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
-  sliceView: SliceView;
   dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
-  screenDimensions,
+  apiContent,
+  screenDimensions: iframeSize,
   simulatorUrl,
-  sliceView,
   dryRun = false,
 }) => {
-  const [client, ref] = useSimulatorClient();
+  const [client, iframeRef] = useSimulatorClient();
+
   const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
+
   useEffect((): void => {
     if (!simulatorUrl) {
       connectToSimulatorFailure();
@@ -79,8 +80,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
 
     const updateSliceZone = async () => {
-      await client.setSliceZoneFromSliceIDs(sliceView);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await client.setSliceZone([apiContent as any]);
     };
+
     updateSliceZone()
       .then(() => {
         connectToSimulatorSuccess();
@@ -88,70 +91,65 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch((e) => {
         connectToSimulatorFailure();
       });
-  }, [client, screenDimensions, sliceView]);
+  }, [client, apiContent, simulatorUrl]);
+
+  const [viewportSize, setViewportSize] = useState<ScreenDimensions>();
+  const viewportRef = useElementSize(({ blockSize, inlineSize }) => {
+    setViewportSize({ height: blockSize, width: inlineSize });
+  }, []);
 
   return (
-    <Box
+    <Flex
+      ref={viewportRef}
       sx={{
-        flex: 1,
-        backgroundColor: "white",
-        minWidth: "fit-content",
-        height: "100%",
+        alignItems: "center",
+        backgroundColor: "headSection",
+        backgroundImage: "url(/pattern.png)",
+        backgroundRepeat: "repeat",
+        backgroundSize: "10px",
         border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
         borderRadius: 8,
+        display: "flex",
+        height: "100%",
+        justifyContent: "center",
         overflow: "hidden",
-        ...(dryRun ? { visibility: "hidden" } : {}),
+        ...(dryRun ? { display: "none" } : {}),
       }}
     >
-      <Flex
-        sx={{
-          height: "100%",
-          backgroundImage: "url(/pattern.png)",
-          backgroundColor: "headSection",
-          backgroundRepeat: "repeat",
-          backgroundSize: "10px",
-          border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
-          width: "fit-content",
-          mx: "auto",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <Flex
-          sx={{
-            justifyContent: "center",
-            margin: "0 auto",
-            overflow: "auto",
-            alignContent: "center",
-            width: screenDimensions.width,
-            height: screenDimensions.height,
-            ...(dryRun
-              ? {
-                  position: "absolute",
-                  top: "0",
-                  width: "0",
-                  height: "0",
-                }
-              : {}),
+      {simulatorUrl ? (
+        <iframe
+          id="__iframe-renderer"
+          ref={iframeRef}
+          src={simulatorUrl}
+          style={{
+            border: "none",
+            maxHeight: `${iframeSize.height}px`,
+            maxWidth: `${iframeSize.width}px`,
+            minHeight: `${iframeSize.height}px`,
+            minWidth: `${iframeSize.width}px`,
+            overflowY: "auto",
+            ...(viewportSize
+              ? { transform: `scale(${getScaling(iframeSize, viewportSize)})` }
+              : { display: "none" }),
           }}
-        >
-          {simulatorUrl ? (
-            <iframe
-              ref={ref}
-              src={simulatorUrl}
-              style={{
-                border: "none",
-                height: "100%",
-                width: "100%",
-              }}
-            />
-          ) : (
-            <SetupError />
-          )}
-        </Flex>
-      </Flex>
-    </Box>
+        />
+      ) : null}
+      {client?.connected ? <div id="__iframe-ready" /> : null}
+    </Flex>
   );
 };
+
+export function getScaling(
+  { height: iframeHeight, width: iframeWidth }: ScreenDimensions,
+  { height: viewportHeight, width: viewportWidth }: ScreenDimensions
+): number {
+  if (iframeWidth > viewportWidth || iframeHeight > viewportHeight) {
+    return iframeWidth - viewportWidth > iframeHeight - viewportHeight
+      ? viewportWidth / iframeWidth
+      : viewportHeight / iframeHeight;
+  } else {
+    return 1;
+  }
+}
 
 export default IframeRenderer;

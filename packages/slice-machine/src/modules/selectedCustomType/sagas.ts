@@ -21,7 +21,13 @@ export function* saveCustomTypeSaga() {
       return;
     }
 
-    yield call(saveCustomType, currentCustomType, currentMockConfig);
+    const { errors }: Awaited<ReturnType<typeof saveCustomType>> = yield call(
+      saveCustomType,
+      currentCustomType
+    );
+    if (errors.length) {
+      throw errors;
+    }
     void Tracker.get().trackCustomTypeSaved({
       id: currentCustomType.id,
       name: currentCustomType.label || currentCustomType.id,

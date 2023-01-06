@@ -58,7 +58,7 @@ type SliceMachineManagerReadCustomTypeMocksConfigArgsReturnType = {
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
 	customTypeID: string;
 	// TODO
-	mocksConfig?: Record<string, unknown>;
+	mocksConfig: Record<string, unknown>;
 };
 
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {
@@ -235,6 +235,7 @@ export class CustomTypesManager extends BaseManager {
 		}
 	}
 
+	// TODO: Remove
 	async readCustomTypeMocksConfig(
 		args: SliceMachineManagerReadCustomTypeMocksConfigArgs,
 	): Promise<SliceMachineManagerReadCustomTypeMocksConfigArgsReturnType> {
@@ -264,6 +265,7 @@ export class CustomTypesManager extends BaseManager {
 		}
 	}
 
+	// TODO: Remove
 	async updateCustomTypeMocksConfig(
 		args: SliceMachineManagerUpdateCustomTypeMocksConfigArgs,
 	): Promise<SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType> {

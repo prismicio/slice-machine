@@ -11,7 +11,6 @@ import { Library, Component } from "../models/Library";
 export * from "./component";
 export * from "./screenshot";
 export * from "./path";
-export * from "./mocks";
 
 export function handleLibraryPath(
   cwd: string,
@@ -45,6 +44,7 @@ export function handleLibraryPath(
       const componentInfo = getComponentInfo(
         curr,
         [cwd, path.join(cwd, ".slicemachine", "assets")],
+        cwd,
         from
       );
       if (!componentInfo) {

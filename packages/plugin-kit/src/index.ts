@@ -161,7 +161,6 @@ export type {
 } from "./hooks/customTypeLibrary-read";
 
 // snippet:read
-export { SnippetReadHookDataRootModelType } from "./hooks/snippet-read";
 export type {
 	SnippetReadHook,
 	SnippetReadHookData,
@@ -170,7 +169,6 @@ export type {
 } from "./hooks/snippet-read";
 
 // slice-simulator-setup:read
-export { SliceSimulatorSetupStepValidationMessageType } from "./hooks/sliceSimulator-setup-read";
 export type {
 	SliceSimulatorSetupReadHook,
 	SliceSimulatorSetupReadHookData,

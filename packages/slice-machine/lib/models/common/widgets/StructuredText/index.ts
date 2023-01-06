@@ -3,8 +3,6 @@ import Form, { FormFields } from "./Form";
 
 import { MdTextFields } from "react-icons/md";
 
-import { MockConfigForm } from "./Mock/Form";
-
 import { createValidationSchema } from "../../../../forms";
 
 import { removeProp } from "../../../../utils";
@@ -13,6 +11,7 @@ import { Widget } from "../Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { optionValues } from "./options";
 import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 /**
  * {
@@ -63,5 +62,5 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
   schema,
   TYPE_NAME: WidgetTypes.RichText,
   Form,
-  MockConfigForm,
+  MockConfigForm: DeprecatedMockConfigMessage,
 };

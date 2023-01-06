@@ -24,7 +24,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
   libName,
   variationId,
 }) => {
-  const { renameSlice, closeRenameSliceModal } = useSliceMachineActions();
+  const { renameSlice, closeModals } = useSliceMachineActions();
   const { isRenameSliceModalOpen, localLibs, remoteLibs } = useSelector(
     (store: SliceMachineStoreType) => ({
       isRenameSliceModalOpen: isModalOpen(store, ModalKeysEnum.RENAME_SLICE),
@@ -43,7 +43,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
       isOpen={isRenameSliceModalOpen}
       widthInPx="530px"
       formId={`rename-slice-modal-${sliceId}`}
-      close={closeRenameSliceModal}
+      close={closeModals}
       buttonLabel="Rename"
       onSubmit={handleOnSubmit}
       initialValues={{

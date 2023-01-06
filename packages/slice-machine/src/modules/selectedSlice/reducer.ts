@@ -12,6 +12,7 @@ import {
   replaceSliceWidgetCreator,
   SelectedSliceActions,
   updateSliceWidgetMockCreator,
+  updateSelectedSliceMocks,
 } from "./actions";
 import { SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
@@ -191,6 +192,15 @@ export const selectedSliceReducer: Reducer<
       return {
         ...prevState,
         model: renamedSlice,
+      };
+    }
+
+    case getType(updateSelectedSliceMocks): {
+      if (!prevState) return prevState;
+      const { mocks } = action.payload;
+      return {
+        ...prevState,
+        mock: mocks,
       };
     }
     default:

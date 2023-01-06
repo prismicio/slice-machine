@@ -16,16 +16,16 @@
     "prepare": "husky install",
     "//postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build && npm run test",
-    "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
+    "build": "npm --workspaces --if-present run build && npm --workspaces --if-present run test",
+    "build-essential": "npm --workspace @slicemachine/core run build && npm --workspace @slicemachine/plugin-kit run build && npm --workspace @slicemachine/manager run build",
     "audit": "lerna run audit",
-    "lint": "lerna run lint",
+    "lint": "npm --workspaces --if-present run lint",
     "lint-staged": "lint-staged",
     "pretty": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "lerna run test --stream",
-    "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
-    "test:e2e:dev": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
+    "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
+    "test:e2e:dev": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",    
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact",
@@ -33,7 +33,8 @@
     "publish:alpha": "lerna publish from-package --dist-tag alpha --no-verify-access --yes",
     "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
     "bump:production": "lerna version --conventional-graduate --exact",
-    "depcheck": "depcheck --skip-missing; lerna run depcheck"
+    "depcheck": "depcheck --skip-missing; lerna run depcheck",
+    "lerna:update": "npx --yes lerna-update-wizard"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
@@ -44,7 +45,7 @@
     "prettier": "^2.4.1"
   },
   "dependencies": {
-    "cypress": "^9.5.4",
+    "cypress": "^12.1.0",
     "cypress-localstorage-commands": "^1.7.0",
     "cypress-wait-until": "^1.7.2",
     "start-server-and-test": "^1.14.0"
@@ -57,19 +58,7 @@
     "**/packages/core/**/*.@(js|jsx|ts|tsx|)": [
       "prettier --write --ignore-unknown",
       "npm --prefix ./packages/core run lint:precommit"
-    ],
-    "**/packages/init/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/init run lint:precommit"
-    ],
-    "**/packages/client/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/client run lint:precommit"
-    ],
-    "**/packages/next-slicezone/**/*": "prettier --write --ignore-unknown",
-    "**/packages/nuxt-sm/**/*": "prettier --write --ignore-unknown",
-    "**/packages/vue-slicezone/**/*": "prettier --write --ignore-unknown",
-    "**/packages/sm-commons/**/*": "prettier --write --ignore-unknown"
+    ]
   },
   "workspaces": [
     "packages/*"

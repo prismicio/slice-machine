@@ -8,5 +8,5 @@ import * as crypto from "node:crypto";
  * @returns The content digest of `input`.
  */
 export const createContentDigest = (input: crypto.BinaryLike): string => {
-	return crypto.createHash("sha1").update(input).digest("base64");
+	return crypto.createHash("sha1").update(input).digest("hex");
 };

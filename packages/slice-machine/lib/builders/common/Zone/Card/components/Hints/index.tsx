@@ -18,8 +18,6 @@ const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
     return await managerClient.snippets.readSnippets({
       fieldPath: fieldPathString.split("."),
       model: item.value,
-      rootModel: {},
-      rootModelType: "Slice",
     });
   });
 
@@ -32,6 +30,10 @@ const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
   }
 
   const snippets = data.snippets || [];
+
+  if (!snippets[0]) {
+    return null;
+  }
 
   return (
     <div style={{ display: show ? "initial" : "none" }}>

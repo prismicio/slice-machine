@@ -1,4 +1,9 @@
-import { ActionType, createAsyncAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import {
   call,
   fork,
@@ -9,9 +14,8 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { createSlice, getState } from "@src/apiClient";
+import { createSlice, getState, SaveSliceMockRequest } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
 import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -62,6 +66,9 @@ export const renameSliceCreator = createAsyncAction(
   }
 >();
 
+export const updateSliceMock =
+  createAction("SLICE/UPDATE_MOCK")<SaveSliceMockRequest>();
+
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createSliceCreator>
@@ -69,7 +76,8 @@ type SlicesActions =
   | ActionType<typeof saveSliceCreator>
   | ActionType<typeof pushSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
-  | ActionType<typeof generateSliceCustomScreenshotCreator>;
+  | ActionType<typeof generateSliceCustomScreenshotCreator>
+  | ActionType<typeof updateSliceMock>;
 
 // Selectors
 export const getLibraries = (
@@ -227,6 +235,31 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
+
+    case getType(updateSliceMock): {
+      const { libraryName, sliceName, mock } = action.payload;
+      const libraries = state.libraries.map((lib) => {
+        if (lib.name !== libraryName) return lib;
+
+        const components = lib.components.map((component) => {
+          if (component.model.name !== sliceName) return component;
+          return {
+            ...component,
+            mock: mock,
+          };
+        });
+        return {
+          ...lib,
+          components,
+        };
+      });
+
+      return {
+        ...state,
+        libraries,
+      };
+    }
+
     default:
       return state;
   }
@@ -236,30 +269,42 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 export function* createSliceSaga({
   payload,
 }: ReturnType<typeof createSliceCreator.request>) {
-  const { variationId } = (yield call(
-    createSlice,
-    payload.sliceName,
-    payload.libName
-  )) as SagaReturnType<typeof createSlice>;
-  void Tracker.get().trackCreateSlice({
-    id: payload.sliceName,
-    name: payload.sliceName,
-    library: payload.libName,
-  });
-  const serverState = (yield call(getState)) as SagaReturnType<typeof getState>;
-  yield put(createSliceCreator.success({ libraries: serverState.libraries }));
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-  const addr = `/${payload.libName.replace(/\//g, "--")}/${
-    payload.sliceName
-  }/${variationId}`;
-  yield put(push("/[lib]/[sliceName]/[variation]", addr));
-  yield take(LOCATION_CHANGE);
-  yield put(
-    openToasterCreator({
-      message: "Slice saved",
-      type: ToasterType.SUCCESS,
-    })
-  );
+  try {
+    const { variationId, errors }: SagaReturnType<typeof createSlice> =
+      yield call(createSlice, payload.sliceName, payload.libName);
+    if (errors.length) {
+      throw errors;
+    }
+    void Tracker.get().trackCreateSlice({
+      id: payload.sliceName,
+      name: payload.sliceName,
+      library: payload.libName,
+    });
+    const serverState = (yield call(getState)) as SagaReturnType<
+      typeof getState
+    >;
+    yield put(createSliceCreator.success({ libraries: serverState.libraries }));
+    yield put(modalCloseCreator());
+    const addr = `/${payload.libName.replace(/\//g, "--")}/${
+      payload.sliceName
+    }/${variationId}`;
+    yield put(push("/[lib]/[sliceName]/[variation]", addr));
+    yield take(LOCATION_CHANGE);
+    yield put(
+      openToasterCreator({
+        message: "Slice saved",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    // Unknown errors
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Slice not created",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
 }
 
 // Saga watchers

@@ -51,6 +51,7 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
               color: "white",
             },
           }}
+          data-cy={`review-form-score-${rating}`}
         >
           {rating}
         </Button>
@@ -182,11 +183,7 @@ const ReviewModal: React.FunctionComponent = () => {
                 <Heading sx={{ fontSize: "20px", mr: 4 }}>
                   Give us your opinion
                 </Heading>
-                <Close
-                  type="button"
-                  onClick={() => skipReview()}
-                  data-cy="close-review"
-                />
+                <Close type="button" onClick={() => skipReview()} />
               </Flex>
               <Flex
                 sx={{
@@ -239,6 +236,7 @@ const ReviewModal: React.FunctionComponent = () => {
                       border: "none",
                     },
                   }}
+                  data-cy="review-form-comment"
                 />
                 <Button
                   form={"review-form"}

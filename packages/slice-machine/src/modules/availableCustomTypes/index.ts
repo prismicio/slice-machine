@@ -8,7 +8,6 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { renameCustomType, saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
@@ -172,11 +171,9 @@ export function* createCustomTypeSaga({
       payload.label,
       payload.repeatable
     );
-    yield call(saveCustomType, newCustomType, {});
+    yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
-    yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE })
-    );
+    yield put(modalCloseCreator());
     yield put(push(`/cts/${payload.id}`));
     yield put(
       openToasterCreator({
@@ -198,9 +195,10 @@ export function* renameCustomTypeSaga({
   payload,
 }: ReturnType<typeof renameCustomTypeCreator.request>) {
   try {
-    const customType = (yield select((store: SliceMachineStoreType) =>
-      selectCustomTypeById(store, payload.customTypeId)
-    )) as ReturnType<typeof selectCustomTypeById>;
+    const customType: ReturnType<typeof selectCustomTypeById> = yield select(
+      selectCustomTypeById,
+      payload.customTypeId
+    );
     if (!customType) {
       throw new Error(`Custom Type "${payload.newCustomTypeName} not found.`);
     }
@@ -212,9 +210,7 @@ export function* renameCustomTypeSaga({
 
     yield call(renameCustomType, renamedCustomType);
     yield put(renameCustomTypeCreator.success({ renamedCustomType }));
-    yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE })
-    );
+    yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
         message: "Custom type updated",

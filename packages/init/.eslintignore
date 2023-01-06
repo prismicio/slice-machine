@@ -1,3 +1,4 @@
-build
-node_modules
-tests
+# .gitignore copy
+
+/dist
+/playground/*

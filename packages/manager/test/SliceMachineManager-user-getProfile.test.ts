@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 
+import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
@@ -18,10 +19,7 @@ it("returns the profile for the user", async (ctx) => {
 	mockPrismicAuthAPI(ctx);
 	const { profile } = mockPrismicUserAPI(ctx);
 
-	await manager.user.login({
-		email: "name@example.com",
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
+	await manager.user.login(createPrismicAuthLoginResponse());
 
 	const res = await manager.user.getProfile();
 

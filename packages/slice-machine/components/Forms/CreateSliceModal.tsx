@@ -96,24 +96,6 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
           <Label htmlFor="origin" sx={{ mb: 2 }}>
             Target Library
           </Label>
-          <Select
-            name="origin"
-            options={libraries.map((v) => ({ value: v.name, label: v.name }))}
-            onChange={(v: { label: string; value: string } | null) =>
-              v ? setFieldValue("from", v.value) : null
-            }
-            defaultValue={{ value: values.from, label: values.from }}
-            theme={(theme) => {
-              return {
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  text: "text",
-                  primary: "background",
-                },
-              };
-            }}
-          />
         </Box>
       )}
     </ModalFormCard>

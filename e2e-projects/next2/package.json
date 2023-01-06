@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "slicemachine": "start-slicemachine"
   },
   "dependencies": {
     "@prismicio/react": "^2.5.0",
@@ -21,7 +22,7 @@
     "typescript": "4.8.4"
   },
   "devDependencies": {
-    "@slicemachine/adapter-next": "^0.0.4",
+    "@slicemachine/adapter-next": "^0.0.5",
     "slice-machine-ui": "../../packages/slice-machine",
     "start-slicemachine": "../../packages/start-slicemachine"
   }

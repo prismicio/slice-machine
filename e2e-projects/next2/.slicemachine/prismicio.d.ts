@@ -288,16 +288,6 @@ interface ImageSliceDefaultPrimary {
    * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
    */
   caption: prismicT.RichTextField;
-  /**
-   * Foo field in _Image → Primary_
-   *
-   * - **Field Type**: Boolean
-   * - **Placeholder**: _None_
-   * - **Default Value**: false
-   * - **API ID Path**: image.primary.foo
-   * - **Documentation**: https://prismic.io/docs/core-concepts/boolean
-   */
-  foo: prismicT.BooleanField;
 }
 /**
  * Default variation for Image Slice

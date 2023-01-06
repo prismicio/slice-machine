@@ -10,6 +10,7 @@ export const PRISMIC_CLIENT = "@prismicio/client";
 export const PRISMIC_HELPERS = "@prismicio/helpers";
 export const PRISMIC_TYPES = "@prismicio/types";
 export const NEXT_SLICEZONE = "next-slicezone";
+export const PRISMIC_NEXT = "@prismicio/next";
 export const NUXT_PRISMIC = "@nuxtjs/prismic";
 export const NUXT_SM = "nuxt-sm";
 export const VUE_SLICEZONE = "vue-slicezone";

@@ -1,17 +1,18 @@
-import { expect, it, vi } from "vitest";
-import express from "express";
-import { Server } from "node:http";
-import { AddressInfo } from "node:net";
-import fetch from "node-fetch";
-
-import { createTestPlugin } from "./__testutils__/createTestPlugin";
-import { createTestProject } from "./__testutils__/createTestProject";
-
-import {
-	createSliceMachineManager,
-	createSliceMachineManagerMiddleware,
-} from "../src";
-import { createSliceMachineManagerClient } from "../src/client";
+import { it } from "vitest";
+// import { expect, it, vi } from "vitest";
+// import express from "express";
+// import { Server } from "node:http";
+// import { AddressInfo } from "node:net";
+// import fetch from "node-fetch";
+//
+// import { createTestPlugin } from "./__testutils__/createTestPlugin";
+// import { createTestProject } from "./__testutils__/createTestProject";
+//
+// import {
+// 	createSliceMachineManager,
+// 	createSliceMachineManagerMiddleware,
+// } from "../src";
+// import { createSliceMachineManagerClient } from "../src/client";
 
 it.todo("creates an RPC middleware for a given manager", async () => {
 	// const adapter = createTestPlugin();

@@ -120,7 +120,7 @@ export class StartSliceMachineProcess {
 	 */
 	private async _buildSliceMachineRunningLine(value: string): Promise<string> {
 		const currentVersion =
-			await this._sliceMachineManager.project.getRunningSliceMachineVersion();
+			await this._sliceMachineManager.versions.getRunningSliceMachineVersion();
 
 		return `${chalk.bgBlack(
 			` ${chalk.bold.white("Slice Machine")} ${chalk.magenta(

@@ -56,6 +56,7 @@ export class UnauthorizedError extends SliceMachineError {
 }
 export class UnauthenticatedError extends SliceMachineError {
 	name = "UnauthenticatedError";
+	message = "Authenticate before trying again.";
 }
 export class NotFoundError extends SliceMachineError {
 	name = "NotFoundError";

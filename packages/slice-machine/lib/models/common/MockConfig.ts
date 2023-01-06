@@ -20,11 +20,11 @@ export const SliceMockConfig = {
     return globalMockConfig?.[libName]?.[sliceName] || {};
   },
   getVariationMockConfig(
-    sliceMockConfig: SliceMockConfig,
+    sliceMockConfig: SliceMockConfig | undefined,
     variationId: string
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return sliceMockConfig[variationId] || {};
+    return sliceMockConfig?.[variationId] || {};
   },
   getFieldMockConfig(
     sliceMockConfig: SliceMockConfig,

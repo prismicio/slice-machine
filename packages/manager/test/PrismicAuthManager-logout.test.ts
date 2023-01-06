@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 
+import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 import { readPrismicAuthState } from "./__testutils__/readPrismicAuthState";
 
@@ -10,10 +11,7 @@ it("removes user-specific data from the auth state file", async (ctx) => {
 
 	mockPrismicUserAPI(ctx);
 
-	await prismicAuthManager.login({
-		email: "name@example.com",
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
+	await prismicAuthManager.login(createPrismicAuthLoginResponse());
 
 	await prismicAuthManager.logout();
 

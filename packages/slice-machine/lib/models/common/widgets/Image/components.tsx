@@ -83,13 +83,13 @@ export const ConstraintForm: React.FC<{
   required?: boolean;
   display: boolean;
 }> = ({ prefix, required = false, display }) => {
-  if (!display) {
-    return null;
-  }
-
   const [_field, meta] = useField(prefix);
 
   const requiredChar = required ? "*" : "";
+
+  if (!display) {
+    return null;
+  }
 
   return (
     <Fragment>

@@ -1,9 +1,4 @@
-import type {
-	CustomTypeModel,
-	CustomTypeModelField,
-	CustomTypeModelFieldForGroup,
-	SharedSliceModel,
-} from "@prismicio/types";
+import type { CustomTypeModelField } from "@prismicio/types";
 
 import type {
 	ExtendSliceMachineHook,
@@ -21,30 +16,12 @@ export type Snippet = {
 };
 
 /**
- * The type of the root model containing a field.
- */
-export const SnippetReadHookDataRootModelType = {
-	Slice: "Slice",
-	CustomType: "CustomType",
-} as const;
-
-/**
  * Data provided to `snippet:read` hook handlers.
  */
 export type SnippetReadHookData = {
 	fieldPath: string[];
-} & (
-	| {
-			rootModelType: typeof SnippetReadHookDataRootModelType.Slice;
-			rootModel: SharedSliceModel;
-			model: CustomTypeModelFieldForGroup;
-	  }
-	| {
-			rootModelType: typeof SnippetReadHookDataRootModelType.CustomType;
-			rootModel: CustomTypeModel;
-			model: CustomTypeModelField;
-	  }
-);
+	model: CustomTypeModelField;
+};
 
 /**
  * Return value for `snippet:read` hook handlers.

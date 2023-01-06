@@ -1,27 +1,34 @@
-import fs from "fs";
-import os from "os";
-import path from "path";
-import axios from "axios";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import * as os from "node:os";
 
 // File called from the cypress setup in cypress-setup.sh
 const [, , EMAIL, PASSWORD, PRISMIC_URL] = process.argv;
 
-axios
-  .post(`${PRISMIC_URL}/authentication/signin`, {
-    email: EMAIL,
-    password: PASSWORD,
-  })
-  .then((response) => {
-    const cookies = response.headers["set-cookie"].join("; ");
-    fs.promises.writeFile(
-      path.join(os.homedir(), ".prismic"),
-      JSON.stringify({
-        base: `${PRISMIC_URL}/`,
-        cookies: cookies,
-      })
-    );
-  })
-  .catch((e) => {
-    console.error("[AUTH]: ", e.message);
-    console.error(e);
-  });
+const main = async () => {
+  const fetch = (await import("node-fetch")).default;
+
+  const res = await fetch(
+    new URL("./authentication/signin", PRISMIC_URL).toString(),
+    {
+      method: "post",
+      body: JSON.stringify({
+        email: EMAIL,
+        password: PASSWORD,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  await fs.writeFile(
+    path.join(os.homedir(), ".prismic"),
+    JSON.stringify({
+      base: new URL(PRISMIC_URL).toString(),
+      cookies: res.headers.get("Set-Cookie")?.split(", ").join("; ") || "",
+    })
+  );
+};
+
+main();
