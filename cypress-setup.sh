@@ -35,5 +35,6 @@ rm -rf e2e-projects/cypress-next-app \
 && node ../../packages/init/bin/slicemachine-init.js --repository ${_PRISMIC_REPO} \
 && npx --yes json -I -f package.json -e "this.devDependencies[\"slice-machine-ui\"]=\"../../packages/slice-machine\"" \
 && npm i \
+&& ls -al \
 && npm i @prismicio/client @prismicio/helpers @prismicio/react \
 && npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\""
