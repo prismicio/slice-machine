@@ -22,6 +22,9 @@ export default defineConfig({
 				test: "./src/test/index.ts",
 			},
 		},
+		rollupOptions: {
+			external: ["readable-web-to-node-stream"],
+		},
 	},
 	test: {
 		coverage: {

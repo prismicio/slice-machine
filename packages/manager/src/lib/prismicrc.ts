@@ -11,7 +11,7 @@ const Prismicrc = t.partial({
 });
 type Prismicrc = t.TypeOf<typeof Prismicrc>;
 
-export const readPrismicrc = (dir?: string): Prismicrc => {
+export const readRawPrismicrc = (dir?: string): Prismicrc => {
 	const rawPrismicrc = dir
 		? rc9.read({ dir, name: PRISMICRC })
 		: rc9.readUser(PRISMICRC);
@@ -27,6 +27,16 @@ export const readPrismicrc = (dir?: string): Prismicrc => {
 	}
 
 	return prismicrc;
+};
+
+export const readPrismicrc = (dir: string): Prismicrc => {
+	const userPrismicrc = readRawPrismicrc();
+	const projectPrismicrc = readRawPrismicrc(dir);
+
+	return {
+		...userPrismicrc,
+		...projectPrismicrc,
+	};
 };
 
 export const writePrismicrc = (config: Prismicrc, dir?: string): void => {

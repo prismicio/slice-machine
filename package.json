@@ -58,10 +58,6 @@
     "**/packages/core/**/*.@(js|jsx|ts|tsx|)": [
       "prettier --write --ignore-unknown",
       "npm --prefix ./packages/core run lint:precommit"
-    ],
-    "**/packages/init/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/init run lint:precommit"
     ]
   },
   "workspaces": [

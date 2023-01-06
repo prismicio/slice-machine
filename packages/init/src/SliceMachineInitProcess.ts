@@ -30,19 +30,25 @@ import {
 import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
 import { assertExists } from "./lib/assertExists";
-import { format } from "./lib/format";
 
 export type SliceMachineInitProcessOptions = {
-	input: string[];
 	repository?: string;
-	push: boolean;
-	pushSlices: boolean;
-	pushCustomTypes: boolean;
-	pushDocuments: boolean;
+	push?: boolean;
+	pushSlices?: boolean;
+	pushCustomTypes?: boolean;
+	pushDocuments?: boolean;
+	cwd?: string;
 } & Record<string, unknown>;
 
+const DEFAULT_OPTIONS: SliceMachineInitProcessOptions = {
+	push: true,
+	pushSlices: true,
+	pushCustomTypes: true,
+	pushDocuments: true,
+};
+
 export const createSliceMachineInitProcess = (
-	options: SliceMachineInitProcessOptions,
+	options?: SliceMachineInitProcessOptions,
 ): SliceMachineInitProcess => {
 	return new SliceMachineInitProcess(options);
 };
@@ -65,9 +71,9 @@ export class SliceMachineInitProcess {
 
 	protected context: SliceMachineInitProcessContext;
 
-	constructor(options: SliceMachineInitProcessOptions) {
-		this.options = options;
-		this.manager = createSliceMachineManager();
+	constructor(options?: SliceMachineInitProcessOptions) {
+		this.options = { ...DEFAULT_OPTIONS, options };
+		this.manager = createSliceMachineManager({ cwd: options?.cwd });
 
 		this.context = {};
 	}
@@ -81,7 +87,7 @@ export class SliceMachineInitProcess {
 			)} Init command started\n`,
 		);
 
-		this.manager.telemetry.initTelemetry();
+		await this.manager.telemetry.initTelemetry();
 		await this.manager.telemetry.track({
 			event: "command:init:start",
 			repository: this.options.repository,
@@ -163,7 +169,9 @@ export class SliceMachineInitProcess {
 						{
 							title: "Detecting framework...",
 							task: async (_, task) => {
-								this.context.framework = await detectFramework();
+								this.context.framework = await detectFramework(
+									this.manager.cwd,
+								);
 
 								task.title = `Detected framework ${chalk.cyan(
 									this.context.framework.name,
@@ -452,13 +460,58 @@ export class SliceMachineInitProcess {
 	}
 
 	protected async selectNewRepository(): Promise<void> {
-		let suggestedName = getRandomRepositoryDomain();
-		while (
-			await this.manager.prismicRepository.checkExists({
-				domain: suggestedName,
-			})
-		) {
+		let suggestedName = "";
+
+		// TODO: Improve concurrency
+		const trySuggestName = async (name: string): Promise<string | void> => {
+			if (name) {
+				const formattedName = formatRepositoryDomain(name);
+
+				if (
+					!validateRepositoryDomain({ domain: formattedName }).hasErrors &&
+					!(await this.manager.prismicRepository.checkExists({
+						domain: formattedName,
+					}))
+				) {
+					return formattedName;
+				}
+			}
+		};
+
+		// 1. Try to suggest name after package name
+		try {
+			const pkgJSONPath = path.join(this.manager.cwd, "package.json");
+			const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
+
+			const maybeSuggestion = await trySuggestName(pkg.name);
+			if (maybeSuggestion) {
+				suggestedName = maybeSuggestion;
+			}
+		} catch {
+			// Noop
+		}
+
+		// 2. Try to suggest name after directory name
+		if (!suggestedName) {
+			const maybeSuggestion = await trySuggestName(
+				path.basename(this.manager.cwd),
+			);
+			if (maybeSuggestion) {
+				suggestedName = maybeSuggestion;
+			}
+		}
+
+		// 3. Use random name
+		if (!suggestedName) {
 			suggestedName = getRandomRepositoryDomain();
+
+			while (
+				await this.manager.prismicRepository.checkExists({
+					domain: suggestedName,
+				})
+			) {
+				suggestedName = getRandomRepositoryDomain();
+			}
 		}
 
 		const { domain } = await prompt<string, "domain">({
@@ -643,9 +696,12 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 					if (sliceMachineConfigExists) {
 						parentTask.title = "Updating Slice Machine configuration...";
-						await this.manager.project.updateSliceMachineConfig({
-							searchAndReplaceMap: {
-								[this.context.repository.domain]: /__PRISMIC_REPOSITORY_NAME/g,
+
+						const config = await this.manager.project.getSliceMachineConfig();
+						await this.manager.project.writeSliceMachineConfig({
+							config: {
+								...config,
+								repositoryName: this.context.repository.domain,
 							},
 						});
 						parentTask.title = "Updated Slice Machine configuration";
@@ -655,23 +711,16 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						const sliceMachineConfigPath =
 							await this.manager.project.suggestSliceMachineConfigPath();
 
-						// Default config is the same for TypeScript and JavaScript as of today
-						const defaultSliceMachineConfig = await format(
-							JSON.stringify({
-								// TODO: Update _latest to a real value
+						await this.manager.project.writeSliceMachineConfig({
+							config: {
+								// TODO: Update _latest to a real value or make it optional
 								_latest: "legacy",
 								repositoryName: this.context.repository.domain,
 								adapter: this.context.framework.adapterName,
 								libraries: ["./slices"],
-							}),
-							sliceMachineConfigPath,
-						);
-
-						await fs.writeFile(
-							sliceMachineConfigPath,
-							defaultSliceMachineConfig,
-							"utf-8",
-						);
+							},
+							path: sliceMachineConfigPath,
+						});
 
 						parentTask.title = "Created Slice Machine configuration";
 					}
@@ -877,6 +926,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 			},
 		]);
 	}
+
+	// TODO: Add Slice Machine script to package.json
 
 	protected initializePlugins(): Promise<void> {
 		return listrRun([
