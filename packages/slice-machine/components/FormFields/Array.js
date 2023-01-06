@@ -31,7 +31,7 @@ const FormFieldArray = ({
       refs.current[len - 1].focus();
     }
     setPrevLen(len);
-  }, [refs.current.length]);
+  }, [refs.current.length, focusOnNewEntry, prevLen]);
 
   return (
     <Fragment>
