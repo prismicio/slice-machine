@@ -40,6 +40,7 @@ coverage/
 unpubTest
 my-test-project
 dist
+*.tgz
 
 .now
 .vercel
