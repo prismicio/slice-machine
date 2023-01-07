@@ -17,7 +17,7 @@ describe("Create Slices", () => {
     cy.createSlice(lib, sliceId, sliceName);
 
     // add widget
-    cy.get('[data-cy="empty-zone-add-new-field"]').first().click();
+    cy.get("button").contains("Add a new field").click();
     cy.get('[data-cy="Rich Text"]').first().click();
     cy.get('[data-cy="new-field-name-input"]')
       .first()
