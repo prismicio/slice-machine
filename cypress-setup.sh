@@ -34,7 +34,6 @@ rm -rf e2e-projects/cypress-next-app \
 && npx --yes vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}"  \
 && cd e2e-projects/cypress-next-app \
 && node ../../packages/init/bin/slicemachine-init.js --repository ${_PRISMIC_REPO} \
-&& npm i --no-save *.tgz \
-&& npm i --save-dev slice-machine-ui-*.tgz \
 && npm i @prismicio/client @prismicio/helpers @prismicio/react \
+&& npm i --no-save *.tgz \
 && npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\""
