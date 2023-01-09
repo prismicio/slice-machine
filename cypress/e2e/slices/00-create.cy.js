@@ -17,7 +17,7 @@ describe("Create Slices", () => {
     cy.createSlice(lib, sliceId, sliceName);
 
     // add widget
-    cy.get('[data-cy="empty-zone-add-new-field"]').first().click();
+    cy.get("button").contains("Add a new field").click();
     cy.get('[data-cy="Rich Text"]').first().click();
     cy.get('[data-cy="new-field-name-input"]')
       .first()
@@ -77,6 +77,29 @@ describe("Create Slices", () => {
       cy.stub(win, "open").callsFake((url) => {
         return win.open.wrappedMethod.call(win, url, "_self");
       });
+    });
+
+    // The Simulator page doesn't fire the `load` event for unknown reasons, but we can fake it.
+    cy.window().then((win) => {
+      const triggerAutIframeLoad = () => {
+        const AUT_IFRAME_SELECTOR = ".aut-iframe";
+
+        // get the application iframe
+        const autIframe =
+          win.parent.document.querySelector(AUT_IFRAME_SELECTOR);
+
+        if (!autIframe) {
+          throw new ReferenceError(
+            `Failed to get the application frame using the selector '${AUT_IFRAME_SELECTOR}'`
+          );
+        }
+
+        autIframe.dispatchEvent(new Event("load"));
+        // remove the event listener to prevent it from firing the load event before each next unload (basically before each successive test)
+        win.removeEventListener("beforeunload", triggerAutIframeLoad);
+      };
+
+      win.addEventListener("beforeunload", triggerAutIframeLoad);
     });
 
     cy.get("[data-testid=simulator-open-button]").click();
