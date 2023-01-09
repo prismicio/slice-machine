@@ -45,10 +45,10 @@
     "prettier": "^2.4.1"
   },
   "dependencies": {
-    "cypress": "^12.1.0",
-    "cypress-localstorage-commands": "^1.7.0",
+    "cypress": "^12.3.0",
+    "cypress-localstorage-commands": "^2.2.2",
     "cypress-wait-until": "^1.7.2",
-    "start-server-and-test": "^1.14.0"
+    "start-server-and-test": "^1.15.2"
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
