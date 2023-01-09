@@ -20,7 +20,7 @@ const isStableVersion =
   /^\d+\.\d+\.\d+$/.test(RELEASE_NUMBER) && semver.lte("0.1.0", RELEASE_NUMBER);
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+let nextConfig = {
   swcMinify: true,
   typescript: {
     // !! WARN !!
