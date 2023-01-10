@@ -665,14 +665,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						 * that all install errors, earlier and presents, can be catched.
 						 *
 						 * Here, we force the task to wait so that it is neither marked as
-						 * done or has the opportunity to handle the error itself
+						 * done or has the opportunity to handle the error itself.
 						 */
-						await new Promise(() => {
-							// If for whatever reason the process is not exited by now, we still throw the error
-							setTimeout(() => {
-								throw error;
-							}, 5000);
-						});
+						// If for whatever reason the process is not exited by now, we still throw the error
+						await new Promise((resolve) => setTimeout(resolve, 5000));
+						throw error;
 					}
 
 					task.title = `Core dependencies installed with ${chalk.cyan(
