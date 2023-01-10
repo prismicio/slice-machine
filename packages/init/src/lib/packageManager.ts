@@ -55,12 +55,14 @@ export const installDependencies = async (
 	return { execaProcess };
 };
 
-export const detectPackageManager = async (): Promise<PackageManagerAgent> => {
+export const detectPackageManager = async (
+	cwd?: string,
+): Promise<PackageManagerAgent> => {
 	// We auto install agent for now otherwise ni could cause some issues with prompt
-	const agent = await niDetect({ autoInstall: true });
+	const agent = await niDetect({ autoInstall: true, cwd });
 
 	if (!agent) {
-		throw new Error("Failed to detect project's framework");
+		throw new Error("Failed to detect project's package manager");
 	}
 
 	return agent;

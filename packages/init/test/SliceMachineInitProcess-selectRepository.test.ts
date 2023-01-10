@@ -1,20 +1,23 @@
-import * as path from "node:path";
-
-import { beforeEach, expect, it } from "vitest";
+import { beforeEach, expect, it, TestContext } from "vitest";
 import { stdin as mockStdin } from "mock-stdin";
+import { vol } from "memfs";
 
-import { createSliceMachineInitProcess } from "../src";
+import { createSliceMachineInitProcess, SliceMachineInitProcess } from "../src";
 
-import { mockPrismicRepositoryManager } from "./__testutils__/mockPrismicRepositoryManager";
+import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
+import { mockPrismicRepositoryAPI } from "./__testutils__/mockPrismicRepositoryAPI";
+import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
+import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
+import { loginUser } from "./__testutils__/loginUser";
 import { setContext } from "./__testutils__/setContext";
 import { updateContext } from "./__testutils__/updateContext";
+import { spyManager } from "./__testutils__/spyManager";
 import { watchStd } from "./__testutils__/watchStd";
 
-const initProcess = createSliceMachineInitProcess({
-	cwd: path.resolve(__dirname, "__fixtures__/base"),
-});
+const initProcess = createSliceMachineInitProcess({ cwd: "/base" });
+const spiedManager = spyManager(initProcess);
 
-beforeEach(() => {
+beforeEach(async () => {
 	setContext(initProcess, {
 		userRepositories: [
 			{
@@ -29,7 +32,36 @@ beforeEach(() => {
 			},
 		],
 	});
+
+	vol.fromJSON(
+		{
+			"./package.json": JSON.stringify({
+				name: "package-base",
+				version: "0.0.0",
+			}),
+		},
+		"/base",
+	);
 });
+
+const mockPrismicAPIs = async (
+	ctx: TestContext,
+	initProcess: SliceMachineInitProcess,
+	existingRepositories: string[] = [],
+): Promise<void> => {
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+	const token = await loginUser(initProcess, prismicAuthLoginResponse);
+
+	mockPrismicRepositoryAPI(ctx, {
+		existsEndpoint: {
+			expectedAuthenticationToken: token,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			existingRepositories,
+		},
+	});
+};
 
 it("prompts user to select a repository from existing ones", async () => {
 	await watchStd(async () => {
@@ -78,9 +110,9 @@ it("prevents user from selecting a repository they don't have write access on", 
 	});
 });
 
-it("allows user to create a new repository and prompts for its name", async () => {
+it("allows user to create a new repository and prompts for its name", async (ctx) => {
 	const domain = "new-repo";
-	mockPrismicRepositoryManager(initProcess, { existingRepositories: [] });
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -108,10 +140,10 @@ it("allows user to create a new repository and prompts for its name", async () =
 	});
 });
 
-it("formats new repository name", async () => {
+it("formats new repository name", async (ctx) => {
 	const rawDomain = "New Repo";
 	const domain = "new-repo";
-	mockPrismicRepositoryManager(initProcess, { existingRepositories: [] });
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -139,12 +171,10 @@ it("formats new repository name", async () => {
 	});
 });
 
-it("checks for new repository name to be long enough", async () => {
+it("checks for new repository name to be long enough", async (ctx) => {
 	const shortDomain = "s";
 	const domain = "new-repo";
-	mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: [],
-	});
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -180,13 +210,11 @@ it("checks for new repository name to be long enough", async () => {
 	});
 });
 
-it("checks for new repository name to be short enough", async () => {
+it("checks for new repository name to be short enough", async (ctx) => {
 	const longDomain =
 		"lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-Officiis-incidunt-ex-harum";
 	const domain = "new-repo";
-	mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: [],
-	});
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -222,12 +250,10 @@ it("checks for new repository name to be short enough", async () => {
 	});
 });
 
-it("checks for new repository name to be available", async () => {
+it("checks for new repository name to be available", async (ctx) => {
 	const existingDomain = "existing-repo";
 	const domain = "new-repo";
-	const prismicRepositorySpy = mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: [existingDomain],
-	});
+	await mockPrismicAPIs(ctx, initProcess, [existingDomain]);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -256,10 +282,10 @@ it("checks for new repository name to be available", async () => {
 		return promise;
 	});
 
-	expect(prismicRepositorySpy.checkExists).toHaveBeenCalledWith({
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenCalledWith({
 		domain: existingDomain,
 	});
-	expect(prismicRepositorySpy.checkExists).toHaveBeenCalledWith({
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenCalledWith({
 		domain,
 	});
 	// @ts-expect-error - Accessing protected property
@@ -269,8 +295,8 @@ it("checks for new repository name to be available", async () => {
 	});
 });
 
-it("suggests new repository name based on package.json first", async () => {
-	mockPrismicRepositoryManager(initProcess, { existingRepositories: [] });
+it("suggests new repository name based on package.json first", async (ctx) => {
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -300,10 +326,8 @@ it("suggests new repository name based on package.json first", async () => {
 	`);
 });
 
-it("suggests new repository name based on directory name second", async () => {
-	mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: ["package-base"],
-	});
+it("suggests new repository name based on directory name second", async (ctx) => {
+	await mockPrismicAPIs(ctx, initProcess, ["package-base"]);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -333,10 +357,8 @@ it("suggests new repository name based on directory name second", async () => {
 	`);
 });
 
-it("suggests new repository name based on random third", async () => {
-	mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: ["package-base", "base"],
-	});
+it("suggests new repository name based on random third", async (ctx) => {
+	await mockPrismicAPIs(ctx, initProcess, ["package-base", "base"]);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -367,10 +389,10 @@ it("suggests new repository name based on random third", async () => {
 	expect(initProcess.context.repository?.exists).toBe(false);
 });
 
-it("automatically enters new repository name selection if user doesn't have any repository", async () => {
+it("automatically enters new repository name selection if user doesn't have any repository", async (ctx) => {
 	const domain = "new-repo";
 	updateContext(initProcess, { userRepositories: [] });
-	mockPrismicRepositoryManager(initProcess, { existingRepositories: [] });
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -393,13 +415,11 @@ it("automatically enters new repository name selection if user doesn't have any 
 	});
 });
 
-it("doesn't throw if package could not be read to suggest new repository name", async () => {
-	const initProcess = createSliceMachineInitProcess({
-		cwd: path.resolve(__dirname, "__fixtures__/emptyPkg"),
-	});
+it("doesn't throw if package could not be read to suggest new repository name", async (ctx) => {
+	const initProcess = createSliceMachineInitProcess({ cwd: "/emptypkg" });
+	vol.fromJSON({ "./package.json": "" }, "/emptypkg");
 	setContext(initProcess, { userRepositories: [] });
-
-	mockPrismicRepositoryManager(initProcess, { existingRepositories: [] });
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();

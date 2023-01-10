@@ -1,24 +1,24 @@
-import * as path from "node:path";
-
 import { beforeEach, expect, it, vi } from "vitest";
 
 import { createSliceMachineInitProcess } from "../src";
 import { UNIVERSAL } from "../src/lib/framework";
 
-import { mockTelemetryManager } from "./__testutils__/mockTelemetryManager";
 import { setContext } from "./__testutils__/setContext";
 import { updateContext } from "./__testutils__/updateContext";
+import { spyManager } from "./__testutils__/spyManager";
 import { watchStd } from "./__testutils__/watchStd";
 
-const initProcess = createSliceMachineInitProcess({
-	cwd: path.resolve(__dirname, "__fixtures__/base"),
-});
+const initProcess = createSliceMachineInitProcess();
+const spiedManager = spyManager(initProcess);
 
-beforeEach(() => {
+beforeEach(async () => {
 	setContext(initProcess, {
 		packageManager: "npm",
 		framework: UNIVERSAL,
 	});
+
+	// @ts-expect-error - Accessing protected property
+	await initProcess.manager.telemetry.initTelemetry();
 });
 
 it("begins core dependencies installation process", async () => {
@@ -43,7 +43,6 @@ it("catches early core dependencies installation process errors", async () => {
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.installProcess).toBeTypeOf("object");
 
-	const telemetrySpy = mockTelemetryManager(initProcess);
 	vi.stubGlobal("process", { ...process, exit: vi.fn() });
 
 	const { stderr } = await watchStd(async () => {
@@ -58,11 +57,12 @@ it("catches early core dependencies installation process errors", async () => {
 		}
 
 		// Wait 2 ticks for async catch handler to happen
-		return new Promise((res) => process.nextTick(() => process.nextTick(res)));
+		await new Promise((res) => process.nextTick(res));
+		await new Promise((res) => process.nextTick(res));
 	});
 
-	expect(telemetrySpy.track).toHaveBeenCalledOnce();
-	expect(telemetrySpy.track).toHaveBeenNthCalledWith(
+	expect(spiedManager.telemetry.track).toHaveBeenCalledOnce();
+	expect(spiedManager.telemetry.track).toHaveBeenNthCalledWith(
 		1,
 		expect.objectContaining({
 			event: "command:init:end",
@@ -91,7 +91,6 @@ it("appends repository selection to error message when core dependencies install
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.installProcess).toBeTypeOf("object");
 
-	mockTelemetryManager(initProcess);
 	vi.stubGlobal("process", { ...process, exit: vi.fn() });
 
 	const { stderr } = await watchStd(async () => {

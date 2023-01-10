@@ -1,23 +1,39 @@
-import * as path from "node:path";
-
-import { beforeEach, expect, it, vi } from "vitest";
+import { beforeEach, expect, it, TestContext, vi } from "vitest";
 import { stdin as mockStdin } from "mock-stdin";
 import open from "open";
+import fetch from "node-fetch";
 
-import { PrismicRepository } from "@slicemachine/manager";
+import { PrismicRepository, PrismicUserProfile } from "@slicemachine/manager";
 
 import { createSliceMachineInitProcess } from "../src";
 
-import { mockUserManager } from "./__testutils__/mockUserManager";
-import { mockPrismicRepositoryManager } from "./__testutils__/mockPrismicRepositoryManager";
-import { mockTelemetryManager } from "./__testutils__/mockTelemetryManager";
+import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
+import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
+import {
+	createPrismicAuthLoginResponse,
+	PrismicAuthLoginResponse,
+} from "./__testutils__/createPrismicAuthLoginResponse";
 import { watchStd } from "./__testutils__/watchStd";
+import { spyManager } from "./__testutils__/spyManager";
+import { loginUser } from "./__testutils__/loginUser";
 
-const initProcess = createSliceMachineInitProcess({
-	cwd: path.resolve(__dirname, "__fixtures__/base"),
+const initProcess = createSliceMachineInitProcess();
+const spiedManager = spyManager(initProcess);
+
+vi.mock("open", () => {
+	return {
+		default: vi.fn(),
+	};
 });
 
-const loginAndFetchUserDataWithStdin = async () => {
+beforeEach(async () => {
+	// @ts-expect-error - Accessing protected property
+	await initProcess.manager.telemetry.initTelemetry();
+});
+
+const loginAndFetchUserDataWithStdin = async (
+	prismicAuthLoginResponse: PrismicAuthLoginResponse,
+) => {
 	const stdin = mockStdin();
 
 	// @ts-expect-error - Accessing protected method
@@ -27,98 +43,99 @@ const loginAndFetchUserDataWithStdin = async () => {
 
 	stdin.send("o").restore();
 
+	await new Promise((res) => setTimeout(res, 50));
+
+	const port: number =
+		// @ts-expect-error - Mocked instance
+		spiedManager.user.getLoginSessionInfo.results[0][1].port;
+
+	await fetch(`http://127.0.0.1:${port}`, {
+		method: "post",
+		body: JSON.stringify(prismicAuthLoginResponse),
+	});
+
 	return promise;
 };
 
-beforeEach(() => {
-	vi.mock("open", () => {
-		return {
-			default: vi.fn(),
-		};
+const mockPrismicAPIs = (
+	ctx: TestContext,
+	repositories: PrismicRepository[] = [],
+): {
+	prismicAuthLoginResponse: PrismicAuthLoginResponse;
+	userProfile: PrismicUserProfile;
+} => {
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	const { profile } = mockPrismicUserAPI(ctx, {
+		repositoriesEndpoint: {
+			expectedAuthenticationToken: prismicAuthLoginResponse._token,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			repositories,
+		},
 	});
-});
+	mockPrismicAuthAPI(ctx);
 
-it("logs in user if logged out", async () => {
-	const userSpy = mockUserManager(initProcess, {
-		isLoggedIn: false,
-		userProfile: true,
+	return {
+		prismicAuthLoginResponse,
+		userProfile: profile,
+	};
+};
+
+it("logs in user if logged out", async (ctx) => {
+	const { prismicAuthLoginResponse } = mockPrismicAPIs(ctx);
+
+	const { stdout } = await watchStd(() => {
+		return loginAndFetchUserDataWithStdin(prismicAuthLoginResponse);
 	});
-	mockPrismicRepositoryManager(initProcess, { repositories: [] });
-	mockTelemetryManager(initProcess);
 
-	const { stdout } = await watchStd(loginAndFetchUserDataWithStdin);
-
-	expect(userSpy.getLoginSessionInfo).toHaveBeenCalledOnce();
-	expect(userSpy.nodeLoginSession).toHaveBeenCalledOnce();
+	expect(spiedManager.user.getLoginSessionInfo).toHaveBeenCalledOnce();
+	expect(spiedManager.user.nodeLoginSession).toHaveBeenCalledOnce();
 	expect(open).toHaveBeenCalledOnce();
 	expect(open).toHaveBeenNthCalledWith(
 		1,
 		// @ts-expect-error - Mocked instance
-		userSpy.getLoginSessionInfo.results[0][1].url,
+		spiedManager.user.getLoginSessionInfo.results[0][1].url,
 	);
 	expect(stdout.join("\n")).toMatch(/Logged in/);
 });
 
-it("uses existing session if already logged in", async () => {
-	const userSpy = mockUserManager(initProcess, {
-		isLoggedIn: true,
-		userProfile: true,
-	});
-	mockPrismicRepositoryManager(initProcess, { repositories: [] });
-	mockTelemetryManager(initProcess);
+it("uses existing session if already logged in", async (ctx) => {
+	const { prismicAuthLoginResponse } = mockPrismicAPIs(ctx);
+	await loginUser(initProcess, prismicAuthLoginResponse);
 
 	const { stdout } = await watchStd(async () => {
 		// @ts-expect-error - Accessing protected method
 		return initProcess.loginAndFetchUserData();
 	});
 
-	expect(userSpy.nodeLoginSession).not.toHaveBeenCalled();
+	expect(spiedManager.user.nodeLoginSession).not.toHaveBeenCalled();
 	expect(stdout.join("\n")).toMatch(/Logged in/);
 });
 
-it("fetches user profile", async () => {
-	const userProfile = {
-		email: "john@example.com",
-		firstName: "john",
-		lastName: "doe",
-		intercomHash: "#",
-		shortId: "00",
-		userId: "0000",
-	};
+it("fetches user profile", async (ctx) => {
+	const { userProfile, prismicAuthLoginResponse } = mockPrismicAPIs(ctx);
 
-	mockUserManager(initProcess, { userProfile });
-	mockPrismicRepositoryManager(initProcess, { repositories: [] });
-	mockTelemetryManager(initProcess);
-
-	await watchStd(loginAndFetchUserDataWithStdin);
+	await watchStd(() => {
+		return loginAndFetchUserDataWithStdin(prismicAuthLoginResponse);
+	});
 
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.userProfile).toStrictEqual(userProfile);
 });
 
-it("identifies user", async () => {
-	const userProfile = {
-		email: "john@example.com",
-		firstName: "john",
-		lastName: "doe",
-		intercomHash: "#",
-		shortId: "00",
-		userId: "0000",
-	};
+it("identifies user", async (ctx) => {
+	const { userProfile, prismicAuthLoginResponse } = mockPrismicAPIs(ctx);
 
-	mockUserManager(initProcess, { userProfile });
-	mockPrismicRepositoryManager(initProcess, { repositories: [] });
-	const telemetrySpy = mockTelemetryManager(initProcess);
+	await watchStd(() => {
+		return loginAndFetchUserDataWithStdin(prismicAuthLoginResponse);
+	});
 
-	await watchStd(loginAndFetchUserDataWithStdin);
-
-	expect(telemetrySpy.identify).toHaveBeenCalledOnce();
-	expect(telemetrySpy.identify).toHaveBeenNthCalledWith(1, {
+	expect(spiedManager.telemetry.identify).toHaveBeenCalledOnce();
+	expect(spiedManager.telemetry.identify).toHaveBeenNthCalledWith(1, {
 		userID: userProfile.shortId,
 		intercomHash: userProfile.intercomHash,
 	});
-	expect(telemetrySpy.track).toHaveBeenCalledOnce();
-	expect(telemetrySpy.track).toHaveBeenNthCalledWith(
+	expect(spiedManager.telemetry.track).toHaveBeenCalledOnce();
+	expect(spiedManager.telemetry.track).toHaveBeenNthCalledWith(
 		1,
 		expect.objectContaining({
 			event: "command:init:identify",
@@ -126,7 +143,7 @@ it("identifies user", async () => {
 	);
 });
 
-it("fetches repositories", async () => {
+it("fetches repositories", async (ctx) => {
 	const repositories: PrismicRepository[] = [
 		{
 			domain: "wroom",
@@ -135,11 +152,11 @@ it("fetches repositories", async () => {
 		},
 	];
 
-	mockUserManager(initProcess, { userProfile: true });
-	mockPrismicRepositoryManager(initProcess, { repositories });
-	mockTelemetryManager(initProcess);
+	const { prismicAuthLoginResponse } = mockPrismicAPIs(ctx, repositories);
 
-	await watchStd(loginAndFetchUserDataWithStdin);
+	await watchStd(() => {
+		return loginAndFetchUserDataWithStdin(prismicAuthLoginResponse);
+	});
 
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.userRepositories).toStrictEqual(repositories);

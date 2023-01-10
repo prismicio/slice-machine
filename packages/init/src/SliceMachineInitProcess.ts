@@ -72,7 +72,7 @@ export class SliceMachineInitProcess {
 	protected context: SliceMachineInitProcessContext;
 
 	constructor(options?: SliceMachineInitProcessOptions) {
-		this.options = { ...DEFAULT_OPTIONS, options };
+		this.options = { ...DEFAULT_OPTIONS, ...options };
 		this.manager = createSliceMachineManager({ cwd: options?.cwd });
 
 		this.context = {};
@@ -181,7 +181,21 @@ export class SliceMachineInitProcess {
 						{
 							title: "Detecting package manager...",
 							task: async (_, task) => {
-								this.context.packageManager = await detectPackageManager();
+								try {
+									this.context.packageManager = await detectPackageManager(
+										this.options.cwd,
+									);
+								} catch (error) {
+									// Default to NPM
+									if (
+										error instanceof Error &&
+										error.message.match(/failed to detect/i)
+									) {
+										this.context.packageManager = "npm";
+									} else {
+										throw error;
+									}
+								}
 
 								task.title = `Detected package manager ${chalk.cyan(
 									this.context.packageManager,

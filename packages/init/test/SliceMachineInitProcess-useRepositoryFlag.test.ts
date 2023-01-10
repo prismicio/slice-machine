@@ -1,20 +1,18 @@
-import * as path from "node:path";
+import { expect, it, TestContext } from "vitest";
 
-import { beforeEach, expect, it } from "vitest";
+import { createSliceMachineInitProcess, SliceMachineInitProcess } from "../src";
 
-import { createSliceMachineInitProcess } from "../src";
-
-import { mockPrismicRepositoryManager } from "./__testutils__/mockPrismicRepositoryManager";
+import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
+import { mockPrismicRepositoryAPI } from "./__testutils__/mockPrismicRepositoryAPI";
+import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
+import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
+import { loginUser } from "./__testutils__/loginUser";
 import { setContext } from "./__testutils__/setContext";
 import { updateContext } from "./__testutils__/updateContext";
-import { updateOptions } from "./__testutils__/updateOptions";
+import { spyManager } from "./__testutils__/spyManager";
 import { watchStd } from "./__testutils__/watchStd";
 
-const initProcess = createSliceMachineInitProcess({
-	cwd: path.resolve(__dirname, "__fixtures__/base"),
-});
-
-beforeEach(() => {
+const setDefaultContext = (initProcess: SliceMachineInitProcess) => {
 	setContext(initProcess, {
 		userRepositories: [
 			{
@@ -29,25 +27,46 @@ beforeEach(() => {
 			},
 		],
 	});
-});
+};
 
-it("uses repository flag", async () => {
-	const domain = "new-repo";
-	updateOptions(initProcess, { repository: domain });
+const mockPrismicAPIs = async (
+	ctx: TestContext,
+	initProcess: SliceMachineInitProcess,
+	existingRepositories: string[] = [],
+): Promise<void> => {
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+	const token = await loginUser(initProcess, prismicAuthLoginResponse);
 
-	const prismicRepositorySpy = mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: [],
+	mockPrismicRepositoryAPI(ctx, {
+		existsEndpoint: {
+			expectedAuthenticationToken: token,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			existingRepositories,
+		},
 	});
+};
+
+it("uses repository flag", async (ctx) => {
+	const domain = "new-repo";
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
+	const spiedManager = spyManager(initProcess);
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
 		return initProcess.useRepositoryFlag();
 	});
 
-	expect(prismicRepositorySpy.checkExists).toHaveBeenCalledOnce();
-	expect(prismicRepositorySpy.checkExists).toHaveBeenNthCalledWith(1, {
-		domain,
-	});
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenCalledOnce();
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenNthCalledWith(
+		1,
+		{
+			domain,
+		},
+	);
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.repository).toStrictEqual({
 		domain,
@@ -55,24 +74,26 @@ it("uses repository flag", async () => {
 	});
 });
 
-it("formats and uses repository flag", async () => {
+it("formats and uses repository flag", async (ctx) => {
 	const rawDomain = "New Repo";
 	const domain = "new-repo";
-	updateOptions(initProcess, { repository: rawDomain });
-
-	const prismicRepositorySpy = mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: [],
-	});
+	const initProcess = createSliceMachineInitProcess({ repository: rawDomain });
+	setDefaultContext(initProcess);
+	const spiedManager = spyManager(initProcess);
+	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
 		return initProcess.useRepositoryFlag();
 	});
 
-	expect(prismicRepositorySpy.checkExists).toHaveBeenCalledOnce();
-	expect(prismicRepositorySpy.checkExists).toHaveBeenNthCalledWith(1, {
-		domain,
-	});
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenCalledOnce();
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenNthCalledWith(
+		1,
+		{
+			domain,
+		},
+	);
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.repository).toStrictEqual({
 		domain,
@@ -82,7 +103,8 @@ it("formats and uses repository flag", async () => {
 
 it("uses repository flag with existing user repository", async () => {
 	const domain = "repo-admin";
-	updateOptions(initProcess, { repository: domain });
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
@@ -99,7 +121,8 @@ it("uses repository flag with existing user repository", async () => {
 it("formats and uses repository flag with existing user repository", async () => {
 	const rawDomain = "Repo Admin";
 	const domain = "repo-admin";
-	updateOptions(initProcess, { repository: rawDomain });
+	const initProcess = createSliceMachineInitProcess({ repository: rawDomain });
+	setDefaultContext(initProcess);
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
@@ -115,7 +138,8 @@ it("formats and uses repository flag with existing user repository", async () =>
 
 it("throws if user does not have write access to repository", async () => {
 	const domain = "repo-writer";
-	updateOptions(initProcess, { repository: domain });
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
 
 	await expect(
 		watchStd(() => {
@@ -127,13 +151,12 @@ it("throws if user does not have write access to repository", async () => {
 	);
 });
 
-it("throws if user is not a member of the repository (already exists)", async () => {
+it("throws if user is not a member of the repository (already exists)", async (ctx) => {
 	const domain = "existing-repo";
-	updateOptions(initProcess, { repository: domain });
-
-	const prismicRepositorySpy = mockPrismicRepositoryManager(initProcess, {
-		existingRepositories: [domain],
-	});
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
+	const spiedManager = spyManager(initProcess);
+	await mockPrismicAPIs(ctx, initProcess, [domain]);
 
 	await expect(
 		watchStd(() => {
@@ -143,15 +166,19 @@ it("throws if user is not a member of the repository (already exists)", async ()
 	).rejects.toThrowErrorMatchingInlineSnapshot(
 		'"Repository name [36mexisting-repo[39m is already taken"',
 	);
-	expect(prismicRepositorySpy.checkExists).toHaveBeenCalledOnce();
-	expect(prismicRepositorySpy.checkExists).toHaveBeenNthCalledWith(1, {
-		domain,
-	});
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenCalledOnce();
+	expect(spiedManager.prismicRepository.checkExists).toHaveBeenNthCalledWith(
+		1,
+		{
+			domain,
+		},
+	);
 });
 
 it("throws if repository name is too short", async () => {
 	const domain = "s";
-	updateOptions(initProcess, { repository: domain });
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
 
 	await expect(
 		watchStd(() => {
@@ -166,7 +193,8 @@ it("throws if repository name is too short", async () => {
 it("throws if repository name is too long", async () => {
 	const domain =
 		"lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-Officiis-incidunt-ex-harum";
-	updateOptions(initProcess, { repository: domain });
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
 
 	await expect(
 		watchStd(() => {
@@ -180,7 +208,8 @@ it("throws if repository name is too long", async () => {
 
 it("throws if context is missing user repositories", async () => {
 	const domain = "new-repo";
-	updateOptions(initProcess, { repository: domain });
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
 	updateContext(initProcess, {
 		userRepositories: undefined,
 	});
@@ -196,7 +225,8 @@ it("throws if context is missing user repositories", async () => {
 });
 
 it("throws if options is missing repository", async () => {
-	updateOptions(initProcess, { repository: undefined });
+	const initProcess = createSliceMachineInitProcess();
+	setDefaultContext(initProcess);
 
 	await expect(
 		watchStd(() => {
