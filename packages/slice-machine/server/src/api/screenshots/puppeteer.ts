@@ -65,6 +65,15 @@ const generateScreenshot = async (
     await page.waitForSelector("#__iframe-ready", { timeout: 10000 });
     const element = await page.$("#__iframe-renderer");
 
+    const iframe = page.frames().find((f) => f.name() === "__iframe-renderer");
+    const images = iframe ? await iframe.$$("img") : [];
+
+    await Promise.all(
+      images.map(async (img) => {
+        await iframe?.waitForFunction((img) => img.complete, {}, img);
+      })
+    );
+
     if (element) {
       await element.screenshot({
         path: pathToFile,
