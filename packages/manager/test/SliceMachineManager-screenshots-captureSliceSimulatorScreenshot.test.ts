@@ -65,13 +65,21 @@ it("captures a Slice Simulator screenshot for a given Slice variation", async (c
 	});
 	expect(puppeteerMock.__page__goto).toHaveBeenCalledWith(
 		sliceSimulatorEndpoint,
+		{ waitUntil: "load" },
 	);
-	expect(puppeteerMock.__page__waitForSelector).toHaveBeenCalledWith("#root", {
-		timeout: 10_000,
-	});
-	expect(puppeteerMock.__page__$).toHaveBeenCalledWith("#root");
+	expect(puppeteerMock.__page__waitForSelector).toHaveBeenCalledWith(
+		"#__iframe-ready",
+		{ timeout: 10_000 },
+	);
+	expect(puppeteerMock.__page__$).toHaveBeenCalledWith("#__iframe-renderer");
 	expect(puppeteerMock.__element__screenshot).toHaveBeenCalledWith({
 		encoding: "binary",
+		clip: {
+			width: 1200,
+			height: 800,
+			x: 0,
+			y: 0,
+		},
 	});
 });
 
@@ -124,6 +132,15 @@ it("can be configured to capture a specific viewport", async (ctx) => {
 		width: viewport.width,
 		height: viewport.height,
 	});
+	expect(puppeteerMock.__element__screenshot).toHaveBeenCalledWith({
+		encoding: "binary",
+		clip: {
+			width: viewport.width,
+			height: viewport.height,
+			x: 0,
+			y: 0,
+		},
+	});
 });
 
 it("throws if the root selector cannot be found", async (ctx) => {
@@ -168,7 +185,7 @@ it("throws if the root selector cannot be found", async (ctx) => {
 			sliceID: model.id,
 			variationID: "baz",
 		});
-	}).rejects.toThrow(/could not find the element to screenshot/i);
+	}).rejects.toThrow(/did not find #__iframe-ready/i);
 });
 
 it("throws if the Slice model cannot be found", async () => {
