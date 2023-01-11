@@ -303,21 +303,16 @@ export const SharedSlice = {
 export const NonSharedSlice = {
   render({
     slice,
-    wrapperType = WrapperType.nonClickable,
     sx,
   }: {
-    bordered: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     slice: { key: string; value: any };
-    thumbnailHeightPx?: string;
-    wrapperType?: WrapperType;
     sx?: ThemeUIStyleObject;
   }) {
-    const Wrapper = WrapperByType[wrapperType];
+    const Wrapper = WrapperByType[WrapperType.nonClickable];
 
     return (
       <Wrapper
-        link={undefined}
         sx={{
           borderColor: (t) => t.colors?.borders,
           "&:focus": {
