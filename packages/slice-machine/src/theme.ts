@@ -15,6 +15,7 @@ const AppTheme = (): Theme =>
       primary: "#5D40F7",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
+      purple12: "#F1EEFE",
       changesWarning: {
         background: "#FFECC7",
         color: "#5C0C17",
@@ -34,7 +35,7 @@ const AppTheme = (): Theme =>
           color: "#5C0C17",
         },
         synced: {
-          bg: "#F1EEFE",
+          bg: "purple12",
           color: "#5842C3",
         },
         deleted: {
@@ -60,6 +61,7 @@ const AppTheme = (): Theme =>
       grey04: "#9AA4AF",
       grey05: "#667587",
       grey07: "#F9F8F9",
+      grey10: "#86848D",
       grey12: "#1A1523",
       greyTransparent: "rgba(37, 37, 45, 0.4)",
       borders: "#E4E2E4",
@@ -336,7 +338,7 @@ const AppTheme = (): Theme =>
         fontFamily: "body",
         fontWeight: "bold",
         fontSize: "1",
-        color: "#F1EEFE",
+        color: "purple12",
         px: "16px",
         py: "8px",
         borderRadius: "6px",
