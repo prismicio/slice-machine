@@ -10,6 +10,7 @@ module.exports = {
     "^src(.*)$": "<rootDir>/src$1",
     "^tests(.*)$": "<rootDir>/tests$1",
     "^components(.*)$": "<rootDir>/components$1",
+    "\\.(css)$": "<rootDir>/tests/__mocks__/styleMock.js",
   },
   transform: {
     "\\.(js|ts|jsx|tsx)$": [
