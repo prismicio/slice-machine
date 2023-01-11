@@ -45,6 +45,8 @@ export const spyManager = (
 	telemetry: SpiedObject<SliceMachineManager["telemetry"]>;
 	user: SpiedObject<SliceMachineManager["user"]>;
 	prismicRepository: SpiedObject<SliceMachineManager["prismicRepository"]>;
+	slices: SpiedObject<SliceMachineManager["slices"]>;
+	customTypes: SpiedObject<SliceMachineManager["customTypes"]>;
 } => {
 	// @ts-expect-error - Accessing protected method
 	const manager = initProcess.manager;
@@ -53,5 +55,7 @@ export const spyManager = (
 		telemetry: spyObject(manager.telemetry),
 		user: spyObject(manager.user),
 		prismicRepository: spyObject(manager.prismicRepository),
+		slices: spyObject(manager.slices),
+		customTypes: spyObject(manager.customTypes),
 	};
 };

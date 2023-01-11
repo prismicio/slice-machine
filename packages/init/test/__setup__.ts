@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, vi } from "vitest";
 import { setupServer, SetupServerApi } from "msw/node";
+import { createMockFactory, MockFactory } from "@prismicio/mock";
 import { vol } from "memfs";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -7,6 +8,7 @@ import * as os from "node:os";
 
 declare module "vitest" {
 	export interface TestContext {
+		mockPrismic: MockFactory;
 		msw: SetupServerApi;
 	}
 }
@@ -68,6 +70,7 @@ beforeAll(() => {
 });
 
 beforeEach(async (ctx) => {
+	ctx.mockPrismic = createMockFactory({ seed: ctx.meta.name });
 	ctx.msw = mswServer;
 
 	ctx.msw.resetHandlers();

@@ -928,7 +928,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								});
 								if (documentsGlob.length === 0) {
 									parentTask.title = "Pushed data to Prismic";
-									task.skip("No documents to push");
+									task.skip("No document to push");
 
 									return;
 								}
