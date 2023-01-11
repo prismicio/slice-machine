@@ -65,6 +65,7 @@
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^8.1.0",
+		"@slicemachine/plugin-kit": "^0.1.8",
 		"@types/listr": "^0.14.4",
 		"@types/prompts": "^2.4.2",
 		"@types/semver": "^7.3.13",

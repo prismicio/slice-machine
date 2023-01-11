@@ -752,6 +752,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							config: {
 								...config,
 								repositoryName: this.context.repository.domain,
+								adapter: this.context.framework.adapterName,
 							},
 						});
 						parentTask.title = "Updated Slice Machine configuration";
