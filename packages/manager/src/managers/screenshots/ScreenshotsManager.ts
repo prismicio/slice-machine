@@ -15,15 +15,16 @@ import { InternalError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
-const SLICE_SIMULATOR_LOAD_TIMEOUT = 10_000; // ms
-const SLICE_SIMULATOR_ROOT_SELECTOR = "#root";
+const SLICE_SIMULATOR_WAIT_FOR_TIMEOUT = 10_000; // ms
+const SLICE_SIMULATOR_WAIT_FOR_SELECTOR = "#__iframe-ready";
+const SLICE_SIMULATOR_SCREENSHOT_SELECTOR = "#__iframe-renderer";
 
 const DEFAULT_SCREENSHOT_VIEWPORT: Viewport = {
 	width: 1200,
 	height: 800,
 };
 
-export function assertS3ACLInitialized(
+function assertS3ACLInitialized(
 	s3ACL: S3ACL | undefined,
 ): asserts s3ACL is NonNullable<typeof s3ACL> {
 	if (s3ACL == undefined) {
@@ -33,7 +34,7 @@ export function assertS3ACLInitialized(
 	}
 }
 
-export function assertBrowserContextInitialized(
+function assertBrowserContextInitialized(
 	browserContext: BrowserContext | undefined,
 ): asserts browserContext is NonNullable<typeof browserContext> {
 	if (browserContext == undefined) {
@@ -43,7 +44,26 @@ export function assertBrowserContextInitialized(
 	}
 }
 
+/**
+ * Encodes a part of a Slice Simulator URL to ensure it can be added to a URL
+ * safely.
+ *
+ * The encoding logic must match Slice Machine UI's URL encoding practices.
+ * Today, that requires the following:
+ *
+ * - Replace "/" with "--" (e.g. a Slice Library ID of "./slices" should turn into
+ *   ".--slices")
+ *
+ * @param urlPart - A part of the URL.
+ *
+ * @returns `urlPart` encoded for use in a URL.
+ */
+const encodeSliceSimulatorURLPart = (urlPart: string): string => {
+	return urlPart.replace(/\//g, "--");
+};
+
 type ScreenshotsManagerCaptureSliceSimulatorScreenshotArgs = {
+	sliceMachineUIOrigin: string;
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
@@ -155,37 +175,64 @@ export class ScreenshotsManager extends BaseManager {
 			);
 		}
 
-		const url = new URL(sliceMachineConfig.localSliceSimulatorURL);
-		url.searchParams.set("lid", args.libraryID);
-		url.searchParams.set("sid", args.sliceID);
-		url.searchParams.set("vid", args.variationID);
+		const { model } = await this.slices.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.sliceID,
+		});
+		if (!model) {
+			throw new Error(
+				`Did not find a Slice in library "${args.libraryID}" with ID "${args.sliceID}".`,
+			);
+		}
+
+		const viewport = args.viewport || DEFAULT_SCREENSHOT_VIEWPORT;
+
+		// TODO: Change `model.name` to `args.sliceID`?
+		// Making that change would require changing the screenshot
+		// page path in Slice Machine UI.
+		const url = new URL(
+			`./${encodeSliceSimulatorURLPart(args.libraryID)}/${model.name}/${
+				args.variationID
+			}/screenshot`,
+			args.sliceMachineUIOrigin,
+		);
+		url.searchParams.set("screenWidth", viewport.width.toString());
+		url.searchParams.set("screenHeight", viewport.height.toString());
 
 		const isURLAccessible = await checkIsURLAccessible(url.toString());
 
 		if (!isURLAccessible) {
-			throw new Error(`Slice Simulator URL is not accessible: ${url}`);
+			throw new Error(
+				`Slice Simulator screenshot URL is not accessible: ${url}`,
+			);
 		}
 
 		const page = await this._browserContext.newPage();
-		page.setViewport(args.viewport || DEFAULT_SCREENSHOT_VIEWPORT);
+		page.setViewport(viewport);
 
-		// TODO: I removed `goto`'s `{ waitUntil: "networkidle2" }` option.
-		// Good idea? Bad idea?
-		await page.goto(url.toString());
-		await page.waitForSelector(SLICE_SIMULATOR_ROOT_SELECTOR, {
-			timeout: SLICE_SIMULATOR_LOAD_TIMEOUT,
+		await page.goto(url.toString(), { waitUntil: "load" });
+		await page.waitForSelector(SLICE_SIMULATOR_WAIT_FOR_SELECTOR, {
+			timeout: SLICE_SIMULATOR_WAIT_FOR_TIMEOUT,
 		});
 
-		const element = await page.$(SLICE_SIMULATOR_ROOT_SELECTOR);
+		const element = await page.$(SLICE_SIMULATOR_SCREENSHOT_SELECTOR);
 		if (!element) {
 			const baseURL = new URL(url.pathname, url.origin);
 
 			throw new Error(
-				`Slice Simulator could not find the element to screenshot. Verify the URL is correct: ${baseURL}`,
+				`Slice Simulator did not find ${SLICE_SIMULATOR_WAIT_FOR_SELECTOR} on the page. Verify the URL is correct: ${baseURL}`,
 			);
 		}
 
-		const data = (await element.screenshot({ encoding: "binary" })) as Buffer;
+		const data = (await element.screenshot({
+			encoding: "binary",
+			clip: {
+				width: viewport.width,
+				height: viewport.height,
+				x: 0,
+				y: 0,
+			},
+		})) as Buffer;
 
 		return {
 			data,
