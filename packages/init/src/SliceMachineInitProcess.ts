@@ -19,6 +19,8 @@ import {
 	installDependencies,
 	detectPackageManager,
 	PackageManagerAgent,
+	getRunScriptCommand,
+	getExecuteCommand,
 } from "./lib/packageManager";
 import {
 	getRandomRepositoryDomain,
@@ -148,6 +150,40 @@ export class SliceMachineInitProcess {
 				"→",
 			)} Init command successful!`,
 		);
+
+		try {
+			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+			// eslint-disable-next-line no-console
+			console.log(`
+  YOUR REPOSITORY
+    Dashboard            ${chalk.cyan(
+			`https://${this.context.repository.domain}.prismic.io`,
+		)}
+    API                  ${chalk.cyan(
+			`https://${this.context.repository.domain}.cdn.prismic.io/api/v2`,
+		)}
+
+  RESOURCES
+    Documentation        ${chalk.cyan(
+			this.context.framework.prismicDocumentation,
+		)}
+    Getting help         ${chalk.cyan("https://community.prismic.io")}
+
+  GETTING STARTED
+    Start Slice Machine  ${chalk.cyan(
+			this.context.projectInitialization?.patchedScript
+				? await getRunScriptCommand({
+						agent: this.context.packageManager || "npm",
+						script: "slicemachine",
+				  })
+				: await getExecuteCommand({
+						agent: this.context.packageManager || "npm",
+						script: "start-slicemachine",
+				  }),
+		)}`);
+		} catch {
+			// Noop, it's only the final convenience messsage
+		}
 	}
 
 	protected trackError = (error: unknown): Promise<void> => {
@@ -541,38 +577,36 @@ export class SliceMachineInitProcess {
 				const domain = formatRepositoryDomain(rawDomain);
 				const validation = validateRepositoryDomain({ domain });
 
+				const minRule = validation.LessThan4
+					? chalk.red(
+							`1. Name must be ${chalk.bold("4 characters long or more")}`,
+					  )
+					: `1. Name must be ${chalk.cyan("4 characters long or more")}`;
+
+				const maxRule = validation.MoreThan30
+					? chalk.red(
+							`1. Name must be ${chalk.bold("30 characters long or less")}`,
+					  )
+					: `1. Name must be ${chalk.cyan("30 characters long or less")}`;
+
 				this.msg = chalk.reset(
 					`
 Choose a name for your Prismic repository
 
   NAMING RULES
-${chalk[validation.LessThan4 ? "red" : "gray"](
-	`    1. Name must be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
-		"4 characters long or more",
-	)}`,
-)}
-${chalk[validation.MoreThan30 ? "red" : "gray"](
-	`    2. Name must be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
-		"30 characters long or less",
-	)}`,
-)}
-${chalk.gray(`    3. Name will be ${chalk.cyan("kebab-cased")} automatically`)}
+    ${minRule}
+    ${maxRule}
+    3. Name will be ${chalk.cyan("kebab-cased")} automatically
 
   CONSIDERATIONS
-${chalk.gray(
-	`    1. Once picked, your repository name ${chalk.cyan("cannot be changed")}`,
-)}
-${chalk.gray(
-	`    2. A ${chalk.cyan(
-		"display name",
-	)} for the repository can be configured later on`,
-)}
+    1. Once picked, your repository name ${chalk.cyan("cannot be changed")}
+    2. A ${chalk.cyan(
+			"display name",
+		)} for the repository can be configured later on
 
   PREVIEW
-${chalk.gray(`    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}`)}
-${chalk.gray(
-	`    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}`,
-)}
+    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}
+    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}
 
 ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 				);
@@ -677,7 +711,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						throw error;
 					}
 
-					task.title = `Core dependencies installed with ${chalk.cyan(
+					task.title = `Installed core dependencies with ${chalk.cyan(
 						this.context.packageManager,
 					)}`;
 				},

@@ -15,6 +15,11 @@ export type Framework = {
 	prismicName: string;
 
 	/**
+	 * A link to the Prismic documentation for the framework
+	 */
+	prismicDocumentation: string;
+
+	/**
 	 * Package name of the adapter responsible for this framework
 	 */
 	adapterName: string;
@@ -47,6 +52,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	"nuxt-2": {
 		name: "Nuxt 2",
 		prismicName: "nuxt-2",
+		prismicDocumentation: "https://prismic.dev/init/nuxt-2",
 		adapterName: "@slicemachine/adapter-nuxt",
 		compatibility: {
 			nuxt: "^2.0.0",
@@ -59,6 +65,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	"next-11-13": {
 		name: "Next.js 11-13",
 		prismicName: "next-11-13",
+		prismicDocumentation: "https://prismic.dev/init/next-11-13",
 		adapterName: "@slicemachine/adapter-next",
 		compatibility: {
 			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
@@ -76,6 +83,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 export const UNIVERSAL: Framework = {
 	name: "universal (no framework)",
 	prismicName: "universal",
+	prismicDocumentation: "https://prismic.dev/init/universal",
 	adapterName: "@slicemachine/adapter-universal",
 	compatibility: {},
 	devDependencies: {

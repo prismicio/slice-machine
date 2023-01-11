@@ -1,4 +1,4 @@
-import { parseNi, detect as niDetect } from "@antfu/ni";
+import { parseNi, parseNr, detect as niDetect, parseNx } from "@antfu/ni";
 import {
 	ExecaChildProcess,
 	execaCommand,
@@ -53,6 +53,20 @@ export const installDependencies = async (
 	});
 
 	return { execaProcess };
+};
+
+export const getRunScriptCommand = async (args: {
+	agent: PackageManagerAgent;
+	script: string;
+}): Promise<string> => {
+	return (await parseNr(args.agent, [args.script])) || `npm run ${args.script}`;
+};
+
+export const getExecuteCommand = async (args: {
+	agent: PackageManagerAgent;
+	script: string;
+}): Promise<string> => {
+	return (await parseNx(args.agent, [args.script])) || `npx ${args.script}`;
 };
 
 export const detectPackageManager = async (
