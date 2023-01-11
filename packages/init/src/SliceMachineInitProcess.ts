@@ -30,6 +30,7 @@ import {
 import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
 import { assertExists } from "./lib/assertExists";
+import { START_SCRIPT_KEY, START_SCRIPT_VALUE } from "./constants";
 
 export type SliceMachineInitProcessOptions = {
 	repository?: string;
@@ -62,6 +63,9 @@ type SliceMachineInitProcessContext = {
 	repository?: {
 		domain: string;
 		exists: boolean;
+	};
+	projectInitialization?: {
+		patchedScript?: boolean;
 	};
 };
 
@@ -122,6 +126,7 @@ export class SliceMachineInitProcess {
 			await this.finishCoreDependenciesInstallation();
 			await this.upsertSliceMachineConfigurationAndStartPluginRunner();
 			await this.pushDataToPrismic();
+			await this.initializeProject();
 			await this.initializePlugins();
 		} catch (error) {
 			await this.trackError(error);
@@ -935,7 +940,70 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		]);
 	}
 
-	// TODO: Add Slice Machine script to package.json
+	protected initializeProject(): Promise<void> {
+		return listrRun([
+			{
+				title: "Initializing project...",
+				task: async (_, parentTask) =>
+					// We return another Listr instance in the event we have additional task to perform to initialize the project
+					listr([
+						{
+							title: `Patching ${chalk.cyan("package.json")} scripts...`,
+							task: async (_, task) => {
+								const pkgPath = path.join(this.manager.cwd, "package.json");
+
+								try {
+									const pkgRaw = await fs.readFile(pkgPath, "utf-8");
+									const pkg = JSON.parse(pkgRaw);
+
+									pkg.scripts || {};
+
+									if (!pkg.scripts[START_SCRIPT_KEY]) {
+										pkg.scripts[START_SCRIPT_KEY] = START_SCRIPT_VALUE;
+
+										// Cheap indent detection based on https://github.com/sindresorhus/detect-indent (simplified because we're only dealing with JSON here)
+										const firstIndent = pkgRaw
+											.split("\n")
+											.find((line) => line.match(/^(?:( )+|\t+)/));
+										const indent = firstIndent?.match(/^(?:( )+|\t+)/)?.[0];
+
+										await fs.writeFile(
+											pkgPath,
+											JSON.stringify(
+												pkg,
+												null,
+												indent && indent !== " " ? indent : "  ",
+											),
+										);
+									} else if (
+										!pkg.scripts["slicemachine"].startsWith(START_SCRIPT_VALUE)
+									) {
+										throw new Error("Script already exists");
+									}
+								} catch (error) {
+									task.title = `Could not patch ${chalk.cyan(
+										"package.json",
+									)} scripts (warning)`;
+									parentTask.title = `Initialized project (could not patch ${chalk.cyan(
+										"package.json",
+									)} scripts)`;
+
+									return;
+								}
+
+								this.context.projectInitialization ||= {};
+								this.context.projectInitialization.patchedScript = true;
+
+								task.title = `Patched ${chalk.cyan("package.json")} scripts`;
+								parentTask.title = `Initialized project (patched ${chalk.cyan(
+									"package.json",
+								)} scripts)`;
+							},
+						},
+					]),
+			},
+		]);
+	}
 
 	protected initializePlugins(): Promise<void> {
 		return listrRun([
