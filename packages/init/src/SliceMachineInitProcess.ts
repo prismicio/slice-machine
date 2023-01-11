@@ -692,8 +692,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							task.output = data.toString();
 						}
 					};
-					// TODO: Assert types
-					this.context.installProcess.stdout?.on("data", updateOutput);
+
+					// Don't clutter console with logs when process is non TTY (CI, etc.)
+					if (process.stdout.isTTY) {
+						this.context.installProcess.stdout?.on("data", updateOutput);
+					}
 					this.context.installProcess.stderr?.on("data", updateOutput);
 
 					try {
@@ -1069,7 +1072,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 										agent: this.context.packageManager,
 									});
 
-									execaProcess.stdout?.on("data", updateOutput);
+									// Don't clutter console with logs when process is non TTY (CI, etc.)
+									if (process.stdout.isTTY) {
+										execaProcess.stdout?.on("data", updateOutput);
+									}
 									execaProcess.stderr?.on("data", updateOutput);
 
 									await execaProcess;

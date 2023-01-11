@@ -27,8 +27,12 @@ vi.mock("execa", async () => {
 	return {
 		...execa,
 		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace `npm install`-like command with simple `echo`
-			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
+			// Replace `npm install`-like command with simple `echo`, we output
+			// to stderr because regular logs are skipped when process is non-TTY
+			return execa.execaCommand(
+				`>&2 echo 'mock command ran: ${command}'`,
+				options,
+			);
 		}) as typeof execa.execaCommand,
 	};
 });
@@ -45,7 +49,7 @@ it("finishes core dependencies installation process", async () => {
 	});
 
 	expect(stdout.join("\n")).toMatch(/mock command ran/);
-	expect(stdout.join("\n")).toMatch(/Core dependencies installed/);
+	expect(stdout.join("\n")).toMatch(/Installed core dependencies/);
 });
 
 it("catches core dependencies installation process errors", async () => {
