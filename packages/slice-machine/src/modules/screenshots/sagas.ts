@@ -18,6 +18,7 @@ import {
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import Tracker from "@src/tracking/client";
+import { isError } from "@lib/models/common/Screenshots";
 
 export function* generateSliceScreenshotSaga({
   payload,
@@ -33,7 +34,7 @@ export function* generateSliceScreenshotSaga({
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
 
     // If screenshot is null, then no screenshots were taken
-    if (!response.data.screenshot) {
+    if (isError(response.data)) {
       throw Error("No screenshot saved");
     }
 

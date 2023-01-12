@@ -35,7 +35,6 @@ export default {
       console.error(
         "Could not load pupeteer. Try re-installing your dependencies (`npm i`) to fix the issue"
       );
-      console.error(e);
       throw e;
     }
 
@@ -44,12 +43,7 @@ export default {
       screenshotUrl,
       pathToFile,
       screenDimensions
-    ).catch((error) => {
-      console.error(error);
-      throw new Error(
-        `Unable to generate screenshot for this page: ${screenshotUrl}`
-      );
-    });
+    );
   },
 };
 
