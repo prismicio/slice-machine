@@ -37,4 +37,4 @@ jobs:
         run: cd packages/init && npm run unit
 
       - name: Build
-        run:cd packages/init &&  npm run build
+        run: cd packages/init &&  npm run build
