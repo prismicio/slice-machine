@@ -7,17 +7,22 @@ import { Button, Box, ThemeUICSSObject } from "theme-ui";
 
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 
-type DropDownSelectorProps = {
+type DropDownMenuProps = {
   options: string[];
   currentValue: string;
   onChange: (selected: string) => void;
   buttonSx?: ThemeUICSSObject;
+  disabled: boolean;
 };
 
 // Note: This is a controlled component that requires its state to be managed via the currentValue prop
-export const DropDownSelector: React.FunctionComponent<
-  DropDownSelectorProps
-> = ({ buttonSx, currentValue, options, onChange }) => {
+export const DropDownMenu: React.FunctionComponent<DropDownMenuProps> = ({
+  buttonSx,
+  currentValue,
+  options,
+  onChange,
+  disabled,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const TRANSITION_DURATION = 200; //ms
@@ -46,6 +51,7 @@ export const DropDownSelector: React.FunctionComponent<
           sx={buttonSx}
           variant="dropDownButton"
           onClick={() => setIsOpen(!isOpen)}
+          disabled={disabled}
         >
           {currentValue}{" "}
           {!isOpen ? (

@@ -49,7 +49,6 @@ const generateScreenshot = async (
 ): Promise<void> => {
   // Create an incognito context to isolate screenshots.
   const context = await browser.createIncognitoBrowserContext();
-  // Create a new page in the context.
   const page = await context.newPage();
   await page.setViewport({
     width: screenDimensions.width,
@@ -59,15 +58,13 @@ const generateScreenshot = async (
   try {
     Files.mkdir(path.dirname(pathToFile), { recursive: true });
 
-    /* We use the waitUntil option in order for the component to be rendered properly.
-     ** The value networkidle2 is required because Nuxt has an open socket with Webpack.
-     */
     await page.goto(screenshotUrl, {
-      waitUntil: "networkidle2",
+      waitUntil: "load",
     });
 
-    await page.waitForSelector("#root", { timeout: 10000 });
-    const element = await page.$("#root");
+    await page.waitForSelector("#__iframe-ready", { timeout: 10000 });
+    const element = await page.$("#__iframe-renderer");
+
     if (element) {
       await element.screenshot({
         path: pathToFile,
@@ -78,11 +75,14 @@ const generateScreenshot = async (
           y: 0,
         },
       });
+    } else {
+      console.error("Could not find Simulator iframe (#__iframe-renderer).");
     }
 
     await context.close();
     return;
   } catch (error) {
+    console.error(error);
     await context.close();
     throw error;
   }

@@ -133,6 +133,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                       <Menu>
                         <MenuButton
                           className="sliceMenuButton"
+                          data-cy="slice-menu-button"
                           style={{
                             padding: "0",
                             cursor: "pointer",

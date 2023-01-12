@@ -1,49 +1,95 @@
-import Link from "next/link";
-import { Flex, Box, Link as ThemeLink } from "theme-ui";
-import { ThemeUIStyleObject } from "@theme-ui/css";
+import NextLink from "next/link";
+import { type FC, type ReactElement, useState } from "react";
+import {
+  type ThemeUIStyleObject,
+  Flex,
+  Box,
+  Link as ThemeLink,
+} from "theme-ui";
+
+import { useElementSize } from "@src/hooks/useElementSize";
 
 type HeaderProps = {
-  ActionButton?: React.ReactElement;
-  MainBreadcrumb: React.ReactElement;
-  SecondaryBreadcrumb?: React.ReactElement;
-  breadrumbHref: string;
+  link: {
+    Element: ReactElement;
+    href: string;
+  };
+  subtitle?: {
+    Element: ReactElement;
+    title: string;
+  };
+  Actions: ReactElement[];
   sx?: ThemeUIStyleObject;
 };
 
-const Header: React.FunctionComponent<HeaderProps> = ({
-  ActionButton,
-  MainBreadcrumb,
-  SecondaryBreadcrumb,
-  breadrumbHref,
-  children,
-  sx,
-}) => (
-  <Flex sx={{ justifyContent: "space-between", alignItems: "start", ...sx }}>
-    <Flex sx={{ flexDirection: "column" }}>
+const Header: FC<HeaderProps> = ({ link, subtitle, Actions, sx }) => {
+  const [overflowing, setOverflowing] = useState(false);
+  const subtitleRef = useElementSize<HTMLElement>(
+    (_size, element) => {
+      setOverflowing(!!subtitle && element.offsetWidth < element.scrollWidth);
+    },
+    [subtitle]
+  );
+  return (
+    <Flex
+      sx={{
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "24px",
+        ...sx,
+      }}
+    >
       <Flex
         sx={{
-          fontSize: SecondaryBreadcrumb ? [3, 2, 4] : 4,
-          fontWeight: "heading",
+          whiteSpace: "nowrap",
+          gap: "8px",
           alignItems: "center",
         }}
       >
-        <Link href={breadrumbHref} passHref>
-          <ThemeLink variant="invisible">
-            <Flex sx={{ alignItems: "center" }}>{MainBreadcrumb}</Flex>
+        <NextLink href={link.href} passHref>
+          <ThemeLink variant="invisible" sx={{ flexShrink: 0 }}>
+            <Flex
+              sx={{
+                alignItems: "center",
+                fontWeight: "heading",
+                fontSize: 4,
+                gap: "8px",
+              }}
+            >
+              {link.Element}
+            </Flex>
           </ThemeLink>
-        </Link>
-        <Box sx={{ fontWeight: "thin" }} as="span">
-          {SecondaryBreadcrumb ? SecondaryBreadcrumb : null}
-        </Box>
+        </NextLink>
+
+        {subtitle ? (
+          <Box
+            ref={subtitleRef}
+            sx={{
+              fontWeight: "thin",
+              fontSize: 4,
+              lineHeight: "heading",
+              flexGrow: 1,
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+            }}
+            as="span"
+            title={overflowing ? subtitle.title : undefined}
+          >
+            {subtitle.Element}
+          </Box>
+        ) : null}
       </Flex>
-      {children ? (
-        <Flex mt={3} sx={{ alignItems: "center" }}>
-          <Flex sx={{ alignItems: "center" }}>{children}</Flex>
-        </Flex>
-      ) : null}
+      <Flex
+        sx={{
+          flexShrink: 0,
+          gap: "8px",
+          alignItems: "center",
+        }}
+      >
+        {Actions}
+      </Flex>
     </Flex>
-    {ActionButton ? ActionButton : null}
-  </Flex>
-);
+  );
+};
 
 export default Header;

@@ -1,7 +1,15 @@
 import { Field } from "formik";
 import { Label, Checkbox } from "theme-ui";
 
-const FormFieldCheckbox = ({ meta, label, fieldName, onChange, ...rest }) => {
+const FormFieldCheckbox = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  initialValues,
+  meta,
+  label,
+  fieldName,
+  onChange,
+  ...rest
+}) => {
   return (
     <Label variant="label.border" {...rest}>
       <Field

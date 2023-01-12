@@ -1,4 +1,4 @@
 ignores: [
-  "@babel/runtime",
+  "@types/jest"
 ]
 skip - missing: true

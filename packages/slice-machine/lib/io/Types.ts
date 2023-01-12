@@ -38,8 +38,11 @@ const generateAndWriteTypes = (env: BackendEnvironment) => {
 
 export const upsert = (env: BackendEnvironment) => {
   const packageJson = retrieveJsonPackage(env.cwd);
+  //  eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const allDependencies = {
+    //  eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ...packageJson.content?.dependencies,
+    //  eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ...packageJson.content?.devDependencies,
   };
   const hasTypesPackage = PRISMIC_TYPES in allDependencies;

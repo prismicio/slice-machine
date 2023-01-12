@@ -6,11 +6,11 @@ import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 
 import FormFields from "./FormFields";
-import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 /**
  * {
@@ -41,7 +41,7 @@ const schema = yup.object().shape({
 export const SelectWidget: Widget<Select, typeof schema> = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  MockConfigForm,
+  MockConfigForm: DeprecatedMockConfigMessage,
   create: (label: string) => ({
     type: WidgetTypes.Select,
     config: {

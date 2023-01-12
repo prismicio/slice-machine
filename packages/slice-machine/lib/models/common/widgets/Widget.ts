@@ -7,7 +7,7 @@ export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   MockConfigForm?: {
     (): JSX.Element;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    initialValues: any;
+    initialValues?: any;
   };
   create: (label: string) => F;
   Meta: {

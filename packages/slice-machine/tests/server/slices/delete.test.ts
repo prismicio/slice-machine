@@ -6,12 +6,6 @@ import { CODE_GENERATED_COMMENT } from "../../../server/src/api/common/hooks/upd
 
 jest.mock("fs");
 
-jest.mock("../../../server/src/api/common/LibrariesState", () => {
-  return {
-    generateState: jest.fn(),
-  };
-});
-
 const SLICE_TO_DELETE_ID = "unwanted_slice";
 const SLICE_TO_DELETE_NAME = "UnwantedSlice";
 const SLICE_TO_DELETE_LIBRARY = "slices";

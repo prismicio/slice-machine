@@ -1,4 +1,9 @@
-import { ActionType, createAsyncAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import {
   call,
   fork,
@@ -14,9 +19,9 @@ import {
   deleteSlice,
   getState,
   renameSlice,
+  SaveSliceMockRequest,
 } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
 import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -85,6 +90,8 @@ export const deleteSliceCreator = createAsyncAction(
     libName: string;
   }
 >();
+export const updateSliceMock =
+  createAction("SLICE/UPDATE_MOCK")<SaveSliceMockRequest>();
 
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
@@ -94,7 +101,8 @@ type SlicesActions =
   | ActionType<typeof saveSliceCreator>
   | ActionType<typeof pushSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
-  | ActionType<typeof generateSliceCustomScreenshotCreator>;
+  | ActionType<typeof generateSliceCustomScreenshotCreator>
+  | ActionType<typeof updateSliceMock>;
 
 // Selectors
 export const getLibraries = (
@@ -287,6 +295,31 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: newLibs,
       };
     }
+
+    case getType(updateSliceMock): {
+      const { libraryName, sliceName, mock } = action.payload;
+      const libraries = state.libraries.map((lib) => {
+        if (lib.name !== libraryName) return lib;
+
+        const components = lib.components.map((component) => {
+          if (component.model.name !== sliceName) return component;
+          return {
+            ...component,
+            mock: mock,
+          };
+        });
+        return {
+          ...lib,
+          components,
+        };
+      });
+
+      return {
+        ...state,
+        libraries,
+      };
+    }
+
     default:
       return state;
   }
@@ -310,7 +343,7 @@ export function* createSliceSaga({
     typeof getState
   >;
   yield put(createSliceCreator.success({ libraries: serverState.libraries }));
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  yield put(modalCloseCreator());
   const addr = `/${payload.libName.replace(/\//g, "--")}/${
     payload.sliceName
   }/${variationId}`;
@@ -339,7 +372,7 @@ export function* renameSliceSaga({
   try {
     yield call(renameSlice, sliceId, newSliceName, libName);
     yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
-    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+    yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
         message: "Slice name updated",
@@ -399,7 +432,7 @@ export function* deleteSliceSaga({
       );
     }
   }
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+  yield put(modalCloseCreator());
 }
 
 function* watchDeleteSlice() {

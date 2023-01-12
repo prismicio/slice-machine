@@ -33,7 +33,7 @@ jobs:
           customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
           user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
-        run: lerna run test
+        run: npm run test
   
   dep-check:
     needs: install-deps
@@ -125,6 +125,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
           PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"

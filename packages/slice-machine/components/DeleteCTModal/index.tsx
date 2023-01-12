@@ -32,8 +32,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
     })
   );
 
-  const { closeDeleteCustomTypeModal, deleteCustomType } =
-    useSliceMachineActions();
+  const { closeModals, deleteCustomType } = useSliceMachineActions();
 
   const { theme } = useThemeUI();
 
@@ -47,7 +46,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           borderRadius: "0px",
         },
       }}
-      onRequestClose={closeDeleteCustomTypeModal}
+      onRequestClose={closeModals}
     >
       <Card
         radius={"0px"}
@@ -81,7 +80,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 Delete Custom Type
               </Heading>
             </Flex>
-            <Close type="button" onClick={() => closeDeleteCustomTypeModal()} />
+            <Close type="button" onClick={() => closeModals()} />
           </Flex>
         )}
         Footer={() => (
@@ -98,7 +97,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <Button
               label="Cancel"
               variant="secondary"
-              onClick={() => closeDeleteCustomTypeModal()}
+              onClick={() => closeModals()}
               sx={{
                 mr: "10px",
                 fontWeight: "bold",

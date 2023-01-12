@@ -27,7 +27,7 @@ export const DeleteSliceModal: React.FunctionComponent<
     })
   );
 
-  const { closeDeleteSliceModal, deleteSlice } = useSliceMachineActions();
+  const { closeModals, deleteSlice } = useSliceMachineActions();
 
   const { theme } = useThemeUI();
 
@@ -41,7 +41,7 @@ export const DeleteSliceModal: React.FunctionComponent<
           borderRadius: "0px",
         },
       }}
-      onRequestClose={closeDeleteSliceModal}
+      onRequestClose={closeModals}
     >
       <Card
         radius={"0px"}
@@ -75,7 +75,7 @@ export const DeleteSliceModal: React.FunctionComponent<
                 Delete Slice
               </Heading>
             </Flex>
-            <Close type="button" onClick={closeDeleteSliceModal} />
+            <Close type="button" onClick={closeModals} />
           </Flex>
         )}
         Footer={() => (
@@ -92,7 +92,7 @@ export const DeleteSliceModal: React.FunctionComponent<
             <Button
               label="Cancel"
               variant="secondary"
-              onClick={() => closeDeleteSliceModal()}
+              onClick={() => closeModals()}
               sx={{
                 mr: "10px",
                 fontWeight: "bold",

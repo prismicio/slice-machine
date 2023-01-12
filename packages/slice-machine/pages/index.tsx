@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Flex, Link as ThemeLink, Text } from "theme-ui";
 
 import Container from "@components/Container";
@@ -36,24 +36,29 @@ const CustomTypes: React.FunctionComponent = () => {
   return (
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
-        ActionButton={
-          customTypeCount > 0 ? (
-            <Button
-              label="Create a Custom Type"
-              onClick={openCreateCustomTypeModal}
-              isLoading={isCreatingCustomType}
-              disabled={isCreatingCustomType}
-              Icon={GoPlus}
-              data-cy="create-ct"
-            />
-          ) : undefined
+        link={{
+          Element: (
+            <>
+              <MdSpaceDashboard /> <Text ml={2}>Custom Types</Text>
+            </>
+          ),
+          href: "/",
+        }}
+        Actions={
+          customTypeCount > 0
+            ? [
+                <Button
+                  label="Create a Custom Type"
+                  onClick={openCreateCustomTypeModal}
+                  isLoading={isCreatingCustomType}
+                  disabled={isCreatingCustomType}
+                  Icon={GoPlus}
+                  iconFill="#FFFFFF"
+                  data-cy="create-ct"
+                />,
+              ]
+            : []
         }
-        MainBreadcrumb={
-          <Fragment>
-            <MdSpaceDashboard /> <Text ml={2}>Custom Types</Text>
-          </Fragment>
-        }
-        breadrumbHref="/"
       />
       {customTypeCount === 0 ? (
         <Flex

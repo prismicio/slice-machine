@@ -144,7 +144,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               </Text>
             ) : null}
             {!!slicesInSliceZone.length && (
-              <Button variant="buttons.darkSmall" onClick={onAddNewSlice}>
+              <Button
+                variant="buttons.darkSmall"
+                onClick={onAddNewSlice}
+                data-cy="update-slices"
+              >
                 Update Slice Zone
               </Button>
             )}

@@ -1,7 +1,12 @@
-import { SliceMock, SliceSM } from "./Slice";
+import * as t from "io-ts";
+import { SliceSM } from "./Slice";
 import type { LibraryMeta } from "../libraries";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 export type { LibraryMeta } from "../libraries";
+
+export const ComponentMocks = t.array(SharedSliceContent);
+export type ComponentMocks = t.TypeOf<typeof ComponentMocks>;
 export interface ComponentInfo {
   fileName: string | null;
   extension: string | null;
@@ -9,7 +14,7 @@ export interface ComponentInfo {
   screenshots: {
     [variationId: string]: Screenshot;
   };
-  mock?: SliceMock;
+  mock?: ComponentMocks;
 }
 
 export const ComponentInfo = {

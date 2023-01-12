@@ -5,6 +5,7 @@ export * as logs from "./logs";
 export { Auth } from "./auth";
 export * from "./client";
 export * from "./fs";
+export * from "./versionCheck";
 
 export function findArgument(args: string[], name: string): string | undefined {
   const flagIndex: number = args.indexOf(`--${name}`);

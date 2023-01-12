@@ -1,42 +1,47 @@
-import "cypress-localstorage-commands";
-import "cypress-wait-until";
+import * as localStorageHelpers from "../helpers/localStorage";
+import * as filesystemHelpers from "../helpers/filesystem";
+import * as customTypesHelpers from "../helpers/customTypes";
+import * as slicesHelpers from "../helpers/slices";
+import * as repositoryHelpers from "../helpers/repository";
 
-Cypress.Commands.add(
-  "setupSliceMachineUserContext",
-  ({
-    hasSendAReview, // boolean
-    isOnboarded, // boolean
-    updatesViewed, // object
-    hasSeenTutorialsTooTip, // boolean
-  }) => {
-    return cy.setLocalStorage(
-      "persist:root",
-      JSON.stringify({
-        userContext: JSON.stringify({
-          hasSendAReview,
-          isOnboarded,
-          updatesViewed: {
-            latest: null,
-            latestNonBreaking: null,
-            ...updatesViewed,
-          },
-          hasSeenTutorialsTooTip,
-        }),
-      })
-    );
-  }
-);
+/* -- LOCAL STORAGE -- */
+Object.keys(localStorageHelpers).forEach((localStorageHelper) => {
+  Cypress.Commands.add(
+    localStorageHelper,
+    localStorageHelpers[localStorageHelper]
+  );
+});
 
-Cypress.Commands.add(
-  "cleanSliceMachineUserContext",
-  (hasSendAReview = true, isOnboarded = true) => {
-    return cy.removeLocalStorage("persist:root");
-  }
-);
+/* -- PROJECT RESET -- */
+Object.keys(filesystemHelpers).forEach((filesystemHelper) => {
+  Cypress.Commands.add(filesystemHelper, filesystemHelpers[filesystemHelper]);
+});
 
-Cypress.Commands.add("getSliceMachineUserContext", () => {
+/* -- CUSTOM TYPES */
+Object.keys(customTypesHelpers).forEach((customTypesHelper) => {
+  Cypress.Commands.add(
+    customTypesHelper,
+    customTypesHelpers[customTypesHelper]
+  );
+});
+
+/* -- SLICES -- */
+Object.keys(slicesHelpers).forEach((slicesHelper) => {
+  Cypress.Commands.add(slicesHelper, slicesHelpers[slicesHelper]);
+});
+
+/* REPOSITORY */
+Object.keys(repositoryHelpers).forEach((repositoryHelper) => {
+  Cypress.Commands.add(repositoryHelper, repositoryHelpers[repositoryHelper]);
+});
+
+/* -- QUERIES -- */
+Cypress.Commands.add("getInputByLabel", (label) => {
   return cy
-    .getLocalStorage("persist:root")
-    .then((data) => JSON.parse(data))
-    .then(({ userContext }) => JSON.parse(userContext));
+    .contains("label", label)
+    .invoke("attr", "for")
+    .then((id) => {
+      const selector = `[id="${id}"],[name="${id}"]`;
+      return cy.get(selector);
+    });
 });

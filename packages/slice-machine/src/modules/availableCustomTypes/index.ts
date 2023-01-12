@@ -20,7 +20,6 @@ import {
   saveCustomType,
 } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
@@ -280,9 +279,7 @@ export function* createCustomTypeSaga({
     );
     yield call(saveCustomType, newCustomType, {});
     yield put(createCustomTypeCreator.success({ newCustomType }));
-    yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE })
-    );
+    yield put(modalCloseCreator());
     yield put(push(`/cts/${payload.id}`));
     yield put(
       openToasterCreator({
@@ -310,9 +307,7 @@ export function* renameCustomTypeSaga({
       payload.newCustomTypeName
     );
     yield put(renameCustomTypeCreator.success(payload));
-    yield put(
-      modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE })
-    );
+    yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
         message: "Custom type updated",
@@ -365,7 +360,7 @@ export function* deleteCustomTypeSaga({
       );
     }
   }
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+  yield put(modalCloseCreator());
 }
 
 // Saga watchers

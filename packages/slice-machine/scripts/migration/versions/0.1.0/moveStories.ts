@@ -1,6 +1,6 @@
 import path from "path";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
-
+import * as IO from "../../../../lib/io";
 import storybook from "../../../../lib/storybook";
 
 export function moveStories(
@@ -8,6 +8,11 @@ export function moveStories(
   libraryName: string,
   sliceName: string
 ) {
+  const modelPath = NodeUtils.CustomPaths(cwd)
+    .library(libraryName)
+    .slice(sliceName)
+    .model();
+  const model = IO.Slice.readSlice(modelPath);
   const customStoriesPath = NodeUtils.CustomPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
@@ -24,7 +29,8 @@ export function moveStories(
     NodeUtils.Framework.defineFramework({ cwd }),
     cwd,
     libraryName,
-    sliceName
+    sliceName,
+    model
   );
 
   // remove old stories

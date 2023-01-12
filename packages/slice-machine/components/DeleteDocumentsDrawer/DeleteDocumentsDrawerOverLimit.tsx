@@ -28,14 +28,14 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
     })
   );
 
-  const { closeDeleteDocumentsDrawerOverLimit } = useSliceMachineActions();
+  const { closeModals } = useSliceMachineActions();
 
   return (
     <Drawer
       placement="right"
       open={isDeleteDocumentsDrawerOverLimitOpen}
       level={null}
-      onClose={closeDeleteDocumentsDrawerOverLimit}
+      onClose={closeModals}
       width={496}
     >
       <Card
@@ -72,10 +72,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
                 Manual action required
               </Heading>
             </Flex>
-            <Close
-              type="button"
-              onClick={() => closeDeleteDocumentsDrawerOverLimit()}
-            />
+            <Close type="button" onClick={() => closeModals()} />
           </Flex>
         )}
         Footer={() => (

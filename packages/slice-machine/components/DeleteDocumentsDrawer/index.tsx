@@ -85,7 +85,7 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
     })
   );
 
-  const { closeDeleteDocumentsDrawer } = useSliceMachineActions();
+  const { closeModals } = useSliceMachineActions();
 
   const [hasConfirmed, setHasConfirmed] = useState(false);
 
@@ -94,7 +94,7 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
       placement="right"
       open={isDeleteDocumentsDrawerOpen}
       level={null}
-      onClose={closeDeleteDocumentsDrawer}
+      onClose={closeModals}
       width={496}
     >
       <Card
@@ -131,7 +131,7 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
                 Confirm deletion
               </Heading>
             </Flex>
-            <Close type="button" onClick={() => closeDeleteDocumentsDrawer()} />
+            <Close type="button" onClick={() => closeModals()} />
           </Flex>
         )}
         Footer={() => (
