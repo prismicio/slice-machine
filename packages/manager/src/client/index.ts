@@ -1,4 +1,4 @@
-// This file defines the `@slicemachine/core/client` export.
+// This file defines the `@slicemachine/manager/client` export.
 // All exports must be designed for non-Node.js usage.
 
 export {
