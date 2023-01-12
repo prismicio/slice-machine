@@ -48,6 +48,10 @@ const DEFAULT_DEV_DEPENDENCIES: Record<string, string> = {
 	"slice-machine-ui": "<1.0.0",
 };
 
+/**
+ * Frameworks we support, orders shouldn't matter much but is respected (the
+ * higher it is the more priority it has in case multiple matches)
+ */
 export const FRAMEWORKS: Record<string, Framework> = {
 	"nuxt-2": {
 		name: "Nuxt 2",
@@ -114,15 +118,16 @@ export const detectFramework = async (cwd: string): Promise<Framework> => {
 		Object.values(FRAMEWORKS).find((framework) => {
 			return Object.entries(framework.compatibility).every(([pkg, range]) => {
 				if (pkg in allDependencies) {
-					// Determine lowest version possibly in use
-					const minimumVersion = semver.minVersion(allDependencies[pkg]);
+					try {
+						// Determine lowest version possibly in use
+						const minimumVersion = semver.minVersion(allDependencies[pkg]);
 
-					// Unconventional tags, `latest`, `beta`, `dev`
-					if (!minimumVersion) {
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						return semver.satisfies(minimumVersion!, range);
+					} catch (error) {
+						// We assume unconventional tags, `latest`, `beta`, `dev` matches the framework
 						return true;
 					}
-
-					return semver.satisfies(minimumVersion, range);
 				}
 
 				return false;

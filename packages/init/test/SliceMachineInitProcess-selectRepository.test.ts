@@ -212,7 +212,7 @@ it("checks for new repository name to be long enough", async (ctx) => {
 
 it("checks for new repository name to be short enough", async (ctx) => {
 	const longDomain =
-		"lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-Officiis-incidunt-ex-harum";
+		"lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-officiis-incidunt-ex-harum";
 	const domain = "new-repo";
 	await mockPrismicAPIs(ctx, initProcess, []);
 
@@ -371,7 +371,7 @@ it("suggests new repository name based on random third", async (ctx) => {
 		// New repository
 		stdin.send("\n");
 
-		await new Promise((res) => setTimeout(res, 50));
+		await new Promise((res) => setTimeout(res, 100));
 
 		// Suggested name
 		stdin.send("\n").restore();

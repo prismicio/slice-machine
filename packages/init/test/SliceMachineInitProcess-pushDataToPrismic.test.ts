@@ -1,4 +1,4 @@
-import { beforeEach, expect, it, SpyInstance, TestContext, vi } from "vitest";
+import { beforeEach, expect, it, Mock, TestContext, vi } from "vitest";
 import { vol } from "memfs";
 
 import { SliceMachinePlugin } from "@slicemachine/plugin-kit";
@@ -34,7 +34,8 @@ vi.mock("globby", async () => {
 				.map((path) => {
 					if (
 						path.includes("documents") &&
-						!path.includes("documents/index.json")
+						!path.includes("documents/index.json") &&
+						path.endsWith(".json")
 					) {
 						return path.split("documents/")[1];
 					}
@@ -69,10 +70,10 @@ const mockAdapter = async (
 		customTypeModel: unknown;
 	};
 	spiedHookHandlers: {
-		sliceLibraryReadHookHandler: SpyInstance;
-		sliceReadHookHandler: SpyInstance;
-		customTypeLibraryReadHookHandler: SpyInstance;
-		customTypeReadHookHandler: SpyInstance;
+		sliceLibraryReadHookHandler: Mock;
+		sliceReadHookHandler: Mock;
+		customTypeLibraryReadHookHandler: Mock;
+		customTypeReadHookHandler: Mock;
 	};
 }> => {
 	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice({

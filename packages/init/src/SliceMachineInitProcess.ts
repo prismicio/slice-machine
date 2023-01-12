@@ -1087,16 +1087,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 										"shortMessage" in error &&
 										"stderr" in error
 									) {
-										await this.trackError(error.shortMessage);
-										console.error(
+										throw new Error(
 											`\n\n${error.shortMessage}\n${error.stderr}\n\n${logSymbols.error} Plugins dependency installation failed`,
+											{ cause: error },
 										);
-									} else {
-										await this.trackError(error);
-										console.error(error);
 									}
 
-									process.exit(1);
+									throw error;
 								}
 							},
 						},

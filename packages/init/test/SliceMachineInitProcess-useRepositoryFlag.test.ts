@@ -192,7 +192,7 @@ it("throws if repository name is too short", async () => {
 
 it("throws if repository name is too long", async () => {
 	const domain =
-		"lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-Officiis-incidunt-ex-harum";
+		"lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-officiis-incidunt-ex-harum";
 	const initProcess = createSliceMachineInitProcess({ repository: domain });
 	setDefaultContext(initProcess);
 
