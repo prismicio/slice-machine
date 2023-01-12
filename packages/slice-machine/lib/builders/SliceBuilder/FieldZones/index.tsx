@@ -130,7 +130,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         variation.id,
         widgetArea,
         result.source.index,
-        (result.destination && result.destination.index) || undefined
+        result.destination?.index ?? undefined
       );
     };
 
