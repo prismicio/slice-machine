@@ -30,11 +30,5 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Lint
-        run: cd packages/init && npm run lint
-
       - name: Unit
         run: cd packages/init && npm run unit
-
-      - name: Build
-        run: cd packages/init &&  npm run build
