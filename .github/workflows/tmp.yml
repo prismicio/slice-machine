@@ -31,10 +31,10 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint -w packages/init
+        run: cd packages/init && npm run lint
 
       - name: Unit
-        run: npm run unit -w packages/init
+        run: cd packages/init && npm run unit
 
       - name: Build
-        run: npm run build -w packages/init
+        run:cd packages/init &&  npm run build
