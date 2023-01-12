@@ -31,4 +31,4 @@ jobs:
         run: npm ci
 
       - name: Unit
-        run: cd packages/init && npm run unit
+        run: npm run unit -w packages/init
