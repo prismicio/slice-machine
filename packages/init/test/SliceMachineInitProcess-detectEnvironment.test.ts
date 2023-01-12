@@ -16,7 +16,7 @@ it("detects framework and package manager", async () => {
 					next: "^13.0.0",
 				},
 			}),
-			"./yarn.lock": "{}",
+			"./package-lock.json": "{}",
 		},
 		"/base",
 	);
@@ -45,7 +45,7 @@ it("detects framework and package manager", async () => {
 		    "prismicDocumentation": "https://prismic.dev/init/next-11-13",
 		    "prismicName": "next-11-13",
 		  },
-		  "packageManager": "yarn",
+		  "packageManager": "npm",
 		}
 	`);
 });

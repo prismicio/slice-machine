@@ -586,6 +586,22 @@ it("cleans up documents directory", async (ctx) => {
 	expect(stdout).toMatch(/Cleaned up data push artifacts/);
 });
 
+it("does not throw if process cannot clean up documents directory", async (ctx) => {
+	const { models } = await mockAdapter(ctx, initProcess);
+	await mockPrismicAPIs(ctx, initProcess, models, true);
+
+	expect(
+		Object.keys(vol.toJSON()).filter((path) => path.includes("documents")),
+	).toStrictEqual([]);
+
+	const { stdout } = await watchStd(() => {
+		// @ts-expect-error - Accessing protected method
+		return initProcess.pushDataToPrismic();
+	});
+
+	expect(stdout).toMatch(/Cleaned up data push artifacts/);
+});
+
 it("throws if context is missing repository", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
 	await mockPrismicAPIs(ctx, initProcess, models);

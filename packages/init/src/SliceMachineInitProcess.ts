@@ -230,7 +230,8 @@ export class SliceMachineInitProcess {
 									// Default to NPM
 									if (
 										error instanceof Error &&
-										error.message.match(/failed to detect/i)
+										(error.message.match(/failed to detect/i) ||
+											error.message.match(/command failed/i))
 									) {
 										this.context.packageManager = "npm";
 									} else {
@@ -994,7 +995,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									const pkgRaw = await fs.readFile(pkgPath, "utf-8");
 									const pkg = JSON.parse(pkgRaw);
 
-									pkg.scripts || {};
+									pkg.scripts ||= {};
 
 									if (!pkg.scripts[START_SCRIPT_KEY]) {
 										pkg.scripts[START_SCRIPT_KEY] = START_SCRIPT_VALUE;
