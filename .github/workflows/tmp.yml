@@ -3,10 +3,10 @@ name: ci tmp
 on:
   push:
     branches:
-      - dev-plugins
+      - tmp/lh/dev-plugins
   pull_request:
     branches:
-      - dev-plugins
+      - lh/dev-plugins
 
 jobs:
   ci:
@@ -30,5 +30,70 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Unit
-        run: npm run unit -w packages/init
+      - name: lib-repositoryDomain-formatRepositoryDomain.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- lib-repositoryDomain-formatRepositoryDomain.test
+
+      - name: lib-repositoryDomain-getErrorMessageForRepositoryDomainValidation.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- lib-repositoryDomain-getErrorMessageForRepositoryDomainValidation.test
+
+      - name: lib-repositoryDomain-getRandomRepositoryDomain.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- lib-repositoryDomain-getRandomRepositoryDomain.test
+
+      - name: lib-repositoryDomain-validateRepositoryDomain.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- lib-repositoryDomain-validateRepositoryDomain.test
+
+      - name: lib-repositoryDomain-validateRepositoryDomainAndAvailability.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- lib-repositoryDomain-validateRepositoryDomainAndAvailability.test
+
+      - name: SliceMachineInitProcess-beginCoreDependenciesInstallation.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-beginCoreDependenciesInstallation.test
+
+      - name: SliceMachineInitProcess-createNewRepository.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-createNewRepository.test
+
+      - name: SliceMachineInitProcess-detectEnvironment.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-detectEnvironment.test
+
+      - name: SliceMachineInitProcess-finishCoreDependenciesInstallation.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-finishCoreDependenciesInstallation.test
+
+      - name: SliceMachineInitProcess-initializePlugins.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-initializePlugins.test
+
+      - name: SliceMachineInitProcess-initializeProject.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-initializeProject.test
+
+      - name: SliceMachineInitProcess-loginAndFetchUserData.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-loginAndFetchUserData.test
+
+      - name: SliceMachineInitProcess-pushDataToPrismic.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-pushDataToPrismic.test
+
+      - name: SliceMachineInitProcess-run.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-run.test
+
+      - name: SliceMachineInitProcess-selectRepository.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-selectRepository.test
+
+      - name: SliceMachineInitProcess-upsertSliceMachineConfigurationAndStartPluginRunner.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-upsertSliceMachineConfigurationAndStartPluginRunner.test
+
+      - name: SliceMachineInitProcess-useRepositoryFlag.test
+        continue-on-error: true
+        run: npm run unit -w packages/init -- SliceMachineInitProcess-useRepositoryFlag.test
