@@ -24,8 +24,8 @@
     "pretty": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "lerna run test --stream",
-    "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
-    "test:e2e:dev": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",    
+    "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
+    "test:e2e:dev": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",    
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact",
@@ -45,10 +45,10 @@
     "prettier": "^2.4.1"
   },
   "dependencies": {
-    "cypress": "^12.1.0",
-    "cypress-localstorage-commands": "^1.7.0",
+    "cypress": "^12.3.0",
+    "cypress-localstorage-commands": "^2.2.2",
     "cypress-wait-until": "^1.7.2",
-    "start-server-and-test": "^1.14.0"
+    "start-server-and-test": "^1.15.2"
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [

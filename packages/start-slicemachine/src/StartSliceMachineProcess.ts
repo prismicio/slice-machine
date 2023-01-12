@@ -88,8 +88,9 @@ export class StartSliceMachineProcess {
 
 		const profile = await this._fetchProfile();
 
-		process.stdout.moveCursor(0, -2);
-		process.stdout.clearLine(1);
+		// Non-TTY environments (like GitHub Actions) do not support line management.
+		process.stdout.moveCursor?.(0, -2);
+		process.stdout.clearLine?.(1);
 		console.log(
 			this._buildLoggedInAsLine(
 				profile

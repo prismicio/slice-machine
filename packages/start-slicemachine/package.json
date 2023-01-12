@@ -1,7 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.1.0",
-	"private": true,
+	"version": "0.1.1-dev-plugins.3",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
@@ -41,7 +40,7 @@
 		"start-slicemachine": "./bin/start-slicemachine.js"
 	},
 	"dependencies": {
-		"@slicemachine/manager": "0.1.0",
+		"@slicemachine/manager": "0.1.1-dev-plugins.3",
 		"chalk": "^4.1.2",
 		"cors": "^2.8.5",
 		"h3": "^1.0.2",
@@ -62,6 +61,7 @@
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"prettier-plugin-jsdoc": "^0.4.2",
+		"rollup-plugin-rename-node-modules": "^1.3.1",
 		"size-limit": "^8.1.0",
 		"typescript": "^4.9.4",
 		"vite": "^4.0.4",
