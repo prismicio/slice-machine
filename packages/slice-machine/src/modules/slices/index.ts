@@ -318,7 +318,7 @@ export function* createSliceSaga({
   yield take(LOCATION_CHANGE);
   yield put(
     openToasterCreator({
-      message: "Slice saved",
+      content: "Slice saved",
       type: ToasterType.SUCCESS,
     })
   );
@@ -342,14 +342,14 @@ export function* renameSliceSaga({
     yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
     yield put(
       openToasterCreator({
-        message: "Slice name updated",
+        content: "Slice name updated",
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Slice name not saved",
+        content: "Internal Error: Slice name not saved",
         type: ToasterType.ERROR,
       })
     );
@@ -372,7 +372,7 @@ export function* deleteSliceSaga({
     yield put(deleteSliceCreator.success(payload));
     yield put(
       openToasterCreator({
-        message: `Successfully deleted Slice “${sliceName}”`,
+        content: `Successfully deleted Slice “${sliceName}”`,
         type: ToasterType.SUCCESS,
       })
     );
@@ -383,7 +383,7 @@ export function* deleteSliceSaga({
         yield put(deleteSliceCreator.success(payload));
       yield put(
         openToasterCreator({
-          message: apiResponse.reason,
+          content: apiResponse.reason,
           type:
             apiResponse.type === "error"
               ? ToasterType.ERROR
@@ -393,7 +393,7 @@ export function* deleteSliceSaga({
     } else {
       yield put(
         openToasterCreator({
-          message: "An unexpected error happened while deleting your slice.",
+          content: "An unexpected error happened while deleting your slice.",
           type: ToasterType.ERROR,
         })
       );

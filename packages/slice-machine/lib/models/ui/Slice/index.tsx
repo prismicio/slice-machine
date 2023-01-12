@@ -15,6 +15,7 @@ import { Button } from "@components/Button";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
+import { LEGACY_SLICE_MIGRATION_GUIDE } from "@lib/consts";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -358,7 +359,7 @@ export const NonSharedSlice = {
             className={style.legacySliceTooltipContainer}
           >
             This Slice was created with the Legacy Builder. You must follow the{" "}
-            <a href="https://prismic.io/" target="_">
+            <a href={LEGACY_SLICE_MIGRATION_GUIDE} target="_">
               migration guide
             </a>{" "}
             to migrate it to Slice Machine before you can use or edit it.

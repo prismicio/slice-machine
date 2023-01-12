@@ -53,7 +53,7 @@ export function* saveSliceSaga({
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Models & mocks not generated",
+        content: "Internal Error: Models & mocks not generated",
         type: ToasterType.ERROR,
       })
     );

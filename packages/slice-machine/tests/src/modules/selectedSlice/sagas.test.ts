@@ -50,7 +50,7 @@ describe("[Selected Slice sagas]", () => {
 
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Models & mocks not generated",
+          content: "Internal Error: Models & mocks not generated",
           type: ToasterType.ERROR,
         })
       );

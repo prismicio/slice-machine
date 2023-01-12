@@ -12,10 +12,25 @@ import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import React, { useEffect } from "react";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
+import { Link, Text } from "theme-ui";
+import { LEGACY_SLICE_MIGRATION_GUIDE } from "@lib/consts";
 
 interface SlicesListProps extends ModelStatusInformation {
   slices: ReadonlyArray<SliceZoneSlice>;
 }
+
+const MigrateSliceToast = () => (
+  <Text>
+    This Custom Type contains legacy Slices. Migrate them following{" "}
+    <Link
+      href={LEGACY_SLICE_MIGRATION_GUIDE}
+      target="_"
+      sx={{ color: "white" }}
+    >
+      this guide
+    </Link>
+  </Text>
+);
 
 export const SlicesList: React.FC<SlicesListProps> = ({
   slices,
@@ -31,10 +46,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
 
   useEffect(() => {
     if (hasLegacySlices)
-      openToaster(
-        "This Custom Type contains legacy Slices. Migrate them following migration guide",
-        ToasterType.WARNING
-      );
+      openToaster(<MigrateSliceToast />, ToasterType.WARNING);
   }, [hasLegacySlices]);
 
   return (

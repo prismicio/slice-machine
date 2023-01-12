@@ -30,7 +30,7 @@ import {
   renameSliceCreator,
 } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
-import { openToasterCreator, ToasterType } from "./toaster";
+import { GenericToastTypes, openToasterCreator, ToasterType } from "./toaster";
 import {
   initCustomTypeStoreCreator,
   createTabCreator,
@@ -530,9 +530,9 @@ const useSliceMachineActions = () => {
 
   // Toaster store
   const openToaster = (
-    message: string,
-    type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
-  ) => dispatch(openToasterCreator({ message, type }));
+    content: string | React.ReactNode,
+    type: GenericToastTypes
+  ) => dispatch(openToasterCreator({ content, type }));
 
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {

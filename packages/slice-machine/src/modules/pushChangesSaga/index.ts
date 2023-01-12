@@ -270,7 +270,7 @@ export function* changesPushSaga({
   // Display success toaster
   yield put(
     openToasterCreator({
-      message: "All slices and custom types have been pushed",
+      content: "All slices and custom types have been pushed",
       type: ToasterType.SUCCESS,
     })
   );
@@ -279,7 +279,7 @@ export function* changesPushSaga({
 function displayGeneralError() {
   return put(
     openToasterCreator({
-      message:
+      content:
         "An unexpected error happened while contacting the Prismic API, please try again or contact us.",
       type: ToasterType.ERROR,
     })

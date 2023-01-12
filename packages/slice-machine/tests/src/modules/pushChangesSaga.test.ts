@@ -135,7 +135,7 @@ describe("[pashSaga module]", () => {
       await saga
         .put(
           openToasterCreator({
-            message: syncChangesToasterMessage(0, 2),
+            content: syncChangesToasterMessage(0, 2),
             type: ToasterType.LOADING,
             options: {
               autoClose: false,
@@ -168,7 +168,7 @@ describe("[pashSaga module]", () => {
         )
         .put(
           openToasterCreator({
-            message: "All slices and custom types have been pushed",
+            content: "All slices and custom types have been pushed",
             type: ToasterType.SUCCESS,
           })
         )
@@ -232,7 +232,7 @@ describe("[pashSaga module]", () => {
       await saga
         .put(
           openToasterCreator({
-            message: syncChangesToasterMessage(0, 2),
+            content: syncChangesToasterMessage(0, 2),
             type: ToasterType.LOADING,
             options: {
               autoClose: false,
@@ -287,7 +287,7 @@ describe("[pashSaga module]", () => {
       await saga
         .put(
           openToasterCreator({
-            message: syncChangesToasterMessage(0, 1),
+            content: syncChangesToasterMessage(0, 1),
             type: ToasterType.LOADING,
             options: {
               autoClose: false,
@@ -359,7 +359,7 @@ describe("[pashSaga module]", () => {
       await expectSaga(changesPushSaga, payload)
         .put(
           openToasterCreator({
-            message: syncChangesToasterMessage(0, 4),
+            content: syncChangesToasterMessage(0, 4),
             type: ToasterType.LOADING,
             options: {
               autoClose: false,
@@ -391,7 +391,7 @@ describe("[pashSaga module]", () => {
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
-            message: "All slices and custom types have been pushed",
+            content: "All slices and custom types have been pushed",
             type: ToasterType.SUCCESS,
           })
         )
@@ -455,7 +455,7 @@ describe("[pashSaga module]", () => {
       await saga
         .put(
           openToasterCreator({
-            message: syncChangesToasterMessage(0, 3),
+            content: syncChangesToasterMessage(0, 3),
             type: ToasterType.LOADING,
             options: {
               autoClose: false,
@@ -481,7 +481,7 @@ describe("[pashSaga module]", () => {
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
-            message: "All slices and custom types have been pushed",
+            content: "All slices and custom types have been pushed",
             type: ToasterType.SUCCESS,
           })
         )
