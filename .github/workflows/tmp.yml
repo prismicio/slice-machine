@@ -1,0 +1,40 @@
+name: ci tmp
+
+on:
+  push:
+    branches:
+      - dev-plugins
+  pull_request:
+    branches:
+      - dev-plugins
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint -w packages/init
+
+      - name: Unit
+        run: npm run unit -w packages/init
+
+      - name: Build
+        run: npm run build -w packages/init
