@@ -39,10 +39,11 @@ jobs:
 
   packages:
     needs: prepare
-    runs-on: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         package:
           - packages/core
           - packages/plugin-kit
