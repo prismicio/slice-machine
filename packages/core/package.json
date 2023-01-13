@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.17-dev-plugins.3",
+  "version": "1.1.17-dev-plugins.4",
   "main": "./build/index.js",
   "engines": {
     "node": ">=14"
