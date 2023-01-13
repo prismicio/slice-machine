@@ -5,7 +5,6 @@ import { UNIVERSAL } from "../src/lib/framework";
 
 import { setContext } from "./__testutils__/setContext";
 import { updateContext } from "./__testutils__/updateContext";
-import { spyManager } from "./__testutils__/spyManager";
 import { watchStd } from "./__testutils__/watchStd";
 
 vi.mock("execa", async () => {
