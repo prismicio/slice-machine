@@ -2,7 +2,6 @@ name: 'Cache node_modules and artifacts'
 description: 'Cache node_modules and artifacts'
 runs:
   using: 'composite'
-	runs-on: [ubuntu-latest]
   steps:
     - name: Cache node_modules
       id: cache-dependencies
