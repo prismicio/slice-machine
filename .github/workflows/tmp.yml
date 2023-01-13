@@ -3,7 +3,7 @@ name: ci tmp
 on:
   push:
     branches:
-      - tmp/lh/dev-plugins
+      - lh/dev-plugins
   pull_request:
     branches:
       - lh/dev-plugins

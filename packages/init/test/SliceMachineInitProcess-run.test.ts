@@ -22,12 +22,8 @@ vi.mock("execa", async () => {
 	return {
 		...execa,
 		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace `npm install`-like command with simple `echo`, we output
-			// to stderr because regular logs are skipped when process is non-TTY
-			return execa.execaCommand(
-				`>&2 echo 'mock command ran: ${command}'`,
-				options,
-			);
+			// Replace command with simple `echo`
+			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
 		}) as typeof execa.execaCommand,
 	};
 });
@@ -234,15 +230,15 @@ it("outputs get started final message", async (ctx) => {
 	expect(stdout.pop()).toMatchInlineSnapshot(`
 		"
 		  YOUR REPOSITORY
-		    Dashboard            [36mhttps://repo-admin.prismic.io[39m
-		    API                  [36mhttps://repo-admin.cdn.prismic.io/api/v2[39m
+		    Dashboard            https://repo-admin.prismic.io
+		    API                  https://repo-admin.cdn.prismic.io/api/v2
 
 		  RESOURCES
-		    Documentation        [36mhttps://prismic.dev/init/universal[39m
-		    Getting help         [36mhttps://community.prismic.io[39m
+		    Documentation        https://prismic.dev/init/universal
+		    Getting help         https://community.prismic.io
 
 		  GETTING STARTED
-		    Start Slice Machine  [36mnpm run slicemachine[39m
+		    Start Slice Machine  npm run slicemachine
 		"
 	`);
 });

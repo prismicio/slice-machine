@@ -13,6 +13,30 @@ declare module "vitest" {
 	}
 }
 
+vi.mock("chalk", async () => {
+	const chalk: typeof import("chalk") = await vi.importActual("chalk");
+
+	return {
+		...chalk,
+		default: new chalk.Instance({ level: 0 }),
+	};
+});
+
+vi.mock("log-symbols", async () => {
+	return {
+		info: "i",
+		success: "s",
+		warning: "!",
+		error: "e",
+		default: {
+			info: "i",
+			success: "s",
+			warning: "!",
+			error: "e",
+		},
+	};
+});
+
 vi.mock("fs", async () => {
 	const memfs: typeof import("memfs") = await vi.importActual("memfs");
 
