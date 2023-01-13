@@ -1,4 +1,5 @@
 const TMP = "/tmp";
+import path from "path";
 import { vol } from "memfs";
 import { libraries } from "../../../src/libraries";
 import slice from "../../_misc/validSliceModel.json";
@@ -132,7 +133,9 @@ test("it finds non local libs", () => {
 
   const result = libraries(TMP, [libName]);
   expect(result[0].isLocal).toEqual(false);
-  expect(result[0].components[0].pathToSlice).toEqual(`${libName}/slices`);
+  expect(result[0].components[0].pathToSlice).toEqual(
+    path.join(`${libName}/slices`)
+  );
 });
 
 test("it rejects invalid JSON models", () => {

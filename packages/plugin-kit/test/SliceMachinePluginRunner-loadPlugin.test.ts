@@ -23,7 +23,7 @@ const mockCreateRequireForProjectOnce = (
 	createRequireMock.mockImplementationOnce((filename) => {
 		if (
 			typeof filename === "string" &&
-			path.dirname(filename) === project.root
+			path.dirname(filename) === path.resolve(project.root)
 		) {
 			return (moduleID: string) => {
 				if (moduleID === args.moduleID) {
@@ -31,7 +31,6 @@ const mockCreateRequireForProjectOnce = (
 				}
 			};
 		}
-
 		throw new Error("not implemented");
 	});
 };
