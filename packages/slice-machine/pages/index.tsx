@@ -7,10 +7,7 @@ import Header from "@components/Header";
 import EmptyState from "@components/EmptyState";
 import { Button } from "@components/Button";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {
-  selectCustomTypeCount,
-  selectAllCustomTypes,
-} from "@src/modules/availableCustomTypes";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
@@ -19,13 +16,13 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { CustomTypeTable } from "@components/CustomTypeTable/ctPage";
 import { GoPlus } from "react-icons/go";
 import { VIDEO_WHAT_ARE_CUSTOM_TYPES } from "../lib/consts";
+import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 
 const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
-  const { customTypes, isCreatingCustomType, customTypeCount } = useSelector(
+  const { customTypes, isCreatingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
-      customTypes: selectAllCustomTypes(store),
-      customTypeCount: selectCustomTypeCount(store),
+      customTypes: selectAllCustomTypes(store).filter(isLocalCustomType),
       isCreatingCustomType: isLoading(
         store,
         LoadingKeysEnum.CREATE_CUSTOM_TYPE
@@ -45,7 +42,7 @@ const CustomTypes: React.FunctionComponent = () => {
           href: "/",
         }}
         Actions={
-          customTypeCount > 0
+          customTypes.length > 0
             ? [
                 <Button
                   label="Create a Custom Type"
@@ -60,7 +57,7 @@ const CustomTypes: React.FunctionComponent = () => {
             : []
         }
       />
-      {customTypeCount === 0 ? (
+      {customTypes.length === 0 ? (
         <Flex
           sx={{
             flex: 1,
