@@ -695,7 +695,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					};
 
 					// Don't clutter console with logs when process is non TTY (CI, etc.)
-					if (process.stdout.isTTY) {
+					if (process.stdout.isTTY || process.env.NODE_ENV === "test") {
 						this.context.installProcess.stdout?.on("data", updateOutput);
 					}
 					this.context.installProcess.stderr?.on("data", updateOutput);
@@ -1075,7 +1075,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									});
 
 									// Don't clutter console with logs when process is non TTY (CI, etc.)
-									if (process.stdout.isTTY) {
+									if (process.stdout.isTTY || process.env.NODE_ENV === "test") {
 										execaProcess.stdout?.on("data", updateOutput);
 									}
 									execaProcess.stderr?.on("data", updateOutput);

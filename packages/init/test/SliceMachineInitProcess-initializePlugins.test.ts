@@ -10,23 +10,19 @@ import { injectTestAdapter } from "./__testutils__/injectTestAdapter";
 import { setContext } from "./__testutils__/setContext";
 import { watchStd } from "./__testutils__/watchStd";
 
-const initProcess = createSliceMachineInitProcess();
-
 vi.mock("execa", async () => {
 	const execa: typeof import("execa") = await vi.importActual("execa");
 
 	return {
 		...execa,
 		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace `npm install`-like command with simple `echo`, we output
-			// to stderr because regular logs are skipped when process is non-TTY
-			return execa.execaCommand(
-				`echo 'mock command ran: ${command}' >&2`,
-				options,
-			);
+			// Replace command with simple `echo`
+			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
 		}) as typeof execa.execaCommand,
 	};
 });
+
+const initProcess = createSliceMachineInitProcess();
 
 const mockAdapter = async (
 	initProcess: SliceMachineInitProcess,
@@ -193,13 +189,20 @@ it("throws on dependency install execa error", async () => {
 		});
 	} catch (error) {
 		expect(error).toMatch(/Failed to initialize plugins/);
-		expect(error).toMatchInlineSnapshot(`
-			[Error: Failed to initialize plugins: Error: Error in \`test-plugin-79e46e79e6ae2a98d180130ffb76b4aebe050ed3\` during \`command:init\` hook:
+
+		expect(
+			(error as Error)
+				.toString()
+				.split("\n")
+				.map((line) => line.trim())
+				.join("\n"),
+		).toMatchInlineSnapshot(`
+			"Error: Failed to initialize plugins: Error: Error in \`test-plugin-79e46e79e6ae2a98d180130ffb76b4aebe050ed3\` during \`command:init\` hook:
 
 			dependency install error
 			stderr
 
-			e Plugins dependency installation failed]
+			e Plugins dependency installation failed"
 		`);
 	}
 

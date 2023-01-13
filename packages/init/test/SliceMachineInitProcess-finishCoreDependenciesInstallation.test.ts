@@ -8,6 +8,18 @@ import { updateContext } from "./__testutils__/updateContext";
 import { spyManager } from "./__testutils__/spyManager";
 import { watchStd } from "./__testutils__/watchStd";
 
+vi.mock("execa", async () => {
+	const execa: typeof import("execa") = await vi.importActual("execa");
+
+	return {
+		...execa,
+		execaCommand: ((command: string, options: Record<string, unknown>) => {
+			// Replace command with simple `echo`
+			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
+		}) as typeof execa.execaCommand,
+	};
+});
+
 const initProcess = createSliceMachineInitProcess();
 const spiedManager = spyManager(initProcess);
 
@@ -19,22 +31,6 @@ beforeEach(async () => {
 
 	// @ts-expect-error - Accessing protected property
 	await initProcess.manager.telemetry.initTelemetry();
-});
-
-vi.mock("execa", async () => {
-	const execa: typeof import("execa") = await vi.importActual("execa");
-
-	return {
-		...execa,
-		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace `npm install`-like command with simple `echo`, we output
-			// to stderr because regular logs are skipped when process is non-TTY
-			return execa.execaCommand(
-				`echo 'mock command ran: ${command}' >&2`,
-				options,
-			);
-		}) as typeof execa.execaCommand,
-	};
 });
 
 it("finishes core dependencies installation process", async () => {

@@ -22,12 +22,8 @@ vi.mock("execa", async () => {
 	return {
 		...execa,
 		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace `npm install`-like command with simple `echo`, we output
-			// to stderr because regular logs are skipped when process is non-TTY
-			return execa.execaCommand(
-				`echo 'mock command ran: ${command}' >&2`,
-				options,
-			);
+			// Replace command with simple `echo`
+			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
 		}) as typeof execa.execaCommand,
 	};
 });
