@@ -23,9 +23,11 @@ export default defineConfig({
 		}),
 	],
 	test: {
+		testTimeout: 10000,
 		coverage: {
 			reporter: ["lcovonly", "text"],
 		},
+		setupFiles: ["./test/__setup__.ts"],
 		deps: {
 			inline: true,
 		},

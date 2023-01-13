@@ -1,4 +1,4 @@
-import { parseNi, detect as niDetect } from "@antfu/ni";
+import { parseNi, parseNr, detect as niDetect, parseNx } from "@antfu/ni";
 import {
 	ExecaChildProcess,
 	execaCommand,
@@ -55,12 +55,28 @@ export const installDependencies = async (
 	return { execaProcess };
 };
 
-export const detectPackageManager = async (): Promise<PackageManagerAgent> => {
+export const getRunScriptCommand = async (args: {
+	agent: PackageManagerAgent;
+	script: string;
+}): Promise<string> => {
+	return (await parseNr(args.agent, [args.script])) || `npm run ${args.script}`;
+};
+
+export const getExecuteCommand = async (args: {
+	agent: PackageManagerAgent;
+	script: string;
+}): Promise<string> => {
+	return (await parseNx(args.agent, [args.script])) || `npx ${args.script}`;
+};
+
+export const detectPackageManager = async (
+	cwd?: string,
+): Promise<PackageManagerAgent> => {
 	// We auto install agent for now otherwise ni could cause some issues with prompt
-	const agent = await niDetect({ autoInstall: true });
+	const agent = await niDetect({ autoInstall: true, cwd });
 
 	if (!agent) {
-		throw new Error("Failed to detect project's framework");
+		throw new Error("Failed to detect project's package manager");
 	}
 
 	return agent;
