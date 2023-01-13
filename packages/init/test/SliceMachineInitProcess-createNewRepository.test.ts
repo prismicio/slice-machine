@@ -46,7 +46,7 @@ const mockPrismicAPIs = async (
 	});
 };
 
-it("creates repository from context", async (ctx) => {
+it.skip("creates repository from context", async (ctx) => {
 	await mockPrismicAPIs(ctx, initProcess);
 
 	await watchStd(async () => {

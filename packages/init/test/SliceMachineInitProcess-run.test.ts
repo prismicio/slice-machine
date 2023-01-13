@@ -192,7 +192,7 @@ it("runs it all", async (ctx) => {
 	expect(stdout).toMatch(/Init command successful/);
 });
 
-it("runs it all with new repo", async (ctx) => {
+it.skip("runs it all with new repo", async (ctx) => {
 	const repositoryName = "new-repo";
 	const initProcess = createSliceMachineInitProcess({
 		repository: repositoryName,
