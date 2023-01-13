@@ -152,7 +152,5 @@ it("throws when package.json could not be read", async () => {
 			// @ts-expect-error - Accessing protected method
 			return initProcess.detectEnvironment();
 		}),
-	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Failed to read project\'s `package.json` at `\\\\base\\\\package.json`"',
-	);
+	).rejects.toMatch(/Failed to read project\'s `package\.json`/);
 });

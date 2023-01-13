@@ -21,7 +21,7 @@ vi.mock("execa", async () => {
 			// Replace `npm install`-like command with simple `echo`, we output
 			// to stderr because regular logs are skipped when process is non-TTY
 			return execa.execaCommand(
-				`>&2 echo 'mock command ran: ${command}'`,
+				`>&2 echo 'mock command ran: ${command}' && exit 0`,
 				options,
 			);
 		}) as typeof execa.execaCommand,
@@ -199,7 +199,7 @@ it("throws on dependency install execa error", async () => {
 			dependency install error
 			stderr
 
-			[31m✖[39m Plugins dependency installation failed]
+			e Plugins dependency installation failed]
 		`);
 	}
 

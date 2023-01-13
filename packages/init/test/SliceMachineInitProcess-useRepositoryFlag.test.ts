@@ -147,7 +147,7 @@ it("throws if user does not have write access to repository", async () => {
 			return initProcess.useRepositoryFlag();
 		}),
 	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Cannot run init command with repository [36mrepo-writer[39m: you are not a developer or admin of this repository"',
+		'"Cannot run init command with repository repo-writer: you are not a developer or admin of this repository"',
 	);
 });
 
@@ -164,7 +164,7 @@ it("throws if user is not a member of the repository (already exists)", async (c
 			return initProcess.useRepositoryFlag();
 		}),
 	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Repository name [36mexisting-repo[39m is already taken"',
+		'"Repository name existing-repo is already taken"',
 	);
 	expect(spiedManager.prismicRepository.checkExists).toHaveBeenCalledOnce();
 	expect(spiedManager.prismicRepository.checkExists).toHaveBeenNthCalledWith(
@@ -186,7 +186,7 @@ it("throws if repository name is too short", async () => {
 			return initProcess.useRepositoryFlag();
 		}),
 	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Repository name [36ms[39m must be 4 characters long or more"',
+		'"Repository name s must be 4 characters long or more"',
 	);
 });
 
@@ -202,7 +202,7 @@ it("throws if repository name is too long", async () => {
 			return initProcess.useRepositoryFlag();
 		}),
 	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Repository name [36mlorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-officiis-incidunt-ex-harum[39m must be 30 characters long or less"',
+		'"Repository name lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-officiis-incidunt-ex-harum must be 30 characters long or less"',
 	);
 });
 
