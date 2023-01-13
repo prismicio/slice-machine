@@ -105,7 +105,7 @@ jobs:
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
 
   packages-win32:
-    needs: prepare
+    needs: prepare-win32
     runs-on: [windows-latest]
     strategy:
       fail-fast: false
