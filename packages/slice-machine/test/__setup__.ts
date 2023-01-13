@@ -1,7 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
 import { FormData } from "formdata-polyfill/esm.min";
-import { Buffer } from "node:buffer";
 import { setupServer, SetupServerApi } from "msw/node";
 import { cleanup } from "@testing-library/react";
 import * as fs from "node:fs/promises";
@@ -94,10 +93,10 @@ vi.stubGlobal(
     // body's content and uses it as the response's body.
     //
     // For more details on the "bug", see: https://github.com/node-fetch/node-fetch/tree/55a4870ae5f805d8ff9a890ea2c652c9977e048e#custom-highwatermark
-    const firstBodyChunk = await new Promise<string | undefined>((resolve) => {
+    const firstBodyChunk = await new Promise<Buffer | undefined>((resolve) => {
       if (res.body) {
-        res.body.on("data", (chunk) => {
-          resolve(Buffer.from(chunk).toString("utf8"));
+        res.body.on("data", (chunk: Buffer) => {
+          resolve(chunk);
         });
       } else {
         resolve(undefined);
@@ -105,11 +104,7 @@ vi.stubGlobal(
     });
 
     if (firstBodyChunk) {
-      return new Response(firstBodyChunk, {
-        headers: res.headers,
-        status: res.status,
-        statusText: res.statusText,
-      });
+      return new Response(firstBodyChunk, res);
     } else {
       return res;
     }
