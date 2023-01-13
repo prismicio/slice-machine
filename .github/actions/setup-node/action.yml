@@ -3,6 +3,7 @@ name: 'Setup Node 18'
 description: 'Setup Node 18'
 runs:
   using: 'composite'
+  runs-on: [ubuntu-latest]
   steps:
     - name: Use Node.js 18
       uses: actions/setup-node@v3

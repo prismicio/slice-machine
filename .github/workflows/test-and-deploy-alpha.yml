@@ -99,16 +99,11 @@ jobs:
       - name: Set up Node
         uses: ./.github/actions/setup-node
 
-      - name: Build slice machine init
-        working-directory: ./packages/init
-        run: npm run build
-
-      - name: Build and export slice machine UI
-        working-directory: ./packages/slice-machine
-        run: npm run build
+      - name: Build Slice Machine UI and init script
+        run: npm run build --workspace packages/init --workspace packages/slice-machine
 
       - name: Running End to End tests
-        run: npm install && npm run test:e2e
+        run: npm run test:e2e
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}

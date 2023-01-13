@@ -2,6 +2,7 @@ name: 'Build essential packages'
 description: 'Build essential packages'
 runs:
   using: 'composite'
+  runs-on: [ubuntu-latest]
   steps:
     - name: Build essential packages used by others
       shell: bash
