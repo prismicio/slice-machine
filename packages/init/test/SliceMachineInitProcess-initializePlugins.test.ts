@@ -21,7 +21,7 @@ vi.mock("execa", async () => {
 			// Replace `npm install`-like command with simple `echo`, we output
 			// to stderr because regular logs are skipped when process is non-TTY
 			return execa.execaCommand(
-				`>&2 echo 'mock command ran: ${command}' && exit 0`,
+				`echo 'mock command ran: ${command}' >&2`,
 				options,
 			);
 		}) as typeof execa.execaCommand,
@@ -194,7 +194,7 @@ it("throws on dependency install execa error", async () => {
 	} catch (error) {
 		expect(error).toMatch(/Failed to initialize plugins/);
 		expect(error).toMatchInlineSnapshot(`
-			[Error: Failed to initialize plugins: Error: Error in \`test-plugin-79e46e79e6ae2a98d180130ffb76b4aebe050ed3\` during \`command:init\` hook: 
+			[Error: Failed to initialize plugins: Error: Error in \`test-plugin-79e46e79e6ae2a98d180130ffb76b4aebe050ed3\` during \`command:init\` hook:
 
 			dependency install error
 			stderr
