@@ -12,12 +12,22 @@ export interface ScreenshotRequest {
   href: string;
 }
 
-export interface ScreenshotResponse {
-  err: Error | null;
-  reason: string | null;
-  warning?: string | null;
-  screenshot: ScreenshotUI | null;
-}
+type ScreenshotErrorResponse = {
+  err: Error;
+  reason: string;
+};
+
+type ScreenshotSuccessResponse = {
+  screenshot: ScreenshotUI;
+};
+
+export type ScreenshotResponse =
+  | ScreenshotErrorResponse
+  | ScreenshotSuccessResponse;
+
+export const isError = (
+  response: ScreenshotResponse
+): response is ScreenshotErrorResponse => "err" in response;
 
 export type TmpFile = File & { path: string };
 export interface CustomScreenshotRequest {

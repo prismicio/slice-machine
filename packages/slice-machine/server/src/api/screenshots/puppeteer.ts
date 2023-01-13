@@ -26,18 +26,24 @@ export default {
         defaultViewport: null,
       });
     }
-    const puppeteerBrowser = await puppeteerBrowserPromise;
+
+    let puppeteerBrowser: puppeteer.Browser;
+
+    try {
+      puppeteerBrowser = await puppeteerBrowserPromise;
+    } catch (e) {
+      console.error(
+        "Could not load pupeteer. Try re-installing your dependencies (`npm i`) to fix the issue"
+      );
+      throw e;
+    }
 
     return generateScreenshot(
       puppeteerBrowser,
       screenshotUrl,
       pathToFile,
       screenDimensions
-    ).catch(() => {
-      throw new Error(
-        `Unable to generate screenshot for this page: ${screenshotUrl}`
-      );
-    });
+    );
   },
 };
 

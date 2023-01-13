@@ -12,7 +12,7 @@ import { ScreenDimensions } from "../../../../lib/models/common/Screenshots";
 import { hash } from "@slicemachine/core/build/utils/str";
 
 export interface ScreenshotResults {
-  screenshot: ScreenshotUI | null;
+  screenshot: ScreenshotUI;
 }
 
 export async function generateScreenshotAndRemoveCustom(
@@ -23,26 +23,20 @@ export async function generateScreenshotAndRemoveCustom(
   screenDimensions: ScreenDimensions,
   href: string
 ): Promise<ScreenshotResults> {
-  try {
-    const result = await generateForVariation(
-      env,
-      libraryName,
-      sliceName,
-      variationId,
-      screenDimensions,
-      href
-    );
+  const result = await generateForVariation(
+    env,
+    libraryName,
+    sliceName,
+    variationId,
+    screenDimensions,
+    href
+  );
 
-    removeCustomScreenshot(env, libraryName, sliceName, variationId);
+  removeCustomScreenshot(env, libraryName, sliceName, variationId);
 
-    return {
-      screenshot: result,
-    };
-  } catch {
-    return {
-      screenshot: null,
-    };
-  }
+  return {
+    screenshot: result,
+  };
 }
 
 async function generateForVariation(

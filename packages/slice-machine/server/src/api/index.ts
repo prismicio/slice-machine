@@ -27,6 +27,7 @@ import sentryHandler, { plainTextBodyParser } from "./sentry";
 
 import { RequestWithEnv, WithEnv } from "./http/common";
 import {
+  isError,
   ScreenshotRequest,
   ScreenshotResponse,
 } from "../../../lib/models/common/Screenshots";
@@ -88,7 +89,7 @@ router.post(
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await screenshot(req.body);
-    if (payload.err) {
+    if (isError(payload)) {
       return res.status(400).json(payload);
     }
     return res.status(200).json(payload);
