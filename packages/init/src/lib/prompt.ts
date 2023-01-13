@@ -20,8 +20,8 @@ export const prompt = async <TReturn, TProperty extends string = string>(
 	}
 
 	// Clear prompt line, clean recap are done manually
-	process.stdout.moveCursor(0, -1);
-	process.stdout.clearLine(1);
+	process.stdout.moveCursor?.(0, -1);
+	process.stdout.clearLine?.(1);
 
 	return answers;
 };

@@ -19,6 +19,8 @@ import {
 	installDependencies,
 	detectPackageManager,
 	PackageManagerAgent,
+	getRunScriptCommand,
+	getExecuteCommand,
 } from "./lib/packageManager";
 import {
 	getRandomRepositoryDomain,
@@ -30,6 +32,7 @@ import {
 import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
 import { assertExists } from "./lib/assertExists";
+import { START_SCRIPT_KEY, START_SCRIPT_VALUE } from "./constants";
 
 export type SliceMachineInitProcessOptions = {
 	repository?: string;
@@ -62,6 +65,9 @@ type SliceMachineInitProcessContext = {
 	repository?: {
 		domain: string;
 		exists: boolean;
+	};
+	projectInitialization?: {
+		patchedScript?: boolean;
 	};
 };
 
@@ -122,6 +128,7 @@ export class SliceMachineInitProcess {
 			await this.finishCoreDependenciesInstallation();
 			await this.upsertSliceMachineConfigurationAndStartPluginRunner();
 			await this.pushDataToPrismic();
+			await this.initializeProject();
 			await this.initializePlugins();
 		} catch (error) {
 			await this.trackError(error);
@@ -143,6 +150,40 @@ export class SliceMachineInitProcess {
 				"→",
 			)} Init command successful!`,
 		);
+
+		try {
+			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+			// eslint-disable-next-line no-console
+			console.log(`
+  YOUR REPOSITORY
+    Dashboard            ${chalk.cyan(
+			`https://${this.context.repository.domain}.prismic.io`,
+		)}
+    API                  ${chalk.cyan(
+			`https://${this.context.repository.domain}.cdn.prismic.io/api/v2`,
+		)}
+
+  RESOURCES
+    Documentation        ${chalk.cyan(
+			this.context.framework.prismicDocumentation,
+		)}
+    Getting help         ${chalk.cyan("https://community.prismic.io")}
+
+  GETTING STARTED
+    Start Slice Machine  ${chalk.cyan(
+			this.context.projectInitialization?.patchedScript
+				? await getRunScriptCommand({
+						agent: this.context.packageManager || "npm",
+						script: "slicemachine",
+				  })
+				: await getExecuteCommand({
+						agent: this.context.packageManager || "npm",
+						script: "start-slicemachine",
+				  }),
+		)}`);
+		} catch {
+			// Noop, it's only the final convenience messsage
+		}
 	}
 
 	protected trackError = (error: unknown): Promise<void> => {
@@ -181,7 +222,22 @@ export class SliceMachineInitProcess {
 						{
 							title: "Detecting package manager...",
 							task: async (_, task) => {
-								this.context.packageManager = await detectPackageManager();
+								try {
+									this.context.packageManager = await detectPackageManager(
+										this.options.cwd,
+									);
+								} catch (error) {
+									// Default to NPM
+									if (
+										error instanceof Error &&
+										(error.message.match(/failed to detect/i) ||
+											error.message.match(/command failed/i))
+									) {
+										this.context.packageManager = "npm";
+									} else {
+										throw error;
+									}
+								}
 
 								task.title = `Detected package manager ${chalk.cyan(
 									this.context.packageManager,
@@ -267,10 +323,10 @@ export class SliceMachineInitProcess {
 					if (!isLoggedIn) {
 						parentTask.output = "Press any key to open the browser to login...";
 						await new Promise((resolve) => {
-							const initialRawMode = process.stdin.isRaw;
-							process.stdin.setRawMode(true);
+							const initialRawMode = !!process.stdin.isRaw;
+							process.stdin.setRawMode?.(true);
 							process.stdin.once("data", (data: Buffer) => {
-								process.stdin.setRawMode(initialRawMode);
+								process.stdin.setRawMode?.(initialRawMode);
 								process.stdin.pause();
 								resolve(data.toString("utf-8"));
 							});
@@ -281,9 +337,7 @@ export class SliceMachineInitProcess {
 						await this.manager.user.nodeLoginSession({
 							port,
 							onListenCallback() {
-								open(url).catch((error) => {
-									throw error;
-								});
+								open(url);
 							},
 						});
 					}
@@ -345,8 +399,10 @@ export class SliceMachineInitProcess {
 						"Flag `repository` must be set to run `useRepositoryFlag`",
 					);
 
+					const domain = formatRepositoryDomain(this.options.repository);
+
 					const maybeRepository = this.context.userRepositories.find(
-						(repository) => repository.domain === this.options.repository,
+						(repository) => repository.domain === domain,
 					);
 
 					if (maybeRepository) {
@@ -360,7 +416,6 @@ export class SliceMachineInitProcess {
 							);
 						}
 					} else {
-						const domain = formatRepositoryDomain(this.options.repository);
 						const validation = await validateRepositoryDomainAndAvailability({
 							domain,
 							existsFn: (domain) =>
@@ -377,11 +432,11 @@ export class SliceMachineInitProcess {
 					}
 
 					task.title = `Selected repository ${chalk.cyan(
-						this.options.repository,
+						domain,
 					)} (flag ${chalk.cyan("repository")} used)`;
 
 					this.context.repository = {
-						domain: this.options.repository,
+						domain,
 						exists: !!maybeRepository,
 					};
 				},
@@ -503,15 +558,13 @@ export class SliceMachineInitProcess {
 
 		// 3. Use random name
 		if (!suggestedName) {
-			suggestedName = getRandomRepositoryDomain();
-
-			while (
+			do {
+				suggestedName = getRandomRepositoryDomain();
+			} while (
 				await this.manager.prismicRepository.checkExists({
 					domain: suggestedName,
 				})
-			) {
-				suggestedName = getRandomRepositoryDomain();
-			}
+			);
 		}
 
 		const { domain } = await prompt<string, "domain">({
@@ -525,38 +578,36 @@ export class SliceMachineInitProcess {
 				const domain = formatRepositoryDomain(rawDomain);
 				const validation = validateRepositoryDomain({ domain });
 
+				const minRule = validation.LessThan4
+					? chalk.red(
+							`1. Name must be ${chalk.bold("4 characters long or more")}`,
+					  )
+					: `1. Name must be ${chalk.cyan("4 characters long or more")}`;
+
+				const maxRule = validation.MoreThan30
+					? chalk.red(
+							`1. Name must be ${chalk.bold("30 characters long or less")}`,
+					  )
+					: `1. Name must be ${chalk.cyan("30 characters long or less")}`;
+
 				this.msg = chalk.reset(
 					`
 Choose a name for your Prismic repository
 
   NAMING RULES
-${chalk[validation.LessThan4 ? "red" : "gray"](
-	`    1. Name must be ${chalk[validation.LessThan4 ? "bold" : "cyan"](
-		"4 characters long or more",
-	)}`,
-)}
-${chalk[validation.MoreThan30 ? "red" : "gray"](
-	`    2. Name must be ${chalk[validation.MoreThan30 ? "bold" : "cyan"](
-		"30 characters long or less",
-	)}`,
-)}
-${chalk.gray(`    3. Name will be ${chalk.cyan("kebab-cased")} automatically`)}
+    ${minRule}
+    ${maxRule}
+    3. Name will be ${chalk.cyan("kebab-cased")} automatically
 
   CONSIDERATIONS
-${chalk.gray(
-	`    1. Once picked, your repository name ${chalk.cyan("cannot be changed")}`,
-)}
-${chalk.gray(
-	`    2. A ${chalk.cyan(
-		"display name",
-	)} for the repository can be configured later on`,
-)}
+    1. Once picked, your repository name ${chalk.cyan("cannot be changed")}
+    2. A ${chalk.cyan(
+			"display name",
+		)} for the repository can be configured later on
 
   PREVIEW
-${chalk.gray(`    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}`)}
-${chalk.gray(
-	`    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}`,
-)}
+    Dashboard  ${chalk.cyan(`https://${domain}.prismic.io`)}
+    API        ${chalk.cyan(`https://${domain}.cdn.prismic.io/api/v2`)}
 
 ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 				);
@@ -581,8 +632,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		});
 
 		// Clear extra lines
-		process.stdout.moveCursor(0, -16);
-		process.stdout.clearScreenDown();
+		process.stdout.moveCursor?.(0, -16);
+		process.stdout.clearScreenDown?.();
 
 		this.context.repository = {
 			domain,
@@ -642,8 +693,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							task.output = data.toString();
 						}
 					};
-					// TODO: Assert types
-					this.context.installProcess.stdout?.on("data", updateOutput);
+
+					// Don't clutter console with logs when process is non TTY (CI, etc.)
+					if (process.stdout.isTTY || process.env.NODE_ENV === "test") {
+						this.context.installProcess.stdout?.on("data", updateOutput);
+					}
 					this.context.installProcess.stderr?.on("data", updateOutput);
 
 					try {
@@ -654,17 +708,14 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						 * that all install errors, earlier and presents, can be catched.
 						 *
 						 * Here, we force the task to wait so that it is neither marked as
-						 * done or has the opportunity to handle the error itself
+						 * done or has the opportunity to handle the error itself.
 						 */
-						await new Promise(() => {
-							// If for whatever reason the process is not exited by now, we still throw the error
-							setTimeout(() => {
-								throw error;
-							}, 5000);
-						});
+						// If for whatever reason the process is not exited by now, we still throw the error
+						await new Promise((resolve) => setTimeout(resolve, 5000));
+						throw error;
 					}
 
-					task.title = `Core dependencies installed with ${chalk.cyan(
+					task.title = `Installed core dependencies with ${chalk.cyan(
 						this.context.packageManager,
 					)}`;
 				},
@@ -702,6 +753,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							config: {
 								...config,
 								repositoryName: this.context.repository.domain,
+								adapter: this.context.framework.adapterName,
 							},
 						});
 						parentTask.title = "Updated Slice Machine configuration";
@@ -877,7 +929,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								});
 								if (documentsGlob.length === 0) {
 									parentTask.title = "Pushed data to Prismic";
-									task.skip("No documents to push");
+									task.skip("No document to push");
 
 									return;
 								}
@@ -927,7 +979,70 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		]);
 	}
 
-	// TODO: Add Slice Machine script to package.json
+	protected initializeProject(): Promise<void> {
+		return listrRun([
+			{
+				title: "Initializing project...",
+				task: async (_, parentTask) =>
+					// We return another Listr instance in the event we have additional task to perform to initialize the project
+					listr([
+						{
+							title: `Patching ${chalk.cyan("package.json")} scripts...`,
+							task: async (_, task) => {
+								const pkgPath = path.join(this.manager.cwd, "package.json");
+
+								try {
+									const pkgRaw = await fs.readFile(pkgPath, "utf-8");
+									const pkg = JSON.parse(pkgRaw);
+
+									pkg.scripts ||= {};
+
+									if (!pkg.scripts[START_SCRIPT_KEY]) {
+										pkg.scripts[START_SCRIPT_KEY] = START_SCRIPT_VALUE;
+
+										// Cheap indent detection based on https://github.com/sindresorhus/detect-indent (simplified because we're only dealing with JSON here)
+										const firstIndent = pkgRaw
+											.split("\n")
+											.find((line) => line.match(/^(?:( )+|\t+)/));
+										const indent = firstIndent?.match(/^(?:( )+|\t+)/)?.[0];
+
+										await fs.writeFile(
+											pkgPath,
+											JSON.stringify(
+												pkg,
+												null,
+												indent && indent !== " " ? indent : "  ",
+											),
+										);
+									} else if (
+										!pkg.scripts["slicemachine"].startsWith(START_SCRIPT_VALUE)
+									) {
+										throw new Error("Script already exists");
+									}
+								} catch (error) {
+									task.title = `Could not patch ${chalk.cyan(
+										"package.json",
+									)} scripts (warning)`;
+									parentTask.title = `Initialized project (could not patch ${chalk.cyan(
+										"package.json",
+									)} scripts)`;
+
+									return;
+								}
+
+								this.context.projectInitialization ||= {};
+								this.context.projectInitialization.patchedScript = true;
+
+								task.title = `Patched ${chalk.cyan("package.json")} scripts`;
+								parentTask.title = `Initialized project (patched ${chalk.cyan(
+									"package.json",
+								)} scripts)`;
+							},
+						},
+					]),
+			},
+		]);
+	}
 
 	protected initializePlugins(): Promise<void> {
 		return listrRun([
@@ -959,7 +1074,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 										agent: this.context.packageManager,
 									});
 
-									execaProcess.stdout?.on("data", updateOutput);
+									// Don't clutter console with logs when process is non TTY (CI, etc.)
+									if (process.stdout.isTTY || process.env.NODE_ENV === "test") {
+										execaProcess.stdout?.on("data", updateOutput);
+									}
 									execaProcess.stderr?.on("data", updateOutput);
 
 									await execaProcess;
@@ -969,16 +1087,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 										"shortMessage" in error &&
 										"stderr" in error
 									) {
-										await this.trackError(error.shortMessage);
-										console.error(
+										throw new Error(
 											`\n\n${error.shortMessage}\n${error.stderr}\n\n${logSymbols.error} Plugins dependency installation failed`,
+											{ cause: error },
 										);
-									} else {
-										await this.trackError(error);
-										console.error(error);
 									}
 
-									process.exit(1);
+									throw error;
 								}
 							},
 						},

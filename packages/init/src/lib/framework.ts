@@ -15,6 +15,11 @@ export type Framework = {
 	prismicName: string;
 
 	/**
+	 * A link to the Prismic documentation for the framework
+	 */
+	prismicDocumentation: string;
+
+	/**
 	 * Package name of the adapter responsible for this framework
 	 */
 	adapterName: string;
@@ -43,10 +48,15 @@ const DEFAULT_DEV_DEPENDENCIES: Record<string, string> = {
 	"slice-machine-ui": "<1.0.0",
 };
 
+/**
+ * Frameworks we support, orders shouldn't matter much but is respected (the
+ * higher it is the more priority it has in case multiple matches)
+ */
 export const FRAMEWORKS: Record<string, Framework> = {
 	"nuxt-2": {
 		name: "Nuxt 2",
 		prismicName: "nuxt-2",
+		prismicDocumentation: "https://prismic.dev/init/nuxt-2",
 		adapterName: "@slicemachine/adapter-nuxt",
 		compatibility: {
 			nuxt: "^2.0.0",
@@ -59,6 +69,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	"next-11-13": {
 		name: "Next.js 11-13",
 		prismicName: "next-11-13",
+		prismicDocumentation: "https://prismic.dev/init/next-11-13",
 		adapterName: "@slicemachine/adapter-next",
 		compatibility: {
 			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
@@ -76,6 +87,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 export const UNIVERSAL: Framework = {
 	name: "universal (no framework)",
 	prismicName: "universal",
+	prismicDocumentation: "https://prismic.dev/init/universal",
 	adapterName: "@slicemachine/adapter-universal",
 	compatibility: {},
 	devDependencies: {
@@ -106,15 +118,16 @@ export const detectFramework = async (cwd: string): Promise<Framework> => {
 		Object.values(FRAMEWORKS).find((framework) => {
 			return Object.entries(framework.compatibility).every(([pkg, range]) => {
 				if (pkg in allDependencies) {
-					// Determine lowest version possibly in use
-					const minimumVersion = semver.minVersion(allDependencies[pkg]);
+					try {
+						// Determine lowest version possibly in use
+						const minimumVersion = semver.minVersion(allDependencies[pkg]);
 
-					// Unconventional tags, `latest`, `beta`, `dev`
-					if (!minimumVersion) {
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						return semver.satisfies(minimumVersion!, range);
+					} catch (error) {
+						// We assume unconventional tags, `latest`, `beta`, `dev` matches the framework
 						return true;
 					}
-
-					return semver.satisfies(minimumVersion, range);
 				}
 
 				return false;
