@@ -6,8 +6,8 @@ export class SlicePage {
     return cy.get("[alt='Preview image']");
   }
 
-  goTo(sliceName) {
-    cy.visit(`/slices/${sliceName}/default`);
+  goTo(sliceLibrary, sliceName) {
+    cy.visit(`/${sliceLibrary}/${sliceName}/default`);
     this.saveButton.should("be.visible");
     cy.contains(sliceName).should("be.visible");
     return this;

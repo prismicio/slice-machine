@@ -22,12 +22,12 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   before("Cleanup local data and create a new slice", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
-    cy.createSlice("slices", slice.id, slice.name);
+    cy.createSlice(slice.library, slice.id, slice.name);
   });
 
   beforeEach("Start from the Slice page", () => {
     cy.setSliceMachineUserContext({});
-    slicePage.goTo(slice.name);
+    slicePage.goTo(slice.library, slice.name);
   });
 
   it("Upload and replace a screenshot on the default variation", () => {

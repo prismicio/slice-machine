@@ -122,7 +122,7 @@ export function addVariationToSlice(variationName) {
   cy.contains("button", "Add new variation").click();
 
   cy.get("[aria-modal]").within(() => {
-    cy.get('input[name="name"]').type(variationName);
+    cy.getInputByLabel("Variation name*").type(variationName);
     cy.contains("button", "Submit").click();
   });
   cy.get("[aria-modal]").should("not.exist");
