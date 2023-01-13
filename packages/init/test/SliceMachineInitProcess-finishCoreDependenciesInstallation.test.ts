@@ -118,9 +118,11 @@ it("appends repository selection to error message when core dependencies install
 			// Noop
 		}
 
-		// Wait 2 ticks for async catch handler to happen
+		// Wait 3 ticks for async catch handler to happen
 		await new Promise((res) => process.nextTick(res));
 		await new Promise((res) => process.nextTick(res));
+		await new Promise((res) => process.nextTick(res));
+		await new Promise((res) => setTimeout(res, 50));
 	});
 
 	expect(stderr[0]).toMatch(/--repository=new-repo/);
