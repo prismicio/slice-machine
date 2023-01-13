@@ -10,7 +10,7 @@ jobs:
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: List all dependencies
         shell: bash
         run: npm list
