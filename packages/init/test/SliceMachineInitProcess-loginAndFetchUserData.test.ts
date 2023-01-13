@@ -1,7 +1,7 @@
+import http from "node:http";
 import { beforeEach, expect, it, TestContext, vi } from "vitest";
 import { stdin as mockStdin } from "mock-stdin";
 import open from "open";
-import fetch from "node-fetch";
 
 import { PrismicRepository, PrismicUserProfile } from "@slicemachine/manager";
 
@@ -49,10 +49,21 @@ const loginAndFetchUserDataWithStdin = async (
 		// @ts-expect-error - Mocked instance
 		spiedManager.user.getLoginSessionInfo.results[0][1].port;
 
-	await fetch(`http://127.0.0.1:${port}`, {
-		method: "post",
-		body: JSON.stringify(prismicAuthLoginResponse),
+	const body = JSON.stringify(prismicAuthLoginResponse);
+
+	// We use low-level `http` because node-fetch has some issue with 127.0.0.1 on CIs
+	const request = http.request({
+		host: "127.0.0.1",
+		port: `${port}`,
+		path: "/",
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Content-Length": Buffer.byteLength(body),
+		},
 	});
+	request.write(body);
+	request.end();
 
 	return promise;
 };
