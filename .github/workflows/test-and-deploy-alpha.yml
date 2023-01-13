@@ -3,27 +3,78 @@ name: test-and-deploy-alpha
 on: [push]
 
 jobs:
-  install-deps:
+  prepare:
     runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - name: Install dependencies
-        run: npm i
-      - name: List all dependencies
-        shell: bash
-        run: npm list
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  unit-tests:
-    needs: install-deps
+      - name: Cache node_modules
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+  prettier:
+    needs: prepare
     runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Running functional and unit tests
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Restore node_modules
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Prettier
+        run: npm run prettier:check
+
+  packages:
+    needs: prepare
+    runs-on: [ubuntu-latest]
+    strategy:
+      matrix:
+        package:
+          - packages/core,
+          - packages/plugin-kit, 
+          - packages/manager,
+          - packages/init,
+          - packages/slice-machine,
+          - packages/start-slicemachine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Restore node_modules
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Build essentials
+        uses: ./.github/actions/build-essential
+
+      - name: Validate dependencies
+        run: npm run depcheck --workspace ${{ matrix.package }}
+
+      - name: Audit dependencies
+        run: npm run audit --workspace ${{ matrix.package }}
+
+      - name: Lint
+        run: npm run lint --workspace ${{ matrix.package }}
+
+      - name: Types
+        continue-on-error: true
+        run: npm run types --workspace ${{ matrix.package }}
+
+      - name: Unit
+        run: npm run unit --workspace ${{ matrix.package }}
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
@@ -33,54 +84,9 @@ jobs:
           customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
           user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
-        run: npm run test
-  
-  dep-check:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Dependency Checks
-        run: npm run depcheck
-  
-  prettier:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Prettier
-        run: npm run prettier:check
-  
-  linting:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Linting
-        run: lerna run lint
 
-  audit:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Audit
-        run: lerna run audit
-
-  e2e-tests:
-    needs: install-deps
+  e2e:
+    needs: prepare
     runs-on: [ubuntu-latest]
     steps: 
       - uses: actions/checkout@v2
@@ -109,7 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     # TODO: Restore `e2e-tests` dependency once the e2e tests are fixed.
     # needs: [e2e-tests, audit, linting, prettier, dep-check, unit-tests, install-deps]
-    needs: [audit, linting, prettier, dep-check, unit-tests, install-deps]
+    needs: [prettier, packages, e2e]
     if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
     environment: alpha
     steps: 

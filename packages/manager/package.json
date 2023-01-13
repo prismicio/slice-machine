@@ -55,7 +55,9 @@
 		"test": "npm run lint && npm run unit && npm run build && npm run size",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
-		"depcheck": "depcheck --config=.depcheckrc"
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p",
+		"types": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@prismicio/custom-types-client": "^1.0.2",
@@ -89,10 +91,12 @@
 		"@size-limit/preset-small-lib": "^8.1.0",
 		"@types/analytics-node": "^3.1.9",
 		"@types/cookie": "^0.5.1",
+		"@types/express": "^4.17.15",
 		"@types/semver": "^7.3.13",
 		"@typescript-eslint/eslint-plugin": "~5.46.1",
 		"@typescript-eslint/parser": "^5.46.1",
 		"@vitest/coverage-c8": "^0.25.8",
+    "better-npm-audit": "^3.7.3",
 		"eslint": "^8.29.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",

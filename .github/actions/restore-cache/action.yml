@@ -1,5 +1,5 @@
-name: 'Cache node modules'
-description: 'Cache node modules'
+name: 'Cache node_modules'
+description: 'Cache node_modules'
 runs:
   using: 'composite'
   steps:

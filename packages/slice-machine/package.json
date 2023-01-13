@@ -23,7 +23,9 @@
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
     "audit-fix": "npm audit fix",
-    "depcheck": "depcheck --config=.depcheckrc"
+    "depcheck": "depcheck --config=.depcheckrc",
+		"unit": "vitest run --coverage",
+		"types": "tsc --noEmit"
   },
   "dependencies": {
     "@prismicio/editor-fields": "^0.1.0",

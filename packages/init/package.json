@@ -46,7 +46,9 @@
 		"test": "npm run lint && npm run unit && npm run build && npm run size",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
-		"depcheck": "depcheck --config=.depcheckrc"
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p",
+		"types": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.18.8",
@@ -64,13 +66,14 @@
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^8.1.0",
-		"@slicemachine/plugin-kit": "^0.1.8",
+		"@slicemachine/plugin-kit": "0.1.8-dev-plugins.3",
 		"@types/listr": "^0.14.4",
 		"@types/prompts": "^2.4.2",
 		"@types/semver": "^7.3.13",
 		"@typescript-eslint/eslint-plugin": "^5.47.0",
 		"@typescript-eslint/parser": "^5.47.0",
 		"@vitest/coverage-c8": "^0.26.0",
+    "better-npm-audit": "^3.7.3",
 		"eslint": "^8.30.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",

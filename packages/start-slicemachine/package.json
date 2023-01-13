@@ -34,7 +34,9 @@
 		"test": "npm run lint && npm run unit && npm run build && npm run size",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
-		"depcheck": "depcheck --config=.depcheckrc"
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p",
+		"types": "tsc --noEmit"
 	},
 	"bin": {
 		"start-slicemachine": "./bin/start-slicemachine.js"
@@ -56,6 +58,7 @@
 		"@typescript-eslint/eslint-plugin": "~5.48.0",
 		"@typescript-eslint/parser": "^5.48.0",
 		"@vitest/coverage-c8": "^0.26.3",
+		"better-npm-audit": "^3.7.3",
 		"eslint": "^8.31.0",
 		"eslint-config-prettier": "^8.6.0",
 		"eslint-plugin-prettier": "^4.2.1",
