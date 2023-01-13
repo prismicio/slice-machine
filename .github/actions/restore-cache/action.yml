@@ -11,4 +11,6 @@ runs:
           node_modules
           */*/node_modules
           ~/.cache/Cypress
+          packages/*/dist
+          packages/core/build
         key: ${{ runner.os }}-lerna-${{ hashFiles('package-lock.json', '**/package-lock.json') }}
