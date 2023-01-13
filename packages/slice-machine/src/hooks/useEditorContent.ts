@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { defaultSharedSliceContent } from "@src/utils/editor";
 import { renderSliceMock } from "@prismicio/mocks";
@@ -11,16 +12,18 @@ function useEditorContentOnce({
   variationID: string;
   slice: ComponentUI;
 }) {
-  const editorContent: SharedSliceContent =
-    slice.mock?.find((m) => m.variation === variationID) ||
-    defaultSharedSliceContent(variationID);
+  return useMemo(() => {
+    const editorContent: SharedSliceContent =
+      slice.mock?.find((m) => m.variation === variationID) ||
+      defaultSharedSliceContent(variationID);
 
-  const apiContent = {
-    ...(renderSliceMock(Slices.fromSM(slice.model), editorContent) as object),
-    id: slice.model.id,
-  };
+    const apiContent = {
+      ...(renderSliceMock(Slices.fromSM(slice.model), editorContent) as object),
+      id: slice.model.id,
+    };
 
-  return { editorContent, apiContent };
+    return { editorContent, apiContent };
+  }, [slice.mock, slice.model, variationID]);
 }
 
 export default useEditorContentOnce;

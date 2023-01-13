@@ -14,29 +14,45 @@ vi.mock("puppeteer", () => {
 });
 
 it("captures a Slice Simulator screenshot for a given Slice variation", async (ctx) => {
-	const localSliceSimulatorURL = "https://localhost:3000/slice-simulator";
-	const adapter = createTestPlugin();
-	const cwd = await createTestProject({ adapter, localSliceSimulatorURL });
+	const model = ctx.mockPrismic.model.sharedSlice();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", () => {
+				return { model };
+			});
+		},
+	});
+	const cwd = await createTestProject({
+		adapter,
+		localSliceSimulatorURL: "https://localhost:3000/slice-simulator",
+	});
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+	await manager.screenshots.initBrowserContext();
+
+	const sliceMachineUIOrigin = "http://localhost:1234";
 	const { sliceSimulatorEndpoint } = mockSliceSimulatorEndpoint(ctx, {
-		localSliceSimulatorURL,
+		sliceMachineUIOrigin,
 		libraryID: "foo",
-		sliceID: "bar",
+		sliceName: model.name,
 		variationID: "baz",
+		viewport: {
+			width: 1200,
+			height: 800,
+		},
 	});
 
 	const screenshotData = Buffer.from("screenshot-data");
 	puppeteerMock.__element__screenshot.mockReturnValueOnce(screenshotData);
 
-	await manager.screenshots.initBrowserContext();
-
 	const res = await manager.screenshots.captureSliceSimulatorScreenshot({
+		sliceMachineUIOrigin,
 		libraryID: "foo",
-		sliceID: "bar",
+		sliceID: model.id,
 		variationID: "baz",
 	});
 
@@ -49,118 +65,226 @@ it("captures a Slice Simulator screenshot for a given Slice variation", async (c
 	});
 	expect(puppeteerMock.__page__goto).toHaveBeenCalledWith(
 		sliceSimulatorEndpoint,
+		{ waitUntil: "load" },
 	);
-	expect(puppeteerMock.__page__waitForSelector).toHaveBeenCalledWith("#root", {
-		timeout: 10_000,
-	});
-	expect(puppeteerMock.__page__$).toHaveBeenCalledWith("#root");
+	expect(puppeteerMock.__page__waitForSelector).toHaveBeenCalledWith(
+		"#__iframe-ready",
+		{ timeout: 10_000 },
+	);
+	expect(puppeteerMock.__page__$).toHaveBeenCalledWith("#__iframe-renderer");
 	expect(puppeteerMock.__element__screenshot).toHaveBeenCalledWith({
 		encoding: "binary",
+		clip: {
+			width: 1200,
+			height: 800,
+			x: 0,
+			y: 0,
+		},
 	});
 });
 
 it("can be configured to capture a specific viewport", async (ctx) => {
-	const localSliceSimulatorURL = "https://localhost:3000/slice-simulator";
-	const adapter = createTestPlugin();
-	const cwd = await createTestProject({ adapter, localSliceSimulatorURL });
+	const model = ctx.mockPrismic.model.sharedSlice();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", () => {
+				return { model };
+			});
+		},
+	});
+	const cwd = await createTestProject({
+		adapter,
+		localSliceSimulatorURL: "https://localhost:3000/slice-simulator",
+	});
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+	await manager.screenshots.initBrowserContext();
+
+	const sliceMachineUIOrigin = "http://localhost:1234";
+	const viewport = { width: 200, height: 100 };
 	mockSliceSimulatorEndpoint(ctx, {
-		localSliceSimulatorURL,
+		sliceMachineUIOrigin,
 		libraryID: "foo",
-		sliceID: "bar",
+		sliceName: model.name,
 		variationID: "baz",
+		viewport,
 	});
 
 	const screenshotData = Buffer.from("screenshot-data");
 	puppeteerMock.__element__screenshot.mockReturnValueOnce(screenshotData);
 
-	await manager.screenshots.initBrowserContext();
-
 	const res = await manager.screenshots.captureSliceSimulatorScreenshot({
+		sliceMachineUIOrigin,
 		libraryID: "foo",
-		sliceID: "bar",
+		sliceID: model.id,
 		variationID: "baz",
-		viewport: { width: 200, height: 100 },
+		viewport,
 	});
 
 	expect(res).toStrictEqual({
 		data: screenshotData,
 	});
 	expect(puppeteerMock.__page__setViewport).toHaveBeenCalledWith({
-		width: 200,
-		height: 100,
+		width: viewport.width,
+		height: viewport.height,
+	});
+	expect(puppeteerMock.__element__screenshot).toHaveBeenCalledWith({
+		encoding: "binary",
+		clip: {
+			width: viewport.width,
+			height: viewport.height,
+			x: 0,
+			y: 0,
+		},
 	});
 });
 
 it("throws if the root selector cannot be found", async (ctx) => {
-	const localSliceSimulatorURL = "https://localhost:3000/slice-simulator";
-	const adapter = createTestPlugin();
-	const cwd = await createTestProject({ adapter, localSliceSimulatorURL });
+	const model = ctx.mockPrismic.model.sharedSlice();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", () => {
+				return { model };
+			});
+		},
+	});
+	const cwd = await createTestProject({
+		adapter,
+		localSliceSimulatorURL: "https://localhost:3000/slice-simulator",
+	});
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
 
-	mockSliceSimulatorEndpoint(ctx, {
-		localSliceSimulatorURL,
-		libraryID: "foo",
-		sliceID: "bar",
-		variationID: "baz",
-	});
-
+	await manager.plugins.initPlugins();
 	await manager.screenshots.initBrowserContext();
+
+	const sliceMachineUIOrigin = "http://localhost:1234";
+	mockSliceSimulatorEndpoint(ctx, {
+		sliceMachineUIOrigin,
+		libraryID: "foo",
+		sliceName: model.name,
+		variationID: "baz",
+		viewport: {
+			width: 1200,
+			height: 800,
+		},
+	});
 
 	puppeteerMock.__page__$.mockReturnValueOnce(null);
 
 	await expect(async () => {
 		await manager.screenshots.captureSliceSimulatorScreenshot({
+			sliceMachineUIOrigin,
 			libraryID: "foo",
-			sliceID: "bar",
+			sliceID: model.id,
 			variationID: "baz",
 		});
-	}).rejects.toThrow(/could not find the element to screenshot/i);
+	}).rejects.toThrow(/did not find #__iframe-ready/i);
 });
 
-it("throws if a Slice Simulator URL is not accessible", async (ctx) => {
-	const localSliceSimulatorURL = "https://localhost:3000/slice-simulator";
-	const adapter = createTestPlugin();
-	const cwd = await createTestProject({ adapter, localSliceSimulatorURL });
+it("throws if the Slice model cannot be found", async () => {
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", () => {
+				throw new Error("not found");
+			});
+		},
+	});
+	const cwd = await createTestProject({
+		adapter,
+		localSliceSimulatorURL: "https://localhost:3000/slice-simulator",
+	});
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
 
-	mockSliceSimulatorEndpoint(ctx, { localSliceSimulatorURL, exists: false });
-
+	await manager.plugins.initPlugins();
 	await manager.screenshots.initBrowserContext();
 
 	await expect(async () => {
 		await manager.screenshots.captureSliceSimulatorScreenshot({
+			sliceMachineUIOrigin: "http://localhost:1234",
 			libraryID: "foo",
 			sliceID: "bar",
 			variationID: "baz",
 		});
-	}).rejects.toThrow(/slice simulator url is not accessible/i);
+	}).rejects.toThrow(/did not find a slice/i);
 });
 
-it("throws if a Slice Simulator URL is not configured", async () => {
-	const adapter = createTestPlugin();
+it("throws if a Slice Simulator screenshot URL is not accessible", async (ctx) => {
+	const model = ctx.mockPrismic.model.sharedSlice();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", () => {
+				return { model };
+			});
+		},
+	});
+	const cwd = await createTestProject({
+		adapter,
+		localSliceSimulatorURL: "https://localhost:3000/slice-simulator",
+	});
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+	await manager.screenshots.initBrowserContext();
+
+	const sliceMachineUIOrigin = "http://localhost:1234";
+	mockSliceSimulatorEndpoint(ctx, {
+		sliceMachineUIOrigin,
+		libraryID: "foo",
+		sliceName: model.name,
+		variationID: "baz",
+		viewport: {
+			width: 1200,
+			height: 800,
+		},
+		exists: false,
+	});
+
+	await expect(async () => {
+		await manager.screenshots.captureSliceSimulatorScreenshot({
+			sliceMachineUIOrigin,
+			libraryID: "foo",
+			sliceID: "bar",
+			variationID: "baz",
+		});
+	}).rejects.toThrow(/slice simulator screenshot url is not accessible/i);
+});
+
+it("throws if a Slice Simulator URL is not configured", async (ctx) => {
+	const model = ctx.mockPrismic.model.sharedSlice();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", () => {
+				return { model };
+			});
+		},
+	});
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
 	await manager.screenshots.initBrowserContext();
 
 	await expect(async () => {
 		await manager.screenshots.captureSliceSimulatorScreenshot({
+			sliceMachineUIOrigin: "http://localhost:1234",
 			libraryID: "foo",
-			sliceID: "bar",
+			sliceID: model.id,
 			variationID: "baz",
 		});
 	}).rejects.toThrow(/slice simulator url must be configured/i);
@@ -174,11 +298,37 @@ it("throws if a browser context has not been initialized", async () => {
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+
 	await expect(async () => {
 		await manager.screenshots.captureSliceSimulatorScreenshot({
+			sliceMachineUIOrigin: "http://localhost:1234",
 			libraryID: "foo",
 			sliceID: "bar",
 			variationID: "baz",
 		});
 	}).rejects.toThrow(/browser context has not been initialized/i);
+});
+
+it("throws if plugins have not been initialized", async () => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({
+		adapter,
+		localSliceSimulatorURL: "https://localhost:3000/slice-simulator",
+	});
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.screenshots.initBrowserContext();
+
+	await expect(async () => {
+		await manager.screenshots.captureSliceSimulatorScreenshot({
+			sliceMachineUIOrigin: "http://localhost:1234",
+			libraryID: "foo",
+			sliceID: "bar",
+			variationID: "baz",
+		});
+	}).rejects.toThrow(/plugins have not been initialized/i);
 });

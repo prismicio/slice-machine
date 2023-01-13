@@ -147,6 +147,7 @@ export const generateSliceScreenshotApiClient = async (
 > => {
   const screenshot =
     await managerClient.screenshots.captureSliceSimulatorScreenshot({
+      sliceMachineUIOrigin: window.location.origin,
       libraryID: params.libraryName,
       sliceID: params.sliceId,
       variationID: params.variationId,
