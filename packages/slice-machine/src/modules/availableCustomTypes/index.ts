@@ -119,9 +119,6 @@ export const selectCustomTypeById = (
   id: string
 ): FrontEndCustomType | null => store.availableCustomTypes[id];
 
-export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
-  Object.values(store.availableCustomTypes).length;
-
 // Reducer
 export const availableCustomTypesReducer: Reducer<
   AvailableCustomTypesStoreType | null,
