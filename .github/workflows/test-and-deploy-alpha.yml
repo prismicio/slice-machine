@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cache
+      - name: Cache node_modules and artifacts
         uses: ./.github/actions/restore-cache
 
       - name: Set up Node
@@ -93,7 +93,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Restore node_modules
+      - name: Restore cache
         uses: ./.github/actions/restore-cache
 
       - name: Set up Node
