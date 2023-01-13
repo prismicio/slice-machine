@@ -22,7 +22,7 @@ const AuthInstructions = () => (
           borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
-        <Heading as="h3">Login to Prismic</Heading>
+        <Heading as="h3">Log in to Prismic</Heading>
       </Flex>
     )}
   >
