@@ -187,7 +187,7 @@ export const generateSliceCustomScreenshotApiClient = (
 export const saveSliceApiClient = async (
   component: ComponentUI
 ): Promise<
-  Awaited<ReturnType<typeof managerClient["slices"]["updateSlice"]>>
+  Awaited<ReturnType<(typeof managerClient)["slices"]["updateSlice"]>>
 > => {
   return await managerClient.slices.updateSlice({
     libraryID: component.from,

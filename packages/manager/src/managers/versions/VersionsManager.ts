@@ -21,7 +21,7 @@ import { Version } from "./types";
 const detectVersionBumpKind = (
 	to: string,
 	from?: string,
-): typeof VERSION_KIND[keyof typeof VERSION_KIND] => {
+): (typeof VERSION_KIND)[keyof typeof VERSION_KIND] => {
 	if (!from) {
 		return VERSION_KIND.FIRST;
 	}

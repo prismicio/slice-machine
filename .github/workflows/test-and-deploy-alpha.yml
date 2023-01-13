@@ -38,13 +38,14 @@ jobs:
     needs: prepare
     runs-on: [ubuntu-latest]
     strategy:
+      fail-fast: false
       matrix:
         package:
-          - packages/core,
-          - packages/plugin-kit, 
-          - packages/manager,
-          - packages/init,
-          - packages/slice-machine,
+          - packages/core
+          - packages/plugin-kit
+          - packages/manager
+          - packages/init
+          - packages/slice-machine
           - packages/start-slicemachine
 
     steps:

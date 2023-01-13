@@ -42,7 +42,7 @@ const omitProcedures = defineOmits<SliceMachineManager>()([
 ]);
 
 export type SliceMachineManagerMiddleware = RPCMiddleware<
-	ProceduresFromInstance<SliceMachineManager, typeof omitProcedures[number]>
+	ProceduresFromInstance<SliceMachineManager, (typeof omitProcedures)[number]>
 >;
 
 export type SliceMachineManagerProcedures =
