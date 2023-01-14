@@ -23,8 +23,8 @@ import {
   selectCurrentMockConfig,
   selectCurrentPoolOfFields,
 } from "../../../../src/modules/selectedCustomType";
-import { SlicesSM } from "@slicemachine/core/models/Slices";
-import { TabField, TabFields } from "@slicemachine/core/models/CustomType";
+import { SlicesSM } from "@core/models/Slices";
+import { TabField, TabFields } from "@core/models/CustomType";
 import Tracker from "../../../../src/tracking/client";
 import { DropResult } from "react-beautiful-dnd";
 

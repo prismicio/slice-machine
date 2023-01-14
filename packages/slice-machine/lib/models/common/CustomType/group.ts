@@ -1,5 +1,5 @@
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { GroupSM } from "@slicemachine/core/models/Group";
+import { GroupSM } from "@core/models/Group";
 
 export const Group = {
   addWidget(

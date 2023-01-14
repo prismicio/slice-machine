@@ -1,5 +1,5 @@
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { CustomTypeSM, TabField } from "@slicemachine/core/models/CustomType";
+import { CustomTypeSM, TabField } from "@core/models/CustomType";
 
 export type PoolOfFields = ReadonlyArray<{ key: string; value: TabField }>;
 

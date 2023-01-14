@@ -13,7 +13,7 @@ import React from "react";
 import Router from "next/router";
 import mockRouter from "next-router-mock";
 import { rest } from "msw";
-import { Frameworks } from "@slicemachine/core/models";
+import { Frameworks } from "@core/models";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 

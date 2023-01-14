@@ -1,5 +1,5 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
-import { Models } from "@slicemachine/core";
+import { Models } from "@core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
@@ -10,7 +10,7 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import { ComponentMocks } from "@slicemachine/core/models";
+import { ComponentMocks } from "@core/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>

@@ -1,9 +1,9 @@
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes/widgets/slices/Slices";
-import { TabSM, TabField } from "@slicemachine/core/models/CustomType/Tab";
-import { GroupSM } from "@slicemachine/core/models/Group";
+import { TabSM, TabField } from "@core/models/CustomType/Tab";
+import { GroupSM } from "@core/models/Group";
 import { SliceZone } from "./sliceZone";
-import { SlicesSM } from "@slicemachine/core/models/Slices";
+import { SlicesSM } from "@core/models/Slices";
 
 interface OrganisedFields {
   fields: ReadonlyArray<{ key: string; value: TabField }>;

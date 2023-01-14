@@ -25,7 +25,8 @@
     "outDir": "./build",
     "paths": {
       "@/*": ["/*"],
-      "@slicemachine/core/*": ["core/*"],
+      "@core": ["core"],
+      "@core/*": ["core/*"],
       "@lib/*": ["lib/*"],
       "@utils/*": ["lib/utils/*"],
       "@builders/*": ["lib/builders/*"],

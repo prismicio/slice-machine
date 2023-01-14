@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { Slices, SliceSM } from "@slicemachine/core/models";
+import { Slices, SliceSM } from "@core/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 // import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";

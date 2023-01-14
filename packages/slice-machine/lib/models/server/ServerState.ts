@@ -1,8 +1,8 @@
 import ServerError from "./ServerError";
 import { FrontEndEnvironment } from "../common/Environment";
 import { LibraryUI } from "../common/LibraryUI";
-import { SliceSM } from "@slicemachine/core/models";
-import { CustomTypeSM } from "@slicemachine/core/models/CustomType";
+import { SliceSM } from "@core/models";
+import { CustomTypeSM } from "@core/models/CustomType";
 import ErrorWithStatus from "../common/ErrorWithStatus";
 
 export interface ConfigErrors {

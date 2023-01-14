@@ -7,7 +7,7 @@ import {
   ReleaseNote,
   VersionKind,
 } from "../models/common/versions";
-import * as NodeUtils from "@slicemachine/core/node-utils";
+import * as NodeUtils from "@core/node-utils";
 
 export async function getPackageChangelog(
   dependencyCwd: string

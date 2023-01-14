@@ -1,5 +1,5 @@
 import PrismicData from "./PrismicData";
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@core";
 import { PackageChangelog } from "./versions";
 import { PackageManager } from "./PackageManager";
 import { CustomTypeMockConfig } from "./MockConfig";

@@ -1,8 +1,5 @@
 import path from "path";
-import {
-  JsonPackage,
-  retrieveJsonPackage,
-} from "@slicemachine/core/node-utils";
+import { JsonPackage, retrieveJsonPackage } from "@core/node-utils";
 import moduleAlias from "module-alias";
 
 /* eslint-disable */

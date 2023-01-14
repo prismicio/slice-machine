@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/models";
+import type Models from "@core/models";
 import { SliceMockConfig } from "./MockConfig";
 
 export interface SliceBody {

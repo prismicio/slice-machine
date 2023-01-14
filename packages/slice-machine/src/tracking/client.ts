@@ -1,4 +1,4 @@
-import { Frameworks } from "@slicemachine/core/models";
+import { Frameworks } from "@core/models";
 import axios from "axios";
 import { LibraryUI } from "../../lib/models/common/LibraryUI";
 import {

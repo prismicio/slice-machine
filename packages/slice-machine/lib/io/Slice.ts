@@ -1,6 +1,6 @@
 import Files from "../utils/files";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { Slices, SliceSM } from "@slicemachine/core/models/Slice";
+import { Slices, SliceSM } from "@core/models/Slice";
 
 export function readSlice(path: string): SliceSM {
   const slice: SharedSlice = Files.readJson(path);

@@ -1,4 +1,4 @@
-import { CustomTypeSM } from "@slicemachine/core/models/CustomType";
+import { CustomTypeSM } from "@core/models/CustomType";
 
 export const createCustomType = (
   id: string,

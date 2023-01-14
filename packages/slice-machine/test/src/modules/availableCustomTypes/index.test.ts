@@ -18,7 +18,7 @@ import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { CustomTypeSM } from "@slicemachine/core/models/CustomType";
+import { CustomTypeSM } from "@core/models/CustomType";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 

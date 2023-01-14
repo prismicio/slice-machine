@@ -14,7 +14,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaBars } from "react-icons/fa";
 import { Widget } from "@lib/models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
-import { TabField } from "@slicemachine/core/models/CustomType";
+import { TabField } from "@core/models/CustomType";
 
 type Item<F extends TabField> = { key: string; value: F };
 

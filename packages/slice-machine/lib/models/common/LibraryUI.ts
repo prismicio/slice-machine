@@ -1,8 +1,4 @@
-import type {
-  LibraryMeta,
-  Library,
-  Component,
-} from "@slicemachine/core/models";
+import type { LibraryMeta, Library, Component } from "@core/models";
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 

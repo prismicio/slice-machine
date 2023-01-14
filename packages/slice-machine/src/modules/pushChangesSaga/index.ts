@@ -1,5 +1,5 @@
 import { ComponentUI } from "../../../lib/models/common/ComponentUI";
-import { CustomTypeSM } from "@slicemachine/core/models/CustomType";
+import { CustomTypeSM } from "@core/models/CustomType";
 import { pushCustomType, pushSliceApiClient } from "../../apiClient";
 import {
   all,

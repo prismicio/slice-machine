@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { simulatorIsSupported } from "@lib/utils";
-import { Frameworks } from "@slicemachine/core/models";
+import { Frameworks } from "@core/models";
 import { slugify } from "@lib/utils/str";
 
 describe("simulatorIsSupported", () => {

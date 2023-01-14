@@ -1,4 +1,4 @@
-import { VariationSM, Screenshot, Component } from "@slicemachine/core/models";
+import { VariationSM, Screenshot, Component } from "@core/models";
 import { BackendEnvironment } from "./Environment";
 import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
 

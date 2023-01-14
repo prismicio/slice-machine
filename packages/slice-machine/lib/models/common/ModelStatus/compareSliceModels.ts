@@ -1,4 +1,4 @@
-import { Screenshot, SliceSM } from "@slicemachine/core/models";
+import { Screenshot, SliceSM } from "@core/models";
 import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
 
