@@ -6,7 +6,7 @@ import ErrorWithStatus from "../models/common/ErrorWithStatus";
 import {
   PrismicSharedConfigManager,
   DEFAULT_CONFIG,
-} from "@slicemachine/core/build/prismic";
+} from "@slicemachine/core/prismic";
 
 export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {

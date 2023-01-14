@@ -1,4 +1,5 @@
-import { Slices, SliceSM } from "../../../src/models/Slice";
+import { describe, expect, test } from "vitest";
+import { Slices, SliceSM } from "../../../core/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const sliceObject = {

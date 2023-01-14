@@ -25,6 +25,7 @@
     "outDir": "./build",
     "paths": {
       "@/*": ["/*"],
+      "@slicemachine/core/*": ["core/*"],
       "@lib/*": ["lib/*"],
       "@utils/*": ["lib/utils/*"],
       "@builders/*": ["lib/builders/*"],
@@ -34,7 +35,7 @@
     },
     "incremental": true
   },
-  "exclude": ["node_modules", "tests/project", "build"],
+  "exclude": ["node_modules", "build"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",

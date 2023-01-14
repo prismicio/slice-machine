@@ -2,7 +2,7 @@ import type {
   LibraryMeta,
   Library,
   Component,
-} from "@slicemachine/core/build/models";
+} from "@slicemachine/core/models";
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 

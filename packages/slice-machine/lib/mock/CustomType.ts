@@ -13,7 +13,7 @@ import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/models/CustomType";
+} from "@slicemachine/core/models/CustomType";
 import { Document } from "@prismicio/types-internal/lib/content";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 

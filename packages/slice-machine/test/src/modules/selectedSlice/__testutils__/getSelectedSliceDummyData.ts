@@ -1,7 +1,7 @@
 import jsonModel from "../__fixtures__/model.json";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import MockSlice from "@lib/mock/Slice";
-import { Slices } from "@slicemachine/core/build/models";
+import { Slices } from "@slicemachine/core/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSelectedSliceDummyData = () => {

@@ -1,6 +1,8 @@
-import { Manifest } from "../../src/models";
+import { describe, expect, test, vi } from "vitest";
 import { fold, isRight, isLeft, getOrElseW } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/function";
+
+import { Manifest } from "../../core/models";
 
 describe("Manifest", () => {
   test("apiEnpoint: https://test.prismic.io/api/v2", () => {
@@ -124,7 +126,7 @@ describe("Manifest", () => {
     const result = Manifest.decode(input);
     expect(isLeft(result)).toBeTruthy();
 
-    const errorFn = jest.fn();
+    const errorFn = vi.fn();
 
     getOrElseW(errorFn)(result);
 

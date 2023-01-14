@@ -1,9 +1,10 @@
+import { afterEach, describe, expect, test, vi } from "vitest";
 const TMP = "/tmp";
 import { vol } from "memfs";
-import { getComponentInfo } from "../../../src/libraries/component";
+import { getComponentInfo } from "../../../core/libraries/component";
 import path from "path";
 
-jest.mock(`fs`, () => {
+vi.mock(`fs`, () => {
   return vol;
 });
 

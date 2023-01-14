@@ -1,13 +1,13 @@
-import { describe, expect, test, afterEach } from "@jest/globals";
+import { describe, expect, test, afterEach, vi } from "vitest";
 import {
   parsePrismicAuthToken,
   serializeCookie,
   serializeCookies,
-} from "../../../src/utils/cookie";
+} from "../../../core/utils/cookie";
 
 describe("cookie", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("parsePrismicAuthToken", () => {

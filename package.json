@@ -17,7 +17,7 @@
     "//postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "npm --workspaces --if-present run build && npm --workspaces --if-present run test",
-    "build-essential": "npm --workspace @slicemachine/core run build && npm --workspace @slicemachine/plugin-kit run build && npm --workspace @slicemachine/manager run build",
+    "build-essential": "npm --workspace @slicemachine/plugin-kit run build && npm --workspace @slicemachine/manager run build",
     "audit": "lerna run audit",
     "lint": "npm --workspaces --if-present run lint",
     "lint-staged": "lint-staged",
@@ -54,10 +54,6 @@
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
       "prettier --write --ignore-unknown",
       "npm --prefix ./packages/slice-machine run lint:precommit"
-    ],
-    "**/packages/core/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/core run lint:precommit"
     ]
   },
   "workspaces": [

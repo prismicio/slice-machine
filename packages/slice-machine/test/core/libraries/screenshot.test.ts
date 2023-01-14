@@ -1,3 +1,4 @@
+import { afterEach, expect, test, vi } from "vitest";
 const TMP = "/tmp";
 import path from "path";
 import { vol } from "memfs";
@@ -5,11 +6,11 @@ import { vol } from "memfs";
 import {
   Extensions,
   resolvePathsToScreenshot,
-} from "../../../src/libraries/screenshot";
+} from "../../../core/libraries/screenshot";
 
-jest.spyOn(console, "error").mockImplementationOnce(() => null);
+vi.spyOn(console, "error").mockImplementationOnce(() => null);
 
-jest.mock(`fs`, () => {
+vi.mock(`fs`, () => {
   return vol;
 });
 

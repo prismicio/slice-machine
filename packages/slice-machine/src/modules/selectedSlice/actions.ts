@@ -10,7 +10,7 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import { ComponentMocks } from "@slicemachine/core/build/models";
+import { ComponentMocks } from "@slicemachine/core/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>

@@ -1,4 +1,4 @@
-import { Frameworks } from "@slicemachine/core/build/models";
+import { Frameworks } from "@slicemachine/core/models";
 
 export enum EventNames {
   Review = "SliceMachine Review",

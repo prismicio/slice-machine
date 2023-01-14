@@ -47,10 +47,7 @@ import {
   updateFieldMockConfigCreator,
 } from "./selectedCustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import {
-  CustomTypeSM,
-  TabField,
-} from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM, TabField } from "@slicemachine/core/models/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import {
   addSliceWidgetCreator,

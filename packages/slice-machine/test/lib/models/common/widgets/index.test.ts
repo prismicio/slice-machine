@@ -3,7 +3,7 @@ import * as Widgets from "@lib/models/common/widgets";
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/models/CustomType";
+} from "@slicemachine/core/models/CustomType";
 import type { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 import type { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";

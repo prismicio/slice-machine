@@ -9,7 +9,7 @@ import {
   SharedSliceMock,
 } from "@prismicio/mocks";
 import { buildFieldsMockConfig } from "./LegacyMockConfig";
-import { ComponentMocks } from "@slicemachine/core/build/models";
+import { ComponentMocks } from "@slicemachine/core/models";
 
 function buildVariationMockConfig(
   model: Variation,

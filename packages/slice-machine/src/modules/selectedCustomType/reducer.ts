@@ -32,8 +32,8 @@ import StateHelpers from "./stateHelpers";
 import { CustomType } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { SlicesSM } from "@slicemachine/core/build/models/Slices";
-import { GroupSM } from "@slicemachine/core/build/models/Group";
+import { SlicesSM } from "@slicemachine/core/models/Slices";
+import { GroupSM } from "@slicemachine/core/models/Group";
 import { Group } from "@lib/models/common/CustomType/group";
 import { renameCustomTypeCreator } from "../availableCustomTypes";
 

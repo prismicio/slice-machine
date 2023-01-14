@@ -1,4 +1,4 @@
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/models/CustomType";
 
 export type FrontEndCustomType = {
   local: CustomTypeSM;

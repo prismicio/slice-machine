@@ -9,7 +9,7 @@ import SliceMachineIconButton from "../../../../components/SliceMachineIconButto
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
 import HeaderCommon from "@components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { VariationSM } from "@slicemachine/core/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { Button } from "@components/Button";

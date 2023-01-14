@@ -1,4 +1,4 @@
-import { TabField } from "@slicemachine/core/build/models/CustomType";
+import { TabField } from "@slicemachine/core/models/CustomType";
 
 interface Widgets {
   [x: string]: TabField;
