@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.6.1-dev-plugins.7",
+  "version": "0.6.1-dev-plugins.8",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "_moduleAliases": {
@@ -30,7 +30,7 @@
     "@prismicio/editor-ui": "^0.1.0",
     "@prismicio/mocks": "1.6.4",
     "@prismicio/types-internal": "^1.5.3",
-    "@slicemachine/manager": "0.1.1-dev-plugins.7",
+    "@slicemachine/manager": "0.1.1-dev-plugins.8",
     "axios": "^0.26.0",
     "chalk": "^4.1.2",
     "cookie": "^0.5.0",
@@ -52,7 +52,7 @@
     "puppeteer": "^19.4.1",
     "react": "^18.2.0",
     "semver": "^7.3.2",
-    "start-slicemachine": "0.1.1-dev-plugins.7",
+    "start-slicemachine": "0.1.1-dev-plugins.8",
     "yup": "^0.32.9"
   },
   "devDependencies": {
