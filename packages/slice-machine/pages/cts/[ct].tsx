@@ -49,8 +49,12 @@ const CustomTypeBuilderWithRouter = () => {
     })
   );
 
+  useEffect(() => {
+    if (!selectedCustomType || !isLocalCustomType(selectedCustomType))
+      void router.replace("/");
+  }, [selectedCustomType]);
+
   if (!selectedCustomType || !isLocalCustomType(selectedCustomType)) {
-    void router.replace("/");
     return null;
   }
 

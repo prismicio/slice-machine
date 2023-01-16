@@ -36,7 +36,7 @@ import { DeleteSliceModal } from "@components/DeleteSliceModal";
 const SlicesIndex: React.FunctionComponent = () => {
   const {
     openCreateSliceModal,
-    closeCreateSliceModal,
+    closeModals,
     createSlice,
     openRenameSliceModal,
     openDeleteSliceModal,
@@ -97,24 +97,29 @@ const SlicesIndex: React.FunctionComponent = () => {
           }}
         >
           <Header
-            ActionButton={
-              localLibraries?.length != 0 && sliceCount != 0 ? (
-                <Button
-                  label="Create a Slice"
-                  onClick={openCreateSliceModal}
-                  isLoading={isCreatingSlice}
-                  disabled={isCreatingSlice}
-                  Icon={GoPlus}
-                  data-cy="create-slice"
-                />
-              ) : undefined
+            link={{
+              Element: (
+                <>
+                  <MdHorizontalSplit /> <Text>Slices</Text>
+                </>
+              ),
+              href: "/slices",
+            }}
+            Actions={
+              localLibraries?.length != 0 && sliceCount != 0
+                ? [
+                    <Button
+                      label="Create a Slice"
+                      onClick={openCreateSliceModal}
+                      isLoading={isCreatingSlice}
+                      disabled={isCreatingSlice}
+                      Icon={GoPlus}
+                      iconFill="#FFFFFF"
+                      data-cy="create-slice"
+                    />,
+                  ]
+                : []
             }
-            MainBreadcrumb={
-              <>
-                <MdHorizontalSplit /> <Text ml={2}>Slices</Text>
-              </>
-            }
-            breadrumbHref="/slices"
           />
           {libraries && (
             <Flex
@@ -241,7 +246,7 @@ const SlicesIndex: React.FunctionComponent = () => {
           <CreateSliceModal
             isCreatingSlice={isCreatingSlice}
             isOpen={isCreateSliceModalOpen}
-            close={closeCreateSliceModal}
+            close={closeModals}
             libraries={localLibraries}
             remoteSlices={remoteSlices}
             onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}

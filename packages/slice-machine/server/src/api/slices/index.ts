@@ -20,6 +20,6 @@ export const getSlices = async (
 };
 
 export default async function handler() {
-  const { env } = await getEnv();
+  const { env } = getEnv();
   return await getSlices(env.client);
 }

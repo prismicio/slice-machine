@@ -56,6 +56,7 @@ const UpdateSliceZoneModalList: React.FC<{
                   sx={{
                     mr: 0,
                   }}
+                  data-cy={`check-${slice.model.id}`}
                 />
               );
             },

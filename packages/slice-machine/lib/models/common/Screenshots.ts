@@ -9,6 +9,7 @@ export interface ScreenshotRequest {
   sliceName: string;
   variationId: string;
   screenDimensions: ScreenDimensions;
+  href: string;
 }
 
 export interface ScreenshotResponse {

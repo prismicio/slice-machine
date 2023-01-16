@@ -10,6 +10,7 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
+import { ComponentMocks } from "@slicemachine/core/build/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -24,7 +25,14 @@ export type SelectedSliceActions =
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
-  | ActionType<typeof generateSliceCustomScreenshotCreator>;
+  | ActionType<typeof generateSliceCustomScreenshotCreator>
+  | ActionType<typeof updateSelectedSliceMocks>;
+
+export const updateSelectedSliceMocks = createAction(
+  "SELECTED_SLICE/UPDATE_MOCKS"
+)<{
+  mocks: ComponentMocks;
+}>();
 
 export const initSliceStoreCreator =
   createAction("SLICE/INIT")<SelectedSliceStoreType>();

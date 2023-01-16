@@ -22,7 +22,7 @@ import DeleteDocumentsDrawer from "@components/DeleteDocumentsDrawer";
 import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 import DeleteDocumentsDrawerOverLimit from "@components/DeleteDocumentsDrawer/DeleteDocumentsDrawerOverLimit";
 
-const changes: React.FunctionComponent = () => {
+const Changes: React.FunctionComponent = () => {
   const {
     unSyncedSlices,
     unSyncedCustomTypes,
@@ -30,7 +30,7 @@ const changes: React.FunctionComponent = () => {
     authStatus,
     isOnline,
   } = useUnSyncChanges();
-  const { pushChanges, closeScreenshotsModal } = useSliceMachineActions();
+  const { pushChanges, closeModals } = useSliceMachineActions();
 
   const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
     isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
@@ -38,7 +38,7 @@ const changes: React.FunctionComponent = () => {
 
   useEffect(() => {
     return () => {
-      closeScreenshotsModal();
+      closeModals();
     };
   }, []);
 
@@ -106,7 +106,11 @@ const changes: React.FunctionComponent = () => {
         sx={{ flex: 1, display: "flex", flexDirection: "column" }}
       >
         <Header
-          ActionButton={
+          link={{
+            Element: <Text>Changes</Text>,
+            href: "/changes",
+          }}
+          Actions={[
             <Button
               label="Push Changes"
               onClick={handlePush}
@@ -119,11 +123,10 @@ const changes: React.FunctionComponent = () => {
                 isSyncing
               }
               Icon={MdLoop}
+              iconFill="#FFFFFF"
               data-cy="push-changes"
-            />
-          }
-          MainBreadcrumb={<Text ml={2}>Changes</Text>}
-          breadrumbHref="/changes"
+            />,
+          ]}
         />
         {PageContent}
       </Box>
@@ -133,4 +136,4 @@ const changes: React.FunctionComponent = () => {
   );
 };
 
-export default changes;
+export default Changes;

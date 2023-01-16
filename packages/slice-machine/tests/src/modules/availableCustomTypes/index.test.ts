@@ -22,7 +22,6 @@ import {
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import axios, { AxiosError } from "axios";
@@ -296,9 +295,7 @@ describe("[Available Custom types module]", () => {
         .put(
           createCustomTypeCreator.success({ newCustomType: customTypeCreated })
         );
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().put(push("/cts/id"));
       saga.next().put(
         openToasterCreator({
@@ -389,9 +386,7 @@ describe("[Available Custom types module]", () => {
           actionPayload.newCustomTypeName
         );
       saga.next().put(renameCustomTypeCreator.success(actionPayload));
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().put(
         openToasterCreator({
           content: "Custom type updated",
@@ -447,9 +442,7 @@ describe("[Available Custom types module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
     it("should call the api and dispatch the good actions on unknown failure", () => {
@@ -471,9 +464,7 @@ describe("[Available Custom types module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
     it("should call the api and dispatch the good actions on an API error", () => {
@@ -502,9 +493,7 @@ describe("[Available Custom types module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
     it("should call the api and dispatch the good actions on an API warning", () => {
@@ -534,9 +523,7 @@ describe("[Available Custom types module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
   });

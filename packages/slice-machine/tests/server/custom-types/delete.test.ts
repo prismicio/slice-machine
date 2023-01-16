@@ -5,12 +5,6 @@ import { RequestWithEnv } from "server/src/api/http/common";
 
 jest.mock("fs");
 
-jest.mock("../../../server/src/api/common/LibrariesState", () => {
-  return {
-    generateState: jest.fn(),
-  };
-});
-
 const readMockConfig = () =>
   JSON.parse(
     vol.readFileSync(`/test/.slicemachine/mock-config.json`, {

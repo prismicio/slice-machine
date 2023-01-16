@@ -27,6 +27,7 @@ export function* generateSliceScreenshotSaga({
     const response = (yield call(generateSliceScreenshotApiClient, {
       libraryName: component.from,
       sliceName: component.model.name,
+      href: component.href,
       variationId,
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;

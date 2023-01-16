@@ -27,7 +27,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
     })
   );
 
-  const { closeScreenshotPreviewModal } = useSliceMachineActions();
+  const { closeModals } = useSliceMachineActions();
 
   return (
     <SliceMachineModal
@@ -35,7 +35,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
       shouldCloseOnOverlayClick={true}
       contentLabel={"Screenshot Preview"}
       portalClassName={"ScreenshotPreviewModal"}
-      onRequestClose={closeScreenshotPreviewModal}
+      onRequestClose={closeModals}
     >
       <Card
         radius={"0px"}
@@ -62,10 +62,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
             <Heading sx={{ fontSize: "14px" }}>
               Screenshot Preview for {sliceName}
             </Heading>
-            <Close
-              type="button"
-              onClick={() => closeScreenshotPreviewModal()}
-            />
+            <Close type="button" onClick={() => closeModals()} />
           </Flex>
         )}
         Footer={() => (
@@ -83,7 +80,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
               sx={{
                 fontWeight: 600,
               }}
-              onClick={() => closeScreenshotPreviewModal()}
+              onClick={() => closeModals()}
             >
               Close
             </Button>

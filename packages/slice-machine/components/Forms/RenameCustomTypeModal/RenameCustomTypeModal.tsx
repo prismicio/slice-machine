@@ -21,9 +21,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
 }) => {
   const customTypeName = customType?.local.label ?? "";
   const customTypeId = customType?.local.id ?? "";
-
-  const { renameCustomType, closeRenameCustomTypeModal } =
-    useSliceMachineActions();
+  const { renameCustomType, closeModals } = useSliceMachineActions();
 
   const handleOnSubmit = (values: { customTypeName: string }) => {
     renameCustomType(customTypeId, values.customTypeName);
@@ -47,7 +45,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
       isOpen={isRenameCustomTypeModalOpen}
       widthInPx="530px"
       formId={`rename-custom-type-modal-${customTypeId}`}
-      close={closeRenameCustomTypeModal}
+      close={closeModals}
       buttonLabel="Rename"
       onSubmit={handleOnSubmit}
       initialValues={{

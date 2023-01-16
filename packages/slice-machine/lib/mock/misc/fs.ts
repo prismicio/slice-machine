@@ -2,7 +2,9 @@ import Files from "../../utils/files";
 import { MocksConfig } from "../../models/paths";
 import { GlobalMockConfig } from "@lib/models/common/MockConfig";
 
-export const getConfig = (cwd: string) => {
+export const getConfig = (
+  cwd: string
+): Record<string, Record<string, unknown>> => {
   const pathToMockConfig = MocksConfig(cwd);
   if (Files.exists(pathToMockConfig)) {
     return Files.readJson<GlobalMockConfig>(pathToMockConfig);
@@ -30,7 +32,7 @@ export const insert = (
       ? {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
           [prefix]: {
-            ...config[prefix],
+            ...(prefix in config ? config[prefix] : {}),
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
             [key]: value,
           },

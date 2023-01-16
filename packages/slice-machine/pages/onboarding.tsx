@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { type FC, type ReactNode, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -12,10 +12,7 @@ import {
   ParagraphProps,
   useThemeUI,
 } from "theme-ui";
-import router from "next/router";
-import { Video as CldVideo } from "cloudinary-react";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "../src/redux/type";
+import { useRouter } from "next/router";
 import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "../src/modules/useSliceMachineActions";
 import Tracker from "../src/tracking/client";
@@ -27,39 +24,12 @@ import {
   VIDEO_ONBOARDING_ADD_TO_PAGE,
   VIDEO_ONBOARDING_PUSH_CHANGES,
 } from "../lib/consts";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+
+import Video from "@components/CloudVideo";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
-
-const Video: React.FC<{
-  publicId: string;
-}> = ({ publicId }) => {
-  const { version, framework } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      version: getCurrentVersion(store),
-      framework: getFramework(store),
-    })
-  );
-  return (
-    <CldVideo
-      cloudName="dmtf1daqp"
-      autoPlay
-      controls
-      loop
-      style={{
-        maxWidth: "100%",
-        height: "auto",
-      }}
-      onPlay={() => {
-        void Tracker.get().trackClickOnVideoTutorials(
-          framework,
-          version,
-          publicId
-        );
-      }}
-      publicId={publicId}
-    />
-  );
-};
 
 const Header = (props: HeadingProps) => (
   <Heading
@@ -107,36 +77,42 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => {
     </>
   );
 };
-const BuildSlicesSlide: React.FC = () => (
+
+type SlideWithPlay = FC<{ onPlay: () => void }>;
+const BuildSlicesSlide: SlideWithPlay = ({ onPlay }) => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video publicId={VIDEO_ONBOARDING_BUILD_A_SLICE} />
+    <Video onPlay={onPlay} publicId={VIDEO_ONBOARDING_BUILD_A_SLICE} />
   </>
 );
 
-const CreatePageTypesSlide: React.FC = () => (
+const CreatePageTypesSlide: SlideWithPlay = ({ onPlay }) => (
   <>
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video publicId={VIDEO_ONBOARDING_ADD_TO_PAGE} />
+    <Video onPlay={onPlay} publicId={VIDEO_ONBOARDING_ADD_TO_PAGE} />
   </>
 );
 
-const PushPagesSlide: React.FC = () => (
+const PushPagesSlide: SlideWithPlay = ({ onPlay }) => (
   <>
     <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video publicId={VIDEO_ONBOARDING_PUSH_CHANGES} />
+    <Video onPlay={onPlay} publicId={VIDEO_ONBOARDING_PUSH_CHANGES} />
   </>
 );
 
-const OnboardingGrid: React.FunctionComponent = ({ children }) => {
+type OnboardingGridProps = Readonly<{
+  children?: ReactNode;
+}>;
+
+const OnboardingGrid: FC<OnboardingGridProps> = ({ children }) => {
   return (
     <Grid
       sx={{
@@ -202,7 +178,7 @@ function idFromStep(
   }
 }
 
-function handleTracking(props: { step: number; maxSteps: number }): void {
+function useTracking(props: { step: number; maxSteps: number }): void {
   const state = useRef(props);
 
   useEffect(() => {
@@ -235,11 +211,26 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 }
 
 export default function Onboarding(): JSX.Element {
+  const router = useRouter();
+
+  const { version, framework } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      version: getCurrentVersion(store),
+      framework: getFramework(store),
+    })
+  );
+
+  const createOnPlay = (id: string) => () => {
+    void Tracker.get().trackClickOnVideoTutorials(framework, version, id);
+  };
+
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
-    <BuildSlicesSlide />,
-    <CreatePageTypesSlide />,
-    <PushPagesSlide />,
+    <BuildSlicesSlide onPlay={createOnPlay(VIDEO_ONBOARDING_BUILD_A_SLICE)} />,
+    <CreatePageTypesSlide
+      onPlay={createOnPlay(VIDEO_ONBOARDING_ADD_TO_PAGE)}
+    />,
+    <PushPagesSlide onPlay={createOnPlay(VIDEO_ONBOARDING_PUSH_CHANGES)} />,
   ];
 
   const { finishOnboarding } = useSliceMachineActions();
@@ -248,7 +239,7 @@ export default function Onboarding(): JSX.Element {
     step: 0,
   });
 
-  handleTracking({
+  useTracking({
     ...state,
     maxSteps: STEPS.length,
   });
@@ -285,7 +276,6 @@ export default function Onboarding(): JSX.Element {
           <Button
             variant="transparent"
             onClick={finish}
-            data-cy="skip-onboarding"
             title="skip onboarding"
             tabIndex={0}
             sx={{
@@ -299,9 +289,9 @@ export default function Onboarding(): JSX.Element {
 
       {STEPS.map((Component, i) => (
         <Flex
-          hidden={i !== state.step}
           key={`step-${i + 1}`}
           sx={{
+            display: i === state.step ? "flex" : "none",
             gridArea: "content",
             alignItems: "center",
             justifyContent: "center",

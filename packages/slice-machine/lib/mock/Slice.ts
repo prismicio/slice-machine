@@ -1,16 +1,15 @@
 import {
   SharedSlice,
-  SlicesTypes,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff/SharedSlice";
 import {
   SharedSliceMockConfig,
   VariationMockConfig,
-  generateSliceMock,
-  renderSliceMock,
+  SharedSliceMock,
 } from "@prismicio/mocks";
 import { buildFieldsMockConfig } from "./LegacyMockConfig";
-import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
+import { ComponentMocks } from "@slicemachine/core/build/models";
 
 function buildVariationMockConfig(
   model: Variation,
@@ -52,6 +51,7 @@ export function buildSliceMockConfig(
 
   return model.variations.map((v) => {
     return {
+      type: "SharedSlice",
       variation: v.id,
       variations: variationConfigs,
     };
@@ -59,22 +59,29 @@ export function buildSliceMockConfig(
 }
 
 export default function MockSlice(
-  smModel: SliceSM,
-  legacyMockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
-): unknown[] {
-  const model = Slices.fromSM(smModel);
-  const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
-  const sliceModel: SharedSlice = {
-    ...model,
-    variations: model.variations.map((v) => {
-      return {
-        ...v,
-        imageUrl: "",
-      } as Variation;
-    }),
-    type: SlicesTypes.SharedSlice,
-  };
-  return sliceMockConfig.map((sc) =>
-    generateSliceMock(sliceModel, sc)(renderSliceMock)
-  );
+  sliceModel: SharedSlice,
+  legacyMockConfig: Record<string, Record<string, Record<string, unknown>>>, // not sure about this one.
+  previousMocks?: ComponentMocks | null | undefined,
+  sliceDiff?: SliceDiff | undefined
+): ComponentMocks {
+  const sliceMockConfig = buildSliceMockConfig(sliceModel, legacyMockConfig);
+  return sliceMockConfig.map((sc) => {
+    if (!sliceDiff) return SharedSliceMock.generate(sliceModel, sc);
+
+    const variationMock = previousMocks?.find(
+      (m) => m.variation === sc.variation
+    );
+    if (!variationMock) return SharedSliceMock.generate(sliceModel, sc);
+
+    const patched = SharedSliceMock.patch(
+      sliceDiff,
+      sliceModel,
+      variationMock,
+      sc
+    );
+    if (!patched.ok || !patched.result)
+      return SharedSliceMock.generate(sliceModel, sc);
+
+    return patched.result;
+  });
 }

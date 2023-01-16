@@ -1,0 +1,1 @@
+[{"__TYPE__":"SharedSliceContent","variation":"default-slice","primary":{"section_title":{"__TYPE__":"FieldContent","value":"slave","type":"Text"}},"items":[{"__TYPE__":"GroupItemContent","value":[["link",{"__TYPE__":"LinkContent","value":{"id":"mock_document_id","__TYPE__":"DocumentLink"}}],["link_label",{"__TYPE__":"FieldContent","value":"electricity","type":"Text"}]]}]}]

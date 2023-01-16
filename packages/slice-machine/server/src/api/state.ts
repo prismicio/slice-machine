@@ -10,14 +10,16 @@ import ServerState from "../../../lib/models/server/ServerState";
 
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
-import { generate } from "./common/generate";
 import { RequestWithEnv } from "./http/common";
 import { getAndSetUserProfile } from "./services/getAndSetUserProfile";
+import { validateOrReplaceMocks } from "./common/validateOrReplaceMocks";
 
 export const getBackendState = async (
   configErrors: Record<string, ServerError>,
   env: BackendEnvironment
 ) => {
+  validateOrReplaceMocks(env.cwd, env.manifest.libraries);
+
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
   const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env);
 
@@ -37,8 +39,6 @@ export const getBackendState = async (
         console.error("[Refresh token]: Internal error : ", error.message)
       );
   }
-
-  generate(env, libraries);
 
   return {
     libraries,

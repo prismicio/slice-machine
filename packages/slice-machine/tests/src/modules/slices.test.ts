@@ -25,7 +25,6 @@ import {
   renameSlice,
 } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
@@ -130,9 +129,7 @@ describe("[Slices module]", () => {
       saga
         .next({ data: serverState })
         .put(createSliceCreator.success({ libraries: serverState.libraries }));
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+      saga.next().put(modalCloseCreator());
       saga
         .next()
         .put(
@@ -179,9 +176,7 @@ describe("[Slices module]", () => {
           newSliceName: actionPayload.newSliceName,
         })
       );
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+      saga.next().put(modalCloseCreator());
       saga.next().put(
         openToasterCreator({
           content: "Slice name updated",
@@ -215,9 +210,7 @@ describe("[Slices module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
     it("should call the api and dispatch the good actions on unknown failure", () => {
@@ -241,9 +234,7 @@ describe("[Slices module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
     it("should call the api and dispatch the good actions on an API error", () => {
@@ -275,9 +266,7 @@ describe("[Slices module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
     it("should call the api and dispatch the good actions on an API warning", () => {
@@ -310,9 +299,7 @@ describe("[Slices module]", () => {
         })
       );
 
-      saga
-        .next()
-        .put(modalCloseCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
   });

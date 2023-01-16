@@ -1,0 +1,52 @@
+{
+  "title": {
+    "__TYPE__": "FieldContent",
+    "value": "chart",
+    "type": "Text"
+  },
+  "slices": {
+    "__TYPE__": "SliceContentType",
+    "value": [
+      {
+        "key": "menu_sub_tab$62efe097-29ec-4532-b122-61215fad11c0",
+        "name": "menu_sub_tab",
+        "widget": {
+          "__TYPE__": "SharedSliceContent",
+          "variation": "default-slice",
+          "primary": {
+            "sectionTitle": {
+              "__TYPE__": "FieldContent",
+              "value": "teach",
+              "type": "Text"
+            }
+          },
+          "items": [
+            {
+              "__TYPE__": "GroupItemContent",
+              "value": [
+                [
+                  "subSectionTitle",
+                  {
+                    "__TYPE__": "FieldContent",
+                    "value": "occur",
+                    "type": "Text"
+                  }
+                ],
+                [
+                  "subSectionLink",
+                  {
+                    "__TYPE__": "LinkContent",
+                    "value": {
+                      "__TYPE__": "DocumentLink",
+                      "id": "mock_document_id"
+                    }
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

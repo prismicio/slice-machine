@@ -26,3 +26,7 @@ tests/project/node_modules
 
 # prov
 /api-dump
+
+# source maps
+/build/**/*.map
+/out/**/*.map

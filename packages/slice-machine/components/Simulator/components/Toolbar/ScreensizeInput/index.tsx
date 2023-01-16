@@ -28,6 +28,7 @@ type ScreensizeInputProps = {
   startValue: string;
   onChange: (sizeEvent: React.ChangeEvent<HTMLInputElement>) => void;
   sx?: ThemeUIStyleObject;
+  disabled: boolean;
 };
 
 export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
@@ -35,6 +36,7 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
   startValue,
   onChange,
   sx,
+  disabled,
 }) => {
   const disabledCharacters = ["e", "-", "+", ",", "."];
 
@@ -68,6 +70,7 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
       <Input
         type="number"
         name={`${label}-screensize-input`}
+        disabled={disabled}
         sx={{
           width: 80,
           height: 32,
@@ -81,6 +84,16 @@ export const ScreensizeInput: React.FC<ScreensizeInputProps> = ({
           color: "greyIcon",
           textAlign: "center",
           paddingLeft: 26,
+          "&:disabled": {
+            cursor: "not-allowed",
+            "&:hover": {
+              border: "1px solid #E4E2E4",
+            },
+            "&:active": {
+              border: "1px solid #E4E2E4",
+              boxShadow: "none",
+            },
+          },
         }}
         onChange={onChange}
         value={startValue}

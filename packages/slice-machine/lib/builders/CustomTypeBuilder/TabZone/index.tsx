@@ -29,6 +29,7 @@ import {
   TabFields,
 } from "@slicemachine/core/build/models/CustomType";
 import Tracker from "../../../../src/tracking/client";
+import { DropResult } from "react-beautiful-dnd";
 
 interface TabZoneProps {
   tabId: string;
@@ -98,10 +99,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     addCustomTypeField(tabId, id, widget.create(label));
   };
 
-  const onDragEnd = (result: {
-    destination?: { droppableId: string; index: number };
-    source: { index: number; droppableId: string };
-  }) => {
+  const onDragEnd = (result: DropResult) => {
     if (ensureDnDDestination(result)) {
       return;
     }

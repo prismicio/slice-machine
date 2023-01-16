@@ -1,0 +1,77 @@
+[
+  {
+    "__TYPE__": "SharedSliceContent",
+    "variation": "default-slice",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Hello",
+              "spans": []
+            },
+            "direction": "ltr"
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Voluptate quis et excepteur nulla cupidatat excepteur amet et occaecat duis nulla velit veniam. Reprehenderit do sit minim laboris ex laboris quis ea ullamco officia sint nisi. In magna ex qui enim."
+            }
+          }
+        ]
+      },
+      "additionalInfoTitle": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Ad fugiat qui magna aliquip velit id elit excepteur sit ad aute aliqua occaecat laboris enim. Cillum proident voluptate consequat nulla nisi labore minim aliquip cillum proident minim eiusmod anim amet. Qui nostrud adipisicing eiusmod cillum ullamco nisi deserunt."
+            }
+          }
+        ]
+      },
+      "additionalInfo": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Non officia quis magna excepteur proident."
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "percentageShare",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "59",
+              "type": "Number"
+            }
+          ],
+          [
+            "entityLabel",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "you",
+              "type": "Text"
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

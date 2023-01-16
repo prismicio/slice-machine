@@ -65,6 +65,8 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   Form,
   prepareInitialValues: (initialValues) => {
     const customTypes =
+      // TODO: fix this error
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useSelector(selectAllCustomTypes).filter(isLocalCustomType);
 
     if (!initialValues?.customtypes) {

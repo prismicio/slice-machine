@@ -30,9 +30,9 @@
       "@builders/*": ["lib/builders/*"],
       "@models/*": ["lib/models/*"],
       "@src/*": ["src/*"],
-      "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"]
-    }
+    },
+    "incremental": true
   },
   "exclude": ["node_modules", "templates", "tests/project", "build"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"]

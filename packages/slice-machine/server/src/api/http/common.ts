@@ -13,7 +13,7 @@ export function WithEnv(
   handler: (req: RequestWithEnv, res: express.Response) => Promise<any>
 ) {
   return async function (req: express.Request, res: express.Response) {
-    const { env, errors } = await getEnv();
+    const { env, errors } = getEnv();
 
     const reqWithEnv = (() => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
