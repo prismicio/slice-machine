@@ -33,6 +33,10 @@ describe("Create Slices", () => {
     cy.getInputByLabel("Variation ID*").type("bar");
 
     cy.get("#variation-add").submit();
+
+    cy.contains("button", "Simulate Slice").should("have.attr", "disabled");
+    cy.contains("button", "Update screenshot").should("have.attr", "disabled");
+
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
       `/${lib}/${editedSliceName}/bar`
@@ -45,6 +49,12 @@ describe("Create Slices", () => {
     );
 
     cy.contains("Save to File System").click();
+
+    cy.contains("button", "Simulate Slice").should("not.have.attr", "disabled");
+    cy.contains("button", "Update screenshot").should(
+      "not.have.attr",
+      "disabled"
+    );
 
     // simulator
 

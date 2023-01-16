@@ -17,15 +17,30 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { Button } from "@components/Button";
 import { AiOutlineCamera } from "react-icons/ai";
+import ReactTooltip from "react-tooltip";
 
 type SideBarProps = {
   component: ComponentUI;
   variation: Models.VariationSM;
+  isTouched: boolean;
 };
+
+const NeedToSaveTooltip: React.FC = () => (
+  <ReactTooltip
+    clickable
+    place="bottom"
+    effect="solid"
+    delayHide={100}
+    id="update-screenshot-button-tooltip"
+  >
+    Save your work in order to update the screenshot
+  </ReactTooltip>
+);
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
   component,
   variation,
+  isTouched,
 }) => {
   const { screenshots } = component;
   const { openScreenshotsModal } = useScreenshotChangesModal();
@@ -46,14 +61,24 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         bg="headSection"
         bodySx={{ p: 0 }}
         Footer={() => (
-          <Button
-            onClick={openScreenshotsModal}
-            variant="secondarySmall"
-            sx={{ fontWeight: "bold" }}
-            Icon={AiOutlineCamera}
-            iconFill="#1A1523"
-            label="Update screenshot"
-          />
+          <>
+            <span
+              data-tip
+              data-tip-disable={false}
+              data-for={"update-screenshot-button-tooltip"}
+            >
+              <Button
+                onClick={openScreenshotsModal}
+                variant="secondarySmall"
+                sx={{ fontWeight: "bold" }}
+                Icon={AiOutlineCamera}
+                iconFill="#1A1523"
+                label="Update screenshot!!!"
+                disabled={isTouched}
+              />
+            </span>
+            {isTouched && <NeedToSaveTooltip />}
+          </>
         )}
         footerSx={{ padding: 2 }}
         sx={{ overflow: "hidden" }}
