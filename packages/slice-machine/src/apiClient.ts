@@ -1,10 +1,7 @@
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
-import { Slices, SliceSM } from "@slicemachine/core/build/models";
-import {
-  CustomTypes,
-  CustomTypeSM,
-} from "@slicemachine/core/build/models/CustomType";
+import { Slices, SliceSM } from "@core/models";
+import { CustomTypes, CustomTypeSM } from "@core/models/CustomType";
 
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import ServerState from "@models/server/ServerState";
@@ -14,7 +11,7 @@ import {
 } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
-import { ComponentMocks } from "@slicemachine/core/build/models";
+import { ComponentMocks } from "@core/models";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";

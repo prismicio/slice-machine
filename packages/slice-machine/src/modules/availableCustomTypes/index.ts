@@ -11,7 +11,7 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@core/models/CustomType";
 import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,

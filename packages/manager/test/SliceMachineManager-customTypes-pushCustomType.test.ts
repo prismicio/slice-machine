@@ -26,6 +26,8 @@ it("pushes a Custom Type using the Custom Types API", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
+	let sentModel;
+
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
 	mockCustomTypesAPI(ctx, {
@@ -33,7 +35,7 @@ it("pushes a Custom Type using the Custom Types API", async (ctx) => {
 			return res(ctx.status(404));
 		},
 		async onCustomTypeInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual(model);
+			sentModel = await req.json();
 
 			return res(ctx.status(201));
 		},
@@ -42,7 +44,7 @@ it("pushes a Custom Type using the Custom Types API", async (ctx) => {
 	await manager.user.login(createPrismicAuthLoginResponse());
 	await manager.customTypes.pushCustomType({ id: model.id });
 
-	expect.assertions(2);
+	expect(sentModel).toStrictEqual(model);
 });
 
 it("uses the update endpoint if the Custom Type already exists", async (ctx) => {
@@ -62,6 +64,8 @@ it("uses the update endpoint if the Custom Type already exists", async (ctx) => 
 
 	await manager.plugins.initPlugins();
 
+	let sentModel;
+
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
 	mockCustomTypesAPI(ctx, {
@@ -71,7 +75,7 @@ it("uses the update endpoint if the Custom Type already exists", async (ctx) => 
 			}
 		},
 		onCustomTypeUpdate: async (req, res, ctx) => {
-			expect(await req.json()).toStrictEqual(model);
+			sentModel = await req.json();
 
 			return res(ctx.status(204));
 		},
@@ -80,7 +84,7 @@ it("uses the update endpoint if the Custom Type already exists", async (ctx) => 
 	await manager.user.login(createPrismicAuthLoginResponse());
 	await manager.customTypes.pushCustomType({ id: model.id });
 
-	expect.assertions(2);
+	expect(sentModel).toStrictEqual(model);
 });
 
 it("throws if plugins have not been initialized", async () => {

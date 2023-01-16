@@ -62,7 +62,6 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - packages/core
           - packages/plugin-kit
           - packages/manager
           - packages/init
@@ -111,7 +110,6 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - packages/core
           - packages/plugin-kit
           - packages/manager
           - packages/init

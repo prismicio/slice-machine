@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 import { Widget } from "../models/common/widgets/Widget";
-import { Frameworks } from "@slicemachine/core/build/models/Framework";
+import { Frameworks } from "@core/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";

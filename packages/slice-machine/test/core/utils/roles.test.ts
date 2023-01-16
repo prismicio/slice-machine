@@ -1,5 +1,5 @@
-import { describe, expect, test } from "@jest/globals";
-import { Roles, canUpdateCustomTypes } from "../../../src/models";
+import { describe, expect, test } from "vitest";
+import { Roles, canUpdateCustomTypes } from "../../../core/models";
 
 describe("canUpdateCutsomTypes", () => {
   test("should return true only if role is owner or admin", () => {

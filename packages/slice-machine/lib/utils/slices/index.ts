@@ -1,7 +1,7 @@
 import glob from "glob";
 
-import { getFormattedLibIdentifier } from "@slicemachine/core/build/libraries";
-import { SliceSM } from "@slicemachine/core/build/models/Slice";
+import { getFormattedLibIdentifier } from "@core/libraries";
+import { SliceSM } from "@core/models/Slice";
 
 import Files from "../files";
 import { CustomPaths } from "../../models/paths";

@@ -1,14 +1,15 @@
+import { afterEach, expect, test, vi } from "vitest";
 const TMP = "/tmp";
 import path from "path";
 import { vol } from "memfs";
-import { libraries } from "../../../src/libraries";
-import slice from "../../_misc/validSliceModel.json";
+import { libraries } from "../../../core/libraries";
+import slice from "../__fixtures__/validSliceModel.json";
 
 const model = JSON.stringify(slice);
 
-jest.spyOn(console, "error").mockImplementationOnce(() => null);
+vi.spyOn(console, "error").mockImplementationOnce(() => null);
 
-jest.mock(`fs`, () => {
+vi.mock(`fs`, () => {
   return vol;
 });
 

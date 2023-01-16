@@ -1,4 +1,4 @@
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@core/models/CustomType";
 import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
 

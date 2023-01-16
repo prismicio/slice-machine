@@ -41,20 +41,14 @@ it("pushes a Slice using the Custom Types API", async (ctx) => {
 	const authenticationToken = await manager.user.getAuthenticationToken();
 	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
 
+	let sentModel;
+
 	mockCustomTypesAPI(ctx, {
 		async onSliceGet(_req, res, ctx) {
 			return res(ctx.status(404));
 		},
 		async onSliceInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual({
-				...model,
-				variations: model.variations.map((variation) => {
-					return {
-						...variation,
-						imageUrl: expect.any(String),
-					};
-				}),
-			});
+			sentModel = await req.json();
 
 			return res(ctx.status(201));
 		},
@@ -87,7 +81,15 @@ it("pushes a Slice using the Custom Types API", async (ctx) => {
 			],
 		},
 	});
-	expect.assertions(4);
+	expect(sentModel).toStrictEqual({
+		...model,
+		variations: model.variations.map((variation) => {
+			return {
+				...variation,
+				imageUrl: expect.any(String),
+			};
+		}),
+	});
 });
 
 it("updates variation screenshot URLs with a default image if no variation screenshot exists", async (ctx) => {
@@ -119,21 +121,14 @@ it("updates variation screenshot URLs with a default image if no variation scree
 	const authenticationToken = await manager.user.getAuthenticationToken();
 	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
 
+	let sentModel;
+
 	mockCustomTypesAPI(ctx, {
 		async onSliceGet(_req, res, ctx) {
 			return res(ctx.status(404));
 		},
 		async onSliceInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual({
-				...model,
-				variations: [
-					{
-						...model.variations[0],
-						imageUrl:
-							"https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
-					},
-				],
-			});
+			sentModel = await req.json();
 
 			return res(ctx.status(201));
 		},
@@ -163,7 +158,16 @@ it("updates variation screenshot URLs with a default image if no variation scree
 			],
 		},
 	});
-	expect.assertions(3);
+	expect(sentModel).toStrictEqual({
+		...model,
+		variations: [
+			{
+				...model.variations[0],
+				imageUrl:
+					"https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+			},
+		],
+	});
 });
 
 it("updates variation screenshot URLs with uploaded screenshots", async (ctx) => {
@@ -219,20 +223,14 @@ it("updates variation screenshot URLs with uploaded screenshots", async (ctx) =>
 		s3ACL.imgixEndpoint,
 	).toString();
 
+	let sentModel;
+
 	mockCustomTypesAPI(ctx, {
 		async onSliceGet(_req, res, ctx) {
 			return res(ctx.status(404));
 		},
 		async onSliceInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual({
-				...model,
-				variations: model.variations.map((variation) => {
-					return {
-						...variation,
-						imageUrl: uploadedScreenshotURL,
-					};
-				}),
-			});
+			sentModel = await req.json();
 
 			return res(ctx.status(201));
 		},
@@ -269,7 +267,15 @@ it("updates variation screenshot URLs with uploaded screenshots", async (ctx) =>
 			],
 		},
 	});
-	expect.assertions(4);
+	expect(sentModel).toStrictEqual({
+		...model,
+		variations: model.variations.map((variation) => {
+			return {
+				...variation,
+				imageUrl: uploadedScreenshotURL,
+			};
+		}),
+	});
 });
 
 it("uses the update endpoint if the Slice already exists", async (ctx) => {
@@ -299,6 +305,8 @@ it("uses the update endpoint if the Slice already exists", async (ctx) => {
 	const authenticationToken = await manager.user.getAuthenticationToken();
 	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
 
+	let sentModel;
+
 	mockCustomTypesAPI(ctx, {
 		async onSliceGet(req, res, ctx) {
 			if (req.params.id === model.id) {
@@ -306,15 +314,7 @@ it("uses the update endpoint if the Slice already exists", async (ctx) => {
 			}
 		},
 		async onSliceUpdate(req, res, ctx) {
-			expect(await req.json()).toStrictEqual({
-				...model,
-				variations: model.variations.map((variation) => {
-					return {
-						...variation,
-						imageUrl: expect.any(String),
-					};
-				}),
-			});
+			sentModel = await req.json();
 
 			return res(ctx.status(201));
 		},
@@ -331,7 +331,15 @@ it("uses the update endpoint if the Slice already exists", async (ctx) => {
 		sliceID: model.id,
 	});
 
-	expect.assertions(2);
+	expect(sentModel).toStrictEqual({
+		...model,
+		variations: model.variations.map((variation) => {
+			return {
+				...variation,
+				imageUrl: expect.any(String),
+			};
+		}),
+	});
 });
 
 it("returns a record of variation IDs mapped to uploaded screenshot URLs", async (ctx) => {
@@ -387,20 +395,14 @@ it("returns a record of variation IDs mapped to uploaded screenshot URLs", async
 		s3ACL.imgixEndpoint,
 	).toString();
 
+	let sentModel;
+
 	mockCustomTypesAPI(ctx, {
 		async onSliceGet(_req, res, ctx) {
 			return res(ctx.status(404));
 		},
 		async onSliceInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual({
-				...model,
-				variations: model.variations.map((variation) => {
-					return {
-						...variation,
-						imageUrl: uploadedScreenshotURL,
-					};
-				}),
-			});
+			sentModel = await req.json();
 
 			return res(ctx.status(201));
 		},
@@ -426,7 +428,15 @@ it("returns a record of variation IDs mapped to uploaded screenshot URLs", async
 		},
 		errors: [],
 	});
-	expect.assertions(3);
+	expect(sentModel).toStrictEqual({
+		...model,
+		variations: model.variations.map((variation) => {
+			return {
+				...variation,
+				imageUrl: uploadedScreenshotURL,
+			};
+		}),
+	});
 });
 
 it("throws if plugins have not been initialized", async () => {

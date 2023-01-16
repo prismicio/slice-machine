@@ -9,7 +9,7 @@ import {
   replaceSliceWidgetCreator,
   updateSliceWidgetMockCreator,
 } from "@src/modules/selectedSlice/actions";
-import { Models } from "@slicemachine/core";
+import { Models } from "@core";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";

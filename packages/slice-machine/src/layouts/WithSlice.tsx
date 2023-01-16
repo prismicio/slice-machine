@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { VariationSM } from "@core/models";
 import useCurrentSlice from "@src/hooks/useCurrentSlice";
 import { AppProps } from "next/app";
 

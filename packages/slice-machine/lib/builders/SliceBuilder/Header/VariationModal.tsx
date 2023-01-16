@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/models";
+import type Models from "@core/models";
 import { Variation } from "@models/common/Variation";
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";

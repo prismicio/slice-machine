@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     alias: {
+      "@core": path.resolve(__dirname, "./core"),
       "@builders": path.resolve(__dirname, "./lib/builders"),
       "@components": path.resolve(__dirname, "./components"),
       "@lib": path.resolve(__dirname, "./lib"),

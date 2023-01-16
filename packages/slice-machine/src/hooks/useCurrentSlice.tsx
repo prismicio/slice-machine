@@ -1,5 +1,5 @@
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/models";
+import { VariationSM } from "@core/models";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@src/redux/type";

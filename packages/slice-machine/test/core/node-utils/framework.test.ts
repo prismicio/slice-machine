@@ -1,15 +1,19 @@
-import { describe, expect, test, jest, afterEach } from "@jest/globals";
-import { Frameworks, SupportedFrameworks } from "../../src/models/Framework";
-import { JsonPackage } from "../../src/node-utils/pkg";
-import * as FrameworkUtils from "../../src/node-utils/framework";
-import * as fs from "fs";
-import { Manifest } from "../../src/models/Manifest";
-
-jest.mock("fs");
+import { afterEach, describe, expect, test, vi } from "vitest";
+import {
+  Frameworks,
+  SupportedFrameworks,
+} from "../../../core/models/Framework";
+import { JsonPackage } from "../../../core/node-utils/pkg";
+import * as FrameworkUtils from "../../../core/node-utils/framework";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { Manifest } from "../../../core/models/Manifest";
+import { createTestProject } from "test/__testutils__/createTestProject";
+import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 
 describe("framework.fancyName", () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   test("it should return a fancy name", () => {
@@ -23,7 +27,7 @@ describe("framework.fancyName", () => {
 
 describe("framework.isFrameworkSupported", () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   const supportedFramework = SupportedFrameworks[0];
@@ -44,7 +48,7 @@ describe("framework.isFrameworkSupported", () => {
 
 describe("framework.detectFramework", () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   test("it should detect a supported framework", () => {
@@ -77,18 +81,18 @@ describe("framework.detectFramework", () => {
 
 describe("framework.defineFrameworks", () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
-  test("it should take the framework from the pkg json if there isn't in the manifest", () => {
-    const fakeManifest = {
-      apiEndpoint: "fake api endpoint",
-    };
+  test("it should take the framework from the pkg json if there isn't in the manifest", async () => {
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({ adapter });
 
-    const mockedFs = jest.mocked(fs);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-
-    mockedFs.readFileSync.mockReturnValue(
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(cwd, "slicemachine.config.json"), "utf8")
+    );
+    await fs.writeFile(
+      path.join(cwd, "package.json"),
       JSON.stringify({
         dependencies: {
           [Frameworks.next]: "beta",
@@ -97,8 +101,8 @@ describe("framework.defineFrameworks", () => {
     );
 
     const result: Frameworks = FrameworkUtils.defineFramework({
-      cwd: "not important",
-      manifest: fakeManifest,
+      cwd,
+      manifest,
     });
     expect(result).toEqual(Frameworks.next);
   });
@@ -116,16 +120,19 @@ describe("framework.defineFrameworks", () => {
     expect(result).toEqual(Frameworks.next);
   });
 
-  test("it should take the framework from the pkg json if the one in manifest isn't supported", () => {
-    const fakeManifest: Manifest = {
-      apiEndpoint: "fake api endpoint",
+  test("it should take the framework from the pkg json if the one in manifest isn't supported", async () => {
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({
+      adapter,
+      // @ts-expect-error - `framework` no longer exists in the manifest.
       framework: FrameworkUtils.UnsupportedFrameWorks[0],
-    };
+    });
 
-    const mockedFs = jest.mocked(fs);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-
-    mockedFs.readFileSync.mockReturnValue(
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(cwd, "slicemachine.config.json"), "utf8")
+    );
+    await fs.writeFile(
+      path.join(cwd, "package.json"),
       JSON.stringify({
         dependencies: {
           [Frameworks.next]: "beta",
@@ -134,19 +141,20 @@ describe("framework.defineFrameworks", () => {
     );
 
     const result: Frameworks = FrameworkUtils.defineFramework({
-      cwd: "not important",
-      manifest: fakeManifest,
+      cwd,
+      manifest,
     });
     expect(result).toEqual(Frameworks.next);
   });
 
-  test("it should default to vanillajs if no manifest and the pkg json framework is unsupported", () => {
+  test("it should default to vanillajs if no manifest and the pkg json framework is unsupported", async () => {
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({ adapter });
+
     const unsupportedFramework = FrameworkUtils.UnsupportedFrameWorks[0];
 
-    const mockedFs = jest.mocked(fs);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-
-    mockedFs.readFileSync.mockReturnValue(
+    await fs.writeFile(
+      path.join(cwd, "package.json"),
       JSON.stringify({
         dependencies: {
           [unsupportedFramework]: "beta",
@@ -155,23 +163,26 @@ describe("framework.defineFrameworks", () => {
     );
 
     const result: Frameworks = FrameworkUtils.defineFramework({
-      cwd: "not important",
+      cwd,
     });
     expect(result).toEqual(Frameworks.vanillajs);
   });
 
-  test("it should default to vanillajs if package and manifest aren't good", () => {
+  test("it should default to vanillajs if package and manifest aren't good", async () => {
     const unsupportedFramework = FrameworkUtils.UnsupportedFrameWorks[0];
 
-    const fakeManifest: Manifest = {
-      apiEndpoint: "fake api endpoint",
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({
+      adapter,
+      // @ts-expect-error - `framework` no longer exists in the manifest.
       framework: unsupportedFramework,
-    };
+    });
 
-    const mockedFs = jest.mocked(fs);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-
-    mockedFs.readFileSync.mockReturnValue(
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(cwd, "slicemachine.config.json"), "utf8")
+    );
+    await fs.writeFile(
+      path.join(cwd, "package.json"),
       JSON.stringify({
         dependencies: {
           [unsupportedFramework]: "beta",
@@ -180,8 +191,8 @@ describe("framework.defineFrameworks", () => {
     );
 
     const result: Frameworks = FrameworkUtils.defineFramework({
-      cwd: "not important",
-      manifest: fakeManifest,
+      cwd,
+      manifest,
     });
     expect(result).toEqual(Frameworks.vanillajs);
   });
@@ -189,18 +200,18 @@ describe("framework.defineFrameworks", () => {
 
 describe("framework.defineFrameworkWithVersion", () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
-  test("it should return the version if found", () => {
-    const fakeManifest = {
-      apiEndpoint: "fake api endpoint",
-    };
+  test("it should return the version if found", async () => {
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({ adapter });
 
-    const mockedFs = jest.mocked(fs);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-
-    mockedFs.readFileSync.mockReturnValue(
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(cwd, "slicemachine.config.json"), "utf8")
+    );
+    await fs.writeFile(
+      path.join(cwd, "package.json"),
       JSON.stringify({
         dependencies: {
           [Frameworks.next]: "beta",
@@ -209,29 +220,29 @@ describe("framework.defineFrameworkWithVersion", () => {
     );
 
     const result = FrameworkUtils.defineFrameworkWithVersion({
-      cwd: "not important",
-      manifest: fakeManifest,
+      cwd,
+      manifest,
     });
     expect(result).toEqual({ framework: Frameworks.next, version: "beta" });
   });
 
-  test("it should return undefined if framework is nto found", () => {
-    const fakeManifest = {
-      apiEndpoint: "fake api endpoint",
-    };
+  test("it should return undefined if framework is nto found", async () => {
+    const adapter = createTestPlugin();
+    const cwd = await createTestProject({ adapter });
 
-    const mockedFs = jest.mocked(fs);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-
-    mockedFs.readFileSync.mockReturnValue(
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(cwd, "slicemachine.config.json"), "utf8")
+    );
+    await fs.writeFile(
+      path.join(cwd, "package.json"),
       JSON.stringify({
         dependencies: {},
       })
     );
 
     const result = FrameworkUtils.defineFrameworkWithVersion({
-      cwd: "not important",
-      manifest: fakeManifest,
+      cwd,
+      manifest,
     });
     expect(result).toEqual({
       framework: Frameworks.vanillajs,

@@ -11,7 +11,7 @@ runs:
           node_modules
           */*/node_modules
           ~/.cache/Cypress
-        key: ${{ runner.os }}-lerna-${{ hashFiles('package-lock.json', '**/package-lock.json') }}-dependencies
+        key: ${{ runner.os }}-${{ hashFiles('package-lock.json', '**/package-lock.json') }}-dependencies
     - name: Cache artifacts
       id: cache-artifacts
       uses: actions/cache@v3
@@ -19,4 +19,4 @@ runs:
         path: |
           packages/*/dist
           packages/core/build
-        key: ${{ runner.os }}-lerna-${{ github.run_id }}-artifacts
+        key: ${{ runner.os }}-${{ github.run_id }}-artifacts

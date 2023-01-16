@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/models";
+import type Models from "@core/models";
 
 export interface SliceMockConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

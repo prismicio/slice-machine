@@ -3,10 +3,10 @@ import { useModelStatus } from "../../../src/hooks/useModelStatus";
 import * as networkHook from "../../../src/hooks/useNetwork";
 import { AuthStatus } from "@src/modules/userContext/types";
 
-import { Slices } from "@slicemachine/core/build/models/Slice";
+import { Slices } from "@core/models/Slice";
 import SliceMock from "../../__fixtures__/sliceModel";
 
-import { CustomTypes } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypes } from "@core/models/CustomType";
 import { customTypeMock } from "../../__fixtures__/customType";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 

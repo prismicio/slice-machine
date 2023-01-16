@@ -1,5 +1,5 @@
-import { Models } from "@slicemachine/core";
-import { retrieveManifest } from "@slicemachine/core/build/node-utils";
+import { Models } from "@core";
+import { retrieveManifest } from "@core/node-utils";
 import { formatValidationErrors } from "io-ts-reporters";
 
 export interface ManifestInfo {

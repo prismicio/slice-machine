@@ -1,6 +1,6 @@
 import { describe, expect } from "vitest";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@core/models/CustomType";
 
 describe("[Custom types factory]", () => {
   describe("[createCustomType]", () => {

@@ -1,4 +1,4 @@
-import { TabSM } from "@slicemachine/core/build/models/CustomType";
+import { TabSM } from "@core/models/CustomType";
 import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 
 const updateTab =

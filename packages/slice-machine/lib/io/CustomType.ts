@@ -1,9 +1,6 @@
 import Files from "../utils/files";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
-import {
-  CustomTypes,
-  CustomTypeSM,
-} from "@slicemachine/core/build/models/CustomType/index";
+import { CustomTypes, CustomTypeSM } from "@core/models/CustomType/index";
 
 export function readCustomType(path: string): CustomTypeSM {
   const ct: CustomType = Files.readJson(path);

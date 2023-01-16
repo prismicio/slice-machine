@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CustomTypes } from "@slicemachine/core/build/models/CustomType/index";
+import { CustomTypes } from "@core/models/CustomType/index";
 import jsonModel from "./__fixtures__/model.json";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import {
