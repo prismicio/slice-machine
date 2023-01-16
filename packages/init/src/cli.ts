@@ -19,7 +19,7 @@ USAGE
 OPTIONS
   --repository, -r        Specify a Prismic repository to use
 
-  --no-push               For starters, prevent anyuthing from being pushed
+  --no-push               For starters, prevent anything from being pushed
   --no-push-slices        For starters, prevent slices from being pushed
   --no-push-custom-types  For starters, prevent custom types from being pushed
   --no-push-documents     For starters, prevent documents from being pushed
