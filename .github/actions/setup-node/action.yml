@@ -1,11 +1,11 @@
 
-name: 'Setup Node 16'
-description: 'Setup Node 16'
+name: Setup Node 16
+description: Setup Node 16
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - name: Use Node.js 16
       uses: actions/setup-node@v3
       with:
         node-version: 16
-        cache: "npm"
+        cache: npm

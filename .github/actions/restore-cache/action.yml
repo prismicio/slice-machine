@@ -1,7 +1,7 @@
-name: 'Cache node_modules and artifacts'
-description: 'Cache node_modules and artifacts'
+name: Cache node_modules and artifacts
+description: Cache node_modules and artifacts
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - name: Cache node_modules
       id: cache-dependencies
