@@ -73,7 +73,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
                 sx={{ fontWeight: "bold" }}
                 Icon={AiOutlineCamera}
                 iconFill="#1A1523"
-                label="Update screenshot!!!"
+                label="Update screenshot"
                 disabled={isTouched}
               />
             </span>

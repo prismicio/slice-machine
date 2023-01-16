@@ -35,7 +35,19 @@ describe("Create Slices", () => {
     cy.get("#variation-add").submit();
 
     cy.contains("button", "Simulate Slice").should("have.attr", "disabled");
+    cy.contains("button", "Simulate Slice").realHover();
+    cy.get("#simulator-button-tooltip").should("be.visible");
+    cy.get("#simulator-button-tooltip").should(
+      "contain",
+      "Save your work in order to simulate"
+    );
     cy.contains("button", "Update screenshot").should("have.attr", "disabled");
+    cy.contains("button", "Update screenshot").realHover();
+    cy.get("#update-screenshot-button-tooltip").should("be.visible");
+    cy.get("#update-screenshot-button-tooltip").should(
+      "contain",
+      "Save your work in order to update the screenshot"
+    );
 
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",

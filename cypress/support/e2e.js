@@ -20,3 +20,5 @@ import "./commands";
 // require('./commands')
 
 import "./assertions";
+
+import "cypress-real-events";
