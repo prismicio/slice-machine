@@ -280,14 +280,14 @@ export function* createCustomTypeSaga({
     yield put(push(`/cts/${payload.id}`));
     yield put(
       openToasterCreator({
-        message: "Custom type saved",
+        content: "Custom type saved",
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Custom type not saved",
+        content: "Internal Error: Custom type not saved",
         type: ToasterType.ERROR,
       })
     );
@@ -307,14 +307,14 @@ export function* renameCustomTypeSaga({
     yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
-        message: "Custom type updated",
+        content: "Custom type updated",
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Custom type not saved",
+        content: "Internal Error: Custom type not saved",
         type: ToasterType.ERROR,
       })
     );
@@ -329,7 +329,7 @@ export function* deleteCustomTypeSaga({
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
       openToasterCreator({
-        message: `Successfully deleted Custom Type “${payload.customTypeName}”`,
+        content: `Successfully deleted Custom Type “${payload.customTypeName}”`,
         type: ToasterType.SUCCESS,
       })
     );
@@ -340,7 +340,7 @@ export function* deleteCustomTypeSaga({
         yield put(deleteCustomTypeCreator.success(payload));
       yield put(
         openToasterCreator({
-          message: apiResponse.reason,
+          content: apiResponse.reason,
           type:
             apiResponse.type === "error"
               ? ToasterType.ERROR
@@ -350,7 +350,7 @@ export function* deleteCustomTypeSaga({
     } else {
       yield put(
         openToasterCreator({
-          message:
+          content:
             "An unexpected error happened while deleting your custom type.",
           type: ToasterType.ERROR,
         })

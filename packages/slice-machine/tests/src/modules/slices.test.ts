@@ -141,7 +141,7 @@ describe("[Slices module]", () => {
       saga.next().take(LOCATION_CHANGE);
       saga.next().put(
         openToasterCreator({
-          message: "Slice saved",
+          content: "Slice saved",
           type: ToasterType.SUCCESS,
         })
       );
@@ -179,7 +179,7 @@ describe("[Slices module]", () => {
       saga.next().put(modalCloseCreator());
       saga.next().put(
         openToasterCreator({
-          message: "Slice name updated",
+          content: "Slice name updated",
           type: ToasterType.SUCCESS,
         })
       );
@@ -205,7 +205,7 @@ describe("[Slices module]", () => {
       saga.next().put(deleteSliceCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
-          message: `Successfully deleted Slice “${actionPayload.sliceName}”`,
+          content: `Successfully deleted Slice “${actionPayload.sliceName}”`,
           type: ToasterType.SUCCESS,
         })
       );
@@ -229,7 +229,7 @@ describe("[Slices module]", () => {
         .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "An unexpected error happened while deleting your slice.",
+          content: "An unexpected error happened while deleting your slice.",
           type: ToasterType.ERROR,
         })
       );
@@ -261,7 +261,7 @@ describe("[Slices module]", () => {
         .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
       saga.throw(err).put(
         openToasterCreator({
-          message: "Could not delete Slice",
+          content: "Could not delete Slice",
           type: ToasterType.ERROR,
         })
       );
@@ -294,7 +294,7 @@ describe("[Slices module]", () => {
       saga.throw(err).put(deleteSliceCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
-          message: "Could not delete Slice",
+          content: "Could not delete Slice",
           type: ToasterType.WARNING,
         })
       );

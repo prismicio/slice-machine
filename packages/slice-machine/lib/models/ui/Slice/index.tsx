@@ -1,11 +1,8 @@
 import React, { useCallback } from "react";
 import {
-  Theme,
   Text,
   Card as Themecard,
-  Heading,
   Flex,
-  Badge,
   type ThemeUIStyleObject,
   type ThemeUICSSObject,
 } from "theme-ui";
@@ -21,19 +18,9 @@ import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { Button } from "@components/Button";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
-
-const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
-  bg: "transparent",
-  transition: "all 200ms ease-in",
-  p: 3,
-  position: "relative",
-  ...sx,
-  "&:hover": {
-    transition: "all 200ms ease-out",
-    bg: "sidebar",
-    border: (t: Theme) => `1px solid ${t.colors?.sidebar as string}`,
-  },
-});
+import ReactTooltip from "react-tooltip";
+import style from "./LegacySliceTooltip.module.css";
+import { LEGACY_SLICE_MIGRATION_GUIDE } from "@lib/consts";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -43,16 +30,13 @@ const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
 });
 
 const SliceVariations = ({
-  hideVariations,
-  variations,
+  numberOfVariations,
 }: {
-  hideVariations: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  variations: ReadonlyArray<any>;
+  numberOfVariations: number;
 }) => {
-  return !hideVariations ? (
+  return (
     <>
-      {variations ? (
+      {numberOfVariations ? (
         <Text
           sx={{
             fontSize: 14,
@@ -61,11 +45,11 @@ const SliceVariations = ({
             lineHeight: "24px",
           }}
         >
-          {variations.length} variation{variations.length > 1 ? "s" : ""}
+          {numberOfVariations} variation{numberOfVariations > 1 ? "s" : ""}
         </Text>
       ) : null}
     </>
-  ) : null;
+  );
 };
 
 const SliceCardActions: React.FC<{
@@ -167,10 +151,7 @@ const SliceDescription = ({
         justifyContent: "space-between",
       }}
     >
-      <SliceVariations
-        variations={slice.model.variations}
-        hideVariations={false}
-      />
+      <SliceVariations numberOfVariations={slice.model.variations.length} />
       <Flex sx={{ alignItems: "center" }}>
         {"status" in StatusOrCustom ? (
           <StatusBadge
@@ -296,7 +277,7 @@ export const SharedSlice = {
             }}
           >
             <ScreenshotPreview
-              deleted={isDeleted(StatusOrCustom)}
+              hideMissingWarning={isDeleted(StatusOrCustom)}
               src={screenshotUrl}
               sx={{
                 height: "198px",
@@ -328,49 +309,100 @@ export const SharedSlice = {
 
 export const NonSharedSlice = {
   render({
-    bordered,
     slice,
-    displayStatus,
-    thumbnailHeightPx = "290px",
-    wrapperType = WrapperType.nonClickable,
     sx,
   }: {
-    bordered: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     slice: { key: string; value: any };
-    displayStatus?: boolean;
-    thumbnailHeightPx?: string;
-    wrapperType?: WrapperType;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sx?: any;
+    sx?: ThemeUIStyleObject;
   }) {
-    const Wrapper = WrapperByType[wrapperType];
+    const Wrapper = WrapperByType[WrapperType.nonClickable];
 
     return (
-      <Wrapper link={undefined}>
-        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
-        <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
-          <ScreenshotPreview
+      <Wrapper
+        sx={{
+          borderColor: (t) => t.colors?.borders,
+          "&:focus": {
+            borderColor: "bordersFocused",
+          },
+        }}
+      >
+        <Themecard
+          sx={{
+            borderColor: "inherit",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderRadius: "6px",
+            overflow: "hidden",
+            ...defaultSx(sx),
+          }}
+        >
+          <Flex
+            data-for={`legacy-slice-tooltip-${slice.key}`}
+            data-tip
             sx={{
-              height: thumbnailHeightPx,
+              py: 2,
+              flexDirection: "row",
+              justifyContent: "center",
+              bg: "purple12",
+              fontSize: "12px",
+              fontWeight: "bold",
+              color: "purple08",
+              lineHeight: "16px",
+            }}
+          >
+            Legacy Slice
+          </Flex>
+          <ReactTooltip
+            id={`legacy-slice-tooltip-${slice.key}`}
+            type="dark"
+            border
+            borderColor="black"
+            place="bottom"
+            effect="solid"
+            clickable
+            delayHide={100}
+            className={style.legacySliceTooltipContainer}
+          >
+            This Slice was created with the Legacy Builder. You must follow the{" "}
+            <a href={LEGACY_SLICE_MIGRATION_GUIDE} target="_">
+              migration guide
+            </a>{" "}
+            to migrate it to Slice Machine before you can use or edit it.
+          </ReactTooltip>
+          <ScreenshotPreview
+            hideMissingWarning
+            sx={{
+              height: "166px",
               borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-              borderRadius: "4px 4px 0 0",
+              borderRadius: 0,
             }}
           />
           <Flex
-            mt={3}
-            sx={{ alignItems: "center", justifyContent: "space-between" }}
+            p={3}
+            sx={{
+              flexDirection: "column",
+            }}
           >
-            <Flex>
-              {displayStatus ? (
-                <Badge mr={2} variant="modified">
-                  Non shared
-                </Badge>
-              ) : null}
-              <Heading sx={{ flex: 1 }} as="h6">
-                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
-                {slice?.value?.fieldset || slice.key}
-              </Heading>
+            <TextWithTooltip
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              text={slice?.value?.fieldset || slice.key}
+              as="h6"
+              sx={{
+                fontWeight: "600 !important",
+                maxWidth: "80%",
+                lineHeight: "24px !important",
+                color: "grey10",
+              }}
+            />
+            <Flex
+              sx={{
+                height: "28px",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <SliceVariations numberOfVariations={1} />
             </Flex>
           </Flex>
         </Themecard>

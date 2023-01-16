@@ -299,7 +299,7 @@ describe("[Available Custom types module]", () => {
       saga.next().put(push("/cts/id"));
       saga.next().put(
         openToasterCreator({
-          message: "Custom type saved",
+          content: "Custom type saved",
           type: ToasterType.SUCCESS,
         })
       );
@@ -320,7 +320,7 @@ describe("[Available Custom types module]", () => {
       saga.next().call(saveCustomType, customTypeCreated, {});
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Custom type not saved",
+          content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
         })
       );
@@ -389,7 +389,7 @@ describe("[Available Custom types module]", () => {
       saga.next().put(modalCloseCreator());
       saga.next().put(
         openToasterCreator({
-          message: "Custom type updated",
+          content: "Custom type updated",
           type: ToasterType.SUCCESS,
         })
       );
@@ -414,7 +414,7 @@ describe("[Available Custom types module]", () => {
         );
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Custom type not saved",
+          content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
         })
       );
@@ -437,7 +437,7 @@ describe("[Available Custom types module]", () => {
       saga.next().put(deleteCustomTypeCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
-          message: `Successfully deleted Custom Type “${actionPayload.customTypeName}”`,
+          content: `Successfully deleted Custom Type “${actionPayload.customTypeName}”`,
           type: ToasterType.SUCCESS,
         })
       );
@@ -458,7 +458,7 @@ describe("[Available Custom types module]", () => {
       saga.next().call(deleteCustomType, actionPayload.customTypeId);
       saga.throw(new Error()).put(
         openToasterCreator({
-          message:
+          content:
             "An unexpected error happened while deleting your custom type.",
           type: ToasterType.ERROR,
         })
@@ -488,7 +488,7 @@ describe("[Available Custom types module]", () => {
       saga.next().call(deleteCustomType, actionPayload.customTypeId);
       saga.throw(err).put(
         openToasterCreator({
-          message: "Could not delete custom type",
+          content: "Could not delete custom type",
           type: ToasterType.ERROR,
         })
       );
@@ -518,7 +518,7 @@ describe("[Available Custom types module]", () => {
       saga.throw(err).put(deleteCustomTypeCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
-          message: "Could not delete custom type",
+          content: "Could not delete custom type",
           type: ToasterType.WARNING,
         })
       );

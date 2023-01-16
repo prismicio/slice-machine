@@ -21,7 +21,7 @@ export function openSyncToaster(
 ) {
   return put(
     openToasterCreator({
-      message: syncChangesToasterMessage(
+      content: syncChangesToasterMessage(
         alreadySyncedChanges,
         totalNumberOfChanges
       ),

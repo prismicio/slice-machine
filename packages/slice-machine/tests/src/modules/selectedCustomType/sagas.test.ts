@@ -75,7 +75,7 @@ describe("[Selected Custom type sagas]", () => {
         .put(saveCustomTypeCreator.success({ customType: customTypeModel }));
       saga.next().put(
         openToasterCreator({
-          message: "Model & mocks have been generated successfully!",
+          content: "Model & mocks have been generated successfully!",
           type: ToasterType.SUCCESS,
         })
       );
@@ -86,7 +86,7 @@ describe("[Selected Custom type sagas]", () => {
 
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Custom type not saved",
+          content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
         })
       );
