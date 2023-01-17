@@ -65,13 +65,16 @@ export default function MockSlice(
   sliceDiff?: SliceDiff | undefined
 ): ComponentMocks {
   const sliceMockConfig = buildSliceMockConfig(sliceModel, legacyMockConfig);
+
   return sliceMockConfig.map((sc) => {
     if (!sliceDiff) return SharedSliceMock.generate(sliceModel, sc);
 
     const variationMock = previousMocks?.find(
       (m) => m.variation === sc.variation
     );
-    if (!variationMock) return SharedSliceMock.generate(sliceModel, sc);
+    if (!variationMock) {
+      return SharedSliceMock.generate(sliceModel, sc);
+    }
 
     const patched = SharedSliceMock.patch(
       sliceDiff,
@@ -79,8 +82,12 @@ export default function MockSlice(
       variationMock,
       sc
     );
-    if (!patched.ok || !patched.result)
-      return SharedSliceMock.generate(sliceModel, sc);
+
+    if (!patched.ok || !patched.result) {
+      // odd case here where patched is false with the error "Error: The model of the content with variation default has not changed.", but here it would be regenerated
+      // return SharedSliceMock.generate(sliceModel, sc);
+      return variationMock;
+    }
 
     return patched.result;
   });

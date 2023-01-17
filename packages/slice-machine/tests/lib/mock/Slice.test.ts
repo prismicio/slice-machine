@@ -229,7 +229,7 @@ describe("MockSlice", () => {
   //   expect(isRight(result)).toBeTruthy();
   // });
 
-  test.only("when i add a variation to a slice it should the old mock content should be kept", () => {
+  test("when i add a variation to a slice it should the old mock content should be kept", () => {
     const sliceModel: SharedSlice = {
       id: "testing",
       type: "SharedSlice",
@@ -386,7 +386,7 @@ describe("MockSlice", () => {
                 content: {
                   text: "Woo",
                 },
-                direction: "ltr",
+                // direction: "ltr",
               },
             ],
           },
