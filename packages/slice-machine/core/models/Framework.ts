@@ -12,7 +12,6 @@ export enum Frameworks {
   vanillajs = "vanillajs",
   previousNext = "previousNext",
 }
-
 export const FrameworksC = t.keyof({
   [Frameworks.none]: null,
   [Frameworks.nuxt]: null,
@@ -25,14 +24,3 @@ export const FrameworksC = t.keyof({
   [Frameworks.vanillajs]: null,
   [Frameworks.previousNext]: null,
 });
-
-export const SupportedFrameworks: Frameworks[] = [
-  Frameworks.none,
-  Frameworks.nuxt,
-  Frameworks.previousNuxt,
-  Frameworks.next,
-  Frameworks.vue,
-  Frameworks.react,
-  Frameworks.svelte,
-  Frameworks.previousNext,
-];
