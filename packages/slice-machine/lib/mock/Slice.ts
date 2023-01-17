@@ -83,10 +83,12 @@ export default function MockSlice(
       sc
     );
 
-    if (!patched.ok || !patched.result) {
-      // odd case here where patched is false with the error "Error: The model of the content with variation default has not changed.", but here it would be regenerated
-      // return SharedSliceMock.generate(sliceModel, sc);
+    if (!patched.ok) {
       return variationMock;
+    }
+
+    if (!patched.result) {
+      return SharedSliceMock.generate(sliceModel, sc);
     }
 
     return patched.result;
