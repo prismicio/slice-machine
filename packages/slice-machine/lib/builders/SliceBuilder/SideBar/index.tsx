@@ -27,6 +27,7 @@ type SideBarProps = {
 
 const NeedToSaveTooltip: React.FC = () => (
   <ReactTooltip
+    clickable
     place="bottom"
     effect="solid"
     delayHide={500}
