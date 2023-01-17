@@ -1,3 +1,5 @@
+import { SliceBuilder } from "../../pages/slices/sliceBuilder";
+
 const random = Date.now();
 
 const customTypeName = `My Test ${random}`;
@@ -6,6 +8,8 @@ const customTypeId = `my_test_${random}`;
 const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
 const sliceLib = "slices";
+
+const sliceBuilder = new SliceBuilder();
 
 describe("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {
@@ -22,7 +26,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.addFieldToCustomType("UID", "ID Field", "uid");
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
-    cy.saveCustomTypeModifications();
+    sliceBuilder.save();
 
     cy.reload();
     cy.contains("ID Field");
@@ -63,7 +67,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
       "repeatable_key_text_id"
     );
 
-    cy.saveSliceModifications();
+    sliceBuilder.save();
 
     cy.reload();
     cy.contains("Static Key Text Field");
@@ -84,7 +88,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
     cy.get("[data-cy=update-slices-modal]").submit();
 
-    cy.saveCustomTypeModifications();
+    sliceBuilder.save();
 
     cy.reload();
     cy.contains(sliceName);

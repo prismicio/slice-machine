@@ -21,15 +21,14 @@ const createCustomTypeModal = new CreateCustomTypeModal();
  * @param {string} name Name of the custom type.
  */
 export function createCustomType(id, name) {
-  cy.visit("/");
-
-  // create custom type
+  customTypesList.goTo();
   customTypesList.emptyStateButton.click();
-  createCustomTypeModal.root.should("be.visible");
 
+  createCustomTypeModal.root.should("be.visible");
   createCustomTypeModal.nameInput.type(name);
   createCustomTypeModal.idInput.should("have.value", id);
   createCustomTypeModal.submit();
+
   cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
   cy.readFile(TYPES_FILE).should("contains", name);
   cy.readFile(CUSTOM_TYPE_MODEL(id));

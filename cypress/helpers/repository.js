@@ -1,34 +1,38 @@
+import { Changes } from "../pages/Changes";
+import { Menu } from "../pages/Menu";
+
+const changes = new Changes();
+const menu = new Menu();
+
 /**
  * Push Changes to the Repository, assert the number of changes as well.
  *
  * @param {number} numberOfChanges number of changes that should be pushed, this number is used for assertions. If this is undefined, no assertions will be made on the number of changes left after the push
  */
-export function pushLocalChanges(numberOfChanges) {
-  cy.visit(`/changes`);
+export function pushLocalChanges(numberOfChanges = 1) {
+  changes.goTo();
 
   if (numberOfChanges) {
     // checking number of changes
-    cy.get("[data-cy=changes-number]").within(() => {
-      cy.contains(numberOfChanges).should("be.visible");
-    });
+    menu
+      .changesNumber()
+      .contains(numberOfChanges)
+      .should("be.visible");
   }
 
   // sync changes button should be enabled
-  cy.get("[data-cy=push-changes]").should("be.enabled");
+  changes.pushButton.should("be.enabled");
 
   // click to push changes
-  cy.get("[data-cy=push-changes]").click();
-
+  changes.pushButton.click();
   if (numberOfChanges) {
     // number of changes should now be 0 at the end of the push
-    // The time to wait depends on the number of changes and if they have images
-    cy.get("[data-cy=changes-number]", {
-      timeout: 2 * 60 * 1000 * (numberOfChanges + 1), // is wroom-qa.com slow?
+    // The time to wait depends on the number of changes
+    menu.changesNumber({
+      timeout: 5000 * (numberOfChanges + 1),
     }).should("not.exist");
 
     // sync changes button should be disabled
-    cy.get("[data-cy=push-changes]").should("be.disabled");
-
-    cy.contains("Up to date").should("be.visible");
+    changes.pushButton.should("be.disabled");
   }
 }
