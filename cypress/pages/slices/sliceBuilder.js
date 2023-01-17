@@ -1,7 +1,6 @@
-export class SlicePage {
-  get saveButton() {
-    return cy.contains("Save to File System");
-  }
+import { Builder } from "../Builder";
+
+export class SliceBuilder extends Builder {
   get imagePreview() {
     return cy.get("[alt='Preview image']");
   }

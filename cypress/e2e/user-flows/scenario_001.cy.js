@@ -1,7 +1,9 @@
-const random = Date.now();
+import { CustomTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
 
+const random = Date.now();
 const customTypeName = `My Custom Type ${random}`;
 const customTypeId = `my_custom_type_${random}`;
+const customTypeBuilder = new CustomTypeBuilder();
 
 describe("I am a new SM user (with Next) who wants to create a Custom Type with fields, and then save and push it to Prismic.", () => {
   before(() => {
@@ -36,12 +38,12 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   it("Adding fields to repeatable CT & saving", () => {
-    cy.visit(`/cts/${customTypeId}`);
+    customTypeBuilder.goTo(customTypeId);
 
     cy.addFieldToCustomType("UID", "ID Field", "uid");
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
-    cy.saveCustomTypeModifications();
+    customTypeBuilder.save();
   });
 
   it("Links to CTs available locally", () => {
