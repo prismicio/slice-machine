@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Button as ThemeButton } from "theme-ui";
+import { Box, Button as ThemeButton, Flex } from "theme-ui";
 import Link from "next/link";
 
 import Card from "@components/Card";
@@ -30,7 +30,7 @@ const NeedToSaveTooltip: React.FC = () => (
     clickable
     place="bottom"
     effect="solid"
-    delayHide={100}
+    delayHide={500}
     id="update-screenshot-button-tooltip"
   >
     Save your work in order to update the screenshot
@@ -62,10 +62,13 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         bodySx={{ p: 0 }}
         Footer={() => (
           <>
-            <span
+            <Flex
               data-tip
               data-tip-disable={false}
               data-for={"update-screenshot-button-tooltip"}
+              sx={{
+                width: "fit-content",
+              }}
             >
               <Button
                 onClick={openScreenshotsModal}
@@ -73,10 +76,10 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
                 sx={{ fontWeight: "bold" }}
                 Icon={AiOutlineCamera}
                 iconFill="#1A1523"
-                label="Update screenshot!!!"
+                label="Update screenshot"
                 disabled={isTouched}
               />
-            </span>
+            </Flex>
             {isTouched && <NeedToSaveTooltip />}
           </>
         )}

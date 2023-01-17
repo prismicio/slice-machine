@@ -131,7 +131,7 @@ const NeedToSaveTooltip: React.FC = () => (
     clickable
     place="bottom"
     effect="solid"
-    delayHide={100}
+    delayHide={500}
     id="simulator-button-tooltip"
   >
     Save your work in order to simulate
