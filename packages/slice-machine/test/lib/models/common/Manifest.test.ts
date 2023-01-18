@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { fold, isRight, isLeft, getOrElseW } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/function";
 
-import { Manifest } from "../../core/models";
+import { Manifest } from "@lib/models/common/Manifest";
 
 describe("Manifest", () => {
   test("apiEnpoint: https://test.prismic.io/api/v2", () => {

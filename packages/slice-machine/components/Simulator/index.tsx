@@ -23,7 +23,6 @@ import {
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { Slices } from "@core/models";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
@@ -43,6 +42,7 @@ import {
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
 import SetupModal from "./components/SetupModal";
+import { Slices } from "@lib/models/common/Slice";
 
 export enum UiState {
   LOADING_SETUP = "LOADING_SETUP",

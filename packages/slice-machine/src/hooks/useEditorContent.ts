@@ -3,7 +3,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { defaultSharedSliceContent } from "@src/utils/editor";
 import { renderSliceMock } from "@prismicio/mocks";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { Slices } from "@core/models";
+import { Slices } from "@lib/models/common/Slice";
 
 function useEditorContentOnce({
   variationID,

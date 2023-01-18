@@ -1,4 +1,4 @@
-import { TabField } from "@core/models/CustomType";
+import { TabField } from "@lib/models/common/CustomType";
 
 interface Widgets {
   [x: string]: TabField;

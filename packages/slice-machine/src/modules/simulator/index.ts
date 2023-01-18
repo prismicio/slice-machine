@@ -26,7 +26,7 @@ import {
   selectIsSimulatorAvailableForFramework,
   updateManifestCreator,
 } from "@src/modules/environment";
-import { Frameworks } from "@core/models";
+import { Frameworks } from "@lib/models/common/Framework";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { SimulatorCheckResponse } from "@models/common/Simulator";

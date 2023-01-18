@@ -1,4 +1,4 @@
-import { TabSM } from "@core/models/CustomType";
+import { TabSM } from "@lib/models/common/CustomType";
 import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 
 const updateTab =

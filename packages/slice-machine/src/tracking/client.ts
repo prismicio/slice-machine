@@ -1,4 +1,4 @@
-import { Frameworks } from "@core/models";
+import { Frameworks } from "@lib/models/common/Framework";
 import axios from "axios";
 import { LibraryUI } from "../../lib/models/common/LibraryUI";
 import {

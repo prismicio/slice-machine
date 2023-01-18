@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import MockCustomType from "../../../lib/mock/CustomType";
-import { CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 vi.mock("@prismicio/mocks/lib/generators/utils/slug", () => {

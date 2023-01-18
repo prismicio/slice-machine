@@ -1,5 +1,5 @@
 import ServerState from "@models/server/ServerState";
-import { Frameworks } from "@core/models";
+import { Frameworks } from "@lib/models/common/Framework";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const dummyServerState: Pick<

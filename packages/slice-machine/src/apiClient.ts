@@ -1,7 +1,7 @@
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
-import { Slices, SliceSM } from "@core/models";
-import { CustomTypes, CustomTypeSM } from "@core/models/CustomType";
+import { SliceSM, Slices } from "@lib/models/common/Slice";
+import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import ServerState from "@models/server/ServerState";
@@ -11,7 +11,7 @@ import {
 } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
-import { ComponentMocks } from "@core/models";
+import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
@@ -185,7 +185,7 @@ export const generateSliceCustomScreenshotApiClient = (
 export const saveSliceApiClient = async (
   component: ComponentUI
 ): Promise<
-  Awaited<ReturnType<typeof managerClient["slices"]["updateSlice"]>>
+  Awaited<ReturnType<(typeof managerClient)["slices"]["updateSlice"]>>
 > => {
   return await managerClient.slices.updateSlice({
     libraryID: component.from,

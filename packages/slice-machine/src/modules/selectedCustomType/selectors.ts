@@ -2,7 +2,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import equal from "fast-deep-equal";
 import { PoolOfFields } from "@src/modules/selectedCustomType/types";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { CustomTypeSM, TabSM } from "@core/models/CustomType";
+import { CustomTypeSM, TabSM } from "@lib/models/common/CustomType";
 
 // Selectors
 export const selectCurrentCustomType = (

@@ -1,4 +1,4 @@
-import { CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export type FrontEndCustomType = {
   local: CustomTypeSM;

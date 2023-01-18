@@ -2,7 +2,7 @@
 
 import { describe, test, expect, vi } from "vitest";
 import { expectSaga } from "redux-saga-test-plan";
-import { CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 import {
   pushCustomTypeCreator,

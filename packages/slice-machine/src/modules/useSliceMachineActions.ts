@@ -47,7 +47,7 @@ import {
   updateFieldMockConfigCreator,
 } from "./selectedCustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { CustomTypeSM, TabField } from "@core/models/CustomType";
+import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import {
   addSliceWidgetCreator,
@@ -68,7 +68,6 @@ import {
   pushCustomTypeCreator,
   pushSliceCreator,
 } from "./pushChangesSaga/actions";
-import { Models } from "@core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 import { changesPushCreator } from "./pushChangesSaga";
@@ -78,6 +77,7 @@ import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
+import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -277,7 +277,7 @@ const useSliceMachineActions = () => {
 
   const addSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     key: string,
     value: NestableWidget
   ) => {
@@ -286,7 +286,7 @@ const useSliceMachineActions = () => {
 
   const replaceSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     previousKey: string,
     newKey: string,
     value: NestableWidget
@@ -304,7 +304,7 @@ const useSliceMachineActions = () => {
 
   const reorderSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     start: number,
     end: number | undefined
   ) => {
@@ -320,7 +320,7 @@ const useSliceMachineActions = () => {
 
   const removeSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     key: string
   ) => {
     dispatch(
@@ -335,7 +335,7 @@ const useSliceMachineActions = () => {
   const updateSliceWidgetMock = (
     variationId: string,
     mockConfig: CustomTypeMockConfig,
-    widgetArea: Models.WidgetsArea,
+    widgetArea: WidgetsArea,
     previousKey: string,
     newKey: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -357,7 +357,7 @@ const useSliceMachineActions = () => {
   const deleteSliceWidgetMock = (
     variationId: string,
     mockConfig: CustomTypeMockConfig,
-    widgetArea: Models.WidgetsArea,
+    widgetArea: WidgetsArea,
     newKey: string
   ) => {
     dispatch(
@@ -430,7 +430,7 @@ const useSliceMachineActions = () => {
   const copyVariationSlice = (
     key: string,
     name: string,
-    copied: Models.VariationSM
+    copied: VariationSM
   ) => {
     dispatch(copyVariationSliceCreator({ key, name, copied }));
   };

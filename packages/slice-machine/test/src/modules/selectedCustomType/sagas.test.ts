@@ -9,7 +9,7 @@ import {
   selectCurrentCustomType,
   selectCurrentMockConfig,
 } from "@src/modules/selectedCustomType";
-import { CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { rest } from "msw";
 

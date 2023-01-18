@@ -1,5 +1,5 @@
-import type Models from "@core/models";
 import { Variation } from "@models/common/Variation";
+import { VariationSM } from "@lib/models/common/Slice";
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import SliceMachineModal from "@components/SliceMachineModal";
@@ -18,13 +18,9 @@ const VariationModal: React.FunctionComponent<{
   isOpen: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClose: () => any;
-  onSubmit: (
-    id: string,
-    name: string,
-    copiedVariation: Models.VariationSM
-  ) => void;
-  initialVariation: Models.VariationSM;
-  variations: ReadonlyArray<Models.VariationSM>;
+  onSubmit: (id: string, name: string, copiedVariation: VariationSM) => void;
+  initialVariation: VariationSM;
+  variations: ReadonlyArray<VariationSM>;
 }> = ({ isOpen, onClose, onSubmit, initialVariation, variations }) => {
   const [errors, setErrors] = useState<{ [fieldKey: string]: string }>({});
   const [generatedId, setGeneratedId] = useState<string>("");

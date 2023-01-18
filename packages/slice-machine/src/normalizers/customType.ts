@@ -1,6 +1,6 @@
 import { normalize, NormalizedSchema, schema } from "normalizr";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
-import { CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 // Define a users schema
 const customTypeSchema = new schema.Entity("customTypes");

@@ -1,7 +1,7 @@
 import { FrontEndEnvironment } from "../common/Environment";
 import { LibraryUI } from "../common/LibraryUI";
-import { SliceSM } from "@core/models";
-import { CustomTypeSM } from "@core/models/CustomType";
+import { SliceSM } from "@lib/models/common/Slice";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 import ErrorWithStatus from "../common/ErrorWithStatus";
 
 export default interface ServerState {
