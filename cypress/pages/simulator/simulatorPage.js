@@ -121,7 +121,7 @@ export class SimulatorPage {
    * @param {string} targetVariation the new variation value.
    */
   changeVariations(targetVariation) {
-    cy.get("button").contains("Default").click();
+    cy.get("[aria-label='Expand variations']").click({ force: true });
     cy.contains(targetVariation).click();
 
     return this;

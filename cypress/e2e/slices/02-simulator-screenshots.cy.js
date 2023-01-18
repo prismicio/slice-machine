@@ -21,17 +21,8 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
     cy.setSliceMachineUserContext({});
     cy.createSlice(slice.library, slice.id, slice.name);
 
-    // add a variation
-    cy.get("button").contains("Default").click();
-    cy.contains("+ Add new variation").click();
-
-    cy.getInputByLabel("Variation name*").type(slice.newVariationName);
-    cy.getInputByLabel("Variation ID*").clear();
-    cy.getInputByLabel("Variation ID*").type("bar");
-
-    cy.get("#variation-add").submit();
-
-    cy.contains("Save to File System").click();
+    cy.addVariationToSlice(slice.newVariationName);
+    cy.saveSliceModifications();
   });
 
   beforeEach("Start from the Slice page", () => {
