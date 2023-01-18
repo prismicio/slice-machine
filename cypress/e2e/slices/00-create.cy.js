@@ -1,6 +1,5 @@
-import path from "path";
-
-import { MANIFEST_FILE, ROOT, SLICE_MOCK_FILE } from "../../consts";
+import { SLICE_MOCK_FILE } from "../../consts";
+import { SimulatorPage } from "../../pages/simulator/simulatorPage";
 
 const sliceName = "TestSlice";
 const editedSliceName = "EditedSliceName";
@@ -8,6 +7,8 @@ const sliceId = "test_slice"; // generated automatically from the slice name
 const lib = "slices";
 
 describe("Create Slices", () => {
+  const simulatorPage = new SimulatorPage();
+
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();
@@ -48,25 +49,7 @@ describe("Create Slices", () => {
 
     // simulator
 
-    cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
-      const pathToFile = path.join(ROOT, "pages", "slice-simulator.jsx");
-      return cy.writeFile(pathToFile, file);
-    });
-
-    cy.readFile(MANIFEST_FILE, "utf-8").then((json) => {
-      const data = {
-        ...json,
-        localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
-      };
-      return cy.writeFile(MANIFEST_FILE, JSON.stringify(data, null, 2));
-    });
-
-    // stub window and set target to self
-    cy.on("window:before:load", (win) => {
-      cy.stub(win, "open").callsFake((url) => {
-        return win.open.wrappedMethod.call(win, url, "_self");
-      });
-    });
+    simulatorPage.setup();
 
     cy.get("[data-testid=simulator-open-button]").click();
 

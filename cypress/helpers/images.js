@@ -12,3 +12,12 @@ export function isSameImageAs(subject, referenceImage) {
       });
     });
 }
+
+export function isCorrectDimensions(subject, expectedWidth, expectedHeight) {
+  cy.wrap(subject)
+    .should("be.visible")
+    .and(($img) => {
+      expect($img[0].naturalWidth).to.equal(expectedWidth);
+      expect($img[0].naturalHeight).to.equal(expectedHeight);
+    });
+}
