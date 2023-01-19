@@ -1,10 +1,22 @@
 import * as yup from "yup";
+import { useFormikContext } from "formik";
+
 import { FormFieldCheckboxControl } from "components/FormFields";
 
 import { FormTypes } from "@lib/forms/types";
 
 import { DefaultFields } from "@lib/forms/defaults";
 import { FormFieldArray } from "components/FormFields";
+
+const label = (controlledValue) =>
+  `use first value as default ${
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+    controlledValue ? `("${controlledValue}")` : ""
+  }`;
+
+const buildControlledValue = (controlledValue, isChecked) =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+  isChecked ? controlledValue : undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {
@@ -30,25 +42,25 @@ const FormFields = {
         },
       });
     },
-    component: (props) => (
-      <FormFieldCheckboxControl
-        {...props}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        defaultValue={props.field.value}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-        getFieldControl={(formValues) => formValues.config?.options}
-        setControlFromField={(options, isChecked) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-          isChecked ? options.length && options[0] : undefined
-        }
-        label={(options) =>
-          `use first value as default ${
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-            options.length ? `("${options[0]}")` : ""
-          }`
-        }
-      />
-    ),
+    component: (props) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks, @typescript-eslint/no-unsafe-assignment
+      const { values } = useFormikContext();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+      const controlledValue = values.config?.options[0];
+      return (
+        <FormFieldCheckboxControl
+          {...props}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          defaultValue={props.field.value}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          controlledValue={controlledValue}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+          setControlledValue={props.helpers.setValue}
+          buildControlledValue={buildControlledValue}
+          label={label}
+        />
+      );
+    },
   },
   options: {
     yupType: "array",

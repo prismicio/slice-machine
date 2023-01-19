@@ -26,18 +26,24 @@ export default {
         defaultViewport: null,
       });
     }
-    const puppeteerBrowser = await puppeteerBrowserPromise;
+
+    let puppeteerBrowser: puppeteer.Browser;
+
+    try {
+      puppeteerBrowser = await puppeteerBrowserPromise;
+    } catch (e) {
+      console.error(
+        "Could not load pupeteer. Try re-installing your dependencies (`npm i`) to fix the issue"
+      );
+      throw e;
+    }
 
     return generateScreenshot(
       puppeteerBrowser,
       screenshotUrl,
       pathToFile,
       screenDimensions
-    ).catch(() => {
-      throw new Error(
-        `Unable to generate screenshot for this page: ${screenshotUrl}`
-      );
-    });
+    );
   },
 };
 
@@ -64,6 +70,15 @@ const generateScreenshot = async (
 
     await page.waitForSelector("#__iframe-ready", { timeout: 10000 });
     const element = await page.$("#__iframe-renderer");
+
+    const iframe = page.frames().find((f) => f.name() === "__iframe-renderer");
+    const images = iframe ? await iframe.$$("img") : [];
+
+    await Promise.all(
+      images.map(async (img) => {
+        await iframe?.waitForFunction((img) => img.complete, {}, img);
+      })
+    );
 
     if (element) {
       await element.screenshot({

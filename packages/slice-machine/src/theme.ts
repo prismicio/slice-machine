@@ -310,16 +310,16 @@ const AppTheme = (): Theme =>
         fontSize: "1",
         color: "textClear",
         border: (t) => `1px solid ${String(t?.colors?.borders)}`,
-        "&:hover": {
+        "&:hover:enabled": {
           bg: darken("secondary", 0.02),
           cursor: "pointer",
         },
-        "&:focus": {
+        "&:focus:enabled": {
           bg: darken("secondary", 0.05),
           borderColor: darken("secondary", 0.15),
           outline: "none",
         },
-        "&:active": {
+        "&:active:enabled": {
           bg: darken("secondary", 0.06),
           outline: "none",
         },
@@ -386,12 +386,16 @@ const AppTheme = (): Theme =>
         pr: 2,
         py: "5px",
         cursor: "pointer",
-        "&:hover": {
+        "&:hover:enabled": {
           background: "#F4F2F4",
         },
-        "&:active": {
+        "&:active:enabled": {
           background: "#F4F2F4",
           boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+        },
+        "&:disabled": {
+          cursor: "not-allowed",
+          opacity: 0.5,
         },
       },
       secondaryMedium: {
