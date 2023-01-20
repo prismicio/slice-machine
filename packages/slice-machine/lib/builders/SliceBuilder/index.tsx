@@ -121,7 +121,13 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
       />
       <FlexEditor
         sx={{ py: 4 }}
-        SideBar={<SideBar component={slice} variation={variation} />}
+        SideBar={
+          <SideBar
+            component={slice}
+            variation={variation}
+            isTouched={isTouched}
+          />
+        }
       >
         <FieldZones mockConfig={slice.mockConfig} variation={variation} />
       </FlexEditor>

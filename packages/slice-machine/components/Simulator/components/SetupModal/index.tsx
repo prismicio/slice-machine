@@ -95,8 +95,6 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     setupSteps: selectSetupSteps(state),
   }));
 
-  // const setupData = getStepperConfigurationByFramework(framework);
-
   const steps = setupSteps || [];
 
   return (
