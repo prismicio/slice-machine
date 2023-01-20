@@ -364,9 +364,10 @@ export const NonSharedSlice = {
             delayHide={100}
             className={style.legacySliceTooltipContainer}
           >
-            This Slice was created with the Legacy Builder. You must follow the{" "}
+            This Slice was created with the Legacy Builder. You cannot edit it.
+            Please follow our{" "}
             <a href={LEGACY_SLICE_MIGRATION_GUIDE} target="_">
-              migration guide
+              migration recommendations
             </a>{" "}
             to migrate it to Slice Machine before you can use or edit it.
           </ReactTooltip>

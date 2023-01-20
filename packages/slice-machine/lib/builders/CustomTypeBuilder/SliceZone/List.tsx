@@ -21,14 +21,15 @@ interface SlicesListProps extends ModelStatusInformation {
 
 const MigrateSliceToast = () => (
   <Text>
-    This Custom Type contains legacy Slices. Migrate them following{" "}
+    This Custom Type contains legacy Slices. Follow our{" "}
     <Link
       href={LEGACY_SLICE_MIGRATION_GUIDE}
       target="_"
       sx={{ color: "white" }}
     >
-      this guide
+      migration recommendations
     </Link>
+    .
   </Text>
 );
 
