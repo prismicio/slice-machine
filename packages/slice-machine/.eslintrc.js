@@ -6,10 +6,7 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: [
-      "../../tsconfig-node.json",
-      "./tsconfig.json",
-    ],
+    project: ["../../tsconfig-node.json", "./tsconfig.json"],
     tsconfigRootDir: __dirname,
   },
   plugins: ["@typescript-eslint", "import"],
@@ -25,10 +22,10 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
-      }
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
     ],
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/strict-boolean-expressions": "warn",
