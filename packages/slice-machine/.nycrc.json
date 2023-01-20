@@ -1,0 +1,6 @@
+{
+  "extension": [".js", ".jsx", ".ts", ".tsx"],
+  "all": true,
+  "sourceMap": true,
+  "instrument": true
+}

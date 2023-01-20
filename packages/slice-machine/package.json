@@ -120,6 +120,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "babel-jest": "^27.5.1",
+    "babel-plugin-istanbul": "^6.1.1",
     "better-npm-audit": "^3.4.0",
     "cloudinary-react": "^1.7.1",
     "concurrently": "^7.0.0",

@@ -37,6 +37,7 @@ coverage/
 .eslintcache
 unpubTest
 my-test-project
+cypress-coverage
 
 .now
 .vercel
