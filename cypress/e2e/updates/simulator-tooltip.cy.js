@@ -2,8 +2,16 @@
 describe("simulator tooltip", () => {
   const lib = ".--slices";
   const sliceName = "DuplicateSlices";
+  const sliceId = "DuplicateSlices";
+
+  beforeEach("Cleanup local data", () => {
+    cy.clearProject();
+  });
+
   it("should display the tooltip when 'userContext.hasSeenSimulatorToolTip' is falsy and set to true when user clicks the close button", () => {
     cy.setSliceMachineUserContext({ hasSeenSimulatorToolTip: false });
+
+    cy.createSlice(lib, sliceId, sliceName);
 
     cy.visit(`/${lib}/${sliceName}/default`);
 
@@ -27,6 +35,8 @@ describe("simulator tooltip", () => {
   it("should not display when hasSeenSimulatorToolTip is truthy", () => {
     cy.setSliceMachineUserContext({});
 
+    cy.createSlice(lib, sliceId, sliceName);
+
     cy.visit(`/${lib}/${sliceName}/default`);
 
     // There is a 5 s timeout for displaying the tooltip.
@@ -37,6 +47,8 @@ describe("simulator tooltip", () => {
 
   it("should close the tooltip when the user clicks the simulator button", () => {
     cy.setSliceMachineUserContext({ hasSeenSimulatorToolTip: false });
+
+    cy.createSlice(lib, sliceId, sliceName);
 
     cy.visit(`/${lib}/${sliceName}/default`);
 

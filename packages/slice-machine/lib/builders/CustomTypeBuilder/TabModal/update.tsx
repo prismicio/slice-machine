@@ -88,7 +88,7 @@ const CreateCustomtypeForm = ({
         title,
       }}
     >
-      {({ errors, values, setFieldValue }) => (
+      {({ errors, values, setFieldValue, isValid }) => (
         <Box>
           <Box sx={{ px: 4, py: 4 }}>
             <InputBox
@@ -103,12 +103,12 @@ const CreateCustomtypeForm = ({
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setFieldValue("id", e.target.value);
-                setFieldValue("actionType", ActionType.UPDATE);
               }}
             />
             <Button
               type="button"
               sx={{ mt: 3, width: "100%" }}
+              disabled={!isValid}
               onClick={() => {
                 if (values.id && values.id.length) {
                   onSubmit({
