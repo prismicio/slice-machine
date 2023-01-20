@@ -29,4 +29,5 @@ export const VIDEO_SIMULATOR_TOOLTIP = "SM_HELP_VIDEOS/mock_data";
 export const SIMULATOR_WINDOW_ID = "slice-machine-simulator";
 
 // LINKS
-export const LEGACY_SLICE_MIGRATION_GUIDE = "https://prismic.io/docs";
+export const LEGACY_SLICE_MIGRATION_GUIDE =
+  "https://community.prismic.io/t/slice-machine-clarity/11878/4";
