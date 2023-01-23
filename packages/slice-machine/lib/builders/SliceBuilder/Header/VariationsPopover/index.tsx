@@ -1,4 +1,4 @@
-import type Models from "@core/models";
+import type * as Models from "@core/models";
 import React, { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
 

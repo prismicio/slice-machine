@@ -1,4 +1,4 @@
-import type Models from "@core/models";
+import type * as Models from "@core/models";
 import { SliceMockConfig } from "./MockConfig";
 
 export interface SliceBody {

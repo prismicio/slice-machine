@@ -1,5 +1,5 @@
 import React from "react";
-import type Models from "@core/models";
+import type * as Models from "@core/models";
 import { Box, Flex, Text } from "theme-ui";
 
 const MenuList: React.FunctionComponent<{
