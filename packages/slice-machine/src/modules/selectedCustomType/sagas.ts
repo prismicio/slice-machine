@@ -21,10 +21,10 @@ export function* saveCustomTypeSaga() {
       return;
     }
 
-    const { errors }: Awaited<ReturnType<typeof saveCustomType>> = yield call(
+    const { errors } = (yield call(
       saveCustomType,
       currentCustomType
-    );
+    )) as Awaited<ReturnType<typeof saveCustomType>>;
     if (errors.length) {
       throw errors;
     }

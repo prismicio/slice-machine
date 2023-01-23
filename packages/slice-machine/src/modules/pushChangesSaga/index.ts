@@ -138,10 +138,10 @@ export function* changesPushSaga({
         // Sending failure event
         yield put(pushSliceCreator.failure({ component: slice }));
 
-        const hasInvalidModel = res.errors.includes((error) => {
+        const hasInvalidModel = res.errors.some((error) => {
           return error.name === "DecodeError";
         });
-        const isUnauthorized = res.errors.includes((error) => {
+        const isUnauthorized = res.errors.some((error) => {
           return error.name === "UnauthenticatedError";
         });
 
