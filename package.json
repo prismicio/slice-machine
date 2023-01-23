@@ -39,6 +39,7 @@
   "dependencies": {
     "cypress": "^12.1.0",
     "cypress-localstorage-commands": "^1.7.0",
+    "cypress-real-events": "^1.7.6",
     "cypress-wait-until": "^1.7.2",
     "start-server-and-test": "^1.14.0"
   },

@@ -326,16 +326,16 @@ const AppTheme = (): Theme =>
         fontSize: "1",
         color: "textClear",
         border: (t) => `1px solid ${String(t?.colors?.borders)}`,
-        "&:hover": {
+        "&:hover:enabled": {
           bg: darken("secondary", 0.02),
           cursor: "pointer",
         },
-        "&:focus": {
+        "&:focus:enabled": {
           bg: darken("secondary", 0.05),
           borderColor: darken("secondary", 0.15),
           outline: "none",
         },
-        "&:active": {
+        "&:active:enabled": {
           bg: darken("secondary", 0.06),
           outline: "none",
         },

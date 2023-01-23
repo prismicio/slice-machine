@@ -104,6 +104,11 @@ jobs:
           user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: npm i && npm run test:e2e
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-tests-screenshots
+          path: cypress/screenshots/
 
   deployment:
     runs-on: ubuntu-latest

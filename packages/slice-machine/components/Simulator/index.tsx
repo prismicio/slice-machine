@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
@@ -50,8 +50,6 @@ export enum UiState {
   FAILED_CONNECT = "FAILED_CONNECT",
   SUCCESS = "SUCCESS",
 }
-
-const MemoedSetupModal = memo(SetupModal);
 
 const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const { checkSimulatorSetup, connectToSimulatorIframe, saveSliceMock } =
@@ -186,7 +184,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
-      <MemoedSetupModal isOpen={currentState === UiState.FAILED_SETUP} />
+      <SetupModal isOpen={currentState === UiState.FAILED_SETUP} />
       <Header
         slice={slice}
         variation={variation}
