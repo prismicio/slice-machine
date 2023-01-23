@@ -126,4 +126,10 @@ export class SimulatorPage {
 
     return this;
   }
+
+  toggleEditor() {
+    cy.contains("label", "Editor").click();
+
+    return this;
+  }
 }
