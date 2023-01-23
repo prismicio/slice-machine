@@ -1,6 +1,6 @@
 import { Box, Label } from "theme-ui";
 
-import Select from "react-select";
+import _Select from "react-select";
 
 import ModalFormCard from "@components/ModalFormCard";
 import camelCase from "lodash/camelCase";
@@ -10,6 +10,17 @@ import { RESERVED_SLICE_NAME } from "@lib/consts";
 import { SliceSM } from "@core/models";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { API_ID_REGEX } from "@lib/consts";
+
+// This line of code provides interop with Vitest and Next.js.
+//
+// `react-select` has default and named exports. Some bundlers, including Rollup
+// when used with Vitest, handle mixed export types by naming the default export
+// "default". In Next.js, SWC seems to handle the default export without the
+// extra "default" name.
+const Select =
+  // @ts-expect-error - `default` is added by Rollup during tests since
+  // `react-select` has default and named exports.
+  Boolean(_Select.default) ? (_Select.default as typeof _Select) : _Select;
 
 const formId = "create-new-slice";
 
@@ -96,6 +107,24 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
           <Label htmlFor="origin" sx={{ mb: 2 }}>
             Target Library
           </Label>
+          <Select
+            name="origin"
+            options={libraries.map((v) => ({ value: v.name, label: v.name }))}
+            onChange={(v: { label: string; value: string } | null) =>
+              v ? setFieldValue("from", v.value) : null
+            }
+            defaultValue={{ value: values.from, label: values.from }}
+            theme={(theme) => {
+              return {
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  text: "text",
+                  primary: "background",
+                },
+              };
+            }}
+          />
         </Box>
       )}
     </ModalFormCard>
