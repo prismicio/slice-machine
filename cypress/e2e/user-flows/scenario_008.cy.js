@@ -38,19 +38,19 @@ describe("Scenario 008", () => {
         variation.variation === "default"
           ? variation
           : {
-              ...variation,
-              primary: {
-                ...variation.primary,
-                booleanfield: {
-                  ...variation.primary.booleanfield,
-                  value: false,
-                },
-                selectfield: {
-                  ...variation.primary.selectfield,
-                  value: "1",
-                },
+            ...variation,
+            primary: {
+              ...variation.primary,
+              booleanfield: {
+                ...variation.primary.booleanfield,
+                value: false,
               },
-            }
+              selectfield: {
+                ...variation.primary.selectfield,
+                value: "1",
+              },
+            },
+          }
       )
     );
 
