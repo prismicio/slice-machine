@@ -88,9 +88,9 @@ const VarationsPopover: React.FunctionComponent<{
         >
           {current.name}{" "}
           {!isOpen ? (
-            <RiArrowDropDownFill size="16px" />
+            <RiArrowDropDownFill size="16px" aria-label="Expand variations" />
           ) : (
-            <RiArrowDropUpFill size="16px" />
+            <RiArrowDropUpFill size="16px" aria-label="Collapse variations" />
           )}
         </Button>
       </Popover>

@@ -20,10 +20,10 @@ import { createTestProject } from "test/__testutils__/createTestProject";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
-vi.mock("next/router", () => require("next-router-mock"));
+vi.mock("next/router", () => import("next-router-mock"));
 
 describe("slices", () => {
-  beforeAll(async () => {
+  beforeAll(() => {
     const div = document.createElement("div");
     div.setAttribute("id", "__next");
     document.body.appendChild(div);
@@ -33,7 +33,7 @@ describe("slices", () => {
     vi.clearAllMocks();
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockRouter.setCurrentUrl("/slices");
   });
 

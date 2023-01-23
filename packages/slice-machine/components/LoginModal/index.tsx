@@ -77,7 +77,7 @@ const LoginModal: React.FunctionComponent = () => {
       closeModals();
     } catch (e) {
       stopLoadingLogin();
-      openToaster("Logging fail", ToasterType.ERROR);
+      openToaster("Login failed", ToasterType.ERROR);
     }
   };
 
@@ -157,7 +157,7 @@ const LoginModal: React.FunctionComponent = () => {
             {isLoginLoading ? (
               <Spinner color="#FFF" size={16} />
             ) : (
-              <>Signin to Prismic</>
+              <>Log in to Prismic</>
             )}
           </Button>
         </Flex>

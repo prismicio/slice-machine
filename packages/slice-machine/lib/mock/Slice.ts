@@ -65,13 +65,16 @@ export default function MockSlice(
   sliceDiff?: SliceDiff | undefined
 ): ComponentMocks {
   const sliceMockConfig = buildSliceMockConfig(sliceModel, legacyMockConfig);
+
   return sliceMockConfig.map((sc) => {
     if (!sliceDiff) return SharedSliceMock.generate(sliceModel, sc);
 
     const variationMock = previousMocks?.find(
       (m) => m.variation === sc.variation
     );
-    if (!variationMock) return SharedSliceMock.generate(sliceModel, sc);
+    if (!variationMock) {
+      return SharedSliceMock.generate(sliceModel, sc);
+    }
 
     const patched = SharedSliceMock.patch(
       sliceDiff,
@@ -79,8 +82,14 @@ export default function MockSlice(
       variationMock,
       sc
     );
-    if (!patched.ok || !patched.result)
+
+    if (!patched.ok) {
+      return variationMock;
+    }
+
+    if (!patched.result) {
       return SharedSliceMock.generate(sliceModel, sc);
+    }
 
     return patched.result;
   });
