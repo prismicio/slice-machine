@@ -270,8 +270,11 @@ export function* createSliceSaga({
   payload,
 }: ReturnType<typeof createSliceCreator.request>) {
   try {
-    const { variationId, errors }: SagaReturnType<typeof createSlice> =
-      yield call(createSlice, payload.sliceName, payload.libName);
+    const { variationId, errors } = (yield call(
+      createSlice,
+      payload.sliceName,
+      payload.libName
+    )) as SagaReturnType<typeof createSlice>;
     if (errors.length) {
       throw errors;
     }

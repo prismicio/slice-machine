@@ -85,6 +85,10 @@ export function* generateSliceCustomScreenshotSaga({
       file,
     })) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
 
+    if (!response?.url) {
+      throw Error("No screenshot saved");
+    }
+
     void Tracker.get().trackScreenshotTaken({
       type: "custom",
       method: method,
@@ -93,7 +97,11 @@ export function* generateSliceCustomScreenshotSaga({
     yield put(
       generateSliceCustomScreenshotCreator.success({
         variationId,
-        screenshot: response.data,
+        screenshot: {
+          url: response.url,
+          path: "__TODO-REMOVE__",
+          hash: "__TODO-REMOVE__",
+        },
         component,
       })
     );

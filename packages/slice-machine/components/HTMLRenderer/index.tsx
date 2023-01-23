@@ -15,14 +15,19 @@ const Pre = ({ children, ...props }: { children?: React.ReactNode }) => {
   const [isCopied, setIsCopied] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
 
-  const copy = async (): Promise<void> => {
+  const copy = (): void => {
     if (preRef.current) {
-      await navigator.clipboard.writeText(preRef.current.innerText);
-
-      setIsCopied(true);
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 1200);
+      navigator.clipboard
+        .writeText(preRef.current.innerText)
+        .then(() => {
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 1200);
+        })
+        .catch(() => {
+          // ignored
+        });
     }
   };
 

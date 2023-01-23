@@ -3,7 +3,7 @@ import { Button, useThemeUI, Box, Flex } from "theme-ui";
 
 import { MdCheck, MdContentCopy } from "react-icons/md";
 
-import CodeBlock, { Language } from "../../../CodeBlock";
+import CodeBlock from "../../../CodeBlock";
 import { IconType } from "react-icons";
 import VersionBadgeList from "./VersionBadgeList";
 
@@ -17,7 +17,7 @@ const CodeBlockWithCopy: React.FC<{
   customCopyText?: string;
   fileName: string;
   FileIcon: IconType;
-  lang?: Language;
+  lang?: string;
   fullHeightCode?: boolean;
 }> = ({ customCopyText, fileName, FileIcon, lang, fullHeightCode, code }) => {
   const codeList = Array.isArray(code) ? code : [code];

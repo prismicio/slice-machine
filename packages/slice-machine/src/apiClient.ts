@@ -171,15 +171,25 @@ export const generateSliceScreenshotApiClient = async (
   // return axios.post("/api/screenshot", params, defaultAxiosConfig);
 };
 
-export const generateSliceCustomScreenshotApiClient = (
+export const generateSliceCustomScreenshotApiClient = async (
   params: CustomScreenshotRequest
-): ReturnType<SliceMachineManagerClient["slices"]["updateSliceScreenshot"]> => {
-  return managerClient.slices.updateSliceScreenshot({
+): Promise<{
+  url: string;
+  errors: Awaited<
+    ReturnType<SliceMachineManagerClient["slices"]["updateSliceScreenshot"]>
+  >["errors"];
+}> => {
+  const { errors } = await managerClient.slices.updateSliceScreenshot({
     libraryID: params.libraryName,
     sliceID: params.sliceId,
     variationID: params.variationId,
     data: params.file,
   });
+
+  return {
+    url: URL.createObjectURL(params.file),
+    errors,
+  };
 };
 
 export const saveSliceApiClient = async (

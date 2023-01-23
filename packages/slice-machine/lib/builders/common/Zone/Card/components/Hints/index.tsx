@@ -14,6 +14,7 @@ const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
   const fieldPathString = renderHintBase({ item });
 
   // TODO: Call `swr`'s global `mutate` function when something changes to clear the cache.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data, error } = useSWR(fieldPathString, async () => {
     return await managerClient.snippets.readSnippets({
       fieldPath: fieldPathString.split("."),

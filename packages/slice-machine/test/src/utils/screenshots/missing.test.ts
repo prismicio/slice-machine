@@ -1,5 +1,5 @@
-import { getSelectedSliceDummyData } from "tests/src/modules/screenshots/utils";
-import { countMissingScreenshots } from "./missing";
+import { countMissingScreenshots } from "@src/utils/screenshots/missing";
+import { getSelectedSliceDummyData } from "../../modules/screenshots/__testutils__/getSelectedSliceDummyData";
 
 describe("[utils - screenshot - missing]", () => {
   it("should return the number of missing screenshots", () => {
