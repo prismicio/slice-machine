@@ -1,6 +1,8 @@
 import { SlicePage } from "../../pages/slices/slicePage";
 import {
   KeyTextModal,
+  LinkModal,
+  LinkToMediaModal,
   RichTextModal,
 } from "../../pages/slices/editWidgetModals";
 
@@ -14,6 +16,8 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let slicePage = new SlicePage();
   let keyTextModal = new KeyTextModal();
   let richTextModal = new RichTextModal();
+  let linkModal = new LinkModal();
+  let linkToMediaModal = new LinkToMediaModal();
   before(() => {
     cy.clearProject();
   });
@@ -30,6 +34,8 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
 
     slicePage.addNewWidgetField("SimpleTextField", "Key Text");
     slicePage.addNewWidgetField("RichTextField", "Rich Text");
+    slicePage.addNewWidgetField("LinkField", "Link");
+    slicePage.addNewWidgetField("LinkToMediaField", "Link to media");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -50,6 +56,23 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .toggleTextTypes(["H1", "H3", "image"])
       .save();
     slicePage.getWidgetField("NewRichTextField");
+
+    slicePage.openEditWidgetModal("LinkField");
+    linkModal
+      .editLabel("NewLinkField")
+      .editApiId("LinkApiID")
+      .editPlaceholder("Default")
+      .toggleAllowTargetBlank()
+      .save();
+    slicePage.getWidgetField("NewLinkField");
+
+    slicePage.openEditWidgetModal("LinkToMediaField");
+    linkToMediaModal
+      .editLabel("NewLinkToMediaField")
+      .editApiId("LinkToMediaApiID")
+      .editPlaceholder("Default")
+      .save();
+    slicePage.getWidgetField("NewLinkToMediaField");
 
     slicePage.save();
   });
