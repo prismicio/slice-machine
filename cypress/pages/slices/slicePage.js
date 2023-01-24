@@ -75,7 +75,7 @@ export class SlicePage {
    * @param {string} type Type of the widget.
    */
   addNewWidgetField(name, type) {
-    cy.contains("button", "Add a new Field").click();
+    cy.get("[data-cy='add-Static-field']").click();
     cy.get("[aria-label='Widget Form Modal']").should("be.visible");
 
     cy.contains("div", type).click();
@@ -83,6 +83,47 @@ export class SlicePage {
     cy.get('[data-cy="new-field-name-input"]').clear().type(name).blur();
 
     cy.contains(/^Add$/).click();
+
+    return this;
+  }
+
+  /**
+   * Get the relevant edit widget modal.
+   *
+   * @param {string} name Name of the widget field.
+   */
+  getWidgetField(name) {
+    return cy.contains("div", name).parent();
+  }
+
+  /**
+   * Open the relevant edit widget modal.
+   *
+   * @param {string} name Name of the widget field.
+   */
+  openEditWidgetModal(name) {
+    cy.contains("div", name)
+      .parent()
+      .find("[aria-label='Edit slice field']")
+      .click();
+
+    return this;
+  }
+
+  /**
+   * delete the relevant edit widget modal.
+   *
+   * @param {string} name Name of the widget field.
+   */
+  deleteWidgetField(name) {
+    cy.contains("div", name)
+      .parent()
+      .find("[data-cy='slice-menu-button']")
+      .click();
+
+    cy.contains("div", "Delete field").click({ force: true });
+
+    cy.contains("div", name).should("not.exist");
 
     return this;
   }
