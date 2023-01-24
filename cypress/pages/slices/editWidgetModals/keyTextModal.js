@@ -1,6 +1,6 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
-export class EditKeyTextModal extends BaseEditWidgetModal {
+export class KeyTextModal extends BaseEditWidgetModal {
   editLabel(newLabel) {
     this.editTextField("Label", newLabel);
     return this;

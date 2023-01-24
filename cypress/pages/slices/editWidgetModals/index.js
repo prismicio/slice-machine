@@ -1,3 +1,4 @@
-import { EditKeyTextModal } from "./editKeyTextModal";
+import { KeyTextModal } from "./keyTextModal";
+import { RichTextModal } from "./richTextModal";
 
-export { EditKeyTextModal };
+export { KeyTextModal, RichTextModal };

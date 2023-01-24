@@ -1,5 +1,8 @@
 import { SlicePage } from "../../pages/slices/slicePage";
-import { EditKeyTextModal } from "../../pages/slices/editWidgetModals";
+import {
+  KeyTextModal,
+  RichTextModal,
+} from "../../pages/slices/editWidgetModals";
 
 const SLICE = {
   id: "sliceBuild",
@@ -9,7 +12,8 @@ const SLICE = {
 
 describe("I am a new SM user (with Next) who wants to build a slice with different widgets.", () => {
   let slicePage = new SlicePage();
-  let editKeyTextModal = new EditKeyTextModal();
+  let keyTextModal = new KeyTextModal();
+  let richTextModal = new RichTextModal();
   before(() => {
     cy.clearProject();
   });
@@ -25,14 +29,27 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.deleteWidgetField("Description");
 
     slicePage.addNewWidgetField("SimpleTextField", "Key Text");
+    slicePage.addNewWidgetField("RichTextField", "Rich Text");
 
     slicePage.openEditWidgetModal("SimpleTextField");
-    editKeyTextModal
+    keyTextModal
       .editLabel("NewTextName")
-      .editApiId("SomeNewID")
+      .editApiId("KeyTextApiID")
       .editPlaceholder("Default")
       .save();
     slicePage.getWidgetField("NewTextName");
+
+    slicePage.openEditWidgetModal("RichTextField");
+    richTextModal
+      .editLabel("NewRichTextField")
+      .editApiId("RichTextApiID")
+      .editPlaceholder("Default")
+      .toggleAllowTargetBlank()
+      .toggleAllowMultipleParagraphs()
+      .deselectAllTextTypes()
+      .toggleTextTypes(["H1", "H3", "image"])
+      .save();
+    slicePage.getWidgetField("NewRichTextField");
 
     slicePage.save();
   });
