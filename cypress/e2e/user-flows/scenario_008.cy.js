@@ -1,6 +1,7 @@
 import { SimulatorPage } from "../../pages/simulator/simulatorPage";
 import { EditorPage } from "../../pages/simulator/editorPage";
 import { SlicePage } from "../../pages/slices/slicePage";
+import { SLICE_MOCK_FILE } from "../../consts";
 
 const SLICE = {
   id: "scenario008",
@@ -12,11 +13,9 @@ describe("Scenario 008", () => {
   let slice = new SlicePage();
   let simulator = new SimulatorPage();
   let editor = new EditorPage();
-  before(() => {
-    cy.clearProject();
-  });
 
   beforeEach(() => {
+    cy.clearProject();
     cy.setSliceMachineUserContext({});
   });
 
@@ -32,6 +31,28 @@ describe("Scenario 008", () => {
       .addNewWidgetField("SelectField", "Select")
       .addNewWidgetField("ImageField", "Image")
       .save();
+
+    // force mock value for the boolean and select fields
+    cy.modifyFile(SLICE_MOCK_FILE(SLICE.name), (mock) =>
+      mock.map((variation) =>
+        variation.variation === "default"
+          ? variation
+          : {
+              ...variation,
+              primary: {
+                ...variation.primary,
+                booleanfield: {
+                  ...variation.primary.booleanfield,
+                  value: false,
+                },
+                selectfield: {
+                  ...variation.primary.selectfield,
+                  value: "1",
+                },
+              },
+            }
+      )
+    );
 
     simulator.setup();
     slice.openSimulator();
@@ -55,8 +76,8 @@ describe("Scenario 008", () => {
     editor.type("SimpleTextField", "SimpleTextContent");
     editor.type("RichTextField", "RichTextContent");
     editor.type("NumberField", "42", "have.value");
-    // editor.toggleBooleanField("BooleanField"); // TODO: select default value in the widget editing modal so it doesn't change
-    // editor.select("SelectField", "2"); // TODO: select default value in the widget editing modal so it doesn't change
+    editor.toggleBooleanField("BooleanField");
+    editor.select("SelectField", "2");
 
     editor.changeImage("ImageField").then((newImageSrc) => {
       editor.type("Alt text", "An ananas maybe", "have.value");
@@ -73,10 +94,10 @@ describe("Scenario 008", () => {
       );
       cy.getInputByLabel("RichTextField").should("contain", "RichTextContent");
       cy.getInputByLabel("NumberField").should("have.value", "42");
-      // cy.getInputByLabel("BooleanField")
-      //   .invoke("attr", "aria-checked")
-      //   .should("equal", "true"); // TODO: select default value in the widget editing modal so it doesn't change
-      // cy.getInputByLabel("SelectField").should("contain", "2"); // TODO: select default value in the widget editing modal so it doesn't change
+      cy.getInputByLabel("BooleanField")
+        .invoke("attr", "aria-checked")
+        .should("equal", "true");
+      cy.getInputByLabel("SelectField").should("contain", "2");
 
       cy.getInputByLabel("Alt text").should("have.value", "An ananas maybe");
       cy.get("[alt='An ananas maybe']")
