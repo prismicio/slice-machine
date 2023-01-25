@@ -7,6 +7,7 @@ import { BooleanModal } from "./booleanModal";
 import { NumberModal } from "./numberModal";
 import { EmbedModal } from "./embedModal";
 import { ColorModal } from "./colorModal";
+import { TimestampModal } from "./timestampModal";
 
 export {
   BooleanModal,
@@ -18,4 +19,5 @@ export {
   LinkToMediaModal,
   NumberModal,
   RichTextModal,
+  TimestampModal,
 };

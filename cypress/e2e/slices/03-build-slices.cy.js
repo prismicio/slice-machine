@@ -9,6 +9,7 @@ import {
   LinkToMediaModal,
   NumberModal,
   RichTextModal,
+  TimestampModal,
 } from "../../pages/slices/editWidgetModals";
 
 const SLICE = {
@@ -28,6 +29,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let numberModal = new NumberModal();
   let embedModal = new EmbedModal();
   let colorModal = new ColorModal();
+  let timestampModal = new TimestampModal();
 
   before(() => {
     cy.clearProject();
@@ -52,6 +54,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("NumberField", "Number");
     slicePage.addNewWidgetField("EmbedField", "Embed");
     slicePage.addNewWidgetField("ColorField", "Color");
+    slicePage.addNewWidgetField("TimestampField", "Timestamp");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -133,6 +136,14 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .editPlaceholder("Default")
       .save();
     slicePage.getWidgetField("NewColorField");
+
+    slicePage.openEditWidgetModal("TimestampField");
+    timestampModal
+      .editLabel("NewTimestampField")
+      .editApiId("TimestampApiID")
+      .editPlaceholder("Default")
+      .save();
+    slicePage.getWidgetField("NewTimestampField");
 
     slicePage.save();
   });
