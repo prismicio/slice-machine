@@ -46,7 +46,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
 
     // Upload screenshot on variation from the Changes Page
     const missingScreenshotVariation = "Missing screenshot";
-    cy.addVariationToSlice(missingScreenshotVariation);
+    slicePage.addVariation(missingScreenshotVariation);
 
     slicePage.imagePreview.should("not.exist");
     cy.saveSliceModifications();
@@ -76,7 +76,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   });
 
   it("Error displayed when non-image files are uploaded", () => {
-    cy.addVariationToSlice("Error handling");
+    slicePage.addVariation("Error handling");
     slicePage.openScreenshotModal();
     cy.contains("Select file").selectFile(
       {
