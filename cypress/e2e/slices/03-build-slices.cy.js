@@ -5,6 +5,7 @@ import {
   KeyTextModal,
   LinkModal,
   LinkToMediaModal,
+  NumberModal,
   RichTextModal,
 } from "../../pages/slices/editWidgetModals";
 
@@ -22,6 +23,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let linkToMediaModal = new LinkToMediaModal();
   let imageModal = new ImageModal();
   let booleanModal = new BooleanModal();
+  let numberModal = new NumberModal();
 
   before(() => {
     cy.clearProject();
@@ -43,6 +45,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("LinkToMediaField", "Link to media");
     slicePage.addNewWidgetField("ImageField", "Image");
     slicePage.addNewWidgetField("BooleanField", "Boolean");
+    slicePage.addNewWidgetField("NumberField", "Number");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -100,6 +103,14 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .toggleDefaultTrue()
       .save();
     slicePage.getWidgetField("NewBooleanField");
+
+    slicePage.openEditWidgetModal("NumberField");
+    numberModal
+      .editLabel("NewNumberField")
+      .editApiId("NumberApiID")
+      .editPlaceholder("Default")
+      .save();
+    slicePage.getWidgetField("NewNumberField");
 
     slicePage.save();
   });

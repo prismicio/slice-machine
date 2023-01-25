@@ -4,6 +4,7 @@ import { LinkModal } from "./linkModal";
 import { LinkToMediaModal } from "./linkToMediaModal";
 import { ImageModal } from "./imageModal";
 import { BooleanModal } from "./booleanModal";
+import { NumberModal } from "./numberModal";
 
 export {
   BooleanModal,
@@ -11,5 +12,6 @@ export {
   KeyTextModal,
   LinkModal,
   LinkToMediaModal,
+  NumberModal,
   RichTextModal,
 };
