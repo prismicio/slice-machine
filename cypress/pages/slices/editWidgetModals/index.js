@@ -5,9 +5,11 @@ import { LinkToMediaModal } from "./linkToMediaModal";
 import { ImageModal } from "./imageModal";
 import { BooleanModal } from "./booleanModal";
 import { NumberModal } from "./numberModal";
+import { EmbedModal } from "./embedModal";
 
 export {
   BooleanModal,
+  EmbedModal,
   ImageModal,
   KeyTextModal,
   LinkModal,
