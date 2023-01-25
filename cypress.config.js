@@ -1,5 +1,7 @@
 const { defineConfig } = require("cypress");
 
+const SERVER_PORT = process.env.SERVER_PORT;
+
 module.exports = defineConfig({
   viewportWidth: 1920,
   viewportHeight: 1080,
@@ -12,6 +14,6 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require("./cypress/plugins/index.js")(on, config);
     },
-    baseUrl: "http://localhost:9999",
+    baseUrl: `http://localhost:${SERVER_PORT}`,
   },
 });

@@ -18,6 +18,7 @@
     "pretty": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "lerna run test --stream -- -- --collectCoverage=false",
+    "test:e2e:fast": "SERVER_PORT=9997 start-server-and-test 'npm run dev-cypress --prefix packages/slice-machine' http://localhost:3001 'npm run dev-server-cypress --prefix packages/slice-machine' http://localhost:9997 'cypress open'",
     "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
     "test:e2e:dev": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",    
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",

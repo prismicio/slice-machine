@@ -44,9 +44,10 @@ app.use("/api", api);
 // For local env (SM), all the requests are forwarded to the next dev server
 // For production, all the requests are forwarded to the next build directory
 if (process.env.ENV === "SM") {
+  const NEXT_PORT = process.env.NEXT_PORT ?? "3000";
   const proxy = createProxyMiddleware({
     changeOrigin: true,
-    target: "http://localhost:3000",
+    target: `http://localhost:${NEXT_PORT}`,
     ws: true,
   });
   app.use(proxy);
