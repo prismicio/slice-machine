@@ -1,5 +1,6 @@
 import { SlicePage } from "../../pages/slices/slicePage";
 import {
+  BooleanModal,
   ImageModal,
   KeyTextModal,
   LinkModal,
@@ -20,6 +21,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let linkModal = new LinkModal();
   let linkToMediaModal = new LinkToMediaModal();
   let imageModal = new ImageModal();
+  let booleanModal = new BooleanModal();
 
   before(() => {
     cy.clearProject();
@@ -40,6 +42,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("LinkField", "Link");
     slicePage.addNewWidgetField("LinkToMediaField", "Link to media");
     slicePage.addNewWidgetField("ImageField", "Image");
+    slicePage.addNewWidgetField("BooleanField", "Boolean");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -87,6 +90,16 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .addThumbnail("Thumbnail2", 100, 80)
       .save();
     slicePage.getWidgetField("NewImageField");
+
+    slicePage.openEditWidgetModal("BooleanField");
+    booleanModal
+      .editLabel("NewBooleanField")
+      .editApiId("BooleanApiID")
+      .editFalsePlaceholder("NewFalse")
+      .editTruePlaceholder("NewTrue")
+      .toggleDefaultTrue()
+      .save();
+    slicePage.getWidgetField("NewBooleanField");
 
     slicePage.save();
   });
