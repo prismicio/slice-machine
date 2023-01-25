@@ -1,5 +1,6 @@
 import { SlicePage } from "../../pages/slices/slicePage";
 import {
+  ImageModal,
   KeyTextModal,
   LinkModal,
   LinkToMediaModal,
@@ -18,6 +19,8 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let richTextModal = new RichTextModal();
   let linkModal = new LinkModal();
   let linkToMediaModal = new LinkToMediaModal();
+  let imageModal = new ImageModal();
+
   before(() => {
     cy.clearProject();
   });
@@ -36,6 +39,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("RichTextField", "Rich Text");
     slicePage.addNewWidgetField("LinkField", "Link");
     slicePage.addNewWidgetField("LinkToMediaField", "Link to media");
+    slicePage.addNewWidgetField("ImageField", "Image");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -73,6 +77,16 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .editPlaceholder("Default")
       .save();
     slicePage.getWidgetField("NewLinkToMediaField");
+
+    slicePage.openEditWidgetModal("ImageField");
+    imageModal
+      .editLabel("NewImageField")
+      .editApiId("ImageApiID")
+      .editWidth("200")
+      .editHeight("200")
+      .addThumbnail("Thumbnail2", 100, 80)
+      .save();
+    slicePage.getWidgetField("NewImageField");
 
     slicePage.save();
   });
