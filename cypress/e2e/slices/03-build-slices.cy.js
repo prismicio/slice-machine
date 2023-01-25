@@ -1,6 +1,7 @@
 import { SlicePage } from "../../pages/slices/slicePage";
 import {
   BooleanModal,
+  ColorModal,
   EmbedModal,
   ImageModal,
   KeyTextModal,
@@ -26,6 +27,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let booleanModal = new BooleanModal();
   let numberModal = new NumberModal();
   let embedModal = new EmbedModal();
+  let colorModal = new ColorModal();
 
   before(() => {
     cy.clearProject();
@@ -49,6 +51,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("BooleanField", "Boolean");
     slicePage.addNewWidgetField("NumberField", "Number");
     slicePage.addNewWidgetField("EmbedField", "Embed");
+    slicePage.addNewWidgetField("ColorField", "Color");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -122,6 +125,14 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .editPlaceholder("Default")
       .save();
     slicePage.getWidgetField("NewEmbedField");
+
+    slicePage.openEditWidgetModal("ColorField");
+    colorModal
+      .editLabel("NewColorField")
+      .editApiId("ColorApiID")
+      .editPlaceholder("Default")
+      .save();
+    slicePage.getWidgetField("NewColorField");
 
     slicePage.save();
   });

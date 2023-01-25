@@ -6,9 +6,11 @@ import { ImageModal } from "./imageModal";
 import { BooleanModal } from "./booleanModal";
 import { NumberModal } from "./numberModal";
 import { EmbedModal } from "./embedModal";
+import { ColorModal } from "./colorModal";
 
 export {
   BooleanModal,
+  ColorModal,
   EmbedModal,
   ImageModal,
   KeyTextModal,

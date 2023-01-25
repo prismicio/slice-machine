@@ -27,4 +27,14 @@ export class BaseEditWidgetModal {
     cy.getInputByLabel(label).clear().type(text);
     return this;
   }
+
+  editLabel(newLabel) {
+    this.editTextField("Label", newLabel);
+    return this;
+  }
+
+  editApiId(newId) {
+    this.editTextField("API ID*", newId);
+    return this;
+  }
 }
