@@ -11,6 +11,7 @@ import {
   LinkToMediaModal,
   NumberModal,
   RichTextModal,
+  SelectModal,
   TimestampModal,
 } from "../../pages/slices/editWidgetModals";
 
@@ -34,6 +35,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let timestampModal = new TimestampModal();
   let dateModal = new DateModal();
   let geoPointModal = new GeoPointModal();
+  let selectModal = new SelectModal();
 
   before(() => {
     cy.clearProject();
@@ -61,6 +63,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("TimestampField", "Timestamp");
     slicePage.addNewWidgetField("DateField", "Date");
     slicePage.addNewWidgetField("GeoPointField", "GeoPoint");
+    slicePage.addNewWidgetField("SelectField", "Select");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -165,6 +168,18 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .editApiId("GeoPointApiID")
       .save();
     slicePage.getWidgetField("NewGeoPointField");
+
+    slicePage.openEditWidgetModal("SelectField");
+    selectModal
+      .editLabel("NewSelectField")
+      .editApiId("SelectApiID")
+      .editPlaceholder("Default")
+      .toggleFirstValAsDefault()
+      .changeOptionLabel(1, "Option 1")
+      .changeOptionLabel(2, "Option 2")
+      .addOption("Option 3")
+      .save();
+    slicePage.getWidgetField("NewSelectField");
 
     slicePage.save();
   });

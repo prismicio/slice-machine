@@ -10,6 +10,7 @@ import { ColorModal } from "./colorModal";
 import { TimestampModal } from "./timestampModal";
 import { DateModal } from "./dateModal";
 import { GeoPointModal } from "./geoPointModal";
+import { SelectModal } from "./selectModal";
 
 export {
   BooleanModal,
@@ -23,5 +24,6 @@ export {
   LinkToMediaModal,
   NumberModal,
   RichTextModal,
+  SelectModal,
   TimestampModal,
 };
