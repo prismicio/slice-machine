@@ -2,7 +2,9 @@ import { SlicePage } from "../../pages/slices/slicePage";
 import {
   BooleanModal,
   ColorModal,
+  DateModal,
   EmbedModal,
+  GeoPointModal,
   ImageModal,
   KeyTextModal,
   LinkModal,
@@ -30,6 +32,8 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let embedModal = new EmbedModal();
   let colorModal = new ColorModal();
   let timestampModal = new TimestampModal();
+  let dateModal = new DateModal();
+  let geoPointModal = new GeoPointModal();
 
   before(() => {
     cy.clearProject();
@@ -55,6 +59,8 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("EmbedField", "Embed");
     slicePage.addNewWidgetField("ColorField", "Color");
     slicePage.addNewWidgetField("TimestampField", "Timestamp");
+    slicePage.addNewWidgetField("DateField", "Date");
+    slicePage.addNewWidgetField("GeoPointField", "GeoPoint");
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -144,6 +150,21 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .editPlaceholder("Default")
       .save();
     slicePage.getWidgetField("NewTimestampField");
+
+    slicePage.openEditWidgetModal("DateField");
+    dateModal
+      .editLabel("NewDateField")
+      .editApiId("DateApiID")
+      .editPlaceholder("Default")
+      .save();
+    slicePage.getWidgetField("NewDateField");
+
+    slicePage.openEditWidgetModal("GeoPointField");
+    geoPointModal
+      .editLabel("NewGeoPointField")
+      .editApiId("GeoPointApiID")
+      .save();
+    slicePage.getWidgetField("NewGeoPointField");
 
     slicePage.save();
   });

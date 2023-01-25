@@ -8,11 +8,15 @@ import { NumberModal } from "./numberModal";
 import { EmbedModal } from "./embedModal";
 import { ColorModal } from "./colorModal";
 import { TimestampModal } from "./timestampModal";
+import { DateModal } from "./dateModal";
+import { GeoPointModal } from "./geoPointModal";
 
 export {
   BooleanModal,
   ColorModal,
+  DateModal,
   EmbedModal,
+  GeoPointModal,
   ImageModal,
   KeyTextModal,
   LinkModal,
