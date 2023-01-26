@@ -6,5 +6,5 @@
 		"@/slices/marketing",
 		"@/slices/navigation"
 	],
-	"localSliceSimulatorURL": "http://localhost:3000/slice-simulator"
+	"localSliceSimulatorURL": "http://localhost:3500/slice-simulator"
 }

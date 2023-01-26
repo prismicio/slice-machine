@@ -42,7 +42,7 @@ export class SimulatorPage {
     cy.readFile(MANIFEST_FILE, "utf-8").then((json) => {
       const data = {
         ...json,
-        localSliceSimulatorURL: "http://localhost:3500/slice-simulator",
+        localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
       };
       return cy.writeFile(MANIFEST_FILE, JSON.stringify(data, null, 2));
     });
