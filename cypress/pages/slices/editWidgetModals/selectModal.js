@@ -21,10 +21,7 @@ export class SelectModal extends BaseEditWidgetModal {
 
   addOption(label) {
     cy.get(this.root).contains("button", "Add option").click();
-    cy.get(this.root)
-      .get("input")
-      .last()
-      .type(label);
+    cy.get(this.root).get("input").last().type(label);
     return this;
   }
 }

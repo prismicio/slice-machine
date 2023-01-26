@@ -11,10 +11,12 @@ import { TimestampModal } from "./timestampModal";
 import { DateModal } from "./dateModal";
 import { GeoPointModal } from "./geoPointModal";
 import { SelectModal } from "./selectModal";
+import { ContentRelationshipModal } from "./contentRelationshipModal";
 
 export {
   BooleanModal,
   ColorModal,
+  ContentRelationshipModal,
   DateModal,
   EmbedModal,
   GeoPointModal,

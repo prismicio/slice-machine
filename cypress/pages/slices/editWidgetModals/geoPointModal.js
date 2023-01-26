@@ -1,3 +1,3 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
-export class GeoPointModal extends BaseEditWidgetModal { }
+export class GeoPointModal extends BaseEditWidgetModal {}

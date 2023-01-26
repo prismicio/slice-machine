@@ -2,6 +2,7 @@ import { SlicePage } from "../../pages/slices/slicePage";
 import {
   BooleanModal,
   ColorModal,
+  ContentRelationshipModal,
   DateModal,
   EmbedModal,
   GeoPointModal,
@@ -36,6 +37,7 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   let dateModal = new DateModal();
   let geoPointModal = new GeoPointModal();
   let selectModal = new SelectModal();
+  let contentRelationshipModal = new ContentRelationshipModal();
 
   before(() => {
     cy.clearProject();
@@ -46,6 +48,9 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
   });
 
   it("Creates a slice and edits the fields in it", () => {
+    const customTypeName = "Single Custom Type";
+    const customTypeId = "single_custom_type";
+    cy.createCustomType(customTypeId, customTypeName);
     cy.createSlice(SLICE.library, SLICE.id, SLICE.name);
 
     slicePage.deleteWidgetField("Title");
@@ -64,6 +69,10 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     slicePage.addNewWidgetField("DateField", "Date");
     slicePage.addNewWidgetField("GeoPointField", "GeoPoint");
     slicePage.addNewWidgetField("SelectField", "Select");
+    slicePage.addNewWidgetField(
+      "ContentRelationshipField",
+      "Content Relationship"
+    );
 
     slicePage.openEditWidgetModal("SimpleTextField");
     keyTextModal
@@ -180,6 +189,14 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .addOption("Option 3")
       .save();
     slicePage.getWidgetField("NewSelectField");
+
+    slicePage.openEditWidgetModal("ContentRelationshipField");
+    contentRelationshipModal
+      .editLabel("NewContentRelationshipField")
+      .editApiId("ContentRelationshipApiID")
+      .addCustomType(customTypeName)
+      .save();
+    slicePage.getWidgetField("NewContentRelationshipField");
 
     slicePage.save();
   });
