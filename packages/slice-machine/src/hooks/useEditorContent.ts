@@ -16,10 +16,13 @@ function useEditorContentOnce({
     slice.mock?.find((m) => m.variation === variationID) ||
     defaultSharedSliceContent(variationID);
 
-  const apiContent = useMemo(() => ({
-    ...(renderSliceMock(Slices.fromSM(slice.model), editorContent) as object),
-    id: slice.model.id,
-  }), [slice.model]);
+  const apiContent = useMemo(
+    () => ({
+      ...(renderSliceMock(Slices.fromSM(slice.model), editorContent) as object),
+      id: slice.model.id,
+    }),
+    [slice.model, editorContent]
+  );
 
   return { editorContent, apiContent };
 }

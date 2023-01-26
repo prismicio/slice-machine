@@ -29,7 +29,7 @@ const Screenshot: ComponentWithSliceProps = ({ slice, variation }) => {
     variationID: variation.id,
   });
 
-  if (!simulatorUrl) {
+  if (simulatorUrl === undefined) {
     return null;
   }
 
