@@ -31,8 +31,8 @@ export async function renameSlice(req: {
     };
   }
   const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
-  const desiredLibrary = libraries.find((library) => library.name === libName);
-  if (!desiredLibrary) {
+  const targetLibrary = libraries.find((library) => library.name === libName);
+  if (!targetLibrary) {
     const message = `[renameSlice] When renaming slice: ${sliceId}, the library: ${libName} was not found.`;
     console.error(message);
     return {
@@ -41,11 +41,11 @@ export async function renameSlice(req: {
       reason: message,
     };
   }
-  const desiredSlice = desiredLibrary.components.find(
+  const targetSlice = targetLibrary.components.find(
     (component) => component.model.id === sliceId
   );
 
-  if (!desiredSlice) {
+  if (!targetSlice) {
     const message = `[renameSlice] When renaming slice: ${sliceId}, the slice: ${sliceId} was not found.`;
     console.error(message);
     return {
@@ -57,11 +57,11 @@ export async function renameSlice(req: {
 
   const sliceDirectory = CustomPaths(env.cwd)
     .library(libName)
-    .slice(desiredSlice.model.name);
+    .slice(targetSlice.model.name);
 
   const generatedSliceDirectory = GeneratedPaths(env.cwd)
     .library(libName)
-    .slice(desiredSlice.model.name);
+    .slice(targetSlice.model.name);
 
   IO.Slice.renameSlice(sliceDirectory.model(), newSliceName);
 
@@ -70,14 +70,29 @@ export async function renameSlice(req: {
     `${CustomPaths(env.cwd).library(libName).value()}/${newSliceName}`
   );
 
+  const newPathToSliceDirectory = GeneratedPaths(env.cwd)
+    .library(libName)
+    .slice(newSliceName);
+
   fs.renameSync(
     generatedSliceDirectory.value(),
-    `${GeneratedPaths(env.cwd).library(libName).value()}/${newSliceName}`
+    newPathToSliceDirectory.value()
   );
+
+  if (fs.existsSync(newPathToSliceDirectory.stories())) {
+    const prevString = fs.readFileSync(
+      newPathToSliceDirectory.stories(),
+      "utf-8"
+    );
+    fs.writeFileSync(
+      newPathToSliceDirectory.stories(),
+      prevString.replaceAll(targetSlice.model.name, newSliceName)
+    );
+  }
 
   IO.Types.upsert(env);
 
   await onSaveSlice(env);
 
-  return desiredSlice;
+  return targetSlice;
 }
