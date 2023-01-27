@@ -9,6 +9,7 @@ import {
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
+import type { Limit } from "@slicemachine/client/build";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import {
   ScreenshotRequest,
@@ -156,6 +157,10 @@ export const pushSliceApiClient = (
       defaultAxiosConfig
     )
     .then((response) => response.data);
+};
+
+export const pushChanges = (): Promise<Limit | null> => {
+  return axios.post("/api/push-changes", {}, defaultAxiosConfig);
 };
 
 /** Auth Routes **/

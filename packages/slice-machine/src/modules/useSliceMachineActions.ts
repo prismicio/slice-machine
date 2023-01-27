@@ -80,8 +80,6 @@ import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 import { changesPushCreator } from "./pushChangesSaga";
-import { SyncError } from "@src/models/SyncError";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
 import { saveSliceMockCreator } from "./simulator";
@@ -484,22 +482,7 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = (
-    unSyncedSlices: ReadonlyArray<ComponentUI>,
-    unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
-    modelStatuses: ModelStatusInformation["modelsStatuses"],
-    onChangesPushed: (pushed: string | null) => void,
-    handleError: (e: SyncError | null) => void
-  ) =>
-    dispatch(
-      changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
-      })
-    );
+  const pushChanges = () => dispatch(changesPushCreator());
 
   // Toaster store
   const openToaster = (

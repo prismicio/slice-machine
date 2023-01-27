@@ -16,13 +16,13 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { CustomTypeTable } from "@components/CustomTypeTable/ctPage";
 import { GoPlus } from "react-icons/go";
 import { VIDEO_WHAT_ARE_CUSTOM_TYPES } from "../lib/consts";
-import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
+import { hasLocal } from "@lib/models/common/ModelData";
 
 const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
   const { customTypes, isCreatingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
-      customTypes: selectAllCustomTypes(store).filter(isLocalCustomType),
+      customTypes: selectAllCustomTypes(store).filter(hasLocal),
       isCreatingCustomType: isLoading(
         store,
         LoadingKeysEnum.CREATE_CUSTOM_TYPE

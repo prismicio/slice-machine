@@ -1,4 +1,4 @@
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 export const normalizeFrontendCustomType = (
@@ -22,8 +22,8 @@ export const normalizeFrontendCustomType = (
 export const normalizeFrontendCustomTypes = (
   localCustomTypes: ReadonlyArray<CustomTypeSM>,
   remoteCustomTypes: ReadonlyArray<CustomTypeSM>
-): Record<string, FrontEndCustomType> => {
-  const customTypes: Record<string, FrontEndCustomType> = {};
+): Record<string, LocalOrRemoteCustomType> => {
+  const customTypes: Record<string, LocalOrRemoteCustomType> = {};
 
   localCustomTypes.forEach((t) => (customTypes[t.id] = { local: t }));
   remoteCustomTypes.forEach(

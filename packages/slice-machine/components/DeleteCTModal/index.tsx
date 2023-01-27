@@ -6,14 +6,17 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
-import { LocalFrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import {
+  LocalAndRemoteCustomType,
+  LocalOnlyCustomType,
+} from "@lib/models/common/ModelData";
 
 type DeleteCTModalProps = {
-  customType?: LocalFrontEndCustomType;
+  customType?: LocalOnlyCustomType | LocalAndRemoteCustomType;
 };
 
 export const DeleteCustomTypeModal: React.FunctionComponent<

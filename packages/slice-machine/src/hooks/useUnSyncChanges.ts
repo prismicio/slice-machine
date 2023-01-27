@@ -1,18 +1,17 @@
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
-import {
-  DeletedFrontEndSliceModel,
-  isDeletedSlice,
-} from "@lib/models/common/ModelStatus/compareSliceModels";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import {
-  FrontEndCustomType,
-  getCustomTypeProp,
-} from "@src/modules/availableCustomTypes/types";
 import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
 import { ModelStatusInformation, useModelStatus } from "./useModelStatus";
+import {
+  LocalOrRemoteCustomType,
+  RemoteOnlySlice,
+  getModelId,
+  hasLocal,
+  hasRemote,
+} from "@lib/models/common/ModelData";
 
 const unSyncStatuses = [
   ModelStatus.New,
@@ -22,14 +21,14 @@ const unSyncStatuses = [
 
 export interface UnSyncChanges extends ModelStatusInformation {
   unSyncedSlices: ComponentUI[];
-  unSyncedCustomTypes: FrontEndCustomType[];
+  unSyncedCustomTypes: LocalOrRemoteCustomType[];
 }
 
 // ComponentUI are manipulated on all the relevant pages
 // But the data is not available for remote only slices
 // which have been deleted locally
 // Should revisit this with the sync improvements
-const wrapDeletedSlice = (s: DeletedFrontEndSliceModel): ComponentUI => ({
+const wrapDeletedSlice = (s: RemoteOnlySlice): ComponentUI => ({
   model: s.remote,
   screenshots: {},
   mockConfig: {},
@@ -59,7 +58,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
   );
 
   const deletedComponents: ComponentUI[] = slices
-    .filter(isDeletedSlice)
+    .filter((slice) => hasRemote(slice) && !hasLocal(slice))
     .map(wrapDeletedSlice);
 
   const components: ComponentUI[] = localComponents
@@ -73,9 +72,9 @@ export const useUnSyncChanges = (): UnSyncChanges => {
   );
   const unSyncedCustomTypes = customTypes.filter(
     (customType) =>
-      modelsStatuses.customTypes[getCustomTypeProp(customType, "id")] &&
+      modelsStatuses.customTypes[getModelId(customType)] &&
       unSyncStatuses.includes(
-        modelsStatuses.customTypes[getCustomTypeProp(customType, "id")]
+        modelsStatuses.customTypes[getModelId(customType)]
       )
   );
 

@@ -23,6 +23,7 @@ import { handler as pushCustomType } from "./custom-types/push";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+import pushChanges from "./push-changes";
 
 import sentryHandler, { plainTextBodyParser } from "./sentry";
 
@@ -267,6 +268,23 @@ router.get(
   ): Promise<Express.Response> {
     const { statusCode } = await pushCustomType(req);
     return res.sendStatus(statusCode);
+  })
+);
+
+router.post(
+  "/push-changes",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const result = await pushChanges(req);
+
+    if (isApiError(result)) {
+      return res.status(result.status).json(result);
+    }
+
+    return res.status(result.status).json(result.body);
   })
 );
 

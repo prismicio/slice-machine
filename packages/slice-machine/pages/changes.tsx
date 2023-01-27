@@ -19,7 +19,6 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SyncError } from "@src/models/SyncError";
 import DeleteDocumentsDrawer from "@components/DeleteDocumentsDrawer";
-import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
 import DeleteDocumentsDrawerOverLimit from "@components/DeleteDocumentsDrawer/DeleteDocumentsDrawerOverLimit";
 
 const Changes: React.FunctionComponent = () => {
@@ -50,18 +49,7 @@ const Changes: React.FunctionComponent = () => {
   const handlePush = () => {
     if (error) setError(null); // reset error
     if (changesPushed.length > 0) setChangesPushed([]); // reset changesPushed
-    pushChanges(
-      unSyncedSlices,
-      unSyncedCustomTypes
-        .filter(isLocalCustomType)
-        .map((customtype) => customtype.local),
-      modelsStatuses,
-      (pushed: string | null) =>
-        pushed
-          ? setChangesPushed([...changesPushed, pushed])
-          : setChangesPushed([]),
-      setError
-    );
+    pushChanges();
   };
 
   const PageContent = useMemo(() => {

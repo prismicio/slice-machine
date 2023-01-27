@@ -27,7 +27,7 @@ import { getEnvironment } from "@src/modules/environment";
 import Tracker from "@src/tracking/client";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getLibraries } from "@src/modules/slices";
-import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
+import { hasLocal } from "@lib/models/common/ModelData";
 
 Modal.setAppElement("#__next");
 
@@ -95,8 +95,8 @@ const ReviewModal: React.FunctionComponent = () => {
 
   const hasSliceWithinCustomType = customTypes.some(
     (customType) =>
-      isLocalCustomType(customType) &&
-      customType.local?.tabs.some(
+      hasLocal(customType) &&
+      customType.local.tabs.some(
         (tab) => tab.sliceZone && tab.sliceZone?.value.length > 0
       )
   );

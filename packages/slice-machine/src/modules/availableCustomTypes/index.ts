@@ -1,13 +1,5 @@
 import { Reducer } from "redux";
-import {
-  AvailableCustomTypesStoreType,
-  DeletedFrontEndCustomType,
-  FrontEndCustomType,
-  isDeletedCustomType,
-  isNewCustomType,
-  isSyncedCustomType,
-  NewCustomType,
-} from "./types";
+import { AvailableCustomTypesStoreType } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -27,7 +19,7 @@ import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
-} from "@src/normalizers/customType";
+} from "@lib/models/common/normalizers/customType";
 import { saveCustomTypeCreator } from "../selectedCustomType/actions";
 import { pushCustomTypeCreator } from "../pushChangesSaga/actions";
 import axios from "axios";
@@ -35,7 +27,14 @@ import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
 import { omit } from "lodash";
 import { deleteSliceCreator } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
-import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
+import {
+  LocalAndRemoteCustomType,
+  LocalOrRemoteCustomType,
+  RemoteOnlyCustomType,
+  hasLocal,
+  hasLocalAndRemote,
+  hasRemote,
+} from "@lib/models/common/ModelData";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -94,7 +93,7 @@ type CustomTypesActions =
 // Selectors
 export const selectAllCustomTypes = (
   store: SliceMachineStoreType
-): FrontEndCustomType[] => Object.values(store.availableCustomTypes);
+): LocalOrRemoteCustomType[] => Object.values(store.availableCustomTypes);
 
 export const selectAllCustomTypeIds = (
   store: SliceMachineStoreType
@@ -104,11 +103,11 @@ export const selectAllCustomTypeLabels = (
   store: SliceMachineStoreType
 ): string[] => {
   return Object.values(store.availableCustomTypes)
-    .flatMap((localAndRemote) => {
-      return Object.values(localAndRemote);
+    .flatMap((localOrRemote) => {
+      return Object.values(localOrRemote);
     })
     .reduce<string[]>((acc, ct) => {
-      if (ct?.label) return [...acc, ct.label];
+      if (ct.label != undefined) return [...acc, ct.label];
 
       return acc;
     }, []);
@@ -117,7 +116,7 @@ export const selectAllCustomTypeLabels = (
 export const selectCustomTypeById = (
   store: SliceMachineStoreType,
   id: string
-): FrontEndCustomType | null => store.availableCustomTypes[id];
+): LocalOrRemoteCustomType | null => store.availableCustomTypes[id];
 
 // Reducer
 export const availableCustomTypesReducer: Reducer<
@@ -150,7 +149,6 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(saveCustomTypeCreator.success): {
-      if (!state) return state;
       const localCustomType = action.payload.customType;
 
       return {
@@ -163,19 +161,16 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(pushCustomTypeCreator.success): {
-      if (!state) return state;
-      const customTypeId = action.payload.customTypeId;
-      const customType = state[customTypeId];
+      const customType = state[action.payload.customTypeId];
 
-      if (!isLocalCustomType(customType)) {
-        // You can't create a deleted custom type
-        return state;
-      }
+      // Rename only applies for custom type with local data
+      if (!hasLocal(customType)) return state;
+
       const localCustomType: CustomTypeSM = customType.local;
 
       return {
         ...state,
-        [customTypeId]: {
+        [customType.local.id]: {
           local: localCustomType,
           remote: localCustomType,
         },
@@ -183,40 +178,42 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(renameCustomTypeCreator.success): {
-      const id = action.payload.customTypeId;
+      const customType = state[action.payload.customTypeId];
       const newName = action.payload.newCustomTypeName;
-      const ct = state[id];
-      if (isDeletedCustomType(ct)) {
-        // You can't rename a deleted custom type
-        return state;
-      }
+
+      // Rename only applies for custom type with local data
+      if (!hasLocal(customType)) return state;
+
       const newLocalCustomType = {
-        ...ct.local,
+        ...customType.local,
         label: newName,
       };
 
       const newCustomType = {
-        ...ct,
+        ...customType,
         local: newLocalCustomType,
       };
 
       return {
         ...state,
-        [id]: newCustomType,
+        [customType.local.id]: newCustomType,
       };
     }
 
     case getType(deleteCustomTypeCreator.success): {
-      const ct = state[action.payload.customTypeId];
-      if (isSyncedCustomType(ct)) {
-        const deletedCT: DeletedFrontEndCustomType = omit(ct, "local");
+      const customType = state[action.payload.customTypeId];
+
+      if (hasLocalAndRemote(customType)) {
+        const remoteOnlyCustomType: RemoteOnlyCustomType = omit(
+          customType,
+          "local"
+        );
         return {
           ...state,
-          [ct.local.id]: deletedCT,
+          [remoteOnlyCustomType.remote.id]: remoteOnlyCustomType,
         };
-      }
-      if (isNewCustomType(ct)) {
-        return omit(state, action.payload.customTypeId);
+      } else if (hasLocal(customType)) {
+        return omit(state, customType.local.id);
       }
 
       return state;
@@ -224,40 +221,36 @@ export const availableCustomTypesReducer: Reducer<
 
     case getType(deleteSliceCreator.success): {
       const sliceId = action.payload.sliceId;
-      const newCTs: AvailableCustomTypesStoreType = Object.entries(state)
-        .map<[string, FrontEndCustomType]>(([ctName, customType]) => {
-          if (isNewCustomType(customType)) {
-            const newCT: NewCustomType = {
-              local: filterSliceFromCustomType(customType.local, sliceId),
-            };
-            return [ctName, newCT];
-          }
-          if (isSyncedCustomType(customType)) {
-            return [
-              ctName,
-              {
+
+      const customTypesUpdated: AvailableCustomTypesStoreType = Object.entries(
+        state
+      )
+        .map<[string, LocalOrRemoteCustomType]>(
+          ([customTypeId, customType]) => {
+            if (hasLocal(customType)) {
+              // Filter only the local model
+              const customTypeUpdated = {
+                ...customType,
                 local: filterSliceFromCustomType(customType.local, sliceId),
-                remote: customType.remote,
-              },
-            ];
+              };
+
+              return [customTypeId, customTypeUpdated];
+            }
+
+            return [customTypeId, customType];
           }
+        )
+        .reduce<AvailableCustomTypesStoreType>(
+          (acc, [customTypeId, customType]) => {
+            return {
+              ...acc,
+              [customTypeId]: customType,
+            };
+          },
+          {}
+        );
 
-          return [
-            ctName,
-            {
-              local: undefined,
-              remote: customType.remote,
-            },
-          ];
-        })
-        .reduce<AvailableCustomTypesStoreType>((acc, [name, ct]) => {
-          return {
-            ...acc,
-            [name]: ct,
-          };
-        }, {});
-
-      return newCTs;
+      return customTypesUpdated;
     }
 
     default:

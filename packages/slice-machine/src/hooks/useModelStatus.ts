@@ -1,18 +1,17 @@
 import {
   computeModelStatus,
-  FrontEndModel,
   ModelStatus,
 } from "@lib/models/common/ModelStatus";
-import {
-  FrontEndSliceModel,
-  getSliceProp,
-} from "@lib/models/common/ModelStatus/compareSliceModels";
-import { getCustomTypeProp } from "@src/modules/availableCustomTypes/types";
 import { getAuthStatus } from "@src/modules/environment";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
 import { useNetwork } from "./useNetwork";
+import {
+  getModelId,
+  LocalOrRemoteModel,
+  LocalOrRemoteSlice,
+} from "@lib/models/common/ModelData";
 
 // Slices and Custom Types needs to be separated as Ids are not unique amongst each others.
 export interface ModelStatusInformation {
@@ -24,11 +23,11 @@ export interface ModelStatusInformation {
   isOnline: boolean;
 }
 
-const isSliceModel = (m: FrontEndModel): m is FrontEndSliceModel =>
+const isSliceModel = (m: LocalOrRemoteModel): m is LocalOrRemoteSlice =>
   "localScreenshots" in m;
 
 export const useModelStatus = (
-  models: FrontEndModel[]
+  models: LocalOrRemoteModel[]
 ): ModelStatusInformation => {
   const isOnline = useNetwork();
   const { authStatus } = useSelector((store: SliceMachineStoreType) => ({
@@ -41,17 +40,17 @@ export const useModelStatus = (
 
   const modelsStatuses: ModelStatusInformation["modelsStatuses"] =
     models.reduce(
-      (acc: ModelStatusInformation["modelsStatuses"], model: FrontEndModel) => {
-        const status: ModelStatus = computeModelStatus(
-          model,
-          userHasAccessToModels
-        );
+      (
+        acc: ModelStatusInformation["modelsStatuses"],
+        model: LocalOrRemoteModel
+      ) => {
+        const { status } = computeModelStatus(model, userHasAccessToModels);
 
         if (isSliceModel(model)) {
           return {
             slices: {
               ...acc.slices,
-              [getSliceProp(model, "id")]: status,
+              [getModelId(model)]: status,
             },
             customTypes: acc.customTypes,
           };
@@ -61,7 +60,7 @@ export const useModelStatus = (
           slices: acc.slices,
           customTypes: {
             ...acc.customTypes,
-            [getCustomTypeProp(model, "id")]: status,
+            [getModelId(model)]: status,
           },
         };
       },

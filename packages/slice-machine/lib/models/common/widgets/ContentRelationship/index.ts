@@ -9,7 +9,7 @@ import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { isLocalCustomType } from "@src/modules/availableCustomTypes/types";
+import { hasLocal } from "../../ModelData";
 
 /**
  * {
@@ -67,7 +67,7 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
     const customTypes =
       // TODO: fix this error
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      useSelector(selectAllCustomTypes).filter(isLocalCustomType);
+      useSelector(selectAllCustomTypes).filter(hasLocal);
 
     if (!initialValues?.customtypes) {
       return initialValues;

@@ -1,6 +1,6 @@
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import { ApiError, isApiError } from "../../../../lib/models/server/ApiResult";
-import { onError } from "../common/error";
+import { onError } from "../../../../lib/models/server/ApiResult";
 import { Acl, ClientError } from "@slicemachine/client";
 
 export const purge = async (

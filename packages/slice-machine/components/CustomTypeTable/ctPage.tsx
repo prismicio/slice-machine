@@ -2,19 +2,22 @@ import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Box, Text } from "theme-ui";
-import { LocalFrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
 import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
+import {
+  LocalOnlyCustomType,
+  LocalOrRemoteCustomType,
+} from "@lib/models/common/ModelData";
 
 export const CustomTypeTable: React.FC<{
-  customTypes: LocalFrontEndCustomType[];
+  customTypes: (LocalOnlyCustomType | LocalOnlyCustomType)[];
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
   const [customTypeToEdit, setCustomTypeToEdit] =
-    useState<LocalFrontEndCustomType>();
+    useState<LocalOrRemoteCustomType>();
 
   const firstColumnWidth = "27%";
   const secondColumnWidth = "27%";
