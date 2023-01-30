@@ -6,7 +6,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 export const normalizeFrontendSlices = (
   localLibraries: ReadonlyArray<LibraryUI>,
   remoteSlices: ReadonlyArray<SliceSM>
-): ReadonlyArray<LocalOrRemoteSlice> => {
+): LocalOrRemoteSlice[] => {
   const slices: Record<string, LocalOrRemoteSlice> = {};
 
   const localComponents = localLibraries.reduce(
@@ -22,7 +22,7 @@ export const normalizeFrontendSlices = (
   });
 
   remoteSlices.forEach((slice) => {
-    slices[slice.id] = { remote: slice };
+    slices[slice.id] = { ...slices[slice.id], remote: slice };
   });
 
   return Object.values(slices);
