@@ -64,9 +64,11 @@ export default async function handler(
 
   /* -- Assemble the models together and compute their statuses -- */
   const slicesModels: ReadonlyArray<LocalOrRemoteSlice> =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     normalizeFrontendSlices(localSlices, remoteSlices);
   const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
     Object.values(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
     );
 
