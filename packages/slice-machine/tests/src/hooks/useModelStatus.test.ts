@@ -15,7 +15,15 @@ jest.mock("react-redux", () => ({
   useSelector: () => mockSelector(),
 }));
 
-const sliceModel = Slices.toSM(SliceMock);
+const BaseSliceMock = {
+  ...SliceMock,
+  variations: SliceMock.variations.map((variation) => {
+    // @ts-expect-error we know imageUrl is optional
+    delete variation["imageUrl"];
+    return variation;
+  }),
+};
+const sliceModel = Slices.toSM(BaseSliceMock);
 const customTypeModel = CustomTypes.toSM(customTypeMock);
 
 describe("[useModelStatus hook]", () => {

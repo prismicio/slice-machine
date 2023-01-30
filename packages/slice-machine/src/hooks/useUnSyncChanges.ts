@@ -58,7 +58,9 @@ export const useUnSyncChanges = (): UnSyncChanges => {
   );
 
   const deletedComponents: ComponentUI[] = slices
-    .filter((slice) => hasRemote(slice) && !hasLocal(slice))
+    .filter(
+      (slice): slice is RemoteOnlySlice => hasRemote(slice) && !hasLocal(slice)
+    )
     .map(wrapDeletedSlice);
 
   const components: ComponentUI[] = localComponents

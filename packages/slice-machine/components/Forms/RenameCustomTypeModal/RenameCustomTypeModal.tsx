@@ -16,14 +16,14 @@ import {
 } from "@lib/models/common/ModelData";
 
 interface RenameCustomTypeModalProps {
-  customType: LocalOnlyCustomType | LocalAndRemoteCustomType;
+  customType?: LocalOnlyCustomType | LocalAndRemoteCustomType;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   customType,
 }) => {
   const customTypeName = customType?.local.label ?? "";
-  const customTypeId = customType?.local.id;
+  const customTypeId = customType?.local.id ?? "";
   const { renameCustomType, closeModals } = useSliceMachineActions();
 
   const handleOnSubmit = (values: { customTypeName: string }) => {

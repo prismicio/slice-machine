@@ -28,12 +28,10 @@ import { omit } from "lodash";
 import { deleteSliceCreator } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
 import {
-  LocalAndRemoteCustomType,
   LocalOrRemoteCustomType,
   RemoteOnlyCustomType,
   hasLocal,
   hasLocalAndRemote,
-  hasRemote,
 } from "@lib/models/common/ModelData";
 
 // Action Creators
@@ -213,7 +211,7 @@ export const availableCustomTypesReducer: Reducer<
           [remoteOnlyCustomType.remote.id]: remoteOnlyCustomType,
         };
       } else if (hasLocal(customType)) {
-        return omit(state, customType.local.id);
+        return omit(state, action.payload.customTypeId);
       }
 
       return state;

@@ -8,16 +8,17 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
 import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
 import {
+  LocalAndRemoteCustomType,
   LocalOnlyCustomType,
-  LocalOrRemoteCustomType,
 } from "@lib/models/common/ModelData";
 
 export const CustomTypeTable: React.FC<{
   customTypes: (LocalOnlyCustomType | LocalOnlyCustomType)[];
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
-  const [customTypeToEdit, setCustomTypeToEdit] =
-    useState<LocalOrRemoteCustomType>();
+  const [customTypeToEdit, setCustomTypeToEdit] = useState<
+    LocalAndRemoteCustomType | LocalOnlyCustomType
+  >();
 
   const firstColumnWidth = "27%";
   const secondColumnWidth = "27%";

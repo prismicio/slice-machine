@@ -18,10 +18,10 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
-import { CustomTypeData } from "@lib/models/common/ModelData";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 
 interface ChangesItemsProps extends ModelStatusInformation {
-  unSyncedCustomTypes: CustomTypeData[];
+  unSyncedCustomTypes: LocalOrRemoteCustomType[];
   unSyncedSlices: ComponentUI[];
   changesPushed: string[];
   syncError: SyncError | null;
