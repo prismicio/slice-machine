@@ -18,7 +18,16 @@ import { refreshStateCreator } from "../environment";
 export const changesPushCreator = createAction("PUSH_CHANGES")();
 
 export function* changesPushSaga(): Generator {
-  yield call(pushChanges);
+  const response = (yield call(pushChanges)) as SagaReturnType<
+    typeof pushChanges
+  >;
+
+  if (response.data?.type) {
+    yield put(
+      modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER }) // Soft limit
+    );
+    return;
+  }
 
   // TODO: find a better way of doing this
   const { data: serverState } = (yield call(getState)) as SagaReturnType<
@@ -34,15 +43,6 @@ export function* changesPushSaga(): Generator {
       clientError: serverState.clientError,
     })
   );
-
-  // yield put(
-  //   modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER }) // Soft limit
-  // );
-  // yield put(
-  //   modalOpenCreator({
-  //     modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT, // Hard limit
-  //   })
-  // );
 
   // TODO: TRACKING SHOULD BE DONE ON THE BACKEND SIDE NOW AS THE BACKEND REALLY KNOWS WHAT HAPPENS
   // send tracking

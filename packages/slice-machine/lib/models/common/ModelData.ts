@@ -48,7 +48,9 @@ export type LocalAndRemoteSlice = LocalAndRemote<SliceSM> & {
 export type LocalOnlySlice = LocalOnly<SliceSM> & {
   localScreenshots: Partial<Record<string, Screenshot>>;
 };
-export type RemoteOnlySlice = RemoteOnly<SliceSM>;
+export type RemoteOnlySlice = RemoteOnly<SliceSM> & {
+  localScreenshots: Partial<Record<string, Screenshot>>;
+};
 
 // Models
 

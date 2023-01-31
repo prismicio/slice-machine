@@ -131,7 +131,6 @@ export const availableCustomTypesReducer: Reducer<
       );
 
       return {
-        ...state,
         ...normalizedNewCustomType,
       };
     }

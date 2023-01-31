@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import { useNetwork } from "./useNetwork";
 import {
   getModelId,
+  hasLocal,
+  LocalOrRemoteCustomType,
   LocalOrRemoteModel,
   LocalOrRemoteSlice,
 } from "@lib/models/common/ModelData";
@@ -23,6 +25,7 @@ export interface ModelStatusInformation {
   isOnline: boolean;
 }
 
+// THIS DOES NOT WORK
 const isSliceModel = (m: LocalOrRemoteModel): m is LocalOrRemoteSlice =>
   "localScreenshots" in m;
 
@@ -66,6 +69,56 @@ export const useModelStatus = (
       },
       { slices: {}, customTypes: {} }
     );
+
+  return {
+    modelsStatuses,
+    authStatus,
+    isOnline,
+  };
+};
+
+function computeStatuses(
+  models: LocalOrRemoteCustomType[],
+  userHasAccessToModels: boolean
+): { [sliceId: string]: ModelStatus };
+function computeStatuses(
+  models: LocalOrRemoteSlice[],
+  userHasAccessToModels: boolean
+): { [sliceId: string]: ModelStatus };
+function computeStatuses(
+  models: LocalOrRemoteModel[],
+  userHasAccessToModels: boolean
+) {
+  return models.reduce<{ [id: string]: ModelStatus }>((acc, model) => {
+    const { status } = computeModelStatus(model, userHasAccessToModels);
+
+    return {
+      ...acc,
+      [hasLocal(model) ? model.local.id : model.remote.id]: status,
+    };
+  }, {} as { [sliceId: string]: ModelStatus });
+}
+
+export const useModelStatus2 = ({
+  slices = [],
+  customTypes = [],
+}: {
+  slices: LocalOrRemoteSlice[];
+  customTypes: LocalOrRemoteCustomType[];
+}): ModelStatusInformation => {
+  const isOnline = useNetwork();
+  const { authStatus } = useSelector((store: SliceMachineStoreType) => ({
+    authStatus: getAuthStatus(store),
+  }));
+  const userHasAccessToModels =
+    isOnline &&
+    authStatus != AuthStatus.FORBIDDEN &&
+    authStatus != AuthStatus.UNAUTHORIZED;
+
+  const modelsStatuses = {
+    slices: computeStatuses(slices, userHasAccessToModels),
+    customTypes: computeStatuses(customTypes, userHasAccessToModels),
+  };
 
   return {
     modelsStatuses,

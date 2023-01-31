@@ -159,7 +159,7 @@ export const pushSliceApiClient = (
     .then((response) => response.data);
 };
 
-export const pushChanges = (): Promise<Limit | null> => {
+export const pushChanges = (): Promise<AxiosResponse<Limit | null>> => {
   return axios.post("/api/push-changes", {}, defaultAxiosConfig);
 };
 
