@@ -10,25 +10,39 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
-import { sortDocumentCards } from ".";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import {
+  getModelId,
+  hasLocal,
+  LocalOrRemoteCustomType,
+} from "@lib/models/common/ModelData";
 
-// TODO: replace with actual API response
-const AssociatedDocuments = [
-  { ctName: "Feature", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Legals", numberOfDocuments: 2030, link: "https://prismic.io/" },
-];
+export function getCTName(ct: LocalOrRemoteCustomType | undefined): string {
+  if (ct === undefined) {
+    return "Could not find Custom Type";
+  }
+
+  return (hasLocal(ct) ? ct.local.label : ct.remote.label) ?? 'John "CT" Doe';
+}
 
 const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
-  const { isDeleteDocumentsDrawerOverLimitOpen } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isDeleteDocumentsDrawerOverLimitOpen: isModalOpen(
-        store,
-        ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT
-      ),
-    })
-  );
+  const {
+    isDeleteDocumentsDrawerOverLimitOpen,
+    availableCustomTypes,
+    modalData,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    isDeleteDocumentsDrawerOverLimitOpen: isModalOpen(
+      store,
+      ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT
+    ),
+    availableCustomTypes: selectAllCustomTypes(store),
+    modalData: store.pushChanges,
+  }));
 
   const { closeModals } = useSliceMachineActions();
+
+  // TODO: sort out this silent error
+  if (!modalData?.details.customTypes) return null;
 
   return (
     <Drawer
@@ -104,22 +118,28 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
         )}
       >
         <Text sx={{ fontWeight: "bold", mb: 1, lineHeight: "24px" }}>
-          Your Custom Type{AssociatedDocuments.length > 1 && "s"} cannot be
-          deleted.
+          Your Custom Type{modalData.details.customTypes.length > 1 && "s"}{" "}
+          cannot be deleted.
         </Text>
         <Text sx={{ mb: 24 }}>
-          {AssociatedDocuments.length > 1
+          {modalData.details.customTypes.length > 1
             ? "These Custom Types have"
             : "This Custom Type has"}{" "}
           too many associated Documents. Archive and delete these Documents
           manually and then try deleting the Custom Types again.
         </Text>
 
-        {sortDocumentCards(AssociatedDocuments).map((ctDocuments) => (
+        {modalData.details.customTypes.map((ct) => (
           <AssociatedDocumentsCard
-            key={ctDocuments.ctName}
-            ctDocuments={ctDocuments}
+            key={ct.id}
             isOverLimit
+            ctName={getCTName(
+              availableCustomTypes.find(
+                (ctInArray) => getModelId(ctInArray) === ct.id
+              )
+            )}
+            link={ct.url}
+            numberOfDocuments={ct.numberOfDocuments}
           />
         ))}
       </Card>

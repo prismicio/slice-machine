@@ -17,17 +17,14 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
-import {
-  AssociatedDocumentsCard,
-  CustomtypeDocuments,
-} from "./AssociatedDocumentsCard";
+import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
-export const sortDocumentCards = (
-  documents: Readonly<Array<CustomtypeDocuments>>
-) =>
-  [...documents].sort(
+export const sortDocumentCards = (limit: Readonly<Limit>) => {
+  const documents = limit.details.customTypes;
+  return [...documents].sort(
     (doc1, doc2) => doc2.numberOfDocuments - doc1.numberOfDocuments
   );
+};
 
 // TODO: replace with actual API response
 const AssociatedDocuments = [
@@ -181,12 +178,12 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
           broken links in your repository.
         </Text>
 
-        {sortDocumentCards(AssociatedDocuments).map((ctDocuments) => (
+        {/* {sortDocumentCards(AssociatedDocuments).map((ctDocuments) => (
           <AssociatedDocumentsCard
             key={ctDocuments.ctName}
             ctDocuments={ctDocuments}
           />
-        ))}
+        ))} */}
       </Card>
     </Drawer>
   );

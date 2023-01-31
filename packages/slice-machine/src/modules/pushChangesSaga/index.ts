@@ -6,7 +6,12 @@ import {
   SagaReturnType,
   takeLatest,
 } from "redux-saga/effects";
-import { createAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAsyncAction,
+  getType,
+  Reducer,
+} from "typesafe-actions";
 import { withLoader } from "../loading";
 import { syncChangeCreator } from "./actions";
 import { openToasterCreator, ToasterType } from "../toaster";
@@ -14,8 +19,23 @@ import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { LoadingKeysEnum } from "../loading/types";
 import { refreshStateCreator } from "../environment";
+import { Limit, LimitType } from "@slicemachine/client/build/models";
 
-export const changesPushCreator = createAction("PUSH_CHANGES")();
+export const changesPushCreator = createAsyncAction(
+  "PUSH_CHANGES.REQUEST",
+  "PUSH_CHANGES.RESPONSE",
+  "PUSH_CHANGES.FAILURE"
+)<undefined, undefined, Limit>();
+
+const sortDocumentLimits = (limit: Readonly<Limit>) => ({
+  ...limit,
+  details: {
+    ...limit.details,
+    customTypes: [...limit.details.customTypes].sort(
+      (doc1, doc2) => doc2.numberOfDocuments - doc1.numberOfDocuments
+    ),
+  },
+});
 
 export function* changesPushSaga(): Generator {
   const response = (yield call(pushChanges)) as SagaReturnType<
@@ -23,8 +43,14 @@ export function* changesPushSaga(): Generator {
   >;
 
   if (response.data?.type) {
+    yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
     yield put(
-      modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER }) // Soft limit
+      modalOpenCreator({
+        modalKey:
+          response.data?.type === LimitType.SOFT
+            ? ModalKeysEnum.DELETE_DOCUMENTS_DRAWER
+            : ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+      })
     );
     return;
   }
@@ -72,7 +98,7 @@ export function* changesPushSaga(): Generator {
 
 function* watchChangesPush() {
   yield takeLatest(
-    getType(changesPushCreator),
+    getType(changesPushCreator.request),
     withLoader(changesPushSaga, LoadingKeysEnum.CHANGES_PUSH)
   );
 }
@@ -81,3 +107,24 @@ function* watchChangesPush() {
 export function* watchChangesPushSagas() {
   yield fork(watchChangesPush);
 }
+
+// Reducer
+export type PushChangesStoreType = Readonly<Limit | null>;
+type PushChangesActions = ActionType<typeof changesPushCreator>;
+
+export const pushChangesReducer: Reducer<
+  PushChangesStoreType,
+  PushChangesActions
+> = (state = null, action) => {
+  switch (action.type) {
+    case getType(changesPushCreator.request):
+    case getType(changesPushCreator.success):
+      return null;
+
+    case getType(changesPushCreator.failure): {
+      return action.payload;
+    }
+    default:
+      return state;
+  }
+};

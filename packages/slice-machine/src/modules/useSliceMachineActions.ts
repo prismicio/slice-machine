@@ -482,7 +482,7 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = () => dispatch(changesPushCreator());
+  const pushChanges = () => dispatch(changesPushCreator.request());
 
   // Toaster store
   const openToaster = (
