@@ -11,19 +11,8 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import {
-  getModelId,
-  hasLocal,
-  LocalOrRemoteCustomType,
-} from "@lib/models/common/ModelData";
-
-export function getCTName(ct: LocalOrRemoteCustomType | undefined): string {
-  if (ct === undefined) {
-    return "Could not find Custom Type";
-  }
-
-  return (hasLocal(ct) ? ct.local.label : ct.remote.label) ?? 'John "CT" Doe';
-}
+import { getModelId } from "@lib/models/common/ModelData";
+import { getCTName } from ".";
 
 const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
   const {

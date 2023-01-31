@@ -482,7 +482,8 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = () => dispatch(changesPushCreator.request());
+  const pushChanges = (confirmDeleteDocuments = false) =>
+    dispatch(changesPushCreator.request({ confirmDeleteDocuments }));
 
   // Toaster store
   const openToaster = (

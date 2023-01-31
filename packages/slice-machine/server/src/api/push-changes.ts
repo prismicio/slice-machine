@@ -173,7 +173,9 @@ export default async function handler(
   );
 
   const body: BulkBody = {
-    confirmDeleteDocuments: true,
+    // TODO: fix type
+    // eslint-disable-next-line
+    confirmDeleteDocuments: req.body.confirmDeleteDocuments,
     changes: [...sliceChanges, ...customTypeChanges],
   };
 

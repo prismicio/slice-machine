@@ -1,4 +1,4 @@
-import { getState, pushChanges } from "../../apiClient";
+import { getState, pushChanges, PushChangesPayload } from "../../apiClient";
 import {
   call,
   fork,
@@ -25,7 +25,7 @@ export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
   "PUSH_CHANGES.RESPONSE",
   "PUSH_CHANGES.FAILURE"
-)<undefined, undefined, Limit>();
+)<PushChangesPayload, undefined, Limit>();
 
 const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   ...limit,
@@ -37,8 +37,10 @@ const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   },
 });
 
-export function* changesPushSaga(): Generator {
-  const response = (yield call(pushChanges)) as SagaReturnType<
+export function* changesPushSaga({
+  payload,
+}: ReturnType<typeof changesPushCreator.request>): Generator {
+  const response = (yield call(pushChanges, payload)) as SagaReturnType<
     typeof pushChanges
   >;
 

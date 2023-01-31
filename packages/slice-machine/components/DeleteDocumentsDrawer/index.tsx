@@ -17,32 +17,21 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
-import { Limit } from "@slicemachine/client/build/models/BulkChanges";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
+import {
+  getModelId,
+  hasLocal,
+  LocalOrRemoteCustomType,
+} from "@lib/models/common/ModelData";
 
-export const sortDocumentCards = (limit: Readonly<Limit>) => {
-  const documents = limit.details.customTypes;
-  return [...documents].sort(
-    (doc1, doc2) => doc2.numberOfDocuments - doc1.numberOfDocuments
-  );
-};
+export function getCTName(ct: LocalOrRemoteCustomType | undefined): string {
+  if (ct === undefined) {
+    return "Could not find Custom Type";
+  }
 
-// TODO: replace with actual API response
-const AssociatedDocuments = [
-  { ctName: "Legals1", numberOfDocuments: 23, link: "https://prismic.io/" },
-  { ctName: "Features1", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features2", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features3", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features4", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features5", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features6", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Legals2", numberOfDocuments: 23, link: "https://prismic.io/" },
-  { ctName: "Features7", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features8", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features9", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features10", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features11", numberOfDocuments: 6, link: "https://prismic.io/" },
-  { ctName: "Features12", numberOfDocuments: 6, link: "https://prismic.io/" },
-];
+  return (hasLocal(ct) ? ct.local.label : ct.remote.label) ?? 'John "CT" Doe';
+}
 
 const ConfirmationDialogue: React.FC<{
   isConfirmed: boolean;
@@ -73,18 +62,22 @@ const ConfirmationDialogue: React.FC<{
 );
 
 const DeleteDocumentsDrawer: React.FunctionComponent = () => {
-  const { isDeleteDocumentsDrawerOpen } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { isDeleteDocumentsDrawerOpen, availableCustomTypes, modalData } =
+    useSelector((store: SliceMachineStoreType) => ({
       isDeleteDocumentsDrawerOpen: isModalOpen(
         store,
         ModalKeysEnum.DELETE_DOCUMENTS_DRAWER
       ),
-    })
-  );
+      availableCustomTypes: selectAllCustomTypes(store),
+      modalData: store.pushChanges,
+    }));
 
-  const { closeModals } = useSliceMachineActions();
+  const { pushChanges, closeModals } = useSliceMachineActions();
 
   const [hasConfirmed, setHasConfirmed] = useState(false);
+
+  // TODO: sort out this silent error
+  if (!modalData?.details.customTypes) return null;
 
   return (
     <Drawer
@@ -154,7 +147,7 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
               label="Push changes"
               variant="primary"
               onClick={() => {
-                console.log("Pushing");
+                pushChanges(true);
               }}
               disabled={!hasConfirmed}
               sx={{
@@ -171,19 +164,25 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
           This action will also delete Documents.
         </Text>
         <Text sx={{ mb: 24 }}>
-          {AssociatedDocuments.length > 1
+          {modalData.details.customTypes.length > 1
             ? "These Custom Types have"
             : "This Custom Type has"}{" "}
           associated Documents, which will also be deleted. This might create
           broken links in your repository.
         </Text>
 
-        {/* {sortDocumentCards(AssociatedDocuments).map((ctDocuments) => (
+        {modalData.details.customTypes.map((ct) => (
           <AssociatedDocumentsCard
-            key={ctDocuments.ctName}
-            ctDocuments={ctDocuments}
+            key={ct.id}
+            ctName={getCTName(
+              availableCustomTypes.find(
+                (ctInArray) => getModelId(ctInArray) === ct.id
+              )
+            )}
+            link={ct.url}
+            numberOfDocuments={ct.numberOfDocuments}
           />
-        ))} */}
+        ))}
       </Card>
     </Drawer>
   );
