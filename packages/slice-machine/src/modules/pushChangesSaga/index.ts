@@ -1,4 +1,4 @@
-import { getState, pushChanges, PushChangesPayload } from "../../apiClient";
+import { getState, pushChanges } from "../../apiClient";
 import {
   call,
   fork,
@@ -20,6 +20,7 @@ import { ModalKeysEnum } from "../modal/types";
 import { LoadingKeysEnum } from "../loading/types";
 import { refreshStateCreator } from "../environment";
 import { Limit, LimitType } from "@slicemachine/client/build/models";
+import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",

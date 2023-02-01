@@ -18,6 +18,7 @@ import {
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ComponentMocks } from "@slicemachine/core/build/models";
 import { PackageChangelog } from "@lib/models/common/versions";
+import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -157,10 +158,6 @@ export const pushSliceApiClient = (
       defaultAxiosConfig
     )
     .then((response) => response.data);
-};
-
-export type PushChangesPayload = {
-  confirmDeleteDocuments: boolean;
 };
 
 export const pushChanges = (

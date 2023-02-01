@@ -32,10 +32,7 @@ import type {
 import { normalizeFrontendSlices } from "../../../lib/models/common/normalizers/slices";
 import { normalizeFrontendCustomTypes } from "../../../lib/models/common/normalizers/customType";
 import { BackendEnvironment } from "../../../lib/models/common/Environment";
-
-export type PushChangesPayload = {
-  confirmDeleteDocuments: boolean;
-};
+import { PushChangesPayload } from "../../../lib/models/common/TransactionalPush";
 
 type TransactionalPushBody = {
   body: PushChangesPayload;
