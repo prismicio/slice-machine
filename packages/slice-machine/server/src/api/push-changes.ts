@@ -1,4 +1,3 @@
-import type { RequestWithEnv } from "./http/common";
 import {
   type SliceInsertChange,
   type SliceUpdateChange,
@@ -32,11 +31,24 @@ import type {
 
 import { normalizeFrontendSlices } from "../../../lib/models/common/normalizers/slices";
 import { normalizeFrontendCustomTypes } from "../../../lib/models/common/normalizers/customType";
+import { BackendEnvironment } from "../../../lib/models/common/Environment";
 
-export default async function handler(
-  req: RequestWithEnv
-): Promise<ApiResult<{ status: number; body: Limit | null }>> {
-  const { cwd, client, manifest } = req.env;
+export type PushChangesPayload = {
+  confirmDeleteDocuments: boolean;
+};
+
+type TransactionalPushBody = {
+  body: PushChangesPayload;
+  env: BackendEnvironment;
+};
+
+export default async function handler({
+  body,
+  env,
+}: TransactionalPushBody): Promise<
+  ApiResult<{ status: number; body: Limit | null }>
+> {
+  const { cwd, client, manifest } = env;
 
   if (!manifest.libraries)
     return {
@@ -172,16 +184,14 @@ export default async function handler(
     []
   );
 
-  const body: BulkBody = {
-    // TODO: fix type
-    // eslint-disable-next-line
-    confirmDeleteDocuments: req.body.confirmDeleteDocuments,
+  const newbody: BulkBody = {
+    confirmDeleteDocuments: body.confirmDeleteDocuments,
     changes: [...sliceChanges, ...customTypeChanges],
   };
 
   /* -- Bulk the changes and send back the result -- */
   return client
-    .bulk(body)
+    .bulk(newbody)
     .then((potentialLimit: Limit | null) => ({
       status: 200,
       body: potentialLimit,
