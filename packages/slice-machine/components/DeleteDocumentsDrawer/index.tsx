@@ -152,6 +152,7 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
               label="Push changes"
               variant="primary"
               onClick={() => {
+                closeModals();
                 pushChanges(true);
               }}
               disabled={!hasConfirmed}

@@ -99,6 +99,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
               label="Try again"
               variant="primary"
               onClick={() => {
+                closeModals();
                 pushChanges(); // TODO: should this confirm deletion? Otherwise we get the other modal
               }}
               sx={{

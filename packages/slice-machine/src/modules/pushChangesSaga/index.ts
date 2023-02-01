@@ -46,10 +46,6 @@ export function* changesPushSaga({
       typeof pushChanges
     >;
 
-    if (response.status !== 200) {
-      throw Error("Couldn't push");
-    }
-
     if (response.data?.type) {
       yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
       yield put(
@@ -92,19 +88,14 @@ export function* changesPushSaga({
         type: ToasterType.SUCCESS,
       })
     );
-  } catch {
-    // should we push event to Sentry?
-    displayGeneralError();
+  } catch (error) {
+    yield put(
+      openToasterCreator({
+        content: "Something went wrong when pushing your changes.",
+        type: ToasterType.ERROR,
+      })
+    );
   }
-}
-
-function displayGeneralError() {
-  return put(
-    openToasterCreator({
-      content: "Something went wrong when pushing your changes.",
-      type: ToasterType.ERROR,
-    })
-  );
 }
 
 function* watchChangesPush() {
