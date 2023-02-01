@@ -41,63 +41,71 @@ const sortDocumentLimits = (limit: Readonly<Limit>) => ({
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
-  const response = (yield call(pushChanges, payload)) as SagaReturnType<
-    typeof pushChanges
-  >;
+  try {
+    const response = (yield call(pushChanges, payload)) as SagaReturnType<
+      typeof pushChanges
+    >;
 
-  if (response.data?.type) {
-    yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
+    if (response.status !== 200) {
+      throw Error("Couldn't push");
+    }
+
+    if (response.data?.type) {
+      yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
+      yield put(
+        modalOpenCreator({
+          modalKey:
+            response.data?.type === LimitType.SOFT
+              ? ModalKeysEnum.DELETE_DOCUMENTS_DRAWER
+              : ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+        })
+      );
+      return;
+    }
+
+    // TODO: find a better way of doing this
+    const { data: serverState } = (yield call(getState)) as SagaReturnType<
+      typeof getState
+    >;
     yield put(
-      modalOpenCreator({
-        modalKey:
-          response.data?.type === LimitType.SOFT
-            ? ModalKeysEnum.DELETE_DOCUMENTS_DRAWER
-            : ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+      refreshStateCreator({
+        env: serverState.env,
+        remoteCustomTypes: serverState.remoteCustomTypes,
+        localCustomTypes: serverState.customTypes,
+        libraries: serverState.libraries,
+        remoteSlices: serverState.remoteSlices,
+        clientError: serverState.clientError,
       })
     );
-    return;
+
+    // TODO: TRACKING SHOULD BE DONE ON THE BACKEND SIDE NOW AS THE BACKEND REALLY KNOWS WHAT HAPPENS
+    // send tracking
+    // void sendTracking();
+
+    // Send global success event
+    yield put(syncChangeCreator());
+
+    // Display success toaster
+    yield put(
+      openToasterCreator({
+        content: "All slices and custom types have been pushed",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch {
+    // should we push event to Sentry?
+    displayGeneralError();
   }
-
-  // TODO: find a better way of doing this
-  const { data: serverState } = (yield call(getState)) as SagaReturnType<
-    typeof getState
-  >;
-  yield put(
-    refreshStateCreator({
-      env: serverState.env,
-      remoteCustomTypes: serverState.remoteCustomTypes,
-      localCustomTypes: serverState.customTypes,
-      libraries: serverState.libraries,
-      remoteSlices: serverState.remoteSlices,
-      clientError: serverState.clientError,
-    })
-  );
-
-  // TODO: TRACKING SHOULD BE DONE ON THE BACKEND SIDE NOW AS THE BACKEND REALLY KNOWS WHAT HAPPENS
-  // send tracking
-  // void sendTracking();
-
-  // Send global success event
-  yield put(syncChangeCreator());
-
-  // Display success toaster
-  yield put(
-    openToasterCreator({
-      content: "All slices and custom types have been pushed",
-      type: ToasterType.SUCCESS,
-    })
-  );
 }
 
-/*function displayGeneralError() {
+function displayGeneralError() {
   return put(
     openToasterCreator({
-      content:
-        "An unexpected error happened while contacting the Prismic API, please try again or contact us.",
+      content: "Something went wrong when pushing your changes.",
       type: ToasterType.ERROR,
     })
   );
-}*/
+}
 
 function* watchChangesPush() {
   yield takeLatest(

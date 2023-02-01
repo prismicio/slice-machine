@@ -24,6 +24,7 @@ import {
   hasLocal,
   LocalOrRemoteCustomType,
 } from "@lib/models/common/ModelData";
+import { ToasterType } from "@src/modules/toaster";
 
 export function getCTName(ct: LocalOrRemoteCustomType | undefined): string {
   if (ct === undefined) {
@@ -72,12 +73,16 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
       modalData: store.pushChanges,
     }));
 
-  const { pushChanges, closeModals } = useSliceMachineActions();
+  const { pushChanges, closeModals, openToaster } = useSliceMachineActions();
 
   const [hasConfirmed, setHasConfirmed] = useState(false);
 
-  // TODO: sort out this silent error
-  if (!modalData?.details.customTypes) return null;
+  if (!isDeleteDocumentsDrawerOpen) return null;
+
+  if (!modalData?.details.customTypes) {
+    openToaster("No change data", ToasterType.ERROR);
+    return null;
+  }
 
   return (
     <Drawer

@@ -13,6 +13,7 @@ import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getModelId } from "@lib/models/common/ModelData";
 import { getCTName } from ".";
+import { ToasterType } from "@src/modules/toaster";
 
 const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
   const {
@@ -28,10 +29,14 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
     modalData: store.pushChanges,
   }));
 
-  const { pushChanges, closeModals } = useSliceMachineActions();
+  const { pushChanges, closeModals, openToaster } = useSliceMachineActions();
 
-  // TODO: sort out this silent error
-  if (!modalData?.details.customTypes) return null;
+  if (!isDeleteDocumentsDrawerOverLimitOpen) return null;
+
+  if (!modalData?.details.customTypes) {
+    openToaster("No change data", ToasterType.ERROR);
+    return null;
+  }
 
   return (
     <Drawer
