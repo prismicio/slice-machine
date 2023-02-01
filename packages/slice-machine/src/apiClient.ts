@@ -9,7 +9,6 @@ import {
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
-import type { Limit } from "@slicemachine/client/build";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import {
   ScreenshotRequest,
@@ -27,6 +26,31 @@ const defaultAxiosConfig = {
     "Content-Type": "application/json",
   },
 };
+
+///////////////////////////
+
+// FIXME
+// For some reason Next can't import from our client package
+
+export type RawLimit = {
+  details: {
+    customTypes: {
+      id: string;
+      numberOfDocuments: number;
+      url: string;
+    }[];
+  };
+};
+export declare enum LimitType {
+  SOFT = "SOFT",
+  HARD = "HARD",
+}
+
+export type Limit = RawLimit & {
+  type: LimitType;
+};
+
+//////////////////////////
 
 /** State Routes **/
 
