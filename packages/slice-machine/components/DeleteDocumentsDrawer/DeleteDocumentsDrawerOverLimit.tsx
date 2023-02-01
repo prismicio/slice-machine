@@ -28,7 +28,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
     modalData: store.pushChanges,
   }));
 
-  const { closeModals } = useSliceMachineActions();
+  const { pushChanges, closeModals } = useSliceMachineActions();
 
   // TODO: sort out this silent error
   if (!modalData?.details.customTypes) return null;
@@ -94,7 +94,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
               label="Try again"
               variant="primary"
               onClick={() => {
-                console.log("Pushing");
+                pushChanges(); // TODO: should this confirm deletion? Otherwise we get the other modal
               }}
               sx={{
                 fontWeight: "bold",

@@ -15,6 +15,24 @@ describe("I am an existing SM user and I want to push local changes", () => {
     name: `Push CT ${random}`,
   };
 
+  function mockPushLimit(limitType, customTypesInPush) {
+    cy.intercept("POST", "/api/push-changes", {
+      statusCode: 200,
+      body: {
+        type: limitType,
+        details: {
+          customTypes: customTypesInPush,
+        },
+      },
+    });
+  }
+
+  function unmockPushLimit() {
+    cy.intercept("POST", "/api/push-changes", (req) => {
+      req.continue()
+    });
+  }
+
   before("Cleanup local data and create a new slice", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
@@ -71,7 +89,44 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.contains("button", "Delete").click();
 
     menu.navigateTo("Changes");
+    cy.visit("/changes");
 
-    cy.pushLocalChanges(2);
+    const customTypesWithDocuments = [
+      {
+        id: customType.id,
+        numberOfDocuments: 2000,
+        url: "url",
+      },
+    ];
+
+    mockPushLimit("HARD", customTypesWithDocuments);
+
+    cy.pushLocalChanges();
+
+    cy.contains("Manual action required").should("be.visible");
+    cy.get("[data-cy='AssociatedDocumentsCard']")
+      .contains(customTypesWithDocuments[0].numberOfDocuments);
+    cy.get("[data-cy='AssociatedDocumentsCard']")
+      .contains(customType.name);
+
+    mockPushLimit("SOFT", customTypesWithDocuments);
+
+    cy.contains("button", "Try again").click();
+    cy.contains("Confirm deletion").should("be.visible");
+    cy.get("[data-cy='AssociatedDocumentsCard']")
+      .contains(customTypesWithDocuments[0].numberOfDocuments);
+    cy.get("[data-cy='AssociatedDocumentsCard']")
+      .contains(customType.name);
+
+    cy.contains("button", "Push changes").should("be.disabled");
+
+    cy.contains("label", "Delete these Documents").click();
+
+    unmockPushLimit();
+
+    cy.contains("button", "Push changes").should("be.enabled").click();
+
+    cy.contains("Up to date").should("be.visible");
+    cy.get("[data-cy=push-changes]").should("be.disabled");
   });
 });

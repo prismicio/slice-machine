@@ -25,6 +25,7 @@ export const AssociatedDocumentsCard: React.FC<
       justifyContent: "space-between",
       alignItems: "center",
     }}
+    data-cy="AssociatedDocumentsCard"
   >
     <Flex sx={{ flexDirection: "column" }}>
       <Text>{ctName}</Text>
