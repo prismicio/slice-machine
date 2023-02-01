@@ -1,16 +1,14 @@
-import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
-import { SliceSM } from "@slicemachine/core/build/models";
-import { LibraryUI } from "@models/common/LibraryUI";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { LocalOrRemoteSlice } from "../ModelData";
+import { Component, Library, SliceSM } from "@slicemachine/core/build/models";
 
 export const normalizeFrontendSlices = (
-  localLibraries: ReadonlyArray<LibraryUI>,
+  localLibraries: ReadonlyArray<Library<Component>>,
   remoteSlices: ReadonlyArray<SliceSM>
 ): LocalOrRemoteSlice[] => {
   const slices: Record<string, LocalOrRemoteSlice> = {};
 
-  const localComponents = localLibraries.reduce(
-    (acc: ComponentUI[], library) => [...acc, ...library.components],
+  const localComponents = localLibraries.reduce<Component[]>(
+    (acc, library) => [...acc, ...library.components],
     []
   );
 
