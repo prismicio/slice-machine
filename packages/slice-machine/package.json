@@ -87,7 +87,7 @@
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^13.0.0",
     "@theme-ui/color": "^0.15.0",
-    "@types/analytics-node": "^3.1.9",
+    "@types/analytics-node": "^3.1.10",
     "@types/cors": "^2.8.12",
     "@types/dedent": "^0.7.0",
     "@types/ejs": "^3.0.6",
