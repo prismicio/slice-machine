@@ -9,11 +9,12 @@ import {
 import { refreshStateCreator } from "@src/modules/environment";
 import { syncChangeCreator } from "@src/modules/pushChangesSaga/actions";
 import { setupServer } from "msw/node";
-import { getState, LimitType, pushChanges } from "../../../src/apiClient";
+import { getState, pushChanges } from "../../../src/apiClient";
 import { modalOpenCreator } from "../../../src/modules/modal";
 import { ModalKeysEnum } from "../../../src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "../../../src/modules/toaster";
 import { dummyServerState } from "./__mocks__/serverState";
+import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
 
 describe("[pushChanges module]", () => {
   const server = setupServer();
