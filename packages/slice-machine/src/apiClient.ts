@@ -41,7 +41,7 @@ export type RawLimit = {
     }[];
   };
 };
-export declare enum LimitType {
+export enum LimitType {
   SOFT = "SOFT",
   HARD = "HARD",
 }
