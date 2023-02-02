@@ -18,6 +18,7 @@ import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ComponentMocks } from "@slicemachine/core/build/models";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
+import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -26,31 +27,6 @@ const defaultAxiosConfig = {
     "Content-Type": "application/json",
   },
 };
-
-///////////////////////////
-
-// FIXME
-// For some reason Next can't import from our client package
-
-export type RawLimit = {
-  details: {
-    customTypes: {
-      id: string;
-      numberOfDocuments: number;
-      url: string;
-    }[];
-  };
-};
-export enum LimitType {
-  SOFT = "SOFT",
-  HARD = "HARD",
-}
-
-export type Limit = RawLimit & {
-  type: LimitType;
-};
-
-//////////////////////////
 
 /** State Routes **/
 
