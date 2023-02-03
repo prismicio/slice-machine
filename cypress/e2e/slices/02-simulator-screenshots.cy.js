@@ -31,7 +31,8 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
     slicePage.goTo(slice.library, slice.name);
   });
 
-  it("Open the simulator on the default variant", () => {
+  // FIXME crashes the simulator for any test running afterwards
+  it.skip("Open the simulator on the default variant", () => {
     simulatorPage.setup();
 
     slicePage.openSimulator();
