@@ -1,7 +1,7 @@
 {
   // TS Config used to build the backend of the application.
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "ES2021",
     "module": "commonjs",
     "allowJs": true,
     "outDir": "../build",
@@ -14,6 +14,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "typeRoots": ["../node_modules/@types"],
+    "lib": ["ES2021.String"],
     "types": ["node"],
     "esModuleInterop": true,
     "inlineSourceMap": true,

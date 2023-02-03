@@ -1,7 +1,7 @@
 {
   // TS Config used by Next to build the frontend of the application.
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ES2019",
     "module": "esnext",
     "removeComments": true,
     "strict": true,
@@ -14,7 +14,7 @@
     "inlineSourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["dom", "dom.iterable", "esnext", "ES2021.String"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "noEmit": true,
     "esModuleInterop": true,
