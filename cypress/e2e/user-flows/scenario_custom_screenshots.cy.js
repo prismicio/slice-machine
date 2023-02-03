@@ -3,12 +3,12 @@ import { SliceCard } from "../../pages/slices/sliceCard";
 import { SlicePage } from "../../pages/slices/slicePage";
 import { Menu } from "../../pages/Menu";
 
-describe.skip("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
+describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
 
   const slice = {
-    id: `test_screenshots${random}`,
-    name: `TestScreenshots${random}`,
+    id: `test_custom_screenshots${random}`,
+    name: `TestCustomScreenshots${random}`,
     library: "slices",
   };
 
