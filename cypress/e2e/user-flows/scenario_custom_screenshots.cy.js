@@ -27,10 +27,9 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
 
   beforeEach("Start from the Slice page", () => {
     cy.setSliceMachineUserContext({});
-    slicePage.goTo(slice.library, slice.name);
   });
 
-  it("Upload and replace a screenshot on the default variation", () => {
+  it("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
     slicePage.imagePreview.should("not.exist");
     slicePage.openScreenshotModal();
@@ -76,6 +75,7 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
   });
 
   it("Error displayed when non-image files are uploaded", () => {
+    slicePage.goTo(slice.library, slice.name);
     slicePage.addVariation("Error handling");
     slicePage.openScreenshotModal();
     cy.contains("Select file").selectFile(
