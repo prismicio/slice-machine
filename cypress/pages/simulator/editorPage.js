@@ -4,6 +4,7 @@ export class EditorPage {
    *
    * @param {string} inputLabel the label of the input to change
    * @param {string} text the new value to type in
+   * @param {string} comparisonOperator the comparison operator to use
    */
   type(inputLabel, text, comparisonOperator = "contain") {
     cy.getInputByLabel(inputLabel).clear().type(text).blur();
@@ -25,6 +26,7 @@ export class EditorPage {
    * Change the selected option in a Select widget
    *
    * @param {string} inputLabel the label of the input to click
+   * @param {string} value the value of the option to select
    */
   select(inputLabel, value) {
     cy.getInputByLabel(inputLabel)
@@ -45,7 +47,6 @@ export class EditorPage {
    * Change the selected option in a Select widget
    *
    * @param {string} inputLabel the label of the input to click
-   * @return {string} the src attribute of the selected image
    */
   changeImage(inputLabel) {
     cy.contains("header", inputLabel).contains("button", "Replace").click();
