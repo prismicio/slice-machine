@@ -79,27 +79,28 @@ describe("Scenario 008", () => {
     editor.toggleBooleanField("BooleanField");
     editor.select("SelectField", "2");
 
-    editor.changeImage("ImageField").then((newImageSrc) => {
-      editor.type("Alt text", "An ananas maybe", "have.value");
+    editor.changeImage("ImageField").invoke("attr", "src").as("newImageSrc");
+    editor.type("Alt text", "An ananas maybe", "have.value");
 
-      simulator.saveMocksButton.click();
+    simulator.saveMocksButton.click();
 
-      cy.contains('[role="alert"]', "Saved").should("be.visible");
+    cy.contains('[role="alert"]', "Saved").should("be.visible");
 
-      cy.reload();
+    cy.reload();
 
-      cy.getInputByLabel("SimpleTextField").should(
-        "contain",
-        "SimpleTextContent"
-      );
-      cy.getInputByLabel("RichTextField").should("contain", "RichTextContent");
-      cy.getInputByLabel("NumberField").should("have.value", "42");
-      cy.getInputByLabel("BooleanField")
-        .invoke("attr", "aria-checked")
-        .should("equal", "true");
-      cy.getInputByLabel("SelectField").should("contain", "2");
+    cy.getInputByLabel("SimpleTextField").should(
+      "contain",
+      "SimpleTextContent"
+    );
+    cy.getInputByLabel("RichTextField").should("contain", "RichTextContent");
+    cy.getInputByLabel("NumberField").should("have.value", "42");
+    cy.getInputByLabel("BooleanField")
+      .invoke("attr", "aria-checked")
+      .should("equal", "true");
+    cy.getInputByLabel("SelectField").should("contain", "2");
 
-      cy.getInputByLabel("Alt text").should("have.value", "An ananas maybe");
+    cy.getInputByLabel("Alt text").should("have.value", "An ananas maybe");
+    cy.get("@newImageSrc").then((newImageSrc) => {
       cy.get("[alt='An ananas maybe']")
         .invoke("attr", "src")
         .should("contain", newImageSrc.substr(0, newImageSrc.indexOf("?") + 1));

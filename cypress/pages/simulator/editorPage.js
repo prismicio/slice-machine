@@ -50,10 +50,6 @@ export class EditorPage {
   changeImage(inputLabel) {
     cy.contains("header", inputLabel).contains("button", "Replace").click();
 
-    return cy
-      .get('[role="dialog"] img')
-      .first()
-      .click()
-      .then(([img]) => img.src);
+    return cy.get('[role="dialog"] img').first().click();
   }
 }
