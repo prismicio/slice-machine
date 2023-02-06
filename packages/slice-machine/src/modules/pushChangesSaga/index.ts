@@ -24,6 +24,7 @@ import {
   Limit,
   LimitType,
 } from "@slicemachine/client/build/models/BulkChanges";
+import axios from "axios";
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
@@ -92,12 +93,26 @@ export function* changesPushSaga({
       })
     );
   } catch (error) {
-    yield put(
-      openToasterCreator({
-        content: "Something went wrong when pushing your changes.",
-        type: ToasterType.ERROR,
-      })
-    );
+    const errorStatus =
+      axios.isAxiosError(error) && error.response ? error.response.status : 500;
+    switch (errorStatus) {
+      case 401:
+      case 403: {
+        // Opening the login modal
+        yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+
+        break;
+      }
+
+      default: {
+        yield put(
+          openToasterCreator({
+            content: "Something went wrong when pushing your changes.",
+            type: ToasterType.ERROR,
+          })
+        );
+      }
+    }
   }
 }
 

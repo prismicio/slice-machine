@@ -16,6 +16,23 @@ import { openToasterCreator, ToasterType } from "../../../src/modules/toaster";
 import { dummyServerState } from "./__mocks__/serverState";
 import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
 
+class CustomAxiosError extends Error {
+  isAxiosError: boolean;
+  response?: {
+    data: any;
+    status: number;
+    statusText?: string;
+    headers?: any;
+    config?: any;
+  };
+
+  constructor(status: number) {
+    super();
+    this.isAxiosError = true;
+    this.response = { data: {}, status };
+  }
+}
+
 describe("[pushChanges module]", () => {
   const server = setupServer();
 
@@ -146,7 +163,19 @@ describe("[pushChanges module]", () => {
       saga.next().isDone();
     });
 
-    // DO we need to handle this??
-    // test.only("when there's a 403 error while pushing a slice it should stop and open the login model", async () => {
+    test.each([[401], [403]])(
+      "when there's a %s error while pushing a slice it should stop and open the login model",
+      (errorCode) => {
+        saga.next().call(pushChanges, requestPayload);
+
+        const customError = new CustomAxiosError(errorCode);
+
+        saga
+          .throw(customError)
+          .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+
+        saga.next().isDone();
+      }
+    );
   });
 });

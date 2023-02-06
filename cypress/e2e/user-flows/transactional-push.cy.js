@@ -33,9 +33,9 @@ describe("I am an existing SM user and I want to push local changes", () => {
     });
   }
 
-  function mockPushError() {
+  function mockPushError(statusCode) {
     cy.intercept("POST", "/api/push-changes", {
-      statusCode: 500,
+      statusCode: statusCode,
       body: null,
     });
   }
@@ -138,13 +138,31 @@ describe("I am an existing SM user and I want to push local changes", () => {
   });
 
   it("shows a toaster on error", () => {
-    mockPushError();
+    mockPushError(500);
     cy.createCustomType(customType.id, customType.name);
 
     cy.visit("/changes");
 
     cy.get("[data-cy=push-changes]").click();
     cy.contains("Something went wrong when pushing your changes.");
+
+    cy.clearProject();
+  });
+
+  it("show's the login modal on auth error", () => {
+    mockPushError(403);
+    cy.createCustomType(customType.id, customType.name);
+
+    cy.visit("/changes");
+
+    cy.get("[data-cy=push-changes]").click();
+
+    cy.get("[aria-modal]").contains("You're not connected");
+    cy.get("[aria-modal]").get("[aria-label='Close']").click();
+
+    cy.get("[data-cy=changes-number]").within(() => {
+      cy.contains(1).should("be.visible");
+    });
 
     cy.clearProject();
   });
