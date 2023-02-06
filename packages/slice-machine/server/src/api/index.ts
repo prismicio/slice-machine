@@ -6,7 +6,6 @@ const fs = require("fs");
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const mime = require("mime");
 
-import { handler as pushSlice } from "./slices/push";
 import saveSlice from "./slices/save";
 import { renameSlice } from "./slices/rename";
 import createSlice from "./slices/create/index";
@@ -19,7 +18,6 @@ import checkSimulator from "./simulator";
 import saveCustomType from "./custom-types/save";
 import renameCustomType from "./custom-types/rename";
 import deleteCustomType from "./custom-types/delete";
-import { handler as pushCustomType } from "./custom-types/push";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
@@ -159,18 +157,6 @@ router.post(
   })
 );
 
-router.get(
-  "/slices/push",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const { statusCode, screenshots } = await pushSlice(req);
-    return res.status(statusCode).json(screenshots);
-  })
-);
-
 router.put(
   "/slices/rename",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -256,18 +242,6 @@ router.delete(
     }
 
     return res.status(200).json(payload);
-  })
-);
-
-router.get(
-  "/custom-types/push",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const { statusCode } = await pushCustomType(req);
-    return res.sendStatus(statusCode);
   })
 );
 

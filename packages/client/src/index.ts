@@ -161,6 +161,8 @@ export class Client {
     );
   }
 
+  // TODO Should these 4 be deleted now?
+  // How to get the INIT script back to work?
   async insertCustomType(customType: CustomType): Promise<AxiosPromise> {
     return this._post(
       `${this.apisEndpoints.Models}customtypes/insert`,

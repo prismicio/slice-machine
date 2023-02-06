@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Box, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
@@ -17,7 +17,6 @@ import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SyncError } from "@src/models/SyncError";
 import DeleteDocumentsDrawer from "@components/DeleteDocumentsDrawer";
 import DeleteDocumentsDrawerOverLimit from "@components/DeleteDocumentsDrawer/DeleteDocumentsDrawerOverLimit";
 
@@ -39,18 +38,9 @@ const Changes: React.FunctionComponent = () => {
     return () => {
       closeModals();
     };
-  }, []);
+  }, [closeModals]);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
-
-  const [changesPushed, setChangesPushed] = useState<string[]>([]);
-  const [error, setError] = useState<SyncError | null>(null);
-
-  const handlePush = () => {
-    if (error) setError(null); // reset error
-    if (changesPushed.length > 0) setChangesPushed([]); // reset changesPushed
-    pushChanges();
-  };
 
   const PageContent = useMemo(() => {
     if (!isOnline) {
@@ -69,8 +59,6 @@ const Changes: React.FunctionComponent = () => {
       <ChangesItems
         unSyncedSlices={unSyncedSlices}
         unSyncedCustomTypes={unSyncedCustomTypes}
-        changesPushed={changesPushed}
-        syncError={error}
         modelsStatuses={modelsStatuses}
         authStatus={authStatus}
         isOnline={isOnline}
@@ -82,8 +70,6 @@ const Changes: React.FunctionComponent = () => {
     numberOfChanges,
     unSyncedSlices,
     unSyncedCustomTypes,
-    changesPushed,
-    error,
     modelsStatuses,
   ]);
 
@@ -101,7 +87,7 @@ const Changes: React.FunctionComponent = () => {
           Actions={[
             <Button
               label="Push Changes"
-              onClick={handlePush}
+              onClick={() => pushChanges()}
               isLoading={isSyncing}
               disabled={
                 numberOfChanges === 0 ||

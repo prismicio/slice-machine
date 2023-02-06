@@ -21,7 +21,6 @@ import {
   normalizeFrontendCustomTypes,
 } from "@lib/models/common/normalizers/customType";
 import { saveCustomTypeCreator } from "../selectedCustomType/actions";
-import { pushCustomTypeCreator } from "../pushChangesSaga/actions";
 import axios from "axios";
 import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
 import { omit } from "lodash";
@@ -84,7 +83,6 @@ type CustomTypesActions =
   | ActionType<typeof createCustomTypeCreator>
   | ActionType<typeof renameCustomTypeCreator>
   | ActionType<typeof saveCustomTypeCreator>
-  | ActionType<typeof pushCustomTypeCreator>
   | ActionType<typeof deleteCustomTypeCreator>
   | ActionType<typeof deleteSliceCreator.success>;
 
@@ -153,23 +151,6 @@ export const availableCustomTypesReducer: Reducer<
         [localCustomType.id]: {
           ...state[localCustomType.id],
           local: localCustomType,
-        },
-      };
-    }
-
-    case getType(pushCustomTypeCreator.success): {
-      const customType = state[action.payload.customTypeId];
-
-      // Rename only applies for custom type with local data
-      if (!hasLocal(customType)) return state;
-
-      const localCustomType: CustomTypeSM = customType.local;
-
-      return {
-        ...state,
-        [customType.local.id]: {
-          local: localCustomType,
-          remote: localCustomType,
         },
       };
     }

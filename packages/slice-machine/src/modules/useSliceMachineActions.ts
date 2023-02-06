@@ -72,10 +72,6 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "./screenshots/actions";
-import {
-  pushCustomTypeCreator,
-  pushSliceCreator,
-} from "./pushChangesSaga/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
@@ -180,7 +176,6 @@ const useSliceMachineActions = () => {
     mockConfig: CustomTypeMockConfig
   ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
-  const pushCustomType = () => dispatch(pushCustomTypeCreator.request());
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) =>
@@ -438,18 +433,6 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const pushSlice = (
-    component: ComponentUI,
-    onPush: (data: SliceBuilderState) => void
-  ) => {
-    dispatch(
-      pushSliceCreator.request({
-        component,
-        onPush,
-      })
-    );
-  };
-
   const copyVariationSlice = (
     key: string,
     name: string,
@@ -533,7 +516,6 @@ const useSliceMachineActions = () => {
     deleteCustomType,
     initCustomTypeStore,
     saveCustomType,
-    pushCustomType,
     createCustomTypeTab,
     updateCustomTypeTab,
     deleteCustomTypeTab,
@@ -562,7 +544,6 @@ const useSliceMachineActions = () => {
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
     saveSlice,
-    pushSlice,
     copyVariationSlice,
     createSlice,
     renameSlice,

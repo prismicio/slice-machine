@@ -32,7 +32,6 @@ import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import { saveSliceCreator } from "../selectedSlice/actions";
-import { pushSliceCreator } from "../pushChangesSaga/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
@@ -100,7 +99,6 @@ type SlicesActions =
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
   | ActionType<typeof saveSliceCreator>
-  | ActionType<typeof pushSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSliceMock>;
@@ -179,36 +177,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(pushSliceCreator.success): {
-      const { component, updatedScreenshotsUrls } = action.payload;
-
-      const remoteSlice = state.remoteSlices.find(
-        (slice) => slice.id === component.model.id
-      );
-
-      const updateScreenshots = (remoteSlice: SliceSM): SliceSM => {
-        return {
-          ...remoteSlice,
-          variations: remoteSlice.variations.map((variation) => ({
-            ...variation,
-            imageUrl: updatedScreenshotsUrls[variation.id] || undefined,
-          })),
-        };
-      };
-
-      const updatedRemoteSlices = remoteSlice
-        ? state.remoteSlices.map((remoteSlice) => {
-            // modified
-            if (remoteSlice.id !== component.model.id) return remoteSlice;
-            return updateScreenshots(component.model);
-          })
-        : [...state.remoteSlices, updateScreenshots(component.model)]; // new
-
-      return {
-        ...state,
-        remoteSlices: updatedRemoteSlices,
-      };
-    }
     case getType(generateSliceScreenshotCreator.success):
     case getType(generateSliceCustomScreenshotCreator.success): {
       const { component, screenshot, variationId } = action.payload;
@@ -223,11 +191,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
                   ...component,
                   screenshots: {
                     ...component.screenshots,
-                    ...(screenshot
-                      ? {
-                          [variationId]: screenshot,
-                        }
-                      : {}),
+                    [variationId]: screenshot,
                   },
                 }
               : c
