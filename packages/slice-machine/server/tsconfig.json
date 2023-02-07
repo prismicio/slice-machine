@@ -14,7 +14,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "typeRoots": ["../node_modules/@types"],
-    "lib": ["ES2021.String"],
+    "lib": ["ES2021", "dom"],
     "types": ["node"],
     "esModuleInterop": true,
     "inlineSourceMap": true,
