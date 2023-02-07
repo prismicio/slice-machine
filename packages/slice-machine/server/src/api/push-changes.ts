@@ -11,7 +11,11 @@ import {
   ChangeTypes,
 } from "@slicemachine/client";
 import * as Libraries from "@slicemachine/core/build/libraries";
-import { Slices, type SliceSM } from "@slicemachine/core/build/models/Slice";
+import {
+  Slices,
+  VariationSM,
+  type SliceSM,
+} from "@slicemachine/core/build/models/Slice";
 import {
   CustomTypes,
   type CustomTypeSM,
@@ -24,7 +28,10 @@ import {
 import { onError } from "../../../lib/models/server/ApiResult";
 import type { ApiResult } from "../../../lib/models/server/ApiResult";
 import type { Component, Library } from "@slicemachine/core/build/models";
-import type {
+import {
+  getModelId,
+  hasLocal,
+  LocalOnlySlice,
   LocalOrRemoteCustomType,
   LocalOrRemoteSlice,
 } from "../../../lib/models/common/ModelData";
@@ -33,6 +40,8 @@ import { normalizeFrontendSlices } from "../../../lib/models/common/normalizers/
 import { normalizeFrontendCustomTypes } from "../../../lib/models/common/normalizers/customType";
 import { BackendEnvironment } from "../../../lib/models/common/Environment";
 import { PushChangesPayload } from "../../../lib/models/common/TransactionalPush";
+import { purge, upload } from "./services/uploadScreenshotClient";
+import { uploadScreenshots } from "./services/sliceService";
 
 type TransactionalPushBody = {
   body: PushChangesPayload;
@@ -187,11 +196,82 @@ export default async function handler({
   };
 
   /* -- Bulk the changes and send back the result -- */
-  return client
-    .bulk(newbody)
-    .then((potentialLimit: Limit | null) => ({
+  try {
+    const result: Limit | null = await client.bulk(newbody);
+
+    const updateScreenshotsPromises = await Promise.all(
+      sliceChanges.map(async (sliceChange) => {
+        // finding the remote model of the Slice we are pushing
+        // removing existing screenshots that have been previously uploaded
+        const slice = slicesModels.find(
+          (s) => getModelId(s) === sliceChange.id
+        );
+        if (!slice || !hasLocal(slice)) {
+          return;
+        }
+
+        const localSliceLib = {
+          ...slice,
+          library: localSlices.find((library) =>
+            library.components.some(
+              (component) => component.model.id === slice.local.id
+            )
+          )?.name,
+        };
+
+        const { err: purgeError } = await purge(env, getModelId(slice));
+        if (purgeError) {
+          console.error(
+            `[slice/push]: Unexpected error while removing previously uploaded screenshots: ${purgeError.reason}`
+          );
+          return { statusCode: purgeError.status };
+        }
+
+        const screenshotUrlsByVariation: Record<string, string | null> =
+          await uploadScreenshots(
+            env,
+            slice.local,
+            slice.local.name,
+            localSliceLib.library ?? ""
+          );
+
+        const modelWithScreenshots: SliceSM = {
+          ...slice.local,
+          variations: slice.local.variations.map((variation: VariationSM) => {
+            const screenshotUploaded = screenshotUrlsByVariation[variation.id];
+
+            if (!screenshotUploaded) return variation;
+            return {
+              ...variation,
+              imageUrl: screenshotUploaded,
+            };
+          }),
+        };
+
+        return modelWithScreenshots;
+      })
+    );
+
+    console.log(updateScreenshotsPromises[0].variations[0].imageUrl);
+
+    return {
       status: 200,
-      body: potentialLimit,
-    }))
-    .catch((error: ClientError) => onError(error.message, error.status));
+      body: result,
+    };
+  } catch (error) {
+    // Write actual guard next to the type
+    // Also should split to handle the bulk and screenshots errors separatly
+    const isClientError = (e: unknown): e is ClientError => true;
+    if (isClientError(error)) {
+      return onError(error.message, error.status);
+    }
+    throw error;
+  }
+  // return client
+  //   .bulk(newbody)
+  //   .then((potentialLimit: Limit | null) => ({
+  //     status: 200,
+  //     body: potentialLimit,
+  //   }))
+  //   .catch((error: ClientError) => onError(error.message, error.status));
 }
