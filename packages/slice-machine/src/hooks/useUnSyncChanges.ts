@@ -9,8 +9,7 @@ import {
   LocalOrRemoteCustomType,
   RemoteOnlySlice,
   getModelId,
-  hasLocal,
-  hasRemote,
+  isRemoteOnly,
 } from "@lib/models/common/ModelData";
 
 const unSyncStatuses = [
@@ -58,9 +57,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
   );
 
   const deletedComponents: ComponentUI[] = slices
-    .filter(
-      (slice): slice is RemoteOnlySlice => hasRemote(slice) && !hasLocal(slice)
-    )
+    .filter(isRemoteOnly)
     .map(wrapDeletedSlice);
 
   const components: ComponentUI[] = localComponents
