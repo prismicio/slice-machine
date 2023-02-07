@@ -1,11 +1,13 @@
-import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import fs from "fs";
+import path from "path";
+
 import * as Libraries from "@slicemachine/core/build/libraries";
 import {
   CustomPaths,
   GeneratedPaths,
 } from "@slicemachine/core/build/node-utils/paths";
 import * as IO from "../../../../lib/io";
-import fs from "fs";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 
 interface RenameSliceBody {
@@ -67,7 +69,7 @@ export async function renameSlice(req: {
 
   fs.renameSync(
     sliceDirectory.value(),
-    `${CustomPaths(env.cwd).library(libName).value()}/${newSliceName}`
+    path.join(CustomPaths(env.cwd).library(libName).value(), newSliceName)
   );
 
   const newPathToSliceDirectory = GeneratedPaths(env.cwd)
