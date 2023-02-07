@@ -50,8 +50,8 @@ export const useModelStatus = ({
   slices = [],
   customTypes = [],
 }: {
-  slices: LocalOrRemoteSlice[];
-  customTypes: LocalOrRemoteCustomType[];
+  slices?: LocalOrRemoteSlice[];
+  customTypes?: LocalOrRemoteCustomType[];
 }): ModelStatusInformation => {
   const isOnline = useNetwork();
   const { authStatus } = useSelector((store: SliceMachineStoreType) => ({

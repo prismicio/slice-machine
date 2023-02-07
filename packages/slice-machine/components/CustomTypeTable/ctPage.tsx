@@ -13,9 +13,11 @@ import {
 } from "@lib/models/common/ModelData";
 
 export const CustomTypeTable: React.FC<{
-  customTypes: (LocalOnlyCustomType | LocalOnlyCustomType)[];
+  customTypes: (LocalOnlyCustomType | LocalAndRemoteCustomType)[];
 }> = ({ customTypes }) => {
-  const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({
+    customTypes,
+  });
   const [customTypeToEdit, setCustomTypeToEdit] = useState<
     LocalAndRemoteCustomType | LocalOnlyCustomType
   >();

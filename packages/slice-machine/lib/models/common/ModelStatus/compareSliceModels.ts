@@ -3,24 +3,22 @@ import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
 import { LocalAndRemoteSlice } from "../ModelData";
 
-export function compareSliceModels(
+export function compareSliceLocalToRemote(
   model: LocalAndRemoteSlice
-):
-  | { status: ModelStatus.Modified; model: LocalAndRemoteSlice }
-  | { status: ModelStatus.Synced; model: LocalAndRemoteSlice } {
+): ModelStatus.Modified | ModelStatus.Synced {
   const areScreenshotsEqual = compareScreenshots(
     model.remote,
     model.localScreenshots
   );
-  if (!areScreenshotsEqual) return { status: ModelStatus.Modified, model };
+  if (!areScreenshotsEqual) return ModelStatus.Modified;
 
   const areModelsEquals = equal(
     stripImageUrl(model.local),
     stripImageUrl(model.remote)
   );
-  if (!areModelsEquals) return { status: ModelStatus.Modified, model };
+  if (!areModelsEquals) return ModelStatus.Modified;
 
-  return { status: ModelStatus.Synced, model };
+  return ModelStatus.Synced;
 }
 
 const stripImageUrl = (slice: SliceSM) => ({

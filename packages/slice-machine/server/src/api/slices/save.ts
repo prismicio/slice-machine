@@ -21,7 +21,7 @@ import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff"
 import { getOrElseW } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
-export async function handler(
+export function handler(
   env: BackendEnvironment,
   { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
 ): Promise<Record<string, never>> {
@@ -76,7 +76,7 @@ export async function handler(
 
   console.log("[slice/save]: Slice was saved!");
 
-  await generateLibrariesIndex(env, from);
+  generateLibrariesIndex(env, from);
   console.log("[slice/save]: Libraries index files regenerated!");
 
   return {};

@@ -19,20 +19,8 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
-import {
-  getModelId,
-  hasLocal,
-  LocalOrRemoteCustomType,
-} from "@lib/models/common/ModelData";
+import { getModelId, isRemoteOnly } from "@lib/models/common/ModelData";
 import { ToasterType } from "@src/modules/toaster";
-
-export function getCTName(ct: LocalOrRemoteCustomType | undefined): string {
-  if (ct === undefined) {
-    return "Could not find Custom Type";
-  }
-
-  return (hasLocal(ct) ? ct.local.label : ct.remote.label) ?? 'John "CT" Doe';
-}
 
 const ConfirmationDialogue: React.FC<{
   isConfirmed: boolean;
@@ -83,6 +71,24 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
     openToaster("No change data", ToasterType.ERROR);
     return null;
   }
+
+  const associatedDocumentsCards = modalData.details.customTypes.map(
+    (customTypeDetail) => {
+      const customType = availableCustomTypes.find(
+        (customType) => getModelId(customType) === customTypeDetail.id
+      );
+      if (customType === undefined || !isRemoteOnly(customType)) return null;
+
+      return (
+        <AssociatedDocumentsCard
+          key={customTypeDetail.id}
+          ctName={customType.remote.label ?? customType.remote.id}
+          link={customTypeDetail.url}
+          numberOfDocuments={customTypeDetail.numberOfDocuments}
+        />
+      );
+    }
+  );
 
   return (
     <Drawer
@@ -177,18 +183,7 @@ const DeleteDocumentsDrawer: React.FunctionComponent = () => {
           broken links in your repository.
         </Text>
 
-        {modalData.details.customTypes.map((ct) => (
-          <AssociatedDocumentsCard
-            key={ct.id}
-            ctName={getCTName(
-              availableCustomTypes.find(
-                (ctInArray) => getModelId(ctInArray) === ct.id
-              )
-            )}
-            link={ct.url}
-            numberOfDocuments={ct.numberOfDocuments}
-          />
-        ))}
+        {associatedDocumentsCards}
       </Card>
     </Drawer>
   );

@@ -7,9 +7,8 @@ export const normalizeFrontendSlices = (
 ): LocalOrRemoteSlice[] => {
   const slices: Record<string, LocalOrRemoteSlice> = {};
 
-  const localComponents = localLibraries.reduce<Component[]>(
-    (acc, library) => [...acc, ...library.components],
-    []
+  const localComponents = localLibraries.flatMap(
+    (library) => library.components
   );
 
   localComponents.forEach((component) => {

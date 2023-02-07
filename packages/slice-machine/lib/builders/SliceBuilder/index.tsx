@@ -98,13 +98,15 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
     saveSlice();
   };
 
-  const { modelsStatuses } = useModelStatus([
-    {
-      local: slice.model,
-      remote: remoteSlice,
-      localScreenshots: slice.screenshots,
-    },
-  ]);
+  const { modelsStatuses } = useModelStatus({
+    slices: [
+      {
+        local: slice.model,
+        remote: remoteSlice,
+        localScreenshots: slice.screenshots,
+      },
+    ],
+  });
 
   if (!variation) return null;
 

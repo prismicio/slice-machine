@@ -72,8 +72,9 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
 
-  const { modelsStatuses, authStatus, isOnline } =
-    useModelStatus(frontendSlices);
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({
+    slices: frontendSlices,
+  });
 
   const slices = (libraries || []).map((l) => l.components).flat();
   const sliceCount = slices.length;

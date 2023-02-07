@@ -29,6 +29,18 @@ export function hasRemote<T extends LocalOrRemote>(
   return "remote" in obj && obj.remote !== undefined;
 }
 
+export function isRemoteOnly<T extends LocalOrRemote>(
+  obj: T
+): obj is T extends RemoteOnly ? T : never {
+  return hasRemote(obj) && !hasLocal(obj);
+}
+
+export function isLocalOnly<T extends LocalOrRemote>(
+  obj: T
+): obj is T extends LocalOnly ? T : never {
+  return !hasRemote(obj) && hasLocal(obj);
+}
+
 // Custom Types
 
 export type LocalOrRemoteCustomType = LocalOrRemote<CustomTypeSM>;

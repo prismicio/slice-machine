@@ -58,15 +58,11 @@ const createIndexFileForFrameWork = (
   return createIndexFile(lib);
 };
 
-export default async function generateLibraryIndex(
+export default function generateLibraryIndex(
   env: BackendEnvironment,
   libName: string
-): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/await-thenable
-  const libraries = await Libraries.libraries(
-    env.cwd,
-    env.manifest.libraries || []
-  );
+) {
+  const libraries = Libraries.libraries(env.cwd, env.manifest.libraries || []);
   const lib = libraries.find((e) => e.isLocal && e.name === libName);
 
   if (!lib) return;
@@ -74,6 +70,6 @@ export default async function generateLibraryIndex(
   const file = createIndexFileForFrameWork(env, lib);
 
   const indexFilePath =
-    findIndexFile(lib.path) || path.join(lib.path, "index.js");
+    findIndexFile(lib.path) ?? path.join(lib.path, "index.js");
   Files.write(indexFilePath, file);
 }
