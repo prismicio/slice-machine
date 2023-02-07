@@ -11,11 +11,7 @@ import {
   ChangeTypes,
 } from "@slicemachine/client";
 import * as Libraries from "@slicemachine/core/build/libraries";
-import {
-  Slices,
-  VariationSM,
-  type SliceSM,
-} from "@slicemachine/core/build/models/Slice";
+import { Slices, type SliceSM } from "@slicemachine/core/build/models/Slice";
 import {
   CustomTypes,
   type CustomTypeSM,
@@ -30,8 +26,6 @@ import type { ApiResult } from "../../../lib/models/server/ApiResult";
 import type { Component, Library } from "@slicemachine/core/build/models";
 import {
   getModelId,
-  hasLocal,
-  LocalOnlySlice,
   LocalOrRemoteCustomType,
   LocalOrRemoteSlice,
 } from "../../../lib/models/common/ModelData";
@@ -40,8 +34,9 @@ import { normalizeFrontendSlices } from "../../../lib/models/common/normalizers/
 import { normalizeFrontendCustomTypes } from "../../../lib/models/common/normalizers/customType";
 import { BackendEnvironment } from "../../../lib/models/common/Environment";
 import { PushChangesPayload } from "../../../lib/models/common/TransactionalPush";
-import { purge, upload } from "./services/uploadScreenshotClient";
-import { uploadScreenshots } from "./services/sliceService";
+import { purge } from "./services/uploadScreenshotClient";
+import { uploadScreenshots as uploadScreenshotsClient } from "./services/sliceService";
+import { compareScreenshots } from "../../../lib/models/common/ModelStatus/compareSliceModels";
 
 type TransactionalPushBody = {
   body: PushChangesPayload;
@@ -54,6 +49,7 @@ export default async function handler({
 }: TransactionalPushBody): Promise<
   ApiResult<{ status: number; body: Limit | null }>
 > {
+  debugger;
   const { cwd, client, manifest } = env;
 
   if (!manifest.libraries)
@@ -75,69 +71,110 @@ export default async function handler({
 
   const localCustomTypes: CustomTypeSM[] = getLocalCustomTypes(cwd);
 
-  const localSlices: ReadonlyArray<Library<Component>> = Libraries.libraries(
+  const localLibraries: ReadonlyArray<Library<Component>> = Libraries.libraries(
     cwd,
     manifest.libraries
   );
 
+  debugger;
+
   /* -- Assemble the models together and compute their statuses -- */
   const slicesModels: ReadonlyArray<LocalOrRemoteSlice> =
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    normalizeFrontendSlices(localSlices, remoteSlices);
+    normalizeFrontendSlices(localLibraries, remoteSlices);
   const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
     Object.values(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
     );
 
   /* -- Compute the request body -- */
 
-  const sliceChanges = slicesModels.reduce(
-    (
-      acc: (SliceInsertChange | SliceUpdateChange | SliceDeleteChange)[],
-      slice: LocalOrRemoteSlice
-    ) => {
-      // assessing the user is connected if we went that far in the processing
-      const statusResult = computeModelStatus(slice, true);
+  const slicesWithStatus = slicesModels.map((s) => ({
+    ...computeModelStatus(s, true),
+  }));
 
-      switch (statusResult.status) {
+  const uploadAndUpdate = async (slice: SliceSM) => {
+    const libraryName =
+      localLibraries.find((library) =>
+        library.components.some((component) => component.model.id === slice.id)
+      )?.name ?? "";
+    const screenshotUrlsByVariation = await uploadScreenshotsClient(
+      env,
+      slice,
+      slice.name,
+      libraryName
+    );
+    return {
+      ...slice,
+      variations: slice.variations.map((v) => ({
+        ...v,
+        imageUrl: screenshotUrlsByVariation[v.id] ?? v.imageUrl,
+      })),
+    };
+  };
+
+  const newScreenshots = await Promise.allSettled(
+    slicesWithStatus.map(async (m) => {
+      switch (m.status) {
         case ModelStatus.New: {
-          const payload = Slices.fromSM(statusResult.model.local);
-          const sliceInsert: SliceInsertChange = {
+          const payload = Slices.fromSM(await uploadAndUpdate(m.model.local));
+          return {
             type: ChangeTypes.SLICE_INSERT,
             id: payload.id,
             payload,
           };
-          return [...acc, sliceInsert];
         }
-
+        case ModelStatus.Deleted: {
+          const { err: purgeError } = await purge(env, getModelId(m.model)); // throw this?
+          if (purgeError) throw purgeError;
+          return {
+            type: ChangeTypes.SLICE_DELETE,
+            id: m.model.remote.id,
+            payload: { id: m.model.remote.id },
+          };
+        }
         case ModelStatus.Modified: {
-          const payload = Slices.fromSM(statusResult.model.local);
-          const sliceUpdate: SliceUpdateChange = {
+          debugger;
+          let sliceModel = m.model.local;
+          if (!compareScreenshots(m.model.remote, m.model.localScreenshots)) {
+            const { err: purgeError } = await purge(env, getModelId(m.model)); // throw this?
+            if (purgeError) throw purgeError;
+            sliceModel = await uploadAndUpdate(m.model.local);
+          } else {
+            sliceModel = {
+              ...sliceModel,
+              variations: sliceModel.variations.map((v) => ({
+                ...v,
+                imageUrl: m.model.remote.variations.find((vv) => vv.id === v.id)
+                  ?.imageUrl,
+              })),
+            };
+          }
+          console.log(sliceModel);
+          const payload = Slices.fromSM(sliceModel);
+          return {
             type: ChangeTypes.SLICE_UPDATE,
             id: payload.id,
             payload,
           };
-          return [...acc, sliceUpdate];
         }
-
-        case ModelStatus.Deleted: {
-          const payload = Slices.fromSM(statusResult.model.remote);
-          const sliceDelete: SliceDeleteChange = {
-            type: ChangeTypes.SLICE_DELETE,
-            id: payload.id,
-            payload: { id: payload.id },
-          };
-          return [...acc, sliceDelete];
-        }
-
-        default: {
-          return acc;
-        }
+        default:
+          return undefined;
       }
-    },
-    []
+    })
   );
+
+  const isFulfilled = <T>(
+    promiseResult: PromiseSettledResult<T>
+  ): promiseResult is PromiseFulfilledResult<T> =>
+    promiseResult.status === "fulfilled";
+
+  const sliceChanges = newScreenshots
+    .filter(isFulfilled)
+    .map((r) => r.value)
+    .filter(
+      (m): m is SliceInsertChange | SliceUpdateChange | SliceDeleteChange =>
+        m !== undefined
+    );
 
   const customTypeChanges = customTypeModels.reduce(
     (
@@ -190,88 +227,18 @@ export default async function handler({
     []
   );
 
-  const newbody: BulkBody = {
+  const newBody: BulkBody = {
     confirmDeleteDocuments: body.confirmDeleteDocuments,
     changes: [...sliceChanges, ...customTypeChanges],
   };
 
-  /* -- Bulk the changes and send back the result -- */
-  try {
-    const result: Limit | null = await client.bulk(newbody);
+  console.log(sliceChanges);
 
-    const updateScreenshotsPromises = await Promise.all(
-      sliceChanges.map(async (sliceChange) => {
-        // finding the remote model of the Slice we are pushing
-        // removing existing screenshots that have been previously uploaded
-        const slice = slicesModels.find(
-          (s) => getModelId(s) === sliceChange.id
-        );
-        if (!slice || !hasLocal(slice)) {
-          return;
-        }
-
-        const localSliceLib = {
-          ...slice,
-          library: localSlices.find((library) =>
-            library.components.some(
-              (component) => component.model.id === slice.local.id
-            )
-          )?.name,
-        };
-
-        const { err: purgeError } = await purge(env, getModelId(slice));
-        if (purgeError) {
-          console.error(
-            `[slice/push]: Unexpected error while removing previously uploaded screenshots: ${purgeError.reason}`
-          );
-          return { statusCode: purgeError.status };
-        }
-
-        const screenshotUrlsByVariation: Record<string, string | null> =
-          await uploadScreenshots(
-            env,
-            slice.local,
-            slice.local.name,
-            localSliceLib.library ?? ""
-          );
-
-        const modelWithScreenshots: SliceSM = {
-          ...slice.local,
-          variations: slice.local.variations.map((variation: VariationSM) => {
-            const screenshotUploaded = screenshotUrlsByVariation[variation.id];
-
-            if (!screenshotUploaded) return variation;
-            return {
-              ...variation,
-              imageUrl: screenshotUploaded,
-            };
-          }),
-        };
-
-        return modelWithScreenshots;
-      })
-    );
-
-    console.log(updateScreenshotsPromises[0].variations[0].imageUrl);
-
-    return {
+  return client
+    .bulk(newBody)
+    .then((potentialLimit: Limit | null) => ({
       status: 200,
-      body: result,
-    };
-  } catch (error) {
-    // Write actual guard next to the type
-    // Also should split to handle the bulk and screenshots errors separatly
-    const isClientError = (e: unknown): e is ClientError => true;
-    if (isClientError(error)) {
-      return onError(error.message, error.status);
-    }
-    throw error;
-  }
-  // return client
-  //   .bulk(newbody)
-  //   .then((potentialLimit: Limit | null) => ({
-  //     status: 200,
-  //     body: potentialLimit,
-  //   }))
-  //   .catch((error: ClientError) => onError(error.message, error.status));
+      body: potentialLimit,
+    }))
+    .catch((error: ClientError) => onError(error.message, error.status));
 }
