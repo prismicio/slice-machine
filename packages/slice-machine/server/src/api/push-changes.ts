@@ -9,6 +9,7 @@ import {
   type BulkBody,
   type ClientError,
   ChangeTypes,
+  type Client,
 } from "@slicemachine/client";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import { Slices, type SliceSM } from "@slicemachine/core/build/models/Slice";
@@ -23,7 +24,11 @@ import {
 } from "../../../lib/models/common/ModelStatus";
 import { onError } from "../../../lib/models/server/ApiResult";
 import type { ApiResult } from "../../../lib/models/server/ApiResult";
-import type { Component, Library } from "@slicemachine/core/build/models";
+import type {
+  Component,
+  Library,
+  Manifest,
+} from "@slicemachine/core/build/models";
 import type {
   LocalOrRemoteCustomType,
   LocalOrRemoteSlice,
@@ -53,6 +58,47 @@ export default async function handler({
       body: null,
     };
 
+  // Fetch all models
+  const { localSlices, remoteSlices, localCustomTypes, remoteCustomTypes } =
+    await fetchModels(client, cwd, manifest.libraries);
+
+  // Assemble the models together
+  const slicesModels: LocalOrRemoteSlice[] = normalizeFrontendSlices(
+    localSlices,
+    remoteSlices
+  );
+  const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
+    Object.values(
+      normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
+    );
+
+  // Compute the POST body
+  const newbody: BulkBody = {
+    confirmDeleteDocuments: body.confirmDeleteDocuments,
+    changes: buildChanges(slicesModels, customTypeModels),
+  };
+
+  // Bulk the changes and send back the result
+  return client
+    .bulk(newbody)
+    .then((potentialLimit: Limit | null) => ({
+      status: 200,
+      body: potentialLimit,
+    }))
+    .catch((error: ClientError) => onError(error.message, error.status));
+}
+
+/* -- FETCH LOCAL AND REMOTE MODELS -- */
+async function fetchModels(
+  client: Client,
+  cwd: string,
+  libraries: NonNullable<Manifest["libraries"]>
+): Promise<{
+  localSlices: ReadonlyArray<Library<Component>>;
+  remoteSlices: SliceSM[];
+  localCustomTypes: CustomTypeSM[];
+  remoteCustomTypes: CustomTypeSM[];
+}> {
   /* -- Retrieve all the different models -- */
   const remoteCustomTypes: CustomTypeSM[] = await client
     .getCustomTypes()
@@ -68,21 +114,17 @@ export default async function handler({
 
   const localSlices: ReadonlyArray<Library<Component>> = Libraries.libraries(
     cwd,
-    manifest.libraries
+    libraries
   );
 
-  /* -- Assemble the models together and compute their statuses -- */
-  const slicesModels: ReadonlyArray<LocalOrRemoteSlice> =
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    normalizeFrontendSlices(localSlices, remoteSlices);
-  const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
-    Object.values(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
-    );
+  return { localSlices, remoteSlices, localCustomTypes, remoteCustomTypes };
+}
 
-  /* -- Compute the request body -- */
-
+/* BUILD CHANGES FROM THE MODELS */
+function buildChanges(
+  slicesModels: LocalOrRemoteSlice[],
+  customTypeModels: ReadonlyArray<LocalOrRemoteCustomType>
+) {
   const sliceChanges = slicesModels.reduce(
     (
       acc: (SliceInsertChange | SliceUpdateChange | SliceDeleteChange)[],
@@ -181,17 +223,5 @@ export default async function handler({
     []
   );
 
-  const newbody: BulkBody = {
-    confirmDeleteDocuments: body.confirmDeleteDocuments,
-    changes: [...sliceChanges, ...customTypeChanges],
-  };
-
-  /* -- Bulk the changes and send back the result -- */
-  return client
-    .bulk(newbody)
-    .then((potentialLimit: Limit | null) => ({
-      status: 200,
-      body: potentialLimit,
-    }))
-    .catch((error: ClientError) => onError(error.message, error.status));
+  return [...sliceChanges, ...customTypeChanges];
 }

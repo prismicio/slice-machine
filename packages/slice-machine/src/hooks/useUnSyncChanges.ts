@@ -4,7 +4,7 @@ import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
-import { ModelStatusInformation, useModelStatus2 } from "./useModelStatus";
+import { ModelStatusInformation, useModelStatus } from "./useModelStatus";
 import {
   LocalOrRemoteCustomType,
   RemoteOnlySlice,
@@ -48,7 +48,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
     })
   );
 
-  const { modelsStatuses, authStatus, isOnline } = useModelStatus2({
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({
     slices,
     customTypes,
   });
