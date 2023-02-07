@@ -77,6 +77,8 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   it("Error displayed when non-image files are uploaded", () => {
     slicePage.goTo(slice.library, slice.name);
     slicePage.addVariation("Error handling");
+    cy.saveSliceModifications();
+
     slicePage.openScreenshotModal();
     cy.contains("Select file").selectFile(
       {
