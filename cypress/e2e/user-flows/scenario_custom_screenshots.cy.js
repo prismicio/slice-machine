@@ -1,7 +1,8 @@
 import { ScreenshotModal } from "../../pages/slices/screenshotModal";
 import { SliceCard } from "../../pages/slices/sliceCard";
 import { SlicePage } from "../../pages/slices/slicePage";
-import { Menu } from "../../pages/Menu";
+import { ChangesPage } from "../../pages/changesPage";
+import { Menu } from "../../pages/menu";
 
 describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
@@ -51,12 +52,14 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     cy.saveSliceModifications();
 
     const menu = new Menu();
+    const changes = new ChangesPage();
     const sliceCard = new SliceCard(slice.name);
 
     menu.navigateTo("Slices");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     menu.navigateTo("Changes");
+    changes.screenshotsButton.should("be.visible");
     sliceCard.content.should("include.text", "1/2 screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
