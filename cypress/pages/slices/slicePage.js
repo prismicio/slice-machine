@@ -47,7 +47,7 @@ export class SlicePage {
 
   openSimulator() {
     cy.contains("Simulate Slice").click();
-    cy.wait(2000); // wait for ready state
+    cy.wait(5000); // wait for ready state
     return this;
   }
 }

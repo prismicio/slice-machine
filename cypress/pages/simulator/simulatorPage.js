@@ -53,7 +53,7 @@ export class SimulatorPage {
       });
     });
 
-    cy.wait(2000); // wait for the page to compile
+    cy.wait(5000); // wait for the page to compile
 
     return this;
   }
