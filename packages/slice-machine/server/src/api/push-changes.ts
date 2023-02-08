@@ -237,6 +237,6 @@ export default async function handler({
     console.error(e);
     Sentry.captureException(e);
 
-    return onError("failed", 500);
+    return onError("An error happened while pushing your changes", 500);
   }
 }

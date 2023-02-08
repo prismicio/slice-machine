@@ -14,7 +14,6 @@ import {
   LocalOrRemoteModel,
   LocalOrRemoteSlice,
 } from "@lib/models/common/ModelData";
-import { mode } from "@prismicio/editor-ui/dist/theme/mode.css";
 
 // Slices and Custom Types needs to be separated as Ids are not unique amongst each others.
 export interface ModelStatusInformation {
