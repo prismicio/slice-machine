@@ -103,19 +103,21 @@ export default async function handler({
     );
     return {
       ...slice,
-      variations: slice.variations.map((v) => ({
-        ...v,
-        imageUrl: screenshotUrlsByVariation[v.id] ?? v.imageUrl,
+      variations: slice.variations.map((localVariation) => ({
+        ...localVariation,
+        imageUrl:
+          screenshotUrlsByVariation[localVariation.id] ??
+          localVariation.imageUrl,
       })),
     };
   };
 
   try {
     const newScreenshots = await Promise.all(
-      slicesWithStatus.map(async (m) => {
-        switch (m.status) {
+      slicesWithStatus.map(async (s) => {
+        switch (s.status) {
           case ModelStatus.New: {
-            const payload = Slices.fromSM(await uploadAndUpdate(m.model.local));
+            const payload = Slices.fromSM(await uploadAndUpdate(s.model.local));
             return {
               type: ChangeTypes.SLICE_INSERT,
               id: payload.id,
@@ -123,27 +125,28 @@ export default async function handler({
             };
           }
           case ModelStatus.Deleted: {
-            const { err: purgeError } = await purge(env, getModelId(m.model)); // throw this?
+            const { err: purgeError } = await purge(env, getModelId(s.model));
             if (purgeError) throw purgeError;
             return {
               type: ChangeTypes.SLICE_DELETE,
-              id: m.model.remote.id,
-              payload: { id: m.model.remote.id },
+              id: s.model.remote.id,
+              payload: { id: s.model.remote.id },
             };
           }
           case ModelStatus.Modified: {
-            let sliceModel = m.model.local;
-            if (!compareScreenshots(m.model.remote, m.model.localScreenshots)) {
-              const { err: purgeError } = await purge(env, getModelId(m.model)); // throw this?
+            let sliceModel = s.model.local;
+            if (!compareScreenshots(s.model.remote, s.model.localScreenshots)) {
+              const { err: purgeError } = await purge(env, getModelId(s.model));
               if (purgeError) throw purgeError;
-              sliceModel = await uploadAndUpdate(m.model.local);
+              sliceModel = await uploadAndUpdate(s.model.local);
             } else {
               sliceModel = {
                 ...sliceModel,
-                variations: sliceModel.variations.map((v) => ({
-                  ...v,
-                  imageUrl: m.model.remote.variations.find(
-                    (vv) => vv.id === v.id
+                variations: sliceModel.variations.map((localVariation) => ({
+                  ...localVariation,
+                  imageUrl: s.model.remote.variations.find(
+                    (remoteVariation) =>
+                      remoteVariation.id === localVariation.id
                   )?.imageUrl,
                 })),
               };
