@@ -63,7 +63,6 @@ export function* changesPushSaga({
       return;
     }
 
-    // TODO: find a better way of doing this
     const { data: serverState } = (yield call(getState)) as SagaReturnType<
       typeof getState
     >;

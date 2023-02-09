@@ -47,6 +47,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
       return (
         <AssociatedDocumentsCard
           key={customTypeDetail.id}
+          isOverLimit
           ctName={customType.remote.label ?? customType.remote.id}
           link={customTypeDetail.url}
           numberOfDocuments={customTypeDetail.numberOfDocuments}
@@ -117,7 +118,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
               variant="primary"
               onClick={() => {
                 closeModals();
-                pushChanges(); // TODO: should this confirm deletion? Otherwise we get the other modal
+                pushChanges();
               }}
               sx={{
                 fontWeight: "bold",
