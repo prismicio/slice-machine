@@ -144,9 +144,9 @@ export async function deleteSlice(req: {
     }
   };
 
-  const updateLibraries = async () => {
+  const updateLibraries = () => {
     try {
-      await generateLibrariesIndex(env, libName);
+      generateLibrariesIndex(env, libName);
     } catch (err) {
       console.error(
         `[slice/delete] Could not update the slice library's index.js file. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`

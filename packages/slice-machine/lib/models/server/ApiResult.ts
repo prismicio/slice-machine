@@ -4,6 +4,15 @@ export type ApiError = {
   reason: string;
 };
 
+export const onError = (
+  message = "Unspecified error occurred.",
+  status?: number
+): ApiError => ({
+  err: new Error(message),
+  status: status !== undefined ? status : 500,
+  reason: message,
+});
+
 export type ApiResult<
   Expected extends Record<keyof Expected, unknown> = Record<string, never>
 > = Expected | ApiError;

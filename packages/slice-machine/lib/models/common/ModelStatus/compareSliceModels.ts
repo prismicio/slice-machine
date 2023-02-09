@@ -1,67 +1,23 @@
 import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
 import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
+import { LocalAndRemoteSlice } from "../ModelData";
 
-export type NewFrontEndSliceModel = {
-  local: SliceSM;
-  localScreenshots: Record<string, Screenshot>;
-};
-
-export type SyncedFrontEndSliceModel = {
-  local: SliceSM;
-  remote: SliceSM;
-  localScreenshots: Record<string, Screenshot>;
-};
-
-export type LocalFrontEndSliceModel =
-  | NewFrontEndSliceModel
-  | SyncedFrontEndSliceModel;
-
-export type DeletedFrontEndSliceModel = {
-  local: undefined;
-  remote: SliceSM;
-  localScreenshots: Record<string, Screenshot>;
-};
-
-export type FrontEndSliceModel =
-  | LocalFrontEndSliceModel
-  | DeletedFrontEndSliceModel;
-
-export const isLocalSlice = (
-  s: FrontEndSliceModel
-): s is LocalFrontEndSliceModel => s.local !== undefined;
-
-export const isDeletedSlice = (
-  s: FrontEndSliceModel
-): s is DeletedFrontEndSliceModel => !isLocalSlice(s);
-
-export const getSliceProp = <key extends keyof SliceSM>(
-  s: FrontEndSliceModel,
-  property: key
-): SliceSM[key] => (isLocalSlice(s) ? s.local[property] : s.remote[property]);
-
-export function compareSliceModels(
-  models: Required<SyncedFrontEndSliceModel>
-): ModelStatus {
-  if (isDeletedSlice(models)) {
-    return ModelStatus.Deleted;
-  }
-
+export function compareSliceLocalToRemote(
+  model: LocalAndRemoteSlice
+): ModelStatus.Modified | ModelStatus.Synced {
   const areScreenshotsEqual = compareScreenshots(
-    models.remote,
-    models.localScreenshots
+    model.remote,
+    model.localScreenshots
   );
-  if (!areScreenshotsEqual) {
-    return ModelStatus.Modified;
-  }
-  const areModelsEquals = equal(
-    stripImageUrl(models.local),
-    stripImageUrl(models.remote)
-  );
+  if (!areScreenshotsEqual) return ModelStatus.Modified;
 
-  if (!areModelsEquals) {
-    return ModelStatus.Modified;
-  }
+  const areModelsEquals = equal(
+    stripImageUrl(model.local),
+    stripImageUrl(model.remote)
+  );
+  if (!areModelsEquals) return ModelStatus.Modified;
+
   return ModelStatus.Synced;
 }
 
@@ -70,18 +26,18 @@ const stripImageUrl = (slice: SliceSM) => ({
   variations: slice.variations.map((v) => ({ ...v, imageUrl: undefined })),
 });
 
-function compareScreenshots(
+export function compareScreenshots(
   remoteModel: SliceSM,
-  localScreenshots: Record<string, Screenshot>
+  localScreenshots: Partial<Record<string, Screenshot>>
 ) {
   return remoteModel.variations.every((variation) => {
-    const localScreenshot = localScreenshots[variation.id];
-    if (!variation.imageUrl && !localScreenshot) {
-      return true;
+    const localScreenshotHash = localScreenshots[variation.id]?.hash;
+    const remoteScreenshotUrl = variation.imageUrl;
+
+    if (localScreenshotHash === undefined) {
+      return remoteScreenshotUrl === undefined;
+    } else {
+      return remoteScreenshotUrl?.includes(localScreenshotHash);
     }
-    if (variation.imageUrl?.includes(localScreenshot?.hash)) {
-      return true;
-    }
-    return false;
   });
 }

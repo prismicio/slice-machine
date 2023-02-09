@@ -23,6 +23,7 @@ import { handler as pushCustomType } from "./custom-types/push";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+import pushChanges from "./push-changes";
 
 import sentryHandler, { plainTextBodyParser } from "./sentry";
 
@@ -136,8 +137,8 @@ router.post(
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await saveSlice(req);
-    return res.status(200).json(payload);
+    const payload = saveSlice(req);
+    return Promise.resolve(res.status(200).json(payload));
   })
 );
 
@@ -173,16 +174,16 @@ router.get(
 router.put(
   "/slices/rename",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
+  WithEnv(function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await renameSlice(req);
+    const payload = renameSlice(req);
     if (isApiError(payload)) {
-      return res.status(payload.status).json(payload);
+      return Promise.resolve(res.status(payload.status).json(payload));
     }
 
-    return res.status(200).json(payload);
+    return Promise.resolve(res.status(200).json(payload));
   })
 );
 
@@ -267,6 +268,23 @@ router.get(
   ): Promise<Express.Response> {
     const { statusCode } = await pushCustomType(req);
     return res.sendStatus(statusCode);
+  })
+);
+
+router.post(
+  "/push-changes",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const result = await pushChanges(req);
+
+    if (isApiError(result)) {
+      return res.status(result.status).json(result);
+    }
+
+    return res.status(result.status).json(result.body);
   })
 );
 

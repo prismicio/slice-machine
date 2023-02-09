@@ -9,7 +9,6 @@ import Grid from "components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { WrapperType } from "@lib/models/ui/Slice/wrappers";
 import { SharedSlice } from "@lib/models/ui/Slice";
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { SyncError } from "@src/models/SyncError";
 import { ApiError } from "@src/models/ApiError";
@@ -19,9 +18,10 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 
 interface ChangesItemsProps extends ModelStatusInformation {
-  unSyncedCustomTypes: FrontEndCustomType[];
+  unSyncedCustomTypes: LocalOrRemoteCustomType[];
   unSyncedSlices: ComponentUI[];
   changesPushed: string[];
   syncError: SyncError | null;

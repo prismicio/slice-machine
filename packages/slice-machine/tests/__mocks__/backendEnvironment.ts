@@ -12,12 +12,6 @@ const backendEnvironment: BackendEnvironment = {
     libraries: ["@/slices"],
   },
   prismicData: {},
-  changelog: {
-    currentVersion: "0.2.0",
-    latestNonBreakingVersion: "0.2.0",
-    updateAvailable: true,
-    versions: [],
-  },
   mockConfig: {},
   framework: Frameworks.next,
   baseUrl: "https://fakebase.io",

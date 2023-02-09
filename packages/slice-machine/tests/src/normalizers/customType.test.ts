@@ -2,7 +2,7 @@ import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
-} from "@src/normalizers/customType";
+} from "@lib/models/common/normalizers/customType";
 
 describe("Normalizer - CustomType", () => {
   describe("normalizeFrontendCustomTypes", () => {

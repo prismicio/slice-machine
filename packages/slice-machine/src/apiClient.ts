@@ -17,6 +17,8 @@ import {
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ComponentMocks } from "@slicemachine/core/build/models";
 import { PackageChangelog } from "@lib/models/common/versions";
+import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
+import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -156,6 +158,12 @@ export const pushSliceApiClient = (
       defaultAxiosConfig
     )
     .then((response) => response.data);
+};
+
+export const pushChanges = (
+  payload: PushChangesPayload
+): Promise<AxiosResponse<Limit | null>> => {
+  return axios.post("/api/push-changes", payload, defaultAxiosConfig);
 };
 
 /** Auth Routes **/

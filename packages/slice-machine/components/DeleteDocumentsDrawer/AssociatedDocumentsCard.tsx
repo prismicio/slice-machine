@@ -1,20 +1,16 @@
 import React from "react";
 import { Flex, Text, Card, Link } from "theme-ui";
 
-export type CustomtypeDocuments = {
+type AssociatedDocumentsCardProps = {
   ctName: string;
   numberOfDocuments: number;
   link: string;
-};
-
-type AssociatedDocumentsCardProps = {
-  ctDocuments: CustomtypeDocuments;
   isOverLimit?: boolean;
 };
 
 export const AssociatedDocumentsCard: React.FC<
   AssociatedDocumentsCardProps
-> = ({ ctDocuments, isOverLimit }) => (
+> = ({ ctName, numberOfDocuments, link, isOverLimit }) => (
   <Card
     sx={{
       mb: 12,
@@ -29,9 +25,10 @@ export const AssociatedDocumentsCard: React.FC<
       justifyContent: "space-between",
       alignItems: "center",
     }}
+    data-cy="AssociatedDocumentsCard"
   >
     <Flex sx={{ flexDirection: "column" }}>
-      <Text>{ctDocuments.ctName}</Text>
+      <Text>{ctName}</Text>
       <Text
         sx={{
           color: "textClear",
@@ -39,11 +36,11 @@ export const AssociatedDocumentsCard: React.FC<
           lineHeight: "16px",
         }}
       >
-        {ctDocuments.numberOfDocuments} documents
+        {numberOfDocuments} documents
       </Text>
     </Flex>
     <Link
-      href={ctDocuments.link}
+      href={link}
       target="_blank"
       variant="cardSmall"
       sx={{ color: isOverLimit ? "danger" : "purple08" }}

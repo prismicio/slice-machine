@@ -1,18 +1,18 @@
 import {
   computeModelStatus,
-  FrontEndModel,
   ModelStatus,
 } from "@lib/models/common/ModelStatus";
-import {
-  FrontEndSliceModel,
-  getSliceProp,
-} from "@lib/models/common/ModelStatus/compareSliceModels";
-import { getCustomTypeProp } from "@src/modules/availableCustomTypes/types";
 import { getAuthStatus } from "@src/modules/environment";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
 import { useNetwork } from "./useNetwork";
+import {
+  hasLocal,
+  LocalOrRemoteCustomType,
+  LocalOrRemoteModel,
+  LocalOrRemoteSlice,
+} from "@lib/models/common/ModelData";
 
 // Slices and Custom Types needs to be separated as Ids are not unique amongst each others.
 export interface ModelStatusInformation {
@@ -24,12 +24,35 @@ export interface ModelStatusInformation {
   isOnline: boolean;
 }
 
-const isSliceModel = (m: FrontEndModel): m is FrontEndSliceModel =>
-  "localScreenshots" in m;
+function computeStatuses(
+  models: LocalOrRemoteCustomType[],
+  userHasAccessToModels: boolean
+): { [sliceId: string]: ModelStatus };
+function computeStatuses(
+  models: LocalOrRemoteSlice[],
+  userHasAccessToModels: boolean
+): { [sliceId: string]: ModelStatus };
+function computeStatuses(
+  models: LocalOrRemoteModel[],
+  userHasAccessToModels: boolean
+) {
+  return models.reduce<{ [id: string]: ModelStatus }>((acc, model) => {
+    const { status } = computeModelStatus(model, userHasAccessToModels);
 
-export const useModelStatus = (
-  models: FrontEndModel[]
-): ModelStatusInformation => {
+    return {
+      ...acc,
+      [hasLocal(model) ? model.local.id : model.remote.id]: status,
+    };
+  }, {} as { [sliceId: string]: ModelStatus });
+}
+
+export const useModelStatus = ({
+  slices = [],
+  customTypes = [],
+}: {
+  slices?: LocalOrRemoteSlice[];
+  customTypes?: LocalOrRemoteCustomType[];
+}): ModelStatusInformation => {
   const isOnline = useNetwork();
   const { authStatus } = useSelector((store: SliceMachineStoreType) => ({
     authStatus: getAuthStatus(store),
@@ -39,34 +62,10 @@ export const useModelStatus = (
     authStatus != AuthStatus.FORBIDDEN &&
     authStatus != AuthStatus.UNAUTHORIZED;
 
-  const modelsStatuses: ModelStatusInformation["modelsStatuses"] =
-    models.reduce(
-      (acc: ModelStatusInformation["modelsStatuses"], model: FrontEndModel) => {
-        const status: ModelStatus = computeModelStatus(
-          model,
-          userHasAccessToModels
-        );
-
-        if (isSliceModel(model)) {
-          return {
-            slices: {
-              ...acc.slices,
-              [getSliceProp(model, "id")]: status,
-            },
-            customTypes: acc.customTypes,
-          };
-        }
-
-        return {
-          slices: acc.slices,
-          customTypes: {
-            ...acc.customTypes,
-            [getCustomTypeProp(model, "id")]: status,
-          },
-        };
-      },
-      { slices: {}, customTypes: {} }
-    );
+  const modelsStatuses = {
+    slices: computeStatuses(slices, userHasAccessToModels),
+    customTypes: computeStatuses(customTypes, userHasAccessToModels),
+  };
 
   return {
     modelsStatuses,

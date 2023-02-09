@@ -1,17 +1,17 @@
 import { StatusBadge } from "../StatusBadge";
-import {
-  FrontEndCustomType,
-  isLocalCustomType,
-} from "@src/modules/availableCustomTypes/types";
 import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
+import {
+  LocalOrRemoteCustomType,
+  hasLocal,
+} from "@lib/models/common/ModelData";
 
 interface CustomTypeTableProps extends ModelStatusInformation {
-  customTypes: FrontEndCustomType[];
+  customTypes: LocalOrRemoteCustomType[];
 }
 
 const firstColumnWidth = "40%";
@@ -67,7 +67,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
       </thead>
       <tbody>
         {customTypes.map((customType) =>
-          isLocalCustomType(customType) ? (
+          hasLocal(customType) ? (
             <Link
               passHref
               href={`/cts/${customType.local.id}`}
