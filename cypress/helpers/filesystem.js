@@ -3,6 +3,7 @@ import {
   ASSETS_FOLDER,
   SLICES_FOLDER,
   TYPES_FILE,
+  SIMULATOR_PATH,
 } from "../consts";
 
 /**
@@ -10,8 +11,16 @@ import {
  */
 export function clearProject() {
   clearCustomTypes();
+  clearSimulator();
   clearSlices();
   clearAssets();
+}
+
+/**
+ * Removed the simulator page
+ */
+export function clearSimulator() {
+  cy.task("clearDir", SIMULATOR_PATH);
 }
 
 /**
