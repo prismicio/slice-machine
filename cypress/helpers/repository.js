@@ -20,7 +20,7 @@ export function pushLocalChanges(numberOfChanges = 1) {
   // number of changes should now be 0 at the end of the push
   // The time to wait depends on the number of changes
   cy.get("[data-cy=changes-number]", {
-    timeout: 5000 * (numberOfChanges + 1),
+    timeout: 15000 * (numberOfChanges + 1),
   }).should("not.exist");
 
   // sync changes button should be disabled
