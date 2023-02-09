@@ -74,7 +74,6 @@ import {
 } from "./screenshots/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
-import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 import { changesPushCreator } from "./pushChangesSaga";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
