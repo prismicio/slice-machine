@@ -81,9 +81,9 @@ export class SlicePage {
 
     cy.contains("div", type).click();
 
-    const nameInput = '[data-cy="new-field-name-input"]'
+    const nameInput = '[data-cy="new-field-name-input"]';
 
-    cy.get(nameInput).clear()
+    cy.get(nameInput).clear();
     cy.get(nameInput).type(name).blur();
 
     cy.contains(/^Add$/).click();
