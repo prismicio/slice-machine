@@ -106,17 +106,8 @@ jobs:
         run: |
           npm i
           failures=0
-          trap 'failures=$((failures+1))' ERR
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e 
-          npm run test:e2e
+          trap 'failures=$((failures+1))' ERR SIGQUIT SIGTERM SIGINT
+          npm run test:e2e; npm run test:e2e; npm run test:e2e; npm run test:e2e; npm run test:e2e; 
           if ((failures == 0)); then
             echo "Success"
           else
