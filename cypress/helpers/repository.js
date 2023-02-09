@@ -19,6 +19,8 @@ export function pushLocalChanges(numberOfChanges = 1) {
 
   // number of changes should now be 0 at the end of the push
   // The time to wait depends on the number of changes and if they have images
+  cy.wait(60 * 1000) // is wroom-qa.com slow?
+
   cy.get("[data-cy=changes-number]", {
     timeout: 60 * 1000 * (numberOfChanges + 1),
   }).should("not.exist");
