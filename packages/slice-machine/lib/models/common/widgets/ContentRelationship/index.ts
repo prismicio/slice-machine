@@ -9,7 +9,7 @@ import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { hasLocal } from "../../ModelData";
+import { hasLocal } from "@lib/models/common/ModelData";
 
 /**
  * {

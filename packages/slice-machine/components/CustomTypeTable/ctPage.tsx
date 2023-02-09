@@ -2,7 +2,7 @@ import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Box, Text } from "theme-ui";
-import { useModelStatus2 as useModelStatus } from "@src/hooks/useModelStatus";
+import { useModelStatus } from "@src/hooks/useModelStatus";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
@@ -13,10 +13,9 @@ import {
 } from "@lib/models/common/ModelData";
 
 export const CustomTypeTable: React.FC<{
-  customTypes: (LocalOnlyCustomType | LocalOnlyCustomType)[];
+  customTypes: (LocalOnlyCustomType | LocalAndRemoteCustomType)[];
 }> = ({ customTypes }) => {
   const { modelsStatuses, authStatus, isOnline } = useModelStatus({
-    slices: [],
     customTypes,
   });
   const [customTypeToEdit, setCustomTypeToEdit] = useState<

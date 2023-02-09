@@ -48,7 +48,7 @@ describe("updateLibraries", () => {
       framework: Models.Frameworks.next,
     };
 
-    await generateLibraryIndex(env, "@/slices");
+    generateLibraryIndex(env, "@/slices");
 
     const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedIndexFile);
@@ -60,7 +60,7 @@ describe("updateLibraries", () => {
       framework: Models.Frameworks.svelte,
     };
 
-    await generateLibraryIndex(env, "@/slices");
+    generateLibraryIndex(env, "@/slices");
 
     const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedSvelteIndexFile);

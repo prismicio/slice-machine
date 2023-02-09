@@ -137,8 +137,8 @@ router.post(
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await saveSlice(req);
-    return res.status(200).json(payload);
+    const payload = saveSlice(req);
+    return Promise.resolve(res.status(200).json(payload));
   })
 );
 
@@ -174,16 +174,16 @@ router.get(
 router.put(
   "/slices/rename",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
+  WithEnv(function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await renameSlice(req);
+    const payload = renameSlice(req);
     if (isApiError(payload)) {
-      return res.status(payload.status).json(payload);
+      return Promise.resolve(res.status(payload.status).json(payload));
     }
 
-    return res.status(200).json(payload);
+    return Promise.resolve(res.status(200).json(payload));
   })
 );
 

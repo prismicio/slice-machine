@@ -4,13 +4,12 @@ import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
-import { ModelStatusInformation, useModelStatus2 } from "./useModelStatus";
+import { ModelStatusInformation, useModelStatus } from "./useModelStatus";
 import {
   LocalOrRemoteCustomType,
   RemoteOnlySlice,
   getModelId,
-  hasLocal,
-  hasRemote,
+  isRemoteOnly,
 } from "@lib/models/common/ModelData";
 
 const unSyncStatuses = [
@@ -48,7 +47,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
     })
   );
 
-  const { modelsStatuses, authStatus, isOnline } = useModelStatus2({
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({
     slices,
     customTypes,
   });
@@ -58,9 +57,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
   );
 
   const deletedComponents: ComponentUI[] = slices
-    .filter(
-      (slice): slice is RemoteOnlySlice => hasRemote(slice) && !hasLocal(slice)
-    )
+    .filter(isRemoteOnly)
     .map(wrapDeletedSlice);
 
   const components: ComponentUI[] = localComponents

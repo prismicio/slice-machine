@@ -11,8 +11,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { getModelId } from "@lib/models/common/ModelData";
-import { getCTName } from ".";
+import { getModelId, isRemoteOnly } from "@lib/models/common/ModelData";
 import { ToasterType } from "@src/modules/toaster";
 
 const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
@@ -37,6 +36,25 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
     openToaster("No change data", ToasterType.ERROR);
     return null;
   }
+
+  const associatedDocumentsCards = modalData.details.customTypes.map(
+    (customTypeDetail) => {
+      const customType = availableCustomTypes.find(
+        (customType) => getModelId(customType) === customTypeDetail.id
+      );
+      if (customType === undefined || !isRemoteOnly(customType)) return null;
+
+      return (
+        <AssociatedDocumentsCard
+          key={customTypeDetail.id}
+          isOverLimit
+          ctName={customType.remote.label ?? customType.remote.id}
+          link={customTypeDetail.url}
+          numberOfDocuments={customTypeDetail.numberOfDocuments}
+        />
+      );
+    }
+  );
 
   return (
     <Drawer
@@ -100,7 +118,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
               variant="primary"
               onClick={() => {
                 closeModals();
-                pushChanges(); // TODO: should this confirm deletion? Otherwise we get the other modal
+                pushChanges();
               }}
               sx={{
                 fontWeight: "bold",
@@ -124,19 +142,7 @@ const DeleteDocumentsDrawerOverLimit: React.FunctionComponent = () => {
           manually and then try deleting the Custom Types again.
         </Text>
 
-        {modalData.details.customTypes.map((ct) => (
-          <AssociatedDocumentsCard
-            key={ct.id}
-            isOverLimit
-            ctName={getCTName(
-              availableCustomTypes.find(
-                (ctInArray) => getModelId(ctInArray) === ct.id
-              )
-            )}
-            link={ct.url}
-            numberOfDocuments={ct.numberOfDocuments}
-          />
-        ))}
+        {associatedDocumentsCards}
       </Card>
     </Drawer>
   );

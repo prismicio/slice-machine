@@ -14,7 +14,7 @@ interface RenameSliceBody {
   libName: string;
 }
 
-export async function renameSlice(req: {
+export function renameSlice(req: {
   body: RenameSliceBody;
   env: BackendEnvironment;
 }) {
@@ -77,7 +77,7 @@ export async function renameSlice(req: {
 
   IO.Types.upsert(env);
 
-  await generateLibrariesIndex(env, libName);
+  generateLibrariesIndex(env, libName);
 
   return desiredSlice;
 }
