@@ -1,12 +1,10 @@
 import "@testing-library/jest-dom";
 
 import { uploadScreenshots } from "../../../server/src/api/services/sliceService";
-import { createOrUpdate } from "../../../server/src/api/slices/push";
 import { upload } from "../../../server/src/api/services/uploadScreenshotClient";
 
 import allFieldSliceObject from "../../__mocks__/sliceModel";
 import backendEnvironment from "../../__mocks__/backendEnvironment";
-import { Client, ApplicationMode } from "@slicemachine/client";
 import { Slices } from "@slicemachine/core/build/models/Slice";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
@@ -41,30 +39,6 @@ jest.mock("../../../server/src/api/services/uploadScreenshotClient", () => {
 describe("Slice Service", () => {
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  describe("createOrUpdate", () => {
-    test("should call insert slice", async () => {
-      const client = new Client(ApplicationMode.PROD, "repo", "auth");
-      const mockInsertSlice = client.insertSlice as jest.Mock;
-      const mockUpdateSlice = client.updateSlice as jest.Mock;
-
-      createOrUpdate(client, allFieldSliceModel, undefined);
-      expect(mockInsertSlice).toHaveBeenCalledTimes(1);
-      expect(mockInsertSlice).toHaveBeenCalledWith(allFieldSliceObject);
-      expect(mockUpdateSlice).toHaveBeenCalledTimes(0);
-    });
-
-    test("should call update slice", async () => {
-      const client = new Client(ApplicationMode.PROD, "repo", "auth");
-      const mockInsertSlice = client.insertSlice as jest.Mock;
-      const mockUpdateSlice = client.updateSlice as jest.Mock;
-
-      createOrUpdate(client, allFieldSliceModel, allFieldSliceModel);
-      expect(mockInsertSlice).toHaveBeenCalledTimes(0);
-      expect(mockUpdateSlice).toHaveBeenCalledTimes(1);
-      expect(mockUpdateSlice).toHaveBeenCalledWith(allFieldSliceObject);
-    });
   });
 
   describe("uploadScreenshots", () => {
