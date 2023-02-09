@@ -56,8 +56,8 @@ export function* changesPushSaga({
         modalOpenCreator({
           modalKey:
             response.data?.type === LimitType.SOFT
-              ? ModalKeysEnum.DELETE_DOCUMENTS_DRAWER
-              : ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+              ? ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER
+              : ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
         })
       );
       return;

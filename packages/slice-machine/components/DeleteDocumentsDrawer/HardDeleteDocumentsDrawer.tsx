@@ -17,7 +17,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
     useSelector((store: SliceMachineStoreType) => ({
       isDeleteDocumentsDrawerOpen: isModalOpen(
         store,
-        ModalKeysEnum.DELETE_DOCUMENTS_DRAWER
+        ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER
       ),
       remoteOnlyCustomTypes: selectAllCustomTypes(store).filter(isRemoteOnly),
       modalData: store.pushChanges,
