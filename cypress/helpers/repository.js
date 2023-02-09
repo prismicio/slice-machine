@@ -18,9 +18,9 @@ export function pushLocalChanges(numberOfChanges = 1) {
   cy.get("[data-cy=push-changes]").click();
 
   // number of changes should now be 0 at the end of the push
-  // The time to wait depends on the number of changes
+  // The time to wait depends on the number of changes and if they have images
   cy.get("[data-cy=changes-number]", {
-    timeout: 15000 * (numberOfChanges + 1),
+    timeout: 60 * 1000 * (numberOfChanges + 1), 
   }).should("not.exist");
 
   // sync changes button should be disabled
