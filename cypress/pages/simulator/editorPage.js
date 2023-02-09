@@ -1,4 +1,16 @@
 export class EditorPage {
+  #root = ".editor";
+
+  /**
+   * Checks if the editor sidebar contains some text
+   * Useful to check it isi fully loaded before interacting
+   *
+   * @param {string} text the text we are looking for
+   */
+  contains(text) {
+    return cy.contains(this.#root, text);
+  }
+
   /**
    * Type into an input text field
    *
@@ -7,8 +19,10 @@ export class EditorPage {
    * @param {string} comparisonOperator the comparison operator to use
    */
   type(inputLabel, text, comparisonOperator = "contain") {
-    cy.getInputByLabel(inputLabel).clear().type(text).blur();
-    cy.getInputByLabel(inputLabel).should(comparisonOperator, text);
+    cy.get(this.#root).getInputByLabel(inputLabel).clear().type(text).blur();
+    cy.get(this.#root)
+      .getInputByLabel(inputLabel)
+      .should(comparisonOperator, text);
     return this;
   }
 
@@ -18,7 +32,7 @@ export class EditorPage {
    * @param {string} inputLabel the label of the input to click
    */
   toggleBooleanField(inputLabel) {
-    cy.getInputByLabel(inputLabel).click();
+    cy.get(this.#root).getInputByLabel(inputLabel).click();
     return this;
   }
 
@@ -29,7 +43,8 @@ export class EditorPage {
    * @param {string} value the value of the option to select
    */
   select(inputLabel, value) {
-    cy.getInputByLabel(inputLabel)
+    cy.get(this.#root)
+      .getInputByLabel(inputLabel)
       .invoke("text")
       .then((currentValue) => {
         if (currentValue === value) {
@@ -38,7 +53,7 @@ export class EditorPage {
           );
         }
       });
-    cy.getInputByLabel(inputLabel).click();
+    cy.get(this.#root).getInputByLabel(inputLabel).click();
     cy.contains('[role="option"]', value).click();
     return this;
   }
@@ -49,7 +64,10 @@ export class EditorPage {
    * @param {string} inputLabel the label of the input to click
    */
   changeImage(inputLabel) {
-    cy.contains("header", inputLabel).contains("button", "Replace").click();
+    cy.get(this.#root)
+      .contains("header", inputLabel)
+      .contains("button", "Replace")
+      .click();
 
     return cy.get('[role="dialog"] img').first().click();
   }

@@ -265,6 +265,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           </Flex>
           {currentState === UiState.SUCCESS ? (
             <Box
+              className="editor"
               sx={{
                 marginLeft: "16px",
                 maxWidth: "440px",
