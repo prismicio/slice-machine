@@ -21,10 +21,15 @@ import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff"
 import { getOrElseW } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
-export function handler(
-  env: BackendEnvironment,
-  { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
-): Promise<Record<string, never>> {
+export default function handler({
+  env,
+  body,
+}: {
+  env: BackendEnvironment;
+  body: SliceSaveBody;
+}): Record<string, never> {
+  const { sliceName, from, model: smModel, mockConfig } = body;
+
   const previousSliceModel = Files.safeReadEntity(
     CustomPaths(env.cwd).library(from).slice(sliceName).model(),
     (payload) => getOrElseW(() => undefined)(SharedSlice.decode(payload))
@@ -80,11 +85,4 @@ export function handler(
   console.log("[slice/save]: Libraries index files regenerated!");
 
   return {};
-}
-
-export default async function apiHandler(req: {
-  body: SliceSaveBody;
-  env: BackendEnvironment;
-}) {
-  return handler(req.env, req.body);
 }

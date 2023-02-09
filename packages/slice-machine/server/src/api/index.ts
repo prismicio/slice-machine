@@ -137,8 +137,8 @@ router.post(
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await saveSlice(req);
-    return res.status(200).json(payload);
+    const payload = saveSlice(req);
+    return Promise.resolve(res.status(200).json(payload));
   })
 );
 
