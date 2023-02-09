@@ -105,6 +105,8 @@ jobs:
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: |
           npm i
+          failures=0
+          trap 'failures=$((failures+1))' ERR
           npm run test:e2e 
           npm run test:e2e 
           npm run test:e2e 
@@ -115,6 +117,12 @@ jobs:
           npm run test:e2e 
           npm run test:e2e 
           npm run test:e2e
+          if ((failures == 0)); then
+            echo "Success"
+          else
+            echo "$failures failures"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
