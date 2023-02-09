@@ -106,7 +106,8 @@ export function* changesPushSaga({
       default: {
         yield put(
           openToasterCreator({
-            content: "Something went wrong when pushing your changes.",
+            content:
+              "Something went wrong when pushing your changes. Check your terminal logs.",
             type: ToasterType.ERROR,
           })
         );

@@ -18,7 +18,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { isSelectedSliceTouched } from "@src/modules/selectedSlice/selectors";
 import { getRemoteSlice } from "@src/modules/slices";
-import { useModelStatus } from "@src/hooks/useModelStatus";
+import { useModelStatus2 as useModelStatus } from "@src/hooks/useModelStatus";
 import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
 
 export type SliceBuilderState = {
@@ -98,13 +98,16 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
     saveSlice();
   };
 
-  const { modelsStatuses } = useModelStatus([
-    {
-      local: slice.model,
-      remote: remoteSlice,
-      localScreenshots: slice.screenshots,
-    },
-  ]);
+  const { modelsStatuses } = useModelStatus({
+    slices: [
+      {
+        local: slice.model,
+        remote: remoteSlice,
+        localScreenshots: slice.screenshots,
+      },
+    ],
+    customTypes: [],
+  });
 
   if (!variation) return null;
 

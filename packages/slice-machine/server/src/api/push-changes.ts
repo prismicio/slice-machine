@@ -24,7 +24,8 @@ import {
 import { onError } from "../../../lib/models/server/ApiResult";
 import type { ApiResult } from "../../../lib/models/server/ApiResult";
 import type { Component, Library } from "@slicemachine/core/build/models";
-import type {
+import {
+  getModelId,
   LocalOrRemoteCustomType,
   LocalOrRemoteSlice,
 } from "../../../lib/models/common/ModelData";
@@ -33,6 +34,10 @@ import { normalizeFrontendSlices } from "../../../lib/models/common/normalizers/
 import { normalizeFrontendCustomTypes } from "../../../lib/models/common/normalizers/customType";
 import { BackendEnvironment } from "../../../lib/models/common/Environment";
 import { PushChangesPayload } from "../../../lib/models/common/TransactionalPush";
+import { purge } from "./services/uploadScreenshotClient";
+import { uploadScreenshots as uploadScreenshotsClient } from "./services/sliceService";
+import { compareScreenshots } from "../../../lib/models/common/ModelStatus/compareSliceModels";
+import * as Sentry from "@sentry/node";
 
 type TransactionalPushBody = {
   body: PushChangesPayload;
@@ -47,151 +52,192 @@ export default async function handler({
 > {
   const { cwd, client, manifest } = env;
 
-  if (!manifest.libraries)
+  if (!manifest.libraries) {
     return {
       status: 400,
       body: null,
     };
+  }
 
-  /* -- Retrieve all the different models -- */
-  const remoteCustomTypes: CustomTypeSM[] = await client
-    .getCustomTypes()
-    .then((customTypes) =>
-      customTypes.map((customType) => CustomTypes.toSM(customType))
+  try {
+    /* -- Retrieve all the different models -- */
+    const remoteCustomTypes: CustomTypeSM[] = await client
+      .getCustomTypes()
+      .then((customTypes) =>
+        customTypes.map((customType) => CustomTypes.toSM(customType))
+      );
+
+    const remoteSlices: SliceSM[] = await client
+      .getSlices()
+      .then((slices) => slices.map((slice) => Slices.toSM(slice)));
+
+    const localCustomTypes: CustomTypeSM[] = getLocalCustomTypes(cwd);
+
+    const localLibraries: ReadonlyArray<Library<Component>> =
+      Libraries.libraries(cwd, manifest.libraries);
+
+    /* -- Assemble the models together and compute their statuses -- */
+    const slicesModels: ReadonlyArray<LocalOrRemoteSlice> =
+      normalizeFrontendSlices(localLibraries, remoteSlices);
+    const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
+      Object.values(
+        normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
+      );
+
+    /* -- Compute the request body -- */
+
+    const slicesWithStatus = slicesModels.map((s) => ({
+      ...computeModelStatus(s, true),
+    }));
+
+    const uploadAndUpdate = async (slice: SliceSM) => {
+      const libraryName =
+        localLibraries.find((library) =>
+          library.components.some(
+            (component) => component.model.id === slice.id
+          )
+        )?.name ?? "";
+      const screenshotUrlsByVariation = await uploadScreenshotsClient(
+        env,
+        slice,
+        slice.name,
+        libraryName
+      );
+      return {
+        ...slice,
+        variations: slice.variations.map((localVariation) => ({
+          ...localVariation,
+          imageUrl:
+            screenshotUrlsByVariation[localVariation.id] ??
+            localVariation.imageUrl,
+        })),
+      };
+    };
+
+    const newScreenshots = await Promise.all(
+      slicesWithStatus.map(async (s) => {
+        switch (s.status) {
+          case ModelStatus.New: {
+            const payload = Slices.fromSM(await uploadAndUpdate(s.model.local));
+            return {
+              type: ChangeTypes.SLICE_INSERT,
+              id: payload.id,
+              payload,
+            };
+          }
+          case ModelStatus.Deleted: {
+            const { err: purgeError } = await purge(env, getModelId(s.model));
+            if (purgeError) throw purgeError;
+            return {
+              type: ChangeTypes.SLICE_DELETE,
+              id: s.model.remote.id,
+              payload: { id: s.model.remote.id },
+            };
+          }
+          case ModelStatus.Modified: {
+            let sliceModel = s.model.local;
+            if (!compareScreenshots(s.model.remote, s.model.localScreenshots)) {
+              const { err: purgeError } = await purge(env, getModelId(s.model));
+              if (purgeError) throw purgeError;
+              sliceModel = await uploadAndUpdate(s.model.local);
+            } else {
+              sliceModel = {
+                ...sliceModel,
+                variations: sliceModel.variations.map((localVariation) => ({
+                  ...localVariation,
+                  imageUrl: s.model.remote.variations.find(
+                    (remoteVariation) =>
+                      remoteVariation.id === localVariation.id
+                  )?.imageUrl,
+                })),
+              };
+            }
+            const payload = Slices.fromSM(sliceModel);
+            return {
+              type: ChangeTypes.SLICE_UPDATE,
+              id: payload.id,
+              payload,
+            };
+          }
+          default:
+            return undefined;
+        }
+      })
     );
 
-  const remoteSlices: SliceSM[] = await client
-    .getSlices()
-    .then((slices) => slices.map((slice) => Slices.toSM(slice)));
-
-  const localCustomTypes: CustomTypeSM[] = getLocalCustomTypes(cwd);
-
-  const localSlices: ReadonlyArray<Library<Component>> = Libraries.libraries(
-    cwd,
-    manifest.libraries
-  );
-
-  /* -- Assemble the models together and compute their statuses -- */
-  const slicesModels: ReadonlyArray<LocalOrRemoteSlice> =
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    normalizeFrontendSlices(localSlices, remoteSlices);
-  const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
-    Object.values(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
+    const sliceChanges = newScreenshots.filter(
+      (m): m is SliceInsertChange | SliceUpdateChange | SliceDeleteChange =>
+        m !== undefined
     );
 
-  /* -- Compute the request body -- */
+    const customTypeChanges = customTypeModels.reduce(
+      (
+        acc: (
+          | CustomTypeInsertChange
+          | CustomTypeUpdateChange
+          | CustomTypeDeleteChange
+        )[],
+        customType: LocalOrRemoteCustomType
+      ) => {
+        // assessing the user is connected if we went that far in the processing
+        const statusResult = computeModelStatus(customType, true);
 
-  const sliceChanges = slicesModels.reduce(
-    (
-      acc: (SliceInsertChange | SliceUpdateChange | SliceDeleteChange)[],
-      slice: LocalOrRemoteSlice
-    ) => {
-      // assessing the user is connected if we went that far in the processing
-      const statusResult = computeModelStatus(slice, true);
+        switch (statusResult.status) {
+          case ModelStatus.New: {
+            const payload = CustomTypes.fromSM(statusResult.model.local);
+            const customTypeInsert: CustomTypeInsertChange = {
+              type: ChangeTypes.CUSTOM_TYPE_INSERT,
+              id: payload.id,
+              payload,
+            };
+            return [...acc, customTypeInsert];
+          }
 
-      switch (statusResult.status) {
-        case ModelStatus.New: {
-          const payload = Slices.fromSM(statusResult.model.local);
-          const sliceInsert: SliceInsertChange = {
-            type: ChangeTypes.SLICE_INSERT,
-            id: payload.id,
-            payload,
-          };
-          return [...acc, sliceInsert];
+          case ModelStatus.Modified: {
+            const payload = CustomTypes.fromSM(statusResult.model.local);
+            const customTypeUpdate: CustomTypeUpdateChange = {
+              type: ChangeTypes.CUSTOM_TYPE_UPDATE,
+              id: payload.id,
+              payload,
+            };
+            return [...acc, customTypeUpdate];
+          }
+
+          case ModelStatus.Deleted: {
+            const payload = CustomTypes.fromSM(statusResult.model.remote);
+            const customTypeDelete: CustomTypeDeleteChange = {
+              type: ChangeTypes.CUSTOM_TYPE_DELETE,
+              id: payload.id,
+              payload: { id: payload.id },
+            };
+            return [...acc, customTypeDelete];
+          }
+
+          default: {
+            return acc;
+          }
         }
+      },
+      []
+    );
 
-        case ModelStatus.Modified: {
-          const payload = Slices.fromSM(statusResult.model.local);
-          const sliceUpdate: SliceUpdateChange = {
-            type: ChangeTypes.SLICE_UPDATE,
-            id: payload.id,
-            payload,
-          };
-          return [...acc, sliceUpdate];
-        }
+    const newBody: BulkBody = {
+      confirmDeleteDocuments: body.confirmDeleteDocuments,
+      changes: [...sliceChanges, ...customTypeChanges],
+    };
 
-        case ModelStatus.Deleted: {
-          const payload = Slices.fromSM(statusResult.model.remote);
-          const sliceDelete: SliceDeleteChange = {
-            type: ChangeTypes.SLICE_DELETE,
-            id: payload.id,
-            payload: { id: payload.id },
-          };
-          return [...acc, sliceDelete];
-        }
+    return client
+      .bulk(newBody)
+      .then((potentialLimit: Limit | null) => ({
+        status: 200,
+        body: potentialLimit,
+      }))
+      .catch((error: ClientError) => onError(error.message, error.status));
+  } catch (e) {
+    console.error("An error happened while pushing your changes");
+    console.error(e);
+    Sentry.captureException(e);
 
-        default: {
-          return acc;
-        }
-      }
-    },
-    []
-  );
-
-  const customTypeChanges = customTypeModels.reduce(
-    (
-      acc: (
-        | CustomTypeInsertChange
-        | CustomTypeUpdateChange
-        | CustomTypeDeleteChange
-      )[],
-      customType: LocalOrRemoteCustomType
-    ) => {
-      // assessing the user is connected if we went that far in the processing
-      const statusResult = computeModelStatus(customType, true);
-
-      switch (statusResult.status) {
-        case ModelStatus.New: {
-          const payload = CustomTypes.fromSM(statusResult.model.local);
-          const customTypeInsert: CustomTypeInsertChange = {
-            type: ChangeTypes.CUSTOM_TYPE_INSERT,
-            id: payload.id,
-            payload,
-          };
-          return [...acc, customTypeInsert];
-        }
-
-        case ModelStatus.Modified: {
-          const payload = CustomTypes.fromSM(statusResult.model.local);
-          const customTypeUpdate: CustomTypeUpdateChange = {
-            type: ChangeTypes.CUSTOM_TYPE_UPDATE,
-            id: payload.id,
-            payload,
-          };
-          return [...acc, customTypeUpdate];
-        }
-
-        case ModelStatus.Deleted: {
-          const payload = CustomTypes.fromSM(statusResult.model.remote);
-          const customTypeDelete: CustomTypeDeleteChange = {
-            type: ChangeTypes.CUSTOM_TYPE_DELETE,
-            id: payload.id,
-            payload: { id: payload.id },
-          };
-          return [...acc, customTypeDelete];
-        }
-
-        default: {
-          return acc;
-        }
-      }
-    },
-    []
-  );
-
-  const newbody: BulkBody = {
-    confirmDeleteDocuments: body.confirmDeleteDocuments,
-    changes: [...sliceChanges, ...customTypeChanges],
-  };
-
-  /* -- Bulk the changes and send back the result -- */
-  return client
-    .bulk(newbody)
-    .then((potentialLimit: Limit | null) => ({
-      status: 200,
-      body: potentialLimit,
-    }))
-    .catch((error: ClientError) => onError(error.message, error.status));
+    return onError("An error happened while pushing your changes", 500);
+  }
 }

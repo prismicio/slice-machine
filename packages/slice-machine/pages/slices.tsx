@@ -24,7 +24,7 @@ import {
 } from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { useModelStatus } from "@src/hooks/useModelStatus";
+import { useModelStatus2 as useModelStatus } from "@src/hooks/useModelStatus";
 import { Button } from "@components/Button";
 import { GoPlus } from "react-icons/go";
 import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
@@ -72,8 +72,10 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
 
-  const { modelsStatuses, authStatus, isOnline } =
-    useModelStatus(frontendSlices);
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({
+    slices: frontendSlices,
+    customTypes: [],
+  });
 
   const slices = (libraries || []).map((l) => l.components).flat();
   const sliceCount = slices.length;
