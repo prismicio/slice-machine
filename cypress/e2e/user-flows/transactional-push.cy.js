@@ -144,7 +144,9 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.visit("/changes");
 
     cy.get("[data-cy=push-changes]").click();
-    cy.contains("Something went wrong when pushing your changes.");
+    cy.contains(
+      "Something went wrong when pushing your changes. Check your terminal logs."
+    );
 
     cy.clearProject();
   });
