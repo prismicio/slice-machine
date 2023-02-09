@@ -52,67 +52,68 @@ export default async function handler({
 > {
   const { cwd, client, manifest } = env;
 
-  if (!manifest.libraries)
+  if (!manifest.libraries) {
     return {
       status: 400,
       body: null,
     };
-
-  /* -- Retrieve all the different models -- */
-  const remoteCustomTypes: CustomTypeSM[] = await client
-    .getCustomTypes()
-    .then((customTypes) =>
-      customTypes.map((customType) => CustomTypes.toSM(customType))
-    );
-
-  const remoteSlices: SliceSM[] = await client
-    .getSlices()
-    .then((slices) => slices.map((slice) => Slices.toSM(slice)));
-
-  const localCustomTypes: CustomTypeSM[] = getLocalCustomTypes(cwd);
-
-  const localLibraries: ReadonlyArray<Library<Component>> = Libraries.libraries(
-    cwd,
-    manifest.libraries
-  );
-
-  /* -- Assemble the models together and compute their statuses -- */
-  const slicesModels: ReadonlyArray<LocalOrRemoteSlice> =
-    normalizeFrontendSlices(localLibraries, remoteSlices);
-  const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
-    Object.values(
-      normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
-    );
-
-  /* -- Compute the request body -- */
-
-  const slicesWithStatus = slicesModels.map((s) => ({
-    ...computeModelStatus(s, true),
-  }));
-
-  const uploadAndUpdate = async (slice: SliceSM) => {
-    const libraryName =
-      localLibraries.find((library) =>
-        library.components.some((component) => component.model.id === slice.id)
-      )?.name ?? "";
-    const screenshotUrlsByVariation = await uploadScreenshotsClient(
-      env,
-      slice,
-      slice.name,
-      libraryName
-    );
-    return {
-      ...slice,
-      variations: slice.variations.map((localVariation) => ({
-        ...localVariation,
-        imageUrl:
-          screenshotUrlsByVariation[localVariation.id] ??
-          localVariation.imageUrl,
-      })),
-    };
-  };
+  }
 
   try {
+    /* -- Retrieve all the different models -- */
+    const remoteCustomTypes: CustomTypeSM[] = await client
+      .getCustomTypes()
+      .then((customTypes) =>
+        customTypes.map((customType) => CustomTypes.toSM(customType))
+      );
+
+    const remoteSlices: SliceSM[] = await client
+      .getSlices()
+      .then((slices) => slices.map((slice) => Slices.toSM(slice)));
+
+    const localCustomTypes: CustomTypeSM[] = getLocalCustomTypes(cwd);
+
+    const localLibraries: ReadonlyArray<Library<Component>> =
+      Libraries.libraries(cwd, manifest.libraries);
+
+    /* -- Assemble the models together and compute their statuses -- */
+    const slicesModels: ReadonlyArray<LocalOrRemoteSlice> =
+      normalizeFrontendSlices(localLibraries, remoteSlices);
+    const customTypeModels: ReadonlyArray<LocalOrRemoteCustomType> =
+      Object.values(
+        normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
+      );
+
+    /* -- Compute the request body -- */
+
+    const slicesWithStatus = slicesModels.map((s) => ({
+      ...computeModelStatus(s, true),
+    }));
+
+    const uploadAndUpdate = async (slice: SliceSM) => {
+      const libraryName =
+        localLibraries.find((library) =>
+          library.components.some(
+            (component) => component.model.id === slice.id
+          )
+        )?.name ?? "";
+      const screenshotUrlsByVariation = await uploadScreenshotsClient(
+        env,
+        slice,
+        slice.name,
+        libraryName
+      );
+      return {
+        ...slice,
+        variations: slice.variations.map((localVariation) => ({
+          ...localVariation,
+          imageUrl:
+            screenshotUrlsByVariation[localVariation.id] ??
+            localVariation.imageUrl,
+        })),
+      };
+    };
+
     const newScreenshots = await Promise.all(
       slicesWithStatus.map(async (s) => {
         switch (s.status) {
