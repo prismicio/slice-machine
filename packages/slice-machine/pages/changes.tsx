@@ -38,7 +38,7 @@ const Changes: React.FunctionComponent = () => {
     return () => {
       closeModals();
     };
-  }, [closeModals]);
+  }, []);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
