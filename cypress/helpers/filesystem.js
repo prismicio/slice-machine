@@ -20,7 +20,7 @@ export function clearProject() {
  * Removed the simulator page
  */
 export function clearSimulator() {
-  cy.task("clearDir", SIMULATOR_PATH);
+  cy.task("rmrf", SIMULATOR_PATH);
 }
 
 /**
