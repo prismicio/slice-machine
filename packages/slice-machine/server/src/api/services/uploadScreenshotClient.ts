@@ -11,8 +11,7 @@ export const purge = async (
     .deleteScreenshotFolder(sliceId)
     .then(() => ({}))
     .catch(() => {
-      const msg =
-        "[slice/push] An error occurred while purging slice folder - please contact support";
+      const msg = `[slice/push] An error occurred while purging slice ${sliceId} - please contact support`;
       console.error(msg);
 
       return { err: onError(msg) };
@@ -44,8 +43,7 @@ export const upload = async (
     })
     .then((assetUrl) => ({ s3ImageUrl: assetUrl }))
     .catch((error: ClientError) => {
-      const msg =
-        "[slice/push] An error occurred while uploading screenshots - please contact support";
+      const msg = `[slice/push] An error occurred while uploading screenshots for slice ${sliceId} variation ${variationId} - please contact support`;
       console.error(msg);
       console.error(`Full error: ${error.message}`);
 

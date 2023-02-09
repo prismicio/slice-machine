@@ -26,7 +26,7 @@ const stripImageUrl = (slice: SliceSM) => ({
   variations: slice.variations.map((v) => ({ ...v, imageUrl: undefined })),
 });
 
-function compareScreenshots(
+export function compareScreenshots(
   remoteModel: SliceSM,
   localScreenshots: Partial<Record<string, Screenshot>>
 ) {
