@@ -87,6 +87,7 @@ export async function deleteSlice(req: {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   const deleteAssets = async () => {
     try {
       IO.Slice.deleteSlice(generatedSliceDirectory.value());
@@ -98,6 +99,7 @@ export async function deleteSlice(req: {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   const updateMockConfig = async () => {
     try {
       removeSliceFromMockConfig(req.env.cwd, {
@@ -114,6 +116,7 @@ export async function deleteSlice(req: {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   const updateCustomTypes = async () => {
     try {
       removeSliceFromCustomTypes(sliceId, env.cwd);
@@ -141,6 +144,7 @@ export async function deleteSlice(req: {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   const updateLibraryIndexFile = () => {
     try {
       generateLibIndexFile(targetLibrary, env.cwd, env.framework);

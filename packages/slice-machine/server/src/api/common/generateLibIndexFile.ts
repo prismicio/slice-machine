@@ -60,19 +60,16 @@ const createIndexFileForFrameWork = (
 
 export const generateLibIndexFileFromLibName = (
   env: BackendEnvironment,
-  libName: string,
+  libName: string
 ) => {
-  const libraries = Libraries.libraries(
-    env.cwd,
-    env.manifest.libraries ?? []
-  );
+  const libraries = Libraries.libraries(env.cwd, env.manifest.libraries ?? []);
   const targetLibrary = libraries.find((library) => library.name === libName);
 
   if (!targetLibrary) {
-    return
+    return;
   }
   generateLibIndexFile(targetLibrary, env.cwd, env.framework);
-}
+};
 
 export default function generateLibIndexFile(
   library: Models.Library<Models.Component>,
