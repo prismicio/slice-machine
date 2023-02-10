@@ -24,17 +24,13 @@ import {
   LimitType,
 } from "@slicemachine/client/build/models/BulkChanges";
 import axios from "axios";
-import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
+import { InvalidCustomTypeResponse } from "server/src/api/push-changes"; // move it to somewhere else
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
   "PUSH_CHANGES.RESPONSE",
   "PUSH_CHANGES.FAILURE"
-)<
-  PushChangesPayload & { customTypesWithError: LocalOrRemoteCustomType[] },
-  undefined,
-  Limit
->();
+)<PushChangesPayload, undefined, Limit | InvalidCustomTypeResponse>();
 
 const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   ...limit,
@@ -50,21 +46,22 @@ export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
   try {
-    // TODO move this to the backend
-    if (payload.customTypesWithError.length > 0) {
+    const response = (yield call(pushChanges, {
+      confirmDeleteDocuments: payload.confirmDeleteDocuments,
+    })) as SagaReturnType<typeof pushChanges>;
+
+    if (response.data?.type === "INVALID_CUSTOM_TYPES") {
+      yield put(changesPushCreator.failure(response.data));
       yield put(
         modalOpenCreator({
           modalKey: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
         })
       );
       return;
-    }
-
-    const response = (yield call(pushChanges, {
-      confirmDeleteDocuments: payload.confirmDeleteDocuments,
-    })) as SagaReturnType<typeof pushChanges>;
-
-    if (response.data?.type) {
+    } else if (
+      response.data?.type &&
+      Object.values(LimitType).includes(response.data?.type)
+    ) {
       yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
       yield put(
         modalOpenCreator({
@@ -143,7 +140,9 @@ export function* watchChangesPushSagas() {
 }
 
 // Reducer
-export type PushChangesStoreType = Readonly<Limit | null>;
+export type PushChangesStoreType = Readonly<
+  Limit | InvalidCustomTypeResponse | null
+>;
 type PushChangesActions = ActionType<typeof changesPushCreator>;
 
 export const pushChangesReducer: Reducer<

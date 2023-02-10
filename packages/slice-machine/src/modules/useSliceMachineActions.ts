@@ -465,19 +465,8 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = ({
-    confirmDeleteDocuments = false,
-    customTypesWithError = [],
-  }: {
-    confirmDeleteDocuments?: boolean;
-    customTypesWithError?: LocalOrRemoteCustomType[];
-  }) =>
-    dispatch(
-      changesPushCreator.request({
-        confirmDeleteDocuments,
-        customTypesWithError,
-      })
-    );
+  const pushChanges = (confirmDeleteDocuments = false) =>
+    dispatch(changesPushCreator.request({ confirmDeleteDocuments }));
 
   // Toaster store
   const openToaster = (

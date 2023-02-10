@@ -29,7 +29,10 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
 
   if (!isDeleteDocumentsDrawerOpen) return null;
 
-  if (!modalData?.details.customTypes) {
+  if (
+    modalData?.type === "INVALID_CUSTOM_TYPES" ||
+    !modalData?.details.customTypes
+  ) {
     openToaster("No change data", ToasterType.ERROR);
     return null;
   }
@@ -63,7 +66,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
           variant="primary"
           onClick={() => {
             closeModals();
-            pushChanges({});
+            pushChanges();
           }}
           sx={{
             fontWeight: "bold",

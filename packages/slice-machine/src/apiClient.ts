@@ -18,6 +18,7 @@ import { ComponentMocks } from "@slicemachine/core/build/models";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
 import { Limit } from "@slicemachine/client/build/models/BulkChanges";
+import { InvalidCustomTypeResponse } from "server/src/api/push-changes"; // need to move this to a common folder
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -141,7 +142,7 @@ export const saveSliceApiClient = (
 
 export const pushChanges = (
   payload: PushChangesPayload
-): Promise<AxiosResponse<Limit | null>> => {
+): Promise<AxiosResponse<InvalidCustomTypeResponse | Limit | null>> => {
   return axios.post("/api/push-changes", payload, defaultAxiosConfig);
 };
 

@@ -49,11 +49,18 @@ type TransactionalPushBody = {
   env: BackendEnvironment;
 };
 
+export type InvalidCustomTypeResponse = {
+  type: "INVALID_CUSTOM_TYPES";
+  details: {
+    customTypes: { id: string }[];
+  };
+};
+
 export default async function handler({
   body,
   env,
 }: TransactionalPushBody): Promise<
-  ApiResult<{ status: number; body: Limit | null }>
+  ApiResult<{ status: number; body: InvalidCustomTypeResponse | Limit | null }>
 > {
   const { cwd, client, manifest } = env;
 
@@ -68,6 +75,30 @@ export default async function handler({
     // Fetch all models
     const { localSlices, remoteSlices, localCustomTypes, remoteCustomTypes } =
       await fetchModels(client, cwd, manifest.libraries);
+
+    const customTypesWitherror = localCustomTypes.filter((ct) =>
+      ct.tabs.some((t) =>
+        t.sliceZone?.value.some((z) =>
+          localSlices.map(
+            (s) => !s.components.flatMap((c) => c.model.id).includes(z.key) // ct references slices not available locally
+          )
+        )
+      )
+    );
+
+    if (customTypesWitherror.length > 0) {
+      return {
+        status: 200,
+        body: {
+          type: "INVALID_CUSTOM_TYPES",
+          details: {
+            customTypes: customTypesWitherror.map((ctwe) => ({
+              id: ctwe.id,
+            })),
+          },
+        },
+      };
+    }
 
     // Compute the POST body
     const newbody: BulkBody = {

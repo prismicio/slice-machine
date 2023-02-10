@@ -20,8 +20,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   SoftDeleteDocumentsDrawer,
   HardDeleteDocumentsDrawer,
+  ReferencesErrorDrawer,
 } from "@components/DeleteDocumentsDrawer";
-import { ReferencesErrorDrawer } from "@components/DeleteDocumentsDrawer/ReferencesErrorDrawer";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -30,7 +30,6 @@ const Changes: React.FunctionComponent = () => {
     modelsStatuses,
     authStatus,
     isOnline,
-    customTypesWithError,
   } = useUnSyncChanges();
   const { pushChanges, closeModals } = useSliceMachineActions();
 
@@ -91,11 +90,7 @@ const Changes: React.FunctionComponent = () => {
           Actions={[
             <Button
               label="Push Changes"
-              onClick={() =>
-                pushChanges({
-                  customTypesWithError,
-                })
-              }
+              onClick={() => pushChanges()}
               isLoading={isSyncing}
               disabled={
                 numberOfChanges === 0 ||
