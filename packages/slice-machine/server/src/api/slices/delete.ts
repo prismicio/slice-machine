@@ -8,7 +8,7 @@ import * as IO from "../../../../lib/io";
 import { remove as removeSliceFromMockConfig } from "../../../../lib/mock/misc/fs";
 import path from "path";
 
-import generateLibrariesIndex from "../common/hooks/updateLibraries";
+import generateLibIndexFile from "../common/generateLibIndexFile";
 import { MocksConfig } from "../../../../lib/models/paths";
 import { DeleteSliceResponse } from "../../../../lib/models/common/Slice";
 import { removeSliceFromCustomTypes } from "../../../../lib/io/Slice";
@@ -38,8 +38,8 @@ export async function deleteSlice(req: {
     };
   }
   const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
-  const desiredLibrary = libraries.find((library) => library.name === libName);
-  if (!desiredLibrary) {
+  const targetLibrary = libraries.find((library) => library.name === libName);
+  if (!targetLibrary) {
     const message = `When deleting slice: ${sliceId}, the library: ${libName} was not found.`;
     console.error(`[slice/delete] ${message}`);
     return {
@@ -49,11 +49,11 @@ export async function deleteSlice(req: {
       type: "error",
     };
   }
-  const desiredSlice = desiredLibrary.components.find(
+  const targetSlice = targetLibrary.components.find(
     (component) => component.model.id === sliceId
   );
 
-  if (!desiredSlice) {
+  if (!targetSlice) {
     const message = `When deleting slice: ${sliceId}, the slice: ${sliceId} was not found.`;
     console.error(`[slice/delete] ${message}`);
     return {
@@ -66,11 +66,11 @@ export async function deleteSlice(req: {
 
   const sliceDirectory = CustomPaths(env.cwd)
     .library(libName)
-    .slice(desiredSlice.model.name);
+    .slice(targetSlice.model.name);
 
   const generatedSliceDirectory = GeneratedPaths(env.cwd)
     .library(libName)
-    .slice(desiredSlice.model.name);
+    .slice(targetSlice.model.name);
 
   try {
     IO.Slice.deleteSlice(sliceDirectory.value());
@@ -87,7 +87,6 @@ export async function deleteSlice(req: {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   const deleteAssets = async () => {
     try {
       IO.Slice.deleteSlice(generatedSliceDirectory.value());
@@ -99,11 +98,10 @@ export async function deleteSlice(req: {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   const updateMockConfig = async () => {
     try {
       removeSliceFromMockConfig(req.env.cwd, {
-        key: desiredSlice.model.name,
+        key: targetSlice.model.name,
         prefix: libName,
       });
     } catch (err) {
@@ -116,7 +114,6 @@ export async function deleteSlice(req: {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   const updateCustomTypes = async () => {
     try {
       removeSliceFromCustomTypes(sliceId, env.cwd);
@@ -144,9 +141,9 @@ export async function deleteSlice(req: {
     }
   };
 
-  const updateLibraries = () => {
+  const updateLibraryIndexFile = () => {
     try {
-      generateLibrariesIndex(env, libName);
+      generateLibIndexFile(targetLibrary, env.cwd, env.framework);
     } catch (err) {
       console.error(
         `[slice/delete] Could not update the slice library's index.js file. Check our troubleshooting guide here: ${TROUBLESHOOTING_DOCS_LINK}`
@@ -160,7 +157,7 @@ export async function deleteSlice(req: {
     updateMockConfig(),
     updateCustomTypes(),
     updateTypes(),
-    updateLibraries(),
+    updateLibraryIndexFile(),
   ]);
 
   return settledResults.some((res) => res.status === "rejected")

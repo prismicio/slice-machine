@@ -1,9 +1,9 @@
 import MockedBackendEnv from "../../__mocks__/backendEnvironment";
 import { MockLibraryInfo } from "../../__mocks__/libraryState";
-import generateLibraryIndex from "../../../server/src/api/common/hooks/updateLibraries";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { Models } from "@slicemachine/core";
 import { vol } from "memfs";
+import { generateLibIndexFileFromLibName } from "server/src/api/common/generateLibIndexFile";
 
 jest.mock(`fs`, () => {
   const { vol } = jest.requireActual("memfs");
@@ -14,7 +14,7 @@ jest.mock(`@slicemachine/core/build/libraries`, () => {
   const actualCore = jest.requireActual("@slicemachine/core/build/libraries");
   return {
     ...actualCore,
-    libraries: (cwd: string, libs: string[]) =>
+    libraries: (_: string, libs: string[]) =>
       libs.map((lib) => MockLibraryInfo(lib)),
   };
 });
@@ -48,7 +48,7 @@ describe("updateLibraries", () => {
       framework: Models.Frameworks.next,
     };
 
-    generateLibraryIndex(env, "@/slices");
+    generateLibIndexFileFromLibName(env, "@/slices");
 
     const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedIndexFile);
@@ -60,7 +60,7 @@ describe("updateLibraries", () => {
       framework: Models.Frameworks.svelte,
     };
 
-    generateLibraryIndex(env, "@/slices");
+    generateLibIndexFileFromLibName(env, "@/slices");
 
     const index = vol.readFileSync("/test/slices/index.js", "utf8");
     expect(index).toEqual(expectedSvelteIndexFile);

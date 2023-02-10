@@ -13,7 +13,7 @@ import Files from "@slicemachine/core/build/node-utils/files";
 import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 
-import generateLibrariesIndex from "../common/hooks/updateLibraries";
+import { generateLibIndexFileFromLibName } from "../common/generateLibIndexFile";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../../../../lib/io";
 import { ComponentMocks, Slices } from "@slicemachine/core/build/models";
@@ -81,7 +81,7 @@ export default function handler({
 
   console.log("[slice/save]: Slice was saved!");
 
-  generateLibrariesIndex(env, from);
+  generateLibIndexFileFromLibName(env, from);
   console.log("[slice/save]: Libraries index files regenerated!");
 
   return {};

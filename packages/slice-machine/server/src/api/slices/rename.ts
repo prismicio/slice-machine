@@ -7,8 +7,9 @@ import {
   GeneratedPaths,
 } from "@slicemachine/core/build/node-utils/paths";
 import * as IO from "../../../../lib/io";
-import generateLibrariesIndex from "../common/hooks/updateLibraries";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import generateLibIndexFile from "../common/generateLibIndexFile";
+import { Component, Library } from "@slicemachine/core/build/models";
 
 interface RenameSliceBody {
   sliceId: string;
@@ -67,6 +68,24 @@ export function renameSlice(req: {
 
   IO.Slice.renameSlice(sliceDirectory.model(), newSliceName);
 
+  const prePatchedLibrary: Library<Component> = {
+    ...targetLibrary,
+    components: targetLibrary.components.map((comp) => {
+      if (comp.model.id === sliceId) {
+        return {
+          ...comp,
+          model: {
+            ...comp.model,
+            id: sliceId,
+            name: newSliceName,
+          },
+        };
+      }
+      return comp;
+    }),
+  };
+  generateLibIndexFile(prePatchedLibrary, env.cwd, env.framework);
+
   fs.renameSync(
     sliceDirectory.value(),
     path.join(CustomPaths(env.cwd).library(libName).value(), newSliceName)
@@ -93,8 +112,6 @@ export function renameSlice(req: {
   }
 
   IO.Types.upsert(env);
-
-  generateLibrariesIndex(env, libName);
 
   return targetSlice;
 }
