@@ -49,4 +49,44 @@ export class SlicePage {
     cy.contains("Simulate Slice").click();
     return this;
   }
+
+  /**
+   * add a new variation through the variation modal.
+   *
+   * @param {string} variationName Name of the variation.
+   */
+  addVariation(variationName) {
+    cy.get("[aria-label='Expand variations']").click({ force: true });
+    cy.contains("button", "Add new variation").click();
+
+    cy.get("[aria-modal]").within(() => {
+      cy.getInputByLabel("Variation name*").type(variationName);
+      cy.contains("button", "Submit").click();
+    });
+    cy.get("[aria-modal]").should("not.exist");
+
+    return this;
+  }
+
+  /**
+   * add a new widget through the modal form.
+   *
+   * @param {string} name Name of the widget field.
+   * @param {string} type Type of the widget.
+   */
+  addNewWidgetField(name, type) {
+    cy.contains("button", "Add a new Field").click();
+    cy.get("[aria-label='Widget Form Modal']").should("be.visible");
+
+    cy.contains("div", type).click();
+
+    const nameInput = '[data-cy="new-field-name-input"]';
+
+    cy.get(nameInput).clear();
+    cy.get(nameInput).type(name).blur();
+
+    cy.contains(/^Add$/).click();
+
+    return this;
+  }
 }
