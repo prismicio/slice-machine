@@ -10,6 +10,8 @@ import { CommonDeleteDocumentsDrawer } from "./CommonDeleteDocumentsDrawer";
 import { isRemoteOnly } from "@lib/models/common/ModelData";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { ToasterType } from "@src/modules/toaster";
+import { getModelId } from "@lib/models/common/ModelData";
+import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 
 const ConfirmationDialogue: React.FC<{
   isConfirmed: boolean;
@@ -40,7 +42,7 @@ const ConfirmationDialogue: React.FC<{
 );
 
 export const SoftDeleteDocumentsDrawer: React.FunctionComponent = () => {
-  const [hasConfirmed, setHasConfirmed] = useState(false);
+  const [confirmDeleteDocuments, setConfirmDeleteDocuments] = useState(false);
 
   const { isDeleteDocumentsDrawerOpen, remoteOnlyCustomTypes, modalData } =
     useSelector((store: SliceMachineStoreType) => ({
@@ -61,20 +63,36 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent = () => {
     return null;
   }
 
+  const associatedDocumentsCards = modalData.details.customTypes.map(
+    (customTypeDetail) => {
+      const customType = remoteOnlyCustomTypes.find(
+        (customType) => getModelId(customType) === customTypeDetail.id
+      );
+      if (customType === undefined) return null;
+
+      return (
+        <AssociatedDocumentsCard
+          isOverLimit
+          key={customTypeDetail.id}
+          ctName={customType.remote.label ?? customType.remote.id}
+          link={customTypeDetail.url}
+          numberOfDocuments={customTypeDetail.numberOfDocuments}
+        />
+      );
+    }
+  );
+
   return (
     <CommonDeleteDocumentsDrawer
-      modalData={modalData}
-      remoteOnlyCustomTypes={remoteOnlyCustomTypes}
       isOpen={isDeleteDocumentsDrawerOpen}
-      isOverLimit={false}
       title="Confirm deletion"
       footer={
         <>
           <ConfirmationDialogue
             onToggle={() => {
-              setHasConfirmed(!hasConfirmed);
+              setConfirmDeleteDocuments(!confirmDeleteDocuments);
             }}
-            isConfirmed={hasConfirmed}
+            isConfirmed={confirmDeleteDocuments}
             sx={{ mb: 10 }}
           />
           <Button
@@ -82,9 +100,9 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent = () => {
             variant="primary"
             onClick={() => {
               closeModals();
-              pushChanges(hasConfirmed);
+              pushChanges({ confirmDeleteDocuments });
             }}
-            disabled={!hasConfirmed}
+            disabled={!confirmDeleteDocuments}
             sx={{
               fontWeight: "bold",
               color: "white",
@@ -106,6 +124,7 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent = () => {
             associated Documents, which will also be deleted. This might create
             broken links in your repository.
           </Text>
+          {associatedDocumentsCards}
         </>
       }
     />

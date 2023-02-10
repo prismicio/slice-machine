@@ -10,6 +10,7 @@ import {
   RemoteOnlySlice,
   getModelId,
   isRemoteOnly,
+  hasLocal,
 } from "@lib/models/common/ModelData";
 
 const unSyncStatuses = [
@@ -21,6 +22,7 @@ const unSyncStatuses = [
 export interface UnSyncChanges extends ModelStatusInformation {
   unSyncedSlices: ComponentUI[];
   unSyncedCustomTypes: LocalOrRemoteCustomType[];
+  customTypesWithError: LocalOrRemoteCustomType[];
 }
 
 // ComponentUI are manipulated on all the relevant pages
@@ -77,11 +79,23 @@ export const useUnSyncChanges = (): UnSyncChanges => {
       )
   );
 
+  // Works, make more readable plz
+  const customTypesWithError = customTypes.filter(hasLocal).filter((ct) =>
+    ct.local.tabs.some((t) =>
+      t.sliceZone?.value.some(
+        (z) =>
+          deletedComponents.map((c) => c.model.id).includes(z.key) || // linked slice about to be deleted
+          !components.map((c) => c.model.id).includes(z.key) // or linked slice doesn't exist at all, already pushed?
+      )
+    )
+  );
+
   return {
     unSyncedSlices,
     unSyncedCustomTypes,
     modelsStatuses,
     authStatus,
     isOnline,
+    customTypesWithError,
   };
 };

@@ -21,6 +21,7 @@ import {
   SoftDeleteDocumentsDrawer,
   HardDeleteDocumentsDrawer,
 } from "@components/DeleteDocumentsDrawer";
+import { ReferencesErrorDrawer } from "@components/DeleteDocumentsDrawer/ReferencesErrorDrawer";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -29,6 +30,7 @@ const Changes: React.FunctionComponent = () => {
     modelsStatuses,
     authStatus,
     isOnline,
+    customTypesWithError,
   } = useUnSyncChanges();
   const { pushChanges, closeModals } = useSliceMachineActions();
 
@@ -89,7 +91,11 @@ const Changes: React.FunctionComponent = () => {
           Actions={[
             <Button
               label="Push Changes"
-              onClick={() => pushChanges()}
+              onClick={() =>
+                pushChanges({
+                  customTypesWithError,
+                })
+              }
               isLoading={isSyncing}
               disabled={
                 numberOfChanges === 0 ||
@@ -108,6 +114,7 @@ const Changes: React.FunctionComponent = () => {
       </Box>
       <SoftDeleteDocumentsDrawer />
       <HardDeleteDocumentsDrawer />
+      <ReferencesErrorDrawer />
     </Container>
   );
 };

@@ -79,6 +79,7 @@ import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -464,8 +465,19 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = (confirmDeleteDocuments = false) =>
-    dispatch(changesPushCreator.request({ confirmDeleteDocuments }));
+  const pushChanges = ({
+    confirmDeleteDocuments = false,
+    customTypesWithError = [],
+  }: {
+    confirmDeleteDocuments?: boolean;
+    customTypesWithError?: LocalOrRemoteCustomType[];
+  }) =>
+    dispatch(
+      changesPushCreator.request({
+        confirmDeleteDocuments,
+        customTypesWithError,
+      })
+    );
 
   // Toaster store
   const openToaster = (

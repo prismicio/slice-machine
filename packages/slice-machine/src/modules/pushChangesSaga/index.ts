@@ -24,12 +24,17 @@ import {
   LimitType,
 } from "@slicemachine/client/build/models/BulkChanges";
 import axios from "axios";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
   "PUSH_CHANGES.RESPONSE",
   "PUSH_CHANGES.FAILURE"
-)<PushChangesPayload, undefined, Limit>();
+)<
+  PushChangesPayload & { customTypesWithError: LocalOrRemoteCustomType[] },
+  undefined,
+  Limit
+>();
 
 const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   ...limit,
@@ -45,9 +50,19 @@ export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
   try {
-    const response = (yield call(pushChanges, payload)) as SagaReturnType<
-      typeof pushChanges
-    >;
+    // TODO move this to the backend
+    if (payload.customTypesWithError.length > 0) {
+      yield put(
+        modalOpenCreator({
+          modalKey: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+        })
+      );
+      return;
+    }
+
+    const response = (yield call(pushChanges, {
+      confirmDeleteDocuments: payload.confirmDeleteDocuments,
+    })) as SagaReturnType<typeof pushChanges>;
 
     if (response.data?.type) {
       yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
