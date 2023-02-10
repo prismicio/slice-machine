@@ -23,7 +23,7 @@ import { handler as pushCustomType } from "./custom-types/push";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
-import pushChanges from "./push-changes";
+import pushChanges from "./pushChanges";
 
 import sentryHandler, { plainTextBodyParser } from "./sentry";
 
