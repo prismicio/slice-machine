@@ -21,7 +21,7 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
     cy.setSliceMachineUserContext({});
     cy.createSlice(slice.library, slice.id, slice.name);
 
-    cy.addVariationToSlice(slice.newVariationName);
+    slicePage.addVariation(slice.newVariationName);
     cy.saveSliceModifications();
   });
 
