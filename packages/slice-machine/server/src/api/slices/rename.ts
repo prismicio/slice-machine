@@ -1,12 +1,14 @@
-import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import fs from "fs";
+import path from "path";
+
 import * as Libraries from "@slicemachine/core/build/libraries";
 import {
   CustomPaths,
   GeneratedPaths,
 } from "@slicemachine/core/build/node-utils/paths";
 import * as IO from "../../../../lib/io";
-import fs from "fs";
 import generateLibrariesIndex from "../common/hooks/updateLibraries";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 
 interface RenameSliceBody {
   sliceId: string;
@@ -31,8 +33,8 @@ export function renameSlice(req: {
     };
   }
   const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
-  const desiredLibrary = libraries.find((library) => library.name === libName);
-  if (!desiredLibrary) {
+  const targetLibrary = libraries.find((library) => library.name === libName);
+  if (!targetLibrary) {
     const message = `[renameSlice] When renaming slice: ${sliceId}, the library: ${libName} was not found.`;
     console.error(message);
     return {
@@ -41,11 +43,11 @@ export function renameSlice(req: {
       reason: message,
     };
   }
-  const desiredSlice = desiredLibrary.components.find(
+  const targetSlice = targetLibrary.components.find(
     (component) => component.model.id === sliceId
   );
 
-  if (!desiredSlice) {
+  if (!targetSlice) {
     const message = `[renameSlice] When renaming slice: ${sliceId}, the slice: ${sliceId} was not found.`;
     console.error(message);
     return {
@@ -57,27 +59,42 @@ export function renameSlice(req: {
 
   const sliceDirectory = CustomPaths(env.cwd)
     .library(libName)
-    .slice(desiredSlice.model.name);
+    .slice(targetSlice.model.name);
 
   const generatedSliceDirectory = GeneratedPaths(env.cwd)
     .library(libName)
-    .slice(desiredSlice.model.name);
+    .slice(targetSlice.model.name);
 
   IO.Slice.renameSlice(sliceDirectory.model(), newSliceName);
 
   fs.renameSync(
     sliceDirectory.value(),
-    `${CustomPaths(env.cwd).library(libName).value()}/${newSliceName}`
+    path.join(CustomPaths(env.cwd).library(libName).value(), newSliceName)
   );
+
+  const newPathToSliceDirectory = GeneratedPaths(env.cwd)
+    .library(libName)
+    .slice(newSliceName);
 
   fs.renameSync(
     generatedSliceDirectory.value(),
-    `${GeneratedPaths(env.cwd).library(libName).value()}/${newSliceName}`
+    newPathToSliceDirectory.value()
   );
+
+  if (fs.existsSync(newPathToSliceDirectory.stories())) {
+    const prevString = fs.readFileSync(
+      newPathToSliceDirectory.stories(),
+      "utf-8"
+    );
+    fs.writeFileSync(
+      newPathToSliceDirectory.stories(),
+      prevString.replaceAll(targetSlice.model.name, newSliceName)
+    );
+  }
 
   IO.Types.upsert(env);
 
   generateLibrariesIndex(env, libName);
 
-  return desiredSlice;
+  return targetSlice;
 }
