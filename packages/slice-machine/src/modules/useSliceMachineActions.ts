@@ -118,12 +118,12 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
   const openDeleteDocumentsDrawer = () =>
     dispatch(
-      modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER })
+      modalOpenCreator({ modalKey: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER })
     );
   const openDeleteDocumentsDrawerOverLimit = () =>
     dispatch(
       modalOpenCreator({
-        modalKey: ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT,
+        modalKey: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
       })
     );
   const openSimulatorSetupModal = () =>

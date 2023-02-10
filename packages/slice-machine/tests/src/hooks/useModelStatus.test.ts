@@ -35,10 +35,10 @@ describe("[useModelStatus hook]", () => {
     jest.spyOn(networkHook, "useNetwork").mockImplementation(() => true); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.AUTHORIZED });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {
@@ -54,10 +54,10 @@ describe("[useModelStatus hook]", () => {
     jest.spyOn(networkHook, "useNetwork").mockImplementation(() => false); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.AUTHORIZED });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {
@@ -73,10 +73,10 @@ describe("[useModelStatus hook]", () => {
     jest.spyOn(networkHook, "useNetwork").mockImplementation(() => true); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.UNAUTHORIZED });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {
@@ -92,10 +92,10 @@ describe("[useModelStatus hook]", () => {
     jest.spyOn(networkHook, "useNetwork").mockImplementation(() => true); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.FORBIDDEN });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {

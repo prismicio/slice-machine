@@ -1,5 +1,5 @@
-import { compareCustomTypeModels } from "./compareCustomTypeModels";
-import { compareSliceModels } from "./compareSliceModels";
+import { compareCustomTypeLocalToRemote } from "./compareCustomTypeModels";
+import { compareSliceLocalToRemote } from "./compareSliceModels";
 import {
   type LocalOrRemoteCustomType,
   type LocalOrRemoteSlice,
@@ -21,6 +21,12 @@ export enum ModelStatus {
   Deleted = "DELETED", // model that exist remotely but not locally
   Unknown = "UNKNOWN", // unable to detect the status of a model
 }
+
+const isSliceModel = (
+  model: LocalAndRemoteSlice | LocalAndRemoteCustomType
+): model is LocalAndRemoteSlice => {
+  return "variations" in model.local && "variations" in model.remote;
+};
 
 export function computeModelStatus(
   model: LocalOrRemoteSlice,
@@ -93,6 +99,8 @@ export function computeModelStatus(
   // If there is no remote model then it's a new model created locally waiting to be pushed
   if (!hasRemote(model)) return { status: ModelStatus.New, model };
 
-  if ("localScreenshots" in model) return compareSliceModels(model);
-  return compareCustomTypeModels(model);
+  const status = isSliceModel(model)
+    ? compareSliceLocalToRemote(model)
+    : compareCustomTypeLocalToRemote(model);
+  return { status, model };
 }

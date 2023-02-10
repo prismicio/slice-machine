@@ -40,12 +40,8 @@ describe("I am an existing SM user and I want to push local changes", () => {
     });
   }
 
-  before("Cleanup local data and create a new slice", () => {
-    cy.clearProject();
-    cy.setSliceMachineUserContext({});
-  });
-
   beforeEach("Start from the Slice page", () => {
+    cy.clearProject();
     cy.setSliceMachineUserContext({});
   });
 

@@ -17,8 +17,10 @@ import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import DeleteDocumentsDrawer from "@components/DeleteDocumentsDrawer";
-import DeleteDocumentsDrawerOverLimit from "@components/DeleteDocumentsDrawer/DeleteDocumentsDrawerOverLimit";
+import {
+  SoftDeleteDocumentsDrawer,
+  HardDeleteDocumentsDrawer,
+} from "@components/DeleteDocumentsDrawer";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -104,8 +106,8 @@ const Changes: React.FunctionComponent = () => {
         />
         {PageContent}
       </Box>
-      <DeleteDocumentsDrawer />
-      <DeleteDocumentsDrawerOverLimit />
+      <SoftDeleteDocumentsDrawer />
+      <HardDeleteDocumentsDrawer />
     </Container>
   );
 };

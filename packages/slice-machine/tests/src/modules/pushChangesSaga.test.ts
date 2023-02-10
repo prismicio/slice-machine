@@ -91,8 +91,8 @@ describe("[pushChanges module]", () => {
     });
 
     test.each([
-      [LimitType.HARD, ModalKeysEnum.DELETE_DOCUMENTS_DRAWER_OVER_LIMIT],
-      [LimitType.SOFT, ModalKeysEnum.DELETE_DOCUMENTS_DRAWER],
+      [LimitType.HARD, ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER],
+      [LimitType.SOFT, ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER],
     ])(
       "Displays delete limit modal when there is a %s limit response",
       (limitType, expectedModalKey) => {
