@@ -19,7 +19,7 @@ describe("Scenario 008", () => {
     cy.setSliceMachineUserContext({});
   });
 
-  it("creates slice and tests the editor mocks", () => {
+  it("edits the different mock fields available in the editor", () => {
     cy.createSlice(SLICE.library, SLICE.id, SLICE.name);
 
     slice
@@ -58,7 +58,7 @@ describe("Scenario 008", () => {
     slice.openSimulator();
 
     // Wait for the editor to be fully loaded
-    cy.contains("label > span", "Title").should("be.visible");
+    editor.contains("Title").should("be.visible");
 
     simulator.changeVariations("Default");
     cy.contains("Scenario008 • Default").should("be.visible");
