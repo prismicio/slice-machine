@@ -6,7 +6,6 @@ const fs = require("fs");
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const mime = require("mime");
 
-import { handler as pushSlice } from "./slices/push";
 import saveSlice from "./slices/save";
 import { renameSlice } from "./slices/rename";
 import createSlice from "./slices/create/index";
@@ -18,21 +17,24 @@ import state from "./state";
 import checkSimulator from "./simulator";
 import saveCustomType from "./custom-types/save";
 import renameCustomType from "./custom-types/rename";
-import { handler as pushCustomType } from "./custom-types/push";
+import deleteCustomType from "./custom-types/delete";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+import pushChanges from "./push-changes";
 
 import sentryHandler, { plainTextBodyParser } from "./sentry";
 
 import { RequestWithEnv, WithEnv } from "./http/common";
 import {
+  isError,
   ScreenshotRequest,
   ScreenshotResponse,
 } from "../../../lib/models/common/Screenshots";
 import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
 import { isApiError } from "../../../lib/models/server/ApiResult";
 import tracking from "./tracking";
+import { deleteSlice } from "./slices/delete";
 import changelog from "./changelog";
 
 router.use(
@@ -88,7 +90,7 @@ router.post(
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await screenshot(req.body);
-    if (payload.err) {
+    if (isError(payload)) {
       return res.status(400).json(payload);
     }
     return res.status(200).json(payload);
@@ -133,8 +135,8 @@ router.post(
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await saveSlice(req);
-    return res.status(200).json(payload);
+    const payload = saveSlice(req);
+    return Promise.resolve(res.status(200).json(payload));
   })
 );
 
@@ -155,26 +157,30 @@ router.post(
   })
 );
 
-router.get(
-  "/slices/push",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const { statusCode, screenshots } = await pushSlice(req);
-    return res.status(statusCode).json(screenshots);
-  })
-);
-
 router.put(
   "/slices/rename",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = renameSlice(req);
+    if (isApiError(payload)) {
+      return Promise.resolve(res.status(payload.status).json(payload));
+    }
+
+    return Promise.resolve(res.status(200).json(payload));
+  })
+);
+
+router.delete(
+  "/slices/delete",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   WithEnv(async function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await renameSlice(req);
+    const payload = await deleteSlice(req);
     if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
     }
@@ -222,15 +228,37 @@ router.patch(
   })
 );
 
-router.get(
-  "/custom-types/push",
+router.delete(
+  "/custom-types/delete",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   WithEnv(async function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const { statusCode } = await pushCustomType(req);
-    return res.sendStatus(statusCode);
+    const payload = await deleteCustomType(req);
+
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
+    }
+
+    return res.status(200).json(payload);
+  })
+);
+
+router.post(
+  "/push-changes",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const result = await pushChanges(req);
+
+    if (isApiError(result)) {
+      return res.status(result.status).json(result);
+    }
+
+    return res.status(result.status).json(result.body);
   })
 );
 

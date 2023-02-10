@@ -16,6 +16,8 @@ import {
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ComponentMocks } from "@slicemachine/core/build/models";
 import { PackageChangelog } from "@lib/models/common/versions";
+import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
+import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -61,11 +63,11 @@ export const renameCustomType = (
   );
 };
 
-export const pushCustomType = (
+export const deleteCustomType = (
   customTypeId: string
 ): Promise<AxiosResponse> => {
-  return axios.get(
-    `/api/custom-types/push?id=${customTypeId}`,
+  return axios.delete(
+    `/api/custom-types/delete?id=${customTypeId}`,
     defaultAxiosConfig
   );
 };
@@ -98,6 +100,20 @@ export const renameSlice = (
   return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
+export const deleteSlice = (
+  sliceId: string,
+  libName: string
+): Promise<AxiosResponse> => {
+  const requestBody = {
+    sliceId,
+    libName,
+  };
+  return axios.delete(`/api/slices/delete`, {
+    ...defaultAxiosConfig,
+    data: requestBody,
+  });
+};
+
 export const generateSliceScreenshotApiClient = (
   params: ScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
@@ -123,15 +139,10 @@ export const saveSliceApiClient = (
   return axios.post("/api/slices/save", requestBody, defaultAxiosConfig);
 };
 
-export const pushSliceApiClient = (
-  component: ComponentUI
-): Promise<Record<string, string | null>> => {
-  return axios
-    .get<Record<string, string | null>>(
-      `/api/slices/push?sliceName=${component.model.name}&from=${component.from}`,
-      defaultAxiosConfig
-    )
-    .then((response) => response.data);
+export const pushChanges = (
+  payload: PushChangesPayload
+): Promise<AxiosResponse<Limit | null>> => {
+  return axios.post("/api/push-changes", payload, defaultAxiosConfig);
 };
 
 /** Auth Routes **/

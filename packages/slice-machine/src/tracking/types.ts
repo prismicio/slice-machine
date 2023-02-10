@@ -13,7 +13,6 @@ export enum EventNames {
   CustomTypeFieldAdded = "SliceMachine Custom Type Field Added",
   CustomTypeSliceZoneUpdated = "SliceMachine Slicezone Updated",
   CustomTypeSaved = "SliceMachine Custom Type Saved",
-  CustomTypePushed = "SliceMachine Custom Type Pushed",
   SliceCreated = "SliceMachine Slice Created",
   OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
   OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
@@ -158,15 +157,6 @@ export interface CustomTypeSaved extends BaseTrackingEvent {
   };
 }
 
-export interface CustomTypePushed extends BaseTrackingEvent {
-  name: EventNames.CustomTypePushed;
-  props: {
-    id: string;
-    name: string;
-    type: "single" | "repeatable";
-  };
-}
-
 export interface CreateSlice extends BaseTrackingEvent {
   name: EventNames.SliceCreated;
   props: {
@@ -220,7 +210,6 @@ export type TrackingEvents =
   | CustomTypeFieldAdded
   | CustomTypeSliceZoneUpdated
   | CustomTypeSaved
-  | CustomTypePushed
   | CreateSlice
   | SliceSimulatorOpen
   | SliceSimulatorSetup

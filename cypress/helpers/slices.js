@@ -27,27 +27,23 @@ export function createSlice(lib, id, name) {
 /**
  * Rename a Slice and assert files are modified.
  *
- * @param {string} lib Slice library where the slice should be created.
  * @param {string} actualName Current name of the slice.
  * @param {string} newName New name to use for the slice.
  */
-export function renameSlice(lib, actualName, newName) {
-  cy.visit(`/${lib}/${actualName}/default`);
+export function renameSlice(actualName, newName) {
+  cy.visit(`/slices`);
+  cy.waitUntil(() => cy.get("[data-cy=slice-action-icon]"));
 
-  // edit slice name
-  cy.get('[data-cy="edit-slice-name"]').click();
+  cy.get('[data-cy="slice-action-icon"]').click();
+  cy.get("[data-cy=slice-action-rename]").should("be.visible");
+  cy.get("[data-cy=slice-action-rename]").click();
+
   cy.get("[data-cy=rename-slice-modal]").should("be.visible");
   cy.get('[data-cy="slice-name-input"]').should("have.value", actualName);
   cy.get('[data-cy="slice-name-input"]').clear().type(`${newName}`);
   cy.get("[data-cy=rename-slice-modal]").submit();
-  cy.location("pathname", { timeout: 20000 }).should(
-    "eq",
-    `/${lib}/${newName}/default`
-  );
-  cy.get('[data-cy="slice-and-variation-name-header"]').contains(
-    `/ ${newName} / Default`
-  );
   cy.get("[data-cy=rename-slice-modal]").should("not.exist");
+  cy.contains(newName).should("exist");
   cy.readFile(SLICE_MODEL(newName)).then((model) => {
     expect(JSON.stringify(model)).to.contain(newName);
   });

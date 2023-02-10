@@ -72,7 +72,8 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.contains("Repeatable Key Text Field");
   });
 
-  it("Push the newly created custom type and slice", () => {
+  // TODO: unskip when transactional push is implemented
+  it.skip("Push the newly created custom type and slice", () => {
     cy.pushLocalChanges(2);
   });
 
@@ -90,7 +91,8 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.contains(sliceName);
   });
 
-  it("Push the custom type with the Slice associated", () => {
+  // TODO: unskip when transactional push is implemented
+  it.skip("Push the custom type with the Slice associated", () => {
     cy.pushLocalChanges(1);
   });
 

@@ -1,0 +1,10 @@
+div.legacySliceTooltipContainer {
+  border-radius: 6px;
+  width: 230px;
+  text-align: center;
+  padding: 8px;
+}
+
+div.legacySliceTooltipContainer > a {
+  color: white;
+}

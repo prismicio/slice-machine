@@ -19,11 +19,16 @@ import {
 import ServerState from "@models/server/ServerState";
 import {
   createCustomTypeCreator,
+  deleteCustomTypeCreator,
   renameCustomTypeCreator,
 } from "./availableCustomTypes";
-import { createSliceCreator, renameSliceCreator } from "./slices";
+import {
+  createSliceCreator,
+  deleteSliceCreator,
+  renameSliceCreator,
+} from "./slices";
 import { UserContextStoreType } from "./userContext/types";
-import { openToasterCreator, ToasterType } from "./toaster";
+import { GenericToastTypes, openToasterCreator } from "./toaster";
 import {
   initCustomTypeStoreCreator,
   createTabCreator,
@@ -67,16 +72,9 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "./screenshots/actions";
-import {
-  pushCustomTypeCreator,
-  pushSliceCreator,
-} from "./pushChangesSaga/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
-import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 import { changesPushCreator } from "./pushChangesSaga";
-import { SyncError } from "@src/models/SyncError";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
 import { saveSliceMockCreator } from "./simulator";
@@ -113,6 +111,21 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
+
+  const openDeleteCustomTypeModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+  const openDeleteSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+  const openDeleteDocumentsDrawer = () =>
+    dispatch(
+      modalOpenCreator({ modalKey: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER })
+    );
+  const openDeleteDocumentsDrawerOverLimit = () =>
+    dispatch(
+      modalOpenCreator({
+        modalKey: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+      })
+    );
   const openSimulatorSetupModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
@@ -147,6 +160,13 @@ const useSliceMachineActions = () => {
         newCustomTypeName,
       })
     );
+  const deleteCustomType = (customTypeId: string, customTypeName: string) =>
+    dispatch(
+      deleteCustomTypeCreator.request({
+        customTypeId,
+        customTypeName,
+      })
+    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -155,7 +175,6 @@ const useSliceMachineActions = () => {
     mockConfig: CustomTypeMockConfig
   ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
-  const pushCustomType = () => dispatch(pushCustomTypeCreator.request());
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) =>
@@ -413,18 +432,6 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const pushSlice = (
-    component: ComponentUI,
-    onPush: (data: SliceBuilderState) => void
-  ) => {
-    dispatch(
-      pushSliceCreator.request({
-        component,
-        onPush,
-      })
-    );
-  };
-
   const copyVariationSlice = (
     key: string,
     name: string,
@@ -439,40 +446,32 @@ const useSliceMachineActions = () => {
   const renameSlice = (
     sliceId: string,
     newSliceName: string,
-    libName: string,
-    variationId: string
+    libName: string
   ) =>
     dispatch(
       renameSliceCreator.request({
         sliceId,
         newSliceName,
         libName,
-        variationId,
+      })
+    );
+  const deleteSlice = (sliceId: string, sliceName: string, libName: string) =>
+    dispatch(
+      deleteSliceCreator.request({
+        sliceId,
+        sliceName,
+        libName,
       })
     );
 
-  const pushChanges = (
-    unSyncedSlices: ReadonlyArray<ComponentUI>,
-    unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
-    modelStatuses: ModelStatusInformation["modelsStatuses"],
-    onChangesPushed: (pushed: string | null) => void,
-    handleError: (e: SyncError | null) => void
-  ) =>
-    dispatch(
-      changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
-      })
-    );
+  const pushChanges = (confirmDeleteDocuments = false) =>
+    dispatch(changesPushCreator.request({ confirmDeleteDocuments }));
 
   // Toaster store
   const openToaster = (
-    message: string,
-    type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
-  ) => dispatch(openToasterCreator({ message, type }));
+    content: string | React.ReactNode,
+    type: GenericToastTypes
+  ) => dispatch(openToasterCreator({ content, type }));
 
   // Simulator
   const saveSliceMock = (payload: SaveSliceMockRequest) =>
@@ -500,6 +499,8 @@ const useSliceMachineActions = () => {
     checkSimulatorSetup,
     connectToSimulatorFailure,
     connectToSimulatorSuccess,
+    openDeleteDocumentsDrawer,
+    openDeleteDocumentsDrawerOverLimit,
     connectToSimulatorIframe,
     refreshState,
     finishOnboarding,
@@ -511,9 +512,9 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     createCustomType,
     renameCustomType,
+    deleteCustomType,
     initCustomTypeStore,
     saveCustomType,
-    pushCustomType,
     createCustomTypeTab,
     updateCustomTypeTab,
     deleteCustomTypeTab,
@@ -542,10 +543,10 @@ const useSliceMachineActions = () => {
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
     saveSlice,
-    pushSlice,
     copyVariationSlice,
     createSlice,
     renameSlice,
+    deleteSlice,
     sendAReview,
     skipReview,
     setUpdatesViewed,
@@ -554,6 +555,8 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
     openScreenshotPreviewModal,
+    openDeleteCustomTypeModal,
+    openDeleteSliceModal,
     openSimulatorSetupModal,
     openCreateSliceModal,
     openRenameSliceModal,

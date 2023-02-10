@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
 
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
@@ -90,19 +90,20 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   onCreateSliceZone,
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
-  const { libraries, frontendSlices } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      libraries: getLibraries(store),
-      frontendSlices: getFrontendSlices(store),
-    })
+  const { libraries, slices } = useSelector((store: SliceMachineStoreType) => ({
+    libraries: getLibraries(store),
+    slices: getFrontendSlices(store),
+  }));
+
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({ slices });
+
+  const { availableSlices, slicesInSliceZone, notFound } = useMemo(
+    () =>
+      sliceZone
+        ? mapAvailableAndSharedSlices(sliceZone, libraries)
+        : { availableSlices: [], slicesInSliceZone: [], notFound: [] },
+    [sliceZone, libraries]
   );
-
-  const { modelsStatuses, authStatus, isOnline } =
-    useModelStatus(frontendSlices);
-
-  const { availableSlices, slicesInSliceZone, notFound } = sliceZone
-    ? mapAvailableAndSharedSlices(sliceZone, libraries)
-    : { availableSlices: [], slicesInSliceZone: [], notFound: [] };
 
   useEffect(() => {
     if (notFound?.length) {

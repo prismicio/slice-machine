@@ -23,4 +23,8 @@ module.exports = {
     "eslint-config-prettier",
   ],
   ignorePatterns: ["build", "templates", "**/tests/**", "helpers/**"],
+  rules: {
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
+    "@typescript-eslint/strict-boolean-expressions": "warn",
+  },
 };

@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/node";
+
 import getEnv from "../services/getEnv";
 import { generateScreenshotAndRemoveCustom } from "./generate";
 import {
@@ -17,7 +19,6 @@ export function validateEnv(
     return {
       err: new Error(reason),
       reason,
-      screenshot: null,
     };
   }
   if (!simulatorUrl) {
@@ -27,7 +28,6 @@ export function validateEnv(
     return {
       err: new Error(reason),
       reason,
-      screenshot: null,
     };
   }
 }
@@ -59,30 +59,15 @@ export default async function handler({
       href
     );
 
-    // We display an error if no screenshot has been taken
-    if (!screenshot) {
-      const message = `Could not generate screenshot for variation ${variationId}`;
-      return {
-        err: new Error(message),
-        reason: message,
-        warning: null,
-        screenshot,
-      };
-    }
-
     return {
-      err: null,
-      reason: null,
       screenshot,
     };
-  } catch (e) {
-    const crashMessage =
-      "Could not generate screenshots for this slice, upload manually a screenshot";
+  } catch (error) {
+    console.error(error);
+    Sentry.captureException(error);
     return {
-      err: new Error(crashMessage),
-      reason: crashMessage,
-      warning: null,
-      screenshot: null,
+      err: error as Error,
+      reason: "Could not generate screenshot",
     };
   }
 }
