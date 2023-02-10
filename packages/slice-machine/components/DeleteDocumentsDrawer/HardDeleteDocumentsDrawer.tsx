@@ -25,6 +25,8 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
 
   const { pushChanges, closeModals, openToaster } = useSliceMachineActions();
 
+  if (!isDeleteDocumentsDrawerOpen) return null;
+
   if (!modalData?.details.customTypes) {
     openToaster("No change data", ToasterType.ERROR);
     return null;
