@@ -7,7 +7,6 @@ import {
 } from "../../../src/modules/pushChangesSaga";
 
 import { refreshStateCreator } from "@src/modules/environment";
-import { syncChangeCreator } from "@src/modules/pushChangesSaga/actions";
 import { setupServer } from "msw/node";
 import { getState, pushChanges } from "../../../src/apiClient";
 import { modalOpenCreator } from "../../../src/modules/modal";
@@ -79,7 +78,7 @@ describe("[pushChanges module]", () => {
           })
         );
 
-      saga.next().put(syncChangeCreator());
+      saga.next().put(changesPushCreator.success());
 
       saga.next().put(
         openToasterCreator({

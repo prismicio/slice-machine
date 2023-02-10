@@ -13,7 +13,6 @@ import {
   Reducer,
 } from "typesafe-actions";
 import { withLoader } from "../loading";
-import { syncChangeCreator } from "./actions";
 import { openToasterCreator, ToasterType } from "../toaster";
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
@@ -82,7 +81,7 @@ export function* changesPushSaga({
     // void sendTracking();
 
     // Send global success event
-    yield put(syncChangeCreator());
+    yield put(changesPushCreator.success());
 
     // Display success toaster
     yield put(
