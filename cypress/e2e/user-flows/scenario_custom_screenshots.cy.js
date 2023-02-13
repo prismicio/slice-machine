@@ -1,14 +1,15 @@
 import { ScreenshotModal } from "../../pages/slices/screenshotModal";
 import { SliceCard } from "../../pages/slices/sliceCard";
 import { SlicePage } from "../../pages/slices/slicePage";
-import { Menu } from "../../pages/Menu";
+import { ChangesPage } from "../../pages/changesPage";
+import { Menu } from "../../pages/menu";
 
-describe.skip("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
+describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
 
   const slice = {
-    id: `test_screenshots${random}`,
-    name: `TestScreenshots${random}`,
+    id: `test_custom_screenshots${random}`,
+    name: `TestCustomScreenshots${random}`,
     library: "slices",
   };
 
@@ -22,15 +23,16 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
   before("Cleanup local data and create a new slice", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
+    // Push all local changes in case there are deleted slices
+    cy.pushLocalChanges();
     cy.createSlice(slice.library, slice.id, slice.name);
   });
 
   beforeEach("Start from the Slice page", () => {
     cy.setSliceMachineUserContext({});
-    slicePage.goTo(slice.library, slice.name);
   });
 
-  it("Upload and replace a screenshot on the default variation", () => {
+  it("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
     slicePage.imagePreview.should("not.exist");
     slicePage.openScreenshotModal();
@@ -52,12 +54,14 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
     cy.saveSliceModifications();
 
     const menu = new Menu();
+    const changes = new ChangesPage();
     const sliceCard = new SliceCard(slice.name);
 
     menu.navigateTo("Slices");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     menu.navigateTo("Changes");
+    changes.screenshotsButton.should("be.visible");
     sliceCard.content.should("include.text", "1/2 screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
@@ -76,7 +80,10 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
   });
 
   it("Error displayed when non-image files are uploaded", () => {
+    slicePage.goTo(slice.library, slice.name);
     slicePage.addVariation("Error handling");
+    cy.saveSliceModifications();
+
     slicePage.openScreenshotModal();
     cy.contains("Select file").selectFile(
       {
