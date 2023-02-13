@@ -18,13 +18,15 @@ import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { LoadingKeysEnum } from "../loading/types";
 import { refreshStateCreator } from "../environment";
-import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
+import {
+  InvalidCustomTypeResponse,
+  PushChangesPayload,
+} from "@lib/models/common/TransactionalPush";
 import {
   Limit,
   LimitType,
 } from "@slicemachine/client/build/models/BulkChanges";
 import axios from "axios";
-import { InvalidCustomTypeResponse } from "server/src/api/push-changes"; // move it to somewhere else
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",

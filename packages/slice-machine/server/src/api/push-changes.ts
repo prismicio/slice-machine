@@ -37,7 +37,10 @@ import {
 import { normalizeFrontendSlices } from "../../../lib/models/common/normalizers/slices";
 import { normalizeFrontendCustomTypes } from "../../../lib/models/common/normalizers/customType";
 import { BackendEnvironment } from "../../../lib/models/common/Environment";
-import { PushChangesPayload } from "../../../lib/models/common/TransactionalPush";
+import {
+  InvalidCustomTypeResponse,
+  PushChangesPayload,
+} from "../../../lib/models/common/TransactionalPush";
 
 import { purge } from "./services/uploadScreenshotClient";
 import { uploadScreenshots as uploadScreenshotsClient } from "./services/sliceService";
@@ -47,13 +50,6 @@ import * as Sentry from "@sentry/node";
 type TransactionalPushBody = {
   body: PushChangesPayload;
   env: BackendEnvironment;
-};
-
-export type InvalidCustomTypeResponse = {
-  type: "INVALID_CUSTOM_TYPES";
-  details: {
-    customTypes: { id: string }[];
-  };
 };
 
 export default async function handler({
@@ -76,25 +72,28 @@ export default async function handler({
     const { localSlices, remoteSlices, localCustomTypes, remoteCustomTypes } =
       await fetchModels(client, cwd, manifest.libraries);
 
-    const customTypesWitherror = localCustomTypes.filter((ct) =>
-      ct.tabs.some((t) =>
-        t.sliceZone?.value.some((z) =>
-          localSlices.map(
-            (s) => !s.components.flatMap((c) => c.model.id).includes(z.key) // ct references slices not available locally
+    const customTypesWithInvalidSliceReferences = localCustomTypes.filter(
+      (ct) =>
+        ct.tabs.some((tab) =>
+          tab.sliceZone?.value.some((z) =>
+            localSlices.map(
+              (s) => !s.components.flatMap((c) => c.model.id).includes(z.key) // ct references slices not available locally
+            )
           )
         )
-      )
     );
 
-    if (customTypesWitherror.length > 0) {
+    if (customTypesWithInvalidSliceReferences.length > 0) {
       return {
         status: 200,
         body: {
           type: "INVALID_CUSTOM_TYPES",
           details: {
-            customTypes: customTypesWitherror.map((ctwe) => ({
-              id: ctwe.id,
-            })),
+            customTypes: customTypesWithInvalidSliceReferences.map(
+              (customType) => ({
+                id: customType.id,
+              })
+            ),
           },
         },
       };

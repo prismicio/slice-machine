@@ -79,7 +79,6 @@ import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ScreenshotTaken } from "@src/tracking/types";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
-import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
