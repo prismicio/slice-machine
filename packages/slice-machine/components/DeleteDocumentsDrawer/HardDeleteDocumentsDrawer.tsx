@@ -13,6 +13,7 @@ import { ToasterType } from "@src/modules/toaster";
 import { CommonDeleteDocumentsDrawer } from "./CommonDeleteDocumentsDrawer";
 import { getModelId } from "@lib/models/common/ModelData";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
+import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
 
 export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
   const { isDeleteDocumentsDrawerOpen, remoteOnlyCustomTypes, modalData } =
@@ -29,10 +30,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
 
   if (!isDeleteDocumentsDrawerOpen) return null;
 
-  if (
-    modalData?.type === "INVALID_CUSTOM_TYPES" ||
-    !modalData?.details.customTypes
-  ) {
+  if (modalData?.type !== LimitType.HARD) {
     openToaster("No change data", ToasterType.ERROR);
     return null;
   }
