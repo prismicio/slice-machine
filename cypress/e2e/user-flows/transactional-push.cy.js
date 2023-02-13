@@ -164,4 +164,36 @@ describe("I am an existing SM user and I want to push local changes", () => {
 
     cy.clearProject();
   });
+
+  it("show removed slice references", () => {
+    const menu = new Menu();
+
+    cy.createSlice(slice.library, slice.id, slice.name);
+    cy.createCustomType(customType.id, customType.name);
+
+    cy.visit(`/cts/${customType.id}`);
+
+    cy.get("[data-cy=update-slices]").click();
+    // forcing this because the input itself is invisible and an svg is displayed
+    cy.get(`[data-cy=check-${slice.id}]`).click({ force: true });
+    cy.get("[data-cy=update-slices-modal]").submit();
+
+    cy.saveCustomTypeModifications();
+
+    cy.clearSlices();
+    menu.navigateTo("Changes");
+    cy.pushLocalChanges();
+
+    cy.contains("Reference to missing Slices").should("be.visible");
+    cy.get("[data-cy='CustomTypesReferencesCard']").contains(customType.name);
+
+    cy.visit(`/cts/${customType.id}`);
+    cy.saveCustomTypeModifications();
+
+    menu.navigateTo("Changes");
+
+    cy.pushLocalChanges();
+    cy.contains("Up to date").should("be.visible");
+    cy.get("[data-cy=push-changes]").should("be.disabled");
+  });
 });

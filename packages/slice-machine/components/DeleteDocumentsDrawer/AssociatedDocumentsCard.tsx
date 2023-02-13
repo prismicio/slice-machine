@@ -67,7 +67,7 @@ export const CustomTypesReferencesCard: React.FC<{ name: string }> = ({
       justifyContent: "space-between",
       alignItems: "center",
     }}
-    data-cy="AssociatedDocumentsCard"
+    data-cy="CustomTypesReferencesCard"
   >
     <Flex sx={{ flexDirection: "column" }}>
       <Text>{name}</Text>
