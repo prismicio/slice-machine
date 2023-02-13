@@ -23,6 +23,8 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   before("Cleanup local data and create a new slice", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
+    // Push all local changes in case there are deleted slices
+    cy.pushLocalChanges();
     cy.createSlice(slice.library, slice.id, slice.name);
   });
 
