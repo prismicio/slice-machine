@@ -1,5 +1,5 @@
 import { SlicePage } from "../../pages/slices/slicePage";
-import { Menu } from "../../pages/Menu";
+import { Menu } from "../../pages/menu";
 
 describe("I am an existing SM user and I want to push local changes", () => {
   const random = Date.now();
