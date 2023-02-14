@@ -49,7 +49,7 @@ export const ReferencesErrorDrawer: React.FunctionComponent = () => {
   return (
     <SliceMachineDrawerUI
       isOpen={isOpen}
-      title={`Reference${hasMoreThanOne ? "s" : ""} to missing Slices`}
+      title={"Missing Slices"}
       footer={
         <>
           <Button
@@ -71,12 +71,15 @@ export const ReferencesErrorDrawer: React.FunctionComponent = () => {
       explanations={
         <>
           <Text sx={{ fontWeight: "bold", mb: 1, lineHeight: "24px" }}>
-            You have Custom Type{hasMoreThanOne ? "s" : ""} with reference
-            {hasMoreThanOne ? "s" : ""} to missing Slices
+            You have{hasMoreThanOne ? "" : " a"} Custom Type
+            {hasMoreThanOne ? "s" : ""} with references to missing Slices
           </Text>
           <Text sx={{ mb: 24 }}>
-            In order to continue pushing, you need to unreference the deleted
-            Slices in the following Custom Type{hasMoreThanOne ? "s" : ""}:
+            Before pushing, remove the references to the missing Slices from{" "}
+            {hasMoreThanOne ? "the following" : "the"} Custom Type
+            {hasMoreThanOne ? "s" : ""} by opening{" "}
+            {hasMoreThanOne ? "each Custom Type" : "it"} and clicking the "Save"
+            button.
           </Text>
           {associatedDocumentsCards}
         </>
