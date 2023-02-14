@@ -1,6 +1,6 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import handler, { sendEvents } from "../../server/src/api/tracking";
-import { EventNames } from "../../src/tracking/types";
+import { EventNames } from "@lib/models/tracking";
 import * as Analytics from "../../server/src/api/services/analytics";
 import { RequestWithEnv } from "server/src/api/http/common";
 
