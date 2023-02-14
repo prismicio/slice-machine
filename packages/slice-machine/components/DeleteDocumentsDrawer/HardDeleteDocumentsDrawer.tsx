@@ -47,7 +47,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
           variant="primary"
           onClick={() => {
             closeModals();
-            pushChanges(true);
+            pushChanges(false);
           }}
           sx={{
             fontWeight: "bold",

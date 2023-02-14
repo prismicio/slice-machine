@@ -85,12 +85,8 @@ export async function trackPushChangesSuccess(params: trackingParameters) {
   const duration = Date.now() - startTime;
 
   return Tracker.get().trackChangesPushed({
-    customTypesCreated: customTypesStats.customTypesCreated,
-    customTypesModified: customTypesStats.customTypesModified,
-    customTypesDeleted: customTypesStats.customTypesDeleted,
-    slicesCreated: slicesStats.slicesCreated,
-    slicesModified: slicesStats.slicesModified,
-    slicesDeleted: slicesStats.slicesDeleted,
+    ...customTypesStats,
+    ...slicesStats,
     total: total,
     missingScreenshots,
     duration: duration,
