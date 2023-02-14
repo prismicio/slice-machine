@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.18-dev-ct-slice-delete.5",
+  "version": "1.1.18-dev-ct-slice-delete.6",
   "private": false,
   "main": "./build/index.js",
   "engines": {
