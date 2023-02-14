@@ -44,6 +44,12 @@ const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   },
 });
 
+const MODAL_KEY_MAP = {
+  INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+  [LimitType.SOFT]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
+  [LimitType.HARD]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+};
+
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
@@ -51,12 +57,6 @@ export function* changesPushSaga({
     const response = (yield call(pushChanges, {
       confirmDeleteDocuments: payload.confirmDeleteDocuments,
     })) as SagaReturnType<typeof pushChanges>;
-
-    const modalKey = {
-      INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
-      [LimitType.SOFT]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
-      [LimitType.HARD]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
-    };
 
     if (response.data) {
       yield put(
@@ -68,7 +68,7 @@ export function* changesPushSaga({
       );
       yield put(
         modalOpenCreator({
-          modalKey: modalKey[response.data.type],
+          modalKey: MODAL_KEY_MAP[response.data.type],
         })
       );
       return;
