@@ -52,25 +52,23 @@ export function* changesPushSaga({
       confirmDeleteDocuments: payload.confirmDeleteDocuments,
     })) as SagaReturnType<typeof pushChanges>;
 
-    if (response.data?.type === "INVALID_CUSTOM_TYPES") {
-      yield put(changesPushCreator.failure(response.data));
+    const modalKey = {
+      INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+      [LimitType.SOFT]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
+      [LimitType.HARD]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+    };
+
+    if (response.data) {
       yield put(
-        modalOpenCreator({
-          modalKey: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
-        })
+        changesPushCreator.failure(
+          response.data.type === "INVALID_CUSTOM_TYPES"
+            ? response.data
+            : sortDocumentLimits(response.data)
+        )
       );
-      return;
-    } else if (
-      response.data?.type &&
-      Object.values(LimitType).includes(response.data?.type)
-    ) {
-      yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
       yield put(
         modalOpenCreator({
-          modalKey:
-            response.data?.type === LimitType.SOFT
-              ? ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER
-              : ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+          modalKey: modalKey[response.data.type],
         })
       );
       return;

@@ -6,11 +6,11 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isModalOpen } from "@src/modules/modal";
-import { CommonDeleteDocumentsDrawer } from "./CommonDeleteDocumentsDrawer";
 import { getModelId, hasLocal } from "@lib/models/common/ModelData";
 import { CustomTypesReferencesCard } from "./AssociatedDocumentsCard";
 import { ToasterType } from "@src/modules/toaster";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
 
 export const ReferencesErrorDrawer: React.FunctionComponent = () => {
   const { isOpen, modalData, localCustomTypes } = useSelector(
@@ -47,7 +47,7 @@ export const ReferencesErrorDrawer: React.FunctionComponent = () => {
   );
 
   return (
-    <CommonDeleteDocumentsDrawer
+    <SliceMachineDrawerUI
       isOpen={isOpen}
       title={`Reference${hasMoreThanOne ? "s" : ""} to missing Slices`}
       footer={

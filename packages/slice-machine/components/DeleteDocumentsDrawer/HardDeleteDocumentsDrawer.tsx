@@ -10,10 +10,10 @@ import { isModalOpen } from "@src/modules/modal";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { isRemoteOnly } from "@lib/models/common/ModelData";
 import { ToasterType } from "@src/modules/toaster";
-import { CommonDeleteDocumentsDrawer } from "./CommonDeleteDocumentsDrawer";
 import { getModelId } from "@lib/models/common/ModelData";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
+import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
 
 export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
   const { isDeleteDocumentsDrawerOpen, remoteOnlyCustomTypes, modalData } =
@@ -55,7 +55,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
   );
 
   return (
-    <CommonDeleteDocumentsDrawer
+    <SliceMachineDrawerUI
       isOpen={isDeleteDocumentsDrawerOpen}
       title="Manual action required"
       footer={

@@ -4,15 +4,13 @@ import { Close, Flex, Heading } from "theme-ui";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Card from "@components/Card";
 
-export const CommonDeleteDocumentsDrawer: React.FunctionComponent<{
+export const SliceMachineDrawerUI: React.FunctionComponent<{
   isOpen: boolean;
   title: string;
   footer: React.ReactNode;
   explanations: React.ReactNode;
 }> = ({ isOpen, title, footer, explanations }) => {
   const { closeModals } = useSliceMachineActions();
-
-  if (!isOpen) return null;
 
   return (
     <Drawer

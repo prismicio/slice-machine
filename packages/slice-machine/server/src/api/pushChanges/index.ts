@@ -9,6 +9,7 @@ import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import * as Sentry from "@sentry/node";
 import { fetchModels } from "./fetchModels";
 import { buildSliceChanges } from "./buildSliceChanges";
+import { getCustomTypesWithInvalidReferences } from "./checkCustomTypes";
 import { buildCustomTypeChanges } from "./buildCustomTypeChanges";
 import {
   InvalidCustomTypeResponse,
@@ -37,41 +38,27 @@ export default async function handler({
 
   try {
     // Fetch all models
-    const { localSlices, remoteSlices, localCustomTypes, remoteCustomTypes } =
+    const { localLibs, remoteSlices, localCustomTypes, remoteCustomTypes } =
       await fetchModels(client, cwd, manifest.libraries);
 
-    const customTypesWithInvalidSliceReferences = localCustomTypes.filter(
-      (ct) =>
-        ct.tabs.some((tab) =>
-          tab.sliceZone?.value.some((z) =>
-            localSlices.map(
-              (s) => !s.components.flatMap((c) => c.model.id).includes(z.key) // ct references slices not available locally
-            )
-          )
-        )
+    const invalidCustomTypes = getCustomTypesWithInvalidReferences(
+      localCustomTypes,
+      localLibs
     );
 
-    if (customTypesWithInvalidSliceReferences.length > 0) {
+    if (invalidCustomTypes.length > 0) {
       return {
         status: 200,
         body: {
           type: "INVALID_CUSTOM_TYPES",
           details: {
-            customTypes: customTypesWithInvalidSliceReferences.map(
-              (customType) => ({
-                id: customType.id,
-              })
-            ),
+            customTypes: invalidCustomTypes,
           },
         },
       };
     }
 
-    const sliceChanges = await buildSliceChanges(
-      env,
-      localSlices,
-      remoteSlices
-    );
+    const sliceChanges = await buildSliceChanges(env, localLibs, remoteSlices);
     const customTypeChanges = buildCustomTypeChanges(
       localCustomTypes,
       remoteCustomTypes
