@@ -41,9 +41,10 @@ export const AssociatedDocumentsCard: React.FC<
   </Card>
 );
 
-export const CustomTypesReferencesCard: React.FC<{ name: string }> = ({
-  name,
-}) => (
+export const CustomTypesReferencesCard: React.FC<{
+  name: string;
+  id: string;
+}> = ({ name, id }) => (
   <Card
     sx={{
       mb: 12,
@@ -60,8 +61,11 @@ export const CustomTypesReferencesCard: React.FC<{ name: string }> = ({
           lineHeight: "16px",
         }}
       >
-        References to a deleted slice
+        References to missing Slices
       </Text>
     </Flex>
+    <Link href={`/cts/${id}`} key={id} target="_blank" variant="cardSmall">
+      View Custom Type
+    </Link>
   </Card>
 );
