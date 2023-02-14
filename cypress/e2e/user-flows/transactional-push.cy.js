@@ -184,7 +184,7 @@ describe("I am an existing SM user and I want to push local changes", () => {
     menu.navigateTo("Changes");
     cy.pushLocalChanges();
 
-    cy.contains("Reference to missing Slices").should("be.visible");
+    cy.contains("Missing Slices").should("be.visible");
     cy.get("[data-cy='CustomTypesReferencesCard']").contains(customType.name);
 
     cy.visit(`/cts/${customType.id}`);
