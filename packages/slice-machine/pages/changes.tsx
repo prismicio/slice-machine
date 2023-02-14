@@ -20,6 +20,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   SoftDeleteDocumentsDrawer,
   HardDeleteDocumentsDrawer,
+  ReferencesErrorDrawer,
 } from "@components/DeleteDocumentsDrawer";
 
 const Changes: React.FunctionComponent = () => {
@@ -108,6 +109,7 @@ const Changes: React.FunctionComponent = () => {
       </Box>
       <SoftDeleteDocumentsDrawer />
       <HardDeleteDocumentsDrawer />
+      <ReferencesErrorDrawer />
     </Container>
   );
 };

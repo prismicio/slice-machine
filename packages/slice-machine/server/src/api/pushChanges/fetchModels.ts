@@ -18,7 +18,7 @@ export async function fetchModels(
   cwd: string,
   libraries: NonNullable<Manifest["libraries"]>
 ): Promise<{
-  localSlices: ReadonlyArray<Library<Component>>;
+  localLibs: ReadonlyArray<Library<Component>>;
   remoteSlices: SliceSM[];
   localCustomTypes: CustomTypeSM[];
   remoteCustomTypes: CustomTypeSM[];
@@ -36,10 +36,10 @@ export async function fetchModels(
 
   const localCustomTypes: CustomTypeSM[] = getLocalCustomTypes(cwd);
 
-  const localSlices: ReadonlyArray<Library<Component>> = Libraries.libraries(
+  const localLibs: ReadonlyArray<Library<Component>> = Libraries.libraries(
     cwd,
     libraries
   );
 
-  return { localSlices, remoteSlices, localCustomTypes, remoteCustomTypes };
+  return { localLibs, remoteSlices, localCustomTypes, remoteCustomTypes };
 }

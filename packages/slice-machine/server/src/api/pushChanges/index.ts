@@ -6,11 +6,15 @@ import {
 import { onError } from "../../../../lib/models/server/ApiResult";
 import type { ApiResult } from "../../../../lib/models/server/ApiResult";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
-import { PushChangesPayload } from "../../../../lib/models/common/TransactionalPush";
 import * as Sentry from "@sentry/node";
 import { fetchModels } from "./fetchModels";
 import { buildSliceChanges } from "./buildSliceChanges";
+import { getCustomTypesWithInvalidReferences } from "./checkCustomTypes";
 import { buildCustomTypeChanges } from "./buildCustomTypeChanges";
+import {
+  InvalidCustomTypeResponse,
+  PushChangesPayload,
+} from "../../../../lib/models/common/TransactionalPush";
 
 type TransactionalPushBody = {
   body: PushChangesPayload;
@@ -21,7 +25,7 @@ export default async function handler({
   body,
   env,
 }: TransactionalPushBody): Promise<
-  ApiResult<{ status: number; body: Limit | null }>
+  ApiResult<{ status: number; body: InvalidCustomTypeResponse | Limit | null }>
 > {
   const { cwd, client, manifest } = env;
 
@@ -34,14 +38,27 @@ export default async function handler({
 
   try {
     // Fetch all models
-    const { localSlices, remoteSlices, localCustomTypes, remoteCustomTypes } =
+    const { localLibs, remoteSlices, localCustomTypes, remoteCustomTypes } =
       await fetchModels(client, cwd, manifest.libraries);
 
-    const sliceChanges = await buildSliceChanges(
-      env,
-      localSlices,
-      remoteSlices
+    const invalidCustomTypes = getCustomTypesWithInvalidReferences(
+      localCustomTypes,
+      localLibs
     );
+
+    if (invalidCustomTypes.length > 0) {
+      return {
+        status: 200,
+        body: {
+          type: "INVALID_CUSTOM_TYPES",
+          details: {
+            customTypes: invalidCustomTypes,
+          },
+        },
+      };
+    }
+
+    const sliceChanges = await buildSliceChanges(env, localLibs, remoteSlices);
     const customTypeChanges = buildCustomTypeChanges(
       localCustomTypes,
       remoteCustomTypes
