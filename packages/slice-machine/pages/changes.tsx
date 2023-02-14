@@ -101,6 +101,7 @@ const Changes: React.FunctionComponent = () => {
           }}
           Actions={[
             <Button
+              key="push-changes"
               label="Push Changes"
               onClick={() => onPush(false)} // not deleting documents by default
               isLoading={isSyncing}

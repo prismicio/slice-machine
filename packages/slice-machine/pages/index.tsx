@@ -45,6 +45,7 @@ const CustomTypes: React.FunctionComponent = () => {
           customTypes.length > 0
             ? [
                 <Button
+                  key="create-custom-type"
                   label="Create a Custom Type"
                   onClick={openCreateCustomTypeModal}
                   isLoading={isCreatingCustomType}

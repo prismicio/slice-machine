@@ -2,6 +2,7 @@ import { afterAll, afterEach, beforeAll, describe, test } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { TestApi, testSaga } from "redux-saga-test-plan";
 import {
+  ChangesPushSagaPayload,
   changesPushCreator,
   changesPushSaga,
 } from "../../../src/modules/pushChangesSaga";
@@ -14,6 +15,12 @@ import { ModalKeysEnum } from "../../../src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "../../../src/modules/toaster";
 import { dummyServerState } from "./__mocks__/serverState";
 import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
+import {
+  rest,
+  type RestContext,
+  type RestRequest,
+  type ResponseComposition,
+} from "msw";
 
 class CustomAxiosError extends Error {
   isAxiosError: boolean;
@@ -32,28 +39,43 @@ class CustomAxiosError extends Error {
   }
 }
 
+const server = setupServer();
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+const makeTrackerSpy = () =>
+  jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+    return res(ctx.json({}));
+  });
+
+const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
+  server.use(rest.post("http://localhost/api/s", spy));
+
+const changesPayload: ChangesPushSagaPayload = {
+  confirmDeleteDocuments: false,
+  unSyncedSlices: [], // used only for tracking, which we mock
+  unSyncedCustomTypes: [], // used only for tracking, which we mock
+  modelsStatuses: { slices: {}, customTypes: {} }, // used only for tracking, which we mock
+};
+
 describe("[pushChanges module]", () => {
-  const server = setupServer();
-
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-
   describe("[changesPushSaga]", () => {
-    const requestPayload = {
-      confirmDeleteDocuments: false,
-    };
-
     let saga: TestApi;
 
     beforeEach(() => {
       saga = testSaga(
         changesPushSaga,
-        changesPushCreator.request(requestPayload)
+        changesPushCreator.request(changesPayload)
       );
     });
     it("Pushes changes when API response is OK display success toaster", () => {
-      saga.next().call(pushChanges, requestPayload);
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker); // warnings happen without this
+
+      saga.next().call(pushChanges, {
+        confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+      });
 
       saga
         .next({
@@ -96,8 +118,14 @@ describe("[pushChanges module]", () => {
     ])(
       "Displays delete limit modal when there is a %s limit response",
       (limitType, expectedModalKey) => {
-        saga.next().call(pushChanges, requestPayload);
+        const fakeTracker = makeTrackerSpy();
+        interceptTracker(fakeTracker); // warnings happen without this
 
+        saga.next().call(pushChanges, {
+          confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+        });
+
+        // This test will also verify that the details are sorted in descending order.
         saga
           .next({
             status: 200,
@@ -150,7 +178,9 @@ describe("[pushChanges module]", () => {
     );
 
     it("Displays an error toaster when there is an API error on push", () => {
-      saga.next().call(pushChanges, requestPayload);
+      saga.next().call(pushChanges, {
+        confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+      });
 
       saga.throw(new Error()).put(
         openToasterCreator({
@@ -166,7 +196,9 @@ describe("[pushChanges module]", () => {
     test.each([[401], [403]])(
       "when there's a %s error while pushing a slice it should stop and open the login model",
       (errorCode) => {
-        saga.next().call(pushChanges, requestPayload);
+        saga.next().call(pushChanges, {
+          confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+        });
 
         const customError = new CustomAxiosError(errorCode);
 

@@ -42,7 +42,7 @@ export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.FAILURE"
 )<ChangesPushSagaPayload, undefined, Limit>();
 
-const sortDocumentLimits = (limit: Readonly<Limit>) => ({
+export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   ...limit,
   details: {
     ...limit.details,
