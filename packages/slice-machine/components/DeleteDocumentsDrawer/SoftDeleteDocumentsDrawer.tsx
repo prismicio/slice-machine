@@ -39,7 +39,9 @@ const ConfirmationDialogue: React.FC<{
   </Flex>
 );
 
-export const SoftDeleteDocumentsDrawer: React.FunctionComponent = () => {
+export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
+  pushChanges: (confirmDeleteDocuments: boolean) => void;
+}> = ({ pushChanges }) => {
   const [hasConfirmed, setHasConfirmed] = useState(false);
 
   const { isDeleteDocumentsDrawerOpen, remoteOnlyCustomTypes, modalData } =
@@ -52,7 +54,7 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent = () => {
       modalData: store.pushChanges,
     }));
 
-  const { pushChanges, closeModals, openToaster } = useSliceMachineActions();
+  const { closeModals, openToaster } = useSliceMachineActions();
 
   if (!isDeleteDocumentsDrawerOpen) return null;
 

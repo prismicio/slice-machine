@@ -12,7 +12,9 @@ import { isRemoteOnly } from "@lib/models/common/ModelData";
 import { ToasterType } from "@src/modules/toaster";
 import { CommonDeleteDocumentsDrawer } from "./CommonDeleteDocumentsDrawer";
 
-export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
+export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
+  pushChanges: (confirmDeleteDocuments: boolean) => void;
+}> = ({ pushChanges }) => {
   const { isDeleteDocumentsDrawerOpen, remoteOnlyCustomTypes, modalData } =
     useSelector((store: SliceMachineStoreType) => ({
       isDeleteDocumentsDrawerOpen: isModalOpen(
@@ -23,7 +25,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
       modalData: store.pushChanges,
     }));
 
-  const { pushChanges, closeModals, openToaster } = useSliceMachineActions();
+  const { closeModals, openToaster } = useSliceMachineActions();
 
   if (!isDeleteDocumentsDrawerOpen) return null;
 
@@ -45,7 +47,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
           variant="primary"
           onClick={() => {
             closeModals();
-            pushChanges();
+            pushChanges(true);
           }}
           sx={{
             fontWeight: "bold",

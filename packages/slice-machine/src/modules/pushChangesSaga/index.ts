@@ -24,12 +24,23 @@ import {
   LimitType,
 } from "@slicemachine/client/build/models/BulkChanges";
 import axios from "axios";
+import Tracker from "@src/tracking/client";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
+import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
+
+export type ChangesPushSagaPayload = PushChangesPayload & {
+  unSyncedSlices: ReadonlyArray<ComponentUI>;
+  unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
+  modelsStatuses: ModelStatusInformation["modelsStatuses"];
+};
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
   "PUSH_CHANGES.RESPONSE",
   "PUSH_CHANGES.FAILURE"
-)<PushChangesPayload, undefined, Limit>();
+)<ChangesPushSagaPayload, undefined, Limit>();
 
 const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   ...limit,
@@ -44,13 +55,18 @@ const sortDocumentLimits = (limit: Readonly<Limit>) => ({
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
-  try {
-    const response = (yield call(pushChanges, payload)) as SagaReturnType<
-      typeof pushChanges
-    >;
+  const startTime = Date.now();
 
-    if (response.data?.type) {
+  try {
+    const response = (yield call(pushChanges, {
+      confirmDeleteDocuments: payload.confirmDeleteDocuments,
+    })) as SagaReturnType<typeof pushChanges>;
+
+    if (response.data && response.data.type) {
       yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
+      void Tracker.get().trackChangesLimitReach({
+        limitType: response.data.type,
+      });
       yield put(
         modalOpenCreator({
           modalKey:
@@ -76,9 +92,8 @@ export function* changesPushSaga({
       })
     );
 
-    // TODO: TRACKING SHOULD BE DONE ON THE BACKEND SIDE NOW AS THE BACKEND REALLY KNOWS WHAT HAPPENS
-    // send tracking
-    // void sendTracking();
+    // Tracking the success of the push
+    void trackPushChangesSuccess({ ...payload, startTime });
 
     // Send global success event
     yield put(changesPushCreator.success());

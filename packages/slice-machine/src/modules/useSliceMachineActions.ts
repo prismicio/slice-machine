@@ -74,9 +74,9 @@ import {
 } from "./screenshots/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
-import { changesPushCreator } from "./pushChangesSaga";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { ScreenshotTaken } from "@src/tracking/types";
+import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
+import type { ScreenDimensions } from "@lib/models/common/Screenshots";
+import type { ScreenshotTaken } from "@lib/models/tracking";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 
@@ -464,8 +464,8 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = (confirmDeleteDocuments = false) =>
-    dispatch(changesPushCreator.request({ confirmDeleteDocuments }));
+  const pushChanges = (payload: ChangesPushSagaPayload) =>
+    dispatch(changesPushCreator.request(payload));
 
   // Toaster store
   const openToaster = (

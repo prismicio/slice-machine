@@ -1,4 +1,5 @@
-import { Frameworks } from "@slicemachine/core/build/models";
+import type { LimitType } from "@slicemachine/client";
+import type { Frameworks } from "@slicemachine/core/build/models";
 
 export enum EventNames {
   Review = "SliceMachine Review",
@@ -24,6 +25,7 @@ export enum EventNames {
 
   ScreenshotTaken = "SliceMachine Screenshot Taken",
   ChangesPushed = "SliceMachine Changes Pushed",
+  ChangesLimitReach = "SliceMachine Changes Limit Reach",
 
   EditorWidgetUsed = "SliceMachine Editor Widget Used",
 }
@@ -183,10 +185,17 @@ export interface ChangesPushed extends BaseTrackingEvent {
     slicesCreated: number;
     slicesModified: number;
     slicesDeleted: number;
+    missingScreenshots: number;
     total: number;
     duration: number;
-    errors: number;
-    missingScreenshots: number;
+    hasDeletedDocuments: boolean;
+  };
+}
+
+export interface ChangesLimitReach extends BaseTrackingEvent {
+  name: EventNames.ChangesLimitReach;
+  props: {
+    limitType: LimitType;
   };
 }
 
@@ -216,6 +225,7 @@ export type TrackingEvents =
   | SliceSimulatorIsNotRunning
   | ScreenshotTaken
   | ChangesPushed
+  | ChangesLimitReach
   | EditorWidgetUsed;
 
 export function isTrackingEvent(
