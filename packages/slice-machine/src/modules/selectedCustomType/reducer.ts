@@ -6,6 +6,7 @@ import {
   updateTabCreator,
   SelectedCustomTypeActions,
   initCustomTypeStoreCreator,
+  cleanupCustomTypeStoreCreator,
   addFieldCreator,
   deleteTabCreator,
   createSliceZoneCreator,
@@ -42,6 +43,8 @@ export const selectedCustomTypeReducer: Reducer<
   SelectedCustomTypeActions
 > = (state = null, action) => {
   switch (action.type) {
+    case getType(cleanupCustomTypeStoreCreator):
+      return null;
     case getType(initCustomTypeStoreCreator):
       return {
         ...state,

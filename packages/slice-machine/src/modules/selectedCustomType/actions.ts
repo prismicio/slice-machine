@@ -8,6 +8,7 @@ import {
 
 export type SelectedCustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
+  | ActionType<typeof cleanupCustomTypeStoreCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof updateFieldMockConfigCreator>
   | ActionType<typeof deleteFieldMockConfigCreator>
@@ -33,6 +34,10 @@ export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
   remoteModel: CustomTypeSM | undefined;
   mockConfig: CustomTypeMockConfig;
 }>();
+
+export const cleanupCustomTypeStoreCreator = createAction(
+  "CUSTOM_TYPE/CLEANUP"
+)();
 
 // Async actions
 export const saveCustomTypeCreator = createAsyncAction(
