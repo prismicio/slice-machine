@@ -44,7 +44,26 @@ const mapAvailableAndSharedSlices = (
       },
       { key, value }
     ) => {
-      if (value.type === SlicesTypes.Slice) {
+      // Shared Slice
+      if (value.type === SlicesTypes.SharedSlice) {
+        const maybeSliceState: ComponentUI | undefined = availableSlices.find(
+          (slice) => slice.model.id === key
+        );
+
+        if (maybeSliceState) {
+          return {
+            ...acc,
+            slicesInSliceZone: [
+              ...acc.slicesInSliceZone,
+              { type: SlicesTypes.SharedSlice, payload: maybeSliceState },
+            ],
+          };
+        }
+
+        return { ...acc, notFound: [...acc.notFound, { key }] };
+      }
+      // Legacy Slice
+      else if (value.type === SlicesTypes.Slice) {
         return {
           ...acc,
           slicesInSliceZone: [
@@ -53,20 +72,9 @@ const mapAvailableAndSharedSlices = (
           ],
         };
       }
-      const maybeSliceState: ComponentUI | undefined = availableSlices.find(
-        (slice) => slice.model.id === key
-      );
 
-      if (maybeSliceState) {
-        return {
-          ...acc,
-          slicesInSliceZone: [
-            ...acc.slicesInSliceZone,
-            { type: SlicesTypes.SharedSlice, payload: maybeSliceState },
-          ],
-        };
-      }
-      return { ...acc, notFound: [...acc.notFound, { key }] };
+      // Really old legacy Slice are ignored
+      return acc;
     },
     { slicesInSliceZone: [], notFound: [] }
   );
