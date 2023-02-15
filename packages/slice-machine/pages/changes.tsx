@@ -22,6 +22,7 @@ import {
   HardDeleteDocumentsDrawer,
   ReferencesErrorDrawer,
 } from "@components/DeleteDocumentsDrawer";
+import { hasLocal } from "@lib/models/common/ModelData";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -41,9 +42,21 @@ const Changes: React.FunctionComponent = () => {
     return () => {
       closeModals();
     };
+    // Do not remote the eslint disable, fixing the eslint warning creates a bug that prevent from opening all modals
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+
+  const onPush = (confirmDeleteDocuments: boolean) =>
+    pushChanges({
+      confirmDeleteDocuments: confirmDeleteDocuments,
+      unSyncedSlices,
+      unSyncedCustomTypes: unSyncedCustomTypes.map((model) =>
+        hasLocal(model) ? model.local : model.remote
+      ),
+      modelsStatuses,
+    });
 
   const PageContent = useMemo(() => {
     if (!isOnline) {
@@ -89,8 +102,9 @@ const Changes: React.FunctionComponent = () => {
           }}
           Actions={[
             <Button
+              key="push-changes"
               label="Push Changes"
-              onClick={() => pushChanges()}
+              onClick={() => onPush(false)} // not deleting documents by default
               isLoading={isSyncing}
               disabled={
                 numberOfChanges === 0 ||
@@ -107,9 +121,9 @@ const Changes: React.FunctionComponent = () => {
         />
         {PageContent}
       </Box>
-      <SoftDeleteDocumentsDrawer />
-      <HardDeleteDocumentsDrawer />
-      <ReferencesErrorDrawer />
+      <SoftDeleteDocumentsDrawer pushChanges={onPush} />
+      <HardDeleteDocumentsDrawer pushChanges={onPush} />
+      <ReferencesErrorDrawer pushChanges={onPush} />
     </Container>
   );
 };

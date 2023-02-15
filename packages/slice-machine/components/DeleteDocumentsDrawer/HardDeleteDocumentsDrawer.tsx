@@ -15,7 +15,9 @@ import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
 import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
 
-export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
+export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
+  pushChanges: (confirmDeleteDocuments: boolean) => void;
+}> = ({ pushChanges }) => {
   const { isDeleteDocumentsDrawerOpen, remoteOnlyCustomTypes, modalData } =
     useSelector((store: SliceMachineStoreType) => ({
       isDeleteDocumentsDrawerOpen: isModalOpen(
@@ -26,7 +28,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
       modalData: store.pushChanges,
     }));
 
-  const { pushChanges, closeModals, openToaster } = useSliceMachineActions();
+  const { closeModals, openToaster } = useSliceMachineActions();
 
   if (!isDeleteDocumentsDrawerOpen) return null;
 
@@ -64,7 +66,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent = () => {
           variant="primary"
           onClick={() => {
             closeModals();
-            pushChanges();
+            pushChanges(false);
           }}
           sx={{
             fontWeight: "bold",

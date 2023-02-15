@@ -51,6 +51,7 @@ const CustomTypeHeader = () => {
         }}
         Actions={[
           <Button
+            key="save-button"
             label="Save to File System"
             isLoading={isSavingCustomType}
             disabled={!hasPendingModifications || isSavingCustomType}

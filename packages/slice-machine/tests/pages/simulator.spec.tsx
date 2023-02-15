@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 import { render, fireEvent, act, waitFor } from "../test-utils";
 import { setupServer } from "msw/node";
 import { rest, ResponseComposition, RestContext, RestRequest } from "msw";
-import { SliceSimulatorOpen } from "@src/tracking/types";
+import { SliceSimulatorOpen } from "@lib/models/tracking";
 import mockRouter from "next-router-mock";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 

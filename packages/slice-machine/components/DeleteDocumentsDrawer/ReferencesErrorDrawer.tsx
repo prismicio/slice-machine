@@ -12,7 +12,9 @@ import { ToasterType } from "@src/modules/toaster";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
 
-export const ReferencesErrorDrawer: React.FunctionComponent = () => {
+export const ReferencesErrorDrawer: React.FunctionComponent<{
+  pushChanges: (confirmDeleteDocuments: boolean) => void;
+}> = ({ pushChanges }) => {
   const { isOpen, modalData, localCustomTypes } = useSelector(
     (store: SliceMachineStoreType) => ({
       isOpen: isModalOpen(store, ModalKeysEnum.REFERENCES_MISSING_DRAWER),
@@ -20,11 +22,11 @@ export const ReferencesErrorDrawer: React.FunctionComponent = () => {
       modalData: store.pushChanges,
     })
   );
-  const { pushChanges, closeModals, openToaster } = useSliceMachineActions();
+  const { closeModals, openToaster } = useSliceMachineActions();
 
   if (!isOpen) return null;
 
-  if (!modalData?.details.customTypes) {
+  if (modalData?.details === undefined) {
     openToaster("No change data", ToasterType.ERROR);
     return null;
   }
@@ -58,7 +60,7 @@ export const ReferencesErrorDrawer: React.FunctionComponent = () => {
             variant="primary"
             onClick={() => {
               closeModals();
-              pushChanges();
+              pushChanges(false);
             }}
             sx={{
               fontWeight: "bold",

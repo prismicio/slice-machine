@@ -16,7 +16,7 @@ import {
 import React from "react";
 import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
-import { CreateSlice } from "../../src/tracking/types";
+import { CreateSlice } from "@lib/models/tracking";
 import { setupServer } from "msw/node";
 import { rest, RestContext } from "msw";
 import SlicesIndex from "../../pages/slices";

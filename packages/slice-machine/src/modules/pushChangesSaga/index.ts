@@ -27,14 +27,25 @@ import {
   LimitType,
 } from "@slicemachine/client/build/models/BulkChanges";
 import axios from "axios";
+import Tracker from "@src/tracking/client";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
+import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
+
+export type ChangesPushSagaPayload = PushChangesPayload & {
+  unSyncedSlices: ReadonlyArray<ComponentUI>;
+  unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
+  modelsStatuses: ModelStatusInformation["modelsStatuses"];
+};
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
   "PUSH_CHANGES.RESPONSE",
   "PUSH_CHANGES.FAILURE"
-)<PushChangesPayload, undefined, Limit | InvalidCustomTypeResponse>();
+)<ChangesPushSagaPayload, undefined, Limit | InvalidCustomTypeResponse>();
 
-const sortDocumentLimits = (limit: Readonly<Limit>) => ({
+export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   ...limit,
   details: {
     ...limit.details,
@@ -53,12 +64,15 @@ const MODAL_KEY_MAP = {
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
+  const startTime = Date.now();
+
   try {
     const response = (yield call(pushChanges, {
       confirmDeleteDocuments: payload.confirmDeleteDocuments,
     })) as SagaReturnType<typeof pushChanges>;
 
     if (response.data) {
+      // sending failure event
       yield put(
         changesPushCreator.failure(
           response.data.type === "INVALID_CUSTOM_TYPES"
@@ -66,6 +80,11 @@ export function* changesPushSaga({
             : sortDocumentLimits(response.data)
         )
       );
+      // Tracking when a limit has been reached
+      void Tracker.get().trackChangesLimitReach({
+        limitType: response.data.type,
+      });
+      // Open the corresponding drawer
       yield put(
         modalOpenCreator({
           modalKey: MODAL_KEY_MAP[response.data.type],
@@ -88,9 +107,8 @@ export function* changesPushSaga({
       })
     );
 
-    // TODO: TRACKING SHOULD BE DONE ON THE BACKEND SIDE NOW AS THE BACKEND REALLY KNOWS WHAT HAPPENS
-    // send tracking
-    // void sendTracking();
+    // Tracking the success of the push
+    void trackPushChangesSuccess({ ...payload, startTime });
 
     // Send global success event
     yield put(changesPushCreator.success());
