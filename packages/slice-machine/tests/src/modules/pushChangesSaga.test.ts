@@ -211,7 +211,9 @@ describe("[pushChanges module]", () => {
     );
 
     it("when there's INVALID_CUSTOM_TYPES response, open the references drawer", () => {
-      saga.next().call(pushChanges, requestPayload);
+      saga.next().call(pushChanges, {
+        confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+      });
 
       saga
         .next({
