@@ -15,7 +15,8 @@ export function getCustomTypesWithInvalidReferences(
       ct.tabs.some((tab) =>
         tab.sliceZone?.value.some(
           (z) =>
-            !localSliceIds.includes(z.key) && z.value.type !== SlicesTypes.Slice
+            !localSliceIds.includes(z.key) &&
+            z.value.type === SlicesTypes.SharedSlice
         )
       )
     )
