@@ -1,4 +1,4 @@
-import { extract } from "oembed-parser";
+import { extract } from "@extractus/oembed-extractor";
 
 export default async function handler(req, res) {
   const oembed = await extract(

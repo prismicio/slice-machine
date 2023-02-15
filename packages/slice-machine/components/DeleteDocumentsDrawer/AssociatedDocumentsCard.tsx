@@ -10,21 +10,12 @@ type AssociatedDocumentsCardProps = {
 
 export const AssociatedDocumentsCard: React.FC<
   AssociatedDocumentsCardProps
-> = ({ ctName, numberOfDocuments, link, isOverLimit }) => (
+> = ({ ctName, numberOfDocuments, link, isOverLimit = false }) => (
   <Card
     sx={{
       mb: 12,
-      backgroundColor: "white",
-      boxShadow: "0px 2px 1px rgba(0, 0, 0, 0.05)",
-      borderRadius: 6,
-      border: (t) => `1px solid ${String(t.colors?.borders)}`,
-      px: 16,
-      py: 2,
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
     }}
+    variant="drawerCard"
     data-cy="AssociatedDocumentsCard"
   >
     <Flex sx={{ flexDirection: "column" }}>
@@ -46,6 +37,35 @@ export const AssociatedDocumentsCard: React.FC<
       sx={{ color: isOverLimit ? "danger" : "purple08" }}
     >
       View documents
+    </Link>
+  </Card>
+);
+
+export const CustomTypesReferencesCard: React.FC<{
+  name: string;
+  id: string;
+}> = ({ name, id }) => (
+  <Card
+    sx={{
+      mb: 12,
+    }}
+    variant="drawerCard"
+    data-cy="CustomTypesReferencesCard"
+  >
+    <Flex sx={{ flexDirection: "column" }}>
+      <Text>{name}</Text>
+      <Text
+        sx={{
+          color: "textClear",
+          fontSize: "12px",
+          lineHeight: "16px",
+        }}
+      >
+        References to missing Slices
+      </Text>
+    </Flex>
+    <Link href={`/cts/${id}`} key={id} target="_blank" variant="cardSmall">
+      View Custom Type
     </Link>
   </Card>
 );

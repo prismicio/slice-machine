@@ -20,6 +20,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   SoftDeleteDocumentsDrawer,
   HardDeleteDocumentsDrawer,
+  ReferencesErrorDrawer,
 } from "@components/DeleteDocumentsDrawer";
 import { hasLocal } from "@lib/models/common/ModelData";
 
@@ -122,6 +123,7 @@ const Changes: React.FunctionComponent = () => {
       </Box>
       <SoftDeleteDocumentsDrawer pushChanges={onPush} />
       <HardDeleteDocumentsDrawer pushChanges={onPush} />
+      <ReferencesErrorDrawer pushChanges={onPush} />
     </Container>
   );
 };

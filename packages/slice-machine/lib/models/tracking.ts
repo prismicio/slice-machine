@@ -1,5 +1,6 @@
 import type { LimitType } from "@slicemachine/client";
 import type { Frameworks } from "@slicemachine/core/build/models";
+import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
   Review = "SliceMachine Review",
@@ -195,7 +196,7 @@ export interface ChangesPushed extends BaseTrackingEvent {
 export interface ChangesLimitReach extends BaseTrackingEvent {
   name: EventNames.ChangesLimitReach;
   props: {
-    limitType: LimitType;
+    limitType: LimitType | InvalidCustomTypeResponse["type"];
   };
 }
 

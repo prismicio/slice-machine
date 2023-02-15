@@ -3,49 +3,14 @@ import Drawer from "rc-drawer";
 import { Close, Flex, Heading } from "theme-ui";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Card from "@components/Card";
-import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
-import { RemoteOnlyCustomType, getModelId } from "@lib/models/common/ModelData";
-import type { Limit } from "@slicemachine/client";
 
-export const CommonDeleteDocumentsDrawer: React.FunctionComponent<{
-  isOverLimit: boolean;
+export const SliceMachineDrawerUI: React.FunctionComponent<{
   isOpen: boolean;
-  remoteOnlyCustomTypes: RemoteOnlyCustomType[];
-  modalData: Readonly<Limit>;
   title: string;
   footer: React.ReactNode;
   explanations: React.ReactNode;
-}> = ({
-  isOverLimit,
-  isOpen,
-  remoteOnlyCustomTypes,
-  modalData,
-  title,
-  footer,
-  explanations,
-}) => {
+}> = ({ isOpen, title, footer, explanations }) => {
   const { closeModals } = useSliceMachineActions();
-
-  if (!isOpen) return null;
-
-  const associatedDocumentsCards = modalData.details.customTypes.map(
-    (customTypeDetail) => {
-      const customType = remoteOnlyCustomTypes.find(
-        (customType) => getModelId(customType) === customTypeDetail.id
-      );
-      if (customType === undefined) return null;
-
-      return (
-        <AssociatedDocumentsCard
-          isOverLimit={isOverLimit}
-          key={customTypeDetail.id}
-          ctName={customType.remote.label ?? customType.remote.id}
-          link={customTypeDetail.url}
-          numberOfDocuments={customTypeDetail.numberOfDocuments}
-        />
-      );
-    }
-  );
 
   return (
     <Drawer
@@ -109,7 +74,6 @@ export const CommonDeleteDocumentsDrawer: React.FunctionComponent<{
         )}
       >
         {explanations}
-        {associatedDocumentsCards}
       </Card>
     </Drawer>
   );

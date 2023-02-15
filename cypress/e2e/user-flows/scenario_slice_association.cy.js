@@ -72,9 +72,8 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.contains("Repeatable Key Text Field");
   });
 
-  // TODO: unskip when transactional push is implemented
-  it.skip("Push the newly created custom type and slice", () => {
-    cy.pushLocalChanges(2);
+  it("Push the newly created custom type and slice", () => {
+    cy.pushLocalChanges();
   });
 
   it("Add the Slice to the Custom Type", () => {
@@ -91,9 +90,10 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     cy.contains(sliceName);
   });
 
-  // TODO: unskip when transactional push is implemented
-  it.skip("Push the custom type with the Slice associated", () => {
-    cy.pushLocalChanges(1);
+  it("Push the custom type with the Slice associated", () => {
+    cy.pushLocalChanges();
+    cy.contains("Up to date").should("be.visible");
+    cy.get("[data-cy=push-changes]").should("be.disabled");
   });
 
   it("Displays and fill the satisfaction survey and the survey never reappears after", () => {

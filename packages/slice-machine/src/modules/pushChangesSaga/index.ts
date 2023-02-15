@@ -18,7 +18,10 @@ import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { LoadingKeysEnum } from "../loading/types";
 import { refreshStateCreator } from "../environment";
-import { PushChangesPayload } from "@lib/models/common/TransactionalPush";
+import {
+  InvalidCustomTypeResponse,
+  PushChangesPayload,
+} from "@lib/models/common/TransactionalPush";
 import {
   Limit,
   LimitType,
@@ -40,7 +43,7 @@ export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
   "PUSH_CHANGES.RESPONSE",
   "PUSH_CHANGES.FAILURE"
-)<ChangesPushSagaPayload, undefined, Limit>();
+)<ChangesPushSagaPayload, undefined, Limit | InvalidCustomTypeResponse>();
 
 export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   ...limit,
@@ -52,6 +55,12 @@ export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   },
 });
 
+const MODAL_KEY_MAP = {
+  INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+  [LimitType.SOFT]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
+  [LimitType.HARD]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+};
+
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
@@ -62,17 +71,23 @@ export function* changesPushSaga({
       confirmDeleteDocuments: payload.confirmDeleteDocuments,
     })) as SagaReturnType<typeof pushChanges>;
 
-    if (response.data && response.data.type) {
-      yield put(changesPushCreator.failure(sortDocumentLimits(response.data)));
+    if (response.data) {
+      // sending failure event
+      yield put(
+        changesPushCreator.failure(
+          response.data.type === "INVALID_CUSTOM_TYPES"
+            ? response.data
+            : sortDocumentLimits(response.data)
+        )
+      );
+      // Tracking when a limit has been reached
       void Tracker.get().trackChangesLimitReach({
         limitType: response.data.type,
       });
+      // Open the corresponding drawer
       yield put(
         modalOpenCreator({
-          modalKey:
-            response.data?.type === LimitType.SOFT
-              ? ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER
-              : ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+          modalKey: MODAL_KEY_MAP[response.data.type],
         })
       );
       return;
@@ -143,7 +158,9 @@ export function* watchChangesPushSagas() {
 }
 
 // Reducer
-export type PushChangesStoreType = Readonly<Limit | null>;
+export type PushChangesStoreType = Readonly<
+  Limit | InvalidCustomTypeResponse | null
+>;
 type PushChangesActions = ActionType<typeof changesPushCreator>;
 
 export const pushChangesReducer: Reducer<

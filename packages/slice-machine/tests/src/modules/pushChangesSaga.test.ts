@@ -209,5 +209,36 @@ describe("[pushChanges module]", () => {
         saga.next().isDone();
       }
     );
+
+    it("when there's INVALID_CUSTOM_TYPES response, open the references drawer", () => {
+      saga.next().call(pushChanges, requestPayload);
+
+      saga
+        .next({
+          status: 200,
+          data: {
+            type: "INVALID_CUSTOM_TYPES",
+            details: {
+              customTypes: [{ id: "CT1" }, { id: "CT2" }],
+            },
+          },
+        })
+        .put(
+          changesPushCreator.failure({
+            type: "INVALID_CUSTOM_TYPES",
+            details: {
+              customTypes: [{ id: "CT1" }, { id: "CT2" }],
+            },
+          })
+        );
+
+      saga.next().put(
+        modalOpenCreator({
+          modalKey: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+        })
+      );
+
+      saga.next().isDone();
+    });
   });
 });

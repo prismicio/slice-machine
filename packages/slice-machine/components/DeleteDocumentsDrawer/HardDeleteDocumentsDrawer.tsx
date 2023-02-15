@@ -10,7 +10,10 @@ import { isModalOpen } from "@src/modules/modal";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { isRemoteOnly } from "@lib/models/common/ModelData";
 import { ToasterType } from "@src/modules/toaster";
-import { CommonDeleteDocumentsDrawer } from "./CommonDeleteDocumentsDrawer";
+import { getModelId } from "@lib/models/common/ModelData";
+import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
+import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
+import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
 
 export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
   pushChanges: (confirmDeleteDocuments: boolean) => void;
@@ -29,17 +32,33 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
 
   if (!isDeleteDocumentsDrawerOpen) return null;
 
-  if (!modalData?.details.customTypes) {
+  if (modalData?.type !== LimitType.HARD) {
     openToaster("No change data", ToasterType.ERROR);
     return null;
   }
 
+  const associatedDocumentsCards = modalData.details.customTypes.map(
+    (customTypeDetail) => {
+      const customType = remoteOnlyCustomTypes.find(
+        (customType) => getModelId(customType) === customTypeDetail.id
+      );
+      if (customType === undefined) return null;
+
+      return (
+        <AssociatedDocumentsCard
+          isOverLimit
+          key={customTypeDetail.id}
+          ctName={customType.remote.label ?? customType.remote.id}
+          link={customTypeDetail.url}
+          numberOfDocuments={customTypeDetail.numberOfDocuments}
+        />
+      );
+    }
+  );
+
   return (
-    <CommonDeleteDocumentsDrawer
-      modalData={modalData}
-      remoteOnlyCustomTypes={remoteOnlyCustomTypes}
+    <SliceMachineDrawerUI
       isOpen={isDeleteDocumentsDrawerOpen}
-      isOverLimit
       title="Manual action required"
       footer={
         <Button
@@ -70,6 +89,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
             too many associated Documents. Archive and delete these Documents
             manually and then try deleting the Custom Types again.
           </Text>
+          {associatedDocumentsCards}
         </>
       }
     />
