@@ -49,10 +49,21 @@ const CustomTypeBuilderWithRouter = () => {
     })
   );
 
+  const { cleanupCustomTypeStore } = useSliceMachineActions();
+
   useEffect(() => {
     if (!selectedCustomType || !hasLocal(selectedCustomType))
       void router.replace("/");
   }, [selectedCustomType, router]);
+
+  useEffect(() => {
+    router.events.on("routeChangeStart", cleanupCustomTypeStore);
+
+    return () => {
+      cleanupCustomTypeStore();
+      router.events.off("routeChangeStart", cleanupCustomTypeStore);
+    };
+  }, []);
 
   if (!selectedCustomType || !hasLocal(selectedCustomType)) {
     return null;

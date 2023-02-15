@@ -50,6 +50,7 @@ import {
   deleteGroupFieldMockConfigCreator,
   deleteFieldMockConfigCreator,
   updateFieldMockConfigCreator,
+  cleanupCustomTypeStoreCreator,
 } from "./selectedCustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
@@ -174,6 +175,8 @@ const useSliceMachineActions = () => {
     remoteModel: CustomTypeSM | undefined,
     mockConfig: CustomTypeMockConfig
   ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
+  const cleanupCustomTypeStore = () =>
+    dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
@@ -514,6 +517,7 @@ const useSliceMachineActions = () => {
     renameCustomType,
     deleteCustomType,
     initCustomTypeStore,
+    cleanupCustomTypeStore,
     saveCustomType,
     createCustomTypeTab,
     updateCustomTypeTab,
