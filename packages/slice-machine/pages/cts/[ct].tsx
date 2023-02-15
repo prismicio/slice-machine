@@ -57,12 +57,11 @@ const CustomTypeBuilderWithRouter = () => {
   }, [selectedCustomType, router]);
 
   useEffect(() => {
-    router.events.on("routeChangeStart", cleanupCustomTypeStore);
-
     return () => {
       cleanupCustomTypeStore();
-      router.events.off("routeChangeStart", cleanupCustomTypeStore);
     };
+    // we don't want to re-run this effect when the cleanupCustomTypeStore is redefined
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!selectedCustomType || !hasLocal(selectedCustomType)) {
