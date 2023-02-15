@@ -61,7 +61,7 @@ export const CustomTypesReferencesCard: React.FC<{
           lineHeight: "16px",
         }}
       >
-        References to missing Slices
+        Missing Slices
       </Text>
     </Flex>
     <Link href={`/cts/${id}`} key={id} target="_blank" variant="cardSmall">
