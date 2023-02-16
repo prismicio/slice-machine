@@ -32,7 +32,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   useEffect(() => {
     if (hasLegacySlices)
       openToaster(
-        "This Custom Type contains Slices that were created with the Legacy Builder.",
+        "This Custom Type contains Slices that are incompatible.",
         ToasterType.WARNING
       );
   }, [hasLegacySlices]);
