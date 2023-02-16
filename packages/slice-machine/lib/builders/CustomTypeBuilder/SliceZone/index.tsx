@@ -30,20 +30,11 @@ const mapAvailableAndSharedSlices = (
     },
     []
   );
-  const {
-    slicesInSliceZone,
-    notFound,
-  }: {
+  const { slicesInSliceZone, notFound } = sliceZone.value.reduce<{
     slicesInSliceZone: ReadonlyArray<SliceZoneSlice>;
     notFound: ReadonlyArray<{ key: string }>;
-  } = sliceZone.value.reduce(
-    (
-      acc: {
-        slicesInSliceZone: ReadonlyArray<SliceZoneSlice>;
-        notFound: ReadonlyArray<{ key: string }>;
-      },
-      { key, value }
-    ) => {
+  }>(
+    (acc, { key, value }) => {
       // Shared Slice
       if (value.type === SlicesTypes.SharedSlice) {
         const maybeSliceState: ComponentUI | undefined = availableSlices.find(
@@ -78,6 +69,7 @@ const mapAvailableAndSharedSlices = (
     },
     { slicesInSliceZone: [], notFound: [] }
   );
+
   return { availableSlices, slicesInSliceZone, notFound };
 };
 

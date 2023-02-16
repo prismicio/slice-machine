@@ -27,7 +27,3 @@ export const VIDEO_ONBOARDING_PUSH_CHANGES = "SMONBOARDING/PUSH_CHANGES__0.5.0";
 export const VIDEO_SIMULATOR_TOOLTIP = "SM_HELP_VIDEOS/mock_data";
 
 export const SIMULATOR_WINDOW_ID = "slice-machine-simulator";
-
-// LINKS
-export const LEGACY_SLICE_MIGRATION_GUIDE =
-  "https://community.prismic.io/t/slice-machine-clarity/11878/4";
