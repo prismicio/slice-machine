@@ -1,4 +1,6 @@
-import { Frameworks } from "@slicemachine/core/build/models";
+import type { LimitType } from "@slicemachine/client";
+import type { Frameworks } from "@slicemachine/core/build/models";
+import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
   Review = "SliceMachine Review",
@@ -13,7 +15,6 @@ export enum EventNames {
   CustomTypeFieldAdded = "SliceMachine Custom Type Field Added",
   CustomTypeSliceZoneUpdated = "SliceMachine Slicezone Updated",
   CustomTypeSaved = "SliceMachine Custom Type Saved",
-  CustomTypePushed = "SliceMachine Custom Type Pushed",
   SliceCreated = "SliceMachine Slice Created",
   OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
   OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
@@ -25,6 +26,7 @@ export enum EventNames {
 
   ScreenshotTaken = "SliceMachine Screenshot Taken",
   ChangesPushed = "SliceMachine Changes Pushed",
+  ChangesLimitReach = "SliceMachine Changes Limit Reach",
 
   EditorWidgetUsed = "SliceMachine Editor Widget Used",
 }
@@ -158,15 +160,6 @@ export interface CustomTypeSaved extends BaseTrackingEvent {
   };
 }
 
-export interface CustomTypePushed extends BaseTrackingEvent {
-  name: EventNames.CustomTypePushed;
-  props: {
-    id: string;
-    name: string;
-    type: "single" | "repeatable";
-  };
-}
-
 export interface CreateSlice extends BaseTrackingEvent {
   name: EventNames.SliceCreated;
   props: {
@@ -193,10 +186,17 @@ export interface ChangesPushed extends BaseTrackingEvent {
     slicesCreated: number;
     slicesModified: number;
     slicesDeleted: number;
+    missingScreenshots: number;
     total: number;
     duration: number;
-    errors: number;
-    missingScreenshots: number;
+    hasDeletedDocuments: boolean;
+  };
+}
+
+export interface ChangesLimitReach extends BaseTrackingEvent {
+  name: EventNames.ChangesLimitReach;
+  props: {
+    limitType: LimitType | InvalidCustomTypeResponse["type"];
   };
 }
 
@@ -220,13 +220,13 @@ export type TrackingEvents =
   | CustomTypeFieldAdded
   | CustomTypeSliceZoneUpdated
   | CustomTypeSaved
-  | CustomTypePushed
   | CreateSlice
   | SliceSimulatorOpen
   | SliceSimulatorSetup
   | SliceSimulatorIsNotRunning
   | ScreenshotTaken
   | ChangesPushed
+  | ChangesLimitReach
   | EditorWidgetUsed;
 
 export function isTrackingEvent(

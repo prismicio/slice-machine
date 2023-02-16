@@ -29,7 +29,10 @@ export function plainTextBodyParser(
   }
 }
 
-async function handler(req: RequestWithEnv, res: express.Response) {
+async function handler(
+  req: RequestWithEnv,
+  res: express.Response
+): Promise<void> {
   try {
     const envelope = req.body as string;
     const pieces = envelope.split("\n");
@@ -49,11 +52,11 @@ async function handler(req: RequestWithEnv, res: express.Response) {
     const sentryUrl = `https://${sentryHost}/api/${projectId}/envelope/`;
     const response = await axios.post(sentryUrl, envelope);
 
-    return res.status(response.status).send(response.data);
+    res.status(response.status).send(response.data);
   } catch (e) {
     // TODO add this back when we have the express
     //   captureException(e);
-    return res.status(400).json({ status: "invalid request" });
+    res.status(400).json({ status: "invalid request" });
   }
 }
 

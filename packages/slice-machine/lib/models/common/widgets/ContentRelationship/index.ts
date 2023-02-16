@@ -7,6 +7,9 @@ import { Widget } from "../Widget";
 import { linkConfigSchema } from "../Link";
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { useSelector } from "react-redux";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { hasLocal } from "@lib/models/common/ModelData";
 
 /**
  * {
@@ -60,4 +63,23 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,
+  prepareInitialValues: (initialValues) => {
+    const customTypes =
+      // TODO: fix this error
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useSelector(selectAllCustomTypes).filter(hasLocal);
+
+    if (!initialValues?.customtypes) {
+      return initialValues;
+    }
+
+    return {
+      ...initialValues,
+      customtypes: initialValues.customtypes.filter((ct) =>
+        customTypes.find(
+          (frontendCustomType) => frontendCustomType.local.id === ct
+        )
+      ),
+    };
+  },
 };

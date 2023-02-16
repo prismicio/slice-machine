@@ -30,20 +30,22 @@ export function createCustomType(id, name) {
  * @param {string} newName New name for the custom type.
  */
 export function renameCustomType(id, actualName, newName) {
-  cy.visit(`/cts/${id}`);
+  cy.visit("/");
 
-  // rename the custom type
-  cy.get('[data-cy="edit-custom-type"]').click();
-  cy.get("[data-cy=rename-custom-type-modal]").should("be.visible");
+  cy.get('[data-cy="edit-custom-type-menu"]').click();
+
+  cy.get("[data-cy=edit-custom-type-menu-dropdown]").should("be.visible");
+
+  cy.get('[data-cy="ct-rename-menu-option"]').click();
+
   cy.get('[data-cy="custom-type-name-input"]').should("have.value", actualName);
   cy.get('[data-cy="custom-type-name-input"]')
     .clear()
     .type(`${newName} - Edited`);
   cy.get("[data-cy=rename-custom-type-modal]").submit();
   cy.get("[data-cy=rename-custom-type-modal]").should("not.exist");
-  cy.get('[data-cy="custom-type-secondary-breadcrumb"]').contains(
-    `/ ${newName} - Edited`
-  );
+
+  cy.get(`[data-cy="custom-type-${id}-label"]`).contains("Edited");
   cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
   cy.readFile(CUSTOM_TYPE_MODEL(id)).then((model) => {
     expect(JSON.stringify(model)).to.contain(newName);

@@ -14,3 +14,7 @@ export interface SliceSaveBody extends SliceBody {
 export interface SliceCreateResponse {
   variationId: string;
 }
+
+export type DeleteSliceResponse =
+  | { err: unknown; reason: string; status: number; type: "error" | "warning" }
+  | Record<string, never>;

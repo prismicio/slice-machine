@@ -73,7 +73,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Push the newly created custom type and slice", () => {
-    cy.pushLocalChanges(2);
+    cy.pushLocalChanges();
   });
 
   it("Add the Slice to the Custom Type", () => {
@@ -91,7 +91,9 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Push the custom type with the Slice associated", () => {
-    cy.pushLocalChanges(1);
+    cy.pushLocalChanges();
+    cy.contains("Up to date").should("be.visible");
+    cy.get("[data-cy=push-changes]").should("be.disabled");
   });
 
   it("Displays and fill the satisfaction survey and the survey never reappears after", () => {

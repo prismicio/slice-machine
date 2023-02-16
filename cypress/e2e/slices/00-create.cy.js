@@ -22,8 +22,6 @@ describe("Create Slices", () => {
     cy.contains("Delete field").click();
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
-    cy.renameSlice(lib, sliceName, editedSliceName);
-
     // add a variation
 
     cy.get("button").contains("Default").click();
@@ -52,13 +50,13 @@ describe("Create Slices", () => {
 
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
-      `/${lib}/${editedSliceName}/bar`
+      `/${lib}/${sliceName}/bar`
     );
     cy.get("button").contains("foo").click();
     cy.contains("Default").click();
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
-      `/${lib}/${editedSliceName}/default`
+      `/${lib}/${sliceName}/default`
     );
 
     cy.contains("Save to File System").click();
@@ -97,18 +95,20 @@ describe("Create Slices", () => {
     cy.get("button").contains("foo").click();
     cy.contains("Default").click();
 
-    cy.readFile(SLICE_MOCK_FILE(editedSliceName), "utf-8")
+    cy.readFile(SLICE_MOCK_FILE(sliceName), "utf-8")
       .its(0)
       .its("primary.description.value")
       .its(0)
       .its("content.text")
       .should("equal", "👋");
-    cy.readFile(SLICE_MOCK_FILE(editedSliceName), "utf-8")
+    cy.readFile(SLICE_MOCK_FILE(sliceName), "utf-8")
       .its(1)
       .its("primary.description.value")
       .its(0)
       .its("content.text")
       .should("equal", "🎉");
+
+    cy.renameSlice(sliceName, editedSliceName);
   });
 
   it("allows drag n drop to the top position", () => {

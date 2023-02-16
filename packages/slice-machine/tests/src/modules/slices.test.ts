@@ -10,12 +10,21 @@ import {
   createSliceCreator,
   renameScreenshots,
   renameModel,
+  renameSliceSaga,
+  renameSliceCreator,
+  deleteSliceSaga,
+  deleteSliceCreator,
+  getFrontendSlices,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
 
-import { createSlice, getState } from "@src/apiClient";
+import {
+  createSlice,
+  deleteSlice,
+  getState,
+  renameSlice,
+} from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
@@ -23,6 +32,15 @@ import { SliceSM } from "@slicemachine/core/build/models";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import axios, { AxiosError } from "axios";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+
+import {
+  generateComponentUI,
+  generateSliceSM,
+  generateLibraryUI,
+} from "./__mocks__/sliceUtilsFactory";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 const dummySlicesState: SlicesStoreType = {
   libraries: [],
@@ -48,6 +66,44 @@ describe("[Slices module]", () => {
       expect(slicesReducer(dummySlicesState, { type: "NO.MATCH" })).toEqual(
         dummySlicesState
       );
+    });
+
+    it("should update the slice state given SLICES/DELETE.SUCCESS action", () => {
+      const sliceIdToDelete = "id";
+      const sliceNameToDelete = "slice-name";
+      const libName = "libName";
+
+      const originalState = { ...dummySlicesState };
+
+      originalState["libraries"] = [
+        {
+          name: libName,
+          isLocal: true,
+          components: [
+            { model: { id: sliceIdToDelete } },
+            { model: { id: "second-slice" } },
+          ],
+        },
+      ] as unknown as LibraryUI[];
+
+      const action = deleteSliceCreator.success({
+        sliceId: sliceIdToDelete,
+        libName,
+        sliceName: sliceNameToDelete,
+      });
+
+      const result = slicesReducer(originalState, action);
+
+      const expectState = { ...originalState };
+      expectState["libraries"] = [
+        {
+          name: libName,
+          isLocal: true,
+          components: [{ model: { id: "second-slice" } }],
+        },
+      ] as unknown as LibraryUI[];
+
+      expect(result).toEqual(expectState);
     });
   });
 
@@ -85,11 +141,228 @@ describe("[Slices module]", () => {
       saga.next().take(LOCATION_CHANGE);
       saga.next().put(
         openToasterCreator({
-          message: "Slice saved",
+          content: "Slice saved",
           type: ToasterType.SUCCESS,
         })
       );
       saga.next().isDone();
+    });
+  });
+
+  describe("[renameSliceSaga]", () => {
+    it("should call the api and dispatch the good actions", () => {
+      const actionPayload = {
+        sliceId: "MySlice",
+        libName: "MyLib/Components",
+        newSliceName: "MyNewSlice",
+      };
+      const saga = testSaga(
+        renameSliceSaga,
+        renameSliceCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(
+          renameSlice,
+          actionPayload.sliceId,
+          actionPayload.newSliceName,
+          actionPayload.libName
+        );
+      saga.next().put(
+        renameSliceCreator.success({
+          libName: actionPayload.libName,
+          sliceId: actionPayload.sliceId,
+          newSliceName: actionPayload.newSliceName,
+        })
+      );
+      saga.next().put(modalCloseCreator());
+      saga.next().put(
+        openToasterCreator({
+          content: "Slice name updated",
+          type: ToasterType.SUCCESS,
+        })
+      );
+      saga.next().isDone();
+    });
+  });
+
+  describe("[deleteCustomTypeSaga]", () => {
+    it("should call the api and dispatch the good actions on success", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.next().put(deleteSliceCreator.success(actionPayload));
+      saga.next().put(
+        openToasterCreator({
+          content: `Successfully deleted Slice “${actionPayload.sliceName}”`,
+          type: ToasterType.SUCCESS,
+        })
+      );
+
+      saga.next().put(modalCloseCreator());
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on unknown failure", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.throw(new Error()).put(
+        openToasterCreator({
+          content: "An unexpected error happened while deleting your slice.",
+          type: ToasterType.ERROR,
+        })
+      );
+
+      saga.next().put(modalCloseCreator());
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on an API error", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
+
+      const err = Error() as AxiosError;
+      // @ts-expect-error Ignoring the type error since we only need these properties to test
+      err.response = {
+        data: { reason: "Could not delete Slice", type: "error" },
+      };
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.throw(err).put(
+        openToasterCreator({
+          content: "Could not delete Slice",
+          type: ToasterType.ERROR,
+        })
+      );
+
+      saga.next().put(modalCloseCreator());
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on an API warning", () => {
+      const actionPayload = {
+        sliceId: "id",
+        sliceName: "name",
+        libName: "lib",
+      };
+      const saga = testSaga(
+        deleteSliceSaga,
+        deleteSliceCreator.request(actionPayload)
+      );
+
+      jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
+
+      const err = Error() as AxiosError;
+      // @ts-expect-error Ignoring the type error since we only need these properties to test
+      err.response = {
+        data: { reason: "Could not delete Slice", type: "warning" },
+      };
+
+      saga
+        .next()
+        .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
+      saga.throw(err).put(deleteSliceCreator.success(actionPayload));
+      saga.next().put(
+        openToasterCreator({
+          content: "Could not delete Slice",
+          type: ToasterType.WARNING,
+        })
+      );
+
+      saga.next().put(modalCloseCreator());
+      saga.next().isDone();
+    });
+  });
+
+  describe("[Selectors]", () => {
+    describe.only("getLocallyDeletedSlices", () => {
+      it("works as expected", () => {
+        const l1 = generateLibraryUI({
+          components: [
+            generateComponentUI({
+              model: generateSliceSM({ id: "1" }),
+            }),
+            generateComponentUI({
+              model: generateSliceSM({ id: "2" }),
+            }),
+            generateComponentUI({
+              model: generateSliceSM({ id: "3" }),
+            }),
+          ],
+        });
+        const l2 = generateLibraryUI({
+          components: [
+            generateComponentUI({
+              model: generateSliceSM({ id: "4" }),
+            }),
+            generateComponentUI({
+              model: generateSliceSM({ id: "5" }),
+            }),
+          ],
+        });
+
+        const remoteSlices = [
+          generateSliceSM({ id: "1" }),
+          generateSliceSM({ id: "3" }),
+          generateSliceSM({ id: "4" }),
+          generateSliceSM({ id: "6" }),
+        ];
+
+        const frontendSlices = getFrontendSlices({
+          slices: { libraries: [l1, l2], remoteSlices },
+        } as unknown as SliceMachineStoreType);
+
+        // it combines slices from all the local libraries
+        // it combines local and remote only libraries
+        // it maps the correct remote slice if found
+        expect(frontendSlices.length).toEqual(6);
+        expect(frontendSlices.map((s) => s.local?.id)).toEqual([
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          undefined,
+        ]);
+        expect(frontendSlices.map((s) => s.remote?.id)).toEqual([
+          "1",
+          undefined,
+          "3",
+          "4",
+          undefined,
+          "6",
+        ]);
+      });
     });
   });
 });

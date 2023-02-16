@@ -13,7 +13,12 @@ import { SaveCustomTypeBody } from "../../../../lib/models/common/CustomType";
 import * as IO from "../../../../lib/io";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import { Component, Slices } from "@slicemachine/core/build/models";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import {
+  SharedSlice,
+  SlicesTypes,
+} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import * as Sentry from "@sentry/node";
 
 export default function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = getEnv();
@@ -63,5 +68,25 @@ export default function handler(req: { body: SaveCustomTypeBody }) {
 
   IO.Types.upsert(env);
 
+  void trackLegacySlices(model);
+
   return {};
+}
+
+function trackLegacySlices(model: CustomTypeSM) {
+  const hasLegacySlices: boolean = model.tabs.some((tab) =>
+    tab.sliceZone?.value.some(
+      (slice) =>
+        slice.value.type !== SlicesTypes.SharedSlice &&
+        slice.value.type !== SlicesTypes.Slice
+    )
+  );
+
+  if (hasLegacySlices) {
+    void Sentry.withScope((scope) => {
+      scope.setExtra("customTypeID", model.id);
+      scope.setExtra("customTypeLabel", model.label);
+      Sentry.captureMessage("Legacy Slice Detected");
+    });
+  }
 }

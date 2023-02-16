@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Text, Link } from "theme-ui";
 import Container from "components/Container";
@@ -30,10 +30,17 @@ import { GoPlus } from "react-icons/go";
 import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
+import { DeleteSliceModal } from "@components/DeleteSliceModal";
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const { openCreateSliceModal, closeModals, createSlice } =
-    useSliceMachineActions();
+  const {
+    openCreateSliceModal,
+    closeModals,
+    createSlice,
+    openRenameSliceModal,
+    openDeleteSliceModal,
+  } = useSliceMachineActions();
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
@@ -65,12 +72,14 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const { modelsStatuses, authStatus, isOnline } =
-    useModelStatus(frontendSlices);
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({
+    slices: frontendSlices,
+  });
 
   const slices = (libraries || []).map((l) => l.components).flat();
   const sliceCount = slices.length;
+
+  const [sliceForEdit, setSliceForEdit] = useState<ComponentUI>();
 
   return (
     <>
@@ -101,6 +110,7 @@ const SlicesIndex: React.FunctionComponent = () => {
               localLibraries?.length != 0 && sliceCount != 0
                 ? [
                     <Button
+                      key="create-slice"
                       label="Create a Slice"
                       onClick={openCreateSliceModal}
                       isLoading={isCreatingSlice}
@@ -197,14 +207,24 @@ const SlicesIndex: React.FunctionComponent = () => {
                               authStatus,
                               isOnline,
                             },
-                            onUpdateScreenshot: (e: React.MouseEvent) => {
-                              e.preventDefault();
-                              onOpenModal({
-                                sliceFilterFn: (s: ComponentUI[]) =>
-                                  s.filter(
-                                    (e) => e.model.id === slice.model.id
-                                  ),
-                              });
+                            actions: {
+                              onUpdateScreenshot: (e: React.MouseEvent) => {
+                                e.preventDefault();
+                                onOpenModal({
+                                  sliceFilterFn: (s: ComponentUI[]) =>
+                                    s.filter(
+                                      (e) => e.model.id === slice.model.id
+                                    ),
+                                });
+                              },
+                              openRenameModal: (slice: ComponentUI) => {
+                                setSliceForEdit(slice);
+                                openRenameSliceModal();
+                              },
+                              openDeleteModal: (slice: ComponentUI) => {
+                                setSliceForEdit(slice);
+                                openDeleteSliceModal();
+                              },
                             },
                             showActions: true,
                           });
@@ -235,6 +255,17 @@ const SlicesIndex: React.FunctionComponent = () => {
           />
         </>
       )}
+      <RenameSliceModal
+        sliceId={sliceForEdit?.model.id ?? ""}
+        sliceName={sliceForEdit?.model.name ?? ""}
+        libName={sliceForEdit?.from ?? ""}
+        data-cy="rename-slice-modal"
+      />
+      <DeleteSliceModal
+        sliceId={sliceForEdit?.model.id ?? ""}
+        sliceName={sliceForEdit?.model.name ?? ""}
+        libName={sliceForEdit?.from ?? ""}
+      />
     </>
   );
 };

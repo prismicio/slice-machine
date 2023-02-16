@@ -6,7 +6,6 @@ const fs = require("fs");
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const mime = require("mime");
 
-import { handler as pushSlice } from "./slices/push";
 import saveSlice from "./slices/save";
 import { renameSlice } from "./slices/rename";
 import createSlice from "./slices/create/index";
@@ -18,14 +17,15 @@ import state from "./state";
 import checkSimulator from "./simulator";
 import saveCustomType from "./custom-types/save";
 import renameCustomType from "./custom-types/rename";
-import { handler as pushCustomType } from "./custom-types/push";
+import deleteCustomType from "./custom-types/delete";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+import pushChanges from "./pushChanges";
 
 import sentryHandler, { plainTextBodyParser } from "./sentry";
 
-import { RequestWithEnv, WithEnv } from "./http/common";
+import { RequestWithEnv, withEnv } from "./http/common";
 import {
   isError,
   ScreenshotRequest,
@@ -34,6 +34,7 @@ import {
 import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
 import { isApiError } from "../../../lib/models/server/ApiResult";
 import tracking from "./tracking";
+import { deleteSlice } from "./slices/delete";
 import changelog from "./changelog";
 
 router.use(
@@ -64,15 +65,9 @@ router.use(
 
 router.get(
   "/state",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
     const payload = await state(req);
-
-    return res.status(200).json(payload);
+    res.status(200).json(payload);
   })
 );
 
@@ -129,65 +124,51 @@ router.post(
 
 router.post(
   "/slices/save",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const payload = await saveSlice(req);
-    return res.status(200).json(payload);
+  withEnv(function (req: RequestWithEnv, res: express.Response) {
+    const payload = saveSlice(req);
+    res.status(200).json(payload);
   })
 );
 
 router.post(
   "/slices/create",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
     const payload = await createSlice(req);
 
     if (isApiError(payload)) {
-      return res.status(payload.status).json(payload);
+      res.status(payload.status).json(payload);
+    } else {
+      res.status(200).json(payload);
     }
-
-    return res.status(200).json(payload);
-  })
-);
-
-router.get(
-  "/slices/push",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const { statusCode, screenshots } = await pushSlice(req);
-    return res.status(statusCode).json(screenshots);
   })
 );
 
 router.put(
   "/slices/rename",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const payload = await renameSlice(req);
+  withEnv(function (req: RequestWithEnv, res: express.Response) {
+    const payload = renameSlice(req);
     if (isApiError(payload)) {
-      return res.status(payload.status).json(payload);
+      res.status(payload.status).json(payload);
     }
+    res.status(200).json(payload);
+  })
+);
 
-    return res.status(200).json(payload);
+router.delete(
+  "/slices/delete",
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
+    const payload = await deleteSlice(req);
+    if (isApiError(payload)) {
+      res.status(payload.status).json(payload);
+    } else {
+      res.status(200).json(payload);
+    }
   })
 );
 
 router.post(
   "/slices/mock",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
-  WithEnv(async function (req: RequestWithEnv, res: express.Response) {
+  withEnv(function (req: RequestWithEnv, res: express.Response) {
     return saveSliceMock(req, res);
   })
 );
@@ -195,57 +176,61 @@ router.post(
 
 router.post(
   "/custom-types/save",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   function (
     req: express.Request<undefined, undefined, SaveCustomTypeBody>,
     res: express.Response
-  ): Express.Response {
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = saveCustomType(req);
-    return res.status(200).json(payload);
+    res.status(200).json(payload);
   }
 );
 
 router.patch(
   "/custom-types/rename",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
     const payload = await renameCustomType(req);
 
     if (isApiError(payload)) {
-      return res.status(payload.status).json(payload);
+      res.status(payload.status).json(payload);
+    } else {
+      res.status(200).json(payload);
     }
-
-    return res.status(200).json(payload);
   })
 );
 
-router.get(
-  "/custom-types/push",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const { statusCode } = await pushCustomType(req);
-    return res.sendStatus(statusCode);
+router.delete(
+  "/custom-types/delete",
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
+    const payload = await deleteCustomType(req);
+
+    if (isApiError(payload)) {
+      res.status(payload.status).json(payload);
+    } else {
+      res.status(200).json(payload);
+    }
+  })
+);
+
+router.post(
+  "/push-changes",
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
+    const result = await pushChanges(req);
+
+    if (isApiError(result)) {
+      res.status(result.status).json(result);
+    } else {
+      res.status(result.status).json(result.body);
+    }
   })
 );
 
 router.get(
   "/simulator/check",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await checkSimulator(req);
-
-    return res.status(200).json(payload);
+    res.status(200).json(payload);
   })
 );
 
@@ -266,27 +251,20 @@ router.post(
 
 router.post(
   "/auth/status",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
+  withEnv(async function (req: RequestWithEnv, res: express.Response) {
     const payload = await statusAuth(req);
     if (payload.status === "error") {
-      return res.status(500).json(payload);
+      res.status(500).json(payload);
+    } else {
+      res.status(200).json(payload);
     }
-    return res.status(200).json(payload);
   })
 );
 
 // Important route that allows the dashboard to send auth tokens.
 router.post(
   "/auth",
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
+  withEnv(function (req: RequestWithEnv, res: express.Response) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = req.body;
 
@@ -294,17 +272,18 @@ router.post(
     const payload = postAuth(req.env.client.apisEndpoints.Wroom, body);
     if (payload.err) {
       console.error(body);
-      return res.status(500).json(body);
+      res.status(500).json(body);
+    } else {
+      res.status(200).json({});
     }
-    return res.status(200).json({});
   })
 );
 
 router.post(
   "/s",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises,
-  WithEnv(async (req, res): Promise<Express.Response> => {
-    return tracking(req)
+  withEnv((req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    tracking(req)
       .catch(() => null)
       .then(() => res.json());
   })
@@ -312,7 +291,7 @@ router.post(
 
 // Sentry Proxy
 // eslint-disable-next-line @typescript-eslint/no-misused-promises,
-router.post("/t", plainTextBodyParser, WithEnv(sentryHandler));
+router.post("/t", plainTextBodyParser, withEnv(sentryHandler));
 
 router.get(
   "/changelog",

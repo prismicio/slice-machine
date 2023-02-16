@@ -1,11 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
-  Theme,
   Text,
   Card as Themecard,
-  Heading,
   Flex,
-  Badge,
   type ThemeUIStyleObject,
   type ThemeUICSSObject,
 } from "theme-ui";
@@ -20,19 +17,9 @@ import { AuthStatus } from "@src/modules/userContext/types";
 import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { Button } from "@components/Button";
-
-const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
-  bg: "transparent",
-  transition: "all 200ms ease-in",
-  p: 3,
-  position: "relative",
-  ...sx,
-  "&:hover": {
-    transition: "all 200ms ease-out",
-    bg: "sidebar",
-    border: (t: Theme) => `1px solid ${t.colors?.sidebar as string}`,
-  },
-});
+import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
+import ReactTooltip from "react-tooltip";
+import style from "./LegacySliceTooltip.module.css";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -42,16 +29,13 @@ const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
 });
 
 const SliceVariations = ({
-  hideVariations,
-  variations,
+  numberOfVariations,
 }: {
-  hideVariations: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  variations: ReadonlyArray<any>;
+  numberOfVariations: number;
 }) => {
-  return !hideVariations ? (
+  return (
     <>
-      {variations ? (
+      {numberOfVariations ? (
         <Text
           sx={{
             fontSize: 14,
@@ -60,38 +44,76 @@ const SliceVariations = ({
             lineHeight: "24px",
           }}
         >
-          {variations.length} variation{variations.length > 1 ? "s" : ""}
+          {numberOfVariations} variation{numberOfVariations > 1 ? "s" : ""}
         </Text>
       ) : null}
     </>
-  ) : null;
+  );
 };
 
-const SliceScreenshotUpdate: React.FC<{
+const SliceCardActions: React.FC<{
   slice: ComponentUI;
-  onUpdateScreenshot: (e: React.MouseEvent) => void;
-}> = ({ onUpdateScreenshot }) => (
-  <Flex
-    mt={1}
-    sx={{
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: 3,
-      borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-      mt: 0,
-    }}
-  >
-    <Button
-      onClick={onUpdateScreenshot}
-      variant="secondarySmall"
-      sx={{ fontWeight: "bold" }}
-      Icon={AiOutlineCamera}
-      iconFill="#1A1523"
-      label="Update screenshot"
-    />
-  </Flex>
-);
+  disableActions: boolean;
+  actions?: {
+    onUpdateScreenshot: (e: React.MouseEvent) => void;
+    openRenameModal?: (slice: ComponentUI) => void;
+    openDeleteModal?: (slice: ComponentUI) => void;
+  };
+}> = ({ actions, slice, disableActions }) => {
+  const onRenameClick = useCallback(() => {
+    if (actions?.openRenameModal) {
+      actions.openRenameModal(slice);
+    }
+  }, [actions, slice]);
+  const onDeleteClick = useCallback(() => {
+    if (actions?.openDeleteModal) {
+      actions.openDeleteModal(slice);
+    }
+  }, [actions, slice]);
 
+  if (!actions) {
+    return null;
+  }
+
+  return (
+    <Flex
+      mt={1}
+      sx={{
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 3,
+        borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+        mt: 0,
+      }}
+    >
+      <Button
+        onClick={actions.onUpdateScreenshot}
+        variant="secondarySmall"
+        sx={{ fontWeight: "bold" }}
+        Icon={AiOutlineCamera}
+        label="Update screenshot"
+        disabled={disableActions}
+      />
+
+      {actions.openRenameModal && (
+        <KebabMenuDropdown
+          dataCy="slice-action-icon"
+          menuOptions={[
+            {
+              displayName: "Rename",
+              onClick: onRenameClick,
+              dataCy: "slice-action-rename",
+            },
+            {
+              displayName: "Delete",
+              onClick: onDeleteClick,
+            },
+          ]}
+        />
+      )}
+    </Flex>
+  );
+};
 const SliceDescription = ({
   slice,
   StatusOrCustom,
@@ -128,10 +150,7 @@ const SliceDescription = ({
         justifyContent: "space-between",
       }}
     >
-      <SliceVariations
-        variations={slice.model.variations}
-        hideVariations={false}
-      />
+      <SliceVariations numberOfVariations={slice.model.variations.length} />
       <Flex sx={{ alignItems: "center" }}>
         {"status" in StatusOrCustom ? (
           <StatusBadge
@@ -179,6 +198,16 @@ const ScreenshotMissingBanner: React.FC<{ slice: ComponentUI }> = ({
   );
 };
 
+type Status = {
+  status: ModelStatus;
+  authStatus: AuthStatus;
+  isOnline: boolean;
+};
+type StatusOrCustom = Status | React.FC<{ slice: ComponentUI }>;
+
+const isDeleted = (statusOrCustom: StatusOrCustom): boolean =>
+  "status" in statusOrCustom && statusOrCustom.status === ModelStatus.Deleted;
+
 export const SharedSlice = {
   render({
     showActions,
@@ -186,18 +215,12 @@ export const SharedSlice = {
     Wrapper,
     StatusOrCustom,
     wrapperType = WrapperType.clickable,
-    onUpdateScreenshot,
+    actions,
     sx,
   }: {
     showActions?: boolean;
     slice: ComponentUI;
-    StatusOrCustom:
-      | {
-          status: ModelStatus;
-          authStatus: AuthStatus;
-          isOnline: boolean;
-        }
-      | React.FC<{ slice: ComponentUI }>;
+    StatusOrCustom: StatusOrCustom;
     Wrapper?: React.FC<{
       children?: React.ReactNode;
       link?: { as: string };
@@ -205,7 +228,11 @@ export const SharedSlice = {
       sx?: ThemeUIStyleObject;
     }>;
     wrapperType?: WrapperType;
-    onUpdateScreenshot?: (e: React.MouseEvent) => void;
+    actions?: {
+      onUpdateScreenshot: (e: React.MouseEvent) => void;
+      openRenameModal?: (slice: ComponentUI) => void;
+      openDeleteModal?: (slice: ComponentUI) => void;
+    };
     sx?: ThemeUIStyleObject;
   }) {
     const defaultVariation = ComponentUI.variation(slice);
@@ -217,7 +244,7 @@ export const SharedSlice = {
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const screenshotUrl = slice?.screenshots?.[variationId]?.url;
+    const screenshotUrl = slice.screenshots?.[variationId]?.url;
 
     return (
       <CardWrapper
@@ -249,6 +276,7 @@ export const SharedSlice = {
             }}
           >
             <ScreenshotPreview
+              hideMissingWarning={isDeleted(StatusOrCustom)}
               src={screenshotUrl}
               sx={{
                 height: "198px",
@@ -256,18 +284,19 @@ export const SharedSlice = {
                 borderRadius: "4px 4px 0 0",
               }}
             />
-            {showActions ? <ScreenshotMissingBanner slice={slice} /> : null}
+            {showActions && !isDeleted(StatusOrCustom) ? (
+              <ScreenshotMissingBanner slice={slice} />
+            ) : null}
             <Flex
               sx={{
                 flexDirection: "column",
               }}
             >
-              {onUpdateScreenshot ? (
-                <SliceScreenshotUpdate
-                  slice={slice}
-                  onUpdateScreenshot={onUpdateScreenshot}
-                />
-              ) : null}
+              <SliceCardActions
+                slice={slice}
+                disableActions={isDeleted(StatusOrCustom)}
+                actions={actions}
+              />
               <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
             </Flex>
           </Flex>
@@ -279,49 +308,107 @@ export const SharedSlice = {
 
 export const NonSharedSlice = {
   render({
-    bordered,
     slice,
-    displayStatus,
-    thumbnailHeightPx = "290px",
-    wrapperType = WrapperType.nonClickable,
     sx,
   }: {
-    bordered: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     slice: { key: string; value: any };
-    displayStatus?: boolean;
-    thumbnailHeightPx?: string;
-    wrapperType?: WrapperType;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sx?: any;
+    sx?: ThemeUIStyleObject;
   }) {
-    const Wrapper = WrapperByType[wrapperType];
+    const Wrapper = WrapperByType[WrapperType.nonClickable];
 
     return (
-      <Wrapper link={undefined}>
-        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
-        <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
-          <ScreenshotPreview
+      <Wrapper
+        sx={{
+          borderColor: (t) => t.colors?.borders,
+          "&:focus": {
+            borderColor: "bordersFocused",
+          },
+        }}
+      >
+        <Themecard
+          sx={{
+            borderColor: "inherit",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderRadius: "6px",
+            overflow: "hidden",
+            ...defaultSx(sx),
+          }}
+        >
+          <Flex
+            data-for={`legacy-slice-tooltip-${slice.key}`}
+            data-tip
             sx={{
-              height: thumbnailHeightPx,
+              py: 2,
+              flexDirection: "row",
+              justifyContent: "center",
+              bg: "purple12",
+              fontSize: "12px",
+              fontWeight: "bold",
+              color: "purple08",
+              lineHeight: "16px",
+            }}
+          >
+            Legacy Slice
+          </Flex>
+          <ReactTooltip
+            id={`legacy-slice-tooltip-${slice.key}`}
+            type="dark"
+            border
+            borderColor="black"
+            place="bottom"
+            effect="solid"
+            clickable
+            delayHide={100}
+            className={style.legacySliceTooltipContainer}
+          >
+            <Text
+              sx={{
+                fontSize: "12px",
+                lineHeight: "16px",
+              }}
+            >
+              This Slice was created with the Legacy Builder, and is
+              incompatible with Slice Machine. You cannot edit, push, or delete
+              it in Slice Machine. In order to proceed, manually remove the
+              Slice from your Custom Type model. Then create a new Slice with
+              the same fields using Slice Machine.
+            </Text>
+          </ReactTooltip>
+          <ScreenshotPreview
+            hideMissingWarning
+            sx={{
+              height: "166px",
               borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-              borderRadius: "4px 4px 0 0",
+              borderRadius: 0,
             }}
           />
           <Flex
-            mt={3}
-            sx={{ alignItems: "center", justifyContent: "space-between" }}
+            p={3}
+            sx={{
+              flexDirection: "column",
+            }}
           >
-            <Flex>
-              {displayStatus ? (
-                <Badge mr={2} variant="modified">
-                  Non shared
-                </Badge>
-              ) : null}
-              <Heading sx={{ flex: 1 }} as="h6">
-                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
-                {slice?.value?.fieldset || slice.key}
-              </Heading>
+            <TextWithTooltip
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              text={slice?.value?.fieldset || slice.key}
+              as="h6"
+              sx={{
+                fontWeight: "600 !important",
+                maxWidth: "80%",
+                lineHeight: "24px !important",
+                color: "grey10",
+              }}
+            />
+            <Flex
+              sx={{
+                height: "28px",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <SliceVariations numberOfVariations={1} />
             </Flex>
           </Flex>
         </Themecard>

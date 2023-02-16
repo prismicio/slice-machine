@@ -31,7 +31,7 @@ describe("[Toaster module]", () => {
     it("should call the react-notify with the success method", () => {
       const openToasterAction: ReturnType<typeof openToasterCreator> = {
         payload: {
-          message: "message",
+          content: "message",
           type: ToasterType.SUCCESS,
         },
         type: "TOASTER/OPEN",
@@ -48,7 +48,7 @@ describe("[Toaster module]", () => {
     it("should call the react-notify with the info method", () => {
       const openToasterAction: ReturnType<typeof openToasterCreator> = {
         payload: {
-          message: "message",
+          content: "message",
           type: ToasterType.INFO,
         },
         type: "TOASTER/OPEN",
@@ -65,7 +65,7 @@ describe("[Toaster module]", () => {
     it("should call the react-notify with the warning method", () => {
       const openToasterAction: ReturnType<typeof openToasterCreator> = {
         payload: {
-          message: "message",
+          content: "message",
           type: ToasterType.WARNING,
         },
         type: "TOASTER/OPEN",
@@ -82,7 +82,7 @@ describe("[Toaster module]", () => {
     it("should call the react-notify with the error method", () => {
       const openToasterAction: ReturnType<typeof openToasterCreator> = {
         payload: {
-          message: "message",
+          content: "message",
           type: ToasterType.ERROR,
         },
         type: "TOASTER/OPEN",

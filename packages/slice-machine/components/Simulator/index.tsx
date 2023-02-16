@@ -15,14 +15,13 @@ import {
   selectSimulatorUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-
-import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { Toolbar } from "./components/Toolbar";
 import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { Slices } from "@slicemachine/core/build/models";
 import { renderSliceMock } from "@prismicio/mocks";
 
@@ -263,6 +262,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           </Flex>
           {currentState === UiState.SUCCESS ? (
             <Box
+              className="editor"
               sx={{
                 marginLeft: "16px",
                 maxWidth: "440px",

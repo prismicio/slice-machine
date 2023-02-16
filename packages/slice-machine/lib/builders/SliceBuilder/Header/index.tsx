@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Box, Flex, Text, useThemeUI } from "theme-ui";
+import { Box, Flex, Text } from "theme-ui";
 import VariationModal from "./VariationModal";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
-import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
-import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
-import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
+import { MdHorizontalSplit } from "react-icons/md";
 import HeaderCommon from "@components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@slicemachine/core/build/models";
@@ -34,8 +32,7 @@ const Header: React.FC<{
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
 
-  const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
-  const { theme } = useThemeUI();
+  const { copyVariationSlice } = useSliceMachineActions();
 
   const { isSimulatorAvailableForFramework, framework } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -83,21 +80,6 @@ const Header: React.FC<{
             title: `${component.model.name} / ${variation.name}`,
           }}
           Actions={[
-            <SliceMachineIconButton
-              key="header-edit-button"
-              Icon={MdModeEdit}
-              label="Edit slice name"
-              data-cy="edit-slice-name"
-              sx={{ cursor: "pointer", color: theme.colors?.icons }}
-              onClick={openRenameSliceModal}
-              style={{
-                color: "#4E4E55",
-                backgroundColor: "#F3F5F7",
-                border: "1px solid #3E3E4826",
-                width: 40,
-                height: 40,
-              }}
-            />,
             <SimulatorButton
               key="header-simulator-button"
               framework={framework}
@@ -156,13 +138,6 @@ const Header: React.FC<{
           }}
           initialVariation={variation}
           variations={component.model.variations}
-        />
-        <RenameSliceModal
-          sliceId={component.model.id}
-          sliceName={component.model.name}
-          libName={component.from}
-          variationId={variation.id}
-          data-cy="rename-slice-modal"
         />
       </Box>
     </Flex>

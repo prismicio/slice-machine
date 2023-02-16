@@ -9,15 +9,9 @@ const backendEnvironment: BackendEnvironment = {
   cwd: "/test",
   manifest: {
     apiEndpoint: "https://myFakeRepo.prismic.io/api/v2",
-    libraries: ["@slices"],
+    libraries: ["@/slices"],
   },
   prismicData: {},
-  changelog: {
-    currentVersion: "0.2.0",
-    latestNonBreakingVersion: "0.2.0",
-    updateAvailable: true,
-    versions: [],
-  },
   mockConfig: {},
   framework: Frameworks.next,
   baseUrl: "https://fakebase.io",

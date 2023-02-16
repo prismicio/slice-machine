@@ -44,6 +44,14 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.saveCustomTypeModifications();
   });
 
+  it("Links to CTs available locally", () => {
+    cy.visit(`/changes`);
+
+    cy.contains(customTypeId).click();
+
+    cy.url().should("include", `/cts/${customTypeId}`);
+  });
+
   it("Pushes changes", () => {
     cy.pushLocalChanges(1);
   });
