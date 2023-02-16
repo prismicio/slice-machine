@@ -20,7 +20,6 @@ import { Button } from "@components/Button";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
-import { LEGACY_SLICE_MIGRATION_GUIDE } from "@lib/consts";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -364,12 +363,11 @@ export const NonSharedSlice = {
             delayHide={100}
             className={style.legacySliceTooltipContainer}
           >
-            This Slice was created with the Legacy Builder. You cannot edit it.
-            Please follow our{" "}
-            <a href={LEGACY_SLICE_MIGRATION_GUIDE} target="_">
-              migration recommendations
-            </a>{" "}
-            to migrate it to Slice Machine before you can use or edit it.
+            This Slice was created with the Legacy Builder, and is incompatible
+            with Slice Machine. You cannot edit, push, or delete it in Slice
+            Machine. In order to proceed, manually remove the Slice from your
+            Custom Type model. Then create a new Slice with the same fields
+            using Slice Machine.
           </ReactTooltip>
           <ScreenshotPreview
             hideMissingWarning
