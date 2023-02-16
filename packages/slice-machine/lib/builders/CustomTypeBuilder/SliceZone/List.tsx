@@ -24,7 +24,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   isOnline,
 }) => {
   const hasLegacySlices = slices.some(
-    (slice) => slice.type === SlicesTypes.Slice
+    (slice) => slice.type !== SlicesTypes.SharedSlice
   );
 
   const { openToaster } = useSliceMachineActions();
@@ -32,7 +32,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   useEffect(() => {
     if (hasLegacySlices)
       openToaster(
-        "This Custom Type contains Slices that were created with the Legacy Builder, which are incompatible with Slice Machine.",
+        "This Custom Type contains Slices that were created with the Legacy Builder.",
         ToasterType.WARNING
       );
   }, [hasLegacySlices]);

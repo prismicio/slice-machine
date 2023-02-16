@@ -363,11 +363,18 @@ export const NonSharedSlice = {
             delayHide={100}
             className={style.legacySliceTooltipContainer}
           >
-            This Slice was created with the Legacy Builder, and is incompatible
-            with Slice Machine. You cannot edit, push, or delete it in Slice
-            Machine. In order to proceed, manually remove the Slice from your
-            Custom Type model. Then create a new Slice with the same fields
-            using Slice Machine.
+            <Text
+              sx={{
+                fontSize: "12px",
+                lineHeight: "16px",
+              }}
+            >
+              This Slice was created with the Legacy Builder, and is
+              incompatible with Slice Machine. You cannot edit, push, or delete
+              it in Slice Machine. In order to proceed, manually remove the
+              Slice from your Custom Type model. Then create a new Slice with
+              the same fields using Slice Machine.
+            </Text>
           </ReactTooltip>
           <ScreenshotPreview
             hideMissingWarning
