@@ -1,5 +1,5 @@
 import { Changes } from "../pages/Changes";
-import { Menu } from "../pages/Menu";
+import { Menu } from "../pages/menu";
 
 const changes = new Changes();
 const menu = new Menu();
