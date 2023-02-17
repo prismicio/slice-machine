@@ -88,7 +88,7 @@ export function renameSlice(req: {
     );
     fs.writeFileSync(
       newPathToSliceDirectory.stories(),
-      prevString.replaceAll(targetSlice.model.name, newSliceName)
+      prevString.replace(new RegExp(targetSlice.model.name, "g"), newSliceName)
     );
   }
 
