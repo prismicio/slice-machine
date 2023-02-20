@@ -17,6 +17,10 @@ export class CustomTypeBuilder extends Builder {
     return cy.get("[data-cy=ct-static-zone]");
   }
 
+  get successToast() {
+    return cy.contains("Models & mocks have been generated successfully");
+  }
+
   goTo(ctId) {
     cy.visit(`/cts/${ctId}`);
     this.saveButton.should("be.visible");

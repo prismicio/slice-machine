@@ -18,9 +18,6 @@ export class Builder {
   save() {
     this.saveButton.should("not.be.disabled");
     this.saveButton.click();
-    cy.contains("Models & mocks have been generated successfully").should(
-      "be.visible"
-    );
     cy.get("[data-cy=builder-save-button-spinner]").should("be.visible");
     cy.get("[data-cy=builder-save-button-icon]").should("be.visible");
     this.saveButton.should("be.disabled");

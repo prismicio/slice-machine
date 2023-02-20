@@ -1,8 +1,12 @@
 import { SliceBuilder } from "../../pages/slices/sliceBuilder";
 import { Menu } from "../../pages/menu";
+import { CustomTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
 
 describe("I am an existing SM user and I want to push local changes", () => {
   const random = Date.now();
+  const menu = new Menu();
+  const slicePage = new SliceBuilder();
+  const customTypeBuilder = new CustomTypeBuilder();
 
   const slice = {
     id: `test_push${random}`,
@@ -49,8 +53,6 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.createSlice(slice.library, slice.id, slice.name);
     cy.createCustomType(customType.id, customType.name);
 
-    const menu = new Menu();
-    const slicePage = new SliceBuilder();
 
     menu.navigateTo("Changes");
 
@@ -78,12 +80,7 @@ describe("I am an existing SM user and I want to push local changes", () => {
 
     cy.pushLocalChanges(2);
 
-    // Delete the custom type
-    menu.navigateTo("Custom Types");
-    cy.get("[data-cy='edit-custom-type-menu']").click();
-    cy.contains("Delete").click();
-    cy.get("[aria-modal]");
-    cy.contains("button", "Delete").click();
+    cy.deleteCustomType(customType.id);
 
     // Delete the slice
     menu.navigateTo("Slices");
@@ -178,7 +175,8 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.get(`[data-cy=check-${slice.id}]`).click({ force: true });
     cy.get("[data-cy=update-slices-modal]").submit();
 
-    cy.saveCustomTypeModifications();
+    customTypeBuilder.save();
+    customTypeBuilder.successToast.should("be.visible");
 
     cy.clearSlices();
     menu.navigateTo("Changes");
@@ -188,7 +186,8 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.get("[data-cy='CustomTypesReferencesCard']").contains(customType.name);
 
     cy.visit(`/cts/${customType.id}`);
-    cy.saveCustomTypeModifications();
+    customTypeBuilder.save();
+    customTypeBuilder.successToast.should("be.visible");
 
     menu.navigateTo("Changes");
 

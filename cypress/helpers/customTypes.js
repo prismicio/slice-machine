@@ -6,6 +6,7 @@ import { AddFieldModal } from "../pages/AddFieldModal";
 import { UpdateSliceZoneModal } from "../pages/UpdateSliceZoneModal";
 import { CustomTypesList } from "../pages/customTypes/customTypesList";
 import { CreateCustomTypeModal } from "../pages/customTypes/createCustomTypeModal";
+import { DeleteModal } from "../pages/DeleteModal";
 
 const customTypeBuilder = new CustomTypeBuilder();
 const renameModal = new CustomTypeRenameModal();
@@ -13,6 +14,7 @@ const addFieldModal = new AddFieldModal();
 const updateSliceZoneModal = new UpdateSliceZoneModal();
 const customTypesList = new CustomTypesList();
 const createCustomTypeModal = new CreateCustomTypeModal();
+const deleteModal = new DeleteModal();
 
 /**
  * Create a Custom type and assert files are created.
@@ -42,23 +44,44 @@ export function createCustomType(id, name) {
  * @param {string} newName New name for the custom type.
  */
 export function renameCustomType(id, actualName, newName) {
-  customTypeBuilder.goTo(id);
+  customTypesList.goTo();
 
-  // rename the custom type
-  customTypeBuilder.renameButton.click();
+  customTypesList.getOptionDopDownButton(id).click();
+  customTypesList.optionDopDownMenu.should("be.visible");
+
+  customTypesList.renameButton.click();
 
   renameModal.root.should("be.visible");
   renameModal.input.should("have.value", actualName);
-  renameModal.input.clear().type(newName);
+  renameModal.input.clear().type(`${newName} - Edited`);
   renameModal.submit();
   renameModal.root.should("not.exist");
 
-  customTypeBuilder.headerCustomTypeName.contains(newName);
+  customTypesList.getCustomTypeLabel(id).contains("Edited");
 
-  cy.readFile(TYPES_FILE).should("contains", newName);
+  cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
   cy.readFile(CUSTOM_TYPE_MODEL(id)).then((model) => {
     expect(JSON.stringify(model)).to.contain(newName);
   });
+}
+
+/**
+ * On the Custom Type builder, delete a custom type.
+ *
+ * @param {string} id Id of the custom type.
+ */
+export function deleteCustomType(id) {
+  customTypesList.goTo();
+
+  customTypesList.getOptionDopDownButton(id).click();
+  customTypesList.optionDopDownMenu.should("be.visible");
+
+  customTypesList.deleteButton.click();
+
+  deleteModal.root.should("be.visible");
+  deleteModal.submit();
+
+  customTypesList.getCustomTypeLabel(id).should("not.exist");
 }
 
 /**
