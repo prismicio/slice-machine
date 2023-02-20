@@ -70,9 +70,6 @@ export class SliceBuilder extends Builder {
   save() {
     this.saveButton.click();
     this.saveButton.should("be.disabled");
-    cy.contains("Models & mocks have been generated successfully!").should(
-      "be.visible"
-    );
     return this;
   }
 

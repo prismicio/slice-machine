@@ -18,7 +18,7 @@ export class CustomTypeBuilder extends Builder {
   }
 
   get successToast() {
-    return cy.contains("Models & mocks have been generated successfully");
+    return cy.contains("Model & mocks have been generated successfully!");
   }
 
   goTo(ctId) {
