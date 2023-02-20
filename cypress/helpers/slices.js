@@ -42,25 +42,27 @@ export function createSlice(lib, id, name) {
  * @param {string} actualName Current name of the slice.
  * @param {string} newName New name to use for the slice.
  */
-export function renameSlice(lib, actualName, newName) {
-  sliceBuilder.goTo(lib, actualName);
-  sliceBuilder.renameButton.click();
+export function renameSlice(actualName, newName) {
+  slicesList.goTo();
+  cy.waitUntil(() => cy.get("[data-cy=slice-action-icon]"));
+
+  slicesList.getOptionDopDownButton(actualName).click();
+
+  slicesList.optionDopDownMenu.should("be.visible");
+  slicesList.renameButton.click();
 
   sliceRenameModal.root.should("be.visible");
   sliceRenameModal.input.should("have.value", actualName);
   sliceRenameModal.input.clear().type(newName);
   sliceRenameModal.submit();
 
-  cy.location("pathname", { timeout: 20000 }).should(
-    "eq",
-    `/${lib}/${newName}/default`
-  );
-  sliceBuilder.headerSliceNameAndVariation.contains(newName);
-  sliceRenameModal.root.should('not.exist');
+  cy.contains(newName).should("exist");
+
   cy.readFile(SLICE_MODEL(newName)).then((model) => {
     expect(JSON.stringify(model)).to.contain(newName);
   });
 }
+
 
 /**
  * On the Slice builder, add static field to the Slice.
