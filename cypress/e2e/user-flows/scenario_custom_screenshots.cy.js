@@ -2,7 +2,7 @@ import { ScreenshotModal } from "../../pages/slices/screenshotModal";
 import { SliceCard } from "../../pages/slices/sliceCard";
 import { Menu } from "../../pages/menu";
 import { SliceBuilder } from "../../pages/slices/sliceBuilder";
-import { Changes } from "../../pages/Changes";
+import { ChangesPage } from "../../pages/changesPage";
 
 describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
@@ -15,7 +15,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
 
   const sliceBuilder = new SliceBuilder();
   const screenshotModal = new ScreenshotModal();
-  const changesPage = new Changes();
+  const changesPage = new ChangesPage();
   const menu = new Menu();
   const sliceCard = new SliceCard(slice.name);
 
@@ -27,7 +27,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     cy.clearProject();
     cy.setSliceMachineUserContext({});
     // Push all local changes in case there are deleted slices
-    cy.pushLocalChanges();
+    // cy.pushLocalChanges(); // TODO: What if there aren't any?? This will fail
     cy.createSlice(slice.library, slice.id, slice.name);
   });
 
@@ -84,8 +84,6 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceBuilder.addVariation("Error handling");
     sliceBuilder.save();
 
-    sliceBuilder.openScreenshotModal();
-    cy.addVariationToSlice("Error handling");
     sliceBuilder.openScreenshotModal();
     cy.contains("Select file").selectFile(
       {
