@@ -1,6 +1,6 @@
 export class SlicesList {
   get emptyStateButton() {
-    return cy.get('[data-cy=empty-state-main-button]');
+    return cy.get("[data-cy=empty-state-main-button]");
   }
 
   getOptionDopDownButton(sliceName) {
@@ -16,11 +16,11 @@ export class SlicesList {
   }
 
   get deleteButton() {
-    return this.optionDopDownMenu.contains('Delete');
+    return this.optionDopDownMenu.contains("Delete");
   }
 
   get renameButton() {
-    return this.optionDopDownMenu.contains('Rename');
+    return this.optionDopDownMenu.contains("Rename");
   }
 
   goTo() {

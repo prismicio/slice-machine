@@ -12,11 +12,11 @@ export class CustomTypesList {
   }
 
   get deleteButton() {
-    return this.optionDopDownMenu.contains('Delete');
+    return this.optionDopDownMenu.contains("Delete");
   }
 
   get renameButton() {
-    return this.optionDopDownMenu.contains('Rename');
+    return this.optionDopDownMenu.contains("Rename");
   }
 
   getCustomTypeRow(id) {
@@ -29,6 +29,6 @@ export class CustomTypesList {
 
   goTo() {
     cy.visit("/");
-    return this
+    return this;
   }
 }

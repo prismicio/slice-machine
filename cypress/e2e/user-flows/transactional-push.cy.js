@@ -53,7 +53,6 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.createSlice(slice.library, slice.id, slice.name);
     cy.createCustomType(customType.id, customType.name);
 
-
     menu.navigateTo("Changes");
 
     cy.pushLocalChanges();

@@ -14,10 +14,7 @@ export function pushLocalChanges(numberOfChanges) {
 
   if (numberOfChanges !== undefined) {
     // checking number of changes
-    menu
-      .changesNumber()
-      .contains(numberOfChanges)
-      .should("be.visible");
+    menu.changesNumber().contains(numberOfChanges).should("be.visible");
   }
 
   // sync changes button should be enabled
@@ -28,9 +25,11 @@ export function pushLocalChanges(numberOfChanges) {
   if (numberOfChanges !== undefined) {
     // number of changes should now be 0 at the end of the push
     // The time to wait depends on the number of changes
-    menu.changesNumber({
-      timeout: 5000 * (numberOfChanges + 1),
-    }).should("not.exist");
+    menu
+      .changesNumber({
+        timeout: 5000 * (numberOfChanges + 1),
+      })
+      .should("not.exist");
 
     // sync changes button should be disabled
     changes.pushButton.should("be.disabled");

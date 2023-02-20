@@ -4,7 +4,7 @@ export class AddVariationModal {
   }
 
   get nameInput() {
-    return cy.getInputByLabel("Variation name*")
+    return cy.getInputByLabel("Variation name*");
   }
 
   submit() {

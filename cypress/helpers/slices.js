@@ -8,7 +8,7 @@ import { AddFieldModal } from "../pages/AddFieldModal";
 import { AddVariationModal } from "../pages/slices/addVariationModal";
 
 const slicesList = new SlicesList();
-const createSliceModal = new CreateSliceModal
+const createSliceModal = new CreateSliceModal();
 const sliceBuilder = new SliceBuilder();
 const sliceRenameModal = new SliceRenameModal();
 const addFieldModal = new AddFieldModal();
@@ -62,7 +62,6 @@ export function renameSlice(actualName, newName) {
     expect(JSON.stringify(model)).to.contain(newName);
   });
 }
-
 
 /**
  * On the Slice builder, add static field to the Slice.
@@ -129,7 +128,7 @@ function addFieldToSlice(elements, fieldType, fieldName, fieldId) {
  * @param {string} variationName Name of the variation.
  */
 export function addVariationToSlice(variationName) {
-  sliceBuilder.variationsDropdown.click({ force: true })
+  sliceBuilder.variationsDropdown.click({ force: true });
   sliceBuilder.addVariationButton.click();
 
   addVariationModal.root.within(() => {

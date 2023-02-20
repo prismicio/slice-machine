@@ -24,7 +24,7 @@ export class SliceBuilder extends Builder {
   }
 
   get addStaticFieldButton() {
-    return cy.get('[data-cy=add-Static-field]');
+    return cy.get("[data-cy=add-Static-field]");
   }
 
   get repeatableZone() {
@@ -32,7 +32,7 @@ export class SliceBuilder extends Builder {
   }
 
   get addRepeatableFieldButton() {
-    return cy.get('[data-cy=add-Repeatable-field]');
+    return cy.get("[data-cy=add-Repeatable-field]");
   }
 
   get variationsDropdown() {
@@ -43,7 +43,7 @@ export class SliceBuilder extends Builder {
     return cy.contains("button", "Add new variation");
   }
 
-  goTo(sliceLibrary, sliceName, variation = 'default') {
+  goTo(sliceLibrary, sliceName, variation = "default") {
     cy.visit(`/${sliceLibrary}/${sliceName}/${variation}`);
     this.saveButton.should("be.visible");
     cy.contains(sliceName).should("be.visible");
