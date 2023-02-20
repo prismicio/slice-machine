@@ -1,6 +1,6 @@
 import { SimulatorPage } from "../../pages/simulator/simulatorPage";
 import { EditorPage } from "../../pages/simulator/editorPage";
-import { SlicePage } from "../../pages/slices/slicePage";
+import { SliceBuilder } from "../../pages/slices/sliceBuilder";
 import { SLICE_MOCK_FILE } from "../../consts";
 
 const SLICE = {
@@ -10,7 +10,7 @@ const SLICE = {
 };
 
 describe("Scenario 008", () => {
-  let slice = new SlicePage();
+  let slice = new SliceBuilder();
   let simulator = new SimulatorPage();
   let editor = new EditorPage();
 
@@ -38,19 +38,19 @@ describe("Scenario 008", () => {
         variation.variation === "default"
           ? variation
           : {
-              ...variation,
-              primary: {
-                ...variation.primary,
-                booleanfield: {
-                  ...variation.primary.booleanfield,
-                  value: false,
-                },
-                selectfield: {
-                  ...variation.primary.selectfield,
-                  value: "1",
-                },
+            ...variation,
+            primary: {
+              ...variation.primary,
+              booleanfield: {
+                ...variation.primary.booleanfield,
+                value: false,
               },
-            }
+              selectfield: {
+                ...variation.primary.selectfield,
+                value: "1",
+              },
+            },
+          }
       )
     );
 

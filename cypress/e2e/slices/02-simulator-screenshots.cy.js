@@ -1,4 +1,4 @@
-import { SlicePage } from "../../pages/slices/slicePage";
+import { SliceBuilder } from "../../pages/slices/sliceBuilder";
 import { SimulatorPage } from "../../pages/simulator/simulatorPage";
 import { ScreenshotModal } from "../../pages/simulator/screenshotModal";
 
@@ -12,7 +12,7 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
     newVariationName: "foo",
   };
 
-  const slicePage = new SlicePage();
+  const slicePage = new SliceBuilder();
   const simulatorPage = new SimulatorPage();
   const screenshotModal = new ScreenshotModal();
 
@@ -22,7 +22,7 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
     cy.createSlice(slice.library, slice.id, slice.name);
 
     slicePage.addVariation(slice.newVariationName);
-    cy.saveSliceModifications();
+    slicePage.save();
   });
 
   beforeEach("Start from the Slice page", () => {

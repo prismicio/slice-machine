@@ -2,7 +2,7 @@ import { ScreenshotModal } from "../../pages/slices/screenshotModal";
 import { SliceCard } from "../../pages/slices/sliceCard";
 import { Menu } from "../../pages/menu";
 import { SliceBuilder } from "../../pages/slices/sliceBuilder";
-import { Menu } from "../../pages/Menu";
+import { Changes } from "../../pages/Changes";
 
 describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
@@ -15,6 +15,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
 
   const sliceBuilder = new SliceBuilder();
   const screenshotModal = new ScreenshotModal();
+  const changesPage = new Changes();
   const menu = new Menu();
   const sliceCard = new SliceCard(slice.name);
 
@@ -51,7 +52,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
 
     // Upload screenshot on variation from the Changes Page
     const missingScreenshotVariation = "Missing screenshot";
-    slicePage.addVariation(missingScreenshotVariation);
+    sliceBuilder.addVariation(missingScreenshotVariation);
 
     sliceBuilder.imagePreview.should("not.exist");
     sliceBuilder.save();
@@ -60,7 +61,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     menu.navigateTo("Changes");
-    changes.screenshotsButton.should("be.visible");
+    changesPage.screenshotsButton.should("be.visible");
     sliceCard.content.should("include.text", "1/2 screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
@@ -79,11 +80,11 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   });
 
   it("Error displayed when non-image files are uploaded", () => {
-    slicePage.goTo(slice.library, slice.name);
-    slicePage.addVariation("Error handling");
-    cy.saveSliceModifications();
+    sliceBuilder.goTo(slice.library, slice.name);
+    sliceBuilder.addVariation("Error handling");
+    sliceBuilder.save();
 
-    slicePage.openScreenshotModal();
+    sliceBuilder.openScreenshotModal();
     cy.addVariationToSlice("Error handling");
     sliceBuilder.openScreenshotModal();
     cy.contains("Select file").selectFile(

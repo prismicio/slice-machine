@@ -9,10 +9,10 @@ const menu = new Menu();
  *
  * @param {number} numberOfChanges number of changes that should be pushed, this number is used for assertions. If this is undefined, no assertions will be made on the number of changes left after the push
  */
-export function pushLocalChanges(numberOfChanges = 1) {
+export function pushLocalChanges(numberOfChanges) {
   changes.goTo();
 
-  if (numberOfChanges) {
+  if (numberOfChanges !== undefined) {
     // checking number of changes
     menu
       .changesNumber()
@@ -25,7 +25,7 @@ export function pushLocalChanges(numberOfChanges = 1) {
 
   // click to push changes
   changes.pushButton.click();
-  if (numberOfChanges) {
+  if (numberOfChanges !== undefined) {
     // number of changes should now be 0 at the end of the push
     // The time to wait depends on the number of changes
     menu.changesNumber({

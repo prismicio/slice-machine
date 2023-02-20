@@ -1,4 +1,4 @@
-import { SlicePage } from "../../pages/slices/slicePage";
+import { SliceBuilder } from "../../pages/slices/sliceBuilder";
 import {
   BooleanModal,
   ColorModal,
@@ -23,7 +23,7 @@ const SLICE = {
 };
 
 describe("I am a new SM user (with Next) who wants to build a slice with different widgets.", () => {
-  let slicePage = new SlicePage();
+  let slicePage = new SliceBuilder();
   let keyTextModal = new KeyTextModal();
   let richTextModal = new RichTextModal();
   let linkModal = new LinkModal();

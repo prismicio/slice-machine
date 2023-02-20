@@ -1,4 +1,4 @@
-import { SlicePage } from "../../pages/slices/slicePage";
+import { SliceBuilder } from "../../pages/slices/sliceBuilder";
 import { Menu } from "../../pages/menu";
 
 describe("I am an existing SM user and I want to push local changes", () => {
@@ -50,7 +50,7 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.createCustomType(customType.id, customType.name);
 
     const menu = new Menu();
-    const slicePage = new SlicePage();
+    const slicePage = new SliceBuilder();
 
     menu.navigateTo("Changes");
 
