@@ -1,4 +1,4 @@
-import { ChangesPage } from "../pages/changesPage";
+import { ChangesPage } from "../pages/changes/changesPage";
 import { Menu } from "../pages/menu";
 
 const changes = new ChangesPage();

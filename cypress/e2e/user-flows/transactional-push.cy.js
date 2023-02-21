@@ -2,7 +2,12 @@ import { SliceBuilder } from "../../pages/slices/sliceBuilder";
 import { Menu } from "../../pages/menu";
 import { CustomTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
 import { SlicesList } from "../../pages/slices/slicesList";
-import { ChangesPage } from "../../pages/changesPage";
+import { ChangesPage } from "../../pages/changes/changesPage";
+import {
+  HardDeleteDocumentsDrawer,
+  ReferencesErrorDrawer,
+  SoftDeleteDocumentsDrawer,
+} from "../../pages/changes/drawers";
 
 describe("I am an existing SM user and I want to push local changes", () => {
   const random = Date.now();
@@ -48,7 +53,11 @@ describe("I am an existing SM user and I want to push local changes", () => {
 
     menu.navigateTo("Slices");
 
-    slicesList.deleteSlice(slice.name);
+    // slicesList.deleteSlice(slice.name);
+    cy.get("[data-cy='slice-action-icon']").click();
+    cy.contains("Delete").click();
+    cy.get("[aria-modal]");
+    cy.contains("button", "Delete").click();
 
     menu.navigateTo("Changes");
 
@@ -64,27 +73,28 @@ describe("I am an existing SM user and I want to push local changes", () => {
 
     changesPage.pushChanges();
 
-    cy.contains("Manual action required").should("be.visible");
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(
-      customTypesWithDocuments[0].numberOfDocuments
-    );
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(customType.name);
+    const hardDeleteDocumentsDrawer = new HardDeleteDocumentsDrawer();
+    const softDeleteDocumentsDrawer = new SoftDeleteDocumentsDrawer();
+
+    hardDeleteDocumentsDrawer.title.should("be.visible");
+    hardDeleteDocumentsDrawer
+      .getAssociatedDocuments(customType.name)
+      .contains(customTypesWithDocuments[0].numberOfDocuments);
 
     changesPage.mockPushLimit("SOFT", customTypesWithDocuments);
 
-    cy.contains("button", "Try again").click();
-    cy.contains("Confirm deletion").should("be.visible");
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(
-      customTypesWithDocuments[0].numberOfDocuments
-    );
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(customType.name);
-    cy.contains("button", "Push changes").should("be.disabled");
+    hardDeleteDocumentsDrawer.pushButton.click();
 
-    cy.contains("label", "Delete these Documents").click();
+    softDeleteDocumentsDrawer.title.should("be.visible");
+    softDeleteDocumentsDrawer
+      .getAssociatedDocuments(customType.name)
+      .contains(customTypesWithDocuments[0].numberOfDocuments);
+
+    softDeleteDocumentsDrawer.pushButton.should("be.disabled");
 
     changesPage.unMockPushRequest();
 
-    cy.contains("button", "Push changes").should("be.enabled").click();
+    softDeleteDocumentsDrawer.confirmDelete();
 
     changesPage.isUpToDate();
   });
@@ -127,8 +137,9 @@ describe("I am an existing SM user and I want to push local changes", () => {
     menu.navigateTo("Changes");
     changesPage.pushChanges();
 
-    cy.contains("Missing Slices").should("be.visible");
-    cy.get("[data-cy='CustomTypesReferencesCard']").contains(customType.name);
+    const referencesErrorDrawer = new ReferencesErrorDrawer();
+    referencesErrorDrawer.title.should("be.visible");
+    referencesErrorDrawer.getCustomTypeReferencesCard(customType.name);
 
     customTypeBuilder.goTo(customType.id).save();
 
