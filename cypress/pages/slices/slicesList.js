@@ -1,3 +1,6 @@
+import { DeleteModal } from "../DeleteModal";
+
+const deleteModal = new DeleteModal();
 export class SlicesList {
   get emptyStateButton() {
     return cy.get("[data-cy=empty-state-main-button]");
@@ -26,5 +29,22 @@ export class SlicesList {
   goTo() {
     cy.visit(`/slices`);
     return this;
+  }
+
+  /**
+   * On the Slice list, delete a slice.
+   *
+   * @param {string} sliceName name of the slice to delete.
+   */
+  deleteSlice(sliceName) {
+    this.getOptionDopDownButton(sliceName).click();
+    this.optionDopDownMenu.should("be.visible");
+
+    this.deleteButton.click();
+
+    deleteModal.root.should("be.visible");
+    deleteModal.submit();
+
+    this.getSliceCard(sliceName).should("not.exist");
   }
 }
