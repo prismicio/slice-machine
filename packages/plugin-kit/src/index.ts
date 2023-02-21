@@ -26,7 +26,8 @@ export type {
 	SliceMachineHookTypes,
 } from "./types";
 
-export { HookError } from "./lib";
+export { HookError } from "./lib/HookSystem";
+export { DecodeError } from "./lib/DecodeError";
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -195,4 +196,4 @@ export {
 	SliceMachinePluginRunner,
 } from "./createSliceMachinePluginRunner";
 
-export type { CallHookReturnType } from "./lib";
+export type { CallHookReturnType } from "./lib/HookSystem";

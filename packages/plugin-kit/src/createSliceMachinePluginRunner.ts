@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 
 import { defu } from "defu";
 
-import { HookSystem } from "./lib";
+import { HookSystem } from "./lib/HookSystem";
 import { createSliceMachineContext } from "./createSliceMachineContext";
 import {
 	LoadedSliceMachinePlugin,

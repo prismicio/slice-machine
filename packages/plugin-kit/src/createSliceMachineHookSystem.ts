@@ -1,4 +1,4 @@
-import { HookSystem } from "./lib";
+import { HookSystem } from "./lib/HookSystem";
 import type { SliceMachineHooks } from "./types";
 
 /**

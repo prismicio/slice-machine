@@ -1,6 +1,6 @@
 import { SliceMachineContext } from "./createSliceMachineContext";
 import { SliceMachinePlugin } from "./defineSliceMachinePlugin";
-import { Hook } from "./lib";
+import { Hook } from "./lib/HookSystem";
 
 import { CommandInitHookBase } from "./hooks/command-init";
 import { CustomTypeAssetDeleteHookBase } from "./hooks/customType-asset-delete";

@@ -1,4 +1,4 @@
-import { HookSystem } from "./lib";
+import { HookSystem } from "./lib/HookSystem";
 import { SliceMachineHooks, SliceMachineProject } from "./types";
 
 import { CustomTypeLibraryReadHookReturnType } from "./hooks/customTypeLibrary-read";
