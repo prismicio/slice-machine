@@ -53,11 +53,7 @@ describe("I am an existing SM user and I want to push local changes", () => {
 
     menu.navigateTo("Slices");
 
-    // slicesList.deleteSlice(slice.name);
-    cy.get("[data-cy='slice-action-icon']").click();
-    cy.contains("Delete").click();
-    cy.get("[aria-modal]");
-    cy.contains("button", "Delete").click();
+    slicesList.deleteSlice(slice.name);
 
     menu.navigateTo("Changes");
 

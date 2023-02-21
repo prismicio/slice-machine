@@ -6,7 +6,7 @@ export class SoftDeleteDocumentsDrawer extends BaseDrawer {
   }
 
   getAssociatedDocuments(ctName) {
-    return this.root.get(`[data-cy='AssociatedDocumentsCard-${ctName}']`)
+    return this.root.get(`[data-cy='AssociatedDocumentsCard-${ctName}']`);
   }
 
   get pushButton() {
