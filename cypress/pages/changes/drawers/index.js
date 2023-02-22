@@ -1,9 +1,9 @@
-import { HardDeleteDocumentsDrawer } from "./hardDeleteDocumentsDrawer";
-import { SoftDeleteDocumentsDrawer } from "./softDeleteDocumentsDrawer";
-import { ReferencesErrorDrawer } from "./referencesErrorDrawer";
+import { hardDeleteDocumentsDrawer } from "./hardDeleteDocumentsDrawer";
+import { softDeleteDocumentsDrawer } from "./softDeleteDocumentsDrawer";
+import { referencesErrorDrawer } from "./referencesErrorDrawer";
 
 export {
-  HardDeleteDocumentsDrawer,
-  SoftDeleteDocumentsDrawer,
-  ReferencesErrorDrawer,
+  hardDeleteDocumentsDrawer,
+  softDeleteDocumentsDrawer,
+  referencesErrorDrawer,
 };

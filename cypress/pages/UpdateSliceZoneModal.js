@@ -1,4 +1,4 @@
-export class UpdateSliceZoneModal {
+class UpdateSliceZoneModal {
   get root() {
     return cy.get("[data-cy=update-slices-modal]");
   }
@@ -14,3 +14,5 @@ export class UpdateSliceZoneModal {
     return this;
   }
 }
+
+export const updateSliceZoneModal = new UpdateSliceZoneModal();

@@ -1,6 +1,6 @@
 import { BaseDrawer } from "./baseDrawer";
 
-export class ReferencesErrorDrawer extends BaseDrawer {
+class ReferencesErrorDrawer extends BaseDrawer {
   constructor() {
     super("Missing Slices");
   }
@@ -9,3 +9,5 @@ export class ReferencesErrorDrawer extends BaseDrawer {
     return this.root.get(`[data-cy='CustomTypesReferencesCard-${ctName}']`);
   }
 }
+
+export const referencesErrorDrawer = new ReferencesErrorDrawer();

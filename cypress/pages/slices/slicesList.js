@@ -1,7 +1,6 @@
-import { DeleteModal } from "../DeleteModal";
+import { deleteModal } from "../DeleteModal";
 
-const deleteModal = new DeleteModal();
-export class SlicesList {
+class SlicesList {
   get emptyStateButton() {
     return cy.get("[data-cy=empty-state-main-button]");
   }
@@ -48,3 +47,5 @@ export class SlicesList {
     this.getSliceCard(sliceName).should("not.exist");
   }
 }
+
+export const slicesList = new SlicesList();

@@ -1,4 +1,4 @@
-export class CreateCustomTypeModal {
+class CreateCustomTypeModal {
   get root() {
     return cy.get("[data-cy=create-ct-modal]");
   }
@@ -16,3 +16,5 @@ export class CreateCustomTypeModal {
     return this;
   }
 }
+
+export const createCustomTypeModal = new CreateCustomTypeModal();

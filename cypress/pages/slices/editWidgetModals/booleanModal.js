@@ -1,6 +1,6 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
-export class BooleanModal extends BaseEditWidgetModal {
+class BooleanModal extends BaseEditWidgetModal {
   editFalsePlaceholder(newPlaceholder) {
     this.editTextField("False Placeholder", newPlaceholder);
     return this;
@@ -16,3 +16,5 @@ export class BooleanModal extends BaseEditWidgetModal {
     return this;
   }
 }
+
+export const booleanModal = new BooleanModal();

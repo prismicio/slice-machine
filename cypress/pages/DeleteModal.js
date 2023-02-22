@@ -1,4 +1,4 @@
-export class DeleteModal {
+class DeleteModal {
   constructor() {
     this.rootSelector = "[aria-modal]";
   }
@@ -11,3 +11,5 @@ export class DeleteModal {
     return this.root.contains("button", "Delete").click();
   }
 }
+
+export const deleteModal = new DeleteModal();

@@ -1,8 +1,6 @@
-import { Menu } from "../menu";
+import { menu } from "../menu";
 
-const menu = new Menu();
-
-export class ChangesPage {
+class ChangesPage {
   get pushButton() {
     return cy.get("[data-cy=push-changes]");
   }
@@ -82,3 +80,5 @@ export class ChangesPage {
     });
   }
 }
+
+export const changesPage = new ChangesPage();

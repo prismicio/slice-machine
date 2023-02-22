@@ -1,6 +1,6 @@
 import { Builder } from "../Builder";
 
-export class SliceBuilder extends Builder {
+class SliceBuilder extends Builder {
   get imagePreview() {
     return cy.get("[alt='Preview image']");
   }
@@ -159,3 +159,5 @@ export class SliceBuilder extends Builder {
     return this;
   }
 }
+
+export const sliceBuilder = new SliceBuilder();

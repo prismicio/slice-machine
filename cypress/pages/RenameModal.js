@@ -17,7 +17,7 @@ class RenameModal {
   }
 }
 
-export class CustomTypeRenameModal extends RenameModal {
+class CustomTypeRenameModal extends RenameModal {
   constructor() {
     super(
       "[data-cy=rename-custom-type-modal]",
@@ -26,8 +26,12 @@ export class CustomTypeRenameModal extends RenameModal {
   }
 }
 
-export class SliceRenameModal extends RenameModal {
+export const customTypeRenameModal = new CustomTypeRenameModal();
+
+class SliceRenameModal extends RenameModal {
   constructor() {
     super("[data-cy=rename-slice-modal]", '[data-cy="slice-name-input"]');
   }
 }
+
+export const sliceRenameModal = new SliceRenameModal();

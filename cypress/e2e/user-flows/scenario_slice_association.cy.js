@@ -1,5 +1,5 @@
-import { CustomTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
-import { SliceBuilder } from "../../pages/slices/sliceBuilder";
+import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 
 const random = Date.now();
 
@@ -9,9 +9,6 @@ const customTypeId = `my_test_${random}`;
 const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
 const sliceLib = "slices";
-
-const sliceBuilder = new SliceBuilder();
-const customTypeBuilder = new CustomTypeBuilder();
 
 describe("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {

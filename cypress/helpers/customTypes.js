@@ -1,20 +1,12 @@
 import "cypress-wait-until";
 import { TYPES_FILE, CUSTOM_TYPE_MODEL } from "../consts";
-import { CustomTypeBuilder } from "../pages/customTypes/customTypeBuilder";
-import { CustomTypeRenameModal } from "../pages/RenameModal";
-import { AddFieldModal } from "../pages/AddFieldModal";
-import { UpdateSliceZoneModal } from "../pages/UpdateSliceZoneModal";
-import { CustomTypesList } from "../pages/customTypes/customTypesList";
-import { CreateCustomTypeModal } from "../pages/customTypes/createCustomTypeModal";
-import { DeleteModal } from "../pages/DeleteModal";
-
-const customTypeBuilder = new CustomTypeBuilder();
-const renameModal = new CustomTypeRenameModal();
-const addFieldModal = new AddFieldModal();
-const updateSliceZoneModal = new UpdateSliceZoneModal();
-const customTypesList = new CustomTypesList();
-const createCustomTypeModal = new CreateCustomTypeModal();
-const deleteModal = new DeleteModal();
+import { customTypeBuilder } from "../pages/customTypes/customTypeBuilder";
+import { customTypeRenameModal } from "../pages/RenameModal";
+import { updateSliceZoneModal } from "../pages/UpdateSliceZoneModal";
+import { customTypesList } from "../pages/customTypes/customTypesList";
+import { createCustomTypeModal } from "../pages/customTypes/createCustomTypeModal";
+import { deleteModal } from "../pages/DeleteModal";
+import { addFieldModal } from "../pages/AddFieldModal";
 
 /**
  * Create a Custom type and assert files are created.
@@ -51,11 +43,11 @@ export function renameCustomType(id, actualName, newName) {
 
   customTypesList.renameButton.click();
 
-  renameModal.root.should("be.visible");
-  renameModal.input.should("have.value", actualName);
-  renameModal.input.clear().type(`${newName} - Edited`);
-  renameModal.submit();
-  renameModal.root.should("not.exist");
+  customTypeRenameModal.root.should("be.visible");
+  customTypeRenameModal.input.should("have.value", actualName);
+  customTypeRenameModal.input.clear().type(`${newName} - Edited`);
+  customTypeRenameModal.submit();
+  customTypeRenameModal.root.should("not.exist");
 
   customTypesList.getCustomTypeLabel(id).contains("Edited");
 

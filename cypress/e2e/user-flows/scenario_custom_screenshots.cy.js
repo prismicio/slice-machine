@@ -1,8 +1,8 @@
-import { ScreenshotModal } from "../../pages/slices/screenshotModal";
-import { SliceCard } from "../../pages/slices/sliceCard";
-import { Menu } from "../../pages/menu";
-import { SliceBuilder } from "../../pages/slices/sliceBuilder";
-import { ChangesPage } from "../../pages/changes/changesPage";
+import { screenshotModal } from "../../pages/slices/screenshotModal";
+import { sliceCard } from "../../pages/slices/sliceCard";
+import { menu } from "../../pages/menu";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
+import { changesPage } from "../../pages/changes/changesPage";
 
 describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
@@ -12,12 +12,6 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     name: `TestCustomScreenshots${random}`,
     library: "slices",
   };
-
-  const sliceBuilder = new SliceBuilder();
-  const screenshotModal = new ScreenshotModal();
-  const changesPage = new ChangesPage();
-  const menu = new Menu();
-  const sliceCard = new SliceCard(slice.name);
 
   const wrongScreenshot = "screenshots/preview_small.png";
   const defaultScreenshot = "screenshots/preview_medium.png";

@@ -1,4 +1,4 @@
-export class CustomTypesList {
+class CustomTypesList {
   get emptyStateButton() {
     return cy.get("[data-cy=empty-state-main-button]");
   }
@@ -32,3 +32,5 @@ export class CustomTypesList {
     return this;
   }
 }
+
+export const customTypesList = new CustomTypesList();

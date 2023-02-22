@@ -1,4 +1,4 @@
-export class CreateSliceModal {
+class CreateSliceModal {
   get root() {
     return cy.get("[data-cy=create-slice-modal]");
   }
@@ -12,3 +12,5 @@ export class CreateSliceModal {
     return this;
   }
 }
+
+export const createSliceModal = new CreateSliceModal();

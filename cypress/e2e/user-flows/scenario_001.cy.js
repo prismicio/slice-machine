@@ -1,9 +1,8 @@
-import { CustomTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
+import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
 
 const random = Date.now();
 const customTypeName = `My Custom Type ${random}`;
 const customTypeId = `my_custom_type_${random}`;
-const customTypeBuilder = new CustomTypeBuilder();
 
 describe("I am a new SM user (with Next) who wants to create a Custom Type with fields, and then save and push it to Prismic.", () => {
   before(() => {

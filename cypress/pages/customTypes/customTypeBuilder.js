@@ -1,6 +1,6 @@
 import { Builder } from "../Builder";
 
-export class CustomTypeBuilder extends Builder {
+class CustomTypeBuilder extends Builder {
   get renameButton() {
     return cy.get('[data-cy="edit-custom-type"]');
   }
@@ -47,3 +47,5 @@ export class CustomTypeBuilder extends Builder {
     return this;
   }
 }
+
+export const customTypeBuilder = new CustomTypeBuilder();

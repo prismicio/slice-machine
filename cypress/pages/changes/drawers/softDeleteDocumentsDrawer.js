@@ -1,6 +1,6 @@
 import { BaseDrawer } from "./baseDrawer";
 
-export class SoftDeleteDocumentsDrawer extends BaseDrawer {
+class SoftDeleteDocumentsDrawer extends BaseDrawer {
   constructor() {
     super("Confirm deletion");
   }
@@ -20,3 +20,5 @@ export class SoftDeleteDocumentsDrawer extends BaseDrawer {
     return this;
   }
 }
+
+export const softDeleteDocumentsDrawer = new SoftDeleteDocumentsDrawer();

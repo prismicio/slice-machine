@@ -1,6 +1,6 @@
 import { BaseDrawer } from "./baseDrawer";
 
-export class HardDeleteDocumentsDrawer extends BaseDrawer {
+class HardDeleteDocumentsDrawer extends BaseDrawer {
   constructor() {
     super("Manual action required");
   }
@@ -9,3 +9,5 @@ export class HardDeleteDocumentsDrawer extends BaseDrawer {
     return this.root.get(`[data-cy='AssociatedDocumentsCard-${ctName}']`);
   }
 }
+
+export const hardDeleteDocumentsDrawer = new HardDeleteDocumentsDrawer();

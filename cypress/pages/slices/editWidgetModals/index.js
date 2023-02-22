@@ -1,31 +1,31 @@
-import { KeyTextModal } from "./keyTextModal";
-import { RichTextModal } from "./richTextModal";
-import { LinkModal } from "./linkModal";
-import { LinkToMediaModal } from "./linkToMediaModal";
-import { ImageModal } from "./imageModal";
-import { BooleanModal } from "./booleanModal";
-import { NumberModal } from "./numberModal";
-import { EmbedModal } from "./embedModal";
-import { ColorModal } from "./colorModal";
-import { TimestampModal } from "./timestampModal";
-import { DateModal } from "./dateModal";
-import { GeoPointModal } from "./geoPointModal";
-import { SelectModal } from "./selectModal";
-import { ContentRelationshipModal } from "./contentRelationshipModal";
+import { keyTextModal } from "./keyTextModal";
+import { richTextModal } from "./richTextModal";
+import { linkModal } from "./linkModal";
+import { linkToMediaModal } from "./linkToMediaModal";
+import { imageModal } from "./imageModal";
+import { booleanModal } from "./booleanModal";
+import { numberModal } from "./numberModal";
+import { embedModal } from "./embedModal";
+import { colorModal } from "./colorModal";
+import { timestampModal } from "./timestampModal";
+import { dateModal } from "./dateModal";
+import { geoPointModal } from "./geoPointModal";
+import { selectModal } from "./selectModal";
+import { contentRelationshipModal } from "./contentRelationshipModal";
 
 export {
-  BooleanModal,
-  ColorModal,
-  ContentRelationshipModal,
-  DateModal,
-  EmbedModal,
-  GeoPointModal,
-  ImageModal,
-  KeyTextModal,
-  LinkModal,
-  LinkToMediaModal,
-  NumberModal,
-  RichTextModal,
-  SelectModal,
-  TimestampModal,
+  booleanModal,
+  colorModal,
+  contentRelationshipModal,
+  dateModal,
+  embedModal,
+  geoPointModal,
+  imageModal,
+  keyTextModal,
+  linkModal,
+  linkToMediaModal,
+  numberModal,
+  richTextModal,
+  selectModal,
+  timestampModal,
 };

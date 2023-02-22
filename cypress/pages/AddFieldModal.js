@@ -1,4 +1,4 @@
-export class AddFieldModal {
+class AddFieldModal {
   fieldTypeButton(fieldType) {
     return cy.get(`[data-cy='${fieldType}']`);
   }
@@ -8,3 +8,5 @@ export class AddFieldModal {
     return this;
   }
 }
+
+export const addFieldModal = new AddFieldModal();

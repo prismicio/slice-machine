@@ -1,6 +1,5 @@
-import { SliceBuilder } from "../../pages/slices/sliceBuilder";
-import { SimulatorPage } from "../../pages/simulator/simulatorPage";
-import { ScreenshotModal } from "../../pages/simulator/screenshotModal";
+import { simulatorPage } from "../../pages/simulator/simulatorPage";
+import { screenshotModal } from "../../pages/simulator/screenshotModal";
 
 describe("I am an existing SM user and I want to take a screenshot from the slice simulator", () => {
   const random = Date.now();
@@ -12,29 +11,25 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
     newVariationName: "foo",
   };
 
-  const slicePage = new SliceBuilder();
-  const simulatorPage = new SimulatorPage();
-  const screenshotModal = new ScreenshotModal();
-
   before("Cleanup local data and create a new slice", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
     cy.createSlice(slice.library, slice.id, slice.name);
 
-    slicePage.addVariation(slice.newVariationName);
-    slicePage.save();
+    sliceBuilder.addVariation(slice.newVariationName);
+    sliceBuilder.save();
   });
 
   beforeEach("Start from the Slice page", () => {
     cy.setSliceMachineUserContext({});
 
-    slicePage.goTo(slice.library, slice.name);
+    sliceBuilder.goTo(slice.library, slice.name);
   });
 
   it("Open the simulator on the default variant", () => {
     simulatorPage.setup();
 
-    slicePage.openSimulator();
+    sliceBuilder.openSimulator();
 
     simulatorPage
       .resizeScreenWithDropdown("Desktop", "Tablet")
@@ -63,12 +58,12 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
     screenshotModal.close();
 
     // Check screenshots in the slice page preview
-    slicePage.goTo(slice.library, slice.name);
-    slicePage.imagePreview.isCorrectDimensions(500, 500);
-    expect(slicePage.imagePreviewSrc).to.equal(mainVariationScreenshotSrc);
-    slicePage
+    sliceBuilder.goTo(slice.library, slice.name);
+    sliceBuilder.imagePreview.isCorrectDimensions(500, 500);
+    expect(sliceBuilder.imagePreviewSrc).to.equal(mainVariationScreenshotSrc);
+    sliceBuilder
       .changeToVariation("Default", slice.newVariationName)
       .imagePreview.isCorrectDimensions(1280, 800);
-    expect(slicePage.imagePreviewSrc).to.equal(secondVariationScreenshotSrc);
+    expect(sliceBuilder.imagePreviewSrc).to.equal(secondVariationScreenshotSrc);
   });
 });

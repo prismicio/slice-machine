@@ -1,21 +1,16 @@
-import { SliceBuilder } from "../../pages/slices/sliceBuilder";
-import { Menu } from "../../pages/menu";
-import { CustomTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
-import { SlicesList } from "../../pages/slices/slicesList";
-import { ChangesPage } from "../../pages/changes/changesPage";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
+import { menu } from "../../pages/menu";
+import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
+import { slicesList } from "../../pages/slices/slicesList";
+import { changesPage } from "../../pages/changes/changesPage";
 import {
-  HardDeleteDocumentsDrawer,
-  ReferencesErrorDrawer,
-  SoftDeleteDocumentsDrawer,
+  hardDeleteDocumentsDrawer,
+  referencesErrorDrawer,
+  softDeleteDocumentsDrawer,
 } from "../../pages/changes/drawers";
 
 describe("I am an existing SM user and I want to push local changes", () => {
   const random = Date.now();
-  const menu = new Menu();
-  const slicePage = new SliceBuilder();
-  const slicesList = new SlicesList();
-  const customTypeBuilder = new CustomTypeBuilder();
-  const changesPage = new ChangesPage();
 
   const slice = {
     id: `test_push${random}`,
@@ -43,7 +38,7 @@ describe("I am an existing SM user and I want to push local changes", () => {
 
     customTypeBuilder.goTo(customType.id).addTab("Foo").save();
 
-    slicePage.goTo(slice.library, slice.name).addVariation("foo").save();
+    sliceBuilder.goTo(slice.library, slice.name).addVariation("foo").save();
 
     menu.navigateTo("Changes");
 
@@ -68,9 +63,6 @@ describe("I am an existing SM user and I want to push local changes", () => {
     changesPage.mockPushLimit("HARD", customTypesWithDocuments);
 
     changesPage.pushChanges();
-
-    const hardDeleteDocumentsDrawer = new HardDeleteDocumentsDrawer();
-    const softDeleteDocumentsDrawer = new SoftDeleteDocumentsDrawer();
 
     hardDeleteDocumentsDrawer.title.should("be.visible");
     hardDeleteDocumentsDrawer
@@ -133,7 +125,6 @@ describe("I am an existing SM user and I want to push local changes", () => {
     menu.navigateTo("Changes");
     changesPage.pushChanges();
 
-    const referencesErrorDrawer = new ReferencesErrorDrawer();
     referencesErrorDrawer.title.should("be.visible");
     referencesErrorDrawer.getCustomTypeReferencesCard(customType.name);
 

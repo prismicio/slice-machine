@@ -1,18 +1,11 @@
 import "cypress-wait-until";
 import { TYPES_FILE, SLICE_MODEL } from "../consts";
-import { SlicesList } from "../pages/slices/slicesList";
-import { CreateSliceModal } from "../pages/slices/createSliceModal";
-import { SliceBuilder } from "../pages/slices/sliceBuilder";
-import { SliceRenameModal } from "../pages/RenameModal";
-import { AddFieldModal } from "../pages/AddFieldModal";
-import { AddVariationModal } from "../pages/slices/addVariationModal";
-
-const slicesList = new SlicesList();
-const createSliceModal = new CreateSliceModal();
-const sliceBuilder = new SliceBuilder();
-const sliceRenameModal = new SliceRenameModal();
-const addFieldModal = new AddFieldModal();
-const addVariationModal = new AddVariationModal();
+import { slicesList } from "../pages/slices/slicesList";
+import { createSliceModal } from "../pages/slices/createSliceModal";
+import { sliceBuilder } from "../pages/slices/sliceBuilder";
+import { sliceRenameModal } from "../pages/RenameModal";
+import { addFieldModal } from "../pages/AddFieldModal";
+import { addVariationModal } from "../pages/slices/addVariationModal";
 
 /**
  * Create a Slice and assert files are created.

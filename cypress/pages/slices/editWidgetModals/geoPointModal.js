@@ -1,3 +1,5 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
-export class GeoPointModal extends BaseEditWidgetModal {}
+class GeoPointModal extends BaseEditWidgetModal { }
+
+export const geoPointModal = new GeoPointModal();

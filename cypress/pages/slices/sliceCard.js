@@ -1,4 +1,4 @@
-export class SliceCard {
+class SliceCard {
   constructor(sliceName) {
     this.root = `a[href^="/slices/${sliceName}"]`;
   }
@@ -16,3 +16,5 @@ export class SliceCard {
     return this;
   }
 }
+
+export const sliceCard = new SliceCard();

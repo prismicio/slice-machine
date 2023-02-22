@@ -1,4 +1,4 @@
-export class AddVariationModal {
+class AddVariationModal {
   get root() {
     return cy.get("[aria-modal]");
   }
@@ -11,3 +11,5 @@ export class AddVariationModal {
     return cy.contains("button", "Submit").click();
   }
 }
+
+export const addVariationModal = new AddVariationModal();
