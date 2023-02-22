@@ -1,15 +1,17 @@
 import {
 	defineSliceMachinePlugin,
-	PluginOptions,
+	SliceMachinePluginOptions,
 	SliceMachinePlugin,
 } from "../../src";
 import { REQUIRED_ADAPTER_HOOKS } from "../../src/createSliceMachinePluginRunner";
 
-type CreateTestAdapterArgs<TPluginOptions extends PluginOptions> = {
+type CreateTestAdapterArgs<TPluginOptions extends SliceMachinePluginOptions> = {
 	setup?: SliceMachinePlugin<TPluginOptions>["setup"];
 };
 
-export const createTestAdapter = <TPluginOptions extends PluginOptions>(
+export const createTestAdapter = <
+	TPluginOptions extends SliceMachinePluginOptions,
+>(
 	args: CreateTestAdapterArgs<TPluginOptions> = {},
 ): SliceMachinePlugin<TPluginOptions> => {
 	return defineSliceMachinePlugin({

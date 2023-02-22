@@ -31,7 +31,8 @@
 		"lint": "eslint --ext .js,.ts .",
 		"prepare": "npm run build",
 		"size": "size-limit",
-		"test": "npm run lint && npm run unit && npm run build && npm run size",
+		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
+		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
 		"depcheck": "depcheck --config=.depcheckrc"
