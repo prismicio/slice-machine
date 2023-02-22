@@ -35,9 +35,5 @@ const SliceMachineConfigCodec = t.intersection([
 export const decodeSliceMachineConfig = (
 	input: unknown,
 ): DecodeReturnType<SliceMachineConfig, SliceMachineConfig, unknown> => {
-	return decode(SliceMachineConfigCodec, input) as DecodeReturnType<
-		SliceMachineConfig,
-		SliceMachineConfig,
-		unknown
-	>;
+	return decode(SliceMachineConfigCodec, input);
 };
