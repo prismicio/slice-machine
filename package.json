@@ -58,6 +58,7 @@
     ]
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "e2e-projects/next2"
   ]
 }
