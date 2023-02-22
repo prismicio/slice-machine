@@ -1,6 +1,6 @@
-import { Builder } from "../Builder";
+import { BaseBuilder } from "../BaseBuilder";
 
-class SliceBuilder extends Builder {
+class SliceBuilder extends BaseBuilder {
   get imagePreview() {
     return cy.get("[alt='Preview image']");
   }

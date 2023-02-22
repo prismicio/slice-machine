@@ -1,6 +1,6 @@
-import { Builder } from "../Builder";
+import { BaseBuilder } from "../BaseBuilder";
 
-class CustomTypeBuilder extends Builder {
+class CustomTypeBuilder extends BaseBuilder {
   get renameButton() {
     return cy.get('[data-cy="edit-custom-type"]');
   }

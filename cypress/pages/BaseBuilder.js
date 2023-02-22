@@ -1,4 +1,4 @@
-class Builder {
+export class BaseBuilder {
   get saveButton() {
     return cy.contains("Save to File System");
   }
@@ -24,5 +24,3 @@ class Builder {
     return this;
   }
 }
-
-export const builder = new Builder();
