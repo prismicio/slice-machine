@@ -1,4 +1,4 @@
-export class EditorPage {
+class EditorPage {
   #root = ".editor";
 
   /**
@@ -72,3 +72,5 @@ export class EditorPage {
     return cy.get('[role="dialog"] img').first().click();
   }
 }
+
+export const editorPage = new EditorPage();

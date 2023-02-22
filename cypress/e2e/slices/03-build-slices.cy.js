@@ -1,19 +1,19 @@
-import { SlicePage } from "../../pages/slices/slicePage";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 import {
-  BooleanModal,
-  ColorModal,
-  ContentRelationshipModal,
-  DateModal,
-  EmbedModal,
-  GeoPointModal,
-  ImageModal,
-  KeyTextModal,
-  LinkModal,
-  LinkToMediaModal,
-  NumberModal,
-  RichTextModal,
-  SelectModal,
-  TimestampModal,
+  booleanModal,
+  colorModal,
+  contentRelationshipModal,
+  dateModal,
+  embedModal,
+  geoPointModal,
+  imageModal,
+  keyTextModal,
+  linkModal,
+  linkToMediaModal,
+  numberModal,
+  richTextModal,
+  selectModal,
+  timestampModal,
 } from "../../pages/slices/editWidgetModals";
 
 const SLICE = {
@@ -23,22 +23,6 @@ const SLICE = {
 };
 
 describe("I am a new SM user (with Next) who wants to build a slice with different widgets.", () => {
-  let slicePage = new SlicePage();
-  let keyTextModal = new KeyTextModal();
-  let richTextModal = new RichTextModal();
-  let linkModal = new LinkModal();
-  let linkToMediaModal = new LinkToMediaModal();
-  let imageModal = new ImageModal();
-  let booleanModal = new BooleanModal();
-  let numberModal = new NumberModal();
-  let embedModal = new EmbedModal();
-  let colorModal = new ColorModal();
-  let timestampModal = new TimestampModal();
-  let dateModal = new DateModal();
-  let geoPointModal = new GeoPointModal();
-  let selectModal = new SelectModal();
-  let contentRelationshipModal = new ContentRelationshipModal();
-
   before(() => {
     cy.clearProject();
   });
@@ -53,36 +37,36 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     cy.createCustomType(customTypeId, customTypeName);
     cy.createSlice(SLICE.library, SLICE.id, SLICE.name);
 
-    slicePage.deleteWidgetField("Title");
-    slicePage.deleteWidgetField("Description");
+    sliceBuilder.deleteWidgetField("Title");
+    sliceBuilder.deleteWidgetField("Description");
 
-    slicePage.addNewWidgetField("SimpleTextField", "Key Text");
-    slicePage.addNewWidgetField("RichTextField", "Rich Text");
-    slicePage.addNewWidgetField("LinkField", "Link");
-    slicePage.addNewWidgetField("LinkToMediaField", "Link to media");
-    slicePage.addNewWidgetField("ImageField", "Image");
-    slicePage.addNewWidgetField("BooleanField", "Boolean");
-    slicePage.addNewWidgetField("NumberField", "Number");
-    slicePage.addNewWidgetField("EmbedField", "Embed");
-    slicePage.addNewWidgetField("ColorField", "Color");
-    slicePage.addNewWidgetField("TimestampField", "Timestamp");
-    slicePage.addNewWidgetField("DateField", "Date");
-    slicePage.addNewWidgetField("GeoPointField", "GeoPoint");
-    slicePage.addNewWidgetField("SelectField", "Select");
-    slicePage.addNewWidgetField(
+    sliceBuilder.addNewWidgetField("SimpleTextField", "Key Text");
+    sliceBuilder.addNewWidgetField("RichTextField", "Rich Text");
+    sliceBuilder.addNewWidgetField("LinkField", "Link");
+    sliceBuilder.addNewWidgetField("LinkToMediaField", "Link to media");
+    sliceBuilder.addNewWidgetField("ImageField", "Image");
+    sliceBuilder.addNewWidgetField("BooleanField", "Boolean");
+    sliceBuilder.addNewWidgetField("NumberField", "Number");
+    sliceBuilder.addNewWidgetField("EmbedField", "Embed");
+    sliceBuilder.addNewWidgetField("ColorField", "Color");
+    sliceBuilder.addNewWidgetField("TimestampField", "Timestamp");
+    sliceBuilder.addNewWidgetField("DateField", "Date");
+    sliceBuilder.addNewWidgetField("GeoPointField", "GeoPoint");
+    sliceBuilder.addNewWidgetField("SelectField", "Select");
+    sliceBuilder.addNewWidgetField(
       "ContentRelationshipField",
       "Content Relationship"
     );
 
-    slicePage.openEditWidgetModal("SimpleTextField");
+    sliceBuilder.openEditWidgetModal("SimpleTextField");
     keyTextModal
       .editLabel("NewTextName")
       .editApiId("KeyTextApiID")
       .editPlaceholder("Default")
       .save();
-    slicePage.getWidgetField("NewTextName");
+    sliceBuilder.getWidgetField("NewTextName");
 
-    slicePage.openEditWidgetModal("RichTextField");
+    sliceBuilder.openEditWidgetModal("RichTextField");
     richTextModal
       .editLabel("NewRichTextField")
       .editApiId("RichTextApiID")
@@ -92,26 +76,26 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .deselectAllTextTypes()
       .toggleTextTypes(["H1", "H3", "image"])
       .save();
-    slicePage.getWidgetField("NewRichTextField");
+    sliceBuilder.getWidgetField("NewRichTextField");
 
-    slicePage.openEditWidgetModal("LinkField");
+    sliceBuilder.openEditWidgetModal("LinkField");
     linkModal
       .editLabel("NewLinkField")
       .editApiId("LinkApiID")
       .editPlaceholder("Default")
       .toggleAllowTargetBlank()
       .save();
-    slicePage.getWidgetField("NewLinkField");
+    sliceBuilder.getWidgetField("NewLinkField");
 
-    slicePage.openEditWidgetModal("LinkToMediaField");
+    sliceBuilder.openEditWidgetModal("LinkToMediaField");
     linkToMediaModal
       .editLabel("NewLinkToMediaField")
       .editApiId("LinkToMediaApiID")
       .editPlaceholder("Default")
       .save();
-    slicePage.getWidgetField("NewLinkToMediaField");
+    sliceBuilder.getWidgetField("NewLinkToMediaField");
 
-    slicePage.openEditWidgetModal("ImageField");
+    sliceBuilder.openEditWidgetModal("ImageField");
     imageModal
       .editLabel("NewImageField")
       .editApiId("ImageApiID")
@@ -119,9 +103,9 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .editHeight("200")
       .addThumbnail("Thumbnail2", 100, 80)
       .save();
-    slicePage.getWidgetField("NewImageField");
+    sliceBuilder.getWidgetField("NewImageField");
 
-    slicePage.openEditWidgetModal("BooleanField");
+    sliceBuilder.openEditWidgetModal("BooleanField");
     booleanModal
       .editLabel("NewBooleanField")
       .editApiId("BooleanApiID")
@@ -129,56 +113,56 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .editTruePlaceholder("NewTrue")
       .toggleDefaultTrue()
       .save();
-    slicePage.getWidgetField("NewBooleanField");
+    sliceBuilder.getWidgetField("NewBooleanField");
 
-    slicePage.openEditWidgetModal("NumberField");
+    sliceBuilder.openEditWidgetModal("NumberField");
     numberModal
       .editLabel("NewNumberField")
       .editApiId("NumberApiID")
       .editPlaceholder("Default")
       .save();
-    slicePage.getWidgetField("NewNumberField");
+    sliceBuilder.getWidgetField("NewNumberField");
 
-    slicePage.openEditWidgetModal("EmbedField");
+    sliceBuilder.openEditWidgetModal("EmbedField");
     embedModal
       .editLabel("NewEmbedField")
       .editApiId("EmbedApiID")
       .editPlaceholder("Default")
       .save();
-    slicePage.getWidgetField("NewEmbedField");
+    sliceBuilder.getWidgetField("NewEmbedField");
 
-    slicePage.openEditWidgetModal("ColorField");
+    sliceBuilder.openEditWidgetModal("ColorField");
     colorModal
       .editLabel("NewColorField")
       .editApiId("ColorApiID")
       .editPlaceholder("Default")
       .save();
-    slicePage.getWidgetField("NewColorField");
+    sliceBuilder.getWidgetField("NewColorField");
 
-    slicePage.openEditWidgetModal("TimestampField");
+    sliceBuilder.openEditWidgetModal("TimestampField");
     timestampModal
       .editLabel("NewTimestampField")
       .editApiId("TimestampApiID")
       .editPlaceholder("Default")
       .save();
-    slicePage.getWidgetField("NewTimestampField");
+    sliceBuilder.getWidgetField("NewTimestampField");
 
-    slicePage.openEditWidgetModal("DateField");
+    sliceBuilder.openEditWidgetModal("DateField");
     dateModal
       .editLabel("NewDateField")
       .editApiId("DateApiID")
       .editPlaceholder("Default")
       .save();
-    slicePage.getWidgetField("NewDateField");
+    sliceBuilder.getWidgetField("NewDateField");
 
-    slicePage.openEditWidgetModal("GeoPointField");
+    sliceBuilder.openEditWidgetModal("GeoPointField");
     geoPointModal
       .editLabel("NewGeoPointField")
       .editApiId("GeoPointApiID")
       .save();
-    slicePage.getWidgetField("NewGeoPointField");
+    sliceBuilder.getWidgetField("NewGeoPointField");
 
-    slicePage.openEditWidgetModal("SelectField");
+    sliceBuilder.openEditWidgetModal("SelectField");
     selectModal
       .editLabel("NewSelectField")
       .editApiId("SelectApiID")
@@ -188,16 +172,16 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
       .changeOptionLabel(2, "Option 2")
       .addOption("Option 3")
       .save();
-    slicePage.getWidgetField("NewSelectField");
+    sliceBuilder.getWidgetField("NewSelectField");
 
-    slicePage.openEditWidgetModal("ContentRelationshipField");
+    sliceBuilder.openEditWidgetModal("ContentRelationshipField");
     contentRelationshipModal
       .editLabel("NewContentRelationshipField")
       .editApiId("ContentRelationshipApiID")
       .addCustomType(customTypeName)
       .save();
-    slicePage.getWidgetField("NewContentRelationshipField");
+    sliceBuilder.getWidgetField("NewContentRelationshipField");
 
-    slicePage.save();
+    sliceBuilder.save();
   });
 });

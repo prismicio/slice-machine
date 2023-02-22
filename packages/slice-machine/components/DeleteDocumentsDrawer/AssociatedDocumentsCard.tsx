@@ -16,7 +16,7 @@ export const AssociatedDocumentsCard: React.FC<
       mb: 12,
     }}
     variant="drawerCard"
-    data-cy="AssociatedDocumentsCard"
+    data-cy={`AssociatedDocumentsCard-${ctName}`}
   >
     <Flex sx={{ flexDirection: "column" }}>
       <Text>{ctName}</Text>
@@ -50,7 +50,7 @@ export const CustomTypesReferencesCard: React.FC<{
       mb: 12,
     }}
     variant="drawerCard"
-    data-cy="CustomTypesReferencesCard"
+    data-cy={`CustomTypesReferencesCard-${name}`}
   >
     <Flex sx={{ flexDirection: "column" }}>
       <Text>{name}</Text>

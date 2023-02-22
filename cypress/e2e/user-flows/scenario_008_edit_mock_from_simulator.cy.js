@@ -1,6 +1,6 @@
-import { SimulatorPage } from "../../pages/simulator/simulatorPage";
-import { EditorPage } from "../../pages/simulator/editorPage";
-import { SlicePage } from "../../pages/slices/slicePage";
+import { simulatorPage } from "../../pages/simulator/simulatorPage";
+import { editorPage } from "../../pages/simulator/editorPage";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 import { SLICE_MOCK_FILE } from "../../consts";
 
 const SLICE = {
@@ -10,10 +10,6 @@ const SLICE = {
 };
 
 describe("Scenario 008", () => {
-  let slice = new SlicePage();
-  let simulator = new SimulatorPage();
-  let editor = new EditorPage();
-
   beforeEach(() => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
@@ -22,7 +18,7 @@ describe("Scenario 008", () => {
   it("edits the different mock fields available in the editor", () => {
     cy.createSlice(SLICE.library, SLICE.id, SLICE.name);
 
-    slice
+    sliceBuilder
       .addVariation("SecondVariation")
       .addNewWidgetField("SimpleTextField", "Key Text")
       .addNewWidgetField("RichTextField", "Rich Text")
@@ -54,35 +50,38 @@ describe("Scenario 008", () => {
       )
     );
 
-    simulator.setup();
-    slice.openSimulator();
+    simulatorPage.setup();
+    sliceBuilder.openSimulator();
 
     // Wait for the editor to be fully loaded
-    editor.contains("Title").should("be.visible");
+    editorPage.contains("Title").should("be.visible");
 
-    simulator.changeVariations("Default");
+    simulatorPage.changeVariations("Default");
     cy.contains("Scenario008 • Default").should("be.visible");
 
-    simulator.changeVariations("SecondVariation");
+    simulatorPage.changeVariations("SecondVariation");
 
     // editor # toggle
     cy.contains("Scenario008 • SecondVariation").should("be.visible");
-    simulator.toggleEditor();
+    simulatorPage.toggleEditor();
     cy.contains("Scenario008 • SecondVariation").should("not.be.visible");
-    simulator.toggleEditor();
+    simulatorPage.toggleEditor();
     cy.contains("Scenario008 • SecondVariation").should("be.visible");
 
     // editor # change field values
-    editor.type("SimpleTextField", "SimpleTextContent");
-    editor.type("RichTextField", "RichTextContent");
-    editor.type("NumberField", "42", "have.value");
-    editor.toggleBooleanField("BooleanField");
-    editor.select("SelectField", "2");
+    editorPage.type("SimpleTextField", "SimpleTextContent");
+    editorPage.type("RichTextField", "RichTextContent");
+    editorPage.type("NumberField", "42", "have.value");
+    editorPage.toggleBooleanField("BooleanField");
+    editorPage.select("SelectField", "2");
 
-    editor.changeImage("ImageField").invoke("attr", "src").as("newImageSrc");
-    editor.type("Alt text", "An ananas maybe", "have.value");
+    editorPage
+      .changeImage("ImageField")
+      .invoke("attr", "src")
+      .as("newImageSrc");
+    editorPage.type("Alt text", "An ananas maybe", "have.value");
 
-    simulator.saveMocksButton.click();
+    simulatorPage.saveMocksButton.click();
 
     cy.contains('[role="alert"]', "Saved").should("be.visible");
 
