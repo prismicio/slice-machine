@@ -1,5 +1,5 @@
 import { screenshotModal } from "../../pages/slices/screenshotModal";
-import { sliceCard } from "../../pages/slices/sliceCard";
+import { SliceCard } from "../../pages/slices/sliceCard";
 import { menu } from "../../pages/menu";
 import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 import { changesPage } from "../../pages/changes/changesPage";
@@ -52,6 +52,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceBuilder.save();
 
     menu.navigateTo("Slices");
+    const sliceCard = new SliceCard(slice.name);
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     menu.navigateTo("Changes");

@@ -1,5 +1,6 @@
 import { simulatorPage } from "../../pages/simulator/simulatorPage";
 import { screenshotModal } from "../../pages/simulator/screenshotModal";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 
 describe("I am an existing SM user and I want to take a screenshot from the slice simulator", () => {
   const random = Date.now();
