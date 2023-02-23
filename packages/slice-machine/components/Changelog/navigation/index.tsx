@@ -11,7 +11,7 @@ export enum VersionTags {
 
 interface NavigationProps {
   changelog: PackageChangelog;
-  selectedVersion: PackageVersion | null;
+  selectedVersion: PackageVersion | undefined;
   selectVersion: (version: PackageVersion) => void;
 }
 

@@ -24,25 +24,21 @@ export const locateFileUpward = async (
 
 	const filePaths = castArray(filePathOrPaths);
 
-	try {
-		for (const filePath of filePaths) {
-			const resolvedFilePath = path.resolve(startDir, filePath);
+	for (const filePath of filePaths) {
+		const resolvedFilePath = path.resolve(startDir, filePath);
 
-			try {
-				await fs.access(resolvedFilePath);
+		try {
+			await fs.access(resolvedFilePath);
 
-				return resolvedFilePath;
-			} catch {
-				continue;
-			}
+			return resolvedFilePath;
+		} catch {
+			continue;
 		}
-	} catch {
-		// noop
 	}
 
 	if (startDir === stopDir) {
 		const formattedFilePaths = filePaths
-			.map((filePath) => `\`${filePath}\``)
+			.map((filePath) => "`" + filePath + "`")
 			.join(" or ");
 
 		throw new Error(

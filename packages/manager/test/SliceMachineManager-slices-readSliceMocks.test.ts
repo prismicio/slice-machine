@@ -1,5 +1,6 @@
 import { expect, it, vi } from "vitest";
 import { Buffer } from "node:buffer";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
@@ -7,8 +8,15 @@ import { expectHookHandlerToHaveBeenCalledWithData } from "./__testutils__/expec
 
 import { createSliceMachineManager } from "../src";
 
+const sliceMock: SharedSliceContent = {
+	__TYPE__: "SharedSliceContent",
+	variation: "foo",
+	primary: {},
+	items: [],
+};
+
 it("returns a Slice's mocks", async () => {
-	const mocks = [{ baz: "qux" }];
+	const mocks = [sliceMock];
 	const hookHandler = vi.fn(() => {
 		return { data: Buffer.from(JSON.stringify(mocks)) };
 	});
@@ -42,7 +50,7 @@ it("returns a Slice's mocks", async () => {
 });
 
 it("ignores plugins that implement `slice:read:asset`", async () => {
-	const mocks = [{ bar: "baz" }];
+	const mocks = [sliceMock];
 	const ignoredMocks = [{ qux: "quux" }];
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {

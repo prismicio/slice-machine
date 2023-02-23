@@ -8,6 +8,7 @@ export const createSliceMachineProject = (
 		root: "/tmp/slicemachine-test",
 		config: {
 			_latest: "0.0.0",
+			repositoryName: "qwerty",
 			apiEndpoint: "https://qwerty.cdn.prismic.io/api/v2",
 			adapter,
 			plugins,

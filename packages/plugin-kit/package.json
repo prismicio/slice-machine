@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/plugin-kit",
-	"version": "0.1.8-dev-plugins.10",
+	"version": "0.1.8-dev-plugins.11",
 	"description": "A set of helpers to develop and run Slice Machine plugins",
 	"keywords": [
 		"typescript",
@@ -42,7 +42,8 @@
 		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
 		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
-		"test": "npm run lint && npm run unit && npm run build && npm run size",
+		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
+		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
 		"depcheck": "depcheck --config=.depcheckrc"

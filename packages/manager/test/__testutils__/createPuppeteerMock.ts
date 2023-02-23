@@ -70,5 +70,7 @@ export const createPuppeteerMock = (): CreatePuppeteerMockReturnType => {
 		__element__screenshot,
 		__page__setViewport,
 		__page__waitForSelector,
-	} as CreatePuppeteerMockReturnType;
+	} as unknown as CreatePuppeteerMockReturnType;
+	// If you have time to fix the types so `as unknown as ...` is not
+	// required, please fix this! - Angelo 2023-02-22
 };
