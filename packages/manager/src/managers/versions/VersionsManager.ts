@@ -21,12 +21,14 @@ import { Version } from "./types";
 const detectVersionBumpKind = (
 	to: string,
 	from?: string,
-): typeof VERSION_KIND[keyof typeof VERSION_KIND] => {
+): typeof VERSION_KIND[keyof typeof VERSION_KIND] | undefined => {
 	if (!from) {
 		return VERSION_KIND.FIRST;
 	}
 
-	if (semver.satisfies(to, `~${from}`)) {
+	if (semver.eq(to, from)) {
+		return undefined;
+	} else if (semver.satisfies(to, `~${from}`)) {
 		return VERSION_KIND.PATCH;
 	} else if (semver.satisfies(to, `^${from}`)) {
 		return VERSION_KIND.MINOR;
