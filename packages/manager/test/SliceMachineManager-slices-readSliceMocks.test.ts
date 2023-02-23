@@ -11,26 +11,8 @@ import { createSliceMachineManager } from "../src";
 const sliceMock: SharedSliceContent = {
 	__TYPE__: "SharedSliceContent",
 	variation: "foo",
-	primary: {
-		bar: {
-			__TYPE__: "BooleanContent",
-			value: true,
-		},
-	},
-	items: [
-		{
-			__TYPE__: "GroupItemContent",
-			value: [
-				[
-					"baz",
-					{
-						__TYPE__: "BooleanContent",
-						value: false,
-					},
-				],
-			],
-		},
-	],
+	primary: {},
+	items: [],
 };
 
 it("returns a Slice's mocks", async () => {
