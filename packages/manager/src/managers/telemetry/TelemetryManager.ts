@@ -56,6 +56,12 @@ export class TelemetryManager extends BaseManager {
 			flushAt: 1,
 			// TODO: Verify that this actually does not send data to Segment when false.
 			enable: this._enabled,
+			errorHandler: () => {
+				// noop - We don't care if the tracking event
+				// failed. Some users or networks intentionally
+				// block Segment, so we can't block the app if
+				// a tracking event is unsuccessful.
+			},
 		});
 		this._anonymousID = randomUUID();
 	}
