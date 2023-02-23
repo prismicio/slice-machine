@@ -2,6 +2,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import semver from "semver";
 
+import { decodePackageJSON } from "../../lib/decodePackageJSON";
 import {
 	fetchGitHubReleaseBodyForRelease,
 	GitHubReleaseMetadata,
@@ -58,11 +59,24 @@ export class VersionsManager extends BaseManager {
 			"utf8",
 		);
 
-		// TODO: Validate the contents? This code currently assumes a
-		// well-formed document.
-		const json = JSON.parse(sliceMachinePackageJSONContents);
+		let sliceMachinePackageJSON: unknown;
+		try {
+			sliceMachinePackageJSON = JSON.parse(sliceMachinePackageJSONContents);
+		} catch {
+			// noop
+		}
 
-		return json.version;
+		const { value, error } = decodePackageJSON(sliceMachinePackageJSON);
+
+		if (error) {
+			throw new Error(
+				`Invalid ${SLICE_MACHINE_NPM_PACKAGE_NAME} \`package.json\` file. ${error.errors.join(
+					", ",
+				)}`,
+			);
+		}
+
+		return value.version;
 	}
 
 	async getAllStableSliceMachineVersions(): Promise<string[]> {
