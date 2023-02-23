@@ -1,6 +1,6 @@
 import { HookError } from "@slicemachine/plugin-kit";
 
-export abstract class SliceMachineError extends Error {
+export class SliceMachineError extends Error {
 	_sliceMachineError = true;
 	name = "SliceMachineError";
 }
