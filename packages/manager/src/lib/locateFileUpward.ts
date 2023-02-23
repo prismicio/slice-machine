@@ -38,7 +38,7 @@ export const locateFileUpward = async (
 
 	if (startDir === stopDir) {
 		const formattedFilePaths = filePaths
-			.map((filePath) => `\`${filePath}\``)
+			.map((filePath) => "`" + filePath + "`")
 			.join(" or ");
 
 		throw new Error(
