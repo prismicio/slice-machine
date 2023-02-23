@@ -1,4 +1,4 @@
-import { Frameworks } from "@core/models";
+import { Frameworks } from "@lib/models/common/Framework";
 
 export enum EventNames {
   Review = "SliceMachine Review",

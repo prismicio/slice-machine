@@ -8,12 +8,12 @@ import {
 } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
-import { Frameworks } from "@core/models/Framework";
+import { Frameworks } from "@lib/models/common/Framework";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
-import { SliceSM } from "@core/models";
-import { CustomTypeSM } from "@core/models/CustomType";
+import { SliceSM } from "@lib/models/common/Slice";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import { AuthStatus } from "../userContext/types";
 import { getChangelogApiClient } from "@src/apiClient";

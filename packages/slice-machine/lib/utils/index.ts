@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 import { Widget } from "../models/common/widgets/Widget";
-import { Frameworks } from "@core/models/Framework";
+import { Frameworks } from "@lib/models/common/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";

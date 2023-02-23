@@ -7,7 +7,7 @@ import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
 import { InputBox } from "./components/InputBox";
 import { RESERVED_SLICE_NAME } from "@lib/consts";
-import { SliceSM } from "@core/models";
+import { SliceSM } from "@lib/models/common/Slice";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { API_ID_REGEX } from "@lib/consts";
 

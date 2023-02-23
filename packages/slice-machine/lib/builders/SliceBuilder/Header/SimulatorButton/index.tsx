@@ -6,7 +6,7 @@ import { BsPlayCircle } from "react-icons/bs";
 import { SIMULATOR_WINDOW_ID, VIDEO_SIMULATOR_TOOLTIP } from "@lib/consts";
 import { useRouter } from "next/router";
 import ReactTooltip from "react-tooltip";
-import { Frameworks } from "@core/models";
+import { Frameworks } from "@lib/models/common/Framework";
 
 import style from "./style.module.css";
 import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";

@@ -21,7 +21,7 @@ import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
-import { SliceSM } from "@core/models";
+import { SliceSM } from "@lib/models/common/Slice";
 import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";

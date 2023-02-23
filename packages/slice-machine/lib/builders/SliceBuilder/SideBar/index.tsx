@@ -12,16 +12,16 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { getStorybookUrl } from "@src/modules/environment";
 import { createStorybookUrl } from "@src/utils/storybook";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import type * as Models from "@core/models";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { Button } from "@components/Button";
 import { AiOutlineCamera } from "react-icons/ai";
+import { VariationSM } from "@lib/models/common/Slice";
 import ReactTooltip from "react-tooltip";
 
 type SideBarProps = {
   component: ComponentUI;
-  variation: Models.VariationSM;
+  variation: VariationSM;
   isTouched: boolean;
 };
 

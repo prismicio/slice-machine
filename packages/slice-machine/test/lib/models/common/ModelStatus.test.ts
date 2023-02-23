@@ -3,7 +3,7 @@ import {
   ModelStatus,
   computeModelStatus,
 } from "@lib/models/common/ModelStatus";
-import { CustomTypes } from "@core/models/CustomType";
+import { CustomTypes } from "@lib/models/common/CustomType";
 import { customTypeMock } from "../../../__fixtures__/customType";
 
 const model = CustomTypes.toSM(customTypeMock);

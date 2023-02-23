@@ -12,8 +12,8 @@ import {
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
-import { buildEndpoints } from "@core/prismic/endpoints";
-import { startPolling } from "@core/utils/poll";
+import { buildEndpoints } from "@lib/prismic/endpoints";
+import { startPolling } from "@lib/utils/poll";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { useSelector } from "react-redux";
 import { isModalOpen } from "@src/modules/modal";
@@ -24,7 +24,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Tracker from "@src/tracking/client";
-import preferWroomBase from "../../lib/utils/preferWroomBase";
+import preferWroomBase from "@lib/utils/preferWroomBase";
 import { ToasterType } from "@src/modules/toaster";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {

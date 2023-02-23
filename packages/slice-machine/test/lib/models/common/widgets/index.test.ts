@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import * as Widgets from "@lib/models/common/widgets";
-import { CustomTypes, CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 import type { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 import type { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
