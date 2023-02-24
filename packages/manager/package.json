@@ -59,6 +59,7 @@
 		"depcheck": "depcheck --config=.depcheckrc"
 	},
 	"dependencies": {
+		"@antfu/ni": "^0.20.0",
 		"@prismicio/custom-types-client": "^1.0.2",
 		"@prismicio/types-internal": "^1.5.3",
 		"@slicemachine/plugin-kit": "0.1.8-dev-plugins.11",
@@ -66,6 +67,7 @@
 		"analytics-node": "^6.2.0",
 		"cookie": "^0.5.0",
 		"cors": "^2.8.5",
+		"execa": "^7.0.0",
 		"file-type": "^18.0.0",
 		"fp-ts": "^2.13.1",
 		"get-port": "^6.1.2",

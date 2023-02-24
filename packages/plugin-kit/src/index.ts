@@ -182,7 +182,6 @@ export type {
 	CommandInitHook,
 	CommandInitHookData,
 	CommandInitHookReturnType,
-	InstallDependenciesFunction,
 } from "./hooks/command-init";
 
 ///////////////////////////////////////////////////////////////////////////////

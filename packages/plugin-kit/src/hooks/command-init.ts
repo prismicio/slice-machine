@@ -5,20 +5,21 @@ import type {
 } from "../types";
 
 /**
- * Install package dependencies. The correct package manager will automatically
- * be used (npm/Yarn/pnpm/etc.).
- */
-export type InstallDependenciesFunction = (args: {
-	dependencies: Record<string, string>;
-	dev?: boolean;
-}) => Promise<void>;
-
-/**
  * Data provided to `command:init` hook handlers.
  */
 export type CommandInitHookData = {
+	/**
+	 * Log messages. The message may be sent to the console or elsewhere.
+	 */
 	log: (message: string) => void;
-	installDependencies: InstallDependenciesFunction;
+	/**
+	 * Install package dependencies. The correct package manager will automatically
+	 * be used (npm/Yarn/pnpm/etc.).
+	 */
+	installDependencies: (args: {
+		dependencies: Record<string, string>;
+		dev?: boolean;
+	}) => Promise<void>;
 };
 
 /**
