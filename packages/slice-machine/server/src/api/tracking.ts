@@ -38,7 +38,7 @@ export function sendEvents(
       event: event.name,
       properties: {
         ...event.props,
-        nodeVersion: process.version,
+        nodeVersion: process.versions.node,
       },
       ...(userId !== undefined ? { userId } : { anonymousId }),
       context: { groupId: { Repository: repositoryName } },

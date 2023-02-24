@@ -48,7 +48,7 @@ export class InitTracker {
         ...identifier,
         properties: {
           ...attributes,
-          nodeVersion: process.version,
+          nodeVersion: process.versions.node,
         },
         ...(this.#repository
           ? { context: { groupId: { Repository: this.#repository } } }
