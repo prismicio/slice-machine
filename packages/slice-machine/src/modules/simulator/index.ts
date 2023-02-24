@@ -250,7 +250,7 @@ export function* saveSliceMockSaga({
     yield put(
       openToasterCreator({
         type: ToasterType.SUCCESS,
-        message: "Saved",
+        content: "Saved",
       })
     );
     yield put(updateSliceMock(data));
@@ -263,7 +263,7 @@ export function* saveSliceMockSaga({
     yield put(
       openToasterCreator({
         type: ToasterType.ERROR,
-        message: message,
+        content: message,
       })
     );
     yield put(saveSliceMockCreator.failure());

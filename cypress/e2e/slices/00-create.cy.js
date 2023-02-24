@@ -1,5 +1,5 @@
 import { SLICE_MOCK_FILE } from "../../consts";
-import { SimulatorPage } from "../../pages/simulator/simulatorPage";
+import { simulatorPage } from "../../pages/simulator/simulatorPage";
 
 const sliceName = "TestSlice";
 const editedSliceName = "EditedSliceName";
@@ -7,8 +7,6 @@ const sliceId = "test_slice"; // generated automatically from the slice name
 const lib = "slices";
 
 describe("Create Slices", () => {
-  const simulatorPage = new SimulatorPage();
-
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();
@@ -21,8 +19,6 @@ describe("Create Slices", () => {
     cy.get('[data-cy="slice-menu-button"]').first().click();
     cy.contains("Delete field").click();
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
-
-    cy.renameSlice(lib, sliceName, editedSliceName);
 
     // add a variation
 
@@ -52,13 +48,13 @@ describe("Create Slices", () => {
 
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
-      `/${lib}/${editedSliceName}/bar`
+      `/${lib}/${sliceName}/bar`
     );
     cy.get("button").contains("foo").click();
     cy.contains("Default").click();
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
-      `/${lib}/${editedSliceName}/default`
+      `/${lib}/${sliceName}/default`
     );
 
     cy.contains("Save to File System").click();
@@ -97,18 +93,20 @@ describe("Create Slices", () => {
     cy.get("button").contains("foo").click();
     cy.contains("Default").click();
 
-    cy.readFile(SLICE_MOCK_FILE(editedSliceName), "utf-8")
+    cy.readFile(SLICE_MOCK_FILE(sliceName), "utf-8")
       .its(0)
       .its("primary.description.value")
       .its(0)
       .its("content.text")
       .should("equal", "👋");
-    cy.readFile(SLICE_MOCK_FILE(editedSliceName), "utf-8")
+    cy.readFile(SLICE_MOCK_FILE(sliceName), "utf-8")
       .its(1)
       .its("primary.description.value")
       .its(0)
       .its("content.text")
       .should("equal", "🎉");
+
+    cy.renameSlice(sliceName, editedSliceName);
   });
 
   it("allows drag n drop to the top position", () => {

@@ -182,7 +182,7 @@ describe("[Simulator module]", () => {
         .put(
           openToasterCreator({
             type: ToasterType.SUCCESS,
-            message: "Saved",
+            content: "Saved",
           })
         )
         .put(updateSliceMock(payload.payload))
@@ -216,7 +216,7 @@ describe("[Simulator module]", () => {
         .put(
           openToasterCreator({
             type: ToasterType.ERROR,
-            message: errorMessage,
+            content: errorMessage,
           })
         )
         .put(saveSliceMockCreator.failure())

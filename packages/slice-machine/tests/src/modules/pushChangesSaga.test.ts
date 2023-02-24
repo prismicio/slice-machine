@@ -1,79 +1,43 @@
-/**
- * @jest-environment jsdom
- */
-
+import { afterAll, afterEach, beforeAll, describe, test } from "@jest/globals";
 import "@testing-library/jest-dom";
-import { describe, test, beforeAll, afterAll, afterEach } from "@jest/globals";
+import { TestApi, testSaga } from "redux-saga-test-plan";
 import {
-  changesPushSaga,
+  ChangesPushSagaPayload,
   changesPushCreator,
+  changesPushSaga,
 } from "../../../src/modules/pushChangesSaga";
-import {
-  PUSH_CHANGES_TOASTER_ID,
-  syncChangesToasterMessage,
-} from "../../../src/modules/pushChangesSaga/syncToaster";
-import { expectSaga } from "redux-saga-test-plan";
-import { ComponentUI } from "../../../lib/models/common/ComponentUI";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
-import {
-  pushCustomTypeCreator,
-  pushSliceCreator,
-} from "@src/modules/pushChangesSaga/actions";
-import {
-  closeToasterCreator,
-  openToasterCreator,
-  ToasterType,
-  updateToasterCreator,
-} from "../../../src/modules/toaster";
+import { refreshStateCreator } from "@src/modules/environment";
 import { setupServer } from "msw/node";
-import { rest, RestContext, RestRequest, ResponseComposition } from "msw";
+import { getState, pushChanges } from "../../../src/apiClient";
 import { modalOpenCreator } from "../../../src/modules/modal";
 import { ModalKeysEnum } from "../../../src/modules/modal/types";
-import { pushCustomType, pushSliceApiClient } from "../../../src/apiClient";
-import { ApiError } from "@src/models/ApiError";
-import { ModelStatus } from "@lib/models/common/ModelStatus";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
-import { EventNames } from "@src/tracking/types";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { openToasterCreator, ToasterType } from "../../../src/modules/toaster";
+import { dummyServerState } from "./__mocks__/serverState";
+import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
+import {
+  rest,
+  type RestContext,
+  type RestRequest,
+  type ResponseComposition,
+} from "msw";
 
-const stubSlice: ComponentUI = {
-  model: {
-    name: "MySlice",
-    id: "my-slice",
-    type: SlicesTypes.SharedSlice,
-    variations: [],
-  },
-  from: "slices",
-  href: "",
-  mockConfig: {},
-  pathToSlice: "",
-  fileName: "",
-  extension: "",
-  screenshots: {},
-};
+class CustomAxiosError extends Error {
+  isAxiosError: boolean;
+  response?: {
+    data: any;
+    status: number;
+    statusText?: string;
+    headers?: any;
+    config?: any;
+  };
 
-const stubSlice2: ComponentUI = {
-  ...stubSlice,
-  model: {
-    ...stubSlice.model,
-    name: "AnotherSlice",
-    id: "some-slice2",
-  },
-};
-
-const stubSlice3: ComponentUI = {
-  ...stubSlice,
-  model: {
-    ...stubSlice.model,
-    name: "SomeSlice",
-    id: "some-slice",
-  },
-};
-
-const stubCustomType: CustomTypeSM = {
-  id: "wooooo",
-} as CustomTypeSM;
+  constructor(status: number) {
+    super();
+    this.isAxiosError = true;
+    this.response = { data: {}, status };
+  }
+}
 
 const server = setupServer();
 beforeAll(() => server.listen());
@@ -86,495 +50,197 @@ const makeTrackerSpy = () =>
   });
 
 const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
-  server.use(rest.post("/api/s", spy));
+  server.use(rest.post("http://localhost/api/s", spy));
 
-// Delay before the saga test timesout, usefull as we have a delay in between slice push
-const sagaTimeout = 3000;
+const changesPayload: ChangesPushSagaPayload = {
+  confirmDeleteDocuments: false,
+  unSyncedSlices: [], // used only for tracking, which we mock
+  unSyncedCustomTypes: [], // used only for tracking, which we mock
+  modelsStatuses: { slices: {}, customTypes: {} }, // used only for tracking, which we mock
+};
 
-describe("[pashSaga module]", () => {
+describe("[pushChanges module]", () => {
   describe("[changesPushSaga]", () => {
-    test("pushes slices and custom types", async () => {
-      const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice];
-      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
-      const modelStatuses: ModelStatusInformation["modelsStatuses"] = {
-        slices: {
-          [stubSlice.model.id]: ModelStatus.Modified,
-        },
-        customTypes: {
-          [stubCustomType.id]: ModelStatus.New,
-        },
-      };
-      const onChangesPushed = jest.fn();
-      const handleError = jest.fn();
-      const trackerSpy = makeTrackerSpy();
-      interceptTracker(trackerSpy);
+    let saga: TestApi;
 
-      server.use(
-        rest.get("/api/slices/push", (_req, res, ctx) => {
-          return res(ctx.json({}));
-        })
+    beforeEach(() => {
+      saga = testSaga(
+        changesPushSaga,
+        changesPushCreator.request(changesPayload)
       );
+    });
+    it("Pushes changes when API response is OK display success toaster", () => {
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker); // warnings happen without this
 
-      server.use(
-        rest.get("/api/custom-types/push", (_req, res, ctx) => {
-          return res(ctx.json({}));
-        })
-      );
-
-      const payload = changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
+      saga.next().call(pushChanges, {
+        confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
       });
-      const saga = expectSaga(changesPushSaga, payload);
 
-      const stateTime = Date.now();
+      saga
+        .next({
+          status: 200,
+          data: null,
+        })
+        .call(getState);
 
-      await saga
+      saga
+        .next({
+          status: 200,
+          data: dummyServerState,
+        })
         .put(
-          openToasterCreator({
-            message: syncChangesToasterMessage(0, 2),
-            type: ToasterType.LOADING,
-            options: {
-              autoClose: false,
-              toastId: PUSH_CHANGES_TOASTER_ID,
-            },
+          refreshStateCreator({
+            env: dummyServerState.env,
+            remoteCustomTypes: dummyServerState.remoteCustomTypes,
+            localCustomTypes: dummyServerState.customTypes,
+            libraries: dummyServerState.libraries,
+            remoteSlices: [],
+            clientError: undefined,
           })
-        )
-        .call(pushSliceApiClient, stubSlice)
-        .delay(300)
-        .put(
-          pushSliceCreator.success({
-            component: stubSlice,
-            updatedScreenshotsUrls: {},
-          })
-        )
-        .put(
-          updateToasterCreator({
-            toasterId: PUSH_CHANGES_TOASTER_ID,
-            options: {
-              render: syncChangesToasterMessage(1, 2),
-            },
-          })
-        )
-        .call(pushCustomType, stubCustomType.id)
-        .put(pushCustomTypeCreator.success({ customTypeId: stubCustomType.id }))
-        .put(
-          closeToasterCreator({
-            toasterId: PUSH_CHANGES_TOASTER_ID,
-          })
-        )
-        .put(
-          openToasterCreator({
-            message: "All slices and custom types have been pushed",
-            type: ToasterType.SUCCESS,
-          })
-        )
-        .run(sagaTimeout);
+        );
 
-      await new Promise(process.nextTick);
+      saga.next().put(changesPushCreator.success());
 
-      const endTime = Date.now();
-
-      const moreThanTotalTime = endTime - stateTime;
-
-      const trackerResult = await trackerSpy.mock.calls[0][0].json();
-      expect(trackerResult.name).toEqual(EventNames.ChangesPushed);
-      expect(trackerResult.props.customTypesCreated).toEqual(1);
-      expect(trackerResult.props.customTypesModified).toEqual(0);
-      expect(trackerResult.props.customTypesDeleted).toEqual(0);
-      expect(trackerResult.props.slicesCreated).toEqual(0);
-      expect(trackerResult.props.slicesModified).toEqual(1);
-      expect(trackerResult.props.slicesDeleted).toEqual(0);
-      expect(trackerResult.props.total).toEqual(2);
-      expect(trackerResult.props.errors).toEqual(0);
-      expect(trackerResult.props.duration).toBeGreaterThan(10);
-      expect(trackerResult.props.duration).toBeLessThanOrEqual(
-        moreThanTotalTime
+      saga.next().put(
+        openToasterCreator({
+          content: "All slices and custom types have been pushed",
+          type: ToasterType.SUCCESS,
+        })
       );
-      expect(trackerResult.props.missingScreenshots).toEqual(0);
+
+      saga.next().isDone();
     });
 
-    test("when there's a 403 error while pushing a slice it should stop and open the login model", async () => {
-      const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice];
-      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
-      const modelStatuses: ModelStatusInformation["modelsStatuses"] = {
-        slices: {
-          [stubSlice.model.id]: ModelStatus.Modified,
-        },
-        customTypes: {
-          [stubCustomType.id]: ModelStatus.New,
-        },
-      };
+    test.each([
+      [LimitType.HARD, ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER],
+      [LimitType.SOFT, ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER],
+    ])(
+      "Displays delete limit modal when there is a %s limit response",
+      (limitType, expectedModalKey) => {
+        const fakeTracker = makeTrackerSpy();
+        interceptTracker(fakeTracker); // warnings happen without this
 
-      const onChangesPushed = jest.fn();
-      const handleError = jest.fn();
-      const trackerSpy = makeTrackerSpy();
-      interceptTracker(trackerSpy);
-
-      server.use(
-        rest.get("/api/slices/push", (_req, res, ctx) => {
-          return res(ctx.status(403));
-        })
-      );
-
-      const payload = changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
-      });
-      const saga = expectSaga(changesPushSaga, payload);
-
-      await saga
-        .put(
-          openToasterCreator({
-            message: syncChangesToasterMessage(0, 2),
-            type: ToasterType.LOADING,
-            options: {
-              autoClose: false,
-              toastId: PUSH_CHANGES_TOASTER_ID,
-            },
-          })
-        )
-        .call(pushSliceApiClient, stubSlice)
-        .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
-        .not.call(pushCustomType, stubCustomType)
-        .run(sagaTimeout)
-        .then(() => {
-          expect(handleError).not.toHaveBeenCalled();
+        saga.next().call(pushChanges, {
+          confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
         });
 
-      await new Promise(process.nextTick);
+        // This test will also verify that the details are sorted in descending order.
+        saga
+          .next({
+            status: 200,
+            data: {
+              type: limitType,
+              details: {
+                customTypes: [
+                  {
+                    id: "CT1",
+                    numberOfDocuments: 2000,
+                    url: "url",
+                  },
+                  {
+                    id: "CT2",
+                    numberOfDocuments: 3000,
+                    url: "url",
+                  },
+                ],
+              },
+            },
+          })
+          .put(
+            changesPushCreator.failure({
+              type: limitType,
+              details: {
+                customTypes: [
+                  {
+                    id: "CT2",
+                    numberOfDocuments: 3000,
+                    url: "url",
+                  },
+                  {
+                    id: "CT1",
+                    numberOfDocuments: 2000,
+                    url: "url",
+                  },
+                ],
+              },
+            })
+          );
 
-      expect(trackerSpy).not.toHaveBeenCalled();
-    });
+        saga.next().put(
+          modalOpenCreator({
+            modalKey: expectedModalKey,
+          })
+        );
 
-    test("when there's a 403 error while pushing a custom type it should stop", async () => {
-      const unSyncedSlices: ReadonlyArray<ComponentUI> = [];
-      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
-      const onChangesPushed = jest.fn();
-      const handleError = jest.fn();
+        saga.next().isDone();
+      }
+    );
 
-      const modelStatuses: ModelStatusInformation["modelsStatuses"] = {
-        slices: {},
-        customTypes: {
-          [stubCustomType.id]: ModelStatus.New,
-        },
-      };
+    it("Displays an error toaster when there is an API error on push", () => {
+      saga.next().call(pushChanges, {
+        confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+      });
 
-      server.use(
-        rest.get("/api/custom-types/push", (_req, res, ctx) => {
-          return res(ctx.status(403));
+      saga.throw(new Error()).put(
+        openToasterCreator({
+          content:
+            "Something went wrong when pushing your changes. Check your terminal logs.",
+          type: ToasterType.ERROR,
         })
       );
 
-      const trackerSpy = makeTrackerSpy();
-      interceptTracker(trackerSpy);
-
-      const payload = changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
-      });
-      const saga = expectSaga(changesPushSaga, payload);
-
-      await saga
-        .put(
-          openToasterCreator({
-            message: syncChangesToasterMessage(0, 1),
-            type: ToasterType.LOADING,
-            options: {
-              autoClose: false,
-              toastId: PUSH_CHANGES_TOASTER_ID,
-            },
-          })
-        )
-        .call(pushCustomType, stubCustomType.id)
-        .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
-        .run(sagaTimeout)
-        .then(() => {
-          expect(handleError).not.toHaveBeenCalled();
-        });
-
-      await new Promise(process.nextTick);
-
-      expect(trackerSpy).not.toHaveBeenCalled();
+      saga.next().isDone();
     });
 
-    test("when pushing slices, if there an Invalid Model error it should not push custom-types and stop", async () => {
-      const unSyncedSlices: ReadonlyArray<ComponentUI> = [
-        stubSlice,
-        stubSlice2,
-        stubSlice3,
-      ];
-      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+    test.each([[401], [403]])(
+      "when there's a %s error while pushing a slice it should stop and open the login model",
+      (errorCode) => {
+        saga.next().call(pushChanges, {
+          confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+        });
 
-      const modelStatuses: ModelStatusInformation["modelsStatuses"] = {
-        slices: unSyncedSlices.reduce<Record<string, ModelStatus>>(
-          (acc, slice) => {
-            acc[slice.model.id] = ModelStatus.New;
-            return acc;
+        const customError = new CustomAxiosError(errorCode);
+
+        saga
+          .throw(customError)
+          .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+
+        saga.next().isDone();
+      }
+    );
+
+    it("when there's INVALID_CUSTOM_TYPES response, open the references drawer", () => {
+      saga.next().call(pushChanges, {
+        confirmDeleteDocuments: changesPayload.confirmDeleteDocuments,
+      });
+
+      saga
+        .next({
+          status: 200,
+          data: {
+            type: "INVALID_CUSTOM_TYPES",
+            details: {
+              customTypes: [{ id: "CT1" }, { id: "CT2" }],
+            },
           },
-          {}
-        ),
-        customTypes: unSyncedCustomTypes.reduce<Record<string, ModelStatus>>(
-          (acc, ct) => {
-            acc[ct.id] = ModelStatus.New;
-            return acc;
-          },
-          {}
-        ),
-      };
-      const onChangesPushed = jest.fn();
-      const handleError = jest.fn();
-      const trackerSpy = makeTrackerSpy();
-      interceptTracker(trackerSpy);
-
-      server.use(
-        rest.get("http://localhost/api/slices/push", (_req, res, ctx) => {
-          const sliceName = _req.url.searchParams.get("sliceName");
-          // will fail for Slice one
-          if (sliceName === stubSlice.model.name) return res(ctx.status(400));
-          return res(ctx.json({}));
-        }),
-        rest.get("http://localhost/api/custom-types/push", (_req, res, ctx) => {
-          return res(ctx.json({}));
         })
-      );
-
-      const payload = changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
-      });
-
-      await expectSaga(changesPushSaga, payload)
         .put(
-          openToasterCreator({
-            message: syncChangesToasterMessage(0, 4),
-            type: ToasterType.LOADING,
-            options: {
-              autoClose: false,
-              toastId: PUSH_CHANGES_TOASTER_ID,
+          changesPushCreator.failure({
+            type: "INVALID_CUSTOM_TYPES",
+            details: {
+              customTypes: [{ id: "CT1" }, { id: "CT2" }],
             },
           })
-        )
-        .call(pushSliceApiClient, stubSlice)
-        .call(pushSliceApiClient, stubSlice2)
-        .call(pushSliceApiClient, stubSlice3)
-        .put(
-          closeToasterCreator({
-            toasterId: PUSH_CHANGES_TOASTER_ID,
-          })
-        )
-        .put(pushSliceCreator.failure({ component: stubSlice }))
-        .put(
-          pushSliceCreator.success({
-            component: stubSlice2,
-            updatedScreenshotsUrls: {},
-          })
-        )
-        .put(
-          pushSliceCreator.success({
-            component: stubSlice3,
-            updatedScreenshotsUrls: {},
-          })
-        )
-        .not.call(pushCustomType, stubCustomType.id)
-        .not.put(
-          openToasterCreator({
-            message: "All slices and custom types have been pushed",
-            type: ToasterType.SUCCESS,
-          })
-        )
-        .run(sagaTimeout)
-        .then(() => {
-          expect(handleError).toHaveBeenCalledWith({
-            type: "slice",
-            error: ApiError.INVALID_MODEL,
-          });
-        });
+        );
 
-      await new Promise(process.nextTick);
-
-      expect(trackerSpy).toHaveBeenCalled();
-      const trackerResult = await trackerSpy.mock.calls[0][0].json();
-      expect(trackerResult.name).toEqual(EventNames.ChangesPushed);
-      expect(trackerResult.props.errors).toEqual(1);
-      expect(trackerResult.props.slicesCreated).toEqual(2);
-      expect(trackerResult.props.customTypesCreated).toEqual(0);
-      expect(trackerResult.props.total).toEqual(4);
-    });
-
-    test("when pushing slices, if there an unexpected error it should not push custom-types", async () => {
-      const unSyncedSlices: ReadonlyArray<ComponentUI> = [
-        stubSlice,
-        stubSlice2,
-      ];
-      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
-      const modelStatuses: ModelStatusInformation["modelsStatuses"] = {
-        slices: {
-          [stubSlice.model.id]: ModelStatus.New,
-          [stubSlice2.model.id]: ModelStatus.New,
-        },
-        customTypes: {
-          [stubCustomType.id]: ModelStatus.New,
-        },
-      };
-      const onChangesPushed = jest.fn();
-      const handleError = jest.fn();
-      const trackerSpy = makeTrackerSpy();
-      interceptTracker(trackerSpy);
-
-      server.use(
-        rest.get("/api/slices/push", (_req, res, ctx) => {
-          return res(ctx.status(500));
-        }),
-        rest.get("/api/custom-types/push", (_req, res, ctx) => {
-          return res(ctx.json({}));
+      saga.next().put(
+        modalOpenCreator({
+          modalKey: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
         })
       );
 
-      const payload = changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
-      });
-      const saga = expectSaga(changesPushSaga, payload);
-
-      await saga
-        .put(
-          openToasterCreator({
-            message: syncChangesToasterMessage(0, 3),
-            type: ToasterType.LOADING,
-            options: {
-              autoClose: false,
-              toastId: PUSH_CHANGES_TOASTER_ID,
-            },
-          })
-        )
-        .call(pushSliceApiClient, stubSlice)
-        .call(pushSliceApiClient, stubSlice2)
-        .put(
-          closeToasterCreator({
-            toasterId: PUSH_CHANGES_TOASTER_ID,
-          })
-        )
-        .put(pushSliceCreator.failure({ component: stubSlice })) // We can't expect a success only a failure as it cancels the saga // or can we?
-        .not.put(
-          pushSliceCreator.success({
-            component: stubSlice2,
-            updatedScreenshotsUrls: {},
-          })
-        )
-        .not.put(pushSliceCreator.failure({ component: stubSlice2 }))
-        .not.call(pushCustomType, stubCustomType.id)
-        .not.put(
-          openToasterCreator({
-            message: "All slices and custom types have been pushed",
-            type: ToasterType.SUCCESS,
-          })
-        )
-        .run(sagaTimeout)
-        .then(() => {
-          expect(handleError).not.toHaveBeenCalled();
-        });
-
-      await new Promise(process.nextTick);
-
-      expect(trackerSpy).not.toHaveBeenCalled();
-    });
-
-    test("when one slice fails with a 400 status the others should be pushed", async () => {
-      const unSyncedSlices: ReadonlyArray<ComponentUI> = [
-        stubSlice,
-        stubSlice2,
-        stubSlice3,
-      ];
-      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
-      const onChangesPushed = jest.fn();
-      const handleError = jest.fn();
-      const trackerSpy = makeTrackerSpy();
-      interceptTracker(trackerSpy);
-
-      const modelStatuses: ModelStatusInformation["modelsStatuses"] = {
-        slices: unSyncedSlices.reduce<Record<string, ModelStatus>>(
-          (acc, curr) => {
-            acc[curr.model.id] = ModelStatus.Modified;
-            return acc;
-          },
-          {}
-        ),
-        customTypes: unSyncedCustomTypes.reduce<Record<string, ModelStatus>>(
-          (acc, curr) => {
-            acc[curr.id] = ModelStatus.New;
-            return acc;
-          },
-          {}
-        ),
-      };
-
-      server.use(
-        rest.get("/api/slices/push", (_req, res, ctx) => {
-          const sliceName = _req.url.searchParams.get("sliceName");
-          // will fail for Slice one
-          if (sliceName === stubSlice.model.name) return res(ctx.status(400));
-          return res(ctx.json({}));
-        })
-      );
-
-      const payload = changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
-      });
-      const saga = expectSaga(changesPushSaga, payload);
-
-      await saga
-        .call(pushSliceApiClient, stubSlice)
-        .call(pushSliceApiClient, stubSlice2)
-        .call(pushSliceApiClient, stubSlice3)
-        .put(pushSliceCreator.failure({ component: stubSlice }))
-        .put(
-          pushSliceCreator.success({
-            component: stubSlice2,
-            updatedScreenshotsUrls: {},
-          })
-        )
-        .put(
-          pushSliceCreator.success({
-            component: stubSlice3,
-            updatedScreenshotsUrls: {},
-          })
-        )
-        .not.call(pushCustomType, stubCustomType)
-        .run(sagaTimeout)
-        .then(() => {
-          expect(handleError).toHaveBeenCalled();
-        });
-
-      await new Promise(process.nextTick);
-
-      expect(trackerSpy).toHaveBeenCalled();
-      const trackerResult = await trackerSpy.mock.calls[0][0].json();
-      expect(trackerResult.name).toEqual(EventNames.ChangesPushed);
-      expect(trackerResult.props.customTypesCreated).toEqual(0);
-      expect(trackerResult.props.slicesCreated).toEqual(0);
-      expect(trackerResult.props.slicesModified).toEqual(2);
-      expect(trackerResult.props.total).toEqual(4);
-      expect(trackerResult.props.errors).toEqual(1);
+      saga.next().isDone();
     });
   });
 });

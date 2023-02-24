@@ -1,4 +1,4 @@
-import { Link as ThemeLink, ThemeUIStyleObject } from "theme-ui";
+import { Box, Link as ThemeLink, ThemeUIStyleObject } from "theme-ui";
 import Link from "next/link";
 
 export const LinkCardWrapper = ({
@@ -29,10 +29,12 @@ export const LinkCardWrapper = ({
 
 export const NonClickableCardWrapper = ({
   children,
+  sx,
 }: {
   children: React.ReactNode;
+  sx?: ThemeUIStyleObject;
 }) => {
-  return <div style={{ cursor: "not-allowed" }}>{children}</div>;
+  return <Box sx={{ cursor: "not-allowed", ...sx }}>{children}</Box>;
 };
 
 export enum WrapperType {

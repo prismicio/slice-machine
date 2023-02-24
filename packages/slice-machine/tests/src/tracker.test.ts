@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 
 import { expect, test } from "@jest/globals";
 import TrackerSingleton, { SMTracker } from "@src/tracking/client";
-import { EventNames } from "@src/tracking/types";
+import { EventNames } from "@lib/models/tracking";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { setupServer } from "msw/node";
 import { rest, RestContext } from "msw";
@@ -276,7 +276,7 @@ describe("SMTracker", () => {
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
 
-    await smTracker.identifyUser("userId", "intercomhash");
+    await smTracker.identifyUser();
     await smTracker.trackReview(Frameworks.next, 3, "comment");
     await smTracker.trackOnboardingSkip(1);
     await smTracker.trackOnboardingContinue(EventNames.OnboardingContinueIntro);
@@ -289,7 +289,11 @@ describe("SMTracker", () => {
     await smTracker.trackOnboardingContinue(
       EventNames.OnboardingContinueScreen3
     );
-    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
+    await smTracker.trackClickOnVideoTutorials(
+      Frameworks.next,
+      "0.2.0",
+      "myfakeVideo"
+    );
     await smTracker.trackPageView(Frameworks.next, "0.2.0");
     await smTracker.trackOnboardingStart();
     await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");

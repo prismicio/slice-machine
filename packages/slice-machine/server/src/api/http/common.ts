@@ -1,29 +1,23 @@
-import express from "express";
-import getEnv from "../services/getEnv";
-import { BackendEnvironment } from "../../../../lib/models/common/Environment";
-import ServerError from "../../../../lib/models/server/ServerError";
+import type { Request, Response } from "express";
 
-export interface RequestWithEnv extends express.Request {
+import type { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import type ServerError from "../../../../lib/models/server/ServerError";
+import getEnv from "../services/getEnv";
+
+export interface RequestWithEnv extends Request {
   env: BackendEnvironment;
   errors: Record<string, ServerError>;
 }
 
-export function WithEnv(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handler: (req: RequestWithEnv, res: express.Response) => Promise<any>
-) {
-  return async function (req: express.Request, res: express.Response) {
+export function withEnv(
+  handler: (req: RequestWithEnv, res: Response) => Promise<void> | void
+): (req: Request, res: Response) => void {
+  return (req, res) => {
+    const reqWithEnv = req as RequestWithEnv;
     const { env, errors } = getEnv();
-
-    const reqWithEnv = (() => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-      const r = req as any;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      r.env = env;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-      r.errors = errors;
-      return r as RequestWithEnv;
-    })();
-    return handler(reqWithEnv, res);
+    reqWithEnv.env = env;
+    reqWithEnv.errors = errors;
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    handler(reqWithEnv, res);
   };
 }

@@ -1,11 +1,12 @@
+import { DropDownMenu } from "@components/DropDownSelector";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { VariationSM } from "@slicemachine/core/build/models";
+import { RiCloseLine } from "react-icons/ri";
 import { useState } from "react";
 
 import { Flex } from "theme-ui";
-import { RiCloseLine } from "react-icons/ri";
 import { Button } from "@components/Button";
 import { AiFillCamera } from "react-icons/ai";
-
-import { DropDownMenu } from "@components/DropDownMenu";
 
 import {
   ScreensizeInput,
@@ -19,8 +20,6 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/models";
 
 type ToolbarProps = {
   slice: ComponentUI;

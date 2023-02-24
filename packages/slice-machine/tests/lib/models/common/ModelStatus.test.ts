@@ -10,7 +10,7 @@ const model = CustomTypes.toSM(customTypeMock);
 describe("Model Status", () => {
   test("computeModelStatus returns the status New", () => {
     const result = computeModelStatus({ local: model }, true);
-    expect(result).toBe(ModelStatus.New);
+    expect(result.status).toBe(ModelStatus.New);
   });
 
   test("computeModelStatus returns the status Modified", () => {
@@ -18,16 +18,16 @@ describe("Model Status", () => {
       { local: model, remote: { ...model, name: "modified" } },
       true
     );
-    expect(result).toBe(ModelStatus.Modified);
+    expect(result.status).toBe(ModelStatus.Modified);
   });
 
   test("computeModelStatus returns the status Synced", () => {
     const result = computeModelStatus({ local: model, remote: model }, true);
-    expect(result).toBe(ModelStatus.Synced);
+    expect(result.status).toBe(ModelStatus.Synced);
   });
 
   test("computeModelStatus returns the status Unknown", () => {
     const result = computeModelStatus({ local: model, remote: model }, false);
-    expect(result).toBe(ModelStatus.Unknown);
+    expect(result.status).toBe(ModelStatus.Unknown);
   });
 });

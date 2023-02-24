@@ -72,7 +72,11 @@ export const AddThumbnailButton: React.FC<{
           alignItems: "center",
         }}
       >
-        <BsFillPlusSquareFill size={34} color="#5263BA" />
+        <BsFillPlusSquareFill
+          size={34}
+          color="#5263BA"
+          aria-label="Add a thumbnail"
+        />
       </Flex>
     )}
   />

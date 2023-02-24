@@ -1,7 +1,7 @@
 import { ActionType, createAsyncAction } from "typesafe-actions";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { ScreenshotTaken } from "@src/tracking/types";
+import { ScreenshotTaken } from "@lib/models/tracking";
 
 export type SelectedSliceActions =
   | ActionType<typeof generateSliceScreenshotCreator>

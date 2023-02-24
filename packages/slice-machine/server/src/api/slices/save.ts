@@ -13,7 +13,7 @@ import Files from "@slicemachine/core/build/node-utils/files";
 import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 
-import onSaveSlice from "../common/hooks/onSaveSlice";
+import generateLibrariesIndex from "../common/hooks/updateLibraries";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../../../../lib/io";
 import { ComponentMocks, Slices } from "@slicemachine/core/build/models";
@@ -21,10 +21,15 @@ import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff"
 import { getOrElseW } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
-export async function handler(
-  env: BackendEnvironment,
-  { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
-): Promise<Record<string, never>> {
+export default function handler({
+  env,
+  body,
+}: {
+  env: BackendEnvironment;
+  body: SliceSaveBody;
+}): Record<string, never> {
+  const { sliceName, from, model: smModel, mockConfig } = body;
+
   const previousSliceModel = Files.safeReadEntity(
     CustomPaths(env.cwd).library(from).slice(sliceName).model(),
     (payload) => getOrElseW(() => undefined)(SharedSlice.decode(payload))
@@ -76,15 +81,8 @@ export async function handler(
 
   console.log("[slice/save]: Slice was saved!");
 
-  await onSaveSlice(env);
+  generateLibrariesIndex(env, from);
   console.log("[slice/save]: Libraries index files regenerated!");
 
   return {};
-}
-
-export default async function apiHandler(req: {
-  body: SliceSaveBody;
-  env: BackendEnvironment;
-}) {
-  return handler(req.env, req.body);
 }

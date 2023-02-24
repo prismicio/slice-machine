@@ -13,7 +13,12 @@ import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { setupServer } from "msw/node";
-import { rest, RestContext, RestRequest, ResponseComposition } from "msw";
+import {
+  rest,
+  type RestContext,
+  type RestRequest,
+  type ResponseComposition,
+} from "msw";
 
 const server = setupServer();
 beforeAll(() => server.listen());
@@ -75,18 +80,20 @@ describe("[Selected Custom type sagas]", () => {
         .put(saveCustomTypeCreator.success({ customType: customTypeModel }));
       saga.next().put(
         openToasterCreator({
-          message: "Model & mocks have been generated successfully!",
+          content: "Model & mocks have been generated successfully!",
           type: ToasterType.SUCCESS,
         })
       );
       saga.next().isDone();
     });
     it("should open a error toaster on internal error", () => {
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker); // warnings happen without this
       const saga = testSaga(saveCustomTypeSaga).next();
 
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Custom type not saved",
+          content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
         })
       );
