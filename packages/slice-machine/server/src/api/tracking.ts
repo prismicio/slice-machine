@@ -36,7 +36,10 @@ export function sendEvents(
   } else if (isTrackingEvent(event)) {
     analytics.track({
       event: event.name,
-      properties: event.props,
+      properties: {
+        ...event.props,
+        nodeVersion: process.version,
+      },
       ...(userId !== undefined ? { userId } : { anonymousId }),
       context: { groupId: { Repository: repositoryName } },
     });
