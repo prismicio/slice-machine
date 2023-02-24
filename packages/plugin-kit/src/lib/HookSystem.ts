@@ -135,12 +135,7 @@ export class HookSystem<THooks extends Hooks = Hooks> {
 		hookFn: THooks[TType]["fn"],
 		...[meta]: HookMetaArg<THooks[TType]["meta"]>
 	): void {
-		if (!this._registeredHooks[type]) {
-			this._registeredHooks[type] = [];
-		}
-
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		this._registeredHooks[type]!.push({
+		const registeredHook = {
 			fn: hookFn,
 			meta: {
 				...meta,
@@ -148,7 +143,15 @@ export class HookSystem<THooks extends Hooks = Hooks> {
 				type,
 				id: uuid(),
 			},
-		} as RegisteredHook<THooks[TType]>);
+		} as RegisteredHook<THooks[TType]>;
+
+		const registeredHooksForType = this._registeredHooks[type];
+
+		if (registeredHooksForType) {
+			registeredHooksForType.push(registeredHook);
+		} else {
+			this._registeredHooks[type] = [registeredHook];
+		}
 	}
 
 	unhook<TType extends keyof THooks>(
