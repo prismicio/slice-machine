@@ -25,7 +25,13 @@ export class InitTracker {
 
       this.#isTrackingActive = isTrackingActive;
       this.#anonymousId = uuidv4();
-      this.#client = new ServerAnalytics(segmentKey);
+      this.#client = new ServerAnalytics(segmentKey, {
+        flushAt: 1,
+        // @ts-expect-error: @types/analytics-node not covering the property errorHandler yet.
+        errorHandler: () => {
+          /* Not blocking the code if event fails */
+        },
+      });
     } catch (error) {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
     }
