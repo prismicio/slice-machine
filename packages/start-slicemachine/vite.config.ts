@@ -3,6 +3,7 @@ import sdk from "vite-plugin-sdk";
 import renameNodeModules from "rollup-plugin-rename-node-modules";
 
 export default defineConfig({
+	logLevel: "warn",
 	plugins: [
 		sdk({
 			internalDependencies: ["node-fetch"],

@@ -3,6 +3,12 @@ import sdk from "vite-plugin-sdk";
 import renameNodeModules from "rollup-plugin-rename-node-modules";
 
 export default defineConfig({
+	logLevel: "warn",
+	plugins: [
+		sdk({
+			internalDependencies: ["execa", "meow", "globby"],
+		}),
+	],
 	build: {
 		lib: {
 			entry: {
@@ -11,17 +17,15 @@ export default defineConfig({
 			},
 		},
 		rollupOptions: {
+			output: {
+				exports: "named",
+			},
 			plugins: [
 				// @ts-expect-error - Type mismatch
 				renameNodeModules("_node_modules"),
 			],
 		},
 	},
-	plugins: [
-		sdk({
-			internalDependencies: ["execa", "meow", "globby"],
-		}),
-	],
 	test: {
 		testTimeout: 10000,
 		coverage: {

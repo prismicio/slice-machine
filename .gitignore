@@ -42,6 +42,8 @@ my-test-project
 dist
 *.tgz
 
+.turbo
+
 .now
 .vercel
 

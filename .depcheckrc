@@ -1,0 +1,5 @@
+ignores:
+  [
+    "husky",
+  ]
+skip - missing: true
