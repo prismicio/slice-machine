@@ -14,7 +14,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"jsx": "preserve",
 		"lib": ["esnext", "dom"],
-		"types": ["node"]
+		"types": ["node", "vite/client"]
 	},
 	"exclude": ["node_modules", "dist"]
 }
