@@ -1,4 +1,4 @@
-// Automatically restart the server ONLY when Vite is in development mode.
+// Automatically restart the process ONLY when Vite is in development mode.
 if (import.meta.env.MODE === "development") {
 	Promise.all([import("node:url"), import("nodemon")]).then(
 		([url, nodemon]) => {
