@@ -3,6 +3,7 @@ import handler, { sendEvents } from "../../server/src/api/tracking";
 import { EventNames } from "@lib/models/tracking";
 import * as Analytics from "../../server/src/api/services/analytics";
 import { RequestWithEnv } from "server/src/api/http/common";
+import { version } from "../../package.json";
 
 jest.mock("../../server/src/api/services/analytics", () => {
   return {
@@ -57,7 +58,7 @@ describe("tracking", () => {
             downloadedLibsCount: 0,
             npmLibsCount: 0,
             downloadedLibs: [],
-            slicemachineVersion: "0",
+            slicemachineVersion: version,
           },
         },
         "repoName"
@@ -72,7 +73,7 @@ describe("tracking", () => {
           manualLibsCount: 0,
           npmLibsCount: 0,
           repoName: "foo",
-          slicemachineVersion: "0",
+          slicemachineVersion: version,
         },
       });
       expect(Analytics.track).not.toHaveBeenCalled();
@@ -86,7 +87,9 @@ describe("tracking", () => {
         anonymousId: "uuid",
         context: { groupId: { Repository: "repoName" } },
         event: "SliceMachine Onboarding Continue Screen Intro",
-        properties: undefined,
+        properties: {
+          slicemachineVersion: version,
+        },
       });
     });
   });
@@ -132,7 +135,9 @@ describe("tracking", () => {
           },
         },
         event: "SliceMachine Onboarding Continue Screen 3",
-        properties: undefined,
+        properties: {
+          slicemachineVersion: version,
+        },
       });
       expect(Analytics.group).not.toHaveBeenCalled();
     });

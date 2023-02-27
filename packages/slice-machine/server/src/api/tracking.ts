@@ -10,6 +10,8 @@ import * as analytics from "./services/analytics";
 
 const anonymousId = uuidv4();
 
+import { version } from "../../../package.json";
+
 export function sendEvents(
   event: TrackingEvents,
   repositoryName: string,
@@ -20,7 +22,10 @@ export function sendEvents(
     analytics.group({
       ...(userId !== undefined ? { userId } : { anonymousId }),
       groupId: event.props.repoName,
-      traits: event.props,
+      traits: {
+        ...event.props,
+        slicemachineVersion: version,
+      },
     });
   } else if (isIdentifyUserEvent(event)) {
     if (userId !== undefined && intercomHash !== undefined) {
@@ -36,7 +41,10 @@ export function sendEvents(
   } else if (isTrackingEvent(event)) {
     analytics.track({
       event: event.name,
-      properties: event.props,
+      properties: {
+        ...event.props,
+        slicemachineVersion: version,
+      },
       ...(userId !== undefined ? { userId } : { anonymousId }),
       context: { groupId: { Repository: repositoryName } },
     });
