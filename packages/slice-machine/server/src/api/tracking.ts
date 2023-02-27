@@ -20,7 +20,10 @@ export function sendEvents(
     analytics.group({
       ...(userId !== undefined ? { userId } : { anonymousId }),
       groupId: event.props.repoName,
-      traits: event.props,
+      traits: {
+        ...event.props,
+        nodeVersion: process.versions.node,
+      },
     });
   } else if (isIdentifyUserEvent(event)) {
     if (userId !== undefined && intercomHash !== undefined) {
