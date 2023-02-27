@@ -4,7 +4,6 @@ import Tracker from "@src/tracking/client";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
-  getCurrentVersion,
   getFramework,
   getRepoName,
   getShortId,
@@ -14,29 +13,23 @@ import { getLibraries } from "@src/modules/slices";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
-  const {
-    libraries,
-    repoName,
-    shortId,
-    intercomHash,
-    currentVersion,
-    framework,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    currentVersion: getCurrentVersion(state),
-    framework: getFramework(state),
-    shortId: getShortId(state),
-    intercomHash: getIntercomHash(state),
-    repoName: getRepoName(state),
-    libraries: getLibraries(state),
-  }));
+  const { libraries, repoName, shortId, intercomHash, framework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      framework: getFramework(state),
+      shortId: getShortId(state),
+      intercomHash: getIntercomHash(state),
+      repoName: getRepoName(state),
+      libraries: getLibraries(state),
+    })
+  );
 
   const router = useRouter();
 
   useEffect(() => {
-    void Tracker.get().groupLibraries(libraries, repoName, currentVersion);
+    void Tracker.get().groupLibraries(libraries, repoName);
 
     // For initial loading
-    void Tracker.get().trackPageView(framework, currentVersion);
+    void Tracker.get().trackPageView(framework);
   }, []);
 
   // Handles if the user login/logout outside of the app.
@@ -47,7 +40,7 @@ const useSMTracker = () => {
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void Tracker.get().trackPageView(framework, currentVersion);
+      void Tracker.get().trackPageView(framework);
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views

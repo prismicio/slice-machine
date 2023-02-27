@@ -56,7 +56,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     useSliceMachineActions();
   const {
     framework,
-    version,
     simulatorUrl,
     iframeStatus,
     manifestStatus,
@@ -75,7 +74,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void Tracker.get().trackOpenSliceSimulator(framework, version);
+    void Tracker.get().trackOpenSliceSimulator(framework);
     Tracker.get().editor.startNewSession();
   }, []);
 
