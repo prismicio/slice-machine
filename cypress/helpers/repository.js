@@ -24,7 +24,7 @@ export function pushLocalChanges(numberOfChanges) {
     // The time to wait depends on the number of changes
     menu
       .changesNumber({
-        timeout: 2 * 60 * 1000 (numberOfChanges + 1),
+        timeout: 2 * 60 * 1000 * (numberOfChanges + 1),
       })
       .should("not.exist");
 
