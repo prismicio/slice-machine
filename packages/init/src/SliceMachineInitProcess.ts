@@ -934,21 +934,36 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									return;
 								}
 
-								const documents: [string, unknown][] = await Promise.all(
-									documentsGlob.map(async (document) => {
-										const filename = path.basename(document, ".json");
+								// TODO: Replace `unknown` with a Prismic document type.
+								// The exact format is not know at this time, hence the `unknown`.
+								const documents: Record<string, unknown> = {};
+
+								await Promise.all(
+									documentsGlob.map(async (documentPath) => {
+										const filename = path.basename(documentPath, ".json");
 										const fileContent = await fs.readFile(
-											path.resolve(documentsDirectoryPath, document),
+											path.resolve(documentsDirectoryPath, documentPath),
 											"utf-8",
 										);
 
-										return [filename, JSON.parse(fileContent)];
+										try {
+											// TOOD: Validate the contents of the JSON file and skip on invalid documents.
+											const parsedContents = JSON.parse(fileContent);
+
+											documents[filename] = parsedContents;
+										} catch {
+											// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+											// eslint-disable-next-line no-console
+											console.log(
+												`Skipped document due to its invalid format: ${documentPath}`,
+											);
+										}
 									}),
 								);
 
 								await this.manager.prismicRepository.pushDocuments({
 									domain: this.context.repository.domain,
-									documents: Object.fromEntries(documents),
+									documents,
 									signature,
 								});
 
