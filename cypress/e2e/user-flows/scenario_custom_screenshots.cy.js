@@ -71,7 +71,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceCard.content.should("not.include.text", "screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
-    cy.pushLocalChanges();
+    cy.pushLocalChanges(1);
   });
 
   it("Error displayed when non-image files are uploaded", () => {
