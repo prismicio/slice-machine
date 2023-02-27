@@ -28,7 +28,6 @@ export class InitTracker {
       this.#anonymousId = uuidv4();
       this.#client = new ServerAnalytics(segmentKey, {
         flushAt: 1,
-        // @ts-expect-error: @types/analytics-node not covering the property errorHandler yet.
         errorHandler: noop,
       });
     } catch (error) {
