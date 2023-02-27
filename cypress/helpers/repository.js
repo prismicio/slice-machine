@@ -11,9 +11,10 @@ export function pushLocalChanges(numberOfChanges) {
 
   if (numberOfChanges !== undefined) {
     // checking number of changes
-    menu.changesNumber()
-    // .contains(numberOfChanges)
-    .should("be.visible");
+    menu
+      .changesNumber()
+      // .contains(numberOfChanges)
+      .should("be.visible");
   }
 
   // sync changes button should be enabled
