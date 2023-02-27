@@ -6,7 +6,7 @@ export const MockLibraryInfo: (
   lib: string
 ) => Models.Library<Models.Component> = (lib: string) => ({
   name: lib,
-  path: "/" + lib,
+  path: "/test/slices",
   isLocal: true,
   components: [
     {

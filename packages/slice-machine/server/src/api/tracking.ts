@@ -4,7 +4,7 @@ import {
   isTrackingEvent,
   isGroupLibrariesEvent,
   isIdentifyUserEvent,
-} from "../../../src/tracking/types";
+} from "../../../lib/models/tracking";
 import { RequestWithEnv } from "./http/common";
 import * as analytics from "./services/analytics";
 
@@ -18,12 +18,12 @@ export function sendEvents(
 ): void {
   if (isGroupLibrariesEvent(event)) {
     analytics.group({
-      ...(userId ? { userId } : { anonymousId }),
+      ...(userId !== undefined ? { userId } : { anonymousId }),
       groupId: event.props.repoName,
       traits: event.props,
     });
   } else if (isIdentifyUserEvent(event)) {
-    if (userId && intercomHash) {
+    if (userId !== undefined && intercomHash !== undefined) {
       analytics.identify({
         ...(userId ? { userId } : { anonymousId }),
         integrations: {
@@ -37,7 +37,7 @@ export function sendEvents(
     analytics.track({
       event: event.name,
       properties: event.props,
-      ...(userId ? { userId } : { anonymousId }),
+      ...(userId !== undefined ? { userId } : { anonymousId }),
       context: { groupId: { Repository: repositoryName } },
     });
   }

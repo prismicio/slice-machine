@@ -13,6 +13,7 @@ module.exports = {
     "^components/(.*)$": "<rootDir>/components/$1",
     "^lib/(.*)$": "<rootDir>/lib/$1",
     "^tests/(.*)$": "<rootDir>/tests/$1",
+    "\\.(css)$": "<rootDir>/tests/__mocks__/styleMock.js",
   },
   setupFiles: ["<rootDir>/tests/jest-setup.js"],
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],

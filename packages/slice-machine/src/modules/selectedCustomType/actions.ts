@@ -5,10 +5,10 @@ import {
   CustomTypeSM,
   TabField,
 } from "@slicemachine/core/build/models/CustomType";
-import { renameCustomTypeCreator } from "../availableCustomTypes";
 
 export type SelectedCustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
+  | ActionType<typeof cleanupCustomTypeStoreCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof updateFieldMockConfigCreator>
   | ActionType<typeof deleteFieldMockConfigCreator>
@@ -27,14 +27,17 @@ export type SelectedCustomTypeActions =
   | ActionType<typeof replaceFieldIntoGroupCreator>
   | ActionType<typeof reorderFieldIntoGroupCreator>
   | ActionType<typeof deleteFieldIntoGroupCreator>
-  | ActionType<typeof deleteSharedSliceCreator>
-  | ActionType<typeof renameCustomTypeCreator>;
+  | ActionType<typeof deleteSharedSliceCreator>;
 
 export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
   model: CustomTypeSM;
   remoteModel: CustomTypeSM | undefined;
   mockConfig: CustomTypeMockConfig;
 }>();
+
+export const cleanupCustomTypeStoreCreator = createAction(
+  "CUSTOM_TYPE/CLEANUP"
+)();
 
 // Async actions
 export const saveCustomTypeCreator = createAsyncAction(

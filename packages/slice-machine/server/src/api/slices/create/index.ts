@@ -105,8 +105,7 @@ export default async function handler(req: {
   if (Files.exists(pathToModel)) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     const smModel = IO.Slice.readSlice(pathToModel);
-    const res = await save({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const res = save({
       body: { sliceName, from, model: smModel, mockConfig: {} },
       env: env,
     });

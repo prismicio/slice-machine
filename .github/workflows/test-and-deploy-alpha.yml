@@ -10,7 +10,7 @@ jobs:
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: List all dependencies
         shell: bash
         run: npm list
@@ -92,7 +92,7 @@ jobs:
         run: npm run build
       - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine
-        run: npm run build && npm run export-build
+        run: npm run build
       - name: Running End to End tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
@@ -118,6 +118,8 @@ jobs:
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup-node
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: Install Dependencies
         run: |
           npm ci
@@ -126,7 +128,6 @@ jobs:
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
           PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -135,5 +136,4 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
           npm run bump:alpha --preid="${{ github.ref_name }}"
-          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           npm run publish:alpha

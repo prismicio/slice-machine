@@ -1,11 +1,20 @@
 import axios, { AxiosError, AxiosPromise, AxiosRequestConfig } from "axios";
 import * as t from "io-ts";
+import { fold } from "fp-ts/Either";
 
 import { UserProfile } from "@slicemachine/core/build/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 
-import type { Acl, ClientError, UploadParameters } from "./models";
+import {
+  Acl,
+  BulkBody,
+  ClientError,
+  Limit,
+  LimitType,
+  RawLimit,
+  UploadParameters,
+} from "./models";
 import {
   ApplicationMode,
   getStatus,
@@ -223,5 +232,51 @@ export class Client {
         return Promise.reject(clientError);
       }
     );
+  }
+
+  /* Bulk changes to the custom type API, a 204 is a success, 202 or 403 is the limit, anything else is an uncontrolled error */
+  async bulk(body: BulkBody): Promise<Limit | null> {
+    // Helper to decode the limit or throw an error
+    function decodeLimitOrThrow(
+      potentialLimit: unknown,
+      statusCode: number,
+      limitType: LimitType
+    ) {
+      return fold<t.Errors, RawLimit, Limit | null>(
+        () => {
+          const error: ClientError = {
+            status: statusCode,
+            message: `Unable to parse raw limit from ${JSON.stringify(
+              potentialLimit
+            )}`,
+          };
+          throw error;
+        },
+        (rawLimit: RawLimit) => {
+          const limit = { ...rawLimit, type: limitType };
+          return limit;
+        }
+      )(RawLimit.decode(potentialLimit));
+    }
+
+    return this._post(`${this.apisEndpoints.Models}bulk`, body)
+      .then((response) => {
+        // Expected a 204 or a soft limit
+        if (response.status === 204) return null; // Success
+        return decodeLimitOrThrow(
+          response.data,
+          response.status,
+          LimitType.SOFT
+        );
+      })
+      .catch((error: ClientError) => {
+        // Try to decode a limit from the error or throw the original error
+        try {
+          const data: unknown = JSON.parse(error.message);
+          return decodeLimitOrThrow(data, error.status, LimitType.HARD);
+        } catch {
+          throw error;
+        }
+      });
   }
 }

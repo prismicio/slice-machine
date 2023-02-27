@@ -60,7 +60,7 @@ export function* generateSliceScreenshotSaga({
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Screenshot not saved",
+        content: "Internal Error: Screenshot not saved",
         type: ToasterType.ERROR,
       })
     );
@@ -97,7 +97,7 @@ export function* generateSliceCustomScreenshotSaga({
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Custom screenshot not saved",
+        content: "Internal Error: Custom screenshot not saved",
         type: ToasterType.ERROR,
       })
     );

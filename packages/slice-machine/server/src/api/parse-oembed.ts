@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const extract = require("oembed-parser").extract;
+const extract = require("@extractus/oembed-extractor").extract;
 
 export default async function handler(url: string) {
   try {

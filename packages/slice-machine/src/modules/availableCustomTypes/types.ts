@@ -1,8 +1,6 @@
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
-export type FrontEndCustomType = {
-  local: CustomTypeSM;
-  remote?: CustomTypeSM;
-};
-
-export type AvailableCustomTypesStoreType = Record<string, FrontEndCustomType>;
+export type AvailableCustomTypesStoreType = Readonly<
+  Record<CustomTypeSM["id"], LocalOrRemoteCustomType>
+>;

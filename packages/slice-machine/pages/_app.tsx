@@ -34,7 +34,7 @@ import { Store } from "redux";
 import { Persistor } from "redux-persist/es/types";
 import { ConnectedRouter } from "connected-next-router";
 import { getState } from "../src/apiClient";
-import { normalizeFrontendCustomTypes } from "../src/normalizers/customType";
+import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/customType";
 import Router from "next/router";
 
 import { NextPage } from "next";

@@ -15,6 +15,7 @@ const AppTheme = (): Theme =>
       primary: "#5D40F7",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
+      purple12: "#F1EEFE",
       purpleStrong: "#5842C3",
       whiteButtonText: "#1A1523",
       codeBlockBackground: "#32275F",
@@ -39,8 +40,11 @@ const AppTheme = (): Theme =>
           color: "#5C0C17",
         },
         synced: {
-          bg: "#F1EEFE",
+          bg: "purple12",
           color: "#5842C3",
+        },
+        deleted: {
+          bg: "rgba(203, 36, 49, 0.1)",
         },
         unknown: {
           bg: "#F3F5F7",
@@ -49,16 +53,21 @@ const AppTheme = (): Theme =>
       },
       codeBlockBorder: "#545454",
       secondary: "#F9FAFB",
+      danger: "#CB2431",
       highlight: "hsl(10, 40%, 90%)",
       purple: "#5B3DF5",
+      purple08: "#5842C3",
       muted: "#F9F9FB",
       icons: "#8091A5",
       gray: "#F8F9FA",
       grey01: "#F3F5F7",
       grey02: "#E6E6EA",
+      grey03: "#F4F2F4",
       grey04: "#9AA4AF",
       grey05: "#667587",
       grey07: "#F9F8F9",
+      grey10: "#86848D",
+      grey12: "#1A1523",
       greyTransparent: "rgba(37, 37, 45, 0.4)",
       borders: "#E4E2E4",
       bordersFocused: "#6E56CF",
@@ -208,6 +217,13 @@ const AppTheme = (): Theme =>
         px: 1,
         py: "1px",
       },
+      DELETED: {
+        fontWeight: "body",
+        color: "danger",
+        bg: "badge.deleted.bg",
+        px: 1,
+        py: "1px",
+      },
       UNKNOWN: {
         fontWeight: "body",
         color: "badge.unknown.color",
@@ -324,6 +340,30 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
       },
+      danger: {
+        bg: "danger",
+        fontFamily: "body",
+        fontWeight: "bold",
+        fontSize: "1",
+        color: "purple12",
+        px: "16px",
+        py: "8px",
+        borderRadius: "6px",
+        border: `1px solid #C61926`,
+        "&:hover": {
+          bg: darken("danger", 0.05),
+          cursor: "pointer",
+        },
+        "&:focus": {
+          bg: darken("danger", 0.05),
+          borderColor: darken("danger", 0.15),
+          outline: "none",
+        },
+        "&:active": {
+          bg: darken("danger", 0.06),
+          outline: "none",
+        },
+      },
       dropDownButton: {
         fontSize: "1",
         p: "3px",
@@ -347,6 +387,7 @@ const AppTheme = (): Theme =>
           bg: darken("secondary", 0.05),
           borderColor: darken("secondary", 0.15),
           outline: "none",
+          boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08);",
         },
         "&:active": {
           "&:not([disabled])": {
@@ -607,6 +648,18 @@ const AppTheme = (): Theme =>
         borderRadius: 4,
         boxShadow: "0 0 8px rgba(0, 0, 0, 0.125)",
       },
+      drawerCard: {
+        backgroundColor: "white",
+        boxShadow: "0px 2px 1px rgba(0, 0, 0, 0.05)",
+        borderRadius: 6,
+        border: (t) => `1px solid ${String(t.colors?.borders)}`,
+        px: 16,
+        py: 2,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
     },
     forms: {
       disabled: {
@@ -616,6 +669,10 @@ const AppTheme = (): Theme =>
       },
       checkbox: {
         color: "icons",
+        dark: {
+          color: "#161618",
+          cursor: "pointer",
+        },
       },
       radio: {
         color: "borders",
@@ -689,6 +746,10 @@ const AppTheme = (): Theme =>
           borderRadius: "3px",
           border: (t) => `1px solid ${String(t?.colors?.borders)}`,
         },
+        large: {
+          fontSize: 1,
+          color: "grey12",
+        },
       },
       switch: {
         height: "24px",
@@ -759,6 +820,14 @@ const AppTheme = (): Theme =>
         transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
         "&:hover": {
           bg: "grey02",
+        },
+      },
+      cardSmall: {
+        color: "purple08",
+        fontSize: "12px",
+        textDecoration: "none",
+        "&:hover": {
+          textDecoration: "underline",
         },
       },
     },
@@ -885,12 +954,15 @@ const AppTheme = (): Theme =>
         "thead tr.small": {
           fontSize: "12px",
         },
-        "tbody tr": {
+        "tbody tr:not(.disabled)": {
           cursor: "pointer",
           transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
           "&:hover": {
             bg: "grey01",
           },
+        },
+        "tbody tr.disabled": {
+          cursor: "not-allowed",
         },
       },
       th: {

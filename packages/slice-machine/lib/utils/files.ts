@@ -143,6 +143,10 @@ const Files = {
       });
     } catch (e) {}
   },
+  removeDirectory(src: string) {
+    fs.rmSync(src, { recursive: true, force: true });
+  },
+  hasWritePermissions: (src: string) => fs.accessSync(src, fs.constants.W_OK),
 };
 
 export default Files;
