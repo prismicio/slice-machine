@@ -21,7 +21,6 @@ import {
   SaveSliceMockRequest,
 } from "@src/apiClient";
 import {
-  getCurrentVersion,
   getFramework,
   selectIsSimulatorAvailableForFramework,
   updateManifestCreator,
@@ -233,11 +232,8 @@ export function* trackOpenSetupModalSaga() {
   const framework: Frameworks = (yield select(getFramework)) as ReturnType<
     typeof getFramework
   >;
-  const version: string = (yield select(getCurrentVersion)) as ReturnType<
-    typeof getCurrentVersion
-  >;
 
-  void Tracker.get().trackSliceSimulatorSetup(framework, version);
+  void Tracker.get().trackSliceSimulatorSetup(framework);
 }
 
 export function* saveSliceMockSaga({

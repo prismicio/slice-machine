@@ -7,10 +7,9 @@ import {
 } from "../../../lib/models/tracking";
 import { RequestWithEnv } from "./http/common";
 import * as analytics from "./services/analytics";
-
+import { retrieveJsonPackage } from "@slicemachine/core/build/node-utils";
+import path from "path";
 const anonymousId = uuidv4();
-
-import { version } from "../../../package.json";
 
 export function sendEvents(
   event: TrackingEvents,
@@ -18,6 +17,9 @@ export function sendEvents(
   userId?: string,
   intercomHash?: string
 ): void {
+  const pkg = retrieveJsonPackage(path.join("..", "..", "..", "package.json"));
+  const version = pkg.content?.version ?? "";
+
   if (isGroupLibrariesEvent(event)) {
     analytics.group({
       ...(userId !== undefined ? { userId } : { anonymousId }),
