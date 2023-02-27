@@ -272,7 +272,6 @@ describe("simulator", () => {
     expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
       name: "SliceMachine Slice Simulator Open",
       props: {
-        version: state.environment.changelog.currentVersion,
         framework: state.environment.framework,
       },
     });

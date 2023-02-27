@@ -17,7 +17,8 @@ export function sendEvents(
   userId?: string,
   intercomHash?: string
 ): void {
-  const pkg = retrieveJsonPackage(path.join("..", "..", "..", "package.json"));
+  const pathToPackage = path.resolve(__dirname, "..", "..", "..");
+  const pkg = retrieveJsonPackage(pathToPackage);
   const version = pkg.content?.version ?? "";
 
   if (isGroupLibrariesEvent(event)) {
