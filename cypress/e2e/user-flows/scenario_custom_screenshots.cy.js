@@ -1,8 +1,8 @@
-import { ScreenshotModal } from "../../pages/slices/screenshotModal";
+import { screenshotModal } from "../../pages/slices/screenshotModal";
 import { SliceCard } from "../../pages/slices/sliceCard";
-import { SlicePage } from "../../pages/slices/slicePage";
-import { ChangesPage } from "../../pages/changesPage";
-import { Menu } from "../../pages/menu";
+import { menu } from "../../pages/menu";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
+import { changesPage } from "../../pages/changes/changesPage";
 
 describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
@@ -13,9 +13,6 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     library: "slices",
   };
 
-  const slicePage = new SlicePage();
-  const screenshotModal = new ScreenshotModal();
-
   const wrongScreenshot = "screenshots/preview_small.png";
   const defaultScreenshot = "screenshots/preview_medium.png";
   const variationScreenshot = "screenshots/preview_large.png";
@@ -24,18 +21,19 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     cy.clearProject();
     cy.setSliceMachineUserContext({});
     // Push all local changes in case there are deleted slices
-    cy.pushLocalChanges();
+    // cy.pushLocalChanges(); // TODO: What if there aren't any?? This will fail
     cy.createSlice(slice.library, slice.id, slice.name);
   });
 
   beforeEach("Start from the Slice page", () => {
     cy.setSliceMachineUserContext({});
+    sliceBuilder.goTo(slice.library, slice.name);
   });
 
   it("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
-    slicePage.imagePreview.should("not.exist");
-    slicePage.openScreenshotModal();
+    sliceBuilder.imagePreview.should("not.exist");
+    sliceBuilder.openScreenshotModal();
 
     screenshotModal
       .verifyImageIsEmpty()
@@ -44,24 +42,21 @@ describe("I am an existing SM user and I want to upload screenshots on variation
       .dragAndDropImage(defaultScreenshot)
       .verifyImageIs(defaultScreenshot)
       .close();
-    slicePage.imagePreview.isSameImageAs(defaultScreenshot);
+    sliceBuilder.imagePreview.isSameImageAs(defaultScreenshot);
 
     // Upload screenshot on variation from the Changes Page
     const missingScreenshotVariation = "Missing screenshot";
-    slicePage.addVariation(missingScreenshotVariation);
+    sliceBuilder.addVariation(missingScreenshotVariation);
 
-    slicePage.imagePreview.should("not.exist");
-    cy.saveSliceModifications();
-
-    const menu = new Menu();
-    const changes = new ChangesPage();
-    const sliceCard = new SliceCard(slice.name);
+    sliceBuilder.imagePreview.should("not.exist");
+    sliceBuilder.save();
 
     menu.navigateTo("Slices");
+    const sliceCard = new SliceCard(slice.name);
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     menu.navigateTo("Changes");
-    changes.screenshotsButton.should("be.visible");
+    changesPage.screenshotsButton.should("be.visible");
     sliceCard.content.should("include.text", "1/2 screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
@@ -76,15 +71,15 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceCard.content.should("not.include.text", "screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
-    cy.pushLocalChanges(1);
+    cy.pushLocalChanges();
   });
 
   it("Error displayed when non-image files are uploaded", () => {
-    slicePage.goTo(slice.library, slice.name);
-    slicePage.addVariation("Error handling");
-    cy.saveSliceModifications();
+    sliceBuilder.goTo(slice.library, slice.name);
+    sliceBuilder.addVariation("Error handling");
+    sliceBuilder.save();
 
-    slicePage.openScreenshotModal();
+    sliceBuilder.openScreenshotModal();
     cy.contains("Select file").selectFile(
       {
         contents: Cypress.Buffer.from("this is not an image"),

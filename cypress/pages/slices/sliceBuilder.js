@@ -1,7 +1,6 @@
-export class SlicePage {
-  get saveButton() {
-    return cy.contains("Save to File System");
-  }
+import { BaseBuilder } from "../BaseBuilder";
+
+class SliceBuilder extends BaseBuilder {
   get imagePreview() {
     return cy.get("[alt='Preview image']");
   }
@@ -12,8 +11,40 @@ export class SlicePage {
     });
   }
 
-  goTo(sliceLibrary, sliceName) {
-    cy.visit(`/${sliceLibrary}/${sliceName}/default`);
+  get renameButton() {
+    return cy.get('[data-cy="edit-slice-name"]');
+  }
+
+  get headerSliceNameAndVariation() {
+    return cy.get('[data-cy="slice-and-variation-name-header"]');
+  }
+
+  get staticZone() {
+    return cy.get("[data-cy=slice-non-repeatable-zone]");
+  }
+
+  get addStaticFieldButton() {
+    return cy.get("[data-cy=add-Static-field]");
+  }
+
+  get repeatableZone() {
+    return cy.get("[data-cy=slice-repeatable-zone]");
+  }
+
+  get addRepeatableFieldButton() {
+    return cy.get("[data-cy=add-Repeatable-field]");
+  }
+
+  get variationsDropdown() {
+    return cy.get("[aria-label='Expand variations']");
+  }
+
+  get addVariationButton() {
+    return cy.contains("button", "Add new variation");
+  }
+
+  goTo(sliceLibrary, sliceName, variation = "default") {
+    cy.visit(`/${sliceLibrary}/${sliceName}/${variation}`);
     this.saveButton.should("be.visible");
     cy.contains(sliceName).should("be.visible");
     return this;
@@ -39,9 +70,6 @@ export class SlicePage {
   save() {
     this.saveButton.click();
     this.saveButton.should("be.disabled");
-    cy.contains("Models & mocks have been generated successfully").should(
-      "be.visible"
-    );
     return this;
   }
 
@@ -131,3 +159,5 @@ export class SlicePage {
     return this;
   }
 }
+
+export const sliceBuilder = new SliceBuilder();

@@ -268,6 +268,7 @@ export const SharedSlice = {
             overflow: "hidden",
             ...defaultSx(sx),
           }}
+          aria-label={`${slice.model.name} slice card`}
         >
           <Flex
             sx={{

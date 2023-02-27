@@ -1,6 +1,6 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
-export class LinkModal extends BaseEditWidgetModal {
+class LinkModal extends BaseEditWidgetModal {
   editPlaceholder(newPlaceholder) {
     this.editTextField("Placeholder", newPlaceholder);
     return this;
@@ -11,3 +11,5 @@ export class LinkModal extends BaseEditWidgetModal {
     return this;
   }
 }
+
+export const linkModal = new LinkModal();

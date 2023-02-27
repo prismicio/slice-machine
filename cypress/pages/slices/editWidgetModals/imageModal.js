@@ -1,6 +1,6 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
-export class ImageModal extends BaseEditWidgetModal {
+class ImageModal extends BaseEditWidgetModal {
   editName(newName) {
     cy.getInputByLabel("Name").clear().type(newName);
     return this;
@@ -24,3 +24,5 @@ export class ImageModal extends BaseEditWidgetModal {
     return this;
   }
 }
+
+export const imageModal = new ImageModal();

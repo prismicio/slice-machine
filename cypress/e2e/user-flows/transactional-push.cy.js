@@ -1,5 +1,13 @@
-import { SlicePage } from "../../pages/slices/slicePage";
-import { Menu } from "../../pages/menu";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
+import { menu } from "../../pages/menu";
+import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
+import { slicesList } from "../../pages/slices/slicesList";
+import { changesPage } from "../../pages/changes/changesPage";
+import {
+  hardDeleteDocumentsDrawer,
+  referencesErrorDrawer,
+  softDeleteDocumentsDrawer,
+} from "../../pages/changes/drawers";
 
 describe("I am an existing SM user and I want to push local changes", () => {
   const random = Date.now();
@@ -15,31 +23,6 @@ describe("I am an existing SM user and I want to push local changes", () => {
     name: `Push CT ${random}`,
   };
 
-  function mockPushLimit(limitType, customTypesInPush) {
-    cy.intercept("POST", "/api/push-changes", {
-      statusCode: 200,
-      body: {
-        type: limitType,
-        details: {
-          customTypes: customTypesInPush,
-        },
-      },
-    });
-  }
-
-  function unmockPushLimit() {
-    cy.intercept("POST", "/api/push-changes", (req) => {
-      req.continue();
-    });
-  }
-
-  function mockPushError(statusCode) {
-    cy.intercept("POST", "/api/push-changes", {
-      statusCode: statusCode,
-      body: null,
-    });
-  }
-
   beforeEach("Start from the Slice page", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
@@ -49,48 +32,23 @@ describe("I am an existing SM user and I want to push local changes", () => {
     cy.createSlice(slice.library, slice.id, slice.name);
     cy.createCustomType(customType.id, customType.name);
 
-    const menu = new Menu();
-    const slicePage = new SlicePage();
+    menu.navigateTo("Changes");
+
+    changesPage.pushChanges().isUpToDate();
+
+    customTypeBuilder.goTo(customType.id).addTab("Foo").save();
+
+    sliceBuilder.goTo(slice.library, slice.name).addVariation("foo").save();
 
     menu.navigateTo("Changes");
 
-    cy.pushLocalChanges();
+    changesPage.pushChanges(2);
 
-    // Update CT (add tab)
-    cy.visit(`/cts/${customType.id}`);
-    // add a tab
-    cy.contains("Add Tab").click();
-    cy.getInputByLabel("New Tab ID").type("Foo");
-    cy.get("#create-tab").contains("Save").click();
-    cy.contains("Save to File System").click();
+    cy.deleteCustomType(customType.id);
 
-    // Update Slice (add variation)
-    slicePage.goTo(slice.library, slice.name);
-    cy.get("button").contains("Default").click();
-    cy.contains("+ Add new variation").click();
-    cy.getInputByLabel("Variation name*").type("foo");
-    cy.getInputByLabel("Variation ID*").clear();
-    cy.getInputByLabel("Variation ID*").type("bar");
-    cy.get("#variation-add").submit();
-    slicePage.save();
-
-    menu.navigateTo("Changes");
-
-    cy.pushLocalChanges(2);
-
-    // Delete the custom type
-    menu.navigateTo("Custom Types");
-    cy.get("[data-cy='edit-custom-type-menu']").click();
-    cy.contains("Delete").click();
-    cy.get("[aria-modal]");
-    cy.contains("button", "Delete").click();
-
-    // Delete the slice
     menu.navigateTo("Slices");
-    cy.get("[data-cy='slice-action-icon']").click();
-    cy.contains("Delete").click();
-    cy.get("[aria-modal]");
-    cy.contains("button", "Delete").click();
+
+    slicesList.deleteSlice(slice.name);
 
     menu.navigateTo("Changes");
 
@@ -102,44 +60,40 @@ describe("I am an existing SM user and I want to push local changes", () => {
       },
     ];
 
-    mockPushLimit("HARD", customTypesWithDocuments);
+    changesPage.mockPushLimit("HARD", customTypesWithDocuments);
 
-    cy.pushLocalChanges();
+    changesPage.pushChanges();
 
-    cy.contains("Manual action required").should("be.visible");
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(
-      customTypesWithDocuments[0].numberOfDocuments
-    );
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(customType.name);
+    hardDeleteDocumentsDrawer.title.should("be.visible");
+    hardDeleteDocumentsDrawer
+      .getAssociatedDocuments(customType.name)
+      .contains(customTypesWithDocuments[0].numberOfDocuments);
 
-    mockPushLimit("SOFT", customTypesWithDocuments);
+    changesPage.mockPushLimit("SOFT", customTypesWithDocuments);
 
-    cy.contains("button", "Try again").click();
-    cy.contains("Confirm deletion").should("be.visible");
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(
-      customTypesWithDocuments[0].numberOfDocuments
-    );
-    cy.get("[data-cy='AssociatedDocumentsCard']").contains(customType.name);
+    hardDeleteDocumentsDrawer.pushButton.click();
 
-    cy.contains("button", "Push changes").should("be.disabled");
+    softDeleteDocumentsDrawer.title.should("be.visible");
+    softDeleteDocumentsDrawer
+      .getAssociatedDocuments(customType.name)
+      .contains(customTypesWithDocuments[0].numberOfDocuments);
 
-    cy.contains("label", "Delete these Documents").click();
+    softDeleteDocumentsDrawer.pushButton.should("be.disabled");
 
-    unmockPushLimit();
+    changesPage.unMockPushRequest();
 
-    cy.contains("button", "Push changes").should("be.enabled").click();
+    softDeleteDocumentsDrawer.confirmDelete();
 
-    cy.contains("Up to date").should("be.visible");
-    cy.get("[data-cy=push-changes]").should("be.disabled");
+    changesPage.isUpToDate();
   });
 
   it("shows a toaster on error", () => {
-    mockPushError(500);
     cy.createCustomType(customType.id, customType.name);
 
     cy.visit("/changes");
 
-    cy.get("[data-cy=push-changes]").click();
+    changesPage.mockPushError(500).pushChanges();
+
     cy.contains(
       "Something went wrong when pushing your changes. Check your terminal logs."
     );
@@ -148,52 +102,36 @@ describe("I am an existing SM user and I want to push local changes", () => {
   });
 
   it("show's the login modal on auth error", () => {
-    mockPushError(403);
     cy.createCustomType(customType.id, customType.name);
 
     cy.visit("/changes");
 
-    cy.get("[data-cy=push-changes]").click();
+    changesPage.mockPushError(403).pushChanges();
 
     cy.get("[aria-modal]").contains("You're not connected");
     cy.get("[aria-modal]").get("[aria-label='Close']").click();
-
-    cy.get("[data-cy=changes-number]").within(() => {
-      cy.contains(1).should("be.visible");
-    });
 
     cy.clearProject();
   });
 
   it("show removed slice references", () => {
-    const menu = new Menu();
-
     cy.createSlice(slice.library, slice.id, slice.name);
     cy.createCustomType(customType.id, customType.name);
 
-    cy.visit(`/cts/${customType.id}`);
-
-    cy.get("[data-cy=update-slices]").click();
-    // forcing this because the input itself is invisible and an svg is displayed
-    cy.get(`[data-cy=check-${slice.id}]`).click({ force: true });
-    cy.get("[data-cy=update-slices-modal]").submit();
-
-    cy.saveCustomTypeModifications();
+    customTypeBuilder.goTo(customType.id).addSliceToSliceZone(slice.id).save();
 
     cy.clearSlices();
-    menu.navigateTo("Changes");
-    cy.pushLocalChanges();
-
-    cy.contains("Missing Slices").should("be.visible");
-    cy.get("[data-cy='CustomTypesReferencesCard']").contains(customType.name);
-
-    cy.visit(`/cts/${customType.id}`);
-    cy.saveCustomTypeModifications();
 
     menu.navigateTo("Changes");
+    changesPage.pushChanges();
 
-    cy.pushLocalChanges();
-    cy.contains("Up to date").should("be.visible");
-    cy.get("[data-cy=push-changes]").should("be.disabled");
+    referencesErrorDrawer.title.should("be.visible");
+    referencesErrorDrawer.getCustomTypeReferencesCard(customType.name);
+
+    customTypeBuilder.goTo(customType.id).save();
+
+    menu.navigateTo("Changes");
+
+    changesPage.pushChanges().isUpToDate();
   });
 });

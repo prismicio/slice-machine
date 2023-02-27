@@ -1,4 +1,4 @@
-export class ScreenshotModal {
+class ScreenshotModal {
   get closeButton() {
     return cy.contains("Close");
   }
@@ -19,3 +19,5 @@ export class ScreenshotModal {
     return this;
   }
 }
+
+export const screenshotModal = new ScreenshotModal();

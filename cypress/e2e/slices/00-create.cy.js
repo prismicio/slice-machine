@@ -1,5 +1,5 @@
 import { SLICE_MOCK_FILE } from "../../consts";
-import { SimulatorPage } from "../../pages/simulator/simulatorPage";
+import { simulatorPage } from "../../pages/simulator/simulatorPage";
 
 const sliceName = "TestSlice";
 const editedSliceName = "EditedSliceName";
@@ -7,8 +7,6 @@ const sliceId = "test_slice"; // generated automatically from the slice name
 const lib = "slices";
 
 describe("Create Slices", () => {
-  const simulatorPage = new SimulatorPage();
-
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();

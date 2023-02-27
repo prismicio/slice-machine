@@ -1,6 +1,6 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
-export class RichTextModal extends BaseEditWidgetModal {
+class RichTextModal extends BaseEditWidgetModal {
   editPlaceholder(newPlaceholder) {
     this.editTextField("Placeholder", newPlaceholder);
     return this;
@@ -29,3 +29,5 @@ export class RichTextModal extends BaseEditWidgetModal {
     return this;
   }
 }
+
+export const richTextModal = new RichTextModal();
