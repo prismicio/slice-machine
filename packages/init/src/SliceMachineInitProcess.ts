@@ -152,16 +152,25 @@ export class SliceMachineInitProcess {
 		);
 
 		try {
+			const apiEndpoints = this.manager.getAPIEndpoints();
+			const wroomHost = new URL(apiEndpoints.PrismicWroom).host;
+
+			const dashboardURL = new URL(
+				`https://${this.context.repository.domain}.${wroomHost}`,
+			)
+				.toString()
+				.replace(/\/$/, "");
+			const apiURL = new URL(
+				"./api/v2",
+				`https://${this.context.repository.domain}.cdn.${wroomHost}`,
+			).toString();
+
 			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
 			// eslint-disable-next-line no-console
 			console.log(`
   YOUR REPOSITORY
-    Dashboard            ${chalk.cyan(
-			`https://${this.context.repository.domain}.prismic.io`,
-		)}
-    API                  ${chalk.cyan(
-			`https://${this.context.repository.domain}.cdn.prismic.io/api/v2`,
-		)}
+    Dashboard            ${chalk.cyan(dashboardURL)}
+    API                  ${chalk.cyan(apiURL)}
 
   RESOURCES
     Documentation        ${chalk.cyan(

@@ -19,6 +19,8 @@ import {
 } from "../auth/PrismicAuthManager";
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
+import { API_ENDPOINTS, APIEndpoints } from "../constants/API_ENDPOINTS";
+
 import { UserManager } from "./user/UserManager";
 import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
 
@@ -151,6 +153,10 @@ export class SliceMachineManager {
 	// child manager.
 	getPrismicAuthManager(): PrismicAuthManager {
 		return this._prismicAuthManager;
+	}
+
+	getAPIEndpoints(): APIEndpoints {
+		return API_ENDPOINTS;
 	}
 
 	// TODO: Remove this global-state method. It is expensive and a
