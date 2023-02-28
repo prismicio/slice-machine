@@ -53,7 +53,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceBuilder.imagePreview.should("not.exist");
     sliceBuilder.save();
 
-    cy.visit('/slices') // state needs to be updated
+    cy.visit("/slices"); // state needs to be updated
     // menu.navigateTo("Slices");
     const sliceCard = new SliceCard(slice.name);
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
