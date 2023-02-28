@@ -99,6 +99,7 @@ SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
 <!-- Links -->
 
 [prismic]: https://prismic.io
+[slice-machine]: https://prismic.io/slice-machine
 
 <!-- TODO: Replace link with a more useful one if available -->
 
