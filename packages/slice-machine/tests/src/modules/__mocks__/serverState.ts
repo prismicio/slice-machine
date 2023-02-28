@@ -42,7 +42,7 @@ export const dummyServerState: Pick<
             {
               key: "title",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   label: "",
                   placeholder: "",
