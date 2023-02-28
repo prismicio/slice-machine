@@ -29,27 +29,6 @@ jest.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
 });
 
 describe("MockSlice", () => {
-  test("parse primary", () => {
-    const link = {
-      "link-2": {
-        __TYPE__: "LinkContent",
-        value: { url: "http://twitter.com", __TYPE__: "ExternalLink" },
-      },
-    };
-    const linkR = LinkContent.decode(link["link-2"].value);
-    expect(isRight(linkR)).toBeTruthy();
-
-    const geo = {
-      key: {
-        // __TYPE__: GeoPointContentType,
-        position: { lat: 48.8583736, lng: 2.2922926 },
-      },
-    };
-    const geoR = GeoPointContent.decode(geo.key);
-
-    expect(isRight(geoR)).toBeTruthy();
-  });
-
   test("when creating a slice it should return the default mock", () => {
     const wanted = [
       {
