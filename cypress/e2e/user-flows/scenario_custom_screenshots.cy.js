@@ -37,12 +37,10 @@ describe("I am an existing SM user and I want to upload screenshots on variation
 
     screenshotModal
       .verifyImageIsEmpty()
-      .uploadImage(defaultScreenshot)
+      .uploadImage(wrongScreenshot)
+      .verifyImageIs(wrongScreenshot)
+      .dragAndDropImage(defaultScreenshot)
       .verifyImageIs(defaultScreenshot)
-      // .uploadImage(wrongScreenshot)
-      // .verifyImageIs(wrongScreenshot)
-      // .dragAndDropImage(defaultScreenshot) // this isn't working as expected
-      // .verifyImageIs(defaultScreenshot)
       .close();
     sliceBuilder.imagePreview.isSameImageAs(defaultScreenshot);
 
@@ -53,8 +51,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceBuilder.imagePreview.should("not.exist");
     sliceBuilder.save();
 
-    cy.visit("/slices"); // state needs to be updated
-    // menu.navigateTo("Slices");
+    menu.navigateTo("Slices");
     const sliceCard = new SliceCard(slice.name);
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
