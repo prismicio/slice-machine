@@ -45,7 +45,7 @@ export const mockSliceSimulatorEndpoint = (
 		}),
 	);
 
-	const screnshotEndpointWithURLParams = new URL(screenshotEndpoint);
+	const screnshotEndpointWithURLParams = new URL(screenshotEndpoint.toString());
 	screnshotEndpointWithURLParams.searchParams.set(
 		"screenWidth",
 		config.viewport.width.toString(),
