@@ -60,7 +60,7 @@ npm run slicemachine
 Pass `--open` to automatically launch Slice Machine in your browser:
 
 ```
-npx run slicemachine -- --open
+npm run slicemachine -- --open
 ```
 
 ## Documentation
