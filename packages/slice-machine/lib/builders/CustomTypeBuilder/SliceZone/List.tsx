@@ -6,7 +6,6 @@ import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import React, { useEffect } from "react";
@@ -23,9 +22,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   authStatus,
   isOnline,
 }) => {
-  const hasLegacySlices = slices.some(
-    (slice) => slice.type !== SlicesTypes.SharedSlice
-  );
+  const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
 
   const { openToaster } = useSliceMachineActions();
 
@@ -41,14 +38,14 @@ export const SlicesList: React.FC<SlicesListProps> = ({
     <Grid
       elems={slices}
       defineElementKey={(slice: SliceZoneSlice) => {
-        if (slice.type === SlicesTypes.Slice) {
+        if (slice.type === "Slice") {
           // NonsharedSlice
           return (slice.payload as NonSharedSliceInSliceZone).key;
         }
         return (slice.payload as ComponentUI).model.name;
       }}
       renderElem={(slice: SliceZoneSlice) => {
-        if (slice.type === SlicesTypes.Slice) {
+        if (slice.type === "Slice") {
           return NonSharedSlice.render({
             slice: slice.payload as NonSharedSliceInSliceZone,
           });

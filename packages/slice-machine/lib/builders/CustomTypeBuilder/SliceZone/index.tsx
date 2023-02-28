@@ -8,7 +8,6 @@ import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 import { SlicesList } from "./List";
 import EmptyState from "./EmptyState";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes";
 import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
@@ -36,7 +35,7 @@ const mapAvailableAndSharedSlices = (
   }>(
     (acc, { key, value }) => {
       // Shared Slice
-      if (value.type === SlicesTypes.SharedSlice) {
+      if (value.type === "SharedSlice") {
         const maybeSliceState: ComponentUI | undefined = availableSlices.find(
           (slice) => slice.model.id === key
         );
@@ -46,7 +45,7 @@ const mapAvailableAndSharedSlices = (
             ...acc,
             slicesInSliceZone: [
               ...acc.slicesInSliceZone,
-              { type: SlicesTypes.SharedSlice, payload: maybeSliceState },
+              { type: "SharedSlice", payload: maybeSliceState },
             ],
           };
         }
@@ -54,12 +53,12 @@ const mapAvailableAndSharedSlices = (
         return { ...acc, notFound: [...acc.notFound, { key }] };
       }
       // Legacy Slice
-      else if (value.type === SlicesTypes.Slice) {
+      else if (value.type === "Slice") {
         return {
           ...acc,
           slicesInSliceZone: [
             ...acc.slicesInSliceZone,
-            { type: SlicesTypes.Slice, payload: { key, value } },
+            { type: "Slice", payload: { key, value } },
           ],
         };
       }
@@ -114,12 +113,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   }, [notFound]);
 
   const sharedSlicesInSliceZone = slicesInSliceZone
-    .filter((e) => e.type === SlicesTypes.SharedSlice)
+    .filter((e) => e.type === "SharedSlice")
     .map((e) => e.payload) as ReadonlyArray<ComponentUI>;
 
   /* Preserve these keys in SliceZone */
   const nonSharedSlicesKeysInSliceZone = slicesInSliceZone
-    .filter((e) => e.type === SlicesTypes.Slice)
+    .filter((e) => e.type === "Slice")
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
   const onAddNewSlice = () => {
