@@ -6,23 +6,23 @@ import { menu } from "../pages/menu";
  */
 
 export function maybePushChanges() {
-  changesPage.goTo()
+  changesPage.goTo();
 
-  changesPage.pushButton.then(button => {
-    const disabled = button.attr("disabled")
+  changesPage.pushButton.then((button) => {
+    const disabled = button.attr("disabled");
 
-    if(!disabled) {
-      changesPage.pushButton.click()
+    if (!disabled) {
+      changesPage.pushButton.click();
 
       menu
-      .changesNumber({
-        timeout: 2 * 60 * 1000,
-      })
-      .should("not.exist");
-    
+        .changesNumber({
+          timeout: 2 * 60 * 1000,
+        })
+        .should("not.exist");
+
       changesPage.pushButton.should("be.disabled");
     }
-  }) 
+  });
 }
 /**
  * Push Changes to the Repository, assert the number of changes as well.

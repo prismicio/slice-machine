@@ -17,13 +17,16 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   const defaultScreenshot = "screenshots/preview_medium.png";
   const variationScreenshot = "screenshots/preview_large.png";
 
-  beforeEach("Cleanup local data and create a new slice and start from the Slice page", () => {
-    cy.clearProject();
-    cy.setSliceMachineUserContext({});
-    cy.maybePushChanges();
-    cy.createSlice(slice.library, slice.id, slice.name);
-    sliceBuilder.goTo(slice.library, slice.name);
-  });
+  beforeEach(
+    "Cleanup local data and create a new slice and start from the Slice page",
+    () => {
+      cy.clearProject();
+      cy.setSliceMachineUserContext({});
+      cy.maybePushChanges();
+      cy.createSlice(slice.library, slice.id, slice.name);
+      sliceBuilder.goTo(slice.library, slice.name);
+    }
+  );
 
   it("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
