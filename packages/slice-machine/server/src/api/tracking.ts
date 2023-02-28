@@ -20,7 +20,10 @@ export function sendEvents(
     analytics.group({
       ...(userId !== undefined ? { userId } : { anonymousId }),
       groupId: event.props.repoName,
-      traits: event.props,
+      traits: {
+        ...event.props,
+        nodeVersion: process.versions.node,
+      },
     });
   } else if (isIdentifyUserEvent(event)) {
     if (userId !== undefined && intercomHash !== undefined) {
@@ -36,7 +39,10 @@ export function sendEvents(
   } else if (isTrackingEvent(event)) {
     analytics.track({
       event: event.name,
-      properties: event.props,
+      properties: {
+        ...event.props,
+        nodeVersion: process.versions.node,
+      },
       ...(userId !== undefined ? { userId } : { anonymousId }),
       context: { groupId: { Repository: repositoryName } },
     });

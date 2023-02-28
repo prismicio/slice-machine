@@ -73,6 +73,7 @@ describe("tracking", () => {
           npmLibsCount: 0,
           repoName: "foo",
           slicemachineVersion: "0",
+          nodeVersion: process.versions.node,
         },
       });
       expect(Analytics.track).not.toHaveBeenCalled();
@@ -86,7 +87,9 @@ describe("tracking", () => {
         anonymousId: "uuid",
         context: { groupId: { Repository: "repoName" } },
         event: "SliceMachine Onboarding Continue Screen Intro",
-        properties: undefined,
+        properties: {
+          nodeVersion: process.versions.node,
+        },
       });
     });
   });
@@ -132,7 +135,9 @@ describe("tracking", () => {
           },
         },
         event: "SliceMachine Onboarding Continue Screen 3",
-        properties: undefined,
+        properties: {
+          nodeVersion: process.versions.node,
+        },
       });
       expect(Analytics.group).not.toHaveBeenCalled();
     });

@@ -1,6 +1,7 @@
 import ServerAnalytics from "analytics-node";
 import { v4 as uuidv4 } from "uuid";
 import { Models } from "@slicemachine/core";
+import noop from "./noop";
 
 export enum EventType {
   DownloadLibrary = "SliceMachine Download Library",
@@ -25,7 +26,10 @@ export class InitTracker {
 
       this.#isTrackingActive = isTrackingActive;
       this.#anonymousId = uuidv4();
-      this.#client = new ServerAnalytics(segmentKey);
+      this.#client = new ServerAnalytics(segmentKey, {
+        flushAt: 1,
+        errorHandler: noop,
+      });
     } catch (error) {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
     }
@@ -46,7 +50,10 @@ export class InitTracker {
       const payload = {
         event: eventType,
         ...identifier,
-        properties: attributes,
+        properties: {
+          ...attributes,
+          nodeVersion: process.versions.node,
+        },
         ...(this.#repository
           ? { context: { groupId: { Repository: this.#repository } } }
           : {}),
