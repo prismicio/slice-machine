@@ -5,4 +5,3 @@ CHANGELOG.md
 # .gitignore copy
 
 /dist
-/playground/*
