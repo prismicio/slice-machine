@@ -1,8 +1,6 @@
 import "@testing-library/jest-dom";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import MockCustomType from "../../../lib/mock/CustomType";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 jest.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
   return jest.fn().mockReturnValue("🥪");
@@ -42,7 +40,7 @@ describe("MockCustomType", () => {
             {
               key: "val1",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   label: "Title",
                   placeholder: "placeholder",
@@ -87,7 +85,7 @@ describe("MockCustomType", () => {
             {
               key: "widget1",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   label: "Title",
                   placeholder: "placeholder",
@@ -176,7 +174,7 @@ describe("MockCustomType", () => {
             {
               key: "group",
               value: {
-                type: WidgetTypes.Group,
+                type: "Group",
                 config: { label: "GroupToto", fields: [] },
               },
             },
@@ -194,7 +192,7 @@ describe("MockCustomType", () => {
     const sharedSlices = {
       my_slice: {
         id: "my_slice",
-        type: SlicesTypes.SharedSlice,
+        type: "SharedSlice",
         name: "MySlice",
         description: "MySlice",
         variations: [
@@ -206,7 +204,7 @@ describe("MockCustomType", () => {
             description: "MySlice",
             primary: {
               title: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   single: "heading1",
                   label: "Title",
@@ -214,7 +212,7 @@ describe("MockCustomType", () => {
                 },
               },
               description: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   single: "paragraph",
                   label: "Description",

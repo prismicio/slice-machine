@@ -1,5 +1,3 @@
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import type { Models } from "@slicemachine/core";
 
 export const MockLibraryInfo: (
@@ -18,7 +16,7 @@ export const MockLibraryInfo: (
       screenshots: {},
       model: {
         id: "sliceId",
-        type: SlicesTypes.SharedSlice,
+        type: "SharedSlice",
         name: "SliceName",
         description: "slice description",
         variations: [
@@ -33,7 +31,7 @@ export const MockLibraryInfo: (
               {
                 key: "title",
                 value: {
-                  type: WidgetTypes.RichText,
+                  type: "StructuredText",
                   config: {
                     single: "heading1",
                     label: "Title",
@@ -44,7 +42,7 @@ export const MockLibraryInfo: (
               {
                 key: "description",
                 value: {
-                  type: WidgetTypes.RichText,
+                  type: "StructuredText",
                   config: {
                     single: "paragraph",
                     label: "Description",

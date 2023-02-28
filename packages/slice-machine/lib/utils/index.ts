@@ -5,7 +5,7 @@ import { Frameworks } from "@slicemachine/core/build/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 import { DropResult } from "react-beautiful-dnd";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
@@ -38,7 +38,7 @@ export const ensureWidgetTypeExistence = (
   return false;
 };
 
-export const createDefaultWidgetValues = (TYPE_NAME: WidgetTypes) => ({
+export const createDefaultWidgetValues = (TYPE_NAME: FieldType) => ({
   TYPE_NAME,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields: DefaultFields,

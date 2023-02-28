@@ -3,8 +3,7 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { Embed } from "@prismicio/types-internal/lib/customtypes";
 
 /**  {
   "type" : "Embed",
@@ -15,7 +14,7 @@ import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestabl
 } */
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { FormFields, schema } = createDefaultWidgetValues(WidgetTypes.Embed);
+const { FormFields, schema } = createDefaultWidgetValues("Embed");
 
 const Meta = {
   icon: FiCode,
@@ -25,7 +24,7 @@ const Meta = {
 
 export const EmbedWidget: Widget<Embed, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.Embed,
+    type: "Embed",
     config: {
       label,
       placeholder: "",
@@ -34,7 +33,7 @@ export const EmbedWidget: Widget<Embed, typeof schema> = {
   MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  TYPE_NAME: WidgetTypes.Embed,
+  TYPE_NAME: "Embed",
   schema,
   Meta,
 };

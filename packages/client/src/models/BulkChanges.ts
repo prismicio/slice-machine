@@ -1,6 +1,8 @@
 import * as t from "io-ts";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import {
+  CustomType,
+  SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 
 export enum ChangeTypes {
   SLICE_INSERT = "SLICE_INSERT",

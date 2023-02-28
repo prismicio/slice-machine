@@ -2,13 +2,9 @@ import jsonModel from "./__mockData__/model.json";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import MockSlice from "@lib/mock/Slice";
 import { Slices } from "@slicemachine/core/build/models";
-import {
-  SharedSlice,
-  SlicesTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { dummyServerState } from "../__mocks__/serverState";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const getSelectedSliceDummyData = () => {
   const dummyModel = Slices.toSM(jsonModel as unknown as SharedSlice);
@@ -71,7 +67,7 @@ export const getRefreshStateCreatorPayloadData = (
           mock: [],
           model: {
             id: modelId,
-            type: SlicesTypes.SharedSlice,
+            type: "SharedSlice",
             name: "CategoryPreviewWithImageBackgrounds",
             description: "CategoryPreviewWithImageBackgrounds",
             variations: [
@@ -89,7 +85,7 @@ export const getRefreshStateCreatorPayloadData = (
                         label: "Title",
                         placeholder: "My first Title...",
                       },
-                      type: WidgetTypes.Text,
+                      type: "Text",
                     },
                   },
                 ],

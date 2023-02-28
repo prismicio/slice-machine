@@ -3,9 +3,11 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
-import type { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
-import type { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import type {
+  CustomType,
+  UID,
+  NestableWidget,
+} from "@prismicio/types-internal/lib/customtypes";
 
 const widgetEntries = Object.entries(Widgets);
 

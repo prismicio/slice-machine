@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { CustomTypes } from "@slicemachine/core/build/models/CustomType/index";
 import jsonModel from "./__mockData__/model.json";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import {
   addFieldCreator,
   createSliceZoneCreator,

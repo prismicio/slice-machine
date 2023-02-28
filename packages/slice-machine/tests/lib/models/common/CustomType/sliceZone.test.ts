@@ -1,13 +1,12 @@
 import { SliceZone } from "@lib/models/common/CustomType/sliceZone";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const mockSliceZone: SlicesSM = {
   key: "slices",
   value: [
-    { key: "slice_in_zone_0", value: { type: SlicesTypes.SharedSlice } },
-    { key: "slice_in_zone_1", value: { type: SlicesTypes.SharedSlice } },
-    { key: "slice_in_zone_2", value: { type: SlicesTypes.SharedSlice } },
+    { key: "slice_in_zone_0", value: { type: "SharedSlice" } },
+    { key: "slice_in_zone_1", value: { type: "SharedSlice" } },
+    { key: "slice_in_zone_2", value: { type: "SharedSlice" } },
   ],
 };
 

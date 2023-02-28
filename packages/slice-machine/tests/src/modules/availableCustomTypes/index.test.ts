@@ -25,7 +25,6 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import axios, { AxiosError } from "axios";
 import { deleteSliceCreator } from "@src/modules/slices";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -141,13 +140,13 @@ describe("[Available Custom types module]", () => {
                 {
                   key: sliceToDeleteId,
                   value: {
-                    type: SlicesTypes.SharedSlice,
+                    type: "SharedSlice",
                   },
                 },
                 {
                   key: "slice_2",
                   value: {
-                    type: SlicesTypes.SharedSlice,
+                    type: "SharedSlice",
                   },
                 },
               ],
@@ -196,7 +195,7 @@ describe("[Available Custom types module]", () => {
                     {
                       key: "slice_2",
                       value: {
-                        type: SlicesTypes.SharedSlice,
+                        type: "SharedSlice",
                       },
                     },
                   ],

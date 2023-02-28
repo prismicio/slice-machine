@@ -1,5 +1,5 @@
 import Files from "../utils/files";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
 import path from "path";
 import { getLocalCustomTypes } from "../../lib/utils/customTypes";

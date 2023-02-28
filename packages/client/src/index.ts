@@ -3,8 +3,10 @@ import * as t from "io-ts";
 import { fold } from "fp-ts/Either";
 
 import { UserProfile } from "@slicemachine/core/build/models";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
+import {
+  CustomType,
+  SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 
 import {
   Acl,

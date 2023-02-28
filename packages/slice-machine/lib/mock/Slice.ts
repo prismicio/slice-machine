@@ -1,8 +1,8 @@
 import {
   SharedSlice,
   Variation,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff/SharedSlice";
+  SliceDiff,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
   SharedSliceMockConfig,
   VariationMockConfig,
