@@ -1,4 +1,8 @@
-# start-slicemachine
+> **Warning**
+>
+> This package is designed for [Slice Machine][slice-machine] plugin authors. If you are not writing a plugin, you probably don't need to be aware of `@slicemachine/plugin-kit`.
+
+# @slicemachine/plugin-kit
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -6,57 +10,25 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-A command line tool to start [Slice Machine][slice-machine].
+A toolkit to build [Slice Machine][slice-machine] plugins.
+
+- Create adapters for frameworks.
+- Build integrations for third-party tools and services.
+- Write project-specific workflows triggered by Slice Machine events.
 
 ## Install
 
-`start-slicemachine` is installed automatically as a dependency to `slice-machine-ui`.
-
-We recommend installing Slice Machine into your project using `@slicemachine/init`:
-
 ```sh
-npx @slicemachine/init
-```
-
-If you want to install `slice-machine-ui` manually, you can do so like this:
-
-```sh
-npm install --save-dev slice-machine-ui
-```
-
-## Quick Start
-
-Run `start-slicemachine` from your command line to start Slice Machine:
-
-```
-npx start-slicemachine
-```
-
-Or add it as a `package.json` script to run it even quicker:
-
-```typescript
-// package.json
-
-{
-	"scripts": {
-		"slicemachine" :"start-slicemachine"
-	}
-}
-```
-
-```sh
-npm run slicemachine
-```
-
-Pass `--open` to automatically launch Slice Machine in your browser:
-
-```
-npm run slicemachine -- --open
+npm install @slicemachine/plugin-kit
 ```
 
 ## Documentation
 
-For full documentation, visit the [official Prismic documentation][prismic-docs].
+Coming soon!
+
+Until proper documentation is written, see `@slicemachine/adapter-next` for an example plugin.
+
+All functions from `@slicemachine/plugin-kit` are typed and self-documented using TypeScript.
 
 ## Contributing
 

@@ -1,4 +1,4 @@
-# start-slicemachine
+# @slicemachine/init
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -6,57 +6,40 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-A command line tool to start [Slice Machine][slice-machine].
+The easiest way to add Slice Machine to your project.
 
-## Install
-
-`start-slicemachine` is installed automatically as a dependency to `slice-machine-ui`.
-
-We recommend installing Slice Machine into your project using `@slicemachine/init`:
-
-```sh
-npx @slicemachine/init
-```
-
-If you want to install `slice-machine-ui` manually, you can do so like this:
-
-```sh
-npm install --save-dev slice-machine-ui
-```
+- 🏗️ &nbsp;Installs [Slice Machine][slice-machine] as a development dependency.
+- 🪄 &nbsp;Automatically detects and installs the correct framework adapter ([Next.js][nextjs] and [Nuxt][nuxt] are supported).
+- ✏️ &nbsp;Walks you through creating a new [Prismic][prismic] content repository.
 
 ## Quick Start
 
-Run `start-slicemachine` from your command line to start Slice Machine:
+First, create a [Next.js][nextjs] or [Nuxt][nuxt] app if you don't already have one:
 
+```sh
+npx create-next-app
+
+# or
+
+npx nuxi init your-app-name
 ```
-npx start-slicemachine
+
+Then, run `@slicemachine/init`:
+
+```sh
+cd your-app-name
+npx @slicemachine/init
 ```
 
-Or add it as a `package.json` script to run it even quicker:
-
-```typescript
-// package.json
-
-{
-	"scripts": {
-		"slicemachine" :"start-slicemachine"
-	}
-}
-```
+Slice Machine is now ready to run!
 
 ```sh
 npm run slicemachine
 ```
 
-Pass `--open` to automatically launch Slice Machine in your browser:
-
-```
-npm run slicemachine -- --open
-```
-
 ## Documentation
 
-For full documentation, visit the [official Prismic documentation][prismic-docs].
+For full documentation, visit the [official Prismic documentation][prismic-docs-slice-machine].
 
 ## Contributing
 
@@ -92,10 +75,13 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 
 [prismic]: https://prismic.io
 [slice-machine]: https://prismic.io/slice-machine
+[nextjs]: https://nextjs.org/
+[nuxt]: https://nuxt.com/
 
 <!-- TODO: Replace link with a more useful one if available -->
 
 [prismic-docs]: https://prismic.io/docs
+[prismic-docs-slice-machine]: https://prismic.io/docs/slice-machine
 [changelog]: /CHANGELOG.md
 
 <!-- TODO: Replace link with a more useful one if available -->

@@ -1,4 +1,8 @@
-# start-slicemachine
+> **Warning**
+>
+> This package is designed only for [Slice Machine][slice-machine]'s maintainers. If you use [Slice Machine][slice-machine] in your projects, you probably don't need to be aware of `@slicemachine/manager`.
+
+# @slicemachine/manager
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -6,57 +10,17 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-A command line tool to start [Slice Machine][slice-machine].
+A low-level tool used to manage Slice Machine data.
 
 ## Install
 
-`start-slicemachine` is installed automatically as a dependency to `slice-machine-ui`.
-
-We recommend installing Slice Machine into your project using `@slicemachine/init`:
-
 ```sh
-npx @slicemachine/init
-```
-
-If you want to install `slice-machine-ui` manually, you can do so like this:
-
-```sh
-npm install --save-dev slice-machine-ui
-```
-
-## Quick Start
-
-Run `start-slicemachine` from your command line to start Slice Machine:
-
-```
-npx start-slicemachine
-```
-
-Or add it as a `package.json` script to run it even quicker:
-
-```typescript
-// package.json
-
-{
-	"scripts": {
-		"slicemachine" :"start-slicemachine"
-	}
-}
-```
-
-```sh
-npm run slicemachine
-```
-
-Pass `--open` to automatically launch Slice Machine in your browser:
-
-```
-npm run slicemachine -- --open
+npm install @slicemachine/manager
 ```
 
 ## Documentation
 
-For full documentation, visit the [official Prismic documentation][prismic-docs].
+This low-level Slice Machine package is not publicly documented and is designed only for internal use.
 
 ## Contributing
 
