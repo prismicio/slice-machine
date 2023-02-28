@@ -26,7 +26,6 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   });
 
   beforeEach("Start from the Slice page", () => {
-    cy.clearAssets();
     cy.setSliceMachineUserContext({});
     sliceBuilder.goTo(slice.library, slice.name);
   });
