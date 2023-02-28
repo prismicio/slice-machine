@@ -14,8 +14,7 @@ import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
-import { Text } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Text } from "@prismicio/types-internal/lib/customtypes";
 import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -38,7 +37,7 @@ const Meta = {
 
 export const TextWidget: Widget<Text, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.Text,
+    type: "Text",
     config: {
       label,
       placeholder: "",
@@ -47,7 +46,7 @@ export const TextWidget: Widget<Text, typeof schema> = {
   MockConfigForm: DeprecatedMockConfigMessage,
   Meta,
   schema,
-  TYPE_NAME: WidgetTypes.Text,
+  TYPE_NAME: "Text",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
 };

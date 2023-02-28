@@ -1,5 +1,4 @@
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Reducer } from "redux";
 import { getType } from "typesafe-actions";
 import {
@@ -57,9 +56,9 @@ export const selectedSliceReducer: Reducer<
       const { variationId, widgetsArea, key, value } = action.payload;
       try {
         if (
-          value.type !== WidgetTypes.Range &&
-          value.type !== WidgetTypes.Separator &&
-          value.type !== WidgetTypes.IntegrationField
+          value.type !== "Range" &&
+          value.type !== "Separator" &&
+          value.type !== "IntegrationFields"
         ) {
           const CurrentWidget: AnyWidget = Widgets[value.type];
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -85,9 +84,9 @@ export const selectedSliceReducer: Reducer<
         action.payload;
       try {
         if (
-          value.type !== WidgetTypes.Range &&
-          value.type !== WidgetTypes.Separator &&
-          value.type !== WidgetTypes.IntegrationField
+          value.type !== "Range" &&
+          value.type !== "Separator" &&
+          value.type !== "IntegrationFields"
         ) {
           const CurrentWidget: AnyWidget = Widgets[value.type];
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

@@ -9,7 +9,7 @@ import Files from "../node-utils/files";
 import { Slices, VariationSM } from "../models/Slice";
 
 import Errors from "../utils/errors";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 /** take a path to slice and return its name  */
 function getComponentName(slicePath: string): string | undefined {

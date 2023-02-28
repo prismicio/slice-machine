@@ -1,17 +1,17 @@
 import "@testing-library/jest-dom";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import {
   SharedSlice,
-  SlicesTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+  SliceDiff,
+} from "@prismicio/types-internal/lib/customtypes";
+import {
+  GeoPointContent,
+  LinkContent,
+  SharedSliceContent,
+} from "@prismicio/types-internal/lib/content";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 // import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
-import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
-import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff";
 
 jest.mock("lorem-ipsum", () => {
   return {
@@ -71,7 +71,7 @@ describe("MockSlice", () => {
 
     const model: SliceSM = {
       id: "some_slice",
-      type: SlicesTypes.SharedSlice,
+      type: "SharedSlice",
       name: "SomeSlice",
       description: "SomeSlice",
       variations: [
@@ -85,7 +85,7 @@ describe("MockSlice", () => {
             {
               key: "title",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   single: "heading1",
                   label: "Title",
@@ -96,7 +96,7 @@ describe("MockSlice", () => {
             {
               key: "description",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   single: "paragraph",
                   label: "Description",
@@ -142,7 +142,7 @@ describe("MockSlice", () => {
 
     const model: SliceSM = {
       id: "some_slice",
-      type: SlicesTypes.SharedSlice,
+      type: "SharedSlice",
       name: "SomeSlice",
       description: "SomeSlice",
       variations: [
@@ -156,7 +156,7 @@ describe("MockSlice", () => {
             {
               key: "title",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   single: "heading1",
                   label: "Title",
@@ -167,7 +167,7 @@ describe("MockSlice", () => {
             {
               key: "description",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   single: "paragraph",
                   label: "Description",
@@ -179,7 +179,7 @@ describe("MockSlice", () => {
               key: "image",
               value: {
                 config: { label: "image", constraint: {}, thumbnails: [] },
-                type: WidgetTypes.Image,
+                type: "Image",
               },
             },
           ],

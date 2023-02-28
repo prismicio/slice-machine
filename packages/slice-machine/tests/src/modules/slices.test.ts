@@ -31,7 +31,6 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import axios, { AxiosError } from "axios";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 
@@ -417,13 +416,13 @@ describe("[utils]", () => {
     const initialModel: SliceSM = {
       id: "slice_id",
       name: PREV_NAME,
-      type: SlicesTypes.SharedSlice,
+      type: "SharedSlice",
       variations: [],
     };
     const expectedModel: SliceSM = {
       id: "slice_id",
       name: NEW_NAME,
-      type: SlicesTypes.SharedSlice,
+      type: "SharedSlice",
       variations: [],
     };
     expect(renameModel(initialModel, NEW_NAME)).toEqual(expectedModel);

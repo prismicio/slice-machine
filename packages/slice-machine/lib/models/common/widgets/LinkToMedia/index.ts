@@ -7,8 +7,7 @@ import { Widget } from "../Widget";
 
 import { linkConfigSchema } from "@lib/models/common/widgets/Link";
 import Form, { FormFields } from "./Form";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { Link } from "@prismicio/types-internal/lib/customtypes";
 
 const Meta = {
   icon: MdAttachment,
@@ -41,13 +40,13 @@ export const LinkToMediaWidget: Widget<Link, typeof schema> = {
   schema,
   Form,
   create: (label: string) => ({
-    type: WidgetTypes.Link,
+    type: "Link",
     config: {
       label,
       placeholder: "",
       select: "media",
     },
   }),
-  TYPE_NAME: WidgetTypes.Link,
+  TYPE_NAME: "Link",
   CUSTOM_NAME: "LinkToMedia",
 };

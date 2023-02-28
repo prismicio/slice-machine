@@ -1,11 +1,8 @@
-import {
-  SharedSlice,
-  SlicesTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 export const sharedSliceMock: SharedSlice = {
   id: "all_fields",
-  type: SlicesTypes.SharedSlice,
+  type: "SharedSlice",
   name: "AllFields",
   description: "AllFields",
   variations: [

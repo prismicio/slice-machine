@@ -17,9 +17,11 @@ import generateLibrariesIndex from "../common/hooks/updateLibraries";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../../../../lib/io";
 import { ComponentMocks, Slices } from "@slicemachine/core/build/models";
-import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
+import {
+  SliceComparator,
+  SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import { getOrElseW } from "fp-ts/lib/Either";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export default function handler({
   env,

@@ -32,7 +32,6 @@ import * as Widgets from "@models/common/widgets/withGroup";
 import StateHelpers from "./stateHelpers";
 import { CustomType } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import { GroupSM } from "@slicemachine/core/build/models/Group";
 import { Group } from "@lib/models/common/CustomType/group";
@@ -107,9 +106,9 @@ export const selectedCustomTypeReducer: Reducer<
       const { tabId, field, fieldId } = action.payload;
       try {
         if (
-          field.type === WidgetTypes.Range ||
-          field.type === WidgetTypes.IntegrationField ||
-          field.type === WidgetTypes.Separator
+          field.type === "Range" ||
+          field.type === "IntegrationFields" ||
+          field.type === "Separator"
         ) {
           throw new Error("Unsupported Field Type.");
         }

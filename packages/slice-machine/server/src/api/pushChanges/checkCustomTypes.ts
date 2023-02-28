@@ -1,6 +1,5 @@
 import type { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import type { Component, Library } from "@slicemachine/core/build/models";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export function getCustomTypesWithInvalidReferences(
   localCustomTypes: CustomTypeSM[],
@@ -15,8 +14,7 @@ export function getCustomTypesWithInvalidReferences(
       ct.tabs.some((tab) =>
         tab.sliceZone?.value.some(
           (z) =>
-            !localSliceIds.includes(z.key) &&
-            z.value.type === SlicesTypes.SharedSlice
+            !localSliceIds.includes(z.key) && z.value.type === "SharedSlice"
         )
       )
     )

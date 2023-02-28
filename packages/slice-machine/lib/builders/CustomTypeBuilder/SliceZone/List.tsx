@@ -6,7 +6,7 @@ import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import React, { useEffect } from "react";

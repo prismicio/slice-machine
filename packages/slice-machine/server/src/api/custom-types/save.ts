@@ -16,7 +16,7 @@ import { Component, Slices } from "@slicemachine/core/build/models";
 import {
   SharedSlice,
   SlicesTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+} from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import * as Sentry from "@sentry/node";
 

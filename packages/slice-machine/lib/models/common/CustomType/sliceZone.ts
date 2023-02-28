@@ -2,7 +2,7 @@ import {
   SlicesTypes,
   CompositeSlice,
   LegacySlice,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+} from "@prismicio/types-internal/lib/customtypes";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import { ComponentUI } from "../ComponentUI";
 
@@ -21,7 +21,7 @@ export const SliceZone = {
       {
         key,
         value: {
-          type: SlicesTypes.SharedSlice,
+          type: "SharedSlice",
         },
       },
     ]);
@@ -40,7 +40,7 @@ export const SliceZone = {
       .concat(
         keys.map((key) => ({
           key,
-          value: { type: SlicesTypes.SharedSlice },
+          value: { type: "SharedSlice" },
         }))
       );
     return {

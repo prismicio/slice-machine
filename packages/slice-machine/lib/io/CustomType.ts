@@ -1,5 +1,5 @@
 import Files from "../utils/files";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import {
   CustomTypes,
   CustomTypeSM,

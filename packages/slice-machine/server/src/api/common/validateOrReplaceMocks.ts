@@ -20,7 +20,7 @@ import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { Document } from "@prismicio/types-internal/lib/content";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { Slices } from "@slicemachine/core/build/models";
 
 export function validateOrReplaceSliceMocks(

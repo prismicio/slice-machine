@@ -3,9 +3,11 @@ import { sendStarterData } from "../src/steps";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import {
+  CustomType,
+  SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import { isLeft, isRight } from "fp-ts/lib/Either";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { InitClient } from "../src/utils";
 import { ApplicationMode } from "@slicemachine/client";
 import { stderr } from "stdout-stderr";
