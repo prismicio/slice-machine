@@ -3,7 +3,7 @@
     <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
   </a>
 </p>
-<p align="center">
+<p align="center" style="max-width: 60ch;">
   Slice Machine transforms the way you code reusable components and lets you deliver them directly to marketers in a custom page builder.
 </p>
 
@@ -17,9 +17,9 @@
 
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
-- 🔪 &nbsp;Build [Slices][prismic-docs-slices] in a specialized development environment.
+- 🧰 &nbsp;Build [Slices][prismic-docs-slices] in a specialized development environment.
 - 📄 &nbsp;Manage and configure your [Custom Types][prismic-docs-custom-types].
-- 🖼 &nbsp;Integrate into your website's framework using code generation.
+- ⚒️ &nbsp;Integrate into your website's framework using code generation.
 
 ## Install
 
