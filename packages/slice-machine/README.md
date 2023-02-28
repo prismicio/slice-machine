@@ -1,13 +1,12 @@
 <p align="center">
-  <a href="https://slicemachine.dev">
+  <a href="https://prismic.io/slice-machine">
     <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
   </a>
 </p>
-<p align="center" style="max-width: 60ch;">
-  Slice Machine transforms the way you code reusable components and lets you deliver them directly to marketers in a custom page builder.
-</p>
 
 # Slice Machine
+
+[Slice Machine][slice-machine] transforms the way you code reusable components and lets you deliver them directly to marketers in a custom page builder.
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
