@@ -1,9 +1,9 @@
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
 import { TabField } from "@slicemachine/core/build/models/CustomType";
-import { NestableFieldTypes } from "@prismicio/types-internal/lib/customtypes";
+import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 export interface Widget<F extends TabField, S extends AnyObjectSchema> {
-  TYPE_NAME: NestableFieldTypes;
+  TYPE_NAME: FieldType;
   MockConfigForm?: {
     (): JSX.Element;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
