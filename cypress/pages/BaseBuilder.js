@@ -1,6 +1,6 @@
 export class BaseBuilder {
   get saveButton() {
-    return cy.contains("Save to File System", { timeout: 60 * 1000 });
+    return cy.contains("Save to File System");
   }
 
   get addStaticFieldButton() {
