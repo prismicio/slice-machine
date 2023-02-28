@@ -1,5 +1,4 @@
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 describe("Slice IO", () => {

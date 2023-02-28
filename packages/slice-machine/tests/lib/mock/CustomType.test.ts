@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
 import MockCustomType from "../../../lib/mock/CustomType";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes";
 
 jest.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
   return jest.fn().mockReturnValue("🥪");

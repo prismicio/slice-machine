@@ -13,10 +13,7 @@ import { SaveCustomTypeBody } from "../../../../lib/models/common/CustomType";
 import * as IO from "../../../../lib/io";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import { Component, Slices } from "@slicemachine/core/build/models";
-import {
-  SharedSlice,
-  SlicesTypes,
-} from "@prismicio/types-internal/lib/customtypes";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import * as Sentry from "@sentry/node";
 
@@ -77,8 +74,7 @@ function trackLegacySlices(model: CustomTypeSM) {
   const hasLegacySlices: boolean = model.tabs.some((tab) =>
     tab.sliceZone?.value.some(
       (slice) =>
-        slice.value.type !== SlicesTypes.SharedSlice &&
-        slice.value.type !== SlicesTypes.Slice
+        slice.value.type !== "SharedSlice" && slice.value.type !== "Slice"
     )
   );
 
