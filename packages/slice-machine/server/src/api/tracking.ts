@@ -29,6 +29,7 @@ export function sendEvents(
       traits: {
         ...event.props,
         slicemachineVersion: version,
+        nodeVersion: process.versions.node,
       },
     });
   } else if (isIdentifyUserEvent(event)) {
@@ -48,6 +49,7 @@ export function sendEvents(
       properties: {
         ...event.props,
         slicemachineVersion: version,
+        nodeVersion: process.versions.node,
       },
       ...(userId !== undefined ? { userId } : { anonymousId }),
       context: { groupId: { Repository: repositoryName } },

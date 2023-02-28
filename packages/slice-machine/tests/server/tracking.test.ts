@@ -58,7 +58,6 @@ describe("tracking", () => {
             downloadedLibsCount: 0,
             npmLibsCount: 0,
             downloadedLibs: [],
-            slicemachineVersion: version,
           },
         },
         "repoName"
@@ -74,6 +73,7 @@ describe("tracking", () => {
           npmLibsCount: 0,
           repoName: "foo",
           slicemachineVersion: version,
+          nodeVersion: process.versions.node,
         },
       });
       expect(Analytics.track).not.toHaveBeenCalled();
@@ -89,6 +89,7 @@ describe("tracking", () => {
         event: "SliceMachine Onboarding Continue Screen Intro",
         properties: {
           slicemachineVersion: version,
+          nodeVersion: process.versions.node,
         },
       });
     });
@@ -137,6 +138,7 @@ describe("tracking", () => {
         event: "SliceMachine Onboarding Continue Screen 3",
         properties: {
           slicemachineVersion: version,
+          nodeVersion: process.versions.node,
         },
       });
       expect(Analytics.group).not.toHaveBeenCalled();
