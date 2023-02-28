@@ -17,16 +17,11 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   const defaultScreenshot = "screenshots/preview_medium.png";
   const variationScreenshot = "screenshots/preview_large.png";
 
-  before("Cleanup local data and create a new slice", () => {
+  beforeEach("Cleanup local data and create a new slice and start from the Slice page", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
-    // Push all local changes in case there are deleted slices
-    // cy.pushLocalChanges(); // TODO: What if there aren't any?? This will fail
+    cy.maybePushChanges();
     cy.createSlice(slice.library, slice.id, slice.name);
-  });
-
-  beforeEach("Start from the Slice page", () => {
-    cy.setSliceMachineUserContext({});
     sliceBuilder.goTo(slice.library, slice.name);
   });
 
@@ -37,10 +32,14 @@ describe("I am an existing SM user and I want to upload screenshots on variation
 
     screenshotModal
       .verifyImageIsEmpty()
-      .uploadImage(wrongScreenshot)
+      .dragAndDropImage(wrongScreenshot)
       .verifyImageIs(wrongScreenshot)
-      .dragAndDropImage(defaultScreenshot)
+      .uploadImage(defaultScreenshot)
       .verifyImageIs(defaultScreenshot)
+      // .uploadImage(wrongScreenshot)
+      // .verifyImageIs(wrongScreenshot)
+      // .dragAndDropImage(defaultScreenshot)
+      // .verifyImageIs(defaultScreenshot)
       .close();
     sliceBuilder.imagePreview.isSameImageAs(defaultScreenshot);
 
