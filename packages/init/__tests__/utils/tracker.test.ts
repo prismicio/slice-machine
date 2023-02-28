@@ -67,7 +67,10 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Download Library",
-      properties: { library: "libraryName" },
+      properties: {
+        library: "libraryName",
+        nodeVersion: process.versions.node,
+      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -89,7 +92,10 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
       event: "SliceMachine Download Library",
-      properties: { library: "libraryName" },
+      properties: {
+        library: "libraryName",
+        nodeVersion: process.versions.node,
+      },
     });
   });
 
@@ -103,7 +109,9 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Init Start",
-      properties: {},
+      properties: {
+        nodeVersion: process.versions.node,
+      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -128,6 +136,7 @@ describe("InitTracker", () => {
       event: "SliceMachine Init Start",
       properties: {
         repo: "repoName",
+        nodeVersion: process.versions.node,
       },
       context: {
         groupId: {
@@ -147,7 +156,9 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Init Identify",
-      properties: {},
+      properties: {
+        nodeVersion: process.versions.node,
+      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -170,7 +181,9 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
       event: "SliceMachine Init Identify",
-      properties: {},
+      properties: {
+        nodeVersion: process.versions.node,
+      },
     });
   });
 
@@ -189,6 +202,7 @@ describe("InitTracker", () => {
         framework: Models.Frameworks.next,
         repo: "repoName",
         result: "success",
+        nodeVersion: process.versions.node,
       },
       context: { groupId: { Repository: "repoName" } },
     });
@@ -217,6 +231,7 @@ describe("InitTracker", () => {
         framework: Models.Frameworks.next,
         repo: "repoName",
         result: "success",
+        nodeVersion: process.versions.node,
       },
       context: { groupId: { Repository: "repoName" } },
     });
@@ -254,6 +269,7 @@ describe("InitTracker", () => {
         repo: "repoName",
         result: "error",
         error: "this is an error message",
+        nodeVersion: process.versions.node,
       },
       context: { groupId: { Repository: "repoName" } },
     });
