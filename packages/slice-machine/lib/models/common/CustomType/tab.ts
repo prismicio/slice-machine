@@ -111,9 +111,9 @@ export const Tab = {
     const { fields, groups } = tabSM.value.reduce<OrganisedFields>(
       (acc: OrganisedFields, current: { key: string; value: TabField }) => {
         switch (current.value.type) {
-          case WidgetTypes.UID:
+          case "UID":
             return acc;
-          case WidgetTypes.Group:
+          case "Group":
             return {
               ...acc,
               groups: [

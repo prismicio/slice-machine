@@ -138,9 +138,9 @@ export const selectedCustomTypeReducer: Reducer<
       const { tabId, previousFieldId, newFieldId, value } = action.payload;
       try {
         if (
-          value.type === WidgetTypes.Range ||
-          value.type === WidgetTypes.IntegrationField ||
-          value.type === WidgetTypes.Separator
+          value.type === "Range" ||
+          value.type === "IntegrationFields" ||
+          value.type === "Separator"
         ) {
           throw new Error("Unsupported Field Type.");
         }
