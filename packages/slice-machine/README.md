@@ -6,13 +6,13 @@
 
 # Slice Machine
 
-[Slice Machine][slice-machine] transforms the way you code reusable components and lets you deliver them directly to marketers in a custom page builder.
-
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
+
+[Slice Machine][slice-machine] transforms the way you code reusable components and lets you deliver them directly to marketers in a custom page builder.
 
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
