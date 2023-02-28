@@ -13,7 +13,7 @@ export function pushLocalChanges(numberOfChanges) {
     // checking number of changes
     menu
       .changesNumber()
-      // .contains(numberOfChanges) <-- see this... it doesn't work 🙀
+      .contains(numberOfChanges)
       .should("be.visible");
   }
 
