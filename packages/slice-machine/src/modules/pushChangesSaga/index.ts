@@ -161,33 +161,6 @@ export function* changesPushSaga({
           // Cancel the saga as it's an unexpected error
           yield cancel();
         }
-
-        // switch (errorStatus) {
-        //   case 400: {
-        //     errors += 1;
-        //     stop = { type: "slice", error: ApiError.INVALID_MODEL };
-        //     break;
-        //   }
-        //
-        //   case 401:
-        //   case 403: {
-        //     // Opening the login modal
-        //     yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-        //
-        //     // Canceling the saga
-        //     yield cancel();
-        //
-        //     break;
-        //   }
-        //
-        //   default: {
-        //     // Display error toaster
-        //     yield displayGeneralError();
-        //
-        //     // Cancel the saga as it's an unexpected error
-        //     yield cancel();
-        //   }
-        // }
       }
     })
   );
