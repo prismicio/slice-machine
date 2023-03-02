@@ -1,6 +1,6 @@
 import { Frameworks } from "@lib/models/common/Framework";
 // import type { LimitType } from "@slicemachine/client";
-import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
+// import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
   Review = "SliceMachine Review",

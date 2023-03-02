@@ -20,7 +20,7 @@ module.exports = {
   rules: {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
-      "warn",
+      "error",
       {
         argsIgnorePattern: "^_",
         varsIgnorePattern: "^_",
@@ -29,6 +29,5 @@ module.exports = {
     ],
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/strict-boolean-expressions": "warn",
-    "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "^_" }],
   },
 };

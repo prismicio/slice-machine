@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import {
   LocalOrRemoteCustomType,

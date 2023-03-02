@@ -1,6 +1,6 @@
 /**
- * Combine all reducers in this file and export the combined reducers.
- * If we were to do this in store.js, reducers wouldn't be hot reloadable.
+ * Combine all reducers in this file and export the combined reducers. If we
+ * were to do this in store.js, reducers wouldn't be hot reloadable.
  */
 
 import { combineReducers, Reducer } from "redux";
@@ -14,11 +14,9 @@ import { selectedCustomTypeReducer } from "@src/modules/selectedCustomType";
 import { slicesReducer } from "@src/modules/slices";
 import { routerReducer } from "connected-next-router";
 import { selectedSliceReducer } from "@src/modules/selectedSlice/reducer";
-import { pushChangesReducer } from "@src/modules/pushChangesSaga";
+// import { pushChangesReducer } from "@src/modules/pushChangesSaga";
 
-/**
- * Creates the main reducer
- */
+/** Creates the main reducer */
 const createReducer = (): Reducer =>
   combineReducers({
     modal: modalReducer,
@@ -31,7 +29,7 @@ const createReducer = (): Reducer =>
     slices: slicesReducer,
     selectedSlice: selectedSliceReducer,
     router: routerReducer,
-    pushChanges: pushChangesReducer,
+    // pushChanges: pushChangesReducer,
   });
 
 export default createReducer;

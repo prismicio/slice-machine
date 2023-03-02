@@ -37,12 +37,10 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import axios from "axios";
-import { DeleteSliceResponse } from "@lib/models/common/Slice";
+// import { DeleteSliceResponse } from "@lib/models/common/Slice";
 import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
 import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
 import { selectSliceById } from "../selectedSlice/selectors";
-
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -351,43 +349,42 @@ function* watchRenameSlice() {
   );
 }
 
-export function* deleteSliceSaga({
-  payload,
-}: ReturnType<typeof deleteSliceCreator.request>) {
-  const { libName, sliceId, sliceName } = payload;
-  try {
-    // yield call(deleteSlice, sliceId, libName);
-    yield put(deleteSliceCreator.success(payload));
-    yield put(
-      openToasterCreator({
-        content: `Successfully deleted Slice “${sliceName}”`,
-        type: ToasterType.SUCCESS,
-      })
-    );
-  } catch (e) {
-    if (axios.isAxiosError(e)) {
-      const apiResponse = e.response?.data as DeleteSliceResponse;
-      if (apiResponse.type === "warning")
-        yield put(deleteSliceCreator.success(payload));
-      yield put(
-        openToasterCreator({
-          content: apiResponse.reason,
-          type:
-            apiResponse.type === "error"
-              ? ToasterType.ERROR
-              : ToasterType.WARNING,
-        })
-      );
-    } else {
-      yield put(
-        openToasterCreator({
-          content: "An unexpected error happened while deleting your slice.",
-          type: ToasterType.ERROR,
-        })
-      );
-    }
-  }
-  yield put(modalCloseCreator());
+export function* deleteSliceSaga({}: // payload,
+ReturnType<typeof deleteSliceCreator.request>) {
+  // const { libName, sliceId, sliceName } = payload;
+  // try {
+  //   // yield call(deleteSlice, sliceId, libName);
+  //   yield put(deleteSliceCreator.success(payload));
+  //   yield put(
+  //     openToasterCreator({
+  //       content: `Successfully deleted Slice “${sliceName}”`,
+  //       type: ToasterType.SUCCESS,
+  //     })
+  //   );
+  // } catch (e) {
+  //   if (axios.isAxiosError(e)) {
+  //     const apiResponse = e.response?.data as DeleteSliceResponse;
+  //     if (apiResponse.type === "warning")
+  //       yield put(deleteSliceCreator.success(payload));
+  //     yield put(
+  //       openToasterCreator({
+  //         content: apiResponse.reason,
+  //         type:
+  //           apiResponse.type === "error"
+  //             ? ToasterType.ERROR
+  //             : ToasterType.WARNING,
+  //       })
+  //     );
+  //   } else {
+  //     yield put(
+  //       openToasterCreator({
+  //         content: "An unexpected error happened while deleting your slice.",
+  //         type: ToasterType.ERROR,
+  //       })
+  //     );
+  //   }
+  // }
+  // yield put(modalCloseCreator());
 }
 
 function* watchDeleteSlice() {

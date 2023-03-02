@@ -1,5 +1,6 @@
 import { LocalOrRemoteSlice } from "../ModelData";
-import { Component, Library, SliceSM } from "@slicemachine/core/build/models";
+import { SliceSM } from "@lib/models/common/Slice";
+import { Library, Component } from "@lib/models/common/Library";
 
 export const normalizeFrontendSlices = (
   localLibraries: ReadonlyArray<Library<Component>>,

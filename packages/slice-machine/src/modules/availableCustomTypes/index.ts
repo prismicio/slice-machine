@@ -271,6 +271,12 @@ export function* renameCustomTypeSaga({
       throw new Error(`Custom Type "${payload.newCustomTypeName} not found.`);
     }
 
+    if (!hasLocal(customType)) {
+      throw new Error(
+        `Can't rename a deleted CustomType (${payload.newCustomTypeName})`
+      );
+    }
+
     const renamedCustomType = renameCustomTypeModel({
       customType: customType.local,
       newName: payload.newCustomTypeName,
@@ -299,7 +305,7 @@ export function* deleteCustomTypeSaga({
   payload,
 }: ReturnType<typeof deleteCustomTypeCreator.request>) {
   try {
-    yield call(deleteCustomType, payload.customTypeId);
+    // yield call(deleteCustomType, payload.customTypeId);
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
       openToasterCreator({
