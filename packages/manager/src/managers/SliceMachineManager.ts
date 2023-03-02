@@ -7,12 +7,7 @@ import {
 
 import { createContentDigest } from "../lib/createContentDigest";
 
-import {
-	PackageChangelog,
-	PackageManager,
-	// PackageVersion,
-	SliceMachineConfig,
-} from "../types";
+import { PackageChangelog, PackageManager, SliceMachineConfig } from "../types";
 import {
 	PrismicAuthManager,
 	PrismicUserProfile,
@@ -36,18 +31,20 @@ import { SimulatorManager } from "./simulator/SimulatorManager";
 import { VersionsManager } from "./versions/VersionsManager";
 
 import { TelemetryManager } from "./telemetry/TelemetryManager";
+import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
 		shortId?: string;
 		intercomHash?: string;
 		manifest: {
+			apiEndpoint: string;
 			localSliceSimulatorURL?: string;
 		};
 		repo: string;
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
-		mockConfig: unknown;
+		mockConfig: unknown; // TODO: Remove
 		framework: unknown; // TODO: Remove
 		sliceMachineAPIUrl: string;
 	};
@@ -71,6 +68,7 @@ type SliceMachineManagerGetStateReturnType = {
 				}
 			>;
 			mock?: SharedSliceContent[];
+			mockConfig: unknown; // TODO: Remove
 		}[];
 		meta: {
 			name?: string;
@@ -83,7 +81,12 @@ type SliceMachineManagerGetStateReturnType = {
 	customTypes: CustomTypes.CustomType[];
 	remoteCustomTypes: CustomTypes.CustomType[];
 	remoteSlices: CustomTypes.Widgets.Slices.SharedSlice[];
-	clientError?: { message: string; status: number };
+	clientError?: {
+		name: string;
+		message: string;
+		status: number;
+		reason: string;
+	};
 };
 
 type SliceMachineManagerConstructorArgs = {
@@ -167,8 +170,6 @@ export class SliceMachineManager {
 			{ sliceMachineConfig, libraries },
 			{ profile, remoteCustomTypes, remoteSlices },
 			customTypes,
-			// currentVersion,
-			// allStableVersions,
 		] = await Promise.all([
 			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
 				const libraries = await this._getLibraries(sliceMachineConfig);
@@ -196,39 +197,31 @@ export class SliceMachineManager {
 				}
 			}),
 			this._getCustomTypes(),
-			// this.versions.getRunningSliceMachineVersion(),
-			// this.versions.getAllStableSliceMachineVersions(),
 		]);
-
-		// const latestNonBreakingVersion = ""; // TODO
-		// const updateAvailable = false; // TODO
-		// const versions = await Promise.all(
-		// 	allStableVersions.map(async (version): Promise<PackageVersion> => {
-		// 		const releaseNotes =
-		// 			await this.versions.getSliceMachineReleaseNotesForVersion({
-		// 				version,
-		// 			});
-		//
-		// 		return {
-		// 			versionNumber: version,
-		// 			releaseNote: releaseNotes ?? null,
-		// 			// TODO
-		// 			kind: "MINOR",
-		// 		};
-		// 	}),
-		// );
 
 		// TODO: SM UI detects if a user is logged out by looking at
 		// `clientError`. Here, we simulate what the old core does by
 		// returning an `ErrorWithStatus`-like object if the user is
 		// not logged in.
 		const clientError: SliceMachineManagerGetStateReturnType["clientError"] =
-			profile ? undefined : { message: "Could not fetch slices", status: 401 };
+			profile
+				? undefined
+				: {
+						name: "__stub__",
+						message: "__stub__",
+						reason: "__stub__",
+						status: 401, // Needed to trigger the unauthorized flow.
+				  };
 
 		return {
 			env: {
 				framework: "",
 				manifest: {
+					apiEndpoint:
+						sliceMachineConfig.apiEndpoint ||
+						buildPrismicRepositoryAPIEndpoint(
+							sliceMachineConfig.repositoryName,
+						),
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
 				mockConfig: {},
@@ -315,6 +308,7 @@ export class SliceMachineManager {
 										model,
 										screenshots,
 										mock: mocks,
+										mockConfig: {}, // TODO: This property can probably be removed.
 									});
 								}
 							}),

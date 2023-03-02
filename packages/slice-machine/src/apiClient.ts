@@ -15,6 +15,8 @@ import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
+import { Frameworks } from "@lib/models/common/Framework";
 
 /** State Routes **/
 
@@ -25,6 +27,11 @@ export const getState = async (): Promise<ServerState> => {
   // transform the data to something SM recognizes.
   const state: ServerState = {
     ...rawState,
+    env: {
+      ...rawState.env,
+      framework: rawState.env.framework as Frameworks,
+      mockConfig: rawState.env.mockConfig as CustomTypeMockConfig,
+    },
     libraries: rawState.libraries.map((library) => {
       return {
         ...library,
@@ -32,6 +39,9 @@ export const getState = async (): Promise<ServerState> => {
           return {
             ...component,
             model: Slices.toSM(component.model),
+
+            // TODO: Remove `mockConfig`.
+            mockConfig: component.mockConfig as CustomTypeMockConfig,
 
             // Replace screnshot Blobs with URLs.
             screenshots: Object.fromEntries(
@@ -75,13 +85,6 @@ export const saveCustomType = async (
   return await managerClient.customTypes.updateCustomType({
     model: CustomTypes.fromSM(customType),
   });
-
-  // const requestBody: SaveCustomTypeBody = {
-  //   model: customType,
-  //   mockConfig: mockConfig,
-  // };
-  //
-  // return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
 };
 
 export const renameCustomType = (
@@ -154,21 +157,17 @@ export const generateSliceScreenshotApiClient = async (
       },
     });
 
-  if (screenshot.data) {
-    const { errors } = await managerClient.slices.updateSliceScreenshot({
-      libraryID: params.libraryName,
-      sliceID: params.sliceId,
-      variationID: params.variationId,
-      data: screenshot.data,
-    });
+  const { errors } = await managerClient.slices.updateSliceScreenshot({
+    libraryID: params.libraryName,
+    sliceID: params.sliceId,
+    variationID: params.variationId,
+    data: screenshot.data,
+  });
 
-    return {
-      url: URL.createObjectURL(screenshot.data),
-      errors,
-    };
-  }
-
-  // return axios.post("/api/screenshot", params, defaultAxiosConfig);
+  return {
+    url: URL.createObjectURL(screenshot.data),
+    errors,
+  };
 };
 
 export const generateSliceCustomScreenshotApiClient = async (
@@ -244,7 +243,7 @@ export const checkSimulatorSetup =
       await managerClient.simulator.getLocalSliceSimulatorURL();
 
     return {
-      manifest: localSliceSimulatorURL ? "ok" : "ko",
+      manifest: Boolean(localSliceSimulatorURL) ? "ok" : "ko",
       value: localSliceSimulatorURL,
     };
   };

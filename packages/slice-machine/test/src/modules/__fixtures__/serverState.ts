@@ -13,7 +13,7 @@ export const dummyServerState: Pick<
       apiEndpoint: "https://sm-env-example.prismic.io/api/v2",
       storybook: "http://localhost:6006",
       chromaticAppId: "5f5b34f06f304800225c4e17",
-      framework: "next",
+      framework: Frameworks.next,
       tracking: false,
       localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
     },
