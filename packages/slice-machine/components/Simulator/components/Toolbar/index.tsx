@@ -1,11 +1,10 @@
+import { DropDownMenu } from "@components/DropDownSelector";
+import { RiCloseLine } from "react-icons/ri";
 import { useState } from "react";
 
 import { Flex } from "theme-ui";
-import { RiCloseLine } from "react-icons/ri";
 import { Button } from "@components/Button";
 import { AiFillCamera } from "react-icons/ai";
-
-import { DropDownMenu } from "@components/DropDownMenu";
 
 import {
   ScreensizeInput,

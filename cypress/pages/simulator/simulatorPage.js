@@ -1,7 +1,6 @@
-import path from "path";
-import { MANIFEST_FILE, ROOT } from "../../consts";
+import { MANIFEST_FILE, SIMULATOR_PATH } from "../../consts";
 
-export class SimulatorPage {
+class SimulatorPage {
   get saveMocksButton() {
     return cy.contains("Save mock content");
   }
@@ -35,8 +34,7 @@ export class SimulatorPage {
    */
   setup() {
     cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
-      const pathToFile = path.join(ROOT, "pages", "slice-simulator.jsx");
-      return cy.writeFile(pathToFile, file);
+      return cy.writeFile(SIMULATOR_PATH, file);
     });
 
     cy.readFile(MANIFEST_FILE, "utf-8").then((json) => {
@@ -126,4 +124,12 @@ export class SimulatorPage {
 
     return this;
   }
+
+  toggleEditor() {
+    cy.contains("label", "Editor").click();
+
+    return this;
+  }
 }
+
+export const simulatorPage = new SimulatorPage();

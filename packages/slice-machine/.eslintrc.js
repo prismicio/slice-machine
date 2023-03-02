@@ -29,5 +29,6 @@ module.exports = {
     ],
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/strict-boolean-expressions": "warn",
+    "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "^_" }],
   },
 };

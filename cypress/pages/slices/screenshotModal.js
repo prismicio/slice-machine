@@ -1,6 +1,6 @@
 const fixturePath = "cypress/fixtures/";
 
-export class ScreenshotModal {
+class ScreenshotModal {
   constructor() {
     this.root = "[aria-modal]";
   }
@@ -51,3 +51,5 @@ export class ScreenshotModal {
     return this;
   }
 }
+
+export const screenshotModal = new ScreenshotModal();

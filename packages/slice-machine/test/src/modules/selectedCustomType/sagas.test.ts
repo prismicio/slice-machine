@@ -11,7 +11,21 @@ import {
 } from "@src/modules/selectedCustomType";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { rest } from "msw";
+
+import {
+  rest,
+  // type RestContext,
+  // type RestRequest,
+  // type ResponseComposition,
+} from "msw";
+
+// const makeTrackerSpy = () =>
+//   jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+//     return res(ctx.json({}));
+//   });
+
+// const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
+//   server.use(rest.post("http://localhost/api/s", spy));
 
 const customTypeModel: CustomTypeSM = {
   id: "about",
@@ -60,18 +74,20 @@ describe("[Selected Custom type sagas]", () => {
         .put(saveCustomTypeCreator.success({ customType: customTypeModel }));
       saga.next().put(
         openToasterCreator({
-          message: "Model & mocks have been generated successfully!",
+          content: "Model & mocks have been generated successfully!",
           type: ToasterType.SUCCESS,
         })
       );
       saga.next().isDone();
     });
     it("should open a error toaster on internal error", () => {
+      // const fakeTracker = makeTrackerSpy();
+      // interceptTracker(fakeTracker); // warnings happen without this
       const saga = testSaga(saveCustomTypeSaga).next();
 
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Custom type not saved",
+          content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
         })
       );
