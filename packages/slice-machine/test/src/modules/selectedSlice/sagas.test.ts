@@ -31,6 +31,7 @@ describe("[Selected Slice sagas]", () => {
         error: null,
         done: true,
         loading: false,
+        message: "Model saved",
       });
     });
     it("should open a error toaster on internal error", () => {
