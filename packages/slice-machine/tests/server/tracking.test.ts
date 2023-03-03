@@ -4,6 +4,8 @@ import { EventNames } from "@lib/models/tracking";
 import * as Analytics from "../../server/src/api/services/analytics";
 import { RequestWithEnv } from "server/src/api/http/common";
 import { version, name } from "../../package.json";
+import type { PageView } from "@lib/models/tracking";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 jest.mock("../../server/src/api/services/analytics", () => {
   return {
@@ -78,7 +80,6 @@ describe("tracking", () => {
             name,
             version,
           },
-          userAgent: `NodeJS/${process.versions.node}`,
         },
       });
       expect(Analytics.track).not.toHaveBeenCalled();
@@ -95,11 +96,43 @@ describe("tracking", () => {
             name,
             version,
           },
-          userAgent: `NodeJS/${process.versions.node}`,
           groupId: { Repository: "repoName" },
         },
         event: "SliceMachine Onboarding Continue Screen Intro",
         properties: {},
+      });
+    });
+
+    test("Page view event shoud include the ndoe version", () => {
+      const body: PageView = {
+        name: EventNames.PageView,
+        props: {
+          url: "",
+          path: "",
+          search: "",
+          title: "",
+          referrer: "",
+          framework: Frameworks.next,
+        },
+      };
+
+      sendEvents(body, "foo");
+      expect(Analytics.identify).not.toHaveBeenCalled();
+      expect(Analytics.group).not.toHaveBeenCalled();
+      expect(Analytics.track).toHaveBeenCalledWith({
+        anonymousId: "uuid",
+        event: body.name,
+        properties: {
+          ...body.props,
+          nodeVersion: process.versions.node,
+        },
+        context: {
+          app: {
+            name,
+            version,
+          },
+          groupId: { Repository: "foo" },
+        },
       });
     });
   });
@@ -144,7 +177,6 @@ describe("tracking", () => {
             name,
             version,
           },
-          userAgent: `NodeJS/${process.versions.node}`,
           groupId: {
             Repository: undefined,
           },

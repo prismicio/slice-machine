@@ -4,6 +4,7 @@ import {
   isTrackingEvent,
   isGroupLibrariesEvent,
   isIdentifyUserEvent,
+  EventNames,
 } from "../../../lib/models/tracking";
 import { RequestWithEnv } from "./http/common";
 import * as analytics from "./services/analytics";
@@ -11,7 +12,7 @@ import { version, name } from "../../../package.json";
 
 const anonymousId = uuidv4();
 
-const userAgent = `NodeJS/${process.versions.node}`;
+const nodeVersion = process.versions.node;
 
 export function sendEvents(
   event: TrackingEvents,
@@ -23,13 +24,14 @@ export function sendEvents(
     analytics.group({
       ...(userId !== undefined ? { userId } : { anonymousId }),
       groupId: event.props.repoName,
-      traits: { ...event.props },
+      traits: {
+        ...event.props,
+      },
       context: {
         app: {
           name,
           version,
         },
-        userAgent,
       },
     });
   } else if (isIdentifyUserEvent(event)) {
@@ -44,16 +46,21 @@ export function sendEvents(
       });
     }
   } else if (isTrackingEvent(event)) {
+    const maybeNodeVersion =
+      event.name === EventNames.PageView ? { nodeVersion } : {};
+
     analytics.track({
       event: event.name,
-      properties: { ...event.props },
+      properties: {
+        ...event.props,
+        ...maybeNodeVersion,
+      },
       ...(userId !== undefined ? { userId } : { anonymousId }),
       context: {
         app: {
           name,
           version,
         },
-        userAgent,
         groupId: { Repository: repositoryName },
       },
     });
