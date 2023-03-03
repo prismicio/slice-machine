@@ -3,9 +3,12 @@ import { chain } from "fp-ts/Either";
 import { fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/function";
 
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { Block } from "@prismicio/types-internal/lib/documents/widgets/nestable/StructuredTextContent/Block";
+import {
+  NestableFieldTypes,
+  NestableWidget,
+  DynamicWidget,
+} from "@prismicio/types-internal/lib/customtypes";
+import { Block } from "@prismicio/types-internal/lib/content";
 import {
   NestableWidgetMockConfig,
   ColorMockConfig,
@@ -24,7 +27,6 @@ import {
   GroupMockConfig,
   UIDMockConfig,
 } from "@prismicio/mocks";
-import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
 import { EmbedContent } from "@prismicio/types-internal/lib/content";
 
 export const DefaultConfig = {
@@ -204,13 +206,13 @@ export type NestableLegacyMockConfig = t.TypeOf<
 >;
 
 export function buildNestableMockConfig(
-  type: WidgetTypes,
+  type: NestableFieldTypes,
   fieldMockConfig?: unknown | undefined
 ): NestableWidgetMockConfig | undefined {
   if (!fieldMockConfig) return;
 
   switch (type) {
-    case WidgetTypes.Color: {
+    case "Color": {
       return fold(
         () => {
           console.warn(`couldn't parse the color mock config.`);
@@ -218,13 +220,13 @@ export function buildNestableMockConfig(
         },
         (config: ColorLegacyMockConfig): ColorMockConfig => {
           return {
-            type: WidgetTypes.Color,
+            type: "Color",
             value: config.content,
           };
         }
       )(ColorLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.Text: {
+    case "Text": {
       return fold(
         () => {
           console.warn(`couldn't parse the text mock config.`);
@@ -232,13 +234,13 @@ export function buildNestableMockConfig(
         },
         (config: TextLegacyMockConfig): TextMockConfig => {
           return {
-            type: WidgetTypes.Text,
+            type: "Text",
             value: config.content,
           };
         }
       )(TextLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.Timestamp: {
+    case "Timestamp": {
       return fold(
         () => {
           console.warn(`couldn't parse the timestamp mock config.`);
@@ -246,13 +248,13 @@ export function buildNestableMockConfig(
         },
         (config: TimestampLegacyMockConfig): TimestampMockConfig => {
           return {
-            type: WidgetTypes.Timestamp,
+            type: "Timestamp",
             value: config.content ? new Date(config.content) : undefined,
           };
         }
       )(TimestampLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.Number: {
+    case "Number": {
       return fold(
         () => {
           console.warn(`couldn't parse the number mock config.`);
@@ -260,13 +262,13 @@ export function buildNestableMockConfig(
         },
         (config: NumberLegacyMockConfig): NumberMockConfig => {
           return {
-            type: WidgetTypes.Number,
+            type: "Number",
             value: config.content,
           };
         }
       )(NumberLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.Date: {
+    case "Date": {
       return fold(
         () => {
           console.warn(`couldn't parse the Date mock config.`);
@@ -274,13 +276,13 @@ export function buildNestableMockConfig(
         },
         (config: DateLegacyMockConfig): DateMockConfig => {
           return {
-            type: WidgetTypes.Date,
+            type: "Date",
             value: config.content ? new Date(config.content) : undefined,
           };
         }
       )(DateLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.GeoPoint: {
+    case "GeoPoint": {
       return fold(
         () => {
           console.warn(`couldn't parse the GeoPoint mock config.`);
@@ -288,13 +290,13 @@ export function buildNestableMockConfig(
         },
         (config: GeoPointLegacyMockConfig): GeoPointMockConfig => {
           return {
-            type: WidgetTypes.GeoPoint,
+            type: "GeoPoint",
             value: config.content,
           };
         }
       )(GeoPointLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.Embed: {
+    case "Embed": {
       return fold(
         () => {
           console.warn(`couldn't parse the Embed mock config.`);
@@ -314,11 +316,11 @@ export function buildNestableMockConfig(
             if (url && oembed) return oembed;
             return;
           })();
-          return { type: WidgetTypes.Embed, value };
+          return { type: "Embed", value };
         }
       )(EmbedLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.BooleanField: {
+    case "Boolean": {
       return fold(
         () => {
           console.warn(`couldn't parse the Boolean mock config.`);
@@ -326,13 +328,13 @@ export function buildNestableMockConfig(
         },
         (config: BooleanLegacyMockConfig): BooleanMockConfig => {
           return {
-            type: WidgetTypes.BooleanField,
+            type: "Boolean",
             value: config.content,
           };
         }
       )(BooleanLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.Select: {
+    case "Select": {
       return fold(
         () => {
           console.warn(`couldn't parse the Select mock config.`);
@@ -340,13 +342,13 @@ export function buildNestableMockConfig(
         },
         (config: SelectLegacyMockConfig): SelectMockConfig => {
           return {
-            type: WidgetTypes.Select,
+            type: "Select",
             value: config.content,
           };
         }
       )(SelectLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.Link: {
+    case "Link": {
       return fold(
         () => {
           console.warn(`couldn't parse the Link mock config.`);
@@ -354,7 +356,7 @@ export function buildNestableMockConfig(
         },
         (config: LinkLegacyMockConfig): LinkMockConfig => {
           return {
-            type: WidgetTypes.Link,
+            type: "Link",
             value:
               typeof config.content === "object"
                 ? ({ value: config.content } as MediaLinkConfig)
@@ -363,7 +365,7 @@ export function buildNestableMockConfig(
         }
       )(LinkLegacyMockConfig.decode(fieldMockConfig));
     }
-    case WidgetTypes.RichText: {
+    case "StructuredText": {
       return fold(
         () => {
           console.warn(`couldn't parse the RichText mock config.`);
@@ -371,7 +373,7 @@ export function buildNestableMockConfig(
         },
         (config: RichTextLegacyMockConfig): RichTextMockConfig => {
           return {
-            type: WidgetTypes.RichText,
+            type: "StructuredText",
             value: config.content as Array<Block>,
             nbBlocks: config.config?.blocks,
             pattern: config.config?.patternType,
@@ -394,11 +396,11 @@ export function buildWidgetMockConfig(
   if (!legacyWidgetMockConfig) return;
   switch (widget.type) {
     // slices are specific and for now we ignore it
-    case WidgetTypes.LegacySlices:
-    case WidgetTypes.Slices:
+    case "Choice":
+    case "Slices":
       return;
 
-    case WidgetTypes.UID:
+    case "UID":
       return fold(
         () => {
           console.warn(`couldn't parse the UID mock config.`);
@@ -406,13 +408,13 @@ export function buildWidgetMockConfig(
         },
         (config: UIDLegacyMockConfig): UIDMockConfig => {
           return {
-            type: WidgetTypes.UID,
+            type: "UID",
             value: config.content,
           };
         }
       )(UIDLegacyMockConfig.decode(legacyWidgetMockConfig));
 
-    case WidgetTypes.Group:
+    case "Group":
       return fold(
         () => {
           console.warn(`couldn't parse the Group mock config.`);
@@ -420,7 +422,7 @@ export function buildWidgetMockConfig(
         },
         (config: GroupLegacyMockConfig): GroupMockConfig => {
           return {
-            type: WidgetTypes.Group,
+            type: "Group",
             fields: buildFieldsMockConfig(
               widget.config?.fields || {},
               config || {}

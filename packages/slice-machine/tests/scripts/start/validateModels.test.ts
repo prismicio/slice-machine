@@ -8,8 +8,7 @@ import { customTypeMock } from "../../__mocks__/customType";
 import sliceMock from "../../__mocks__/sliceModel";
 import { CustomTypes } from "@slicemachine/core/build/models/CustomType/index";
 import { Slices } from "@slicemachine/core/build/models/Slice";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 describe("[Scripts] Start - Validate Models", () => {
   const cwd: string = "/DEV/MYSELF/";
@@ -50,7 +49,7 @@ describe("[Scripts] Start - Validate Models", () => {
       json: {
         Main: {
           "": {
-            type: WidgetTypes.UID,
+            type: "UID",
             config: {
               label: "Uid",
               placeholder: "",
@@ -73,7 +72,7 @@ describe("[Scripts] Start - Validate Models", () => {
       json: {
         Main: {
           "u<i>d": {
-            type: WidgetTypes.Text,
+            type: "Text",
             config: {
               label: "Social Card Title",
             },
@@ -93,7 +92,7 @@ describe("[Scripts] Start - Validate Models", () => {
       json: {
         Main: {
           "ric@&1": {
-            type: WidgetTypes.Text,
+            type: "Text",
             config: {
               label: "Social Card Title",
             },

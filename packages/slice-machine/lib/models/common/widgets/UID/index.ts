@@ -15,10 +15,7 @@ import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
-import {
-  UID,
-  WidgetTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets";
+import { UID } from "@prismicio/types-internal/lib/customtypes";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -46,7 +43,7 @@ const Meta = {
 
 export const UIDWidget: Widget<UID, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.UID,
+    type: "UID",
     config: {
       label,
       placeholder: "",
@@ -54,6 +51,6 @@ export const UIDWidget: Widget<UID, typeof schema> = {
   }),
   Meta,
   schema,
-  TYPE_NAME: WidgetTypes.UID,
+  TYPE_NAME: "UID",
   FormFields,
 };

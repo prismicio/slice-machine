@@ -1,6 +1,6 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import {
   CustomTypeSM,
   TabField,

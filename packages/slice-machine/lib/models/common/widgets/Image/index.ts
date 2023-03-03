@@ -9,8 +9,7 @@ import { removeProp } from "../../../../utils";
 import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 import { Widget } from "../Widget";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { Image } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { Image } from "@prismicio/types-internal/lib/customtypes";
 
 /**
  * {
@@ -53,7 +52,7 @@ export const ImageWidget: Widget<Image, typeof schema> = {
   Form,
   schema,
   create: (label: string) => ({
-    type: WidgetTypes.Image,
+    type: "Image",
     config: {
       label,
       constraint: {},
@@ -62,5 +61,5 @@ export const ImageWidget: Widget<Image, typeof schema> = {
   }),
   MockConfigForm: DeprecatedMockConfigMessage,
   FormFields,
-  TYPE_NAME: WidgetTypes.Image,
+  TYPE_NAME: "Image",
 };

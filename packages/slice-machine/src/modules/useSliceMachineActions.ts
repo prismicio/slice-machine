@@ -57,7 +57,7 @@ import {
   CustomTypeSM,
   TabField,
 } from "@slicemachine/core/build/models/CustomType";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,

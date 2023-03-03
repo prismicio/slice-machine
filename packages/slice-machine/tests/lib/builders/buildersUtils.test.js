@@ -1,6 +1,5 @@
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import { findWidgetByConfigOrType } from "@builders/utils";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const dumbConfig = {
   label: "",
@@ -12,91 +11,59 @@ const dumbConfig = {
 
 describe("utils/findWidgetByConfigOrType", () => {
   test("We can find the image widget with image type", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.Image
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "Image");
     expect(widgetFound).toEqual(Widgets.Image);
   });
   test("We can find the color widget with color type", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.Color
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "Color");
     expect(widgetFound).toEqual(Widgets.Color);
   });
   test("We can find the UID widget with UID type", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.UID
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "UID");
     expect(widgetFound).toEqual(Widgets.UID);
   });
   test("We can find the group widget with group type", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.Group
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "Group");
     expect(widgetFound).toEqual(Widgets.Group);
   });
   test("We can find the GeoPoint widget with GeoPoint type", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      WidgetTypes.GeoPoint
+      "GeoPoint"
     );
     expect(widgetFound).toEqual(Widgets.GeoPoint);
   });
   test("We can find the select widget with Select type", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.Select
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "Select");
     expect(widgetFound).toEqual(Widgets.Select);
   });
   test("We can find the boolean widget with Select boolean", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      WidgetTypes.BooleanField
+      "Boolean"
     );
     expect(widgetFound).toEqual(Widgets.Boolean);
   });
   test("We can find the date widget with Select date", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.Date
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "Date");
     expect(widgetFound).toEqual(Widgets.Date);
   });
   test("We can find the timestamp widget with Select timestamp", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      WidgetTypes.Timestamp
+      "Timestamp"
     );
     expect(widgetFound).toEqual(Widgets.Timestamp);
   });
   test("We can find the number widget with Select number", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.Number
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "Number");
     expect(widgetFound).toEqual(Widgets.Number);
   });
   test("We can find the link widget with link type", () => {
-    const widgetFound = findWidgetByConfigOrType(
-      Widgets,
-      dumbConfig,
-      WidgetTypes.Link
-    );
+    const widgetFound = findWidgetByConfigOrType(Widgets, dumbConfig, "Link");
     expect(widgetFound).toEqual(Widgets.Link);
   });
   test("We can find the ContentRelationship widget with the right config", () => {
@@ -108,7 +75,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       contentRelationshipConfig,
-      WidgetTypes.Link
+      "Link"
     );
     expect(widgetFound).toEqual(Widgets.ContentRelationship);
   });
@@ -121,7 +88,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       contentRelationshipConfig,
-      WidgetTypes.Link
+      "Link"
     );
     expect(widgetFound).toEqual(Widgets.LinkToMedia);
   });

@@ -17,7 +17,7 @@ import {
 } from "@models/common/MockConfig";
 import { DropResult } from "react-beautiful-dnd";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>

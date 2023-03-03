@@ -3,7 +3,7 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { ClientError } from "@slicemachine/client";
 import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 

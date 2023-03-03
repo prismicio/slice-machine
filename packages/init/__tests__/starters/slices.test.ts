@@ -7,7 +7,7 @@ import mockfs from "mock-fs";
 import os from "os";
 import inquirer from "inquirer";
 
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { isLeft } from "fp-ts/lib/Either";
 import { stderr } from "stdout-stderr";
 import { InitClient } from "../../src/utils";

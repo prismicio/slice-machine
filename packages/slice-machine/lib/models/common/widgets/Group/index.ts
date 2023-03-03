@@ -4,7 +4,6 @@ import { MdPlaylistAdd } from "react-icons/md";
 import { Widget } from "../Widget";
 import CustomListItem from "./ListItem";
 import { GroupSM } from "@slicemachine/core/build/models/Group";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const Meta = {
   icon: MdPlaylistAdd,
@@ -30,12 +29,12 @@ export const GroupWidget: Widget<GroupSM, typeof schema> = {
   FormFields: DefaultFields,
   schema,
   create: (label: string) => ({
-    type: WidgetTypes.Group,
+    type: "Group",
     config: {
       label,
       fields: [],
     },
   }),
   CustomListItem,
-  TYPE_NAME: WidgetTypes.Group,
+  TYPE_NAME: "Group",
 };

@@ -17,8 +17,7 @@ import { DefaultFields } from "../../../../forms/defaults";
 import { Input, CheckBox } from "../../../../forms/fields";
 
 import { Widget } from "../Widget";
-import { BooleanField } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { BooleanField } from "@prismicio/types-internal/lib/customtypes";
 import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 const Meta = {
@@ -61,10 +60,10 @@ const schema = yup.object().shape({
 });
 
 export const BooleanWidget: Widget<BooleanField, typeof schema> = {
-  TYPE_NAME: WidgetTypes.BooleanField,
+  TYPE_NAME: "Boolean",
   MockConfigForm: DeprecatedMockConfigMessage,
   create: (label: string) => ({
-    type: WidgetTypes.BooleanField,
+    type: "Boolean",
     config: {
       label,
       default_value: false,

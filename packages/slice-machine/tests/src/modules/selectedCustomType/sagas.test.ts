@@ -10,7 +10,6 @@ import {
   selectCurrentMockConfig,
 } from "@src/modules/selectedCustomType";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { setupServer } from "msw/node";
 import {
@@ -45,7 +44,7 @@ const customTypeModel: CustomTypeSM = {
         {
           key: "title",
           value: {
-            type: WidgetTypes.RichText,
+            type: "StructuredText",
             config: {
               label: "",
               placeholder: "",

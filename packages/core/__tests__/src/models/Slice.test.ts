@@ -1,5 +1,5 @@
 import { Slices, SliceSM } from "../../../src/models/Slice";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 const sliceObject = {
   id: "all_fields",

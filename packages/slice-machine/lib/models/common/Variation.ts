@@ -1,4 +1,4 @@
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import type Models from "@slicemachine/core/build/models";
 import { VariationSM } from "@slicemachine/core/build/models/Slice";
 import { FieldsSM } from "@slicemachine/core/build/models/Fields";

@@ -1,5 +1,4 @@
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes/widgets/slices/Slices";
+import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes";
 import {
   TabSM,
   TabField,
@@ -32,7 +31,7 @@ export const Tab = {
       return {
         ...tab,
         value: tab.value.map((field) => {
-          if (field.key === groupId && field.value.type === WidgetTypes.Group) {
+          if (field.key === groupId && field.value.type === "Group") {
             return {
               key: groupId,
               value: mutate(field.value),
@@ -112,9 +111,9 @@ export const Tab = {
     const { fields, groups } = tabSM.value.reduce<OrganisedFields>(
       (acc: OrganisedFields, current: { key: string; value: TabField }) => {
         switch (current.value.type) {
-          case WidgetTypes.UID:
+          case "UID":
             return acc;
-          case WidgetTypes.Group:
+          case "Group":
             return {
               ...acc,
               groups: [
@@ -122,7 +121,6 @@ export const Tab = {
                 { key: current.key, value: current.value },
               ],
             };
-            return acc;
           default:
             return {
               ...acc,

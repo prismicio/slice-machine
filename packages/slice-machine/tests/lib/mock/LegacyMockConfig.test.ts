@@ -1,217 +1,157 @@
 import "@testing-library/jest-dom";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import {
   buildNestableMockConfig,
   buildWidgetMockConfig,
 } from "../../../lib/mock/LegacyMockConfig";
-import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
+import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes";
 
 jest.spyOn(console, "warn").mockImplementation(() => undefined); // less noise, might be a feature?
 
 describe("CustomTypeMockConfig", () => {
   test("returns undefined if the fieldMockConfig is undefined or not provided", () => {
-    expect(buildNestableMockConfig(WidgetTypes.Date)).toBe(undefined);
-    expect(buildNestableMockConfig(WidgetTypes.Date, undefined)).toBe(
-      undefined
-    );
+    expect(buildNestableMockConfig("Date")).toBe(undefined);
+    expect(buildNestableMockConfig("Date", undefined)).toBe(undefined);
   });
   describe("WidgetTypes.Color", () => {
     test("valid content", () => {
       const config = { content: "red" };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Color,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Color", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Color,
+        type: "Color",
         value: "red",
       });
     });
     test("invalid content", () => {
       const config = { content: 100 };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Color,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Color", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
   describe("WidgetTypes.Text", () => {
     test("valid content", () => {
       const config = { content: "text sample" };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Text,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Text", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Text,
+        type: "Text",
         value: "text sample",
       });
     });
     test("invalid content", () => {
       const config = { content: 100 };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Text,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Text", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
   describe("WidgetTypes.Timestamp", () => {
     test("valid content", () => {
       const config = { content: "2022-06-30T10:03:49.000Z" };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Timestamp,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Timestamp", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Timestamp,
+        type: "Timestamp",
         value: new Date("2022-06-30T10:03:49.000Z"),
       });
     });
     test("no content", () => {
       const config = {};
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Timestamp,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Timestamp", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Timestamp,
+        type: "Timestamp",
         value: undefined,
       });
     });
     test("invalid content", () => {
       const config = { content: 100 };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Timestamp,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Timestamp", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
   describe("WidgetTypes.Number", () => {
     test("valid content", () => {
       const config = { content: 123 };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Number,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Number", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Number,
+        type: "Number",
         value: 123,
       });
     });
     test("invalid content", () => {
       const config = { content: "123" };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Number,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Number", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
   describe("WidgetTypes.Date", () => {
     test("valid content", () => {
       const config = { content: "2022-07-15" };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Date,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Date", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Date,
+        type: "Date",
         value: new Date("2022-07-15"),
       });
     });
     test("no content", () => {
       const config = {};
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Date,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Date", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Date,
+        type: "Date",
         value: undefined,
       });
     });
     test("invalid content", () => {
       const config = { content: 123 };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Date,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Date", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
   describe("WidgetTypes.GeoPoint", () => {
     test("valid content", () => {
       const config = { content: { latitude: 1, longitude: 2 } };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.GeoPoint,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("GeoPoint", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.GeoPoint,
+        type: "GeoPoint",
         value: config.content,
       });
     });
     test("invalid content", () => {
       const config = { content: { latitude: 1 } };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.GeoPoint,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("GeoPoint", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
   describe("WidgetTypes.Embed", () => {
     test("no config provided", () => {
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Embed,
-        undefined
-      );
+      const widgetMockConfig = buildNestableMockConfig("Embed", undefined);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
     test("no config content provided", () => {
       const config = { content: undefined };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Embed,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Embed", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Embed,
+        type: "Embed",
         value: undefined,
       });
     });
     test("valid config content provided", () => {
       const config = { content: { url: "url-test", oembed: "oembed-test" } };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Embed,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Embed", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Embed,
+        type: "Embed",
         value: "oembed-test",
       });
     });
     test("config content without url", () => {
       const config = { content: { oembed: "oembed-test" } };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Embed,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Embed", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Embed,
+        type: "Embed",
         value: undefined,
       });
     });
     test("config content without oembed", () => {
       const config = { content: { url: "url-test" } };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Embed,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Embed", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Embed,
+        type: "Embed",
         value: undefined,
       });
     });
@@ -219,21 +159,15 @@ describe("CustomTypeMockConfig", () => {
   describe("WidgetTypes.BooleanField", () => {
     test("valid content", () => {
       const config = { content: true };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.BooleanField,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Boolean", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.BooleanField,
+        type: "Boolean",
         value: true,
       });
     });
     test("invalid content", () => {
       const config = { content: "true" };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.BooleanField,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Boolean", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
@@ -244,12 +178,9 @@ describe("CustomTypeMockConfig", () => {
         options: ["opt1", "opt2"],
         default_value: "opt1",
       };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Select,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Select", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Select,
+        type: "Select",
         value: "opt2",
       });
     });
@@ -259,23 +190,17 @@ describe("CustomTypeMockConfig", () => {
       const config = {
         content: { id: "id", url: "url", name: "name", kind: "kind" },
       };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Link,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Link", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Link,
+        type: "Link",
         value: { value: config.content },
       });
     });
     test("non object content", () => {
       const config = { content: 100 };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Link,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Link", config);
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.Link,
+        type: "Link",
         value: { value: 100 },
       });
     });
@@ -283,18 +208,12 @@ describe("CustomTypeMockConfig", () => {
   describe("WidgetTypes.Image", () => {
     test("valid content", () => {
       const config = { content: "content-image-test" };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Image,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Image", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
     test("invalid content", () => {
       const config = { content: 100 };
-      const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.Image,
-        config
-      );
+      const widgetMockConfig = buildNestableMockConfig("Image", config);
       expect(widgetMockConfig).toStrictEqual(undefined);
     });
   });
@@ -308,11 +227,11 @@ describe("CustomTypeMockConfig", () => {
         },
       };
       const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.RichText,
+        "StructuredText",
         config
       );
       expect(widgetMockConfig).toStrictEqual({
-        type: WidgetTypes.RichText,
+        type: "StructuredText",
         value: ["text"],
         nbBlocks: 1,
         pattern: "PARAGRAPH",
@@ -326,7 +245,7 @@ describe("CustomTypeMockConfig", () => {
         },
       };
       const widgetMockConfig = buildNestableMockConfig(
-        WidgetTypes.RichText,
+        "StructuredText",
         config
       );
       expect(widgetMockConfig).toStrictEqual(undefined);
@@ -336,12 +255,12 @@ describe("CustomTypeMockConfig", () => {
 
 describe("buildWidgetMockConfig", () => {
   test("return undefined if legacyWidgetMockConfig is not provided", () => {
-    const widget = { type: WidgetTypes.Color };
+    const widget = { type: "Color" };
     expect(buildWidgetMockConfig(widget, undefined)).toBe(undefined);
   });
   test("return undefined for WidgetTypes.LegacySlices and WidgetTypes.Slices", () => {
-    const widgetLegacySlices = { type: WidgetTypes.LegacySlices };
-    const widgetSlices = { type: WidgetTypes.Slices };
+    const widgetLegacySlices = { type: "Choice" };
+    const widgetSlices = { type: "Slices" };
     expect(buildWidgetMockConfig(widgetLegacySlices, {})).toBe(undefined);
     expect(buildWidgetMockConfig(widgetSlices, {})).toBe(undefined);
   });
@@ -351,11 +270,11 @@ describe("buildWidgetMockConfig", () => {
       field2: { content: false },
     };
     const widget: DynamicWidget = {
-      type: WidgetTypes.Group,
+      type: "Group",
       config: {
         fields: {
-          field1: { type: WidgetTypes.Color },
-          field2: { type: WidgetTypes.BooleanField },
+          field1: { type: "Color" },
+          field2: { type: "Boolean" },
         },
       },
     };
@@ -364,10 +283,10 @@ describe("buildWidgetMockConfig", () => {
       legacyWidgetMockConfig
     );
     const expectedResult = {
-      type: WidgetTypes.Group,
+      type: "Group",
       fields: {
-        field1: { type: WidgetTypes.Color, value: "red" },
-        field2: { type: WidgetTypes.BooleanField, value: false },
+        field1: { type: "Color", value: "red" },
+        field2: { type: "Boolean", value: false },
       },
     };
     expect(mockConfigOutput).toStrictEqual(expectedResult);
@@ -375,11 +294,11 @@ describe("buildWidgetMockConfig", () => {
   test("invalid group", () => {
     const legacyWidgetMockConfig = { field1: true };
     const widget: DynamicWidget = {
-      type: WidgetTypes.Group,
+      type: "Group",
       config: {
         fields: {
-          field1: { type: WidgetTypes.Color },
-          field2: { type: WidgetTypes.BooleanField },
+          field1: { type: "Color" },
+          field2: { type: "Boolean" },
         },
       },
     };
@@ -392,19 +311,19 @@ describe("buildWidgetMockConfig", () => {
 
   test("UID widget - valid content", () => {
     const legacyWidgetMockConfig = { content: "uid" };
-    const widget: DynamicWidget = { type: WidgetTypes.UID };
+    const widget: DynamicWidget = { type: "UID" };
     const mockConfigOutput = buildWidgetMockConfig(
       widget,
       legacyWidgetMockConfig
     );
     expect(mockConfigOutput).toStrictEqual({
-      type: WidgetTypes.UID,
+      type: "UID",
       value: "uid",
     });
   });
   test("UID widget - invalid content", () => {
     const legacyWidgetMockConfig = { content: 100 };
-    const widget: DynamicWidget = { type: WidgetTypes.UID };
+    const widget: DynamicWidget = { type: "UID" };
     const mockConfigOutput = buildWidgetMockConfig(
       widget,
       legacyWidgetMockConfig
