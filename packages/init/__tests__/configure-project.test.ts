@@ -29,7 +29,6 @@ const trackingEventOutput = {
     error: "Failed to configure Slice Machine",
   },
   context: {
-    userAgent: process.versions.node,
     groupId: { Repository: "repoName" },
   },
 };

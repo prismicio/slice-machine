@@ -51,12 +51,9 @@ export class InitTracker {
         event: eventType,
         ...identifier,
         properties: attributes,
-        context: {
-          userAgent: `NodeJS/${process.versions.node}`,
-          ...(this.#repository
-            ? { groupId: { Repository: this.#repository } }
-            : {}),
-        },
+        ...(this.#repository
+          ? { context: { groupId: { Repository: this.#repository } } }
+          : {}),
       };
 
       return this.#client.track(payload, () => {

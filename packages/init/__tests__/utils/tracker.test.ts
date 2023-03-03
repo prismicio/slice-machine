@@ -70,9 +70,6 @@ describe("InitTracker", () => {
       properties: {
         library: "libraryName",
       },
-      context: {
-        userAgent: process.versions.node,
-      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -97,9 +94,6 @@ describe("InitTracker", () => {
       properties: {
         library: "libraryName",
       },
-      context: {
-        userAgent: process.versions.node,
-      },
     });
   });
 
@@ -114,9 +108,6 @@ describe("InitTracker", () => {
       anonymousId: "uuid",
       event: "SliceMachine Init Start",
       properties: {},
-      context: {
-        userAgent: process.versions.node,
-      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -143,7 +134,6 @@ describe("InitTracker", () => {
         repo: "repoName",
       },
       context: {
-        userAgent: process.versions.node,
         groupId: {
           Repository: "repoName",
         },
@@ -162,9 +152,6 @@ describe("InitTracker", () => {
       anonymousId: "uuid",
       event: "SliceMachine Init Identify",
       properties: {},
-      context: {
-        userAgent: process.versions.node,
-      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -188,9 +175,6 @@ describe("InitTracker", () => {
       userId: "userId",
       event: "SliceMachine Init Identify",
       properties: {},
-      context: {
-        userAgent: process.versions.node,
-      },
     });
   });
 
@@ -211,7 +195,6 @@ describe("InitTracker", () => {
         result: "success",
       },
       context: {
-        userAgent: process.versions.node,
         groupId: { Repository: "repoName" },
       },
     });
@@ -242,7 +225,6 @@ describe("InitTracker", () => {
         result: "success",
       },
       context: {
-        userAgent: process.versions.node,
         groupId: { Repository: "repoName" },
       },
     });
@@ -282,7 +264,6 @@ describe("InitTracker", () => {
         error: "this is an error message",
       },
       context: {
-        userAgent: process.versions.node,
         groupId: { Repository: "repoName" },
       },
     });
