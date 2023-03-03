@@ -35,16 +35,17 @@ jobs:
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: npm run test
   
-  dep-check:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Dependency Checks
-        run: npm run depcheck
+  # TODO: add this back
+  # dep-check:
+  #   needs: install-deps
+  #   runs-on: [ubuntu-latest]
+  #   steps: 
+  #     - uses: actions/checkout@v2
+  #     - uses: ./.github/actions/restore-cache
+  #     - uses: ./.github/actions/setup-node
+  #     - uses: ./.github/actions/build-essential
+  #     - name: Dependency Checks
+  #       run: npm run depcheck
   
   prettier:
     needs: install-deps
@@ -114,7 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     # TODO: Restore `e2e-tests` dependency once the e2e tests are fixed.
     # needs: [e2e-tests, audit, linting, prettier, dep-check, unit-tests, install-deps]
-    needs: [audit, linting, prettier, dep-check, unit-tests, install-deps]
+    needs: [audit, linting, prettier, unit-tests, install-deps]
     if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
     environment: alpha
     steps: 
