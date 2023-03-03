@@ -1,6 +1,10 @@
-// // @vitest-environment jsdom
+import { describe, test, expect } from "vitest";
+describe("TODO: Upate this test suite when push change is backported", () => {
+  test("TODO: Upate this test suite when push change is backported", () => {
+    expect(true).toBe(true);
+  });
+});
 
-// import { describe, test, expect, vi } from "vitest";
 // import { expectSaga } from "redux-saga-test-plan";
 // import { CustomTypeSM } from "@lib/models/common/CustomType";
 
