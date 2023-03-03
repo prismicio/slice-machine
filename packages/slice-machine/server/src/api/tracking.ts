@@ -7,14 +7,9 @@ import {
 } from "../../../lib/models/tracking";
 import { RequestWithEnv } from "./http/common";
 import * as analytics from "./services/analytics";
-import { retrieveJsonPackage } from "@slicemachine/core/build/node-utils";
-import path from "path";
+import { version } from "../../../package.json";
 
 const anonymousId = uuidv4();
-
-const pathToPackage = path.resolve(__dirname, "..", "..", "..");
-const pkg = retrieveJsonPackage(pathToPackage);
-const version = pkg.content?.version ?? "";
 
 export function sendEvents(
   event: TrackingEvents,

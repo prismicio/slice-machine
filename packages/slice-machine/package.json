@@ -82,6 +82,7 @@
     "@prismicio/slice-simulator-com": "^0.4.1",
     "@reach/menu-button": "^0.18.0",
     "@relmify/jest-fp-ts": "^2.0.2",
+    "@rollup/plugin-json": "^6.0.0",
     "@sentry/nextjs": "^7.20.1",
     "@sentry/rollup-plugin": "^0.2.1",
     "@testing-library/jest-dom": "^5.15.0",

@@ -2,6 +2,7 @@ import esbuild from "rollup-plugin-esbuild";
 import sentryRollupPlugin from "@sentry/rollup-plugin";
 import path from "path";
 import NodeUtils from "@slicemachine/core/build/node-utils";
+import json from "@rollup/plugin-json";
 
 const { SENTRY_AUTH_TOKEN } = process.env;
 const pkg = NodeUtils.retrieveJsonPackage(path.resolve(__dirname));
@@ -19,6 +20,7 @@ export default {
     sourcemap: true,
   },
   plugins: [
+    json(),
     esbuild({
       exclude: /node_modules/,
       platform: "node",
