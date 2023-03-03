@@ -1,10 +1,8 @@
-<p align="center">
-  <a href="https://prismic.io/slice-machine">
-    <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
-  </a>
-</p>
+> **Warning**
+>
+> This package is designed for [Slice Machine][slice-machine] plugin authors. If you are not writing a plugin, you probably don't need to be aware of `@slicemachine/plugin-kit`.
 
-# Slice Machine
+# @slicemachine/plugin-kit
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -12,31 +10,25 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-[Slice Machine][slice-machine] transforms the way you code reusable components and lets you deliver them directly to marketers in a custom page builder using [Prismic][prismic].
+A toolkit to build [Slice Machine][slice-machine] plugins.
 
-<!-- [![Codecov][codecov-src]][codecov-href] -->
-
-- 🧰 &nbsp;Build [Slices][prismic-docs-slices] in a specialized development environment.
-- 📄 &nbsp;Manage and configure your [Custom Types][prismic-docs-custom-types].
-- ⚒️ &nbsp;Integrate into your website's framework using code generation.
+- Create adapters for frameworks.
+- Build integrations for third-party tools and services.
+- Write project-specific workflows triggered by Slice Machine events.
 
 ## Install
 
-We recommend installing Slice Machine into your project using `@slicemachine/init`:
-
 ```sh
-npx @slicemachine/init
-```
-
-If you want to install `slice-machine-ui` manually, you can do so like this:
-
-```sh
-npm install --save-dev slice-machine-ui
+npm install @slicemachine/plugin-kit
 ```
 
 ## Documentation
 
-For full documentation, visit the [official Prismic documentation][prismic-docs-slice-machine].
+Coming soon!
+
+Until proper documentation is written, see `@slicemachine/adapter-next` for an example plugin.
+
+All functions from `@slicemachine/plugin-kit` are typed and self-documented using TypeScript.
 
 ## Contributing
 
@@ -49,34 +41,6 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 **Suggesting an improvement**: [Open an issue][repo-feature-request] explaining your improvement or feature so we can discuss and learn more.
 
 **Submitting code changes**: For small fixes, feel free to [open a PR][repo-pull-requests] with a description of your changes. For large changes, please first [open an issue][repo-feature-request] so we can discuss if and how the changes should be implemented.
-
-### Development scripts
-
-To start the SliceMachine locally you need to :
-
-1. Install the project dependencies
-   > `make install`
-2. Run the SliceMachine backend (express server) into a first terminal
-   > `cd packages/slice-machine && npm run dev-server`
-3. Run the SliceMachine frontend (next server) into a second terminal
-   > `cd packages/slice-machine && npm run dev`
-4. Open the SliceMachine in your browser `http://localhost:9999`
-5. (optional) When working on the `@slicemachine/core` package you have to run an extra watcher
-   > `cd packages/core && npm run watch`
-
-SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
-
-#### `make clean`
-
-> a command that clean all the project dependencies and reinstall the SliceMachine from scratch
-
-#### `npm run test`
-
-> boolean check if unit tests all pass - uses jest
-
-#### `npm run lint`
-
-> boolean check if code conforms to linting rules - uses eslint
 
 ## License
 
@@ -104,9 +68,6 @@ SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
 <!-- TODO: Replace link with a more useful one if available -->
 
 [prismic-docs]: https://prismic.io/docs
-[prismic-docs-slice-machine]: https://prismic.io/docs/slice-machine
-[prismic-docs-slices]: https://prismic.io/docs/slice
-[prismic-docs-custom-types]: https://prismic.io/docs/custom-types
 [changelog]: /CHANGELOG.md
 
 <!-- TODO: Replace link with a more useful one if available -->
@@ -118,15 +79,15 @@ SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/slice-machine-ui/latest.svg
-[npm-version-href]: https://npmjs.com/package/slice-machine-ui
-[npm-downloads-src]: https://img.shields.io/npm/dm/slice-machine-ui.svg
-[npm-downloads-href]: https://npmjs.com/package/slice-machine-ui
+[npm-version-src]: https://img.shields.io/npm/v/start-slicemachine/latest.svg
+[npm-version-href]: https://npmjs.com/package/start-slicemachine
+[npm-downloads-src]: https://img.shields.io/npm/dm/start-slicemachine.svg
+[npm-downloads-href]: https://npmjs.com/package/start-slicemachine
 [github-actions-ci-src]: https://github.com/prismicio/slice-machine/workflows/test/badge.svg
 [github-actions-ci-href]: https://github.com/prismicio/slice-machine/actions?query=workflow%3Atest
 [codecov-src]: https://img.shields.io/codecov/c/github/prismicio/slice-machine.svg
 [codecov-href]: https://codecov.io/gh/prismicio/slice-machine
 [conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
 [conventional-commits-href]: https://conventionalcommits.org
-[license-src]: https://img.shields.io/npm/l/slice-machine-ui.svg
-[license-href]: https://npmjs.com/package/slice-machine-ui
+[license-src]: https://img.shields.io/npm/l/start-slicemachine.svg
+[license-href]: https://npmjs.com/package/start-slicemachine

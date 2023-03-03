@@ -40,17 +40,15 @@ export function* saveSliceSaga({
         loading: false,
         done: true,
         error: errors,
+        message: errors[0].message,
+        status: 500,
       });
     }
     setData({
       loading: false,
       done: true,
       error: null,
-      // warning: !!response.data.warning,
-      // status: response.status,
-      // message:
-      //   response.data.warning ||
-      //   "Models & mocks have been generated successfully!",
+      message: "Model saved",
     });
 
     yield put(saveSliceCreator.success({ component }));
