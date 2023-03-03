@@ -72,8 +72,12 @@ describe("tracking", () => {
           manualLibsCount: 0,
           npmLibsCount: 0,
           repoName: "foo",
-          slicemachineVersion: version,
-          nodeVersion: process.versions.node,
+        },
+        context: {
+          app: {
+            version,
+          },
+          userAgent: process.versions.node,
         },
       });
       expect(Analytics.track).not.toHaveBeenCalled();
@@ -85,12 +89,15 @@ describe("tracking", () => {
       expect(Analytics.group).not.toHaveBeenCalled();
       expect(Analytics.track).toHaveBeenCalledWith({
         anonymousId: "uuid",
-        context: { groupId: { Repository: "repoName" } },
-        event: "SliceMachine Onboarding Continue Screen Intro",
-        properties: {
-          slicemachineVersion: version,
-          nodeVersion: process.versions.node,
+        context: {
+          app: {
+            version,
+          },
+          userAgent: process.versions.node,
+          groupId: { Repository: "repoName" },
         },
+        event: "SliceMachine Onboarding Continue Screen Intro",
+        properties: {},
       });
     });
   });
@@ -131,15 +138,16 @@ describe("tracking", () => {
       expect(Analytics.track).toHaveBeenCalledWith({
         anonymousId: "uuid",
         context: {
+          app: {
+            version,
+          },
+          userAgent: process.versions.node,
           groupId: {
             Repository: undefined,
           },
         },
         event: "SliceMachine Onboarding Continue Screen 3",
-        properties: {
-          slicemachineVersion: version,
-          nodeVersion: process.versions.node,
-        },
+        properties: {},
       });
       expect(Analytics.group).not.toHaveBeenCalled();
     });

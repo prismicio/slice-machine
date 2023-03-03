@@ -26,10 +26,12 @@ export function sendEvents(
     analytics.group({
       ...(userId !== undefined ? { userId } : { anonymousId }),
       groupId: event.props.repoName,
-      traits: {
-        ...event.props,
-        slicemachineVersion: version,
-        nodeVersion: process.versions.node,
+      traits: { ...event.props },
+      context: {
+        app: {
+          version,
+        },
+        userAgent: process.versions.node,
       },
     });
   } else if (isIdentifyUserEvent(event)) {
@@ -46,13 +48,15 @@ export function sendEvents(
   } else if (isTrackingEvent(event)) {
     analytics.track({
       event: event.name,
-      properties: {
-        ...event.props,
-        slicemachineVersion: version,
-        nodeVersion: process.versions.node,
-      },
+      properties: { ...event.props },
       ...(userId !== undefined ? { userId } : { anonymousId }),
-      context: { groupId: { Repository: repositoryName } },
+      context: {
+        app: {
+          version,
+        },
+        userAgent: process.versions.node,
+        groupId: { Repository: repositoryName },
+      },
     });
   }
 }

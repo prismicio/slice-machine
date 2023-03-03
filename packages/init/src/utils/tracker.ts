@@ -50,13 +50,13 @@ export class InitTracker {
       const payload = {
         event: eventType,
         ...identifier,
-        properties: {
-          ...attributes,
-          nodeVersion: process.versions.node,
+        properties: attributes,
+        context: {
+          userAgent: process.versions.node,
+          ...(this.#repository
+            ? { groupId: { Repository: this.#repository } }
+            : {}),
         },
-        ...(this.#repository
-          ? { context: { groupId: { Repository: this.#repository } } }
-          : {}),
       };
 
       return this.#client.track(payload, () => {
