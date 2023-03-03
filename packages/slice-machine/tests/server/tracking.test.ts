@@ -3,7 +3,7 @@ import handler, { sendEvents } from "../../server/src/api/tracking";
 import { EventNames } from "@lib/models/tracking";
 import * as Analytics from "../../server/src/api/services/analytics";
 import { RequestWithEnv } from "server/src/api/http/common";
-import { version } from "../../package.json";
+import { version, name } from "../../package.json";
 
 jest.mock("../../server/src/api/services/analytics", () => {
   return {
@@ -75,9 +75,10 @@ describe("tracking", () => {
         },
         context: {
           app: {
+            name,
             version,
           },
-          userAgent: process.versions.node,
+          userAgent: `NodeJS/${process.versions.node}`,
         },
       });
       expect(Analytics.track).not.toHaveBeenCalled();
@@ -91,9 +92,10 @@ describe("tracking", () => {
         anonymousId: "uuid",
         context: {
           app: {
+            name,
             version,
           },
-          userAgent: process.versions.node,
+          userAgent: `NodeJS/${process.versions.node}`,
           groupId: { Repository: "repoName" },
         },
         event: "SliceMachine Onboarding Continue Screen Intro",
@@ -139,9 +141,10 @@ describe("tracking", () => {
         anonymousId: "uuid",
         context: {
           app: {
+            name,
             version,
           },
-          userAgent: process.versions.node,
+          userAgent: `NodeJS/${process.versions.node}`,
           groupId: {
             Repository: undefined,
           },

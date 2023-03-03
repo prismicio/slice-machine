@@ -52,7 +52,7 @@ export class InitTracker {
         ...identifier,
         properties: attributes,
         context: {
-          userAgent: process.versions.node,
+          userAgent: `NodeJS/${process.versions.node}`,
           ...(this.#repository
             ? { groupId: { Repository: this.#repository } }
             : {}),

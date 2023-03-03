@@ -7,9 +7,11 @@ import {
 } from "../../../lib/models/tracking";
 import { RequestWithEnv } from "./http/common";
 import * as analytics from "./services/analytics";
-import { version } from "../../../package.json";
+import { version, name } from "../../../package.json";
 
 const anonymousId = uuidv4();
+
+const userAgent = `NodeJS/${process.versions.node}`;
 
 export function sendEvents(
   event: TrackingEvents,
@@ -24,9 +26,10 @@ export function sendEvents(
       traits: { ...event.props },
       context: {
         app: {
+          name,
           version,
         },
-        userAgent: process.versions.node,
+        userAgent,
       },
     });
   } else if (isIdentifyUserEvent(event)) {
@@ -47,9 +50,10 @@ export function sendEvents(
       ...(userId !== undefined ? { userId } : { anonymousId }),
       context: {
         app: {
+          name,
           version,
         },
-        userAgent: process.versions.node,
+        userAgent,
         groupId: { Repository: repositoryName },
       },
     });
