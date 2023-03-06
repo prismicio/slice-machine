@@ -32,6 +32,12 @@ describe("tracking", () => {
     test("sends identify event", () => {
       sendEvents({ name: EventNames.IdentifyUser }, "foo", "foo", "foo");
       expect(Analytics.identify).toHaveBeenCalledWith({
+        context: {
+          app: {
+            name,
+            version,
+          },
+        },
         integrations: {
           Intercom: {
             user_hash: "foo",
