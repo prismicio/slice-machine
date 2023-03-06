@@ -17,7 +17,7 @@ import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "../src/modules/useSliceMachineActions";
 import Tracker from "../src/tracking/client";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
-import { EventNames } from "../src/tracking/types";
+import { EventNames } from "@lib/models/tracking";
 import { getCurrentVersion, getFramework } from "../src/modules/environment";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,

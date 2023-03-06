@@ -12,6 +12,7 @@ describe("Custom Types specs", () => {
   it("A user can create and rename a custom type", () => {
     cy.createCustomType(customTypeId, customTypeName);
     cy.renameCustomType(customTypeId, customTypeName, "New Custom Type Name");
+    cy.visit(`/cts/${customTypeId}`);
     // add a tab
     cy.contains("Add Tab").click();
     cy.getInputByLabel("New Tab ID").type("Foo");

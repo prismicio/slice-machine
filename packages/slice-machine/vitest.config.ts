@@ -19,6 +19,7 @@ export default defineConfig({
       components: path.resolve(__dirname, "./components"),
       lib: path.resolve(__dirname, "./lib"),
       tests: path.resolve(__dirname, "./tests"),
+      "\\.(css)$": path.resolve(__dirname, "./tests/__mocks__/styleMock.js"),
     },
     include: ["./test/**/*.test.{ts,tsx}"],
     coverage: {

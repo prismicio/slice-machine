@@ -13,6 +13,11 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
 import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
+// import {
+//   InvalidCustomTypeResponse,
+//   PushChangesPayload,
+// } from "@lib/models/common/TransactionalPush";
+// import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
 import { managerClient } from "./managerClient";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
@@ -101,6 +106,15 @@ export const pushCustomType = async (customTypeId: string): Promise<void> => {
   });
 };
 
+// export const deleteCustomType = (
+//   customTypeId: string
+// ): Promise<AxiosResponse> => {
+//   return axios.delete(
+//     `/api/custom-types/delete?id=${customTypeId}`,
+//     defaultAxiosConfig
+//   );
+// };
+
 /** Slice Routes **/
 export const createSlice = async (
   sliceName: string,
@@ -133,6 +147,20 @@ export const renameSlice = async (
     model: Slices.fromSM(slice),
   });
 };
+
+// export const deleteSlice = (
+//   sliceId: string,
+//   libName: string
+// ): Promise<AxiosResponse> => {
+//   const requestBody = {
+//     sliceId,
+//     libName,
+//   };
+//   return axios.delete(`/api/slices/delete`, {
+//     ...defaultAxiosConfig,
+//     data: requestBody,
+//   });
+// };
 
 export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest
@@ -210,6 +238,12 @@ export const pushSliceApiClient = async (
     sliceID: component.model.id,
   });
 };
+
+// export const pushChanges = (
+//   payload: PushChangesPayload
+// ): Promise<AxiosResponse<InvalidCustomTypeResponse | Limit | null>> => {
+//   return axios.post("/api/push-changes", payload, defaultAxiosConfig);
+// };
 
 /** Auth Routes **/
 

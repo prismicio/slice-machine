@@ -18,12 +18,12 @@ import {
   CustomTypeFieldAdded,
   CustomTypeSliceZoneUpdated,
   CustomTypeSaved,
-  CustomTypePushed,
   CreateSlice,
   ScreenshotTaken,
   ChangesPushed,
   SliceSimulatorIsNotRunning,
-} from "./types";
+  ChangesLimitReach,
+} from "../../lib/models/tracking";
 
 export class SMTracker {
   #client = (event: TrackingEvents) =>
@@ -88,7 +88,7 @@ export class SMTracker {
     repoName: string | undefined,
     version: string
   ): Promise<void> {
-    if (!repoName || !this.#isTrackingActive) {
+    if (repoName === undefined || !this.#isTrackingActive) {
       return;
     }
 
@@ -101,7 +101,9 @@ export class SMTracker {
         manualLibsCount: libs.filter((l) => l.meta.isManual).length,
         downloadedLibsCount: downloadedLibs.length,
         npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
-        downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
+        downloadedLibs: downloadedLibs.map((l) =>
+          l.meta.name != null ? l.meta.name : "Unknown"
+        ),
         slicemachineVersion: version,
       },
     };
@@ -265,19 +267,6 @@ export class SMTracker {
     return this.#trackEvent(payload);
   }
 
-  async trackCustomTypePushed(data: {
-    id: string;
-    name: string;
-    type: "single" | "repeatable";
-  }): Promise<void> {
-    const payload: CustomTypePushed = {
-      name: EventNames.CustomTypePushed,
-      props: data,
-    };
-
-    return this.#trackEvent(payload);
-  }
-
   async trackCreateSlice(data: {
     id: string;
     name: string;
@@ -307,6 +296,17 @@ export class SMTracker {
     return this.#trackEvent(payload);
   }
 
+  async trackChangesLimitReach(
+    data: ChangesLimitReach["props"]
+  ): Promise<void> {
+    const payload: ChangesLimitReach = {
+      name: EventNames.ChangesLimitReach,
+      props: data,
+    };
+
+    return this.#trackEvent(payload);
+  }
+
   #startedNewEditorSession = false;
   editor = {
     startNewSession: () => {
@@ -326,13 +326,13 @@ export class SMTracker {
 }
 
 const Tracker = (() => {
-  let smTrackerInstance: SMTracker;
+  let smTrackerInstance: SMTracker | undefined;
 
   const init = () => new SMTracker();
 
   return {
     get() {
-      if (!smTrackerInstance) smTrackerInstance = init();
+      if (smTrackerInstance === undefined) smTrackerInstance = init();
       return smTrackerInstance;
     },
   };
