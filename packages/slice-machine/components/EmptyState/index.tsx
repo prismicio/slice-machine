@@ -4,7 +4,7 @@ import { Video } from "cloudinary-react";
 import { useSelector } from "react-redux";
 import Tracking from "../../src/tracking/client";
 import { SliceMachineStoreType } from "../../src/redux/type";
-import { getFramework, getCurrentVersion } from "@src/modules/environment";
+import { getFramework } from "@src/modules/environment";
 interface Props {
   title: string;
   onCreateNew: () => void;
@@ -22,12 +22,9 @@ const EmptyState: React.FunctionComponent<Props> = ({
   documentationComponent,
   videoPublicIdUrl,
 }) => {
-  const { version, framework } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      version: getCurrentVersion(store),
-      framework: getFramework(store),
-    })
-  );
+  const { framework } = useSelector((store: SliceMachineStoreType) => ({
+    framework: getFramework(store),
+  }));
 
   return (
     <Box
@@ -60,7 +57,6 @@ const EmptyState: React.FunctionComponent<Props> = ({
           onPlay={() => {
             void Tracking.get().trackClickOnVideoTutorials(
               framework,
-              version,
               videoPublicIdUrl
             );
           }}

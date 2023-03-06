@@ -50,10 +50,7 @@ export class InitTracker {
       const payload = {
         event: eventType,
         ...identifier,
-        properties: {
-          ...attributes,
-          nodeVersion: process.versions.node,
-        },
+        properties: attributes,
         ...(this.#repository
           ? { context: { groupId: { Repository: this.#repository } } }
           : {}),

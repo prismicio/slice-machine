@@ -45,7 +45,6 @@ export interface PageView extends BaseTrackingEvent {
     title: string;
     referrer: string;
     framework: Frameworks;
-    slicemachineVersion: string;
   };
 }
 
@@ -61,7 +60,6 @@ export interface GroupLibraries extends BaseTrackingEvent {
     downloadedLibsCount: number;
     npmLibsCount: number;
     downloadedLibs: Array<string>;
-    slicemachineVersion: string;
   };
 }
 
@@ -69,7 +67,6 @@ export interface OpenVideoTutorials extends BaseTrackingEvent {
   name: EventNames.OpenVideoTutorials;
   props: {
     framework: Frameworks;
-    slicemachineVersion: string; // why is this one different ?
     video: string;
   };
 }
@@ -87,14 +84,12 @@ export interface SliceSimulatorSetup extends BaseTrackingEvent {
   name: EventNames.SliceSimulatorSetup;
   props: {
     framework: Frameworks;
-    version: string;
   };
 }
 
 export interface SliceSimulatorOpen extends BaseTrackingEvent {
   name: EventNames.SliceSimulatorOpen;
   props: {
-    version: string;
     framework: Frameworks;
   };
 }

@@ -69,7 +69,6 @@ describe("InitTracker", () => {
       event: "SliceMachine Download Library",
       properties: {
         library: "libraryName",
-        nodeVersion: process.versions.node,
       },
     });
 
@@ -94,7 +93,6 @@ describe("InitTracker", () => {
       event: "SliceMachine Download Library",
       properties: {
         library: "libraryName",
-        nodeVersion: process.versions.node,
       },
     });
   });
@@ -109,9 +107,7 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Init Start",
-      properties: {
-        nodeVersion: process.versions.node,
-      },
+      properties: {},
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -136,7 +132,6 @@ describe("InitTracker", () => {
       event: "SliceMachine Init Start",
       properties: {
         repo: "repoName",
-        nodeVersion: process.versions.node,
       },
       context: {
         groupId: {
@@ -156,9 +151,7 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Init Identify",
-      properties: {
-        nodeVersion: process.versions.node,
-      },
+      properties: {},
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -181,9 +174,7 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
       event: "SliceMachine Init Identify",
-      properties: {
-        nodeVersion: process.versions.node,
-      },
+      properties: {},
     });
   });
 
@@ -202,9 +193,10 @@ describe("InitTracker", () => {
         framework: Models.Frameworks.next,
         repo: "repoName",
         result: "success",
-        nodeVersion: process.versions.node,
       },
-      context: { groupId: { Repository: "repoName" } },
+      context: {
+        groupId: { Repository: "repoName" },
+      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -231,9 +223,10 @@ describe("InitTracker", () => {
         framework: Models.Frameworks.next,
         repo: "repoName",
         result: "success",
-        nodeVersion: process.versions.node,
       },
-      context: { groupId: { Repository: "repoName" } },
+      context: {
+        groupId: { Repository: "repoName" },
+      },
     });
   });
 
@@ -269,9 +262,10 @@ describe("InitTracker", () => {
         repo: "repoName",
         result: "error",
         error: "this is an error message",
-        nodeVersion: process.versions.node,
       },
-      context: { groupId: { Repository: "repoName" } },
+      context: {
+        groupId: { Repository: "repoName" },
+      },
     });
   });
 });

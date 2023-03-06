@@ -3,6 +3,9 @@ import handler, { sendEvents } from "../../server/src/api/tracking";
 import { EventNames } from "@lib/models/tracking";
 import * as Analytics from "../../server/src/api/services/analytics";
 import { RequestWithEnv } from "server/src/api/http/common";
+import { version, name } from "../../package.json";
+import type { PageView } from "@lib/models/tracking";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 jest.mock("../../server/src/api/services/analytics", () => {
   return {
@@ -29,6 +32,12 @@ describe("tracking", () => {
     test("sends identify event", () => {
       sendEvents({ name: EventNames.IdentifyUser }, "foo", "foo", "foo");
       expect(Analytics.identify).toHaveBeenCalledWith({
+        context: {
+          app: {
+            name,
+            version,
+          },
+        },
         integrations: {
           Intercom: {
             user_hash: "foo",
@@ -57,7 +66,6 @@ describe("tracking", () => {
             downloadedLibsCount: 0,
             npmLibsCount: 0,
             downloadedLibs: [],
-            slicemachineVersion: "0",
           },
         },
         "repoName"
@@ -72,8 +80,12 @@ describe("tracking", () => {
           manualLibsCount: 0,
           npmLibsCount: 0,
           repoName: "foo",
-          slicemachineVersion: "0",
-          nodeVersion: process.versions.node,
+        },
+        context: {
+          app: {
+            name,
+            version,
+          },
         },
       });
       expect(Analytics.track).not.toHaveBeenCalled();
@@ -85,10 +97,47 @@ describe("tracking", () => {
       expect(Analytics.group).not.toHaveBeenCalled();
       expect(Analytics.track).toHaveBeenCalledWith({
         anonymousId: "uuid",
-        context: { groupId: { Repository: "repoName" } },
+        context: {
+          app: {
+            name,
+            version,
+          },
+          groupId: { Repository: "repoName" },
+        },
         event: "SliceMachine Onboarding Continue Screen Intro",
+        properties: {},
+      });
+    });
+
+    test("Page view event shoud include the ndoe version", () => {
+      const body: PageView = {
+        name: EventNames.PageView,
+        props: {
+          url: "",
+          path: "",
+          search: "",
+          title: "",
+          referrer: "",
+          framework: Frameworks.next,
+        },
+      };
+
+      sendEvents(body, "foo");
+      expect(Analytics.identify).not.toHaveBeenCalled();
+      expect(Analytics.group).not.toHaveBeenCalled();
+      expect(Analytics.track).toHaveBeenCalledWith({
+        anonymousId: "uuid",
+        event: body.name,
         properties: {
+          ...body.props,
           nodeVersion: process.versions.node,
+        },
+        context: {
+          app: {
+            name,
+            version,
+          },
+          groupId: { Repository: "foo" },
         },
       });
     });
@@ -130,14 +179,16 @@ describe("tracking", () => {
       expect(Analytics.track).toHaveBeenCalledWith({
         anonymousId: "uuid",
         context: {
+          app: {
+            name,
+            version,
+          },
           groupId: {
             Repository: undefined,
           },
         },
         event: "SliceMachine Onboarding Continue Screen 3",
-        properties: {
-          nodeVersion: process.versions.node,
-        },
+        properties: {},
       });
       expect(Analytics.group).not.toHaveBeenCalled();
     });

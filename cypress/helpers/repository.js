@@ -2,6 +2,29 @@ import { changesPage } from "../pages/changes/changesPage";
 import { menu } from "../pages/menu";
 
 /**
+ * Try to push any lingering changes, (usually deletions)
+ */
+
+export function maybePushChanges() {
+  changesPage.goTo();
+
+  changesPage.pushButton.then((button) => {
+    const disabled = button.attr("disabled");
+
+    if (!disabled) {
+      changesPage.pushButton.click();
+
+      menu
+        .changesNumber({
+          timeout: 2 * 60 * 1000,
+        })
+        .should("not.exist");
+
+      changesPage.pushButton.should("be.disabled");
+    }
+  });
+}
+/**
  * Push Changes to the Repository, assert the number of changes as well.
  *
  * @param {number} numberOfChanges number of changes that should be pushed, this number is used for assertions. If this is undefined, no assertions will be made on the number of changes left after the push
@@ -24,7 +47,7 @@ export function pushLocalChanges(numberOfChanges) {
     // The time to wait depends on the number of changes
     menu
       .changesNumber({
-        timeout: 5000 * (numberOfChanges + 1),
+        timeout: 2 * 60 * 1000 * (numberOfChanges + 1),
       })
       .should("not.exist");
 

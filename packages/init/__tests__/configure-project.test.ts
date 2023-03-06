@@ -27,9 +27,10 @@ const trackingEventOutput = {
     repo: "repoName",
     result: "error",
     error: "Failed to configure Slice Machine",
-    nodeVersion: process.versions.node,
   },
-  context: { groupId: { Repository: "repoName" } },
+  context: {
+    groupId: { Repository: "repoName" },
+  },
 };
 
 jest.mock("../src/utils/logs", () => ({

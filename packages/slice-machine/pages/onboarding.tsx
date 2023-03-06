@@ -18,7 +18,7 @@ import useSliceMachineActions from "../src/modules/useSliceMachineActions";
 import Tracker from "../src/tracking/client";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
 import { EventNames } from "@lib/models/tracking";
-import { getCurrentVersion, getFramework } from "../src/modules/environment";
+import { getFramework } from "../src/modules/environment";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,
   VIDEO_ONBOARDING_ADD_TO_PAGE,
@@ -213,15 +213,12 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 export default function Onboarding(): JSX.Element {
   const router = useRouter();
 
-  const { version, framework } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      version: getCurrentVersion(store),
-      framework: getFramework(store),
-    })
-  );
+  const { framework } = useSelector((store: SliceMachineStoreType) => ({
+    framework: getFramework(store),
+  }));
 
   const createOnPlay = (id: string) => () => {
-    void Tracker.get().trackClickOnVideoTutorials(framework, version, id);
+    void Tracker.get().trackClickOnVideoTutorials(framework, id);
   };
 
   const STEPS = [
