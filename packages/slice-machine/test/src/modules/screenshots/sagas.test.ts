@@ -73,7 +73,7 @@ describe("[Selected Slice sagas]", () => {
 
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Screenshot not saved",
+          content: "Internal Error: Screenshot not saved",
           type: ToasterType.ERROR,
         })
       );

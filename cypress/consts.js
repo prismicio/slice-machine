@@ -1,3 +1,5 @@
+import path from "path";
+
 export const ROOT = "e2e-projects/cypress-next-app";
 
 export const PACKAGE_JSON_FILE = `${ROOT}/package.json`;
@@ -16,3 +18,5 @@ export const SLICE_MOCK_FILE = (sliceName) =>
 
 export const SLICE_MODEL = (sliceName) =>
   `${SLICES_FOLDER}/${sliceName}/model.json`;
+
+export const SIMULATOR_PATH = path.join(ROOT, "pages", "slice-simulator.jsx");

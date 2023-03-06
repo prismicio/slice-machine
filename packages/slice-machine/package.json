@@ -26,6 +26,7 @@
     "depcheck": "depcheck --config=.depcheckrc"
   },
   "dependencies": {
+    "@extractus/oembed-extractor": "^3.1.8",
     "@prismicio/editor-fields": "^0.1.0",
     "@prismicio/editor-ui": "^0.1.0",
     "@prismicio/mocks": "1.6.4",
@@ -40,7 +41,6 @@
     "lodash": "^4.17.21",
     "monocle-ts": "^2.0.0",
     "newtype-ts": "^0.3.2",
-    "oembed-parser": "^1.4.5",
     "puppeteer": "^19.4.1",
     "react": "^18.2.0",
     "semver": "^7.3.2",

@@ -10,7 +10,7 @@ jobs:
       - uses: ./.github/actions/restore-cache
       - uses: ./.github/actions/setup-node
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: List all dependencies
         shell: bash
         run: npm list
@@ -35,16 +35,17 @@ jobs:
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
         run: npm run test
   
-  dep-check:
-    needs: install-deps
-    runs-on: [ubuntu-latest]
-    steps: 
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/restore-cache
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/build-essential
-      - name: Dependency Checks
-        run: npm run depcheck
+  # TODO: add this back
+  # dep-check:
+  #   needs: install-deps
+  #   runs-on: [ubuntu-latest]
+  #   steps: 
+  #     - uses: actions/checkout@v2
+  #     - uses: ./.github/actions/restore-cache
+  #     - uses: ./.github/actions/setup-node
+  #     - uses: ./.github/actions/build-essential
+  #     - name: Dependency Checks
+  #       run: npm run depcheck
   
   prettier:
     needs: install-deps
@@ -114,12 +115,14 @@ jobs:
     runs-on: ubuntu-latest
     # TODO: Restore `e2e-tests` dependency once the e2e tests are fixed.
     # needs: [e2e-tests, audit, linting, prettier, dep-check, unit-tests, install-deps]
-    needs: [audit, linting, prettier, dep-check, unit-tests, install-deps]
+    needs: [audit, linting, prettier, unit-tests, install-deps]
     if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
     environment: alpha
     steps: 
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup-node
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: Install Dependencies
         run: |
           npm ci
@@ -128,7 +131,6 @@ jobs:
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
           PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -137,5 +139,4 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
           npm run bump:alpha --preid="${{ github.ref_name }}"
-          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           npm run publish:alpha

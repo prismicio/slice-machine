@@ -1,19 +1,17 @@
-import { ScreenshotModal } from "../../pages/slices/screenshotModal";
+import { screenshotModal } from "../../pages/slices/screenshotModal";
 import { SliceCard } from "../../pages/slices/sliceCard";
-import { SlicePage } from "../../pages/slices/slicePage";
-import { Menu } from "../../pages/Menu";
+import { menu } from "../../pages/menu";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
+import { changesPage } from "../../pages/changes/changesPage";
 
-describe.skip("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
+describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   const random = Date.now();
 
   const slice = {
-    id: `test_screenshots${random}`,
-    name: `TestScreenshots${random}`,
+    id: `test_custom_screenshots${random}`,
+    name: `TestCustomScreenshots${random}`,
     library: "slices",
   };
-
-  const slicePage = new SlicePage();
-  const screenshotModal = new ScreenshotModal();
 
   const wrongScreenshot = "screenshots/preview_small.png";
   const defaultScreenshot = "screenshots/preview_medium.png";
@@ -22,18 +20,20 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
   before("Cleanup local data and create a new slice", () => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
+    // Push all local changes in case there are deleted slices
+    // cy.pushLocalChanges(); // TODO: What if there aren't any?? This will fail
     cy.createSlice(slice.library, slice.id, slice.name);
   });
 
   beforeEach("Start from the Slice page", () => {
     cy.setSliceMachineUserContext({});
-    slicePage.goTo(slice.library, slice.name);
+    sliceBuilder.goTo(slice.library, slice.name);
   });
 
-  it("Upload and replace a screenshot on the default variation", () => {
+  it("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
-    slicePage.imagePreview.should("not.exist");
-    slicePage.openScreenshotModal();
+    sliceBuilder.imagePreview.should("not.exist");
+    sliceBuilder.openScreenshotModal();
 
     screenshotModal
       .verifyImageIsEmpty()
@@ -42,22 +42,21 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
       .dragAndDropImage(defaultScreenshot)
       .verifyImageIs(defaultScreenshot)
       .close();
-    slicePage.imagePreview.isSameImageAs(defaultScreenshot);
+    sliceBuilder.imagePreview.isSameImageAs(defaultScreenshot);
 
     // Upload screenshot on variation from the Changes Page
     const missingScreenshotVariation = "Missing screenshot";
-    cy.addVariationToSlice(missingScreenshotVariation);
+    sliceBuilder.addVariation(missingScreenshotVariation);
 
-    slicePage.imagePreview.should("not.exist");
-    cy.saveSliceModifications();
-
-    const menu = new Menu();
-    const sliceCard = new SliceCard(slice.name);
+    sliceBuilder.imagePreview.should("not.exist");
+    sliceBuilder.save();
 
     menu.navigateTo("Slices");
+    const sliceCard = new SliceCard(slice.name);
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     menu.navigateTo("Changes");
+    changesPage.screenshotsButton.should("be.visible");
     sliceCard.content.should("include.text", "1/2 screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
@@ -72,12 +71,15 @@ describe.skip("I am an existing SM user and I want to upload screenshots on vari
     sliceCard.content.should("not.include.text", "screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
-    cy.pushLocalChanges(1);
+    cy.pushLocalChanges();
   });
 
   it("Error displayed when non-image files are uploaded", () => {
-    cy.addVariationToSlice("Error handling");
-    slicePage.openScreenshotModal();
+    sliceBuilder.goTo(slice.library, slice.name);
+    sliceBuilder.addVariation("Error handling");
+    sliceBuilder.save();
+
+    sliceBuilder.openScreenshotModal();
     cy.contains("Select file").selectFile(
       {
         contents: Cypress.Buffer.from("this is not an image"),
