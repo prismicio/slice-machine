@@ -43,9 +43,20 @@ export function sendEvents(
             user_hash: intercomHash,
           },
         },
+        context: {
+          app: {
+            name,
+            version,
+          },
+        },
       });
     }
   } else if (isTrackingEvent(event)) {
+    /*
+     * We are adding the node version to get a sense of which version our users uses.
+     * We add it to the event PageView as this is the most common one that everyone would trigger naturally.
+     * We add this value back-end as it is way easier to retrieve here and we don't want to have it in the front-end as it is just used here.
+     */
     const maybeNodeVersion =
       event.name === EventNames.PageView ? { nodeVersion } : {};
 
