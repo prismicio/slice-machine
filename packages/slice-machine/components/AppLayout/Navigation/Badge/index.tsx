@@ -18,7 +18,7 @@ const VersionBadge: React.FC<BadgeProps> = ({ version, label = "V" }) => (
     }}
   >
     {label} : {version}{" "}
-    <Link passHref href="/changelog">
+    <Link passHref href="/changelog" legacyBehavior>
       <ThemeLink sx={{ color: "textClear" }}>(Changelog)</ThemeLink>
     </Link>
   </Box>

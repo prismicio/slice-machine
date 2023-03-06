@@ -6,7 +6,7 @@ import Link from "next/link";
 const ChangelogItem: React.FunctionComponent<{ currentVersion: string }> = ({
   currentVersion,
 }) => (
-  <Link href={"/changelog"} passHref>
+  <Link href={"/changelog"} passHref legacyBehavior>
     <ThemeLink
       variant="links.sidebar"
       sx={{

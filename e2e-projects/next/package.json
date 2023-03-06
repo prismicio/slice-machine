@@ -20,7 +20,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.0",
     "@tailwindcss/typography": "^0.5.2",
-    "next": "^12.1.4",
+    "next": "^13.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.1.11"
@@ -29,7 +29,7 @@
     "@slicemachine/adapter-next": "0.0.13-dev-plugins-m3.0",
     "autoprefixer": "^10.4.4",
     "eslint": "^8.37.0",
-    "eslint-config-next": "^12.1.4",
+    "eslint-config-next": "^13.2.3",
     "postcss": "^8.4.12",
     "slice-machine-ui": "0.6.1-dev-plugins-m3.0",
     "start-slicemachine": "0.6.1-dev-plugins-m3.0",

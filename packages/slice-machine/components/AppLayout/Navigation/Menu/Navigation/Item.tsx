@@ -18,7 +18,7 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(
     const router = useRouter();
     return (
       <Box {...rest} ref={ref} as="li" key={link.title}>
-        <Link href={link.href} passHref>
+        <Link href={link.href} passHref legacyBehavior>
           <ThemeLink
             variant={
               theme === "emphasis" ? "links.sidebarEmphasis" : "links.sidebar"

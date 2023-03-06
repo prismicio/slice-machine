@@ -12,7 +12,7 @@ export const LinkCardWrapper = ({
 }) => {
   //TODO: make the redirection through "connected-next-router" so that the router location is synched with redux
   return (
-    <Link passHref href={link?.as || ""}>
+    <Link passHref href={link?.as || ""} legacyBehavior>
       <ThemeLink
         sx={{
           textDecoration: "none",

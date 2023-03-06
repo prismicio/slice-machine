@@ -25,6 +25,5 @@ module.exports = async () => {
       loader: "imgix",
       path: "",
     },
-    swcMinify: true,
   };
 };

@@ -62,6 +62,7 @@ export const CustomTypeTable: React.FC<{
               passHref
               href={`/cts/${customType.local.id}`}
               key={customType.local.id}
+              legacyBehavior
             >
               <tr tabIndex={0}>
                 <Box as={"td"} style={{ width: firstColumnWidth }}>

@@ -72,6 +72,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
               passHref
               href={`/cts/${customType.local.id}`}
               key={customType.local.id}
+              legacyBehavior
             >
               <tr tabIndex={0}>
                 <CustomTypeChangeRow

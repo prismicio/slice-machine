@@ -46,7 +46,7 @@ const Header: FC<HeaderProps> = ({ link, subtitle, Actions, sx }) => {
           alignItems: "center",
         }}
       >
-        <NextLink href={link.href} passHref>
+        <NextLink href={link.href} passHref legacyBehavior>
           <ThemeLink variant="invisible" sx={{ flexShrink: 0 }}>
             <Flex
               sx={{

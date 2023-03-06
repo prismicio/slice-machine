@@ -7,7 +7,7 @@ const Logo: React.FC = () => {
   const { theme } = useThemeUI();
   return (
     <Box p={2}>
-      <Link href="/" passHref>
+      <Link href="/" passHref legacyBehavior>
         <ThemeLink variant="links.invisible">
           <Flex sx={{ alignItems: "center" }}>
             <SliceMachineLogo

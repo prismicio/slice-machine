@@ -14,7 +14,7 @@ const UpdateSliceZoneModalEmptyState = () => (
       "Slice Zone" that allows content creators to add, edit, and rearrange
       Slices to compose dynamic layouts for any page design.
     </Text>
-    <Link passHref href={`/slices`}>
+    <Link passHref href={`/slices`} legacyBehavior>
       <Button sx={{ mt: "24px" }}>Create new Slice</Button>
     </Link>
   </Flex>
