@@ -14,7 +14,6 @@ import {
   OnboardingStart,
   OnboardingContinue,
   OnboardingSkip,
-  CreateCustomType,
   CustomTypeFieldAdded,
   CustomTypeSliceZoneUpdated,
   CustomTypeSaved,
@@ -199,21 +198,6 @@ export class SMTracker {
       props: {
         screenSkipped,
       },
-    };
-
-    return this.#trackEvent(payload);
-  }
-
-  async trackCreateCustomType(customTypeInfo: {
-    id: string;
-    name: string;
-    repeatable: boolean;
-  }): Promise<void> {
-    const { id, name, repeatable } = customTypeInfo;
-
-    const payload: CreateCustomType = {
-      name: EventNames.CreateCustomType,
-      props: { id, name, type: repeatable ? "repeatable" : "single" },
     };
 
     return this.#trackEvent(payload);

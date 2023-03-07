@@ -339,34 +339,6 @@ describe("SMTracker", () => {
     expect(trackingSpy).not.toHaveBeenCalled();
   });
 
-  test("it should send a create custom type event", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    const smTracker = new SMTracker();
-
-    const id = "test";
-    const name = "testing";
-    const repeatable = true;
-    await smTracker.trackCreateCustomType({ id, name, repeatable });
-    expect(trackingSpy).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        body: {
-          name: "SliceMachine Custom Type Created",
-          props: {
-            id,
-            name,
-            type: "repeatable",
-          },
-        },
-      }),
-      expect.anything(),
-      expect.anything()
-    );
-  });
-
   test("shouldn't send any events when tracker is disable", async (ctx) => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
