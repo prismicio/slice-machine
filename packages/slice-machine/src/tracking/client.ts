@@ -14,7 +14,6 @@ import {
   OnboardingStart,
   OnboardingContinue,
   OnboardingSkip,
-  CustomTypeFieldAdded,
   CustomTypeSliceZoneUpdated,
   CreateSlice,
   ScreenshotTaken,
@@ -196,30 +195,6 @@ export class SMTracker {
       name: EventNames.OnboardingSkip,
       props: {
         screenSkipped,
-      },
-    };
-
-    return this.#trackEvent(payload);
-  }
-
-  async trackCustomTypeFieldAdded({
-    fieldId,
-    customTypeId,
-    zone,
-    type,
-  }: {
-    fieldId: string;
-    customTypeId: string;
-    zone: "static" | "repeatable";
-    type: string;
-  }): Promise<void> {
-    const payload: CustomTypeFieldAdded = {
-      name: EventNames.CustomTypeFieldAdded,
-      props: {
-        id: fieldId,
-        name: customTypeId,
-        zone,
-        type,
       },
     };
 
