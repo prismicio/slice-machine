@@ -16,7 +16,6 @@ import {
   OnboardingSkip,
   CustomTypeFieldAdded,
   CustomTypeSliceZoneUpdated,
-  CustomTypeSaved,
   CreateSlice,
   ScreenshotTaken,
   ChangesPushed,
@@ -232,19 +231,6 @@ export class SMTracker {
   }): Promise<void> {
     const payload: CustomTypeSliceZoneUpdated = {
       name: EventNames.CustomTypeSliceZoneUpdated,
-      props: data,
-    };
-
-    return this.#trackEvent(payload);
-  }
-
-  async trackCustomTypeSaved(data: {
-    id: string;
-    name: string;
-    type: "single" | "repeatable";
-  }): Promise<void> {
-    const payload: CustomTypeSaved = {
-      name: EventNames.CustomTypeSaved,
       props: data,
     };
 
