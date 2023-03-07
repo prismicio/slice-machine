@@ -66,16 +66,6 @@ export const createSliceMachineServer = async (
 		),
 	);
 
-	// TODO: Remove once tracking is implemented in `core2`
-	router.add(
-		"/api/s",
-		eventHandler(() => {
-			// noop
-
-			return {};
-		}),
-	);
-
 	if (process.env.NODE_ENV === "development") {
 		router.get(
 			"/**",

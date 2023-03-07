@@ -63,6 +63,8 @@ export class StartSliceMachineProcess {
 	 * Runs the process.
 	 */
 	async run(): Promise<void> {
+		await this._sliceMachineManager.telemetry.initTelemetry();
+
 		await this._sliceMachineManager.plugins.initPlugins();
 
 		await this._validateProject();
