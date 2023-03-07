@@ -25,7 +25,6 @@ import {
 } from "../../../../src/modules/selectedCustomType";
 import { SlicesSM } from "@lib/models/common/Slices";
 import { TabField, TabFields } from "@lib/models/common/CustomType";
-import Tracker from "../../../../src/tracking/client";
 import { track } from "@src/apiClient";
 import { DropResult } from "react-beautiful-dnd";
 
@@ -141,7 +140,8 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   };
 
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
-    void Tracker.get().trackCustomTypeSliceAdded({
+    void track({
+      event: "custom-type:slice-zone-updated",
       customTypeId: currentCustomType.id,
     });
     replaceCustomTypeSharedSlice(tabId, keys, preserve);

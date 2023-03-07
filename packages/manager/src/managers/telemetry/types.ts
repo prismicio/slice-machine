@@ -4,6 +4,7 @@ export const SegmentEventType = {
 	command_init_end: "command:init:end",
 	customType_created: "custom-type:created",
 	customType_fieldAdded: "custom-type:field-added",
+	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
 	customType_saved: "custom-type:saved",
 } as const;
 type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
@@ -15,6 +16,8 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.customType_created]: "SliceMachine Custom Type Created",
 	[SegmentEventType.customType_fieldAdded]:
 		"SliceMachine Custom Type Field Added",
+	[SegmentEventType.customType_sliceZoneUpdated]:
+		"SliceMachine Slicezone Updated",
 	[SegmentEventType.customType_saved]: "SliceMachine Custom Type Saved",
 } as const;
 export type HumanSegmentEventTypes =
@@ -62,6 +65,11 @@ type CustomTypeFieldAddedSegmentEvent = SegmentEvent<
 	}
 >;
 
+type CustomTypeSliceZoneUpdatedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.customType_sliceZoneUpdated,
+	{ customTypeId: string }
+>;
+
 type CustomTypeSavedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.customType_saved,
 	{ id: string; name: string; type: "repeatable" | "single" }
@@ -73,4 +81,5 @@ export type SegmentEvents =
 	| CommandInitEndSegmentEvent
 	| CustomTypeCreatedSegmentEvent
 	| CustomTypeFieldAddedSegmentEvent
+	| CustomTypeSliceZoneUpdatedSegmentEvent
 	| CustomTypeSavedSegmentEvent;

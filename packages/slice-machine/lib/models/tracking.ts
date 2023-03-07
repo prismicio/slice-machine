@@ -11,7 +11,6 @@ export enum EventNames {
   SliceSimulatorIsNotRunning = "SliceMachine Slice Simulator is not running",
   PageView = "SliceMachine Page View",
   OpenVideoTutorials = "SliceMachine Open Video Tutorials",
-  CustomTypeSliceZoneUpdated = "SliceMachine Slicezone Updated",
   SliceCreated = "SliceMachine Slice Created",
   OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
   OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
@@ -122,13 +121,6 @@ export interface OnboardingSkip extends BaseTrackingEvent {
   };
 }
 
-export interface CustomTypeSliceZoneUpdated extends BaseTrackingEvent {
-  name: EventNames.CustomTypeSliceZoneUpdated;
-  props: {
-    customTypeId: string;
-  };
-}
-
 export interface CreateSlice extends BaseTrackingEvent {
   name: EventNames.SliceCreated;
   props: {
@@ -186,7 +178,6 @@ export type TrackingEvents =
   | OnboardingStart
   | OnboardingContinue
   | OnboardingSkip
-  | CustomTypeSliceZoneUpdated
   | CreateSlice
   | SliceSimulatorOpen
   | SliceSimulatorSetup
