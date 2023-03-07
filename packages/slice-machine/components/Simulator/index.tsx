@@ -27,7 +27,7 @@ import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
 
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 import useThrottle from "@src/hooks/useThrottle";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -56,7 +56,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     useSliceMachineActions();
   const {
     framework,
-    version,
     simulatorUrl,
     iframeStatus,
     manifestStatus,
@@ -75,7 +74,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void Tracker.get().trackOpenSliceSimulator(framework, version);
+    void Tracker.get().trackOpenSliceSimulator(framework);
     Tracker.get().editor.startNewSession();
   }, []);
 
@@ -282,7 +281,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   key={variation.id}
                   content={editorContent}
                   onContentChange={(c) => {
-                    setEditorState(c as SharedSliceContent);
+                    setEditorState(c);
                     Tracker.get().editor.trackWidgetUsed(slice.model.id);
                   }}
                   sharedSlice={sharedSlice}

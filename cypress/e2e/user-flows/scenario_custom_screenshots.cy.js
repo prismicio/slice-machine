@@ -17,18 +17,16 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   const defaultScreenshot = "screenshots/preview_medium.png";
   const variationScreenshot = "screenshots/preview_large.png";
 
-  before("Cleanup local data and create a new slice", () => {
-    cy.clearProject();
-    cy.setSliceMachineUserContext({});
-    // Push all local changes in case there are deleted slices
-    // cy.pushLocalChanges(); // TODO: What if there aren't any?? This will fail
-    cy.createSlice(slice.library, slice.id, slice.name);
-  });
-
-  beforeEach("Start from the Slice page", () => {
-    cy.setSliceMachineUserContext({});
-    sliceBuilder.goTo(slice.library, slice.name);
-  });
+  beforeEach(
+    "Cleanup local data and create a new slice and start from the Slice page",
+    () => {
+      cy.clearProject();
+      cy.setSliceMachineUserContext({});
+      cy.maybePushChanges();
+      cy.createSlice(slice.library, slice.id, slice.name);
+      sliceBuilder.goTo(slice.library, slice.name);
+    }
+  );
 
   it("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
@@ -37,10 +35,14 @@ describe("I am an existing SM user and I want to upload screenshots on variation
 
     screenshotModal
       .verifyImageIsEmpty()
-      .uploadImage(wrongScreenshot)
+      .dragAndDropImage(wrongScreenshot)
       .verifyImageIs(wrongScreenshot)
-      .dragAndDropImage(defaultScreenshot)
+      .uploadImage(defaultScreenshot)
       .verifyImageIs(defaultScreenshot)
+      // .uploadImage(wrongScreenshot)
+      // .verifyImageIs(wrongScreenshot)
+      // .dragAndDropImage(defaultScreenshot)
+      // .verifyImageIs(defaultScreenshot)
       .close();
     sliceBuilder.imagePreview.isSameImageAs(defaultScreenshot);
 
@@ -71,7 +73,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceCard.content.should("not.include.text", "screenshots missing");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
-    cy.pushLocalChanges();
+    cy.pushLocalChanges(1);
   });
 
   it("Error displayed when non-image files are uploaded", () => {

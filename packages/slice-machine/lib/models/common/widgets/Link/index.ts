@@ -2,11 +2,9 @@ import * as yup from "yup";
 import Form, { FormFields } from "./Form";
 import { FiLink2 } from "react-icons/fi";
 
-import { MockConfigForm } from "./Mock/Form";
-
 import { Widget } from "../Widget";
-import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Link } from "@prismicio/types-internal/lib/customtypes";
+import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 /**
 * {
@@ -90,19 +88,19 @@ const schema = yup.object().shape({
 });
 
 export const LinkWidget: Widget<Link, typeof schema> = {
-  MockConfigForm,
+  MockConfigForm: DeprecatedMockConfigMessage,
   Meta,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   schema,
   Form,
   create: (label: string) => ({
-    type: WidgetTypes.Link,
+    type: "Link",
     config: {
       label,
       placeholder: "",
       select: null,
     },
   }),
-  TYPE_NAME: WidgetTypes.Link,
+  TYPE_NAME: "Link",
 };

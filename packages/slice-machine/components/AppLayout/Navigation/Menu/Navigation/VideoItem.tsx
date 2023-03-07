@@ -12,11 +12,9 @@ type VideoItemProps = {
   hasSeenTutorialsTooTip: boolean;
   onClose: () => void;
   framework: Frameworks;
-  sliceMachineVersion: string;
 };
 
 const VideoItem: FC<VideoItemProps> = ({
-  sliceMachineVersion,
   framework,
   hasSeenTutorialsTooTip,
   onClose,
@@ -25,11 +23,7 @@ const VideoItem: FC<VideoItemProps> = ({
   const videoUrl = VIDEO_YOUTUBE_PLAYLIST_LINK;
 
   const handleClose = () => {
-    void Tracker.get().trackClickOnVideoTutorials(
-      framework,
-      sliceMachineVersion,
-      videoUrl
-    );
+    void Tracker.get().trackClickOnVideoTutorials(framework, videoUrl);
     onClose();
   };
 

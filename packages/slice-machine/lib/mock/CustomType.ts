@@ -1,7 +1,8 @@
 import {
   CustomType,
   flattenWidgets,
-} from "@prismicio/types-internal/lib/customtypes/CustomType";
+  SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
   DocumentMockConfig,
   DocWidgetMockConfig,
@@ -9,13 +10,12 @@ import {
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
 import { buildWidgetMockConfig } from "./LegacyMockConfig";
-import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
+import { WidgetKey } from "@prismicio/types-internal/lib/common";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType";
 import { Document } from "@prismicio/types-internal/lib/content";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 function buildDocumentMockConfig(
   model: CustomType,

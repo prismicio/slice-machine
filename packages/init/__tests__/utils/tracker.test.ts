@@ -67,7 +67,9 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Download Library",
-      properties: { library: "libraryName" },
+      properties: {
+        library: "libraryName",
+      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -89,7 +91,9 @@ describe("InitTracker", () => {
     expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
       event: "SliceMachine Download Library",
-      properties: { library: "libraryName" },
+      properties: {
+        library: "libraryName",
+      },
     });
   });
 
@@ -190,7 +194,9 @@ describe("InitTracker", () => {
         repo: "repoName",
         result: "success",
       },
-      context: { groupId: { Repository: "repoName" } },
+      context: {
+        groupId: { Repository: "repoName" },
+      },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -218,7 +224,9 @@ describe("InitTracker", () => {
         repo: "repoName",
         result: "success",
       },
-      context: { groupId: { Repository: "repoName" } },
+      context: {
+        groupId: { Repository: "repoName" },
+      },
     });
   });
 
@@ -255,7 +263,9 @@ describe("InitTracker", () => {
         result: "error",
         error: "this is an error message",
       },
-      context: { groupId: { Repository: "repoName" } },
+      context: {
+        groupId: { Repository: "repoName" },
+      },
     });
   });
 });

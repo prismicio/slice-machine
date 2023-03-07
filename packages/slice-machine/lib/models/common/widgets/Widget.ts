@@ -1,9 +1,9 @@
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
 import { TabField } from "@slicemachine/core/build/models/CustomType";
+import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 export interface Widget<F extends TabField, S extends AnyObjectSchema> {
-  TYPE_NAME: WidgetTypes;
+  TYPE_NAME: FieldType;
   MockConfigForm?: {
     (): JSX.Element;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

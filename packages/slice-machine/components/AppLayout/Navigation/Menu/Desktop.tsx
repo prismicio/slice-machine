@@ -132,7 +132,6 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
           )}
           <VideoItem
             framework={framework}
-            sliceMachineVersion={changelog.currentVersion}
             hasSeenTutorialsTooTip={hasSeenTutorialsTooTip}
             onClose={setSeenTutorialsToolTip}
           />

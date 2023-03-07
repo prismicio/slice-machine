@@ -99,14 +99,13 @@ describe("SMTracker", () => {
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
 
-    await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
+    await smTracker.trackSliceSimulatorSetup(Frameworks.next);
 
     expect(trackerSpy).toHaveBeenCalled();
     expect(trackerSpy.mock.calls[0][0].body).toEqual({
       name: "SliceMachine Slice Simulator Setup",
       props: {
         framework: "next",
-        version: "0.2.0",
       },
     });
   });
@@ -116,13 +115,12 @@ describe("SMTracker", () => {
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
 
-    await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");
+    await smTracker.trackOpenSliceSimulator(Frameworks.next);
     expect(trackerSpy).toHaveBeenCalled();
     expect(trackerSpy.mock.calls[0][0].body).toEqual({
       name: "SliceMachine Slice Simulator Open",
       props: {
         framework: "next",
-        version: "0.2.0",
       },
     });
   });
@@ -187,13 +185,12 @@ describe("SMTracker", () => {
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
 
-    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0", "foo");
+    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "foo");
     expect(trackerSpy).toHaveBeenCalled();
     expect(trackerSpy.mock.calls[0][0].body).toEqual({
       name: "SliceMachine Open Video Tutorials",
       props: {
         framework: Frameworks.next,
-        slicemachineVersion: "0.2.0",
         video: "foo",
       },
     });
@@ -204,7 +201,7 @@ describe("SMTracker", () => {
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
 
-    await smTracker.trackPageView(Frameworks.next, "0.2.0");
+    await smTracker.trackPageView(Frameworks.next);
     expect(trackerSpy).toHaveBeenCalled();
     expect(trackerSpy.mock.calls[0][0].body).toEqual({
       name: "SliceMachine Page View",
@@ -213,7 +210,6 @@ describe("SMTracker", () => {
         path: "/",
         referrer: "",
         search: "",
-        slicemachineVersion: "0.2.0",
         title: "",
         url: "http://localhost/",
       },
@@ -226,7 +222,7 @@ describe("SMTracker", () => {
     interceptTracker(trackerSpy);
     const repoName = "wooooooooo";
 
-    await smTracker.groupLibraries([], repoName, "0.2.0");
+    await smTracker.groupLibraries([], repoName);
     expect(trackerSpy).toHaveBeenCalled();
     expect(trackerSpy.mock.calls[0][0].body).toEqual({
       name: EventNames.GroupLibraries,
@@ -236,7 +232,6 @@ describe("SMTracker", () => {
         downloadedLibsCount: 0,
         manualLibsCount: 0,
         npmLibsCount: 0,
-        slicemachineVersion: "0.2.0",
       },
     });
   });
@@ -246,7 +241,7 @@ describe("SMTracker", () => {
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
 
-    await smTracker.groupLibraries([], undefined, "0.2.0");
+    await smTracker.groupLibraries([], undefined);
     expect(trackerSpy).not.toHaveBeenCalled();
   });
 
@@ -289,16 +284,12 @@ describe("SMTracker", () => {
     await smTracker.trackOnboardingContinue(
       EventNames.OnboardingContinueScreen3
     );
-    await smTracker.trackClickOnVideoTutorials(
-      Frameworks.next,
-      "0.2.0",
-      "myfakeVideo"
-    );
-    await smTracker.trackPageView(Frameworks.next, "0.2.0");
+    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "myfakeVideo");
+    await smTracker.trackPageView(Frameworks.next);
     await smTracker.trackOnboardingStart();
-    await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");
-    await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
-    await smTracker.groupLibraries([], "repoName", "0.2.0");
+    await smTracker.trackOpenSliceSimulator(Frameworks.next);
+    await smTracker.trackSliceSimulatorSetup(Frameworks.next);
+    await smTracker.groupLibraries([], "repoName");
     expect(trackerSpy).not.toHaveBeenCalled();
   });
 });

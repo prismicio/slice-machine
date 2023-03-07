@@ -104,6 +104,13 @@ async function init() {
 
   setVersion(cwd);
 
+  // Info about tracking
+  if (isTrackingAvailable) {
+    logs.writeInfo(
+      "We use tracking tools to improve user experience. Learn more: https://prismic.io/docs/slice-machine#tracking"
+    );
+  }
+
   // Ask the user to run slice-machine.
   displayFinalMessage(cwd, wasStarter, repository, client.apisEndpoints.Wroom);
 }

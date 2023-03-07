@@ -13,10 +13,7 @@ import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {
-  getCurrentVersion,
-  getLinkToStorybookDocs,
-} from "@src/modules/environment";
+import { getLinkToStorybookDocs } from "@src/modules/environment";
 import Tracker from "@src/tracking/client";
 import Video from "@components/CloudVideo";
 
@@ -47,8 +44,7 @@ const SimulatorNotSupportedTooltip: React.FC<{
 const SimulatorOnboardingTooltip: React.FC<{
   framework: Frameworks;
   onCloseToolTip: () => void;
-  version: string;
-}> = ({ framework, onCloseToolTip, version }) => {
+}> = ({ framework, onCloseToolTip }) => {
   const { theme } = useThemeUI();
   return (
     <ReactTooltip
@@ -92,7 +88,6 @@ const SimulatorOnboardingTooltip: React.FC<{
           onPlay={() => {
             void Tracker.get().trackClickOnVideoTutorials(
               framework,
-              version,
               VIDEO_SIMULATOR_TOOLTIP
             );
           }}
@@ -149,11 +144,10 @@ const SimulatorButton: React.FC<{
 
   const { setSeenSimulatorToolTip } = useSliceMachineActions();
 
-  const { hasSeenSimulatorTooTip, linkToStorybookDocs, version } = useSelector(
+  const { hasSeenSimulatorTooTip, linkToStorybookDocs } = useSelector(
     (store: SliceMachineStoreType) => ({
       hasSeenSimulatorTooTip: userHasSeenSimulatorToolTip(store),
       linkToStorybookDocs: getLinkToStorybookDocs(store),
-      version: getCurrentVersion(store),
     })
   );
 
@@ -214,7 +208,6 @@ const SimulatorButton: React.FC<{
           <SimulatorOnboardingTooltip
             framework={framework}
             onCloseToolTip={onCloseToolTip}
-            version={version}
           />
         ) : isTouched ? (
           <NeedToSaveTooltip />

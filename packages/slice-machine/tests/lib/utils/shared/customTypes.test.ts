@@ -1,5 +1,4 @@
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 describe("Slice IO", () => {
@@ -25,13 +24,13 @@ describe("Slice IO", () => {
           {
             key: "slice_id",
             value: {
-              type: SlicesTypes.SharedSlice,
+              type: "SharedSlice",
             },
           },
           {
             key: "slice_2",
             value: {
-              type: SlicesTypes.SharedSlice,
+              type: "SharedSlice",
             },
           },
         ],
@@ -61,7 +60,7 @@ describe("Slice IO", () => {
               {
                 key: "slice_2",
                 value: {
-                  type: SlicesTypes.SharedSlice,
+                  type: "SharedSlice",
                 },
               },
             ],

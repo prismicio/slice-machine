@@ -62,7 +62,7 @@ export class SMTracker {
 
   /** Public methods **/
 
-  async trackPageView(framework: Frameworks, version: string): Promise<void> {
+  async trackPageView(framework: Frameworks): Promise<void> {
     const payload: PageView = {
       name: EventNames.PageView,
       props: {
@@ -72,7 +72,6 @@ export class SMTracker {
         title: document.title,
         referrer: document.referrer,
         framework,
-        slicemachineVersion: version,
       },
     };
 
@@ -85,8 +84,7 @@ export class SMTracker {
 
   async groupLibraries(
     libs: readonly LibraryUI[],
-    repoName: string | undefined,
-    version: string
+    repoName: string | undefined
   ): Promise<void> {
     if (repoName === undefined || !this.#isTrackingActive) {
       return;
@@ -104,7 +102,6 @@ export class SMTracker {
         downloadedLibs: downloadedLibs.map((l) =>
           l.meta.name != null ? l.meta.name : "Unknown"
         ),
-        slicemachineVersion: version,
       },
     };
 
@@ -115,14 +112,12 @@ export class SMTracker {
 
   async trackClickOnVideoTutorials(
     framework: Frameworks,
-    version: string,
     video: string
   ): Promise<void> {
     const payload: OpenVideoTutorials = {
       name: EventNames.OpenVideoTutorials,
       props: {
         framework,
-        slicemachineVersion: version,
         video,
       },
     };
@@ -145,24 +140,18 @@ export class SMTracker {
     return this.#trackEvent(payload);
   }
 
-  async trackSliceSimulatorSetup(
-    framework: Frameworks,
-    version: string
-  ): Promise<void> {
+  async trackSliceSimulatorSetup(framework: Frameworks): Promise<void> {
     const payload: SliceSimulatorSetup = {
       name: EventNames.SliceSimulatorSetup,
-      props: { framework, version },
+      props: { framework },
     };
     return this.#trackEvent(payload);
   }
 
-  async trackOpenSliceSimulator(
-    framework: Frameworks,
-    version: string
-  ): Promise<void> {
+  async trackOpenSliceSimulator(framework: Frameworks): Promise<void> {
     const payload: SliceSimulatorOpen = {
       name: EventNames.SliceSimulatorOpen,
-      props: { framework, version },
+      props: { framework },
     };
 
     return this.#trackEvent(payload);
