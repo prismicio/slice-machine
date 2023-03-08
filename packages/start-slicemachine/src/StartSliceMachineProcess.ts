@@ -64,9 +64,9 @@ export class StartSliceMachineProcess {
 	 * Runs the process.
 	 */
 	async run(): Promise<void> {
-		await migrate(this._sliceMachineManager);
 		await this._sliceMachineManager.plugins.initPlugins();
 
+		await migrate(this._sliceMachineManager);
 		await this._validateProject();
 
 		const server = await createSliceMachineServer({
