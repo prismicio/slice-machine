@@ -18,7 +18,7 @@ import serveStatic from "serve-static";
 import cors from "cors";
 import fetch from "node-fetch";
 import { createStaticFileEventHandler } from "./createStaticFileEventHandler";
-import { default as sentryHandler } from "./sentry";
+import { default as sentryHandler } from "./sentryHandler";
 
 type CreateSliceMachineServerArgs = {
 	sliceMachineManager: SliceMachineManager;

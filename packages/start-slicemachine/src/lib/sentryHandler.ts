@@ -2,8 +2,8 @@
 // adapted from https://github.com/getsentry/examples/blob/master/tunneling/nextjs/pages/api/tunnel.js
 
 import * as url from "url";
-const axios = require("axios");
 import { H3Event, readRawBody } from "h3";
+import fetch from "node-fetch";
 
 async function handler(event: H3Event): Promise<Record<string, never>> {
 	try {
@@ -22,7 +22,10 @@ async function handler(event: H3Event): Promise<Record<string, never>> {
 		const projectId = (path?.endsWith("/") ? path.slice(0, -1) : path) ?? "";
 
 		const sentryUrl = `https://${host}/api/${projectId}/envelope/`;
-		await axios.post(sentryUrl, envelope);
+		await fetch(sentryUrl, {
+			method: "POST",
+			body: envelope,
+		});
 	} catch (e) {
 		// TODO add this back when we have the express
 		//   captureException(e);
