@@ -66,10 +66,11 @@ export class ProjectManager extends BaseManager {
 			if (maybeDeprecatedConfigPath) {
 				fs.rename(maybeDeprecatedConfigPath, path.join(this.cwd, SLICE_MACHINE_CONFIG_FILENAME))
 				this._cachedSliceMachineConfigPath = maybeDeprecatedConfigPath;
+			} else {
+				throw new Error(
+					`Could not find a ${SLICE_MACHINE_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
+				);
 			}
-			throw new Error(
-				`Could not find a ${SLICE_MACHINE_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
-			);
 		}
 
 		return this._cachedSliceMachineConfigPath;
