@@ -18,7 +18,6 @@ const SliceMachineConfigPluginRegistrationCodec = t.union([
 
 const SliceMachineConfigCodec = t.intersection([
 	t.type({
-		_latest: t.string,
 		repositoryName: t.string,
 		adapter: SliceMachineConfigPluginRegistrationCodec,
 	}),

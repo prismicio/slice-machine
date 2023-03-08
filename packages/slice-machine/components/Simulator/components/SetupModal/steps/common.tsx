@@ -97,7 +97,6 @@ export const CreatePage =
 export const UpdateSmJson =
   ({
     code = `{
-  "_latest": "0.3.0",
   "apiEndpoint": "https://project.prismic.io/api/v2",
   "libraries": [
     "@/slices"

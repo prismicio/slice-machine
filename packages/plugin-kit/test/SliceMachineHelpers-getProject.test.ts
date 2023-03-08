@@ -16,7 +16,6 @@ it("returns Slice Machine project metadata", async () => {
 	);
 
 	const smJSON: SliceMachineConfig = {
-		_latest: "_latest",
 		repositoryName: "repositoryName",
 		adapter: "adapter",
 	};

@@ -63,6 +63,7 @@ export class StartSliceMachineProcess {
 	 * Runs the process.
 	 */
 	async run(): Promise<void> {
+		console.log(this._sliceMachineManager)
 		await this._sliceMachineManager.plugins.initPlugins();
 
 		await this._validateProject();
