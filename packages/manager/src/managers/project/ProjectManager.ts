@@ -43,8 +43,10 @@ export class ProjectManager extends BaseManager {
 			return await locateFileUpward(SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME, {
 				startDir: this.cwd,
 			});
-		} catch (error) {}
-		return null;
+		} catch (error) {
+		} finally {
+			return null;
+		}
 	}
 
 	async getSliceMachineConfigPath(

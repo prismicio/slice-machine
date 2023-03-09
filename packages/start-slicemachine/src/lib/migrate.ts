@@ -44,6 +44,7 @@ const migrateMockFile = (
 			if (fsSync.existsSync(deprecatedPathToMocks)) {
 				return fsSync.readFileSync(deprecatedPathToMocks, "utf-8");
 			}
+
 			return null;
 		})();
 
@@ -59,7 +60,7 @@ const migrateMockFile = (
 	} catch (error) {}
 };
 
-export const migrate = async (manager: SliceMachineManager) => {
+export const migrate = async (manager: SliceMachineManager): Promise<void> => {
 	try {
 		const allSlices = await manager.slices.readAllSlices();
 		const sharedSlices = allSlices.models.reduce(
