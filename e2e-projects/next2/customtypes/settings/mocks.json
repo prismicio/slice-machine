@@ -1,0 +1,67 @@
+{
+  "name": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "heading1",
+        "content": {
+          "text": "Pupil"
+        }
+      }
+    ]
+  },
+  "description": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Id mollit dolore sint tempor nisi velit elit non amet aliqua ut et ipsum nisi."
+        }
+      }
+    ]
+  },
+  "profilePicture": {
+    "__TYPE__": "ImageContent",
+    "origin": {
+      "id": "main",
+      "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117",
+      "width": 3810,
+      "height": 5715
+    },
+    "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117?rect=0%2C953%2C3810%2C3810&w=2000&h=2000",
+    "width": 2000,
+    "height": 2000,
+    "edit": {
+      "zoom": 1,
+      "crop": {
+        "x": 0,
+        "y": 953
+      },
+      "background": "transparent"
+    },
+    "thumbnails": {}
+  },
+  "newsletterDescription": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Laboris non pariatur duis qui ea reprehenderit tempor fugiat tempor mollit consectetur laborum."
+        }
+      }
+    ]
+  },
+  "newsletterDisclaimer": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Nisi irure nostrud eu consectetur dolore reprehenderit exercitation ad reprehenderit et adipisicing nostrud esse."
+        }
+      }
+    ]
+  }
+}
