@@ -22,25 +22,6 @@ describe("SMTracker", () => {
     vi.clearAllMocks();
   });
 
-  test("should send a identify event", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    const smTracker = new SMTracker();
-    await smTracker.identifyUser();
-    expect(trackingSpy).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        body: {
-          name: EventNames.IdentifyUser,
-        },
-      }),
-      expect.anything(),
-      expect.anything()
-    );
-  });
-
   test("should send a group libraries event", async (ctx) => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))

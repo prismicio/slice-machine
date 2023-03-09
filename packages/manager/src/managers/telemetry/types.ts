@@ -19,6 +19,7 @@ export const SegmentEventType = {
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
 	customType_saved: "custom-type:saved",
 	slice_created: "slice:created",
+	identifyUser: "identify-user",
 } as const;
 type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
 
@@ -50,6 +51,7 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slicezone Updated",
 	[SegmentEventType.customType_saved]: "SliceMachine Custom Type Saved",
 	[SegmentEventType.slice_created]: "SliceMachine Slice Created",
+	[SegmentEventType.identifyUser]: "IdentifyUser",
 } as const;
 export type HumanSegmentEventTypes =
 	typeof HumanSegmentEventType[keyof typeof HumanSegmentEventType];
@@ -174,6 +176,10 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 	{ id: string; name: string; library: string }
 >;
 
+type IdentifyUserSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.identifyUser
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -194,4 +200,5 @@ export type SegmentEvents =
 	| CustomTypeFieldAddedSegmentEvent
 	| CustomTypeSliceZoneUpdatedSegmentEvent
 	| CustomTypeSavedSegmentEvent
-	| SliceCreatedSegmentEvent;
+	| SliceCreatedSegmentEvent
+	| IdentifyUserSegmentEvent;

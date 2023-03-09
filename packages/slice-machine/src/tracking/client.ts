@@ -3,7 +3,6 @@ import { LibraryUI } from "../../lib/models/common/LibraryUI";
 import {
   EventNames,
   TrackingEvents,
-  IdentifyUser,
   GroupLibraries,
   ScreenshotTaken,
   ChangesPushed,
@@ -31,25 +30,7 @@ export class SMTracker {
     );
   }
 
-  async #identify(): Promise<void> {
-    if (!this.#isTrackingActive) {
-      return;
-    }
-
-    const payload: IdentifyUser = {
-      name: EventNames.IdentifyUser,
-    };
-
-    return this.#client(payload).catch(() =>
-      console.warn(`Couldn't report identify: Tracking error`)
-    );
-  }
-
   /** Public methods **/
-
-  async identifyUser(): Promise<void> {
-    await this.#identify();
-  }
 
   async groupLibraries(
     libs: readonly LibraryUI[],

@@ -42,7 +42,7 @@ const useSMTracker = () => {
 
   // Handles if the user login/logout outside of the app.
   useEffect(() => {
-    if (shortId && intercomHash) void Tracker.get().identifyUser();
+    if (shortId && intercomHash) void track({ event: "identify-user" });
   }, [shortId, intercomHash]);
 
   // For handling page change

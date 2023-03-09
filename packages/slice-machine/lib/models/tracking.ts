@@ -2,7 +2,6 @@
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  IdentifyUser = "IdentifyUser",
   GroupLibraries = "GroupLibraries",
 
   ScreenshotTaken = "SliceMachine Screenshot Taken",
@@ -16,10 +15,6 @@ type BaseTrackingEvent = {
   name: EventNames;
   props?: Record<string, unknown>;
 };
-
-export interface IdentifyUser extends BaseTrackingEvent {
-  name: EventNames.IdentifyUser;
-}
 
 export interface GroupLibraries extends BaseTrackingEvent {
   name: EventNames.GroupLibraries;
@@ -73,7 +68,6 @@ export interface EditorWidgetUsed extends BaseTrackingEvent {
 }
 
 export type TrackingEvents =
-  | IdentifyUser
   | GroupLibraries
   | ScreenshotTaken
   | ChangesPushed
@@ -91,10 +85,4 @@ export function isGroupLibrariesEvent(
   payload: TrackingEvents
 ): payload is GroupLibraries {
   return payload.name === EventNames.GroupLibraries;
-}
-
-export function isIdentifyUserEvent(
-  payload: TrackingEvents
-): payload is IdentifyUser {
-  return payload.name === EventNames.IdentifyUser;
 }
