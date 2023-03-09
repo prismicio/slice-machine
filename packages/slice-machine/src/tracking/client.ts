@@ -6,7 +6,6 @@ import {
   TrackingEvents,
   IdentifyUser,
   GroupLibraries,
-  PageView,
   OpenVideoTutorials,
   OnboardingContinue,
   CreateSlice,
@@ -51,23 +50,6 @@ export class SMTracker {
   }
 
   /** Public methods **/
-
-  async trackPageView(framework: Frameworks, version: string): Promise<void> {
-    const payload: PageView = {
-      name: EventNames.PageView,
-      props: {
-        url: window.location.href,
-        path: window.location.pathname,
-        search: window.location.search,
-        title: document.title,
-        referrer: document.referrer,
-        framework,
-        slicemachineVersion: version,
-      },
-    };
-
-    await this.#trackEvent(payload);
-  }
 
   async identifyUser(): Promise<void> {
     await this.#identify();

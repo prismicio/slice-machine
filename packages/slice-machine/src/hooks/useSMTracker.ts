@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import Tracker from "@src/tracking/client";
+import { track } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
@@ -36,7 +37,7 @@ const useSMTracker = () => {
     void Tracker.get().groupLibraries(libraries, repoName, currentVersion);
 
     // For initial loading
-    void Tracker.get().trackPageView(framework, currentVersion);
+    void trackPageView(framework, currentVersion);
   }, []);
 
   // Handles if the user login/logout outside of the app.
@@ -47,7 +48,7 @@ const useSMTracker = () => {
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void Tracker.get().trackPageView(framework, currentVersion);
+      void trackPageView(framework, currentVersion);
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views
@@ -64,3 +65,19 @@ const useSMTracker = () => {
 };
 
 export default useSMTracker;
+
+function trackPageView(
+  framework: string,
+  version: string
+): ReturnType<typeof track> {
+  return track({
+    event: "page-view",
+    url: window.location.href,
+    path: window.location.pathname,
+    search: window.location.search,
+    title: document.title,
+    referrer: document.referrer,
+    framework,
+    slicemachineVersion: version,
+  });
+}

@@ -154,35 +154,6 @@ describe("SMTracker", () => {
     );
   });
 
-  test("should send a page view event", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    const smTracker = new SMTracker();
-
-    await smTracker.trackPageView(Frameworks.next, "0.2.0");
-    expect(trackingSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        body: {
-          name: "SliceMachine Page View",
-          props: {
-            framework: Frameworks.next,
-            path: "/",
-            referrer: "",
-            search: "",
-            slicemachineVersion: "0.2.0",
-            title: "",
-            url: "http://localhost:3000/",
-          },
-        },
-      }),
-      expect.anything(),
-      expect.anything()
-    );
-  });
-
   test("should send a group libraries event", async (ctx) => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))

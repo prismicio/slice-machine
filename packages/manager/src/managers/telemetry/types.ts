@@ -8,6 +8,7 @@ export const SegmentEventType = {
 	sliceSimulator_setup: "slice-simulator:setup",
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
+	pageView: "page-view",
 	customType_created: "custom-type:created",
 	customType_fieldAdded: "custom-type:field-added",
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
@@ -26,6 +27,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sliceSimulator_open]: "SliceMachine Slice Simulator Open",
 	[SegmentEventType.sliceSimulator_isNotRunning]:
 		"SliceMachine Slice Simulator is not running",
+	[SegmentEventType.pageView]: "SliceMachine Page View",
 	[SegmentEventType.customType_created]: "SliceMachine Custom Type Created",
 	[SegmentEventType.customType_fieldAdded]:
 		"SliceMachine Custom Type Field Added",
@@ -92,6 +94,19 @@ type SliceSimulatorIsNotRunningSegmentEvent = SegmentEvent<
 	{ framework: string }
 >;
 
+type PageViewSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.pageView,
+	{
+		url: string;
+		path: string;
+		search: string;
+		title: string;
+		referrer: string;
+		framework: string;
+		slicemachineVersion: string;
+	}
+>;
+
 type CustomTypeCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.customType_created,
 	{ id: string; name: string; type: "repeatable" | "single" }
@@ -127,6 +142,7 @@ export type SegmentEvents =
 	| SliceSimulatorSetupSegmentEvent
 	| SliceSimulatorOpenSegmentEvent
 	| SliceSimulatorIsNotRunningSegmentEvent
+	| PageViewSegmentEvent
 	| CustomTypeCreatedSegmentEvent
 	| CustomTypeFieldAddedSegmentEvent
 	| CustomTypeSliceZoneUpdatedSegmentEvent

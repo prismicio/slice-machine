@@ -3,7 +3,6 @@ import { Frameworks } from "@lib/models/common/Framework";
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  PageView = "SliceMachine Page View",
   OpenVideoTutorials = "SliceMachine Open Video Tutorials",
   SliceCreated = "SliceMachine Slice Created",
   OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
@@ -25,19 +24,6 @@ type BaseTrackingEvent = {
   name: EventNames;
   props?: Record<string, unknown>;
 };
-
-export interface PageView extends BaseTrackingEvent {
-  name: EventNames.PageView;
-  props: {
-    url: string;
-    path: string;
-    search: string;
-    title: string;
-    referrer: string;
-    framework: Frameworks;
-    slicemachineVersion: string;
-  };
-}
 
 export interface IdentifyUser extends BaseTrackingEvent {
   name: EventNames.IdentifyUser;
@@ -121,7 +107,6 @@ export interface EditorWidgetUsed extends BaseTrackingEvent {
 }
 
 export type TrackingEvents =
-  | PageView
   | IdentifyUser
   | GroupLibraries
   | OpenVideoTutorials
