@@ -11,7 +11,6 @@ import {
   SliceSimulatorSetup,
   SliceSimulatorOpen,
   OnboardingContinue,
-  OnboardingSkip,
   CreateSlice,
   ScreenshotTaken,
   ChangesPushed,
@@ -161,17 +160,6 @@ export class SMTracker {
     const payload: OnboardingContinue = {
       name: continueOnboardingEventType,
     };
-    return this.#trackEvent(payload);
-  }
-
-  async trackOnboardingSkip(screenSkipped: number): Promise<void> {
-    const payload: OnboardingSkip = {
-      name: EventNames.OnboardingSkip,
-      props: {
-        screenSkipped,
-      },
-    };
-
     return this.#trackEvent(payload);
   }
 

@@ -197,8 +197,7 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 
       const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
       if (hasTheUserSkippedTheOnboarding) {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        Tracker.get().trackOnboardingSkip(step);
+        void track({ event: "onboarding:skip", screenSkipped: step });
         return;
       }
 
