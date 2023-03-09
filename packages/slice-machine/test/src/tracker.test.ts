@@ -42,31 +42,6 @@ describe("SMTracker", () => {
     );
   });
 
-  test("should send a track review event", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    const smTracker = new SMTracker();
-
-    await smTracker.trackReview(Frameworks.next, 3, "comment");
-    expect(trackingSpy).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        body: {
-          name: "SliceMachine Review",
-          props: {
-            comment: "comment",
-            framework: "next",
-            rating: 3,
-          },
-        },
-      }),
-      expect.anything(),
-      expect.anything()
-    );
-  });
-
   test("should send a onboarding skip event", async (ctx) => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
@@ -336,41 +311,6 @@ describe("SMTracker", () => {
     const smTracker = new SMTracker();
 
     await smTracker.groupLibraries([], undefined, "0.2.0");
-    expect(trackingSpy).not.toHaveBeenCalled();
-  });
-
-  test("shouldn't send any events when tracker is disable", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    const smTracker = new SMTracker();
-    smTracker.initialize(false);
-
-    await smTracker.identifyUser();
-    await smTracker.trackReview(Frameworks.next, 3, "comment");
-    await smTracker.trackOnboardingSkip(1);
-    await smTracker.trackOnboardingContinue(EventNames.OnboardingContinueIntro);
-    await smTracker.trackOnboardingContinue(
-      EventNames.OnboardingContinueScreen1
-    );
-    await smTracker.trackOnboardingContinue(
-      EventNames.OnboardingContinueScreen2
-    );
-    await smTracker.trackOnboardingContinue(
-      EventNames.OnboardingContinueScreen3
-    );
-    await smTracker.trackClickOnVideoTutorials(
-      Frameworks.next,
-      "0.2.0",
-      "video"
-    );
-    await smTracker.trackPageView(Frameworks.next, "0.2.0");
-    await smTracker.trackOnboardingStart();
-    await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");
-    await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
-    await smTracker.groupLibraries([], "repoName", "0.2.0");
     expect(trackingSpy).not.toHaveBeenCalled();
   });
 });

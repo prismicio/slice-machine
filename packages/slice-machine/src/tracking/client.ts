@@ -8,7 +8,6 @@ import {
   GroupLibraries,
   PageView,
   OpenVideoTutorials,
-  Review,
   SliceSimulatorSetup,
   SliceSimulatorOpen,
   OnboardingStart,
@@ -123,22 +122,6 @@ export class SMTracker {
       },
     };
     await this.#trackEvent(payload);
-  }
-
-  async trackReview(
-    framework: Frameworks,
-    rating: number,
-    comment: string
-  ): Promise<void> {
-    const payload: Review = {
-      name: EventNames.Review,
-      props: {
-        framework,
-        rating,
-        comment,
-      },
-    };
-    return this.#trackEvent(payload);
   }
 
   async trackSliceSimulatorSetup(

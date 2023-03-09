@@ -3,7 +3,6 @@ import { Frameworks } from "@lib/models/common/Framework";
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  Review = "SliceMachine Review",
   OnboardingStart = "SliceMachine Onboarding Start",
   OnboardingSkip = "SliceMachine Onboarding Skip",
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
@@ -67,15 +66,6 @@ export interface OpenVideoTutorials extends BaseTrackingEvent {
     framework: Frameworks;
     slicemachineVersion: string; // why is this one different ?
     video: string;
-  };
-}
-
-export interface Review extends BaseTrackingEvent {
-  name: EventNames.Review;
-  props: {
-    framework: Frameworks;
-    rating: number;
-    comment: string;
   };
 }
 
@@ -174,7 +164,6 @@ export type TrackingEvents =
   | IdentifyUser
   | GroupLibraries
   | OpenVideoTutorials
-  | Review
   | OnboardingStart
   | OnboardingContinue
   | OnboardingSkip
