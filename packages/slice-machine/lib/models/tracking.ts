@@ -3,7 +3,6 @@ import { Frameworks } from "@lib/models/common/Framework";
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  OnboardingStart = "SliceMachine Onboarding Start",
   OnboardingSkip = "SliceMachine Onboarding Skip",
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
@@ -92,10 +91,6 @@ export interface SliceSimulatorIsNotRunning extends BaseTrackingEvent {
   };
 }
 
-export interface OnboardingStart extends BaseTrackingEvent {
-  name: EventNames.OnboardingStart;
-}
-
 export interface OnboardingContinue extends BaseTrackingEvent {
   name:
     | EventNames.OnboardingContinueIntro
@@ -164,7 +159,6 @@ export type TrackingEvents =
   | IdentifyUser
   | GroupLibraries
   | OpenVideoTutorials
-  | OnboardingStart
   | OnboardingContinue
   | OnboardingSkip
   | CreateSlice

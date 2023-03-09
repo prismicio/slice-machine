@@ -10,7 +10,6 @@ import {
   OpenVideoTutorials,
   SliceSimulatorSetup,
   SliceSimulatorOpen,
-  OnboardingStart,
   OnboardingContinue,
   OnboardingSkip,
   CreateSlice,
@@ -153,13 +152,6 @@ export class SMTracker {
       props: { framework },
     };
 
-    return this.#trackEvent(payload);
-  }
-
-  async trackOnboardingStart(): Promise<void> {
-    const payload: OnboardingStart = {
-      name: EventNames.OnboardingStart,
-    };
     return this.#trackEvent(payload);
   }
 

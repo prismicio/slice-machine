@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "../src/modules/useSliceMachineActions";
 import Tracker from "../src/tracking/client";
+import { track } from "@src/apiClient";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
 import { EventNames } from "@lib/models/tracking";
 import { getCurrentVersion, getFramework } from "../src/modules/environment";
@@ -188,8 +189,7 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 
   useEffect(() => {
     // on mount
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    Tracker.get().trackOnboardingStart();
+    void track({ event: "onboarding:start" });
 
     // on unmount
     return () => {
