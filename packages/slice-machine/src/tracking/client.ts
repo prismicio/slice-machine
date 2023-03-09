@@ -8,7 +8,6 @@ import {
   GroupLibraries,
   PageView,
   OpenVideoTutorials,
-  SliceSimulatorSetup,
   SliceSimulatorOpen,
   OnboardingContinue,
   CreateSlice,
@@ -120,17 +119,6 @@ export class SMTracker {
       },
     };
     await this.#trackEvent(payload);
-  }
-
-  async trackSliceSimulatorSetup(
-    framework: Frameworks,
-    version: string
-  ): Promise<void> {
-    const payload: SliceSimulatorSetup = {
-      name: EventNames.SliceSimulatorSetup,
-      props: { framework, version },
-    };
-    return this.#trackEvent(payload);
   }
 
   async trackOpenSliceSimulator(

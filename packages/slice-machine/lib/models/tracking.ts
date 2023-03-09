@@ -3,7 +3,6 @@ import { Frameworks } from "@lib/models/common/Framework";
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
   SliceSimulatorIsNotRunning = "SliceMachine Slice Simulator is not running",
   PageView = "SliceMachine Page View",
@@ -64,14 +63,6 @@ export interface OpenVideoTutorials extends BaseTrackingEvent {
     framework: Frameworks;
     slicemachineVersion: string; // why is this one different ?
     video: string;
-  };
-}
-
-export interface SliceSimulatorSetup extends BaseTrackingEvent {
-  name: EventNames.SliceSimulatorSetup;
-  props: {
-    framework: Frameworks;
-    version: string;
   };
 }
 
@@ -154,7 +145,6 @@ export type TrackingEvents =
   | OnboardingContinue
   | CreateSlice
   | SliceSimulatorOpen
-  | SliceSimulatorSetup
   | SliceSimulatorIsNotRunning
   | ScreenshotTaken
   | ChangesPushed

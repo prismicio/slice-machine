@@ -42,31 +42,6 @@ describe("SMTracker", () => {
     );
   });
 
-  test("should send a slice preview setup event", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    const smTracker = new SMTracker();
-
-    await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
-
-    expect(trackingSpy).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        body: {
-          name: "SliceMachine Slice Simulator Setup",
-          props: {
-            framework: "next",
-            version: "0.2.0",
-          },
-        },
-      }),
-      expect.anything(),
-      expect.anything()
-    );
-  });
-
   test("should send a open slice preview event", async (ctx) => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))

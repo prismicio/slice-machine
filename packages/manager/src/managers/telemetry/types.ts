@@ -5,6 +5,7 @@ export const SegmentEventType = {
 	review: "review",
 	onboarding_start: "onboarding:start",
 	onboarding_skip: "onboarding:skip",
+	sliceSimulator_setup: "slice-simulator:setup",
 	customType_created: "custom-type:created",
 	customType_fieldAdded: "custom-type:field-added",
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
@@ -19,6 +20,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.review]: "SliceMachine Review",
 	[SegmentEventType.onboarding_start]: "SliceMachine Onboarding Start",
 	[SegmentEventType.onboarding_skip]: "SliceMachine Onboarding Skip",
+	[SegmentEventType.sliceSimulator_setup]: "SliceMachine Slice Simulator Setup",
 	[SegmentEventType.customType_created]: "SliceMachine Custom Type Created",
 	[SegmentEventType.customType_fieldAdded]:
 		"SliceMachine Custom Type Field Added",
@@ -70,6 +72,11 @@ type OnboardingSkipSegmentEvent = SegmentEvent<
 	{ screenSkipped: number }
 >;
 
+type SliceSimulatorSetupSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.sliceSimulator_setup,
+	{ framework: string; version: string }
+>;
+
 type CustomTypeCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.customType_created,
 	{ id: string; name: string; type: "repeatable" | "single" }
@@ -102,6 +109,7 @@ export type SegmentEvents =
 	| ReviewSegmentEvent
 	| OnboardingStartSegmentEvent
 	| OnboardingSkipSegmentEvent
+	| SliceSimulatorSetupSegmentEvent
 	| CustomTypeCreatedSegmentEvent
 	| CustomTypeFieldAddedSegmentEvent
 	| CustomTypeSliceZoneUpdatedSegmentEvent
