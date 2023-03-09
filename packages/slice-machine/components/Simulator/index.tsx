@@ -116,7 +116,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
-      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
+      void track({ event: "slice-simulator:is-not-running", framework });
     }
   }, [currentState, framework]);
 

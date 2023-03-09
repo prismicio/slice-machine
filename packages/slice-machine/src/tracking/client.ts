@@ -12,7 +12,6 @@ import {
   CreateSlice,
   ScreenshotTaken,
   ChangesPushed,
-  SliceSimulatorIsNotRunning,
   ChangesLimitReach,
 } from "../../lib/models/tracking";
 
@@ -118,15 +117,6 @@ export class SMTracker {
       },
     };
     await this.#trackEvent(payload);
-  }
-
-  async trackSliceSimulatorIsNotRunning(framework: Frameworks): Promise<void> {
-    const payload: SliceSimulatorIsNotRunning = {
-      name: EventNames.SliceSimulatorIsNotRunning,
-      props: { framework },
-    };
-
-    return this.#trackEvent(payload);
   }
 
   async trackOnboardingContinue(
