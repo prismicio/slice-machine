@@ -2,7 +2,6 @@
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  ScreenshotTaken = "SliceMachine Screenshot Taken",
   ChangesPushed = "SliceMachine Changes Pushed",
   ChangesLimitReach = "SliceMachine Changes Limit Reach",
 
@@ -13,14 +12,6 @@ type BaseTrackingEvent = {
   name: EventNames;
   props?: Record<string, unknown>;
 };
-
-export interface ScreenshotTaken extends BaseTrackingEvent {
-  name: EventNames.ScreenshotTaken;
-  props: {
-    type: "custom" | "automatic";
-    method: "fromSimulator" | "upload" | "dragAndDrop";
-  };
-}
 
 export interface ChangesPushed extends BaseTrackingEvent {
   name: EventNames.ChangesPushed;
@@ -54,7 +45,6 @@ export interface EditorWidgetUsed extends BaseTrackingEvent {
 }
 
 export type TrackingEvents =
-  | ScreenshotTaken
   | ChangesPushed
   | ChangesLimitReach
   | EditorWidgetUsed;

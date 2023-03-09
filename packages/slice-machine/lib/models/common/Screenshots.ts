@@ -40,3 +40,8 @@ export interface CustomScreenshotRequest {
   sliceId: string;
   variationId: string;
 }
+
+export type ScreenshotGenerationMethod =
+  | "fromSimulator"
+  | "upload"
+  | "dragAndDrop";

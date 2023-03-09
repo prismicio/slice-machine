@@ -21,6 +21,7 @@ export const SegmentEventType = {
 	slice_created: "slice:created",
 	identifyUser: "identify-user",
 	groupLibraries: "group-libraries",
+	screenshotTaken: "screenshot-taken",
 } as const;
 type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
 
@@ -54,6 +55,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.slice_created]: "SliceMachine Slice Created",
 	[SegmentEventType.identifyUser]: "IdentifyUser",
 	[SegmentEventType.groupLibraries]: "GroupLibraries",
+	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 } as const;
 export type HumanSegmentEventTypes =
 	typeof HumanSegmentEventType[keyof typeof HumanSegmentEventType];
@@ -194,6 +196,14 @@ type GroupLibrariesSegmentEvent = SegmentEvent<
 	}
 >;
 
+type ScreenshotTakenSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.screenshotTaken,
+	{
+		type: "custom" | "automatic";
+		method: "fromSimulator" | "upload" | "dragAndDrop";
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -216,4 +226,5 @@ export type SegmentEvents =
 	| CustomTypeSavedSegmentEvent
 	| SliceCreatedSegmentEvent
 	| IdentifyUserSegmentEvent
-	| GroupLibrariesSegmentEvent;
+	| GroupLibrariesSegmentEvent
+	| ScreenshotTakenSegmentEvent;

@@ -2,7 +2,6 @@ import axios from "axios";
 import {
   EventNames,
   TrackingEvents,
-  ScreenshotTaken,
   ChangesPushed,
   ChangesLimitReach,
 } from "../../lib/models/tracking";
@@ -29,14 +28,6 @@ export class SMTracker {
   }
 
   /** Public methods **/
-
-  async trackScreenshotTaken(data: ScreenshotTaken["props"]): Promise<void> {
-    const payload: ScreenshotTaken = {
-      name: EventNames.ScreenshotTaken,
-      props: data,
-    };
-    return this.#trackEvent(payload);
-  }
 
   async trackChangesPushed(data: ChangesPushed["props"]): Promise<void> {
     const payload: ChangesPushed = {
