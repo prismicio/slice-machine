@@ -1,4 +1,4 @@
 {
-    "repositoryName": "aaa",
-    "adapter": "@slicemachine/adapter-next"
+  "repositoryName": "aaa",
+  "adapter": "@slicemachine/adapter-next"
 }

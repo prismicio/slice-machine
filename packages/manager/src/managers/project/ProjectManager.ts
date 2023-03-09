@@ -40,12 +40,10 @@ export class ProjectManager extends BaseManager {
 
 	async getSliceMachineDeprecatedConfigPath(): Promise<string | null> {
 		try {
-			return await locateFileUpward(
-				SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME,
-				{ startDir: this.cwd },
-			);
-		} catch (error) {
-		}
+			return await locateFileUpward(SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME, {
+				startDir: this.cwd,
+			});
+		} catch (error) {}
 		return null;
 	}
 
@@ -62,9 +60,13 @@ export class ProjectManager extends BaseManager {
 				{ startDir: this.cwd },
 			);
 		} catch (error) {
-			const maybeDeprecatedConfigPath = await this.getSliceMachineDeprecatedConfigPath();
+			const maybeDeprecatedConfigPath =
+				await this.getSliceMachineDeprecatedConfigPath();
 			if (maybeDeprecatedConfigPath) {
-				fs.rename(maybeDeprecatedConfigPath, path.join(this.cwd, SLICE_MACHINE_CONFIG_FILENAME))
+				fs.rename(
+					maybeDeprecatedConfigPath,
+					path.join(this.cwd, SLICE_MACHINE_CONFIG_FILENAME),
+				);
 				this._cachedSliceMachineConfigPath = maybeDeprecatedConfigPath;
 			} else {
 				throw new Error(
