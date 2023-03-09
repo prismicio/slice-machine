@@ -220,7 +220,12 @@ export default function Onboarding(): JSX.Element {
   );
 
   const createOnPlay = (id: string) => () => {
-    void Tracker.get().trackClickOnVideoTutorials(framework, version, id);
+    void track({
+      event: "open-video-tutorials",
+      framework,
+      slicemachineVersion: version,
+      video: id,
+    });
   };
 
   const STEPS = [

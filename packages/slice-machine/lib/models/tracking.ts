@@ -1,9 +1,7 @@
-import { Frameworks } from "@lib/models/common/Framework";
 // import type { LimitType } from "@slicemachine/client";
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  OpenVideoTutorials = "SliceMachine Open Video Tutorials",
   SliceCreated = "SliceMachine Slice Created",
   OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
   OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
@@ -38,15 +36,6 @@ export interface GroupLibraries extends BaseTrackingEvent {
     npmLibsCount: number;
     downloadedLibs: Array<string>;
     slicemachineVersion: string;
-  };
-}
-
-export interface OpenVideoTutorials extends BaseTrackingEvent {
-  name: EventNames.OpenVideoTutorials;
-  props: {
-    framework: Frameworks;
-    slicemachineVersion: string; // why is this one different ?
-    video: string;
   };
 }
 
@@ -109,7 +98,6 @@ export interface EditorWidgetUsed extends BaseTrackingEvent {
 export type TrackingEvents =
   | IdentifyUser
   | GroupLibraries
-  | OpenVideoTutorials
   | OnboardingContinue
   | CreateSlice
   | ScreenshotTaken

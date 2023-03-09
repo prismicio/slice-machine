@@ -1,4 +1,3 @@
-import { Frameworks } from "@lib/models/common/Framework";
 import axios from "axios";
 import { LibraryUI } from "../../lib/models/common/LibraryUI";
 import {
@@ -6,7 +5,6 @@ import {
   TrackingEvents,
   IdentifyUser,
   GroupLibraries,
-  OpenVideoTutorials,
   OnboardingContinue,
   CreateSlice,
   ScreenshotTaken,
@@ -83,22 +81,6 @@ export class SMTracker {
     await this.#client(payload).catch(() =>
       console.warn(`Couldn't report group: Tracking error`)
     );
-  }
-
-  async trackClickOnVideoTutorials(
-    framework: Frameworks,
-    version: string,
-    video: string
-  ): Promise<void> {
-    const payload: OpenVideoTutorials = {
-      name: EventNames.OpenVideoTutorials,
-      props: {
-        framework,
-        slicemachineVersion: version,
-        video,
-      },
-    };
-    await this.#trackEvent(payload);
   }
 
   async trackOnboardingContinue(

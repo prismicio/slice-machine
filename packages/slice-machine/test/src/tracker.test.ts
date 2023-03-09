@@ -3,7 +3,6 @@
 import { describe, test, afterEach, expect, vi } from "vitest";
 import TrackerSingleton, { SMTracker } from "@src/tracking/client";
 import { EventNames } from "@lib/models/tracking";
-import { Frameworks } from "@lib/models/common/Framework";
 import { rest } from "msw";
 
 describe("Tracker Singleton", () => {
@@ -122,31 +121,6 @@ describe("SMTracker", () => {
       expect.objectContaining({
         body: {
           name: "SliceMachine Onboarding Continue Screen 3",
-        },
-      }),
-      expect.anything(),
-      expect.anything()
-    );
-  });
-
-  test("should send a open video tutorials event", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    const smTracker = new SMTracker();
-
-    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0", "foo");
-    expect(trackingSpy).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        body: {
-          name: "SliceMachine Open Video Tutorials",
-          props: {
-            framework: Frameworks.next,
-            slicemachineVersion: "0.2.0",
-            video: "foo",
-          },
         },
       }),
       expect.anything(),
