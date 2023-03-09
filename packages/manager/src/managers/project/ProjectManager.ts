@@ -43,10 +43,9 @@ export class ProjectManager extends BaseManager {
 			return await locateFileUpward(SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME, {
 				startDir: this.cwd,
 			});
-		} catch (error) {
-		} finally {
-			return null;
-		}
+		} catch {}
+
+		return null;
 	}
 
 	async getSliceMachineConfigPath(
@@ -65,11 +64,12 @@ export class ProjectManager extends BaseManager {
 			const maybeDeprecatedConfigPath =
 				await this.getSliceMachineDeprecatedConfigPath();
 			if (maybeDeprecatedConfigPath) {
-				fs.rename(
-					maybeDeprecatedConfigPath,
-					path.join(this.cwd, SLICE_MACHINE_CONFIG_FILENAME),
+				const newConfigPath = path.join(
+					this.cwd,
+					SLICE_MACHINE_CONFIG_FILENAME,
 				);
-				this._cachedSliceMachineConfigPath = maybeDeprecatedConfigPath;
+				fs.rename(maybeDeprecatedConfigPath, newConfigPath);
+				this._cachedSliceMachineConfigPath = newConfigPath;
 			} else {
 				throw new Error(
 					`Could not find a ${SLICE_MACHINE_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,

@@ -26,10 +26,8 @@ export const locateFileUpward = async (
 
 	for (const filePath of filePaths) {
 		const resolvedFilePath = path.resolve(startDir, filePath);
-
 		try {
 			await fs.access(resolvedFilePath);
-
 			return resolvedFilePath;
 		} catch {
 			continue;
