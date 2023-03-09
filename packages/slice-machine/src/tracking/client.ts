@@ -5,7 +5,6 @@ import {
   TrackingEvents,
   IdentifyUser,
   GroupLibraries,
-  OnboardingContinue,
   ScreenshotTaken,
   ChangesPushed,
   ChangesLimitReach,
@@ -80,15 +79,6 @@ export class SMTracker {
     await this.#client(payload).catch(() =>
       console.warn(`Couldn't report group: Tracking error`)
     );
-  }
-
-  async trackOnboardingContinue(
-    continueOnboardingEventType: OnboardingContinue["name"]
-  ): Promise<void> {
-    const payload: OnboardingContinue = {
-      name: continueOnboardingEventType,
-    };
-    return this.#trackEvent(payload);
   }
 
   async trackScreenshotTaken(data: ScreenshotTaken["props"]): Promise<void> {

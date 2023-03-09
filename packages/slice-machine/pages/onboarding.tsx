@@ -15,10 +15,8 @@ import {
 import { useRouter } from "next/router";
 import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "../src/modules/useSliceMachineActions";
-import Tracker from "../src/tracking/client";
 import { track } from "@src/apiClient";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
-import { EventNames } from "@lib/models/tracking";
 import { getCurrentVersion, getFramework } from "../src/modules/environment";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,
@@ -160,22 +158,18 @@ const StepIndicator = ({
   );
 };
 
-function idFromStep(
-  step: number
-):
-  | EventNames.OnboardingContinueIntro
-  | EventNames.OnboardingContinueScreen1
-  | EventNames.OnboardingContinueScreen2
-  | EventNames.OnboardingContinueScreen3 {
+function trackStep(step: number): ReturnType<typeof track> {
   switch (step) {
     case 0:
-      return EventNames.OnboardingContinueIntro;
+      return track({ event: "onboarding:continue:screen-intro" });
     case 1:
-      return EventNames.OnboardingContinueScreen1;
+      return track({ event: "onboarding:continue:screen-1" });
     case 2:
-      return EventNames.OnboardingContinueScreen2;
+      return track({ event: "onboarding:continue:screen-2" });
+    case 3:
+      return track({ event: "onboarding:continue:screen-3" });
     default:
-      return EventNames.OnboardingContinueScreen3;
+      throw new Error(`Invalid step '${step}'.`);
   }
 }
 
@@ -201,10 +195,7 @@ function useTracking(props: { step: number; maxSteps: number }): void {
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      Tracker.get().trackOnboardingContinue(
-        EventNames.OnboardingContinueScreen3
-      );
+      void trackStep(3);
     };
   }, []);
 }
@@ -256,8 +247,7 @@ export default function Onboarding(): JSX.Element {
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return finish();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    Tracker.get().trackOnboardingContinue(idFromStep(state.step));
+    void trackStep(state.step);
 
     return setState({ ...state, step: state.step + 1 });
   }

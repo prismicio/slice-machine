@@ -2,11 +2,6 @@
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
-  OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
-  OnboardingContinueScreen2 = "SliceMachine Onboarding Continue Screen 2",
-  OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
-
   IdentifyUser = "IdentifyUser",
   GroupLibraries = "GroupLibraries",
 
@@ -36,14 +31,6 @@ export interface GroupLibraries extends BaseTrackingEvent {
     downloadedLibs: Array<string>;
     slicemachineVersion: string;
   };
-}
-
-export interface OnboardingContinue extends BaseTrackingEvent {
-  name:
-    | EventNames.OnboardingContinueIntro
-    | EventNames.OnboardingContinueScreen1
-    | EventNames.OnboardingContinueScreen2
-    | EventNames.OnboardingContinueScreen3;
 }
 
 export interface ScreenshotTaken extends BaseTrackingEvent {
@@ -88,7 +75,6 @@ export interface EditorWidgetUsed extends BaseTrackingEvent {
 export type TrackingEvents =
   | IdentifyUser
   | GroupLibraries
-  | OnboardingContinue
   | ScreenshotTaken
   | ChangesPushed
   | ChangesLimitReach
