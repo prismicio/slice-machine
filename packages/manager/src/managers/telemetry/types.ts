@@ -22,8 +22,6 @@ export const SegmentEventType = {
 	identifyUser: "identify-user",
 	groupLibraries: "group-libraries",
 	screenshotTaken: "screenshot-taken",
-	changes_pushed: "changes:pushed",
-	changes_limitReach: "changes:limit-reach", // TODO #DELETE
 	editor_widgetUsed: "editor:widget-used",
 } as const;
 type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
@@ -59,8 +57,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.identifyUser]: "IdentifyUser",
 	[SegmentEventType.groupLibraries]: "GroupLibraries",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
-	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
-	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
 	[SegmentEventType.editor_widgetUsed]: "SliceMachine Editor Widget Used",
 } as const;
 export type HumanSegmentEventTypes =
@@ -210,32 +206,6 @@ type ScreenshotTakenSegmentEvent = SegmentEvent<
 	}
 >;
 
-type ChangesPushedSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.changes_pushed,
-	{
-		customTypesCreated: number;
-		customTypesModified: number;
-		customTypesDeleted: number;
-		slicesCreated: number;
-		slicesModified: number;
-		slicesDeleted: number;
-		missingScreenshots: number;
-		total: number;
-		duration: number;
-		hasDeletedDocuments: boolean;
-	}
->;
-
-// import type { LimitType } from "@slicemachine/client";
-// import type { InvalidCustomTypeResponse } from "./common/TransactionalPush";
-
-type ChangesLimitReachSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.changes_limitReach,
-	{
-		// limitType: LimitType | InvalidCustomTypeResponse["type"];
-	}
->;
-
 type EditorWidgetUsedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.editor_widgetUsed,
 	{ sliceId: string }
@@ -265,6 +235,4 @@ export type SegmentEvents =
 	| IdentifyUserSegmentEvent
 	| GroupLibrariesSegmentEvent
 	| ScreenshotTakenSegmentEvent
-	| ChangesPushedSegmentEvent
-	| ChangesLimitReachSegmentEvent
 	| EditorWidgetUsedSegmentEvent;
