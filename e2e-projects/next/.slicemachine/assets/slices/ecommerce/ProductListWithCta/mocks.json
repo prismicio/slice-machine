@@ -1,0 +1,88 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "product_list_with_cta",
+    "items": [
+      {
+        "productLink": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      },
+      {
+        "productLink": {
+          "link_type": "Web",
+          "url": "https://slicemachine.dev"
+        }
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Redefine world-class portals",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Sint cillum do laborum. Consequat Lorem non ea pariatur.",
+          "spans": []
+        }
+      ],
+      "link": {
+        "link_type": "Web",
+        "url": "http://google.com"
+      }
+    }
+  },
+  {
+    "variation": "customProducts",
+    "name": "Custom Products",
+    "slice_type": "product_list_with_cta",
+    "items": [
+      {
+        "productLink": {
+          "link_type": "Web",
+          "url": "http://google.com"
+        }
+      },
+      {
+        "productLink": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      },
+      {
+        "productLink": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      },
+      {
+        "productLink": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Maximize cutting-edge e-commerce",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Sint ullamco duis veniam magna dolore elit enim.",
+          "spans": []
+        }
+      ]
+    }
+  }
+]

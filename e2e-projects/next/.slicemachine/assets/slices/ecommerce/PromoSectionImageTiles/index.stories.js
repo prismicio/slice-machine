@@ -1,0 +1,9 @@
+import MyComponent from '../../../../../slices/ecommerce/PromoSectionImageTiles';
+
+export default {
+  title: 'slices/ecommerce/PromoSectionImageTiles'
+}
+
+
+export const _DefaultSlice = () => <MyComponent slice={{"variation":"default-slice","name":"Default slice","slice_type":"promo_section_image_tiles","items":[],"primary":{"title":"optimize virtual e-services","subtitle":"unleash viral schemas","linkLabel":"engage integrated e-tailers","link":{"link_type":"Web","url":"http://twitter.com"},"backgroundColor":"#ad4add","image1":{"dimensions":{"width":176,"height":256},"alt":"Placeholder image","copyright":null,"url":"https://images.unsplash.com/photo-1547082299-de196ea013d6?w=176&h=256&fit=crop"},"image2":{"dimensions":{"width":176,"height":256},"alt":"Placeholder image","copyright":null,"url":"https://images.unsplash.com/photo-1493119508027-2b584f234d6c?w=176&h=256&fit=crop"},"image3":{"dimensions":{"width":176,"height":256},"alt":"Placeholder image","copyright":null,"url":"https://images.unsplash.com/photo-1579931794097-0ad001e51edb?w=176&h=256&fit=crop"},"image4":{"dimensions":{"width":176,"height":256},"alt":"Placeholder image","copyright":null,"url":"https://images.unsplash.com/photo-1551739440-5dd934d3a94a?w=176&h=256&fit=crop"},"image5":{"dimensions":{"width":176,"height":256},"alt":"Placeholder image","copyright":null,"url":"https://images.unsplash.com/photo-1607582278038-6bebbd4d7b72?w=176&h=256&fit=crop"},"image6":{"dimensions":{"width":176,"height":256},"alt":"Placeholder image","copyright":null,"url":"https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=176&h=256&fit=crop"},"image7":{"dimensions":{"width":176,"height":256},"alt":"Placeholder image","copyright":null,"url":"https://images.unsplash.com/photo-1547082299-de196ea013d6?w=176&h=256&fit=crop"},"personalisationid":"iterate vertical paradigms"},"id":"_DefaultSlice"}} />
+_DefaultSlice.storyName = 'Default slice'

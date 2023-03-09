@@ -1,0 +1,50 @@
+{
+  "topPromoBanner": {
+    "__TYPE__": "FieldContent",
+    "value": "needle",
+    "type": "Text"
+  },
+  "logo": {
+    "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a?fit=crop&w=64&h=64",
+    "origin": {
+      "id": "main",
+      "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a",
+      "width": 64,
+      "height": 64
+    },
+    "width": 64,
+    "height": 64,
+    "edit": {
+      "zoom": 1,
+      "crop": {
+        "x": 0,
+        "y": 0
+      },
+      "background": "transparent"
+    },
+    "credits": null,
+    "alt": null,
+    "__TYPE__": "ImageContent",
+    "thumbnails": {}
+  },
+  "menuTabs": {
+    "__TYPE__": "GroupContentType",
+    "value": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "menuTab",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "__TYPE__": "DocumentLink",
+                "id": "mock_document_id"
+              }
+            }
+          ]
+        ]
+      }
+    ]
+  }
+}

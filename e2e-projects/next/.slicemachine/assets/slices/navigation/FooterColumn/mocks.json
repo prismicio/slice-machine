@@ -1,0 +1,33 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "footer_column",
+    "items": [
+      {
+        "link": {
+          "link_type": "Web",
+          "url": "http://google.com"
+        },
+        "link_label": "generate bricks-and-clicks bandwidth"
+      },
+      {
+        "link": {
+          "link_type": "Web",
+          "url": "https://slicemachine.dev"
+        },
+        "link_label": "transition killer applications"
+      },
+      {
+        "link": {
+          "link_type": "Web",
+          "url": "https://slicemachine.dev"
+        },
+        "link_label": "mesh strategic users"
+      }
+    ],
+    "primary": {
+      "section_title": "enhance real-time architectures"
+    }
+  }
+]

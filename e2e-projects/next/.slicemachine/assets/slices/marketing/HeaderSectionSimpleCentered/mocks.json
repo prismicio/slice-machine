@@ -1,0 +1,24 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "header_section_simple_centered",
+    "items": [],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Repurpose compelling niches",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Nostrud consectetur fugiat sint consectetur tempor ea qui id anim dolor.",
+          "spans": []
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "slices": {
+    "MySlice": {}
+  },
+  "_cts": {
+    "home_page": {},
+    "page": {},
+    "menu": {},
+    "blog-page": {
+      "description": {
+        "config": {
+          "patternType": "PARAGRAPH",
+          "blocks": 1
+        }
+      },
+      "title": {
+        "config": {
+          "patternType": "HEADING",
+          "blocks": 1
+        }
+      },
+      "category": {
+        "config": {
+          "patternType": "HEADING",
+          "blocks": 1
+        }
+      }
+    }
+  },
+  "slices/ecommerce": {
+    "PromoSectionWithBackgroundImage": {},
+    "PromoSectionImageTiles": {
+      "default-slice": {
+        "primary": {}
+      }
+    }
+  },
+  "slices/marketing": {
+    "ContentSectionCentered": {
+      "default-slice": {
+        "primary": {
+          "description": {
+            "config": {
+              "patternType": "STORY",
+              "blocks": 3
+            }
+          }
+        }
+      }
+    },
+    "FeaturedSectionCentered22": {
+      "default-slice": {
+        "items": {}
+      }
+    },
+    "StatsSectionSplitWithImage": {
+      "default-slice": {
+        "primary": {},
+        "items": {
+          "unit": {
+            "config": {
+              "patternType": "HEADING",
+              "blocks": 1
+            }
+          },
+          "stats": {
+            "config": {
+              "patternType": "HEADING",
+              "blocks": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

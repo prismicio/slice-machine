@@ -1,0 +1,55 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "chart_slice",
+    "items": [
+      {
+        "percentageShare": 5467,
+        "entityLabel": "enhance transparent infrastructures"
+      },
+      {
+        "percentageShare": 1955,
+        "entityLabel": "streamline B2B vortals"
+      },
+      {
+        "percentageShare": 6415,
+        "entityLabel": "empower granular applications"
+      },
+      {
+        "percentageShare": 9513,
+        "entityLabel": "empower plug-and-play web services"
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Target global paradigms",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Nulla deserunt fugiat aliquip aliqua cillum occaecat culpa irure adipisicing cillum occaecat cillum in labore sint. Consequat irure anim anim magna non cillum ut nulla aute in. Consectetur pariatur eiusmod cupidatat irure magna et ea.",
+          "spans": []
+        }
+      ],
+      "additionalInfoTitle": [
+        {
+          "type": "paragraph",
+          "text": "Ad ex ex esse irure consectetur.",
+          "spans": []
+        }
+      ],
+      "additionalInfo": [
+        {
+          "type": "paragraph",
+          "text": "Duis deserunt ex ex laborum est culpa veniam occaecat mollit ut incididunt.",
+          "spans": []
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,100 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "featured_section_centered22",
+    "items": [
+      {
+        "icon": {
+          "dimensions": {
+            "width": 48,
+            "height": 48
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=48&h=48&fit=crop"
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Velit consectetur consequat id reprehenderit dolor minim enim non occaecat duis laborum fugiat.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Proident duis qui cupidatat excepteur. Officia irure aute nisi minim dolore ipsum sit laboris reprehenderit ad exercitation Lorem duis veniam qui. Non irure sint dolor laboris.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "icon": {
+          "dimensions": {
+            "width": 48,
+            "height": 48
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=48&h=48&fit=crop"
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Non veniam eu reprehenderit duis quis occaecat. Aliqua ea aliquip deserunt minim et quis eiusmod cillum ea officia. Do ex et aliqua et.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Elit do consequat est nostrud id. Deserunt pariatur enim esse ipsum enim minim cupidatat nisi proident deserunt proident pariatur enim fugiat.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "icon": {
+          "dimensions": {
+            "width": 48,
+            "height": 48
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1600804931749-2da4ce26c869?w=48&h=48&fit=crop"
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Veniam officia do Lorem minim voluptate nulla labore. Exercitation minim voluptate consectetur voluptate labore.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Ad in minim cillum. Aute laboris sit id duis amet excepteur adipisicing nostrud quis enim duis labore.",
+            "spans": []
+          }
+        ]
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Benchmark leading-edge solutions",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "In laboris culpa eiusmod officia aliquip officia. Enim et ex aliqua elit duis ea pariatur pariatur aliqua nisi laboris. Ut quis ex elit laboris dolor culpa Lorem nulla pariatur sit ut do consectetur.",
+          "spans": []
+        }
+      ]
+    }
+  }
+]

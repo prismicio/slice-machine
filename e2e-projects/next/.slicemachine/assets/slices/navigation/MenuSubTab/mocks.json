@@ -1,0 +1,40 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "menu_sub_tab",
+    "items": [
+      {
+        "subSectionTitle": "scale viral markets",
+        "subSectionLink": {
+          "link_type": "Web",
+          "url": "http://twitter.com"
+        }
+      },
+      {
+        "subSectionTitle": "recontextualize back-end ROI",
+        "subSectionLink": {
+          "link_type": "Web",
+          "url": "http://google.com"
+        }
+      },
+      {
+        "subSectionTitle": "leverage proactive communities",
+        "subSectionLink": {
+          "link_type": "Web",
+          "url": "http://google.com"
+        }
+      },
+      {
+        "subSectionTitle": "repurpose visionary e-business",
+        "subSectionLink": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      }
+    ],
+    "primary": {
+      "sectionTitle": "synthesize dot-com solutions"
+    }
+  }
+]

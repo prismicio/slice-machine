@@ -1,0 +1,71 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "category_preview_with_scrolling_cards",
+    "items": [
+      {
+        "image": {
+          "dimensions": {
+            "width": 224,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1600861194802-a2b11076bc51?w=224&h=320&fit=crop"
+        },
+        "title": "utilize plug-and-play portals",
+        "link": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      },
+      {
+        "image": {
+          "dimensions": {
+            "width": 224,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1471897488648-5eae4ac6686b?w=224&h=320&fit=crop"
+        },
+        "title": "extend innovative e-tailers",
+        "link": {
+          "link_type": "Web",
+          "url": "http://twitter.com"
+        }
+      },
+      {
+        "image": {
+          "dimensions": {
+            "width": 224,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=224&h=320&fit=crop"
+        },
+        "title": "productize open-source relationships",
+        "link": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Incentivize magnetic markets",
+          "spans": []
+        }
+      ],
+      "CTA": "redefine bricks-and-clicks functionalities",
+      "CTALink": {
+        "link_type": "Web",
+        "url": "https://slicemachine.dev"
+      }
+    }
+  }
+]
