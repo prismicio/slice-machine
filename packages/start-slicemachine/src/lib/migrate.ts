@@ -85,6 +85,8 @@ export const migrate = async (manager: SliceMachineManager) => {
 				(str: string) => ComponentMocks.decode(str)._tag === "Right",
 				() => SharedSliceMock.generate(c.model),
 			);
+
+			safeUnlink(deprecatedPathToMocks, "file");
 		});
 
 		const allCustomTypes = await manager.customTypes.readAllCustomTypes();
@@ -110,15 +112,12 @@ export const migrate = async (manager: SliceMachineManager) => {
 	} catch (error) {
 	} finally {
 		safeUnlink(
-			path.join(createPathToDeprecatedLibrary(manager.cwd), "assets"),
-			"folder",
-		);
-		safeUnlink(
 			path.join(
 				createPathToDeprecatedLibrary(manager.cwd),
 				MOCK_CONFIG_FILE_NAME,
 			),
 			"file",
 		);
+		safeUnlink(createPathToCustomTypesAssets(manager.cwd), "folder");
 	}
 };

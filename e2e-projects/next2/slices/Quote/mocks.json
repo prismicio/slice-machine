@@ -8,14 +8,14 @@
         {
           "type": "heading2",
           "content": {
-            "text": "Consist"
+            "text": "Increase"
           }
         }
       ]
     },
     "source": {
       "__TYPE__": "FieldContent",
-      "value": "burst",
+      "value": "state",
       "type": "Text"
     }
   },
