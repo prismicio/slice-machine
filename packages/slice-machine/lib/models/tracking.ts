@@ -2,7 +2,6 @@
 // import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
 
 export enum EventNames {
-  ChangesPushed = "SliceMachine Changes Pushed",
   ChangesLimitReach = "SliceMachine Changes Limit Reach",
 
   EditorWidgetUsed = "SliceMachine Editor Widget Used",
@@ -12,22 +11,6 @@ type BaseTrackingEvent = {
   name: EventNames;
   props?: Record<string, unknown>;
 };
-
-export interface ChangesPushed extends BaseTrackingEvent {
-  name: EventNames.ChangesPushed;
-  props: {
-    customTypesCreated: number;
-    customTypesModified: number;
-    customTypesDeleted: number;
-    slicesCreated: number;
-    slicesModified: number;
-    slicesDeleted: number;
-    missingScreenshots: number;
-    total: number;
-    duration: number;
-    hasDeletedDocuments: boolean;
-  };
-}
 
 // TODO #DELETE
 export interface ChangesLimitReach extends BaseTrackingEvent {
@@ -44,10 +27,7 @@ export interface EditorWidgetUsed extends BaseTrackingEvent {
   };
 }
 
-export type TrackingEvents =
-  | ChangesPushed
-  | ChangesLimitReach
-  | EditorWidgetUsed;
+export type TrackingEvents = ChangesLimitReach | EditorWidgetUsed;
 
 export function isTrackingEvent(
   payload: TrackingEvents

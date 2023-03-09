@@ -22,6 +22,7 @@ export const SegmentEventType = {
 	identifyUser: "identify-user",
 	groupLibraries: "group-libraries",
 	screenshotTaken: "screenshot-taken",
+	changes_pushed: "changes:pushed",
 } as const;
 type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
 
@@ -56,6 +57,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.identifyUser]: "IdentifyUser",
 	[SegmentEventType.groupLibraries]: "GroupLibraries",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
+	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
 } as const;
 export type HumanSegmentEventTypes =
 	typeof HumanSegmentEventType[keyof typeof HumanSegmentEventType];
@@ -204,6 +206,22 @@ type ScreenshotTakenSegmentEvent = SegmentEvent<
 	}
 >;
 
+type ChangesPushedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.changes_pushed,
+	{
+		customTypesCreated: number;
+		customTypesModified: number;
+		customTypesDeleted: number;
+		slicesCreated: number;
+		slicesModified: number;
+		slicesDeleted: number;
+		missingScreenshots: number;
+		total: number;
+		duration: number;
+		hasDeletedDocuments: boolean;
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -227,4 +245,5 @@ export type SegmentEvents =
 	| SliceCreatedSegmentEvent
 	| IdentifyUserSegmentEvent
 	| GroupLibrariesSegmentEvent
-	| ScreenshotTakenSegmentEvent;
+	| ScreenshotTakenSegmentEvent
+	| ChangesPushedSegmentEvent;
