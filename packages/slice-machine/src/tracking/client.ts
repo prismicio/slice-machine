@@ -1,9 +1,7 @@
 import axios from "axios";
-import { LibraryUI } from "../../lib/models/common/LibraryUI";
 import {
   EventNames,
   TrackingEvents,
-  GroupLibraries,
   ScreenshotTaken,
   ChangesPushed,
   ChangesLimitReach,
@@ -31,36 +29,6 @@ export class SMTracker {
   }
 
   /** Public methods **/
-
-  async groupLibraries(
-    libs: readonly LibraryUI[],
-    repoName: string | undefined,
-    version: string
-  ): Promise<void> {
-    if (repoName === undefined || !this.#isTrackingActive) {
-      return;
-    }
-
-    const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
-
-    const payload: GroupLibraries = {
-      name: EventNames.GroupLibraries,
-      props: {
-        repoName: repoName,
-        manualLibsCount: libs.filter((l) => l.meta.isManual).length,
-        downloadedLibsCount: downloadedLibs.length,
-        npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
-        downloadedLibs: downloadedLibs.map((l) =>
-          l.meta.name != null ? l.meta.name : "Unknown"
-        ),
-        slicemachineVersion: version,
-      },
-    };
-
-    await this.#client(payload).catch(() =>
-      console.warn(`Couldn't report group: Tracking error`)
-    );
-  }
 
   async trackScreenshotTaken(data: ScreenshotTaken["props"]): Promise<void> {
     const payload: ScreenshotTaken = {
