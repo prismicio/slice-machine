@@ -8,6 +8,7 @@ import { Box, Flex, Spinner } from "theme-ui";
 import Header from "./components/Header";
 
 import Tracker from "@src/tracking/client";
+import { track } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import {
   getCurrentVersion,
@@ -75,7 +76,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void Tracker.get().trackOpenSliceSimulator(framework, version);
+    void track({ event: "slice-simulator:open", framework, version });
     Tracker.get().editor.startNewSession();
   }, []);
 
