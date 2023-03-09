@@ -6,7 +6,6 @@ import {
   IdentifyUser,
   GroupLibraries,
   OnboardingContinue,
-  CreateSlice,
   ScreenshotTaken,
   ChangesPushed,
   ChangesLimitReach,
@@ -88,18 +87,6 @@ export class SMTracker {
   ): Promise<void> {
     const payload: OnboardingContinue = {
       name: continueOnboardingEventType,
-    };
-    return this.#trackEvent(payload);
-  }
-
-  async trackCreateSlice(data: {
-    id: string;
-    name: string;
-    library: string;
-  }): Promise<void> {
-    const payload: CreateSlice = {
-      name: EventNames.SliceCreated,
-      props: data,
     };
     return this.#trackEvent(payload);
   }
