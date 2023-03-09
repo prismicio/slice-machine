@@ -22,12 +22,10 @@ const safeUnlink = (pathToUnlink: string, type: "file" | "folder") => {
 		if (type === "file") {
 			fsSync.unlinkSync(pathToUnlink)
 		} else {
-			fsSync.rmdirSync(pathToUnlink, { recursive: true })
+			fsSync.rmSync(pathToUnlink, { recursive: true })
 		}
 	}
-	catch(_) {
-		console.log({ _ })
-	}
+	catch(_) {}
 }
 
 const migrateMockFile = (
