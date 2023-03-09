@@ -1,9 +1,4 @@
-// import type { LimitType } from "@slicemachine/client";
-// import { InvalidCustomTypeResponse } from "./common/TransactionalPush";
-
 export enum EventNames {
-  ChangesLimitReach = "SliceMachine Changes Limit Reach",
-
   EditorWidgetUsed = "SliceMachine Editor Widget Used",
 }
 
@@ -12,14 +7,6 @@ type BaseTrackingEvent = {
   props?: Record<string, unknown>;
 };
 
-// TODO #DELETE
-export interface ChangesLimitReach extends BaseTrackingEvent {
-  name: EventNames.ChangesLimitReach;
-  props: {
-    // limitType: LimitType | InvalidCustomTypeResponse["type"];
-  };
-}
-
 export interface EditorWidgetUsed extends BaseTrackingEvent {
   name: EventNames.EditorWidgetUsed;
   props: {
@@ -27,7 +14,7 @@ export interface EditorWidgetUsed extends BaseTrackingEvent {
   };
 }
 
-export type TrackingEvents = ChangesLimitReach | EditorWidgetUsed;
+export type TrackingEvents = EditorWidgetUsed;
 
 export function isTrackingEvent(
   payload: TrackingEvents

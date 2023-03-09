@@ -1,9 +1,5 @@
 import axios from "axios";
-import {
-  EventNames,
-  TrackingEvents,
-  ChangesLimitReach,
-} from "../../lib/models/tracking";
+import { EventNames, TrackingEvents } from "../../lib/models/tracking";
 
 export class SMTracker {
   #client = (event: TrackingEvents) =>
@@ -27,17 +23,6 @@ export class SMTracker {
   }
 
   /** Public methods **/
-
-  async trackChangesLimitReach(
-    data: ChangesLimitReach["props"]
-  ): Promise<void> {
-    const payload: ChangesLimitReach = {
-      name: EventNames.ChangesLimitReach,
-      props: data,
-    };
-
-    return this.#trackEvent(payload);
-  }
 
   #startedNewEditorSession = false;
   editor = {

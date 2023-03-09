@@ -23,6 +23,7 @@ export const SegmentEventType = {
 	groupLibraries: "group-libraries",
 	screenshotTaken: "screenshot-taken",
 	changes_pushed: "changes:pushed",
+	changes_limitReach: "changes:limit-reach", // TODO #DELETE
 } as const;
 type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
 
@@ -58,6 +59,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.groupLibraries]: "GroupLibraries",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
+	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
 } as const;
 export type HumanSegmentEventTypes =
 	typeof HumanSegmentEventType[keyof typeof HumanSegmentEventType];
@@ -222,6 +224,16 @@ type ChangesPushedSegmentEvent = SegmentEvent<
 	}
 >;
 
+// import type { LimitType } from "@slicemachine/client";
+// import type { InvalidCustomTypeResponse } from "./common/TransactionalPush";
+
+type ChangesLimitReachSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.changes_limitReach,
+	{
+		// limitType: LimitType | InvalidCustomTypeResponse["type"];
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -246,4 +258,5 @@ export type SegmentEvents =
 	| IdentifyUserSegmentEvent
 	| GroupLibrariesSegmentEvent
 	| ScreenshotTakenSegmentEvent
-	| ChangesPushedSegmentEvent;
+	| ChangesPushedSegmentEvent
+	| ChangesLimitReachSegmentEvent;
