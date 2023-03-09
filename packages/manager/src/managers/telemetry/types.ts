@@ -24,6 +24,7 @@ export const SegmentEventType = {
 	screenshotTaken: "screenshot-taken",
 	changes_pushed: "changes:pushed",
 	changes_limitReach: "changes:limit-reach", // TODO #DELETE
+	editor_widgetUsed: "editor:widget-used",
 } as const;
 type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
 
@@ -60,6 +61,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
 	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
+	[SegmentEventType.editor_widgetUsed]: "SliceMachine Editor Widget Used",
 } as const;
 export type HumanSegmentEventTypes =
 	typeof HumanSegmentEventType[keyof typeof HumanSegmentEventType];
@@ -234,6 +236,11 @@ type ChangesLimitReachSegmentEvent = SegmentEvent<
 	}
 >;
 
+type EditorWidgetUsedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.editor_widgetUsed,
+	{ sliceId: string }
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -259,4 +266,5 @@ export type SegmentEvents =
 	| GroupLibrariesSegmentEvent
 	| ScreenshotTakenSegmentEvent
 	| ChangesPushedSegmentEvent
-	| ChangesLimitReachSegmentEvent;
+	| ChangesLimitReachSegmentEvent
+	| EditorWidgetUsedSegmentEvent;

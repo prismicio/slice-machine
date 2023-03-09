@@ -7,7 +7,6 @@ import { Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
-import Tracker from "@src/tracking/client";
 import { track } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import {
@@ -77,8 +76,19 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   useEffect(() => {
     checkSimulatorSetup();
     void track({ event: "slice-simulator:open", framework, version });
-    Tracker.get().editor.startNewSession();
   }, []);
+
+  const startedNewEditorSessionRef = useRef(false);
+
+  useEffect(() => {
+    startedNewEditorSessionRef.current = true;
+  }, []);
+
+  const trackWidgetUsed = (sliceId: string) => {
+    if (!startedNewEditorSessionRef.current) return;
+    startedNewEditorSessionRef.current = false;
+    void track({ event: "editor:widget-used", sliceId });
+  };
 
   const currentState: UiState = (() => {
     if (manifestStatus === "ko") {
@@ -284,7 +294,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   content={editorContent}
                   onContentChange={(c) => {
                     setEditorState(c as SharedSliceContent);
-                    Tracker.get().editor.trackWidgetUsed(slice.model.id);
+                    trackWidgetUsed(slice.model.id);
                   }}
                   sharedSlice={sharedSlice}
                 />

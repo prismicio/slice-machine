@@ -111,15 +111,6 @@ export const getCurrentVersion = (store: SliceMachineStoreType): string => {
   return changelog?.currentVersion;
 };
 
-export const getIsTrackingAvailable = (
-  store: SliceMachineStoreType
-): boolean => {
-  return (
-    store.environment.manifest.tracking === undefined ||
-    store.environment.manifest.tracking
-  );
-};
-
 export const getStorybookUrl = (
   store: SliceMachineStoreType
 ): string | null => {
