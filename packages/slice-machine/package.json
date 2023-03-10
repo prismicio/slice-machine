@@ -16,7 +16,6 @@
     "test": "vitest run --coverage",
     "watch-test": "vitest watch",
     "config": "tsc --showConfig",
-    "postinstall": "node postinstall",
     "prepublishOnly": "npm run build",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
