@@ -1,6 +1,6 @@
 {
   "_latest": "1.0.0",
-  "repositoryName": "slicemachine-dev-mule",
+  "repositoryName": "md-slice-crash",
   "libraries": ["./slices"],
   "adapter": "@slicemachine/adapter-next",
   "localSliceSimulatorURL": "http://localhost:8000/slice-simulator"

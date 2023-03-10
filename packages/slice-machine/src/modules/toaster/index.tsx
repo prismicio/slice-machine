@@ -17,11 +17,16 @@ type ScreenshotCapturedToast = {
   url: string;
 };
 
+export type GenericToastTypes = Exclude<
+  ToasterType,
+  ToasterType.SCREENSHOT_CAPTURED
+>;
+
 // Action Creators
 export const openToasterCreator = createAction("TOASTER/OPEN")<
   | {
-      message: string;
-      type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>;
+      content: string | React.ReactNode;
+      type: GenericToastTypes;
       options?: ToastOptions;
     }
   | ScreenshotCapturedToast
@@ -42,19 +47,19 @@ export function* openToasterSaga(
 ) {
   switch (action.payload.type) {
     case ToasterType.SUCCESS:
-      toast.success(action.payload.message, action.payload.options);
+      toast.success(action.payload.content, action.payload.options);
       break;
     case ToasterType.ERROR:
-      toast.error(action.payload.message, action.payload.options);
+      toast.error(action.payload.content, action.payload.options);
       break;
     case ToasterType.INFO:
-      toast.info(action.payload.message, action.payload.options);
+      toast.info(action.payload.content, action.payload.options);
       break;
     case ToasterType.WARNING:
-      toast.warning(action.payload.message, action.payload.options);
+      toast.warning(action.payload.content, action.payload.options);
       break;
     case ToasterType.LOADING:
-      toast.loading(action.payload.message, action.payload.options);
+      toast.loading(action.payload.content, action.payload.options);
       break;
     case ToasterType.SCREENSHOT_CAPTURED:
       toast(<ScreenshotToaster url={action.payload.url} />);

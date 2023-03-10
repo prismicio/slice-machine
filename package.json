@@ -21,7 +21,7 @@
     "audit": "lerna run audit",
     "lint": "npm --workspaces --if-present run lint",
     "lint-staged": "lint-staged",
-    "pretty": "prettier --write .",
+    "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "lerna run test --stream",
     "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
@@ -30,10 +30,9 @@
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact",
     "bump:alpha": "lerna version prerelease --preid $npm_config_preid --no-changelog --exact --yes",
+    "bump:production": "lerna version --conventional-graduate --exact",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --no-verify-access --yes",
     "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
-    "bump:production": "lerna version --conventional-graduate --exact",
-    "depcheck": "depcheck --skip-missing; lerna run depcheck",
     "lerna:update": "npx --yes lerna-update-wizard"
   },
   "devDependencies": {
