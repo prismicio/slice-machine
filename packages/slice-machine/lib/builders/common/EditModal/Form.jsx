@@ -2,8 +2,6 @@ import { memo } from "react";
 import { Formik, Form } from "formik";
 import { Box } from "theme-ui";
 
-import { MockConfigKey } from "../../../consts";
-
 const WidgetForm = ({
   formId,
   initialValues,
@@ -25,7 +23,6 @@ const WidgetForm = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment
           const {
             id: apiId,
-            [MockConfigKey]: mockConfigObject,
             ...rest
           } = values;
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -51,7 +48,7 @@ const WidgetForm = ({
             {}
           );
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-          onSave({ newKey: apiId, value: withDefaultValues }, mockConfigObject);
+          onSave({ newKey: apiId, value: withDefaultValues });
         }}
       >
         {(props) => (

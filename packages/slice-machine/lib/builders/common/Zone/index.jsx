@@ -13,7 +13,6 @@ import ZoneHeader from "./components/ZoneHeader";
 import EmptyState from "./components/EmptyState";
 
 const Zone = ({
-  mockConfig,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -26,7 +25,6 @@ const Zone = ({
   EditModal /* temp */,
   onSave /* user clicked on "Save" (EditModal) */,
   dataTip /* text info to display as tip */,
-  getFieldMockConfig /* access mock configuration of given apiId */,
   renderHintBase /* render base (eg. path to slice) content for hints */,
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
   dataCy,
@@ -129,8 +127,6 @@ const Zone = ({
         fields={fields}
         showHints={showHints}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        mockConfig={mockConfig}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dataTip={dataTip}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         title={title}
@@ -169,8 +165,6 @@ const Zone = ({
         onSave={onSave}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         fields={poolOfFieldsToCheck}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        getFieldMockConfig={getFieldMockConfig}
       />
       <SelectFieldTypeModal
         data={selectModalData}
@@ -185,7 +179,6 @@ const Zone = ({
 
 Zone.propTypes = {
   isRepeatable: bool,
-  mockConfig: object.isRequired,
   title: string.isRequired,
   dataTip: string.isRequired,
   onSave: func.isRequired,
@@ -193,8 +186,6 @@ Zone.propTypes = {
   onDragEnd: func.isRequired,
   onDeleteItem: func.isRequired,
   poolOfFieldsToCheck: arrayOf(shape({ key: string, value: object })),
-  // how to access mock config for given key
-  getFieldMockConfig: func.isRequired,
   renderHintBase: func.isRequired,
   renderFieldAccessor: func.isRequired,
   widgetsArray: array.isRequired,

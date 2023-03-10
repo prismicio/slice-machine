@@ -44,7 +44,6 @@ type SliceMachineManagerGetStateReturnType = {
 		repo: string;
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
-		mockConfig: unknown; // TODO: Remove
 		framework: unknown; // TODO: Remove
 		sliceMachineAPIUrl: string;
 	};
@@ -68,7 +67,6 @@ type SliceMachineManagerGetStateReturnType = {
 				}
 			>;
 			mock?: SharedSliceContent[];
-			mockConfig: unknown; // TODO: Remove
 		}[];
 		meta: {
 			name?: string;
@@ -224,7 +222,6 @@ export class SliceMachineManager {
 						),
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
-				mockConfig: {},
 				// TODO: Don't hardcode this!
 				packageManager: "npm",
 				// TODO: Don't hardcode this!
@@ -308,7 +305,6 @@ export class SliceMachineManager {
 										model,
 										screenshots,
 										mock: mocks,
-										mockConfig: {}, // TODO: This property can probably be removed.
 									});
 								}
 							}),

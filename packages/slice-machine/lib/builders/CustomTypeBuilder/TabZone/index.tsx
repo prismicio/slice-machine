@@ -9,7 +9,6 @@ import { transformKeyAccessor } from "@utils/str";
 import Zone from "../../common/Zone";
 
 import ctBuilderArray from "@lib/models/common/widgets/ctBuilderArray";
-import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 
 import SliceZone from "../SliceZone";
 
@@ -20,7 +19,6 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
   selectCurrentCustomType,
-  selectCurrentMockConfig,
   selectCurrentPoolOfFields,
 } from "../../../../src/modules/selectedCustomType";
 import { SlicesSM } from "@lib/models/common/Slices";
@@ -43,32 +41,21 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     createSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-    updateFieldMockConfig,
-    deleteFieldMockConfig,
   } = useSliceMachineActions();
 
-  const { currentCustomType, mockConfig, poolOfFields } = useSelector(
+  const { currentCustomType, poolOfFields } = useSelector(
     (store: SliceMachineStoreType) => ({
       currentCustomType: selectCurrentCustomType(store),
-      mockConfig: selectCurrentMockConfig(store),
       poolOfFields: selectCurrentPoolOfFields(store),
     })
   );
 
-  if (!currentCustomType || !mockConfig || !poolOfFields) {
+  if (!currentCustomType || !poolOfFields) {
     return null;
   }
 
   const onDeleteItem = (fieldId: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    deleteFieldMockConfig(mockConfig, fieldId);
     deleteCustomTypeField(tabId, fieldId);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getFieldMockConfig = ({ apiId }: { apiId: string }): any => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    return CustomTypeMockConfig.getFieldMockConfig(mockConfig, apiId);
   };
 
   const onSaveNewField = ({
@@ -113,23 +100,15 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     apiId: previousKey,
     newKey,
     value,
-    mockValue,
   }: {
     apiId: string;
     newKey: string;
     value: TabField;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mockValue: any;
   }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
-    }
-    if (mockValue) {
-      updateFieldMockConfig(mockConfig, previousKey, newKey, mockValue);
-    } else {
-      deleteFieldMockConfig(mockConfig, newKey);
     }
     replaceCustomTypeField(tabId, previousKey, newKey, value);
   };
@@ -154,8 +133,6 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
       <Zone
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        mockConfig={mockConfig}
         title="Static Zone"
         dataTip={""}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -166,7 +143,6 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         showHints={true}
         EditModal={EditModal}
         widgetsArray={ctBuilderArray}
-        getFieldMockConfig={getFieldMockConfig}
         onDeleteItem={onDeleteItem}
         onSave={onSave}
         onSaveNewField={onSaveNewField}

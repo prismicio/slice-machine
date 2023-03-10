@@ -20,7 +20,6 @@ import { PackageChangelog } from "@lib/models/common/versions";
 // import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
 import { managerClient } from "./managerClient";
-import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { Frameworks } from "@lib/models/common/Framework";
 
 /** State Routes **/
@@ -35,7 +34,6 @@ export const getState = async (): Promise<ServerState> => {
     env: {
       ...rawState.env,
       framework: rawState.env.framework as Frameworks,
-      mockConfig: rawState.env.mockConfig as CustomTypeMockConfig,
     },
     libraries: rawState.libraries.map((library) => {
       return {
@@ -44,9 +42,6 @@ export const getState = async (): Promise<ServerState> => {
           return {
             ...component,
             model: Slices.toSM(component.model),
-
-            // TODO: Remove `mockConfig`.
-            mockConfig: component.mockConfig as CustomTypeMockConfig,
 
             // Replace screnshot Blobs with URLs.
             screenshots: Object.fromEntries(

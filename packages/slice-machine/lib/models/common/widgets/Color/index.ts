@@ -1,6 +1,5 @@
 import { MdColorLens } from "react-icons/md";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
 
@@ -33,7 +32,6 @@ export const ColorWidget: Widget<Color, typeof schema> = {
       placeholder: "",
     },
   }),
-  MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME,

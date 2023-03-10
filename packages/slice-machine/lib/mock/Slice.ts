@@ -31,66 +31,36 @@ function buildVariationMockConfig(
   };
 }
 
-export function buildSliceMockConfig(
-  model: SharedSlice,
-  legacyMockConfig: Partial<
-    Record<string, Partial<Record<string, Partial<Record<string, unknown>>>>>
-  >
-): ReadonlyArray<SharedSliceMockConfig> {
-  const variationConfigs: Record<string, VariationMockConfig> =
-    model.variations.reduce((acc, variationModel) => {
-      const variationMockConfig = legacyMockConfig[variationModel.id];
-      return {
-        ...acc,
-        [variationModel.id]: buildVariationMockConfig(
-          variationModel,
-          variationMockConfig
-        ),
-      };
-    }, {});
-
-  return model.variations.map((v) => {
-    return {
-      type: "SharedSlice",
-      variation: v.id,
-      variations: variationConfigs,
-    };
-  });
-}
-
 export default function MockSlice(
   sliceModel: SharedSlice,
-  legacyMockConfig: Record<string, Record<string, Record<string, unknown>>>, // not sure about this one.
   previousMocks?: ComponentMocks | null | undefined,
   sliceDiff?: SliceDiff | undefined
 ): ComponentMocks {
-  const sliceMockConfig = buildSliceMockConfig(sliceModel, legacyMockConfig);
+  return []
+  // return sliceModel.variations.map((variation) => {
+  //   const variationMock = previousMocks?.find(
+  //     (m) => m.variation === variation.id
+  //   );
 
-  return sliceMockConfig.map((sc) => {
-    if (!sliceDiff) return SharedSliceMock.generate(sliceModel, sc);
+  //   if (!variationMock) {
+  //     return SharedSliceMock.generate(sliceModel);
+  //   }
 
-    const variationMock = previousMocks?.find(
-      (m) => m.variation === sc.variation
-    );
-    if (!variationMock) {
-      return SharedSliceMock.generate(sliceModel, sc);
-    }
+  //   if (!sliceDiff) return variationMock;
 
-    const patched = SharedSliceMock.patch(
-      sliceDiff,
-      sliceModel,
-      variationMock,
-      sc
-    );
+  //   const patched = SharedSliceMock.patch(
+  //     sliceDiff,
+  //     sliceModel,
+  //     variationMock,
+  //   );
 
-    if (!patched.ok) {
-      return variationMock;
-    }
+  //   if (!patched.ok) {
+  //     return variationMock;
+  //   }
 
-    if (!patched.result) {
-      return SharedSliceMock.generate(sliceModel, sc);
-    }
+  //   if (!patched.result) {
+  //     return SharedSliceMock.generate(sliceModel);
+  //   }
 
-    return patched.result;
-  });
+  // })
 }
