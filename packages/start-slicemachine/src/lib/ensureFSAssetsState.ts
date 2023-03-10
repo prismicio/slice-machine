@@ -1,4 +1,3 @@
-import * as t from "io-ts";
 import * as path from "node:path";
 import * as fsSync from "node:fs";
 import { SliceMachineManager } from "@slicemachine/manager";
@@ -11,12 +10,8 @@ import { DocumentMock, SharedSliceMock } from "@prismicio/mocks";
 const MOCKS_FILE_NAME = "mocks.json";
 const MOCK_CONFIG_FILE_NAME = "mock-config.json";
 
-const ComponentMocks = t.array(SharedSliceContent);
-
 const createPathToDeprecatedLibrary = (cwd: string) =>
 	path.join(cwd, ".slicemachine");
-const createPathToSlicesAssets = (cwd: string) =>
-	path.join(createPathToDeprecatedLibrary(cwd), "assets", "slices");
 const createPathToCustomTypesAssets = (cwd: string) =>
 	path.join(createPathToDeprecatedLibrary(cwd), "assets", "customtypes");
 
@@ -30,7 +25,33 @@ const safeUnlink = (pathToUnlink: string, type: "file" | "folder") => {
 	} catch (_) {}
 };
 
-const migrateMockFile = (
+const ensureOrGenerateSliceScreenshot = (
+	variationsIDs: string[],
+	targetPathToSliceFolder: string,
+	deprecatedPathToSliceAssets: string,
+) => {
+	variationsIDs.forEach((variationID) => {
+		const targetPathToVariationScreenshot = path.join(
+			targetPathToSliceFolder,
+			`screenshot-${variationID}.png`,
+		);
+		if (!fsSync.existsSync(targetPathToVariationScreenshot)) {
+			const deprecatedPathToVariationScreenshot = path.join(
+				deprecatedPathToSliceAssets,
+				variationID,
+				"preview.png",
+			);
+			if (fsSync.existsSync(deprecatedPathToVariationScreenshot)) {
+				fsSync.renameSync(
+					deprecatedPathToVariationScreenshot,
+					targetPathToVariationScreenshot,
+				);
+			}
+		}
+	});
+};
+
+const ensureOrGenerateMockFile = (
 	targetPathToMocks: string,
 	deprecatedPathToMocks: string,
 	validator: (str: string) => boolean,
@@ -48,45 +69,72 @@ const migrateMockFile = (
 			return null;
 		})();
 
-		if (rawMockContent === null || !validator(rawMockContent)) {
-			const regeneratedMocks = generate();
-			fsSync.writeFileSync(
-				targetPathToMocks,
-				JSON.stringify(regeneratedMocks, null, 2),
-			);
-		} else {
+		const regeneratedMocksString = JSON.stringify(generate(), null, 2);
+		const isValidMock = (() => {
+			try {
+				return rawMockContent !== null && validator(rawMockContent);
+			} catch {
+				return false;
+			}
+		})();
+
+		if (!isValidMock) {
+			fsSync.writeFileSync(targetPathToMocks, regeneratedMocksString);
+		} else if (rawMockContent) {
 			fsSync.writeFileSync(targetPathToMocks, rawMockContent);
+		} else {
+			fsSync.writeFileSync(targetPathToMocks, regeneratedMocksString);
 		}
 	} catch (error) {}
 };
 
-export const migrate = async (manager: SliceMachineManager): Promise<void> => {
+export const ensureFSAssetsState = async (
+	manager: SliceMachineManager,
+): Promise<void> => {
 	try {
 		const allSlices = await manager.slices.readAllSlices();
 		const sharedSlices = allSlices.models.reduce(
 			(o, slice) => ({ ...o, [slice.model.id]: slice.model }),
 			{},
 		);
+
 		allSlices.models.forEach((c) => {
-			const targetPathToMocks = path.join(
+			const targetPathToSliceFolder = path.join(
 				manager.cwd,
 				c.libraryID,
 				c.model.name,
+			);
+			const targetPathToMocks = path.join(
+				targetPathToSliceFolder,
 				MOCKS_FILE_NAME,
 			);
-			const deprecatedPathToMocks = path.join(
-				createPathToSlicesAssets(manager.cwd),
+			const deprecatedPathToSliceAssets = path.join(
+				createPathToDeprecatedLibrary(manager.cwd),
+				"assets",
 				c.libraryID,
 				c.model.name,
+			);
+			const deprecatedPathToMocks = path.join(
+				deprecatedPathToSliceAssets,
 				MOCKS_FILE_NAME,
 			);
-			migrateMockFile(
+
+			ensureOrGenerateMockFile(
 				targetPathToMocks,
 				deprecatedPathToMocks,
-				(str: string) => ComponentMocks.decode(str)._tag === "Right",
+				(str: string) => {
+					const r = SharedSliceContent.decode(JSON.parse(str));
+					return r._tag === "Right";
+				},
 				() => SharedSliceMock.generate(c.model),
 			);
 
+			const variationsIDs = c.model.variations.map((v) => v.id);
+			ensureOrGenerateSliceScreenshot(
+				variationsIDs,
+				targetPathToSliceFolder,
+				deprecatedPathToSliceAssets,
+			);
 			safeUnlink(deprecatedPathToMocks, "file");
 		});
 
@@ -103,10 +151,10 @@ export const migrate = async (manager: SliceMachineManager): Promise<void> => {
 				c.model.id,
 				MOCKS_FILE_NAME,
 			);
-			migrateMockFile(
+			ensureOrGenerateMockFile(
 				targetPathToMocks,
 				deprecatedPathToMocks,
-				(str: string) => Document.decode(str)._tag === "Right",
+				(str: string) => Document.decode(JSON.parse(str))._tag === "Right",
 				() => DocumentMock.generate(c.model, sharedSlices),
 			);
 		});
@@ -119,6 +167,9 @@ export const migrate = async (manager: SliceMachineManager): Promise<void> => {
 			),
 			"file",
 		);
-		safeUnlink(createPathToCustomTypesAssets(manager.cwd), "folder");
+		safeUnlink(
+			path.join(createPathToDeprecatedLibrary(manager.cwd), "assets"),
+			"folder",
+		);
 	}
 };

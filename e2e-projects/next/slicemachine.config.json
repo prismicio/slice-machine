@@ -1,9 +1,10 @@
 {
-	"apiEndpoint": "https://cimsirp.prismic.io/api/v2",
+	"repositoryName": "cimsirp",
 	"libraries": [
-		"@/slices/ecommerce",
-		"@/slices/marketing",
-		"@/slices/navigation"
+		"slices/ecommerce",
+		"slices/marketing",
+		"slices/navigation"
 	],
+	"adapter": "@slicemachine/adapter-next",
 	"localSliceSimulatorURL": "http://localhost:3500/slice-simulator"
 }

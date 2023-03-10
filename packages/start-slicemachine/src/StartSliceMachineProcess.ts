@@ -10,7 +10,7 @@ import open from "open";
 
 import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
-import { migrate } from "./lib/migrate";
+import { ensureFSAssetsState } from "./lib/ensureFSAssetsState";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -66,7 +66,7 @@ export class StartSliceMachineProcess {
 	async run(): Promise<void> {
 		await this._sliceMachineManager.plugins.initPlugins();
 
-		await migrate(this._sliceMachineManager);
+		await ensureFSAssetsState(this._sliceMachineManager);
 		await this._validateProject();
 
 		const server = await createSliceMachineServer({
