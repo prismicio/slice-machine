@@ -9,21 +9,12 @@ import {
 	Limit,
 	LimitType,
 	RawLimit,
+	TransactionalMergeArgs,
+	TransactionalMergeReturnType,
 } from "./types";
 import fetch from "node-fetch";
 import * as t from "io-ts";
 import { fold } from "fp-ts/Either";
-
-type TransactionalMergeArgs = {
-	confirmDeleteDocuments: boolean;
-	changes: {
-		id: string;
-		type: "Slice" | "CustomType";
-		operation: "create" | "change" | "delete";
-	}[];
-};
-
-type TransactionalMergeReturnType = Limit | null;
 
 export class TransactionalMergeManager extends BaseManager {
 	constructor(sliceMachineManager: SliceMachineManager) {
@@ -43,8 +34,8 @@ export class TransactionalMergeManager extends BaseManager {
 			const allChanges: AllChangeTypes[] = await Promise.all(
 				args.changes.map(async (change) => {
 					if (change.type === "Slice") {
-						switch (change.operation) {
-							case "create": {
+						switch (change.status) {
+							case "NEW": {
 								const { model } = await this.slices.readSlice({
 									libraryID: "./slices",
 									sliceID: change.id,
@@ -52,7 +43,7 @@ export class TransactionalMergeManager extends BaseManager {
 
 								if (!model) {
 									// TODO: This can be undefined but types don't catch it
-									throw Error("Could not find model ${change.id}");
+									throw Error(`Could not find model ${change.id}`);
 								}
 
 								return {
@@ -61,7 +52,7 @@ export class TransactionalMergeManager extends BaseManager {
 									payload: model,
 								};
 							}
-							case "change": {
+							case "MODIFIED": {
 								const { model } = await this.slices.readSlice({
 									libraryID: "./slices",
 									sliceID: change.id,
@@ -69,7 +60,7 @@ export class TransactionalMergeManager extends BaseManager {
 
 								if (!model) {
 									// TODO: This can be undefined but types don't catch it
-									throw Error("Could not find model");
+									throw Error(`Could not find model  ${change.id}`);
 								}
 
 								return {
@@ -78,7 +69,7 @@ export class TransactionalMergeManager extends BaseManager {
 									payload: model,
 								};
 							}
-							case "delete":
+							case "DELETED":
 								return {
 									id: change.id,
 									payload: { id: change.id },
@@ -86,8 +77,8 @@ export class TransactionalMergeManager extends BaseManager {
 								};
 						}
 					} else {
-						switch (change.operation) {
-							case "create": {
+						switch (change.status) {
+							case "NEW": {
 								const { model } = await this.customTypes.readCustomType({
 									id: change.id,
 								});
@@ -101,12 +92,12 @@ export class TransactionalMergeManager extends BaseManager {
 									payload: model,
 								};
 							}
-							case "change": {
+							case "MODIFIED": {
 								const { model } = await this.customTypes.readCustomType({
 									id: change.id,
 								});
 								if (!model) {
-									throw Error("Could not find model");
+									throw Error(`Could not find model ${change.id}`);
 								}
 
 								return {
@@ -115,7 +106,7 @@ export class TransactionalMergeManager extends BaseManager {
 									payload: model,
 								};
 							}
-							case "delete":
+							case "DELETED":
 								return {
 									id: change.id,
 									payload: { id: change.id },
@@ -135,7 +126,8 @@ export class TransactionalMergeManager extends BaseManager {
 			const authenticationToken = await this.user.getAuthenticationToken();
 			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
-			// return fetch(`${API_ENDPOINTS.PrismicModels}bulk`, { // TODO: use the right endpoint (this ends in /customtypes)
+			// TODO: API route in consts ends with /customtypes
+			// TODO: move to customtypes client
 			return fetch("https://customtypes.prismic.io/bulk", {
 				body: JSON.stringify(requestBody),
 				method: "POST",
@@ -146,13 +138,13 @@ export class TransactionalMergeManager extends BaseManager {
 					"Content-Type": "application/json",
 				},
 			})
-				.then((response) => {
+				.then(async (response) => {
 					if (response.status === 204) {
 						return null;
 					}
 
 					return this._decodeLimitOrThrow(
-						response.json(),
+						await response.json(),
 						response.status,
 						LimitType.SOFT,
 					);

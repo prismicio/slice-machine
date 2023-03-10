@@ -1,131 +1,5 @@
-// TODO: all of this should probably be shared somewhere
 import { CustomTypes } from "@prismicio/types-internal";
 import * as t from "io-ts";
-
-type LibraryMeta = {
-	reader: {
-		name: string;
-		version: string;
-	};
-	build(libPath: string):
-		| {
-				name: string;
-				version: string;
-		  }
-		| undefined;
-};
-export interface ComponentInfo {
-	fileName: string | null;
-	extension: string | null;
-	model: CustomTypes.Widgets.Slices.SharedSlice;
-	screenshots: {
-		[variationId: string]: Screenshot;
-	};
-	mock?: any;
-}
-export declare const ComponentInfo: {
-	hasPreviewsMissing(info: ComponentInfo): boolean;
-};
-export interface Component extends ComponentInfo {
-	from: string;
-	href: string;
-	pathToSlice: string;
-}
-export interface Screenshot {
-	path: string;
-	hash: string;
-}
-export interface Library<C extends Component> {
-	name: string;
-	path: string;
-	isLocal: boolean;
-	components: ReadonlyArray<C>;
-	meta?: LibraryMeta;
-}
-
-// Generics
-
-type LocalOrRemote<L = unknown, R = L> =
-	| LocalAndRemote<L, R>
-	| LocalOnly<L>
-	| RemoteOnly<R>;
-type LocalAndRemote<L = unknown, R = L> = LocalOnly<L> & RemoteOnly<R>;
-type LocalOnly<L = unknown> = { local: L };
-type RemoteOnly<R = unknown> = { remote: R };
-
-export function hasLocalAndRemote<T extends LocalOrRemote>(
-	obj: T,
-): obj is T extends LocalAndRemote ? T : never {
-	return "local" in obj && "remote" in obj;
-}
-
-export function hasLocal<T extends LocalOrRemote>(
-	obj: T,
-): obj is T extends LocalAndRemote | LocalOnly ? T : never {
-	return "local" in obj;
-}
-
-export function hasRemote<T extends LocalOrRemote>(
-	obj: T,
-): obj is T extends LocalAndRemote | RemoteOnly ? T : never {
-	return "remote" in obj;
-}
-
-export function isRemoteOnly<T extends LocalOrRemote>(
-	obj: T,
-): obj is T extends RemoteOnly ? T : never {
-	return hasRemote(obj) && !hasLocal(obj);
-}
-
-export function isLocalOnly<T extends LocalOrRemote>(
-	obj: T,
-): obj is T extends LocalOnly ? T : never {
-	return !hasRemote(obj) && hasLocal(obj);
-}
-
-// Custom Types
-
-export type LocalOrRemoteCustomType = LocalOrRemote<CustomTypes.CustomType>;
-export type LocalAndRemoteCustomType = LocalAndRemote<CustomTypes.CustomType>;
-export type LocalOnlyCustomType = LocalOnly<CustomTypes.CustomType>;
-export type RemoteOnlyCustomType = RemoteOnly<CustomTypes.CustomType>;
-
-// Slices
-
-export type LocalOrRemoteSlice =
-	| LocalAndRemoteSlice
-	| LocalOnlySlice
-	| RemoteOnlySlice;
-export type LocalAndRemoteSlice =
-	LocalAndRemote<CustomTypes.Widgets.Slices.SharedSlice> & {
-		localScreenshots: Partial<Record<string, Screenshot>>;
-	};
-export type LocalOnlySlice =
-	LocalOnly<CustomTypes.Widgets.Slices.SharedSlice> & {
-		localScreenshots: Partial<Record<string, Screenshot>>;
-	};
-export type RemoteOnlySlice =
-	RemoteOnly<CustomTypes.Widgets.Slices.SharedSlice> & {
-		localScreenshots: Partial<Record<string, Screenshot>>;
-	};
-
-// Models
-
-export type LocalOrRemoteModel = LocalOrRemoteCustomType | LocalOrRemoteSlice;
-
-export function getModelId<
-	M extends CustomTypes.CustomType | CustomTypes.Widgets.Slices.SharedSlice,
->(model: LocalOrRemote<M>): M["id"] {
-	return hasLocal(model) ? model.local.id : model.remote.id;
-}
-
-export enum ModelStatus {
-	New = "NEW", // new model that does not exist in the repo
-	Modified = "MODIFIED", // model that exist both remote and locally but has modifications locally
-	Synced = "SYNCED", // model that exist both remote and locally with no modifications
-	Deleted = "DELETED", // model that exist remotely but not locally
-	Unknown = "UNKNOWN", // unable to detect the status of a model
-}
 
 export enum ChangeTypes {
 	SLICE_INSERT = "SLICE_INSERT",
@@ -203,3 +77,14 @@ export interface ClientError {
 	status: number;
 	message: string;
 }
+
+export type TransactionalMergeArgs = {
+	confirmDeleteDocuments: boolean;
+	changes: {
+		id: string;
+		type: "Slice" | "CustomType";
+		status: "NEW" | "MODIFIED" | "DELETED";
+	}[];
+};
+
+export type TransactionalMergeReturnType = Limit | null;

@@ -22,6 +22,11 @@ export enum ModelStatus {
   Unknown = "UNKNOWN", // unable to detect the status of a model
 }
 
+export type ChangesStatus =
+  | ModelStatus.Deleted
+  | ModelStatus.New
+  | ModelStatus.Modified;
+
 const isSliceModel = (
   model: LocalAndRemoteSlice | LocalAndRemoteCustomType
 ): model is LocalAndRemoteSlice => {

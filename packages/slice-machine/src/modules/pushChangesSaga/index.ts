@@ -22,37 +22,26 @@ import {
   InvalidCustomTypeResponse,
   PushChangesPayload,
 } from "@lib/models/common/TransactionalPush";
-import axios from "axios";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
-import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
 import Tracker from "@src/tracking/client";
+import { SliceMachineManagerClient } from "@slicemachine/manager/client";
+import { ChangesStatus } from "@lib/models/common/ModelStatus";
 
 export type ChangesPushSagaPayload = PushChangesPayload & {
-  unSyncedSlices: ReadonlyArray<ComponentUI>;
-  unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
-  modelsStatuses: ModelStatusInformation["modelsStatuses"];
+  changedSlices: ReadonlyArray<{ c: ComponentUI; status: ChangesStatus }>;
+  changedCustomTypes: ReadonlyArray<{
+    c: CustomTypeSM;
+    status: ChangesStatus;
+  }>;
 };
 
-// TODO: move to a common place
-type RawLimit = {
-  details: {
-    customTypes: {
-      id: string;
-      numberOfDocuments: number;
-      url: string;
-    }[];
-  };
-};
-enum LimitType {
-  SOFT = "SOFT",
-  HARD = "HARD",
-}
-type Limit = RawLimit & {
-  type: LimitType;
-};
+type Limit = NonNullable<
+  Awaited<
+    ReturnType<SliceMachineManagerClient["transactionalMerge"]["pushChanges"]>
+  >
+>;
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
@@ -72,43 +61,27 @@ export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
 
 const MODAL_KEY_MAP = {
   // INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
-  [LimitType.SOFT]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
-  [LimitType.HARD]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
-};
-
-const modelStatusToOperation = (
-  status: ModelStatus
-): "create" | "change" | "delete" => {
-  switch (status) {
-    case ModelStatus.New:
-      return "create";
-    case ModelStatus.Modified:
-      return "change";
-    case ModelStatus.Deleted:
-      return "delete";
-  }
-  throw Error("Invalid model status");
+  ["SOFT"]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
+  ["HARD"]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
 };
 
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
   const startTime = Date.now();
-  const { unSyncedSlices, unSyncedCustomTypes, modelsStatuses } = payload;
+  const { changedSlices, changedCustomTypes } = payload;
 
   const sliceChanges: Parameters<typeof pushChanges>[0]["changes"] =
-    unSyncedSlices.map((slice) => ({
-      id: slice.model.id,
+    changedSlices.map((slice) => ({
+      id: slice.c.model.id,
       type: "Slice",
-      operation: modelStatusToOperation(modelsStatuses.slices[slice.model.id]),
+      status: slice.status,
     }));
   const customTypeChanges: Parameters<typeof pushChanges>[0]["changes"] =
-    unSyncedCustomTypes.map((customType) => ({
-      id: customType.id,
+    changedCustomTypes.map((customType) => ({
+      id: customType.c.id,
       type: "CustomType",
-      operation: modelStatusToOperation(
-        modelsStatuses.customTypes[customType.id]
-      ),
+      status: customType.status,
     }));
 
   // Creating a new payload with the correct format
@@ -166,27 +139,14 @@ export function* changesPushSaga({
       })
     );
   } catch (error) {
-    const errorStatus =
-      axios.isAxiosError(error) && error.response ? error.response.status : 500;
-    switch (errorStatus) {
-      case 401:
-      case 403: {
-        // Opening the login modal
-        yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-
-        break;
-      }
-
-      default: {
-        yield put(
-          openToasterCreator({
-            content:
-              "Something went wrong when pushing your changes. Check your terminal logs.",
-            type: ToasterType.ERROR,
-          })
-        );
-      }
-    }
+    // TODO: handle auth errors
+    yield put(
+      openToasterCreator({
+        content:
+          "Something went wrong when pushing your changes. Check your terminal logs.",
+        type: ToasterType.ERROR,
+      })
+    );
   }
 }
 
