@@ -122,7 +122,8 @@ export const ensureFSAssetsState = async (
 			ensureOrGenerateMockFile(
 				targetPathToMocks,
 				deprecatedPathToMocks,
-				(str: string) => SharedSliceContent.decode(JSON.parse(str))._tag === "Right",
+				(str: string) =>
+					SharedSliceContent.decode(JSON.parse(str))._tag === "Right",
 				() => SharedSliceMock.generate(c.model),
 			);
 
