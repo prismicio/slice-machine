@@ -13,12 +13,14 @@ import {
 	eventHandler,
 	createRouter,
 	proxyRequest,
+	createError,
 } from "h3";
 import serveStatic from "serve-static";
 import cors from "cors";
 import fetch from "node-fetch";
 import { createStaticFileEventHandler } from "./createStaticFileEventHandler";
 import { handler as sentryHandler } from "./sentryHandler";
+import { onError, initSentry } from "./sentrySetup";
 
 type CreateSliceMachineServerArgs = {
 	sliceMachineManager: SliceMachineManager;
@@ -44,7 +46,11 @@ type CreateSliceMachineServerArgs = {
 export const createSliceMachineServer = async (
 	args: CreateSliceMachineServerArgs,
 ): Promise<Server> => {
-	const app = createApp();
+	initSentry(args.sliceMachineManager);
+
+	const app = createApp({
+		onError,
+	});
 	const router = createRouter();
 
 	app.use(fromNodeMiddleware(cors()));
@@ -78,6 +84,22 @@ export const createSliceMachineServer = async (
 	);
 
 	router.add("/api/t", eventHandler(sentryHandler));
+
+	router.add(
+		"/api/crash",
+		eventHandler(() => {
+			throw new Error("Uncaught Error");
+		}),
+	);
+	router.add(
+		"/api/error",
+		eventHandler(() => {
+			return createError({
+				status: 500,
+				message: "Test Error",
+			});
+		}),
+	);
 
 	if (process.env.NODE_ENV === "development") {
 		router.get(
