@@ -20,7 +20,7 @@ import cors from "cors";
 import fetch from "node-fetch";
 import { createStaticFileEventHandler } from "./createStaticFileEventHandler";
 import { handler as sentryHandler } from "./sentryHandler";
-import { onError, initSentry } from "./sentrySetup";
+import { setupSentry } from "./setupSentry";
 
 type CreateSliceMachineServerArgs = {
 	sliceMachineManager: SliceMachineManager;
@@ -46,11 +46,10 @@ type CreateSliceMachineServerArgs = {
 export const createSliceMachineServer = async (
 	args: CreateSliceMachineServerArgs,
 ): Promise<Server> => {
-	initSentry(args.sliceMachineManager);
+	const app = createApp();
 
-	const app = createApp({
-		onError,
-	});
+	setupSentry(args.sliceMachineManager, app);
+
 	const router = createRouter();
 
 	app.use(fromNodeMiddleware(cors()));
