@@ -22,6 +22,10 @@ const main = async () => {
     }
   );
 
+  if (!res.headers.has("Set-Cookie")){
+    throw new Error("Could not authenticate to prismic. Please check the credentials.");
+  }
+
   await fs.writeFile(
     path.join(os.homedir(), ".prismic"),
     JSON.stringify({
