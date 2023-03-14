@@ -6,7 +6,7 @@ import { SLICE_MOCK_FILE } from "../../consts";
 const SLICE = {
   id: "scenario008",
   name: "Scenario008",
-  library: "slices",
+  library: ".--slices",
 };
 
 describe("Scenario 008", () => {

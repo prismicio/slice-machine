@@ -8,7 +8,7 @@ const customTypeId = `my_test_${random}`;
 
 const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
-const sliceLib = "slices";
+const sliceLib = ".--slices";
 
 describe("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {
@@ -68,7 +68,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
 
     sliceBuilder.save();
 
-    cy.reload();
+    cy.reload(true);
     cy.contains("Static Key Text Field");
     cy.contains("Static Rich Text Field");
     cy.contains("Repeatable Rich Text Field");
@@ -89,7 +89,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
 
     customTypeBuilder.save();
 
-    cy.reload();
+    cy.reload(true);
     cy.contains(sliceName);
   });
 
@@ -118,7 +118,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     );
     cy.get("#review-form").submit();
 
-    cy.reload();
+    cy.reload(true);
     cy.waitUntil(() => cy.get("[data-cy=create-ct]"));
 
     cy.get("#review-form").should("not.exist");

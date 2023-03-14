@@ -19,7 +19,7 @@ import {
 const SLICE = {
   id: "sliceBuild",
   name: "SliceBuilding",
-  library: "slices",
+  library: ".--slices",
 };
 
 describe("I am a new SM user (with Next) who wants to build a slice with different widgets.", () => {

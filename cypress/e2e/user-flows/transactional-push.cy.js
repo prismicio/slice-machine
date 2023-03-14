@@ -15,7 +15,7 @@ describe("I am an existing SM user and I want to push local changes", () => {
   const slice = {
     id: `test_push${random}`,
     name: `TestPush${random}`,
-    library: "slices",
+    library: ".--slices",
   };
 
   const customType = {
