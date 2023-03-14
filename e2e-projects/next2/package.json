@@ -10,20 +10,20 @@
     "slicemachine": "start-slicemachine"
   },
   "dependencies": {
-    "@prismicio/react": "^2.5.0",
-    "@types/node": "18.11.9",
-    "@types/react": "18.0.25",
-    "@types/react-dom": "18.0.8",
-    "eslint": "8.27.0",
-    "eslint-config-next": "13.0.2",
-    "next": "13.0.2",
+    "@prismicio/react": "^2.5.2",
+    "@types/node": "18.14.1",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "eslint": "8.34.0",
+    "eslint-config-next": "13.2.1",
+    "next": "13.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.8.4"
+    "typescript": "4.9.5"
   },
   "devDependencies": {
     "@slicemachine/adapter-next": "^0.0.9",
-    "slice-machine-ui": "0.6.1-dev-plugins.11",
-    "start-slicemachine": "0.1.1-dev-plugins.11"
+    "slice-machine-ui": "0.6.1-dev-plugins.12",
+    "start-slicemachine": "0.1.1-dev-plugins.12"
   }
 }

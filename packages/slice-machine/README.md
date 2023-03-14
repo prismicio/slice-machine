@@ -1,10 +1,7 @@
 <p align="center">
-  <a href="https://slicemachine.dev">
+  <a href="https://prismic.io/slice-machine">
     <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
   </a>
-</p>
-<p align="center">
-  A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.
 </p>
 
 # Slice Machine
@@ -15,21 +12,31 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
+[Slice Machine][slice-machine] transforms the way you code reusable components and lets you deliver them directly to marketers in a custom page builder using [Prismic][prismic].
+
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
-- 🔪 &nbsp;Create slices locally;
-- 📄 &nbsp;Manage your custom types;
-- 🖼 &nbsp;Storybook integrated workflow.
+- 🧰 &nbsp;Build [Slices][prismic-docs-slices] in a specialized development environment.
+- 📄 &nbsp;Manage and configure your [Custom Types][prismic-docs-custom-types].
+- ⚒️ &nbsp;Integrate into your website's framework using code generation.
 
 ## Install
 
-```bash
+We recommend installing Slice Machine into your project using `@slicemachine/init`:
+
+```sh
 npx @slicemachine/init
+```
+
+If you want to install `slice-machine-ui` manually, you can do so like this:
+
+```sh
+npm install --save-dev slice-machine-ui
 ```
 
 ## Documentation
 
-For full documentation, visit the [official Prismic documentation][prismic-docs].
+For full documentation, visit the [official Prismic documentation][prismic-docs-slice-machine].
 
 ## Contributing
 
@@ -47,29 +54,34 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 
 To start the SliceMachine locally you need to :
 
-1) Install the project dependencies
-> `make install`
-2) Run the SliceMachine backend (express server) into a first terminal
-> `cd packages/slice-machine && npm run dev-server`
-3) Run the SliceMachine frontend (next server) into a second terminal
-> `cd packages/slice-machine && npm run dev`
-4) Open the SliceMachine in your browser `http://localhost:9999`
-5) (optional) When working on the `@slicemachine/core` package you have to run an extra watcher
-> `cd packages/core && npm run watch`
+1. Install the project dependencies
+   > `make install`
+2. Run the SliceMachine backend (express server) into a first terminal
+   > `cd packages/slice-machine && npm run dev-server`
+3. Run the SliceMachine frontend (next server) into a second terminal
+   > `cd packages/slice-machine && npm run dev`
+4. Open the SliceMachine in your browser `http://localhost:9999`
+5. (optional) When working on the `@slicemachine/core` package you have to run an extra watcher
+   > `cd packages/core && npm run watch`
 
 SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
 
 #### `make clean`
+
 > a command that clean all the project dependencies and reinstall the SliceMachine from scratch
+
 #### `npm run test`
+
 > boolean check if unit tests all pass - uses jest
+
 #### `npm run lint`
+
 > boolean check if code conforms to linting rules - uses eslint
 
 ## License
 
 ```
-   Copyright 2013-2021 Prismic <contact@prismic.io> (https://prismic.io)
+   Copyright 2013-2023 Prismic <contact@prismic.io> (https://prismic.io)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -87,10 +99,14 @@ SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
 <!-- Links -->
 
 [prismic]: https://prismic.io
+[slice-machine]: https://prismic.io/slice-machine
 
 <!-- TODO: Replace link with a more useful one if available -->
 
 [prismic-docs]: https://prismic.io/docs
+[prismic-docs-slice-machine]: https://prismic.io/docs/slice-machine
+[prismic-docs-slices]: https://prismic.io/docs/slice
+[prismic-docs-custom-types]: https://prismic.io/docs/custom-types
 [changelog]: /CHANGELOG.md
 
 <!-- TODO: Replace link with a more useful one if available -->

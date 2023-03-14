@@ -31,6 +31,7 @@ describe("[Selected Slice sagas]", () => {
         error: null,
         done: true,
         loading: false,
+        message: "Model saved",
       });
     });
     it("should open a error toaster on internal error", () => {
@@ -45,7 +46,7 @@ describe("[Selected Slice sagas]", () => {
 
       saga.throw(new Error()).put(
         openToasterCreator({
-          message: "Internal Error: Models & mocks not generated",
+          content: "Internal Error: Models & mocks not generated",
           type: ToasterType.ERROR,
         })
       );

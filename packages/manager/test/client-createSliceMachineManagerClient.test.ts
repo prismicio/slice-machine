@@ -6,7 +6,7 @@ import { createSliceMachineManagerClient } from "../src/client";
 vi.stubGlobal("Blob", Blob);
 
 it("creates an RPC client for a given URL", async () => {
-	const fetch = vi.fn() as typeof globalThis.fetch;
+	const fetch = vi.fn();
 	const serverURL = "https://example.com/manager";
 	const client = createSliceMachineManagerClient({ serverURL, fetch });
 

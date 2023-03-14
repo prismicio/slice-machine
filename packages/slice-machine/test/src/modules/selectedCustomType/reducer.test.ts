@@ -13,6 +13,7 @@ import {
   replaceFieldCreator,
   replaceSharedSliceCreator,
   updateTabCreator,
+  cleanupCustomTypeStoreCreator,
 } from "@src/modules/selectedCustomType";
 import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 import * as widgets from "@models/common/widgets/withGroup";
@@ -40,6 +41,15 @@ describe("[Selected Custom type module]", () => {
       expect(
         selectedCustomTypeReducer(dummyCustomTypesState, { type: "NO.MATCH" })
       ).toEqual(dummyCustomTypesState);
+    });
+
+    it("should reset the custom type state given CUSTOM_TYPE/CLEANUP action", () => {
+      expect(
+        selectedCustomTypeReducer(
+          dummyCustomTypesState,
+          cleanupCustomTypeStoreCreator()
+        )
+      ).toEqual(null);
     });
 
     it("should update the custom type state given CUSTOM_TYPE/INIT action", () => {

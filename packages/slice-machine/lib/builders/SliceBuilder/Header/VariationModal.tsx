@@ -5,7 +5,7 @@ import { Formik, Form, Field } from "formik";
 import SliceMachineModal from "@components/SliceMachineModal";
 
 import Card from "@components/Card/Default";
-import Select from "react-select";
+import Select from "@components/Select";
 
 import { Text, Box, Button, Label, Input, Flex } from "theme-ui";
 

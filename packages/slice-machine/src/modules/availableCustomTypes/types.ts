@@ -1,8 +1,6 @@
 import { CustomTypeSM } from "@lib/models/common/CustomType";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 
-export type FrontEndCustomType = {
-  local: CustomTypeSM;
-  remote?: CustomTypeSM;
-};
-
-export type AvailableCustomTypesStoreType = Record<string, FrontEndCustomType>;
+export type AvailableCustomTypesStoreType = Readonly<
+  Record<CustomTypeSM["id"], LocalOrRemoteCustomType>
+>;
