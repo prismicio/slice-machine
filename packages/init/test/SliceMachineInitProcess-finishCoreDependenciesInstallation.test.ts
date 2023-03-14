@@ -1,4 +1,4 @@
-import { beforeEach, expect, it, vi } from "vitest";
+import { beforeEach, expect, it } from "vitest";
 import { execaCommand } from "execa";
 
 import { createSliceMachineInitProcess } from "../src";
