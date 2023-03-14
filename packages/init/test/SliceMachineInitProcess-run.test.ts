@@ -1,5 +1,6 @@
 import { expect, it, TestContext, vi } from "vitest";
 import { vol } from "memfs";
+import { execaCommand } from "execa";
 
 import { createSliceMachineInitProcess, SliceMachineInitProcess } from "../src";
 import { UNIVERSAL } from "../src/lib/framework";
@@ -14,19 +15,7 @@ import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { injectTestAdapter } from "./__testutils__/injectTestAdapter";
 import { loginUser } from "./__testutils__/loginUser";
 import { watchStd } from "./__testutils__/watchStd";
-import { spyManager } from "./__testutils__/spyManager";
-
-vi.mock("execa", async () => {
-	const execa: typeof import("execa") = await vi.importActual("execa");
-
-	return {
-		...execa,
-		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace command with simple `echo`
-			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
-		}) as typeof execa.execaCommand,
-	};
-});
+import { spyManager, SpyManagerReturnType } from "./__testutils__/spyManager";
 
 const existingRepo = "existing-repo";
 const prepareEnvironment = async (
@@ -34,7 +23,7 @@ const prepareEnvironment = async (
 	initProcess: SliceMachineInitProcess,
 	repositoryName: string,
 	isNewRepo = false,
-): Promise<void> => {
+): Promise<{ spiedManager: SpyManagerReturnType }> => {
 	vol.fromJSON(
 		{
 			"./package.json": JSON.stringify({
@@ -170,6 +159,21 @@ const prepareEnvironment = async (
 			documents,
 		},
 	});
+
+	// Mock execa
+	const spiedManager = spyManager(initProcess);
+	spiedManager.project.installDependencies.mockImplementation((args) => {
+		const execaProcess = execaCommand(
+			`echo 'mock command ran: ${JSON.stringify(args)}'`,
+			{ encoding: "utf-8" },
+		);
+
+		return {
+			execaProcess,
+		};
+	});
+
+	return { spiedManager };
 };
 
 it("runs it all", async (ctx) => {
@@ -274,8 +278,11 @@ it("tracks thrown errors", async (ctx) => {
 		repository: existingRepo,
 		cwd: "/",
 	});
-	await prepareEnvironment(ctx, initProcess, "repo-admin");
-	const spiedManager = spyManager(initProcess);
+	const { spiedManager } = await prepareEnvironment(
+		ctx,
+		initProcess,
+		"repo-admin",
+	);
 
 	await expect(
 		watchStd(() => {

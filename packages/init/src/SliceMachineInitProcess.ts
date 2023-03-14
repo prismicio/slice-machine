@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import chalk from "chalk";
-import { ExecaChildProcess } from "execa";
+import type { ExecaChildProcess } from "execa";
 import open from "open";
 import logSymbols from "log-symbols";
 import { globby } from "globby";
@@ -219,7 +219,9 @@ export class SliceMachineInitProcess {
 							title: "Detecting package manager...",
 							task: async (_, task) => {
 								this.context.packageManager =
-									await this.manager.project.detectPackageManager();
+									await this.manager.project.detectPackageManager({
+										root: this.manager.cwd,
+									});
 
 								task.title = `Detected package manager ${chalk.cyan(
 									this.context.packageManager,
@@ -1040,24 +1042,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						}
 					};
 
-					try {
-						await this.manager.project.initProject({
-							log: updateOutput,
-						});
-					} catch (error) {
-						if (
-							error instanceof Error &&
-							/package installation failed/i.test(error.message) &&
-							error.cause instanceof Error &&
-							"shortMessage" in error.cause &&
-							"stderr" in error.cause
-						) {
-							throw new Error(
-								`\n\n${error.cause.shortMessage}\n${error.cause.stderr}\n\n${logSymbols.error} Plugins dependency installation failed`,
-								{ cause: error },
-							);
-						}
-					}
+					await this.manager.project.initProject({
+						log: updateOutput,
+					});
 
 					task.title = "Initialized plugins";
 				},

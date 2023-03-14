@@ -1,4 +1,5 @@
 import { beforeEach, expect, it, vi } from "vitest";
+import { execaCommand } from "execa";
 
 import { createSliceMachineInitProcess } from "../src";
 import { UNIVERSAL } from "../src/lib/framework";
@@ -6,25 +7,26 @@ import { UNIVERSAL } from "../src/lib/framework";
 import { setContext } from "./__testutils__/setContext";
 import { updateContext } from "./__testutils__/updateContext";
 import { watchStd } from "./__testutils__/watchStd";
-
-vi.mock("execa", async () => {
-	const execa: typeof import("execa") = await vi.importActual("execa");
-
-	return {
-		...execa,
-		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace command with simple `echo`
-			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
-		}) as typeof execa.execaCommand,
-	};
-});
+import { spyManager } from "./__testutils__/spyManager";
 
 const initProcess = createSliceMachineInitProcess();
+const spiedManager = spyManager(initProcess);
 
 beforeEach(async () => {
 	setContext(initProcess, {
 		packageManager: "npm",
 		framework: UNIVERSAL,
+	});
+
+	spiedManager.project.installDependencies.mockImplementation((args) => {
+		const execaProcess = execaCommand(
+			`echo 'mock command ran: ${JSON.stringify(args)}'`,
+			{ encoding: "utf-8" },
+		);
+
+		return {
+			execaProcess,
+		};
 	});
 
 	// @ts-expect-error - Accessing protected property

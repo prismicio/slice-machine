@@ -42,6 +42,10 @@ type ProjectManagerInitProjectArgs = {
 	log?: (message: string) => void;
 };
 
+type ProjectManagerDetectPackageManager = {
+	root?: string;
+};
+
 type ProjectManagerInstallDependenciesArgs = {
 	dependencies: Record<string, string>;
 	dev?: boolean;
@@ -214,8 +218,10 @@ export class ProjectManager extends BaseManager {
 		}
 	}
 
-	async detectPackageManager(): Promise<PackageManager> {
-		const projectRoot = await this.getRoot();
+	async detectPackageManager(
+		args?: ProjectManagerDetectPackageManager,
+	): Promise<PackageManager> {
+		const projectRoot = args?.root || (await this.getRoot());
 
 		const packageManager = await niDetect({
 			autoInstall: true,
