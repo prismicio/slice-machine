@@ -168,9 +168,9 @@ const prepareEnvironment = async (
 			{ encoding: "utf-8" },
 		);
 
-		return {
+		return Promise.resolve({
 			execaProcess,
-		};
+		});
 	});
 
 	return { spiedManager };

@@ -24,9 +24,9 @@ beforeEach(async () => {
 			{ encoding: "utf-8" },
 		);
 
-		return {
+		return Promise.resolve({
 			execaProcess,
-		};
+		});
 	});
 
 	// @ts-expect-error - Accessing protected property
