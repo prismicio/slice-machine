@@ -191,7 +191,7 @@ export class ProjectManager extends BaseManager {
 		const log = args.log || console.log.bind(globalThis);
 
 		const { errors } = await this.sliceMachinePluginRunner.callHook(
-			"command:init",
+			"project:init",
 			{
 				log,
 				installDependencies: async (args) => {
