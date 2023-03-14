@@ -121,3 +121,6 @@ vi.stubGlobal(
     };
   })
 );
+
+// See: https://github.com/vitest-dev/vitest/issues/2296
+require.extensions[".css"] = () => ({});

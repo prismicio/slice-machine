@@ -1,9 +1,9 @@
-import { parseNx } from "@antfu/ni";
+import { parseNix } from "@antfu/ni";
 import { PackageManager } from "@slicemachine/manager";
 
 export const getExecuteCommand = async (args: {
 	agent: PackageManager;
 	script: string;
 }): Promise<string> => {
-	return (await parseNx(args.agent, [args.script])) || `npx ${args.script}`;
+	return (await parseNix(args.agent, [args.script])) || `npx ${args.script}`;
 };
