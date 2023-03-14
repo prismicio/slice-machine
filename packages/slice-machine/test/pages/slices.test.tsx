@@ -52,6 +52,7 @@ describe("slices", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -162,7 +163,7 @@ describe("slices", () => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
+    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
 
     render(<SlicesIndex />, {
       preloadedState: {
@@ -191,9 +192,16 @@ describe("slices", () => {
 
     await waitFor(() => expect(trackingSpy).toHaveBeenCalled());
 
-    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-      name: "SliceMachine Slice Created",
-      props: { id: "FooBar", name: "FooBar", library: "slices" },
+    const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
+      batch: Array<Record<string, unknown>>;
+    }>();
+    expect(trackingData?.batch[0]).toMatchObject({
+      event: "SliceMachine Slice Created",
+      properties: {
+        id: "FooBar",
+        name: "FooBar",
+        library: "slices",
+      },
     });
   });
 
@@ -214,6 +222,7 @@ describe("slices", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -324,7 +333,7 @@ describe("slices", () => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
+    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
 
     render(<SlicesIndex />, {
       preloadedState: {

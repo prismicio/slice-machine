@@ -12,21 +12,6 @@ import {
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
-import {
-  rest,
-  // type RestContext,
-  // type RestRequest,
-  // type ResponseComposition,
-} from "msw";
-
-// const makeTrackerSpy = () =>
-//   jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
-//     return res(ctx.json({}));
-//   });
-
-// const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
-//   server.use(rest.post("http://localhost/api/s", spy));
-
 const customTypeModel: CustomTypeSM = {
   id: "about",
   label: "My Cool About Page",
@@ -60,9 +45,7 @@ const customTypeModel: CustomTypeSM = {
 
 describe("[Selected Custom type sagas]", () => {
   describe("[saveCustomTypeSaga]", () => {
-    it("should call the api and dispatch the good actions on success", (ctx) => {
-      ctx.msw.use(rest.post("/api/s", (_req, res, ctx) => res(ctx.json({}))));
-
+    it("should call the api and dispatch the good actions on success", () => {
       const saga = testSaga(saveCustomTypeSaga);
 
       saga.next().select(selectCurrentCustomType);
@@ -81,8 +64,6 @@ describe("[Selected Custom type sagas]", () => {
       saga.next().isDone();
     });
     it("should open a error toaster on internal error", () => {
-      // const fakeTracker = makeTrackerSpy();
-      // interceptTracker(fakeTracker); // warnings happen without this
       const saga = testSaga(saveCustomTypeSaga).next();
 
       saga.throw(new Error()).put(

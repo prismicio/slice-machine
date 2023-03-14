@@ -31,6 +31,7 @@ describe("CreateCustomTypeModal", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -43,7 +44,7 @@ describe("CreateCustomTypeModal", () => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
+    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
 
     const fakeId = "testing_id";
     const fakeName = "testing-name";
@@ -75,19 +76,16 @@ describe("CreateCustomTypeModal", () => {
       fireEvent.click(submitButton);
     });
 
-    expect(trackingSpy).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        body: {
-          name: "SliceMachine Custom Type Created",
-          props: {
-            id: fakeId,
-            name: fakeName,
-            type: "repeatable",
-          },
-        },
-      }),
-      expect.anything(),
-      expect.anything()
-    );
+    const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
+      batch: Array<Record<string, unknown>>;
+    }>();
+    expect(trackingData?.batch[0]).toMatchObject({
+      event: "SliceMachine Custom Type Created",
+      properties: {
+        id: fakeId,
+        name: fakeName,
+        type: "repeatable",
+      },
+    });
   });
 });

@@ -138,6 +138,7 @@ describe("Custom Type Builder", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -150,7 +151,7 @@ describe("Custom Type Builder", () => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
+    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
 
     const customTypeId = "a-page";
 
@@ -232,9 +233,12 @@ describe("Custom Type Builder", () => {
     });
 
     expect(trackingSpy).toHaveBeenCalled();
-    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-      name: "SliceMachine Custom Type Field Added",
-      props: {
+    const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
+      batch: Array<Record<string, unknown>>;
+    }>();
+    expect(trackingData?.batch[0]).toMatchObject({
+      event: "SliceMachine Custom Type Field Added",
+      properties: {
         id: "new_field",
         name: "a-page",
         type: "StructuredText",
@@ -251,6 +255,7 @@ describe("Custom Type Builder", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -263,7 +268,7 @@ describe("Custom Type Builder", () => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
+    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
 
     const customTypeId = "a-page";
 
@@ -353,9 +358,12 @@ describe("Custom Type Builder", () => {
     });
 
     expect(trackingSpy).toHaveBeenCalled();
-    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-      name: "SliceMachine Slicezone Updated",
-      props: { customTypeId },
+    const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
+      batch: Array<Record<string, unknown>>;
+    }>();
+    expect(trackingData?.batch[0]).toMatchObject({
+      event: "SliceMachine Slicezone Updated",
+      properties: { customTypeId },
     });
   });
 
@@ -371,6 +379,7 @@ describe("Custom Type Builder", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -383,7 +392,7 @@ describe("Custom Type Builder", () => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
+    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
 
     const customTypeId = "a-page";
 
@@ -465,9 +474,12 @@ describe("Custom Type Builder", () => {
     });
 
     expect(trackingSpy).toHaveBeenCalled();
-    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-      name: "SliceMachine Custom Type Field Added",
-      props: {
+    const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
+      batch: Array<Record<string, unknown>>;
+    }>();
+    expect(trackingData?.batch[0]).toMatchObject({
+      event: "SliceMachine Custom Type Field Added",
+      properties: {
         id: "new_field",
         name: "a-page",
         type: "StructuredText",
@@ -481,12 +493,19 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveCustomType);
     });
 
-    await waitFor(() =>
-      expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-        name: "SliceMachine Custom Type Saved",
-        props: { type: "repeatable", id: customTypeId, name: customTypeId },
-      })
-    );
+    await waitFor(async () => {
+      const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
+        batch: Array<Record<string, unknown>>;
+      }>();
+      expect(trackingData?.batch[0]).toMatchObject({
+        event: "SliceMachine Custom Type Saved",
+        properties: {
+          type: "repeatable",
+          id: customTypeId,
+          name: customTypeId,
+        },
+      });
+    });
   });
 
   test("if saving fails a it should not send the save event", async (ctx) => {
@@ -503,6 +522,7 @@ describe("Custom Type Builder", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -515,7 +535,7 @@ describe("Custom Type Builder", () => {
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
+    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
 
     const customTypeId = "a-page";
 
@@ -602,9 +622,12 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveFieldButton);
     });
 
-    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-      name: "SliceMachine Custom Type Field Added",
-      props: {
+    const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
+      batch: Array<Record<string, unknown>>;
+    }>();
+    expect(trackingData?.batch[0]).toMatchObject({
+      event: "SliceMachine Custom Type Field Added",
+      properties: {
         id: "new_field",
         name: "a-page",
         type: "StructuredText",

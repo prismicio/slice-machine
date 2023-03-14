@@ -5,15 +5,12 @@ import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummy
 import { generateSliceScreenshotCreator } from "@src/modules/screenshots/actions";
 import { generateSliceScreenshotApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { rest } from "msw";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 
 describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
-    it("should call the api and dispatch the success action", (ctx) => {
-      ctx.msw.use(rest.post("/api/s", (_req, res, ctx) => res(ctx.json({}))));
-
+    it("should call the api and dispatch the success action", () => {
       const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
@@ -57,9 +54,7 @@ describe("[Selected Slice sagas]", () => {
 
       saga.next().isDone();
     });
-    it("should open a error toaster on internal error", (ctx) => {
-      ctx.msw.use(rest.post("/api/s", (_req, res, ctx) => res(ctx.json({}))));
-
+    it("should open a error toaster on internal error", () => {
       const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,

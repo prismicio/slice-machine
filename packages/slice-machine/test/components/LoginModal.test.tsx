@@ -6,7 +6,6 @@ import { render } from "@testing-library/react";
 import LoginModal from "@components/LoginModal";
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import { useSelector } from "react-redux";
-import { rest } from "msw";
 
 const mockDispatch = vi.fn();
 vi.mock("react-beautiful-dnd", () => {
@@ -28,7 +27,7 @@ describe("LoginModal", () => {
   div.id = "__next";
   document.body.appendChild(div);
 
-  test("when given a prismic url in env it should open to prismic.io/dashboard", (ctx) => {
+  test("when given a prismic url in env it should open to prismic.io/dashboard", () => {
     useSelectorMock.mockImplementation(() => ({
       env: {
         sliceMachineAPIUrl: "http://localhost:9999/",
@@ -39,15 +38,6 @@ describe("LoginModal", () => {
       isOpen: true,
       isLoginLoading: true,
     }));
-
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    // const trackerSpy = makeTrackerSpy();
-    // interceptTracker(trackerSpy);
-
     const result = render(<App />);
 
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
