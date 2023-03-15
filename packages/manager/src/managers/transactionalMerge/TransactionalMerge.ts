@@ -42,7 +42,6 @@ export class TransactionalMergeManager extends BaseManager {
 								});
 
 								if (!model) {
-									// TODO: This can be undefined but types don't catch it
 									throw Error(`Could not find model ${change.id}`);
 								}
 
@@ -59,7 +58,6 @@ export class TransactionalMergeManager extends BaseManager {
 								});
 
 								if (!model) {
-									// TODO: This can be undefined but types don't catch it
 									throw Error(`Could not find model  ${change.id}`);
 								}
 

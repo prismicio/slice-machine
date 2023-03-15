@@ -62,7 +62,7 @@ type SliceMachineManagerReadAllSlicesReturnType = {
 };
 
 type SliceMachineManagerReadSliceReturnType = {
-	model: CustomTypes.Widgets.Slices.SharedSlice;
+	model: CustomTypes.Widgets.Slices.SharedSlice | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
