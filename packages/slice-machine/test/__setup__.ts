@@ -7,7 +7,11 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 
+import { createSliceMachineManager } from "@slicemachine/manager";
+import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import "@testing-library/jest-dom";
+import { createTestPlugin } from "./__testutils__/createTestPlugin";
+import { createTestProject } from "./__testutils__/createTestProject";
 
 declare module "vitest" {
   export interface TestContext {
@@ -23,6 +27,23 @@ beforeAll(() => {
 
 beforeEach(async (ctx) => {
   ctx.msw = mswServer;
+
+  const adapter = createTestPlugin();
+  const cwd = await createTestProject({ adapter });
+  const manager = createSliceMachineManager({
+    nativePlugins: { [adapter.meta.name]: adapter },
+    cwd,
+  });
+
+  await manager.telemetry.initTelemetry();
+  await manager.plugins.initPlugins();
+
+  ctx.msw.use(
+    createSliceMachineManagerMSWHandler({
+      url: "http://localhost:3000/_manager",
+      sliceMachineManager: manager,
+    })
+  );
 
   await fs.mkdir(os.homedir(), { recursive: true });
   await fs.rm(path.join(os.homedir(), ".prismic"), { force: true });

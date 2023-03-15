@@ -131,23 +131,6 @@ describe("Custom Type Builder", () => {
   ];
 
   test("should send a tracking event when the user adds a field", async (ctx) => {
-    const adapter = createTestPlugin();
-    const cwd = await createTestProject({ adapter });
-    const manager = createSliceMachineManager({
-      nativePlugins: { [adapter.meta.name]: adapter },
-      cwd,
-    });
-
-    await manager.telemetry.initTelemetry();
-    await manager.plugins.initPlugins();
-
-    ctx.msw.use(
-      createSliceMachineManagerMSWHandler({
-        url: "http://localhost:3000/_manager",
-        sliceMachineManager: manager,
-      })
-    );
-
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
@@ -248,23 +231,6 @@ describe("Custom Type Builder", () => {
   });
 
   test("should send a tracking event when the user adds a slice", async (ctx) => {
-    const adapter = createTestPlugin();
-    const cwd = await createTestProject({ adapter });
-    const manager = createSliceMachineManager({
-      nativePlugins: { [adapter.meta.name]: adapter },
-      cwd,
-    });
-
-    await manager.telemetry.initTelemetry();
-    await manager.plugins.initPlugins();
-
-    ctx.msw.use(
-      createSliceMachineManagerMSWHandler({
-        url: "http://localhost:3000/_manager",
-        sliceMachineManager: manager,
-      })
-    );
-
     const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
       (_req, res, ctx) => res(ctx.json({}))
     );
