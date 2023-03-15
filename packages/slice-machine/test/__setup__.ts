@@ -97,8 +97,9 @@ vi.stubGlobal(
         url = new URL(input);
       } catch {
         const windowHref =
-          typeof window === "undefined" ? undefined : window.location.href;
-
+          typeof window === "undefined"
+            ? "http://localhost:3000"
+            : window.location.href;
         url = new URL(input, windowHref);
       }
     } else {
