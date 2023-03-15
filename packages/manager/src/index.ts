@@ -24,4 +24,4 @@ export {
 
 export { DecodeError } from "./lib/DecodeError";
 
-export type { SliceMachineConfig } from "./types";
+export type { SliceMachineConfig, PackageManager } from "./types";

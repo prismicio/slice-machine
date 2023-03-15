@@ -10,7 +10,7 @@ test("installs dependencies", async (ctx) => {
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	expect(installDependencies).toHaveBeenCalledWith({
 		dependencies: {
@@ -32,7 +32,7 @@ test("creates a prismicio.js file", async (ctx) => {
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "prismicio.js"),
@@ -59,7 +59,7 @@ test("does not overwrite prismicio file if it already exists", async (ctx) => {
 
 	await fs.writeFile(filePath, contents);
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const postHookContents = await fs.readFile(filePath, "utf8");
 
@@ -70,7 +70,7 @@ test("prismicio file is formatted by default", async (ctx) => {
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "prismicio.js"),
@@ -95,7 +95,7 @@ test("prismicio file is not formatted if formatting is disabled", async (ctx) =>
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await pluginRunner.callHook("command:init", { log, installDependencies });
+	await pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "prismicio.js"),
@@ -118,7 +118,7 @@ test("creates a prismicio.ts file when TypeScript is enabled", async (ctx) => {
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await pluginRunner.callHook("command:init", { log, installDependencies });
+	await pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "prismicio.ts"),
@@ -145,7 +145,7 @@ test("creates a prismicio.ts file when TypeScript is detected", async (ctx) => {
 		JSON.stringify({}),
 	);
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "prismicio.ts"),
@@ -167,7 +167,7 @@ test("creates a Slice Simulator page file", async (ctx) => {
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "pages", "slice-simulator.js"),
@@ -212,7 +212,7 @@ test("does not overwrite Slice Simulator page file if it already exists", async 
 	await fs.mkdir(path.dirname(filePath), { recursive: true });
 	await fs.writeFile(filePath, contents);
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const postHookContents = await fs.readFile(filePath, "utf8");
 
@@ -225,7 +225,7 @@ test("creates Slice Simulator page file in the src directory if it exists", asyn
 
 	await fs.mkdir(path.join(ctx.project.root, "src"));
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const pagesDir = await fs.readdir(
 		path.join(ctx.project.root, "src", "pages"),
@@ -238,7 +238,7 @@ test("Slice Simulator page file is formatted by default", async (ctx) => {
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await ctx.pluginRunner.callHook("command:init", { log, installDependencies });
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "pages", "slice-simulator.js"),
@@ -263,7 +263,7 @@ test("Slice Simulator page file is not formatted if formatting is disabled", asy
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await pluginRunner.callHook("command:init", { log, installDependencies });
+	await pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "pages", "slice-simulator.js"),
@@ -288,7 +288,7 @@ test("creates a Slice Simulator TypeScript page file when TypeScript is enabled"
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
-	await pluginRunner.callHook("command:init", { log, installDependencies });
+	await pluginRunner.callHook("project:init", { log, installDependencies });
 
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "pages", "slice-simulator.tsx"),
