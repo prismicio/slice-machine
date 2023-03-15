@@ -84,7 +84,6 @@
     "next": "^12.3.4",
     "next-router-mock": "^0.8.0",
     "node-fetch": "^3.3.1",
-    "normalizr": "^3.6.2",
     "parse-multipart-data": "^1.5.0",
     "rc-drawer": "^4.4.3",
     "react-beautiful-dnd": "^13.1.1",

@@ -47,8 +47,7 @@
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
 		"depcheck": "depcheck --config=.depcheckrc",
-		"audit": "better-npm-audit audit -l high -p",
-		"types": "tsc --noEmit"
+		"audit": "better-npm-audit audit -l high -p"
 	},
 	"dependencies": {
 		"@prismicio/types": "^0.2.7",
