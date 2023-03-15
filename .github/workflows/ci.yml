@@ -1,0 +1,208 @@
+name: ci
+
+on: [push]
+
+jobs:
+  prepare:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache node_modules and artifacts
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps --no-audit
+
+      - name: Build essentials
+        uses: ./.github/actions/build-essential
+
+  prepare-win32:
+    runs-on: [windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache node_modules and artifacts
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build essentials
+        uses: ./.github/actions/build-essential
+
+  prettier:
+    needs: prepare
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Restore cache
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Prettier
+        run: npm run prettier:check
+
+  packages:
+    needs: prepare
+    runs-on: [ubuntu-latest]
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - packages/plugin-kit
+          - packages/manager
+          - packages/init
+          - packages/slice-machine
+          - packages/start-slicemachine
+          - packages/adapter-next
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Restore cache
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Validate dependencies
+        run: npm run depcheck --workspace ${{ matrix.package }}
+
+      - name: Audit dependencies
+        run: npm run audit --workspace ${{ matrix.package }}
+
+      - name: Lint
+        run: npm run lint --workspace ${{ matrix.package }}
+
+      - name: Types
+        continue-on-error: true
+        run: npm run types --workspace ${{ matrix.package }}
+
+      - name: Unit
+        run: npm run unit --workspace ${{ matrix.package }}
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          REPO_URL: ${{ secrets.REPO_URL }}
+          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
+          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
+          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
+          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
+          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
+
+  packages-win32:
+    needs: prepare-win32
+    runs-on: [windows-latest]
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - packages/plugin-kit
+          - packages/manager
+          - packages/init
+          - packages/slice-machine
+          - packages/start-slicemachine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Restore cache
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Unit
+        run: npm run unit --workspace ${{ matrix.package }}
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          REPO_URL: ${{ secrets.REPO_URL }}
+          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
+          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
+          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
+          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
+          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
+
+  e2e:
+    needs: prepare
+    runs-on: [ubuntu-latest]
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Restore cache
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Build Slice Machine UI and init script
+        run: npm run build --workspace packages/init --workspace packages/slice-machine
+
+      - name: Running End to End tests
+        run: npm run test:e2e
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          PRISMIC_URL: ${{ secrets.PRISMIC_URL }}
+          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
+          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
+          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
+          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
+          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
+
+      - name: Upload End to End screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-tests-screenshots
+          path: cypress/screenshots/
+
+  deployment:
+    runs-on: ubuntu-latest
+    needs: [prettier, packages, packages-win32, e2e]
+    if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
+    environment: alpha
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Install Dependencies
+        run: |
+          npm ci
+          git checkout .
+
+      - name: Build essentials
+        uses: ./.github/actions/build-essential
+
+      - name: Version And Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
+          PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git checkout .
+          npm run bump:alpha --preid="${{ github.ref_name }}"
+          npm run publish:alpha

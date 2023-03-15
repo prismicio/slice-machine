@@ -39,15 +39,18 @@ const spyObject = <TObject extends object>(
 	return spiedObject;
 };
 
-export const spyManager = (
-	initProcess: SliceMachineInitProcess,
-): {
+export type SpyManagerReturnType = {
 	telemetry: SpiedObject<SliceMachineManager["telemetry"]>;
 	user: SpiedObject<SliceMachineManager["user"]>;
 	prismicRepository: SpiedObject<SliceMachineManager["prismicRepository"]>;
 	slices: SpiedObject<SliceMachineManager["slices"]>;
 	customTypes: SpiedObject<SliceMachineManager["customTypes"]>;
-} => {
+	project: SpiedObject<SliceMachineManager["project"]>;
+};
+
+export const spyManager = (
+	initProcess: SliceMachineInitProcess,
+): SpyManagerReturnType => {
 	// @ts-expect-error - Accessing protected method
 	const manager = initProcess.manager;
 
@@ -57,5 +60,6 @@ export const spyManager = (
 		prismicRepository: spyObject(manager.prismicRepository),
 		slices: spyObject(manager.slices),
 		customTypes: spyObject(manager.customTypes),
+		project: spyObject(manager.project),
 	};
 };

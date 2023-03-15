@@ -18,6 +18,7 @@ import serveStatic from "serve-static";
 import cors from "cors";
 import fetch from "node-fetch";
 import { createStaticFileEventHandler } from "./createStaticFileEventHandler";
+import { handler as sentryHandler } from "./sentryHandler";
 
 type CreateSliceMachineServerArgs = {
 	sliceMachineManager: SliceMachineManager;
@@ -75,6 +76,8 @@ export const createSliceMachineServer = async (
 			return {};
 		}),
 	);
+
+	router.add("/api/t", eventHandler(sentryHandler));
 
 	if (process.env.NODE_ENV === "development") {
 		router.get(

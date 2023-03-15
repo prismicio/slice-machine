@@ -282,7 +282,7 @@ export class SliceMachineManager {
 								]);
 
 								if (model) {
-									const screenshots: typeof components[number]["screenshots"] =
+									const screenshots: (typeof components)[number]["screenshots"] =
 										{};
 									await Promise.all(
 										model.variations.map(async (variation) => {

@@ -1,14 +1,9 @@
-import { beforeAll, expect, it } from "vitest";
+import { expect, it } from "vitest";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
-import { stubOniguruma } from "./__testutils__/stubOniguruma";
 
 import { createSliceMachineManager } from "../src";
-
-beforeAll(async () => {
-	await stubOniguruma();
-});
 
 it("returns Slice Simulator set up steps with validation status", async () => {
 	const adapter = createTestPlugin({
