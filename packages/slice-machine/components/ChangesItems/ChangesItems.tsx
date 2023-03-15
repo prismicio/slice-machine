@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Box, Button, Text } from "theme-ui";
 import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 
@@ -9,40 +9,32 @@ import Grid from "components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { WrapperType } from "@lib/models/ui/Slice/wrappers";
 import { SharedSlice } from "@lib/models/ui/Slice";
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
-import { SyncError } from "@src/models/SyncError";
-import { ApiError } from "@src/models/ApiError";
-import { ErrorBanner } from "./ErrorBanner";
 
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 
 interface ChangesItemsProps extends ModelStatusInformation {
-  unSyncedCustomTypes: FrontEndCustomType[];
+  unSyncedCustomTypes: LocalOrRemoteCustomType[];
   unSyncedSlices: ComponentUI[];
-  changesPushed: string[];
-  syncError: SyncError | null;
 }
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
   unSyncedCustomTypes,
   unSyncedSlices,
-  changesPushed,
-  syncError,
   modelsStatuses,
   authStatus,
   isOnline,
 }) => {
-  const { customTypeError, slicesError } = getSyncErrors(syncError);
-
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
   return (
-    <>
+    <Box sx={{ pb: 4 }}>
       {unSyncedCustomTypes.length > 0 && (
         <>
           <ChangesSectionHeader>
@@ -53,7 +45,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
               </Text>
             </Box>
           </ChangesSectionHeader>
-          {customTypeError}
           <CustomTypeTable
             customTypes={unSyncedCustomTypes}
             modelsStatuses={modelsStatuses}
@@ -74,7 +65,10 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
               </Box>
               <Box>
                 {unSyncedSlices.some(
-                  (slice) => countMissingScreenshots(slice) > 0
+                  (slice) =>
+                    countMissingScreenshots(slice) > 0 &&
+                    modelsStatuses.slices[slice.model.id] !==
+                      ModelStatus.Deleted
                 ) && (
                   <Text
                     sx={{
@@ -114,7 +108,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
               </Box>
             </ChangesSectionHeader>
           </Box>
-          {slicesError}
           <Grid
             gridGap="32px 16px"
             elems={unSyncedSlices}
@@ -124,22 +117,24 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
               return SharedSlice.render({
                 showActions: true,
                 slice: slice,
-                wrapperType: WrapperType.clickable,
+                wrapperType:
+                  modelsStatuses.slices[slice.model.id] !== ModelStatus.Deleted
+                    ? WrapperType.clickable
+                    : WrapperType.nonClickable,
                 StatusOrCustom: {
                   status: modelsStatuses.slices[slice.model.id],
                   authStatus,
                   isOnline,
                 },
-                onUpdateScreenshot: (e: React.MouseEvent) => {
-                  e.preventDefault();
-                  onOpenModal({
-                    sliceFilterFn: (s: ComponentUI[]) =>
-                      s.filter((e) => e.model.id === slice.model.id),
-                  });
+                actions: {
+                  onUpdateScreenshot: (e: React.MouseEvent) => {
+                    e.preventDefault();
+                    onOpenModal({
+                      sliceFilterFn: (s: ComponentUI[]) =>
+                        s.filter((e) => e.model.id === slice.model.id),
+                    });
+                  },
                 },
-                sx: changesPushed.includes(slice.model.id)
-                  ? { animation: "fadeout .4s linear forwards" }
-                  : {},
               });
             }}
           />
@@ -149,36 +144,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
           />
         </>
       )}
-    </>
+    </Box>
   );
 };
-
-function getSyncErrors(syncError: SyncError | null): {
-  customTypeError: ReactNode | null;
-  slicesError: ReactNode | null;
-} {
-  if (syncError && syncError.type === "custom type") {
-    if (syncError.error === ApiError.INVALID_MODEL)
-      return {
-        customTypeError: (
-          <ErrorBanner
-            message="We couldn’t push the following Custom Types. Check your Custom Types models and retry."
-            sx={{ m: "8px 0px" }}
-          />
-        ),
-        slicesError: null,
-      };
-  }
-
-  if (syncError && syncError.type === "slice") {
-    if (syncError.error === ApiError.INVALID_MODEL)
-      return {
-        customTypeError: null,
-        slicesError: (
-          <ErrorBanner message="We couldn’t push the following Slices. Check your Slices models and retry." />
-        ),
-      };
-  }
-
-  return { customTypeError: null, slicesError: null };
-}

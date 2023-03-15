@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
@@ -15,15 +15,13 @@ import {
   selectSimulatorUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-
-import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { Toolbar } from "./components/Toolbar";
 import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { Slices } from "@core/models";
+import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
@@ -43,6 +41,7 @@ import {
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
 import SetupModal from "./components/SetupModal";
+import { Slices } from "@lib/models/common/Slice";
 
 export enum UiState {
   LOADING_SETUP = "LOADING_SETUP",
@@ -51,8 +50,6 @@ export enum UiState {
   FAILED_CONNECT = "FAILED_CONNECT",
   SUCCESS = "SUCCESS",
 }
-
-const MemoedSetupModal = memo(SetupModal);
 
 const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const { checkSimulatorSetup, connectToSimulatorIframe, saveSliceMock } =
@@ -187,7 +184,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
-      <MemoedSetupModal isOpen={currentState === UiState.FAILED_SETUP} />
+      <SetupModal isOpen={currentState === UiState.FAILED_SETUP} />
       <Header
         slice={slice}
         variation={variation}
@@ -265,6 +262,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           </Flex>
           {currentState === UiState.SUCCESS ? (
             <Box
+              className="editor"
               sx={{
                 marginLeft: "16px",
                 maxWidth: "440px",

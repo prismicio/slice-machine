@@ -1,7 +1,7 @@
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
-import { Slices, SliceSM } from "@core/models";
-import { CustomTypes, CustomTypeSM } from "@core/models/CustomType";
+import { SliceSM, Slices } from "@lib/models/common/Slice";
+import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import ServerState from "@models/server/ServerState";
@@ -11,10 +11,17 @@ import {
 } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
-import { ComponentMocks } from "@core/models";
+import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
+// import {
+//   InvalidCustomTypeResponse,
+//   PushChangesPayload,
+// } from "@lib/models/common/TransactionalPush";
+// import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
 import { managerClient } from "./managerClient";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
+import { Frameworks } from "@lib/models/common/Framework";
 
 /** State Routes **/
 
@@ -25,6 +32,11 @@ export const getState = async (): Promise<ServerState> => {
   // transform the data to something SM recognizes.
   const state: ServerState = {
     ...rawState,
+    env: {
+      ...rawState.env,
+      framework: rawState.env.framework as Frameworks,
+      mockConfig: rawState.env.mockConfig as CustomTypeMockConfig,
+    },
     libraries: rawState.libraries.map((library) => {
       return {
         ...library,
@@ -32,6 +44,9 @@ export const getState = async (): Promise<ServerState> => {
           return {
             ...component,
             model: Slices.toSM(component.model),
+
+            // TODO: Remove `mockConfig`.
+            mockConfig: component.mockConfig as CustomTypeMockConfig,
 
             // Replace screnshot Blobs with URLs.
             screenshots: Object.fromEntries(
@@ -75,13 +90,6 @@ export const saveCustomType = async (
   return await managerClient.customTypes.updateCustomType({
     model: CustomTypes.fromSM(customType),
   });
-
-  // const requestBody: SaveCustomTypeBody = {
-  //   model: customType,
-  //   mockConfig: mockConfig,
-  // };
-  //
-  // return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
 };
 
 export const renameCustomType = (
@@ -97,6 +105,15 @@ export const pushCustomType = async (customTypeId: string): Promise<void> => {
     id: customTypeId,
   });
 };
+
+// export const deleteCustomType = (
+//   customTypeId: string
+// ): Promise<AxiosResponse> => {
+//   return axios.delete(
+//     `/api/custom-types/delete?id=${customTypeId}`,
+//     defaultAxiosConfig
+//   );
+// };
 
 /** Slice Routes **/
 export const createSlice = async (
@@ -131,6 +148,20 @@ export const renameSlice = async (
   });
 };
 
+// export const deleteSlice = (
+//   sliceId: string,
+//   libName: string
+// ): Promise<AxiosResponse> => {
+//   const requestBody = {
+//     sliceId,
+//     libName,
+//   };
+//   return axios.delete(`/api/slices/delete`, {
+//     ...defaultAxiosConfig,
+//     data: requestBody,
+//   });
+// };
+
 export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest
 ): Promise<
@@ -154,32 +185,38 @@ export const generateSliceScreenshotApiClient = async (
       },
     });
 
-  if (screenshot.data) {
-    const { errors } = await managerClient.slices.updateSliceScreenshot({
-      libraryID: params.libraryName,
-      sliceID: params.sliceId,
-      variationID: params.variationId,
-      data: screenshot.data,
-    });
+  const { errors } = await managerClient.slices.updateSliceScreenshot({
+    libraryID: params.libraryName,
+    sliceID: params.sliceId,
+    variationID: params.variationId,
+    data: screenshot.data,
+  });
 
-    return {
-      url: URL.createObjectURL(screenshot.data),
-      errors,
-    };
-  }
-
-  // return axios.post("/api/screenshot", params, defaultAxiosConfig);
+  return {
+    url: URL.createObjectURL(screenshot.data),
+    errors,
+  };
 };
 
-export const generateSliceCustomScreenshotApiClient = (
+export const generateSliceCustomScreenshotApiClient = async (
   params: CustomScreenshotRequest
-): ReturnType<SliceMachineManagerClient["slices"]["updateSliceScreenshot"]> => {
-  return managerClient.slices.updateSliceScreenshot({
+): Promise<{
+  url: string;
+  errors: Awaited<
+    ReturnType<SliceMachineManagerClient["slices"]["updateSliceScreenshot"]>
+  >["errors"];
+}> => {
+  const { errors } = await managerClient.slices.updateSliceScreenshot({
     libraryID: params.libraryName,
     sliceID: params.sliceId,
     variationID: params.variationId,
     data: params.file,
   });
+
+  return {
+    url: URL.createObjectURL(params.file),
+    errors,
+  };
 };
 
 export const saveSliceApiClient = async (
@@ -201,6 +238,12 @@ export const pushSliceApiClient = async (
     sliceID: component.model.id,
   });
 };
+
+// export const pushChanges = (
+//   payload: PushChangesPayload
+// ): Promise<AxiosResponse<InvalidCustomTypeResponse | Limit | null>> => {
+//   return axios.post("/api/push-changes", payload, defaultAxiosConfig);
+// };
 
 /** Auth Routes **/
 
@@ -234,7 +277,7 @@ export const checkSimulatorSetup =
       await managerClient.simulator.getLocalSliceSimulatorURL();
 
     return {
-      manifest: localSliceSimulatorURL ? "ok" : "ko",
+      manifest: Boolean(localSliceSimulatorURL) ? "ok" : "ko",
       value: localSliceSimulatorURL,
     };
   };

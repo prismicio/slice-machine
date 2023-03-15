@@ -8,10 +8,15 @@ type FormDataField =
 export const readMSWFormData = async (
 	req: RestRequest,
 ): Promise<Record<string, FormDataField>> => {
-	const boundary = parseMultipartFormData.getBoundary(
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		req.headers.get("Content-Type")!,
-	);
+	const contentType = req.headers.get("Content-Type");
+
+	if (contentType == null) {
+		throw new Error(
+			"readMSWFormData can only be used on requests that have a `Content-Type` header. This request did not contain one.",
+		);
+	}
+
+	const boundary = parseMultipartFormData.getBoundary(contentType);
 	const parsedData = parseMultipartFormData.parse(
 		Buffer.from(await req.text()),
 		boundary,

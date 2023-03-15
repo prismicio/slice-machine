@@ -19,11 +19,16 @@ import {
 import ServerState from "@models/server/ServerState";
 import {
   createCustomTypeCreator,
+  deleteCustomTypeCreator,
   renameCustomTypeCreator,
 } from "./availableCustomTypes";
-import { createSliceCreator, renameSliceCreator } from "./slices";
+import {
+  createSliceCreator,
+  deleteSliceCreator,
+  renameSliceCreator,
+} from "./slices";
 import { UserContextStoreType } from "./userContext/types";
-import { openToasterCreator, ToasterType } from "./toaster";
+import { GenericToastTypes, openToasterCreator } from "./toaster";
 import {
   initCustomTypeStoreCreator,
   createTabCreator,
@@ -45,9 +50,10 @@ import {
   deleteGroupFieldMockConfigCreator,
   deleteFieldMockConfigCreator,
   updateFieldMockConfigCreator,
+  cleanupCustomTypeStoreCreator,
 } from "./selectedCustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { CustomTypeSM, TabField } from "@core/models/CustomType";
+import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import {
   addSliceWidgetCreator,
@@ -64,20 +70,13 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "./screenshots/actions";
-import {
-  pushCustomTypeCreator,
-  pushSliceCreator,
-} from "./pushChangesSaga/actions";
-import { Models } from "@core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
-import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
-import { changesPushCreator } from "./pushChangesSaga";
-import { SyncError } from "@src/models/SyncError";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { ScreenshotTaken } from "@src/tracking/types";
+// import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
+import type { ScreenDimensions } from "@lib/models/common/Screenshots";
+import type { ScreenshotTaken } from "@lib/models/tracking";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
+import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -110,6 +109,21 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
+
+  const openDeleteCustomTypeModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
+  const openDeleteSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+  const openDeleteDocumentsDrawer = () =>
+    dispatch(
+      modalOpenCreator({ modalKey: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER })
+    );
+  const openDeleteDocumentsDrawerOverLimit = () =>
+    dispatch(
+      modalOpenCreator({
+        modalKey: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+      })
+    );
   const openSimulatorSetupModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
@@ -144,6 +158,13 @@ const useSliceMachineActions = () => {
         newCustomTypeName,
       })
     );
+  const deleteCustomType = (customTypeId: string, customTypeName: string) =>
+    dispatch(
+      deleteCustomTypeCreator.request({
+        customTypeId,
+        customTypeName,
+      })
+    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -151,8 +172,9 @@ const useSliceMachineActions = () => {
     remoteModel: CustomTypeSM | undefined,
     mockConfig: CustomTypeMockConfig
   ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
+  const cleanupCustomTypeStore = () =>
+    dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
-  const pushCustomType = () => dispatch(pushCustomTypeCreator.request());
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) =>
@@ -277,7 +299,7 @@ const useSliceMachineActions = () => {
 
   const addSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     key: string,
     value: NestableWidget
   ) => {
@@ -286,7 +308,7 @@ const useSliceMachineActions = () => {
 
   const replaceSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     previousKey: string,
     newKey: string,
     value: NestableWidget
@@ -304,7 +326,7 @@ const useSliceMachineActions = () => {
 
   const reorderSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     start: number,
     end: number | undefined
   ) => {
@@ -320,7 +342,7 @@ const useSliceMachineActions = () => {
 
   const removeSliceWidget = (
     variationId: string,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     key: string
   ) => {
     dispatch(
@@ -335,7 +357,7 @@ const useSliceMachineActions = () => {
   const updateSliceWidgetMock = (
     variationId: string,
     mockConfig: CustomTypeMockConfig,
-    widgetArea: Models.WidgetsArea,
+    widgetArea: WidgetsArea,
     previousKey: string,
     newKey: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -357,7 +379,7 @@ const useSliceMachineActions = () => {
   const deleteSliceWidgetMock = (
     variationId: string,
     mockConfig: CustomTypeMockConfig,
-    widgetArea: Models.WidgetsArea,
+    widgetArea: WidgetsArea,
     newKey: string
   ) => {
     dispatch(
@@ -415,22 +437,10 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const pushSlice = (
-    component: ComponentUI,
-    onPush: (data: SliceBuilderState) => void
-  ) => {
-    dispatch(
-      pushSliceCreator.request({
-        component,
-        onPush,
-      })
-    );
-  };
-
   const copyVariationSlice = (
     key: string,
     name: string,
-    copied: Models.VariationSM
+    copied: VariationSM
   ) => {
     dispatch(copyVariationSliceCreator({ key, name, copied }));
   };
@@ -441,40 +451,34 @@ const useSliceMachineActions = () => {
   const renameSlice = (
     libName: string,
     sliceId: string,
-    variationId: string,
     newSliceName: string
   ) =>
     dispatch(
       renameSliceCreator.request({
         sliceId,
         newSliceName,
-        variationId,
         libName,
       })
     );
 
-  const pushChanges = (
-    unSyncedSlices: ReadonlyArray<ComponentUI>,
-    unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
-    modelStatuses: ModelStatusInformation["modelsStatuses"],
-    onChangesPushed: (pushed: string | null) => void,
-    handleError: (e: SyncError | null) => void
-  ) =>
+  const deleteSlice = (sliceId: string, sliceName: string, libName: string) =>
     dispatch(
-      changesPushCreator({
-        unSyncedSlices,
-        unSyncedCustomTypes,
-        modelStatuses,
-        onChangesPushed,
-        handleError,
+      deleteSliceCreator.request({
+        sliceId,
+        sliceName,
+        libName,
       })
     );
 
+  const pushChanges = () => ({});
+  // const pushChanges = (payload: ChangesPushSagaPayload) =>
+  //   dispatch(changesPushCreator.request(payload));
+
   // Toaster store
   const openToaster = (
-    message: string,
-    type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
-  ) => dispatch(openToasterCreator({ message, type }));
+    content: string | React.ReactNode,
+    type: GenericToastTypes
+  ) => dispatch(openToasterCreator({ content, type }));
 
   // Simulator
   const saveSliceMock = (payload: SaveSliceMockRequest) =>
@@ -502,6 +506,8 @@ const useSliceMachineActions = () => {
     checkSimulatorSetup,
     connectToSimulatorFailure,
     connectToSimulatorSuccess,
+    openDeleteDocumentsDrawer,
+    openDeleteDocumentsDrawerOverLimit,
     connectToSimulatorIframe,
     refreshState,
     finishOnboarding,
@@ -513,9 +519,10 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     createCustomType,
     renameCustomType,
+    deleteCustomType,
     initCustomTypeStore,
+    cleanupCustomTypeStore,
     saveCustomType,
-    pushCustomType,
     createCustomTypeTab,
     updateCustomTypeTab,
     deleteCustomTypeTab,
@@ -544,10 +551,10 @@ const useSliceMachineActions = () => {
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
     saveSlice,
-    pushSlice,
     copyVariationSlice,
     createSlice,
     renameSlice,
+    deleteSlice,
     sendAReview,
     skipReview,
     setUpdatesViewed,
@@ -556,6 +563,8 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
     openScreenshotPreviewModal,
+    openDeleteCustomTypeModal,
+    openDeleteSliceModal,
     openSimulatorSetupModal,
     openCreateSliceModal,
     openRenameSliceModal,

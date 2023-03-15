@@ -88,7 +88,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .then(() => {
         connectToSimulatorSuccess();
       })
-      .catch((e) => {
+      .catch(() => {
         connectToSimulatorFailure();
       });
   }, [client, apiContent, simulatorUrl]);

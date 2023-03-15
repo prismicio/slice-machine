@@ -1,7 +1,9 @@
 import { HookError, SliceMachinePluginOptions } from "@slicemachine/plugin-kit";
+import { detect as niDetect } from "@antfu/ni";
+
 import { VERSION_KIND } from "./constants/VERSION_KIND";
 
-export type PackageManager = "npm" | "yarn";
+export type PackageManager = NonNullable<Awaited<ReturnType<typeof niDetect>>>;
 
 export type PackageChangelog = {
 	currentVersion: string;
@@ -13,7 +15,7 @@ export type PackageChangelog = {
 export type PackageVersion = {
 	versionNumber: string;
 	releaseNote: string | null;
-	kind: (typeof VERSION_KIND)[keyof typeof VERSION_KIND] | null;
+	kind: (typeof VERSION_KIND)[keyof typeof VERSION_KIND] | undefined;
 };
 
 /**

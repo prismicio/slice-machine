@@ -1,7 +1,6 @@
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import type Models from "@core/models";
-import { VariationSM } from "@core/models/Slice";
-import { FieldsSM } from "@core/models/Fields";
+import { VariationSM, WidgetsArea } from "./Slice";
+import { FieldsSM } from "./Fields";
 
 import camelCase from "lodash/camelCase";
 
@@ -12,7 +11,7 @@ export const Variation = {
 
   reorderWidget(
     variation: VariationSM,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     start: number,
     end: number
   ): VariationSM {
@@ -43,7 +42,7 @@ export const Variation = {
 
   replaceWidget(
     variation: VariationSM,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     previousKey: string,
     newKey: string,
     newValue: NestableWidget
@@ -64,7 +63,7 @@ export const Variation = {
 
   addWidget(
     variation: VariationSM,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     key: string,
     value: NestableWidget
   ): VariationSM {
@@ -76,7 +75,7 @@ export const Variation = {
 
   deleteWidget(
     variation: VariationSM,
-    widgetsArea: Models.WidgetsArea,
+    widgetsArea: WidgetsArea,
     widgetKey: string
   ): VariationSM {
     return {

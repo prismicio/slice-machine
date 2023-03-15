@@ -25,10 +25,10 @@ export const AuthErrorPage = () => {
           Could not access your repository
         </Text>
         <Text sx={{ fontSize: "13px", lineHeight: "24px" }}>
-          You need to login to Prismic in order to push your changes.
+          You need to log in to Prismic in order to push your changes.
         </Text>
         <Button sx={{ mt: "24px" }} onClick={() => openLoginModal()}>
-          Login to Prismic
+          Log in to Prismic
         </Button>
       </Flex>
     </Flex>

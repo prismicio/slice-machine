@@ -3,7 +3,7 @@ import {
   CompositeSlice,
   LegacySlice,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SlicesSM } from "@core/models/Slices";
+import { SlicesSM } from "../Slices";
 import { ComponentUI } from "../ComponentUI";
 
 export type NonSharedSliceInSliceZone = {
@@ -49,7 +49,7 @@ export const SliceZone = {
     };
   },
   removeSharedSlice(sz: SlicesSM, key: string): SlicesSM {
-    const value = sz.value.filter(({ key: k }) => k === key);
+    const value = sz.value.filter(({ key: k }) => k !== key);
 
     return {
       ...sz,

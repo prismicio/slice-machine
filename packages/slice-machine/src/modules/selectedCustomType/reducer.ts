@@ -6,6 +6,7 @@ import {
   updateTabCreator,
   SelectedCustomTypeActions,
   initCustomTypeStoreCreator,
+  cleanupCustomTypeStoreCreator,
   addFieldCreator,
   deleteTabCreator,
   createSliceZoneCreator,
@@ -32,10 +33,9 @@ import StateHelpers from "./stateHelpers";
 import { CustomType } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { SlicesSM } from "@core/models/Slices";
-import { GroupSM } from "@core/models/Group";
+import { SlicesSM } from "@lib/models/common/Slices";
+import { GroupSM } from "@lib/models/common/Group";
 import { Group } from "@lib/models/common/CustomType/group";
-import { renameCustomTypeCreator } from "../availableCustomTypes";
 
 // Reducer
 export const selectedCustomTypeReducer: Reducer<
@@ -43,6 +43,8 @@ export const selectedCustomTypeReducer: Reducer<
   SelectedCustomTypeActions
 > = (state = null, action) => {
   switch (action.type) {
+    case getType(cleanupCustomTypeStoreCreator):
+      return null;
     case getType(initCustomTypeStoreCreator):
       return {
         ...state,
@@ -316,18 +318,6 @@ export const selectedCustomTypeReducer: Reducer<
           groupId
         )((group: GroupSM) => Group.reorderWidget(group, start, end))
       );
-    }
-    case getType(renameCustomTypeCreator.success): {
-      if (!state) return state;
-
-      return {
-        ...state,
-        model: action.payload.renamedCustomType,
-        initialModel: {
-          ...state.initialModel,
-          label: action.payload.renamedCustomType.label,
-        },
-      };
     }
     default:
       return state;

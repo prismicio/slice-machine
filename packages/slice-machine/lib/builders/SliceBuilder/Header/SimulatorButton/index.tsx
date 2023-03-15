@@ -6,7 +6,7 @@ import { BsPlayCircle } from "react-icons/bs";
 import { SIMULATOR_WINDOW_ID, VIDEO_SIMULATOR_TOOLTIP } from "@lib/consts";
 import { useRouter } from "next/router";
 import ReactTooltip from "react-tooltip";
-import { Frameworks } from "@core/models";
+import { Frameworks } from "@lib/models/common/Framework";
 
 import style from "./style.module.css";
 import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";
@@ -131,7 +131,7 @@ const NeedToSaveTooltip: React.FC = () => (
     clickable
     place="bottom"
     effect="solid"
-    delayHide={100}
+    delayHide={500}
     id="simulator-button-tooltip"
   >
     Save your work in order to simulate
@@ -191,7 +191,7 @@ const SimulatorButton: React.FC<{
         <Button
           data-tip
           Icon={BsPlayCircle}
-          iconFill={disabled ? "#C9D0D8" : "#6F6E77"}
+          iconFill={"#4E4E55"}
           label="Simulate Slice"
           data-testid="simulator-open-button"
           onClick={() => {
@@ -199,7 +199,14 @@ const SimulatorButton: React.FC<{
             window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID);
           }}
           disabled={disabled}
-          variant={disabled ? "disabledSecondary" : "secondary"}
+          variant={"secondary"}
+          sx={{
+            color: "#4E4E55",
+            backgroundColor: "#F3F5F7",
+            border: "1px solid #3E3E4826",
+            height: 40,
+            ...(disabled ? { opacity: 0.5, cursor: "not-allowed" } : {}),
+          }}
         />
       </span>
       {isSimulatorAvailableForFramework ? (

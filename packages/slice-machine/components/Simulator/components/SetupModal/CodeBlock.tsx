@@ -3,35 +3,38 @@ import { Button, useThemeUI, Box, Flex } from "theme-ui";
 
 import { MdCheck, MdContentCopy } from "react-icons/md";
 
-import CodeBlock, { Language } from "../../../CodeBlock";
+import CodeBlock from "../../../CodeBlock";
 import { IconType } from "react-icons";
+import VersionBadgeList from "./VersionBadgeList";
+
+type Code = {
+  text: string;
+  version: string;
+};
 
 const CodeBlockWithCopy: React.FC<{
-  children: string;
+  code: Code | Code[];
   customCopyText?: string;
   fileName: string;
   FileIcon: IconType;
-  lang?: Language;
+  lang?: string;
   fullHeightCode?: boolean;
-}> = ({
-  children,
-  customCopyText,
-  fileName,
-  FileIcon,
-  lang,
-  fullHeightCode,
-}) => {
+}> = ({ customCopyText, fileName, FileIcon, lang, fullHeightCode, code }) => {
+  const codeList = Array.isArray(code) ? code : [code];
   const { theme } = useThemeUI();
   const [isCopied, setIsCopied] = useState(false);
+  const [currentCode, setCurrentCode] = useState(codeList[0]);
 
   const copy = (): void => {
-    children &&
-      navigator.clipboard.writeText(customCopyText || children).then(() => {
-        setIsCopied(true);
-        setTimeout(() => {
-          setIsCopied(false);
-        }, 1200);
-      });
+    currentCode &&
+      void navigator.clipboard
+        .writeText(customCopyText || currentCode.text)
+        .then(() => {
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 1200);
+        });
   };
 
   return (
@@ -62,43 +65,58 @@ const CodeBlockWithCopy: React.FC<{
           fontSize: "12px",
         }}
         Header={() => (
-          <Flex
-            sx={{
-              px: "26px",
-              py: "22px",
-              color: "#FFF",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom: "1px solid rgba(111, 110, 119, 0.2)",
-            }}
-          >
-            <Flex sx={{ alignItems: "center" }}>
-              <FileIcon size={14} style={{ marginRight: "12px" }} /> {fileName}
-            </Flex>
-            <Button
-              onClick={copy}
-              variant="transparent"
+          <div>
+            <Flex
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                p: 0,
-                fontSize: "12px",
+                px: "26px",
+                py: "22px",
                 color: "#FFF",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid rgba(111, 110, 119, 0.2)",
               }}
             >
-              Copy&nbsp;
-              {isCopied ? (
-                <MdCheck size={16} color={String(theme?.colors?.success)} />
-              ) : (
-                <MdContentCopy size={16} style={{ marginLeft: "8px" }} />
-              )}
-            </Button>
-          </Flex>
+              <Flex sx={{ alignItems: "center" }}>
+                <FileIcon size={14} style={{ marginRight: "12px" }} />{" "}
+                {fileName}
+              </Flex>
+              <Button
+                onClick={copy}
+                variant="transparent"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  p: 0,
+                  fontSize: "12px",
+                  color: "#FFF",
+                }}
+              >
+                Copy&nbsp;
+                {isCopied ? (
+                  <MdCheck size={16} color={String(theme?.colors?.success)} />
+                ) : (
+                  <MdContentCopy size={16} style={{ marginLeft: "8px" }} />
+                )}
+              </Button>
+            </Flex>
+            {codeList.length > 1 ? (
+              <VersionBadgeList
+                versions={codeList.map((c) => c.version)}
+                selectedVersion={currentCode.version}
+                setSelectedVersion={(newVersion) => {
+                  setCurrentCode(
+                    (code) =>
+                      codeList.find((c) => c.version === newVersion) || code
+                  );
+                }}
+              />
+            ) : null}
+          </div>
         )}
       >
-        {children}
+        {currentCode.text}
       </CodeBlock>
     </Box>
   );

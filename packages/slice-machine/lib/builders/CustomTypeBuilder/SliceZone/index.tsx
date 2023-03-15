@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
 
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
@@ -7,7 +7,7 @@ import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 import { SlicesList } from "./List";
 import EmptyState from "./EmptyState";
-import { SlicesSM } from "@core/models/Slices";
+import { SlicesSM } from "@lib/models/common/Slices";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import {
   NonSharedSliceInSliceZone,
@@ -30,21 +30,31 @@ const mapAvailableAndSharedSlices = (
     },
     []
   );
-  const {
-    slicesInSliceZone,
-    notFound,
-  }: {
+  const { slicesInSliceZone, notFound } = sliceZone.value.reduce<{
     slicesInSliceZone: ReadonlyArray<SliceZoneSlice>;
     notFound: ReadonlyArray<{ key: string }>;
-  } = sliceZone.value.reduce(
-    (
-      acc: {
-        slicesInSliceZone: ReadonlyArray<SliceZoneSlice>;
-        notFound: ReadonlyArray<{ key: string }>;
-      },
-      { key, value }
-    ) => {
-      if (value.type === SlicesTypes.Slice) {
+  }>(
+    (acc, { key, value }) => {
+      // Shared Slice
+      if (value.type === SlicesTypes.SharedSlice) {
+        const maybeSliceState: ComponentUI | undefined = availableSlices.find(
+          (slice) => slice.model.id === key
+        );
+
+        if (maybeSliceState) {
+          return {
+            ...acc,
+            slicesInSliceZone: [
+              ...acc.slicesInSliceZone,
+              { type: SlicesTypes.SharedSlice, payload: maybeSliceState },
+            ],
+          };
+        }
+
+        return { ...acc, notFound: [...acc.notFound, { key }] };
+      }
+      // Legacy Slice
+      else if (value.type === SlicesTypes.Slice) {
         return {
           ...acc,
           slicesInSliceZone: [
@@ -53,23 +63,13 @@ const mapAvailableAndSharedSlices = (
           ],
         };
       }
-      const maybeSliceState: ComponentUI | undefined = availableSlices.find(
-        (slice) => slice.model.id === key
-      );
 
-      if (maybeSliceState) {
-        return {
-          ...acc,
-          slicesInSliceZone: [
-            ...acc.slicesInSliceZone,
-            { type: SlicesTypes.SharedSlice, payload: maybeSliceState },
-          ],
-        };
-      }
-      return { ...acc, notFound: [...acc.notFound, { key }] };
+      // Really old legacy Slice are ignored
+      return acc;
     },
     { slicesInSliceZone: [], notFound: [] }
   );
+
   return { availableSlices, slicesInSliceZone, notFound };
 };
 
@@ -90,19 +90,20 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   onCreateSliceZone,
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
-  const { libraries, frontendSlices } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      libraries: getLibraries(store),
-      frontendSlices: getFrontendSlices(store),
-    })
+  const { libraries, slices } = useSelector((store: SliceMachineStoreType) => ({
+    libraries: getLibraries(store),
+    slices: getFrontendSlices(store),
+  }));
+
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus({ slices });
+
+  const { availableSlices, slicesInSliceZone, notFound } = useMemo(
+    () =>
+      sliceZone
+        ? mapAvailableAndSharedSlices(sliceZone, libraries)
+        : { availableSlices: [], slicesInSliceZone: [], notFound: [] },
+    [sliceZone, libraries]
   );
-
-  const { modelsStatuses, authStatus, isOnline } =
-    useModelStatus(frontendSlices);
-
-  const { availableSlices, slicesInSliceZone, notFound } = sliceZone
-    ? mapAvailableAndSharedSlices(sliceZone, libraries)
-    : { availableSlices: [], slicesInSliceZone: [], notFound: [] };
 
   useEffect(() => {
     if (notFound?.length) {

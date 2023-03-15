@@ -61,7 +61,7 @@ export function* generateSliceScreenshotSaga({
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Screenshot not saved",
+        content: "Internal Error: Screenshot not saved",
         type: ToasterType.ERROR,
       })
     );
@@ -85,6 +85,10 @@ export function* generateSliceCustomScreenshotSaga({
       file,
     })) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
 
+    if (!response?.url) {
+      throw Error("No screenshot saved");
+    }
+
     void Tracker.get().trackScreenshotTaken({
       type: "custom",
       method: method,
@@ -93,14 +97,18 @@ export function* generateSliceCustomScreenshotSaga({
     yield put(
       generateSliceCustomScreenshotCreator.success({
         variationId,
-        screenshot: response.data,
+        screenshot: {
+          url: response.url,
+          path: "__TODO-REMOVE__",
+          hash: "__TODO-REMOVE__",
+        },
         component,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        message: "Internal Error: Custom screenshot not saved",
+        content: "Internal Error: Custom screenshot not saved",
         type: ToasterType.ERROR,
       })
     );

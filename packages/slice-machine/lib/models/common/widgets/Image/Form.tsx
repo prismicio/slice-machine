@@ -15,7 +15,7 @@ import {
   AddThumbnailButton,
   ConstraintForm,
 } from "./components";
-import { TabFields } from "@core/models/CustomType";
+import { TabFields } from "@lib/models/common/CustomType";
 
 const FormFields = {
   label: DefaultFields.label,

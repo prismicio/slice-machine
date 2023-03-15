@@ -21,10 +21,10 @@ export function* saveCustomTypeSaga() {
       return;
     }
 
-    const { errors }: Awaited<ReturnType<typeof saveCustomType>> = yield call(
+    const { errors } = (yield call(
       saveCustomType,
       currentCustomType
-    );
+    )) as Awaited<ReturnType<typeof saveCustomType>>;
     if (errors.length) {
       throw errors;
     }
@@ -36,7 +36,7 @@ export function* saveCustomTypeSaga() {
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
     yield put(
       openToasterCreator({
-        message: "Model & mocks have been generated successfully!",
+        content: "Model & mocks have been generated successfully!",
         type: ToasterType.SUCCESS,
       })
     );
@@ -44,7 +44,7 @@ export function* saveCustomTypeSaga() {
     // Unknown errors
     yield put(
       openToasterCreator({
-        message: "Internal Error: Custom type not saved",
+        content: "Internal Error: Custom type not saved",
         type: ToasterType.ERROR,
       })
     );

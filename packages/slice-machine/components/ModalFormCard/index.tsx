@@ -1,13 +1,19 @@
 import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { Formik, Form, FormikErrors, FormikTouched } from "formik";
+import {
+  Formik,
+  Form,
+  FormikErrors,
+  FormikTouched,
+  FormikValues,
+} from "formik";
 import { Flex, Heading, Close, Box, Button as ThemeButton } from "theme-ui";
 import { Button } from "@components/Button";
 
 import Card from "../Card";
 import { SetStateAction } from "react";
 
-type ModalCardProps<T> = {
+type ModalCardProps<T extends FormikValues> = {
   children: (props: {
     isValid: boolean;
     isSubmitting: boolean;
@@ -40,7 +46,7 @@ type ModalCardProps<T> = {
   dataCy?: string;
 };
 
-function ModalCard<Values>({
+function ModalCard<Values extends FormikValues>({
   children,
   close,
   isOpen,

@@ -10,7 +10,7 @@ export type VersionKind = (typeof VersionKind)[keyof typeof VersionKind];
 export interface PackageVersion {
   versionNumber: string;
   releaseNote: string | null;
-  kind: VersionKind | null;
+  kind: VersionKind | undefined;
 }
 
 // Release not fetch from GitHub

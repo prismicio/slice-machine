@@ -21,9 +21,9 @@ export default function Changelog() {
 
   const latestVersion = changelog.versions[0];
 
-  const [selectedVersion, setSelectedVersion] = useState<PackageVersion | null>(
-    latestVersion || null
-  );
+  const [selectedVersion, setSelectedVersion] = useState<
+    PackageVersion | undefined
+  >(latestVersion || undefined);
 
   useEffect(() => {
     setSelectedVersion(latestVersion);

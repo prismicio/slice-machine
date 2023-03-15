@@ -6,6 +6,7 @@ export default defineConfig({
 	plugins: [
 		sdk({
 			internalDependencies: [
+				"execa",
 				"fp-ts",
 				"r19",
 				"p-limit",

@@ -1,4 +1,3 @@
-import type Models from "@core/models";
 import React, { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
 
@@ -7,13 +6,14 @@ import MenuList from "./MenuList";
 import { Button, Box, ThemeUICSSObject, ThemeUIStyleObject } from "theme-ui";
 
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
+import { VariationSM } from "@lib/models/common/Slice";
 
 const VarationsPopover: React.FunctionComponent<{
   buttonSx?: ThemeUICSSObject;
-  defaultValue?: Models.VariationSM;
+  defaultValue?: VariationSM;
   onNewVariation?: () => void;
-  variations: ReadonlyArray<Models.VariationSM>;
-  onChange: (selected: Models.VariationSM) => void;
+  variations: ReadonlyArray<VariationSM>;
+  onChange: (selected: VariationSM) => void;
   sx?: ThemeUIStyleObject;
   disabled?: boolean;
 }> = ({
@@ -26,7 +26,7 @@ const VarationsPopover: React.FunctionComponent<{
   disabled,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [current, setCurrent] = useState<Models.VariationSM>(
+  const [current, setCurrent] = useState<VariationSM>(
     defaultValue || variations[0]
   );
 
@@ -37,7 +37,7 @@ const VarationsPopover: React.FunctionComponent<{
   }, [defaultValue]);
 
   const TRANSITION_DURATION = 200; //ms
-  const handleChange = function (variation: Models.VariationSM) {
+  const handleChange = function (variation: VariationSM) {
     setIsOpen(false);
     setCurrent(variation);
     setTimeout(() => onChange(variation), TRANSITION_DURATION + 10); // time to properly close the popover with transition
@@ -88,9 +88,9 @@ const VarationsPopover: React.FunctionComponent<{
         >
           {current.name}{" "}
           {!isOpen ? (
-            <RiArrowDropDownFill size="16px" />
+            <RiArrowDropDownFill size="16px" aria-label="Expand variations" />
           ) : (
-            <RiArrowDropUpFill size="16px" />
+            <RiArrowDropUpFill size="16px" aria-label="Collapse variations" />
           )}
         </Button>
       </Popover>

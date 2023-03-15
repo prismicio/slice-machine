@@ -81,9 +81,9 @@ const NumberBox: React.FC<{ number: number }> = ({ number }) => (
 
 const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const {
-    linkToTroubleshootingDocs,
-    framework,
-    linkToStorybookDocs,
+    // linkToTroubleshootingDocs,
+    // framework,
+    // linkToStorybookDocs,
     isSimulatorAvailableForFramework,
     setupSteps,
   } = useSelector((state: SliceMachineStoreType) => ({
@@ -94,8 +94,6 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
     setupSteps: selectSetupSteps(state),
   }));
-
-  // const setupData = getStepperConfigurationByFramework(framework);
 
   const steps = setupSteps || [];
 

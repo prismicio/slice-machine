@@ -10,7 +10,7 @@ import {
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
 import { buildWidgetMockConfig } from "./LegacyMockConfig";
 import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
-import { CustomTypes, CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 import { Document } from "@prismicio/types-internal/lib/content";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 

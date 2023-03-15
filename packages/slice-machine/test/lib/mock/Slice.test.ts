@@ -1,12 +1,17 @@
 import { describe, test, expect, vi } from "vitest";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { Slices, SliceSM } from "@core/models";
+import {
+  SharedSlice,
+  SlicesTypes,
+} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { Slices, SliceSM } from "@lib/models/common/Slice";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 // import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
 import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
+import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff";
 
 vi.mock("lorem-ipsum", () => {
   return {
@@ -223,4 +228,198 @@ describe.skip("MockSlice", () => {
   //   const result = SliceMock.decode(mock);
   //   expect(isRight(result)).toBeTruthy();
   // });
+
+  test("when i add a variation to a slice it should the old mock content should be kept", () => {
+    const sliceModel: SharedSlice = {
+      id: "testing",
+      type: "SharedSlice",
+      name: "Testing",
+      description: "Testing",
+      variations: [
+        {
+          id: "default",
+          name: "Default",
+          docURL: "...",
+          version: "sktwi1xtmkfgx8626",
+          description: "Testing",
+          primary: {
+            title: {
+              type: "StructuredText",
+              config: {
+                single: "heading1",
+                label: "Title",
+                placeholder: "This is where it all begins...",
+              },
+            },
+            description: {
+              type: "StructuredText",
+              config: {
+                single: "paragraph",
+                label: "Description",
+                placeholder: "A nice description of your feature",
+              },
+            },
+          },
+          items: {},
+          imageUrl:
+            "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+        },
+        {
+          id: "foo",
+          name: "Foo",
+          docURL: "...",
+          version: "sktwi1xtmkfgx8626",
+          description: "Testing",
+          primary: {
+            title: {
+              type: "StructuredText",
+              config: {
+                single: "heading1",
+                label: "Title",
+                placeholder: "This is where it all begins...",
+              },
+            },
+            description: {
+              type: "StructuredText",
+              config: {
+                single: "paragraph",
+                label: "Description",
+                placeholder: "A nice description of your feature",
+              },
+            },
+          },
+          items: {},
+          imageUrl:
+            "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+        },
+      ],
+    };
+    const legacyMockConfig = {};
+    const previousMocks: SharedSliceContent[] = [
+      {
+        __TYPE__: "SharedSliceContent",
+        variation: "default",
+        primary: {
+          title: {
+            __TYPE__: "StructuredTextContent",
+            value: [
+              {
+                type: "heading1",
+                content: {
+                  text: "Test Heading",
+                  // "spans": []
+                },
+                // "direction": "ltr"
+              },
+            ],
+          },
+          description: {
+            __TYPE__: "StructuredTextContent",
+            value: [
+              {
+                type: "paragraph",
+                content: {
+                  text: "Some text on the default slice.",
+                },
+              },
+            ],
+          },
+        },
+        items: [
+          {
+            __TYPE__: "GroupItemContent",
+            value: [],
+          },
+        ],
+      },
+    ];
+    const sliceDiff: SliceDiff = {
+      op: "updated",
+      value: {
+        variations: {
+          foo: {
+            op: "added",
+            value: {
+              id: "foo",
+              name: "Foo",
+              docURL: "...",
+              version: "sktwi1xtmkfgx8626",
+              description: "Testing",
+              primary: {
+                title: {
+                  type: "StructuredText",
+                  config: {
+                    single: "heading1",
+                    label: "Title",
+                    placeholder: "This is where it all begins...",
+                  },
+                },
+                description: {
+                  type: "StructuredText",
+                  config: {
+                    single: "paragraph",
+                    label: "Description",
+                    placeholder: "A nice description of your feature",
+                  },
+                },
+              },
+              items: {},
+              imageUrl:
+                "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+            },
+          },
+        },
+      },
+    };
+
+    const wanted = [
+      ...previousMocks,
+      {
+        __TYPE__: "SharedSliceContent",
+        variation: "foo",
+        primary: {
+          title: {
+            __TYPE__: "StructuredTextContent",
+            value: [
+              {
+                type: "heading1",
+                content: {
+                  text: "Woo",
+                },
+                // direction: "ltr",
+              },
+            ],
+          },
+          description: {
+            __TYPE__: "StructuredTextContent",
+            value: [
+              {
+                type: "paragraph",
+                content: {
+                  text: "Some text.",
+                },
+              },
+            ],
+          },
+        },
+        items: [
+          {
+            __TYPE__: "GroupItemContent",
+            value: [],
+          },
+        ],
+      },
+    ];
+
+    const results = MockSlice(
+      sliceModel,
+      legacyMockConfig,
+      previousMocks,
+      sliceDiff
+    );
+
+    // check the content is unchanged
+    expect(results[0]).toEqual(previousMocks[0]);
+    expect(results).toEqual(wanted);
+  });
 });
