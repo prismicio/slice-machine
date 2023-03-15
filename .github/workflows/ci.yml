@@ -176,8 +176,6 @@ jobs:
 
   deployment:
     runs-on: ubuntu-latest
-    # TODO: Restore `e2e-tests` dependency once the e2e tests are fixed.
-    # needs: [e2e-tests, audit, linting, prettier, dep-check, unit-tests, install-deps]
     needs: [prettier, packages, packages-win32, e2e]
     if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
     environment: alpha
