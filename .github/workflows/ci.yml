@@ -7,7 +7,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Cache node_modules and artifacts
         uses: ./.github/actions/restore-cache
@@ -25,7 +25,7 @@ jobs:
     runs-on: [windows-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Cache node_modules and artifacts
         uses: ./.github/actions/restore-cache
@@ -44,7 +44,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -119,7 +119,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -144,7 +144,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps: 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -181,7 +181,7 @@ jobs:
     environment: alpha
     steps: 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node
         uses: ./.github/actions/setup-node
