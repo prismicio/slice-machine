@@ -1,8 +1,8 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import type {
-	CommandInitHook,
-	CommandInitHookData,
+	ProjectInitHook,
+	ProjectInitHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
 import { stripIndent } from "common-tags";
@@ -15,7 +15,7 @@ import type { PluginOptions } from "../types";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
 type InstallDependenciesArgs = {
-	installDependencies: CommandInitHookData["installDependencies"];
+	installDependencies: ProjectInitHookData["installDependencies"];
 };
 
 const installDependencies = async ({
@@ -215,7 +215,7 @@ const createSliceSimulatorPage = async ({
 	await fs.writeFile(filePath, contents);
 };
 
-export const commandInit: CommandInitHook<PluginOptions> = async (
+export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
 ) => {
