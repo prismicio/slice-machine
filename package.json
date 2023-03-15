@@ -63,6 +63,7 @@
     "packages/start-slicemachine",
     "packages/init",
     "packages/slice-machine",
+    "packages/adapter-*",
     "e2e-projects/next2"
   ]
 }

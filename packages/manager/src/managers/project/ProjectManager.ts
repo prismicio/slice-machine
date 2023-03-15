@@ -188,11 +188,11 @@ export class ProjectManager extends BaseManager {
 		return path.dirname(sliceMachinePackageJSONPath);
 	}
 
-	async initProject(args: ProjectManagerInitProjectArgs): Promise<void> {
+	async initProject(args?: ProjectManagerInitProjectArgs): Promise<void> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		// eslint-disable-next-line no-console
-		const log = args.log || console.log.bind(globalThis);
+		const log = args?.log || console.log.bind(this);
 
 		const { errors } = await this.sliceMachinePluginRunner.callHook(
 			"project:init",
@@ -236,8 +236,17 @@ export class ProjectManager extends BaseManager {
 	): Promise<ProjectManagerInstallDependenciesReturnType> {
 		const packageManager =
 			args.packageManager || (await this.detectPackageManager());
+
 		// eslint-disable-next-line no-console
-		const log = args.log || console.log.bind(globalThis);
+		const log = args.log || console.log.bind(this);
+
+		const wrappedLogger = (data: Buffer | string | null) => {
+			if (data instanceof Buffer) {
+				log(data.toString());
+			} else if (typeof data === "string") {
+				log(data);
+			}
+		};
 
 		try {
 			const { execaProcess } = await installDependencies({
@@ -248,9 +257,9 @@ export class ProjectManager extends BaseManager {
 
 			// Don't clutter console with logs when process is non TTY (CI, etc.)
 			if (process.stdout.isTTY || process.env.NODE_ENV === "test") {
-				execaProcess.stdout?.on("data", log);
+				execaProcess.stdout?.on("data", wrappedLogger);
 			}
-			execaProcess.stderr?.on("data", log);
+			execaProcess.stderr?.on("data", wrappedLogger);
 
 			return {
 				execaProcess,
