@@ -1,14 +1,22 @@
-name: 'Cache node modules'
-description: 'Cache node modules'
+name: Cache node_modules and artifacts
+description: Cache node_modules and artifacts
 runs:
-  using: 'composite'
+  using: composite
   steps:
-    - name: Restore cache
-      id: restore-cache
-      uses: actions/cache@v2
+    - name: Cache node_modules
+      id: cache-dependencies
+      uses: actions/cache@v3
       with:
         path: |
           node_modules
           */*/node_modules
           ~/.cache/Cypress
-        key: ${{ runner.os }}-lerna-${{ hashFiles('package-lock.json', '**/package-lock.json') }}
+        key: ${{ runner.os }}-${{ hashFiles('package-lock.json', '**/package-lock.json') }}-dependencies
+    - name: Cache artifacts
+      id: cache-artifacts
+      uses: actions/cache@v3
+      with:
+        path: |
+          packages/*/dist
+          packages/core/build
+        key: ${{ runner.os }}-${{ github.run_id }}-artifacts

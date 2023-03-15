@@ -52,10 +52,12 @@
 		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
 		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
-		"test": "npm run lint && npm run unit && npm run build && npm run size",
+		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
+		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
-		"depcheck": "depcheck --config=.depcheckrc"
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p"
 	},
 	"dependencies": {
 		"@prismicio/slice-simulator-core": "^0.2.7",
@@ -79,6 +81,7 @@
 		"@typescript-eslint/parser": "^5.55.0",
 		"@vitejs/plugin-react": "^3.1.0",
 		"@vitest/coverage-c8": "^0.27.3",
+		"better-npm-audit": "^3.7.3",
 		"eslint": "^8.36.0",
 		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",

@@ -11,19 +11,19 @@
     "node": ">=14"
   },
   "scripts": {
+    "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
     "dev": "next dev",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
-    "test": "vitest run --coverage",
-    "watch-test": "vitest watch",
-    "config": "tsc --showConfig",
+    "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
     "postinstall": "node postinstall",
     "prepublishOnly": "npm run build",
-    "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
-    "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
+    "test": "npm run lint && npm run types && npm run unit && npm run build",
+		"types": "tsc --noEmit",
+    "unit": "vitest run --coverage",
+		"unit:watch": "vitest watch",
     "lint:precommit": "eslint",
-    "audit": "better-npm-audit audit -l high -p",
-    "audit-fix": "npm audit fix",
-    "depcheck": "depcheck --config=.depcheckrc"
+    "depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p"
   },
   "dependencies": {
     "@extractus/oembed-extractor": "^3.1.8",
@@ -84,7 +84,6 @@
     "next": "^12.3.4",
     "next-router-mock": "^0.8.0",
     "node-fetch": "^3.3.1",
-    "normalizr": "^3.6.2",
     "parse-multipart-data": "^1.5.0",
     "rc-drawer": "^4.4.3",
     "react-beautiful-dnd": "^13.1.1",

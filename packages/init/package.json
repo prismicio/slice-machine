@@ -47,7 +47,8 @@
 		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
-		"depcheck": "depcheck --config=.depcheckrc"
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p"
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
@@ -71,6 +72,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.55.0",
 		"@typescript-eslint/parser": "^5.55.0",
 		"@vitest/coverage-c8": "^0.27.3",
+		"better-npm-audit": "^3.7.3",
 		"eslint": "^8.36.0",
 		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",
