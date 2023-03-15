@@ -37,9 +37,6 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     cy.createCustomType(customTypeId, customTypeName);
     cy.createSlice(SLICE.library, SLICE.id, SLICE.name);
 
-    sliceBuilder.deleteWidgetField("Title");
-    sliceBuilder.deleteWidgetField("Description");
-
     sliceBuilder.addNewWidgetField("SimpleTextField", "Key Text");
     sliceBuilder.addNewWidgetField("RichTextField", "Rich Text");
     sliceBuilder.addNewWidgetField("LinkField", "Link");
