@@ -19,7 +19,7 @@ export default defineConfig({
 	},
 	plugins: [
 		sdk({
-			internalDependencies: ["execa", "meow", "globby"],
+			internalDependencies: ["meow", "globby"],
 		}),
 	],
 	test: {
