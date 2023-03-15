@@ -272,7 +272,9 @@ export class SliceMachineInitProcess {
 							dependencies: this.context.framework.devDependencies,
 							dev: true,
 							// Picked up later
-							log: () => {}
+							log: () => {
+								/* ... */
+							},
 						});
 
 					// Fail hard if process fails
