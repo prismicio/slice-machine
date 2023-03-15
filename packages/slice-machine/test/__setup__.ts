@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
 import { FormData } from "formdata-polyfill/esm.min";
-import { setupServer, SetupServerApi } from "msw/node";
+import { setupServer, SetupServer } from "msw/node";
 import { cleanup } from "@testing-library/react";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -15,7 +15,7 @@ import { createTestProject } from "./__testutils__/createTestProject";
 
 declare module "vitest" {
   export interface TestContext {
-    msw: SetupServerApi;
+    msw: SetupServer;
   }
 }
 
