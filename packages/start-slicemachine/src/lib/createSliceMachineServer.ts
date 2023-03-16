@@ -48,7 +48,12 @@ export const createSliceMachineServer = async (
 ): Promise<Server> => {
 	const app = createApp();
 
-	setupSentry(args.sliceMachineManager, app);
+	const isTelemetryEnabled =
+		await args.sliceMachineManager.telemetry.checkIsTelemetryEnabled();
+
+	if (isTelemetryEnabled) {
+		setupSentry(args.sliceMachineManager, app);
+	}
 
 	const router = createRouter();
 

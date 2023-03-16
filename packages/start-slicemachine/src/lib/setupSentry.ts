@@ -42,7 +42,7 @@ export const setupSentry = async (
 			: "alpha",
 	});
 
-	if (userProfile !== undefined) {
+	if (userProfile) {
 		Sentry.setUser({ id: userProfile.shortId });
 	}
 	Sentry.setTag("repository", config.repositoryName);
