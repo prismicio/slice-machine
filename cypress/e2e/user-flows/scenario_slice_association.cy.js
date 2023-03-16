@@ -68,7 +68,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
 
     sliceBuilder.save();
 
-    cy.reload(true);
+    cy.reload();
     cy.contains("Static Key Text Field");
     cy.contains("Static Rich Text Field");
     cy.contains("Repeatable Rich Text Field");
@@ -89,7 +89,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
 
     customTypeBuilder.save();
 
-    cy.reload(true);
+    cy.reload();
     cy.contains(sliceName);
   });
 
@@ -118,7 +118,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
     );
     cy.get("#review-form").submit();
 
-    cy.reload(true);
+    cy.reload();
     cy.waitUntil(() => cy.get("[data-cy=create-ct]"));
 
     cy.get("#review-form").should("not.exist");
