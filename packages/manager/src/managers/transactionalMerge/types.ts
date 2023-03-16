@@ -78,13 +78,24 @@ export interface ClientError {
 	message: string;
 }
 
+type ChangeStatus = "NEW" | "MODIFIED" | "DELETED";
+
+type CustomTypeChange = {
+	id: string;
+	type: "CustomType";
+	status: ChangeStatus;
+};
+
+type SliceChange = {
+	id: string;
+	type: "Slice";
+	status: ChangeStatus;
+	libraryID: string;
+};
+
 export type TransactionalMergeArgs = {
 	confirmDeleteDocuments: boolean;
-	changes: {
-		id: string;
-		type: "Slice" | "CustomType";
-		status: "NEW" | "MODIFIED" | "DELETED";
-	}[];
+	changes: (CustomTypeChange | SliceChange)[];
 };
 
 export type TransactionalMergeReturnType = Limit | null;

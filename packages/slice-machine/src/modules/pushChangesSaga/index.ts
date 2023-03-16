@@ -72,6 +72,7 @@ export function* changesPushSaga({
   const sliceChanges = changedSlices.map((sliceChange) => ({
     id: sliceChange.slice.model.id,
     type: "Slice" as const,
+    libraryID: sliceChange.slice.from,
     status: sliceChange.status,
   }));
   const customTypeChanges = changedCustomTypes.map((customTypeChange) => ({

@@ -37,7 +37,7 @@ export class TransactionalMergeManager extends BaseManager {
 						switch (change.status) {
 							case "NEW": {
 								const { model } = await this.slices.readSlice({
-									libraryID: "./slices",
+									libraryID: change.libraryID,
 									sliceID: change.id,
 								});
 
@@ -53,7 +53,7 @@ export class TransactionalMergeManager extends BaseManager {
 							}
 							case "MODIFIED": {
 								const { model } = await this.slices.readSlice({
-									libraryID: "./slices",
+									libraryID: change.libraryID,
 									sliceID: change.id,
 								});
 
