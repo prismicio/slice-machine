@@ -20,7 +20,7 @@ import cors from "cors";
 import fetch from "node-fetch";
 import { createStaticFileEventHandler } from "./createStaticFileEventHandler";
 import { handler as sentryHandler } from "./sentryHandler";
-import { setupSentry } from "./setupSentry";
+import { onRPCError, setupSentry } from "./setupSentry";
 
 type CreateSliceMachineServerArgs = {
 	sliceMachineManager: SliceMachineManager;
@@ -59,6 +59,7 @@ export const createSliceMachineServer = async (
 		fromNodeMiddleware(
 			createSliceMachineManagerMiddleware({
 				sliceMachineManager: args.sliceMachineManager,
+				onError: onRPCError,
 			}),
 		),
 	);

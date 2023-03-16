@@ -29,7 +29,7 @@ export async function handler(event: H3Event): Promise<Record<string, never>> {
 			body: envelope,
 		});
 	} catch (e) {
-		// TODO add this back when we have the express
+		// TODO add this back when we have the express !!!
 		//   captureException(e);
 	} finally {
 		return {};

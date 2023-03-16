@@ -5,6 +5,7 @@ import {
 	RPCMiddleware,
 	createRPCMiddleware,
 	proceduresFromInstance,
+	OnErrorEventHandler,
 } from "r19";
 
 import { SliceMachineManager } from "./SliceMachineManager";
@@ -62,6 +63,7 @@ export const getSliceMachineManagerProcedures = (
 
 export type CreateSliceMachineManagerMiddlewareArgs = {
 	sliceMachineManager: SliceMachineManager;
+	onError?: OnErrorEventHandler;
 };
 
 export const createSliceMachineManagerMiddleware = (
@@ -71,5 +73,6 @@ export const createSliceMachineManagerMiddleware = (
 		procedures: getSliceMachineManagerProcedures({
 			sliceMachineManager: args.sliceMachineManager,
 		}),
+		onError: args.onError,
 	});
 };

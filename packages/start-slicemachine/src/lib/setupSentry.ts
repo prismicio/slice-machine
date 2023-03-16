@@ -2,14 +2,17 @@ import * as Sentry from "@sentry/node";
 
 import semver from "semver";
 import { App, H3Event, sendError } from "h3";
-import { SliceMachineManager } from "@slicemachine/manager";
+import {
+	CreateSliceMachineManagerMiddlewareArgs,
+	PrismicUserProfile,
+	SliceMachineManager,
+} from "@slicemachine/manager";
 import { SENTRY_EXPRESS_DSN } from "../constants";
 
 export const setupSentry = async (
 	manager: SliceMachineManager,
 	app: App,
 ): Promise<void> => {
-	!isDevEnv() || process.env.SENTRY_AUTH_TOKEN !== undefined;
 	if (!isSentryEnabled()) {
 		return;
 	}
@@ -17,12 +20,12 @@ export const setupSentry = async (
 	const sliceMachineVersion =
 		await manager.versions.getRunningSliceMachineVersion();
 
-	let user;
+	let userProfile: PrismicUserProfile | undefined;
 	try {
-		user = await manager.user.getProfile();
+		userProfile = await manager.user.getProfile();
 	} catch {
 		// not logged in
-		// user stays undefined
+		// userProfile stays undefined
 	}
 
 	const config = await manager.project.getSliceMachineConfig();
@@ -39,32 +42,40 @@ export const setupSentry = async (
 			: "alpha",
 	});
 
-	Sentry.setUser({ id: user?.shortId });
+	if (userProfile !== undefined) {
+		Sentry.setUser({ id: userProfile.shortId });
+	}
 	Sentry.setTag("repository", config.repositoryName);
 	Sentry.setContext("Repository Data", {
 		name: config.repositoryName,
 	});
 
-	app.options.onError = onError;
+	app.options.onError = onH3Error;
 };
-
-const isDevEnv = () =>
-	["development", "test"].includes(process.env.NODE_ENV ?? "");
 
 // We want Sentry enabled
 // - automatically in production (not dev or test)
 // - or if explicitely set in the environment
 const isSentryEnabled = (): boolean =>
-	!isDevEnv() || process.env.SENTRY_AUTH_TOKEN !== undefined;
+	!["development", "test"].includes(process.env.NODE_ENV ?? "") ||
+	process.env.SENTRY_AUTH_TOKEN !== undefined;
 
-const onError = (error: Error, event: H3Event): void => {
-	if (isSentryEnabled()) {
-		Sentry.withScope(function (scope) {
-			// TODO: we need the `procedurePath` fron payload here
-			scope.setTransactionName(event.path);
-			Sentry.captureException(error);
-		});
-	}
+const onH3Error = (error: Error, event: H3Event): void => {
+	Sentry.withScope(function (scope) {
+		scope.setTransactionName(event.path);
+		Sentry.captureException(error);
+	});
 
 	sendError(event, error);
+};
+
+export const onRPCError: CreateSliceMachineManagerMiddlewareArgs["onError"] = (
+	args,
+) => {
+	if (isSentryEnabled()) {
+		Sentry.withScope(function (scope) {
+			scope.setTransactionName(args.procedurePath.join(","));
+			Sentry.captureException(args.error);
+		});
+	}
 };
