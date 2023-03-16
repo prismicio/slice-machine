@@ -59,7 +59,7 @@ vi.mock("analytics-node", () => {
 	const MockSegmentClient = vi.fn();
 
 	MockSegmentClient.prototype.identify = vi.fn(
-		(_message: unknown, callback: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: Error) => void) => {
 			if (callback) {
 				callback();
 			}
@@ -67,7 +67,7 @@ vi.mock("analytics-node", () => {
 	);
 
 	MockSegmentClient.prototype.track = vi.fn(
-		(_message: unknown, callback: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: Error) => void) => {
 			if (callback) {
 				callback();
 			}

@@ -1,16 +1,18 @@
 import { describe, it } from "vitest";
 import { testSaga } from "redux-saga-test-plan";
 import { generateSliceScreenshotSaga } from "@src/modules/screenshots/sagas";
-import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";
 import { generateSliceScreenshotCreator } from "@src/modules/screenshots/actions";
 import { generateSliceScreenshotApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import SegmentClient from "analytics-node";
+
+import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 
 describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
-    it("should call the api and dispatch the success action", () => {
+    it("should call the api and dispatch the success action", async () => {
       const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
@@ -53,6 +55,10 @@ describe("[Selected Slice sagas]", () => {
       );
 
       saga.next().isDone();
+
+      // Wait for network request to be performed
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
     });
     it("should open a error toaster on internal error", () => {
       const screenDimensions = { width: 1200, height: 600 };

@@ -80,6 +80,32 @@ vi.mock("fs/promises", async () => {
   };
 });
 
+vi.mock("analytics-node", () => {
+  const MockSegmentClient = vi.fn();
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  MockSegmentClient.prototype.identify = vi.fn(
+    (_message: unknown, callback?: (error?: Error) => void) => {
+      if (callback) {
+        callback();
+      }
+    }
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  MockSegmentClient.prototype.track = vi.fn(
+    (_message: unknown, callback?: (error?: Error) => void) => {
+      if (callback) {
+        callback();
+      }
+    }
+  );
+
+  return {
+    default: MockSegmentClient,
+  };
+});
+
 vi.stubGlobal("FormData", FormData);
 vi.stubGlobal("Blob", Blob);
 vi.stubGlobal("File", File);

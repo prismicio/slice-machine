@@ -2,10 +2,12 @@
 
 import { describe, test, afterEach, expect, vi } from "vitest";
 import React from "react";
+import { rest } from "msw";
+import SegmentClient from "analytics-node";
+
 import { render, fireEvent, act } from "../__testutils__";
 import CreateCustomTypeModal from "../../components/Forms/CreateCustomTypeModal";
 import { ModalKeysEnum } from "../../src/modules/modal/types";
-import { rest } from "msw";
 
 vi.mock("next/router", () => require("next-router-mock"));
 global.console = { ...global.console, error: vi.fn() };
@@ -20,11 +22,6 @@ describe("CreateCustomTypeModal", () => {
   document.body.appendChild(div);
 
   test("when a slice is created the tracker should be called", async (ctx) => {
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("https://api.segment.io/v1/batch", trackingSpy));
-
     const fakeId = "testing_id";
     const fakeName = "testing-name";
     const fakeRepo = "foo";
@@ -55,16 +52,17 @@ describe("CreateCustomTypeModal", () => {
       fireEvent.click(submitButton);
     });
 
-    const trackingData = await trackingSpy.mock.lastCall?.[0].json<{
-      batch: Array<Record<string, unknown>>;
-    }>();
-    expect(trackingData?.batch[0]).toMatchObject({
-      event: "SliceMachine Custom Type Created",
-      properties: {
-        id: fakeId,
-        name: fakeName,
-        type: "repeatable",
-      },
-    });
+    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "SliceMachine Custom Type Created",
+        properties: {
+          id: fakeId,
+          name: fakeName,
+          type: "repeatable",
+        },
+      }),
+      expect.any(Function)
+    );
   });
 });
