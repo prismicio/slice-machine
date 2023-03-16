@@ -1,16 +1,24 @@
-// Compare an element src attribute to a fixture image, using a hash of the Base64 images
-export function isSameImageAs(subject, referenceImage) {
-  cy.wrap(subject)
-    .should(([img]) => expect(img.complete).to.be.true)
-    .then(([img]) => cy.request({ url: img.src, encoding: "base64" }))
-    .then((response) => cy.task("sha256", response.body))
-    .then((imageHash) => {
-      cy.fixture(referenceImage).then((base64Ref) => {
-        cy.task("sha256", base64Ref).then((refHash) => {
-          expect(imageHash).to.equal(refHash, "Base64 image hash comparison");
-        });
-      });
+/**
+ * Compare an img element to a fixture image. This only compares image dimensions
+ * so make sure your data set does not contain images with the same size.
+ * @param {*} subject, the img element
+ * @param {*} fixtureImage, the reference image fixture path
+ */
+export function isSameImageAs(subject, fixtureImage) {
+  cy.fixture(fixtureImage).then((base64) => {
+    let fixtureImage = new Image();
+    fixtureImage.src = `data:image/png;base64,${base64}`;
+    return new Promise((resolve) => {
+      fixtureImage.onload = () => {
+        isCorrectDimensions(
+          subject,
+          fixtureImage.naturalWidth,
+          fixtureImage.naturalHeight
+        );
+        resolve();
+      };
     });
+  });
 }
 
 export function isCorrectDimensions(subject, expectedWidth, expectedHeight) {
