@@ -1,5 +1,6 @@
 import { SLICE_MOCK_FILE } from "../../consts";
 import { simulatorPage } from "../../pages/simulator/simulatorPage";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 
 const sliceName = "TestSlice";
 const editedSliceName = "EditedSliceName";
@@ -15,14 +16,8 @@ describe("Create Slices", () => {
   it("A user can create and rename a slice", () => {
     cy.createSlice(lib, sliceId, sliceName);
 
-    // add widget
-    cy.get("button").contains("Add a new field").click();
-    cy.get('[data-cy="Rich Text"]').first().click();
-    cy.get('[data-cy="new-field-name-input"]')
-      .first()
-      .focus()
-      .type("Description");
-    cy.get('[data-cy="new-field-form"]').first().submit();
+    sliceBuilder.addNewWidgetField("Title", "Key Text");
+    sliceBuilder.addNewWidgetField("Description", "Rich Text");
 
     cy.contains("Save to File System").click();
 
@@ -149,6 +144,9 @@ describe("Create Slices", () => {
 
     // TODO: use faster fixtures
     cy.createSlice(lib, sliceId, sliceName);
+
+    sliceBuilder.addNewWidgetField("Title", "Key Text");
+    sliceBuilder.addNewWidgetField("Description", "Rich Text");
 
     cy.get('ul[data-cy="slice-non-repeatable-zone"] > li')
       .eq(1)

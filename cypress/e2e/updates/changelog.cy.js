@@ -1,4 +1,4 @@
-// TODO: Change this to an intergration test.
+// TODO: Change this to an integration test.
 describe.skip("changelog.warningBreakingChanges", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({
