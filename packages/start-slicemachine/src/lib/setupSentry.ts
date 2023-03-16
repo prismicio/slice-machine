@@ -31,11 +31,11 @@ export const setupSentry = async (
 	const config = await manager.project.getSliceMachineConfig();
 
 	const isStableVersion =
-		/^\d+\.\d+\.\d+$/.test(sliceMachineVersion) &&
+		semver.prerelease(sliceMachineVersion) === null &&
 		semver.lte("0.1.0", sliceMachineVersion);
 
 	Sentry.init({
-		dsn: process.env.SENTRY_EXPRESS_DSN ?? SENTRY_EXPRESS_DSN,
+		dsn: SENTRY_EXPRESS_DSN,
 		release: sliceMachineVersion,
 		environment: isStableVersion
 			? process.env.NODE_ENV ?? "production"
