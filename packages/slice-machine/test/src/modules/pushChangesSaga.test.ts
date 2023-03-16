@@ -52,6 +52,7 @@ const changesPayload: ChangesPushSagaPayload = {
       slice: {
         model: { id: "slice1", variations: [{ id: "var1" }] },
         screenshots: { var1: { path: "path/to/screenshot" } },
+        from: "library1",
       } as unknown as ComponentUI,
       status: ModelStatus.New,
     },
@@ -67,7 +68,12 @@ const changesPayload: ChangesPushSagaPayload = {
 const pushChangesApiPayload = {
   confirmDeleteDocuments: false,
   changes: [
-    { id: "slice1", status: ModelStatus.New, type: "Slice" },
+    {
+      id: "slice1",
+      status: ModelStatus.New,
+      libraryID: "library1",
+      type: "Slice",
+    },
     {
       id: "customType1",
       status: ModelStatus.Modified,
