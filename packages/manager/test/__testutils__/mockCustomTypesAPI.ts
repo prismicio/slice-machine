@@ -11,6 +11,7 @@ type MockCustomTypesAPIConfig = {
 	onSliceGet?: Parameters<typeof rest.get>[1];
 	onSliceInsert?: Parameters<typeof rest.post>[1];
 	onSliceUpdate?: Parameters<typeof rest.post>[1];
+	onBulk?: Parameters<typeof rest.post>[1];
 };
 
 export const mockCustomTypesAPI = (
@@ -101,6 +102,12 @@ export const mockCustomTypesAPI = (
 				new URL("./slices/update", endpoint).toString(),
 				config.onSliceUpdate,
 			),
+		);
+	}
+
+	if (config?.onBulk) {
+		ctx.msw.use(
+			rest.post(new URL("./bulk", endpoint).toString(), config.onBulk),
 		);
 	}
 };

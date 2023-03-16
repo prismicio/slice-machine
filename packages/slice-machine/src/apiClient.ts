@@ -13,17 +13,12 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
 import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
-// import {
-//   InvalidCustomTypeResponse,
-//   PushChangesPayload,
-// } from "@lib/models/common/TransactionalPush";
-// import { Limit } from "@slicemachine/client/build/models/BulkChanges";
 
 import { managerClient } from "./managerClient";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { Frameworks } from "@lib/models/common/Framework";
 
-/** State Routes **/
+/** State Routes * */
 
 export const getState = async (): Promise<ServerState> => {
   const rawState = await managerClient.getState();
@@ -82,7 +77,7 @@ export const getState = async (): Promise<ServerState> => {
   return state;
 };
 
-/** Custom Type Routes **/
+/** Custom Type Routes * */
 
 export const saveCustomType = async (
   customType: CustomTypeSM
@@ -100,12 +95,6 @@ export const renameCustomType = (
   });
 };
 
-export const pushCustomType = async (customTypeId: string): Promise<void> => {
-  await managerClient.customTypes.pushCustomType({
-    id: customTypeId,
-  });
-};
-
 // export const deleteCustomType = (
 //   customTypeId: string
 // ): Promise<AxiosResponse> => {
@@ -115,7 +104,7 @@ export const pushCustomType = async (customTypeId: string): Promise<void> => {
 //   );
 // };
 
-/** Slice Routes **/
+/** Slice Routes * */
 export const createSlice = async (
   sliceName: string,
   libName: string
@@ -230,22 +219,12 @@ export const saveSliceApiClient = async (
   });
 };
 
-export const pushSliceApiClient = async (
-  component: ComponentUI
-): ReturnType<SliceMachineManagerClient["slices"]["pushSlice"]> => {
-  return await managerClient.slices.pushSlice({
-    libraryID: component.from,
-    sliceID: component.model.id,
-  });
-};
+export const pushChanges: SliceMachineManagerClient["prismicRepository"]["pushChanges"] =
+  async (payload) => {
+    return await managerClient.prismicRepository.pushChanges(payload);
+  };
 
-// export const pushChanges = (
-//   payload: PushChangesPayload
-// ): Promise<AxiosResponse<InvalidCustomTypeResponse | Limit | null>> => {
-//   return axios.post("/api/push-changes", payload, defaultAxiosConfig);
-// };
-
-/** Auth Routes **/
+/** Auth Routes * */
 
 export const startAuth = async (): Promise<void> => {
   return await managerClient.user.logout();
@@ -269,7 +248,7 @@ export const checkAuthStatus = async (): Promise<CheckAuthStatusResponse> => {
   }
 };
 
-/** Simulator Routes **/
+/** Simulator Routes * */
 
 export const checkSimulatorSetup =
   async (): Promise<SimulatorCheckResponse> => {
