@@ -36,12 +36,6 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   it("Create a Slice with multiple fields (repeatable and non-repeatable)", () => {
     cy.createSlice(sliceLib, sliceId, sliceName);
 
-    // clear the Slice
-    cy.get('[data-cy="slice-menu-button"]').each(($element) => {
-      cy.wrap($element).click();
-      cy.contains("Delete field").click();
-    });
-
     cy.addStaticFieldToSlice(
       "Key Text",
       "Static Key Text Field",
