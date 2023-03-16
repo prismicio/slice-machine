@@ -32,7 +32,6 @@ function assertTelemetryInitialized(
 }
 
 export class TelemetryManager extends BaseManager {
-	private _enabled = false;
 	private _segmentClient: SegmentClient | undefined = undefined;
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
@@ -43,19 +42,11 @@ export class TelemetryManager extends BaseManager {
 			return;
 		}
 
-		let root: string;
-		try {
-			root = await this.project.getRoot();
-		} catch {
-			root = await this.project.suggestRoot();
-		}
-
-		this._enabled = readPrismicrc(root).telemetry !== false;
 		this._segmentClient = new SegmentClient(API_TOKENS.SegmentKey, {
 			// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
 			flushAt: 1,
 			// TODO: Verify that this actually does not send data to Segment when false.
-			enable: this._enabled,
+			enable: await this.checkIsTelemetryEnabled(),
 			errorHandler: () => {
 				// noop - We don't care if the tracking event
 				// failed. Some users or networks intentionally
@@ -150,5 +141,16 @@ export class TelemetryManager extends BaseManager {
 				resolve();
 			});
 		});
+	}
+
+	async checkIsTelemetryEnabled(): Promise<boolean> {
+		let root: string;
+		try {
+			root = await this.project.getRoot();
+		} catch {
+			root = await this.project.suggestRoot();
+		}
+
+		return readPrismicrc(root).telemetry !== false;
 	}
 }
