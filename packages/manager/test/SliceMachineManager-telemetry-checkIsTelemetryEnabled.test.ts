@@ -38,7 +38,7 @@ it("returns telemetry state honoring local `.prismicrc`", async () => {
 		cwd,
 	});
 
-	await fs.writeFile(path.join(os.homedir(), ".prismicrc"), "telemetry=false");
+	await fs.writeFile(path.join(cwd, ".prismicrc"), "telemetry=false");
 
 	await expect(manager.telemetry.checkIsTelemetryEnabled()).resolves.toBe(
 		false,
@@ -53,7 +53,7 @@ it("returns telemetry state honoring global `.prismicrc`", async () => {
 		cwd,
 	});
 
-	await fs.writeFile(path.join(cwd, ".prismicrc"), "telemetry=false");
+	await fs.writeFile(path.join(os.homedir(), ".prismicrc"), "telemetry=false");
 
 	await expect(manager.telemetry.checkIsTelemetryEnabled()).resolves.toBe(
 		false,

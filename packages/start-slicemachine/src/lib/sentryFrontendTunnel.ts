@@ -5,7 +5,9 @@ import { H3Event, readRawBody } from "h3";
 import fetch from "node-fetch";
 import * as Sentry from "@sentry/node";
 
-export async function handler(event: H3Event): Promise<Record<string, never>> {
+export const sentryFrontendTunnel = async (
+	event: H3Event,
+): Promise<Record<string, never>> => {
 	try {
 		const envelope = await readRawBody(event);
 
@@ -14,14 +16,10 @@ export async function handler(event: H3Event): Promise<Record<string, never>> {
 		}
 
 		const pieces = envelope.split("\n");
-
 		const header = JSON.parse(pieces[0]);
-
 		const { host, pathname } = new URL(header.dsn);
-
 		const projectId =
 			(pathname?.endsWith("/") ? pathname.slice(0, -1) : pathname) ?? "";
-
 		const sentryUrl = `https://${host}/api/${projectId}/envelope/`;
 
 		const response = await fetch(sentryUrl, {
@@ -38,4 +36,4 @@ export async function handler(event: H3Event): Promise<Record<string, never>> {
 	} finally {
 		return {};
 	}
-}
+};
