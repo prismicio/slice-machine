@@ -9,7 +9,8 @@ import {
   softDeleteDocumentsDrawer,
 } from "../../pages/changes/drawers";
 
-describe("I am an existing SM user and I want to push local changes", () => {
+// TODO enable this once the transactional push is implemented
+describe.skip("I am an existing SM user and I want to push local changes", () => {
   const random = Date.now();
 
   const slice = {
