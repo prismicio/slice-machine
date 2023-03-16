@@ -37,7 +37,7 @@ export type ChangesPushSagaPayload = PushChangesPayload & {
 
 type Limit = NonNullable<
   Awaited<
-    ReturnType<SliceMachineManagerClient["transactionalMerge"]["pushChanges"]>
+    ReturnType<SliceMachineManagerClient["prismicRepository"]["pushChanges"]>
   >
 >;
 

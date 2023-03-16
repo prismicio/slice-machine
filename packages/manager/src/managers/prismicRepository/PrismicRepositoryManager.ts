@@ -1,5 +1,6 @@
 import * as t from "io-ts";
 import fetch, { Response } from "node-fetch";
+import { fold } from "fp-ts/Either";
 
 import { decode } from "../../lib/decode";
 import { serializeCookies } from "../../lib/serializeCookies";
@@ -10,11 +11,22 @@ import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { BaseManager } from "../BaseManager";
 
 import {
+	AllChangeTypes,
+	BulkBody,
+	ChangeTypes,
+	ClientError,
+	Limit,
+	LimitType,
 	PrismicRepository,
 	PrismicRepositoryRole,
 	PrismicRepositoryUserAgent,
 	PrismicRepositoryUserAgents,
+	RawLimit,
+	TransactionalMergeArgs,
+	TransactionalMergeReturnType,
 } from "./types";
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { UnauthenticatedError } from "../../errors";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -235,6 +247,173 @@ export class PrismicRepositoryManager extends BaseManager {
 				},
 			);
 		}
+	}
+
+	async pushChanges(
+		args: TransactionalMergeArgs,
+	): Promise<TransactionalMergeReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		if (!(await this.user.checkIsLoggedIn())) {
+			throw new UnauthenticatedError();
+		}
+
+		try {
+			const allChanges: AllChangeTypes[] = await Promise.all(
+				args.changes.map(async (change) => {
+					if (change.type === "Slice") {
+						switch (change.status) {
+							case "NEW": {
+								const { model } = await this.slices.readSlice({
+									libraryID: change.libraryID,
+									sliceID: change.id,
+								});
+
+								if (!model) {
+									throw Error(`Could not find model ${change.id}`);
+								}
+
+								return {
+									type: ChangeTypes.SLICE_INSERT,
+									id: change.id,
+									payload: model,
+								};
+							}
+							case "MODIFIED": {
+								const { model } = await this.slices.readSlice({
+									libraryID: change.libraryID,
+									sliceID: change.id,
+								});
+
+								if (!model) {
+									throw Error(`Could not find model  ${change.id}`);
+								}
+
+								return {
+									type: ChangeTypes.SLICE_UPDATE,
+									id: change.id,
+									payload: model,
+								};
+							}
+							case "DELETED":
+								return {
+									id: change.id,
+									payload: { id: change.id },
+									type: ChangeTypes.SLICE_DELETE,
+								};
+						}
+					} else {
+						switch (change.status) {
+							case "NEW": {
+								const { model } = await this.customTypes.readCustomType({
+									id: change.id,
+								});
+								if (!model) {
+									throw Error(`Could not find model ${change.id}`);
+								}
+
+								return {
+									type: ChangeTypes.CUSTOM_TYPE_INSERT,
+									id: change.id,
+									payload: model,
+								};
+							}
+							case "MODIFIED": {
+								const { model } = await this.customTypes.readCustomType({
+									id: change.id,
+								});
+								if (!model) {
+									throw Error(`Could not find model ${change.id}`);
+								}
+
+								return {
+									type: ChangeTypes.CUSTOM_TYPE_UPDATE,
+									id: change.id,
+									payload: model,
+								};
+							}
+							case "DELETED":
+								return {
+									id: change.id,
+									payload: { id: change.id },
+									type: ChangeTypes.CUSTOM_TYPE_DELETE,
+								};
+						}
+					}
+				}),
+			);
+
+			// Compute the POST body
+			const requestBody: BulkBody = {
+				confirmDeleteDocuments: args.confirmDeleteDocuments,
+				changes: allChanges,
+			};
+
+			const authenticationToken = await this.user.getAuthenticationToken();
+			const sliceMachineConfig = await this.project.getSliceMachineConfig();
+
+			// TODO: API route in consts ends with /customtypes
+			// TODO: move to customtypes client
+			return fetch("https://customtypes.prismic.io/bulk", {
+				body: JSON.stringify(requestBody),
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${authenticationToken}`,
+					"User-Agent": "slice-machine",
+					repository: sliceMachineConfig.repositoryName,
+					"Content-Type": "application/json",
+				},
+			})
+				.then(async (response) => {
+					if (response.status === 204) {
+						return null;
+					}
+
+					return this._decodeLimitOrThrow(
+						await response.json(),
+						response.status,
+						LimitType.SOFT,
+					);
+				})
+				.catch((err: ClientError) => {
+					// Try to decode a limit from the error or throw the original error
+					try {
+						const data: unknown = JSON.parse(err.message);
+
+						return this._decodeLimitOrThrow(data, err.status, LimitType.HARD);
+					} catch {
+						throw err;
+					}
+				});
+		} catch (err) {
+			console.error("An error happened while pushing your changes");
+			console.error(err);
+
+			throw err;
+		}
+	}
+
+	private _decodeLimitOrThrow(
+		potentialLimit: unknown,
+		statusCode: number,
+		limitType: LimitType,
+	): Limit | null {
+		return fold<t.Errors, RawLimit, Limit | null>(
+			() => {
+				const error: ClientError = {
+					status: statusCode,
+					message: `Unable to parse raw limit from ${JSON.stringify(
+						potentialLimit,
+					)}`,
+				};
+				throw error;
+			},
+			(rawLimit: RawLimit) => {
+				const limit = { ...rawLimit, type: limitType };
+
+				return limit;
+			},
+		)(RawLimit.decode(potentialLimit));
 	}
 
 	private async _fetch(args: {

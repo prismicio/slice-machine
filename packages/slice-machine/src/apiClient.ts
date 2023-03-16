@@ -95,12 +95,6 @@ export const renameCustomType = (
   });
 };
 
-export const pushCustomType = async (customTypeId: string): Promise<void> => {
-  await managerClient.customTypes.pushCustomType({
-    id: customTypeId,
-  });
-};
-
 // export const deleteCustomType = (
 //   customTypeId: string
 // ): Promise<AxiosResponse> => {
@@ -225,18 +219,9 @@ export const saveSliceApiClient = async (
   });
 };
 
-export const pushSliceApiClient = async (
-  component: ComponentUI
-): ReturnType<SliceMachineManagerClient["slices"]["pushSlice"]> => {
-  return await managerClient.slices.pushSlice({
-    libraryID: component.from,
-    sliceID: component.model.id,
-  });
-};
-
-export const pushChanges: SliceMachineManagerClient["transactionalMerge"]["pushChanges"] =
+export const pushChanges: SliceMachineManagerClient["prismicRepository"]["pushChanges"] =
   async (payload) => {
-    return await managerClient.transactionalMerge.pushChanges(payload);
+    return await managerClient.prismicRepository.pushChanges(payload);
   };
 
 /** Auth Routes * */

@@ -29,7 +29,6 @@ import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
 import { SimulatorManager } from "./simulator/SimulatorManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
-import { TransactionalMergeManager } from "./transactionalMerge/TransactionalMerge";
 
 import { TelemetryManager } from "./telemetry/TelemetryManager";
 import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
@@ -113,7 +112,6 @@ export class SliceMachineManager {
 	telemetry: TelemetryManager;
 	user: UserManager;
 	versions: VersionsManager;
-	transactionalMerge: TransactionalMergeManager;
 
 	constructor(args?: SliceMachineManagerConstructorArgs) {
 		// _prismicAuthManager must be set at least before UserManager
@@ -136,7 +134,6 @@ export class SliceMachineManager {
 		this.simulator = new SimulatorManager(this);
 
 		this.versions = new VersionsManager(this);
-		this.transactionalMerge = new TransactionalMergeManager(this);
 
 		this.telemetry = new TelemetryManager(this);
 

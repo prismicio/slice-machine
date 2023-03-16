@@ -17,7 +17,6 @@ import { SimulatorManager } from "./simulator/SimulatorManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
-import { TransactionalMergeManager } from "./transactionalMerge/TransactionalMerge";
 
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;
@@ -85,10 +84,6 @@ export abstract class BaseManager {
 
 	protected get versions(): VersionsManager {
 		return this._sliceMachineManager.versions;
-	}
-
-	protected get transactionalMerge(): TransactionalMergeManager {
-		return this._sliceMachineManager.transactionalMerge;
 	}
 
 	protected get telemetry(): TelemetryManager {
