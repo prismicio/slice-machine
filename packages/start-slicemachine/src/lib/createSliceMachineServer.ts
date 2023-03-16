@@ -1,10 +1,6 @@
-import {
-	SliceMachineManager,
-	createPrismicAuthManagerMiddleware,
-	createSliceMachineManagerMiddleware,
-} from "@slicemachine/manager";
 import { createServer, Server } from "node:http";
 import * as path from "node:path";
+
 import {
 	createApp,
 	fromNodeMiddleware,
@@ -17,8 +13,16 @@ import {
 import serveStatic from "serve-static";
 import cors from "cors";
 import fetch from "node-fetch";
+import {
+	SliceMachineManager,
+	createPrismicAuthManagerMiddleware,
+	createSliceMachineManagerMiddleware,
+} from "@slicemachine/manager";
+
 import { createStaticFileEventHandler } from "./createStaticFileEventHandler";
-import { handler as sentryHandler } from "./sentryHandler";
+import { setupSentry } from "./setupSentry";
+import * as sentryErrorHandlers from "./sentryErrorHandlers";
+import { sentryFrontendTunnel } from "./sentryFrontendTunnel";
 
 type CreateSliceMachineServerArgs = {
 	sliceMachineManager: SliceMachineManager;
@@ -44,7 +48,17 @@ type CreateSliceMachineServerArgs = {
 export const createSliceMachineServer = async (
 	args: CreateSliceMachineServerArgs,
 ): Promise<Server> => {
-	const app = createApp();
+	const isTelemetryEnabled =
+		await args.sliceMachineManager.telemetry.checkIsTelemetryEnabled();
+
+	if (isTelemetryEnabled) {
+		setupSentry(args.sliceMachineManager);
+	}
+
+	const app = createApp({
+		onError: isTelemetryEnabled ? sentryErrorHandlers.h3 : undefined,
+	});
+
 	const router = createRouter();
 
 	app.use(fromNodeMiddleware(cors()));
@@ -54,6 +68,7 @@ export const createSliceMachineServer = async (
 		fromNodeMiddleware(
 			createSliceMachineManagerMiddleware({
 				sliceMachineManager: args.sliceMachineManager,
+				onError: isTelemetryEnabled ? sentryErrorHandlers.rpc : undefined,
 			}),
 		),
 	);
@@ -67,7 +82,7 @@ export const createSliceMachineServer = async (
 		),
 	);
 
-	router.add("/api/t", eventHandler(sentryHandler));
+	router.add("/api/t", eventHandler(sentryFrontendTunnel));
 
 	if (process.env.NODE_ENV === "development") {
 		router.get(
