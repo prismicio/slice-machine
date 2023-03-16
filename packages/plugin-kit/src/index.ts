@@ -177,13 +177,12 @@ export type {
 	SliceSimulatorSetupStepValidationMessage,
 } from "./hooks/sliceSimulator-setup-read";
 
-// command:init
+// project:init
 export type {
-	CommandInitHook,
-	CommandInitHookData,
-	CommandInitHookReturnType,
-	InstallDependenciesFunction,
-} from "./hooks/command-init";
+	ProjectInitHook,
+	ProjectInitHookData,
+	ProjectInitHookReturnType,
+} from "./hooks/project-init";
 
 ///////////////////////////////////////////////////////////////////////////////
 //

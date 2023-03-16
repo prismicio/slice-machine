@@ -27,7 +27,7 @@ const CodeBlockWithCopy: React.FC<{
 
   const copy = (): void => {
     currentCode &&
-      navigator.clipboard
+      void navigator.clipboard
         .writeText(customCopyText || currentCode.text)
         .then(() => {
           setIsCopied(true);

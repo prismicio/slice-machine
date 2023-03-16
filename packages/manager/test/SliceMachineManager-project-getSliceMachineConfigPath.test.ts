@@ -33,7 +33,7 @@ it("throws if a config file could not be found", async () => {
 
 	await fs.rm(path.join(cwd, "slicemachine.config.json"));
 
-	await expect(async () => {
-		await manager.project.getSliceMachineConfigPath();
-	}).rejects.toThrow(/could not find a slicemachine.config.json/i);
+	await expect(manager.project.getSliceMachineConfigPath()).rejects.toThrow(
+		/could not find a slicemachine\.config\.json/i,
+	);
 });

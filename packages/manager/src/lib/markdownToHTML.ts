@@ -20,10 +20,13 @@ const createRehypeStarryNight = async (): Promise<
 	const { default: tsxGrammar } = await import(
 		"@wooorm/starry-night/lang/source.tsx.js"
 	);
+	const { default: vueGrammar } = await import(
+		"@wooorm/starry-night/lang/text.html.vue.js"
+	);
 	const { toString } = await import("hast-util-to-string");
 
 	return (options = {}) => {
-		const grammars = options.grammars || [...common, tsxGrammar];
+		const grammars = options.grammars || [...common, tsxGrammar, vueGrammar];
 		const starryNightPromise = createStarryNight(grammars);
 		const prefix = "language-";
 

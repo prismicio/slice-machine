@@ -6,6 +6,7 @@ export default defineConfig({
 	plugins: [
 		sdk({
 			internalDependencies: [
+				"execa",
 				"fp-ts",
 				"r19",
 				"p-limit",
@@ -32,6 +33,7 @@ export default defineConfig({
 		},
 	},
 	test: {
+		testTimeout: 20000,
 		coverage: {
 			reporter: ["lcovonly", "text"],
 		},

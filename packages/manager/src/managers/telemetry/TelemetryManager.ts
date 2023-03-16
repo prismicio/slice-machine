@@ -96,14 +96,20 @@ export class TelemetryManager extends BaseManager {
 			assertTelemetryInitialized(this._segmentClient);
 
 			// TODO: Make sure client fails gracefully when no internet connection
-			this._segmentClient.track(payload, (maybeError?: Error) => {
-				if (maybeError) {
-					// TODO: Not sure how we want to deal with that
-					console.warn(`An error occurred during Segment tracking`, maybeError);
-				}
+			this._segmentClient.track(
+				payload as Parameters<typeof this._segmentClient.track>[0],
+				(maybeError?: Error) => {
+					if (maybeError) {
+						// TODO: Not sure how we want to deal with that
+						console.warn(
+							`An error occurred during Segment tracking`,
+							maybeError,
+						);
+					}
 
-				resolve();
-			});
+					resolve();
+				},
+			);
 		});
 	}
 

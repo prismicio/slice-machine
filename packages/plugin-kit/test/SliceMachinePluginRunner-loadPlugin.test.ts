@@ -23,7 +23,7 @@ const mockCreateRequireForProjectOnce = (
 	createRequireMock.mockImplementationOnce((filename) => {
 		if (
 			typeof filename === "string" &&
-			path.dirname(filename) === project.root
+			path.dirname(filename) === path.resolve(project.root)
 		) {
 			return (moduleID: string) => {
 				if (moduleID === args.moduleID) {
@@ -43,7 +43,7 @@ vi.mock("module", async () => {
 
 	return {
 		...actual,
-		createRequire: (...args: Parameters<typeof actual["createRequire"]>) => {
+		createRequire: (...args: Parameters<(typeof actual)["createRequire"]>) => {
 			const res = createRequireMock(...args);
 
 			if (res !== undefined) {
