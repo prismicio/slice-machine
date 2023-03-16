@@ -123,6 +123,9 @@
 		"puppeteer": "^19"
 	},
 	"peerDependenciesMeta": {
+		"msw": {
+			"optional": true
+		},
 		"puppeteer": {
 			"optional": true
 		}
