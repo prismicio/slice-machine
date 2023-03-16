@@ -38,7 +38,7 @@ export const setupSentry = async (
 		dsn: SENTRY_EXPRESS_DSN,
 		release: sliceMachineVersion,
 		environment: isStableVersion
-			? process.env.NODE_ENV ?? "production"
+			? process.env.NODE_ENV || "production"
 			: "alpha",
 	});
 
