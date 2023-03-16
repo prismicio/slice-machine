@@ -73,7 +73,11 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
 		expect.objectContaining({
 			event: "SliceMachine Init End",
-			properties: commandInitEndProperties,
+			properties: {
+				repo: commandInitEndProperties.repository,
+				framework: commandInitEndProperties.framework,
+				success: commandInitEndProperties.success,
+			},
 		}),
 		expect.any(Function),
 	);
