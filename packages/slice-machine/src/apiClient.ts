@@ -234,15 +234,10 @@ export const pushSliceApiClient = async (
   });
 };
 
-export const pushChanges = async (
-  payload: Parameters<
-    SliceMachineManagerClient["transactionalMerge"]["pushChanges"]
-  >[0]
-): ReturnType<
-  SliceMachineManagerClient["transactionalMerge"]["pushChanges"]
-> => {
-  return await managerClient.transactionalMerge.pushChanges(payload);
-};
+export const pushChanges: SliceMachineManagerClient["transactionalMerge"]["pushChanges"] =
+  async (payload) => {
+    return await managerClient.transactionalMerge.pushChanges(payload);
+  };
 
 /** Auth Routes * */
 

@@ -75,7 +75,7 @@ export async function trackPushChangesSuccess(params: trackingParameters) {
 
   const total = changedSlices.length + changedCustomTypes.length;
   const missingScreenshots: number = changedSlices.reduce(
-    (sum, slice) => sum + countMissingScreenshots(slice.c),
+    (sum, sliceChange) => sum + countMissingScreenshots(sliceChange.slice),
     0
   );
   const duration = Date.now() - startTime;

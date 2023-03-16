@@ -23,9 +23,10 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 //   ReferencesErrorDrawer,
 // } from "@components/DeleteDocumentsDrawer";
 import { hasLocal } from "@lib/models/common/ModelData";
-import { ChangesStatus } from "@lib/models/common/ModelStatus";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
+import {
+  ChangedCustomType,
+  ChangedSlice,
+} from "@lib/models/common/ModelStatus";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -36,19 +37,17 @@ const Changes: React.FunctionComponent = () => {
     isOnline,
   } = useUnSyncChanges();
 
-  type ChangedSlice = { status: ChangesStatus; c: ComponentUI };
-  type ChangedCustomType = { status: ChangesStatus; c: CustomTypeSM };
   const { changedSlices, changedCustomTypes } = useMemo(() => {
     const changedSlices = unSyncedSlices
       .map((s) => ({
-        c: s,
+        slice: s,
         status: modelsStatuses.slices[s.model.id],
       }))
-      .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status)); // FIXME can we sync unSyncStatuses and ChangedSlice?
+      .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status)); // TODO can we sync unSyncStatuses and ChangedSlice?
     const changedCustomTypes = unSyncedCustomTypes
       .map((model) => (hasLocal(model) ? model.local : model.remote))
       .map((ct) => ({
-        c: ct,
+        customType: ct,
         status: modelsStatuses.customTypes[ct.id],
       }))
       .filter((c): c is ChangedCustomType => unSyncStatuses.includes(c.status));

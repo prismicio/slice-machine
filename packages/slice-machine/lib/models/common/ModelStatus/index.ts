@@ -13,6 +13,8 @@ import {
   hasLocal,
   hasRemote,
 } from "../ModelData";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export enum ModelStatus {
   New = "NEW", // new model that does not exist in the repo
@@ -26,6 +28,12 @@ export type ChangesStatus =
   | ModelStatus.Deleted
   | ModelStatus.New
   | ModelStatus.Modified;
+
+export type ChangedSlice = { status: ChangesStatus; slice: ComponentUI };
+export type ChangedCustomType = {
+  status: ChangesStatus;
+  customType: CustomTypeSM;
+};
 
 const isSliceModel = (
   model: LocalAndRemoteSlice | LocalAndRemoteCustomType

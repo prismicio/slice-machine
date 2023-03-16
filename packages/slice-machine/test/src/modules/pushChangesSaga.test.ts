@@ -49,7 +49,7 @@ const changesPayload: ChangesPushSagaPayload = {
   confirmDeleteDocuments: false,
   changedSlices: [
     {
-      c: {
+      slice: {
         model: { id: "slice1", variations: [{ id: "var1" }] },
         screenshots: { var1: { path: "path/to/screenshot" } },
       } as unknown as ComponentUI,
@@ -57,7 +57,10 @@ const changesPayload: ChangesPushSagaPayload = {
     },
   ],
   changedCustomTypes: [
-    { c: { id: "customType1" } as CustomTypeSM, status: ModelStatus.Modified },
+    {
+      customType: { id: "customType1" } as CustomTypeSM,
+      status: ModelStatus.Modified,
+    },
   ],
 };
 

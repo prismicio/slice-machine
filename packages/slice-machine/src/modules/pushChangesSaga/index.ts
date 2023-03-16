@@ -22,19 +22,17 @@ import {
   InvalidCustomTypeResponse,
   PushChangesPayload,
 } from "@lib/models/common/TransactionalPush";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
 import Tracker from "@src/tracking/client";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
-import { ChangesStatus } from "@lib/models/common/ModelStatus";
+import {
+  ChangedCustomType,
+  ChangedSlice,
+} from "@lib/models/common/ModelStatus";
 
 export type ChangesPushSagaPayload = PushChangesPayload & {
-  changedSlices: ReadonlyArray<{ c: ComponentUI; status: ChangesStatus }>;
-  changedCustomTypes: ReadonlyArray<{
-    c: CustomTypeSM;
-    status: ChangesStatus;
-  }>;
+  changedSlices: ReadonlyArray<ChangedSlice>;
+  changedCustomTypes: ReadonlyArray<ChangedCustomType>;
 };
 
 type Limit = NonNullable<
@@ -71,18 +69,16 @@ export function* changesPushSaga({
   const startTime = Date.now();
   const { changedSlices, changedCustomTypes } = payload;
 
-  const sliceChanges: Parameters<typeof pushChanges>[0]["changes"] =
-    changedSlices.map((slice) => ({
-      id: slice.c.model.id,
-      type: "Slice",
-      status: slice.status,
-    }));
-  const customTypeChanges: Parameters<typeof pushChanges>[0]["changes"] =
-    changedCustomTypes.map((customType) => ({
-      id: customType.c.id,
-      type: "CustomType",
-      status: customType.status,
-    }));
+  const sliceChanges = changedSlices.map((sliceChange) => ({
+    id: sliceChange.slice.model.id,
+    type: "Slice" as const,
+    status: sliceChange.status,
+  }));
+  const customTypeChanges = changedCustomTypes.map((customTypeChange) => ({
+    id: customTypeChange.customType.id,
+    type: "CustomType" as const,
+    status: customTypeChange.status,
+  }));
 
   // Creating a new payload with the correct format
   const pushPayload: Parameters<typeof pushChanges>[0] = {
