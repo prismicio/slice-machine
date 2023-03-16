@@ -3,6 +3,7 @@
 
 import { H3Event, readRawBody } from "h3";
 import fetch from "node-fetch";
+import * as Sentry from "@sentry/node";
 
 export async function handler(event: H3Event): Promise<Record<string, never>> {
 	try {
@@ -22,15 +23,18 @@ export async function handler(event: H3Event): Promise<Record<string, never>> {
 			(pathname?.endsWith("/") ? pathname.slice(0, -1) : pathname) ?? "";
 
 		const sentryUrl = `https://${host}/api/${projectId}/envelope/`;
-		// TODO fetch does not throw on error
-		// handle non 200 errors as well
-		await fetch(sentryUrl, {
+
+		const response = await fetch(sentryUrl, {
 			method: "POST",
 			body: envelope,
 		});
+
+		if (!response.ok) {
+			const errorMessage = await response.text();
+			throw new Error(errorMessage);
+		}
 	} catch (e) {
-		// TODO add this back when we have the express !!!
-		//   captureException(e);
+		Sentry.captureException(e);
 	} finally {
 		return {};
 	}
