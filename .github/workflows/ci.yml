@@ -62,6 +62,7 @@ jobs:
       fail-fast: false
       matrix:
         package:
+          # Don't forget to replicate this list under `packages-win32` matrix
           - packages/plugin-kit
           - packages/manager
           - packages/init
@@ -111,11 +112,13 @@ jobs:
       fail-fast: false
       matrix:
         package:
+          # Don't forget to replicate this list under `packages` matrix
           - packages/plugin-kit
           - packages/manager
           - packages/init
           - packages/slice-machine
           - packages/start-slicemachine
+          - packages/adapter-next
 
     steps:
       - name: Checkout

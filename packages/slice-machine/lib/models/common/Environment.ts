@@ -24,5 +24,4 @@ export interface FrontEndEnvironment {
   packageManager: PackageManager;
   mockConfig: CustomTypeMockConfig;
   framework: Frameworks;
-  sliceMachineAPIUrl: string;
 }
