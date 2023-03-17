@@ -170,6 +170,7 @@ export class SliceMachineManager {
 			{ sliceMachineConfig, libraries },
 			{ profile, remoteCustomTypes, remoteSlices },
 			customTypes,
+			packageManager,
 		] = await Promise.all([
 			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
 				const libraries = await this._getLibraries(sliceMachineConfig);
@@ -197,6 +198,7 @@ export class SliceMachineManager {
 				}
 			}),
 			this._getCustomTypes(),
+			this.project.detectPackageManager(),
 		]);
 
 		// TODO: SM UI detects if a user is logged out by looking at
@@ -225,11 +227,12 @@ export class SliceMachineManager {
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
 				mockConfig: {},
-				// TODO: Don't hardcode this!
-				packageManager: "npm",
-				// TODO: Don't hardcode this!
+				packageManager,
 				repo: sliceMachineConfig.repositoryName,
-				// TODO: Don't hardcode this!
+				/**
+				 * @deprecated Value is inferred from `window.location` in the UI as
+				 *   `start-slicemachine` server now proxies it
+				 */
 				sliceMachineAPIUrl: "http://localhost:9999",
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
