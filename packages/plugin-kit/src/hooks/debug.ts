@@ -7,14 +7,12 @@ import type {
 /**
  * Data provided to `debug` hook handlers.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DebugHookData = any;
+export type DebugHookData = unknown;
 
 /**
  * Return value for `debug` hook handlers.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DebugHookReturnType = any;
+export type DebugHookReturnType = unknown;
 
 /**
  * Base version of a `debug` hook handler without plugin runner context.

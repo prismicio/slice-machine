@@ -71,7 +71,7 @@ import {
   generateSliceScreenshotCreator,
 } from "./screenshots/actions";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
-// import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
+import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
 import type {
   ScreenDimensions,
   ScreenshotGenerationMethod,
@@ -472,9 +472,8 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = () => ({});
-  // const pushChanges = (payload: ChangesPushSagaPayload) =>
-  //   dispatch(changesPushCreator.request(payload));
+  const pushChanges = (payload: ChangesPushSagaPayload) =>
+    dispatch(changesPushCreator.request(payload));
 
   // Toaster store
   const openToaster = (
