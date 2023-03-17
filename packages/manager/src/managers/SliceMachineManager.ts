@@ -46,7 +46,6 @@ type SliceMachineManagerGetStateReturnType = {
 		packageManager: PackageManager;
 		mockConfig: unknown; // TODO: Remove
 		framework: unknown; // TODO: Remove
-		sliceMachineAPIUrl: string;
 	};
 	libraries: {
 		name: string;
@@ -229,11 +228,6 @@ export class SliceMachineManager {
 				mockConfig: {},
 				packageManager,
 				repo: sliceMachineConfig.repositoryName,
-				/**
-				 * @deprecated Value is inferred from `window.location` in the UI as
-				 *   `start-slicemachine` server now proxies it
-				 */
-				sliceMachineAPIUrl: "http://localhost:9999",
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
 			},

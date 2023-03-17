@@ -26,7 +26,6 @@ export const dummyServerState: Pick<
     },
     mockConfig: {},
     framework: Frameworks.next,
-    sliceMachineAPIUrl: "http://localhost:9999",
     shortId: "shortId",
   },
   customTypes: [
