@@ -1,4 +1,5 @@
 import { describe, test } from "vitest";
+import SegmentClient from "analytics-node";
 import "@testing-library/jest-dom";
 import { TestApi, testSaga } from "redux-saga-test-plan";
 import {
@@ -92,7 +93,7 @@ describe("[pushChanges module]", () => {
         changesPushCreator.request(changesPayload)
       );
     });
-    test("Pushes changes when API response is OK display success toaster", () => {
+    test("Pushes changes when API response is OK display success toaster", async () => {
       saga.next().call(pushChanges, pushChangesApiPayload);
 
       saga.next(null).call(getState);
@@ -118,6 +119,10 @@ describe("[pushChanges module]", () => {
       );
 
       saga.next().isDone();
+
+      // Wait for network request to be performed
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
     });
 
     test.each([
@@ -174,6 +179,10 @@ describe("[pushChanges module]", () => {
         );
 
         saga.next().isDone();
+
+        // Wait for network request to be performed
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
       }
     );
 
