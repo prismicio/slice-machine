@@ -1,7 +1,7 @@
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
-import { TabField } from "@core/models/CustomType";
+import { TabField } from "@lib/models/common/CustomType";
 export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   TYPE_NAME: WidgetTypes;
   MockConfigForm?: {
@@ -23,6 +23,7 @@ export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   CustomListItem?: (props: any) => React.ReactElement;
   // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
   Form?: (props: any) => React.ReactNode;
+  prepareInitialValues?: (props: F["config"]) => F["config"];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any

@@ -3,10 +3,10 @@ import { useModelStatus } from "../../../src/hooks/useModelStatus";
 import * as networkHook from "../../../src/hooks/useNetwork";
 import { AuthStatus } from "@src/modules/userContext/types";
 
-import { Slices } from "@core/models/Slice";
+import { Slices } from "@lib/models/common/Slice";
 import SliceMock from "../../__fixtures__/sliceModel";
 
-import { CustomTypes } from "@core/models/CustomType";
+import { CustomTypes } from "@lib/models/common/CustomType";
 import { customTypeMock } from "../../__fixtures__/customType";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 
@@ -22,7 +22,15 @@ vi.mock("react-redux", async () => {
   };
 });
 
-const sliceModel = Slices.toSM(SliceMock);
+const BaseSliceMock = {
+  ...SliceMock,
+  variations: SliceMock.variations.map((variation) => {
+    // @ts-expect-error we know imageUrl is optional
+    delete variation["imageUrl"];
+    return variation;
+  }),
+};
+const sliceModel = Slices.toSM(BaseSliceMock);
 const customTypeModel = CustomTypes.toSM(customTypeMock);
 
 describe("[useModelStatus hook]", () => {
@@ -34,10 +42,10 @@ describe("[useModelStatus hook]", () => {
     vi.spyOn(networkHook, "useNetwork").mockImplementation(() => true); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.AUTHORIZED });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {
@@ -53,10 +61,10 @@ describe("[useModelStatus hook]", () => {
     vi.spyOn(networkHook, "useNetwork").mockImplementation(() => false); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.AUTHORIZED });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {
@@ -72,10 +80,10 @@ describe("[useModelStatus hook]", () => {
     vi.spyOn(networkHook, "useNetwork").mockImplementation(() => true); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.UNAUTHORIZED });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {
@@ -91,10 +99,10 @@ describe("[useModelStatus hook]", () => {
     vi.spyOn(networkHook, "useNetwork").mockImplementation(() => true); // isOnline
     mockSelector.mockReturnValue({ authStatus: AuthStatus.FORBIDDEN });
 
-    const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
-      { local: customTypeModel },
-    ]);
+    const result = useModelStatus({
+      slices: [{ local: sliceModel, remote: sliceModel, localScreenshots: {} }],
+      customTypes: [{ local: customTypeModel }],
+    });
 
     expect(result).toEqual({
       modelsStatuses: {

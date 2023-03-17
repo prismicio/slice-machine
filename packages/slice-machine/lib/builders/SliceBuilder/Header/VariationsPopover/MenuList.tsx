@@ -1,11 +1,11 @@
+import { VariationSM } from "@lib/models/common/Slice";
 import React from "react";
-import type * as Models from "@core/models";
 import { Box, Flex, Text } from "theme-ui";
 
 const MenuList: React.FunctionComponent<{
-  defaultValue: Models.VariationSM;
-  variations: ReadonlyArray<Models.VariationSM>;
-  onChange: (selected: Models.VariationSM) => void;
+  defaultValue: VariationSM;
+  variations: ReadonlyArray<VariationSM>;
+  onChange: (selected: VariationSM) => void;
   MenuItemAction?: React.ReactElement;
 }> = ({ defaultValue, variations, MenuItemAction, onChange }) => {
   return (
@@ -55,10 +55,10 @@ const MenuList: React.FunctionComponent<{
 export default MenuList;
 
 const MenuItem: React.FunctionComponent<{
-  value: Models.VariationSM;
+  value: VariationSM;
   isActive: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  onClick: ((v: Models.VariationSM) => void) | Function;
+  onClick: ((v: VariationSM) => void) | Function;
 }> = ({ value, isActive, onClick }) => {
   return (
     <Box

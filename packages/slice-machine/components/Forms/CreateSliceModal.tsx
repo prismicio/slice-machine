@@ -1,26 +1,14 @@
 import { Box, Label } from "theme-ui";
 
-import _Select from "react-select";
-
+import Select from "@components/Select";
 import ModalFormCard from "@components/ModalFormCard";
 import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
 import { InputBox } from "./components/InputBox";
 import { RESERVED_SLICE_NAME } from "@lib/consts";
-import { SliceSM } from "@core/models";
+import { SliceSM } from "@lib/models/common/Slice";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { API_ID_REGEX } from "@lib/consts";
-
-// This line of code provides interop with Vitest and Next.js.
-//
-// `react-select` has default and named exports. Some bundlers, including Rollup
-// when used with Vitest, handle mixed export types by naming the default export
-// "default". In Next.js, SWC seems to handle the default export without the
-// extra "default" name.
-const Select =
-  // @ts-expect-error - `default` is added by Rollup during tests since
-  // `react-select` has default and named exports.
-  Boolean(_Select.default) ? (_Select.default as typeof _Select) : _Select;
 
 const formId = "create-new-slice";
 

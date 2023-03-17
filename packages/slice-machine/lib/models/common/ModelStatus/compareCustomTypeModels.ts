@@ -1,14 +1,11 @@
-import { CustomTypeSM } from "@core/models/CustomType";
 import equal from "fast-deep-equal";
 import { ModelStatus } from ".";
+import { LocalAndRemoteCustomType } from "../ModelData";
 
-export type FrontEndCtModel = { local: CustomTypeSM; remote?: CustomTypeSM };
-
-export function compareCustomTypeModels(models: FrontEndCtModel) {
+export function compareCustomTypeLocalToRemote(
+  model: LocalAndRemoteCustomType
+): ModelStatus.Modified | ModelStatus.Synced {
   // If Custom Types are not equals then it was modified locally
-  if (!equal(models.local, models.remote)) {
-    return ModelStatus.Modified;
-  }
-
+  if (!equal(model.local, model.remote)) return ModelStatus.Modified;
   return ModelStatus.Synced;
 }

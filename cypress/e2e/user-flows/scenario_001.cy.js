@@ -1,5 +1,6 @@
-const random = Date.now();
+import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
 
+const random = Date.now();
 const customTypeName = `My Custom Type ${random}`;
 const customTypeId = `my_custom_type_${random}`;
 
@@ -36,12 +37,20 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   it("Adding fields to repeatable CT & saving", () => {
-    cy.visit(`/cts/${customTypeId}`);
+    customTypeBuilder.goTo(customTypeId);
 
     cy.addFieldToCustomType("UID", "ID Field", "uid");
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
-    cy.saveCustomTypeModifications();
+    customTypeBuilder.save();
+  });
+
+  it("Links to CTs available locally", () => {
+    cy.visit(`/changes`);
+
+    cy.contains(customTypeId).click();
+
+    cy.url().should("include", `/cts/${customTypeId}`);
   });
 
   it("Pushes changes", () => {

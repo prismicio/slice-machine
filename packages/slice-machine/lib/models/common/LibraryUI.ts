@@ -1,4 +1,4 @@
-import type { LibraryMeta, Library, Component } from "@core/models";
+import type { LibraryMeta, Library, Component } from "./Library";
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 

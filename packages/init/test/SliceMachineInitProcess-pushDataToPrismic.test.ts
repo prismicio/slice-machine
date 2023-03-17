@@ -137,16 +137,20 @@ const mockAdapter = async (
 	};
 };
 
-const mockPrismicAPIs = async (
-	ctx: TestContext,
-	initProcess: SliceMachineInitProcess,
+type MockPrismicAPIsArgs = {
+	initProcess: SliceMachineInitProcess;
 	models: {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		sharedSliceModel: any;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		customTypeModel: any;
-	},
-	noDocuments = false,
+	};
+	documents?: Record<string, unknown>;
+};
+
+const mockPrismicAPIs = async (
+	ctx: TestContext,
+	args: MockPrismicAPIsArgs,
 ): Promise<void> => {
 	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
 	mockPrismicUserAPI(ctx);
@@ -159,8 +163,8 @@ const mockPrismicAPIs = async (
 		},
 		async onSliceInsert(req, res, ctx) {
 			expect(await req.json()).toStrictEqual({
-				...models.sharedSliceModel,
-				variations: models.sharedSliceModel.variations.map(
+				...args.models.sharedSliceModel,
+				variations: args.models.sharedSliceModel.variations.map(
 					(variation: Record<string, unknown>) => {
 						return {
 							...variation,
@@ -176,7 +180,7 @@ const mockPrismicAPIs = async (
 			return res(ctx.status(404));
 		},
 		async onCustomTypeInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual(models.customTypeModel);
+			expect(await req.json()).toStrictEqual(args.models.customTypeModel);
 
 			return res(ctx.status(201));
 		},
@@ -189,21 +193,32 @@ const mockPrismicAPIs = async (
 		},
 	});
 
-	if (!noDocuments) {
+	const documents = args.documents || {
+		baz: { qux: "quux" },
+		corge: { grault: "garply" },
+	};
+
+	if (Object.keys(documents).length > 0) {
+		const preparedDocuments: Record<string, unknown> = {};
+
+		for (const documentKey in documents) {
+			const document = documents[documentKey];
+
+			preparedDocuments[`./en-us/${documentKey}.json`] =
+				typeof document === "string"
+					? document
+					: JSON.stringify(documents[documentKey]);
+		}
+
 		vol.fromJSON(
 			{
 				"./index.json": JSON.stringify({ signature: "foo" }),
-				"./en-us/baz.json": JSON.stringify({ qux: "quux" }),
-				"./en-us/corge.json": JSON.stringify({ grault: "garply" }),
+				...preparedDocuments,
 			},
 			"/documents",
 		);
 	}
 
-	const documents = {
-		baz: { qux: "quux" },
-		corge: { grault: "garply" },
-	};
 	mockPrismicRepositoryAPI(ctx, {
 		starterDocumentsEndpoint: {
 			expectedAuthenticationToken: token,
@@ -220,7 +235,7 @@ const mockPrismicAPIs = async (
 
 it("pushes data to Prismic", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
@@ -244,7 +259,7 @@ it("skips pushing anything to Prismic when no-push flag is set", async (ctx) => 
 		},
 	});
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	await watchStd(() => {
@@ -261,7 +276,7 @@ it("skips pushing anything to Prismic when no-push flag is set", async (ctx) => 
 
 it("pushes slices to Prismic", async (ctx) => {
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	const { stdout } = await watchStd(() => {
@@ -286,7 +301,7 @@ it("skips pushing slices to Prismic when no-push-slices flag is set", async (ctx
 		},
 	});
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	await watchStd(() => {
@@ -310,7 +325,7 @@ it("skips pushing slices to Prismic when no-push flag is set", async (ctx) => {
 		},
 	});
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	await watchStd(() => {
@@ -327,7 +342,7 @@ it("skips pushing slices to Prismic when no slices are available", async (ctx) =
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess, {
 		empty: ["slice-library:read"],
 	});
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	const { stdout } = await watchStd(() => {
@@ -345,7 +360,7 @@ it("throws when it fails to read slice libraries", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess, {
 		throwsOn: ["slice-library:read"],
 	});
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 
 	await expect(
 		watchStd(() => {
@@ -359,7 +374,7 @@ it("throws when it fails to read slice libraries", async (ctx) => {
 
 it("pushes custom types to Prismic", async (ctx) => {
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	const { stdout } = await watchStd(() => {
@@ -386,7 +401,7 @@ it("skips pushing custom types to Prismic when no-push-custom-types flag is set"
 		},
 	});
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	await watchStd(() => {
@@ -412,7 +427,7 @@ it("skips pushing custom types to Prismic when no-push flag is set", async (ctx)
 		},
 	});
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	await watchStd(() => {
@@ -431,7 +446,7 @@ it("skips pushing custom types to Prismic when no custom types are available", a
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess, {
 		empty: ["custom-type-library:read"],
 	});
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	const { stdout } = await watchStd(() => {
@@ -451,7 +466,7 @@ it("throws when it fails to read slice libraries", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess, {
 		throwsOn: ["custom-type-library:read"],
 	});
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 
 	await expect(
 		watchStd(() => {
@@ -465,7 +480,7 @@ it("throws when it fails to read slice libraries", async (ctx) => {
 
 it("pushes documents to Prismic", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	const { stdout } = await watchStd(() => {
@@ -474,6 +489,38 @@ it("pushes documents to Prismic", async (ctx) => {
 	});
 
 	expect(spiedManager.prismicRepository.pushDocuments).toHaveBeenCalledOnce();
+	expect(stdout).toMatch(/Pushed all documents/);
+});
+
+it("skips documents that cannot be parsed", async (ctx) => {
+	const { models } = await mockAdapter(ctx, initProcess);
+	await mockPrismicAPIs(ctx, {
+		initProcess,
+		models,
+		documents: {
+			// We purposely leave out the "corge" document because
+			// it will not be sent.
+			baz: { qux: "quux" },
+		},
+	});
+	const spiedManager = spyManager(initProcess);
+	vol.fromJSON(
+		{
+			"./index.json": JSON.stringify({ signature: "foo" }),
+			"./en-us/baz.json": JSON.stringify({ qux: "quux" }),
+			// This document contains invalid JSON and will be skipped.
+			"./en-us/corge.json": "invalid JSON",
+		},
+		"/documents",
+	);
+
+	const { stdout } = await watchStd(() => {
+		// @ts-expect-error - Accessing protected method
+		return initProcess.pushDataToPrismic();
+	});
+
+	expect(spiedManager.prismicRepository.pushDocuments).toHaveBeenCalledOnce();
+	expect(stdout).toMatch(new RegExp(`skipped document.*en-us/corge.json`, "i"));
 	expect(stdout).toMatch(/Pushed all documents/);
 });
 
@@ -488,7 +535,7 @@ it("skips pushing documents to Prismic when no-push-documents flag is set", asyn
 		},
 	});
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	await watchStd(() => {
@@ -510,7 +557,7 @@ it("skips pushing documents to Prismic when no-push flag is set", async (ctx) =>
 		},
 	});
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
 
 	await watchStd(() => {
@@ -523,7 +570,11 @@ it("skips pushing documents to Prismic when no-push flag is set", async (ctx) =>
 
 it("skips pushing documents to Prismic when no documents directory is available", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models, true);
+	await mockPrismicAPIs(ctx, {
+		initProcess,
+		models,
+		documents: {},
+	});
 	const spiedManager = spyManager(initProcess);
 
 	const { stdout } = await watchStd(() => {
@@ -537,7 +588,11 @@ it("skips pushing documents to Prismic when no documents directory is available"
 
 it("skips pushing documents to Prismic when no documents are available", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models, true);
+	await mockPrismicAPIs(ctx, {
+		initProcess,
+		models,
+		documents: {},
+	});
 	const spiedManager = spyManager(initProcess);
 	vol.fromJSON(
 		{
@@ -559,7 +614,7 @@ it("skips pushing documents to Prismic when no documents are available", async (
 
 it("pushes data to Prismic", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
@@ -574,7 +629,7 @@ it("pushes data to Prismic", async (ctx) => {
 
 it("cleans up documents directory", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
@@ -589,7 +644,11 @@ it("cleans up documents directory", async (ctx) => {
 
 it("does not throw if process cannot clean up documents directory", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models, true);
+	await mockPrismicAPIs(ctx, {
+		initProcess,
+		models,
+		documents: {},
+	});
 
 	expect(
 		Object.keys(vol.toJSON()).filter((path) => path.includes("documents")),
@@ -605,7 +664,7 @@ it("does not throw if process cannot clean up documents directory", async (ctx) 
 
 it("throws if context is missing repository", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, initProcess, models);
+	await mockPrismicAPIs(ctx, { initProcess, models });
 	updateContext(initProcess, {
 		repository: undefined,
 	});

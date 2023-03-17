@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { simulatorIsSupported } from "@lib/utils";
-import { Frameworks } from "@core/models";
+import { Frameworks } from "@lib/models/common/Framework";
 import { slugify } from "@lib/utils/str";
 
 describe("simulatorIsSupported", () => {

@@ -1,6 +1,7 @@
 import jsonModel from "../__fixtures__/model.json";
 import mocks from "../__fixtures__/mocks.json";
-import { ComponentMocks, Slices } from "@core/models";
+import { Slices } from "@lib/models/common/Slice";
+import { ComponentMocks } from "@lib/models/common/Library";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 

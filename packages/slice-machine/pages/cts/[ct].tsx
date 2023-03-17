@@ -5,10 +5,11 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getEnvironment } from "@src/modules/environment";
-import { CustomTypeSM } from "@core/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { selectCustomTypeById } from "../../src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useEffect } from "react";
+import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomTypeSM;
@@ -48,18 +49,31 @@ const CustomTypeBuilderWithRouter = () => {
     })
   );
 
-  useEffect(() => {
-    if (!selectedCustomType) void router.replace("/");
-  }, [selectedCustomType]);
+  const { cleanupCustomTypeStore } = useSliceMachineActions();
 
-  if (!selectedCustomType) {
+  useEffect(() => {
+    if (!selectedCustomType || !hasLocal(selectedCustomType))
+      void router.replace("/");
+  }, [selectedCustomType, router]);
+
+  useEffect(() => {
+    return () => {
+      cleanupCustomTypeStore();
+    };
+    // we don't want to re-run this effect when the cleanupCustomTypeStore is redefined
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!selectedCustomType || !hasLocal(selectedCustomType)) {
     return null;
   }
 
   return (
     <CustomTypeBuilderWithProvider
       customType={selectedCustomType.local}
-      remoteCustomType={selectedCustomType.remote}
+      remoteCustomType={
+        hasRemote(selectedCustomType) ? selectedCustomType.remote : undefined
+      }
     />
   );
 };

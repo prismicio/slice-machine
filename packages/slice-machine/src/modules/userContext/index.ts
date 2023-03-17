@@ -7,7 +7,7 @@ import {
 } from "@src/modules/userContext/types";
 import { refreshStateCreator } from "../environment";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
-import { syncChangeCreator } from "../pushChangesSaga/actions";
+// import { changesPushCreator } from "../pushChangesSaga";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
@@ -53,7 +53,7 @@ type userContextActions = ActionType<
   | typeof hasSeenTutorialsTooTipCreator
   | typeof hasSeenSimulatorToolTipCreator
   | typeof refreshStateCreator
-  | typeof syncChangeCreator
+  // | typeof changesPushCreator.success
 >;
 
 // Selectors
@@ -121,12 +121,12 @@ export const userContextReducer: Reducer<
         authStatus: getAuthStatus(action.payload.clientError),
       };
     }
-    case getType(syncChangeCreator): {
-      return {
-        ...state,
-        lastSyncChange: Date.now(),
-      };
-    }
+    // case getType(changesPushCreator.success): {
+    //   return {
+    //     ...state,
+    //     lastSyncChange: Date.now(),
+    //   };
+    // }
 
     default:
       return state;

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useThemeUI, Text, Button, Flex, Box } from "theme-ui";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { BsCode } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
@@ -14,11 +16,7 @@ const buttonIconStyle: React.CSSProperties = {
 
 export interface Item {
   key: string;
-  value: {
-    config: Record<string, unknown>;
-    fields?: Array<unknown>;
-    type: string;
-  };
+  value: NestableWidget | UID;
 }
 
 export type RenderHintBaseFN = (args: { item: Item }) => string;
@@ -34,7 +32,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
 
   const copy = (): void => {
     code &&
-      navigator.clipboard.writeText(code).then(() => {
+      void navigator.clipboard.writeText(code).then(() => {
         setIsCopied(true);
         setTimeout(() => {
           setIsCopied(false);

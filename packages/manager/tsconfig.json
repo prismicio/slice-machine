@@ -12,8 +12,7 @@
 		"esModuleInterop": true,
 
 		"forceConsistentCasingInFileNames": true,
-		"jsx": "preserve",
-		"lib": ["esnext", "dom", "dom.iterable"],
+		"lib": ["esnext"],
 		"types": ["node"]
 	},
 	"exclude": ["node_modules", "dist"]

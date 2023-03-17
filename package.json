@@ -21,7 +21,7 @@
     "audit": "lerna run audit",
     "lint": "npm --workspaces --if-present run lint",
     "lint-staged": "lint-staged",
-    "pretty": "prettier --write .",
+    "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "lerna run test --stream",
     "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development NO_SENTRY=1 npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
@@ -30,26 +30,25 @@
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact",
     "bump:alpha": "lerna version prerelease --preid $npm_config_preid --no-changelog --exact --yes",
+    "bump:production": "lerna version --conventional-graduate --exact",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --no-verify-access --yes",
     "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
-    "bump:production": "lerna version --conventional-graduate --exact",
-    "depcheck": "depcheck --skip-missing; lerna run depcheck",
     "lerna:update": "npx --yes lerna-update-wizard"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
     "depcheck": "^1.4.3",
-    "husky": "^7.0.2",
+    "husky": "^8.0.3",
     "lerna": "^3.22.1",
-    "lint-staged": "^11.1.2",
-    "prettier": "^2.4.1"
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.4"
   },
   "dependencies": {
-    "cypress": "^12.3.0",
+    "cypress": "^12.8.0",
     "cypress-localstorage-commands": "^2.2.2",
     "cypress-real-events": "^1.7.6",
     "cypress-wait-until": "^1.7.2",
-    "start-server-and-test": "^1.15.2"
+    "start-server-and-test": "^1.15.5"
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
@@ -57,8 +56,14 @@
       "npm --prefix ./packages/slice-machine run lint:precommit"
     ]
   },
+  "//": "Order matters!",
   "workspaces": [
-    "packages/*",
+    "packages/plugin-kit",
+    "packages/manager",
+    "packages/start-slicemachine",
+    "packages/init",
+    "packages/slice-machine",
+    "packages/adapter-*",
     "e2e-projects/next2"
   ]
 }

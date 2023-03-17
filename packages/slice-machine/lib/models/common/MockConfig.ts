@@ -1,4 +1,4 @@
-import type * as Models from "@core/models";
+import { WidgetsArea } from "./Slice";
 
 export interface SliceMockConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +29,7 @@ export const SliceMockConfig = {
   getFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: Models.WidgetsArea,
+    widgetArea: WidgetsArea,
     fieldId: string
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -43,7 +43,7 @@ export const SliceMockConfig = {
   deleteFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: Models.WidgetsArea,
+    widgetArea: WidgetsArea,
     fieldId: string
   ) {
     return {
@@ -65,7 +65,7 @@ export const SliceMockConfig = {
   updateFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: Models.WidgetsArea,
+    widgetArea: WidgetsArea,
     previousKey: string,
     fieldId: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

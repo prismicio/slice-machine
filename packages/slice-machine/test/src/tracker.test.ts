@@ -2,8 +2,8 @@
 
 import { describe, test, afterEach, expect, vi } from "vitest";
 import TrackerSingleton, { SMTracker } from "@src/tracking/client";
-import { EventNames } from "@src/tracking/types";
-import { Frameworks } from "@core/models";
+import { EventNames } from "@lib/models/tracking";
+import { Frameworks } from "@lib/models/common/Framework";
 import { rest } from "msw";
 
 describe("Tracker Singleton", () => {

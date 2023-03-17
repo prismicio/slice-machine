@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CustomTypes } from "@core/models/CustomType/index";
+import { CustomTypes } from "@lib/models/common/CustomType";
 import jsonModel from "./__fixtures__/model.json";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import {
@@ -13,6 +13,7 @@ import {
   replaceFieldCreator,
   replaceSharedSliceCreator,
   updateTabCreator,
+  cleanupCustomTypeStoreCreator,
 } from "@src/modules/selectedCustomType";
 import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 import * as widgets from "@models/common/widgets/withGroup";
@@ -40,6 +41,15 @@ describe("[Selected Custom type module]", () => {
       expect(
         selectedCustomTypeReducer(dummyCustomTypesState, { type: "NO.MATCH" })
       ).toEqual(dummyCustomTypesState);
+    });
+
+    it("should reset the custom type state given CUSTOM_TYPE/CLEANUP action", () => {
+      expect(
+        selectedCustomTypeReducer(
+          dummyCustomTypesState,
+          cleanupCustomTypeStoreCreator()
+        )
+      ).toEqual(null);
     });
 
     it("should update the custom type state given CUSTOM_TYPE/INIT action", () => {

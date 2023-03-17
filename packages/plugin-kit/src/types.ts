@@ -2,7 +2,7 @@ import { SliceMachineContext } from "./createSliceMachineContext";
 import { SliceMachinePlugin } from "./defineSliceMachinePlugin";
 import { Hook } from "./lib/HookSystem";
 
-import { CommandInitHookBase } from "./hooks/command-init";
+import { ProjectInitHookBase } from "./hooks/project-init";
 import { CustomTypeAssetDeleteHookBase } from "./hooks/customType-asset-delete";
 import { CustomTypeAssetReadHookBase } from "./hooks/customType-asset-read";
 import { CustomTypeAssetUpdateHookBase } from "./hooks/customType-asset-update";
@@ -158,7 +158,7 @@ export const SliceMachineHookType = {
 
 	sliceSimulator_setup_read: "slice-simulator:setup:read",
 
-	command_init: "command:init",
+	project_init: "project:init",
 
 	debug: "debug",
 } as const;
@@ -167,7 +167,7 @@ export const SliceMachineHookType = {
  * Hook types.
  */
 export type SliceMachineHookTypes =
-	typeof SliceMachineHookType[keyof typeof SliceMachineHookType];
+	(typeof SliceMachineHookType)[keyof typeof SliceMachineHookType];
 
 /**
  * Slice Machine-specific hook handlers.
@@ -205,8 +205,8 @@ export type SliceMachineHooks = {
 	// Slice Simulator
 	[SliceMachineHookType.sliceSimulator_setup_read]: Hook<SliceSimulatorSetupReadHookBase>;
 
-	// Commands
-	[SliceMachineHookType.command_init]: Hook<CommandInitHookBase>;
+	// Project
+	[SliceMachineHookType.project_init]: Hook<ProjectInitHookBase>;
 
 	// Debug
 	[SliceMachineHookType.debug]: Hook<DebugHookBase>;

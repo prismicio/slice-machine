@@ -62,7 +62,7 @@ type SliceMachineManagerReadAllSlicesReturnType = {
 };
 
 type SliceMachineManagerReadSliceReturnType = {
-	model: CustomTypes.Widgets.Slices.SharedSlice;
+	model: CustomTypes.Widgets.Slices.SharedSlice | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
@@ -104,7 +104,7 @@ type SliceMachineManagerReadSliceMocksArgs = {
 
 type SliceMachineManagerReadSliceMocksReturnType = {
 	mocks?: SharedSliceContent[];
-	errors: HookError[];
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadSliceMocksConfigArgs = {
@@ -467,19 +467,36 @@ export class SlicesManager extends BaseManager {
 				assetID: `mocks.json`,
 			},
 		);
-		const data = hookResult.data[0]?.data;
-
-		// TODO: Validate the returned mocks.
+		const { data, errors } = decodeHookResult(
+			t.type({
+				data: t.array(SharedSliceContent),
+			}),
+			{
+				...hookResult,
+				// Convert the asset data from a Buffer to JSON
+				// to prepare it for validation.
+				data: hookResult.data.map((result) => {
+					try {
+						return {
+							...result,
+							data: JSON.parse(result.data.toString()),
+						};
+					} catch {
+						return result;
+					}
+				}),
+			},
+		);
 
 		if (data) {
 			return {
-				mocks: JSON.parse(data.toString()),
-				errors: hookResult.errors,
+				mocks: data[0]?.data,
+				errors,
 			};
 		} else {
 			return {
 				mocks: [],
-				errors: hookResult.errors,
+				errors,
 			};
 		}
 	}

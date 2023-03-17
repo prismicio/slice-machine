@@ -5,8 +5,6 @@ import { transformKeyAccessor } from "@utils/str";
 
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
-import type { Models } from "@core";
-import { WidgetsArea } from "@core/models/Slice";
 
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
@@ -18,6 +16,7 @@ import {
 import { DropResult } from "react-beautiful-dnd";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -29,7 +28,7 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
 
 type FieldZonesProps = {
   mockConfig: CustomTypeMockConfig;
-  variation: Models.VariationSM;
+  variation: VariationSM;
 };
 
 const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
@@ -44,13 +43,13 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     updateSliceWidgetMock,
     deleteSliceWidgetMock,
   } = useSliceMachineActions();
-  const _onDeleteItem = (widgetArea: Models.WidgetsArea) => (key: string) => {
+  const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
     deleteSliceWidgetMock(variation.id, mockConfig, widgetArea, key);
     removeSliceWidget(variation.id, widgetArea, key);
   };
 
   const _getFieldMockConfig =
-    (widgetArea: Models.WidgetsArea) =>
+    (widgetArea: WidgetsArea) =>
     ({ apiId }: { apiId: string }) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return SliceMockConfig.getFieldMockConfig(
@@ -63,7 +62,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     };
 
   const _onSave =
-    (widgetArea: Models.WidgetsArea) =>
+    (widgetArea: WidgetsArea) =>
     ({
       apiId: previousKey,
       newKey,
@@ -95,7 +94,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     };
 
   const _onSaveNewField =
-    (widgetArea: Models.WidgetsArea) =>
+    (widgetArea: WidgetsArea) =>
     ({
       id,
       label,
@@ -124,17 +123,16 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       );
     };
 
-  const _onDragEnd =
-    (widgetArea: Models.WidgetsArea) => (result: DropResult) => {
-      if (ensureDnDDestination(result)) return;
+  const _onDragEnd = (widgetArea: WidgetsArea) => (result: DropResult) => {
+    if (ensureDnDDestination(result)) return;
 
-      reorderSliceWidget(
-        variation.id,
-        widgetArea,
-        result.source.index,
-        result.destination?.index ?? undefined
-      );
-    };
+    reorderSliceWidget(
+      variation.id,
+      widgetArea,
+      result.source.index,
+      (result.destination && result.destination.index) || undefined
+    );
+  };
 
   return (
     <>

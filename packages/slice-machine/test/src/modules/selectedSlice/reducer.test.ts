@@ -9,12 +9,12 @@ import {
   replaceSliceWidgetCreator,
   updateSliceWidgetMockCreator,
 } from "@src/modules/selectedSlice/actions";
-import { Models } from "@core";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";
 import { getRefreshStateCreatorPayloadData } from "./__testutils__/getRefreshStateCreatorPayloadData";
 import { refreshStateCreator } from "@src/modules/environment";
+import { WidgetsArea } from "@lib/models/common/Slice";
 
 const { dummyModelVariationID, dummyMockConfig, dummySliceState } =
   getSelectedSliceDummyData();
@@ -56,7 +56,7 @@ describe("[Selected Slice module]", () => {
         dummySliceState,
         addSliceWidgetCreator({
           variationId: dummyModelVariationID,
-          widgetsArea: Models.WidgetsArea.Primary,
+          widgetsArea: WidgetsArea.Primary,
           key: newWidget.key,
           value: newWidget.value,
         })
@@ -87,7 +87,7 @@ describe("[Selected Slice module]", () => {
         dummySliceState,
         replaceSliceWidgetCreator({
           variationId: dummyModelVariationID,
-          widgetsArea: Models.WidgetsArea.Primary,
+          widgetsArea: WidgetsArea.Primary,
           previousKey: widgetToReplace.key,
           newKey: updatedWidget.key,
           value: updatedWidget.value,
@@ -112,7 +112,7 @@ describe("[Selected Slice module]", () => {
         dummySliceState,
         removeSliceWidgetCreator({
           variationId: dummyModelVariationID,
-          widgetsArea: Models.WidgetsArea.Primary,
+          widgetsArea: WidgetsArea.Primary,
           key: widgetToDelete.key,
         })
       );
@@ -126,7 +126,7 @@ describe("[Selected Slice module]", () => {
         updateSliceWidgetMockCreator({
           variationId: dummyModelVariationID,
           mockConfig: dummyMockConfig,
-          widgetArea: Models.WidgetsArea.Primary,
+          widgetArea: WidgetsArea.Primary,
           previousKey: "section_title",
           newKey: "section_title",
           mockValue: {
@@ -145,7 +145,7 @@ describe("[Selected Slice module]", () => {
         deleteSliceWidgetMockCreator({
           variationId: dummyModelVariationID,
           mockConfig: dummyMockConfig,
-          widgetArea: Models.WidgetsArea.Primary,
+          widgetArea: WidgetsArea.Primary,
           newKey: "section_title",
         })
       );

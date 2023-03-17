@@ -32,7 +32,6 @@ function assertTelemetryInitialized(
 }
 
 export class TelemetryManager extends BaseManager {
-	private _enabled = false;
 	private _segmentClient: SegmentClient | undefined = undefined;
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
@@ -43,19 +42,17 @@ export class TelemetryManager extends BaseManager {
 			return;
 		}
 
-		let root: string;
-		try {
-			root = await this.project.getRoot();
-		} catch {
-			root = await this.project.suggestRoot();
-		}
-
-		this._enabled = readPrismicrc(root).telemetry !== false;
 		this._segmentClient = new SegmentClient(API_TOKENS.SegmentKey, {
 			// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
 			flushAt: 1,
 			// TODO: Verify that this actually does not send data to Segment when false.
-			enable: this._enabled,
+			enable: await this.checkIsTelemetryEnabled(),
+			errorHandler: () => {
+				// noop - We don't care if the tracking event
+				// failed. Some users or networks intentionally
+				// block Segment, so we can't block the app if
+				// a tracking event is unsuccessful.
+			},
 		});
 		this._anonymousID = randomUUID();
 	}
@@ -99,14 +96,20 @@ export class TelemetryManager extends BaseManager {
 			assertTelemetryInitialized(this._segmentClient);
 
 			// TODO: Make sure client fails gracefully when no internet connection
-			this._segmentClient.track(payload, (maybeError?: Error) => {
-				if (maybeError) {
-					// TODO: Not sure how we want to deal with that
-					console.warn(`An error occurred during Segment tracking`, maybeError);
-				}
+			this._segmentClient.track(
+				payload as Parameters<typeof this._segmentClient.track>[0],
+				(maybeError?: Error) => {
+					if (maybeError) {
+						// TODO: Not sure how we want to deal with that
+						console.warn(
+							`An error occurred during Segment tracking`,
+							maybeError,
+						);
+					}
 
-				resolve();
-			});
+					resolve();
+				},
+			);
 		});
 	}
 
@@ -138,5 +141,16 @@ export class TelemetryManager extends BaseManager {
 				resolve();
 			});
 		});
+	}
+
+	async checkIsTelemetryEnabled(): Promise<boolean> {
+		let root: string;
+		try {
+			root = await this.project.getRoot();
+		} catch {
+			root = await this.project.suggestRoot();
+		}
+
+		return readPrismicrc(root).telemetry !== false;
 	}
 }

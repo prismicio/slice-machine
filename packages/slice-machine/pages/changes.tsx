@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Box, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
@@ -13,11 +13,20 @@ import {
 } from "@components/ChangesEmptyPage";
 import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
-import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
+import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SyncError } from "@src/models/SyncError";
+// import {
+//   SoftDeleteDocumentsDrawer,
+//   HardDeleteDocumentsDrawer,
+//   ReferencesErrorDrawer,
+// } from "@components/DeleteDocumentsDrawer";
+import { hasLocal } from "@lib/models/common/ModelData";
+import {
+  ChangedCustomType,
+  ChangedSlice,
+} from "@lib/models/common/ModelStatus";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -27,6 +36,25 @@ const Changes: React.FunctionComponent = () => {
     authStatus,
     isOnline,
   } = useUnSyncChanges();
+
+  const { changedSlices, changedCustomTypes } = useMemo(() => {
+    const changedSlices = unSyncedSlices
+      .map((s) => ({
+        slice: s,
+        status: modelsStatuses.slices[s.model.id],
+      }))
+      .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status)); // TODO can we sync unSyncStatuses and ChangedSlice?
+    const changedCustomTypes = unSyncedCustomTypes
+      .map((model) => (hasLocal(model) ? model.local : model.remote))
+      .map((ct) => ({
+        customType: ct,
+        status: modelsStatuses.customTypes[ct.id],
+      }))
+      .filter((c): c is ChangedCustomType => unSyncStatuses.includes(c.status));
+
+    return { changedSlices, changedCustomTypes };
+  }, [unSyncedSlices, unSyncedCustomTypes, modelsStatuses]);
+
   const { pushChanges, closeModals } = useSliceMachineActions();
 
   const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
@@ -37,27 +65,18 @@ const Changes: React.FunctionComponent = () => {
     return () => {
       closeModals();
     };
+    // Do not remote the eslint disable, fixing the eslint warning creates a bug that prevent from opening all modals
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
-  const [changesPushed, setChangesPushed] = useState<string[]>([]);
-  const [error, setError] = useState<SyncError | null>(null);
-
-  const handlePush = () => {
-    if (error) setError(null); // reset error
-    if (changesPushed.length > 0) setChangesPushed([]); // reset changesPushed
-    pushChanges(
-      unSyncedSlices,
-      unSyncedCustomTypes.map((customtype) => customtype.local),
-      modelsStatuses,
-      (pushed: string | null) =>
-        pushed
-          ? setChangesPushed([...changesPushed, pushed])
-          : setChangesPushed([]),
-      setError
-    );
-  };
+  const onPush = (confirmDeleteDocuments: boolean) =>
+    pushChanges({
+      confirmDeleteDocuments: confirmDeleteDocuments,
+      changedSlices,
+      changedCustomTypes,
+    });
 
   const PageContent = useMemo(() => {
     if (!isOnline) {
@@ -76,8 +95,6 @@ const Changes: React.FunctionComponent = () => {
       <ChangesItems
         unSyncedSlices={unSyncedSlices}
         unSyncedCustomTypes={unSyncedCustomTypes}
-        changesPushed={changesPushed}
-        syncError={error}
         modelsStatuses={modelsStatuses}
         authStatus={authStatus}
         isOnline={isOnline}
@@ -89,8 +106,6 @@ const Changes: React.FunctionComponent = () => {
     numberOfChanges,
     unSyncedSlices,
     unSyncedCustomTypes,
-    changesPushed,
-    error,
     modelsStatuses,
   ]);
 
@@ -107,8 +122,9 @@ const Changes: React.FunctionComponent = () => {
           }}
           Actions={[
             <Button
+              key="push-changes"
               label="Push Changes"
-              onClick={handlePush}
+              onClick={() => onPush(false)} // not deleting documents by default
               isLoading={isSyncing}
               disabled={
                 numberOfChanges === 0 ||
@@ -125,6 +141,9 @@ const Changes: React.FunctionComponent = () => {
         />
         {PageContent}
       </Box>
+      {/* <SoftDeleteDocumentsDrawer pushChanges={onPush} />
+      <HardDeleteDocumentsDrawer pushChanges={onPush} />
+      <ReferencesErrorDrawer pushChanges={onPush} /> */}
     </Container>
   );
 };

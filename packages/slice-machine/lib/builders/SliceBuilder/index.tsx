@@ -13,13 +13,17 @@ import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 
-import { SliceSM, VariationSM } from "@core/models";
+import { SliceSM, VariationSM } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { isSelectedSliceTouched } from "@src/modules/selectedSlice/selectors";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
+import {
+  LocalAndRemoteSlice,
+  LocalOnlySlice,
+} from "@lib/models/common/ModelData";
 
 export type SliceBuilderState = {
   imageLoading: boolean;
@@ -98,15 +102,13 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
     saveSlice();
   };
 
-  const { modelsStatuses } = useModelStatus([
-    {
-      local: slice.model,
-      remote: remoteSlice,
-      localScreenshots: slice.screenshots,
-    },
-  ]);
+  const sliceModel: LocalAndRemoteSlice | LocalOnlySlice = {
+    local: slice.model,
+    localScreenshots: slice.screenshots,
+    ...(remoteSlice ? { remote: remoteSlice } : {}),
+  };
 
-  if (!variation) return null;
+  const { modelsStatuses } = useModelStatus({ slices: [sliceModel] });
 
   return (
     <Box sx={{ flex: 1 }}>

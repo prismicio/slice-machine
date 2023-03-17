@@ -1,28 +1,34 @@
+import { changesPage } from "../pages/changes/changesPage";
+import { menu } from "../pages/menu";
+
 /**
  * Push Changes to the Repository, assert the number of changes as well.
  *
- * @param {number} numberOfChanges number of changes that should be pushed, this number is used for assertions
+ * @param {number} numberOfChanges number of changes that should be pushed, this number is used for assertions. If this is undefined, no assertions will be made on the number of changes left after the push
  */
-export function pushLocalChanges(numberOfChanges = 1) {
-  cy.visit(`/changes`);
+export function pushLocalChanges(numberOfChanges) {
+  changesPage.goTo();
 
-  // checking number of changes
-  cy.get("[data-cy=changes-number]").within(() => {
-    cy.contains(numberOfChanges).should("be.visible");
-  });
+  if (numberOfChanges !== undefined) {
+    // checking number of changes
+    menu.changesNumber().contains(numberOfChanges).should("be.visible");
+  }
 
   // sync changes button should be enabled
-  cy.get("[data-cy=push-changes]").should("be.enabled");
+  changesPage.pushButton.should("be.enabled");
 
   // click to push changes
-  cy.get("[data-cy=push-changes]").click();
+  changesPage.pushButton.click();
+  if (numberOfChanges !== undefined) {
+    // number of changes should now be 0 at the end of the push
+    // The time to wait depends on the number of changes
+    menu
+      .changesNumber({
+        timeout: 5000 * (numberOfChanges + 1),
+      })
+      .should("not.exist");
 
-  // number of changes should now be 0 at the end of the push
-  // The time to wait depends on the number of changes
-  cy.get("[data-cy=changes-number]", {
-    timeout: 5000 * (numberOfChanges + 1),
-  }).should("not.exist");
-
-  // sync changes button should be disabled
-  cy.get("[data-cy=push-changes]").should("be.disabled");
+    // sync changes button should be disabled
+    changesPage.pushButton.should("be.disabled");
+  }
 }

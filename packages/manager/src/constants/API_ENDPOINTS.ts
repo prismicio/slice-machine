@@ -1,6 +1,6 @@
 import { APPLICATION_MODE } from "./APPLICATION_MODE";
 
-type APIEndpoints = {
+export type APIEndpoints = {
 	PrismicWroom: string;
 	PrismicAuthentication: string;
 	PrismicModels: string;

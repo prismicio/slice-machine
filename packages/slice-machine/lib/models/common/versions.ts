@@ -4,13 +4,13 @@ export const VersionKind = {
   PATCH: "PATCH",
   FIRST: "FIRST",
 } as const;
-export type VersionKind = typeof VersionKind[keyof typeof VersionKind];
+export type VersionKind = (typeof VersionKind)[keyof typeof VersionKind];
 
 // Model built from Npm version number and GitHub release note
 export interface PackageVersion {
   versionNumber: string;
   releaseNote: string | null;
-  kind: VersionKind | null;
+  kind: VersionKind | undefined;
 }
 
 // Release not fetch from GitHub
