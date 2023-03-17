@@ -1,6 +1,6 @@
 import { it, expect, vi } from "vitest";
 
-import { HookError, HookSystem } from "../src/lib";
+import { HookError, HookSystem } from "../src/lib/HookSystem";
 
 it("calls hooks", async () => {
 	const system = new HookSystem();

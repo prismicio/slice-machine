@@ -23,5 +23,8 @@ export default defineConfig({
 			reporter: ["lcovonly", "text"],
 		},
 		setupFiles: "./test/__setup__.ts",
+		deps: {
+			inline: true,
+		},
 	},
 });
