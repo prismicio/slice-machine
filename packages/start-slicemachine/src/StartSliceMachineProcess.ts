@@ -156,12 +156,28 @@ export class StartSliceMachineProcess {
 	/**
 	 * Validates the project's config and content models.
 	 *
+	 * @throws Throws if a Library name is invalid.
 	 * @throws Throws if a Slice model is invalid.
 	 * @throws Throws if a Custom Type model is invalid.
 	 */
 	private async _validateProject(): Promise<void> {
 		// Validate Slice Machine config.
 		await this._sliceMachineManager.project.loadSliceMachineConfig();
+
+		const allProjectLibraries =
+			await this._sliceMachineManager.slices.readAllSliceLibraries();
+		const invalidLibraryNames = allProjectLibraries.libraries.reduce<string[]>(
+			(acc, library) =>
+				library.libraryID.startsWith("@") ? [...acc, library.libraryID] : acc,
+			[],
+		);
+		if (invalidLibraryNames.length > 0) {
+			throw new Error(
+				`The following Slice libraries have invalid names: ${invalidLibraryNames.join(
+					", ",
+				)}. Slice libraries must not start with an "@" character.`,
+			);
+		}
 
 		// Validate Slice models.
 		const allSlices = await this._sliceMachineManager.slices.readAllSlices();
