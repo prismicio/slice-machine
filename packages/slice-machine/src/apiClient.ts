@@ -318,3 +318,5 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
     versions: versionsWithMetadata,
   };
 };
+
+export const track = managerClient.telemetry.track;

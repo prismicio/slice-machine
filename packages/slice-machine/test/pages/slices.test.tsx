@@ -12,6 +12,8 @@ import {
 import React from "react";
 import mockRouter from "next-router-mock";
 import { rest } from "msw";
+import SegmentClient from "analytics-node";
+
 import SlicesIndex from "../../pages/slices";
 
 import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
@@ -52,6 +54,7 @@ describe("slices", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -158,11 +161,6 @@ describe("slices", () => {
         ],
       },
     ];
-
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
 
     render(<SlicesIndex />, {
       preloadedState: {
@@ -189,12 +187,22 @@ describe("slices", () => {
       fireEvent.click(submitButton);
     });
 
-    await waitFor(() => expect(trackingSpy).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(SegmentClient.prototype.track).toHaveBeenCalled()
+    );
 
-    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-      name: "SliceMachine Slice Created",
-      props: { id: "FooBar", name: "FooBar", library: "slices" },
-    });
+    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "SliceMachine Slice Created",
+        properties: {
+          id: "FooBar",
+          name: "FooBar",
+          library: "slices",
+        },
+      }),
+      expect.any(Function)
+    );
   });
 
   test("if creation fails it sohuld not send the tracking event", async (ctx) => {
@@ -214,6 +222,7 @@ describe("slices", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -320,11 +329,6 @@ describe("slices", () => {
         ],
       },
     ];
-
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
 
     render(<SlicesIndex />, {
       preloadedState: {
@@ -353,6 +357,6 @@ describe("slices", () => {
 
     await new Promise((r) => setTimeout(r, 500));
 
-    expect(trackingSpy).not.toBeCalled();
+    expect(SegmentClient.prototype.track).not.toBeCalled();
   });
 });

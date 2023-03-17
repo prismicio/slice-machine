@@ -19,6 +19,7 @@ import {
   getSimulatorSetupSteps,
   saveSliceMock,
   SaveSliceMockRequest,
+  track,
 } from "@src/apiClient";
 import {
   getCurrentVersion,
@@ -31,7 +32,6 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
-import Tracker from "@src/tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { updateSliceMock } from "../slices";
 
@@ -260,7 +260,7 @@ export function* trackOpenSetupModalSaga() {
     typeof getCurrentVersion
   >;
 
-  void Tracker.get().trackSliceSimulatorSetup(framework, version);
+  void track({ event: "slice-simulator:setup", framework, version });
 }
 
 export function* saveSliceMockSaga({

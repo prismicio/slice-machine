@@ -10,6 +10,7 @@ import {
   // deleteSliceSaga,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
+import SegmentClient from "analytics-node";
 
 import { createSlice, getState } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
@@ -77,7 +78,7 @@ describe("[Slices module]", () => {
   });
 
   describe("[createSliceSaga]", () => {
-    it("should call the api and dispatch the good actions", () => {
+    it("should call the api and dispatch the good actions", async () => {
       vi.spyOn(console, "error").mockImplementationOnce(() => undefined);
 
       const variationId = "variationId";
@@ -115,6 +116,10 @@ describe("[Slices module]", () => {
         })
       );
       saga.next().isDone();
+
+      // Wait for network request to be performed
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
     });
   });
 

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, vi } from "vitest";
-import { setupServer, SetupServerApi } from "msw/node";
+import { setupServer, SetupServer } from "msw/node";
 import { createMockFactory, MockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -8,7 +8,7 @@ import * as os from "node:os";
 declare module "vitest" {
 	export interface TestContext {
 		mockPrismic: MockFactory;
-		msw: SetupServerApi;
+		msw: SetupServer;
 	}
 }
 

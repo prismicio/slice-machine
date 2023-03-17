@@ -1,11 +1,11 @@
-import Tracker from "@src/tracking/client";
 import { ChangesPushSagaPayload } from ".";
+import { track } from "@src/apiClient";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 
 type trackingParameters = ChangesPushSagaPayload & { startTime: number };
 
-export async function trackPushChangesSuccess(params: trackingParameters) {
+export function trackPushChangesSuccess(params: trackingParameters) {
   const {
     startTime,
     confirmDeleteDocuments,
@@ -80,7 +80,8 @@ export async function trackPushChangesSuccess(params: trackingParameters) {
   );
   const duration = Date.now() - startTime;
 
-  return Tracker.get().trackChangesPushed({
+  return track({
+    event: "changes:pushed",
     ...customTypesStats,
     ...slicesStats,
     total: total,

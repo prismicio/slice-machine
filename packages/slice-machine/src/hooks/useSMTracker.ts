@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import Tracker from "@src/tracking/client";
+import { track } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
@@ -11,6 +11,7 @@ import {
   getIntercomHash,
 } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
+import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
@@ -33,21 +34,21 @@ const useSMTracker = () => {
   const router = useRouter();
 
   useEffect(() => {
-    void Tracker.get().groupLibraries(libraries, repoName, currentVersion);
+    void trackGroupLibraries(libraries, repoName, currentVersion);
 
     // For initial loading
-    void Tracker.get().trackPageView(framework, currentVersion);
+    void trackPageView(framework, currentVersion);
   }, []);
 
   // Handles if the user login/logout outside of the app.
   useEffect(() => {
-    if (shortId && intercomHash) void Tracker.get().identifyUser();
+    if (shortId && intercomHash) void track({ event: "identify-user" });
   }, [shortId, intercomHash]);
 
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void Tracker.get().trackPageView(framework, currentVersion);
+      void trackPageView(framework, currentVersion);
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views
@@ -64,3 +65,39 @@ const useSMTracker = () => {
 };
 
 export default useSMTracker;
+
+async function trackGroupLibraries(
+  libs: readonly LibraryUI[],
+  repoName: string | undefined,
+  version: string
+): ReturnType<typeof track> {
+  if (repoName === undefined) return;
+  const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
+  return track({
+    event: "group-libraries",
+    repoName: repoName,
+    manualLibsCount: libs.filter((l) => l.meta.isManual).length,
+    downloadedLibsCount: downloadedLibs.length,
+    npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
+    downloadedLibs: downloadedLibs.map((l) =>
+      l.meta.name != null ? l.meta.name : "Unknown"
+    ),
+    slicemachineVersion: version,
+  });
+}
+
+function trackPageView(
+  framework: string,
+  version: string
+): ReturnType<typeof track> {
+  return track({
+    event: "page-view",
+    url: window.location.href,
+    path: window.location.pathname,
+    search: window.location.search,
+    title: document.title,
+    referrer: document.referrer,
+    framework,
+    slicemachineVersion: version,
+  });
+}

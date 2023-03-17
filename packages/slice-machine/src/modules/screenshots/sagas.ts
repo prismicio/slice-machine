@@ -15,9 +15,9 @@ import {
 import {
   generateSliceScreenshotApiClient,
   generateSliceCustomScreenshotApiClient,
+  track,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import Tracker from "@src/tracking/client";
 
 export function* generateSliceScreenshotSaga({
   payload,
@@ -42,10 +42,7 @@ export function* generateSliceScreenshotSaga({
       })
     );
 
-    void Tracker.get().trackScreenshotTaken({
-      type: "automatic",
-      method: method,
-    });
+    void track({ event: "screenshot-taken", type: "automatic", method });
 
     yield put(
       generateSliceScreenshotCreator.success({
@@ -89,10 +86,7 @@ export function* generateSliceCustomScreenshotSaga({
       throw Error("No screenshot saved");
     }
 
-    void Tracker.get().trackScreenshotTaken({
-      type: "custom",
-      method: method,
-    });
+    void track({ event: "screenshot-taken", type: "custom", method });
 
     yield put(
       generateSliceCustomScreenshotCreator.success({

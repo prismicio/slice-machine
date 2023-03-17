@@ -107,7 +107,7 @@
 		"express": "^4.18.2",
 		"hook-std": "^3.0.0",
 		"memfs": "^3.4.13",
-		"msw": "^0.49.3",
+		"msw": "^1.1.0",
 		"parse-multipart-data": "^1.5.0",
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"puppeteer": "^19.7.5",
@@ -118,10 +118,13 @@
 		"vitest": "^0.27.3"
 	},
 	"peerDependencies": {
-		"msw": "^0.49",
+		"msw": "^1.1.0",
 		"puppeteer": "^19"
 	},
 	"peerDependenciesMeta": {
+		"msw": {
+			"optional": true
+		},
 		"puppeteer": {
 			"optional": true
 		}

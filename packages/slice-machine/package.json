@@ -80,7 +80,7 @@
     "highlight.js": "^11.7.0",
     "jsdom": "^21.1.1",
     "marked": "^4.2.12",
-    "msw": "^0.49.3",
+    "msw": "^1.1.0",
     "next": "^12.3.4",
     "next-router-mock": "^0.8.0",
     "node-fetch": "^3.3.1",

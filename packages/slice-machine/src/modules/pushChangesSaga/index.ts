@@ -1,4 +1,4 @@
-import { getState, pushChanges } from "../../apiClient";
+import { getState, pushChanges, track } from "../../apiClient";
 import {
   call,
   fork,
@@ -23,7 +23,6 @@ import {
   PushChangesPayload,
 } from "@lib/models/common/TransactionalPush";
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
-import Tracker from "@src/tracking/client";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 import {
   ChangedCustomType,
@@ -96,9 +95,7 @@ export function* changesPushSaga({
       // sending failure event
       yield put(changesPushCreator.failure(sortDocumentLimits(response)));
       // Tracking when a limit has been reached
-      void Tracker.get().trackChangesLimitReach({
-        limitType: response.type,
-      });
+      void track({ event: "changes:limit-reach", limitType: response.type });
       // Open the corresponding drawer
       yield put(
         modalOpenCreator({
