@@ -17,7 +17,7 @@ import WidgetFormField from "./Field";
 
 import { findWidgetByConfigOrType } from "../../utils";
 import { removeProp } from "@lib/utils";
-import { deepMerge } from "@lib/utils/obj";
+
 import { DeprecatedMockConfigMessage } from "@lib/models/common/DeprecatedMockConfigMessage";
 
 if (process.env.NODE_ENV !== "test") {

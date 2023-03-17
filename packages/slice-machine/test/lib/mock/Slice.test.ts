@@ -7,11 +7,14 @@ import {
 import { Slices, SliceSM } from "@lib/models/common/Slice";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
-// import allFieldSliceModel from "../../../tests/__mocks__/sliceModel";
+
 import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff";
+import {
+  DiffOperation,
+  SliceDiff,
+} from "@prismicio/types-internal/lib/customtypes/diff";
 
 vi.mock("lorem-ipsum", () => {
   return {
@@ -286,7 +289,6 @@ describe.skip("MockSlice", () => {
         },
       ],
     };
-    const legacyMockConfig = {};
     const previousMocks: SharedSliceContent[] = [
       {
         __TYPE__: "SharedSliceContent",
@@ -326,11 +328,11 @@ describe.skip("MockSlice", () => {
       },
     ];
     const sliceDiff: SliceDiff = {
-      op: "updated",
+      op: DiffOperation.Updated,
       value: {
         variations: {
           foo: {
-            op: "added",
+            op: DiffOperation.Added,
             value: {
               id: "foo",
               name: "Foo",
@@ -403,11 +405,7 @@ describe.skip("MockSlice", () => {
       },
     ];
 
-    const results = MockSlice(
-      sliceModel,
-      previousMocks,
-      sliceDiff
-    );
+    const results = MockSlice(sliceModel, previousMocks, sliceDiff);
 
     // check the content is unchanged
     expect(results[0]).toEqual(previousMocks[0]);
