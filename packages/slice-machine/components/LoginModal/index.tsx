@@ -11,7 +11,7 @@ import {
   Text,
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { checkAuthStatus, startAuth } from "@src/apiClient";
+import { checkAuthStatus, startAuth, track } from "@src/apiClient";
 import { buildEndpoints } from "@lib/prismic/endpoints";
 import { startPolling } from "@lib/utils/poll";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
@@ -23,7 +23,6 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import Tracker from "@src/tracking/client";
 import preferWroomBase from "@lib/utils/preferWroomBase";
 import { ToasterType } from "@src/modules/toaster";
 
@@ -50,7 +49,7 @@ const LoginModal: React.FunctionComponent = () => {
   const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
   const loginRedirectUrl = `${
     buildEndpoints(prismicBase + "/").Dashboard.cliLogin
-  }&port=${new URL(env.sliceMachineAPIUrl).port}&path=/api/auth`;
+  }&port=${window.location.port || "9999"}&path=/api/auth`;
   const onClick = async () => {
     if (!loginRedirectUrl) {
       return;
@@ -70,7 +69,7 @@ const LoginModal: React.FunctionComponent = () => {
         60
       );
 
-      void Tracker.get().identifyUser();
+      void track({ event: "identify-user" });
 
       openToaster("Logged in", ToasterType.SUCCESS);
       stopLoadingLogin();

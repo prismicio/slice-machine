@@ -6,7 +6,6 @@ import { render } from "@testing-library/react";
 import LoginModal from "@components/LoginModal";
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import { useSelector } from "react-redux";
-import { rest } from "msw";
 
 const mockDispatch = vi.fn();
 vi.mock("react-beautiful-dnd", () => {
@@ -28,10 +27,9 @@ describe("LoginModal", () => {
   div.id = "__next";
   document.body.appendChild(div);
 
-  test("when given a prismic url in env it should open to prismic.io/dashboard", (ctx) => {
+  test("when given a prismic url in env it should open to prismic.io/dashboard", () => {
     useSelectorMock.mockImplementation(() => ({
       env: {
-        sliceMachineAPIUrl: "http://localhost:9999/",
         manifest: {
           apiEndpoint: "https://foo.prismic.io/api/v2",
         },
@@ -39,27 +37,18 @@ describe("LoginModal", () => {
       isOpen: true,
       isLoginLoading: true,
     }));
-
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
-
-    // const trackerSpy = makeTrackerSpy();
-    // interceptTracker(trackerSpy);
-
     const result = render(<App />);
 
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
       "href",
-      "https://prismic.io/dashboard/cli/login?source=slice-machine&port=9999&path=/api/auth"
+      // Since we're not using the `start-slicemachine` server proxy, port defaults to Next/React Testing Library's default port
+      "https://prismic.io/dashboard/cli/login?source=slice-machine&port=3000&path=/api/auth"
     );
   });
 
   test("when given wroom.io url it should open to wroom.io/dashboard", () => {
     useSelectorMock.mockImplementation(() => ({
       env: {
-        sliceMachineAPIUrl: "http://localhost:9999/",
         manifest: {
           apiEndpoint: "https://foo.wroom.io/api/v2",
         },
@@ -71,7 +60,8 @@ describe("LoginModal", () => {
 
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
       "href",
-      "https://wroom.io/dashboard/cli/login?source=slice-machine&port=9999&path=/api/auth"
+      // Since we're not using the `start-slicemachine` server proxy, port defaults to Next/React Testing Library's default port
+      "https://wroom.io/dashboard/cli/login?source=slice-machine&port=3000&path=/api/auth"
     );
   });
 });

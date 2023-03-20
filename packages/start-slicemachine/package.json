@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.1.1-dev-plugins-testing.0",
+	"version": "0.6.1-dev-plugins.12",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
@@ -29,13 +29,14 @@
 		"dev": "vite build --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
-		"prepare": "npm run build",
+		"//prepare": "npm run build",
 		"size": "size-limit",
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
 		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
-		"depcheck": "depcheck --config=.depcheckrc"
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p"
 	},
 	"bin": {
 		"start-slicemachine": "./bin/start-slicemachine.js"
@@ -44,30 +45,30 @@
 		"@slicemachine/manager": "0.1.1-dev-plugins-testing.0",
 		"chalk": "^4.1.2",
 		"cors": "^2.8.5",
-		"h3": "^1.0.2",
+		"h3": "^1.6.0",
 		"mri": "^1.2.0",
-		"node-fetch": "^3.3.0",
-		"open": "^8.4.0",
+		"node-fetch": "^3.3.1",
+		"open": "^8.4.2",
 		"serve-static": "^1.15.0"
 	},
 	"devDependencies": {
-		"@size-limit/preset-small-lib": "^8.1.0",
+		"@size-limit/preset-small-lib": "^8.2.4",
 		"@types/cors": "^2.8.13",
-		"@types/serve-static": "^1.15.0",
-		"@typescript-eslint/eslint-plugin": "~5.48.0",
-		"@typescript-eslint/parser": "^5.48.0",
-		"@vitest/coverage-c8": "^0.26.3",
-		"eslint": "^8.31.0",
-		"eslint-config-prettier": "^8.6.0",
+		"@types/serve-static": "^1.15.1",
+		"@typescript-eslint/eslint-plugin": "~5.55.0",
+		"@typescript-eslint/parser": "^5.55.0",
+		"@vitest/coverage-c8": "^0.27.3",
+		"better-npm-audit": "^3.7.3",
+		"eslint": "^8.36.0",
+		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"prettier-plugin-jsdoc": "^0.4.2",
-		"rollup-plugin-rename-node-modules": "^1.3.1",
-		"size-limit": "^8.1.0",
-		"typescript": "^4.9.4",
-		"vite": "^4.0.4",
-		"vite-plugin-sdk": "^0.1.0",
-		"vitest": "^0.26.3"
+		"size-limit": "^8.2.4",
+		"typescript": "^4.9.5",
+		"vite": "^4.1.4",
+		"vite-plugin-sdk": "^0.1.1",
+		"vitest": "^0.27.3"
 	},
 	"engines": {
 		"node": ">=14.15.0"

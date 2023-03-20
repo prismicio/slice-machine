@@ -45,7 +45,6 @@ type SliceMachineManagerGetStateReturnType = {
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
 		framework: unknown; // TODO: Remove
-		sliceMachineAPIUrl: string;
 	};
 	libraries: {
 		name: string;
@@ -168,6 +167,7 @@ export class SliceMachineManager {
 			{ sliceMachineConfig, libraries },
 			{ profile, remoteCustomTypes, remoteSlices },
 			customTypes,
+			packageManager,
 		] = await Promise.all([
 			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
 				const libraries = await this._getLibraries(sliceMachineConfig);
@@ -195,6 +195,7 @@ export class SliceMachineManager {
 				}
 			}),
 			this._getCustomTypes(),
+			this.project.detectPackageManager(),
 		]);
 
 		// TODO: SM UI detects if a user is logged out by looking at
@@ -222,12 +223,8 @@ export class SliceMachineManager {
 						),
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
-				// TODO: Don't hardcode this!
-				packageManager: "npm",
-				// TODO: Don't hardcode this!
+				packageManager,
 				repo: sliceMachineConfig.repositoryName,
-				// TODO: Don't hardcode this!
-				sliceMachineAPIUrl: "http://localhost:9999",
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
 			},
@@ -276,7 +273,7 @@ export class SliceMachineManager {
 								]);
 
 								if (model) {
-									const screenshots: typeof components[number]["screenshots"] =
+									const screenshots: (typeof components)[number]["screenshots"] =
 										{};
 									await Promise.all(
 										model.variations.map(async (variation) => {

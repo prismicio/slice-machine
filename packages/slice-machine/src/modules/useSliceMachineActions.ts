@@ -66,9 +66,11 @@ import {
   generateSliceScreenshotCreator,
 } from "./screenshots/actions";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
-// import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
-import type { ScreenDimensions } from "@lib/models/common/Screenshots";
-import type { ScreenshotTaken } from "@lib/models/tracking";
+import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
+import type {
+  ScreenDimensions,
+  ScreenshotGenerationMethod,
+} from "@lib/models/common/Screenshots";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
@@ -335,7 +337,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     component: ComponentUI,
     screenDimensions: ScreenDimensions,
-    method: ScreenshotTaken["props"]["method"]
+    method: ScreenshotGenerationMethod
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
@@ -351,7 +353,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     component: ComponentUI,
     file: Blob,
-    method: ScreenshotTaken["props"]["method"]
+    method: ScreenshotGenerationMethod
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator.request({
@@ -409,9 +411,8 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = () => ({});
-  // const pushChanges = (payload: ChangesPushSagaPayload) =>
-  //   dispatch(changesPushCreator.request(payload));
+  const pushChanges = (payload: ChangesPushSagaPayload) =>
+    dispatch(changesPushCreator.request(payload));
 
   // Toaster store
   const openToaster = (

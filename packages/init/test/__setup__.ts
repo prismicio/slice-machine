@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, vi } from "vitest";
-import { setupServer, SetupServerApi } from "msw/node";
+import { setupServer, SetupServer } from "msw/node";
 import { createMockFactory, MockFactory } from "@prismicio/mock";
 import { vol } from "memfs";
 import * as fs from "node:fs/promises";
@@ -9,7 +9,7 @@ import * as os from "node:os";
 declare module "vitest" {
 	export interface TestContext {
 		mockPrismic: MockFactory;
-		msw: SetupServerApi;
+		msw: SetupServer;
 	}
 }
 
@@ -59,7 +59,7 @@ vi.mock("analytics-node", () => {
 	const MockSegmentClient = vi.fn();
 
 	MockSegmentClient.prototype.identify = vi.fn(
-		(_message: unknown, callback: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: Error) => void) => {
 			if (callback) {
 				callback();
 			}
@@ -67,7 +67,7 @@ vi.mock("analytics-node", () => {
 	);
 
 	MockSegmentClient.prototype.track = vi.fn(
-		(_message: unknown, callback: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: Error) => void) => {
 			if (callback) {
 				callback();
 			}

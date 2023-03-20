@@ -1,4 +1,4 @@
-import { HookSystem } from "../src/lib";
+import { HookSystem } from "../src/lib/HookSystem";
 
 // Placeholder function
 const fn = () => null;

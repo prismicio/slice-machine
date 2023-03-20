@@ -17,7 +17,7 @@ import {
   getCurrentVersion,
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
-import Tracker from "@src/tracking/client";
+import { track } from "@src/apiClient";
 import Video from "@components/CloudVideo";
 
 const SimulatorNotSupportedTooltip: React.FC<{
@@ -90,11 +90,12 @@ const SimulatorOnboardingTooltip: React.FC<{
           publicId={VIDEO_SIMULATOR_TOOLTIP}
           poster="/simulator-video-thumbnail.png"
           onPlay={() => {
-            void Tracker.get().trackClickOnVideoTutorials(
+            void track({
+              event: "open-video-tutorials",
               framework,
-              version,
-              VIDEO_SIMULATOR_TOOLTIP
-            );
+              slicemachineVersion: version,
+              video: VIDEO_SIMULATOR_TOOLTIP,
+            });
           }}
         />
         <Box sx={{ p: "16px" }}>

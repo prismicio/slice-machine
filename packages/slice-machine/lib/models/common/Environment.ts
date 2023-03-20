@@ -21,5 +21,4 @@ export interface FrontEndEnvironment {
   changelog?: PackageChangelog;
   packageManager: PackageManager;
   framework: Frameworks;
-  sliceMachineAPIUrl: string;
 }

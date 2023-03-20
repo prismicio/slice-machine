@@ -26,8 +26,6 @@ import "src/css/starry-night.css";
 import "src/css/hljs.css";
 
 import ServerState from "../lib/models/server/ServerState";
-import { getIsTrackingAvailable } from "../src/modules/environment";
-import Tracker from "../src/tracking/client";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
@@ -101,11 +99,6 @@ function MyApp({
         remoteSlices: serverState.remoteSlices,
       },
     });
-
-    const state = store.getState();
-    const tracking = getIsTrackingAvailable(state);
-
-    Tracker.get().initialize(tracking);
 
     setSMStore({ store, persistor });
   }, [serverState, smStore]);

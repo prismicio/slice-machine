@@ -12,7 +12,7 @@ import {
   isRemoteOnly,
 } from "@lib/models/common/ModelData";
 
-const unSyncStatuses = [
+export const unSyncStatuses = [
   ModelStatus.New,
   ModelStatus.Modified,
   ModelStatus.Deleted,

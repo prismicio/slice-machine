@@ -26,7 +26,8 @@ export type {
 	SliceMachineHookTypes,
 } from "./types";
 
-export { HookError } from "./lib";
+export { HookError } from "./lib/HookSystem";
+export { DecodeError } from "./lib/DecodeError";
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -177,13 +178,12 @@ export type {
 	SliceSimulatorSetupStepValidationMessage,
 } from "./hooks/sliceSimulator-setup-read";
 
-// command:init
+// project:init
 export type {
-	CommandInitHook,
-	CommandInitHookData,
-	CommandInitHookReturnType,
-	InstallDependenciesFunction,
-} from "./hooks/command-init";
+	ProjectInitHook,
+	ProjectInitHookData,
+	ProjectInitHookReturnType,
+} from "./hooks/project-init";
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -196,4 +196,4 @@ export {
 	SliceMachinePluginRunner,
 } from "./createSliceMachinePluginRunner";
 
-export type { CallHookReturnType } from "./lib";
+export type { CallHookReturnType } from "./lib/HookSystem";

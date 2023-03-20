@@ -5,8 +5,7 @@ import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { saveCustomTypeCreator } from "./actions";
 import { selectCurrentCustomType } from "./index";
-import { saveCustomType } from "../../apiClient";
-import Tracker from "../../tracking/client";
+import { saveCustomType, track } from "@src/apiClient";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -25,7 +24,8 @@ export function* saveCustomTypeSaga() {
     if (errors.length) {
       throw errors;
     }
-    void Tracker.get().trackCustomTypeSaved({
+    void track({
+      event: "custom-type:saved",
       id: currentCustomType.id,
       name: currentCustomType.label || currentCustomType.id,
       type: currentCustomType.repeatable ? "repeatable" : "single",

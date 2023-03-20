@@ -3,7 +3,7 @@ import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
 
-import { commandInit } from "./hooks/command-init";
+import { projectInit } from "./hooks/project-init";
 import { customTypeAssetDelete } from "./hooks/customType-asset-delete";
 import { customTypeAssetRead } from "./hooks/customType-asset-read";
 import { customTypeAssetUpdate } from "./hooks/customType-asset-update";
@@ -34,7 +34,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		lazyLoadSlices: true,
 	},
 	setup({ hook }) {
-		hook("command:init", commandInit);
+		hook("project:init", projectInit);
 
 		hook("slice:create", sliceCreate);
 		hook("slice:update", sliceUpdate);
