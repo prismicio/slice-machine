@@ -12,6 +12,7 @@ describe("[Selected Custom type selectors]", () => {
       const customTypeStatus = isSelectedCustomTypeTouched({
         selectedCustomType: {
           model,
+          // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type '{ id: strin... Remove this comment to see the full error message
           initialModel: null,
           mockConfig: {},
           initialMockConfig: {},
@@ -22,6 +23,7 @@ describe("[Selected Custom type selectors]", () => {
     });
     test("it computes correctly the state of the modifications 2/4", () => {
       const customTypeStatus = isSelectedCustomTypeTouched({
+        // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model,
           initialModel: model,
@@ -34,6 +36,7 @@ describe("[Selected Custom type selectors]", () => {
     });
     test("it computes correctly the state of the modifications 3/4", () => {
       const customTypeStatus = isSelectedCustomTypeTouched({
+        // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model,
           initialModel: { ...model, label: `differ-from-${model.label}` },
@@ -47,6 +50,7 @@ describe("[Selected Custom type selectors]", () => {
       const customTypeStatus = isSelectedCustomTypeTouched({
         selectedCustomType: {
           model,
+          // @ts-expect-error TS(2740) FIXME: Type '{}' is missing the following properties from... Remove this comment to see the full error message
           initialModel: { ...model, tabs: {} },
           mockConfig: {},
           initialMockConfig: {},

@@ -27,6 +27,7 @@ export const getState = async (): Promise<ServerState> => {
   // transform the data to something SM recognizes.
   const state: ServerState = {
     ...rawState,
+    // @ts-expect-error TS(2322) FIXME: Type '{ framework: Frameworks; mockConfig: CustomT... Remove this comment to see the full error message
     env: {
       ...rawState.env,
       framework: rawState.env.framework as Frameworks,

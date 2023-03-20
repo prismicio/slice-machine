@@ -56,6 +56,7 @@ export const dummyServerState: Pick<
       ],
     },
   ],
+  // @ts-expect-error TS(2322) FIXME: Type '{ env: { repo: string; manifest: { libraries... Remove this comment to see the full error message
   remoteSlices: [],
   remoteCustomTypes: [],
   libraries: [],
