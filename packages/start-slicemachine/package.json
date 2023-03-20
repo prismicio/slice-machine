@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.6.1-dev-plugins-validation.0",
+	"version": "0.6.1-dev-plugins-validation.1",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
@@ -42,7 +42,7 @@
 		"start-slicemachine": "./bin/start-slicemachine.js"
 	},
 	"dependencies": {
-		"@slicemachine/manager": "0.1.1-dev-plugins-validation.0",
+		"@slicemachine/manager": "0.1.1-dev-plugins-validation.1",
 		"chalk": "^4.1.2",
 		"cors": "^2.8.5",
 		"h3": "^1.6.0",
