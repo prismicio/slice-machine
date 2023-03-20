@@ -25,7 +25,7 @@ vi.mock("react-redux", async () => {
 const BaseSliceMock = {
   ...SliceMock,
   variations: SliceMock.variations.map((variation) => {
-    // @ts-expect-error we know imageUrl is optional
+    // @ts-expect-error TS(2790) FIXME: The operand of a 'delete' operator must be optiona... Remove this comment to see the full error message
     delete variation["imageUrl"];
     return variation;
   }),

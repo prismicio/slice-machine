@@ -23,11 +23,11 @@ describe("[Selected Slice module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no matching action", () => {
       expect(
-        // @ts-expect-error the NO.MATCH is not a valid action type
+        // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"SLIC... Remove this comment to see the full error message
         selectedSliceReducer(dummySliceState, { type: "NO.MATCH" })
       ).toEqual(dummySliceState);
       expect(
-        // @ts-expect-error the NO.MATCH is not a valid action type
+        // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"SLIC... Remove this comment to see the full error message
         selectedSliceReducer(null, { type: "NO.MATCH" })
       ).toEqual(null);
     });

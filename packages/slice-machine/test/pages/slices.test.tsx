@@ -11,6 +11,7 @@ import {
 } from "vitest";
 import React from "react";
 import mockRouter from "next-router-mock";
+// @ts-expect-error TS(6133) FIXME: 'rest' is declared but its value is never read.
 import { rest } from "msw";
 import SegmentClient from "analytics-node";
 
@@ -164,8 +165,10 @@ describe("slices", () => {
 
     render(<SlicesIndex />, {
       preloadedState: {
+        // @ts-expect-error TS(2739) FIXME: Type '{ framework: string; changelog: { currentVer... Remove this comment to see the full error message
         environment,
         slices: {
+          // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
           libraries,
           remoteSlices: [],
         },
@@ -174,11 +177,13 @@ describe("slices", () => {
 
     const createOneButton = document.querySelector('[data-cy="create-slice"]');
     await act(async () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.click(createOneButton);
     });
 
     const nameInput = document.querySelector('[data-cy="slice-name-input"]');
     await act(async () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(nameInput, { target: { value: "FooBar" } });
     });
 
@@ -332,8 +337,10 @@ describe("slices", () => {
 
     render(<SlicesIndex />, {
       preloadedState: {
+        // @ts-expect-error TS(2739) FIXME: Type '{ framework: string; changelog: { currentVer... Remove this comment to see the full error message
         environment,
         slices: {
+          // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
           libraries,
           remoteSlices: [],
         },
@@ -342,11 +349,13 @@ describe("slices", () => {
 
     const createOneButton = document.querySelector('[data-cy="create-slice"]');
     await act(async () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.click(createOneButton);
     });
 
     const nameInput = document.querySelector('[data-cy="slice-name-input"]');
     await act(async () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(nameInput, { target: { value: "FooBar" } });
     });
 

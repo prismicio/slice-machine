@@ -13,10 +13,12 @@ const dummyLoadingState: LoadingStoreType = initialState;
 describe("[Loading module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
       expect(loadingReducer(dummyLoadingState, {})).toEqual(dummyLoadingState);
     });
 
     it("should return the initial state if no matching action", () => {
+      // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"LOAD... Remove this comment to see the full error message
       expect(loadingReducer(dummyLoadingState, { type: "NO.MATCH" })).toEqual(
         dummyLoadingState
       );

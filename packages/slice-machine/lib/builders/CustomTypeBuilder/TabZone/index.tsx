@@ -80,11 +80,11 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     label: string;
     widgetTypeName: string;
   }) => {
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
+    // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
     void track({
@@ -105,7 +105,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     reorderCustomTypeField(
       tabId,
       result.source.index,
-      // @ts-expect-error We have to change the typeGuard above to cast properly the "result" property
+      // @ts-expect-error TS(2533) FIXME: Object is possibly 'null' or 'undefined'.
       result.destination.index
     );
   };
@@ -122,8 +122,8 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockValue: any;
   }) => {
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
     }
@@ -162,8 +162,8 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         dataTip={""}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         fields={fields}
+        // @ts-expect-error TS(4104) FIXME: The type 'PoolOfFields' is 'readonly' and cannot b... Remove this comment to see the full error message
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
         poolOfFieldsToCheck={poolOfFields}
         showHints={true}
         EditModal={EditModal}

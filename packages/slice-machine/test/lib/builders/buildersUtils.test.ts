@@ -15,6 +15,7 @@ const dumbConfig = {
 describe("utils/findWidgetByConfigOrType", () => {
   test("We can find the image widget with image type", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Image
@@ -23,6 +24,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the color widget with color type", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Color
@@ -31,6 +33,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the UID widget with UID type", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.UID
@@ -39,6 +42,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the group widget with group type", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Group
@@ -47,6 +51,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the GeoPoint widget with GeoPoint type", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.GeoPoint
@@ -55,6 +60,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the select widget with Select type", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Select
@@ -63,6 +69,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the boolean widget with Select boolean", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.BooleanField
@@ -71,6 +78,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the date widget with Select date", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Date
@@ -79,6 +87,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the timestamp widget with Select timestamp", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Timestamp
@@ -87,6 +96,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the number widget with Select number", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Number
@@ -95,6 +105,7 @@ describe("utils/findWidgetByConfigOrType", () => {
   });
   test("We can find the link widget with link type", () => {
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
       WidgetTypes.Link
@@ -108,6 +119,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       select: "document",
     };
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       contentRelationshipConfig,
       WidgetTypes.Link
@@ -121,6 +133,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       select: "media",
     };
     const widgetFound = findWidgetByConfigOrType(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       contentRelationshipConfig,
       WidgetTypes.Link

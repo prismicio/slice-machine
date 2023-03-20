@@ -334,10 +334,12 @@ describe.skip("MockSlice", () => {
       },
     ];
     const sliceDiff: SliceDiff = {
+      // @ts-expect-error TS(2322) FIXME: Type '"updated"' is not assignable to type 'DiffOp... Remove this comment to see the full error message
       op: "updated",
       value: {
         variations: {
           foo: {
+            // @ts-expect-error TS(2322) FIXME: Type '"added"' is not assignable to type 'DiffOper... Remove this comment to see the full error message
             op: "added",
             value: {
               id: "foo",
@@ -347,6 +349,7 @@ describe.skip("MockSlice", () => {
               description: "Testing",
               primary: {
                 title: {
+                  // @ts-expect-error TS(2322) FIXME: Type '{ type: "StructuredText"; config: { single: ... Remove this comment to see the full error message
                   type: "StructuredText",
                   config: {
                     single: "heading1",
@@ -355,6 +358,7 @@ describe.skip("MockSlice", () => {
                   },
                 },
                 description: {
+                  // @ts-expect-error TS(2322) FIXME: Type '{ type: "StructuredText"; config: { single: ... Remove this comment to see the full error message
                   type: "StructuredText",
                   config: {
                     single: "paragraph",

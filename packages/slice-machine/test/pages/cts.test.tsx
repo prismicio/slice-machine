@@ -12,6 +12,7 @@ import {
 import React from "react";
 import Router from "next/router";
 import mockRouter from "next-router-mock";
+// @ts-expect-error TS(6133) FIXME: 'rest' is declared but its value is never read.
 import { rest } from "msw";
 import SegmentClient from "analytics-node";
 import { Frameworks } from "@lib/models/common/Framework";
@@ -131,6 +132,7 @@ describe("Custom Type Builder", () => {
     },
   ];
 
+  // @ts-expect-error TS(6133) FIXME: 'ctx' is declared but its value is never read.
   test("should send a tracking event when the user adds a field", async (ctx) => {
     const customTypeId = "a-page";
 
@@ -141,6 +143,7 @@ describe("Custom Type Builder", () => {
 
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
+        // @ts-expect-error TS(2739) FIXME: Type '{ framework: Frameworks.next; mockConfig: { ... Remove this comment to see the full error message
         environment: {
           framework: Frameworks.next,
           mockConfig: { _cts: { [customTypeId]: {} } },
@@ -161,6 +164,7 @@ describe("Custom Type Builder", () => {
             },
           },
         },
+        // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model: {
             id: "a-page",
@@ -191,6 +195,7 @@ describe("Custom Type Builder", () => {
         },
         slices: {
           remoteSlices: [],
+          // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
           libraries: libraries,
         },
       },
@@ -226,6 +231,7 @@ describe("Custom Type Builder", () => {
     );
   });
 
+  // @ts-expect-error TS(6133) FIXME: 'ctx' is declared but its value is never read.
   test("should send a tracking event when the user adds a slice", async (ctx) => {
     const customTypeId = "a-page";
 
@@ -243,6 +249,7 @@ describe("Custom Type Builder", () => {
 
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
+        // @ts-expect-error TS(2739) FIXME: Type '{ framework: string; mockConfig: { _cts: { "... Remove this comment to see the full error message
         environment,
         availableCustomTypes: {
           [customTypeId]: {
@@ -260,6 +267,7 @@ describe("Custom Type Builder", () => {
             },
           },
         },
+        // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model: {
             id: "a-page",
@@ -289,6 +297,7 @@ describe("Custom Type Builder", () => {
           initialMockConfig: {},
         },
         slices: {
+          // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
           libraries,
           remoteSlices: [],
         },
@@ -356,6 +365,7 @@ describe("Custom Type Builder", () => {
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment: {
+          // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
           framework: "next",
           mockConfig: { _cts: { [customTypeId]: {} } },
         },
@@ -375,6 +385,7 @@ describe("Custom Type Builder", () => {
             },
           },
         },
+        // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model: {
             id: "a-page",
@@ -404,6 +415,7 @@ describe("Custom Type Builder", () => {
           initialMockConfig: {},
         },
         slices: {
+          // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
           libraries: libraries,
           remoteSlices: [],
         },
@@ -495,6 +507,7 @@ describe("Custom Type Builder", () => {
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment: {
+          // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
           framework: "next",
           mockConfig: { _cts: { [customTypeId]: {} } },
         },
@@ -514,6 +527,7 @@ describe("Custom Type Builder", () => {
             },
           },
         },
+        // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model: {
             id: "a-page",
@@ -543,6 +557,7 @@ describe("Custom Type Builder", () => {
           initialMockConfig: {},
         },
         slices: {
+          // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
           libraries: libraries,
           remoteSlices: [],
         },

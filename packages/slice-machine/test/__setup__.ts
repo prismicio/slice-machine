@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
 import { FormData } from "formdata-polyfill/esm.min";
+// @ts-expect-error TS(2724) FIXME: '"msw/node"' has no exported member named 'SetupSe... Remove this comment to see the full error message
 import { setupServer, SetupServer } from "msw/node";
 import { cleanup } from "@testing-library/react";
 import * as fs from "node:fs/promises";

@@ -2,6 +2,7 @@
 
 import { describe, test, afterEach, expect, beforeAll, vi } from "vitest";
 import { render, fireEvent, act, waitFor } from "../__testutils__";
+// @ts-expect-error TS(6133) FIXME: 'rest' is declared but its value is never read.
 import { rest } from "msw";
 import mockRouter from "next-router-mock";
 import router from "next/router";
@@ -278,6 +279,7 @@ describe.skip("simulator", () => {
     //   })
     // );
 
+    // @ts-expect-error TS(2741) FIXME: Property 'pageProps' is missing in type '{}' but r... Remove this comment to see the full error message
     const App = render(<Simulator />, {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
     });
@@ -318,9 +320,9 @@ describe.skip("simulator", () => {
 
     const expectedMock = [...state.slices.libraries[0].components[0].mock];
     expectedMock[0].primary.title.value[0].content.text = "🎉";
-    // @ts-expect-error - Ignoring wrong type
+    // @ts-expect-error TS(2339) FIXME: Property 'spans' does not exist on type '{ text: s... Remove this comment to see the full error message
     expectedMock[0].primary.title.value[0].content.spans = [];
-    // @ts-expect-error - Ignoring wrong type
+    // @ts-expect-error TS(2339) FIXME: Property 'direction' does not exist on type '{ typ... Remove this comment to see the full error message
     expectedMock[0].primary.title.value[0].direction = "ltr";
 
     expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);

@@ -2,6 +2,7 @@
 
 import { describe, test, afterEach, expect, vi } from "vitest";
 import React from "react";
+// @ts-expect-error TS(6133) FIXME: 'rest' is declared but its value is never read.
 import { rest } from "msw";
 import SegmentClient from "analytics-node";
 
@@ -21,6 +22,7 @@ describe("CreateCustomTypeModal", () => {
   div.setAttribute("id", "__next");
   document.body.appendChild(div);
 
+  // @ts-expect-error TS(6133) FIXME: 'ctx' is declared but its value is never read.
   test("when a slice is created the tracker should be called", async (ctx) => {
     const fakeId = "testing_id";
     const fakeName = "testing-name";
@@ -28,10 +30,12 @@ describe("CreateCustomTypeModal", () => {
 
     render(<CreateCustomTypeModal />, {
       preloadedState: {
+        // @ts-expect-error TS(2739) FIXME: Type '{ repo: string; }' is missing the following ... Remove this comment to see the full error message
         environment: {
           repo: fakeRepo,
         },
         availableCustomTypes: {},
+        // @ts-expect-error TS(2740) FIXME: Type '{ CREATE_CUSTOM_TYPE: true; }' is missing th... Remove this comment to see the full error message
         modal: { [ModalKeysEnum.CREATE_CUSTOM_TYPE]: true },
       },
     });
@@ -41,14 +45,17 @@ describe("CreateCustomTypeModal", () => {
     const submitButton = document.querySelector('[type="submit"]');
 
     await act(async () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(labelInput, { target: { value: fakeName } });
     });
 
     await act(async () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(idInput, { target: { value: fakeId } });
     });
 
     await act(async () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.click(submitButton);
     });
 
