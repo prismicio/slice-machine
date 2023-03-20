@@ -320,9 +320,9 @@ describe.skip("simulator", () => {
 
     const expectedMock = [...state.slices.libraries[0].components[0].mock];
     expectedMock[0].primary.title.value[0].content.text = "🎉";
-    // @ts-expect-error TS(2339) FIXME: Property 'spans' does not exist on type '{ text: s... Remove this comment to see the full error message
+    // @ts-expect-error - Ignoring wrong type
     expectedMock[0].primary.title.value[0].content.spans = [];
-    // @ts-expect-error TS(2339) FIXME: Property 'direction' does not exist on type '{ typ... Remove this comment to see the full error message
+    // @ts-expect-error - Ignoring wrong type
     expectedMock[0].primary.title.value[0].direction = "ltr";
 
     expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);

@@ -22,8 +22,8 @@ if (process.env.NODE_ENV === "test") {
     );
   }
 
+  // @ts-expect-error - `default` is added by Rollup during tests since
   // `react-select` has default and named exports. It does not exist normally.
-  // @ts-expect-error TS(2339) FIXME: Property 'default' does not exist on type 'StateMa... Remove this comment to see the full error message
   Select = _Select.default;
 }
 
