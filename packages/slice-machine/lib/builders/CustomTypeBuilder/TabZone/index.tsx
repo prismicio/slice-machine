@@ -106,8 +106,8 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     newKey: string;
     value: TabField;
   }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     // @ts-expect-error We have to create a widget map or a service instead of using export name
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
     }
@@ -139,8 +139,8 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         dataTip={""}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         fields={fields}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         poolOfFieldsToCheck={poolOfFields}
         showHints={true}
         EditModal={EditModal}

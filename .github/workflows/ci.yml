@@ -90,7 +90,6 @@ jobs:
         run: npm run lint --workspace ${{ matrix.package }}
 
       - name: Types
-        continue-on-error: true
         run: npm run types --workspace ${{ matrix.package }}
 
       - name: Unit

@@ -7,7 +7,6 @@ import {
 import { Slices, SliceSM } from "@lib/models/common/Slice";
 import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
-
 import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";

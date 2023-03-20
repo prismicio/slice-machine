@@ -43,10 +43,12 @@ describe("EditModal", () => {
       'input[name="config.options.2"]'
     )?.nextSibling;
 
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'ChildNode | null | undefined' is... Remove this comment to see the full error message
     await act(async () => fireEvent.click(removeButton));
 
     const saveButton = document.querySelector('button[type="submit"]');
 
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
     await act(async () => fireEvent.click(saveButton));
 
     expect(saveFn).toHaveBeenCalled();
@@ -89,16 +91,19 @@ describe("EditModal", () => {
     const labelInput = document.querySelector('input[name="config.label"]');
     const fakeLabel = "rich text";
     await act(async () =>
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(labelInput, { target: { value: fakeLabel } })
     );
 
     const idInput = document.querySelector('input[name="id"]');
     const fakeId = "some_id";
     await act(async () =>
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(idInput, { target: { value: fakeId } })
     );
 
     const saveButton = document.querySelector('button[type="submit"]');
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
     await act(async () => fireEvent.click(saveButton));
 
     expect(saveFn).toHaveBeenCalled();
