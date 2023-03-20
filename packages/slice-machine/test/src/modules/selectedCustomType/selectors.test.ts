@@ -13,8 +13,6 @@ describe("[Selected Custom type selectors]", () => {
         selectedCustomType: {
           model,
           initialModel: null,
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
 
@@ -25,8 +23,6 @@ describe("[Selected Custom type selectors]", () => {
         selectedCustomType: {
           model,
           initialModel: model,
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
 
@@ -37,8 +33,6 @@ describe("[Selected Custom type selectors]", () => {
         selectedCustomType: {
           model,
           initialModel: { ...model, label: `differ-from-${model.label}` },
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
       expect(customTypeStatus).toBe(true);
@@ -48,8 +42,6 @@ describe("[Selected Custom type selectors]", () => {
         selectedCustomType: {
           model,
           initialModel: { ...model, tabs: {} },
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
       expect(customTypeStatus).toBe(true);

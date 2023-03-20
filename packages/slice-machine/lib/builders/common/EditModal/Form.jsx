@@ -21,10 +21,7 @@ const WidgetForm = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unused-vars
         onSubmit={(values, _) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment
-          const {
-            id: apiId,
-            ...rest
-          } = values;
+          const { id: apiId, ...rest } = values;
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const withDefaultValues = Object.entries(rest).reduce(
             (acc, [key, value]) => {

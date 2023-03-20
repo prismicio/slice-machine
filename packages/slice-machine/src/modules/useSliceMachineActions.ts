@@ -164,7 +164,7 @@ const useSliceMachineActions = () => {
   // Custom type module
   const initCustomTypeStore = (
     model: CustomTypeSM,
-    remoteModel: CustomTypeSM | undefined,
+    remoteModel: CustomTypeSM | undefined
   ) => dispatch(initCustomTypeStoreCreator({ model, remoteModel }));
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());

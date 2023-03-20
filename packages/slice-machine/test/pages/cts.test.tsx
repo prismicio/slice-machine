@@ -163,7 +163,6 @@ describe("Custom Type Builder", () => {
       preloadedState: {
         environment: {
           framework: Frameworks.next,
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -206,8 +205,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           remoteSlices: [],
@@ -276,7 +273,6 @@ describe("Custom Type Builder", () => {
 
     const environment = {
       framework: "next",
-      mockConfig: { _cts: { [customTypeId]: {} } },
     };
 
     render(<CreateCustomTypeBuilder />, {
@@ -323,8 +319,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           libraries,
@@ -396,7 +390,6 @@ describe("Custom Type Builder", () => {
       preloadedState: {
         environment: {
           framework: "next",
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -439,8 +432,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           libraries: libraries,
@@ -528,7 +519,6 @@ describe("Custom Type Builder", () => {
       preloadedState: {
         environment: {
           framework: "next",
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -571,11 +561,9 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
-          libraries: libraries,
+          libraries,
           remoteSlices: [],
         },
       },

@@ -17,7 +17,6 @@ describe("EditModal", () => {
   test("remove an item from a select field", async () => {
     const saveFn = vi.fn();
     const closeFn = vi.fn();
-    const getFieldMockConfigFn = vi.fn();
     const field = {
       key: "selecta",
       value: {
@@ -37,13 +36,7 @@ describe("EditModal", () => {
     const fields = [field];
 
     render(
-      <EditModal
-        onSave={saveFn}
-        close={closeFn}
-        getFieldMockConfig={getFieldMockConfigFn}
-        data={data}
-        fields={fields}
-      />
+      <EditModal onSave={saveFn} close={closeFn} data={data} fields={fields} />
     );
 
     const removeButton = document.querySelector(
@@ -88,16 +81,9 @@ describe("EditModal", () => {
 
     const saveFn = vi.fn();
     const closeFn = vi.fn();
-    const getFieldMockConfigFn = vi.fn();
 
     render(
-      <EditModal
-        onSave={saveFn}
-        close={closeFn}
-        getFieldMockConfig={getFieldMockConfigFn}
-        data={data}
-        fields={fields}
-      />
+      <EditModal onSave={saveFn} close={closeFn} data={data} fields={fields} />
     );
 
     const labelInput = document.querySelector('input[name="config.label"]');

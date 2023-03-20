@@ -24,9 +24,7 @@ const customTypeAsArray = CustomTypes.toSM(jsonModel as unknown as CustomType);
 const dummyCustomTypesState: SelectedCustomTypeStoreType = {
   model: customTypeAsArray,
   initialModel: customTypeAsArray,
-  remoteModel: null,
-  mockConfig: {},
-  initialMockConfig: {},
+  remoteModel: undefined,
 };
 
 describe("[Selected Custom type module]", () => {
@@ -58,16 +56,13 @@ describe("[Selected Custom type module]", () => {
           dummyCustomTypesState,
           initCustomTypeStoreCreator({
             model: customTypeAsArray,
-            remoteModel: null,
-            mockConfig: {},
+            remoteModel: undefined,
           })
         )
       ).toEqual({
         model: customTypeAsArray,
         initialModel: customTypeAsArray,
-        remoteModel: null,
-        mockConfig: {},
-        initialMockConfig: {},
+        remoteModel: undefined,
       });
     });
     it("should update the custom type state given CUSTOM_TYPE/CREATE_TAB action", () => {
