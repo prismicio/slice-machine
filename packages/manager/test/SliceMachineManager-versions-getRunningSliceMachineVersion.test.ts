@@ -16,7 +16,7 @@ vi.mock("module", async () => {
 
 	return {
 		...actual,
-		createRequire: (...args: Parameters<typeof actual["createRequire"]>) => {
+		createRequire: (...args: Parameters<(typeof actual)["createRequire"]>) => {
 			const actualCreateRequire = actual.createRequire(...args);
 
 			return {

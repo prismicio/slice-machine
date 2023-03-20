@@ -6,7 +6,7 @@ export const PrismicRepositoryUserAgent = {
 	LegacyZero: "prismic-cli/0",
 } as const;
 export type PrismicRepositoryUserAgents =
-	typeof PrismicRepositoryUserAgent[keyof typeof PrismicRepositoryUserAgent];
+	(typeof PrismicRepositoryUserAgent)[keyof typeof PrismicRepositoryUserAgent];
 
 export const PrismicRepositoryRole = {
 	SuperUser: "SuperUser",
@@ -18,7 +18,7 @@ export const PrismicRepositoryRole = {
 	Readonly: "Readonly",
 } as const;
 export type PrismicRepositoryRoles =
-	typeof PrismicRepositoryRole[keyof typeof PrismicRepositoryRole];
+	(typeof PrismicRepositoryRole)[keyof typeof PrismicRepositoryRole];
 
 export const PrismicRepository = t.type({
 	domain: t.string,
