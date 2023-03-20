@@ -104,6 +104,13 @@ export class StartSliceMachineProcess {
 		);
 		console.log();
 
+		if (profile) {
+			this._sliceMachineManager.telemetry.identify({
+				userID: profile.shortId,
+				intercomHash: profile.intercomHash,
+			});
+		}
+
 		// Prepare the manager for Slice Machine actions.
 		try {
 			// TODO: This try...catch statement is a temporary fix

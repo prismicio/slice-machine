@@ -15,21 +15,16 @@ import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
-  const {
-    libraries,
-    repoName,
-    shortId,
-    intercomHash,
-    currentVersion,
-    framework,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    currentVersion: getCurrentVersion(state),
-    framework: getFramework(state),
-    shortId: getShortId(state),
-    intercomHash: getIntercomHash(state),
-    repoName: getRepoName(state),
-    libraries: getLibraries(state),
-  }));
+  const { libraries, repoName, currentVersion, framework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      currentVersion: getCurrentVersion(state),
+      framework: getFramework(state),
+      shortId: getShortId(state),
+      intercomHash: getIntercomHash(state),
+      repoName: getRepoName(state),
+      libraries: getLibraries(state),
+    })
+  );
 
   const router = useRouter();
 
@@ -39,11 +34,6 @@ const useSMTracker = () => {
     // For initial loading
     void trackPageView(framework, currentVersion);
   }, []);
-
-  // Handles if the user login/logout outside of the app.
-  useEffect(() => {
-    if (shortId && intercomHash) void track({ event: "identify-user" });
-  }, [shortId, intercomHash]);
 
   // For handling page change
   useEffect(() => {

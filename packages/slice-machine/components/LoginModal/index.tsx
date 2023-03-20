@@ -11,7 +11,7 @@ import {
   Text,
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { checkAuthStatus, startAuth, track } from "@src/apiClient";
+import { checkAuthStatus, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@lib/prismic/endpoints";
 import { startPolling } from "@lib/utils/poll";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
@@ -68,8 +68,6 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60
       );
-
-      void track({ event: "identify-user" });
 
       openToaster("Logged in", ToasterType.SUCCESS);
       stopLoadingLogin();

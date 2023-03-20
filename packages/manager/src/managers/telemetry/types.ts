@@ -21,7 +21,6 @@ export const SegmentEventType = {
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
 	customType_saved: "custom-type:saved",
 	slice_created: "slice:created",
-	identifyUser: "identify-user",
 	groupLibraries: "group-libraries",
 	screenshotTaken: "screenshot-taken",
 	changes_pushed: "changes:pushed",
@@ -59,7 +58,6 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slicezone Updated",
 	[SegmentEventType.customType_saved]: "SliceMachine Custom Type Saved",
 	[SegmentEventType.slice_created]: "SliceMachine Slice Created",
-	[SegmentEventType.identifyUser]: "IdentifyUser",
 	[SegmentEventType.groupLibraries]: "GroupLibraries",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
@@ -189,10 +187,6 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 	{ id: string; name: string; library: string }
 >;
 
-type IdentifyUserSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.identifyUser
->;
-
 type GroupLibrariesSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.groupLibraries,
 	{
@@ -260,7 +254,6 @@ export type SegmentEvents =
 	| CustomTypeSliceZoneUpdatedSegmentEvent
 	| CustomTypeSavedSegmentEvent
 	| SliceCreatedSegmentEvent
-	| IdentifyUserSegmentEvent
 	| GroupLibrariesSegmentEvent
 	| ScreenshotTakenSegmentEvent
 	| ChangesPushedSegmentEvent
