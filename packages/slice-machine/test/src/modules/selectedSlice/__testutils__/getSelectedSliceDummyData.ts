@@ -7,7 +7,7 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/s
 export const getSelectedSliceDummyData = () => {
   const dummyModel = Slices.toSM(jsonModel as unknown as SharedSlice);
 
-  const dummyModelVariationID = "my-variation-id";
+  const dummyModelVariationID = "default-slice";
 
   const dummySliceState: ComponentUI = {
     from: "slices/libName",
