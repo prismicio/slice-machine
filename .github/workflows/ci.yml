@@ -107,6 +107,7 @@ jobs:
 
   packages-win32:
     needs: prepare-win32
+    if: false
     runs-on: [windows-latest]
     strategy:
       fail-fast: false
@@ -180,7 +181,7 @@ jobs:
 
   deployment:
     runs-on: ubuntu-latest
-    needs: [prettier, packages, packages-win32]
+    needs: [prettier, packages]
     if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
     environment: alpha
     steps: 
