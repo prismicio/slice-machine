@@ -76,8 +76,7 @@ describe("[Selected Custom type module]", () => {
     });
     it("should update the custom type state given CUSTOM_TYPE/CREATE_TAB action", () => {
       const newTabId = "Tab1";
-      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-      const previousTabLength = dummyCustomTypesState.model.tabs.length;
+      const previousTabLength = dummyCustomTypesState?.model.tabs.length ?? 0;
       const newState = selectedCustomTypeReducer(
         dummyCustomTypesState,
         createTabCreator({

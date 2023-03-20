@@ -9,11 +9,8 @@ import {
   beforeAll,
   vi,
 } from "vitest";
-import React from "react";
 import Router from "next/router";
 import mockRouter from "next-router-mock";
-// @ts-expect-error TS(6133) FIXME: 'rest' is declared but its value is never read.
-import { rest } from "msw";
 import SegmentClient from "analytics-node";
 import { Frameworks } from "@lib/models/common/Framework";
 import { createSliceMachineManager } from "@slicemachine/manager";
@@ -132,8 +129,7 @@ describe("Custom Type Builder", () => {
     },
   ];
 
-  // @ts-expect-error TS(6133) FIXME: 'ctx' is declared but its value is never read.
-  test("should send a tracking event when the user adds a field", async (ctx) => {
+  test("should send a tracking event when the user adds a field", async () => {
     const customTypeId = "a-page";
 
     Router.push({
@@ -231,8 +227,7 @@ describe("Custom Type Builder", () => {
     );
   });
 
-  // @ts-expect-error TS(6133) FIXME: 'ctx' is declared but its value is never read.
-  test("should send a tracking event when the user adds a slice", async (ctx) => {
+  test("should send a tracking event when the user adds a slice", async () => {
     const customTypeId = "a-page";
 
     Router.push({

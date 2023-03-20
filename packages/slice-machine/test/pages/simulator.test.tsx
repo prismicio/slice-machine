@@ -2,8 +2,6 @@
 
 import { describe, test, afterEach, expect, beforeAll, vi } from "vitest";
 import { render, fireEvent, act, waitFor } from "../__testutils__";
-// @ts-expect-error TS(6133) FIXME: 'rest' is declared but its value is never read.
-import { rest } from "msw";
 import mockRouter from "next-router-mock";
 import router from "next/router";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";

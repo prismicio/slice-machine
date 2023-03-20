@@ -1,9 +1,6 @@
 // @vitest-environment jsdom
 
 import { describe, test, afterEach, expect, vi } from "vitest";
-import React from "react";
-// @ts-expect-error TS(6133) FIXME: 'rest' is declared but its value is never read.
-import { rest } from "msw";
 import SegmentClient from "analytics-node";
 
 import { render, fireEvent, act } from "../__testutils__";
@@ -22,8 +19,7 @@ describe("CreateCustomTypeModal", () => {
   div.setAttribute("id", "__next");
   document.body.appendChild(div);
 
-  // @ts-expect-error TS(6133) FIXME: 'ctx' is declared but its value is never read.
-  test("when a slice is created the tracker should be called", async (ctx) => {
+  test("when a slice is created the tracker should be called", async () => {
     const fakeId = "testing_id";
     const fakeName = "testing-name";
     const fakeRepo = "foo";
@@ -45,18 +41,21 @@ describe("CreateCustomTypeModal", () => {
     const submitButton = document.querySelector('[type="submit"]');
 
     await act(async () => {
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-      fireEvent.change(labelInput, { target: { value: fakeName } });
+      if (labelInput) {
+        fireEvent.change(labelInput, { target: { value: fakeName } });
+      }
     });
 
     await act(async () => {
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-      fireEvent.change(idInput, { target: { value: fakeId } });
+      if (idInput) {
+        fireEvent.change(idInput, { target: { value: fakeId } });
+      }
     });
 
     await act(async () => {
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-      fireEvent.click(submitButton);
+      if (submitButton) {
+        fireEvent.click(submitButton);
+      }
     });
 
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
