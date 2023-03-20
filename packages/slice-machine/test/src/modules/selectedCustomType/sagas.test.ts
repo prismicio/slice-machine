@@ -65,7 +65,7 @@ describe("[Selected Custom type sagas]", () => {
       const saga = testSaga(saveCustomTypeSaga);
 
       saga.next().select(selectCurrentCustomType);
-      saga.next({}).call(saveCustomType, customTypeModel);
+      saga.next(customTypeModel).call(saveCustomType, customTypeModel);
 
       saga
         .next({ errors: [] })
