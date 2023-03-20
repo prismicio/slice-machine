@@ -328,7 +328,15 @@ export class SliceMachineManager {
 			);
 		}
 
-		return libraries;
+		// Preserve library order from config file
+		return libraries.sort((library1, library2) => {
+			const libraryIndex1 =
+				sliceMachineConfig.libraries?.indexOf(library1.name) || 0;
+			const libraryIndex2 =
+				sliceMachineConfig.libraries?.indexOf(library2.name) || 0;
+
+			return Math.sign(libraryIndex1 - libraryIndex2);
+		});
 	}
 
 	private async _getCustomTypes(): Promise<
