@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@slicemachine/adapter-next": "^0.0.9",
-    "slice-machine-ui": "0.6.1-dev-plugins.12",
-    "start-slicemachine": "0.6.1-dev-plugins.12"
+    "slice-machine-ui": "0.6.1-dev-plugins-validation.0",
+    "start-slicemachine": "0.6.1-dev-plugins-validation.0"
   }
 }
