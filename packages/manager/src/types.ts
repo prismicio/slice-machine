@@ -15,7 +15,7 @@ export type PackageChangelog = {
 export type PackageVersion = {
 	versionNumber: string;
 	releaseNote: string | null;
-	kind: (typeof VERSION_KIND)[keyof typeof VERSION_KIND] | undefined;
+	kind: typeof VERSION_KIND[keyof typeof VERSION_KIND] | undefined;
 };
 
 /**

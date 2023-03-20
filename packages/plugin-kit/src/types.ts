@@ -167,7 +167,7 @@ export const SliceMachineHookType = {
  * Hook types.
  */
 export type SliceMachineHookTypes =
-	(typeof SliceMachineHookType)[keyof typeof SliceMachineHookType];
+	typeof SliceMachineHookType[keyof typeof SliceMachineHookType];
 
 /**
  * Slice Machine-specific hook handlers.

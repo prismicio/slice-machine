@@ -28,8 +28,7 @@ export const SegmentEventType = {
 	changes_limitReach: "changes:limit-reach",
 	editor_widgetUsed: "editor:widget-used",
 } as const;
-type SegmentEventTypes =
-	(typeof SegmentEventType)[keyof typeof SegmentEventType];
+type SegmentEventTypes = typeof SegmentEventType[keyof typeof SegmentEventType];
 
 export const HumanSegmentEventType = {
 	[SegmentEventType.command_init_start]: "SliceMachine Init Start",
@@ -67,7 +66,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.editor_widgetUsed]: "SliceMachine Editor Widget Used",
 } as const;
 export type HumanSegmentEventTypes =
-	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
+	typeof HumanSegmentEventType[keyof typeof HumanSegmentEventType];
 
 type SegmentEvent<
 	TType extends SegmentEventTypes,

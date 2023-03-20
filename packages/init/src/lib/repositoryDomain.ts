@@ -118,8 +118,7 @@ export const ValidationErrors = {
 	MoreThan30: "MoreThan30",
 	AlreadyExists: "AlreadyExists",
 } as const;
-type ValidationErrors =
-	(typeof ValidationErrors)[keyof typeof ValidationErrors];
+type ValidationErrors = typeof ValidationErrors[keyof typeof ValidationErrors];
 
 type ValidateRepositoryDomainArgs = { domain: string };
 type ValidateRepositoryDomainReturnType = Record<
