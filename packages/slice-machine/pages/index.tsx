@@ -31,13 +31,7 @@ const CustomTypes: React.FunctionComponent = () => {
   );
 
   const sortedCustomTypes = customTypes.sort((customType1, customType2) => {
-    if (customType1.local.id > customType2.local.id) {
-      return 1;
-    } else if (customType1.local.id < customType2.local.id) {
-      return -1;
-    }
-
-    return 0;
+    return customType1.local.id.localeCompare(customType2.local.id);
   });
 
   return (

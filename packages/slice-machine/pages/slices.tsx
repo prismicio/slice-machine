@@ -76,13 +76,7 @@ const SlicesIndex: React.FunctionComponent = () => {
   const sortedLibraries: LibraryUI[] = libraries.map((library) => {
     // Sort slices
     library.components = [...library.components].sort((slice1, slice2) => {
-      if (slice1.model.name > slice2.model.name) {
-        return 1;
-      } else if (slice1.model.name < slice2.model.name) {
-        return -1;
-      }
-
-      return 0;
+      return slice1.model.name.localeCompare(slice2.model.name);
     });
     return library;
   });
