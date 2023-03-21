@@ -4,7 +4,7 @@ import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 import { MdPlayCircleFilled } from "react-icons/md";
 import { Close, Flex, Paragraph } from "theme-ui";
 import style from "./VideoItem.module.css";
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { Frameworks } from "@lib/models/common/Framework";
 import { VIDEO_YOUTUBE_PLAYLIST_LINK } from "@lib/consts";
 
@@ -25,7 +25,7 @@ const VideoItem: FC<VideoItemProps> = ({
   const videoUrl = VIDEO_YOUTUBE_PLAYLIST_LINK;
 
   const handleClose = () => {
-    void track({
+    void telemetry.track({
       event: "open-video-tutorials",
       framework,
       slicemachineVersion: sliceMachineVersion,

@@ -17,7 +17,7 @@ import {
   getCurrentVersion,
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import Video from "@components/CloudVideo";
 
 const SimulatorNotSupportedTooltip: React.FC<{
@@ -90,7 +90,7 @@ const SimulatorOnboardingTooltip: React.FC<{
           publicId={VIDEO_SIMULATOR_TOOLTIP}
           poster="/simulator-video-thumbnail.png"
           onPlay={() => {
-            void track({
+            void telemetry.track({
               event: "open-video-tutorials",
               framework,
               slicemachineVersion: version,

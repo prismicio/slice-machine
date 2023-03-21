@@ -2,7 +2,7 @@ import { Button, Text, Heading, Box, Spinner } from "theme-ui";
 import React from "react";
 import { Video } from "cloudinary-react";
 import { useSelector } from "react-redux";
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { SliceMachineStoreType } from "../../src/redux/type";
 import { getFramework, getCurrentVersion } from "@src/modules/environment";
 interface Props {
@@ -58,7 +58,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
           }}
           publicId={videoPublicIdUrl}
           onPlay={() => {
-            void track({
+            void telemetry.track({
               event: "open-video-tutorials",
               framework,
               slicemachineVersion: version,

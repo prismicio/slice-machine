@@ -1,4 +1,4 @@
-import { getState, pushChanges, track } from "../../apiClient";
+import { getState, pushChanges, telemetry } from "../../apiClient";
 import {
   call,
   fork,
@@ -95,7 +95,10 @@ export function* changesPushSaga({
       // sending failure event
       yield put(changesPushCreator.failure(sortDocumentLimits(response)));
       // Tracking when a limit has been reached
-      void track({ event: "changes:limit-reach", limitType: response.type });
+      void telemetry.track({
+        event: "changes:limit-reach",
+        limitType: response.type,
+      });
       // Open the corresponding drawer
       yield put(
         modalOpenCreator({

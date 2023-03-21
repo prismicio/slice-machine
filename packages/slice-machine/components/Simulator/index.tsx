@@ -7,7 +7,7 @@ import { Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import {
   getCurrentVersion,
@@ -75,7 +75,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void track({ event: "slice-simulator:open", framework, version });
+    void telemetry.track({ event: "slice-simulator:open", framework, version });
   }, []);
 
   const startedNewEditorSessionRef = useRef(false);
@@ -87,7 +87,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const trackWidgetUsed = (sliceId: string) => {
     if (!startedNewEditorSessionRef.current) return;
     startedNewEditorSessionRef.current = false;
-    void track({ event: "editor:widget-used", sliceId });
+    void telemetry.track({ event: "editor:widget-used", sliceId });
   };
 
   const currentState: UiState = (() => {
@@ -126,7 +126,10 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
-      void track({ event: "slice-simulator:is-not-running", framework });
+      void telemetry.track({
+        event: "slice-simulator:is-not-running",
+        framework,
+      });
     }
   }, [currentState, framework]);
 
@@ -286,10 +289,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             >
               <ThemeProvider mode="light">
                 <SharedSliceEditor
-                  /** because of a re-render issue on the richtext
-                  /* we enforce re-rendering the editor when the variation change.
-                  /* this change should be removed once the editor is fixed.
-                  */
+                  /**
+                   * Because of a re-render issue on the richtext /* we enforce
+                   * re-rendering the editor when the variation change. /* this
+                   * change should be removed once the editor is fixed.
+                   */
                   key={variation.id}
                   content={editorContent}
                   onContentChange={(c) => {

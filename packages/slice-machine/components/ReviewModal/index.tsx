@@ -24,7 +24,7 @@ import {
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getLibraries } from "@src/modules/slices";
 import { hasLocal } from "@lib/models/common/ModelData";
@@ -113,7 +113,12 @@ const ReviewModal: React.FunctionComponent = () => {
 
   const onSendAReview = (rating: number, comment: string): void => {
     startLoadingReview();
-    void track({ event: "review", framework: env.framework, rating, comment });
+    void telemetry.track({
+      event: "review",
+      framework: env.framework,
+      rating,
+      comment,
+    });
     sendAReview();
     stopLoadingReview();
   };

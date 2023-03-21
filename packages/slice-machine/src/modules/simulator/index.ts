@@ -19,7 +19,7 @@ import {
   getSimulatorSetupSteps,
   saveSliceMock,
   SaveSliceMockRequest,
-  track,
+  telemetry,
 } from "@src/apiClient";
 import {
   getCurrentVersion,
@@ -260,7 +260,7 @@ export function* trackOpenSetupModalSaga() {
     typeof getCurrentVersion
   >;
 
-  void track({ event: "slice-simulator:setup", framework, version });
+  void telemetry.track({ event: "slice-simulator:setup", framework, version });
 }
 
 export function* saveSliceMockSaga({

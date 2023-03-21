@@ -1,5 +1,5 @@
 import { ChangesPushSagaPayload } from ".";
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 
@@ -80,7 +80,7 @@ export function trackPushChangesSuccess(params: trackingParameters) {
   );
   const duration = Date.now() - startTime;
 
-  return track({
+  return telemetry.track({
     event: "changes:pushed",
     ...customTypesStats,
     ...slicesStats,

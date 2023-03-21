@@ -25,7 +25,7 @@ import {
 } from "../../../../src/modules/selectedCustomType";
 import { SlicesSM } from "@lib/models/common/Slices";
 import { TabField, TabFields } from "@lib/models/common/CustomType";
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { DropResult } from "react-beautiful-dnd";
 
 interface TabZoneProps {
@@ -87,7 +87,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
-    void track({
+    void telemetry.track({
       event: "custom-type:field-added",
       id,
       name: currentCustomType.id,
@@ -140,7 +140,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   };
 
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
-    void track({
+    void telemetry.track({
       event: "custom-type:slice-zone-updated",
       customTypeId: currentCustomType.id,
     });

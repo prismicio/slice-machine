@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { group, track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
@@ -25,7 +25,7 @@ const useSMTracker = () => {
   const router = useRouter();
 
   useEffect(() => {
-    void groupLibraries(libraries, repoName, currentVersion);
+    void group(libraries, repoName, currentVersion);
 
     // For initial loading
     void trackPageView(framework, currentVersion);
@@ -52,14 +52,14 @@ const useSMTracker = () => {
 
 export default useSMTracker;
 
-async function groupLibraries(
+async function group(
   libs: readonly LibraryUI[],
   repositoryName: string | undefined,
   version: string
-): ReturnType<typeof group> {
+): ReturnType<typeof telemetry.group> {
   if (repositoryName === undefined) return;
   const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
-  return group({
+  return telemetry.group({
     repositoryName,
     manualLibsCount: libs.filter((l) => l.meta.isManual).length,
     downloadedLibsCount: downloadedLibs.length,
@@ -74,8 +74,8 @@ async function groupLibraries(
 function trackPageView(
   framework: string,
   version: string
-): ReturnType<typeof track> {
-  return track({
+): ReturnType<typeof telemetry.track> {
+  return telemetry.track({
     event: "page-view",
     url: window.location.href,
     path: window.location.pathname,

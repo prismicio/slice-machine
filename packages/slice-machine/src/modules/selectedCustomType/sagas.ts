@@ -5,7 +5,7 @@ import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { saveCustomTypeCreator } from "./actions";
 import { selectCurrentCustomType, selectCurrentMockConfig } from "./index";
-import { saveCustomType, track } from "@src/apiClient";
+import { saveCustomType, telemetry } from "@src/apiClient";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -27,7 +27,7 @@ export function* saveCustomTypeSaga() {
     if (errors.length) {
       throw errors;
     }
-    void track({
+    void telemetry.track({
       event: "custom-type:saved",
       id: currentCustomType.id,
       name: currentCustomType.label || currentCustomType.id,
