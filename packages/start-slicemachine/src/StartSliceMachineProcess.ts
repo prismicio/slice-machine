@@ -164,10 +164,21 @@ export class StartSliceMachineProcess {
 	 */
 	private async _validateProject(): Promise<void> {
 		// Validate Slice Machine config.
-		await this._sliceMachineManager.project.loadSliceMachineConfig();
+		const config =
+			await this._sliceMachineManager.project.loadSliceMachineConfig();
 
 		// Validate Library IDs
-		await this._validateLibraries();
+		const invalidLibraries =
+			config.libraries?.filter(
+				(library) => library.startsWith("@") || library.startsWith("~"),
+			) || [];
+		if (invalidLibraries.length > 0) {
+			throw new Error(
+				`The following Slice libraries have invalid names: ${invalidLibraries.join(
+					", ",
+				)}. Slice library names must not start with "@" nor "~".`,
+			);
+		}
 
 		// Validate Slice models.
 		const allSlices = await this._sliceMachineManager.slices.readAllSlices();
@@ -182,30 +193,6 @@ export class StartSliceMachineProcess {
 		if (allCustomTypes.errors.length > 0) {
 			// TODO: Provide better error message.
 			throw new Error(allCustomTypes.errors.join(", "));
-		}
-	}
-
-	private async _validateLibraries(): Promise<void> {
-		const allProjectLibraries =
-			await this._sliceMachineManager.slices.readAllSliceLibraries();
-
-		const isLibraryIDValid = (name: string): boolean =>
-			!name.startsWith("@") && !name.startsWith("~");
-
-		const invalidLibraryNames = allProjectLibraries.libraries.reduce<string[]>(
-			(acc, library) =>
-				!isLibraryIDValid(library.libraryID)
-					? [...acc, library.libraryID]
-					: acc,
-			[],
-		);
-
-		if (invalidLibraryNames.length > 0) {
-			throw new Error(
-				`The following Slice libraries have invalid names: ${invalidLibraryNames.join(
-					", ",
-				)}. Slice libraries must not start with "@" nor "~".`,
-			);
 		}
 	}
 
