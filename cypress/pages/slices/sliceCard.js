@@ -1,6 +1,6 @@
 export class SliceCard {
   constructor(sliceName) {
-    this.root = `a[href^="/slices/${sliceName}"]`;
+    this.root = `[aria-label="${sliceName} slice card"]`;
   }
 
   get content() {

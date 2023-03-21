@@ -45,12 +45,6 @@ class SimulatorPage {
       return cy.writeFile(MANIFEST_FILE, JSON.stringify(data, null, 2));
     });
 
-    cy.window().then((win) => {
-      cy.stub(win, "open").callsFake((url) => {
-        return win.open.wrappedMethod.call(win, url, "_self");
-      });
-    });
-
     return this;
   }
 

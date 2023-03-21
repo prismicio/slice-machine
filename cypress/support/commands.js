@@ -55,3 +55,10 @@ Cypress.Commands.add("getInputByLabel", (label) => {
       return cy.get(selector);
     });
 });
+
+// The current cy.reload() always fails because it never receives a load event.
+Cypress.Commands.overwrite("reload", () => {
+  return cy.url().then((url) => {
+    cy.visit(url);
+  });
+});

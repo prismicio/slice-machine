@@ -154,8 +154,8 @@ jobs:
       - name: Set up Node
         uses: ./.github/actions/setup-node
 
-      - name: Build Slice Machine UI and init script
-        run: npm run build --workspace packages/init --workspace packages/slice-machine
+      - name: Build Slice Machine UI, init and start scripts
+        run: npm run build --workspace packages/init --workspace packages/slice-machine --workspace packages/start-slicemachine
 
       - name: Running End to End tests
         run: npm run test:e2e
@@ -198,6 +198,7 @@ jobs:
 
       - name: Version And Publish
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
           PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
@@ -207,4 +208,5 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
           npm run bump:alpha --preid="${{ github.ref_name }}"
+          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           npm run publish:alpha
