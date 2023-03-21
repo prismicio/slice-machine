@@ -115,12 +115,14 @@ export class StartSliceMachineProcess {
 		} catch {
 			// noop - We'll try again before taking a screenshot.
 		}
-		await Promise.all([
-			profile
-				? this._sliceMachineManager.user.refreshAuthenticationToken()
-				: undefined,
-			profile ? this._sliceMachineManager.screenshots.initS3ACL() : undefined,
-		]);
+		if (profile) {
+			await Promise.allSettled([
+				// noop - We'll try again when needed.
+				this._sliceMachineManager.user.refreshAuthenticationToken(),
+				// noop - We'll try again before uploading a screenshot.
+				this._sliceMachineManager.screenshots.initS3ACL(),
+			]);
+		}
 	}
 
 	/**

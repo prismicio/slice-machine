@@ -78,6 +78,13 @@ export const createSliceMachineServer = async (
 		fromNodeMiddleware(
 			createPrismicAuthManagerMiddleware({
 				prismicAuthManager: args.sliceMachineManager.getPrismicAuthManager(),
+				async onLoginCallback() {
+					try {
+						await args.sliceMachineManager.screenshots.initS3ACL();
+					} catch (error) {
+						// noop - We'll try again before uploading a screenshot.
+					}
+				},
 			}),
 		),
 	);
