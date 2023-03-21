@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 
-import { track } from "@src/apiClient";
+import { group, track } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
   getCurrentVersion,
   getFramework,
   getRepoName,
-  getShortId,
-  getIntercomHash,
 } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
@@ -19,8 +17,6 @@ const useSMTracker = () => {
     (state: SliceMachineStoreType) => ({
       currentVersion: getCurrentVersion(state),
       framework: getFramework(state),
-      shortId: getShortId(state),
-      intercomHash: getIntercomHash(state),
       repoName: getRepoName(state),
       libraries: getLibraries(state),
     })
@@ -29,7 +25,7 @@ const useSMTracker = () => {
   const router = useRouter();
 
   useEffect(() => {
-    void trackGroupLibraries(libraries, repoName, currentVersion);
+    void groupLibraries(libraries, repoName, currentVersion);
 
     // For initial loading
     void trackPageView(framework, currentVersion);
@@ -56,16 +52,15 @@ const useSMTracker = () => {
 
 export default useSMTracker;
 
-async function trackGroupLibraries(
+async function groupLibraries(
   libs: readonly LibraryUI[],
-  repoName: string | undefined,
+  repositoryName: string | undefined,
   version: string
-): ReturnType<typeof track> {
-  if (repoName === undefined) return;
+): ReturnType<typeof group> {
+  if (repositoryName === undefined) return;
   const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
-  return track({
-    event: "group-libraries",
-    repoName: repoName,
+  return group({
+    repositoryName,
     manualLibsCount: libs.filter((l) => l.meta.isManual).length,
     downloadedLibsCount: downloadedLibs.length,
     npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,

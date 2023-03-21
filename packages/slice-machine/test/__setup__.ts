@@ -84,6 +84,15 @@ vi.mock("analytics-node", () => {
   const MockSegmentClient = vi.fn();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  MockSegmentClient.prototype.group = vi.fn(
+    (_message: unknown, callback?: (error?: Error) => void) => {
+      if (callback) {
+        callback();
+      }
+    }
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   MockSegmentClient.prototype.identify = vi.fn(
     (_message: unknown, callback?: (error?: Error) => void) => {
       if (callback) {

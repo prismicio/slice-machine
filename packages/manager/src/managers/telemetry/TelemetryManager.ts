@@ -5,6 +5,7 @@ import SegmentClient from "analytics-node";
 import { readPrismicrc } from "../../lib/prismicrc";
 
 import { API_TOKENS } from "../../constants/API_TOKENS";
+import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
 
 import { BaseManager } from "../BaseManager";
 
@@ -19,6 +20,22 @@ type TelemetryManagerTrackArgs = SegmentEvents;
 type TelemetryManagerIdentifyArgs = {
 	userID: string;
 	intercomHash: string;
+};
+
+type TelemetryManagerGroupArgs = {
+	repositoryName: string;
+	manualLibsCount: number;
+	downloadedLibsCount: number;
+	npmLibsCount: number;
+	downloadedLibs: string[];
+	slicemachineVersion: string;
+};
+
+type TelemetryManagerGetDefaultContextReturnType = {
+	app: {
+		name: string;
+		version: string;
+	};
 };
 
 function assertTelemetryInitialized(
@@ -59,15 +76,16 @@ export class TelemetryManager extends BaseManager {
 
 	// TODO: Should `userId` be automatically populated by the logged in
 	// user? We already have their info via UserRepository.
-	track(args: TelemetryManagerTrackArgs): Promise<void> {
+	async track(args: TelemetryManagerTrackArgs): Promise<void> {
 		const { event, repository, ...properties } = args;
 
+		const context = await this._getDefaultContext();
 		const payload: {
 			event: HumanSegmentEventTypes;
 			userId?: string;
 			anonymousId?: string;
 			properties?: Record<string, unknown>;
-			context?: {
+			context: TelemetryManagerGetDefaultContextReturnType & {
 				groupId?: {
 					Repository?: string;
 				};
@@ -78,6 +96,7 @@ export class TelemetryManager extends BaseManager {
 				repo: repository,
 				...properties,
 			},
+			context,
 		};
 
 		if (this._userID) {
@@ -87,7 +106,6 @@ export class TelemetryManager extends BaseManager {
 		}
 
 		if (args.repository) {
-			payload.context ||= {};
 			payload.context.groupId ||= {};
 			payload.context.groupId.Repository = repository;
 		}
@@ -116,20 +134,23 @@ export class TelemetryManager extends BaseManager {
 	// TODO: Should `userID` and `intercomHash` be automatically populated
 	// by the logged in user? We already have their info via
 	// UserRepository.
-	identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
+	async identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
+		const context = await this._getDefaultContext();
+		const payload = {
+			userId: args.userID,
+			anonymousId: this._anonymousID,
+			integrations: {
+				Intercom: {
+					user_hash: args.intercomHash,
+				},
+			},
+			context,
+		};
+
+		this._userID = args.userID;
+
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
-
-			const payload = {
-				userId: args.userID,
-				anonymousId: this._anonymousID,
-				integrations: {
-					Intercom: {
-						user_hash: args.intercomHash,
-					},
-				},
-			};
-			this._userID = args.userID;
 
 			// TODO: Make sure client fails gracefully when no internet connection
 			this._segmentClient.identify(payload, (maybeError?: Error) => {
@@ -143,6 +164,45 @@ export class TelemetryManager extends BaseManager {
 		});
 	}
 
+	async group(args: TelemetryManagerGroupArgs): Promise<void> {
+		const { repositoryName, ...traits } = args;
+
+		const context = await this._getDefaultContext();
+		const payload: {
+			groupId: string;
+			userId?: string;
+			anonymousId?: string;
+			traits?: Record<string, unknown>;
+			context: TelemetryManagerGetDefaultContextReturnType;
+		} = {
+			groupId: repositoryName,
+			traits,
+			context,
+		};
+
+		if (this._userID) {
+			payload.userId = this._userID;
+		} else {
+			payload.anonymousId = this._anonymousID;
+		}
+
+		return new Promise((resolve) => {
+			assertTelemetryInitialized(this._segmentClient);
+
+			this._segmentClient.group(
+				payload as Parameters<typeof this._segmentClient.group>[0],
+				(maybeError?: Error) => {
+					if (maybeError) {
+						// TODO: Not sure how we want to deal with that
+						console.warn(`An error occurred during Segment group`, maybeError);
+					}
+
+					resolve();
+				},
+			);
+		});
+	}
+
 	async checkIsTelemetryEnabled(): Promise<boolean> {
 		let root: string;
 		try {
@@ -152,5 +212,11 @@ export class TelemetryManager extends BaseManager {
 		}
 
 		return readPrismicrc(root).telemetry !== false;
+	}
+
+	private async _getDefaultContext(): Promise<TelemetryManagerGetDefaultContextReturnType> {
+		const version = await this.versions.getRunningSliceMachineVersion();
+
+		return { app: { name: SLICE_MACHINE_NPM_PACKAGE_NAME, version } };
 	}
 }

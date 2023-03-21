@@ -21,7 +21,6 @@ export const SegmentEventType = {
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
 	customType_saved: "custom-type:saved",
 	slice_created: "slice:created",
-	groupLibraries: "group-libraries",
 	screenshotTaken: "screenshot-taken",
 	changes_pushed: "changes:pushed",
 	changes_limitReach: "changes:limit-reach",
@@ -58,7 +57,6 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slicezone Updated",
 	[SegmentEventType.customType_saved]: "SliceMachine Custom Type Saved",
 	[SegmentEventType.slice_created]: "SliceMachine Slice Created",
-	[SegmentEventType.groupLibraries]: "GroupLibraries",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
 	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
@@ -187,18 +185,6 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 	{ id: string; name: string; library: string }
 >;
 
-type GroupLibrariesSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.groupLibraries,
-	{
-		repoName: string;
-		manualLibsCount: number;
-		downloadedLibsCount: number;
-		npmLibsCount: number;
-		downloadedLibs: Array<string>;
-		slicemachineVersion: string;
-	}
->;
-
 type ScreenshotTakenSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.screenshotTaken,
 	{
@@ -254,7 +240,6 @@ export type SegmentEvents =
 	| CustomTypeSliceZoneUpdatedSegmentEvent
 	| CustomTypeSavedSegmentEvent
 	| SliceCreatedSegmentEvent
-	| GroupLibrariesSegmentEvent
 	| ScreenshotTakenSegmentEvent
 	| ChangesPushedSegmentEvent
 	| ChangesLimitReachSegmentEvent
