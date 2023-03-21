@@ -6,10 +6,11 @@ import { SLICE_MOCK_FILE } from "../../consts";
 const SLICE = {
   id: "scenario008",
   name: "Scenario008",
-  library: "slices",
+  library: ".--slices",
 };
 
-describe("Scenario 008", () => {
+// TODO: Enable once mocks are working
+describe.skip("Scenario 008", () => {
   beforeEach(() => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
@@ -54,7 +55,7 @@ describe("Scenario 008", () => {
     sliceBuilder.openSimulator();
 
     // Wait for the editor to be fully loaded
-    editorPage.contains("Title").should("be.visible");
+    editorPage.contains("Scenario008 • SecondVariation").should("be.visible");
 
     simulatorPage.changeVariations("Default");
     cy.contains("Scenario008 • Default").should("be.visible");

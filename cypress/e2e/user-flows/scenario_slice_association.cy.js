@@ -8,7 +8,7 @@ const customTypeId = `my_test_${random}`;
 
 const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
-const sliceLib = "slices";
+const sliceLib = ".--slices";
 
 describe("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {
@@ -35,12 +35,6 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
 
   it("Create a Slice with multiple fields (repeatable and non-repeatable)", () => {
     cy.createSlice(sliceLib, sliceId, sliceName);
-
-    // clear the Slice
-    cy.get('[data-cy="slice-menu-button"]').each(($element) => {
-      cy.wrap($element).click();
-      cy.contains("Delete field").click();
-    });
 
     cy.addStaticFieldToSlice(
       "Key Text",

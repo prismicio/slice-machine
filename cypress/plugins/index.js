@@ -12,7 +12,6 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const fs = require("fs");
-const crypto = require("crypto");
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -34,11 +33,6 @@ module.exports = (on, config) => {
       } else {
         return null;
       }
-    },
-    sha256(fileBuffer) {
-      const hashSum = crypto.createHash("sha256");
-      hashSum.update(fileBuffer);
-      return hashSum.digest("hex");
     },
   });
 };

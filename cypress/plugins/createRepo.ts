@@ -4,9 +4,7 @@ import * as os from "node:os";
 import cookie from "cookie";
 
 // File called from the cypress setup in cypress-setup.sh
-const [, , DOMAIN_NAME, PASSWORD, _PRISMIC_URL] = process.argv;
-
-const PRISMIC_URL = "https://wroom.io";
+const [, , DOMAIN_NAME, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
   const fetch = (await import("node-fetch")).default;

@@ -2,7 +2,6 @@
 
 import { describe, test, afterEach, expect, beforeAll, vi } from "vitest";
 import { render, fireEvent, act, waitFor } from "../__testutils__";
-import { rest } from "msw";
 import mockRouter from "next-router-mock";
 import router from "next/router";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
@@ -278,6 +277,7 @@ describe.skip("simulator", () => {
     //   })
     // );
 
+    // @ts-expect-error TS(2741) FIXME: Property 'pageProps' is missing in type '{}' but r... Remove this comment to see the full error message
     const App = render(<Simulator />, {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
     });

@@ -19,7 +19,7 @@ import {
 const SLICE = {
   id: "sliceBuild",
   name: "SliceBuilding",
-  library: "slices",
+  library: ".--slices",
 };
 
 describe("I am a new SM user (with Next) who wants to build a slice with different widgets.", () => {
@@ -36,9 +36,6 @@ describe("I am a new SM user (with Next) who wants to build a slice with differe
     const customTypeId = "single_custom_type";
     cy.createCustomType(customTypeId, customTypeName);
     cy.createSlice(SLICE.library, SLICE.id, SLICE.name);
-
-    sliceBuilder.deleteWidgetField("Title");
-    sliceBuilder.deleteWidgetField("Description");
 
     sliceBuilder.addNewWidgetField("SimpleTextField", "Key Text");
     sliceBuilder.addNewWidgetField("RichTextField", "Rich Text");
