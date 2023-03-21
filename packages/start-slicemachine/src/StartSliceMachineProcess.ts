@@ -85,7 +85,7 @@ export class StartSliceMachineProcess {
 				`Running at ${chalk.magenta(url)}`,
 			),
 		);
-		console.log(this._buildLoggedInAsLine(chalk.dim("Loading...")));
+		console.log(await this._buildLoggedInAsLine(chalk.dim("Loading...")));
 		console.log();
 
 		const profile = await this._fetchProfile();
@@ -94,7 +94,7 @@ export class StartSliceMachineProcess {
 		process.stdout.moveCursor?.(0, -2);
 		process.stdout.clearLine?.(1);
 		console.log(
-			this._buildLoggedInAsLine(
+			await this._buildLoggedInAsLine(
 				profile
 					? `${[profile.firstName, profile.lastName]
 							.filter(Boolean)
@@ -151,9 +151,12 @@ export class StartSliceMachineProcess {
 	 *
 	 * @returns String to pass to the console.
 	 */
-	private _buildLoggedInAsLine(value: string): string {
+	private async _buildLoggedInAsLine(value: string): Promise<string> {
+		const currentVersion =
+			await this._sliceMachineManager.versions.getRunningSliceMachineVersion();
+
 		return `${chalk.bgBlack(
-			`         ${chalk.bold("Logged in as")} `,
+			`    ${" ".repeat(currentVersion.length)}${chalk.bold("Logged in as")} `,
 		)} ${chalk.dim("→")} ${value}`;
 	}
 
