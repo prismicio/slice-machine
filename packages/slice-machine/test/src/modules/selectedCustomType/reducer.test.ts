@@ -59,8 +59,7 @@ describe("[Selected Custom type module]", () => {
           dummyCustomTypesState,
           initCustomTypeStoreCreator({
             model: customTypeAsArray,
-            // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type '({ id: stri... Remove this comment to see the full error message
-            remoteModel: null,
+            remoteModel: undefined,
           })
         )
       ).toEqual({
