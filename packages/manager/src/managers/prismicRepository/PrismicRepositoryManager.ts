@@ -273,10 +273,16 @@ export class PrismicRepositoryManager extends BaseManager {
 									throw Error(`Could not find model ${change.id}`);
 								}
 
+								const modelWithScreenshots =
+									await this.slices.updateSliceModelScreenshotsInPlace({
+										libraryID: change.libraryID,
+										model,
+									});
+
 								return {
 									type: ChangeTypes.SLICE_INSERT,
 									id: change.id,
-									payload: model,
+									payload: modelWithScreenshots,
 								};
 							}
 							case "MODIFIED": {
@@ -289,10 +295,16 @@ export class PrismicRepositoryManager extends BaseManager {
 									throw Error(`Could not find model  ${change.id}`);
 								}
 
+								const modelWithScreenshots =
+									await this.slices.updateSliceModelScreenshotsInPlace({
+										libraryID: change.libraryID,
+										model,
+									});
+
 								return {
 									type: ChangeTypes.SLICE_UPDATE,
 									id: change.id,
-									payload: model,
+									payload: modelWithScreenshots,
 								};
 							}
 							case "DELETED":

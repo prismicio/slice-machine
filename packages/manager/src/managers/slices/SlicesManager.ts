@@ -348,7 +348,7 @@ export class SlicesManager extends BaseManager {
 
 		if (model) {
 			const modelWithScreenshots =
-				await this._updateSliceModelScreenshotsInPlace({
+				await this.updateSliceModelScreenshotsInPlace({
 					libraryID: args.libraryID,
 					model,
 				});
@@ -568,7 +568,7 @@ export class SlicesManager extends BaseManager {
 		return await client.getAllSharedSlices();
 	}
 
-	private async _updateSliceModelScreenshotsInPlace(
+	async updateSliceModelScreenshotsInPlace(
 		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
 	): Promise<CustomTypes.Widgets.Slices.SharedSlice> {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
