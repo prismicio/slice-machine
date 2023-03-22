@@ -133,7 +133,6 @@ it('sends the Node.js version along the "SliceMachine Page View" event', async (
 		path: "/",
 		referrer: "",
 		search: "",
-		slicemachineVersion: "0.2.0",
 		title: "",
 		url: "http://localhost:3000/",
 	};

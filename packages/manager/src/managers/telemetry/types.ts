@@ -124,12 +124,12 @@ type OnboardingContinueScreen3SegmentEvent = SegmentEvent<
 
 type SliceSimulatorSetupSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.sliceSimulator_setup,
-	{ framework: string; version: string }
+	{ framework: string }
 >;
 
 type SliceSimulatorOpenSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.sliceSimulator_open,
-	{ framework: string; version: string }
+	{ framework: string }
 >;
 
 type SliceSimulatorIsNotRunningSegmentEvent = SegmentEvent<
@@ -146,13 +146,12 @@ type PageViewSegmentEvent = SegmentEvent<
 		title: string;
 		referrer: string;
 		framework: string;
-		slicemachineVersion: string;
 	}
 >;
 
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.openVideoTutorials,
-	{ framework: string; slicemachineVersion: string; video: string }
+	{ framework: string; video: string }
 >;
 
 type CustomTypeCreatedSegmentEvent = SegmentEvent<

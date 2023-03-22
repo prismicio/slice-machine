@@ -17,7 +17,7 @@ import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "../src/modules/useSliceMachineActions";
 import { telemetry } from "@src/apiClient";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
-import { getCurrentVersion, getFramework } from "../src/modules/environment";
+import { getFramework } from "../src/modules/environment";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,
   VIDEO_ONBOARDING_ADD_TO_PAGE,
@@ -158,7 +158,7 @@ const StepIndicator = ({
   );
 };
 
-function trackStep(step: number): ReturnType<typeof track> {
+function trackStep(step: number): ReturnType<typeof telemetry.track> {
   switch (step) {
     case 0:
       return telemetry.track({ event: "onboarding:continue:screen-intro" });
@@ -203,18 +203,14 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 export default function Onboarding(): JSX.Element {
   const router = useRouter();
 
-  const { version, framework } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      version: getCurrentVersion(store),
-      framework: getFramework(store),
-    })
-  );
+  const { framework } = useSelector((store: SliceMachineStoreType) => ({
+    framework: getFramework(store),
+  }));
 
   const createOnPlay = (id: string) => () => {
     void telemetry.track({
       event: "open-video-tutorials",
       framework,
-      slicemachineVersion: version,
       video: id,
     });
   };

@@ -32,7 +32,6 @@ type TelemetryManagerGroupArgs = {
 	downloadedLibsCount: number;
 	npmLibsCount: number;
 	downloadedLibs: string[];
-	slicemachineVersion: string;
 };
 
 type TelemetryManagerContext = {

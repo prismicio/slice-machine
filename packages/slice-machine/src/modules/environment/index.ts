@@ -99,11 +99,6 @@ export const getPackageManager = (
   return store.environment.packageManager;
 };
 
-export const getCurrentVersion = (store: SliceMachineStoreType): string => {
-  const changelog = getChangelog(store);
-  return changelog?.currentVersion;
-};
-
 export const getStorybookUrl = (
   store: SliceMachineStoreType
 ): string | null => {

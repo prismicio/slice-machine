@@ -41,7 +41,6 @@ it("sends a group payload to Segment", async () => {
 		downloadedLibsCount: 0,
 		manualLibsCount: 0,
 		npmLibsCount: 0,
-		slicemachineVersion: "0.2.0",
 	});
 
 	expect(SegmentClient.prototype.group).toHaveBeenCalledWith(
@@ -53,7 +52,6 @@ it("sends a group payload to Segment", async () => {
 				downloadedLibsCount: 0,
 				manualLibsCount: 0,
 				npmLibsCount: 0,
-				slicemachineVersion: "0.2.0",
 			},
 			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
 		},
@@ -94,7 +92,6 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		downloadedLibsCount: 0,
 		manualLibsCount: 0,
 		npmLibsCount: 0,
-		slicemachineVersion: "0.2.0",
 	});
 
 	expect(consoleWarnSpy).toHaveBeenCalledWith(
@@ -116,7 +113,6 @@ it("throws if telemetry was not initialized", async () => {
 			downloadedLibsCount: 0,
 			manualLibsCount: 0,
 			npmLibsCount: 0,
-			slicemachineVersion: "0.2.0",
 		});
 	}).rejects.toThrow(/telemetry has not been initialized/i);
 });

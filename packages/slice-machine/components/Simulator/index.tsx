@@ -9,11 +9,7 @@ import Header from "./components/Header";
 
 import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
-import {
-  getCurrentVersion,
-  getFramework,
-  selectSimulatorUrl,
-} from "@src/modules/environment";
+import { getFramework, selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -56,7 +52,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     useSliceMachineActions();
   const {
     framework,
-    version,
     simulatorUrl,
     iframeStatus,
     manifestStatus,
@@ -64,7 +59,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
     simulatorUrl: selectSimulatorUrl(state),
-    version: getCurrentVersion(state),
     iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
@@ -75,7 +69,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void telemetry.track({ event: "slice-simulator:open", framework, version });
+    void telemetry.track({ event: "slice-simulator:open", framework });
   }, []);
 
   const startedNewEditorSessionRef = useRef(false);

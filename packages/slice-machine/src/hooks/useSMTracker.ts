@@ -3,19 +3,14 @@ import { useEffect } from "react";
 import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  getCurrentVersion,
-  getFramework,
-  getRepoName,
-} from "@src/modules/environment";
+import { getFramework, getRepoName } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
-  const { libraries, repoName, currentVersion, framework } = useSelector(
+  const { libraries, repoName, framework } = useSelector(
     (state: SliceMachineStoreType) => ({
-      currentVersion: getCurrentVersion(state),
       framework: getFramework(state),
       repoName: getRepoName(state),
       libraries: getLibraries(state),
@@ -25,16 +20,16 @@ const useSMTracker = () => {
   const router = useRouter();
 
   useEffect(() => {
-    void group(libraries, repoName, currentVersion);
+    void group(libraries, repoName);
 
     // For initial loading
-    void trackPageView(framework, currentVersion);
+    void trackPageView(framework);
   }, []);
 
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void trackPageView(framework, currentVersion);
+      void trackPageView(framework);
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views
@@ -54,8 +49,7 @@ export default useSMTracker;
 
 async function group(
   libs: readonly LibraryUI[],
-  repositoryName: string | undefined,
-  version: string
+  repositoryName: string | undefined
 ): ReturnType<typeof telemetry.group> {
   if (repositoryName === undefined) return;
   const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
@@ -67,14 +61,10 @@ async function group(
     downloadedLibs: downloadedLibs.map((l) =>
       l.meta.name != null ? l.meta.name : "Unknown"
     ),
-    slicemachineVersion: version,
   });
 }
 
-function trackPageView(
-  framework: string,
-  version: string
-): ReturnType<typeof telemetry.track> {
+function trackPageView(framework: string): ReturnType<typeof telemetry.track> {
   return telemetry.track({
     event: "page-view",
     url: window.location.href,
@@ -83,6 +73,5 @@ function trackPageView(
     title: document.title,
     referrer: document.referrer,
     framework,
-    slicemachineVersion: version,
   });
 }
