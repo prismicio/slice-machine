@@ -115,6 +115,42 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 	);
 });
 
+it('sends the Node.js version along the "SliceMachine Page View" event', async () => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
+
+	const properties = {
+		framework: "next",
+		path: "/",
+		referrer: "",
+		search: "",
+		slicemachineVersion: "0.2.0",
+		title: "",
+		url: "http://localhost:3000/",
+	};
+
+	await manager.telemetry.track({ event: "page-view", ...properties });
+
+	expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+		expect.objectContaining({
+			event: "SliceMachine Page View",
+			properties: { ...properties, nodeVersion: process.versions.node },
+			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
+		}),
+		expect.any(Function),
+	);
+});
+
 it("logs a warning to the console if Segment returns an error", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });

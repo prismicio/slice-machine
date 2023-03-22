@@ -116,6 +116,11 @@ export class TelemetryManager extends BaseManager {
 			payload.context.groupId.Repository = repository;
 		}
 
+		if (event === "page-view") {
+			payload.properties ||= {};
+			payload.properties.nodeVersion = process.versions.node;
+		}
+
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
 
