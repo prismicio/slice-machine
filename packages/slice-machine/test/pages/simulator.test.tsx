@@ -215,7 +215,6 @@ describe.skip("simulator", () => {
                     },
                   ],
                 },
-                mockConfig: {},
               },
             ],
             meta: {

@@ -131,7 +131,7 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
           />
         }
       >
-        <FieldZones mockConfig={slice.mockConfig} variation={variation} />
+        <FieldZones variation={variation} />
       </FlexEditor>
     </Box>
   );

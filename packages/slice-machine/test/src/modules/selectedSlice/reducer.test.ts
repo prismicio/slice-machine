@@ -3,11 +3,9 @@ import { selectedSliceReducer } from "@src/modules/selectedSlice/reducer";
 import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
-  deleteSliceWidgetMockCreator,
   initSliceStoreCreator,
   removeSliceWidgetCreator,
   replaceSliceWidgetCreator,
-  updateSliceWidgetMockCreator,
 } from "@src/modules/selectedSlice/actions";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
@@ -16,8 +14,7 @@ import { getRefreshStateCreatorPayloadData } from "./__testutils__/getRefreshSta
 import { refreshStateCreator } from "@src/modules/environment";
 import { WidgetsArea } from "@lib/models/common/Slice";
 
-const { dummyModelVariationID, dummyMockConfig, dummySliceState } =
-  getSelectedSliceDummyData();
+const { dummyModelVariationID, dummySliceState } = getSelectedSliceDummyData();
 
 describe("[Selected Slice module]", () => {
   describe("[Reducer]", () => {
@@ -119,40 +116,6 @@ describe("[Selected Slice module]", () => {
 
       const primaryWidgets = newState?.model.variations[0].primary;
       expect(primaryWidgets?.length).toEqual(0);
-    });
-    it("should update the selected slice state given SLICE/UPDATE_WIDGET_MOCK action", () => {
-      const newState = selectedSliceReducer(
-        dummySliceState,
-        updateSliceWidgetMockCreator({
-          variationId: dummyModelVariationID,
-          mockConfig: dummyMockConfig,
-          widgetArea: WidgetsArea.Primary,
-          previousKey: "section_title",
-          newKey: "section_title",
-          mockValue: {
-            content: "NewContent",
-          },
-        })
-      );
-
-      expect(newState?.mockConfig["default-slice"]?.primary).toEqual({
-        section_title: { content: "NewContent" },
-      });
-    });
-    it("should update the selected slice state given SLICE/DELETE_WIDGET_MOCK action", () => {
-      const newState = selectedSliceReducer(
-        dummySliceState,
-        deleteSliceWidgetMockCreator({
-          variationId: dummyModelVariationID,
-          mockConfig: dummyMockConfig,
-          widgetArea: WidgetsArea.Primary,
-          newKey: "section_title",
-        })
-      );
-
-      expect(newState?.mockConfig["default-slice"]?.primary).toEqual({
-        section_title: undefined,
-      });
     });
     it("should update the selected slice state given SLICE/COPY_VARIATION action", () => {
       const preVariations = dummySliceState?.model.variations;

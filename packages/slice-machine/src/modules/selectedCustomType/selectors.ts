@@ -1,7 +1,6 @@
 import { SliceMachineStoreType } from "@src/redux/type";
 import equal from "fast-deep-equal";
 import { PoolOfFields } from "@src/modules/selectedCustomType/types";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { CustomTypeSM, TabSM } from "@lib/models/common/CustomType";
 
 // Selectors
@@ -10,13 +9,6 @@ export const selectCurrentCustomType = (
 ): CustomTypeSM | null => {
   if (!store.selectedCustomType) return null;
   return store.selectedCustomType.model;
-};
-
-export const selectCurrentMockConfig = (
-  store: SliceMachineStoreType
-): CustomTypeMockConfig | null => {
-  if (!store.selectedCustomType) return null;
-  return store.selectedCustomType.mockConfig;
 };
 
 export const selectCurrentPoolOfFields = (
@@ -34,14 +26,8 @@ export const selectCurrentPoolOfFields = (
 export const isSelectedCustomTypeTouched = (store: SliceMachineStoreType) => {
   if (!store.selectedCustomType) return false;
 
-  return (
-    !equal(
-      store.selectedCustomType.initialModel,
-      store.selectedCustomType.model
-    ) ||
-    !equal(
-      store.selectedCustomType.initialMockConfig,
-      store.selectedCustomType.mockConfig
-    )
+  return !equal(
+    store.selectedCustomType.initialModel,
+    store.selectedCustomType.model
   );
 };

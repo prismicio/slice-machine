@@ -30,7 +30,6 @@ export interface UnSyncChanges extends ModelStatusInformation {
 const wrapDeletedSlice = (s: RemoteOnlySlice): ComponentUI => ({
   model: s.remote,
   screenshots: {},
-  mockConfig: {},
   from: "",
   href: "",
   pathToSlice: "",

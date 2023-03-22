@@ -11,7 +11,6 @@ import { Widget } from "../Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { optionValues } from "./options";
 import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 /**
  * {
@@ -62,5 +61,4 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
   schema,
   TYPE_NAME: WidgetTypes.RichText,
   Form,
-  MockConfigForm: DeprecatedMockConfigMessage,
 };

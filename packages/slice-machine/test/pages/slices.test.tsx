@@ -71,7 +71,6 @@ describe("slices", () => {
       changelog: {
         currentVersion: "0.0.1",
       },
-      mockConfig: { _cts: {} },
     };
 
     const libraries = [
@@ -249,7 +248,6 @@ describe("slices", () => {
       changelog: {
         currentVersion: "0.0.1",
       },
-      mockConfig: { _cts: {} },
     };
 
     const libraries = [

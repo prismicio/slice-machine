@@ -143,7 +143,6 @@ describe("Custom Type Builder", () => {
         // @ts-expect-error TS(2739) FIXME: Type '{ framework: Frameworks.next; mockConfig: { ... Remove this comment to see the full error message
         environment: {
           framework: Frameworks.next,
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -187,8 +186,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           remoteSlices: [],
@@ -241,7 +238,6 @@ describe("Custom Type Builder", () => {
 
     const environment = {
       framework: "next",
-      mockConfig: { _cts: { [customTypeId]: {} } },
     };
 
     render(<CreateCustomTypeBuilder />, {
@@ -290,8 +286,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
@@ -367,7 +361,6 @@ describe("Custom Type Builder", () => {
         environment: {
           // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
           framework: "next",
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -411,8 +404,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
@@ -514,7 +505,6 @@ describe("Custom Type Builder", () => {
         environment: {
           // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
           framework: "next",
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -558,12 +548,10 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
-          libraries: libraries,
+          libraries,
           remoteSlices: [],
         },
       },

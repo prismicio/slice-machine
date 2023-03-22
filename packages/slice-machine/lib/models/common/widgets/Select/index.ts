@@ -10,7 +10,6 @@ import FormFields from "./FormFields";
 import { Widget } from "../Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 /**
  * {
@@ -41,7 +40,6 @@ const schema = yup.object().shape({
 export const SelectWidget: Widget<Select, typeof schema> = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  MockConfigForm: DeprecatedMockConfigMessage,
   create: (label: string) => ({
     type: WidgetTypes.Select,
     config: {
