@@ -10,6 +10,7 @@ import open from "open";
 
 import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
+import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -66,7 +67,7 @@ export class StartSliceMachineProcess {
 		const appVersion =
 			await this._sliceMachineManager.versions.getRunningSliceMachineVersion();
 		await this._sliceMachineManager.telemetry.initTelemetry({
-			appName: "slice-machine-ui",
+			appName: SLICE_MACHINE_NPM_PACKAGE_NAME,
 			appVersion,
 		});
 

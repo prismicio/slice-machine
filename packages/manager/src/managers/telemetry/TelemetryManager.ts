@@ -97,6 +97,7 @@ export class TelemetryManager extends BaseManager {
 		} = {
 			event: HumanSegmentEventType[event],
 			properties: {
+				nodeVersion: process.versions.node,
 				repo: repository,
 				...properties,
 			},
@@ -113,11 +114,6 @@ export class TelemetryManager extends BaseManager {
 			payload.context ||= {};
 			payload.context.groupId ||= {};
 			payload.context.groupId.Repository = repository;
-		}
-
-		if (event === "page-view") {
-			payload.properties ||= {};
-			payload.properties.nodeVersion = process.versions.node;
 		}
 
 		return new Promise((resolve) => {
@@ -153,7 +149,7 @@ export class TelemetryManager extends BaseManager {
 					user_hash: args.intercomHash,
 				},
 			},
-			context: this._context,
+			context: { ...this._context },
 		};
 
 		this._userID = args.userID;
@@ -181,11 +177,11 @@ export class TelemetryManager extends BaseManager {
 			userId?: string;
 			anonymousId?: string;
 			traits?: Record<string, unknown>;
-			context?: TelemetryManagerContext;
+			context?: Partial<TelemetryManagerContext>;
 		} = {
 			groupId: repositoryName,
 			traits,
-			context: this._context,
+			context: { ...this._context },
 		};
 
 		if (this._userID) {

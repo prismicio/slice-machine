@@ -207,6 +207,7 @@ describe("slices", () => {
           id: "FooBar",
           name: "FooBar",
           library: "slices",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)

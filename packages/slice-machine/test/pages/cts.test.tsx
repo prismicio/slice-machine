@@ -222,6 +222,7 @@ describe("Custom Type Builder", () => {
           name: "a-page",
           type: "StructuredText",
           zone: "static",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)
@@ -323,7 +324,7 @@ describe("Custom Type Builder", () => {
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slicezone Updated",
-        properties: { customTypeId },
+        properties: { customTypeId, nodeVersion: process.versions.node },
       }),
       expect.any(Function)
     );
@@ -445,6 +446,7 @@ describe("Custom Type Builder", () => {
           name: "a-page",
           type: "StructuredText",
           zone: "static",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)
@@ -465,6 +467,7 @@ describe("Custom Type Builder", () => {
             type: "repeatable",
             id: customTypeId,
             name: customTypeId,
+            nodeVersion: process.versions.node,
           },
         }),
         expect.any(Function)
@@ -596,6 +599,7 @@ describe("Custom Type Builder", () => {
           name: "a-page",
           type: "StructuredText",
           zone: "static",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)
