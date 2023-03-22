@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { MdPlace } from "react-icons/md";
-import { MockConfigForm } from "./Mock/Form";
 
 import { DefaultFields } from "../../../../forms/defaults";
 
@@ -51,7 +50,6 @@ export const GeoPointWidget: Widget<GeoPoint, typeof schema> = {
       label,
     },
   }),
-  MockConfigForm,
   FormFields,
   TYPE_NAME: WidgetTypes.GeoPoint,
   schema,

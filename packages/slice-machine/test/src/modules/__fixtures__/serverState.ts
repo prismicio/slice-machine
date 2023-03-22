@@ -24,7 +24,6 @@ export const dummyServerState: Pick<
       updateAvailable: false,
       versions: [],
     },
-    mockConfig: {},
     framework: Frameworks.next,
     shortId: "shortId",
   },

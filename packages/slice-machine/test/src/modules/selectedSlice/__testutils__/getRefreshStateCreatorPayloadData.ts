@@ -55,7 +55,6 @@ export const getRefreshStateCreatorPayloadData = (
               },
             ],
           },
-          mockConfig: {},
         },
       ],
       meta: {

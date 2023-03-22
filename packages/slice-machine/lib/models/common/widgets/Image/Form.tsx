@@ -91,7 +91,6 @@ type FieldValues = {
     };
     thumbnails: Array<Thumbnail>;
   };
-  mockConfig: Record<string, unknown>;
 };
 
 type FormProps = {

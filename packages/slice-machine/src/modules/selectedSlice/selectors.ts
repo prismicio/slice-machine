@@ -49,10 +49,5 @@ export const isSelectedSliceTouched = (
     selectedSlice.model.variations
   );
 
-  const sameMockConfig = equal(
-    librarySlice.mockConfig,
-    selectedSlice.mockConfig
-  );
-
-  return !sameVariations || !sameMockConfig;
+  return !sameVariations;
 };

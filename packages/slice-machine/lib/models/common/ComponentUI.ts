@@ -1,7 +1,6 @@
 import { VariationSM } from "./Slice";
 import { Component, Screenshot } from "./Library";
 import { BackendEnvironment } from "./Environment";
-import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
 
 export const createScreenshotUrl = (
   baseUrl: string,
@@ -54,7 +53,6 @@ export interface ScreenshotUI extends Screenshot {
 
 export interface ComponentUI extends Component {
   screenshots: Record<VariationSM["id"], ScreenshotUI>;
-  mockConfig: CustomTypeMockConfig;
 }
 
 export const ComponentUI = {
@@ -62,11 +60,6 @@ export const ComponentUI = {
     return {
       ...component,
       screenshots: buildScreenshotUrls(component.screenshots, env.baseUrl),
-      mockConfig: SliceMockConfig.getSliceMockConfig(
-        env.mockConfig,
-        component.from,
-        component.model.name
-      ),
     };
   },
   variation(
