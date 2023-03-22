@@ -89,7 +89,7 @@ const ensureOrGenerateMockFile = (
 };
 
 // TODO: MIGRATION - Move this to the Migration Manager
-export const ensureFSAssetsState = async (
+export const migrateAssets = async (
 	manager: SliceMachineManager,
 ): Promise<void> => {
 	try {

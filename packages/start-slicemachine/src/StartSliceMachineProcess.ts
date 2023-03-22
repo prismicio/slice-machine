@@ -10,7 +10,7 @@ import open from "open";
 
 import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
-import { ensureFSAssetsState } from "./lib/ensureFSAssetsState";
+import { migrateAssets } from "./legacyMigrations/migrateAssets";
 import { migrateSMConfig } from "./legacyMigrations/migrateSMConfig";
 
 const DEFAULT_SERVER_PORT = 9999;
@@ -72,7 +72,8 @@ export class StartSliceMachineProcess {
 		await this._sliceMachineManager.plugins.initPlugins();
 
 		// TODO: MIGRATION - Move this to the Migration Manager
-		await ensureFSAssetsState(this._sliceMachineManager);
+		// TODO: Should the config migration return a value to control this execution?
+		await migrateAssets(this._sliceMachineManager);
 
 		await this._validateProject();
 
