@@ -5,7 +5,6 @@ import SegmentClient from "analytics-node";
 import { readPrismicrc } from "../../lib/prismicrc";
 
 import { API_TOKENS } from "../../constants/API_TOKENS";
-import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
 
 import { BaseManager } from "../BaseManager";
 
@@ -14,6 +13,11 @@ import {
 	HumanSegmentEventTypes,
 	SegmentEvents,
 } from "./types";
+
+type TelemetryManagerInitTelemetryArgs = {
+	appName: string;
+	appVersion: string;
+};
 
 type TelemetryManagerTrackArgs = SegmentEvents;
 
@@ -31,7 +35,7 @@ type TelemetryManagerGroupArgs = {
 	slicemachineVersion: string;
 };
 
-type TelemetryManagerGetDefaultContextReturnType = {
+type TelemetryManagerContext = {
 	app: {
 		name: string;
 		version: string;
@@ -52,8 +56,9 @@ export class TelemetryManager extends BaseManager {
 	private _segmentClient: SegmentClient | undefined = undefined;
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
+	private _context: TelemetryManagerContext | undefined = undefined;
 
-	async initTelemetry(): Promise<void> {
+	async initTelemetry(args: TelemetryManagerInitTelemetryArgs): Promise<void> {
 		if (this._segmentClient) {
 			// Prevent subsequent initializations.
 			return;
@@ -72,6 +77,7 @@ export class TelemetryManager extends BaseManager {
 			},
 		});
 		this._anonymousID = randomUUID();
+		this._context = { app: { name: args.appName, version: args.appVersion } };
 	}
 
 	// TODO: Should `userId` be automatically populated by the logged in
@@ -79,13 +85,12 @@ export class TelemetryManager extends BaseManager {
 	async track(args: TelemetryManagerTrackArgs): Promise<void> {
 		const { event, repository, ...properties } = args;
 
-		const context = await this._getDefaultContext();
 		const payload: {
 			event: HumanSegmentEventTypes;
 			userId?: string;
 			anonymousId?: string;
 			properties?: Record<string, unknown>;
-			context: TelemetryManagerGetDefaultContextReturnType & {
+			context: Partial<TelemetryManagerContext> & {
 				groupId?: {
 					Repository?: string;
 				};
@@ -96,7 +101,7 @@ export class TelemetryManager extends BaseManager {
 				repo: repository,
 				...properties,
 			},
-			context,
+			context: { ...this._context },
 		};
 
 		if (this._userID) {
@@ -106,6 +111,7 @@ export class TelemetryManager extends BaseManager {
 		}
 
 		if (args.repository) {
+			payload.context ||= {};
 			payload.context.groupId ||= {};
 			payload.context.groupId.Repository = repository;
 		}
@@ -135,7 +141,6 @@ export class TelemetryManager extends BaseManager {
 	// by the logged in user? We already have their info via
 	// UserRepository.
 	async identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
-		const context = await this._getDefaultContext();
 		const payload = {
 			userId: args.userID,
 			anonymousId: this._anonymousID,
@@ -144,7 +149,7 @@ export class TelemetryManager extends BaseManager {
 					user_hash: args.intercomHash,
 				},
 			},
-			context,
+			context: this._context,
 		};
 
 		this._userID = args.userID;
@@ -167,17 +172,16 @@ export class TelemetryManager extends BaseManager {
 	async group(args: TelemetryManagerGroupArgs): Promise<void> {
 		const { repositoryName, ...traits } = args;
 
-		const context = await this._getDefaultContext();
 		const payload: {
 			groupId: string;
 			userId?: string;
 			anonymousId?: string;
 			traits?: Record<string, unknown>;
-			context: TelemetryManagerGetDefaultContextReturnType;
+			context?: TelemetryManagerContext;
 		} = {
 			groupId: repositoryName,
 			traits,
-			context,
+			context: this._context,
 		};
 
 		if (this._userID) {
@@ -212,11 +216,5 @@ export class TelemetryManager extends BaseManager {
 		}
 
 		return readPrismicrc(root).telemetry !== false;
-	}
-
-	private async _getDefaultContext(): Promise<TelemetryManagerGetDefaultContextReturnType> {
-		const version = await this.versions.getRunningSliceMachineVersion();
-
-		return { app: { name: SLICE_MACHINE_NPM_PACKAGE_NAME, version } };
 	}
 }

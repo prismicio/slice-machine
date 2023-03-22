@@ -10,6 +10,7 @@ import * as os from "node:os";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import "@testing-library/jest-dom";
+import pkg from "../package.json";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 
@@ -35,7 +36,10 @@ beforeEach(async (ctx) => {
     cwd,
   });
 
-  await manager.telemetry.initTelemetry();
+  await manager.telemetry.initTelemetry({
+    appName: pkg.name,
+    appVersion: pkg.version,
+  });
   await manager.plugins.initPlugins();
 
   ctx.msw.use(

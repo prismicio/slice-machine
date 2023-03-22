@@ -3,7 +3,6 @@ import SegmentClient from "analytics-node";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
-import { mockSliceMachineUIDirectory } from "./__testutils__/mockSliceMachineUIDirectory";
 
 import { createSliceMachineManager } from "../src";
 
@@ -23,19 +22,18 @@ vi.mock("analytics-node", () => {
 	};
 });
 
-it("sends a given event to Segment", async (ctx) => {
+it("sends a given event to Segment", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
-	await mockSliceMachineUIDirectory({
-		ctx,
-		packageJSON: { name: "slice-machine-ui", version: "0.2.0" },
-	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	await manager.telemetry.track({
 		event: "command:init:start",
@@ -48,25 +46,24 @@ it("sends a given event to Segment", async (ctx) => {
 			properties: {
 				repo: undefined,
 			},
-			context: { app: { name: "slice-machine-ui", version: "0.2.0" } },
+			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
 		},
 		expect.any(Function),
 	);
 });
 
-it("maps event payloads correctly to expected Segment tracking payloads", async (ctx) => {
+it("maps event payloads correctly to expected Segment tracking payloads", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
-	await mockSliceMachineUIDirectory({
-		ctx,
-		packageJSON: { name: "slice-machine-ui", version: "0.2.0" },
-	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	const commandInitEndProperties = {
 		repository: "foo",
@@ -89,7 +86,7 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 				success: commandInitEndProperties.success,
 			},
 			context: {
-				app: { name: "slice-machine-ui", version: "0.2.0" },
+				app: { name: "slice-machine-ui", version: "0.0.1-test" },
 				groupId: { Repository: commandInitEndProperties.repository },
 			},
 		}),
@@ -112,25 +109,24 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		expect.objectContaining({
 			event: "SliceMachine Custom Type Created",
 			properties: customTypeCreatedProperties,
-			context: { app: { name: "slice-machine-ui", version: "0.2.0" } },
+			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
 		}),
 		expect.any(Function),
 	);
 });
 
-it("logs a warning to the console if Segment returns an error", async (ctx) => {
+it("logs a warning to the console if Segment returns an error", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
-	await mockSliceMachineUIDirectory({
-		ctx,
-		packageJSON: { name: "slice-machine-ui", version: "0.2.0" },
-	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	vi.mocked(SegmentClient.prototype.track).mockImplementationOnce(
 		(_message, callback) => {

@@ -3,7 +3,6 @@ import SegmentClient from "analytics-node";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
-import { mockSliceMachineUIDirectory } from "./__testutils__/mockSliceMachineUIDirectory";
 
 import { createSliceMachineManager } from "../src";
 
@@ -23,19 +22,18 @@ vi.mock("analytics-node", () => {
 	};
 });
 
-it("sends a group payload to Segment", async (ctx) => {
+it("sends a group payload to Segment", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
-	await mockSliceMachineUIDirectory({
-		ctx,
-		packageJSON: { name: "slice-machine-ui", version: "0.2.0" },
-	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	await manager.telemetry.group({
 		repositoryName: "repositoryName",
@@ -57,25 +55,24 @@ it("sends a group payload to Segment", async (ctx) => {
 				npmLibsCount: 0,
 				slicemachineVersion: "0.2.0",
 			},
-			context: { app: { name: "slice-machine-ui", version: "0.2.0" } },
+			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
 		},
 		expect.any(Function),
 	);
 });
 
-it("logs a warning to the console if Segment returns an error", async (ctx) => {
+it("logs a warning to the console if Segment returns an error", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
-	await mockSliceMachineUIDirectory({
-		ctx,
-		packageJSON: { name: "slice-machine-ui", version: "0.2.0" },
-	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	vi.mocked(SegmentClient.prototype.group).mockImplementationOnce(
 		(_message, callback) => {

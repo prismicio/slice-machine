@@ -31,7 +31,10 @@ it("creates a reusable Segment client", async () => {
 	// @ts-expect-error - Accessing an internal private property
 	expect(manager.telemetry._segmentClient).toBe(undefined);
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	// @ts-expect-error - Accessing an internal private property
 	expect(manager.telemetry._segmentClient).toBeInstanceOf(SegmentClient);
@@ -47,7 +50,10 @@ it("disables the Segment client if .prismicrc is configured to disable telemery"
 
 	await fs.writeFile(path.join(os.homedir(), ".prismicrc"), "telemetry=false");
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	// @ts-expect-error - Accessing an internal private property
 	expect(manager.telemetry._segmentClient.enable).toBe(false);
