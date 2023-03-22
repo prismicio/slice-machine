@@ -14,8 +14,6 @@ describe("[Selected Custom type selectors]", () => {
           model,
           // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type '{ id: strin... Remove this comment to see the full error message
           initialModel: null,
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
 
@@ -27,8 +25,6 @@ describe("[Selected Custom type selectors]", () => {
         selectedCustomType: {
           model,
           initialModel: model,
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
 
@@ -40,8 +36,6 @@ describe("[Selected Custom type selectors]", () => {
         selectedCustomType: {
           model,
           initialModel: { ...model, label: `differ-from-${model.label}` },
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
       expect(customTypeStatus).toBe(true);
@@ -52,8 +46,6 @@ describe("[Selected Custom type selectors]", () => {
           model,
           // @ts-expect-error TS(2740) FIXME: Type '{}' is missing the following properties from... Remove this comment to see the full error message
           initialModel: { ...model, tabs: {} },
-          mockConfig: {},
-          initialMockConfig: {},
         },
       });
       expect(customTypeStatus).toBe(true);

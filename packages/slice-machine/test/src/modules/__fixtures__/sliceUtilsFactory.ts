@@ -20,7 +20,6 @@ const DEFAULT_COMPONENT_UI: ComponentUI = {
   screenshots: {},
   mock: [],
   model: DEFAULT_SLICE_SM,
-  mockConfig: {},
 };
 
 const DEFAULT_LIBRARY_UI = {

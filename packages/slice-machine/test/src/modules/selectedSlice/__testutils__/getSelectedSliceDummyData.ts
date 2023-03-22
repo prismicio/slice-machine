@@ -9,16 +9,6 @@ export const getSelectedSliceDummyData = () => {
 
   const dummyModelVariationID = "default-slice";
 
-  const dummyMockConfig = {
-    [dummyModelVariationID]: {
-      primary: {
-        section_title: {
-          content: "Content",
-        },
-      },
-    },
-  };
-
   const dummySliceState: ComponentUI = {
     from: "slices/libName",
     href: "slices--libName",
@@ -27,14 +17,12 @@ export const getSelectedSliceDummyData = () => {
     extension: "js",
     model: dummyModel,
     screenshots: {},
-    mock: MockSlice(Slices.fromSM(dummyModel), dummyMockConfig),
-    mockConfig: dummyMockConfig,
+    mock: MockSlice(Slices.fromSM(dummyModel)),
   };
 
   return {
     dummyModel,
     dummyModelVariationID,
-    dummyMockConfig,
     dummySliceState,
   };
 };

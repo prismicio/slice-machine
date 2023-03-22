@@ -1,6 +1,5 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
@@ -69,7 +68,6 @@ export const updateSliceWidgetMockCreator = createAction(
   "SLICE/UPDATE_WIDGET_MOCK"
 )<{
   variationId: string;
-  mockConfig: SliceMockConfig;
   widgetArea: WidgetsArea;
   previousKey: string;
   newKey: string;
@@ -81,7 +79,6 @@ export const deleteSliceWidgetMockCreator = createAction(
   "SLICE/DELETE_WIDGET_MOCK"
 )<{
   variationId: string;
-  mockConfig: SliceMockConfig;
   widgetArea: WidgetsArea;
   newKey: string;
 }>();

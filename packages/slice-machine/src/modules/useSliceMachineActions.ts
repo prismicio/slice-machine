@@ -46,13 +46,8 @@ import {
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
-  updateGroupFieldMockConfigCreator,
-  deleteGroupFieldMockConfigCreator,
-  deleteFieldMockConfigCreator,
-  updateFieldMockConfigCreator,
   cleanupCustomTypeStoreCreator,
 } from "./selectedCustomType";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import {
@@ -171,9 +166,8 @@ const useSliceMachineActions = () => {
   // Custom type module
   const initCustomTypeStore = (
     model: CustomTypeSM,
-    remoteModel: CustomTypeSM | undefined,
-    mockConfig: CustomTypeMockConfig
-  ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
+    remoteModel: CustomTypeSM | undefined
+  ) => dispatch(initCustomTypeStoreCreator({ model, remoteModel }));
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
@@ -210,57 +204,6 @@ const useSliceMachineActions = () => {
     sliceKeys: string[],
     preserve: string[]
   ) => dispatch(replaceSharedSliceCreator({ tabId, sliceKeys, preserve }));
-  const updateFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    previousFieldId: string,
-    fieldId: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any
-  ) =>
-    dispatch(
-      updateFieldMockConfigCreator({
-        customTypeMockConfig,
-        previousFieldId,
-        fieldId,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        value,
-      })
-    );
-  const deleteFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    fieldId: string
-  ) =>
-    dispatch(deleteFieldMockConfigCreator({ customTypeMockConfig, fieldId }));
-  const updateGroupFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    groupId: string,
-    previousFieldId: string,
-    fieldId: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any
-  ) =>
-    dispatch(
-      updateGroupFieldMockConfigCreator({
-        customTypeMockConfig,
-        groupId,
-        previousFieldId,
-        fieldId,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        value,
-      })
-    );
-  const deleteGroupFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    groupId: string,
-    fieldId: string
-  ) =>
-    dispatch(
-      deleteGroupFieldMockConfigCreator({
-        customTypeMockConfig,
-        groupId,
-        fieldId,
-      })
-    );
   const addFieldIntoGroup = (
     tabId: string,
     groupId: string,
@@ -356,9 +299,22 @@ const useSliceMachineActions = () => {
     );
   };
 
+  const deleteSliceWidgetMock = (
+    variationId: string,
+    widgetArea: WidgetsArea,
+    newKey: string
+  ) => {
+    dispatch(
+      deleteSliceWidgetMockCreator({
+        variationId,
+        widgetArea,
+        newKey,
+      })
+    );
+  };
+
   const updateSliceWidgetMock = (
     variationId: string,
-    mockConfig: CustomTypeMockConfig,
     widgetArea: WidgetsArea,
     previousKey: string,
     newKey: string,
@@ -368,28 +324,11 @@ const useSliceMachineActions = () => {
     dispatch(
       updateSliceWidgetMockCreator({
         variationId,
-        mockConfig,
         widgetArea,
         previousKey,
         newKey,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         mockValue,
-      })
-    );
-  };
-
-  const deleteSliceWidgetMock = (
-    variationId: string,
-    mockConfig: CustomTypeMockConfig,
-    widgetArea: WidgetsArea,
-    newKey: string
-  ) => {
-    dispatch(
-      deleteSliceWidgetMockCreator({
-        variationId,
-        mockConfig,
-        widgetArea,
-        newKey,
       })
     );
   };
@@ -534,10 +473,7 @@ const useSliceMachineActions = () => {
     createSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-    updateFieldMockConfig,
-    deleteFieldMockConfig,
-    updateGroupFieldMockConfig,
-    deleteGroupFieldMockConfig,
+
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,

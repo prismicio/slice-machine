@@ -8,7 +8,6 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import {
   saveCustomTypeCreator,
   selectCurrentCustomType,
-  selectCurrentMockConfig,
 } from "@src/modules/selectedCustomType";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
@@ -50,8 +49,7 @@ describe("[Selected Custom type sagas]", () => {
       const saga = testSaga(saveCustomTypeSaga);
 
       saga.next().select(selectCurrentCustomType);
-      saga.next(customTypeModel).select(selectCurrentMockConfig);
-      saga.next({}).call(saveCustomType, customTypeModel);
+      saga.next(customTypeModel).call(saveCustomType, customTypeModel);
 
       saga
         .next({ errors: [] })
