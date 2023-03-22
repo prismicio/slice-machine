@@ -4,7 +4,6 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
 import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 /** {
     "type" : "Number",
@@ -31,7 +30,6 @@ export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
       placeholder: "",
     },
   }),
-  MockConfigForm: DeprecatedMockConfigMessage,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: WidgetTypes.Number,

@@ -111,9 +111,7 @@ describe.skip("MockSlice", () => {
       ],
     };
 
-    const mockConfig = {};
-
-    const result = MockSlice(Slices.fromSM(model), mockConfig);
+    const result = MockSlice(Slices.fromSM(model));
 
     expect(result).toEqual(wanted);
     // TODO: check the codec we use for SharedSliceContent[]
@@ -190,13 +188,7 @@ describe.skip("MockSlice", () => {
       ],
     };
 
-    const mockConfig = {
-      default: {
-        primary: {},
-      },
-    };
-
-    const result = MockSlice(Slices.fromSM(model), mockConfig);
+    const result = MockSlice(Slices.fromSM(model));
     // "result" contains more than "partial"
     expect(result).toMatchObject(partial);
     // The image is random, so we check its properties instead.
@@ -296,7 +288,6 @@ describe.skip("MockSlice", () => {
         },
       ],
     };
-    const legacyMockConfig = {};
     const previousMocks: SharedSliceContent[] = [
       {
         __TYPE__: "SharedSliceContent",
@@ -413,12 +404,7 @@ describe.skip("MockSlice", () => {
       },
     ];
 
-    const results = MockSlice(
-      sliceModel,
-      legacyMockConfig,
-      previousMocks,
-      sliceDiff
-    );
+    const results = MockSlice(sliceModel, previousMocks, sliceDiff);
 
     // check the content is unchanged
     expect(results[0]).toEqual(previousMocks[0]);

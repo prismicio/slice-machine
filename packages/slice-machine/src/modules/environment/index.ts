@@ -68,13 +68,6 @@ export const selectSimulatorUrl = (
 export const getFramework = (store: SliceMachineStoreType): Frameworks =>
   store.environment.framework;
 
-export const getShortId = (store: SliceMachineStoreType): string | undefined =>
-  store.environment.shortId;
-
-export const getIntercomHash = (
-  store: SliceMachineStoreType
-): string | undefined => store.environment.intercomHash;
-
 export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
 
@@ -104,11 +97,6 @@ export const getPackageManager = (
   store: SliceMachineStoreType
 ): PackageManager => {
   return store.environment.packageManager;
-};
-
-export const getCurrentVersion = (store: SliceMachineStoreType): string => {
-  const changelog = getChangelog(store);
-  return changelog?.currentVersion;
 };
 
 export const getStorybookUrl = (

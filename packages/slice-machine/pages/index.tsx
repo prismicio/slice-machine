@@ -30,6 +30,10 @@ const CustomTypes: React.FunctionComponent = () => {
     })
   );
 
+  const sortedCustomTypes = customTypes.sort((customType1, customType2) => {
+    return customType1.local.id.localeCompare(customType2.local.id);
+  });
+
   return (
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
@@ -42,7 +46,7 @@ const CustomTypes: React.FunctionComponent = () => {
           href: "/",
         }}
         Actions={
-          customTypes.length > 0
+          sortedCustomTypes.length > 0
             ? [
                 <Button
                   key="create-custom-type"
@@ -58,7 +62,7 @@ const CustomTypes: React.FunctionComponent = () => {
             : []
         }
       />
-      {customTypes.length === 0 ? (
+      {sortedCustomTypes.length === 0 ? (
         <Flex
           sx={{
             flex: 1,
@@ -91,7 +95,7 @@ const CustomTypes: React.FunctionComponent = () => {
           />
         </Flex>
       ) : (
-        <CustomTypeTable customTypes={customTypes} />
+        <CustomTypeTable customTypes={sortedCustomTypes} />
       )}
       <CreateCustomTypeModal />
     </Container>

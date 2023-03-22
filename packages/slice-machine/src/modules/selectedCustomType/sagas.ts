@@ -4,19 +4,16 @@ import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { saveCustomTypeCreator } from "./actions";
-import { selectCurrentCustomType, selectCurrentMockConfig } from "./index";
-import { saveCustomType, track } from "@src/apiClient";
+import { selectCurrentCustomType } from "./index";
+import { saveCustomType, telemetry } from "@src/apiClient";
 
 export function* saveCustomTypeSaga() {
   try {
     const currentCustomType = (yield select(
       selectCurrentCustomType
     )) as ReturnType<typeof selectCurrentCustomType>;
-    const currentMockConfig = (yield select(
-      selectCurrentMockConfig
-    )) as ReturnType<typeof selectCurrentMockConfig>;
 
-    if (!currentCustomType || !currentMockConfig) {
+    if (!currentCustomType) {
       return;
     }
 
@@ -27,7 +24,7 @@ export function* saveCustomTypeSaga() {
     if (errors.length) {
       throw errors;
     }
-    void track({
+    void telemetry.track({
       event: "custom-type:saved",
       id: currentCustomType.id,
       name: currentCustomType.label || currentCustomType.id,

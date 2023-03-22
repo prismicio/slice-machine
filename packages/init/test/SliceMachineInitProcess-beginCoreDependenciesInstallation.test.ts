@@ -2,6 +2,7 @@ import { beforeEach, expect, it, vi } from "vitest";
 
 import { createSliceMachineInitProcess } from "../src";
 import { UNIVERSAL } from "../src/lib/framework";
+import pkg from "../package.json";
 
 import { setContext } from "./__testutils__/setContext";
 import { updateContext } from "./__testutils__/updateContext";
@@ -18,7 +19,10 @@ beforeEach(async () => {
 	});
 
 	// @ts-expect-error - Accessing protected property
-	await initProcess.manager.telemetry.initTelemetry();
+	await initProcess.manager.telemetry.initTelemetry({
+		appName: pkg.name,
+		appVersion: pkg.version,
+	});
 });
 
 it("begins core dependencies installation process", async () => {

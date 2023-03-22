@@ -44,7 +44,6 @@ type SliceMachineManagerGetStateReturnType = {
 		repo: string;
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
-		mockConfig: unknown; // TODO: Remove
 		framework: unknown; // TODO: Remove
 	};
 	libraries: {
@@ -67,7 +66,6 @@ type SliceMachineManagerGetStateReturnType = {
 				}
 			>;
 			mock?: SharedSliceContent[];
-			mockConfig: unknown; // TODO: Remove
 		}[];
 		meta: {
 			name?: string;
@@ -225,7 +223,6 @@ export class SliceMachineManager {
 						),
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
-				mockConfig: {},
 				packageManager,
 				repo: sliceMachineConfig.repositoryName,
 				intercomHash: profile?.intercomHash,
@@ -305,7 +302,6 @@ export class SliceMachineManager {
 										model,
 										screenshots,
 										mock: mocks,
-										mockConfig: {}, // TODO: This property can probably be removed.
 									});
 								}
 							}),
@@ -328,7 +324,15 @@ export class SliceMachineManager {
 			);
 		}
 
-		return libraries;
+		// Preserve library order from config file
+		return libraries.sort((library1, library2) => {
+			const libraryIndex1 =
+				sliceMachineConfig.libraries?.indexOf(library1.name) || 0;
+			const libraryIndex2 =
+				sliceMachineConfig.libraries?.indexOf(library2.name) || 0;
+
+			return Math.sign(libraryIndex1 - libraryIndex2);
+		});
 	}
 
 	private async _getCustomTypes(): Promise<

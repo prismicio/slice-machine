@@ -15,9 +15,9 @@ import {
 import { useRouter } from "next/router";
 import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "../src/modules/useSliceMachineActions";
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
-import { getCurrentVersion, getFramework } from "../src/modules/environment";
+import { getFramework } from "../src/modules/environment";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,
   VIDEO_ONBOARDING_ADD_TO_PAGE,
@@ -158,16 +158,16 @@ const StepIndicator = ({
   );
 };
 
-function trackStep(step: number): ReturnType<typeof track> {
+function trackStep(step: number): ReturnType<typeof telemetry.track> {
   switch (step) {
     case 0:
-      return track({ event: "onboarding:continue:screen-intro" });
+      return telemetry.track({ event: "onboarding:continue:screen-intro" });
     case 1:
-      return track({ event: "onboarding:continue:screen-1" });
+      return telemetry.track({ event: "onboarding:continue:screen-1" });
     case 2:
-      return track({ event: "onboarding:continue:screen-2" });
+      return telemetry.track({ event: "onboarding:continue:screen-2" });
     case 3:
-      return track({ event: "onboarding:continue:screen-3" });
+      return telemetry.track({ event: "onboarding:continue:screen-3" });
     default:
       throw new Error(`Invalid step '${step}'.`);
   }
@@ -183,7 +183,7 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 
   useEffect(() => {
     // on mount
-    void track({ event: "onboarding:start" });
+    void telemetry.track({ event: "onboarding:start" });
 
     // on unmount
     return () => {
@@ -191,7 +191,7 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 
       const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
       if (hasTheUserSkippedTheOnboarding) {
-        void track({ event: "onboarding:skip", screenSkipped: step });
+        void telemetry.track({ event: "onboarding:skip", screenSkipped: step });
         return;
       }
 
@@ -203,18 +203,14 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 export default function Onboarding(): JSX.Element {
   const router = useRouter();
 
-  const { version, framework } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      version: getCurrentVersion(store),
-      framework: getFramework(store),
-    })
-  );
+  const { framework } = useSelector((store: SliceMachineStoreType) => ({
+    framework: getFramework(store),
+  }));
 
   const createOnPlay = (id: string) => () => {
-    void track({
+    void telemetry.track({
       event: "open-video-tutorials",
       framework,
-      slicemachineVersion: version,
       video: id,
     });
   };

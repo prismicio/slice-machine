@@ -8,8 +8,6 @@ import {
 import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
 
-import { SliceMockConfig } from "./MockConfig";
-
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
 
@@ -126,7 +124,6 @@ export interface SliceBody {
 
 export interface SliceSaveBody extends SliceBody {
   model: SliceSM;
-  mockConfig?: SliceMockConfig;
 }
 
 export interface SliceCreateResponse {

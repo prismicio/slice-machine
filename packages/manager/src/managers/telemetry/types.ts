@@ -21,8 +21,6 @@ export const SegmentEventType = {
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
 	customType_saved: "custom-type:saved",
 	slice_created: "slice:created",
-	identifyUser: "identify-user",
-	groupLibraries: "group-libraries",
 	screenshotTaken: "screenshot-taken",
 	changes_pushed: "changes:pushed",
 	changes_limitReach: "changes:limit-reach",
@@ -59,8 +57,6 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slicezone Updated",
 	[SegmentEventType.customType_saved]: "SliceMachine Custom Type Saved",
 	[SegmentEventType.slice_created]: "SliceMachine Slice Created",
-	[SegmentEventType.identifyUser]: "IdentifyUser",
-	[SegmentEventType.groupLibraries]: "GroupLibraries",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
 	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
@@ -128,12 +124,12 @@ type OnboardingContinueScreen3SegmentEvent = SegmentEvent<
 
 type SliceSimulatorSetupSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.sliceSimulator_setup,
-	{ framework: string; version: string }
+	{ framework: string }
 >;
 
 type SliceSimulatorOpenSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.sliceSimulator_open,
-	{ framework: string; version: string }
+	{ framework: string }
 >;
 
 type SliceSimulatorIsNotRunningSegmentEvent = SegmentEvent<
@@ -150,13 +146,12 @@ type PageViewSegmentEvent = SegmentEvent<
 		title: string;
 		referrer: string;
 		framework: string;
-		slicemachineVersion: string;
 	}
 >;
 
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.openVideoTutorials,
-	{ framework: string; slicemachineVersion: string; video: string }
+	{ framework: string; video: string }
 >;
 
 type CustomTypeCreatedSegmentEvent = SegmentEvent<
@@ -187,22 +182,6 @@ type CustomTypeSavedSegmentEvent = SegmentEvent<
 type SliceCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.slice_created,
 	{ id: string; name: string; library: string }
->;
-
-type IdentifyUserSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.identifyUser
->;
-
-type GroupLibrariesSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.groupLibraries,
-	{
-		repoName: string;
-		manualLibsCount: number;
-		downloadedLibsCount: number;
-		npmLibsCount: number;
-		downloadedLibs: Array<string>;
-		slicemachineVersion: string;
-	}
 >;
 
 type ScreenshotTakenSegmentEvent = SegmentEvent<
@@ -260,8 +239,6 @@ export type SegmentEvents =
 	| CustomTypeSliceZoneUpdatedSegmentEvent
 	| CustomTypeSavedSegmentEvent
 	| SliceCreatedSegmentEvent
-	| IdentifyUserSegmentEvent
-	| GroupLibrariesSegmentEvent
 	| ScreenshotTakenSegmentEvent
 	| ChangesPushedSegmentEvent
 	| ChangesLimitReachSegmentEvent

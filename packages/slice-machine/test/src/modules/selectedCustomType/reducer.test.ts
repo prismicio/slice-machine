@@ -26,8 +26,6 @@ const dummyCustomTypesState: SelectedCustomTypeStoreType = {
   initialModel: customTypeAsArray,
   // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type '({ id: stri... Remove this comment to see the full error message
   remoteModel: null,
-  mockConfig: {},
-  initialMockConfig: {},
 };
 
 describe("[Selected Custom type module]", () => {
@@ -63,15 +61,12 @@ describe("[Selected Custom type module]", () => {
             model: customTypeAsArray,
             // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type '({ id: stri... Remove this comment to see the full error message
             remoteModel: null,
-            mockConfig: {},
           })
         )
       ).toEqual({
         model: customTypeAsArray,
         initialModel: customTypeAsArray,
         remoteModel: null,
-        mockConfig: {},
-        initialMockConfig: {},
       });
     });
     it("should update the custom type state given CUSTOM_TYPE/CREATE_TAB action", () => {

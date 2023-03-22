@@ -16,6 +16,7 @@ import { Frameworks } from "@lib/models/common/Framework";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
+import pkg from "../../package.json";
 import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
 import { createTestPlugin } from "../__testutils__/createTestPlugin";
 import { createTestProject } from "../__testutils__/createTestProject";
@@ -142,7 +143,6 @@ describe("Custom Type Builder", () => {
         // @ts-expect-error TS(2739) FIXME: Type '{ framework: Frameworks.next; mockConfig: { ... Remove this comment to see the full error message
         environment: {
           framework: Frameworks.next,
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -186,8 +186,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           remoteSlices: [],
@@ -221,6 +219,7 @@ describe("Custom Type Builder", () => {
           name: "a-page",
           type: "StructuredText",
           zone: "static",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)
@@ -239,7 +238,6 @@ describe("Custom Type Builder", () => {
 
     const environment = {
       framework: "next",
-      mockConfig: { _cts: { [customTypeId]: {} } },
     };
 
     render(<CreateCustomTypeBuilder />, {
@@ -288,8 +286,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
@@ -322,7 +318,7 @@ describe("Custom Type Builder", () => {
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slicezone Updated",
-        properties: { customTypeId },
+        properties: { customTypeId, nodeVersion: process.versions.node },
       }),
       expect.any(Function)
     );
@@ -340,7 +336,10 @@ describe("Custom Type Builder", () => {
       cwd,
     });
 
-    await manager.telemetry.initTelemetry();
+    await manager.telemetry.initTelemetry({
+      appName: pkg.name,
+      appVersion: pkg.version,
+    });
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -362,7 +361,6 @@ describe("Custom Type Builder", () => {
         environment: {
           // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
           framework: "next",
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -406,8 +404,6 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
@@ -441,6 +437,7 @@ describe("Custom Type Builder", () => {
           name: "a-page",
           type: "StructuredText",
           zone: "static",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)
@@ -461,6 +458,7 @@ describe("Custom Type Builder", () => {
             type: "repeatable",
             id: customTypeId,
             name: customTypeId,
+            nodeVersion: process.versions.node,
           },
         }),
         expect.any(Function)
@@ -482,7 +480,10 @@ describe("Custom Type Builder", () => {
       cwd,
     });
 
-    await manager.telemetry.initTelemetry();
+    await manager.telemetry.initTelemetry({
+      appName: pkg.name,
+      appVersion: pkg.version,
+    });
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -504,7 +505,6 @@ describe("Custom Type Builder", () => {
         environment: {
           // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
           framework: "next",
-          mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
           [customTypeId]: {
@@ -548,12 +548,10 @@ describe("Custom Type Builder", () => {
               },
             ],
           },
-          mockConfig: {},
-          initialMockConfig: {},
         },
         slices: {
           // @ts-expect-error TS(2322) FIXME: Type '{ path: string; isLocal: boolean; name: stri... Remove this comment to see the full error message
-          libraries: libraries,
+          libraries,
           remoteSlices: [],
         },
       },
@@ -589,6 +587,7 @@ describe("Custom Type Builder", () => {
           name: "a-page",
           type: "StructuredText",
           zone: "static",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)
