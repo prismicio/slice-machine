@@ -2,6 +2,7 @@ import * as path from "node:path";
 import * as fs from "node:fs/promises";
 
 import chalk from "chalk";
+import semver from "semver";
 
 import { SliceMachineManager, SliceMachineConfig } from "@slicemachine/manager";
 
@@ -41,11 +42,24 @@ ${chalk.bgYellow(` ${chalk.black("WARN")} `)} ${chalk.magenta(
 
   - If you were importing values from this file, please now import
     them from ${chalk.magenta("slicemachine.config.json")}.
-    You can delete this file after to suppress this warning.
+    You can safely delete this file after to suppress this warning.
 
   - If you weren't, you can safely delete this file to suppress
     this warning.
 `);
+	}
+
+	// TODO: Decide on how to handle really old migrations (1+ year)
+	// Warn on old latest
+	if (smJSON._latest && !semver.satisfies(smJSON._latest, ">0.3.0")) {
+		// eslint-disable-next-line no-console
+		console.log(
+			`\n${chalk.bgYellow(` ${chalk.black("WARN")} `)} ${chalk.magenta(
+				"sm.json",
+			)} was last migrated before ${chalk.magenta(
+				"0.3.0",
+			)}, migration might be incomplete`,
+		);
 	}
 
 	// eslint-disable-next-line no-console
@@ -135,9 +149,8 @@ ${chalk.bgYellow(` ${chalk.black("WARN")} `)} ${chalk.magenta(
 
 	// Warn about old sm.json
 	// eslint-disable-next-line no-console
-	return console.log(`${chalk.bgCyan(
-		` ${chalk.black("INFO")} `,
-	)} Your ${chalk.magenta(
+	return console.log(`
+${chalk.bgCyan(` ${chalk.black("INFO")} `)} Your ${chalk.magenta(
 		"sm.json",
 	)} content was automatically migrated to ${chalk.magenta(
 		"slicemachine.config.json",
@@ -145,7 +158,7 @@ ${chalk.bgYellow(` ${chalk.black("WARN")} `)} ${chalk.magenta(
 
   - If you were importing values from this file, please now import
     them from ${chalk.magenta("slicemachine.config.json")}.
-    You can delete this file after to suppress this warning.
+    You can safely delete this file after.
 
   - If you weren't, you can safely delete this file.
 `);
