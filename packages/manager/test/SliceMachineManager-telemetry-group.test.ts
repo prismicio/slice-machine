@@ -9,7 +9,7 @@ import { createSliceMachineManager } from "../src";
 vi.mock("analytics-node", () => {
 	const MockSegmentClient = vi.fn();
 
-	MockSegmentClient.prototype.identify = vi.fn(
+	MockSegmentClient.prototype.group = vi.fn(
 		(_message: unknown, callback?: (error?: Error) => void) => {
 			if (callback) {
 				callback();
@@ -22,7 +22,7 @@ vi.mock("analytics-node", () => {
 	};
 });
 
-it("sends an identification payload to Segment", async () => {
+it("sends a group payload to Segment", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -35,19 +35,23 @@ it("sends an identification payload to Segment", async () => {
 		appVersion: "0.0.1-test",
 	});
 
-	await manager.telemetry.identify({
-		userID: "foo",
-		intercomHash: "bar",
+	await manager.telemetry.group({
+		repositoryName: "repositoryName",
+		downloadedLibs: [],
+		downloadedLibsCount: 0,
+		manualLibsCount: 0,
+		npmLibsCount: 0,
 	});
 
-	expect(SegmentClient.prototype.identify).toHaveBeenCalledWith(
+	expect(SegmentClient.prototype.group).toHaveBeenCalledWith(
 		{
-			userId: "foo",
 			anonymousId: expect.any(String),
-			integrations: {
-				Intercom: {
-					user_hash: "bar",
-				},
+			groupId: "repositoryName",
+			traits: {
+				downloadedLibs: [],
+				downloadedLibsCount: 0,
+				manualLibsCount: 0,
+				npmLibsCount: 0,
 			},
 			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
 		},
@@ -68,7 +72,7 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		appVersion: "0.0.1-test",
 	});
 
-	vi.mocked(SegmentClient.prototype.identify).mockImplementationOnce(
+	vi.mocked(SegmentClient.prototype.group).mockImplementationOnce(
 		(_message, callback) => {
 			if (callback) {
 				callback(new Error());
@@ -82,9 +86,12 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		.spyOn(globalThis.console, "warn")
 		.mockImplementation(() => void 0);
 
-	await manager.telemetry.identify({
-		userID: "foo",
-		intercomHash: "bar",
+	await manager.telemetry.group({
+		repositoryName: "repositoryName",
+		downloadedLibs: [],
+		downloadedLibsCount: 0,
+		manualLibsCount: 0,
+		npmLibsCount: 0,
 	});
 
 	expect(consoleWarnSpy).toHaveBeenCalledWith(
@@ -100,9 +107,12 @@ it("throws if telemetry was not initialized", async () => {
 	const manager = createSliceMachineManager({ cwd });
 
 	await expect(async () => {
-		await manager.telemetry.identify({
-			userID: "foo",
-			intercomHash: "bar",
+		await manager.telemetry.group({
+			repositoryName: "repositoryName",
+			downloadedLibs: [],
+			downloadedLibsCount: 0,
+			manualLibsCount: 0,
+			npmLibsCount: 0,
 		});
 	}).rejects.toThrow(/telemetry has not been initialized/i);
 });

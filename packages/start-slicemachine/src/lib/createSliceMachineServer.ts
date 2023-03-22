@@ -78,6 +78,13 @@ export const createSliceMachineServer = async (
 		fromNodeMiddleware(
 			createPrismicAuthManagerMiddleware({
 				prismicAuthManager: args.sliceMachineManager.getPrismicAuthManager(),
+				onLoginCallback: async () => {
+					const profile = await args.sliceMachineManager.user.getProfile();
+					await args.sliceMachineManager.telemetry.identify({
+						userID: profile.shortId,
+						intercomHash: profile.intercomHash,
+					});
+				},
 			}),
 		),
 	);

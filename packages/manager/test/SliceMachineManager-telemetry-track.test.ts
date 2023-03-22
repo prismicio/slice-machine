@@ -30,7 +30,10 @@ it("sends a given event to Segment", async () => {
 		cwd,
 	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	await manager.telemetry.track({
 		event: "command:init:start",
@@ -42,7 +45,9 @@ it("sends a given event to Segment", async () => {
 			event: "SliceMachine Init Start",
 			properties: {
 				repo: undefined,
+				nodeVersion: process.versions.node,
 			},
+			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
 		},
 		expect.any(Function),
 	);
@@ -56,7 +61,10 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		cwd,
 	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	const commandInitEndProperties = {
 		repository: "foo",
@@ -77,6 +85,11 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 				repo: commandInitEndProperties.repository,
 				framework: commandInitEndProperties.framework,
 				success: commandInitEndProperties.success,
+				nodeVersion: process.versions.node,
+			},
+			context: {
+				app: { name: "slice-machine-ui", version: "0.0.1-test" },
+				groupId: { Repository: commandInitEndProperties.repository },
 			},
 		}),
 		expect.any(Function),
@@ -97,7 +110,11 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
 		expect.objectContaining({
 			event: "SliceMachine Custom Type Created",
-			properties: customTypeCreatedProperties,
+			properties: {
+				...customTypeCreatedProperties,
+				nodeVersion: process.versions.node,
+			},
+			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
 		}),
 		expect.any(Function),
 	);
@@ -111,7 +128,10 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		cwd,
 	});
 
-	await manager.telemetry.initTelemetry();
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
 
 	vi.mocked(SegmentClient.prototype.track).mockImplementationOnce(
 		(_message, callback) => {

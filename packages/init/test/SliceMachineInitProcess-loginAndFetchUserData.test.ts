@@ -6,6 +6,7 @@ import open from "open";
 import { PrismicRepository, PrismicUserProfile } from "@slicemachine/manager";
 
 import { createSliceMachineInitProcess } from "../src";
+import pkg from "../package.json";
 
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
@@ -28,7 +29,10 @@ vi.mock("open", () => {
 
 beforeEach(async () => {
 	// @ts-expect-error - Accessing protected property
-	await initProcess.manager.telemetry.initTelemetry();
+	await initProcess.manager.telemetry.initTelemetry({
+		appName: pkg.name,
+		appVersion: pkg.version,
+	});
 });
 
 const loginAndFetchUserDataWithStdin = async (

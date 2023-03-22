@@ -13,11 +13,8 @@ import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {
-  getCurrentVersion,
-  getLinkToStorybookDocs,
-} from "@src/modules/environment";
-import { track } from "@src/apiClient";
+import { getLinkToStorybookDocs } from "@src/modules/environment";
+import { telemetry } from "@src/apiClient";
 import Video from "@components/CloudVideo";
 
 const SimulatorNotSupportedTooltip: React.FC<{
@@ -47,8 +44,7 @@ const SimulatorNotSupportedTooltip: React.FC<{
 const SimulatorOnboardingTooltip: React.FC<{
   framework: Frameworks;
   onCloseToolTip: () => void;
-  version: string;
-}> = ({ framework, onCloseToolTip, version }) => {
+}> = ({ framework, onCloseToolTip }) => {
   const { theme } = useThemeUI();
   return (
     <ReactTooltip
@@ -90,10 +86,9 @@ const SimulatorOnboardingTooltip: React.FC<{
           publicId={VIDEO_SIMULATOR_TOOLTIP}
           poster="/simulator-video-thumbnail.png"
           onPlay={() => {
-            void track({
+            void telemetry.track({
               event: "open-video-tutorials",
               framework,
-              slicemachineVersion: version,
               video: VIDEO_SIMULATOR_TOOLTIP,
             });
           }}
@@ -150,11 +145,10 @@ const SimulatorButton: React.FC<{
 
   const { setSeenSimulatorToolTip } = useSliceMachineActions();
 
-  const { hasSeenSimulatorTooTip, linkToStorybookDocs, version } = useSelector(
+  const { hasSeenSimulatorTooTip, linkToStorybookDocs } = useSelector(
     (store: SliceMachineStoreType) => ({
       hasSeenSimulatorTooTip: userHasSeenSimulatorToolTip(store),
       linkToStorybookDocs: getLinkToStorybookDocs(store),
-      version: getCurrentVersion(store),
     })
   );
 
@@ -215,7 +209,6 @@ const SimulatorButton: React.FC<{
           <SimulatorOnboardingTooltip
             framework={framework}
             onCloseToolTip={onCloseToolTip}
-            version={version}
           />
         ) : isTouched ? (
           <NeedToSaveTooltip />

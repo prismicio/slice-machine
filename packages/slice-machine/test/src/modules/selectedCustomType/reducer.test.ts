@@ -66,7 +66,7 @@ describe("[Selected Custom type module]", () => {
       ).toEqual({
         model: customTypeAsArray,
         initialModel: customTypeAsArray,
-        remoteModel: undefined,
+        remoteModel: null,
       });
     });
     it("should update the custom type state given CUSTOM_TYPE/CREATE_TAB action", () => {

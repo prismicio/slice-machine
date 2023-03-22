@@ -9,6 +9,7 @@ declare module "vitest" {
 	export interface TestContext {
 		mockPrismic: MockFactory;
 		msw: SetupServer;
+		sliceMachineUIDirectory: string;
 	}
 }
 
@@ -96,6 +97,33 @@ vi.mock("fs/promises", async () => {
 	};
 });
 
+const MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH =
+	"/foo/bar/baz/slice-machine-ui/package.json";
+
+vi.mock("module", async () => {
+	const actual = (await vi.importActual(
+		"node:module",
+	)) as typeof import("node:module");
+
+	return {
+		...actual,
+		createRequire: (...args) => {
+			const actualCreateRequire = actual.createRequire(...args);
+
+			return {
+				...actualCreateRequire,
+				resolve: (id: string) => {
+					if (id === "slice-machine-ui/package.json") {
+						return MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH;
+					}
+
+					return actualCreateRequire(id);
+				},
+			};
+		},
+	} as typeof actual;
+});
+
 const mswServer = setupServer();
 
 beforeAll(() => {
@@ -113,6 +141,10 @@ beforeEach(async (ctx) => {
 	await fs.mkdir(path.join(os.homedir()), { recursive: true });
 	await fs.rm(path.join(os.homedir(), ".prismic"), { force: true });
 	await fs.rm(path.join(os.homedir(), ".prismicrc"), { force: true });
+
+	ctx.sliceMachineUIDirectory = path.dirname(
+		MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH,
+	);
 });
 
 afterAll(() => {

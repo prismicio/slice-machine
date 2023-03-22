@@ -10,6 +10,7 @@ import open from "open";
 
 import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
+import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -63,7 +64,12 @@ export class StartSliceMachineProcess {
 	 * Runs the process.
 	 */
 	async run(): Promise<void> {
-		await this._sliceMachineManager.telemetry.initTelemetry();
+		const appVersion =
+			await this._sliceMachineManager.versions.getRunningSliceMachineVersion();
+		await this._sliceMachineManager.telemetry.initTelemetry({
+			appName: SLICE_MACHINE_NPM_PACKAGE_NAME,
+			appVersion,
+		});
 
 		await this._sliceMachineManager.plugins.initPlugins();
 
@@ -103,6 +109,13 @@ export class StartSliceMachineProcess {
 			),
 		);
 		console.log();
+
+		if (profile) {
+			this._sliceMachineManager.telemetry.identify({
+				userID: profile.shortId,
+				intercomHash: profile.intercomHash,
+			});
+		}
 
 		// Prepare the manager for Slice Machine actions.
 		try {
