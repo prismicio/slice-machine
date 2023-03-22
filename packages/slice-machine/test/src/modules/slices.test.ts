@@ -10,6 +10,7 @@ import {
   // deleteSliceSaga,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
+import SegmentClient from "analytics-node";
 
 import { createSlice, getState } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
@@ -28,10 +29,12 @@ const dummySlicesState: SlicesStoreType = {
 describe("[Slices module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
       expect(slicesReducer(dummySlicesState, {})).toEqual(dummySlicesState);
     });
 
     it("should return the initial state if no matching action", () => {
+      // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"STAT... Remove this comment to see the full error message
       expect(slicesReducer(dummySlicesState, { type: "NO.MATCH" })).toEqual(
         dummySlicesState
       );
@@ -77,7 +80,7 @@ describe("[Slices module]", () => {
   });
 
   describe("[createSliceSaga]", () => {
-    it("should call the api and dispatch the good actions", () => {
+    it("should call the api and dispatch the good actions", async () => {
       vi.spyOn(console, "error").mockImplementationOnce(() => undefined);
 
       const variationId = "variationId";
@@ -115,6 +118,10 @@ describe("[Slices module]", () => {
         })
       );
       saga.next().isDone();
+
+      // Wait for network request to be performed
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
     });
   });
 

@@ -2,18 +2,24 @@ import * as fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import * as path from "node:path";
 import { createRequire } from "node:module";
+import { detect as niDetect } from "@antfu/ni";
+import { ExecaChildProcess } from "execa";
 
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
+import { format } from "../../lib/format";
+import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
 
-import { SliceMachineConfig } from "../../types";
+import { PackageManager, SliceMachineConfig } from "../../types";
+
+import { SliceMachineError, InternalError } from "../../errors";
 
 import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
 import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
 
 import { BaseManager } from "../BaseManager";
-import { format } from "../../lib/format";
 
 type ProjectManagerGetSliceMachineConfigPathArgs = {
 	ignoreCache?: boolean;
@@ -30,6 +36,25 @@ type ProjectManagerCheckIsTypeScriptArgs = {
 type ProjectManagerWriteSliceMachineConfigArgs = {
 	config: SliceMachineConfig;
 	path?: string;
+};
+
+type ProjectManagerInitProjectArgs = {
+	log?: (message: string) => void;
+};
+
+type ProjectManagerDetectPackageManager = {
+	root?: string;
+};
+
+type ProjectManagerInstallDependenciesArgs = {
+	dependencies: Record<string, string>;
+	dev?: boolean;
+	packageManager?: PackageManager;
+	log?: (message: string) => void;
+};
+
+type ProjectManagerInstallDependenciesReturnType = {
+	execaProcess: ExecaChildProcess;
 };
 
 export class ProjectManager extends BaseManager {
@@ -160,5 +185,96 @@ export class ProjectManager extends BaseManager {
 		);
 
 		return path.dirname(sliceMachinePackageJSONPath);
+	}
+
+	async initProject(args?: ProjectManagerInitProjectArgs): Promise<void> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		// eslint-disable-next-line no-console
+		const log = args?.log || console.log.bind(this);
+
+		const { errors } = await this.sliceMachinePluginRunner.callHook(
+			"project:init",
+			{
+				log,
+				installDependencies: async (args) => {
+					const { execaProcess } = await this.installDependencies({
+						dependencies: args.dependencies,
+						dev: args.dev,
+						log,
+					});
+
+					await execaProcess;
+				},
+			},
+		);
+
+		if (errors.length > 0) {
+			// TODO: Provide better error message.
+			throw new SliceMachineError(
+				`Failed to initialize project: ${errors.join(", ")}`,
+			);
+		}
+	}
+
+	async detectPackageManager(
+		args?: ProjectManagerDetectPackageManager,
+	): Promise<PackageManager> {
+		const projectRoot = args?.root || (await this.getRoot());
+
+		const packageManager = await niDetect({
+			autoInstall: true,
+			cwd: projectRoot,
+		});
+
+		return packageManager || "npm";
+	}
+
+	async installDependencies(
+		args: ProjectManagerInstallDependenciesArgs,
+	): Promise<ProjectManagerInstallDependenciesReturnType> {
+		const packageManager =
+			args.packageManager || (await this.detectPackageManager());
+
+		// eslint-disable-next-line no-console
+		const log = args.log || console.log.bind(this);
+
+		const wrappedLogger = (data: Buffer | string | null) => {
+			if (data instanceof Buffer) {
+				log(data.toString());
+			} else if (typeof data === "string") {
+				log(data);
+			}
+		};
+
+		try {
+			const { execaProcess } = await installDependencies({
+				packageManager,
+				dependencies: args.dependencies,
+				dev: args.dev,
+			});
+
+			// Don't clutter console with logs when process is non TTY (CI, etc.)
+			if (process.stdout.isTTY || process.env.NODE_ENV === "test") {
+				execaProcess.stdout?.on("data", wrappedLogger);
+			}
+			execaProcess.stderr?.on("data", wrappedLogger);
+
+			return {
+				execaProcess,
+			};
+		} catch (error) {
+			if (
+				error instanceof Error &&
+				"shortMessage" in error &&
+				"stderr" in error
+			) {
+				throw new InternalError("Package installation failed", {
+					cause: error,
+				});
+			}
+
+			throw error;
+		}
 	}
 }

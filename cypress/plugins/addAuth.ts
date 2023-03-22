@@ -3,9 +3,7 @@ import * as path from "node:path";
 import * as os from "node:os";
 
 // File called from the cypress setup in cypress-setup.sh
-const [, , EMAIL, PASSWORD, _PRISMIC_URL] = process.argv;
-
-const PRISMIC_URL = "https://wroom.io";
+const [, , EMAIL, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
   const fetch = (await import("node-fetch")).default;
@@ -23,6 +21,12 @@ const main = async () => {
       },
     }
   );
+
+  if (!res.headers.has("Set-Cookie")) {
+    throw new Error(
+      "Could not authenticate to prismic. Please check the credentials."
+    );
+  }
 
   await fs.writeFile(
     path.join(os.homedir(), ".prismic"),

@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import chalk from "chalk";
-import { ExecaChildProcess } from "execa";
+import type { ExecaChildProcess } from "execa";
 import open from "open";
 import logSymbols from "log-symbols";
 import { globby } from "globby";
@@ -12,16 +12,12 @@ import {
 	PrismicUserProfile,
 	PrismicRepository,
 	SliceMachineManager,
+	PackageManager,
 } from "@slicemachine/manager";
 
 import { detectFramework, Framework } from "./lib/framework";
-import {
-	installDependencies,
-	detectPackageManager,
-	PackageManagerAgent,
-	getRunScriptCommand,
-	getExecuteCommand,
-} from "./lib/packageManager";
+import { getRunScriptCommand } from "./lib/getRunScriptCommand";
+import { getExecuteCommand } from "./lib/getExecuteCommand";
 import {
 	getRandomRepositoryDomain,
 	formatRepositoryDomain,
@@ -58,7 +54,7 @@ export const createSliceMachineInitProcess = (
 
 type SliceMachineInitProcessContext = {
 	framework?: Framework;
-	packageManager?: PackageManagerAgent;
+	packageManager?: PackageManager;
 	installProcess?: ExecaChildProcess;
 	userProfile?: PrismicUserProfile;
 	userRepositories?: PrismicRepository[];
@@ -231,22 +227,10 @@ export class SliceMachineInitProcess {
 						{
 							title: "Detecting package manager...",
 							task: async (_, task) => {
-								try {
-									this.context.packageManager = await detectPackageManager(
-										this.options.cwd,
-									);
-								} catch (error) {
-									// Default to NPM
-									if (
-										error instanceof Error &&
-										(error.message.match(/failed to detect/i) ||
-											error.message.match(/command failed/i))
-									) {
-										this.context.packageManager = "npm";
-									} else {
-										throw error;
-									}
-								}
+								this.context.packageManager =
+									await this.manager.project.detectPackageManager({
+										root: this.manager.cwd,
+									});
 
 								task.title = `Detected package manager ${chalk.cyan(
 									this.context.packageManager,
@@ -282,11 +266,16 @@ export class SliceMachineInitProcess {
 						"Project framework must be available through context to run `beginCoreDependenciesInstallation`",
 					);
 
-					const { execaProcess } = await installDependencies({
-						agent: this.context.packageManager,
-						dependencies: this.context.framework.devDependencies,
-						dev: true,
-					});
+					const { execaProcess } =
+						await this.manager.project.installDependencies({
+							packageManager: this.context.packageManager,
+							dependencies: this.context.framework.devDependencies,
+							dev: true,
+							// Picked up later
+							log: () => {
+								/* ... */
+							},
+						});
 
 					// Fail hard if process fails
 					execaProcess.catch(async (error) => {
@@ -1079,54 +1068,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						}
 					};
 
-					// TODO: init hook
-					const { errors } = await this.manager.plugins.dangerouslyCallHook(
-						"command:init",
-						{
-							log: updateOutput,
-							installDependencies: async (args) => {
-								assertExists(
-									this.context.packageManager,
-									"Project package manager must be available through context to run `initializePlugins`",
-								);
-
-								try {
-									const { execaProcess } = await installDependencies({
-										...args,
-										agent: this.context.packageManager,
-									});
-
-									// Don't clutter console with logs when process is non TTY (CI, etc.)
-									if (process.stdout.isTTY || process.env.NODE_ENV === "test") {
-										execaProcess.stdout?.on("data", updateOutput);
-									}
-									execaProcess.stderr?.on("data", updateOutput);
-
-									await execaProcess;
-								} catch (error) {
-									if (
-										error instanceof Error &&
-										"shortMessage" in error &&
-										"stderr" in error
-									) {
-										throw new Error(
-											`\n\n${error.shortMessage}\n${error.stderr}\n\n${logSymbols.error} Plugins dependency installation failed`,
-											{ cause: error },
-										);
-									}
-
-									throw error;
-								}
-							},
-						},
-					);
-
-					if (errors.length > 0) {
-						// TODO: Provide better error message.
-						throw new Error(
-							`Failed to initialize plugins: ${errors.join(", ")}`,
-						);
-					}
+					await this.manager.project.initProject({
+						log: updateOutput,
+					});
 
 					task.title = "Initialized plugins";
 				},

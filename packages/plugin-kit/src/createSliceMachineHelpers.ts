@@ -4,6 +4,8 @@ import * as fs from "node:fs/promises";
 import prettier from "prettier";
 import { stripIndent } from "common-tags";
 
+import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
+
 import { SliceMachineProject } from "./types";
 
 type FormatOptions = {
@@ -44,12 +46,31 @@ export class SliceMachineHelpers {
 
 	getProject = async (): Promise<SliceMachineProject> => {
 		const configFilePath = this.joinPathFromRoot("slicemachine.config.json");
-		const configContents = await fs.readFile(configFilePath, "utf8");
-		const config = JSON.parse(configContents);
+
+		let rawConfig: unknown | undefined;
+		try {
+			const contents = await fs.readFile(configFilePath, "utf8");
+			rawConfig = JSON.parse(contents);
+		} catch {
+			// noop
+		}
+
+		if (!rawConfig) {
+			// TODO: Write a more friendly and useful message.
+			throw new Error("No config found.");
+		}
+
+		const { value: sliceMachineConfig, error } =
+			decodeSliceMachineConfig(rawConfig);
+
+		if (error) {
+			// TODO: Write a more friendly and useful message.
+			throw new Error(`Invalid config. ${error.errors.join(", ")}`);
+		}
 
 		return {
 			...this._project,
-			config,
+			config: sliceMachineConfig,
 		};
 	};
 

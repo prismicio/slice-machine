@@ -10,7 +10,7 @@ vi.mock("analytics-node", () => {
 	const MockSegmentClient = vi.fn();
 
 	MockSegmentClient.prototype.track = vi.fn(
-		(_message: unknown, callback: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: Error) => void) => {
 			if (callback) {
 				callback();
 			}
@@ -48,7 +48,7 @@ it("sends a given event to Segment", async () => {
 	);
 });
 
-it('supports the "SliceMachine Init Start" event via the `command:init:start` token', async () => {
+it("maps event payloads correctly to expected Segment tracking payloads", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -58,65 +58,46 @@ it('supports the "SliceMachine Init Start" event via the `command:init:start` to
 
 	await manager.telemetry.initTelemetry();
 
-	await manager.telemetry.track({
-		event: "command:init:start",
-	});
-
-	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
-		expect.objectContaining({
-			event: "SliceMachine Init Start",
-		}),
-		expect.any(Function),
-	);
-});
-
-it('supports the "SliceMachine Init Identify" event via the `command:init:identify` token', async () => {
-	const adapter = createTestPlugin();
-	const cwd = await createTestProject({ adapter });
-	const manager = createSliceMachineManager({
-		nativePlugins: { [adapter.meta.name]: adapter },
-		cwd,
-	});
-
-	await manager.telemetry.initTelemetry();
-
-	await manager.telemetry.track({
-		event: "command:init:identify",
-	});
-
-	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
-		expect.objectContaining({
-			event: "SliceMachine Init Identify",
-		}),
-		expect.any(Function),
-	);
-});
-
-it('supports the "SliceMachine Init End" event via the `command:init:end` token', async () => {
-	const adapter = createTestPlugin();
-	const cwd = await createTestProject({ adapter });
-	const manager = createSliceMachineManager({
-		nativePlugins: { [adapter.meta.name]: adapter },
-		cwd,
-	});
-
-	await manager.telemetry.initTelemetry();
-
-	await manager.telemetry.track({
-		event: "command:init:end",
+	const commandInitEndProperties = {
 		repository: "foo",
 		framework: "bar",
 		success: true,
+	};
+
+	await manager.telemetry.track({
+		event: "command:init:end",
+		...commandInitEndProperties,
 	});
 
+	expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
 	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
 		expect.objectContaining({
 			event: "SliceMachine Init End",
 			properties: {
-				repo: "foo",
-				framework: "bar",
-				success: true,
+				repo: commandInitEndProperties.repository,
+				framework: commandInitEndProperties.framework,
+				success: commandInitEndProperties.success,
 			},
+		}),
+		expect.any(Function),
+	);
+
+	const customTypeCreatedProperties = {
+		id: "test",
+		name: "testing",
+		type: "repeatable" as const,
+	};
+
+	await manager.telemetry.track({
+		event: "custom-type:created",
+		...customTypeCreatedProperties,
+	});
+
+	expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);
+	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+		expect.objectContaining({
+			event: "SliceMachine Custom Type Created",
+			properties: customTypeCreatedProperties,
 		}),
 		expect.any(Function),
 	);

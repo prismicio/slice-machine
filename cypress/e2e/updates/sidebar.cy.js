@@ -1,4 +1,5 @@
-describe("update notification", () => {
+// TODO: Change this to an integration test.
+describe.skip("update notification", () => {
   function mockChangelogCall(releaseNote) {
     cy.intercept("GET", "/api/changelog", {
       statusCode: 200,

@@ -13,16 +13,20 @@ import {
 } from "@components/ChangesEmptyPage";
 import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
-import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
+import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {
-  SoftDeleteDocumentsDrawer,
-  HardDeleteDocumentsDrawer,
-  ReferencesErrorDrawer,
-} from "@components/DeleteDocumentsDrawer";
+// import {
+//   SoftDeleteDocumentsDrawer,
+//   HardDeleteDocumentsDrawer,
+//   ReferencesErrorDrawer,
+// } from "@components/DeleteDocumentsDrawer";
 import { hasLocal } from "@lib/models/common/ModelData";
+import {
+  ChangedCustomType,
+  ChangedSlice,
+} from "@lib/models/common/ModelStatus";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -32,6 +36,25 @@ const Changes: React.FunctionComponent = () => {
     authStatus,
     isOnline,
   } = useUnSyncChanges();
+
+  const { changedSlices, changedCustomTypes } = useMemo(() => {
+    const changedSlices = unSyncedSlices
+      .map((s) => ({
+        slice: s,
+        status: modelsStatuses.slices[s.model.id],
+      }))
+      .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status)); // TODO can we sync unSyncStatuses and ChangedSlice?
+    const changedCustomTypes = unSyncedCustomTypes
+      .map((model) => (hasLocal(model) ? model.local : model.remote))
+      .map((ct) => ({
+        customType: ct,
+        status: modelsStatuses.customTypes[ct.id],
+      }))
+      .filter((c): c is ChangedCustomType => unSyncStatuses.includes(c.status));
+
+    return { changedSlices, changedCustomTypes };
+  }, [unSyncedSlices, unSyncedCustomTypes, modelsStatuses]);
+
   const { pushChanges, closeModals } = useSliceMachineActions();
 
   const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
@@ -51,11 +74,8 @@ const Changes: React.FunctionComponent = () => {
   const onPush = (confirmDeleteDocuments: boolean) =>
     pushChanges({
       confirmDeleteDocuments: confirmDeleteDocuments,
-      unSyncedSlices,
-      unSyncedCustomTypes: unSyncedCustomTypes.map((model) =>
-        hasLocal(model) ? model.local : model.remote
-      ),
-      modelsStatuses,
+      changedSlices,
+      changedCustomTypes,
     });
 
   const PageContent = useMemo(() => {
@@ -121,9 +141,9 @@ const Changes: React.FunctionComponent = () => {
         />
         {PageContent}
       </Box>
-      <SoftDeleteDocumentsDrawer pushChanges={onPush} />
+      {/* <SoftDeleteDocumentsDrawer pushChanges={onPush} />
       <HardDeleteDocumentsDrawer pushChanges={onPush} />
-      <ReferencesErrorDrawer pushChanges={onPush} />
+      <ReferencesErrorDrawer pushChanges={onPush} /> */}
     </Container>
   );
 };

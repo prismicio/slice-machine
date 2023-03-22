@@ -56,9 +56,7 @@ describe.skip("MockCustomType", () => {
       ],
     };
 
-    const mockConfig = {};
-
-    const result = MockCustomType(model, mockConfig, {});
+    const result = MockCustomType(model, {});
 
     expect(result).toStrictEqual(wanted);
   });
@@ -101,25 +99,7 @@ describe.skip("MockCustomType", () => {
       ],
     };
 
-    const mockConfig = {
-      widget1: {
-        content: [
-          {
-            content: {
-              text: "HARD CODED VALUE",
-              spans: [],
-            },
-            type: "heading1",
-          },
-        ],
-      },
-      config: {
-        patternType: "PARAGRAPH",
-        blocks: 2,
-      },
-    };
-
-    const result = MockCustomType(model, mockConfig, {});
+    const result = MockCustomType(model, {});
 
     expect(result).toStrictEqual(wanted);
   });
@@ -189,8 +169,6 @@ describe.skip("MockCustomType", () => {
       ],
     };
 
-    const mockConfig = {};
-
     const sharedSlices = {
       my_slice: {
         id: "my_slice",
@@ -230,7 +208,7 @@ describe.skip("MockCustomType", () => {
       },
     };
 
-    const result = MockCustomType(model, mockConfig, sharedSlices);
+    const result = MockCustomType(model, sharedSlices);
 
     expect(result).toStrictEqual(wanted);
   });

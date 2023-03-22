@@ -26,8 +26,6 @@ import "src/css/starry-night.css";
 import "src/css/hljs.css";
 
 import ServerState from "../lib/models/server/ServerState";
-import { getIsTrackingAvailable } from "../src/modules/environment";
-import Tracker from "../src/tracking/client";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
@@ -102,11 +100,6 @@ function MyApp({
       },
     });
 
-    const state = store.getState();
-    const tracking = getIsTrackingAvailable(state);
-
-    Tracker.get().initialize(tracking);
-
     setSMStore({ store, persistor });
   }, [serverState, smStore]);
 
@@ -124,6 +117,7 @@ function MyApp({
               <LoadingPage />
             ) : (
               <Provider store={smStore.store}>
+                {/** @ts-expect-error TS(2322) FIXME: Type 'SingletonRouter' is not assignable to type '... Remove this comment to see the full error message */}
                 <ConnectedRouter Router={Router}>
                   <PersistGate loading={null} persistor={smStore.persistor}>
                     <ComponentLayout>

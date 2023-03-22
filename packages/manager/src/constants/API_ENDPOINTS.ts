@@ -1,3 +1,4 @@
+import { addTrailingSlash } from "../lib/addTrailingSlash";
 import { APPLICATION_MODE } from "./APPLICATION_MODE";
 
 export type APIEndpoints = {
@@ -12,11 +13,13 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 	switch (process.env.SM_ENV) {
 		case APPLICATION_MODE.Development: {
 			const apiEndpoints = {
-				PrismicWroom: process.env.wroom_endpoint,
-				PrismicAuthentication: process.env.authentication_server_endpoint,
-				PrismicModels: process.env.customtypesapi_endpoint,
-				PrismicUser: process.env.user_service_endpoint,
-				AwsAclProvider: process.env.acl_provider_endpoint,
+				PrismicWroom: addTrailingSlash(process.env.wroom_endpoint),
+				PrismicAuthentication: addTrailingSlash(
+					process.env.authentication_server_endpoint,
+				),
+				PrismicModels: addTrailingSlash(process.env.customtypesapi_endpoint),
+				PrismicUser: addTrailingSlash(process.env.user_service_endpoint),
+				AwsAclProvider: addTrailingSlash(process.env.acl_provider_endpoint),
 			};
 
 			const missingAPIEndpoints = Object.keys(apiEndpoints).filter((key) => {

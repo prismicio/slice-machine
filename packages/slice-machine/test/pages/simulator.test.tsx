@@ -2,10 +2,10 @@
 
 import { describe, test, afterEach, expect, beforeAll, vi } from "vitest";
 import { render, fireEvent, act, waitFor } from "../__testutils__";
-import { rest } from "msw";
 import mockRouter from "next-router-mock";
 import router from "next/router";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
+import SegmentClient from "analytics-node";
 
 import Simulator from "../../pages/[lib]/[sliceName]/[variation]/simulator";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -91,6 +91,7 @@ describe.skip("simulator", () => {
       cwd,
     });
 
+    await manager.telemetry.initTelemetry();
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -210,7 +211,6 @@ describe.skip("simulator", () => {
                     },
                   ],
                 },
-                mockConfig: {},
               },
             ],
             meta: {
@@ -222,11 +222,6 @@ describe.skip("simulator", () => {
         ],
       },
     };
-
-    const trackingSpy = vi.fn<Parameters<Parameters<typeof rest.post>[1]>>(
-      (_req, res, ctx) => res(ctx.json({}))
-    );
-    ctx.msw.use(rest.post("/api/s", trackingSpy));
 
     // server.use(
     //   rest.get("/api/state", (_req, res, ctx) => {
@@ -281,19 +276,26 @@ describe.skip("simulator", () => {
     //   })
     // );
 
+    // @ts-expect-error TS(2741) FIXME: Property 'pageProps' is missing in type '{}' but r... Remove this comment to see the full error message
     const App = render(<Simulator />, {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
     });
 
-    await waitFor(() => expect(trackingSpy).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(SegmentClient.prototype.track).toHaveBeenCalled()
+    );
 
-    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-      name: "SliceMachine Slice Simulator Open",
-      props: {
-        version: state.environment.changelog.currentVersion,
-        framework: state.environment.framework,
-      },
-    });
+    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "SliceMachine Slice Simulator Open",
+        properties: {
+          version: state.environment.changelog.currentVersion,
+          framework: state.environment.framework,
+        },
+      }),
+      expect.any(Function)
+    );
 
     const button = App.container.querySelector('[data-cy="save-mock"]');
     expect(button).not.toBeNull();
@@ -313,9 +315,6 @@ describe.skip("simulator", () => {
       fireEvent.click(button as Element);
     });
 
-    expect(trackingSpy).toHaveBeenCalled();
-    const payloadSent = trackingSpy.mock.lastCall?.[0].body;
-
     const expectedMock = [...state.slices.libraries[0].components[0].mock];
     expectedMock[0].primary.title.value[0].content.text = "🎉";
     // @ts-expect-error - Ignoring wrong type
@@ -323,10 +322,14 @@ describe.skip("simulator", () => {
     // @ts-expect-error - Ignoring wrong type
     expectedMock[0].primary.title.value[0].direction = "ltr";
 
-    expect(payloadSent).toEqual({
-      sliceName: "MySlice",
-      libraryName: "slices",
-      mock: expectedMock,
-    });
+    expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);
+    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sliceName: "MySlice",
+        libraryName: "slices",
+        mock: expectedMock,
+      }),
+      expect.any(Function)
+    );
   });
 });

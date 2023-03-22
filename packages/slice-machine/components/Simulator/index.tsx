@@ -7,7 +7,7 @@ import { Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
-import Tracker from "@src/tracking/client";
+import { track } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import {
   getCurrentVersion,
@@ -75,9 +75,20 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void Tracker.get().trackOpenSliceSimulator(framework, version);
-    Tracker.get().editor.startNewSession();
+    void track({ event: "slice-simulator:open", framework, version });
   }, []);
+
+  const startedNewEditorSessionRef = useRef(false);
+
+  useEffect(() => {
+    startedNewEditorSessionRef.current = true;
+  }, []);
+
+  const trackWidgetUsed = (sliceId: string) => {
+    if (!startedNewEditorSessionRef.current) return;
+    startedNewEditorSessionRef.current = false;
+    void track({ event: "editor:widget-used", sliceId });
+  };
 
   const currentState: UiState = (() => {
     if (manifestStatus === "ko") {
@@ -115,7 +126,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
-      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
+      void track({ event: "slice-simulator:is-not-running", framework });
     }
   }, [currentState, framework]);
 
@@ -283,7 +294,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   content={editorContent}
                   onContentChange={(c) => {
                     setEditorState(c as SharedSliceContent);
-                    Tracker.get().editor.trackWidgetUsed(slice.model.id);
+                    trackWidgetUsed(slice.model.id);
                   }}
                   sharedSlice={sharedSlice}
                 />

@@ -69,6 +69,7 @@ export class StartSliceMachineProcess {
 		// Nothing can start without the config file
 		await migrateSMConfig(this._sliceMachineManager.cwd);
 
+		await this._sliceMachineManager.telemetry.initTelemetry();
 		await this._sliceMachineManager.plugins.initPlugins();
 
 		// TODO: MIGRATION - Move this to the Migration Manager
@@ -166,12 +167,27 @@ export class StartSliceMachineProcess {
 	/**
 	 * Validates the project's config and content models.
 	 *
+	 * @throws Throws if a Library name is invalid.
 	 * @throws Throws if a Slice model is invalid.
 	 * @throws Throws if a Custom Type model is invalid.
 	 */
 	private async _validateProject(): Promise<void> {
 		// Validate Slice Machine config.
-		await this._sliceMachineManager.project.loadSliceMachineConfig();
+		const config =
+			await this._sliceMachineManager.project.loadSliceMachineConfig();
+
+		// Validate Library IDs
+		const invalidLibraries =
+			config.libraries?.filter(
+				(library) => library.startsWith("@") || library.startsWith("~"),
+			) || [];
+		if (invalidLibraries.length > 0) {
+			throw new Error(
+				`The following Slice libraries have invalid names: ${invalidLibraries.join(
+					", ",
+				)}. Slice library names must not start with "@" nor "~".`,
+			);
+		}
 
 		// Validate Slice models.
 		const allSlices = await this._sliceMachineManager.slices.readAllSlices();

@@ -70,7 +70,16 @@ const SlicesIndex: React.FunctionComponent = () => {
     createSlice(sliceName, from);
   };
 
-  const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
+  const localLibraries: LibraryUI[] = libraries.filter(
+    (library) => library.isLocal
+  );
+  const sortedLibraries: LibraryUI[] = libraries.map((library) => {
+    // Sort slices
+    library.components = [...library.components].sort((slice1, slice2) => {
+      return slice1.model.name.localeCompare(slice2.model.name);
+    });
+    return library;
+  });
 
   const { modelsStatuses, authStatus, isOnline } = useModelStatus({
     slices: frontendSlices,
@@ -123,7 +132,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 : []
             }
           />
-          {libraries && (
+          {sortedLibraries && (
             <Flex
               sx={{
                 flex: 1,
@@ -163,7 +172,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   />
                 </Flex>
               ) : (
-                libraries.map((lib) => {
+                sortedLibraries.map((lib) => {
                   const { name, isLocal, components } = lib;
                   return (
                     <Flex

@@ -33,6 +33,7 @@ const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 describe("[Available Custom types module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
       expect(availableCustomTypesReducer(dummyCustomTypesState, {})).toEqual(
         dummyCustomTypesState
       );
@@ -40,6 +41,7 @@ describe("[Available Custom types module]", () => {
 
     it("should return the initial state if no matching action", () => {
       expect(
+        // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"CUST... Remove this comment to see the full error message
         availableCustomTypesReducer(dummyCustomTypesState, { type: "NO.MATCH" })
       ).toEqual(dummyCustomTypesState);
     });
@@ -50,6 +52,7 @@ describe("[Available Custom types module]", () => {
         remoteCustomTypes: dummyServerState.remoteCustomTypes,
         localCustomTypes: dummyServerState.customTypes,
         libraries: dummyServerState.libraries,
+        // @ts-expect-error TS(2322) FIXME: Type 'readonly ({ id: string; label: string | null... Remove this comment to see the full error message
         remoteSlices: dummyServerState.remoteCustomTypes,
       });
 

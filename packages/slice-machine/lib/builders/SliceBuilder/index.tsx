@@ -62,8 +62,8 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
   // activate/deactivate Success message
   useEffect(() => {
     if (data.done) {
+      // @ts-expect-error TS(2345) FIXME: Argument of type '(content: string | React.ReactNo... Remove this comment to see the full error message
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       handleRemoteResponse(openToaster)(data);
     }
   }, [data]);
@@ -131,7 +131,7 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
           />
         }
       >
-        <FieldZones mockConfig={slice.mockConfig} variation={variation} />
+        <FieldZones variation={variation} />
       </FlexEditor>
     </Box>
   );

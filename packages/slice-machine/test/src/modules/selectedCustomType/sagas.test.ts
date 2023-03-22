@@ -1,5 +1,6 @@
 import { describe, it } from "vitest";
 import { testSaga } from "redux-saga-test-plan";
+import SegmentClient from "analytics-node";
 
 import { saveCustomType } from "@src/apiClient";
 import { saveCustomTypeSaga } from "@src/modules/selectedCustomType/sagas";
@@ -7,25 +8,9 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import {
   saveCustomTypeCreator,
   selectCurrentCustomType,
-  selectCurrentMockConfig,
 } from "@src/modules/selectedCustomType";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-
-import {
-  rest,
-  // type RestContext,
-  // type RestRequest,
-  // type ResponseComposition,
-} from "msw";
-
-// const makeTrackerSpy = () =>
-//   jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
-//     return res(ctx.json({}));
-//   });
-
-// const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
-//   server.use(rest.post("http://localhost/api/s", spy));
 
 const customTypeModel: CustomTypeSM = {
   id: "about",
@@ -60,14 +45,11 @@ const customTypeModel: CustomTypeSM = {
 
 describe("[Selected Custom type sagas]", () => {
   describe("[saveCustomTypeSaga]", () => {
-    it("should call the api and dispatch the good actions on success", (ctx) => {
-      ctx.msw.use(rest.post("/api/s", (_req, res, ctx) => res(ctx.json({}))));
-
+    it("should call the api and dispatch the good actions on success", async () => {
       const saga = testSaga(saveCustomTypeSaga);
 
       saga.next().select(selectCurrentCustomType);
-      saga.next(customTypeModel).select(selectCurrentMockConfig);
-      saga.next({}).call(saveCustomType, customTypeModel);
+      saga.next(customTypeModel).call(saveCustomType, customTypeModel);
 
       saga
         .next({ errors: [] })
@@ -79,10 +61,12 @@ describe("[Selected Custom type sagas]", () => {
         })
       );
       saga.next().isDone();
+
+      // Wait for network request to be performed
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
     });
     it("should open a error toaster on internal error", () => {
-      // const fakeTracker = makeTrackerSpy();
-      // interceptTracker(fakeTracker); // warnings happen without this
       const saga = testSaga(saveCustomTypeSaga).next();
 
       saga.throw(new Error()).put(

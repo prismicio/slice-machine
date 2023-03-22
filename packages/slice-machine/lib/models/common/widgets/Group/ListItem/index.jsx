@@ -15,7 +15,6 @@ import EditModal from "@lib/builders/common/EditModal";
 import { findWidgetByConfigOrType } from "@builders/utils";
 
 import * as Widgets from "@lib/models/common/widgets";
-import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 
 import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
 
@@ -27,7 +26,6 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 /* eslint-disable */
 const CustomListItem = ({
   tabId,
-  mockConfig,
   widget,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentSnapshot,
@@ -44,8 +42,6 @@ const CustomListItem = ({
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
   const {
-    updateGroupFieldMockConfig,
-    deleteGroupFieldMockConfig,
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     replaceFieldIntoGroup,
@@ -57,16 +53,6 @@ const CustomListItem = ({
     setNewFieldData({ widgetTypeName });
     setSelectMode(false);
   };
-
-  /* eslint-disable */
-  const getFieldMockConfig = ({ apiId }) => {
-    return CustomTypeMockConfig.getGroupFieldMockConfig(
-      mockConfig,
-      groupItem.key,
-      apiId
-    );
-  };
-  /* eslint-enable */
 
   const onCancelNewField = () => {
     setNewFieldData(null);
@@ -87,36 +73,11 @@ const CustomListItem = ({
     addFieldIntoGroup(tabId, groupItem.key, id, newWidget);
   };
 
-  const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {
+  const onSaveField = ({ apiId: previousKey, newKey, value }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
     }
-    if (mockValue) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      updateGroupFieldMockConfig(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-        mockConfig,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-        groupItem.key,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        previousKey,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        newKey,
-        mockValue
-      );
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      deleteGroupFieldMockConfig(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-        mockConfig,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-        groupItem.key,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        previousKey
-      );
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
     replaceFieldIntoGroup(tabId, groupItem.key, previousKey, newKey, value);
   };
@@ -140,8 +101,6 @@ const CustomListItem = ({
   };
 
   const onDeleteItem = (key) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
-    deleteGroupFieldMockConfig(mockConfig, groupItem.key, key);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     deleteFieldIntoGroup(tabId, groupItem.key, key);
   };
@@ -276,7 +235,6 @@ const CustomListItem = ({
         onSave={onSaveField}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         fields={groupItem.value.config.fields}
-        getFieldMockConfig={getFieldMockConfig}
       />
     </Fragment>
   );

@@ -6,7 +6,7 @@ export const PACKAGE_JSON_FILE = `${ROOT}/package.json`;
 export const MANIFEST_FILE = `${ROOT}/slicemachine.config.json`;
 
 export const ASSETS_FOLDER = `${ROOT}/.slicemachine`;
-export const TYPES_FILE = `${ASSETS_FOLDER}/prismicio.d.ts`;
+export const TYPES_FILE = `${ROOT}/prismicio.d.ts`;
 
 export const CUSTOM_TYPES_FOLDER = `${ROOT}/customtypes`;
 export const CUSTOM_TYPE_MODEL = (customTypeId) =>

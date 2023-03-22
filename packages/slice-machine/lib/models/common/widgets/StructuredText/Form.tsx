@@ -96,7 +96,7 @@ type FormValues = {
 
 const WidgetForm: React.FC<{
   initialValues: FormValues;
-  values: FormValues & { mockConfig: Record<string, string | number> };
+  values: FormValues;
   errors: FormValues;
   fields: Array<Record<string, unknown>>; // fields of all the widgets
   setFieldValue: (a: string, b?: string) => void;

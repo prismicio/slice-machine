@@ -21,6 +21,7 @@ import {
   getState,
   renameSlice,
   SaveSliceMockRequest,
+  track,
 } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { Reducer } from "redux";
@@ -29,7 +30,6 @@ import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@lib/models/common/Slice";
-import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import { saveSliceCreator } from "../selectedSlice/actions";
@@ -263,7 +263,8 @@ export function* createSliceSaga({
     if (errors.length) {
       throw errors;
     }
-    void Tracker.get().trackCreateSlice({
+    void track({
+      event: "slice:created",
       id: payload.sliceName,
       name: payload.sliceName,
       library: payload.libName,

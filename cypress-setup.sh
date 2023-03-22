@@ -25,10 +25,11 @@ fi
 rm -rf e2e-projects/cypress-next-app \
 && npx --yes create-next-app e2e-projects/cypress-next-app \
 && npx --yes vite-node ./cypress/plugins/addAuth.ts -- ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
-&& npx --yes vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}"  \
+&& npx --yes vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}" \
 && npm --workspaces pack --pack-destination ./e2e-projects/cypress-next-app \
 && cd e2e-projects/cypress-next-app \
 && npm i *.tgz \
 && npx @slicemachine/init --repository ${_PRISMIC_REPO} \
-&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\""
+&& npm i --save-dev slice-machine-ui*.tgz \
+&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\"" \
 && npx --yes json -I -f slicemachine.config.json -e "this.localSliceSimulatorURL=\"http://localhost:3000/slice-simulator\""

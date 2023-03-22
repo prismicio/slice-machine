@@ -44,9 +44,7 @@ type SliceMachineManagerGetStateReturnType = {
 		repo: string;
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
-		mockConfig: unknown; // TODO: Remove
 		framework: unknown; // TODO: Remove
-		sliceMachineAPIUrl: string;
 	};
 	libraries: {
 		name: string;
@@ -68,7 +66,6 @@ type SliceMachineManagerGetStateReturnType = {
 				}
 			>;
 			mock?: SharedSliceContent[];
-			mockConfig: unknown; // TODO: Remove
 		}[];
 		meta: {
 			name?: string;
@@ -170,6 +167,7 @@ export class SliceMachineManager {
 			{ sliceMachineConfig, libraries },
 			{ profile, remoteCustomTypes, remoteSlices },
 			customTypes,
+			packageManager,
 		] = await Promise.all([
 			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
 				const libraries = await this._getLibraries(sliceMachineConfig);
@@ -197,6 +195,7 @@ export class SliceMachineManager {
 				}
 			}),
 			this._getCustomTypes(),
+			this.project.detectPackageManager(),
 		]);
 
 		// TODO: SM UI detects if a user is logged out by looking at
@@ -224,13 +223,8 @@ export class SliceMachineManager {
 						),
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
-				mockConfig: {},
-				// TODO: Don't hardcode this!
-				packageManager: "npm",
-				// TODO: Don't hardcode this!
+				packageManager,
 				repo: sliceMachineConfig.repositoryName,
-				// TODO: Don't hardcode this!
-				sliceMachineAPIUrl: "http://localhost:9999",
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
 			},
@@ -279,7 +273,7 @@ export class SliceMachineManager {
 								]);
 
 								if (model) {
-									const screenshots: typeof components[number]["screenshots"] =
+									const screenshots: (typeof components)[number]["screenshots"] =
 										{};
 									await Promise.all(
 										model.variations.map(async (variation) => {
@@ -308,7 +302,6 @@ export class SliceMachineManager {
 										model,
 										screenshots,
 										mock: mocks,
-										mockConfig: {}, // TODO: This property can probably be removed.
 									});
 								}
 							}),
@@ -331,7 +324,15 @@ export class SliceMachineManager {
 			);
 		}
 
-		return libraries;
+		// Preserve library order from config file
+		return libraries.sort((library1, library2) => {
+			const libraryIndex1 =
+				sliceMachineConfig.libraries?.indexOf(library1.name) || 0;
+			const libraryIndex2 =
+				sliceMachineConfig.libraries?.indexOf(library2.name) || 0;
+
+			return Math.sign(libraryIndex1 - libraryIndex2);
+		});
 	}
 
 	private async _getCustomTypes(): Promise<

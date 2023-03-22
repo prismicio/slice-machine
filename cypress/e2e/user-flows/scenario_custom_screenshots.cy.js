@@ -10,7 +10,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   const slice = {
     id: `test_custom_screenshots${random}`,
     name: `TestCustomScreenshots${random}`,
-    library: "slices",
+    library: ".--slices",
   };
 
   const wrongScreenshot = "screenshots/preview_small.png";

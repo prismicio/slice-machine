@@ -1,4 +1,4 @@
-import { CreateScopeReturnType } from "./lib";
+import { CreateScopeReturnType } from "./lib/HookSystem";
 import { SliceMachineContext } from "./createSliceMachineContext";
 import {
 	SliceMachinePluginOptions,

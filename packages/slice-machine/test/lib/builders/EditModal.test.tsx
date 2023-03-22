@@ -17,7 +17,6 @@ describe("EditModal", () => {
   test("remove an item from a select field", async () => {
     const saveFn = vi.fn();
     const closeFn = vi.fn();
-    const getFieldMockConfigFn = vi.fn();
     const field = {
       key: "selecta",
       value: {
@@ -37,23 +36,19 @@ describe("EditModal", () => {
     const fields = [field];
 
     render(
-      <EditModal
-        onSave={saveFn}
-        close={closeFn}
-        getFieldMockConfig={getFieldMockConfigFn}
-        data={data}
-        fields={fields}
-      />
+      <EditModal onSave={saveFn} close={closeFn} data={data} fields={fields} />
     );
 
     const removeButton = document.querySelector(
       'input[name="config.options.2"]'
     )?.nextSibling;
 
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'ChildNode | null | undefined' is... Remove this comment to see the full error message
     await act(async () => fireEvent.click(removeButton));
 
     const saveButton = document.querySelector('button[type="submit"]');
 
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
     await act(async () => fireEvent.click(saveButton));
 
     expect(saveFn).toHaveBeenCalled();
@@ -88,31 +83,27 @@ describe("EditModal", () => {
 
     const saveFn = vi.fn();
     const closeFn = vi.fn();
-    const getFieldMockConfigFn = vi.fn();
 
     render(
-      <EditModal
-        onSave={saveFn}
-        close={closeFn}
-        getFieldMockConfig={getFieldMockConfigFn}
-        data={data}
-        fields={fields}
-      />
+      <EditModal onSave={saveFn} close={closeFn} data={data} fields={fields} />
     );
 
     const labelInput = document.querySelector('input[name="config.label"]');
     const fakeLabel = "rich text";
     await act(async () =>
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(labelInput, { target: { value: fakeLabel } })
     );
 
     const idInput = document.querySelector('input[name="id"]');
     const fakeId = "some_id";
     await act(async () =>
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(idInput, { target: { value: fakeId } })
     );
 
     const saveButton = document.querySelector('button[type="submit"]');
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
     await act(async () => fireEvent.click(saveButton));
 
     expect(saveFn).toHaveBeenCalled();

@@ -46,13 +46,8 @@ import {
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
-  updateGroupFieldMockConfigCreator,
-  deleteGroupFieldMockConfigCreator,
-  deleteFieldMockConfigCreator,
-  updateFieldMockConfigCreator,
   cleanupCustomTypeStoreCreator,
 } from "./selectedCustomType";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import {
@@ -71,9 +66,11 @@ import {
   generateSliceScreenshotCreator,
 } from "./screenshots/actions";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
-// import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
-import type { ScreenDimensions } from "@lib/models/common/Screenshots";
-import type { ScreenshotTaken } from "@lib/models/tracking";
+import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
+import type {
+  ScreenDimensions,
+  ScreenshotGenerationMethod,
+} from "@lib/models/common/Screenshots";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
@@ -169,9 +166,8 @@ const useSliceMachineActions = () => {
   // Custom type module
   const initCustomTypeStore = (
     model: CustomTypeSM,
-    remoteModel: CustomTypeSM | undefined,
-    mockConfig: CustomTypeMockConfig
-  ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
+    remoteModel: CustomTypeSM | undefined
+  ) => dispatch(initCustomTypeStoreCreator({ model, remoteModel }));
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
@@ -208,57 +204,6 @@ const useSliceMachineActions = () => {
     sliceKeys: string[],
     preserve: string[]
   ) => dispatch(replaceSharedSliceCreator({ tabId, sliceKeys, preserve }));
-  const updateFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    previousFieldId: string,
-    fieldId: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any
-  ) =>
-    dispatch(
-      updateFieldMockConfigCreator({
-        customTypeMockConfig,
-        previousFieldId,
-        fieldId,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        value,
-      })
-    );
-  const deleteFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    fieldId: string
-  ) =>
-    dispatch(deleteFieldMockConfigCreator({ customTypeMockConfig, fieldId }));
-  const updateGroupFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    groupId: string,
-    previousFieldId: string,
-    fieldId: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any
-  ) =>
-    dispatch(
-      updateGroupFieldMockConfigCreator({
-        customTypeMockConfig,
-        groupId,
-        previousFieldId,
-        fieldId,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        value,
-      })
-    );
-  const deleteGroupFieldMockConfig = (
-    customTypeMockConfig: CustomTypeMockConfig,
-    groupId: string,
-    fieldId: string
-  ) =>
-    dispatch(
-      deleteGroupFieldMockConfigCreator({
-        customTypeMockConfig,
-        groupId,
-        fieldId,
-      })
-    );
   const addFieldIntoGroup = (
     tabId: string,
     groupId: string,
@@ -354,9 +299,22 @@ const useSliceMachineActions = () => {
     );
   };
 
+  const deleteSliceWidgetMock = (
+    variationId: string,
+    widgetArea: WidgetsArea,
+    newKey: string
+  ) => {
+    dispatch(
+      deleteSliceWidgetMockCreator({
+        variationId,
+        widgetArea,
+        newKey,
+      })
+    );
+  };
+
   const updateSliceWidgetMock = (
     variationId: string,
-    mockConfig: CustomTypeMockConfig,
     widgetArea: WidgetsArea,
     previousKey: string,
     newKey: string,
@@ -366,7 +324,6 @@ const useSliceMachineActions = () => {
     dispatch(
       updateSliceWidgetMockCreator({
         variationId,
-        mockConfig,
         widgetArea,
         previousKey,
         newKey,
@@ -376,27 +333,11 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const deleteSliceWidgetMock = (
-    variationId: string,
-    mockConfig: CustomTypeMockConfig,
-    widgetArea: WidgetsArea,
-    newKey: string
-  ) => {
-    dispatch(
-      deleteSliceWidgetMockCreator({
-        variationId,
-        mockConfig,
-        widgetArea,
-        newKey,
-      })
-    );
-  };
-
   const generateSliceScreenshot = (
     variationId: string,
     component: ComponentUI,
     screenDimensions: ScreenDimensions,
-    method: ScreenshotTaken["props"]["method"]
+    method: ScreenshotGenerationMethod
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
@@ -412,7 +353,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     component: ComponentUI,
     file: Blob,
-    method: ScreenshotTaken["props"]["method"]
+    method: ScreenshotGenerationMethod
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator.request({
@@ -470,9 +411,8 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const pushChanges = () => ({});
-  // const pushChanges = (payload: ChangesPushSagaPayload) =>
-  //   dispatch(changesPushCreator.request(payload));
+  const pushChanges = (payload: ChangesPushSagaPayload) =>
+    dispatch(changesPushCreator.request(payload));
 
   // Toaster store
   const openToaster = (
@@ -533,10 +473,7 @@ const useSliceMachineActions = () => {
     createSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-    updateFieldMockConfig,
-    deleteFieldMockConfig,
-    updateGroupFieldMockConfig,
-    deleteGroupFieldMockConfig,
+
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,

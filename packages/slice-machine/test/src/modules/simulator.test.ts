@@ -39,6 +39,7 @@ const dummySimulatorState: SimulatorStoreType = initialState;
 describe("[Simulator module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
+      // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
       expect(simulatorReducer(dummySimulatorState, {})).toEqual(
         dummySimulatorState
       );
@@ -46,6 +47,7 @@ describe("[Simulator module]", () => {
 
     it("should return the initial state if no matching action", () => {
       expect(
+        // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"SIMU... Remove this comment to see the full error message
         simulatorReducer(dummySimulatorState, { type: "NO.MATCH" })
       ).toEqual(dummySimulatorState);
     });
@@ -97,6 +99,7 @@ describe("[Simulator module]", () => {
 
     it("should set manifest status to ko if checkSimulatorSetupCreator.failure action", () => {
       const initialState: SimulatorStoreType = dummySimulatorState;
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Error' is not assignable to para... Remove this comment to see the full error message
       const action = checkSimulatorSetupCreator.failure(new Error("Error"));
 
       const expectedState: SimulatorStoreType = {
