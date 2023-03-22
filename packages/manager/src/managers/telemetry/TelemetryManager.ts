@@ -81,7 +81,7 @@ export class TelemetryManager extends BaseManager {
 
 	// TODO: Should `userId` be automatically populated by the logged in
 	// user? We already have their info via UserRepository.
-	async track(args: TelemetryManagerTrackArgs): Promise<void> {
+	track(args: TelemetryManagerTrackArgs): Promise<void> {
 		const { event, repository, ...properties } = args;
 
 		const payload: {
@@ -89,7 +89,7 @@ export class TelemetryManager extends BaseManager {
 			userId?: string;
 			anonymousId?: string;
 			properties?: Record<string, unknown>;
-			context: Partial<TelemetryManagerContext> & {
+			context?: Partial<TelemetryManagerContext> & {
 				groupId?: {
 					Repository?: string;
 				};
@@ -144,7 +144,7 @@ export class TelemetryManager extends BaseManager {
 	// TODO: Should `userID` and `intercomHash` be automatically populated
 	// by the logged in user? We already have their info via
 	// UserRepository.
-	async identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
+	identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
 		const payload = {
 			userId: args.userID,
 			anonymousId: this._anonymousID,
@@ -173,7 +173,7 @@ export class TelemetryManager extends BaseManager {
 		});
 	}
 
-	async group(args: TelemetryManagerGroupArgs): Promise<void> {
+	group(args: TelemetryManagerGroupArgs): Promise<void> {
 		const { repositoryName, ...traits } = args;
 
 		const payload: {
