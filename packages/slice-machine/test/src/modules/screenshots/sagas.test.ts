@@ -46,8 +46,6 @@ describe("[Selected Slice sagas]", () => {
         generateSliceScreenshotCreator.success({
           screenshot: {
             url: response.url,
-            path: "__TODO-REMOVE__",
-            hash: "__TODO-REMOVE__",
           },
           component: dummySliceState,
           variationId: dummyModelVariationID,

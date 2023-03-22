@@ -42,8 +42,7 @@ export interface Component extends ComponentInfo {
 }
 
 export interface Screenshot {
-  path: string;
-  hash: string;
+  hash?: string;
 }
 export interface Library<C extends Component> {
   name: string;

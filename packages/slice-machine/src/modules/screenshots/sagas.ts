@@ -49,8 +49,6 @@ export function* generateSliceScreenshotSaga({
         variationId,
         screenshot: {
           url: response.url,
-          path: "__TODO-REMOVE__",
-          hash: "__TODO-REMOVE__",
         },
         component,
       })
@@ -93,8 +91,6 @@ export function* generateSliceCustomScreenshotSaga({
         variationId,
         screenshot: {
           url: response.url,
-          path: "__TODO-REMOVE__",
-          hash: "__TODO-REMOVE__",
         },
         component,
       })

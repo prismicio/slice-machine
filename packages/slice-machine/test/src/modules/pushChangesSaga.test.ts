@@ -52,7 +52,7 @@ const changesPayload: ChangesPushSagaPayload = {
     {
       slice: {
         model: { id: "slice1", variations: [{ id: "var1" }] },
-        screenshots: { var1: { path: "path/to/screenshot" } },
+        screenshots: { var1: { hash: "__HASH__" } },
         from: "library1",
       } as unknown as ComponentUI,
       status: ModelStatus.New,

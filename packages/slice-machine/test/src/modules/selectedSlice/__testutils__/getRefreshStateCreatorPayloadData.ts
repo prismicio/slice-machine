@@ -21,7 +21,6 @@ export const getRefreshStateCreatorPayloadData = (
           extension: "js",
           screenshots: {
             "default-slice": {
-              path: "updated-screenshot-path",
               hash: "f92c69c60df8fd8eb42902bfb6574776",
               url: "http://localhost:9999/api/__preview?q=default-slice",
             },
