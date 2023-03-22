@@ -14,7 +14,6 @@ import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NP
 
 import { BaseManager } from "../BaseManager";
 import { format } from "../../lib/format";
-import { SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME";
 
 type ProjectManagerGetSliceMachineConfigPathArgs = {
 	ignoreCache?: boolean;
@@ -38,16 +37,6 @@ export class ProjectManager extends BaseManager {
 	private _cachedSliceMachineConfigPath: string | undefined;
 	private _cachedSliceMachineConfig: SliceMachineConfig | undefined;
 
-	async getSliceMachineDeprecatedConfigPath(): Promise<string | null> {
-		try {
-			return await locateFileUpward(SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME, {
-				startDir: this.cwd,
-			});
-		} catch {}
-
-		return null;
-	}
-
 	async getSliceMachineConfigPath(
 		args?: ProjectManagerGetSliceMachineConfigPathArgs,
 	): Promise<string> {
@@ -61,20 +50,9 @@ export class ProjectManager extends BaseManager {
 				{ startDir: this.cwd },
 			);
 		} catch (error) {
-			const maybeDeprecatedConfigPath =
-				await this.getSliceMachineDeprecatedConfigPath();
-			if (maybeDeprecatedConfigPath) {
-				const newConfigPath = path.join(
-					this.cwd,
-					SLICE_MACHINE_CONFIG_FILENAME,
-				);
-				fs.rename(maybeDeprecatedConfigPath, newConfigPath);
-				this._cachedSliceMachineConfigPath = newConfigPath;
-			} else {
-				throw new Error(
-					`Could not find a ${SLICE_MACHINE_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
-				);
-			}
+			throw new Error(
+				`Could not find a ${SLICE_MACHINE_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
+			);
 		}
 
 		return this._cachedSliceMachineConfigPath;

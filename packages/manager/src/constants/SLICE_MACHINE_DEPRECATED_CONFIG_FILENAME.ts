@@ -1,1 +1,0 @@
-export const SLICE_MACHINE_DEPRECATED_CONFIG_FILENAME = "sm.json";

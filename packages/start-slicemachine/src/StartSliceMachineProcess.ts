@@ -11,6 +11,7 @@ import open from "open";
 import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
 import { ensureFSAssetsState } from "./lib/ensureFSAssetsState";
+import { migrateSMConfig } from "./legacyMigrations/migrateSMConfig";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -64,9 +65,15 @@ export class StartSliceMachineProcess {
 	 * Runs the process.
 	 */
 	async run(): Promise<void> {
+		// This migration needs to run before the plugins are initialised
+		// Nothing can start without the config file
+		await migrateSMConfig(this._sliceMachineManager.cwd);
+
 		await this._sliceMachineManager.plugins.initPlugins();
 
+		// TODO: MIGRATION - Move this to the Migration Manager
 		await ensureFSAssetsState(this._sliceMachineManager);
+
 		await this._validateProject();
 
 		const server = await createSliceMachineServer({
