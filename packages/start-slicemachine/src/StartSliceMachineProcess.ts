@@ -10,8 +10,8 @@ import open from "open";
 
 import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
+import { migrateSMJSON } from "./legacyMigrations/migrateSMJSON";
 import { migrateAssets } from "./legacyMigrations/migrateAssets";
-import { migrateSMConfig } from "./legacyMigrations/migrateSMConfig";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -67,13 +67,12 @@ export class StartSliceMachineProcess {
 	async run(): Promise<void> {
 		// This migration needs to run before the plugins are initialised
 		// Nothing can start without the config file
-		await migrateSMConfig(this._sliceMachineManager.cwd);
+		await migrateSMJSON(this._sliceMachineManager);
 
 		await this._sliceMachineManager.telemetry.initTelemetry();
 		await this._sliceMachineManager.plugins.initPlugins();
 
 		// TODO: MIGRATION - Move this to the Migration Manager
-		// TODO: Should the config migration return a value to control this execution?
 		await migrateAssets(this._sliceMachineManager);
 
 		await this._validateProject();

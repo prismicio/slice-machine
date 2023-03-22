@@ -25,7 +25,3 @@ export {
 export { DecodeError } from "./lib/DecodeError";
 
 export type { SliceMachineConfig, PackageManager } from "./types";
-
-// TODO: MIGRATION - Remove this once Migrations are part of the manager
-export { locateFileUpward } from "./lib/locateFileUpward";
-export { SLICE_MACHINE_CONFIG_FILENAME } from "./constants/SLICE_MACHINE_CONFIG_FILENAME";
