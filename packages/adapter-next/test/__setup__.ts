@@ -35,7 +35,6 @@ beforeEach(async (ctx) => {
 	ctx.project = {
 		root: tmpRoot,
 		config: {
-			_latest: "0.0.0",
 			adapter: {
 				resolve: adapter,
 				options: {},
