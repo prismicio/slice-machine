@@ -123,7 +123,17 @@ export class ScreenshotsManager extends BaseManager {
 				Repository: sliceMachineConfig.repositoryName,
 			},
 		});
-		const awsACLJSON = await awsACLRes.json();
+
+		const awsACLText = await awsACLRes.text();
+		let awsACLJSON: unknown;
+		try {
+			awsACLJSON = JSON.parse(awsACLText);
+		} catch (error) {
+			// Response is not JSON
+			throw new Error(
+				`Invalid AWS ACL response from ${awsACLURL}: ${awsACLText}`,
+			);
+		}
 
 		const { value: awsACL, error } = decode(
 			t.intersection([

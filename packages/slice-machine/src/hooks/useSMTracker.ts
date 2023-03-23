@@ -47,12 +47,13 @@ const useSMTracker = () => {
 
 export default useSMTracker;
 
-async function group(
+function group(
   libs: readonly LibraryUI[],
   repositoryName: string | undefined
-): ReturnType<typeof telemetry.group> {
+): ReturnType<typeof telemetry.group> | void {
   if (repositoryName === undefined) return;
   const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
+
   return telemetry.group({
     repositoryName,
     manualLibsCount: libs.filter((l) => l.meta.isManual).length,

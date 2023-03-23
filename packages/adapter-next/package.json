@@ -46,7 +46,7 @@
 		"dev": "vite build --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
-		"prepare": "npm run build",
+		"prepublishOnly": "npm run build",
 		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
 		"release:alpha": "npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
 		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
