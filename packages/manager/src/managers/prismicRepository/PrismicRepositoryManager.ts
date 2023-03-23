@@ -279,6 +279,11 @@ export class PrismicRepositoryManager extends BaseManager {
 										model,
 									});
 
+								await this.slices.updateSlice({
+									libraryID: change.libraryID,
+									model: modelWithScreenshots,
+								});
+
 								return {
 									type: ChangeTypes.SLICE_INSERT,
 									id: change.id,
@@ -300,6 +305,11 @@ export class PrismicRepositoryManager extends BaseManager {
 										libraryID: change.libraryID,
 										model,
 									});
+
+								await this.slices.updateSlice({
+									libraryID: change.libraryID,
+									model: modelWithScreenshots,
+								});
 
 								return {
 									type: ChangeTypes.SLICE_UPDATE,

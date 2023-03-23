@@ -30,6 +30,7 @@ import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
+import { createContentDigest } from "../../lib/createContentDigest";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -586,28 +587,37 @@ export class SlicesManager extends BaseManager {
 					variationID: variation.id,
 				});
 
-				if (screenshot.data) {
-					const keyPrefix = [
-						sliceMachineConfig.repositoryName,
-						"shared-slices",
-						args.model.id,
-						variation.id,
-					].join("/");
-
-					// TODO: If the existing imageUrl
-					// property (not the prefilled efault
-					// URL) is identical to the new image
-					// (we'll need to get the image's full
-					// URL before we upload it), then don't
-					// upload anything.
-
-					const uploadedScreenshot = await this.screenshots.uploadScreenshot({
-						data: screenshot.data,
-						keyPrefix,
-					});
-
-					updatedVariation.imageUrl = uploadedScreenshot.url;
+				if (!screenshot.data) {
+					return updatedVariation;
 				}
+
+				const hasScreenshotChanged = !variation.imageUrl?.includes(
+					createContentDigest(screenshot.data),
+				);
+
+				if (!hasScreenshotChanged) {
+					return updatedVariation;
+				}
+
+				console.log(
+					"Changed",
+					variation.imageUrl,
+					createContentDigest(screenshot.data),
+				);
+
+				const keyPrefix = [
+					sliceMachineConfig.repositoryName,
+					"shared-slices",
+					args.model.id,
+					variation.id,
+				].join("/");
+
+				const uploadedScreenshot = await this.screenshots.uploadScreenshot({
+					data: screenshot.data,
+					keyPrefix,
+				});
+
+				updatedVariation.imageUrl = uploadedScreenshot.url;
 
 				return updatedVariation;
 			}),
