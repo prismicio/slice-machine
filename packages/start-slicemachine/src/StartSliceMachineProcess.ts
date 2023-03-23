@@ -8,10 +8,11 @@ import {
 import chalk from "chalk";
 import open from "open";
 
-import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { listen } from "./lib/listen";
+import { createSliceMachineServer } from "./lib/createSliceMachineServer";
 import { migrateSMJSON } from "./legacyMigrations/migrateSMJSON";
 import { migrateAssets } from "./legacyMigrations/migrateAssets";
+import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -69,7 +70,13 @@ export class StartSliceMachineProcess {
 		// Nothing can start without the config file
 		await migrateSMJSON(this._sliceMachineManager);
 
-		await this._sliceMachineManager.telemetry.initTelemetry();
+		const appVersion =
+			await this._sliceMachineManager.versions.getRunningSliceMachineVersion();
+		await this._sliceMachineManager.telemetry.initTelemetry({
+			appName: SLICE_MACHINE_NPM_PACKAGE_NAME,
+			appVersion,
+		});
+
 		await this._sliceMachineManager.plugins.initPlugins();
 
 		// TODO: MIGRATION - Move this to the Migration Manager
@@ -93,7 +100,7 @@ export class StartSliceMachineProcess {
 				`Running at ${chalk.magenta(url)}`,
 			),
 		);
-		console.log(this._buildLoggedInAsLine(chalk.dim("Loading...")));
+		console.log(await this._buildLoggedInAsLine(chalk.dim("Loading...")));
 		console.log();
 
 		const profile = await this._fetchProfile();
@@ -102,7 +109,7 @@ export class StartSliceMachineProcess {
 		process.stdout.moveCursor?.(0, -2);
 		process.stdout.clearLine?.(1);
 		console.log(
-			this._buildLoggedInAsLine(
+			await this._buildLoggedInAsLine(
 				profile
 					? `${[profile.firstName, profile.lastName]
 							.filter(Boolean)
@@ -111,6 +118,13 @@ export class StartSliceMachineProcess {
 			),
 		);
 		console.log();
+
+		if (profile) {
+			this._sliceMachineManager.telemetry.identify({
+				userID: profile.shortId,
+				intercomHash: profile.intercomHash,
+			});
+		}
 
 		// Prepare the manager for Slice Machine actions.
 		try {
@@ -123,12 +137,14 @@ export class StartSliceMachineProcess {
 		} catch {
 			// noop - We'll try again before taking a screenshot.
 		}
-		await Promise.all([
-			profile
-				? this._sliceMachineManager.user.refreshAuthenticationToken()
-				: undefined,
-			profile ? this._sliceMachineManager.screenshots.initS3ACL() : undefined,
-		]);
+		if (profile) {
+			await Promise.allSettled([
+				// noop - We'll try again when needed.
+				this._sliceMachineManager.user.refreshAuthenticationToken(),
+				// noop - We'll try again before uploading a screenshot.
+				this._sliceMachineManager.screenshots.initS3ACL(),
+			]);
+		}
 	}
 
 	/**
@@ -157,9 +173,12 @@ export class StartSliceMachineProcess {
 	 *
 	 * @returns String to pass to the console.
 	 */
-	private _buildLoggedInAsLine(value: string): string {
+	private async _buildLoggedInAsLine(value: string): Promise<string> {
+		const currentVersion =
+			await this._sliceMachineManager.versions.getRunningSliceMachineVersion();
+
 		return `${chalk.bgBlack(
-			`         ${chalk.bold("Logged in as")} `,
+			`    ${" ".repeat(currentVersion.length)}${chalk.bold("Logged in as")} `,
 		)} ${chalk.dim("→")} ${value}`;
 	}
 

@@ -315,4 +315,7 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
   };
 };
 
-export const track = managerClient.telemetry.track;
+export const telemetry = {
+  group: managerClient.telemetry.group,
+  track: managerClient.telemetry.track,
+};

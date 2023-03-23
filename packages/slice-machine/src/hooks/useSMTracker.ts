@@ -1,54 +1,35 @@
 import { useEffect } from "react";
 
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  getCurrentVersion,
-  getFramework,
-  getRepoName,
-  getShortId,
-  getIntercomHash,
-} from "@src/modules/environment";
+import { getFramework, getRepoName } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
-  const {
-    libraries,
-    repoName,
-    shortId,
-    intercomHash,
-    currentVersion,
-    framework,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    currentVersion: getCurrentVersion(state),
-    framework: getFramework(state),
-    shortId: getShortId(state),
-    intercomHash: getIntercomHash(state),
-    repoName: getRepoName(state),
-    libraries: getLibraries(state),
-  }));
+  const { libraries, repoName, framework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      framework: getFramework(state),
+      repoName: getRepoName(state),
+      libraries: getLibraries(state),
+    })
+  );
 
   const router = useRouter();
 
   useEffect(() => {
-    void trackGroupLibraries(libraries, repoName, currentVersion);
+    void group(libraries, repoName);
 
     // For initial loading
-    void trackPageView(framework, currentVersion);
+    void trackPageView(framework);
   }, []);
-
-  // Handles if the user login/logout outside of the app.
-  useEffect(() => {
-    if (shortId && intercomHash) void track({ event: "identify-user" });
-  }, [shortId, intercomHash]);
 
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void trackPageView(framework, currentVersion);
+      void trackPageView(framework);
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views
@@ -66,31 +47,26 @@ const useSMTracker = () => {
 
 export default useSMTracker;
 
-async function trackGroupLibraries(
+function group(
   libs: readonly LibraryUI[],
-  repoName: string | undefined,
-  version: string
-): ReturnType<typeof track> {
-  if (repoName === undefined) return;
+  repositoryName: string | undefined
+): ReturnType<typeof telemetry.group> | void {
+  if (repositoryName === undefined) return;
   const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
-  return track({
-    event: "group-libraries",
-    repoName: repoName,
+
+  return telemetry.group({
+    repositoryName,
     manualLibsCount: libs.filter((l) => l.meta.isManual).length,
     downloadedLibsCount: downloadedLibs.length,
     npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
     downloadedLibs: downloadedLibs.map((l) =>
       l.meta.name != null ? l.meta.name : "Unknown"
     ),
-    slicemachineVersion: version,
   });
 }
 
-function trackPageView(
-  framework: string,
-  version: string
-): ReturnType<typeof track> {
-  return track({
+function trackPageView(framework: string): ReturnType<typeof telemetry.track> {
+  return telemetry.track({
     event: "page-view",
     url: window.location.href,
     path: window.location.pathname,
@@ -98,6 +74,5 @@ function trackPageView(
     title: document.title,
     referrer: document.referrer,
     framework,
-    slicemachineVersion: version,
   });
 }

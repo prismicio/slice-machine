@@ -15,6 +15,7 @@ import {
 	PackageManager,
 } from "@slicemachine/manager";
 
+import pkg from "../package.json";
 import { detectFramework, Framework } from "./lib/framework";
 import { getRunScriptCommand } from "./lib/getRunScriptCommand";
 import { getExecuteCommand } from "./lib/getExecuteCommand";
@@ -89,7 +90,10 @@ export class SliceMachineInitProcess {
 			)} Init command started\n`,
 		);
 
-		await this.manager.telemetry.initTelemetry();
+		await this.manager.telemetry.initTelemetry({
+			appName: pkg.name,
+			appVersion: pkg.version,
+		});
 		await this.manager.telemetry.track({
 			event: "command:init:start",
 			repository: this.options.repository,

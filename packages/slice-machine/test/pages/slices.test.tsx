@@ -12,6 +12,7 @@ import {
 import mockRouter from "next-router-mock";
 import SegmentClient from "analytics-node";
 
+import pkg from "../../package.json";
 import SlicesIndex from "../../pages/slices";
 
 import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
@@ -52,7 +53,10 @@ describe("slices", () => {
       cwd,
     });
 
-    await manager.telemetry.initTelemetry();
+    await manager.telemetry.initTelemetry({
+      appName: pkg.name,
+      appVersion: pkg.version,
+    });
     await manager.plugins.initPlugins();
 
     ctx.msw.use(
@@ -202,6 +206,7 @@ describe("slices", () => {
           id: "FooBar",
           name: "FooBar",
           library: "slices",
+          nodeVersion: process.versions.node,
         },
       }),
       expect.any(Function)
@@ -225,7 +230,10 @@ describe("slices", () => {
       cwd,
     });
 
-    await manager.telemetry.initTelemetry();
+    await manager.telemetry.initTelemetry({
+      appName: pkg.name,
+      appVersion: pkg.version,
+    });
     await manager.plugins.initPlugins();
 
     ctx.msw.use(

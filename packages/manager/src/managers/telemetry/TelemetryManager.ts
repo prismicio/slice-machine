@@ -14,11 +14,31 @@ import {
 	SegmentEvents,
 } from "./types";
 
+type TelemetryManagerInitTelemetryArgs = {
+	appName: string;
+	appVersion: string;
+};
+
 type TelemetryManagerTrackArgs = SegmentEvents;
 
 type TelemetryManagerIdentifyArgs = {
 	userID: string;
 	intercomHash: string;
+};
+
+type TelemetryManagerGroupArgs = {
+	repositoryName: string;
+	manualLibsCount: number;
+	downloadedLibsCount: number;
+	npmLibsCount: number;
+	downloadedLibs: string[];
+};
+
+type TelemetryManagerContext = {
+	app: {
+		name: string;
+		version: string;
+	};
 };
 
 function assertTelemetryInitialized(
@@ -35,8 +55,9 @@ export class TelemetryManager extends BaseManager {
 	private _segmentClient: SegmentClient | undefined = undefined;
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
+	private _context: TelemetryManagerContext | undefined = undefined;
 
-	async initTelemetry(): Promise<void> {
+	async initTelemetry(args: TelemetryManagerInitTelemetryArgs): Promise<void> {
 		if (this._segmentClient) {
 			// Prevent subsequent initializations.
 			return;
@@ -55,6 +76,7 @@ export class TelemetryManager extends BaseManager {
 			},
 		});
 		this._anonymousID = randomUUID();
+		this._context = { app: { name: args.appName, version: args.appVersion } };
 	}
 
 	// TODO: Should `userId` be automatically populated by the logged in
@@ -67,7 +89,7 @@ export class TelemetryManager extends BaseManager {
 			userId?: string;
 			anonymousId?: string;
 			properties?: Record<string, unknown>;
-			context?: {
+			context?: Partial<TelemetryManagerContext> & {
 				groupId?: {
 					Repository?: string;
 				};
@@ -75,9 +97,11 @@ export class TelemetryManager extends BaseManager {
 		} = {
 			event: HumanSegmentEventType[event],
 			properties: {
+				nodeVersion: process.versions.node,
 				repo: repository,
 				...properties,
 			},
+			context: { ...this._context },
 		};
 
 		if (this._userID) {
@@ -117,19 +141,21 @@ export class TelemetryManager extends BaseManager {
 	// by the logged in user? We already have their info via
 	// UserRepository.
 	identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
+		const payload = {
+			userId: args.userID,
+			anonymousId: this._anonymousID,
+			integrations: {
+				Intercom: {
+					user_hash: args.intercomHash,
+				},
+			},
+			context: { ...this._context },
+		};
+
+		this._userID = args.userID;
+
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
-
-			const payload = {
-				userId: args.userID,
-				anonymousId: this._anonymousID,
-				integrations: {
-					Intercom: {
-						user_hash: args.intercomHash,
-					},
-				},
-			};
-			this._userID = args.userID;
 
 			// TODO: Make sure client fails gracefully when no internet connection
 			this._segmentClient.identify(payload, (maybeError?: Error) => {
@@ -140,6 +166,44 @@ export class TelemetryManager extends BaseManager {
 
 				resolve();
 			});
+		});
+	}
+
+	group(args: TelemetryManagerGroupArgs): Promise<void> {
+		const { repositoryName, ...traits } = args;
+
+		const payload: {
+			groupId: string;
+			userId?: string;
+			anonymousId?: string;
+			traits?: Record<string, unknown>;
+			context?: Partial<TelemetryManagerContext>;
+		} = {
+			groupId: repositoryName,
+			traits,
+			context: { ...this._context },
+		};
+
+		if (this._userID) {
+			payload.userId = this._userID;
+		} else {
+			payload.anonymousId = this._anonymousID;
+		}
+
+		return new Promise((resolve) => {
+			assertTelemetryInitialized(this._segmentClient);
+
+			this._segmentClient.group(
+				payload as Parameters<typeof this._segmentClient.group>[0],
+				(maybeError?: Error) => {
+					if (maybeError) {
+						// TODO: Not sure how we want to deal with that
+						console.warn(`An error occurred during Segment group`, maybeError);
+					}
+
+					resolve();
+				},
+			);
 		});
 	}
 

@@ -7,13 +7,9 @@ import { Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
-import { track } from "@src/apiClient";
+import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
-import {
-  getCurrentVersion,
-  getFramework,
-  selectSimulatorUrl,
-} from "@src/modules/environment";
+import { getFramework, selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -56,7 +52,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     useSliceMachineActions();
   const {
     framework,
-    version,
     simulatorUrl,
     iframeStatus,
     manifestStatus,
@@ -64,7 +59,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
     simulatorUrl: selectSimulatorUrl(state),
-    version: getCurrentVersion(state),
     iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
@@ -75,7 +69,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void track({ event: "slice-simulator:open", framework, version });
+    void telemetry.track({ event: "slice-simulator:open", framework });
   }, []);
 
   const startedNewEditorSessionRef = useRef(false);
@@ -87,7 +81,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const trackWidgetUsed = (sliceId: string) => {
     if (!startedNewEditorSessionRef.current) return;
     startedNewEditorSessionRef.current = false;
-    void track({ event: "editor:widget-used", sliceId });
+    void telemetry.track({ event: "editor:widget-used", sliceId });
   };
 
   const currentState: UiState = (() => {
@@ -126,7 +120,10 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
-      void track({ event: "slice-simulator:is-not-running", framework });
+      void telemetry.track({
+        event: "slice-simulator:is-not-running",
+        framework,
+      });
     }
   }, [currentState, framework]);
 
@@ -286,10 +283,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             >
               <ThemeProvider mode="light">
                 <SharedSliceEditor
-                  /** because of a re-render issue on the richtext
-                  /* we enforce re-rendering the editor when the variation change.
-                  /* this change should be removed once the editor is fixed.
-                  */
+                  /**
+                   * Because of a re-render issue on the richtext /* we enforce
+                   * re-rendering the editor when the variation change. /* this
+                   * change should be removed once the editor is fixed.
+                   */
                   key={variation.id}
                   content={editorContent}
                   onContentChange={(c) => {

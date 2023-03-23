@@ -21,7 +21,7 @@ import {
   getState,
   renameSlice,
   SaveSliceMockRequest,
-  track,
+  telemetry,
 } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { Reducer } from "redux";
@@ -263,7 +263,7 @@ export function* createSliceSaga({
     if (errors.length) {
       throw errors;
     }
-    void track({
+    void telemetry.track({
       event: "slice:created",
       id: payload.sliceName,
       name: payload.sliceName,

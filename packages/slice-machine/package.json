@@ -120,10 +120,6 @@
     },
     "connected-next-router": {
       "react-redux": "$react-redux"
-    },
-    "react-oembed-container": {
-      "react": "$react",
-      "react-dom": "$react-dom"
     }
   },
   "gitHead": "e34025f35abbd621d3bcdae3772114e3436f381e"
