@@ -5,7 +5,7 @@ import Logo from "../Menu/Logo";
 import { LinkProps } from "..";
 
 import { useSelector } from "react-redux";
-import { getChangelog, getFramework } from "@src/modules/environment";
+import { getChangelog } from "@src/modules/environment";
 import {
   getUpdatesViewed,
   userHashasSeenTutorialsTooTip,
@@ -84,13 +84,13 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { changelog, updatesViewed, hasSeenTutorialsTooTip, framework } =
-    useSelector((store: SliceMachineStoreType) => ({
+  const { changelog, updatesViewed, hasSeenTutorialsTooTip } = useSelector(
+    (store: SliceMachineStoreType) => ({
       changelog: getChangelog(store),
-      framework: getFramework(store),
       updatesViewed: getUpdatesViewed(store),
       hasSeenTutorialsTooTip: userHashasSeenTutorialsTooTip(store),
-    }));
+    })
+  );
 
   const { setUpdatesViewed, setSeenTutorialsToolTip } =
     useSliceMachineActions();
@@ -131,7 +131,6 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
             />
           )}
           <VideoItem
-            framework={framework}
             hasSeenTutorialsTooTip={hasSeenTutorialsTooTip}
             onClose={setSeenTutorialsToolTip}
           />

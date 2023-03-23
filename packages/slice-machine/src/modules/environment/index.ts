@@ -6,12 +6,11 @@ import {
   createAsyncAction,
   getType,
 } from "typesafe-actions";
+import type { PackageManager } from "@slicemachine/manager";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
-import { Frameworks } from "@lib/models/common/Framework";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
-import { PackageManager } from "@lib/models/common/PackageManager";
 import { SliceSM } from "@lib/models/common/Slice";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
@@ -65,9 +64,6 @@ export const selectSimulatorUrl = (
   return store.environment.manifest.localSliceSimulatorURL;
 };
 
-export const getFramework = (store: SliceMachineStoreType): Frameworks =>
-  store.environment.framework;
-
 export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
 
@@ -103,44 +99,6 @@ export const getStorybookUrl = (
   store: SliceMachineStoreType
 ): string | null => {
   return store.environment.manifest.storybook || null;
-};
-
-export const getLinkToTroubleshootingDocs = (
-  state: SliceMachineStoreType
-): string => {
-  const framework = getFramework(state);
-  switch (framework) {
-    case Frameworks.next:
-    case Frameworks.previousNext:
-      return "https://prismic.io/docs/technologies/setup-slice-simulator-nextjs";
-    case Frameworks.nuxt:
-    case Frameworks.previousNuxt:
-      return "https://prismic.io/docs/technologies/setup-slice-simulator-nuxtjs";
-    default:
-      return "https://prismic.io/docs";
-  }
-};
-
-export const getLinkToStorybookDocs = (
-  state: SliceMachineStoreType
-): string => {
-  const framework = getFramework(state);
-  switch (framework) {
-    case Frameworks.next:
-    case Frameworks.previousNext:
-      return "https://prismic.io/docs/technologies/storybook-nextjs";
-    case Frameworks.nuxt:
-    case Frameworks.previousNuxt:
-      return "https://prismic.io/docs/technologies/use-storybook-nuxtjs";
-    case Frameworks.react:
-      return "https://storybook.js.org/docs/react/get-started/install";
-    case Frameworks.vue:
-      return "https://storybook.js.org/docs/vue/get-started/install";
-    case Frameworks.svelte:
-      return "https://storybook.js.org/docs/svelte/get-started/install";
-    default:
-      return "https://prismic.io/docs";
-  }
 };
 
 export const getAuthStatus = (state: SliceMachineStoreType): AuthStatus => {

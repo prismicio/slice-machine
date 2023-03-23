@@ -1,5 +1,4 @@
 import * as t from "io-ts";
-import { Frameworks, FrameworksC } from "./Framework";
 
 const apiEndpoint = new t.Type<string>(
   "apiEndpoint",
@@ -41,32 +40,11 @@ const apiEndpoint = new t.Type<string>(
   t.identity
 );
 
-export const FrameworkCodec = new t.Type<Frameworks>(
-  "framework",
-  (input: unknown): input is Frameworks => FrameworksC.is(input),
-  (input, context) => {
-    const frameworks = Object.keys(Frameworks);
-    if (typeof input !== "string" || !FrameworksC.is(input)) {
-      return t.failure(
-        input,
-        context,
-        `framework should be one of ${frameworks.join(
-          ", "
-        )}. Set framework to one of these values or remove it and slice-machine will guess the framework.`
-      );
-    }
-
-    return t.success(input);
-  },
-  t.identity
-);
-
 export const Manifest = t.intersection([
   t.type({
     apiEndpoint,
   }),
   t.partial({
-    framework: FrameworkCodec,
     storybook: t.string,
     localSliceSimulatorURL: t.string,
     libraries: t.array(t.string),

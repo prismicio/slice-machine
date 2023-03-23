@@ -3,15 +3,16 @@ import { useEffect } from "react";
 import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getFramework, getRepoName } from "@src/modules/environment";
+import { getRepoName } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useRouter } from "next/router";
 
+import { managerClient } from "../managerClient";
+
 const useSMTracker = () => {
-  const { libraries, repoName, framework } = useSelector(
+  const { libraries, repoName } = useSelector(
     (state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
       repoName: getRepoName(state),
       libraries: getLibraries(state),
     })
@@ -23,13 +24,13 @@ const useSMTracker = () => {
     void group(libraries, repoName);
 
     // For initial loading
-    void trackPageView(framework);
+    void trackPageView();
   }, []);
 
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void trackPageView(framework);
+      void trackPageView();
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views
@@ -64,7 +65,13 @@ async function group(
   });
 }
 
-function trackPageView(framework: string): ReturnType<typeof telemetry.track> {
+async function trackPageView(): ReturnType<typeof telemetry.track> {
+  const sliceMachineConfig =
+    await managerClient.project.getSliceMachineConfig();
+  const adapter =
+    typeof sliceMachineConfig.adapter === "string"
+      ? sliceMachineConfig.adapter
+      : sliceMachineConfig.adapter.resolve;
   return telemetry.track({
     event: "page-view",
     url: window.location.href,
@@ -72,6 +79,6 @@ function trackPageView(framework: string): ReturnType<typeof telemetry.track> {
     search: window.location.search,
     title: document.title,
     referrer: document.referrer,
-    framework,
+    adapter,
   });
 }

@@ -117,7 +117,6 @@ describe.skip("simulator", () => {
         savingMock: false,
       },
       environment: {
-        framework: "next",
         changelog: {
           currentVersion: "0.0.0",
         },
@@ -293,10 +292,7 @@ describe.skip("simulator", () => {
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slice Simulator Open",
-        properties: {
-          version: state.environment.changelog.currentVersion,
-          framework: state.environment.framework,
-        },
+        properties: { version: state.environment.changelog.currentVersion },
       }),
       expect.any(Function)
     );

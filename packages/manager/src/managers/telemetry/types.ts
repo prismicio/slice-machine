@@ -94,7 +94,7 @@ type CommandInitEndSegmentEvent = SegmentEvent<
 
 type ReviewSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.review,
-	{ framework: string; rating: number; comment: string }
+	{ rating: number; comment: string }
 >;
 
 type OnboardingStartSegmentEvent = SegmentEvent<
@@ -123,18 +123,15 @@ type OnboardingContinueScreen3SegmentEvent = SegmentEvent<
 >;
 
 type SliceSimulatorSetupSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.sliceSimulator_setup,
-	{ framework: string }
+	typeof SegmentEventType.sliceSimulator_setup
 >;
 
 type SliceSimulatorOpenSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.sliceSimulator_open,
-	{ framework: string }
+	typeof SegmentEventType.sliceSimulator_open
 >;
 
 type SliceSimulatorIsNotRunningSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.sliceSimulator_isNotRunning,
-	{ framework: string }
+	typeof SegmentEventType.sliceSimulator_isNotRunning
 >;
 
 type PageViewSegmentEvent = SegmentEvent<
@@ -145,13 +142,13 @@ type PageViewSegmentEvent = SegmentEvent<
 		search: string;
 		title: string;
 		referrer: string;
-		framework: string;
+		adapter: string;
 	}
 >;
 
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.openVideoTutorials,
-	{ framework: string; video: string }
+	{ video: string }
 >;
 
 type CustomTypeCreatedSegmentEvent = SegmentEvent<

@@ -67,7 +67,6 @@ describe("slices", () => {
     );
 
     const environment = {
-      framework: "next",
       changelog: {
         currentVersion: "0.0.1",
       },
@@ -244,7 +243,6 @@ describe("slices", () => {
     );
 
     const environment = {
-      framework: "next",
       changelog: {
         currentVersion: "0.0.1",
       },

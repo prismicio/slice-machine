@@ -5,29 +5,19 @@ import { MdPlayCircleFilled } from "react-icons/md";
 import { Close, Flex, Paragraph } from "theme-ui";
 import style from "./VideoItem.module.css";
 import { telemetry } from "@src/apiClient";
-import { Frameworks } from "@lib/models/common/Framework";
 import { VIDEO_YOUTUBE_PLAYLIST_LINK } from "@lib/consts";
 
 type VideoItemProps = {
   hasSeenTutorialsTooTip: boolean;
   onClose: () => void;
-  framework: Frameworks;
 };
 
-const VideoItem: FC<VideoItemProps> = ({
-  framework,
-  hasSeenTutorialsTooTip,
-  onClose,
-}) => {
+const VideoItem: FC<VideoItemProps> = ({ hasSeenTutorialsTooTip, onClose }) => {
   const id = "video-tool-tip";
   const videoUrl = VIDEO_YOUTUBE_PLAYLIST_LINK;
 
   const handleClose = () => {
-    void telemetry.track({
-      event: "open-video-tutorials",
-      framework,
-      video: videoUrl,
-    });
+    void telemetry.track({ event: "open-video-tutorials", video: videoUrl });
     onClose();
   };
 

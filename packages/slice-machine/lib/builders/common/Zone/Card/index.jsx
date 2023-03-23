@@ -11,8 +11,6 @@ import { findWidgetByConfigOrType } from "../../../utils";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 
 import Li from "components/Li";
-import { useSelector } from "react-redux";
-import { getFramework } from "@src/modules/environment";
 
 const FieldZone = ({
   fields,
@@ -29,10 +27,6 @@ const FieldZone = ({
   isRepeatable,
   dataCy,
 }) => {
-  const { framework } = useSelector((state) => ({
-    framework: getFramework(state),
-  }));
-
   return (
     <DragDropContext
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -97,7 +91,7 @@ const FieldZone = ({
 
                 if (widget.CustomListItem) {
                   const { CustomListItem } = widget;
-                  return <CustomListItem {...props} framework={framework} />;
+                  return <CustomListItem {...props} />;
                 }
 
                 const HintElement = (
@@ -110,7 +104,6 @@ const FieldZone = ({
                     isRepeatable={isRepeatable}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     renderHintBase={renderHintBase}
-                    framework={framework}
                     Widgets={Widgets}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}

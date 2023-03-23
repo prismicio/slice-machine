@@ -1,5 +1,4 @@
 import ServerState from "@models/server/ServerState";
-import { Frameworks } from "@lib/models/common/Framework";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const dummyServerState: Pick<
@@ -13,7 +12,6 @@ export const dummyServerState: Pick<
       apiEndpoint: "https://sm-env-example.prismic.io/api/v2",
       storybook: "http://localhost:6006",
       chromaticAppId: "5f5b34f06f304800225c4e17",
-      framework: Frameworks.next,
       tracking: false,
       localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
     },
@@ -24,7 +22,6 @@ export const dummyServerState: Pick<
       updateAvailable: false,
       versions: [],
     },
-    framework: Frameworks.next,
     shortId: "shortId",
   },
   customTypes: [

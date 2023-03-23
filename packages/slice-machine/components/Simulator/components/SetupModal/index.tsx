@@ -5,12 +5,7 @@ import { Box, Flex, Heading, Text } from "theme-ui";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  getFramework,
-  getLinkToStorybookDocs,
-  getLinkToTroubleshootingDocs,
-  selectIsSimulatorAvailableForFramework,
-} from "@src/modules/environment";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import { selectSetupSteps } from "@src/modules/simulator";
 
 import HTMLRenderer from "@components/HTMLRenderer";
@@ -80,20 +75,13 @@ const NumberBox: React.FC<{ number: number }> = ({ number }) => (
 );
 
 const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
-  const {
-    // linkToTroubleshootingDocs,
-    // framework,
-    // linkToStorybookDocs,
-    isSimulatorAvailableForFramework,
-    setupSteps,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    framework: getFramework(state),
-    linkToStorybookDocs: getLinkToStorybookDocs(state),
-    isSimulatorAvailableForFramework:
-      selectIsSimulatorAvailableForFramework(state),
-    linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
-    setupSteps: selectSetupSteps(state),
-  }));
+  const { isSimulatorAvailableForFramework, setupSteps } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      isSimulatorAvailableForFramework:
+        selectIsSimulatorAvailableForFramework(state),
+      setupSteps: selectSetupSteps(state),
+    })
+  );
 
   const steps = setupSteps || [];
 
@@ -148,23 +136,6 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
                   </TabPanel>
                 );
               })}
-              {/*
-              {setupData.steps.map((Step, i) => {
-                return (
-                  <TabPanel
-                    key={`next-step-${i + 1}`}
-                    selectedClassName="react-tabs__vertical__tab-panel--selected"
-                    className="react-tabs__vertical__tab-panel"
-                  >
-                    <Step
-                      stepNumber={i + 1}
-                      linkToStorybookDocs={linkToStorybookDocs}
-                      linkToTroubleshootingDocs={linkToTroubleshootingDocs}
-                    />
-                  </TabPanel>
-                );
-              })}
-              */}
             </>
           ) : (
             <TabPanel

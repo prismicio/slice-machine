@@ -1,26 +1,21 @@
 import React, { RefCallback, useCallback, useRef } from "react";
-import { Box, Flex, Close, Text, Link, useThemeUI } from "theme-ui";
+import { Box, Flex, Close, Text, useThemeUI } from "theme-ui";
 import { Button } from "@components/Button";
 
 import { BsPlayCircle } from "react-icons/bs";
 import { SIMULATOR_WINDOW_ID, VIDEO_SIMULATOR_TOOLTIP } from "@lib/consts";
 import { useRouter } from "next/router";
 import ReactTooltip from "react-tooltip";
-import { Frameworks } from "@lib/models/common/Framework";
 
 import style from "./style.module.css";
 import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { getLinkToStorybookDocs } from "@src/modules/environment";
 import { telemetry } from "@src/apiClient";
 import Video from "@components/CloudVideo";
 
-const SimulatorNotSupportedTooltip: React.FC<{
-  framework: Frameworks;
-  linkToStorybookDocs: string;
-}> = ({ framework, linkToStorybookDocs }) => (
+const SimulatorNotSupportedTooltip: React.FC = () => (
   <ReactTooltip
     clickable
     place="bottom"
@@ -28,23 +23,14 @@ const SimulatorNotSupportedTooltip: React.FC<{
     delayHide={500}
     id="simulator-button-tooltip"
   >
-    <Text as="b">Framework "{framework}" not supported</Text>
-    <Text as="p">
-      Slice Simulator does not support your framework yet.
-      <br />
-      You can{" "}
-      <Link sx={{ color: "#FFF" }} target="_blank" href={linkToStorybookDocs}>
-        install Storybook
-      </Link>{" "}
-      instead.
-    </Text>
+    <Text as="b">Framework not supported</Text>
+    <Text as="p">Slice Simulator does not support your framework yet.</Text>
   </ReactTooltip>
 );
 
 const SimulatorOnboardingTooltip: React.FC<{
-  framework: Frameworks;
   onCloseToolTip: () => void;
-}> = ({ framework, onCloseToolTip }) => {
+}> = ({ onCloseToolTip }) => {
   const { theme } = useThemeUI();
   return (
     <ReactTooltip
@@ -88,7 +74,6 @@ const SimulatorOnboardingTooltip: React.FC<{
           onPlay={() => {
             void telemetry.track({
               event: "open-video-tutorials",
-              framework,
               video: VIDEO_SIMULATOR_TOOLTIP,
             });
           }}
@@ -135,20 +120,18 @@ const NeedToSaveTooltip: React.FC = () => (
 );
 
 const SimulatorButton: React.FC<{
-  framework: Frameworks;
   isSimulatorAvailableForFramework: boolean;
   isTouched: boolean;
-}> = ({ framework, isSimulatorAvailableForFramework, isTouched }) => {
+}> = ({ isSimulatorAvailableForFramework, isTouched }) => {
   const router = useRouter();
 
   const ref = useRef<HTMLButtonElement | null>(null);
 
   const { setSeenSimulatorToolTip } = useSliceMachineActions();
 
-  const { hasSeenSimulatorTooTip, linkToStorybookDocs } = useSelector(
+  const { hasSeenSimulatorTooTip } = useSelector(
     (store: SliceMachineStoreType) => ({
       hasSeenSimulatorTooTip: userHasSeenSimulatorToolTip(store),
-      linkToStorybookDocs: getLinkToStorybookDocs(store),
     })
   );
 
@@ -206,18 +189,12 @@ const SimulatorButton: React.FC<{
       </span>
       {isSimulatorAvailableForFramework ? (
         !hasSeenSimulatorTooTip ? (
-          <SimulatorOnboardingTooltip
-            framework={framework}
-            onCloseToolTip={onCloseToolTip}
-          />
+          <SimulatorOnboardingTooltip onCloseToolTip={onCloseToolTip} />
         ) : isTouched ? (
           <NeedToSaveTooltip />
         ) : null
       ) : (
-        <SimulatorNotSupportedTooltip
-          framework={framework}
-          linkToStorybookDocs={linkToStorybookDocs}
-        />
+        <SimulatorNotSupportedTooltip />
       )}
     </>
   );

@@ -29,7 +29,6 @@ const CustomListItem = ({
   widget,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentSnapshot,
-  framework,
   showHints,
   isRepeatable,
   item: groupItem,
@@ -189,8 +188,6 @@ const CustomListItem = ({
                                 item.key
                               )}`
                             }
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            framework={framework}
                             Widgets={Widgets}
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
