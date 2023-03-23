@@ -576,34 +576,28 @@ export class SlicesManager extends BaseManager {
 
 		const variations = await Promise.all(
 			args.model.variations.map(async (variation) => {
-				const updatedVariation: CustomTypes.Widgets.Slices.Variation = {
-					...variation,
-					imageUrl: DEFAULT_SLICE_SCREENSHOT_URL,
-				};
-
 				const screenshot = await this.readSliceScreenshot({
 					libraryID: args.libraryID,
 					sliceID: args.model.id,
 					variationID: variation.id,
 				});
 
+				// If there's no screenshot, delete it by replacing it with the default screenshot
 				if (!screenshot.data) {
-					return updatedVariation;
+					return {
+						...variation,
+						imageUrl: DEFAULT_SLICE_SCREENSHOT_URL,
+					};
 				}
 
 				const hasScreenshotChanged = !variation.imageUrl?.includes(
 					createContentDigest(screenshot.data),
 				);
 
+				// If screenshot hasn't changed, do nothing
 				if (!hasScreenshotChanged) {
-					return updatedVariation;
+					return variation;
 				}
-
-				console.log(
-					"Changed",
-					variation.imageUrl,
-					createContentDigest(screenshot.data),
-				);
 
 				const keyPrefix = [
 					sliceMachineConfig.repositoryName,
@@ -617,9 +611,10 @@ export class SlicesManager extends BaseManager {
 					keyPrefix,
 				});
 
-				updatedVariation.imageUrl = uploadedScreenshot.url;
-
-				return updatedVariation;
+				return {
+					...variation,
+					imageUrl: uploadedScreenshot.url,
+				};
 			}),
 		);
 
