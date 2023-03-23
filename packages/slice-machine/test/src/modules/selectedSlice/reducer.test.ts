@@ -149,7 +149,6 @@ describe("[Selected Slice module]", () => {
       expect(newState?.screenshots).toEqual({
         "default-slice": {
           hash: "f92c69c60df8fd8eb42902bfb6574776",
-          path: "updated-screenshot-path",
           url: "http://localhost:9999/api/__preview?q=default-slice",
         },
       });

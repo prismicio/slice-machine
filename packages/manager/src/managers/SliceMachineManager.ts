@@ -60,7 +60,6 @@ type SliceMachineManagerGetStateReturnType = {
 			screenshots: Record<
 				string,
 				{
-					path: string;
 					hash: string;
 					data: Buffer;
 				}
@@ -285,7 +284,6 @@ export class SliceMachineManager {
 
 											if (screenshot.data) {
 												screenshots[variation.id] = {
-													path: "__stub__",
 													hash: createContentDigest(screenshot.data),
 													data: screenshot.data,
 												};
