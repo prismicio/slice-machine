@@ -103,6 +103,15 @@ export const migrateAssets = async (
 	const isTelemetryEnabled = await manager.telemetry.checkIsTelemetryEnabled();
 
 	try {
+		// Exit early if migration is already performed
+		if (
+			!fsSync.existsSync(
+				path.join(createPathToDeprecatedLibrary(manager.cwd), "assets"),
+			)
+		) {
+			return;
+		}
+
 		const allSlices = await manager.slices.readAllSlices();
 		const sharedSlices = allSlices.models.reduce(
 			(o, slice) => ({ ...o, [slice.model.id]: slice.model }),
