@@ -1,7 +1,6 @@
 import * as yup from "yup";
 
 import { Widget } from "../models/common/widgets/Widget";
-import { Frameworks } from "@lib/models/common/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
@@ -66,13 +65,4 @@ export const sanitizeSbId = (str: string) => {
     .replace(/-+/g, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
-};
-
-export const simulatorIsSupported = (framework: Frameworks) => {
-  return [
-    Frameworks.next,
-    Frameworks.nuxt,
-    Frameworks.previousNext,
-    Frameworks.previousNuxt,
-  ].includes(framework);
 };

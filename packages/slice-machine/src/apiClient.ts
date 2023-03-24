@@ -15,7 +15,6 @@ import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
-import { Frameworks } from "@lib/models/common/Framework";
 
 /** State Routes * */
 
@@ -26,11 +25,6 @@ export const getState = async (): Promise<ServerState> => {
   // transform the data to something SM recognizes.
   const state: ServerState = {
     ...rawState,
-    // @ts-expect-error TS(2322) FIXME: Type '{ framework: Frameworks; mockConfig: CustomT... Remove this comment to see the full error message
-    env: {
-      ...rawState.env,
-      framework: rawState.env.framework as Frameworks,
-    },
     libraries: rawState.libraries.map((library) => {
       return {
         ...library,

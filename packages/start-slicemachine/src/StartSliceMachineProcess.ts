@@ -1,15 +1,16 @@
 /* eslint-disable no-console */
 
+import type { AddressInfo } from "node:net";
+import chalk from "chalk";
+import open from "open";
+
 import {
 	PrismicUserProfile,
 	SliceMachineManager,
 	createSliceMachineManager,
 } from "@slicemachine/manager";
-import chalk from "chalk";
-import open from "open";
 
-import { listen } from "./lib/listen";
-import { createSliceMachineServer } from "./lib/createSliceMachineServer";
+import { createSliceMachineExpressApp } from "./lib/createSliceMachineExpressApp";
 import { migrateSMJSON } from "./legacyMigrations/migrateSMJSON";
 import { migrateAssets } from "./legacyMigrations/migrateAssets";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
@@ -84,10 +85,11 @@ export class StartSliceMachineProcess {
 
 		await this._validateProject();
 
-		const server = await createSliceMachineServer({
+		const app = await createSliceMachineExpressApp({
 			sliceMachineManager: this._sliceMachineManager,
 		});
-		const { address } = await listen(server, { port: this.port });
+		const server = app.listen(this.port);
+		const address = server.address() as AddressInfo;
 		const url = `http://localhost:${address.port}`;
 
 		if (this.open) {

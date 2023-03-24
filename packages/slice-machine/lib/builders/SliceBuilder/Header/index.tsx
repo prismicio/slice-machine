@@ -14,10 +14,7 @@ import { Button } from "@components/Button";
 import { AiFillSave } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  getFramework,
-  selectIsSimulatorAvailableForFramework,
-} from "@src/modules/environment";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import SimulatorButton from "./SimulatorButton";
 
 const Header: React.FC<{
@@ -34,11 +31,10 @@ const Header: React.FC<{
 
   const { copyVariationSlice } = useSliceMachineActions();
 
-  const { isSimulatorAvailableForFramework, framework } = useSelector(
+  const { isSimulatorAvailableForFramework } = useSelector(
     (state: SliceMachineStoreType) => ({
       isSimulatorAvailableForFramework:
         selectIsSimulatorAvailableForFramework(state),
-      framework: getFramework(state),
     })
   );
 
@@ -82,7 +78,6 @@ const Header: React.FC<{
           Actions={[
             <SimulatorButton
               key="header-simulator-button"
-              framework={framework}
               isSimulatorAvailableForFramework={
                 isSimulatorAvailableForFramework
               }

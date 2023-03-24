@@ -30,6 +30,7 @@ import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
+import { createContentDigest } from "../../lib/createContentDigest";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -348,7 +349,7 @@ export class SlicesManager extends BaseManager {
 
 		if (model) {
 			const modelWithScreenshots =
-				await this._updateSliceModelScreenshotsInPlace({
+				await this.updateSliceModelScreenshotsInPlace({
 					libraryID: args.libraryID,
 					model,
 				});
@@ -568,48 +569,52 @@ export class SlicesManager extends BaseManager {
 		return await client.getAllSharedSlices();
 	}
 
-	private async _updateSliceModelScreenshotsInPlace(
+	async updateSliceModelScreenshotsInPlace(
 		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
 	): Promise<CustomTypes.Widgets.Slices.SharedSlice> {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 		const variations = await Promise.all(
 			args.model.variations.map(async (variation) => {
-				const updatedVariation: CustomTypes.Widgets.Slices.Variation = {
-					...variation,
-					imageUrl: DEFAULT_SLICE_SCREENSHOT_URL,
-				};
-
 				const screenshot = await this.readSliceScreenshot({
 					libraryID: args.libraryID,
 					sliceID: args.model.id,
 					variationID: variation.id,
 				});
 
-				if (screenshot.data) {
-					const keyPrefix = [
-						sliceMachineConfig.repositoryName,
-						"shared-slices",
-						args.model.id,
-						variation.id,
-					].join("/");
-
-					// TODO: If the existing imageUrl
-					// property (not the prefilled efault
-					// URL) is identical to the new image
-					// (we'll need to get the image's full
-					// URL before we upload it), then don't
-					// upload anything.
-
-					const uploadedScreenshot = await this.screenshots.uploadScreenshot({
-						data: screenshot.data,
-						keyPrefix,
-					});
-
-					updatedVariation.imageUrl = uploadedScreenshot.url;
+				// If there's no screenshot, delete it by replacing it with the default screenshot
+				if (!screenshot.data) {
+					return {
+						...variation,
+						imageUrl: DEFAULT_SLICE_SCREENSHOT_URL,
+					};
 				}
 
-				return updatedVariation;
+				const hasScreenshotChanged = !variation.imageUrl?.includes(
+					createContentDigest(screenshot.data),
+				);
+
+				// If screenshot hasn't changed, do nothing
+				if (!hasScreenshotChanged) {
+					return variation;
+				}
+
+				const keyPrefix = [
+					sliceMachineConfig.repositoryName,
+					"shared-slices",
+					args.model.id,
+					variation.id,
+				].join("/");
+
+				const uploadedScreenshot = await this.screenshots.uploadScreenshot({
+					data: screenshot.data,
+					keyPrefix,
+				});
+
+				return {
+					...variation,
+					imageUrl: uploadedScreenshot.url,
+				};
 			}),
 		);
 

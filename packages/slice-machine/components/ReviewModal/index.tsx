@@ -23,7 +23,6 @@ import {
 } from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-import { getEnvironment } from "@src/modules/environment";
 import { telemetry } from "@src/apiClient";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getLibraries } from "@src/modules/slices";
@@ -63,7 +62,6 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
 
 const ReviewModal: React.FunctionComponent = () => {
   const {
-    env,
     isReviewLoading,
     isLoginModalOpen,
     hasSendAReview,
@@ -72,7 +70,6 @@ const ReviewModal: React.FunctionComponent = () => {
     libraries,
     lastSyncChange,
   } = useSelector((store: SliceMachineStoreType) => ({
-    env: getEnvironment(store),
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
     isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
     hasSendAReview: userHasSendAReview(store),
@@ -113,12 +110,7 @@ const ReviewModal: React.FunctionComponent = () => {
 
   const onSendAReview = (rating: number, comment: string): void => {
     startLoadingReview();
-    void telemetry.track({
-      event: "review",
-      framework: env.framework,
-      rating,
-      comment,
-    });
+    void telemetry.track({ event: "review", rating, comment });
     sendAReview();
     stopLoadingReview();
   };

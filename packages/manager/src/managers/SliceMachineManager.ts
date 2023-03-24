@@ -44,7 +44,6 @@ type SliceMachineManagerGetStateReturnType = {
 		repo: string;
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
-		framework: unknown; // TODO: Remove
 	};
 	libraries: {
 		name: string;
@@ -60,7 +59,6 @@ type SliceMachineManagerGetStateReturnType = {
 			screenshots: Record<
 				string,
 				{
-					path: string;
 					hash: string;
 					data: Buffer;
 				}
@@ -214,7 +212,6 @@ export class SliceMachineManager {
 
 		return {
 			env: {
-				framework: "",
 				manifest: {
 					apiEndpoint:
 						sliceMachineConfig.apiEndpoint ||
@@ -285,7 +282,6 @@ export class SliceMachineManager {
 
 											if (screenshot.data) {
 												screenshots[variation.id] = {
-													path: "__stub__",
 													hash: createContentDigest(screenshot.data),
 													data: screenshot.data,
 												};

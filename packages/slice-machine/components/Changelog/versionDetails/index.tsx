@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Text } from "theme-ui";
+import type { PackageManager } from "@slicemachine/manager";
 import { PackageChangelog, PackageVersion } from "@models/common/versions";
-import { PackageManager } from "@models/common/PackageManager";
 import { VersionKindLabel } from "./VersionKindLabel";
 import { ReleaseNoteDetails } from "./ReleaseNoteDetails";
 import { UpdateCommandBox } from "./UpdateCommandBox";

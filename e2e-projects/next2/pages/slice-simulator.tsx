@@ -6,7 +6,8 @@ import { components } from "../slices";
 const SliceSimulatorPage = () => {
   return (
     <SliceSimulator
-      sliceZone={(props) => <SliceZone {...props} components={components} />}
+      background="#000000"
+      sliceZone={(props) => <SliceZone {...props} components={components}/>}
     />
   );
 };
