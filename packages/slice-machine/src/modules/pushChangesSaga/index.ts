@@ -81,7 +81,7 @@ export function* changesPushSaga({
   }));
 
   // Creating a new payload with the correct format
-  const pushPayload: Parameters<typeof pushChanges>[0] = {
+  const pushPayload = {
     confirmDeleteDocuments: payload.confirmDeleteDocuments,
     changes: [...sliceChanges, ...customTypeChanges],
   };
