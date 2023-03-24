@@ -1,0 +1,48 @@
+{
+  "topPromoBanner": {
+    "__TYPE__": "FieldContent",
+    "value": "social",
+    "type": "Text"
+  },
+  "logo": {
+    "__TYPE__": "ImageContent",
+    "origin": {
+      "id": "main",
+      "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb",
+      "width": 3958,
+      "height": 3958
+    },
+    "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb?rect=0%2C0%2C3958%2C3958&w=64&h=64",
+    "width": 64,
+    "height": 64,
+    "edit": {
+      "zoom": 1,
+      "crop": {
+        "x": 0,
+        "y": 0
+      },
+      "background": "transparent"
+    },
+    "thumbnails": {}
+  },
+  "menuTabs": {
+    "__TYPE__": "GroupContentType",
+    "value": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "menuTab",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "__TYPE__": "DocumentLink",
+                "id": "mock_document_id"
+              }
+            }
+          ]
+        ]
+      }
+    ]
+  }
+}

@@ -1,1 +1,100 @@
-[{"__TYPE__":"SharedSliceContent","variation":"default-slice","primary":{"title":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Lorem commodo enim adipisicing esse adipisicing. Nostrud ex in sint reprehenderit magna nostrud cupidatat duis deserunt aliquip qui aute id voluptate."}}]},"description":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Dolore magna adipisicing eiusmod qui elit nisi esse cillum excepteur cillum ea non ea. Cupidatat elit culpa fugiat."}}]},"address":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Exercitation ad pariatur laboris cillum fugiat aute qui. Ullamco ullamco laboris deserunt amet adipisicing labore qui qui ipsum fugiat tempor cupidatat non ullamco. Laboris cillum qui cupidatat Lorem anim labore tempor laborum cupidatat sit laborum enim minim."}}]},"phone":{"__TYPE__":"FieldContent","value":"tiny","type":"Text"},"email":{"__TYPE__":"FieldContent","value":"be","type":"Text"},"careerText":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Aliqua laborum nisi nisi cillum commodo qui adipisicing."}}]},"careerLink":{"__TYPE__":"LinkContent","value":{"url":"http://google.com","__TYPE__":"ExternalLink"}},"CareerLinkText":{"__TYPE__":"FieldContent","value":"lungs","type":"Text"},"cta":{"__TYPE__":"FieldContent","value":"total","type":"Text"}},"items":[{"__TYPE__":"GroupItemContent","value":[["field",{"__TYPE__":"FieldContent","value":"product","type":"Text"}],["fieldPlaceholder",{"__TYPE__":"FieldContent","value":"case","type":"Text"}]]}]}]
+{
+  "__TYPE__": "SharedSliceContent",
+  "variation": "default-slice",
+  "primary": {
+    "title": {
+      "__TYPE__": "StructuredTextContent",
+      "value": [
+        {
+          "type": "paragraph",
+          "content": {
+            "text": "Aute minim qui culpa aliqua. Commodo proident enim ad sint nulla."
+          }
+        }
+      ]
+    },
+    "description": {
+      "__TYPE__": "StructuredTextContent",
+      "value": [
+        {
+          "type": "paragraph",
+          "content": {
+            "text": "Est veniam nisi commodo reprehenderit irure officia laboris irure exercitation fugiat deserunt Lorem proident eiusmod deserunt. Officia eiusmod veniam deserunt amet sit non non occaecat."
+          }
+        }
+      ]
+    },
+    "address": {
+      "__TYPE__": "StructuredTextContent",
+      "value": [
+        {
+          "type": "paragraph",
+          "content": {
+            "text": "Non non et veniam ea aute proident cillum non cillum do laboris ut esse sunt. In consequat dolor Lorem in fugiat. Sit tempor consequat officia exercitation tempor."
+          }
+        }
+      ]
+    },
+    "phone": {
+      "__TYPE__": "FieldContent",
+      "value": "surface",
+      "type": "Text"
+    },
+    "email": {
+      "__TYPE__": "FieldContent",
+      "value": "soft",
+      "type": "Text"
+    },
+    "careerText": {
+      "__TYPE__": "StructuredTextContent",
+      "value": [
+        {
+          "type": "paragraph",
+          "content": {
+            "text": "Culpa voluptate velit in occaecat. Incididunt magna anim qui in voluptate ipsum dolor quis ullamco officia et cillum commodo."
+          }
+        }
+      ]
+    },
+    "careerLink": {
+      "__TYPE__": "LinkContent",
+      "value": {
+        "__TYPE__": "ExternalLink",
+        "url": "http://google.com"
+      }
+    },
+    "CareerLinkText": {
+      "__TYPE__": "FieldContent",
+      "value": "mother",
+      "type": "Text"
+    },
+    "cta": {
+      "__TYPE__": "FieldContent",
+      "value": "screen",
+      "type": "Text"
+    }
+  },
+  "items": [
+    {
+      "__TYPE__": "GroupItemContent",
+      "value": [
+        [
+          "field",
+          {
+            "__TYPE__": "FieldContent",
+            "value": "travel",
+            "type": "Text"
+          }
+        ],
+        [
+          "fieldPlaceholder",
+          {
+            "__TYPE__": "FieldContent",
+            "value": "travel",
+            "type": "Text"
+          }
+        ]
+      ]
+    }
+  ]
+}
