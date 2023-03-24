@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.6.1-dev-plugins-testing.0",
+  "version": "0.6.1-dev-plugins-m1-validation.0",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "_moduleAliases": {
@@ -17,12 +17,12 @@
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
     "prepublishOnly": "npm run build",
     "test": "npm run lint && npm run types && npm run unit && npm run build",
-		"types": "tsc --noEmit",
+    "types": "tsc --noEmit",
     "unit": "vitest run --coverage",
-		"unit:watch": "vitest watch",
+    "unit:watch": "vitest watch",
     "lint:precommit": "eslint",
     "depcheck": "depcheck --config=.depcheckrc",
-		"audit": "better-npm-audit audit -l high -p"
+    "audit": "better-npm-audit audit -l high -p"
   },
   "dependencies": {
     "@extractus/oembed-extractor": "^3.1.8",
@@ -30,7 +30,7 @@
     "@prismicio/editor-ui": "^0.1.0",
     "@prismicio/mocks": "1.6.4",
     "@prismicio/types-internal": "^1.5.3",
-    "@slicemachine/manager": "0.1.1-dev-plugins-testing.0",
+    "@slicemachine/manager": "0.1.1-dev-plugins-m1-validation.0",
     "axios": "^0.26.1",
     "fast-deep-equal": "^3.1.3",
     "fp-ts": "^2.13.1",
@@ -43,7 +43,7 @@
     "puppeteer": "^19.7.5",
     "react": "^18.2.0",
     "semver": "^7.3.8",
-    "start-slicemachine": "0.6.1-dev-plugins.12",
+    "start-slicemachine": "0.6.1-dev-plugins-m1-validation.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

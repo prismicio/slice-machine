@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.1.1-dev-plugins-testing.0",
+	"version": "0.1.1-dev-plugins-m1-validation.0",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
@@ -63,7 +63,7 @@
 		"@antfu/ni": "^0.20.0",
 		"@prismicio/custom-types-client": "^1.0.2",
 		"@prismicio/types-internal": "^1.5.3",
-		"@slicemachine/plugin-kit": "0.1.8-dev-plugins-testing.0",
+		"@slicemachine/plugin-kit": "0.1.8-dev-plugins-m1-validation.0",
 		"@wooorm/starry-night": "^1.6.0",
 		"analytics-node": "^6.2.0",
 		"cookie": "^0.5.0",
@@ -99,7 +99,7 @@
 		"@typescript-eslint/eslint-plugin": "~5.55.0",
 		"@typescript-eslint/parser": "^5.55.0",
 		"@vitest/coverage-c8": "^0.27.3",
-    "better-npm-audit": "^3.7.3",
+		"better-npm-audit": "^3.7.3",
 		"depcheck": "^1.4.3",
 		"eslint": "^8.36.0",
 		"eslint-config-prettier": "^8.7.0",
