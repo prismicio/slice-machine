@@ -9,7 +9,6 @@ import { createSliceMachineManager } from "../src";
 it("returns the project's Slice Machine config", async () => {
 	const adapter = createTestPlugin();
 	const testSliceMachineConfig = {
-		_latest: "foo",
 		repositoryName: "bar",
 		apiEndpoint: "baz",
 		adapter,

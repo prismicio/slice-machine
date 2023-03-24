@@ -36,8 +36,6 @@ export type SliceMachineConfigPluginRegistration<
  * Slice Machine configuration from `slicemachine.config.js`.
  */
 export type SliceMachineConfig = {
-	// TODO: Is `_latest` necessary? Can we deprecate it?
-	_latest: string;
 	// TODO: Can we make `apiEndpoint` optional?
 	apiEndpoint?: string;
 	// NOTE: This is a new property.

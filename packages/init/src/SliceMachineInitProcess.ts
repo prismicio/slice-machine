@@ -767,8 +767,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 						await this.manager.project.writeSliceMachineConfig({
 							config: {
-								// TODO: Update _latest to a real value or make it optional
-								_latest: "legacy",
 								repositoryName: this.context.repository.domain,
 								adapter: this.context.framework.adapterName,
 								libraries: ["./slices"],

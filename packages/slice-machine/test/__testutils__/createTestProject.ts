@@ -43,7 +43,6 @@ export const createTestProject = async (
   await fs.writeFile(
     path.join(root, "slicemachine.config.json"),
     JSON.stringify({
-      _latest: "0.0.0",
       repositoryName: `test-repo-${testNameDigest}`,
       ...sliceMachineConfig,
       adapter: adapterName,

@@ -34,7 +34,6 @@ it("creates new Slice Machine configuration", async () => {
 
 	expect(vol.toJSON()["/slicemachine.config.json"]).toMatchInlineSnapshot(`
 		"{
-		  \\"_latest\\": \\"legacy\\",
 		  \\"repositoryName\\": \\"repo-admin\\",
 		  \\"adapter\\": \\"test-plugin-0194c5b16375a550d23fd066d6a455d02ea4a5ef\\",
 		  \\"libraries\\": [\\"./slices\\"]
@@ -49,7 +48,6 @@ it("updates existing Slice Machine configuration", async () => {
 	injectTestAdapter({ initProcess, adapter });
 
 	const existingConfig = {
-		_latest: "legacy",
 		repositoryName: "previous-repo",
 		adapter: "foo",
 		libraries: ["./my-slices"],
@@ -70,7 +68,6 @@ it("updates existing Slice Machine configuration", async () => {
 
 	expect(vol.toJSON()["/slicemachine.config.json"]).toMatchInlineSnapshot(`
 		"{
-		  \\"_latest\\": \\"legacy\\",
 		  \\"repositoryName\\": \\"repo-admin\\",
 		  \\"adapter\\": \\"test-plugin-500ac0533b8aa48f3fd6d4bc7174bda57aa0444c\\",
 		  \\"libraries\\": [\\"./my-slices\\"]

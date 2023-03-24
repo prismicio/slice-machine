@@ -5,23 +5,22 @@ import { CreateSliceMachineManagerMiddlewareArgs } from "@slicemachine/manager";
 
 import { checkIsSentryEnabled } from "./checkIsSentryEnabled";
 
-export const node: ErrorRequestHandler = (error, req, _res, next): void => {
+export const node = (name: string, error: unknown): void => {
 	if (checkIsSentryEnabled()) {
 		Sentry.withScope(function (scope) {
-			scope.setTransactionName(req.path);
+			scope.setTransactionName(name);
 			Sentry.captureException(error);
 		});
 	}
+};
+
+export const server: ErrorRequestHandler = (error, req, _res, next): void => {
+	node(req.path, error);
 	next();
 };
 
 export const rpc: CreateSliceMachineManagerMiddlewareArgs["onError"] = (
 	args,
 ) => {
-	if (checkIsSentryEnabled()) {
-		Sentry.withScope(function (scope) {
-			scope.setTransactionName(args.procedurePath.join(","));
-			Sentry.captureException(args.error);
-		});
-	}
+	node(args.procedurePath.join("."), args.error);
 };

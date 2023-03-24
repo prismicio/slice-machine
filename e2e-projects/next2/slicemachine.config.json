@@ -1,5 +1,4 @@
 {
-  "_latest": "1.0.0",
   "repositoryName": "md-slice-crash",
   "libraries": ["./slices"],
   "adapter": "@slicemachine/adapter-next",

@@ -12,6 +12,7 @@ type LocateFileUpwardConfig = {
 	_originalStartDir?: string;
 };
 
+// TODO: MIGRATION - Remove this after migration the Migration Manager if still not used elsewhere
 export const locateFileUpward = async (
 	filePathOrPaths: string | readonly string[],
 	{

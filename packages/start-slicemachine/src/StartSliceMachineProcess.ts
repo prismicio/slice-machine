@@ -11,7 +11,9 @@ import {
 } from "@slicemachine/manager";
 
 import { createSliceMachineExpressApp } from "./lib/createSliceMachineExpressApp";
-
+import { setupSentry } from "./lib/setupSentry";
+import { migrateSMJSON } from "./legacyMigrations/migrateSMJSON";
+import { migrateAssets } from "./legacyMigrations/migrateAssets";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
 
 const DEFAULT_SERVER_PORT = 9999;
@@ -66,14 +68,27 @@ export class StartSliceMachineProcess {
 	 * Runs the process.
 	 */
 	async run(): Promise<void> {
+		// This migration needs to run before the plugins are initialised
+		// Nothing can start without the config file
+		await migrateSMJSON(this._sliceMachineManager);
+
+		// Initialize Segment and Sentry
 		const appVersion =
 			await this._sliceMachineManager.versions.getRunningSliceMachineVersion();
 		await this._sliceMachineManager.telemetry.initTelemetry({
 			appName: SLICE_MACHINE_NPM_PACKAGE_NAME,
 			appVersion,
 		});
+		const isTelemetryEnabled =
+			await this._sliceMachineManager.telemetry.checkIsTelemetryEnabled();
+		if (isTelemetryEnabled) {
+			setupSentry(this._sliceMachineManager);
+		}
 
 		await this._sliceMachineManager.plugins.initPlugins();
+
+		// TODO: MIGRATION - Move this to the Migration Manager
+		await migrateAssets(this._sliceMachineManager);
 
 		await this._validateProject();
 

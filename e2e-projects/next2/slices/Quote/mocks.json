@@ -1,18 +1,28 @@
-[
-  {
-    "variation": "default",
-    "name": "Default",
-    "slice_type": "quote",
-    "items": [],
-    "primary": {
-      "quote": [
+{
+  "__TYPE__": "SharedSliceContent",
+  "variation": "default",
+  "primary": {
+    "quote": {
+      "__TYPE__": "StructuredTextContent",
+      "value": [
         {
           "type": "heading2",
-          "text": "Harness world-class applications",
-          "spans": []
+          "content": {
+            "text": "Increase"
+          }
         }
-      ],
-      "source": "productize granular blockchains"
+      ]
+    },
+    "source": {
+      "__TYPE__": "FieldContent",
+      "value": "state",
+      "type": "Text"
     }
-  }
-]
+  },
+  "items": [
+    {
+      "__TYPE__": "GroupItemContent",
+      "value": []
+    }
+  ]
+}

@@ -147,7 +147,6 @@ export class ProjectManager extends BaseManager {
 	async loadSliceMachineConfig(): Promise<SliceMachineConfig> {
 		// TODO: Reload plugins with a fresh plugin runner. Plugins may
 		// have been added or removed.
-
 		const configFilePath = await this.getSliceMachineConfigPath();
 
 		let rawConfig: unknown | undefined;

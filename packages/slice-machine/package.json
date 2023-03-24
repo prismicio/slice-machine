@@ -15,7 +15,6 @@
     "dev": "next dev",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
-    "postinstall": "node postinstall",
     "prepublishOnly": "npm run build",
     "test": "npm run lint && npm run types && npm run unit && npm run build",
 		"types": "tsc --noEmit",

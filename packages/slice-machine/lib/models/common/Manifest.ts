@@ -49,7 +49,6 @@ export const Manifest = t.intersection([
     localSliceSimulatorURL: t.string,
     libraries: t.array(t.string),
     chromaticAppId: t.string,
-    _latest: t.string,
     tracking: t.boolean,
     generateTypes: t.boolean,
   }),
