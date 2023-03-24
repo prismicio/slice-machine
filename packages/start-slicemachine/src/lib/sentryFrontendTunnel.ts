@@ -1,4 +1,4 @@
-// We tunnel the Sentry calls via the h3 server to avoid ad blockers
+// We tunnel the Sentry calls via the Express server to avoid ad blockers
 // adapted from https://github.com/getsentry/examples/blob/0e2f17c5914f28ccae931e51801b7d9760d34cbe/tunneling/nextjs/pages/api/tunnel.js
 
 import type { RequestHandler } from "express";

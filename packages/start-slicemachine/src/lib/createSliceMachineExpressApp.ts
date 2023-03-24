@@ -21,7 +21,7 @@ type CreateSliceMachineExpressAppArgs = {
 };
 
 /**
- * Creates an HTTP server to handle the following:
+ * Creates an Express app to handle the following:
  *
  * - Serve the Slice Machine app.
  * - Expose a given Slice Machine manager to non-Node.js environments, like the
@@ -35,7 +35,7 @@ type CreateSliceMachineExpressAppArgs = {
  *
  * @param args - Configuration for the server.
  *
- * @returns A standard `node:http` server.
+ * @returns A standard Express app.
  */
 export const createSliceMachineExpressApp = async (
 	args: CreateSliceMachineExpressAppArgs,
