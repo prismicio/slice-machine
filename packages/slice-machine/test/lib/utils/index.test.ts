@@ -1,17 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { simulatorIsSupported } from "@lib/utils";
-import { Frameworks } from "@lib/models/common/Framework";
 import { slugify } from "@lib/utils/str";
-
-describe("simulatorIsSupported", () => {
-  test("Can create Storybook url from variation id", () => {
-    expect(simulatorIsSupported(Frameworks.next)).toBeTruthy();
-    expect(simulatorIsSupported(Frameworks.nuxt)).toBeTruthy();
-    expect(simulatorIsSupported(Frameworks.vue)).toBeFalsy();
-    expect(simulatorIsSupported(Frameworks.react)).toBeFalsy();
-    expect(simulatorIsSupported(Frameworks.vanillajs)).toBeFalsy();
-  });
-});
 
 describe("slugify", () => {
   test("returns the same string if valid", () => {

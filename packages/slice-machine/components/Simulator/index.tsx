@@ -9,7 +9,7 @@ import Header from "./components/Header";
 
 import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
-import { getFramework, selectSimulatorUrl } from "@src/modules/environment";
+import { selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -51,13 +51,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const { checkSimulatorSetup, connectToSimulatorIframe, saveSliceMock } =
     useSliceMachineActions();
   const {
-    framework,
     simulatorUrl,
     iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
   } = useSelector((state: SliceMachineStoreType) => ({
-    framework: getFramework(state),
     simulatorUrl: selectSimulatorUrl(state),
     iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
@@ -69,7 +67,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void telemetry.track({ event: "slice-simulator:open", framework });
+    void telemetry.track({ event: "slice-simulator:open" });
   }, []);
 
   const startedNewEditorSessionRef = useRef(false);
@@ -120,12 +118,9 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
-      void telemetry.track({
-        event: "slice-simulator:is-not-running",
-        framework,
-      });
+      void telemetry.track({ event: "slice-simulator:is-not-running" });
     }
-  }, [currentState, framework]);
+  }, [currentState]);
 
   useEffect(() => {
     if (currentState === UiState.SUCCESS) {

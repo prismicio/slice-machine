@@ -17,14 +17,11 @@ import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "../src/modules/useSliceMachineActions";
 import { telemetry } from "@src/apiClient";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
-import { getFramework } from "../src/modules/environment";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,
   VIDEO_ONBOARDING_ADD_TO_PAGE,
   VIDEO_ONBOARDING_PUSH_CHANGES,
 } from "../lib/consts";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
 
 import Video from "@components/CloudVideo";
 
@@ -203,16 +200,8 @@ function useTracking(props: { step: number; maxSteps: number }): void {
 export default function Onboarding(): JSX.Element {
   const router = useRouter();
 
-  const { framework } = useSelector((store: SliceMachineStoreType) => ({
-    framework: getFramework(store),
-  }));
-
   const createOnPlay = (id: string) => () => {
-    void telemetry.track({
-      event: "open-video-tutorials",
-      framework,
-      video: id,
-    });
+    void telemetry.track({ event: "open-video-tutorials", video: id });
   };
 
   const STEPS = [

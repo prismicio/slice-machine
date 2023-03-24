@@ -44,7 +44,6 @@ type SliceMachineManagerGetStateReturnType = {
 		repo: string;
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
-		framework: unknown; // TODO: Remove
 	};
 	libraries: {
 		name: string;
@@ -213,7 +212,6 @@ export class SliceMachineManager {
 
 		return {
 			env: {
-				framework: "",
 				manifest: {
 					apiEndpoint:
 						sliceMachineConfig.apiEndpoint ||

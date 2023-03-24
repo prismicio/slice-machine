@@ -12,7 +12,6 @@ import {
 import Router from "next/router";
 import mockRouter from "next-router-mock";
 import SegmentClient from "analytics-node";
-import { Frameworks } from "@lib/models/common/Framework";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
@@ -140,10 +139,6 @@ describe("Custom Type Builder", () => {
 
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
-        // @ts-expect-error TS(2739) FIXME: Type '{ framework: Frameworks.next; mockConfig: { ... Remove this comment to see the full error message
-        environment: {
-          framework: Frameworks.next,
-        },
         availableCustomTypes: {
           [customTypeId]: {
             local: {
@@ -236,14 +231,8 @@ describe("Custom Type Builder", () => {
 
     // duplicated state for library context :/
 
-    const environment = {
-      framework: "next",
-    };
-
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
-        // @ts-expect-error TS(2739) FIXME: Type '{ framework: string; mockConfig: { _cts: { "... Remove this comment to see the full error message
-        environment,
         availableCustomTypes: {
           [customTypeId]: {
             local: {
@@ -358,10 +347,6 @@ describe("Custom Type Builder", () => {
 
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
-        environment: {
-          // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
-          framework: "next",
-        },
         availableCustomTypes: {
           [customTypeId]: {
             local: {
@@ -502,10 +487,6 @@ describe("Custom Type Builder", () => {
 
     render(<CreateCustomTypeBuilder />, {
       preloadedState: {
-        environment: {
-          // @ts-expect-error TS(2322) FIXME: Type '"next"' is not assignable to type 'Framework... Remove this comment to see the full error message
-          framework: "next",
-        },
         availableCustomTypes: {
           [customTypeId]: {
             local: {

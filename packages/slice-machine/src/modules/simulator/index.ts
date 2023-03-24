@@ -22,11 +22,9 @@ import {
   telemetry,
 } from "@src/apiClient";
 import {
-  getFramework,
   selectIsSimulatorAvailableForFramework,
   updateManifestCreator,
 } from "@src/modules/environment";
-import { Frameworks } from "@lib/models/common/Framework";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
@@ -252,11 +250,7 @@ export function* failCheckSetupSaga({
 }
 
 export function* trackOpenSetupModalSaga() {
-  const framework: Frameworks = (yield select(getFramework)) as ReturnType<
-    typeof getFramework
-  >;
-
-  void telemetry.track({ event: "slice-simulator:setup", framework });
+  void telemetry.track({ event: "slice-simulator:setup" });
 }
 
 export function* saveSliceMockSaga({
