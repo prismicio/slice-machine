@@ -1,11 +1,14 @@
 import * as path from "node:path";
 import * as fsSync from "node:fs";
+
 import { SliceMachineManager } from "@slicemachine/manager";
 import {
 	SharedSliceContent,
 	Document,
 } from "@prismicio/types-internal/lib/content";
 import { DocumentMock, SharedSliceMock } from "@prismicio/mocks";
+
+import * as sentryErrorHandlers from "../lib/sentryErrorHandlers";
 
 const MOCKS_FILE_NAME = "mocks.json";
 const MOCK_CONFIG_FILE_NAME = "mock-config.json";
@@ -56,6 +59,7 @@ const ensureOrGenerateMockFile = (
 	deprecatedPathToMocks: string,
 	validator: (str: string) => boolean,
 	generate: () => Record<string, unknown>,
+	isTelemetryEnabled: boolean,
 ) => {
 	try {
 		const rawMockContent = (() => {
@@ -85,13 +89,19 @@ const ensureOrGenerateMockFile = (
 		} else {
 			fsSync.writeFileSync(targetPathToMocks, regeneratedMocksString);
 		}
-	} catch (error) {}
+	} catch (error) {
+		if (isTelemetryEnabled) {
+			sentryErrorHandlers.node("migrateAssets.ensureOrGenerateMockFile", error);
+		}
+	}
 };
 
 // TODO: MIGRATION - Move this to the Migration Manager
 export const migrateAssets = async (
 	manager: SliceMachineManager,
 ): Promise<void> => {
+	const isTelemetryEnabled = await manager.telemetry.checkIsTelemetryEnabled();
+
 	try {
 		const allSlices = await manager.slices.readAllSlices();
 		const sharedSlices = allSlices.models.reduce(
@@ -126,6 +136,7 @@ export const migrateAssets = async (
 				(str: string) =>
 					SharedSliceContent.decode(JSON.parse(str))._tag === "Right",
 				() => SharedSliceMock.generate(c.model),
+				isTelemetryEnabled,
 			);
 
 			const variationsIDs = c.model.variations.map((v) => v.id);
@@ -155,9 +166,13 @@ export const migrateAssets = async (
 				deprecatedPathToMocks,
 				(str: string) => Document.decode(JSON.parse(str))._tag === "Right",
 				() => DocumentMock.generate(c.model, sharedSlices),
+				isTelemetryEnabled,
 			);
 		});
 	} catch (error) {
+		if (isTelemetryEnabled) {
+			sentryErrorHandlers.node("migrateAssets", error);
+		}
 	} finally {
 		safeUnlink(
 			path.join(

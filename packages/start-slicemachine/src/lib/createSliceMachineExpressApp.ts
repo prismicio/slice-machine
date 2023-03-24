@@ -1,5 +1,6 @@
 import * as path from "node:path";
 
+import * as Sentry from "@sentry/node";
 import express, { Express } from "express";
 import bodyParser from "body-parser";
 import { createProxyMiddleware } from "http-proxy-middleware";
@@ -12,9 +13,9 @@ import {
 	createSliceMachineManagerMiddleware,
 } from "@slicemachine/manager";
 
-import { setupSentry } from "./setupSentry";
 import * as sentryErrorHandlers from "./sentryErrorHandlers";
 import { sentryFrontendTunnel } from "./sentryFrontendTunnel";
+import { checkIsSentryEnabled } from "./checkIsSentryEnabled";
 
 type CreateSliceMachineExpressAppArgs = {
 	sliceMachineManager: SliceMachineManager;
@@ -43,10 +44,6 @@ export const createSliceMachineExpressApp = async (
 	const isTelemetryEnabled =
 		await args.sliceMachineManager.telemetry.checkIsTelemetryEnabled();
 
-	if (isTelemetryEnabled) {
-		setupSentry(args.sliceMachineManager);
-	}
-
 	const app = express();
 
 	app.use(cors());
@@ -69,6 +66,9 @@ export const createSliceMachineExpressApp = async (
 					userID: profile.shortId,
 					intercomHash: profile.intercomHash,
 				});
+				if (checkIsSentryEnabled()) {
+					Sentry.setUser({ id: profile.shortId });
+				}
 
 				try {
 					await args.sliceMachineManager.screenshots.initS3ACL();
@@ -143,7 +143,7 @@ export const createSliceMachineExpressApp = async (
 	}
 
 	if (isTelemetryEnabled) {
-		app.use(sentryErrorHandlers.node);
+		app.use(sentryErrorHandlers.server);
 	}
 
 	return app;
