@@ -43,7 +43,7 @@
     "puppeteer": "^19.7.5",
     "react": "^18.2.0",
     "semver": "^7.3.8",
-    "start-slicemachine": "0.1.1-dev-plugins-testing.0",
+    "start-slicemachine": "0.6.1-dev-plugins.12",
     "yup": "^0.32.11"
   },
   "devDependencies": {
