@@ -23,7 +23,14 @@ import {
   PushChangesPayload,
 } from "@lib/models/common/TransactionalPush";
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
-import { SliceMachineManagerClient } from "@slicemachine/manager/client";
+import {
+  // isSliceMachineError,
+  // isUnauthenticatedError,
+  // isUnauthorizedError,
+  SliceMachineManagerClient,
+  // UnauthenticatedError,
+  SliceMachineError,
+} from "@slicemachine/manager/client";
 import {
   ChangedCustomType,
   ChangedSlice,
@@ -136,6 +143,18 @@ export function* changesPushSaga({
       })
     );
   } catch (error) {
+    // if (isUnauthenticatedError(error) || isUnauthorizedError(error)) { // TODO: This should work
+    const isSMError = (error: unknown): error is SliceMachineError =>
+      typeof error === "object" && error !== null;
+
+    if (
+      isSMError(error) &&
+      (error.name === "UnauthenticatedError" ||
+        error.name === "UnauthorizedError")
+    ) {
+      yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+      return;
+    }
     // TODO: handle auth errors
     yield put(
       openToasterCreator({
