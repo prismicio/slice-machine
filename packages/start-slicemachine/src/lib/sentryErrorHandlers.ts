@@ -1,19 +1,18 @@
-import { checkIsSentryEnabled } from "./checkIsSentryEnabled";
-
+import type { ErrorRequestHandler } from "express";
 import * as Sentry from "@sentry/node";
 
-import { H3Event, sendError } from "h3";
 import { CreateSliceMachineManagerMiddlewareArgs } from "@slicemachine/manager";
 
-export const h3 = (error: Error, event: H3Event): void => {
+import { checkIsSentryEnabled } from "./checkIsSentryEnabled";
+
+export const node: ErrorRequestHandler = (error, req, _res, next): void => {
 	if (checkIsSentryEnabled()) {
 		Sentry.withScope(function (scope) {
-			scope.setTransactionName(event.path);
+			scope.setTransactionName(req.path);
 			Sentry.captureException(error);
 		});
-
-		sendError(event, error);
 	}
+	next();
 };
 
 export const rpc: CreateSliceMachineManagerMiddlewareArgs["onError"] = (
