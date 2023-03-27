@@ -90,6 +90,17 @@ export class SliceMachineInitProcess {
 			)} Init command started\n`,
 		);
 
+		if (await this.manager.telemetry.checkIsTelemetryEnabled()) {
+			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+			// eslint-disable-next-line no-console
+			console.log(
+				`${
+					logSymbols.info
+				} We collect telemetry data to improve user experience.\n  Learn more: ${chalk.cyan(
+					"https://prismic.io/docs/slice-machine#tracking",
+				)}\n`,
+			);
+		}
 		await this.manager.telemetry.initTelemetry({
 			appName: pkg.name,
 			appVersion: pkg.version,
