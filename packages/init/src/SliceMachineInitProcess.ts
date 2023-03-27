@@ -97,7 +97,7 @@ export class SliceMachineInitProcess {
 				`${
 					logSymbols.info
 				} We collect telemetry data to improve user experience.\n  Learn more: ${chalk.cyan(
-					"https://prismic.io/docs/slice-machine#tracking",
+					"https://prismic.dev/slice-machine/telemetry",
 				)}\n`,
 			);
 		}
