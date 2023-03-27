@@ -65,6 +65,8 @@ export const createPrismicAuthManagerMiddleware = (
 	return defineNodeMiddleware(async (req, res) => {
 		const event = createEvent(req, res);
 
-		return await router.handler(event);
+		await router.handler(event);
+
+		res.end();
 	});
 };
