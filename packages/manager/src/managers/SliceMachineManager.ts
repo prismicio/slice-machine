@@ -1,6 +1,9 @@
 import { CustomTypes } from "@prismicio/types-internal";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { PrismicError } from "@prismicio/custom-types-client";
+import {
+	ForbiddenError,
+	UnauthorizedError,
+} from "@prismicio/custom-types-client";
 import {
 	SliceMachinePlugin,
 	SliceMachinePluginRunner,
@@ -164,7 +167,7 @@ export class SliceMachineManager {
 	async getState(): Promise<SliceMachineManagerGetStateReturnType> {
 		const [
 			{ sliceMachineConfig, libraries },
-			{ profile, remoteCustomTypes, remoteSlices, unauthorizedError },
+			{ profile, remoteCustomTypes, remoteSlices, authError },
 			customTypes,
 			packageManager,
 		] = await Promise.all([
@@ -174,7 +177,7 @@ export class SliceMachineManager {
 				return { sliceMachineConfig, libraries };
 			}),
 			this._getProfile().then(async (profile) => {
-				let unauthorizedError;
+				let authError;
 				if (profile) {
 					try {
 						const [remoteCustomTypes, remoteSlices] = await Promise.all([
@@ -186,20 +189,23 @@ export class SliceMachineManager {
 							profile,
 							remoteCustomTypes,
 							remoteSlices,
-							unauthorizedError,
+							authError,
 						};
 					} catch (error) {
 						// Non-Prismic error
-						if (!(error instanceof PrismicError)) {
+						if (
+							error instanceof UnauthorizedError ||
+							error instanceof ForbiddenError
+						) {
+							authError = {
+								name: "__stub__",
+								message: "__stub__",
+								reason: "__stub__",
+								status: 401,
+							};
+						} else {
 							throw error;
 						}
-
-						unauthorizedError = {
-							name: "__stub__",
-							message: "__stub__",
-							reason: "__stub__",
-							status: 401,
-						};
 					}
 				}
 
@@ -207,7 +213,7 @@ export class SliceMachineManager {
 					profile,
 					remoteCustomTypes: [],
 					remoteSlices: [],
-					unauthorizedError,
+					authError,
 				};
 			}),
 			this._getCustomTypes(),
@@ -217,9 +223,9 @@ export class SliceMachineManager {
 		// SM UI detects if a user is logged out by looking at
 		// `clientError`. Here, we simulate what the old core does by
 		// returning an `ErrorWithStatus`-like object if the user does
-		// not have acces to the repository or is not logged in.
+		// not have access to the repository or is not logged in.
 		const clientError: SliceMachineManagerGetStateReturnType["clientError"] =
-			unauthorizedError ||
+			authError ||
 			(profile
 				? undefined
 				: {
