@@ -1,1 +1,29 @@
-[{"__TYPE__":"SharedSliceContent","variation":"default-slice","primary":{"title":{"__TYPE__":"StructuredTextContent","value":[{"type":"heading1","content":{"text":"Twice"}}]},"description":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Laboris exercitation eiusmod reprehenderit nisi eiusmod ullamco ea esse anim laborum. Incididunt ad deserunt anim nulla."}}]}},"items":[{"__TYPE__":"GroupItemContent","value":[]}]}]
+{
+  "__TYPE__": "SharedSliceContent",
+  "variation": "default-slice",
+  "primary": {
+    "title": {
+      "__TYPE__": "StructuredTextContent",
+      "value": [
+        {
+          "type": "heading1",
+          "content": {
+            "text": "Organized"
+          }
+        }
+      ]
+    },
+    "description": {
+      "__TYPE__": "StructuredTextContent",
+      "value": [
+        {
+          "type": "paragraph",
+          "content": {
+            "text": "Occaecat eiusmod enim ad eu Lorem consequat minim laboris tempor minim aliqua aute cillum incididunt. Nisi consequat qui nisi ipsum nisi amet mollit."
+          }
+        }
+      ]
+    }
+  },
+  "items": []
+}

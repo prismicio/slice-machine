@@ -1,1 +1,36 @@
-[{"__TYPE__":"SharedSliceContent","variation":"default-slice","primary":{"sectionTitle":{"__TYPE__":"FieldContent","value":"repeat","type":"Text"}},"items":[{"__TYPE__":"GroupItemContent","value":[["subSectionTitle",{"__TYPE__":"FieldContent","value":"dear","type":"Text"}],["subSectionLink",{"__TYPE__":"LinkContent","value":{"id":"mock_document_id","__TYPE__":"DocumentLink"}}]]}]}]
+{
+  "__TYPE__": "SharedSliceContent",
+  "variation": "default-slice",
+  "primary": {
+    "sectionTitle": {
+      "__TYPE__": "FieldContent",
+      "value": "sugar",
+      "type": "Text"
+    }
+  },
+  "items": [
+    {
+      "__TYPE__": "GroupItemContent",
+      "value": [
+        [
+          "subSectionTitle",
+          {
+            "__TYPE__": "FieldContent",
+            "value": "kitchen",
+            "type": "Text"
+          }
+        ],
+        [
+          "subSectionLink",
+          {
+            "__TYPE__": "LinkContent",
+            "value": {
+              "__TYPE__": "DocumentLink",
+              "id": "mock_document_id"
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

@@ -6,5 +6,5 @@
 		"slices/navigation"
 	],
 	"adapter": "@slicemachine/adapter-next",
-	"localSliceSimulatorURL": "http://localhost:3500/slice-simulator"
+	"localSliceSimulatorURL": "http://localhost:8000/slice-simulator"
 }
