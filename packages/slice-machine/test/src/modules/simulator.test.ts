@@ -273,8 +273,8 @@ describe("[Simulator module]", () => {
       const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
 
       const payload = saveSliceMockCreator.request({
-        sliceName: "MySlice",
-        libraryName: "slices",
+        libraryID: "slices",
+        sliceID: "MySlice",
         mock: [],
       });
 
@@ -325,8 +325,8 @@ describe("[Simulator module]", () => {
       const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
 
       const payload = saveSliceMockCreator.request({
-        sliceName: "MySlice",
-        libraryName: "slices",
+        libraryID: "slices",
+        sliceID: "MySlice",
         mock: [],
       });
 

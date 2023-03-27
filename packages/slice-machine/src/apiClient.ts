@@ -258,8 +258,8 @@ export const getSimulatorSetupSteps = async (): ReturnType<
 };
 
 export type SaveSliceMockRequest = {
-  sliceName: string;
-  libraryName: string;
+  libraryID: string;
+  sliceID: string;
   mock: ComponentMocks;
 };
 
@@ -267,8 +267,8 @@ export const saveSliceMock = async (
   payload: SaveSliceMockRequest
 ): ReturnType<SliceMachineManagerClient["slices"]["updateSliceMocks"]> => {
   return await managerClient.slices.updateSliceMocks({
-    libraryID: payload.libraryName,
-    sliceID: payload.sliceName,
+    libraryID: payload.libraryID,
+    sliceID: payload.sliceID,
     mocks: payload.mock,
   });
 };

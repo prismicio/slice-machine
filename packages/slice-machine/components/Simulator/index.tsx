@@ -197,8 +197,8 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         onSaveMock={() =>
           editorState &&
           saveSliceMock({
-            sliceName: slice.model.name,
-            libraryName: slice.from,
+            libraryID: slice.from,
+            sliceID: slice.model.id,
             mock: (slice.mock || [])
               .filter((mock) => mock.variation !== editorState.variation)
               .concat(editorState),
