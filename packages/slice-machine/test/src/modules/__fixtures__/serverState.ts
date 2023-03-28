@@ -23,6 +23,7 @@ export const dummyServerState: Pick<
       versions: [],
     },
     shortId: "shortId",
+    supportsSliceSimulator: true,
   },
   customTypes: [
     {

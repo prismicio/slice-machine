@@ -11,6 +11,7 @@ import {
   saveSliceMockSaga,
   saveSliceMockCreator,
 } from "@src/modules/simulator";
+import { select } from "redux-saga/effects";
 import { testSaga, expectSaga } from "redux-saga-test-plan";
 import {
   checkSetupSaga,
@@ -215,6 +216,7 @@ describe("[Simulator module]", () => {
       };
 
       await expectSaga(failCheckSetupSaga, payload)
+        .provide([[select(selectIsSimulatorAvailableForFramework), true]])
         .put(
           checkSimulatorSetupCreator.failure({
             setupSteps: payload.setupSteps,
