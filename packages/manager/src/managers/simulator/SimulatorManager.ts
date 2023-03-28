@@ -10,7 +10,7 @@ import { decodeHookResult } from "../../lib/decodeHookResult";
 import { functionCodec } from "../../lib/functionCodec";
 import { markdownToHTML } from "../../lib/markdownToHTML";
 
-import { UnexpectedDataError } from "../../errors";
+import { SliceMachineError, UnexpectedDataError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -89,6 +89,13 @@ export class SimulatorManager extends BaseManager {
 			t.array(sliceSimulatorSetupStepCodec),
 			hookResult,
 		);
+
+		// If no hooks were registered
+		if (!data.length && !errors.length) {
+			throw new SliceMachineError(
+				"Slice Simulator is not supported by available plugins",
+			);
+		}
 
 		const steps = await Promise.all(
 			data[0].map(async (step) => {
