@@ -47,7 +47,7 @@
 	],
 	"scripts": {
 		"build": "vite build",
-		"dev": "vite build --watch",
+		"dev": "vite build --watch --mode development",
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepublishOnly": "npm run build",
