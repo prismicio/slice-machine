@@ -171,7 +171,6 @@ export class SliceMachineManager {
 			{ profile, remoteCustomTypes, remoteSlices, authError },
 			customTypes,
 			packageManager,
-			supportsSliceSimulator,
 		] = await Promise.all([
 			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
 				const libraries = await this._getLibraries(sliceMachineConfig);
@@ -220,15 +219,6 @@ export class SliceMachineManager {
 			}),
 			this._getCustomTypes(),
 			this.project.detectPackageManager(),
-			(async () => {
-				try {
-					await this.simulator.readSliceSimulatorSetupSteps();
-
-					return true;
-				} catch (error) {
-					return false;
-				}
-			})(),
 		]);
 
 		// SM UI detects if a user is logged out by looking at
@@ -257,7 +247,7 @@ export class SliceMachineManager {
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
 				packageManager,
-				supportsSliceSimulator,
+				supportsSliceSimulator: this.simulator.supportsSliceSimulator(),
 				repo: sliceMachineConfig.repositoryName,
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
