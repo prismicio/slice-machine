@@ -374,9 +374,8 @@ export class PrismicRepositoryManager extends BaseManager {
 			const authenticationToken = await this.user.getAuthenticationToken();
 			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
-			// TODO: API route in consts ends with /customtypes
 			// TODO: move to customtypes client
-			return fetch("https://customtypes.prismic.io/bulk", {
+			return fetch(new URL("/bulk", API_ENDPOINTS.PrismicModels).toString(), {
 				body: JSON.stringify(requestBody),
 				method: "POST",
 				headers: {

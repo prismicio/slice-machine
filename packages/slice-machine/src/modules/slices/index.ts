@@ -222,12 +222,12 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
 
     case getType(updateSliceMock): {
-      const { libraryName, sliceName, mock } = action.payload;
+      const { libraryID, sliceID, mock } = action.payload;
       const libraries = state.libraries.map((lib) => {
-        if (lib.name !== libraryName) return lib;
+        if (lib.name !== libraryID) return lib;
 
         const components = lib.components.map((component) => {
-          if (component.model.name !== sliceName) return component;
+          if (component.model.id !== sliceID) return component;
           return {
             ...component,
             mock: mock,
