@@ -46,7 +46,6 @@ export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:asset:read",
 	"custom-type:asset:delete",
 	"custom-type-library:read",
-	"slice-simulator:setup:read",
 ];
 /**
  * @internal

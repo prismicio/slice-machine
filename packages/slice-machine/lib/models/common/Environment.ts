@@ -19,4 +19,5 @@ export interface FrontEndEnvironment {
   repo: string;
   changelog?: PackageChangelog;
   packageManager: PackageManager;
+  supportsSliceSimulator: boolean;
 }
