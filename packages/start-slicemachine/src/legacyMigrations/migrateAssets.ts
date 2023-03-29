@@ -1,3 +1,4 @@
+import * as t from "io-ts";
 import * as path from "node:path";
 import * as fsSync from "node:fs";
 
@@ -6,12 +7,16 @@ import {
 	SharedSliceContent,
 	Document,
 } from "@prismicio/types-internal/lib/content";
+
 import { DocumentMock, SharedSliceMock } from "@prismicio/mocks";
 
 import * as sentryErrorHandlers from "../lib/sentryErrorHandlers";
 
 const MOCKS_FILE_NAME = "mocks.json";
 const MOCK_CONFIG_FILE_NAME = "mock-config.json";
+
+const SharedSliceContentArray = t.array(SharedSliceContent);
+const DocumentArray = t.array(Document);
 
 const createPathToDeprecatedLibrary = (cwd: string) =>
 	path.join(cwd, ".slicemachine");
@@ -58,7 +63,7 @@ const ensureOrGenerateMockFile = (
 	targetPathToMocks: string,
 	deprecatedPathToMocks: string,
 	validator: (str: string) => boolean,
-	generate: () => Record<string, unknown>,
+	generate: () => Record<string, unknown>[],
 	isTelemetryEnabled: boolean,
 ) => {
 	try {
@@ -139,12 +144,19 @@ export const migrateAssets = async (
 				MOCKS_FILE_NAME,
 			);
 
+			const reGeneratedMocks = c.model.variations.map((variation) => {
+				return SharedSliceMock.generate(c.model, {
+					variation: variation.id,
+					type: "SharedSlice",
+				});
+			});
+
 			ensureOrGenerateMockFile(
 				targetPathToMocks,
 				deprecatedPathToMocks,
 				(str: string) =>
-					SharedSliceContent.decode(JSON.parse(str))._tag === "Right",
-				() => SharedSliceMock.generate(c.model),
+					SharedSliceContentArray.decode(JSON.parse(str))._tag === "Right",
+				() => reGeneratedMocks,
 				isTelemetryEnabled,
 			);
 
@@ -173,8 +185,8 @@ export const migrateAssets = async (
 			ensureOrGenerateMockFile(
 				targetPathToMocks,
 				deprecatedPathToMocks,
-				(str: string) => Document.decode(JSON.parse(str))._tag === "Right",
-				() => DocumentMock.generate(c.model, sharedSlices),
+				(str: string) => DocumentArray.decode(JSON.parse(str))._tag === "Right",
+				() => [DocumentMock.generate(c.model, sharedSlices)],
 				isTelemetryEnabled,
 			);
 		});
