@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { fileTypeFromBuffer } from "file-type";
-import fetch, { FormData, Blob } from "node-fetch";
+import fetch, { FormData, Blob, Response } from "node-fetch";
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { BrowserContext, Viewport } from "puppeteer";
 
@@ -83,6 +83,10 @@ type ScreenshotsManagerUploadScreenshotReturnType = {
 	url: string;
 };
 
+type ScreenshotsManagerDeleteScreenshotFolderArgs = {
+	sliceID: string;
+};
+
 export class ScreenshotsManager extends BaseManager {
 	private _browserContext: BrowserContext | undefined;
 	private _s3ACL: S3ACL | undefined;
@@ -112,17 +116,8 @@ export class ScreenshotsManager extends BaseManager {
 			return;
 		}
 
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
-		const authenticationToken = await this.user.getAuthenticationToken();
-
 		const awsACLURL = new URL("create", API_ENDPOINTS.AwsAclProvider);
-		const awsACLRes = await fetch(awsACLURL.toString(), {
-			headers: {
-				Authorization: `Bearer ${authenticationToken}`,
-				"User-Agent": SLICE_MACHINE_USER_AGENT,
-				Repository: sliceMachineConfig.repositoryName,
-			},
-		});
+		const awsACLRes = await this._fetch({ url: awsACLURL });
 
 		const awsACLText = await awsACLRes.text();
 		let awsACLJSON: unknown;
@@ -295,5 +290,40 @@ export class ScreenshotsManager extends BaseManager {
 				`Unable to upload screenshot with status code: ${res.status}`,
 			);
 		}
+	}
+
+	async deleteScreenshotFolder(
+		args: ScreenshotsManagerDeleteScreenshotFolderArgs,
+	): Promise<void> {
+		const res = await this._fetch({
+			body: { sliceId: args.sliceID },
+			method: "POST",
+			url: new URL("delete-folder", API_ENDPOINTS.AwsAclProvider),
+		});
+		if (!res.ok) {
+			throw new Error(
+				`Unable to delete screenshot folder with status code: ${res.status}`,
+			);
+		}
+	}
+
+	private async _fetch(args: {
+		url: URL;
+		method?: "GET" | "POST";
+		body?: unknown;
+	}): Promise<Response> {
+		const authenticationToken = await this.user.getAuthenticationToken();
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+
+		return await fetch(args.url, {
+			body: args.body ? JSON.stringify(args.body) : undefined,
+			headers: {
+				Authorization: `Bearer ${authenticationToken}`,
+				Repository: sliceMachineConfig.repositoryName,
+				"User-Agent": SLICE_MACHINE_USER_AGENT,
+				...(args.body ? { "Content-Type": "application/json" } : {}),
+			},
+			method: args.method,
+		});
 	}
 }
