@@ -24,12 +24,9 @@ import {
 } from "@lib/models/common/TransactionalPush";
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
 import {
-  // isSliceMachineError,
-  // isUnauthenticatedError,
-  // isUnauthorizedError,
+  isUnauthenticatedError,
+  isUnauthorizedError,
   SliceMachineManagerClient,
-  // UnauthenticatedError,
-  SliceMachineError,
 } from "@slicemachine/manager/client";
 import {
   ChangedCustomType,
@@ -143,15 +140,7 @@ export function* changesPushSaga({
       })
     );
   } catch (error) {
-    // if (isUnauthenticatedError(error) || isUnauthorizedError(error)) { // TODO: This should work
-    const isSMError = (error: unknown): error is SliceMachineError =>
-      typeof error === "object" && error !== null;
-
-    if (
-      isSMError(error) &&
-      (error.name === "UnauthenticatedError" ||
-        error.name === "UnauthorizedError")
-    ) {
+    if (isUnauthenticatedError(error) || isUnauthorizedError(error)) {
       yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
       return;
     }

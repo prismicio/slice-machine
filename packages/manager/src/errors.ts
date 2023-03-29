@@ -41,9 +41,16 @@ export class PluginHookResultError extends SliceMachineError {
 export const isSliceMachineError = (
 	error: unknown,
 ): error is SliceMachineError => {
-	return (
-		typeof error === "object" && error !== null && "_sliceMachineError" in error
-	);
+	// @ts-expect-error TODO: Discuss a stronger way to serialize error for the client to detect with r19
+	if (typeof window !== "undefined") {
+		return typeof error === "object" && error !== null;
+	} else {
+		return (
+			typeof error === "object" &&
+			error !== null &&
+			"_sliceMachineError" in error
+		);
+	}
 };
 
 export const isUnauthorizedError = (
