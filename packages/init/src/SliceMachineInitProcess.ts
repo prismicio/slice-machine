@@ -847,6 +847,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									return;
 								}
 
+								task.title = "Pushing slices... (initializing ACL)";
+								await this.manager.screenshots.initS3ACL();
+
 								let pushed = 0;
 								task.title = `Pushing slices... (0/${slices.length})`;
 								await Promise.all(
