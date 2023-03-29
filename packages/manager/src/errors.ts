@@ -41,7 +41,8 @@ export class PluginHookResultError extends SliceMachineError {
 export const isSliceMachineError = (
 	error: unknown,
 ): error is SliceMachineError => {
-	// @ts-expect-error TODO: Discuss a stronger way to serialize error for the client to detect with r19
+	// TODO: Discuss a stronger way to serialize error for the client to detect with r19
+	// @ts-expect-error We don't want to add "dom" to tsconfig "lib" because of the TODO
 	if (typeof window !== "undefined") {
 		return typeof error === "object" && error !== null;
 	} else {
