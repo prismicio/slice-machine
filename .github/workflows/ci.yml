@@ -178,8 +178,8 @@ jobs:
 
   deployment:
     runs-on: ubuntu-latest
-    needs: [prettier, packages, packages-win32, e2e]
-    if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
+    needs: [prettier, packages, packages-win32]
+    if: startsWith(github.ref, 'refs/heads/lh') # Job only runs on dev branches
     environment: alpha
     steps: 
       - name: Checkout
