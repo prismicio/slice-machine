@@ -207,5 +207,5 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
-          npm config set '//registry.npmjs.org/:_authToken' "${{NPM_TOKEN}}"
+          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           npm run publish:alpha -- --preid=dev-ci.$(git rev-parse --short ${{ github.sha }})+0
