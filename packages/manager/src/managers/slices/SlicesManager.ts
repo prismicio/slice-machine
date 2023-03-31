@@ -31,6 +31,7 @@ import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { createContentDigest } from "../../lib/createContentDigest";
+import { mockSlice } from "../../lib/mockSlice";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -257,8 +258,16 @@ export class SlicesManager extends BaseManager {
 			args,
 		);
 
+		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+			mocks: mockSlice(args.model),
+		}
+
+		const { errors: updateSliceHookErrors } = await this.updateSliceMocks(updateSliceMocksArgs)
+
 		return {
-			errors: hookResult.errors,
+			errors: [...hookResult.errors, ...updateSliceHookErrors],
 		};
 	}
 
