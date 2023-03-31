@@ -262,9 +262,11 @@ export class SlicesManager extends BaseManager {
 			libraryID: args.libraryID,
 			sliceID: args.model.id,
 			mocks: mockSlice(args.model),
-		}
+		};
 
-		const { errors: updateSliceHookErrors } = await this.updateSliceMocks(updateSliceMocksArgs)
+		const { errors: updateSliceHookErrors } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
 
 		return {
 			errors: [...hookResult.errors, ...updateSliceHookErrors],
