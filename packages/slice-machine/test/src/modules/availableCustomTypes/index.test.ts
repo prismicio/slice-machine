@@ -400,7 +400,9 @@ describe("[Available Custom types module]", () => {
       );
 
       saga.next().call(deleteCustomType, actionPayload.customTypeId);
-      saga.next().put(deleteCustomTypeCreator.success(actionPayload));
+      saga
+        .next({ errors: [] })
+        .put(deleteCustomTypeCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
           content: `Successfully deleted Custom Type “${actionPayload.customTypeName}”`,

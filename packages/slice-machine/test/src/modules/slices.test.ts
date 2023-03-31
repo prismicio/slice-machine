@@ -178,7 +178,7 @@ describe("[Slices module]", () => {
       saga
         .next()
         .call(deleteSlice, actionPayload.sliceId, actionPayload.libName);
-      saga.next().put(deleteSliceCreator.success(actionPayload));
+      saga.next({ errors: [] }).put(deleteSliceCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
           content: `Successfully deleted Slice “${actionPayload.sliceName}”`,

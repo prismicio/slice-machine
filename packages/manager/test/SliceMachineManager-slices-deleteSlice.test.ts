@@ -11,6 +11,11 @@ it("calls plugins' `slice:delete` hook", async (ctx) => {
 	const hookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
+			hook("slice:read", () => ({ model }));
+			hook("custom-type-library:read", () => ({ ids: ["foo"] }));
+			hook("custom-type:read", () => ({
+				model: ctx.mockPrismic.model.customType(),
+			}));
 			hook("slice:delete", hookHandler);
 		},
 	});

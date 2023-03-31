@@ -11,6 +11,7 @@ it("calls plugins' `custom-type:delete` hook", async (ctx) => {
 	const hookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
+			hook("custom-type:read", () => ({ model }));
 			hook("custom-type:delete", hookHandler);
 		},
 	});
