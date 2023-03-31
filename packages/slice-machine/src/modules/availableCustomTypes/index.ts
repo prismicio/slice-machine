@@ -7,7 +7,7 @@ import { call, fork, put, select, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
-  // deleteCustomType,
+  deleteCustomType,
   renameCustomType,
   saveCustomType,
 } from "@src/apiClient";
@@ -21,8 +21,6 @@ import {
   normalizeFrontendCustomTypes,
 } from "@lib/models/common/normalizers/customType";
 import { saveCustomTypeCreator } from "../selectedCustomType/actions";
-import axios from "axios";
-import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
 import { omit } from "lodash";
 import { deleteSliceCreator } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
@@ -305,7 +303,7 @@ export function* deleteCustomTypeSaga({
   payload,
 }: ReturnType<typeof deleteCustomTypeCreator.request>) {
   try {
-    // yield call(deleteCustomType, payload.customTypeId);
+    yield call(deleteCustomType, payload.customTypeId);
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
       openToasterCreator({
@@ -314,28 +312,13 @@ export function* deleteCustomTypeSaga({
       })
     );
   } catch (e) {
-    if (axios.isAxiosError(e)) {
-      const apiResponse = e.response?.data as DeleteCustomTypeResponse;
-      if (apiResponse.type === "warning")
-        yield put(deleteCustomTypeCreator.success(payload));
-      yield put(
-        openToasterCreator({
-          content: apiResponse.reason,
-          type:
-            apiResponse.type === "error"
-              ? ToasterType.ERROR
-              : ToasterType.WARNING,
-        })
-      );
-    } else {
-      yield put(
-        openToasterCreator({
-          content:
-            "An unexpected error happened while deleting your custom type.",
-          type: ToasterType.ERROR,
-        })
-      );
-    }
+    yield put(
+      openToasterCreator({
+        content:
+          "An unexpected error happened while deleting your custom type.",
+        type: ToasterType.ERROR,
+      })
+    );
   }
   yield put(modalCloseCreator());
 }

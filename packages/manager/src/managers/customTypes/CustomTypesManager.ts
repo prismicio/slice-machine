@@ -6,8 +6,6 @@ import {
 	CallHookReturnType,
 	CustomTypeCreateHook,
 	CustomTypeCreateHookData,
-	CustomTypeDeleteHook,
-	CustomTypeDeleteHookData,
 	CustomTypeReadHookData,
 	CustomTypeRenameHook,
 	CustomTypeRenameHookData,
@@ -63,6 +61,14 @@ type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
 
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {
 	errors: HookError[];
+};
+
+type CustomTypesMachineManagerDeleteCustomTypeArgs = {
+	id: string;
+};
+
+type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
+	errors: (DecodeError | HookError)[];
 };
 
 export class CustomTypesManager extends BaseManager {
@@ -178,20 +184,29 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	// TODO: Disallow until Custom Types can be deleted.
 	async deleteCustomType(
-		args: CustomTypeDeleteHookData,
-	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeDeleteHook>>> {
+		args: CustomTypesMachineManagerDeleteCustomTypeArgs,
+	): Promise<CustomTypesMachineManagerDeleteCustomTypeReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"custom-type:delete",
-			args,
-		);
+		const { model, errors: readCustomTypeErrors } = await this.readCustomType({
+			id: args.id,
+		});
 
-		return {
-			errors: hookResult.errors,
-		};
+		if (model) {
+			const hookResult = await this.sliceMachinePluginRunner.callHook(
+				"custom-type:delete",
+				{ model },
+			);
+
+			return {
+				errors: hookResult.errors,
+			};
+		} else {
+			return {
+				errors: readCustomTypeErrors,
+			};
+		}
 	}
 
 	async pushCustomType(
