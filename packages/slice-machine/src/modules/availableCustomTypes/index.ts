@@ -3,7 +3,14 @@ import { AvailableCustomTypesStoreType } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { refreshStateCreator } from "@src/modules/environment";
-import { call, fork, put, select, takeLatest } from "redux-saga/effects";
+import {
+  call,
+  fork,
+  put,
+  SagaReturnType,
+  select,
+  takeLatest,
+} from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
@@ -303,7 +310,13 @@ export function* deleteCustomTypeSaga({
   payload,
 }: ReturnType<typeof deleteCustomTypeCreator.request>) {
   try {
-    yield call(deleteCustomType, payload.customTypeId);
+    const result = (yield call(
+      deleteCustomType,
+      payload.customTypeId
+    )) as SagaReturnType<typeof deleteCustomType>;
+    if (result.errors.length > 0) {
+      throw result.errors;
+    }
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
       openToasterCreator({

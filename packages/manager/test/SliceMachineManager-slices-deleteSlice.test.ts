@@ -22,7 +22,10 @@ it("calls plugins' `slice:delete` hook", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.slices.deleteSlice({ libraryID: "foo", model });
+	const res = await manager.slices.deleteSlice({
+		libraryID: "foo",
+		sliceID: model.id,
+	});
 
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
 		libraryID: "foo",
@@ -40,7 +43,7 @@ it("throws if plugins have not been initialized", async (ctx) => {
 	await expect(async () => {
 		await manager.slices.deleteSlice({
 			libraryID: "foo",
-			model: ctx.mockPrismic.model.sharedSlice(),
+			sliceID: ctx.mockPrismic.model.sharedSlice().id,
 		});
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });

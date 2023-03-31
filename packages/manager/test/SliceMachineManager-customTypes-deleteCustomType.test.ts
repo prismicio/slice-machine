@@ -22,7 +22,7 @@ it("calls plugins' `custom-type:delete` hook", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
-	const res = await manager.customTypes.deleteCustomType({ model });
+	const res = await manager.customTypes.deleteCustomType({ id: model.id });
 
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, { model });
 	expect(res).toStrictEqual({
@@ -36,7 +36,7 @@ it("throws if plugins have not been initialized", async (ctx) => {
 
 	await expect(async () => {
 		await manager.customTypes.deleteCustomType({
-			model: ctx.mockPrismic.model.customType(),
+			id: ctx.mockPrismic.model.customType().id,
 		});
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });

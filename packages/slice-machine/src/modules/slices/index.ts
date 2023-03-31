@@ -355,7 +355,14 @@ export function* deleteSliceSaga({
 }: ReturnType<typeof deleteSliceCreator.request>) {
   const { libName, sliceId, sliceName } = payload;
   try {
-    yield call(deleteSlice, sliceId, libName);
+    const result = (yield call(
+      deleteSlice,
+      sliceId,
+      libName
+    )) as SagaReturnType<typeof deleteSlice>;
+    if (result.errors.length > 0) {
+      throw result.errors;
+    }
     yield put(deleteSliceCreator.success(payload));
     yield put(
       openToasterCreator({
