@@ -12,6 +12,7 @@ it("calls plugins' `slice:create` hook", async (ctx) => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("slice:create", hookHandler);
+			hook("slice:asset:update", hookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
