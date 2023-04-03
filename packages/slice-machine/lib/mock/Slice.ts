@@ -15,7 +15,10 @@ export default function MockSlice(
     );
 
     if (!variationMock) {
-      return SharedSliceMock.generate(sliceModel);
+      return SharedSliceMock.generate(sliceModel, {
+        variation: variation.id,
+        type: "SharedSlice",
+      });
     }
     if (!sliceDiff) return variationMock;
     const patched = SharedSliceMock.patch(sliceDiff, sliceModel, variationMock);
@@ -23,7 +26,10 @@ export default function MockSlice(
       return variationMock;
     }
     if (!patched.result) {
-      return SharedSliceMock.generate(sliceModel);
+      return SharedSliceMock.generate(sliceModel, {
+        variation: variation.id,
+        type: "SharedSlice",
+      });
     }
     return patched.result;
   });
