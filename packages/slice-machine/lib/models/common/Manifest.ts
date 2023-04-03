@@ -45,7 +45,6 @@ export const Manifest = t.intersection([
     apiEndpoint,
   }),
   t.partial({
-    storybook: t.string,
     localSliceSimulatorURL: t.string,
     libraries: t.array(t.string),
     chromaticAppId: t.string,
