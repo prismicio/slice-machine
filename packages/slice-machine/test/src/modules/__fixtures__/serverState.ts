@@ -10,7 +10,6 @@ export const dummyServerState: Pick<
     manifest: {
       libraries: ["~/slices"],
       apiEndpoint: "https://sm-env-example.prismic.io/api/v2",
-      storybook: "http://localhost:6006",
       chromaticAppId: "5f5b34f06f304800225c4e17",
       tracking: false,
       localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
