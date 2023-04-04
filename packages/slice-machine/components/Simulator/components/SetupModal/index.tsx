@@ -2,11 +2,13 @@ import Card from "@components/Card";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { Box, Flex, Heading, Text } from "theme-ui";
 
+import { useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import { selectSetupSteps } from "@src/modules/simulator";
+import { telemetry } from "@src/apiClient";
 
 import HTMLRenderer from "@components/HTMLRenderer";
 
@@ -84,6 +86,10 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   );
 
   const steps = setupSteps || [];
+
+  useEffect(() => {
+    if (isOpen) void telemetry.track({ event: "slice-simulator:setup" });
+  }, [isOpen]);
 
   return (
     <SliceMachineModal isOpen={isOpen}>
