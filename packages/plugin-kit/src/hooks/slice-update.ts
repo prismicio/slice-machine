@@ -1,4 +1,6 @@
 import type { SharedSliceModel } from "@prismicio/types";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
+import { HookError } from "../lib/HookSystem";
 
 import type {
 	ExtendSliceMachineHook,
@@ -12,12 +14,16 @@ import type {
 export type SliceUpdateHookData = {
 	libraryID: string;
 	model: SharedSliceModel;
+	mocks?: SharedSliceContent[];
 };
 
 /**
  * Return value for `slice:update` hook handlers.
  */
-export type SliceUpdateHookReturnType = void;
+export type SliceUpdateHookReturnType = {
+	mocks: SharedSliceContent[] | undefined;
+	errors: HookError[];
+};
 
 /**
  * Base version of a `slice:update` hook handler without plugin runner context.

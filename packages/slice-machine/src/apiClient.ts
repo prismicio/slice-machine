@@ -11,10 +11,10 @@ import {
 } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
-import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 /** State Routes * */
 
@@ -198,7 +198,7 @@ export const generateSliceCustomScreenshotApiClient = async (
   };
 };
 
-export const saveSliceApiClient = async (
+export const updateSliceApiClient = async (
   component: ComponentUI
 ): Promise<
   Awaited<ReturnType<(typeof managerClient)["slices"]["updateSlice"]>>
@@ -206,6 +206,7 @@ export const saveSliceApiClient = async (
   return await managerClient.slices.updateSlice({
     libraryID: component.from,
     model: Slices.fromSM(component.model),
+    mocks: component.mocks,
   });
 };
 
@@ -260,7 +261,7 @@ export const getSimulatorSetupSteps = async (): ReturnType<
 export type SaveSliceMockRequest = {
   libraryID: string;
   sliceID: string;
-  mock: ComponentMocks;
+  mocks: SharedSliceContent[];
 };
 
 export const saveSliceMock = async (
@@ -269,7 +270,7 @@ export const saveSliceMock = async (
   return await managerClient.slices.updateSliceMocks({
     libraryID: payload.libraryID,
     sliceID: payload.sliceID,
-    mocks: payload.mock,
+    mocks: payload.mocks,
   });
 };
 

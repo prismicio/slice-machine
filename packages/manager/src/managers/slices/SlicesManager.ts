@@ -17,6 +17,7 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 	SliceUpdateHookData,
+	SliceUpdateHookReturnType,
 } from "@slicemachine/plugin-kit";
 
 import { DecodeError } from "../../lib/DecodeError";
@@ -32,6 +33,7 @@ import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 import { BaseManager } from "../BaseManager";
 import { createContentDigest } from "../../lib/createContentDigest";
 import { mockSlice } from "../../lib/mockSlice";
+import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -261,7 +263,7 @@ export class SlicesManager extends BaseManager {
 		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
 			libraryID: args.libraryID,
 			sliceID: args.model.id,
-			mocks: mockSlice(args.model),
+			mocks: mockSlice({ model: args.model }),
 		};
 
 		const { errors: updateSliceHookErrors } = await this.updateSliceMocks(
@@ -297,16 +299,40 @@ export class SlicesManager extends BaseManager {
 
 	async updateSlice(
 		args: SliceUpdateHookData,
-	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
+	): Promise<SliceUpdateHookReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		const { mocks: previousMocks } = await this.readSliceMocks({
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+		});
+		const { model: previousModel } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+		});
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"slice:update",
 			args,
 		);
 
+		const updatedMocks = mockSlice({
+			model: args.model,
+			mocks: previousMocks,
+			sliceDiff: SliceComparator.compare(previousModel, args.model),
+		});
+		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+			mocks: updatedMocks,
+		};
+
+		const { errors: updateSliceMocksHookResult } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
+
 		return {
-			errors: hookResult.errors,
+			mocks: updatedMocks,
+			errors: [...hookResult.errors, ...updateSliceMocksHookResult],
 		};
 	}
 

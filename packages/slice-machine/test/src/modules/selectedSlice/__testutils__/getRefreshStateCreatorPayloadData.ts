@@ -25,7 +25,7 @@ export const getRefreshStateCreatorPayloadData = (
               url: "http://localhost:9999/api/__preview?q=default-slice",
             },
           },
-          mock: [],
+          mocks: [],
           model: {
             id: modelId,
             type: SlicesTypes.SharedSlice,

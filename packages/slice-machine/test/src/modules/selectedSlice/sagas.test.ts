@@ -1,30 +1,30 @@
 import { describe, expect, it, vi } from "vitest";
 import { testSaga } from "redux-saga-test-plan";
-import { saveSliceSaga } from "@src/modules/selectedSlice/sagas";
-import { saveSliceCreator } from "@src/modules/selectedSlice/actions";
-import { saveSliceApiClient } from "@src/apiClient";
+import { updateSliceSaga } from "@src/modules/selectedSlice/sagas";
+import { updateSliceCreator } from "@src/modules/selectedSlice/actions";
+import { updateSliceApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";
 
 const { dummySliceState } = getSelectedSliceDummyData();
 
 describe("[Selected Slice sagas]", () => {
-  describe("[saveSliceSaga]", () => {
+  describe("[updateSliceSaga]", () => {
     it("should call the api and dispatch the success action", () => {
       const mockSetData = vi.fn();
       const saga = testSaga(
-        saveSliceSaga,
-        saveSliceCreator.request({
+        updateSliceSaga,
+        updateSliceCreator.request({
           component: dummySliceState,
           setData: mockSetData,
         })
       );
 
-      saga.next().call(saveSliceApiClient, dummySliceState);
+      saga.next().call(updateSliceApiClient, dummySliceState);
 
       saga
         .next({ errors: [] })
-        .put(saveSliceCreator.success({ component: dummySliceState }));
+        .put(updateSliceCreator.success({ component: dummySliceState }));
 
       saga.next().isDone();
       expect(mockSetData).toHaveBeenCalledWith({
@@ -37,8 +37,8 @@ describe("[Selected Slice sagas]", () => {
     it("should open a error toaster on internal error", () => {
       const mockSetData = vi.fn();
       const saga = testSaga(
-        saveSliceSaga,
-        saveSliceCreator.request({
+        updateSliceSaga,
+        updateSliceCreator.request({
           component: dummySliceState,
           setData: mockSetData,
         })

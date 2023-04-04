@@ -32,7 +32,7 @@ import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@lib/models/common/Slice";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
-import { saveSliceCreator } from "../selectedSlice/actions";
+import { updateSliceCreator } from "../selectedSlice/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
@@ -97,7 +97,7 @@ type SlicesActions =
   | ActionType<typeof createSliceCreator>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
-  | ActionType<typeof saveSliceCreator>
+  | ActionType<typeof updateSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSliceMock>;
@@ -163,7 +163,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: newLibs,
       };
     }
-    case getType(saveSliceCreator.success): {
+    case getType(updateSliceCreator.success): {
       const newComponentUI = action.payload.component;
 
       const newLibraries = state.libraries.map((library) => {
@@ -222,7 +222,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
 
     case getType(updateSliceMock): {
-      const { libraryID, sliceID, mock } = action.payload;
+      const { libraryID, sliceID, mocks } = action.payload;
       const libraries = state.libraries.map((lib) => {
         if (lib.name !== libraryID) return lib;
 
@@ -230,7 +230,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
           if (component.model.id !== sliceID) return component;
           return {
             ...component,
-            mock: mock,
+            mocks,
           };
         });
         return {

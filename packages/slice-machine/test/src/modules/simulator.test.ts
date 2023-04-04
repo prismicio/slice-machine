@@ -277,7 +277,7 @@ describe("[Simulator module]", () => {
       const payload = saveSliceMockCreator.request({
         libraryID: "slices",
         sliceID: "MySlice",
-        mock: [],
+        mocks: [],
       });
 
       await expectSaga(saveSliceMockSaga, payload)
@@ -288,7 +288,7 @@ describe("[Simulator module]", () => {
           })
         )
         .put(updateSliceMock(payload.payload))
-        .put(updateSelectedSliceMocks({ mocks: payload.payload.mock }))
+        .put(updateSelectedSliceMocks({ mocks: payload.payload.mocks }))
         .put(saveSliceMockCreator.success())
         .run();
 
@@ -329,7 +329,7 @@ describe("[Simulator module]", () => {
       const payload = saveSliceMockCreator.request({
         libraryID: "slices",
         sliceID: "MySlice",
-        mock: [],
+        mocks: [],
       });
 
       const errorMessage = "Error saving content";

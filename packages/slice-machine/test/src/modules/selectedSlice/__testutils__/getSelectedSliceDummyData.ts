@@ -19,7 +19,7 @@ export const getSelectedSliceDummyData = () => {
     extension: "js",
     model: dummyModel,
     screenshots: {},
-    mock: jsonMocks as ComponentInfo["mock"],
+    mocks: jsonMocks as ComponentInfo["mocks"],
   };
 
   return {

@@ -4,15 +4,17 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
-export const mockSlice = (
-	model: SharedSlice,
-	previousMocks?: SharedSliceContent[],
-	sliceDiff?: SliceDiff,
-): SharedSliceContent[] => {
+type mockSliceArgs = {
+	model: SharedSlice;
+	mocks?: SharedSliceContent[];
+	sliceDiff?: SliceDiff;
+};
+
+export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
+	const { model, mocks, sliceDiff } = args;
+
 	return model.variations.map((variation) => {
-		const variationMock = previousMocks?.find(
-			(m) => m.variation === variation.id,
-		);
+		const variationMock = mocks?.find((m) => m.variation === variation.id);
 
 		if (!variationMock) {
 			return SharedSliceMock.generate(model);

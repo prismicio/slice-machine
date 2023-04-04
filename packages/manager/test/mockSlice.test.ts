@@ -107,7 +107,7 @@ describe.skip("mockSlice", () => {
 			],
 		};
 
-		const result = mockSlice(model);
+		const result = mockSlice({ model });
 
 		expect(result).toEqual(wanted);
 		// TODO: check the codec we use for SharedSliceContent[]
@@ -175,7 +175,7 @@ describe.skip("mockSlice", () => {
 			],
 		};
 
-		const result = mockSlice(model, partial);
+		const result = mockSlice({ model, mocks: partial });
 		// text "Woo2" is still part of
 		expect(result).toMatchObject(partial);
 		// The image is random, so we check its properties instead.
@@ -275,7 +275,7 @@ describe.skip("mockSlice", () => {
 				},
 			],
 		};
-		const previousMocks: SharedSliceContent[] = [
+		const mocks: SharedSliceContent[] = [
 			{
 				__TYPE__: "SharedSliceContent",
 				variation: "default",
@@ -353,7 +353,7 @@ describe.skip("mockSlice", () => {
 		};
 
 		const wanted = [
-			...previousMocks,
+			...mocks,
 			{
 				__TYPE__: "SharedSliceContent",
 				variation: "foo",
@@ -391,10 +391,10 @@ describe.skip("mockSlice", () => {
 			},
 		];
 
-		const results = mockSlice(sliceModel, previousMocks, sliceDiff);
+		const results = mockSlice({ model: sliceModel, mocks, sliceDiff });
 
 		// check the content is unchanged
-		expect(results[0]).toEqual(previousMocks[0]);
+		expect(results[0]).toEqual(mocks[0]);
 		expect(results).toEqual(wanted);
 	});
 });
