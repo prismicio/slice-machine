@@ -85,14 +85,10 @@ export const renameCustomType = (
   });
 };
 
-// export const deleteCustomType = (
-//   customTypeId: string
-// ): Promise<AxiosResponse> => {
-//   return axios.delete(
-//     `/api/custom-types/delete?id=${customTypeId}`,
-//     defaultAxiosConfig
-//   );
-// };
+export const deleteCustomType = async (customTypeID: string) =>
+  await managerClient.customTypes.deleteCustomType({
+    id: customTypeID,
+  });
 
 /** Slice Routes * */
 export const createSlice = async (
@@ -127,19 +123,11 @@ export const renameSlice = async (
   });
 };
 
-// export const deleteSlice = (
-//   sliceId: string,
-//   libName: string
-// ): Promise<AxiosResponse> => {
-//   const requestBody = {
-//     sliceId,
-//     libName,
-//   };
-//   return axios.delete(`/api/slices/delete`, {
-//     ...defaultAxiosConfig,
-//     data: requestBody,
-//   });
-// };
+export const deleteSlice = async (sliceId: string, libName: string) =>
+  await managerClient.slices.deleteSlice({
+    libraryID: libName,
+    sliceID: sliceId,
+  });
 
 export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest

@@ -17,7 +17,7 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
   createSlice,
-  // deleteSlice,
+  deleteSlice,
   getState,
   renameSlice,
   SaveSliceMockRequest,
@@ -350,42 +350,35 @@ function* watchRenameSlice() {
   );
 }
 
-export function* deleteSliceSaga({}: // payload,
-ReturnType<typeof deleteSliceCreator.request>) {
-  // const { libName, sliceId, sliceName } = payload;
-  // try {
-  //   // yield call(deleteSlice, sliceId, libName);
-  //   yield put(deleteSliceCreator.success(payload));
-  //   yield put(
-  //     openToasterCreator({
-  //       content: `Successfully deleted Slice “${sliceName}”`,
-  //       type: ToasterType.SUCCESS,
-  //     })
-  //   );
-  // } catch (e) {
-  //   if (axios.isAxiosError(e)) {
-  //     const apiResponse = e.response?.data as DeleteSliceResponse;
-  //     if (apiResponse.type === "warning")
-  //       yield put(deleteSliceCreator.success(payload));
-  //     yield put(
-  //       openToasterCreator({
-  //         content: apiResponse.reason,
-  //         type:
-  //           apiResponse.type === "error"
-  //             ? ToasterType.ERROR
-  //             : ToasterType.WARNING,
-  //       })
-  //     );
-  //   } else {
-  //     yield put(
-  //       openToasterCreator({
-  //         content: "An unexpected error happened while deleting your slice.",
-  //         type: ToasterType.ERROR,
-  //       })
-  //     );
-  //   }
-  // }
-  // yield put(modalCloseCreator());
+export function* deleteSliceSaga({
+  payload,
+}: ReturnType<typeof deleteSliceCreator.request>) {
+  const { libName, sliceId, sliceName } = payload;
+  try {
+    const result = (yield call(
+      deleteSlice,
+      sliceId,
+      libName
+    )) as SagaReturnType<typeof deleteSlice>;
+    if (result.errors.length > 0) {
+      throw result.errors;
+    }
+    yield put(deleteSliceCreator.success(payload));
+    yield put(
+      openToasterCreator({
+        content: `Successfully deleted Slice “${sliceName}”`,
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      openToasterCreator({
+        content: "An unexpected error happened while deleting your slice.",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
+  yield put(modalCloseCreator());
 }
 
 function* watchDeleteSlice() {
