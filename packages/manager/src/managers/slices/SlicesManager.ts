@@ -657,7 +657,7 @@ export class SlicesManager extends BaseManager {
 			await this.customTypes.readAllCustomTypes();
 
 		// Successfully update all custom types or throw
-		Promise.all(
+		await Promise.all(
 			models.map(async (customType) => {
 				const updatedJsonModel = Object.entries(customType.model.json).reduce(
 					(tabAccumulator, [tabKey, tab]) => {
