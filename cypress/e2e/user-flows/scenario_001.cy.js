@@ -1,4 +1,6 @@
 import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
+import { menu } from "../../pages/menu";
+import { changesPage } from "../../pages/changes/changesPage";
 
 const random = Date.now();
 const customTypeName = `My Custom Type ${random}`;
@@ -43,17 +45,14 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
     customTypeBuilder.save();
-  });
 
-  it("Links to CTs available locally", () => {
-    cy.visit(`/changes`);
-
+    // Links to CTs available locally
+    menu.navigateTo("Changes");
     cy.contains(customTypeId).click();
-
     cy.url().should("include", `/cts/${customTypeId}`);
   });
 
-  it("Pushes changes", () => {
-    cy.pushLocalChanges(1);
+    menu.navigateTo("Changes");
+    changesPage.pushChanges().isUpToDate();
   });
 });

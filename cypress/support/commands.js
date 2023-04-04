@@ -2,7 +2,6 @@ import * as localStorageHelpers from "../helpers/localStorage";
 import * as filesystemHelpers from "../helpers/filesystem";
 import * as customTypesHelpers from "../helpers/customTypes";
 import * as slicesHelpers from "../helpers/slices";
-import * as repositoryHelpers from "../helpers/repository";
 import * as imageHelpers from "../helpers/images";
 
 /* -- LOCAL STORAGE -- */
@@ -29,11 +28,6 @@ Object.keys(customTypesHelpers).forEach((customTypesHelper) => {
 /* -- SLICES -- */
 Object.keys(slicesHelpers).forEach((slicesHelper) => {
   Cypress.Commands.add(slicesHelper, slicesHelpers[slicesHelper]);
-});
-
-/* REPOSITORY */
-Object.keys(repositoryHelpers).forEach((repositoryHelper) => {
-  Cypress.Commands.add(repositoryHelper, repositoryHelpers[repositoryHelper]);
 });
 
 /* IMAGES */
