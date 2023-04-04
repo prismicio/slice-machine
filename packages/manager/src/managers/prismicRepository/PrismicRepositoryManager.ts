@@ -297,7 +297,7 @@ export class PrismicRepositoryManager extends BaseManager {
 								});
 
 								if (!model) {
-									throw Error(`Could not find model  ${change.id}`);
+									throw Error(`Could not find model ${change.id}`);
 								}
 
 								const modelWithScreenshots =
@@ -318,6 +318,10 @@ export class PrismicRepositoryManager extends BaseManager {
 								};
 							}
 							case "DELETED":
+								await this.screenshots.deleteScreenshotFolder({
+									sliceID: change.id,
+								});
+
 								return {
 									id: change.id,
 									payload: { id: change.id },

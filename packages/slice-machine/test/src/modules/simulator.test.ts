@@ -13,10 +13,7 @@ import {
 } from "@src/modules/simulator";
 import { select } from "redux-saga/effects";
 import { testSaga, expectSaga } from "redux-saga-test-plan";
-import {
-  checkSetupSaga,
-  trackOpenSetupModalSaga,
-} from "@src/modules/simulator";
+import { checkSetupSaga } from "@src/modules/simulator";
 import { SimulatorStoreType } from "@src/modules/simulator/types";
 
 import {
@@ -170,7 +167,6 @@ describe("[Simulator module]", () => {
       saga
         .next(response2)
         .call(failCheckSetupSaga, { setupSteps: response2.steps });
-      saga.next().call(trackOpenSetupModalSaga);
       saga.next().isDone();
     });
     it("should open setup modal if checkSimulatorSetupCreator.failure action", () => {

@@ -19,7 +19,6 @@ import {
   getSimulatorSetupSteps,
   saveSliceMock,
   SaveSliceMockRequest,
-  telemetry,
 } from "@src/apiClient";
 import {
   selectIsSimulatorAvailableForFramework,
@@ -201,7 +200,6 @@ export function* checkSetupSaga(
       return;
     }
     yield call(failCheckSetupSaga, { setupSteps: setupSteps.steps });
-    yield call(trackOpenSetupModalSaga);
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     yield put(checkSimulatorSetupCreator.failure({ error: error as Error }));
@@ -247,10 +245,6 @@ export function* failCheckSetupSaga({
     })
   );
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
-}
-
-export function* trackOpenSetupModalSaga() {
-  void telemetry.track({ event: "slice-simulator:setup" });
 }
 
 export function* saveSliceMockSaga({

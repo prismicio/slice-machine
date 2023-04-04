@@ -9,8 +9,6 @@ import {
 	SliceAssetUpdateHook,
 	SliceCreateHook,
 	SliceCreateHookData,
-	SliceDeleteHook,
-	SliceDeleteHookData,
 	SliceLibraryReadHookData,
 	SliceReadHookData,
 	SliceRenameHook,
@@ -134,6 +132,15 @@ type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
 type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
 	libraryID: string;
 	model: CustomTypes.Widgets.Slices.SharedSlice;
+};
+
+type SliceMachineManagerDeleteSliceArgs = {
+	libraryID: string;
+	sliceID: string;
+};
+
+type SliceMachineManagerDeleteSliceReturnType = {
+	errors: (DecodeError | HookError)[];
 };
 
 export class SlicesManager extends BaseManager {
@@ -350,20 +357,41 @@ export class SlicesManager extends BaseManager {
 		};
 	}
 
-	// TODO: Disallow until Slices can be deleted.
 	async deleteSlice(
-		args: SliceDeleteHookData,
-	): Promise<OnlyHookErrors<CallHookReturnType<SliceDeleteHook>>> {
+		args: SliceMachineManagerDeleteSliceArgs,
+	): Promise<SliceMachineManagerDeleteSliceReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"slice:delete",
-			args,
-		);
+		const { model, errors: readSliceErrors } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.sliceID,
+		});
 
-		return {
-			errors: hookResult.errors,
-		};
+		if (model) {
+			const { errors: deleteSliceErrors } =
+				await this.sliceMachinePluginRunner.callHook("slice:delete", {
+					model,
+					libraryID: args.libraryID,
+				});
+
+			// Do not update custom types if slice deletion failed
+			if (deleteSliceErrors.length > 0) {
+				return {
+					errors: deleteSliceErrors,
+				};
+			}
+
+			const { errors: updateCustomTypeErrors } =
+				await this._removeSliceFromCustomTypes(args.sliceID);
+
+			return {
+				errors: updateCustomTypeErrors,
+			};
+		} else {
+			return {
+				errors: readSliceErrors,
+			};
+		}
 	}
 
 	/**
@@ -658,5 +686,59 @@ export class SlicesManager extends BaseManager {
 			...args.model,
 			variations,
 		};
+	}
+
+	private async _removeSliceFromCustomTypes(sliceID: string) {
+		const { models, errors: customTypeReadErrors } =
+			await this.customTypes.readAllCustomTypes();
+
+		// Successfully update all custom types or throw
+		await Promise.all(
+			models.map(async (customType) => {
+				const updatedJsonModel = Object.entries(customType.model.json).reduce(
+					(tabAccumulator, [tabKey, tab]) => {
+						const updatedTabFields = Object.entries(tab).reduce(
+							(fieldAccumulator, [fieldKey, field]) => {
+								if (
+									field.config === undefined ||
+									field.type !== "Slices" ||
+									field.config.choices === undefined
+								) {
+									return { ...fieldAccumulator, [fieldKey]: field };
+								}
+
+								const filteredChoices = Object.entries(
+									field.config.choices,
+								).reduce((choiceAccumulator, [choiceKey, choice]) => {
+									if (choiceKey === sliceID) {
+										return choiceAccumulator;
+									}
+
+									return { ...choiceAccumulator, [choiceKey]: choice };
+								}, {});
+
+								return {
+									...fieldAccumulator,
+									[fieldKey]: {
+										...field,
+										config: { ...field.config, choices: filteredChoices },
+									},
+								};
+							},
+							{},
+						);
+
+						return { ...tabAccumulator, [tabKey]: updatedTabFields };
+					},
+					{},
+				);
+
+				await this.customTypes.updateCustomType({
+					model: { ...customType.model, json: updatedJsonModel },
+				});
+			}),
+		);
+
+		return { errors: customTypeReadErrors };
 	}
 }

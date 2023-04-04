@@ -1,23 +1,25 @@
-{
-  "__TYPE__": "SharedSliceContent",
-  "variation": "default-slice",
-  "primary": {
-    "description": {
-      "__TYPE__": "StructuredTextContent",
-      "value": [
-        {
-          "type": "paragraph",
-          "content": {
-            "text": "Excepteur aliqua ex fugiat veniam. Cupidatat dolor ea irure veniam sit laboris laborum irure pariatur nostrud. Labore consectetur sunt est cillum dolor sint sunt duis."
+[
+  {
+    "__TYPE__": "SharedSliceContent",
+    "variation": "default-slice",
+    "primary": {
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Commodo sunt elit veniam fugiat esse quis qui."
+            }
           }
-        }
-      ]
-    }
-  },
-  "items": [
-    {
-      "__TYPE__": "GroupItemContent",
-      "value": []
-    }
-  ]
-}
+        ]
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
+  }
+]

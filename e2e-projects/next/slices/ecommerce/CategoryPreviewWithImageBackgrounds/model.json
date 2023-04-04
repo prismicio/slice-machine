@@ -5,6 +5,24 @@
   "description": "CategoryPreviewWithImageBackgrounds",
   "variations": [
     {
+      "id": "another-variation",
+      "name": "Another variation",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "CategoryPreviewWithImageBackgrounds",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        }
+      }
+    },
+    {
       "id": "default-slice",
       "name": "Default slice",
       "docURL": "...",

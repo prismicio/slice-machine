@@ -90,12 +90,6 @@ export const getPackageManager = (
   return store.environment.packageManager;
 };
 
-export const getStorybookUrl = (
-  store: SliceMachineStoreType
-): string | null => {
-  return store.environment.manifest.storybook || null;
-};
-
 export const getAuthStatus = (state: SliceMachineStoreType): AuthStatus => {
   return state.userContext.authStatus;
 };
