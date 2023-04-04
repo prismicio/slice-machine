@@ -15,7 +15,6 @@ import {
 	SliceReadHookData,
 	SliceRenameHook,
 	SliceRenameHookData,
-	SliceUpdateHook,
 	SliceUpdateHookData,
 	SliceUpdateHookReturnType,
 } from "@slicemachine/plugin-kit";

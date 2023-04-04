@@ -31,7 +31,7 @@ vi.mock("@prismicio/mocks/lib/generators/utils/slug", () => {
 	return vi.fn().mockReturnValue("Woo");
 });
 
-describe.skip("mockSlice", () => {
+describe("mockSlice", () => {
 	test("parse primary", () => {
 		const link = {
 			"link-2": {

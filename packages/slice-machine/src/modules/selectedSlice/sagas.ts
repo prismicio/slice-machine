@@ -25,7 +25,7 @@ export function* updateSliceSaga({
       status: null,
       message: null,
     });
-    const { errors } = (yield call(
+    const { errors, mocks } = (yield call(
       updateSliceApiClient,
       component
     )) as SagaReturnType<typeof updateSliceApiClient>;
@@ -45,7 +45,9 @@ export function* updateSliceSaga({
       message: "Model saved",
     });
 
-    yield put(updateSliceCreator.success({ component }));
+    yield put(
+      updateSliceCreator.success({ component: { ...component, mocks } })
+    );
   } catch (e) {
     yield put(
       openToasterCreator({
