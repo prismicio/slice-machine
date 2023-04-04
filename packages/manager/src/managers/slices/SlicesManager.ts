@@ -656,49 +656,52 @@ export class SlicesManager extends BaseManager {
 		const { models, errors: customTypeReadErrors } =
 			await this.customTypes.readAllCustomTypes();
 
-		models.forEach((customType) => {
-			const updatedJsonModel = Object.entries(customType.model.json).reduce(
-				(tabAccumulator, [tabKey, tab]) => {
-					const updatedTabFields = Object.entries(tab).reduce(
-						(fieldAccumulator, [fieldKey, field]) => {
-							if (
-								field.config === undefined ||
-								field.type !== "Slices" ||
-								field.config.choices === undefined
-							) {
-								return { ...fieldAccumulator, [fieldKey]: field };
-							}
-
-							const filteredChoices = Object.entries(
-								field.config.choices,
-							).reduce((choiceAccumulator, [choiceKey, choice]) => {
-								if (choiceKey === sliceID) {
-									return choiceAccumulator;
+		// Successfully update all custom types or throw
+		Promise.all(
+			models.map(async (customType) => {
+				const updatedJsonModel = Object.entries(customType.model.json).reduce(
+					(tabAccumulator, [tabKey, tab]) => {
+						const updatedTabFields = Object.entries(tab).reduce(
+							(fieldAccumulator, [fieldKey, field]) => {
+								if (
+									field.config === undefined ||
+									field.type !== "Slices" ||
+									field.config.choices === undefined
+								) {
+									return { ...fieldAccumulator, [fieldKey]: field };
 								}
 
-								return { ...choiceAccumulator, [choiceKey]: choice };
-							}, {});
+								const filteredChoices = Object.entries(
+									field.config.choices,
+								).reduce((choiceAccumulator, [choiceKey, choice]) => {
+									if (choiceKey === sliceID) {
+										return choiceAccumulator;
+									}
 
-							return {
-								...fieldAccumulator,
-								[fieldKey]: {
-									...field,
-									config: { ...field.config, choices: filteredChoices },
-								},
-							};
-						},
-						{},
-					);
+									return { ...choiceAccumulator, [choiceKey]: choice };
+								}, {});
 
-					return { ...tabAccumulator, [tabKey]: updatedTabFields };
-				},
-				{},
-			);
+								return {
+									...fieldAccumulator,
+									[fieldKey]: {
+										...field,
+										config: { ...field.config, choices: filteredChoices },
+									},
+								};
+							},
+							{},
+						);
 
-			this.customTypes.updateCustomType({
-				model: { ...customType.model, json: updatedJsonModel },
-			});
-		});
+						return { ...tabAccumulator, [tabKey]: updatedTabFields };
+					},
+					{},
+				);
+
+				await this.customTypes.updateCustomType({
+					model: { ...customType.model, json: updatedJsonModel },
+				});
+			}),
+		);
 
 		return { errors: customTypeReadErrors };
 	}
