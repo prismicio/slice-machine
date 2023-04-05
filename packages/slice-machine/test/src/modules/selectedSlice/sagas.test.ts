@@ -20,14 +20,12 @@ describe("[Selected Slice sagas]", () => {
         })
       );
 
-      saga
-        .next()
-        .call(readSliceMocks, {
-          libraryID: dummySliceState.from,
-          sliceID: dummySliceState.model.id,
-        });
-
       saga.next().call(updateSliceApiClient, dummySliceState);
+
+      saga.next().call(readSliceMocks, {
+        libraryID: dummySliceState.from,
+        sliceID: dummySliceState.model.id,
+      });
 
       saga
         .next({ errors: [] })
