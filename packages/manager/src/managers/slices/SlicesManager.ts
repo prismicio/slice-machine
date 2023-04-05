@@ -54,7 +54,7 @@ type SliceMachineManagerUpdateSliceArgs = {
 	libraryID: string;
 	model: SharedSliceModel;
 	mocks?: SharedSliceContent[];
-}
+};
 
 type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
 	models: { model: CustomTypes.Widgets.Slices.SharedSlice }[];
@@ -312,7 +312,7 @@ export class SlicesManager extends BaseManager {
 
 	async updateSlice(
 		args: SliceMachineManagerUpdateSliceArgs,
-		): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
+	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		const { mocks: previousMocks } = await this.readSliceMocks({
