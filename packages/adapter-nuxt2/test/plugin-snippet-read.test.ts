@@ -53,17 +53,17 @@ const testSnippet = (
 				expected.map((descriptor) => ({
 					...descriptor,
 					code: prettier
-						.format(descriptor.code, { parser: "typescript" })
+						.format(descriptor.code, { parser: "vue" })
 						.replace(/[\r\n]+$/, "")
 						.replace(/;$/, ""),
 				})),
 			);
 		} else {
 			expect(res).toStrictEqual({
-				label: "React",
-				language: "tsx",
+				label: "Vue",
+				language: "vue",
 				code: prettier
-					.format(expected, { parser: "typescript" })
+					.format(expected, { parser: "vue" })
 					.replace(/[\r\n]+$/, "")
 					.replace(/;$/, ""),
 			});
@@ -71,71 +71,79 @@ const testSnippet = (
 	});
 };
 
-testSnippet("boolean", `<>{${model.id}.data.boolean}</>`);
+testSnippet("boolean", `{{${model.id}.data.boolean}}`);
 
-testSnippet("color", `<>{${model.id}.data.color}</>`);
+testSnippet("color", `{{${model.id}.data.color}}`);
 
 testSnippet(
 	"contentRelationship",
-	`<PrismicLink field={${model.id}.data.contentRelationship}>Link</PrismicLink>`,
+	`<PrismicLink :field="${model.id}.data.contentRelationship">Link</PrismicLink>`,
 );
 
-testSnippet("date", `<>{${model.id}.data.date}</>`);
+testSnippet("date", `{{${model.id}.data.date}}`);
 
-testSnippet("embed", `<>{${model.id}.data.embed}</>`);
+testSnippet("embed", `<PrismicEmbed :field="${model.id}.data.embed" />`);
 
-testSnippet("geoPoint", `<>{${model.id}.data.geoPoint}</>`);
+testSnippet("geoPoint", `{{${model.id}.data.geoPoint}}`);
 
 testSnippet(
 	"group",
-	`<>{${model.id}.data.group.map((item) => (
-<>{/* Render content for item */}</>
-))}</>`,
+	`<template v-for="item in ${model.id}.data.group">
+	{{ item }}
+</template>`,
 );
 
-testSnippet("image", [
-	{
-		label: "React (next/image)",
-		language: "tsx",
-		code: `<PrismicNextImage field={${model.id}.data.image} />`,
-	},
-	{
-		label: "React",
-		language: "tsx",
-		code: `<PrismicImage field={${model.id}.data.image} />`,
-	},
-]);
+testSnippet("image", `<PrismicImage :field="${model.id}.data.image" />`);
 
-testSnippet("integrationFields", `<>{${model.id}.data.integrationFields}</>`);
+testSnippet("integrationFields", `{{${model.id}.data.integrationFields}}`);
 
-testSnippet("keyText", `<>{${model.id}.data.keyText}</>`);
+testSnippet("keyText", `{{${model.id}.data.keyText}}`);
 
 testSnippet(
 	"link",
-	`<PrismicLink field={${model.id}.data.link}>Link</PrismicLink>`,
+	`<PrismicLink :field="${model.id}.data.link">Link</PrismicLink>`,
 );
 
 testSnippet(
 	"linkToMedia",
-	`<PrismicLink field={${model.id}.data.linkToMedia}>Link</PrismicLink>`,
+	`<PrismicLink :field="${model.id}.data.linkToMedia">Link</PrismicLink>`,
 );
 
-testSnippet("number", `<>{${model.id}.data.number}</>`);
+testSnippet("number", `{{${model.id}.data.number}}`);
 
-testSnippet(
-	"richText",
-	`<PrismicRichText field={${model.id}.data.richText} />`,
-);
+testSnippet("richText", [
+	{
+		label: `Vue (rich)`,
+		language: "vue",
+		code: `<PrismicRichText :field="${model.id}.data.richText" />`,
+	},
+	{
+		label: `Vue (plain)`,
+		language: "vue",
+		code: `<PrismicText :field="${model.id}.data.richText" />`,
+	},
+]);
 
-testSnippet("select", `<>{${model.id}.data.select}</>`);
+testSnippet("select", `{{${model.id}.data.select}}`);
 
 testSnippet(
 	"sliceZone",
-	`<SliceZone slices={${model.id}.data.sliceZone} components={components} />`,
+	`<SliceZone :slices="${model.id}.data.sliceZone" :components="components" />`,
 );
 
-testSnippet("timestamp", `<>{${model.id}.data.timestamp}</>`);
+testSnippet("timestamp", `{{${model.id}.data.timestamp}}`);
 
-testSnippet("title", `<PrismicRichText field={${model.id}.data.title} />`);
+testSnippet("title", [
+	{
+		label: `Vue (rich)`,
+		language: "vue",
+		code: `<PrismicRichText :field="${model.id}.data.title" />`,
+	},
+	{
+		label: `Vue (plain)`,
+		language: "vue",
+		code: `<PrismicText :field="${model.id}.data.title" />`,
+	},
+]);
 
-testSnippet("uid", `<>{${model.id}.data.uid}</>`);
+testSnippet("uid", `{{${model.id}.data.uid}}`);

@@ -15,7 +15,7 @@ const format = async (input: string, helpers: SliceMachineHelpers) => {
 	const formattedInput = await helpers.format(input, undefined, {
 		includeNewlineAtEnd: false,
 		prettier: {
-			parser: "typescript",
+			parser: "vue",
 		},
 	});
 

@@ -24,7 +24,7 @@ const installDependencies = async ({
 }: InstallDependenciesArgs) => {
 	await installDependencies({
 		dependencies: {
-			NUXT_PRISMIC: "^1.4.2",
+			[NUXT_PRISMIC]: "^1.4.2",
 		},
 		dev: true,
 	});
@@ -95,7 +95,7 @@ const configurePrismicModule = async ({
 	config.build.transpile ||= [];
 	config.build.transpile.push("@prismicio/vue");
 
-	await writeFile(mod as unknown as ASTNode);
+	await writeFile(mod as unknown as ASTNode, nuxtConfigPath);
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
@@ -142,7 +142,9 @@ const createSliceSimulatorPage = async ({
 	`;
 
 	if (options.format) {
-		contents = await helpers.format(contents, filePath);
+		contents = await helpers.format(contents, filePath, {
+			prettier: { parser: "vue" },
+		});
 	}
 
 	await fs.writeFile(filePath, contents);

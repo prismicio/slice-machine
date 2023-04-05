@@ -8,7 +8,6 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { buildSliceDirectoryPath } from "../lib/buildSliceDirectoryPath";
-import { pascalCase } from "../lib/pascalCase";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { updateSliceModelFile } from "../lib/updateSliceModelFile";
 import { upsertGlobalContentTypes } from "../lib/upsertGlobalContentTypes";
@@ -21,10 +20,8 @@ type Args = {
 	data: SliceCreateHookData;
 } & SliceMachineContext<PluginOptions>;
 
-const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
+const createComponentFile = async ({ dir, helpers, options }: Args) => {
 	const filePath = path.join(dir, "index.vue");
-	const model = data.model;
-	const pascalName = pascalCase(model.name);
 
 	let contents = stripIndent`
 		<template>
@@ -48,7 +45,9 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 	`;
 
 	if (options.format) {
-		contents = await helpers.format(contents, filePath);
+		contents = await helpers.format(contents, filePath, {
+			prettier: { parser: "vue" },
+		});
 	}
 
 	await fs.writeFile(filePath, contents);

@@ -29,7 +29,7 @@ declare module "vitest" {
 
 beforeEach(async (ctx) => {
 	const tmpRoot = await fs.mkdtemp(
-		path.join(os.tmpdir(), "@slicemachine__adapter-next___"),
+		path.join(os.tmpdir(), "@slicemachine__adapter-nuxt2___"),
 	);
 
 	ctx.project = {
