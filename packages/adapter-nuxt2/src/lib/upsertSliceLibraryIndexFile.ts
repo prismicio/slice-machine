@@ -46,7 +46,7 @@ export const upsertSliceLibraryIndexFile = async (
 						const id = slice.model.id;
 						const dirName = pascalCase(slice.model.name);
 
-						return `${id}: () => import(/* webpackChunkName: prismic.${args.libraryID}.${id} */ './${dirName}/index.vue')`;
+						return `${id}: () => import(/* webpackChunkName: prismic.${args.libraryID}.${id} */ "./${dirName}/index.vue")`;
 					})
 					.join(",\n")}
 			}
@@ -60,7 +60,7 @@ export const upsertSliceLibraryIndexFile = async (
 					const componentName = pascalCase(slice.model.name);
 					const dirName = pascalCase(slice.model.name);
 
-					return `import ${componentName} from "./${dirName}";`;
+					return `import ${componentName} from "./${dirName}/index.vue";`;
 				})
 				.join("\n")}
 
