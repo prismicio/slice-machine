@@ -379,7 +379,7 @@ export class PrismicRepositoryManager extends BaseManager {
 
 			// TODO: move to customtypes client
 			const response = await this._fetch({
-				url: new URL("/bulk", API_ENDPOINTS.PrismicModels),
+				url: new URL("./bulk", API_ENDPOINTS.PrismicModels),
 				method: "POST",
 				body: requestBody,
 				repository: sliceMachineConfig.repositoryName,
