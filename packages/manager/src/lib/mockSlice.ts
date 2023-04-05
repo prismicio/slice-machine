@@ -7,11 +7,11 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/s
 type mockSliceArgs = {
 	model: SharedSlice;
 	mocks?: SharedSliceContent[];
-	sliceDiff?: SliceDiff;
+	diff?: SliceDiff;
 };
 
 export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
-	const { model, mocks, sliceDiff } = args;
+	const { model, mocks, diff } = args;
 
 	return model.variations.map((variation) => {
 		const variationMock = mocks?.find((m) => m.variation === variation.id);
@@ -19,11 +19,11 @@ export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
 		if (!variationMock) {
 			return SharedSliceMock.generate(model);
 		}
-		if (!sliceDiff) {
+		if (!diff) {
 			return variationMock;
 		}
 
-		const patched = SharedSliceMock.patch(sliceDiff, model, variationMock);
+		const patched = SharedSliceMock.patch(diff, model, variationMock);
 		if (!patched.ok) {
 			return variationMock;
 		}

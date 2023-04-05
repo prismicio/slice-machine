@@ -9,7 +9,7 @@ import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { updateSliceCreator } from "./actions";
-import { updateSliceApiClient } from "@src/apiClient";
+import { readSliceMocks, updateSliceApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 export function* updateSliceSaga({
@@ -25,7 +25,7 @@ export function* updateSliceSaga({
       status: null,
       message: null,
     });
-    const { errors, mocks } = (yield call(
+    const { errors } = (yield call(
       updateSliceApiClient,
       component
     )) as SagaReturnType<typeof updateSliceApiClient>;
@@ -44,6 +44,11 @@ export function* updateSliceSaga({
       error: null,
       message: "Model saved",
     });
+
+    const { mocks } = (yield call(readSliceMocks, {
+      libraryID: component.from,
+      sliceID: component.model.id,
+    })) as SagaReturnType<typeof readSliceMocks>;
 
     yield put(
       updateSliceCreator.success({ component: { ...component, mocks } })

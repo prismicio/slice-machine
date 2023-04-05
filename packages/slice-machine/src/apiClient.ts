@@ -252,6 +252,20 @@ export type SaveSliceMockRequest = {
   mocks: SharedSliceContent[];
 };
 
+export type ReadSliceMockRequest = {
+  libraryID: string;
+  sliceID: string;
+};
+
+export const readSliceMocks = async (
+  payload: ReadSliceMockRequest
+): ReturnType<SliceMachineManagerClient["slices"]["readSliceMocks"]> => {
+  return await managerClient.slices.readSliceMocks({
+    libraryID: payload.libraryID,
+    sliceID: payload.sliceID,
+  });
+};
+
 export const saveSliceMock = async (
   payload: SaveSliceMockRequest
 ): ReturnType<SliceMachineManagerClient["slices"]["updateSliceMocks"]> => {

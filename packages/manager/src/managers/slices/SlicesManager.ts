@@ -1,5 +1,6 @@
 import * as t from "io-ts";
 import fetch from "node-fetch";
+import type { SharedSliceModel } from "@prismicio/types";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomTypes } from "@prismicio/types-internal";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
@@ -13,8 +14,8 @@ import {
 	SliceReadHookData,
 	SliceRenameHook,
 	SliceRenameHookData,
+	SliceUpdateHook,
 	SliceUpdateHookData,
-	SliceUpdateHookReturnType,
 } from "@slicemachine/plugin-kit";
 
 import { DecodeError } from "../../lib/DecodeError";
@@ -48,6 +49,12 @@ type SlicesManagerReadAllSliceLibrariesReturnType = {
 type SliceMachineManagerReadAllSlicesForLibraryArgs = {
 	libraryID: string;
 };
+
+type SliceMachineManagerUpdateSliceArgs = {
+	libraryID: string;
+	model: SharedSliceModel;
+	mocks?: SharedSliceContent[];
+}
 
 type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
 	models: { model: CustomTypes.Widgets.Slices.SharedSlice }[];
@@ -304,8 +311,8 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async updateSlice(
-		args: SliceUpdateHookData,
-	): Promise<SliceUpdateHookReturnType> {
+		args: SliceMachineManagerUpdateSliceArgs,
+		): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		const { mocks: previousMocks } = await this.readSliceMocks({
@@ -324,7 +331,7 @@ export class SlicesManager extends BaseManager {
 		const updatedMocks = mockSlice({
 			model: args.model,
 			mocks: previousMocks,
-			sliceDiff: SliceComparator.compare(previousModel, args.model),
+			diff: SliceComparator.compare(previousModel, args.model),
 		});
 		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
 			libraryID: args.libraryID,
@@ -337,7 +344,6 @@ export class SlicesManager extends BaseManager {
 		);
 
 		return {
-			mocks: updatedMocks,
 			errors: [...hookResult.errors, ...updateSliceMocksHookResult],
 		};
 	}

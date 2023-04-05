@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { testSaga } from "redux-saga-test-plan";
 import { updateSliceSaga } from "@src/modules/selectedSlice/sagas";
 import { updateSliceCreator } from "@src/modules/selectedSlice/actions";
-import { updateSliceApiClient } from "@src/apiClient";
+import { readSliceMocks, updateSliceApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";
 
@@ -19,6 +19,13 @@ describe("[Selected Slice sagas]", () => {
           setData: mockSetData,
         })
       );
+
+      saga
+        .next()
+        .call(readSliceMocks, {
+          libraryID: dummySliceState.from,
+          sliceID: dummySliceState.model.id,
+        });
 
       saga.next().call(updateSliceApiClient, dummySliceState);
 

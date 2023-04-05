@@ -313,7 +313,7 @@ describe("mockSlice", () => {
 				],
 			},
 		];
-		const sliceDiff: SliceDiff = {
+		const diff: SliceDiff = {
 			op: DiffOperation.Updated,
 			value: {
 				variations: {
@@ -391,7 +391,7 @@ describe("mockSlice", () => {
 			},
 		];
 
-		const results = mockSlice({ model: sliceModel, mocks, sliceDiff });
+		const results = mockSlice({ model: sliceModel, mocks, diff });
 
 		// check the content is unchanged
 		expect(results[0]).toEqual(mocks[0]);
