@@ -40,15 +40,13 @@ export const upsertSliceLibraryIndexFile = async (
 		contents = stripIndent`
 			${NON_EDITABLE_FILE_BANNER}
 
-			import dynamic from 'next/dynamic'
-
 			export const components = {
 				${slices
 					.map((slice) => {
 						const id = slice.model.id;
 						const dirName = pascalCase(slice.model.name);
 
-						return `${id}: dynamic(() => import('./${dirName}'))`;
+						return `${id}: () => import(/* webpackChunkName: prismic.${args.libraryID}.${id} */ './${dirName}/index.vue')`;
 					})
 					.join(",\n")}
 			}

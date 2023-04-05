@@ -6,12 +6,14 @@ import type {
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
 import { stripIndent } from "common-tags";
+import { loadFile, writeFile, type ASTNode } from "magicast";
 
 import { checkPathExists } from "../lib/checkPathExists";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
 import type { PluginOptions } from "../types";
-import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
+
+const NUXT_PRISMIC = "@nuxtjs/prismic";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];
@@ -22,151 +24,78 @@ const installDependencies = async ({
 }: InstallDependenciesArgs) => {
 	await installDependencies({
 		dependencies: {
-			"@prismicio/client": "latest",
-			"@prismicio/helpers": "latest",
-			"@prismicio/react": "latest",
-			"@prismicio/next": "latest",
-		},
-	});
-
-	await installDependencies({
-		dependencies: {
-			"@prismicio/types": "latest",
+			NUXT_PRISMIC: "^1.4.2",
 		},
 		dev: true,
 	});
 };
 
-type CreatePrismicIOFileArgs = SliceMachineContext<PluginOptions>;
+type ConfigurePrismicModuleArgs = SliceMachineContext<PluginOptions>;
 
-const createPrismicIOFile = async ({
+const configurePrismicModule = async ({
 	helpers,
-	options,
-}: CreatePrismicIOFileArgs) => {
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
+	project,
+}: ConfigurePrismicModuleArgs) => {
+	let nuxtConfigPath = helpers.joinPathFromRoot("nuxt.config.js");
+
+	if (!(await checkPathExists(nuxtConfigPath))) {
+		nuxtConfigPath = helpers.joinPathFromRoot("nuxt.config.ts");
+
+		// nuxt.config.* not found
+		if (!(await checkPathExists(nuxtConfigPath))) {
+			return;
+		}
+	}
+
+	const mod = await loadFile(nuxtConfigPath);
+	const config =
+		mod.exports.default.$type === "function-call"
+			? mod.exports.default.$args[0]
+			: mod.exports.default;
+
+	// Register Prismic module
+	let hasInlinedConfiguration = false;
+	const hasPrismicModuleRegistered = !![
+		...(config.modules || []),
+		...(config.buildModules || []),
+	].find((registration: string | [string, unknown]) => {
+		if (typeof registration === "string") {
+			return registration === NUXT_PRISMIC;
+		} else if (Array.isArray(registration)) {
+			hasInlinedConfiguration = !!registration[1];
+
+			return registration[0] === NUXT_PRISMIC;
+		}
+
+		return false;
 	});
 
-	const filePath = helpers.joinPathFromRoot(
-		isTypeScriptProject ? "prismicio.ts" : "prismicio.js",
-	);
-
-	if (await checkPathExists(filePath)) {
-		return;
+	if (!hasPrismicModuleRegistered) {
+		config.buildModules ||= [];
+		config.buildModules.push(NUXT_PRISMIC);
 	}
 
-	let contents: string;
-
-	if (isTypeScriptProject) {
-		contents = stripIndent`
-			import * as prismic from "@prismicio/client";
-			import * as prismicNext from "@prismicio/next";
-			import config from "./slicemachine.config.json";
-
-			/**
-			 * The project's Prismic repository name.
-			 */
-			export const repositoryName = config.repositoryName;
-
-			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field
-			 * is resolved.
-			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-			 */
-			// TODO: Update the routes array to match your project's route structure.
-			const routes: prismic.ClientConfig["routes"] = [
-				{
-					type: "homepage",
-					path: "/",
-				},
-				{
-					type: "page",
-					path: "/:uid",
-				},
-			];
-
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param config - Configuration for the Prismic client.
-			 */
-			export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				prismicNext.enableAutoPreviews({
-					client,
-					previewData: config.previewData,
-					req: config.req,
-				});
-
-				return client;
+	// Append Prismic module configuration
+	const endpoint =
+		project.config.apiEndpoint ||
+		`https://${project.config.repositoryName}.cdn.prismic.io/api/v2`;
+	if (!hasInlinedConfiguration) {
+		if (config.prismic) {
+			config.prismic.endpoint = endpoint;
+		} else {
+			config.prismic = {
+				endpoint,
+				modern: true,
 			};
-		`;
-	} else {
-		contents = stripIndent`
-			import * as prismic from "@prismicio/client";
-			import * as prismicNext from "@prismicio/next";
-			import config from "./slicemachine.config.json";
-
-			/**
-			 * The project's Prismic repository name.
-			 */
-			export const repositoryName = config.repositoryName;
-
-			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field
-			 * is resolved.
-			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-			 *
-			 * @type {prismic.ClientConfig["routes"]}
-			 */
-			// TODO: Update the routes array to match your project's route structure.
-			const routes = [
-				{
-					type: "homepage",
-					path: "/",
-				},
-				{
-					type: "page",
-					path: "/:uid",
-				},
-			];
-
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
-			 */
-			export const createClient = (config = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				prismicNext.enableAutoPreviews({
-					client,
-					previewData: config.previewData,
-					req: config.req,
-				});
-
-				return client;
-			};
-		`;
+		}
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
+	// Transpile `@prismicio/vue`
+	config.build ||= {};
+	config.build.transpile ||= [];
+	config.build.transpile.push("@prismicio/vue");
 
-	await fs.writeFile(filePath, contents);
+	await writeFile(mod as unknown as ASTNode);
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
@@ -175,12 +104,12 @@ const createSliceSimulatorPage = async ({
 	helpers,
 	options,
 }: CreateSliceSimulatorPageArgs) => {
-	const srcDirectoryExists = await checkPathExists(
-		helpers.joinPathFromRoot("src"),
+	const srcPagesDirectoryExists = await checkPathExists(
+		helpers.joinPathFromRoot("src/pages"),
 	);
 
 	const filePath = helpers.joinPathFromRoot(
-		srcDirectoryExists ? "src/pages" : "pages",
+		srcPagesDirectoryExists ? "src/pages" : "pages",
 		"slice-simulator.vue",
 	);
 
@@ -191,20 +120,25 @@ const createSliceSimulatorPage = async ({
 	await fs.mkdir(path.dirname(filePath), { recursive: true });
 
 	let contents = stripIndent`
-		import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-		import { SliceZone } from "@prismicio/react";
+		<template>
+			<SliceSimulator v-slot="{ slices }">
+				<SliceZone :slices="slices" :components="components" />
+			</SliceSimulator>
+		</template>
 
-		import { components } from "../slices";
+		<script>
+		import { SliceSimulator } from "@slicemachine/adapter-nuxt2/simulator"
+		import { components } from "~/slices";
 
-		const SliceSimulatorPage = () => {
-			return (
-				<SliceSimulator
-					sliceZone={(props) => <SliceZone {...props} components={components} />}
-				/>
-			);
+		export default {
+			components: {
+				SliceSimulator,
+			},
+			data () {
+				return { components };
+			},
 		};
-
-		export default SliceSimulatorPage;
+		</script>
 	`;
 
 	if (options.format) {
@@ -221,7 +155,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 	rejectIfNecessary(
 		await Promise.allSettled([
 			await installDependencies({ installDependencies: _installDependencies }),
-			await createPrismicIOFile(context),
+			await configurePrismicModule(context),
 			await createSliceSimulatorPage(context),
 		]),
 	);

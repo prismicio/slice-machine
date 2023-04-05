@@ -22,20 +22,25 @@ export const sliceRead: SliceReadHook<PluginOptions> = async (
 
 	const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
 
+	const modelReadErrors: string[] = [];
+
 	// Find the first matching model.
 	const [model] = (
 		await Promise.all(
 			childDirs.map(async (childDir) => {
 				if (childDir.isDirectory()) {
 					const modelPath = path.join(libraryDir, childDir.name, "model.json");
+					try {
+						const modelContents = await readJSONFile(modelPath);
 
-					const modelContents = await readJSONFile(modelPath);
-
-					if (
-						isSharedSliceModel(modelContents) &&
-						modelContents.id === data.sliceID
-					) {
-						return modelContents;
+						if (
+							isSharedSliceModel(modelContents) &&
+							modelContents.id === data.sliceID
+						) {
+							return modelContents;
+						}
+					} catch (error) {
+						modelReadErrors.push(modelPath);
 					}
 				}
 			}),
@@ -47,6 +52,16 @@ export const sliceRead: SliceReadHook<PluginOptions> = async (
 			model,
 		};
 	} else {
+		if (modelReadErrors.length) {
+			throw new Error(
+				`Did not find a Slice model with ID "${data.sliceID}" in the "${
+					data.libraryID
+				}" Slice Library.\n\nThose Slice models could not be read:\n  - ${modelReadErrors.join(
+					"\n  - ",
+				)}`,
+			);
+		}
+
 		throw new Error(
 			`Did not find a Slice model with ID "${data.sliceID}" in the "${data.libraryID}" Slice Library.`,
 		);

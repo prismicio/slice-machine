@@ -30,29 +30,41 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 ) => {
 	const { fieldPath } = data;
 
-	const label = "React";
+	const label = "Vue";
 
 	switch (data.model.type) {
 		case prismicT.CustomTypeModelFieldType.StructuredText: {
-			return {
-				label,
-				language: "tsx",
-				code: await format(
-					stripIndent`
-						<PrismicRichText field={${dotPath(fieldPath)}} />
+			return [
+				{
+					label: `${label} (rich)`,
+					language: "vue",
+					code: await format(
+						stripIndent`
+						<PrismicRichText :field="${dotPath(fieldPath)}" />
 					`,
-					helpers,
-				),
-			};
+						helpers,
+					),
+				},
+				{
+					label: `${label} (plain)`,
+					language: "vue",
+					code: await format(
+						stripIndent`
+						<PrismicText :field="${dotPath(fieldPath)}" />
+					`,
+						helpers,
+					),
+				},
+			];
 		}
 
 		case prismicT.CustomTypeModelFieldType.Link: {
 			return {
 				label,
-				language: "tsx",
+				language: "vue",
 				code: await format(
 					stripIndent`
-						<PrismicLink field={${dotPath(fieldPath)}}>Link</PrismicLink>
+						<PrismicLink :field="${dotPath(fieldPath)}">Link</PrismicLink>
 					`,
 					helpers,
 				),
@@ -60,44 +72,43 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case prismicT.CustomTypeModelFieldType.Image: {
-			return [
-				{
-					label: `${label} (next/image)`,
-					language: "tsx",
-					code: await format(
-						stripIndent`
-							<PrismicNextImage field={${dotPath(fieldPath)}} />
+			return {
+				label,
+				language: "vue",
+				code: await format(
+					stripIndent`
+							<PrismicImage :field="${dotPath(fieldPath)}" />
 						`,
-						helpers,
-					),
-				},
-				{
-					label,
-					language: "tsx",
-					code: await format(
-						stripIndent`
-							<PrismicImage field={${dotPath(fieldPath)}} />
+					helpers,
+				),
+			};
+		}
+
+		case prismicT.CustomTypeModelFieldType.Embed: {
+			return {
+				label,
+				language: "vue",
+				code: await format(
+					stripIndent`
+							<PrismicEmbed :field="${dotPath(fieldPath)}" />
 						`,
-						helpers,
-					),
-				},
-			];
+					helpers,
+				),
+			};
 		}
 
 		case prismicT.CustomTypeModelFieldType.Group: {
-			const code = await format(
-				stripIndent`
-					<>{${dotPath(fieldPath)}.map(item => (
-					  <>{/* Render content for item */}</>
-					))}</>
-				`,
-				helpers,
-			);
-
 			return {
 				label,
-				language: "tsx",
-				code,
+				language: "vue",
+				code: await format(
+					stripIndent`
+						<template v-for="item in ${dotPath(fieldPath)}">
+							{{ item }}
+						</template>
+					`,
+					helpers,
+				),
 			};
 		}
 
@@ -105,8 +116,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			const code = await format(
 				stripIndent`
 					<SliceZone
-					  slices={${dotPath(fieldPath)}}
-					  components={components}
+						:slices="${dotPath(fieldPath)}"
+						:components="components"
 					/>
 				`,
 				helpers,
@@ -114,7 +125,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 
 			return {
 				label,
-				language: "tsx",
+				language: "vue",
 				code,
 			};
 		}
@@ -122,10 +133,10 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		default: {
 			return {
 				label,
-				language: "tsx",
+				language: "vue",
 				code: await format(
 					stripIndent`
-						<>{${dotPath(fieldPath)}}</>
+						{{${dotPath(fieldPath)}}}
 					`,
 					helpers,
 				),

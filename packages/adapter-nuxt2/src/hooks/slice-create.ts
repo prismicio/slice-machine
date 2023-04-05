@@ -8,8 +8,6 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { buildSliceDirectoryPath } from "../lib/buildSliceDirectoryPath";
-import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
-import { getJSOrTSXFileExtension } from "../lib/getJSOrTSXFileExtension";
 import { pascalCase } from "../lib/pascalCase";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { updateSliceModelFile } from "../lib/updateSliceModelFile";
@@ -24,67 +22,30 @@ type Args = {
 } & SliceMachineContext<PluginOptions>;
 
 const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
-	const filePath = path.join(
-		dir,
-		`index.${await getJSOrTSXFileExtension({ helpers, options })}`,
-	);
+	const filePath = path.join(dir, "index.vue");
 	const model = data.model;
 	const pascalName = pascalCase(model.name);
 
-	let contents: string;
+	let contents = stripIndent`
+		<template>
+			<section
+				:data-slice-type="slice.slice_type"
+				:data-slice-variation="slice.variation"
+			>
+				Placeholder component for {{ model.id }} (variation: {{ slice.variation }}) Slices
+			</section>
+		</template>
 
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
+		<script>
+		import { getSliceComponentProps } from "@prismicio/vue/components";
 
-	if (isTypeScriptProject) {
-		contents = stripIndent`
-			import { Content } from "@prismicio/client";
-			import { SliceComponentProps } from "@prismicio/react";
-
-			/**
-			 * Props for \`${pascalName}\`.
-			 */
-			export type ${pascalName}Props = SliceComponentProps<Content.${pascalName}Slice>;
-
-			/**
-			 * Component for "${model.name}" Slices.
-			 */
-			const ${pascalName} = ({ slice }: ${pascalName}Props): JSX.Element => {
-				return (
-					<section
-						data-slice-type={slice.slice_type}
-						data-slice-variation={slice.variation}
-					>
-						Placeholder component for ${model.id} (variation: {slice.variation}) Slices
-					</section>
-				);
-			};
-
-			export default ${pascalName}
-		`;
-	} else {
-		contents = stripIndent`
-			/**
-			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
-			 * @typedef {import("@prismicio/react").SliceComponentProps<${pascalName}Slice>} ${pascalName}Props
-			 * @param {${pascalName}Props}
-			 */
-			const ${pascalName} = ({ slice }) => {
-				return (
-					<section
-						data-slice-type={slice.slice_type}
-						data-slice-variation={slice.variation}
-					>
-						Placeholder component for ${model.id} (variation: {slice.variation}) Slices
-					</section>
-				);
-			};
-
-			export default ${pascalName};
-		`;
-	}
+		export default {
+			// The array passed to \`getSliceComponentProps\` is purely optional.
+			// Consider it as a visual hint for you when templating your slice.
+			props: getSliceComponentProps(["slice", "index", "slices", "context"]),
+		};
+		</script>
+	`;
 
 	if (options.format) {
 		contents = await helpers.format(contents, filePath);

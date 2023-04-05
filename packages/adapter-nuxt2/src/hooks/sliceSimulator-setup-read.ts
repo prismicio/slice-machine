@@ -7,16 +7,9 @@ import { source } from "common-tags";
 import { createRequire } from "node:module";
 import fetch from "node-fetch";
 
-import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
-import { getJSOrTSXFileExtension } from "../lib/getJSOrTSXFileExtension";
-
 import type { PluginOptions } from "../types";
 
-const REQUIRED_DEPENDENCIES = [
-	"@prismicio/react",
-	"@prismicio/client",
-	"@prismicio/helpers",
-];
+const REQUIRED_DEPENDENCIES = ["@nuxtjs/prismic"];
 
 type Args = SliceMachineContext<PluginOptions>;
 
@@ -82,64 +75,37 @@ const createStep1 = async ({
 
 const createStep2 = async ({
 	helpers,
-	options,
 }: Args): Promise<SliceSimulatorSetupStep> => {
-	const fileName = `slice-simulator.${await getJSOrTSXFileExtension({
-		helpers,
-		options,
-	})}`;
+	const fileName = "slice-simulator.vue";
 	const filePath = helpers.joinPathFromRoot("pages", fileName);
 
-	let fileContents: string;
+	const fileContents = await helpers.format(
+		source`
+			<template>
+				<SliceSimulator v-slot="{ slices }">
+					<SliceZone :slices="slices" :components="components" />
+				</SliceSimulator>
+			</template>
 
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
+			<script>
+			import { SliceSimulator } from "@slicemachine/adapter-nuxt2/simulator"
+			import { components } from "~/slices";
 
-	if (isTypeScriptProject) {
-		fileContents = await helpers.format(
-			source`
-				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-				import { SliceZone } from "@prismicio/react";
-
-				import { components } from "../slices";
-
-				export default function SliceSimulatorPage(): JSX.Element {
-					return (
-						<SliceSimulator
-							sliceZone={(props) => <SliceZone {...props} components={components} />}
-						/>
-					);
-				};
-			`,
-			filePath,
-			{
-				includeNewlineAtEnd: false,
-			},
-		);
-	} else {
-		fileContents = await helpers.format(
-			source`
-				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-				import { SliceZone } from "@prismicio/react";
-
-				import { components } from "../slices";
-
-				export default function SliceSimulatorPage() {
-					return (
-						<SliceSimulator
-							sliceZone={(props) => <SliceZone {...props} components={components} />}
-						/>
-					);
-				};
-			`,
-			filePath,
-			{
-				includeNewlineAtEnd: false,
-			},
-		);
-	}
+			export default {
+				components: {
+					SliceSimulator,
+				},
+				data () {
+					return { components };
+				},
+			};
+			</script>
+		`,
+		filePath,
+		{
+			includeNewlineAtEnd: false,
+		},
+	);
 
 	return {
 		title: "Create a page for the simulator",
@@ -147,7 +113,7 @@ const createStep2 = async ({
 		body: source`
 			In your \`pages\` directory, create a file called \`${fileName}\` and add the following code. This route will be used to simulate and develop your components.
 
-			~~~tsx
+			~~~vue
 			${fileContents}
 			~~~
 		`,
