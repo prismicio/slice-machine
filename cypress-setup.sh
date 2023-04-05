@@ -31,5 +31,6 @@ rm -rf e2e-projects/cypress-next-app \
 && npm i *.tgz \
 && npx @slicemachine/init --repository ${_PRISMIC_REPO} \
 && npm i --save-dev slice-machine-ui*.tgz \
+&& npm i \
 && npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\"" \
 && npx --yes json -I -f slicemachine.config.json -e "this.localSliceSimulatorURL=\"http://localhost:3000/slice-simulator\""
