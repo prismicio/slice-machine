@@ -220,7 +220,7 @@ export class StartSliceMachineProcess {
 		const allSlices = await this._sliceMachineManager.slices.readAllSlices();
 		if (allSlices.errors.length > 0) {
 			throw new Error(
-				`Errors ocurred while validating your project's slices.\n\n${allSlices.errors.join(
+				`Errors occurred while validating your project's slices.\n\n${allSlices.errors.join(
 					"\n\n",
 				)}`,
 			);
