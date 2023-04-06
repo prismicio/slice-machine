@@ -142,7 +142,7 @@ const Zone = ({
         onDeleteItem={onDeleteItem}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dataCy={dataCy}
-        NewFieldC={() =>
+        newField={
           newFieldData && (
             <NewField
               {...newFieldData}
