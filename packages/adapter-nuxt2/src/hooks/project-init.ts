@@ -7,7 +7,6 @@ import type {
 } from "@slicemachine/plugin-kit";
 import { stripIndent } from "common-tags";
 import { loadFile, writeFile, type ASTNode } from "magicast";
-import { getDefaultExportOptions } from "magicast/helpers";
 
 import { checkPathExists } from "../lib/checkPathExists";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
