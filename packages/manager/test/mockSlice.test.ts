@@ -9,11 +9,7 @@ import { isRight } from "fp-ts/lib/Either";
 
 import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
 import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import {
-	DiffOperation,
-	SliceDiff,
-} from "@prismicio/types-internal/lib/customtypes/diff";
+import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
 import { mockSlice } from "../src/lib/mockSlice";
 
 vi.mock("lorem-ipsum", () => {
@@ -117,25 +113,6 @@ describe("mockSlice", () => {
 	});
 
 	test("when updating a mock it should append new value to existing mock", () => {
-		// "image" is missing, see below.
-		const partial: SharedSliceContent[] = [
-			{
-				__TYPE__: "SharedSliceContent",
-				variation: "default",
-				primary: {
-					title: {
-						__TYPE__: "StructuredTextContent",
-						value: [{ type: "heading1", content: { text: "Woo2" } }],
-					},
-					description: {
-						__TYPE__: "StructuredTextContent",
-						value: [{ type: "paragraph", content: { text: "Some text." } }],
-					},
-				},
-				items: [{ __TYPE__: "GroupItemContent", value: [] }],
-			},
-		];
-
 		const model: SharedSlice = {
 			id: "some_slice",
 			type: SlicesTypes.SharedSlice,
@@ -166,6 +143,20 @@ describe("mockSlice", () => {
 								placeholder: "A nice description of your product",
 							},
 						},
+					},
+				},
+			],
+		};
+
+		const initialMocks = mockSlice({ model });
+
+		const modelWithImage = {
+			...model,
+			variations: [
+				{
+					...model.variations[0],
+					primary: {
+						...model.variations[0].primary,
 						image: {
 							config: { label: "image", constraint: {}, thumbnails: [] },
 							type: WidgetTypes.Image,
@@ -175,9 +166,13 @@ describe("mockSlice", () => {
 			],
 		};
 
-		const result = mockSlice({ model, mocks: partial });
-		// text "Woo2" is still part of
-		expect(result).toMatchObject(partial);
+		const result = mockSlice({
+			model: modelWithImage,
+			mocks: initialMocks,
+			diff: SliceComparator.compare(model, modelWithImage),
+		});
+
+		expect(result).toMatchObject(initialMocks);
 		// The image is random, so we check its properties instead.
 		expect(result[0].primary).toHaveProperty(
 			"image",
@@ -210,7 +205,7 @@ describe("mockSlice", () => {
 	//   expect(isRight(result)).toBeTruthy();
 	// });
 
-	test("when i add a variation to a slice, the old mock content should be kept", () => {
+	test("when I add a variation to a slice, the old mock content should be kept", () => {
 		const sliceModel: SharedSlice = {
 			id: "testing",
 			type: "SharedSlice",
@@ -245,6 +240,14 @@ describe("mockSlice", () => {
 					imageUrl:
 						"https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
 				},
+			],
+		};
+
+		const initialMocks = mockSlice({ model: sliceModel });
+		const modelWithNewVariation: SharedSlice = {
+			...sliceModel,
+			variations: [
+				...sliceModel.variations,
 				{
 					id: "foo",
 					name: "Foo",
@@ -275,85 +278,15 @@ describe("mockSlice", () => {
 				},
 			],
 		};
-		const mocks: SharedSliceContent[] = [
-			{
-				__TYPE__: "SharedSliceContent",
-				variation: "default",
-				primary: {
-					title: {
-						__TYPE__: "StructuredTextContent",
-						value: [
-							{
-								type: "heading1",
-								content: {
-									text: "Test Heading",
-									// "spans": []
-								},
-								// "direction": "ltr"
-							},
-						],
-					},
-					description: {
-						__TYPE__: "StructuredTextContent",
-						value: [
-							{
-								type: "paragraph",
-								content: {
-									text: "Some text on the default slice.",
-								},
-							},
-						],
-					},
-				},
-				items: [
-					{
-						__TYPE__: "GroupItemContent",
-						value: [],
-					},
-				],
-			},
-		];
-		const diff: SliceDiff = {
-			op: DiffOperation.Updated,
-			value: {
-				variations: {
-					foo: {
-						op: DiffOperation.Added,
-						value: {
-							id: "foo",
-							name: "Foo",
-							docURL: "...",
-							version: "sktwi1xtmkfgx8626",
-							description: "Testing",
-							primary: {
-								title: {
-									type: "StructuredText",
-									config: {
-										single: "heading1",
-										label: "Title",
-										placeholder: "This is where it all begins...",
-									},
-								},
-								description: {
-									type: "StructuredText",
-									config: {
-										single: "paragraph",
-										label: "Description",
-										placeholder: "A nice description of your feature",
-									},
-								},
-							},
-							items: {},
-							imageUrl:
-								"https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
-						},
-					},
-				},
-			},
-		};
+
+		const updatedMocks = mockSlice({
+			model: modelWithNewVariation,
+			mocks: initialMocks,
+			diff: SliceComparator.compare(sliceModel, modelWithNewVariation),
+		});
 
 		const wanted = [
-			...mocks,
+			...initialMocks,
 			{
 				__TYPE__: "SharedSliceContent",
 				variation: "foo",
@@ -366,7 +299,6 @@ describe("mockSlice", () => {
 								content: {
 									text: "Woo",
 								},
-								// direction: "ltr",
 							},
 						],
 					},
@@ -391,10 +323,6 @@ describe("mockSlice", () => {
 			},
 		];
 
-		const results = mockSlice({ model: sliceModel, mocks, diff });
-
-		// check the content is unchanged
-		expect(results[0]).toEqual(mocks[0]);
-		expect(results).toEqual(wanted);
+		expect(updatedMocks).toEqual(wanted);
 	});
 });

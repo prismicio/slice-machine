@@ -15,7 +15,6 @@ import {
 	SliceRenameHook,
 	SliceRenameHookData,
 	SliceUpdateHook,
-	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
 
 import { DecodeError } from "../../lib/DecodeError";
