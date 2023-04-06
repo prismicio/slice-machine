@@ -1,0 +1,106 @@
+{
+	"name": "@slicemachine/adapter-nuxt",
+	"version": "0.0.1",
+	"description": "Slice Machine adapter for Nuxt 3.",
+	"keywords": [
+		"typescript",
+		"prismic"
+	],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/adapter-nuxt"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./simulator": {
+			"require": "./dist/simulator.cjs",
+			"import": "./dist/simulator.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"dist/index.d.ts"
+			],
+			"simulator": [
+				"dist/simulator/index.d.ts"
+			]
+		}
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"format": "prettier --write .",
+		"lint": "eslint --ext .js,.ts .",
+		"prepublishOnly": "npm run build",
+		"size": "size-limit",
+		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
+		"types": "tsc --noEmit",
+		"unit": "vitest run --coverage",
+		"unit:watch": "vitest watch",
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p"
+	},
+	"dependencies": {
+		"@prismicio/slice-simulator-core": "^0.2.7",
+		"@prismicio/types": "^0.2.7",
+		"@slicemachine/plugin-kit": "0.1.8-dev-plugins-m2.2",
+		"common-tags": "^1.8.2",
+		"fs-extra": "^11.1.0",
+		"magicast": "^0.2.1",
+		"node-fetch": "^3.3.1",
+		"pascal-case": "^3.1.2",
+		"prismic-ts-codegen": "^0.1.5"
+	},
+	"devDependencies": {
+		"@prismicio/mock": "^0.2.0",
+		"@size-limit/preset-small-lib": "^8.2.4",
+		"@types/common-tags": "^1.8.1",
+		"@types/fs-extra": "^11.0.1",
+		"@types/prettier": "^2.7.2",
+		"@types/semver": "^7.3.13",
+		"@typescript-eslint/eslint-plugin": "^5.55.0",
+		"@typescript-eslint/parser": "^5.55.0",
+		"@vitest/coverage-c8": "^0.27.3",
+		"better-npm-audit": "^3.7.3",
+		"depcheck": "^1.4.3",
+		"eslint": "^8.37.0",
+		"eslint-config-prettier": "^8.7.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"nuxt": "^3.3.3",
+		"prettier": "^2.8.4",
+		"prettier-plugin-jsdoc": "^0.4.2",
+		"size-limit": "^8.2.4",
+		"ts-morph": "^17.0.1",
+		"typescript": "^4.9.5",
+		"vite": "^4.1.4",
+		"vite-plugin-sdk": "^0.1.1",
+		"vitest": "^0.27.3",
+		"vue": "^3.2.47"
+	},
+	"peerDependencies": {
+		"nuxt": "^3.0.0"
+	},
+	"engines": {
+		"node": ">=14.15.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

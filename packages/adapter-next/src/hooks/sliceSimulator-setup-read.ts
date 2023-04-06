@@ -215,7 +215,7 @@ const createStep3 = async ({
 				return {
 					title: "Unable to connect to simulator page",
 					message: source`
-						Check that the \`localSliceSimulatorURL\` property in \`slicemachine.config.json\` is correct and try again. See the [troubleshooting page](https://prismic.io/docs/technologies/setup-slice-simulator-nextjs) for more details.
+						Check that the \`localSliceSimulatorURL\` property in \`slicemachine.config.json\` is correct and try again. See the [troubleshooting page](https://prismic.io/docs/setup-nextjs) for more details.
 					`,
 				};
 			}

@@ -20,7 +20,8 @@ type Args = {
 	data: SliceCreateHookData;
 } & SliceMachineContext<PluginOptions>;
 
-const createComponentFile = async ({ dir, helpers, options }: Args) => {
+const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
+	const model = data.model;
 	const filePath = path.join(dir, "index.vue");
 
 	let contents = stripIndent`
@@ -29,7 +30,7 @@ const createComponentFile = async ({ dir, helpers, options }: Args) => {
 				:data-slice-type="slice.slice_type"
 				:data-slice-variation="slice.variation"
 			>
-				Placeholder component for {{ model.id }} (variation: {{ slice.variation }}) Slices
+				Placeholder component for ${model.id} (variation: {{ slice.variation }}) Slices
 			</section>
 		</template>
 

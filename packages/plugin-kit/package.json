@@ -12,7 +12,7 @@
 	"repository": {
 		"type": "git",
 		"url": "ssh://git@github.com/prismicio/slicemachine-plugin-kit.git",
-		"directory": "packages/kit"
+		"directory": "packages/plugin-kit"
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",

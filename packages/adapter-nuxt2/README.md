@@ -7,7 +7,7 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-[Slice Machine][slicemachine] adapter for [Next.js][nextjs].
+[Slice Machine][slicemachine] adapter for [Nuxt][nuxt] 2.
 
 <!--
 
@@ -24,7 +24,7 @@ Non-breaking space: &nbsp; are here on purpose to fix emoji rendering on certain
 ## Install
 
 ```bash
-npm install --save-dev @slicemachine/adapter-next
+npm install --save-dev @slicemachine/adapter-nuxt2
 ```
 
 ## Documentation
@@ -67,7 +67,7 @@ limitations under the License.
 
 [prismic]: https://prismic.io
 [slicemachine]: https://www.slicemachine.dev/
-[nextjs]: https://nextjs.org/
+[nuxt]: https://nuxtjs.org/
 
 <!-- TODO: Replace link with a more useful one if available -->
 

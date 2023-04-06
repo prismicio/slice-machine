@@ -7,6 +7,7 @@ import type {
 } from "@slicemachine/plugin-kit";
 import { stripIndent } from "common-tags";
 import { loadFile, writeFile, type ASTNode } from "magicast";
+import { getDefaultExportOptions } from "magicast/helpers";
 
 import { checkPathExists } from "../lib/checkPathExists";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
@@ -48,10 +49,7 @@ const configurePrismicModule = async ({
 	}
 
 	const mod = await loadFile(nuxtConfigPath);
-	const config =
-		mod.exports.default.$type === "function-call"
-			? mod.exports.default.$args[0]
-			: mod.exports.default;
+	const config = getDefaultExportOptions(mod);
 
 	// Register Prismic module
 	let hasInlinedConfiguration = false;
@@ -127,7 +125,7 @@ const createSliceSimulatorPage = async ({
 		</template>
 
 		<script>
-		import { SliceSimulator } from "@slicemachine/adapter-nuxt2/simulator"
+		import { SliceSimulator } from "@slicemachine/adapter-nuxt2/simulator";
 		import { components } from "~/slices";
 
 		export default {
