@@ -18,7 +18,7 @@ const DEFAULT_COMPONENT_UI: ComponentUI = {
   fileName: "index",
   extension: "js",
   screenshots: {},
-  mock: [],
+  mocks: [],
   model: DEFAULT_SLICE_SM,
 };
 

@@ -1,5 +1,6 @@
 import * as t from "io-ts";
 import fetch from "node-fetch";
+import type { SharedSliceModel } from "@prismicio/types";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomTypes } from "@prismicio/types-internal";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
@@ -14,7 +15,6 @@ import {
 	SliceRenameHook,
 	SliceRenameHookData,
 	SliceUpdateHook,
-	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
 
 import { DecodeError } from "../../lib/DecodeError";
@@ -29,6 +29,8 @@ import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { createContentDigest } from "../../lib/createContentDigest";
+import { mockSlice } from "../../lib/mockSlice";
+import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -45,6 +47,12 @@ type SlicesManagerReadAllSliceLibrariesReturnType = {
 
 type SliceMachineManagerReadAllSlicesForLibraryArgs = {
 	libraryID: string;
+};
+
+type SliceMachineManagerUpdateSliceArgs = {
+	libraryID: string;
+	model: SharedSliceModel;
+	mocks?: SharedSliceContent[];
 };
 
 type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
@@ -264,8 +272,18 @@ export class SlicesManager extends BaseManager {
 			args,
 		);
 
+		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+			mocks: mockSlice({ model: args.model }),
+		};
+
+		const { errors: updateSliceHookErrors } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
+
 		return {
-			errors: hookResult.errors,
+			errors: [...hookResult.errors, ...updateSliceHookErrors],
 		};
 	}
 
@@ -292,17 +310,40 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async updateSlice(
-		args: SliceUpdateHookData,
+		args: SliceMachineManagerUpdateSliceArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		const { mocks: previousMocks } = await this.readSliceMocks({
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+		});
+		const { model: previousModel } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+		});
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"slice:update",
 			args,
 		);
 
+		const updatedMocks = mockSlice({
+			model: args.model,
+			mocks: previousMocks,
+			diff: SliceComparator.compare(previousModel, args.model),
+		});
+		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+			mocks: updatedMocks,
+		};
+
+		const { errors: updateSliceMocksHookResult } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
+
 		return {
-			errors: hookResult.errors,
+			errors: [...hookResult.errors, ...updateSliceMocksHookResult],
 		};
 	}
 

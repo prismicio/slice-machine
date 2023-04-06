@@ -8,8 +8,8 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import { ComponentMocks } from "@lib/models/common/Library";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -19,7 +19,7 @@ export type SelectedSliceActions =
   | ActionType<typeof removeSliceWidgetCreator>
   | ActionType<typeof updateSliceWidgetMockCreator>
   | ActionType<typeof deleteSliceWidgetMockCreator>
-  | ActionType<typeof saveSliceCreator>
+  | ActionType<typeof updateSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof refreshStateCreator>
@@ -30,7 +30,7 @@ export type SelectedSliceActions =
 export const updateSelectedSliceMocks = createAction(
   "SELECTED_SLICE/UPDATE_MOCKS"
 )<{
-  mocks: ComponentMocks;
+  mocks: SharedSliceContent[];
 }>();
 
 export const initSliceStoreCreator =
@@ -83,10 +83,10 @@ export const deleteSliceWidgetMockCreator = createAction(
   newKey: string;
 }>();
 
-export const saveSliceCreator = createAsyncAction(
-  "SLICE/SAVE.REQUEST",
-  "SLICE/SAVE.RESPONSE",
-  "SLICE/SAVE.FAILURE"
+export const updateSliceCreator = createAsyncAction(
+  "SLICE/UPDATE.REQUEST",
+  "SLICE/UPDATE.RESPONSE",
+  "SLICE/UPDATE.FAILURE"
 )<
   {
     component: ComponentUI;

@@ -1,8 +1,10 @@
 import jsonModel from "../__fixtures__/model.json";
+import jsonMocks from "../__fixtures__/mocks.json";
+
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import MockSlice from "@lib/mock/Slice";
 import { Slices } from "@lib/models/common/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { ComponentInfo } from "@lib/models/common/Library";
 
 export const getSelectedSliceDummyData = () => {
   const dummyModel = Slices.toSM(jsonModel as unknown as SharedSlice);
@@ -17,7 +19,7 @@ export const getSelectedSliceDummyData = () => {
     extension: "js",
     model: dummyModel,
     screenshots: {},
-    mock: MockSlice(Slices.fromSM(dummyModel)),
+    mocks: jsonMocks as ComponentInfo["mocks"],
   };
 
   return {

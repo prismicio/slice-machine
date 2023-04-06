@@ -68,7 +68,7 @@ type SliceMachineManagerGetStateReturnType = {
 					data: Buffer;
 				}
 			>;
-			mock?: SharedSliceContent[];
+			mocks?: SharedSliceContent[];
 		}[];
 		meta: {
 			name?: string;
@@ -324,7 +324,7 @@ export class SliceMachineManager {
 										extension: "extension",
 										model,
 										screenshots,
-										mock: mocks,
+										mocks,
 									});
 								}
 							}),

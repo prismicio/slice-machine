@@ -8,13 +8,13 @@ import {
 import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
-import { saveSliceCreator } from "./actions";
-import { saveSliceApiClient } from "@src/apiClient";
+import { updateSliceCreator } from "./actions";
+import { readSliceMocks, updateSliceApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
-export function* saveSliceSaga({
+export function* updateSliceSaga({
   payload,
-}: ReturnType<typeof saveSliceCreator.request>) {
+}: ReturnType<typeof updateSliceCreator.request>) {
   const { component, setData } = payload;
 
   try {
@@ -26,9 +26,9 @@ export function* saveSliceSaga({
       message: null,
     });
     const { errors } = (yield call(
-      saveSliceApiClient,
+      updateSliceApiClient,
       component
-    )) as SagaReturnType<typeof saveSliceApiClient>;
+    )) as SagaReturnType<typeof updateSliceApiClient>;
     if (errors.length > 0) {
       return setData({
         loading: false,
@@ -45,7 +45,14 @@ export function* saveSliceSaga({
       message: "Model saved",
     });
 
-    yield put(saveSliceCreator.success({ component }));
+    const { mocks } = (yield call(readSliceMocks, {
+      libraryID: component.from,
+      sliceID: component.model.id,
+    })) as SagaReturnType<typeof readSliceMocks>;
+
+    yield put(
+      updateSliceCreator.success({ component: { ...component, mocks } })
+    );
   } catch (e) {
     yield put(
       openToasterCreator({
@@ -58,8 +65,8 @@ export function* saveSliceSaga({
 
 function* watchSaveSlice() {
   yield takeLatest(
-    getType(saveSliceCreator.request),
-    withLoader(saveSliceSaga, LoadingKeysEnum.SAVE_SLICE)
+    getType(updateSliceCreator.request),
+    withLoader(updateSliceSaga, LoadingKeysEnum.SAVE_SLICE)
   );
 }
 
