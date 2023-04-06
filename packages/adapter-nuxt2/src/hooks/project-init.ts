@@ -49,7 +49,10 @@ const configurePrismicModule = async ({
 	}
 
 	const mod = await loadFile(nuxtConfigPath);
-	const config = getDefaultExportOptions(mod);
+	const config =
+		mod.exports.default.$type === "function-call"
+			? mod.exports.default.$args[0]
+			: mod.exports.default;
 
 	// Register Prismic module
 	let hasInlinedConfiguration = false;
