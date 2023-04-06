@@ -356,6 +356,7 @@ it("returns a record of variation IDs mapped to uploaded screenshot URLs", async
 			hook("slice:asset:read", () => {
 				return { data: screenshotData };
 			});
+			hook("slice:asset:update", vi.fn());
 		},
 	});
 	const cwd = await createTestProject({ adapter });

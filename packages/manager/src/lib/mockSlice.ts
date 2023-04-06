@@ -17,7 +17,10 @@ export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
 		const variationMock = mocks?.find((m) => m.variation === variation.id);
 
 		if (!variationMock) {
-			return SharedSliceMock.generate(model);
+			return SharedSliceMock.generate(model, {
+				type: "SharedSlice",
+				variation: variation.id,
+			});
 		}
 		if (!diff) {
 			return variationMock;
@@ -28,7 +31,10 @@ export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
 			return variationMock;
 		}
 		if (!patched.result) {
-			return SharedSliceMock.generate(model);
+			return SharedSliceMock.generate(model, {
+				type: "SharedSlice",
+				variation: variation.id,
+			});
 		}
 
 		return patched.result;
