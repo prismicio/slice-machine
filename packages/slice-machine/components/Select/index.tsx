@@ -13,18 +13,18 @@
 
 import _Select from "react-select";
 
-let Select = _Select;
+// let Select = _Select;
 
-if (process.env.NODE_ENV === "test") {
-  if (!("default" in _Select)) {
-    throw new Error(
-      "The <Select> component detected the test environment, hosted by Vitest. Vitest requires using `react-select`'s `default` named export (different from its default export). The `default` named export was not found, however. We are halting as a result."
-    );
-  }
+// if (process.env.NODE_ENV === "test") {
+//   if (!("default" in _Select)) {
+//     throw new Error(
+//       "The <Select> component detected the test environment, hosted by Vitest. Vitest requires using `react-select`'s `default` named export (different from its default export). The `default` named export was not found, however. We are halting as a result."
+//     );
+//   }
 
-  // @ts-expect-error - `default` is added by Rollup during tests since
-  // `react-select` has default and named exports. It does not exist normally.
-  Select = _Select.default;
-}
+//   // @ts-expect-error - `default` is added by Rollup during tests since
+//   // `react-select` has default and named exports. It does not exist normally.
+//   Select = _Select.default;
+// }
 
-export default Select;
+export default _Select;
