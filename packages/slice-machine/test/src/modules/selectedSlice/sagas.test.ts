@@ -27,13 +27,11 @@ describe("[Selected Slice sagas]", () => {
         sliceID: dummySliceState.model.id,
       });
 
-      saga
-        .next({ errors: [], mocks: [] })
-        .put(
-          updateSliceCreator.success({
-            component: { ...dummySliceState, mocks: [] },
-          })
-        );
+      saga.next({ errors: [], mocks: [] }).put(
+        updateSliceCreator.success({
+          component: { ...dummySliceState, mocks: [] },
+        })
+      );
 
       saga.next().isDone();
       expect(mockSetData).toHaveBeenCalledWith({
