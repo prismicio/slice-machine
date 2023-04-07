@@ -22,14 +22,18 @@ describe("[Selected Slice sagas]", () => {
 
       saga.next().call(updateSliceApiClient, dummySliceState);
 
-      saga.next().call(readSliceMocks, {
+      saga.next({ errors: [] }).call(readSliceMocks, {
         libraryID: dummySliceState.from,
         sliceID: dummySliceState.model.id,
       });
 
       saga
-        .next({ errors: [] })
-        .put(updateSliceCreator.success({ component: dummySliceState }));
+        .next({ errors: [], mocks: [] })
+        .put(
+          updateSliceCreator.success({
+            component: { ...dummySliceState, mocks: [] },
+          })
+        );
 
       saga.next().isDone();
       expect(mockSetData).toHaveBeenCalledWith({

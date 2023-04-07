@@ -71,7 +71,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      "BooleanField"
+      "Boolean"
     );
     expect(widgetFound).toEqual(Widgets.Boolean);
   });

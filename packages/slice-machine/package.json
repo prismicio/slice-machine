@@ -14,7 +14,7 @@
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
     "dev": "next dev",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
-    "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "prepublishOnly": "npm run build",
     "test": "npm run lint && npm run types && npm run unit && npm run build",
     "types": "tsc --noEmit",
