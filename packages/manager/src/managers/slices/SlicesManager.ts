@@ -1,6 +1,5 @@
 import * as t from "io-ts";
 import fetch from "node-fetch";
-import type { SharedSliceModel } from "@prismicio/types";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomTypes } from "@prismicio/types-internal";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
@@ -31,6 +30,7 @@ import { BaseManager } from "../BaseManager";
 import { createContentDigest } from "../../lib/createContentDigest";
 import { mockSlice } from "../../lib/mockSlice";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -51,7 +51,7 @@ type SliceMachineManagerReadAllSlicesForLibraryArgs = {
 
 type SliceMachineManagerUpdateSliceArgs = {
 	libraryID: string;
-	model: SharedSliceModel;
+	model: SharedSlice;
 	mocks?: SharedSliceContent[];
 };
 

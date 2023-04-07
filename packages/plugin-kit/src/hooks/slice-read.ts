@@ -1,4 +1,4 @@
-import type { SharedSliceModel } from "@prismicio/types";
+import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
 	ExtendSliceMachineHook,
@@ -17,7 +17,7 @@ export type SliceReadHookData = {
 /**
  * Return value for `slice:read` hook handlers.
  */
-export type SliceReadHookReturnType = { model: SharedSliceModel };
+export type SliceReadHookReturnType = { model: SharedSlice };
 
 /**
  * Base version of a `slice:read` hook handler without plugin runner context.

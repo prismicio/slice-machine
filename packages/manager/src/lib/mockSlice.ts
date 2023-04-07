@@ -28,7 +28,7 @@ export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
 			return variationMock;
 		}
 
-		const patched = SharedSliceMock.patch(diff, model, variationMock);
+		const patched = SharedSliceMock.patch(diff, variationMock);
 		if (!patched.ok) {
 			return variationMock;
 		}

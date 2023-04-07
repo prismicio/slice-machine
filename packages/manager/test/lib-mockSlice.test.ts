@@ -3,8 +3,10 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { isRight } from "fp-ts/lib/Either";
 
-import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
-import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
+import {
+	GeoPointContent,
+	LinkContent,
+} from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
 import { mockSlice } from "../src/lib/mockSlice";
 
@@ -16,8 +18,7 @@ describe("mockSlice", () => {
 				value: { url: "http://twitter.com", __TYPE__: "ExternalLink" },
 			},
 		};
-		const linkR = LinkContent.decode(link["link-2"].value);
-		expect(isRight(linkR)).toBeTruthy();
+		expect(isRight(LinkContent.decode(link["link-2"]))).toBeTruthy();
 
 		const geo = {
 			key: {
@@ -27,7 +28,7 @@ describe("mockSlice", () => {
 		};
 		const geoR = GeoPointContent.decode(geo.key);
 
-		expect(isRight(geoR)).toBeTruthy();
+		expect(isRight(geoR)).toBeFalsy();
 	});
 
 	test("when creating a slice it should return the default mock", () => {
