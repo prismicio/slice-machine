@@ -42,6 +42,7 @@ describe("slices", () => {
     const adapter = createTestPlugin({
       setup: ({ hook }) => {
         hook("slice:create", () => void 0);
+        hook("slice:asset:update", () => void 0);
       },
     });
     const cwd = await createTestProject({
