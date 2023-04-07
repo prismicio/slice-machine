@@ -3,8 +3,7 @@ import Form, { FormFields } from "./Form";
 import { FiLink2 } from "react-icons/fi";
 
 import { Widget } from "../Widget";
-import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Link } from "@prismicio/types-internal/lib/customtypes";
 
 /**
 * {
@@ -94,12 +93,12 @@ export const LinkWidget: Widget<Link, typeof schema> = {
   schema,
   Form,
   create: (label: string) => ({
-    type: WidgetTypes.Link,
+    type: "Link",
     config: {
       label,
       placeholder: "",
       select: null,
     },
   }),
-  TYPE_NAME: WidgetTypes.Link,
+  TYPE_NAME: "Link",
 };

@@ -4,7 +4,6 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
 
 import { Color } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /** {
   "type" : "Color",
@@ -20,13 +19,11 @@ const Meta = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(
-  WidgetTypes.Color
-);
+const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues("Color");
 
 export const ColorWidget: Widget<Color, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.Color,
+    type: "Color",
     config: {
       label,
       placeholder: "",

@@ -46,7 +46,7 @@ const Meta = {
 
 export const UIDWidget: Widget<UID, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.UID,
+    type: "UID",
     config: {
       label,
       placeholder: "",
@@ -54,6 +54,6 @@ export const UIDWidget: Widget<UID, typeof schema> = {
   }),
   Meta,
   schema,
-  TYPE_NAME: WidgetTypes.UID,
+  TYPE_NAME: "UID",
   FormFields,
 };

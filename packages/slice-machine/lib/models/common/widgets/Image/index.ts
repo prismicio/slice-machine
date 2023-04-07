@@ -51,7 +51,7 @@ export const ImageWidget: Widget<Image, typeof schema> = {
   Form,
   schema,
   create: (label: string) => ({
-    type: WidgetTypes.Image,
+    type: "Image",
     config: {
       label,
       constraint: {},
@@ -59,5 +59,5 @@ export const ImageWidget: Widget<Image, typeof schema> = {
     },
   }),
   FormFields,
-  TYPE_NAME: WidgetTypes.Image,
+  TYPE_NAME: "Image",
 };

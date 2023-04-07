@@ -3,7 +3,6 @@ import { createDefaultWidgetValues } from "../../../../utils";
 
 import { Widget } from "../Widget";
 import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /** {
     "type" : "Number",
@@ -14,7 +13,7 @@ import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
   } */
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { FormFields, schema } = createDefaultWidgetValues(WidgetTypes.Number);
+const { FormFields, schema } = createDefaultWidgetValues("Number");
 
 const Meta = {
   icon: AiOutlineFieldNumber,
@@ -24,7 +23,7 @@ const Meta = {
 
 export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.Number,
+    type: "Number",
     config: {
       label,
       placeholder: "",
@@ -32,7 +31,7 @@ export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
   }),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  TYPE_NAME: WidgetTypes.Number,
+  TYPE_NAME: "Number",
   schema,
   Meta,
 };

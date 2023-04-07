@@ -13,7 +13,7 @@ export function buildEmptySliceModel(
 ): CustomTypes.Widgets.Slices.SharedSlice {
   return {
     id: snakelize(args.sliceName),
-    type: CustomTypes.Widgets.Slices.SlicesTypes.SharedSlice,
+    type: CustomTypes.Widgets.Slices."SharedSlice",
     name: args.sliceName,
     description: args.sliceName,
     variations: [

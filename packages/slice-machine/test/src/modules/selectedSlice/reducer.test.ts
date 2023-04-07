@@ -7,8 +7,7 @@ import {
   removeSliceWidgetCreator,
   replaceSliceWidgetCreator,
 } from "@src/modules/selectedSlice/actions";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";
 import { getRefreshStateCreatorPayloadData } from "./__testutils__/getRefreshStateCreatorPayloadData";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -41,7 +40,7 @@ describe("[Selected Slice module]", () => {
       const newWidget: { key: string; value: NestableWidget } = {
         key: "new-widget-text",
         value: {
-          type: WidgetTypes.Text,
+          type: "Text",
           config: {
             label: "newWidgetText",
             placeholder: "",
@@ -72,7 +71,7 @@ describe("[Selected Slice module]", () => {
       const updatedWidget: { key: string; value: NestableWidget } = {
         key: "new_key",
         value: {
-          type: WidgetTypes.Text,
+          type: "Text",
           config: {
             label: "newWidgetText",
             placeholder: "",

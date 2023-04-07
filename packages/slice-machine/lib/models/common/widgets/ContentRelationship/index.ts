@@ -6,7 +6,6 @@ import { MdSettingsEthernet } from "react-icons/md";
 import { Widget } from "../Widget";
 import { linkConfigSchema } from "../Link";
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { hasLocal } from "@lib/models/common/ModelData";
@@ -51,7 +50,7 @@ const schema = yup.object().shape({
 
 export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.Link,
+    type: "Link",
     config: {
       label,
       select: "document",
@@ -59,7 +58,7 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   }),
   Meta,
   schema,
-  TYPE_NAME: WidgetTypes.Link,
+  TYPE_NAME: "Link",
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,

@@ -1,8 +1,10 @@
 import { SharedSliceMock } from "@prismicio/mocks";
 
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { SliceDiff } from "@prismicio/types-internal/lib/customtypes/diff";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import {
+	SharedSlice,
+	SliceDiff,
+} from "@prismicio/types-internal/lib/customtypes";
 
 type mockSliceArgs = {
 	model: SharedSlice;

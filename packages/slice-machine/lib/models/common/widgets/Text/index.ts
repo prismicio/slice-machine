@@ -37,7 +37,7 @@ const Meta = {
 
 export const TextWidget: Widget<Text, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.Text,
+    type: "Text",
     config: {
       label,
       placeholder: "",
@@ -45,7 +45,7 @@ export const TextWidget: Widget<Text, typeof schema> = {
   }),
   Meta,
   schema,
-  TYPE_NAME: WidgetTypes.Text,
+  TYPE_NAME: "Text",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
 };

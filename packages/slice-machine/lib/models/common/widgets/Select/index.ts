@@ -8,7 +8,6 @@ import { removeProp } from "../../../../utils";
 import FormFields from "./FormFields";
 
 import { Widget } from "../Widget";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**
@@ -41,7 +40,7 @@ export const SelectWidget: Widget<Select, typeof schema> = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   create: (label: string) => ({
-    type: WidgetTypes.Select,
+    type: "Select",
     config: {
       label,
       placeholder: "",
@@ -50,5 +49,5 @@ export const SelectWidget: Widget<Select, typeof schema> = {
   }),
   schema,
   Meta,
-  TYPE_NAME: WidgetTypes.Select,
+  TYPE_NAME: "Select",
 };

@@ -24,7 +24,7 @@ const customTypeModel: CustomTypeSM = {
         {
           key: "title",
           value: {
-            type: WidgetTypes.RichText,
+            type: "StructuredText",
             config: {
               label: "",
               placeholder: "",
