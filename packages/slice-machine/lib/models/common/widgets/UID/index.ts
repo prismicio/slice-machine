@@ -15,10 +15,7 @@ import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
-import {
-  UID,
-  WidgetTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets";
+import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const FormFields = {
   label: DefaultFields.label,

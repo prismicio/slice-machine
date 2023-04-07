@@ -10,7 +10,6 @@ import {
   selectCurrentCustomType,
 } from "@src/modules/selectedCustomType";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const customTypeModel: CustomTypeSM = {
   id: "about",

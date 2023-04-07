@@ -8,7 +8,6 @@ import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
 
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { optionValues } from "./options";
 import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
