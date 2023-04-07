@@ -209,9 +209,11 @@ const createStep3 = async ({
 			}
 
 			// Check if the URL is accessible.
-			const res = await fetch(project.config.localSliceSimulatorURL);
-
-			if (!res.ok) {
+			let res;
+			try {
+				res = await fetch(project.config.localSliceSimulatorURL);
+			} catch {}
+			if (!res || !res.ok) {
 				return {
 					title: "Unable to connect to simulator page",
 					message: source`
