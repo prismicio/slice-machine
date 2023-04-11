@@ -153,12 +153,14 @@ export class ProjectManager extends BaseManager {
 		try {
 			const contents = await fs.readFile(configFilePath, "utf8");
 			rawConfig = JSON.parse(contents);
-		} catch (err) {
-			if (err instanceof SyntaxError) {
+		} catch (error) {
+			if (error instanceof SyntaxError) {
 				throw new SliceMachineError(
-					`Could not parse config file at ${configFilePath}.\n\nError Message: ${err.message}`,
+					`Could not parse config file at ${configFilePath}.\n\nError Message: ${error.message}`,
 				);
 			}
+
+			// Noop, more specific error is thrown after
 		}
 
 		if (!rawConfig) {
