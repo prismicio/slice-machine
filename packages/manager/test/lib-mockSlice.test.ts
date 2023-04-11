@@ -22,13 +22,13 @@ describe("mockSlice", () => {
 
 		const geo = {
 			key: {
-				// __TYPE__: GeoPointContentType,
+				__TYPE__: "GeoPointContent",
 				position: { lat: 48.8583736, lng: 2.2922926 },
 			},
 		};
 		const geoR = GeoPointContent.decode(geo.key);
 
-		expect(isRight(geoR)).toBeFalsy();
+		expect(isRight(geoR)).toBeTruthy();
 	});
 
 	test("when creating a slice it should return the default mock", () => {
