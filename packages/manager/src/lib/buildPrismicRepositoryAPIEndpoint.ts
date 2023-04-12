@@ -10,7 +10,7 @@ export const buildPrismicRepositoryAPIEndpoint = (
 ): string => {
 	const baseEndpoint = new URL(API_ENDPOINTS.PrismicWroom);
 
-	return `${baseEndpoint.protocol}://${repositoryName}${
-		withCDN ? ".cdn" : ""
-	}.${baseEndpoint.host}/api/v2`;
+	return `${baseEndpoint.protocol}//${repositoryName}${withCDN ? ".cdn" : ""}.${
+		baseEndpoint.host
+	}/api/v2`;
 };
