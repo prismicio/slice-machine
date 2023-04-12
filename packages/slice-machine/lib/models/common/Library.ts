@@ -13,8 +13,6 @@ export const LibraryMeta = {
 
 export type LibraryMeta = t.TypeOf<typeof LibraryMeta.reader>;
 
-export const ComponentMocks = t.array(SharedSliceContent);
-export type ComponentMocks = t.TypeOf<typeof ComponentMocks>;
 export interface ComponentInfo {
   fileName: string | null;
   extension: string | null;
@@ -22,7 +20,7 @@ export interface ComponentInfo {
   screenshots: {
     [variationId: string]: Screenshot;
   };
-  mock?: ComponentMocks;
+  mocks?: SharedSliceContent[];
 }
 
 export const ComponentInfo = {

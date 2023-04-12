@@ -57,7 +57,7 @@ describe("Custom Type Builder", () => {
           fileName: "index",
           extension: "js",
           screenshots: {},
-          mock: [
+          mocks: [
             {
               variation: "default",
               name: "Default",

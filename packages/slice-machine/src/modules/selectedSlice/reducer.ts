@@ -166,7 +166,7 @@ export const selectedSliceReducer: Reducer<
       const { mocks } = action.payload;
       return {
         ...prevState,
-        mock: mocks,
+        mocks,
       };
     }
     default:

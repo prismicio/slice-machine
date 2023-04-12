@@ -90,7 +90,7 @@ describe("slices", () => {
             fileName: "index",
             extension: "js",
             screenshots: {},
-            mock: [
+            mocks: [
               {
                 variation: "default",
                 name: "Default",
@@ -266,7 +266,7 @@ describe("slices", () => {
             fileName: "index",
             extension: "js",
             screenshots: {},
-            mock: [
+            mocks: [
               {
                 variation: "default",
                 name: "Default",
