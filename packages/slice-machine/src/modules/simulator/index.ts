@@ -12,7 +12,6 @@ import {
   race,
   take,
   delay,
-  CallEffect,
 } from "redux-saga/effects";
 import {
   checkSimulatorSetup,
@@ -210,21 +209,21 @@ function* connectToSimulatorIframe() {
   yield put(connectToSimulatorIframeCreator.request());
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    timeout,
-    iframeCheckKO,
+    iframeCheckOk,
   }: {
-    iframeCheckKO: ReturnType<typeof connectToSimulatorIframeCreator.failure>;
-    timeout: CallEffect<true>;
+    iframeCheckOk: ReturnType<typeof connectToSimulatorIframeCreator.success>;
   } = yield race({
     iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
     iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-    timeout: delay(5000),
+    timeout: delay(20000),
   });
-  if (timeout || iframeCheckKO) {
-    yield put(connectToSimulatorIframeCreator.failure());
+
+  if (iframeCheckOk) {
+    yield put(connectToSimulatorIframeCreator.success());
     return;
   }
-  yield put(connectToSimulatorIframeCreator.success());
+
+  yield put(connectToSimulatorIframeCreator.failure());
 }
 
 export function* failCheckSetupSaga({
