@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 
-import { createSliceMachineManager, SliceMachineManager } from "../src";
+import { createSliceMachineManager } from "../src";
+import { SliceMachineManager } from "../src/managers/SliceMachineManager";
 
 it("creates a SliceMachineManager", () => {
 	const manager = createSliceMachineManager();

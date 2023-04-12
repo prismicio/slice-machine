@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 
-import { createPrismicAuthManager, PrismicAuthManager } from "../src";
+import { createPrismicAuthManager } from "../src";
+import { PrismicAuthManager } from "../src/auth/PrismicAuthManager";
 
 it("creates a PrismicAuthManager", () => {
 	const prismicAuthManager = createPrismicAuthManager();

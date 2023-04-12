@@ -89,7 +89,7 @@ test("creates a Slice Simulator page file", async (ctx) => {
 		</template>
 
 		<script>
-		import { SliceSimulator } from \\"@slicemachine/adapter-nuxt2/simulator\\";
+		import { SliceSimulator } from \\"@slicemachine/adapter-nuxt2/dist/simulator.cjs\\";
 		import { components } from \\"~/slices\\";
 
 		export default {
