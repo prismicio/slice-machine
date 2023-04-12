@@ -1,5 +1,5 @@
-export {
+export { createStartSliceMachineProcess } from "./StartSliceMachineProcess";
+export type {
 	StartSliceMachineProcess,
 	StartSliceMachineProcessConstructorArgs,
-	createStartSliceMachineProcess,
 } from "./StartSliceMachineProcess";

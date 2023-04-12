@@ -1,1 +1,2 @@
-export { SliceSimulator, SliceSimulatorProps } from "./SliceSimulator";
+export { SliceSimulator } from "./SliceSimulator";
+export type { SliceSimulatorProps } from "./SliceSimulator";
