@@ -10,6 +10,7 @@
     "dev:start-slicemachine": "npm --workspace start-slicemachine run dev",
     "dev:plugin-kit": "npm --workspace @slicemachine/plugin-kit run dev",
     "dev:slice-machine-ui": "npm --workspace slice-machine-ui run dev",
+    "dev:adapter-next": "npm --workspace @slicemachine/adapter-next run dev",
     "dev:e2e-next": "cd ./e2e-projects/next && npm run dev -- --port 8000",
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",

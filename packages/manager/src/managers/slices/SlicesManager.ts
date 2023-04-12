@@ -304,7 +304,11 @@ export class SlicesManager extends BaseManager {
 
 		return {
 			model: data[0]?.model,
-			errors,
+			errors: errors.map((error) => {
+				error.message = `Failed to decode slice model with id '${args.sliceID}': ${error.message}`;
+
+				return error;
+			}),
 		};
 	}
 
