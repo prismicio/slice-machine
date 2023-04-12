@@ -46,7 +46,10 @@ export const upsertSliceLibraryIndexFile = async (
 						const id = slice.model.id;
 						const dirName = pascalCase(slice.model.name);
 
-						return `${id}: () => import(/* webpackChunkName: prismic.${args.libraryID}.${id} */ "./${dirName}/index.vue")`;
+						return `${id}: () => import(/* webpackChunkName: "prismic__${args.libraryID.replace(
+							/[^\w]/g,
+							"",
+						)}__${id}" */ "./${dirName}/index.vue")`;
 					})
 					.join(",\n")}
 			};

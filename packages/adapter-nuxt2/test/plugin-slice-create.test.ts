@@ -79,7 +79,7 @@ test("library index file includes created Slice", async (ctx) => {
 			.getText(),
 	).toBe(`bar_baz: () =>
     import(
-      /* webpackChunkName: prismic.slices.bar_baz */ "./QuxQuux/index.vue"
+      /* webpackChunkName: "prismic__slices__bar_baz" */ "./QuxQuux/index.vue"
     )`);
 });
 

@@ -14,7 +14,8 @@ const CodeBlock: React.FC<{
 }> = ({ children, lang, sx, codeStyle, codeClass, Header }) => {
   const { theme } = useThemeUI();
   const text = lang
-    ? hljs.highlight(children, { language: lang }).value
+    ? hljs.highlight(children, { language: lang === "vue" ? "html" : lang })
+        .value
     : hljs.highlightAuto(children, DEFAULT_LANGUAGES).value;
 
   return (

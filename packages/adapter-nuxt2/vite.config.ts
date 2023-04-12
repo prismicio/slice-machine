@@ -14,6 +14,9 @@ export default defineConfig({
 				simulator: "./src/simulator/index.ts",
 			},
 		},
+		rollupOptions: {
+			external: ["vue"],
+		},
 	},
 	test: {
 		testTimeout: 10000,
