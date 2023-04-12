@@ -117,7 +117,7 @@ const ReviewModal: React.FunctionComponent = () => {
 
   const validateReview = ({ rating }: { rating: number; comment: string }) => {
     if (!rating) {
-      return { id: "Please Choose a rating" };
+      return { id: "Please choose a rating" };
     }
   };
 
@@ -164,7 +164,7 @@ const ReviewModal: React.FunctionComponent = () => {
           onSendAReview(values.rating, values.comment);
         }}
       >
-        {({ isValid, values }) => (
+        {({ isValid }) => (
           <Form id="review-form">
             <Card>
               <Flex
@@ -180,7 +180,7 @@ const ReviewModal: React.FunctionComponent = () => {
                 }}
               >
                 <Heading sx={{ fontSize: "20px", mr: 4 }}>
-                  Give us your opinion
+                  Share Feedback
                 </Heading>
                 <Close type="button" onClick={() => skipReview()} />
               </Flex>
@@ -192,8 +192,8 @@ const ReviewModal: React.FunctionComponent = () => {
                 }}
               >
                 <Text variant={"xs"} as={"p"} sx={{ maxWidth: 302, mb: 3 }}>
-                  Overall, how satisfied or dissatisfied are you with your first
-                  experience with Slice Machine?
+                  Overall, how satisfied are you with your Slice Machine
+                  experience?
                 </Text>
                 <Box
                   mb={2}
@@ -207,34 +207,17 @@ const ReviewModal: React.FunctionComponent = () => {
                     Very unsatisfied
                   </Text>
                   <Text variant={"xs"} as={"p"}>
-                    Very statisfied
+                    Very satisfied
                   </Text>
                 </Box>
                 <Field name={"rating"} component={SelectReviewComponent} />
                 <Field
                   name={"comment"}
                   type="text"
-                  placeholder={
-                    "Sorry about that! What did you find unsatisfactory?"
-                  }
+                  placeholder="Share your thoughts. What can we improve?"
                   as={Textarea}
                   autoComplete="off"
-                  className={
-                    values.rating > 3 || values.rating === 0 ? "hidden" : ""
-                  }
-                  sx={{
-                    height: 80,
-                    opacity: 1,
-                    mb: 3,
-                    transition: "all 300ms",
-                    "&.hidden": {
-                      height: 0,
-                      opacity: 0,
-                      mb: 0,
-                      p: 0,
-                      border: "none",
-                    },
-                  }}
+                  sx={{ height: 80, mb: 3 }}
                   data-cy="review-form-comment"
                 />
                 <Button

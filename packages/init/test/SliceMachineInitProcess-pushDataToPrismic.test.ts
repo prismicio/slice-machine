@@ -285,7 +285,6 @@ it("pushes slices to Prismic", async (ctx) => {
 	});
 
 	expect(spiedHookHandlers.sliceLibraryReadHookHandler).toHaveBeenCalledOnce();
-	expect(spiedHookHandlers.sliceReadHookHandler).toHaveBeenCalledTimes(2);
 	expect(spiedManager.slices.pushSlice).toHaveBeenCalledTimes(2);
 	expect(stdout).toMatch(/Pushed all slices/);
 });

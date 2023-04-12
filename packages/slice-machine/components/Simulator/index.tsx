@@ -22,7 +22,7 @@ import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
 
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content/fields/slices/SharedSliceContent";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 import useThrottle from "@src/hooks/useThrottle";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -149,7 +149,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     if (editorState?.variation === variation.id) return editorState;
 
     return (
-      slice.mock?.find((m) => m.variation === variation.id) ||
+      slice.mocks?.find((m) => m.variation === variation.id) ||
       defaultSharedSliceContent(variation.id)
     );
   }, [editorState, variation.id]);
@@ -199,7 +199,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           saveSliceMock({
             libraryID: slice.from,
             sliceID: slice.model.id,
-            mock: (slice.mock || [])
+            mocks: (slice.mocks || [])
               .filter((mock) => mock.variation !== editorState.variation)
               .concat(editorState),
           })

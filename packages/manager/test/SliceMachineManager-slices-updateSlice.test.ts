@@ -12,6 +12,8 @@ it("calls plugins' `slice:update` hook", async (ctx) => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("slice:update", hookHandler);
+			hook("slice:asset:read", vi.fn());
+			hook("slice:asset:update", vi.fn());
 		},
 	});
 	const cwd = await createTestProject({ adapter });

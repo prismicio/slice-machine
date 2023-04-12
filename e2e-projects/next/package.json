@@ -26,7 +26,7 @@
     "recharts": "^2.1.11"
   },
   "devDependencies": {
-    "@slicemachine/adapter-next": "^0.0.9",
+    "@slicemachine/adapter-next": "0.0.13-dev-plugins-m2.2",
     "autoprefixer": "^10.4.4",
     "eslint": "^8.37.0",
     "eslint-config-next": "^12.1.4",

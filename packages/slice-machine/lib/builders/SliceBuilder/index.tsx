@@ -42,7 +42,7 @@ export const initialState: SliceBuilderState = {
 };
 
 const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
-  const { openToaster, saveSlice } = useSliceMachineActions();
+  const { openToaster, updateSlice } = useSliceMachineActions();
   const { isTouched, remoteSlice } = useSelector(
     (store: SliceMachineStoreType) => ({
       isTouched: isSelectedSliceTouched(store, slice.from, slice.model.id),
@@ -72,7 +72,7 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
   else
     return (
       <SliceBuilderForVariation
-        saveSlice={saveSlice.bind(null, slice, setData)}
+        updateSlice={updateSlice.bind(null, slice, setData)}
         slice={slice}
         variation={variation}
         remoteSlice={remoteSlice}
@@ -83,7 +83,7 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
 };
 
 type SliceBuilderForVariationProps = {
-  saveSlice: () => void;
+  updateSlice: () => void;
   slice: ComponentUI;
   variation: VariationSM;
   remoteSlice: SliceSM | undefined;
@@ -91,17 +91,13 @@ type SliceBuilderForVariationProps = {
   data: SliceBuilderState;
 };
 const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
-  saveSlice,
+  updateSlice,
   slice,
   variation,
   remoteSlice,
   isTouched,
   data,
 }) => {
-  const onSaveSlice = () => {
-    saveSlice();
-  };
-
   const sliceModel: LocalAndRemoteSlice | LocalOnlySlice = {
     local: slice.model,
     localScreenshots: slice.screenshots,
@@ -117,7 +113,7 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
         status={modelsStatuses.slices[slice.model.id]}
         isTouched={isTouched}
         variation={variation}
-        onSave={onSaveSlice}
+        onSave={updateSlice}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
       />

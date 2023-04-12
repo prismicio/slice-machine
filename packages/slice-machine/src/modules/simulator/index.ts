@@ -265,7 +265,7 @@ export function* saveSliceMockSaga({
     );
     yield put(updateSliceMock(payload));
 
-    yield put(updateSelectedSliceMocks({ mocks: payload.mock }));
+    yield put(updateSelectedSliceMocks({ mocks: payload.mocks }));
     yield put(saveSliceMockCreator.success());
   } catch (error) {
     yield put(
