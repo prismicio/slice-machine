@@ -33,6 +33,7 @@ node_modules
 /lib
 tmp
 .cache
+.caches
 .changelog
 coverage/
 .nyc_output/
@@ -41,6 +42,11 @@ unpubTest
 my-test-project
 dist
 *.tgz
+.next/
+out/
+build/
+next-env.d.ts
+.sentryclirc
 
 .now
 .vercel
