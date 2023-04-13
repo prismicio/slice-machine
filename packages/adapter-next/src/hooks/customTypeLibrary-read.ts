@@ -1,5 +1,5 @@
 import type { CustomTypeLibraryReadHook } from "@slicemachine/plugin-kit";
-import * as prismicT from "@prismicio/types";
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
@@ -11,7 +11,7 @@ import type { PluginOptions } from "../types";
 const isCustomTypeModel = (
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	input: any,
-): input is prismicT.CustomTypeModel => {
+): input is CustomType => {
 	return typeof input === "object" && input !== null && "json" in input;
 };
 

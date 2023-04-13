@@ -1,7 +1,5 @@
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { dummyServerState } from "../../__fixtures__/serverState";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const getRefreshStateCreatorPayloadData = (
   libraryName: string,
@@ -28,7 +26,7 @@ export const getRefreshStateCreatorPayloadData = (
           mocks: [],
           model: {
             id: modelId,
-            type: SlicesTypes.SharedSlice,
+            type: "SharedSlice",
             name: "CategoryPreviewWithImageBackgrounds",
             description: "CategoryPreviewWithImageBackgrounds",
             variations: [
@@ -46,7 +44,7 @@ export const getRefreshStateCreatorPayloadData = (
                         label: "Title",
                         placeholder: "My first Title...",
                       },
-                      type: WidgetTypes.Text,
+                      type: "Text",
                     },
                   },
                 ],

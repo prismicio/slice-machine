@@ -10,7 +10,6 @@ import {
   selectCurrentCustomType,
 } from "@src/modules/selectedCustomType";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const customTypeModel: CustomTypeSM = {
   id: "about",
@@ -24,7 +23,7 @@ const customTypeModel: CustomTypeSM = {
         {
           key: "title",
           value: {
-            type: WidgetTypes.RichText,
+            type: "StructuredText",
             config: {
               label: "",
               placeholder: "",

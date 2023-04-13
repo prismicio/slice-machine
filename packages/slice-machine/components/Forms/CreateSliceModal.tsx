@@ -1,6 +1,6 @@
 import { Box, Label } from "theme-ui";
 
-import Select from "@components/Select";
+import Select from "react-select";
 import ModalFormCard from "@components/ModalFormCard";
 import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";

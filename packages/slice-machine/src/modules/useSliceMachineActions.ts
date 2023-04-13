@@ -49,7 +49,7 @@ import {
   cleanupCustomTypeStoreCreator,
 } from "./selectedCustomType";
 import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,

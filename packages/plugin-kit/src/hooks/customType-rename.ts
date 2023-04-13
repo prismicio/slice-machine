@@ -1,4 +1,4 @@
-import { CustomTypeModel } from "@prismicio/types";
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
 	ExtendSliceMachineHook,
@@ -10,7 +10,7 @@ import type {
  * Data provided to `custom-type:rename` hook handlers.
  */
 export type CustomTypeRenameHookData = {
-	model: CustomTypeModel;
+	model: CustomType;
 };
 
 /**

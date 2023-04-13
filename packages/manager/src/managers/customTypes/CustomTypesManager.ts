@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 import fetch from "node-fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import { CustomTypes } from "@prismicio/types-internal";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
 	CustomTypeCreateHook,
@@ -30,12 +30,12 @@ type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 };
 
 type SliceMachineManagerReadAllCustomTypeReturnType = {
-	models: { model: CustomTypes.CustomType }[];
+	models: { model: CustomType }[];
 	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadCustomTypeReturnType = {
-	model: CustomTypes.CustomType | undefined;
+	model: CustomType | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
@@ -143,7 +143,7 @@ export class CustomTypesManager extends BaseManager {
 		);
 		const { data, errors } = decodeHookResult(
 			t.type({
-				model: CustomTypes.CustomType,
+				model: CustomType,
 			}),
 			hookResult,
 		);
@@ -302,7 +302,7 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	async fetchRemoteCustomTypes(): Promise<CustomTypes.CustomType[]> {
+	async fetchRemoteCustomTypes(): Promise<CustomType[]> {
 		const authenticationToken = await this.user.getAuthenticationToken();
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 

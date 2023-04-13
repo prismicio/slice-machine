@@ -1,4 +1,4 @@
-import { SharedSliceModel } from "@prismicio/types";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { SliceMachineContext } from "@slicemachine/plugin-kit";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -9,7 +9,7 @@ import { buildSliceDirectoryPath } from "./buildSliceDirectoryPath";
 
 type UpdateSliceModelFileArgs = {
 	libraryID: string;
-	model: SharedSliceModel;
+	model: SharedSlice;
 } & SliceMachineContext<PluginOptions>;
 
 export const updateSliceModelFile = async ({

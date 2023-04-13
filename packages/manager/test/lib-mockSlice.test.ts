@@ -1,14 +1,12 @@
 import { describe, test, expect } from "vitest";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
-import {
-	SharedSlice,
-	SlicesTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { isRight } from "fp-ts/lib/Either";
 
-import { GeoPointContent } from "@prismicio/types-internal/lib/documents/widgets/nestable";
-import { LinkContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/Link";
+import {
+	GeoPointContent,
+	LinkContent,
+} from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
 import { mockSlice } from "../src/lib/mockSlice";
 
@@ -20,12 +18,11 @@ describe("mockSlice", () => {
 				value: { url: "http://twitter.com", __TYPE__: "ExternalLink" },
 			},
 		};
-		const linkR = LinkContent.decode(link["link-2"].value);
-		expect(isRight(linkR)).toBeTruthy();
+		expect(isRight(LinkContent.decode(link["link-2"]))).toBeTruthy();
 
 		const geo = {
 			key: {
-				// __TYPE__: GeoPointContentType,
+				__TYPE__: "GeoPointContent",
 				position: { lat: 48.8583736, lng: 2.2922926 },
 			},
 		};
@@ -37,7 +34,7 @@ describe("mockSlice", () => {
 	test("when creating a slice it should return the default mock", () => {
 		const model: SharedSlice = {
 			id: "some_slice",
-			type: SlicesTypes.SharedSlice,
+			type: "SharedSlice",
 			name: "SomeSlice",
 			description: "SomeSlice",
 			variations: [
@@ -50,7 +47,7 @@ describe("mockSlice", () => {
 					description: "SomeSlice",
 					primary: {
 						title: {
-							type: WidgetTypes.RichText,
+							type: "StructuredText",
 							config: {
 								single: "heading1",
 								label: "Title",
@@ -58,7 +55,7 @@ describe("mockSlice", () => {
 							},
 						},
 						description: {
-							type: WidgetTypes.RichText,
+							type: "StructuredText",
 							config: {
 								single: "paragraph",
 								label: "Description",
@@ -95,7 +92,7 @@ describe("mockSlice", () => {
 	test("when updating a mock it should append new value to existing mock", () => {
 		const model: SharedSlice = {
 			id: "some_slice",
-			type: SlicesTypes.SharedSlice,
+			type: "SharedSlice",
 			name: "SomeSlice",
 			description: "SomeSlice",
 			variations: [
@@ -108,7 +105,7 @@ describe("mockSlice", () => {
 					description: "SomeSlice",
 					primary: {
 						title: {
-							type: WidgetTypes.RichText,
+							type: "StructuredText",
 							config: {
 								single: "heading1",
 								label: "Title",
@@ -116,7 +113,7 @@ describe("mockSlice", () => {
 							},
 						},
 						description: {
-							type: WidgetTypes.RichText,
+							type: "StructuredText",
 							config: {
 								single: "paragraph",
 								label: "Description",
@@ -130,7 +127,7 @@ describe("mockSlice", () => {
 
 		const initialMocks = mockSlice({ model });
 
-		const modelWithImage = {
+		const modelWithImage: SharedSlice = {
 			...model,
 			variations: [
 				{
@@ -139,7 +136,7 @@ describe("mockSlice", () => {
 						...model.variations[0].primary,
 						image: {
 							config: { label: "image", constraint: {}, thumbnails: [] },
-							type: WidgetTypes.Image,
+							type: "Image",
 						},
 					},
 				},
@@ -175,15 +172,6 @@ describe("mockSlice", () => {
 		// const decoded = SliceMock.decode(result);
 		// expect(isRight(decoded)).toBeTruthy();
 	});
-
-	// change slice mock to the codec for SharedSliceContent[]
-	// test.skip("allFieldSliceModel", () => {
-	//   const model = Slices.toSM({ ...allFieldSliceModel });
-	//   const mock = MockSlice(model, {});
-	//
-	//   const result = SliceMock.decode(mock);
-	//   expect(isRight(result)).toBeTruthy();
-	// });
 
 	test("when I add a variation to a slice, the old mock content should be kept", () => {
 		const sliceModel: SharedSlice = {

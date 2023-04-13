@@ -1,5 +1,5 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";

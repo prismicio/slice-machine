@@ -8,7 +8,6 @@ import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
 
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { optionValues } from "./options";
 import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
@@ -47,7 +46,7 @@ const schema = yup.object().shape({
 
 export const StructuredTextWidget: Widget<RichText, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.RichText,
+    type: "StructuredText",
     config: {
       label,
       placeholder: "",
@@ -59,6 +58,6 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
   FormFields,
   Meta,
   schema,
-  TYPE_NAME: WidgetTypes.RichText,
+  TYPE_NAME: "StructuredText",
   Form,
 };

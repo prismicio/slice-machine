@@ -1,4 +1,4 @@
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import { GroupSM } from "../Group";
 
 export const Group = {

@@ -1,4 +1,4 @@
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 const allFieldSliceModel = {
   id: "all_fields",

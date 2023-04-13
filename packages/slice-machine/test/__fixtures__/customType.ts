@@ -1,5 +1,4 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 export const customTypeMock: CustomType = {
   id: "fakeCT",
@@ -15,7 +14,7 @@ export const customTypeMock: CustomType = {
           single:
             "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
         },
-        type: WidgetTypes.RichText,
+        type: "StructuredText",
       },
     },
   },

@@ -21,7 +21,7 @@ export const SliceZone = {
       {
         key,
         value: {
-          type: SlicesTypes.SharedSlice,
+          type: "SharedSlice",
         },
       },
     ]);
@@ -40,7 +40,7 @@ export const SliceZone = {
       .concat(
         keys.map((key) => ({
           key,
-          value: { type: SlicesTypes.SharedSlice },
+          value: { type: "SharedSlice" },
         }))
       );
     return {

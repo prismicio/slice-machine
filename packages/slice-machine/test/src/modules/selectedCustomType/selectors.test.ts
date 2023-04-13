@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import jsonModel from "./__fixtures__/model.json";
 import { isSelectedCustomTypeTouched } from "@src/modules/selectedCustomType";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypes } from "@lib/models/common/CustomType";
 
 const model = CustomTypes.toSM(jsonModel as unknown as CustomType);

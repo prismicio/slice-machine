@@ -1,4 +1,4 @@
-import { SharedSliceModel } from "@prismicio/types";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
 	ExtendSliceMachineHook,
@@ -11,7 +11,7 @@ import type {
  */
 export type SliceRenameHookData = {
 	libraryID: string;
-	model: SharedSliceModel;
+	model: SharedSlice;
 };
 
 /**

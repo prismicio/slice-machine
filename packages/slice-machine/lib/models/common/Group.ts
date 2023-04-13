@@ -1,8 +1,5 @@
 import * as t from "io-ts";
-import {
-  Group,
-  WidgetTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Group } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { StringOrNull } from "@prismicio/types-internal/lib/validators";
 import { FieldsSM } from "./Fields";
 import { getOrElseW } from "fp-ts/lib/Either";
@@ -19,7 +16,7 @@ export type GroupConfig = t.TypeOf<typeof GroupConfig>;
 export const GroupSM = t.exact(
   t.intersection([
     t.type({
-      type: t.literal(WidgetTypes.Group),
+      type: t.literal("Group"),
     }),
     t.partial({
       fieldset: StringOrNull,
