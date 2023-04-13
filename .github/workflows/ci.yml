@@ -69,6 +69,8 @@ jobs:
           - packages/slice-machine
           - packages/start-slicemachine
           - packages/adapter-next
+          - packages/adapter-nuxt
+          - packages/adapter-nuxt2
 
     steps:
       - name: Checkout
@@ -118,6 +120,8 @@ jobs:
           - packages/slice-machine
           - packages/start-slicemachine
           - packages/adapter-next
+          - packages/adapter-nuxt
+          - packages/adapter-nuxt2
 
     steps:
       - name: Checkout

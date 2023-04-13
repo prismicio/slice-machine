@@ -3,23 +3,21 @@
 
 export type { PrismicRepository } from "./managers/prismicRepository/types";
 
-export { SliceMachineManager } from "./managers/SliceMachineManager";
+export type { SliceMachineManager } from "./managers/SliceMachineManager";
 export { createSliceMachineManager } from "./managers/createSliceMachineManager";
-export {
-	CreateSliceMachineManagerMiddlewareArgs,
-	createSliceMachineManagerMiddleware,
-} from "./managers/createSliceMachineManagerMiddleware";
+export { createSliceMachineManagerMiddleware } from "./managers/createSliceMachineManagerMiddleware";
+export type { CreateSliceMachineManagerMiddlewareArgs } from "./managers/createSliceMachineManagerMiddleware";
 
-export {
+export type {
 	PrismicAuthManager,
 	PrismicUserProfile,
 	PrismicAuthState,
 } from "./auth/PrismicAuthManager";
 export { createPrismicAuthManager } from "./auth/createPrismicAuthManager";
-export {
+export { createPrismicAuthManagerMiddleware } from "./auth/createPrismicAuthManagerMiddleware";
+export type {
 	CreatePrismicAuthManagerMiddlewareArgs,
 	PrismicAuthCheckStatusResponse,
-	createPrismicAuthManagerMiddleware,
 } from "./auth/createPrismicAuthManagerMiddleware";
 
 export { DecodeError } from "./lib/DecodeError";

@@ -57,9 +57,22 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		name: "Nuxt 2",
 		prismicName: "nuxt-2",
 		prismicDocumentation: "https://prismic.dev/init/nuxt-2",
-		adapterName: "@slicemachine/adapter-nuxt",
+		adapterName: "@slicemachine/adapter-nuxt2",
 		compatibility: {
 			nuxt: "^2.0.0",
+		},
+		devDependencies: {
+			...DEFAULT_DEV_DEPENDENCIES,
+			"@slicemachine/adapter-nuxt2": "latest",
+		},
+	},
+	"nuxt-3": {
+		name: "Nuxt 3",
+		prismicName: "nuxt-3",
+		prismicDocumentation: "https://prismic.dev/init/nuxt-3",
+		adapterName: "@slicemachine/adapter-nuxt",
+		compatibility: {
+			nuxt: "^3.0.0",
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,

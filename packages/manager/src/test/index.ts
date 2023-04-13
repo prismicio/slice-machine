@@ -1,4 +1,2 @@
-export {
-	createSliceMachineManagerMSWHandler,
-	CreateSliceMachineManagerMSWHandlerArgs,
-} from "./createSliceMachineManagerMSWHandler";
+export { createSliceMachineManagerMSWHandler } from "./createSliceMachineManagerMSWHandler";
+export type { CreateSliceMachineManagerMSWHandlerArgs } from "./createSliceMachineManagerMSWHandler";

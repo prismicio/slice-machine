@@ -15,7 +15,6 @@
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
     "prepare": "husky install",
-    "bootstrap": "lerna bootstrap",
     "build": "npm --workspaces --if-present run build && npm --workspaces --if-present run test",
     "build-essential": "npm --workspace @slicemachine/plugin-kit run build && npm --workspace @slicemachine/manager run build",
     "audit": "lerna run audit",

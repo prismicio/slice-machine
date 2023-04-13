@@ -5,7 +5,7 @@ import type {
 } from "@slicemachine/plugin-kit";
 import { source } from "common-tags";
 import { createRequire } from "node:module";
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSOrTSXFileExtension } from "../lib/getJSOrTSXFileExtension";
@@ -209,15 +209,18 @@ const createStep3 = async ({
 			}
 
 			// Check if the URL is accessible.
-			let res;
+			let res: Response | undefined = undefined;
 			try {
 				res = await fetch(project.config.localSliceSimulatorURL);
-			} catch {}
+			} catch (error) {
+				// Noop, we return if `res` is not defined
+			}
+
 			if (!res || !res.ok) {
 				return {
 					title: "Unable to connect to simulator page",
 					message: source`
-						Check that the \`localSliceSimulatorURL\` property in \`slicemachine.config.json\` is correct and try again. See the [troubleshooting page](https://prismic.io/docs/technologies/setup-slice-simulator-nextjs) for more details.
+						Check that the \`localSliceSimulatorURL\` property in \`slicemachine.config.json\` is correct and try again. See the [troubleshooting page](https://prismic.io/docs/setup-nextjs) for more details.
 					`,
 				};
 			}
