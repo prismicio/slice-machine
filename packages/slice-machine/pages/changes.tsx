@@ -17,11 +17,11 @@ import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-// import {
-//   SoftDeleteDocumentsDrawer,
-//   HardDeleteDocumentsDrawer,
-//   ReferencesErrorDrawer,
-// } from "@components/DeleteDocumentsDrawer";
+import {
+  SoftDeleteDocumentsDrawer,
+  HardDeleteDocumentsDrawer,
+  ReferencesErrorDrawer,
+} from "@components/DeleteDocumentsDrawer";
 import { hasLocal } from "@lib/models/common/ModelData";
 import {
   ChangedCustomType,
@@ -141,9 +141,9 @@ const Changes: React.FunctionComponent = () => {
         />
         {PageContent}
       </Box>
-      {/* <SoftDeleteDocumentsDrawer pushChanges={onPush} />
+      <SoftDeleteDocumentsDrawer pushChanges={onPush} />
       <HardDeleteDocumentsDrawer pushChanges={onPush} />
-      <ReferencesErrorDrawer pushChanges={onPush} /> */}
+      <ReferencesErrorDrawer pushChanges={onPush} />
     </Container>
   );
 };

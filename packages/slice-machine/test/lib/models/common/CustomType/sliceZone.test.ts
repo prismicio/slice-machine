@@ -1,14 +1,13 @@
 import { SliceZone } from "@lib/models/common/CustomType/sliceZone";
 // @ts-expect-error TS(2307) FIXME: Cannot find module '@slicemachine/core/build/model... Remove this comment to see the full error message
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const mockSliceZone: SlicesSM = {
   key: "slices",
   value: [
-    { key: "slice_in_zone_0", value: { type: SlicesTypes.SharedSlice } },
-    { key: "slice_in_zone_1", value: { type: SlicesTypes.SharedSlice } },
-    { key: "slice_in_zone_2", value: { type: SlicesTypes.SharedSlice } },
+    { key: "slice_in_zone_0", value: { type: "SharedSlice" } },
+    { key: "slice_in_zone_1", value: { type: "SharedSlice" } },
+    { key: "slice_in_zone_2", value: { type: "SharedSlice" } },
   ],
 };
 

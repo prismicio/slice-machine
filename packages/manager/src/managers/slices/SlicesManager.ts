@@ -1,8 +1,6 @@
 import * as t from "io-ts";
 import fetch from "node-fetch";
-import type { SharedSliceModel } from "@prismicio/types";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import { CustomTypes } from "@prismicio/types-internal";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import {
 	CallHookReturnType,
@@ -31,6 +29,7 @@ import { BaseManager } from "../BaseManager";
 import { createContentDigest } from "../../lib/createContentDigest";
 import { mockSlice } from "../../lib/mockSlice";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -51,25 +50,25 @@ type SliceMachineManagerReadAllSlicesForLibraryArgs = {
 
 type SliceMachineManagerUpdateSliceArgs = {
 	libraryID: string;
-	model: SharedSliceModel;
+	model: SharedSlice;
 	mocks?: SharedSliceContent[];
 };
 
 type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
-	models: { model: CustomTypes.Widgets.Slices.SharedSlice }[];
+	models: { model: SharedSlice }[];
 	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadAllSlicesReturnType = {
 	models: {
 		libraryID: string;
-		model: CustomTypes.Widgets.Slices.SharedSlice;
+		model: SharedSlice;
 	}[];
 	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadSliceReturnType = {
-	model: CustomTypes.Widgets.Slices.SharedSlice | undefined;
+	model: SharedSlice | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
@@ -137,7 +136,7 @@ type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
 
 type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
 	libraryID: string;
-	model: CustomTypes.Widgets.Slices.SharedSlice;
+	model: SharedSlice;
 };
 
 type SliceMachineManagerDeleteSliceArgs = {
@@ -298,7 +297,7 @@ export class SlicesManager extends BaseManager {
 		);
 		const { data, errors } = decodeHookResult(
 			t.type({
-				model: CustomTypes.Widgets.Slices.SharedSlice,
+				model: SharedSlice,
 			}),
 			hookResult,
 		);
@@ -628,7 +627,7 @@ export class SlicesManager extends BaseManager {
 		}
 	}
 
-	async fetchRemoteSlices(): Promise<CustomTypes.Widgets.Slices.SharedSlice[]> {
+	async fetchRemoteSlices(): Promise<SharedSlice[]> {
 		const authenticationToken = await this.user.getAuthenticationToken();
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
@@ -644,7 +643,7 @@ export class SlicesManager extends BaseManager {
 
 	async updateSliceModelScreenshotsInPlace(
 		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
-	): Promise<CustomTypes.Widgets.Slices.SharedSlice> {
+	): Promise<SharedSlice> {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 		const variations = await Promise.all(

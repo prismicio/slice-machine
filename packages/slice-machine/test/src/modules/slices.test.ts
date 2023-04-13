@@ -328,13 +328,13 @@ describe("[Slices module]", () => {
 //     const initialModel: SliceSM = {
 //       id: "slice_id",
 //       name: PREV_NAME,
-//       type: SlicesTypes.SharedSlice,
+//       type: "SharedSlice",
 //       variations: [],
 //     };
 //     const expectedModel: SliceSM = {
 //       id: "slice_id",
 //       name: NEW_NAME,
-//       type: SlicesTypes.SharedSlice,
+//       type: "SharedSlice",
 //       variations: [],
 //     };
 //     expect(renameModel(initialModel, NEW_NAME)).toEqual(expectedModel);

@@ -9,7 +9,6 @@ import { createInitialValues, createValidationSchema } from "@lib/forms";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import { slugify } from "@lib/utils/str";
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { ErrorTooltip } from "./ErrorTooltip";
 import { InputType } from "@lib/forms/fields";
@@ -73,7 +72,7 @@ const NewField: React.FC<NewField> = ({
 
   const initialValues: FormFieldValues = {
     ...createInitialValues(FormFields),
-    ...(widgetTypeName === WidgetTypes.UID ? { id: "uid" } : {}),
+    ...(widgetTypeName === "UID" ? { id: "uid" } : {}),
     widgetTypeName,
   };
 

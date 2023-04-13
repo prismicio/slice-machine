@@ -1,4 +1,4 @@
-import { SharedSliceModel } from "@prismicio/types";
+import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { SliceMachineContext } from "@slicemachine/plugin-kit";
 import * as path from "node:path";
 
@@ -9,7 +9,7 @@ import { pascalCase } from "./pascalCase";
 
 type BuildSliceDirectoryPathArgs = {
 	libraryID: string;
-	model: SharedSliceModel;
+	model: SharedSlice;
 	helpers: SliceMachineContext<PluginOptions>["helpers"];
 };
 

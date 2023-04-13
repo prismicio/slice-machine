@@ -2,7 +2,6 @@ import { describe, test, expect } from "vitest";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import { findWidgetByConfigOrType } from "@builders/utils";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const dumbConfig = {
   label: "",
@@ -18,7 +17,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Image
+      "Image"
     );
     expect(widgetFound).toEqual(Widgets.Image);
   });
@@ -27,7 +26,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Color
+      "Color"
     );
     expect(widgetFound).toEqual(Widgets.Color);
   });
@@ -36,7 +35,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.UID
+      "UID"
     );
     expect(widgetFound).toEqual(Widgets.UID);
   });
@@ -45,7 +44,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Group
+      "Group"
     );
     expect(widgetFound).toEqual(Widgets.Group);
   });
@@ -54,7 +53,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.GeoPoint
+      "GeoPoint"
     );
     expect(widgetFound).toEqual(Widgets.GeoPoint);
   });
@@ -63,7 +62,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Select
+      "Select"
     );
     expect(widgetFound).toEqual(Widgets.Select);
   });
@@ -72,7 +71,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.BooleanField
+      "Boolean"
     );
     expect(widgetFound).toEqual(Widgets.Boolean);
   });
@@ -81,7 +80,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Date
+      "Date"
     );
     expect(widgetFound).toEqual(Widgets.Date);
   });
@@ -90,7 +89,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Timestamp
+      "Timestamp"
     );
     expect(widgetFound).toEqual(Widgets.Timestamp);
   });
@@ -99,7 +98,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Number
+      "Number"
     );
     expect(widgetFound).toEqual(Widgets.Number);
   });
@@ -108,7 +107,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       dumbConfig,
-      WidgetTypes.Link
+      "Link"
     );
     expect(widgetFound).toEqual(Widgets.Link);
   });
@@ -122,7 +121,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       contentRelationshipConfig,
-      WidgetTypes.Link
+      "Link"
     );
     expect(widgetFound).toEqual(Widgets.ContentRelationship);
   });
@@ -136,7 +135,7 @@ describe("utils/findWidgetByConfigOrType", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'typeof import("... Remove this comment to see the full error message
       Widgets,
       contentRelationshipConfig,
-      WidgetTypes.Link
+      "Link"
     );
     expect(widgetFound).toEqual(Widgets.LinkToMedia);
   });

@@ -1,5 +1,5 @@
 import type { CustomTypeReadHook } from "@slicemachine/plugin-kit";
-import * as prismicT from "@prismicio/types";
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import * as path from "node:path";
 
 import { buildCustomTypeDirectoryPath } from "../lib/buildCustomTypeDirectoryPath";
@@ -16,7 +16,7 @@ export const customTypeRead: CustomTypeReadHook<PluginOptions> = async (
 		"index.json",
 	);
 
-	const model = await readJSONFile<prismicT.CustomTypeModel>(filePath);
+	const model = await readJSONFile<CustomType>(filePath);
 
 	return {
 		model,

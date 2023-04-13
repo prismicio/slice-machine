@@ -6,7 +6,6 @@ import {
   SharedSliceRef,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes/widgets/slices/Slices";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const SlicesSM = t.type({
   key: t.string,
@@ -25,7 +24,7 @@ export const SliceZone = {
       throw new Error("Error while parsing an SM slicezone");
     })(
       DynamicSlices.decode({
-        type: WidgetTypes.Slices,
+        type: "Slices",
         fieldset: "Slice Zone",
         config: {
           choices: slices.value.reduce(

@@ -61,7 +61,7 @@ export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
 });
 
 const MODAL_KEY_MAP = {
-  // INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+  ["INVALID_CUSTOM_TYPES"]: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
   ["SOFT"]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
   ["HARD"]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
 };

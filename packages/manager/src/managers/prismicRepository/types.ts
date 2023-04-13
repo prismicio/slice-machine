@@ -1,4 +1,7 @@
-import { CustomTypes } from "@prismicio/types-internal";
+import {
+	CustomType,
+	SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import * as t from "io-ts";
 
 export const PrismicRepositoryUserAgent = {
@@ -50,22 +53,22 @@ interface DeleteChange extends Change {
 }
 export interface SliceInsertChange extends Change {
 	type: ChangeTypes.SLICE_INSERT;
-	payload: CustomTypes.Widgets.Slices.SharedSlice;
+	payload: SharedSlice;
 }
 export interface SliceUpdateChange extends Change {
 	type: ChangeTypes.SLICE_UPDATE;
-	payload: CustomTypes.Widgets.Slices.SharedSlice;
+	payload: SharedSlice;
 }
 export interface SliceDeleteChange extends DeleteChange {
 	type: ChangeTypes.SLICE_DELETE;
 }
 export interface CustomTypeInsertChange extends Change {
 	type: ChangeTypes.CUSTOM_TYPE_INSERT;
-	payload: CustomTypes.CustomType;
+	payload: CustomType;
 }
 export interface CustomTypeUpdateChange extends Change {
 	type: ChangeTypes.CUSTOM_TYPE_UPDATE;
-	payload: CustomTypes.CustomType;
+	payload: CustomType;
 }
 export interface CustomTypeDeleteChange extends DeleteChange {
 	type: ChangeTypes.CUSTOM_TYPE_DELETE;

@@ -1,10 +1,9 @@
 import * as t from "io-ts";
 
 import {
-  SlicesTypes,
   SharedSlice,
   Variation,
-} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+} from "@prismicio/types-internal/lib/customtypes";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
 
@@ -37,7 +36,7 @@ export type VariationSM = t.TypeOf<typeof VariationSM>;
 export const SliceSM = t.intersection([
   t.type({
     id: t.string,
-    type: t.literal(SlicesTypes.SharedSlice),
+    type: t.literal("SharedSlice"),
     name: t.string,
     variations: t.array(VariationSM),
   }),

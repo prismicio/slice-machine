@@ -46,7 +46,7 @@
 		"audit": "better-npm-audit audit -l high -p"
 	},
 	"dependencies": {
-		"@prismicio/types": "^0.2.7",
+		"@prismicio/types-internal": "2.0.0-alpha.9",
 		"common-tags": "^1.8.2",
 		"defu": "^6.1.2",
 		"fp-ts": "^2.13.1",

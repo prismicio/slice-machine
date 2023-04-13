@@ -3,7 +3,7 @@ import jsonMocks from "../__fixtures__/mocks.json";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Slices } from "@lib/models/common/Slice";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { ComponentInfo } from "@lib/models/common/Library";
 
 export const getSelectedSliceDummyData = () => {

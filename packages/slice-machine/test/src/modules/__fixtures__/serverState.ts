@@ -1,5 +1,4 @@
 import ServerState from "@models/server/ServerState";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const dummyServerState: Pick<
   ServerState,
@@ -37,7 +36,7 @@ export const dummyServerState: Pick<
             {
               key: "title",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   label: "",
                   placeholder: "",

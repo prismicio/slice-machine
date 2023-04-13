@@ -1,4 +1,4 @@
-import type { CustomTypeModel } from "@prismicio/types";
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
 	ExtendSliceMachineHook,
@@ -17,7 +17,7 @@ export type CustomTypeReadHookData = {
  * Return value for `custom-type:read` hook handlers.
  */
 export type CustomTypeReadHookReturnType = {
-	model: CustomTypeModel;
+	model: CustomType;
 };
 
 /**

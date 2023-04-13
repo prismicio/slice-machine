@@ -1,4 +1,7 @@
-import { CustomTypes } from "@prismicio/types-internal";
+import {
+	SharedSlice,
+	CustomType,
+} from "@prismicio/types-internal/lib/customtypes";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import {
 	ForbiddenError,
@@ -60,7 +63,7 @@ type SliceMachineManagerGetStateReturnType = {
 			pathToSlice: string;
 			fileName: string | null;
 			extension: string | null;
-			model: CustomTypes.Widgets.Slices.SharedSlice;
+			model: SharedSlice;
 			screenshots: Record<
 				string,
 				{
@@ -78,9 +81,9 @@ type SliceMachineManagerGetStateReturnType = {
 			isManual: boolean;
 		};
 	}[];
-	customTypes: CustomTypes.CustomType[];
-	remoteCustomTypes: CustomTypes.CustomType[];
-	remoteSlices: CustomTypes.Widgets.Slices.SharedSlice[];
+	customTypes: CustomType[];
+	remoteCustomTypes: CustomType[];
+	remoteSlices: SharedSlice[];
 	clientError?: {
 		name: string;
 		message: string;
