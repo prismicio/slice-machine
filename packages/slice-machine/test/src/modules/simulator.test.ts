@@ -11,11 +11,9 @@ import {
   saveSliceMockSaga,
   saveSliceMockCreator,
 } from "@src/modules/simulator";
+import { select } from "redux-saga/effects";
 import { testSaga, expectSaga } from "redux-saga-test-plan";
-import {
-  checkSetupSaga,
-  trackOpenSetupModalSaga,
-} from "@src/modules/simulator";
+import { checkSetupSaga } from "@src/modules/simulator";
 import { SimulatorStoreType } from "@src/modules/simulator/types";
 
 import {
@@ -169,7 +167,6 @@ describe("[Simulator module]", () => {
       saga
         .next(response2)
         .call(failCheckSetupSaga, { setupSteps: response2.steps });
-      saga.next().call(trackOpenSetupModalSaga);
       saga.next().isDone();
     });
     it("should open setup modal if checkSimulatorSetupCreator.failure action", () => {
@@ -215,6 +212,7 @@ describe("[Simulator module]", () => {
       };
 
       await expectSaga(failCheckSetupSaga, payload)
+        .provide([[select(selectIsSimulatorAvailableForFramework), true]])
         .put(
           checkSimulatorSetupCreator.failure({
             setupSteps: payload.setupSteps,
@@ -273,9 +271,9 @@ describe("[Simulator module]", () => {
       const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
 
       const payload = saveSliceMockCreator.request({
-        sliceName: "MySlice",
-        libraryName: "slices",
-        mock: [],
+        libraryID: "slices",
+        sliceID: "MySlice",
+        mocks: [],
       });
 
       await expectSaga(saveSliceMockSaga, payload)
@@ -286,7 +284,7 @@ describe("[Simulator module]", () => {
           })
         )
         .put(updateSliceMock(payload.payload))
-        .put(updateSelectedSliceMocks({ mocks: payload.payload.mock }))
+        .put(updateSelectedSliceMocks({ mocks: payload.payload.mocks }))
         .put(saveSliceMockCreator.success())
         .run();
 
@@ -325,9 +323,9 @@ describe("[Simulator module]", () => {
       const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
 
       const payload = saveSliceMockCreator.request({
-        sliceName: "MySlice",
-        libraryName: "slices",
-        mock: [],
+        libraryID: "slices",
+        sliceID: "MySlice",
+        mocks: [],
       });
 
       const errorMessage = "Error saving content";

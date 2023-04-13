@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/plugin-kit",
-	"version": "0.1.8-dev-plugins-testing.0",
+	"version": "0.1.8-dev-plugins-m2.2",
 	"description": "A set of helpers to develop and run Slice Machine plugins",
 	"keywords": [
 		"typescript",
@@ -12,7 +12,7 @@
 	"repository": {
 		"type": "git",
 		"url": "ssh://git@github.com/prismicio/slicemachine-plugin-kit.git",
-		"directory": "packages/kit"
+		"directory": "packages/plugin-kit"
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
@@ -37,10 +37,6 @@
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepublishOnly": "npm run build",
-		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
-		"release:alpha": "npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
-		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
-		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
 		"types": "tsc --noEmit",
@@ -50,7 +46,7 @@
 		"audit": "better-npm-audit audit -l high -p"
 	},
 	"dependencies": {
-		"@prismicio/types": "^0.2.7",
+		"@prismicio/types-internal": "2.0.0-alpha.9",
 		"common-tags": "^1.8.2",
 		"defu": "^6.1.2",
 		"fp-ts": "^2.13.1",
@@ -68,14 +64,13 @@
 		"@vitest/coverage-c8": "^0.27.3",
 		"better-npm-audit": "^3.7.3",
 		"depcheck": "^1.4.3",
-		"eslint": "^8.36.0",
+		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"prettier": "^2.8.4",
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"size-limit": "^8.2.4",
-		"standard-version": "^9.5.0",
 		"ts-expect": "^1.3.0",
 		"typescript": "^4.9.5",
 		"vite": "^4.1.4",

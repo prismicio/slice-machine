@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-next",
-	"version": "0.0.12",
+	"version": "0.0.13-dev-plugins-m2.2",
 	"description": "Slice Machine adapter for Next.js.",
 	"keywords": [
 		"typescript",
@@ -8,7 +8,8 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "ssh://git@github.com/prismicio/slicemachine-adapter-next.git"
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/adapter-next"
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
@@ -47,10 +48,6 @@
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepublishOnly": "npm run build",
-		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
-		"release:alpha": "npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
-		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
-		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
 		"types": "tsc --noEmit",
@@ -61,8 +58,8 @@
 	},
 	"dependencies": {
 		"@prismicio/slice-simulator-core": "^0.2.7",
-		"@prismicio/types": "^0.2.7",
-		"@slicemachine/plugin-kit": "0.1.8-dev-plugins-testing.0",
+		"@prismicio/types-internal": "2.0.0-alpha.9",
+		"@slicemachine/plugin-kit": "0.1.8-dev-plugins-m2.2",
 		"common-tags": "^1.8.2",
 		"fs-extra": "^11.1.0",
 		"node-fetch": "^3.3.1",
@@ -83,7 +80,7 @@
 		"@vitest/coverage-c8": "^0.27.3",
 		"better-npm-audit": "^3.7.3",
 		"depcheck": "^1.4.3",
-		"eslint": "^8.36.0",
+		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
@@ -91,7 +88,6 @@
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"react": "^18.2.0",
 		"size-limit": "^8.2.4",
-		"standard-version": "^9.5.0",
 		"ts-morph": "^17.0.1",
 		"typescript": "^4.9.5",
 		"vite": "^4.1.4",

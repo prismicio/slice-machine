@@ -1,7 +1,6 @@
 import * as t from "io-ts";
 import fetch from "node-fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import { CustomTypes } from "@prismicio/types-internal";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import {
 	CallHookReturnType,
@@ -9,14 +8,11 @@ import {
 	SliceAssetUpdateHook,
 	SliceCreateHook,
 	SliceCreateHookData,
-	SliceDeleteHook,
-	SliceDeleteHookData,
 	SliceLibraryReadHookData,
 	SliceReadHookData,
 	SliceRenameHook,
 	SliceRenameHookData,
 	SliceUpdateHook,
-	SliceUpdateHookData,
 } from "@slicemachine/plugin-kit";
 
 import { DecodeError } from "../../lib/DecodeError";
@@ -31,6 +27,9 @@ import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { createContentDigest } from "../../lib/createContentDigest";
+import { mockSlice } from "../../lib/mockSlice";
+import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -49,21 +48,27 @@ type SliceMachineManagerReadAllSlicesForLibraryArgs = {
 	libraryID: string;
 };
 
+type SliceMachineManagerUpdateSliceArgs = {
+	libraryID: string;
+	model: SharedSlice;
+	mocks?: SharedSliceContent[];
+};
+
 type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
-	models: { model: CustomTypes.Widgets.Slices.SharedSlice }[];
+	models: { model: SharedSlice }[];
 	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadAllSlicesReturnType = {
 	models: {
 		libraryID: string;
-		model: CustomTypes.Widgets.Slices.SharedSlice;
+		model: SharedSlice;
 	}[];
 	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerReadSliceReturnType = {
-	model: CustomTypes.Widgets.Slices.SharedSlice | undefined;
+	model: SharedSlice | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
@@ -131,7 +136,16 @@ type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
 
 type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
 	libraryID: string;
-	model: CustomTypes.Widgets.Slices.SharedSlice;
+	model: SharedSlice;
+};
+
+type SliceMachineManagerDeleteSliceArgs = {
+	libraryID: string;
+	sliceID: string;
+};
+
+type SliceMachineManagerDeleteSliceReturnType = {
+	errors: (DecodeError | HookError)[];
 };
 
 export class SlicesManager extends BaseManager {
@@ -257,8 +271,18 @@ export class SlicesManager extends BaseManager {
 			args,
 		);
 
+		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+			mocks: mockSlice({ model: args.model }),
+		};
+
+		const { errors: updateSliceHookErrors } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
+
 		return {
-			errors: hookResult.errors,
+			errors: [...hookResult.errors, ...updateSliceHookErrors],
 		};
 	}
 
@@ -273,29 +297,56 @@ export class SlicesManager extends BaseManager {
 		);
 		const { data, errors } = decodeHookResult(
 			t.type({
-				model: CustomTypes.Widgets.Slices.SharedSlice,
+				model: SharedSlice,
 			}),
 			hookResult,
 		);
 
 		return {
 			model: data[0]?.model,
-			errors,
+			errors: errors.map((error) => {
+				error.message = `Failed to decode slice model with id '${args.sliceID}': ${error.message}`;
+
+				return error;
+			}),
 		};
 	}
 
 	async updateSlice(
-		args: SliceUpdateHookData,
+		args: SliceMachineManagerUpdateSliceArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		const { mocks: previousMocks } = await this.readSliceMocks({
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+		});
+		const { model: previousModel } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+		});
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"slice:update",
 			args,
 		);
 
+		const updatedMocks = mockSlice({
+			model: args.model,
+			mocks: previousMocks,
+			diff: SliceComparator.compare(previousModel, args.model),
+		});
+		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+			libraryID: args.libraryID,
+			sliceID: args.model.id,
+			mocks: updatedMocks,
+		};
+
+		const { errors: updateSliceMocksHookResult } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
+
 		return {
-			errors: hookResult.errors,
+			errors: [...hookResult.errors, ...updateSliceMocksHookResult],
 		};
 	}
 
@@ -314,20 +365,41 @@ export class SlicesManager extends BaseManager {
 		};
 	}
 
-	// TODO: Disallow until Slices can be deleted.
 	async deleteSlice(
-		args: SliceDeleteHookData,
-	): Promise<OnlyHookErrors<CallHookReturnType<SliceDeleteHook>>> {
+		args: SliceMachineManagerDeleteSliceArgs,
+	): Promise<SliceMachineManagerDeleteSliceReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"slice:delete",
-			args,
-		);
+		const { model, errors: readSliceErrors } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.sliceID,
+		});
 
-		return {
-			errors: hookResult.errors,
-		};
+		if (model) {
+			const { errors: deleteSliceErrors } =
+				await this.sliceMachinePluginRunner.callHook("slice:delete", {
+					model,
+					libraryID: args.libraryID,
+				});
+
+			// Do not update custom types if slice deletion failed
+			if (deleteSliceErrors.length > 0) {
+				return {
+					errors: deleteSliceErrors,
+				};
+			}
+
+			const { errors: updateCustomTypeErrors } =
+				await this._removeSliceFromCustomTypes(args.sliceID);
+
+			return {
+				errors: updateCustomTypeErrors,
+			};
+		} else {
+			return {
+				errors: readSliceErrors,
+			};
+		}
 	}
 
 	/**
@@ -555,7 +627,7 @@ export class SlicesManager extends BaseManager {
 		}
 	}
 
-	async fetchRemoteSlices(): Promise<CustomTypes.Widgets.Slices.SharedSlice[]> {
+	async fetchRemoteSlices(): Promise<SharedSlice[]> {
 		const authenticationToken = await this.user.getAuthenticationToken();
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
@@ -571,7 +643,7 @@ export class SlicesManager extends BaseManager {
 
 	async updateSliceModelScreenshotsInPlace(
 		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
-	): Promise<CustomTypes.Widgets.Slices.SharedSlice> {
+	): Promise<SharedSlice> {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
 		const variations = await Promise.all(
@@ -622,5 +694,59 @@ export class SlicesManager extends BaseManager {
 			...args.model,
 			variations,
 		};
+	}
+
+	private async _removeSliceFromCustomTypes(sliceID: string) {
+		const { models, errors: customTypeReadErrors } =
+			await this.customTypes.readAllCustomTypes();
+
+		// Successfully update all custom types or throw
+		await Promise.all(
+			models.map(async (customType) => {
+				const updatedJsonModel = Object.entries(customType.model.json).reduce(
+					(tabAccumulator, [tabKey, tab]) => {
+						const updatedTabFields = Object.entries(tab).reduce(
+							(fieldAccumulator, [fieldKey, field]) => {
+								if (
+									field.config === undefined ||
+									field.type !== "Slices" ||
+									field.config.choices === undefined
+								) {
+									return { ...fieldAccumulator, [fieldKey]: field };
+								}
+
+								const filteredChoices = Object.entries(
+									field.config.choices,
+								).reduce((choiceAccumulator, [choiceKey, choice]) => {
+									if (choiceKey === sliceID) {
+										return choiceAccumulator;
+									}
+
+									return { ...choiceAccumulator, [choiceKey]: choice };
+								}, {});
+
+								return {
+									...fieldAccumulator,
+									[fieldKey]: {
+										...field,
+										config: { ...field.config, choices: filteredChoices },
+									},
+								};
+							},
+							{},
+						);
+
+						return { ...tabAccumulator, [tabKey]: updatedTabFields };
+					},
+					{},
+				);
+
+				await this.customTypes.updateCustomType({
+					model: { ...customType.model, json: updatedJsonModel },
+				});
+			}),
+		);
+
+		return { errors: customTypeReadErrors };
 	}
 }

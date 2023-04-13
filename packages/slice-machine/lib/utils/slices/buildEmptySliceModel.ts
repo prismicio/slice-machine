@@ -1,4 +1,4 @@
-import { CustomTypes } from "@prismicio/types-internal";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { DEFAULT_VARIATION_ID } from "@lib/consts";
 
@@ -10,10 +10,10 @@ type BuildEmptySliceModelArgs = {
 
 export function buildEmptySliceModel(
   args: BuildEmptySliceModelArgs
-): CustomTypes.Widgets.Slices.SharedSlice {
+): SharedSlice {
   return {
     id: snakelize(args.sliceName),
-    type: CustomTypes.Widgets.Slices.SlicesTypes.SharedSlice,
+    type: "SharedSlice",
     name: args.sliceName,
     description: args.sliceName,
     variations: [

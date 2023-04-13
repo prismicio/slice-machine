@@ -68,14 +68,9 @@ export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
 
 export const selectIsSimulatorAvailableForFramework = (
-  _store: SliceMachineStoreType
+  store: SliceMachineStoreType
 ): boolean => {
-  // TODO: Detect if the manager can provide set up steps, most likely from the
-  // adapter (but if possible, construct the code so it is not
-  // adapter-specific; in the future, we may want to let plugins provide
-  // their own simulator environments).
-  return true;
-  // return simulatorIsSupported(store.environment.framework);
+  return store.environment.supportsSliceSimulator;
 };
 
 export const getChangelog = (store: SliceMachineStoreType) => {
@@ -93,12 +88,6 @@ export const getPackageManager = (
   store: SliceMachineStoreType
 ): PackageManager => {
   return store.environment.packageManager;
-};
-
-export const getStorybookUrl = (
-  store: SliceMachineStoreType
-): string | null => {
-  return store.environment.manifest.storybook || null;
 };
 
 export const getAuthStatus = (state: SliceMachineStoreType): AuthStatus => {

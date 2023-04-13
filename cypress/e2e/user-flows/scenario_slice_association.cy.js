@@ -1,3 +1,4 @@
+import { changesPage } from "../../pages/changes/changesPage";
 import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
 import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 
@@ -70,7 +71,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Push the newly created custom type and slice", () => {
-    cy.pushLocalChanges();
+    changesPage.goTo().pushChanges().isUpToDate();
   });
 
   it("Add the Slice to the Custom Type", () => {
@@ -88,9 +89,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Push the custom type with the Slice associated", () => {
-    cy.pushLocalChanges();
-    cy.contains("Up to date").should("be.visible");
-    cy.get("[data-cy=push-changes]").should("be.disabled");
+    changesPage.goTo().pushChanges().isUpToDate();
   });
 
   it("Displays and fill the satisfaction survey and the survey never reappears after", () => {

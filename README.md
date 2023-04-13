@@ -26,8 +26,6 @@ It takes a few seconds to generate components with corresponding data models. Ev
 ### 2. Preview your components locally
 While you build your components, you'll need to preview them. Slice Machine generates updated mocks to display content in the context of your app — without querying any remote content.
 
-If you already use Storybook, Slice Machine generates stories for each of your Slices.
-
 ### 3. Ship your library to a page builder
 Once you're done creating your components locally, publish them to Prismic. You get a full-fledged online content editor, tailored to your components' data models. Content editors can preview Slices from there and create pages without any help!
 
@@ -83,30 +81,6 @@ const Page = () => (
 )
 ````
 Note that `MySliceMocks` is an array of Slice variations. You get 1 Slice mock per variation.
-
-#### Using Storybook
-
-Add the localhost port of your Storybook instance to `sm.json`:
-
-```JSON
-{
-  "apiEndpoint": "...",
-  "storybook": "http://localhost:6000"
-}
-````
-
-In `.storybook/main.js`, import our `getStoriesPaths` helper and use it inside `stories` array:
-
-```javascript
-const { getStoriesPaths } = require('slice-machine-ui/helpers/storybook')
-
-module.exports = {
-  // ...,
-  stories: [...getStoriesPaths()]
-}
-````
-
-Run Storybook. You should now be able to access it from Slice Machine, and screenshots will be taken from there everytime you save/push your Slices.
 
 ### Publishing your library
 Once you're happy with the result, it's time to publish it to Prismic. Note that if you want to be able to use a Slice in one of your pages (Custom types), you will have to click on "Add slices" in the Custom types editor and select the Slices to be used.

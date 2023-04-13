@@ -1,13 +1,12 @@
 /**
- * Checks whether or not Sentry is enabled
+ * Checks whether or not Sentry is enabled.
  *
- * Sentry is enabled:
+ * Sentry is enabled automatically in production but can be disabled by setting
+ * `ENABLE_SENTRY` to `false`.
  *
- * - Automatically in production
- * - If explicitely set through `SENTRY_AUTH_TOKEN`
- *
- * @returns Whether or not Sentry is enabeld
+ * @returns Whether or not Sentry is enabled.
  */
 export const checkIsSentryEnabled = (): boolean =>
-	!["development", "test"].includes(process.env.NODE_ENV ?? "") ||
-	process.env.SENTRY_AUTH_TOKEN !== undefined;
+	process.env.ENABLE_SENTRY === undefined
+		? !["development", "test"].includes(process.env.NODE_ENV ?? "")
+		: process.env.ENABLE_SENTRY === "true";

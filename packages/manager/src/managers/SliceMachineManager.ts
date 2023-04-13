@@ -1,5 +1,12 @@
-import { CustomTypes } from "@prismicio/types-internal";
+import {
+	SharedSlice,
+	CustomType,
+} from "@prismicio/types-internal/lib/customtypes";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
+import {
+	ForbiddenError,
+	UnauthorizedError,
+} from "@prismicio/custom-types-client";
 import {
 	SliceMachinePlugin,
 	SliceMachinePluginRunner,
@@ -44,6 +51,7 @@ type SliceMachineManagerGetStateReturnType = {
 		repo: string;
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
+		supportsSliceSimulator: boolean;
 	};
 	libraries: {
 		name: string;
@@ -55,7 +63,7 @@ type SliceMachineManagerGetStateReturnType = {
 			pathToSlice: string;
 			fileName: string | null;
 			extension: string | null;
-			model: CustomTypes.Widgets.Slices.SharedSlice;
+			model: SharedSlice;
 			screenshots: Record<
 				string,
 				{
@@ -63,7 +71,7 @@ type SliceMachineManagerGetStateReturnType = {
 					data: Buffer;
 				}
 			>;
-			mock?: SharedSliceContent[];
+			mocks?: SharedSliceContent[];
 		}[];
 		meta: {
 			name?: string;
@@ -73,9 +81,9 @@ type SliceMachineManagerGetStateReturnType = {
 			isManual: boolean;
 		};
 	}[];
-	customTypes: CustomTypes.CustomType[];
-	remoteCustomTypes: CustomTypes.CustomType[];
-	remoteSlices: CustomTypes.Widgets.Slices.SharedSlice[];
+	customTypes: CustomType[];
+	remoteCustomTypes: CustomType[];
+	remoteSlices: SharedSlice[];
 	clientError?: {
 		name: string;
 		message: string;
@@ -163,7 +171,7 @@ export class SliceMachineManager {
 	async getState(): Promise<SliceMachineManagerGetStateReturnType> {
 		const [
 			{ sliceMachineConfig, libraries },
-			{ profile, remoteCustomTypes, remoteSlices },
+			{ profile, remoteCustomTypes, remoteSlices, authError },
 			customTypes,
 			packageManager,
 		] = await Promise.all([
@@ -173,42 +181,63 @@ export class SliceMachineManager {
 				return { sliceMachineConfig, libraries };
 			}),
 			this._getProfile().then(async (profile) => {
+				let authError;
 				if (profile) {
-					const [remoteCustomTypes, remoteSlices] = await Promise.all([
-						this.customTypes.fetchRemoteCustomTypes(),
-						this.slices.fetchRemoteSlices(),
-					]);
+					try {
+						const [remoteCustomTypes, remoteSlices] = await Promise.all([
+							this.customTypes.fetchRemoteCustomTypes(),
+							this.slices.fetchRemoteSlices(),
+						]);
 
-					return {
-						profile,
-						remoteCustomTypes,
-						remoteSlices,
-					};
-				} else {
-					return {
-						profile,
-						remoteCustomTypes: [],
-						remoteSlices: [],
-					};
+						return {
+							profile,
+							remoteCustomTypes,
+							remoteSlices,
+							authError,
+						};
+					} catch (error) {
+						// Non-Prismic error
+						if (
+							error instanceof UnauthorizedError ||
+							error instanceof ForbiddenError
+						) {
+							authError = {
+								name: "__stub__",
+								message: "__stub__",
+								reason: "__stub__",
+								status: 401,
+							};
+						} else {
+							throw error;
+						}
+					}
 				}
+
+				return {
+					profile,
+					remoteCustomTypes: [],
+					remoteSlices: [],
+					authError,
+				};
 			}),
 			this._getCustomTypes(),
 			this.project.detectPackageManager(),
 		]);
 
-		// TODO: SM UI detects if a user is logged out by looking at
+		// SM UI detects if a user is logged out by looking at
 		// `clientError`. Here, we simulate what the old core does by
-		// returning an `ErrorWithStatus`-like object if the user is
-		// not logged in.
+		// returning an `ErrorWithStatus`-like object if the user does
+		// not have access to the repository or is not logged in.
 		const clientError: SliceMachineManagerGetStateReturnType["clientError"] =
-			profile
+			authError ||
+			(profile
 				? undefined
 				: {
 						name: "__stub__",
 						message: "__stub__",
 						reason: "__stub__",
 						status: 401, // Needed to trigger the unauthorized flow.
-				  };
+				  });
 
 		return {
 			env: {
@@ -221,6 +250,7 @@ export class SliceMachineManager {
 					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
 				packageManager,
+				supportsSliceSimulator: this.simulator.supportsSliceSimulator(),
 				repo: sliceMachineConfig.repositoryName,
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
@@ -297,7 +327,7 @@ export class SliceMachineManager {
 										extension: "extension",
 										model,
 										screenshots,
-										mock: mocks,
+										mocks,
 									});
 								}
 							}),

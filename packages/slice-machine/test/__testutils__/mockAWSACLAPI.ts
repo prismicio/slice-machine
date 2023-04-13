@@ -27,6 +27,7 @@ type MockAWSACLAPIConfig = {
           contentType?: string;
         }[];
       };
+  deleteFolderEndpoint?: { expectedSliceIDs: string[] };
 };
 
 type MockAWSACLAPIReturnType = {
@@ -139,6 +140,22 @@ export const mockAWSACLAPI = (
           return res(ctx.status(401));
         }
       })
+    );
+  }
+
+  if (config?.deleteFolderEndpoint) {
+    ctx.msw.use(
+      rest.post(
+        new URL("delete-folder", endpoint).toString(),
+        async (req, res, ctx) => {
+          const { sliceId } = await req.json<{ sliceId: string }>();
+          if (config.deleteFolderEndpoint?.expectedSliceIDs.includes(sliceId)) {
+            return res(ctx.status(200));
+          } else {
+            return res(ctx.status(401));
+          }
+        }
+      )
     );
   }
 

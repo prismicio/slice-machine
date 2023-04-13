@@ -17,7 +17,7 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
   createSlice,
-  // deleteSlice,
+  deleteSlice,
   getState,
   renameSlice,
   SaveSliceMockRequest,
@@ -32,7 +32,7 @@ import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@lib/models/common/Slice";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
-import { saveSliceCreator } from "../selectedSlice/actions";
+import { updateSliceCreator } from "../selectedSlice/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
@@ -97,7 +97,7 @@ type SlicesActions =
   | ActionType<typeof createSliceCreator>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
-  | ActionType<typeof saveSliceCreator>
+  | ActionType<typeof updateSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSliceMock>;
@@ -163,7 +163,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: newLibs,
       };
     }
-    case getType(saveSliceCreator.success): {
+    case getType(updateSliceCreator.success): {
       const newComponentUI = action.payload.component;
 
       const newLibraries = state.libraries.map((library) => {
@@ -222,15 +222,15 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
 
     case getType(updateSliceMock): {
-      const { libraryName, sliceName, mock } = action.payload;
+      const { libraryID, sliceID, mocks } = action.payload;
       const libraries = state.libraries.map((lib) => {
-        if (lib.name !== libraryName) return lib;
+        if (lib.name !== libraryID) return lib;
 
         const components = lib.components.map((component) => {
-          if (component.model.name !== sliceName) return component;
+          if (component.model.id !== sliceID) return component;
           return {
             ...component,
-            mock: mock,
+            mocks,
           };
         });
         return {
@@ -350,42 +350,35 @@ function* watchRenameSlice() {
   );
 }
 
-export function* deleteSliceSaga({}: // payload,
-ReturnType<typeof deleteSliceCreator.request>) {
-  // const { libName, sliceId, sliceName } = payload;
-  // try {
-  //   // yield call(deleteSlice, sliceId, libName);
-  //   yield put(deleteSliceCreator.success(payload));
-  //   yield put(
-  //     openToasterCreator({
-  //       content: `Successfully deleted Slice “${sliceName}”`,
-  //       type: ToasterType.SUCCESS,
-  //     })
-  //   );
-  // } catch (e) {
-  //   if (axios.isAxiosError(e)) {
-  //     const apiResponse = e.response?.data as DeleteSliceResponse;
-  //     if (apiResponse.type === "warning")
-  //       yield put(deleteSliceCreator.success(payload));
-  //     yield put(
-  //       openToasterCreator({
-  //         content: apiResponse.reason,
-  //         type:
-  //           apiResponse.type === "error"
-  //             ? ToasterType.ERROR
-  //             : ToasterType.WARNING,
-  //       })
-  //     );
-  //   } else {
-  //     yield put(
-  //       openToasterCreator({
-  //         content: "An unexpected error happened while deleting your slice.",
-  //         type: ToasterType.ERROR,
-  //       })
-  //     );
-  //   }
-  // }
-  // yield put(modalCloseCreator());
+export function* deleteSliceSaga({
+  payload,
+}: ReturnType<typeof deleteSliceCreator.request>) {
+  const { libName, sliceId, sliceName } = payload;
+  try {
+    const result = (yield call(
+      deleteSlice,
+      sliceId,
+      libName
+    )) as SagaReturnType<typeof deleteSlice>;
+    if (result.errors.length > 0) {
+      throw result.errors;
+    }
+    yield put(deleteSliceCreator.success(payload));
+    yield put(
+      openToasterCreator({
+        content: `Successfully deleted Slice “${sliceName}”`,
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      openToasterCreator({
+        content: "An unexpected error happened while deleting your slice.",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
+  yield put(modalCloseCreator());
 }
 
 function* watchDeleteSlice() {

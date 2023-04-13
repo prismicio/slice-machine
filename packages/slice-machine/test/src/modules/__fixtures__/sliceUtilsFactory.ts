@@ -1,11 +1,10 @@
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { SliceSM } from "@lib/models/common/Slice";
 
 const DEFAULT_SLICE_SM: SliceSM = {
   id: "blog_section_three_column_cards",
-  type: SlicesTypes.SharedSlice,
+  type: "SharedSlice",
   name: "BlogSectionThreeColumnCards",
   description: "BlogSectionThreeColumnCards",
   variations: [],
@@ -18,7 +17,7 @@ const DEFAULT_COMPONENT_UI: ComponentUI = {
   fileName: "index",
   extension: "js",
   screenshots: {},
-  mock: [],
+  mocks: [],
   model: DEFAULT_SLICE_SM,
 };
 

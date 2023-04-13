@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useThemeUI, Text, Button, Flex, Box } from "theme-ui";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { BsCode } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
 import { MdCheck } from "react-icons/md";
 import Code from "@components/CodeBlock";
 import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
+
+import { NestableWidget, UID } from "@prismicio/types-internal/lib/customtypes";
 
 const buttonIconStyle: React.CSSProperties = {
   position: "relative",

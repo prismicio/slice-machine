@@ -148,4 +148,14 @@ export class SimulatorManager extends BaseManager {
 			errors,
 		};
 	}
+
+	supportsSliceSimulator(): boolean {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hooks = this.sliceMachinePluginRunner.hooksForType(
+			"slice-simulator:setup:read",
+		);
+
+		return hooks.length > 0;
+	}
 }

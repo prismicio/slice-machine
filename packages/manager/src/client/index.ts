@@ -1,10 +1,10 @@
 // This file defines the `@slicemachine/manager/client` export.
 // All exports must be designed for non-Node.js usage.
 
-export {
+export { createSliceMachineManagerClient } from "../managers/createSliceMachineManagerClient";
+export type {
 	CreateSliceMachineManagerClientArgs,
 	SliceMachineManagerClient,
-	createSliceMachineManagerClient,
 } from "../managers/createSliceMachineManagerClient";
 
 export type {

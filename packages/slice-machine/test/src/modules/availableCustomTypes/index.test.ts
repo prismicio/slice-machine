@@ -6,7 +6,7 @@ import {
   renameCustomTypeCreator,
   renameCustomTypeSaga,
   selectCustomTypeById,
-  // deleteCustomTypeSaga,
+  deleteCustomTypeSaga,
   deleteCustomTypeCreator,
 } from "@src/modules/availableCustomTypes";
 import { testSaga } from "redux-saga-test-plan";
@@ -15,7 +15,7 @@ import { refreshStateCreator } from "@src/modules/environment";
 
 import { dummyServerState } from "../__fixtures__/serverState";
 import {
-  // deleteCustomType,
+  deleteCustomType,
   renameCustomType,
   saveCustomType,
 } from "@src/apiClient";
@@ -24,9 +24,7 @@ import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
-// import axios, { AxiosError } from "axios";
 import { deleteSliceCreator } from "@src/modules/slices";
-import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -145,13 +143,13 @@ describe("[Available Custom types module]", () => {
                 {
                   key: sliceToDeleteId,
                   value: {
-                    type: SlicesTypes.SharedSlice,
+                    type: "SharedSlice",
                   },
                 },
                 {
                   key: "slice_2",
                   value: {
-                    type: SlicesTypes.SharedSlice,
+                    type: "SharedSlice",
                   },
                 },
               ],
@@ -200,7 +198,7 @@ describe("[Available Custom types module]", () => {
                     {
                       key: "slice_2",
                       value: {
-                        type: SlicesTypes.SharedSlice,
+                        type: "SharedSlice",
                       },
                     },
                   ],
@@ -389,110 +387,52 @@ describe("[Available Custom types module]", () => {
     });
   });
 
-  // TODO: bring back test with back-port
-  // describe("[deleteCustomTypeSaga]", () => {
-  //   it("should call the api and dispatch the good actions on success", () => {
-  //     const actionPayload = {
-  //       customTypeId: "id",
-  //       customTypeName: "name",
-  //     };
-  //     const saga = testSaga(
-  //       deleteCustomTypeSaga,
-  //       deleteCustomTypeCreator.request(actionPayload)
-  //     );
+  describe("[deleteCustomTypeSaga]", () => {
+    it("should call the api and dispatch the good actions on success", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        customTypeName: "name",
+      };
+      const saga = testSaga(
+        deleteCustomTypeSaga,
+        deleteCustomTypeCreator.request(actionPayload)
+      );
 
-  //     saga.next().call(deleteCustomType, actionPayload.customTypeId);
-  //     saga.next().put(deleteCustomTypeCreator.success(actionPayload));
-  //     saga.next().put(
-  //       openToasterCreator({
-  //         content: `Successfully deleted Custom Type “${actionPayload.customTypeName}”`,
-  //         type: ToasterType.SUCCESS,
-  //       })
-  //     );
+      saga.next().call(deleteCustomType, actionPayload.customTypeId);
+      saga
+        .next({ errors: [] })
+        .put(deleteCustomTypeCreator.success(actionPayload));
+      saga.next().put(
+        openToasterCreator({
+          content: `Successfully deleted Custom Type “${actionPayload.customTypeName}”`,
+          type: ToasterType.SUCCESS,
+        })
+      );
 
-  //     saga.next().put(modalCloseCreator());
-  //     saga.next().isDone();
-  //   });
-  //   it("should call the api and dispatch the good actions on unknown failure", () => {
-  //     const actionPayload = {
-  //       customTypeId: "id",
-  //       customTypeName: "name",
-  //     };
-  //     const saga = testSaga(
-  //       deleteCustomTypeSaga,
-  //       deleteCustomTypeCreator.request(actionPayload)
-  //     );
+      saga.next().put(modalCloseCreator());
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on unknown failure", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        customTypeName: "name",
+      };
+      const saga = testSaga(
+        deleteCustomTypeSaga,
+        deleteCustomTypeCreator.request(actionPayload)
+      );
 
-  //     saga.next().call(deleteCustomType, actionPayload.customTypeId);
-  //     saga.throw(new Error()).put(
-  //       openToasterCreator({
-  //         content:
-  //           "An unexpected error happened while deleting your custom type.",
-  //         type: ToasterType.ERROR,
-  //       })
-  //     );
+      saga.next().call(deleteCustomType, actionPayload.customTypeId);
+      saga.throw(new Error()).put(
+        openToasterCreator({
+          content:
+            "An unexpected error happened while deleting your custom type.",
+          type: ToasterType.ERROR,
+        })
+      );
 
-  //     saga.next().put(modalCloseCreator());
-  //     saga.next().isDone();
-  //   });
-  //   it("should call the api and dispatch the good actions on an API error", () => {
-  //     const actionPayload = {
-  //       customTypeId: "id",
-  //       customTypeName: "name",
-  //     };
-  //     const saga = testSaga(
-  //       deleteCustomTypeSaga,
-  //       deleteCustomTypeCreator.request(actionPayload)
-  //     );
-
-  //     jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
-
-  //     const err = Error() as AxiosError;
-  //     // @ts-expect-error Ignoring the type error since we only need these properties to test
-  //     err.response = {
-  //       data: { reason: "Could not delete custom type", type: "error" },
-  //     };
-
-  //     saga.next().call(deleteCustomType, actionPayload.customTypeId);
-  //     saga.throw(err).put(
-  //       openToasterCreator({
-  //         content: "Could not delete custom type",
-  //         type: ToasterType.ERROR,
-  //       })
-  //     );
-
-  //     saga.next().put(modalCloseCreator());
-  //     saga.next().isDone();
-  //   });
-  //   it("should call the api and dispatch the good actions on an API warning", () => {
-  //     const actionPayload = {
-  //       customTypeId: "id",
-  //       customTypeName: "name",
-  //     };
-  //     const saga = testSaga(
-  //       deleteCustomTypeSaga,
-  //       deleteCustomTypeCreator.request(actionPayload)
-  //     );
-
-  //     jest.spyOn(axios, "isAxiosError").mockImplementation(() => true);
-
-  //     const err = Error() as AxiosError;
-  //     // @ts-expect-error Ignoring the type error since we only need these properties to test
-  //     err.response = {
-  //       data: { reason: "Could not delete custom type", type: "warning" },
-  //     };
-
-  //     saga.next().call(deleteCustomType, actionPayload.customTypeId);
-  //     saga.throw(err).put(deleteCustomTypeCreator.success(actionPayload));
-  //     saga.next().put(
-  //       openToasterCreator({
-  //         content: "Could not delete custom type",
-  //         type: ToasterType.WARNING,
-  //       })
-  //     );
-
-  //     saga.next().put(modalCloseCreator());
-  //     saga.next().isDone();
-  //   });
-  // });
+      saga.next().put(modalCloseCreator());
+      saga.next().isDone();
+    });
+  });
 });

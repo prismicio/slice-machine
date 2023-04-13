@@ -2,7 +2,6 @@ import { FiCode } from "react-icons/fi";
 import { createDefaultWidgetValues } from "../../../../utils";
 
 import { Widget } from "../Widget";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**  {
@@ -14,7 +13,7 @@ import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestabl
 } */
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { FormFields, schema } = createDefaultWidgetValues(WidgetTypes.Embed);
+const { FormFields, schema } = createDefaultWidgetValues("Embed");
 
 const Meta = {
   icon: FiCode,
@@ -24,7 +23,7 @@ const Meta = {
 
 export const EmbedWidget: Widget<Embed, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.Embed,
+    type: "Embed",
     config: {
       label,
       placeholder: "",
@@ -32,7 +31,7 @@ export const EmbedWidget: Widget<Embed, typeof schema> = {
   }),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  TYPE_NAME: WidgetTypes.Embed,
+  TYPE_NAME: "Embed",
   schema,
   Meta,
 };

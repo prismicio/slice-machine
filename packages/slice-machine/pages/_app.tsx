@@ -117,7 +117,6 @@ function MyApp({
               <LoadingPage />
             ) : (
               <Provider store={smStore.store}>
-                {/** @ts-expect-error TS(2322) FIXME: Type 'SingletonRouter' is not assignable to type '... Remove this comment to see the full error message */}
                 <ConnectedRouter Router={Router}>
                   <PersistGate loading={null} persistor={smStore.persistor}>
                     <ComponentLayout>

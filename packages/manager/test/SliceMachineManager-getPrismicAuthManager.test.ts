@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 
-import { createSliceMachineManager, PrismicAuthManager } from "../src";
+import { createSliceMachineManager } from "../src";
+import { PrismicAuthManager } from "../src/auth/PrismicAuthManager";
 
 it("returns the manager's PrismicAuthManager", () => {
 	const manager = createSliceMachineManager();

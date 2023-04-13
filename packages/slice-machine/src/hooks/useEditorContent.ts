@@ -14,7 +14,7 @@ function useEditorContentOnce({
 }) {
   return useMemo(() => {
     const editorContent: SharedSliceContent =
-      slice.mock?.find((m) => m.variation === variationID) ||
+      slice.mocks?.find((m) => m.variation === variationID) ||
       defaultSharedSliceContent(variationID);
 
     const apiContent = {
@@ -23,7 +23,7 @@ function useEditorContentOnce({
     };
 
     return { editorContent, apiContent };
-  }, [slice.mock, slice.model, variationID]);
+  }, [slice.mocks, slice.model, variationID]);
 }
 
 export default useEditorContentOnce;

@@ -1,4 +1,4 @@
-import type { CustomTypeModel } from "@prismicio/types";
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
 	ExtendSliceMachineHook,
@@ -10,7 +10,7 @@ import type {
  * Data provided to `custom-type:delete` hook handlers.
  */
 export type CustomTypeDeleteHookData = {
-	model: CustomTypeModel;
+	model: CustomType;
 };
 
 /**

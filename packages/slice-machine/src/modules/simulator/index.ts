@@ -12,14 +12,12 @@ import {
   race,
   take,
   delay,
-  CallEffect,
 } from "redux-saga/effects";
 import {
   checkSimulatorSetup,
   getSimulatorSetupSteps,
   saveSliceMock,
   SaveSliceMockRequest,
-  telemetry,
 } from "@src/apiClient";
 import {
   selectIsSimulatorAvailableForFramework,
@@ -201,7 +199,6 @@ export function* checkSetupSaga(
       return;
     }
     yield call(failCheckSetupSaga, { setupSteps: setupSteps.steps });
-    yield call(trackOpenSetupModalSaga);
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     yield put(checkSimulatorSetupCreator.failure({ error: error as Error }));
@@ -212,21 +209,21 @@ function* connectToSimulatorIframe() {
   yield put(connectToSimulatorIframeCreator.request());
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    timeout,
-    iframeCheckKO,
+    iframeCheckOk,
   }: {
-    iframeCheckKO: ReturnType<typeof connectToSimulatorIframeCreator.failure>;
-    timeout: CallEffect<true>;
+    iframeCheckOk: ReturnType<typeof connectToSimulatorIframeCreator.success>;
   } = yield race({
     iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
     iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-    timeout: delay(5000),
+    timeout: delay(20000),
   });
-  if (timeout || iframeCheckKO) {
-    yield put(connectToSimulatorIframeCreator.failure());
+
+  if (iframeCheckOk) {
+    yield put(connectToSimulatorIframeCreator.success());
     return;
   }
-  yield put(connectToSimulatorIframeCreator.success());
+
+  yield put(connectToSimulatorIframeCreator.failure());
 }
 
 export function* failCheckSetupSaga({
@@ -249,10 +246,6 @@ export function* failCheckSetupSaga({
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 }
 
-export function* trackOpenSetupModalSaga() {
-  void telemetry.track({ event: "slice-simulator:setup" });
-}
-
 export function* saveSliceMockSaga({
   payload,
 }: ReturnType<typeof saveSliceMockCreator.request>): Generator {
@@ -271,7 +264,7 @@ export function* saveSliceMockSaga({
     );
     yield put(updateSliceMock(payload));
 
-    yield put(updateSelectedSliceMocks({ mocks: payload.mock }));
+    yield put(updateSelectedSliceMocks({ mocks: payload.mocks }));
     yield put(saveSliceMockCreator.success());
   } catch (error) {
     yield put(

@@ -90,6 +90,17 @@ export class SliceMachineInitProcess {
 			)} Init command started\n`,
 		);
 
+		if (await this.manager.telemetry.checkIsTelemetryEnabled()) {
+			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+			// eslint-disable-next-line no-console
+			console.log(
+				`${
+					logSymbols.info
+				} We collect telemetry data to improve user experience.\n  Learn more: ${chalk.cyan(
+					"https://prismic.dev/slice-machine/telemetry",
+				)}\n`,
+			);
+		}
 		await this.manager.telemetry.initTelemetry({
 			appName: pkg.name,
 			appVersion: pkg.version,
@@ -835,6 +846,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 									return;
 								}
+
+								task.title = "Pushing slices... (initializing ACL)";
+								await this.manager.screenshots.initS3ACL();
 
 								let pushed = 0;
 								task.title = `Pushing slices... (0/${slices.length})`;

@@ -49,7 +49,7 @@ import {
   cleanupCustomTypeStoreCreator,
 } from "./selectedCustomType";
 import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
@@ -58,7 +58,7 @@ import {
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
-  saveSliceCreator,
+  updateSliceCreator,
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
 import {
@@ -365,13 +365,13 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const saveSlice = (
+  const updateSlice = (
     component: ComponentUI,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setData: (data: any) => void
   ) => {
     dispatch(
-      saveSliceCreator.request({
+      updateSliceCreator.request({
         component,
         setData,
       })
@@ -487,7 +487,7 @@ const useSliceMachineActions = () => {
     deleteSliceWidgetMock,
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
-    saveSlice,
+    updateSlice,
     copyVariationSlice,
     createSlice,
     renameSlice,

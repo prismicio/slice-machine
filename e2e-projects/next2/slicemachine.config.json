@@ -1,6 +1,0 @@
-{
-  "repositoryName": "md-slice-crash",
-  "libraries": ["./slices"],
-  "adapter": "@slicemachine/adapter-next",
-  "localSliceSimulatorURL": "http://localhost:8000/slice-simulator"
-}

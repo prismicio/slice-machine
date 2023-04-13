@@ -33,6 +33,7 @@ export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"slice:create",
 	"slice:read",
 	"slice:rename",
+	"slice:delete",
 	"slice:update",
 	"slice:asset:update",
 	"slice:asset:read",
@@ -41,12 +42,12 @@ export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:create",
 	"custom-type:read",
 	"custom-type:rename",
+	"custom-type:delete",
 	"custom-type:update",
 	"custom-type:asset:update",
 	"custom-type:asset:read",
 	"custom-type:asset:delete",
 	"custom-type-library:read",
-	"slice-simulator:setup:read",
 ];
 /**
  * @internal

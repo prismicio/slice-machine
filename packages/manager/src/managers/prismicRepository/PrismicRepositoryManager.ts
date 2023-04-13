@@ -297,7 +297,7 @@ export class PrismicRepositoryManager extends BaseManager {
 								});
 
 								if (!model) {
-									throw Error(`Could not find model  ${change.id}`);
+									throw Error(`Could not find model ${change.id}`);
 								}
 
 								const modelWithScreenshots =
@@ -318,6 +318,10 @@ export class PrismicRepositoryManager extends BaseManager {
 								};
 							}
 							case "DELETED":
+								await this.screenshots.deleteScreenshotFolder({
+									sliceID: change.id,
+								});
+
 								return {
 									id: change.id,
 									payload: { id: change.id },
@@ -371,42 +375,39 @@ export class PrismicRepositoryManager extends BaseManager {
 				changes: allChanges,
 			};
 
-			const authenticationToken = await this.user.getAuthenticationToken();
 			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
-			// TODO: API route in consts ends with /customtypes
 			// TODO: move to customtypes client
-			return fetch("https://customtypes.prismic.io/bulk", {
-				body: JSON.stringify(requestBody),
+			const response = await this._fetch({
+				url: new URL("./bulk", API_ENDPOINTS.PrismicModels),
 				method: "POST",
-				headers: {
-					Authorization: `Bearer ${authenticationToken}`,
-					"User-Agent": "slice-machine",
-					repository: sliceMachineConfig.repositoryName,
-					"Content-Type": "application/json",
-				},
-			})
-				.then(async (response) => {
-					if (response.status === 204) {
-						return null;
-					}
+				body: requestBody,
+				repository: sliceMachineConfig.repositoryName,
+			});
 
+			switch (response.status) {
+				case 202:
 					return this._decodeLimitOrThrow(
 						await response.json(),
 						response.status,
 						LimitType.SOFT,
 					);
-				})
-				.catch((err: ClientError) => {
-					// Try to decode a limit from the error or throw the original error
-					try {
-						const data: unknown = JSON.parse(err.message);
-
-						return this._decodeLimitOrThrow(data, err.status, LimitType.HARD);
-					} catch {
-						throw err;
-					}
-				});
+				case 204:
+					return null;
+				case 401:
+					throw new UnauthenticatedError();
+				case 403:
+					return this._decodeLimitOrThrow(
+						await response.json(),
+						response.status,
+						LimitType.HARD,
+					);
+				case 400:
+					const text = await response.text();
+					throw new Error(text);
+				default:
+					throw new Error(`Unexpected status code ${response.status}`);
+			}
 		} catch (err) {
 			console.error("An error happened while pushing your changes");
 			console.error(err);
@@ -443,6 +444,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		method?: "GET" | "POST";
 		body?: unknown;
 		userAgent?: PrismicRepositoryUserAgents;
+		repository?: string;
 	}): Promise<Response> {
 		const cookies = await this.user.getAuthenticationCookies();
 
@@ -450,6 +452,10 @@ export class PrismicRepositoryManager extends BaseManager {
 
 		if (args.body) {
 			extraHeaders["Content-Type"] = "application/json";
+		}
+
+		if (args.repository) {
+			extraHeaders.repository = args.repository;
 		}
 
 		return await fetch(args.url.toString(), {

@@ -138,7 +138,7 @@ describe.skip("simulator", () => {
                 fileName: "index",
                 extension: "js",
                 screenshots: {},
-                mock: [
+                mocks: [
                   {
                     __TYPE__: "SharedSliceContent",
                     variation: "default",
@@ -315,7 +315,7 @@ describe.skip("simulator", () => {
       fireEvent.click(button as Element);
     });
 
-    const expectedMock = [...state.slices.libraries[0].components[0].mock];
+    const expectedMock = [...state.slices.libraries[0].components[0].mocks];
     expectedMock[0].primary.title.value[0].content.text = "🎉";
     // @ts-expect-error - Ignoring wrong type
     expectedMock[0].primary.title.value[0].content.spans = [];
@@ -327,7 +327,7 @@ describe.skip("simulator", () => {
       expect.objectContaining({
         sliceName: "MySlice",
         libraryName: "slices",
-        mock: expectedMock,
+        mocks: expectedMock,
       }),
       expect.any(Function)
     );

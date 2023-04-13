@@ -1,15 +1,15 @@
 import * as t from "io-ts";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import {
+  NestableWidget,
+  DynamicSection,
+  DynamicWidget,
+  DynamicSlices,
   Group,
   UID,
-  WidgetTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets";
+} from "@prismicio/types-internal/lib/customtypes";
 import { Groups, GroupSM } from "../Group";
-import { DynamicSection } from "@prismicio/types-internal/lib/customtypes/Section";
+
 import { SlicesSM, SliceZone } from "../Slices";
-import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
-import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes/widgets/slices/Slices";
 
 import { SliceZone as SliceZoneOperations } from "./sliceZone";
 
@@ -35,7 +35,7 @@ export type TabSM = t.TypeOf<typeof TabSM>;
 export const Tabs = {
   toSM(key: string, tab: DynamicSection): TabSM {
     const maybeSz = Object.entries(tab).find(
-      ([, value]) => value.type === WidgetTypes.Slices
+      ([, value]) => value.type === "Slices"
     );
     const sliceZone =
       maybeSz && SliceZone.toSM(maybeSz[0], maybeSz[1] as DynamicSlices);
@@ -45,10 +45,10 @@ export const Tabs = {
       value: Object.entries(tab).reduce<TabFields>(
         (acc: TabFields, [fieldId, value]: [string, DynamicWidget]) => {
           switch (value.type) {
-            case WidgetTypes.LegacySlices:
-            case WidgetTypes.Slices:
+            case "Choice":
+            case "Slices":
               return acc;
-            case WidgetTypes.Group:
+            case "Group":
               return [
                 ...acc,
                 {
@@ -70,7 +70,7 @@ export const Tabs = {
       .reduce<Array<[string, NestableWidget | UID | Group | DynamicSlices]>>(
         (acc, { key, value }) => {
           switch (value.type) {
-            case WidgetTypes.Group:
+            case "Group":
               return [...acc, [key, Groups.fromSM(value)]];
             default:
               return [...acc, [key, value]];
@@ -114,7 +114,7 @@ export const Tab = {
       return {
         ...tab,
         value: tab.value.map((field) => {
-          if (field.key === groupId && field.value.type === WidgetTypes.Group) {
+          if (field.key === groupId && field.value.type === "Group") {
             return {
               key: groupId,
               value: mutate(field.value),
@@ -194,9 +194,9 @@ export const Tab = {
     const { fields, groups } = tabSM.value.reduce<OrganisedFields>(
       (acc: OrganisedFields, current: { key: string; value: TabField }) => {
         switch (current.value.type) {
-          case WidgetTypes.UID:
+          case "UID":
             return acc;
-          case WidgetTypes.Group:
+          case "Group":
             return {
               ...acc,
               groups: [

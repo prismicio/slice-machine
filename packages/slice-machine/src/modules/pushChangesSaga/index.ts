@@ -23,7 +23,11 @@ import {
   PushChangesPayload,
 } from "@lib/models/common/TransactionalPush";
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
-import { SliceMachineManagerClient } from "@slicemachine/manager/client";
+import {
+  isUnauthenticatedError,
+  isUnauthorizedError,
+  SliceMachineManagerClient,
+} from "@slicemachine/manager/client";
 import {
   ChangedCustomType,
   ChangedSlice,
@@ -57,7 +61,7 @@ export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
 });
 
 const MODAL_KEY_MAP = {
-  // INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+  ["INVALID_CUSTOM_TYPES"]: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
   ["SOFT"]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
   ["HARD"]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
 };
@@ -136,6 +140,10 @@ export function* changesPushSaga({
       })
     );
   } catch (error) {
+    if (isUnauthenticatedError(error) || isUnauthorizedError(error)) {
+      yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+      return;
+    }
     // TODO: handle auth errors
     yield put(
       openToasterCreator({

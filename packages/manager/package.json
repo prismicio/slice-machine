@@ -1,10 +1,11 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.1.1-dev-plugins-testing.0",
+	"version": "0.1.1-dev-plugins-m2.2",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
-		"url": "ssh://git@github.com/prismicio/slice-machine.git"
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/manager"
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
@@ -47,7 +48,7 @@
 	],
 	"scripts": {
 		"build": "vite build",
-		"dev": "vite build --watch",
+		"dev": "vite build --watch --mode development",
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepublishOnly": "npm run build",
@@ -61,9 +62,10 @@
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
-		"@prismicio/custom-types-client": "^1.0.2",
-		"@prismicio/types-internal": "^1.5.3",
-		"@slicemachine/plugin-kit": "0.1.8-dev-plugins-testing.0",
+		"@prismicio/custom-types-client": "^1.1.0",
+		"@prismicio/mocks": "2.0.0-alpha.2",
+		"@prismicio/types-internal": "2.0.0-alpha.9",
+		"@slicemachine/plugin-kit": "0.1.8-dev-plugins-m2.2",
 		"@wooorm/starry-night": "^1.6.0",
 		"analytics-node": "^6.2.0",
 		"cookie": "^0.5.0",
@@ -99,9 +101,9 @@
 		"@typescript-eslint/eslint-plugin": "~5.55.0",
 		"@typescript-eslint/parser": "^5.55.0",
 		"@vitest/coverage-c8": "^0.27.3",
-    "better-npm-audit": "^3.7.3",
+		"better-npm-audit": "^3.7.3",
 		"depcheck": "^1.4.3",
-		"eslint": "^8.36.0",
+		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",

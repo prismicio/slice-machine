@@ -1,5 +1,3 @@
-import camelCase from "lodash/camelCase";
-
 const camelizeRE = /-(\w)/g;
 
 export function transformKeyAccessor(str: string): string {
@@ -26,11 +24,6 @@ export function hyphenate(str: string): string {
 
 export function snakelize(str: string): string {
   return hyphenate(str).replace(/-/g, "_");
-}
-
-export function createStorybookId(str: string): string {
-  const camel = camelCase(str);
-  return `_${camel[0].toUpperCase()}${camel.slice(1)}`;
 }
 
 export const slugify = (input: string) => {

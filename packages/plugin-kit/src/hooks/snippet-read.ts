@@ -1,4 +1,4 @@
-import type { CustomTypeModelField } from "@prismicio/types";
+import type { DynamicWidget } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
 	ExtendSliceMachineHook,
@@ -20,7 +20,7 @@ export type Snippet = {
  */
 export type SnippetReadHookData = {
 	fieldPath: string[];
-	model: CustomTypeModelField;
+	model: DynamicWidget;
 };
 
 /**

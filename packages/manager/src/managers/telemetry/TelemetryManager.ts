@@ -123,7 +123,7 @@ export class TelemetryManager extends BaseManager {
 			this._segmentClient.track(
 				payload as Parameters<typeof this._segmentClient.track>[0],
 				(maybeError?: Error) => {
-					if (maybeError) {
+					if (maybeError && import.meta.env.DEV) {
 						// TODO: Not sure how we want to deal with that
 						console.warn(
 							`An error occurred during Segment tracking`,
@@ -159,7 +159,7 @@ export class TelemetryManager extends BaseManager {
 
 			// TODO: Make sure client fails gracefully when no internet connection
 			this._segmentClient.identify(payload, (maybeError?: Error) => {
-				if (maybeError) {
+				if (maybeError && import.meta.env.DEV) {
 					// TODO: Not sure how we want to deal with that
 					console.warn(`An error occurred during Segment identify`, maybeError);
 				}
@@ -196,7 +196,7 @@ export class TelemetryManager extends BaseManager {
 			this._segmentClient.group(
 				payload as Parameters<typeof this._segmentClient.group>[0],
 				(maybeError?: Error) => {
-					if (maybeError) {
+					if (maybeError && import.meta.env.DEV) {
 						// TODO: Not sure how we want to deal with that
 						console.warn(`An error occurred during Segment group`, maybeError);
 					}

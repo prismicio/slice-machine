@@ -11,10 +11,10 @@ import {
 } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
-import { ComponentMocks } from "@lib/models/common/Library";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 /** State Routes * */
 
@@ -85,14 +85,10 @@ export const renameCustomType = (
   });
 };
 
-// export const deleteCustomType = (
-//   customTypeId: string
-// ): Promise<AxiosResponse> => {
-//   return axios.delete(
-//     `/api/custom-types/delete?id=${customTypeId}`,
-//     defaultAxiosConfig
-//   );
-// };
+export const deleteCustomType = async (customTypeID: string) =>
+  await managerClient.customTypes.deleteCustomType({
+    id: customTypeID,
+  });
 
 /** Slice Routes * */
 export const createSlice = async (
@@ -127,19 +123,11 @@ export const renameSlice = async (
   });
 };
 
-// export const deleteSlice = (
-//   sliceId: string,
-//   libName: string
-// ): Promise<AxiosResponse> => {
-//   const requestBody = {
-//     sliceId,
-//     libName,
-//   };
-//   return axios.delete(`/api/slices/delete`, {
-//     ...defaultAxiosConfig,
-//     data: requestBody,
-//   });
-// };
+export const deleteSlice = async (sliceId: string, libName: string) =>
+  await managerClient.slices.deleteSlice({
+    libraryID: libName,
+    sliceID: sliceId,
+  });
 
 export const generateSliceScreenshotApiClient = async (
   params: ScreenshotRequest
@@ -198,7 +186,7 @@ export const generateSliceCustomScreenshotApiClient = async (
   };
 };
 
-export const saveSliceApiClient = async (
+export const updateSliceApiClient = async (
   component: ComponentUI
 ): Promise<
   Awaited<ReturnType<(typeof managerClient)["slices"]["updateSlice"]>>
@@ -206,6 +194,7 @@ export const saveSliceApiClient = async (
   return await managerClient.slices.updateSlice({
     libraryID: component.from,
     model: Slices.fromSM(component.model),
+    mocks: component.mocks,
   });
 };
 
@@ -258,18 +247,32 @@ export const getSimulatorSetupSteps = async (): ReturnType<
 };
 
 export type SaveSliceMockRequest = {
-  sliceName: string;
-  libraryName: string;
-  mock: ComponentMocks;
+  libraryID: string;
+  sliceID: string;
+  mocks: SharedSliceContent[];
+};
+
+export type ReadSliceMockRequest = {
+  libraryID: string;
+  sliceID: string;
+};
+
+export const readSliceMocks = async (
+  payload: ReadSliceMockRequest
+): ReturnType<SliceMachineManagerClient["slices"]["readSliceMocks"]> => {
+  return await managerClient.slices.readSliceMocks({
+    libraryID: payload.libraryID,
+    sliceID: payload.sliceID,
+  });
 };
 
 export const saveSliceMock = async (
   payload: SaveSliceMockRequest
 ): ReturnType<SliceMachineManagerClient["slices"]["updateSliceMocks"]> => {
   return await managerClient.slices.updateSliceMocks({
-    libraryID: payload.libraryName,
-    sliceID: payload.sliceName,
-    mocks: payload.mock,
+    libraryID: payload.libraryID,
+    sliceID: payload.sliceID,
+    mocks: payload.mocks,
   });
 };
 

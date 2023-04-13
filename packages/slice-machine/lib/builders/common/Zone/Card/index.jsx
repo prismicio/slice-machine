@@ -22,7 +22,7 @@ const FieldZone = ({
   renderFieldAccessor,
   onDeleteItem,
   showHints,
-  NewFieldC,
+  newField,
   renderHintBase,
   isRepeatable,
   dataCy,
@@ -113,7 +113,7 @@ const FieldZone = ({
               })
             }
             {provided.placeholder}
-            <NewFieldC />
+            {newField}
           </Box>
         )}
       </Droppable>

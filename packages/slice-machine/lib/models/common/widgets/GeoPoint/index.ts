@@ -5,7 +5,6 @@ import { DefaultFields } from "../../../../forms/defaults";
 
 import { Widget } from "../Widget";
 import { GeoPoint } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /** : {
   "type" : "GeoPoint",
@@ -45,13 +44,13 @@ const Meta = {
 
 export const GeoPointWidget: Widget<GeoPoint, typeof schema> = {
   create: (label: string) => ({
-    type: WidgetTypes.GeoPoint,
+    type: "GeoPoint",
     config: {
       label,
     },
   }),
   FormFields,
-  TYPE_NAME: WidgetTypes.GeoPoint,
+  TYPE_NAME: "GeoPoint",
   schema,
   Meta,
 };

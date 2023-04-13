@@ -5,7 +5,7 @@ import { DefaultFields } from "@lib/forms/defaults";
 
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
 
-import Select from "@components/Select";
+import Select from "react-select";
 import { Col, Flex as FlexGrid } from "@components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";

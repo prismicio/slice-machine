@@ -1,10 +1,11 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.6.1-dev-plugins.12",
+	"version": "0.6.1-dev-plugins-m2.2",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
-		"url": "ssh://git@github.com/prismicio/slice-machine.git"
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/start-slicemachine"
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
@@ -42,7 +43,7 @@
 		"start-slicemachine": "./bin/start-slicemachine.js"
 	},
 	"dependencies": {
-		"@slicemachine/manager": "0.1.1-dev-plugins-testing.0",
+		"@slicemachine/manager": "0.1.1-dev-plugins-m2.2",
 		"body-parser": "^1.20.2",
 		"chalk": "^4.1.2",
 		"cors": "^2.8.5",
@@ -65,7 +66,7 @@
 		"@vitest/coverage-c8": "^0.27.3",
 		"better-npm-audit": "^3.7.3",
 		"depcheck": "^1.4.3",
-		"eslint": "^8.36.0",
+		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",

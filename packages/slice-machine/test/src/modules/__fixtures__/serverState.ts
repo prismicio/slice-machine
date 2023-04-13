@@ -1,5 +1,4 @@
 import ServerState from "@models/server/ServerState";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const dummyServerState: Pick<
   ServerState,
@@ -10,7 +9,6 @@ export const dummyServerState: Pick<
     manifest: {
       libraries: ["~/slices"],
       apiEndpoint: "https://sm-env-example.prismic.io/api/v2",
-      storybook: "http://localhost:6006",
       chromaticAppId: "5f5b34f06f304800225c4e17",
       tracking: false,
       localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
@@ -23,6 +21,7 @@ export const dummyServerState: Pick<
       versions: [],
     },
     shortId: "shortId",
+    supportsSliceSimulator: true,
   },
   customTypes: [
     {
@@ -37,7 +36,7 @@ export const dummyServerState: Pick<
             {
               key: "title",
               value: {
-                type: WidgetTypes.RichText,
+                type: "StructuredText",
                 config: {
                   label: "",
                   placeholder: "",

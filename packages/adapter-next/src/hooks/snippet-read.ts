@@ -2,7 +2,6 @@ import type {
 	SliceMachineHelpers,
 	SnippetReadHook,
 } from "@slicemachine/plugin-kit";
-import * as prismicT from "@prismicio/types";
 import { stripIndent } from "common-tags";
 
 import type { PluginOptions } from "../types";
@@ -33,7 +32,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 	const label = "React";
 
 	switch (data.model.type) {
-		case prismicT.CustomTypeModelFieldType.StructuredText: {
+		case "StructuredText": {
 			return {
 				label,
 				language: "tsx",
@@ -46,7 +45,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
-		case prismicT.CustomTypeModelFieldType.Link: {
+		case "Link": {
 			return {
 				label,
 				language: "tsx",
@@ -59,7 +58,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
-		case prismicT.CustomTypeModelFieldType.Image: {
+		case "Image": {
 			return [
 				{
 					label: `${label} (next/image)`,
@@ -84,7 +83,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			];
 		}
 
-		case prismicT.CustomTypeModelFieldType.Group: {
+		case "Group": {
 			const code = await format(
 				stripIndent`
 					<>{${dotPath(fieldPath)}.map(item => (
@@ -101,7 +100,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
-		case prismicT.CustomTypeModelFieldType.Slices: {
+		case "Slices": {
 			const code = await format(
 				stripIndent`
 					<SliceZone

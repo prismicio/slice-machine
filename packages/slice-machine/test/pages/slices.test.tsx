@@ -42,6 +42,7 @@ describe("slices", () => {
     const adapter = createTestPlugin({
       setup: ({ hook }) => {
         hook("slice:create", () => void 0);
+        hook("slice:asset:update", () => void 0);
       },
     });
     const cwd = await createTestProject({
@@ -90,7 +91,7 @@ describe("slices", () => {
             fileName: "index",
             extension: "js",
             screenshots: {},
-            mock: [
+            mocks: [
               {
                 variation: "default",
                 name: "Default",
@@ -266,7 +267,7 @@ describe("slices", () => {
             fileName: "index",
             extension: "js",
             screenshots: {},
-            mock: [
+            mocks: [
               {
                 variation: "default",
                 name: "Default",
