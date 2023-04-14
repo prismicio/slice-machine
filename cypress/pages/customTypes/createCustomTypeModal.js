@@ -13,6 +13,7 @@ class CreateCustomTypeModal {
 
   submit() {
     this.root.submit();
+
     return this;
   }
 }

@@ -47,29 +47,34 @@ class SliceBuilder extends BaseBuilder {
     cy.visit(`/${sliceLibrary}/${sliceName}/${variation}`);
     this.saveButton.should("be.visible");
     cy.contains(sliceName).should("be.visible");
+
     return this;
   }
 
   openScreenshotModal() {
     cy.contains("Update screenshot").click();
+
     return this;
   }
 
   openVariationModal() {
     cy.get("[aria-label='Expand variations']").parent().click();
     cy.contains("Add new variation").click();
+
     return this;
   }
 
   changeToVariation(startVariation, targetVariation) {
     cy.get("button").contains(startVariation).click();
     cy.contains(targetVariation).click();
+
     return this;
   }
 
   save() {
     this.saveButton.click();
     this.saveButton.should("be.disabled");
+
     return this;
   }
 
@@ -94,6 +99,7 @@ class SliceBuilder extends BaseBuilder {
         cy.get("@windowOpen").should("be.called");
         cy.visit(simUrl);
       });
+
     return this;
   }
 

@@ -27,6 +27,7 @@ class SlicesList {
 
   goTo() {
     cy.visit(`/slices`);
+
     return this;
   }
 

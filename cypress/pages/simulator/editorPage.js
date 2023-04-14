@@ -23,6 +23,7 @@ class EditorPage {
     cy.get(this.#root)
       .getInputByLabel(inputLabel)
       .should(comparisonOperator, text);
+
     return this;
   }
 
@@ -33,6 +34,7 @@ class EditorPage {
    */
   toggleBooleanField(inputLabel) {
     cy.get(this.#root).getInputByLabel(inputLabel).click();
+
     return this;
   }
 
@@ -55,6 +57,7 @@ class EditorPage {
       });
     cy.get(this.#root).getInputByLabel(inputLabel).click();
     cy.contains('[role="option"]', value).click();
+
     return this;
   }
 

@@ -5,6 +5,7 @@ class AddFieldModal {
 
   pickField(fieldType) {
     this.fieldTypeButton(fieldType).click();
+
     return this;
   }
 }

@@ -13,6 +13,7 @@ class RenameModal {
 
   submit() {
     this.root.submit();
+
     return this;
   }
 }

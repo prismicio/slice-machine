@@ -11,6 +11,7 @@ class ChangesPage {
 
   goTo() {
     cy.visit(`/changes`);
+
     return this;
   }
 

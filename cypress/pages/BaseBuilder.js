@@ -21,6 +21,7 @@ export class BaseBuilder {
     cy.get("[data-cy=builder-save-button-spinner]").should("be.visible");
     cy.get("[data-cy=builder-save-button-icon]").should("be.visible");
     this.saveButton.should("be.disabled");
+
     return this;
   }
 }

@@ -18,6 +18,7 @@ class ScreenshotModal {
       `${fixturePath}${imageFixturePath}`,
       { force: true }
     );
+
     return this;
   }
 
@@ -27,27 +28,32 @@ class ScreenshotModal {
       .selectFile(`${fixturePath}${imageFixturePath}`, { action: "drag-drop" });
     cy.contains("Uploading file").should("be.visible");
     cy.contains("Uploading file").should("not.exist");
+
     return this;
   }
 
   selectVariation(variationName) {
     cy.get(this.root).contains(variationName).click();
+
     return this;
   }
 
   close() {
     this.closeIcon.click();
     cy.get(this.root).should("not.exist");
+
     return this;
   }
 
   verifyImageIs(imageFixturePath) {
     this.imagePreview.isSameImageAs(imageFixturePath);
+
     return this;
   }
 
   verifyImageIsEmpty() {
     this.imagePreview.should("not.exist");
+
     return this;
   }
 }

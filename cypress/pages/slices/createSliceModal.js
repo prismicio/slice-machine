@@ -9,6 +9,7 @@ class CreateSliceModal {
 
   submit() {
     this.root.submit();
+
     return this;
   }
 }

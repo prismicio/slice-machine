@@ -18,6 +18,7 @@ export class BaseDrawer {
 
   pushChanges() {
     this.pushButton.click();
+
     return this;
   }
 }

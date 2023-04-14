@@ -29,6 +29,7 @@ class CustomTypesList {
 
   goTo() {
     cy.visit("/");
+
     return this;
   }
 }

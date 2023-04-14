@@ -6,8 +6,9 @@
  */
 export function isSameImageAs(subject, fixtureImage) {
   cy.fixture(fixtureImage).then((base64) => {
-    let fixtureImage = new Image();
+    const fixtureImage = new Image();
     fixtureImage.src = `data:image/png;base64,${base64}`;
+
     return new Promise((resolve) => {
       fixtureImage.onload = () => {
         isCorrectDimensions(

@@ -42,6 +42,7 @@ class SimulatorPage {
         ...json,
         localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
       };
+
       return cy.writeFile(MANIFEST_FILE, JSON.stringify(data, null, 2));
     });
 

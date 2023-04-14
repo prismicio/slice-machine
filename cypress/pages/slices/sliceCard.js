@@ -13,6 +13,7 @@ export class SliceCard {
 
   openScreenshotModal() {
     cy.get(this.root).contains("Update screenshot").click();
+
     return this;
   }
 }
