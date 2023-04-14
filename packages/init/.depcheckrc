@@ -1,12 +1,13 @@
-ignores: [
-  "@size-limit/preset-small-lib",
-  "@vitest/coverage-c8",
-  "prettier-plugin-jsdoc",
-  "typescript",
-	"@typescript-eslint/eslint-plugin",
-	"@typescript-eslint/parser",
-	"eslint-config-prettier",
-	"eslint-plugin-prettier",
-	"eslint-plugin-tsdoc"
-]
+ignores:
+  [
+    "@size-limit/preset-small-lib",
+    "@vitest/coverage-c8",
+    "prettier-plugin-jsdoc",
+    "typescript",
+    "@typescript-eslint/eslint-plugin",
+    "@typescript-eslint/parser",
+    "eslint-config-prettier",
+    "eslint-plugin-prettier",
+    "eslint-plugin-tsdoc",
+  ]
 skip - missing: true

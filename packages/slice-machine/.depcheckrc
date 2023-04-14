@@ -5,8 +5,8 @@ ignores:
     "start-slicemachine",
     "@vitest/coverage-c8",
     "jest-environment-jsdom",
-    "semver"
-		"eslint-import-resolver-typescript"
-		"eslint-plugin-import"
+    "semver",
+    "eslint-import-resolver-typescript",
+    "eslint-plugin-import",
   ]
 skip - missing: true
