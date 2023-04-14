@@ -1,19 +1,19 @@
 export class SliceCard {
-  constructor(sliceName) {
-    this.root = `[aria-label="${sliceName} slice card"]`;
-  }
+	constructor(sliceName) {
+		this.root = `[aria-label="${sliceName} slice card"]`;
+	}
 
-  get content() {
-    return cy.get(this.root);
-  }
+	get content() {
+		return cy.get(this.root);
+	}
 
-  get imagePreview() {
-    return cy.get(this.root).find("[alt='Preview image']");
-  }
+	get imagePreview() {
+		return cy.get(this.root).find("[alt='Preview image']");
+	}
 
-  openScreenshotModal() {
-    cy.get(this.root).contains("Update screenshot").click();
+	openScreenshotModal() {
+		cy.get(this.root).contains("Update screenshot").click();
 
-    return this;
-  }
+		return this;
+	}
 }

@@ -15,18 +15,18 @@ import { addVariationModal } from "../pages/slices/addVariationModal";
  * @param {string} name Name of the custom type.
  */
 export function createSlice(lib, id, name) {
-  slicesList.goTo();
-  slicesList.emptyStateButton.click();
+	slicesList.goTo();
+	slicesList.emptyStateButton.click();
 
-  createSliceModal.root.should("be.visible");
-  createSliceModal.nameInput.type(name);
-  createSliceModal.submit();
+	createSliceModal.root.should("be.visible");
+	createSliceModal.nameInput.type(name);
+	createSliceModal.submit();
 
-  cy.location("pathname", { timeout: 20000 }).should(
-    "eq",
-    `/${lib}/${name}/default`
-  );
-  cy.readFile(TYPES_FILE).should("contains", name);
+	cy.location("pathname", { timeout: 20000 }).should(
+		"eq",
+		`/${lib}/${name}/default`
+	);
+	cy.readFile(TYPES_FILE).should("contains", name);
 }
 
 /**
@@ -36,24 +36,24 @@ export function createSlice(lib, id, name) {
  * @param {string} newName New name to use for the slice.
  */
 export function renameSlice(actualName, newName) {
-  slicesList.goTo();
-  cy.waitUntil(() => cy.get("[data-cy=slice-action-icon]"));
+	slicesList.goTo();
+	cy.waitUntil(() => cy.get("[data-cy=slice-action-icon]"));
 
-  slicesList.getOptionDopDownButton(actualName).click();
+	slicesList.getOptionDopDownButton(actualName).click();
 
-  slicesList.optionDopDownMenu.should("be.visible");
-  slicesList.renameButton.click();
+	slicesList.optionDopDownMenu.should("be.visible");
+	slicesList.renameButton.click();
 
-  sliceRenameModal.root.should("be.visible");
-  sliceRenameModal.input.should("have.value", actualName);
-  sliceRenameModal.input.clear().type(newName);
-  sliceRenameModal.submit();
+	sliceRenameModal.root.should("be.visible");
+	sliceRenameModal.input.should("have.value", actualName);
+	sliceRenameModal.input.clear().type(newName);
+	sliceRenameModal.submit();
 
-  cy.contains(newName).should("exist");
+	cy.contains(newName).should("exist");
 
-  cy.readFile(SLICE_MODEL(newName)).then((model) => {
-    expect(JSON.stringify(model)).to.contain(newName);
-  });
+	cy.readFile(SLICE_MODEL(newName)).then((model) => {
+		expect(JSON.stringify(model)).to.contain(newName);
+	});
 }
 
 /**
@@ -64,13 +64,13 @@ export function renameSlice(actualName, newName) {
  * @param {string} fieldId Id of the new field.
  */
 export function addStaticFieldToSlice(fieldType, fieldName, fieldId) {
-  const elements = {
-    addFieldButton: sliceBuilder.addStaticFieldButton,
-    fieldArea: sliceBuilder.staticZone,
-    fieldPreId: "slice.primary",
-  };
+	const elements = {
+		addFieldButton: sliceBuilder.addStaticFieldButton,
+		fieldArea: sliceBuilder.staticZone,
+		fieldPreId: "slice.primary",
+	};
 
-  return addFieldToSlice(elements, fieldType, fieldName, fieldId);
+	return addFieldToSlice(elements, fieldType, fieldName, fieldId);
 }
 
 /**
@@ -81,38 +81,38 @@ export function addStaticFieldToSlice(fieldType, fieldName, fieldId) {
  * @param {string} fieldId Id of the new field.
  */
 export function addRepeatableFieldToSlice(fieldType, fieldName, fieldId) {
-  const elements = {
-    addFieldButton: sliceBuilder.addRepeatableFieldButton,
-    fieldArea: sliceBuilder.repeatableZone,
-    fieldPreId: "slice.items[i]",
-  };
+	const elements = {
+		addFieldButton: sliceBuilder.addRepeatableFieldButton,
+		fieldArea: sliceBuilder.repeatableZone,
+		fieldPreId: "slice.items[i]",
+	};
 
-  return addFieldToSlice(elements, fieldType, fieldName, fieldId);
+	return addFieldToSlice(elements, fieldType, fieldName, fieldId);
 }
 
 function addFieldToSlice(elements, fieldType, fieldName, fieldId) {
-  elements.addFieldButton.first().click();
-  addFieldModal.pickField(fieldType);
+	elements.addFieldButton.first().click();
+	addFieldModal.pickField(fieldType);
 
-  sliceBuilder.NewField.inputName().clear();
-  // waiting for the field to re-render
-  cy.wait(500);
-  sliceBuilder.NewField.inputName().type(fieldName);
+	sliceBuilder.NewField.inputName().clear();
+	// waiting for the field to re-render
+	cy.wait(500);
+	sliceBuilder.NewField.inputName().type(fieldName);
 
-  // API Id modification for UID field is disabled
-  if (fieldType != "UID") {
-    sliceBuilder.NewField.inputId().clear();
-    // waiting for the field to re-render
-    cy.wait(500);
-    sliceBuilder.NewField.inputId().type(fieldId);
-  }
+	// API Id modification for UID field is disabled
+	if (fieldType != "UID") {
+		sliceBuilder.NewField.inputId().clear();
+		// waiting for the field to re-render
+		cy.wait(500);
+		sliceBuilder.NewField.inputId().type(fieldId);
+	}
 
-  sliceBuilder.NewField.submit();
+	sliceBuilder.NewField.submit();
 
-  elements.fieldArea.within(() => {
-    cy.contains(fieldName).should("be.visible");
-    cy.contains(`${elements.fieldPreId}.${fieldId}`).should("be.visible");
-  });
+	elements.fieldArea.within(() => {
+		cy.contains(fieldName).should("be.visible");
+		cy.contains(`${elements.fieldPreId}.${fieldId}`).should("be.visible");
+	});
 }
 
 /**
@@ -121,12 +121,12 @@ function addFieldToSlice(elements, fieldType, fieldName, fieldId) {
  * @param {string} variationName Name of the variation.
  */
 export function addVariationToSlice(variationName) {
-  sliceBuilder.variationsDropdown.click({ force: true });
-  sliceBuilder.addVariationButton.click();
+	sliceBuilder.variationsDropdown.click({ force: true });
+	sliceBuilder.addVariationButton.click();
 
-  addVariationModal.root.within(() => {
-    addVariationModal.nameInput.type(variationName);
-    addVariationModal.submit();
-  });
-  addVariationModal.root.should("not.exist");
+	addVariationModal.root.within(() => {
+		addVariationModal.nameInput.type(variationName);
+		addVariationModal.submit();
+	});
+	addVariationModal.root.should("not.exist");
 }

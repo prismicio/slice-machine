@@ -1,13 +1,13 @@
 class AddFieldModal {
-  fieldTypeButton(fieldType) {
-    return cy.get(`[data-cy='${fieldType}']`);
-  }
+	fieldTypeButton(fieldType) {
+		return cy.get(`[data-cy='${fieldType}']`);
+	}
 
-  pickField(fieldType) {
-    this.fieldTypeButton(fieldType).click();
+	pickField(fieldType) {
+		this.fieldTypeButton(fieldType).click();
 
-    return this;
-  }
+		return this;
+	}
 }
 
 export const addFieldModal = new AddFieldModal();

@@ -15,17 +15,17 @@ import { addFieldModal } from "../pages/AddFieldModal";
  * @param {string} name Name of the custom type.
  */
 export function createCustomType(id, name) {
-  customTypesList.goTo();
-  customTypesList.emptyStateButton.click();
+	customTypesList.goTo();
+	customTypesList.emptyStateButton.click();
 
-  createCustomTypeModal.root.should("be.visible");
-  createCustomTypeModal.nameInput.type(name);
-  createCustomTypeModal.idInput.should("have.value", id);
-  createCustomTypeModal.submit();
+	createCustomTypeModal.root.should("be.visible");
+	createCustomTypeModal.nameInput.type(name);
+	createCustomTypeModal.idInput.should("have.value", id);
+	createCustomTypeModal.submit();
 
-  cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
-  cy.readFile(TYPES_FILE).should("contains", name);
-  cy.readFile(CUSTOM_TYPE_MODEL(id));
+	cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
+	cy.readFile(TYPES_FILE).should("contains", name);
+	cy.readFile(CUSTOM_TYPE_MODEL(id));
 }
 
 /**
@@ -36,25 +36,25 @@ export function createCustomType(id, name) {
  * @param {string} newName New name for the custom type.
  */
 export function renameCustomType(id, actualName, newName) {
-  customTypesList.goTo();
+	customTypesList.goTo();
 
-  customTypesList.getOptionDopDownButton(id).click();
-  customTypesList.optionDopDownMenu.should("be.visible");
+	customTypesList.getOptionDopDownButton(id).click();
+	customTypesList.optionDopDownMenu.should("be.visible");
 
-  customTypesList.renameButton.click();
+	customTypesList.renameButton.click();
 
-  customTypeRenameModal.root.should("be.visible");
-  customTypeRenameModal.input.should("have.value", actualName);
-  customTypeRenameModal.input.clear().type(`${newName} - Edited`);
-  customTypeRenameModal.submit();
-  customTypeRenameModal.root.should("not.exist");
+	customTypeRenameModal.root.should("be.visible");
+	customTypeRenameModal.input.should("have.value", actualName);
+	customTypeRenameModal.input.clear().type(`${newName} - Edited`);
+	customTypeRenameModal.submit();
+	customTypeRenameModal.root.should("not.exist");
 
-  customTypesList.getCustomTypeLabel(id).contains("Edited");
+	customTypesList.getCustomTypeLabel(id).contains("Edited");
 
-  cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
-  cy.readFile(CUSTOM_TYPE_MODEL(id)).then((model) => {
-    expect(JSON.stringify(model)).to.contain(newName);
-  });
+	cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
+	cy.readFile(CUSTOM_TYPE_MODEL(id)).then((model) => {
+		expect(JSON.stringify(model)).to.contain(newName);
+	});
 }
 
 /**
@@ -63,17 +63,17 @@ export function renameCustomType(id, actualName, newName) {
  * @param {string} id Id of the custom type.
  */
 export function deleteCustomType(id) {
-  customTypesList.goTo();
+	customTypesList.goTo();
 
-  customTypesList.getOptionDopDownButton(id).click();
-  customTypesList.optionDopDownMenu.should("be.visible");
+	customTypesList.getOptionDopDownButton(id).click();
+	customTypesList.optionDopDownMenu.should("be.visible");
 
-  customTypesList.deleteButton.click();
+	customTypesList.deleteButton.click();
 
-  deleteModal.root.should("be.visible");
-  deleteModal.submit();
+	deleteModal.root.should("be.visible");
+	deleteModal.submit();
 
-  customTypesList.getCustomTypeLabel(id).should("not.exist");
+	customTypesList.getCustomTypeLabel(id).should("not.exist");
 }
 
 /**
@@ -84,27 +84,27 @@ export function deleteCustomType(id) {
  * @param {string} fieldId Id of the new field.
  */
 export function addFieldToCustomType(fieldType, fieldName, fieldId) {
-  customTypeBuilder.addStaticFieldButton.first().click();
-  addFieldModal.pickField(fieldType);
+	customTypeBuilder.addStaticFieldButton.first().click();
+	addFieldModal.pickField(fieldType);
 
-  customTypeBuilder.NewField.inputName().clear();
-  // waiting for the field to re-render
-  cy.wait(500);
-  customTypeBuilder.NewField.inputName().type(fieldName);
+	customTypeBuilder.NewField.inputName().clear();
+	// waiting for the field to re-render
+	cy.wait(500);
+	customTypeBuilder.NewField.inputName().type(fieldName);
 
-  // API Id modification for UID field is disabled
-  if (fieldType != "UID") {
-    customTypeBuilder.NewField.inputId().clear();
-    // waiting for the field to re-render
-    cy.wait(500);
-    customTypeBuilder.NewField.inputId().type(fieldId);
-  }
+	// API Id modification for UID field is disabled
+	if (fieldType != "UID") {
+		customTypeBuilder.NewField.inputId().clear();
+		// waiting for the field to re-render
+		cy.wait(500);
+		customTypeBuilder.NewField.inputId().type(fieldId);
+	}
 
-  customTypeBuilder.NewField.submit();
-  customTypeBuilder.staticZone.within(() => {
-    cy.contains(fieldName).should("be.visible");
-    cy.contains(`data.${fieldId}`).should("be.visible");
-  });
+	customTypeBuilder.NewField.submit();
+	customTypeBuilder.staticZone.within(() => {
+		cy.contains(fieldName).should("be.visible");
+		cy.contains(`data.${fieldId}`).should("be.visible");
+	});
 }
 
 /**
@@ -113,7 +113,7 @@ export function addFieldToCustomType(fieldType, fieldName, fieldId) {
  * @param {string[]} sliceIds Ids of slices to add to the custom type.
  */
 export function addSlicesToCustomType(sliceIds) {
-  customTypeBuilder.updateSliceZoneButton.click();
-  sliceIds.forEach((sliceId) => updateSliceZoneModal.selectSlice(sliceId));
-  updateSliceZoneModal.submit();
+	customTypeBuilder.updateSliceZoneButton.click();
+	sliceIds.forEach((sliceId) => updateSliceZoneModal.selectSlice(sliceId));
+	updateSliceZoneModal.submit();
 }

@@ -1,24 +1,24 @@
 import { BaseDrawer } from "./baseDrawer";
 
 class SoftDeleteDocumentsDrawer extends BaseDrawer {
-  constructor() {
-    super("Confirm deletion");
-  }
+	constructor() {
+		super("Confirm deletion");
+	}
 
-  getAssociatedDocuments(ctName) {
-    return this.root.get(`[data-cy='AssociatedDocumentsCard-${ctName}']`);
-  }
+	getAssociatedDocuments(ctName) {
+		return this.root.get(`[data-cy='AssociatedDocumentsCard-${ctName}']`);
+	}
 
-  get pushButton() {
-    return this.root.contains("button", "Push changes");
-  }
+	get pushButton() {
+		return this.root.contains("button", "Push changes");
+	}
 
-  confirmDelete() {
-    this.root.contains("label", "Delete these Documents").click();
-    this.pushButton.click();
+	confirmDelete() {
+		this.root.contains("label", "Delete these Documents").click();
+		this.pushButton.click();
 
-    return this;
-  }
+		return this;
+	}
 }
 
 export const softDeleteDocumentsDrawer = new SoftDeleteDocumentsDrawer();

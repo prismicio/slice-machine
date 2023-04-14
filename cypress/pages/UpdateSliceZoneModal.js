@@ -1,20 +1,20 @@
 class UpdateSliceZoneModal {
-  get root() {
-    return cy.get("[data-cy=update-slices-modal]");
-  }
+	get root() {
+		return cy.get("[data-cy=update-slices-modal]");
+	}
 
-  selectSlice(sliceId) {
-    // forcing this because the input itself is invisible and an svg is displayed
-    cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
+	selectSlice(sliceId) {
+		// forcing this because the input itself is invisible and an svg is displayed
+		cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
 
-    return this;
-  }
+		return this;
+	}
 
-  submit() {
-    this.root.submit();
+	submit() {
+		this.root.submit();
 
-    return this;
-  }
+		return this;
+	}
 }
 
 export const updateSliceZoneModal = new UpdateSliceZoneModal();

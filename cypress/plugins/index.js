@@ -16,23 +16,23 @@ const fs = require("fs");
  * @type {Cypress.PluginConfig}
  */
 module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
-  on("task", {
-    rmrf(file) {
-      return fs.promises
-        .rm(file, { recursive: true, force: true })
-        .then(() => null);
-    },
-    clearDir(dir) {
-      if (fs.existsSync(dir)) {
-        return fs.promises
-          .rmdir(dir, { recursive: true })
-          .then(() => fs.promises.mkdir(dir))
-          .then(() => null);
-      } else {
-        return null;
-      }
-    },
-  });
+	// `on` is used to hook into various events Cypress emits
+	// `config` is the resolved Cypress config
+	on("task", {
+		rmrf(file) {
+			return fs.promises
+				.rm(file, { recursive: true, force: true })
+				.then(() => null);
+		},
+		clearDir(dir) {
+			if (fs.existsSync(dir)) {
+				return fs.promises
+					.rmdir(dir, { recursive: true })
+					.then(() => fs.promises.mkdir(dir))
+					.then(() => null);
+			} else {
+				return null;
+			}
+		},
+	});
 };

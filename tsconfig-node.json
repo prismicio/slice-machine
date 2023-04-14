@@ -1,4 +1,4 @@
 {
-  "compilerOptions": { "noEmit": true },
-  "include": ["packages/*/.eslintrc.js"]
+	"compilerOptions": { "noEmit": true },
+	"include": ["packages/*/.eslintrc.js"]
 }

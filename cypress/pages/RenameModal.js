@@ -1,38 +1,38 @@
 class RenameModal {
-  constructor(rootSelector, inputSelector) {
-    this.rootSelector = rootSelector;
-    this.inputSelector = inputSelector;
-  }
+	constructor(rootSelector, inputSelector) {
+		this.rootSelector = rootSelector;
+		this.inputSelector = inputSelector;
+	}
 
-  get root() {
-    return cy.get(this.rootSelector);
-  }
-  get input() {
-    return cy.get(this.inputSelector);
-  }
+	get root() {
+		return cy.get(this.rootSelector);
+	}
+	get input() {
+		return cy.get(this.inputSelector);
+	}
 
-  submit() {
-    this.root.submit();
+	submit() {
+		this.root.submit();
 
-    return this;
-  }
+		return this;
+	}
 }
 
 class CustomTypeRenameModal extends RenameModal {
-  constructor() {
-    super(
-      "[data-cy=rename-custom-type-modal]",
-      '[data-cy="custom-type-name-input"]'
-    );
-  }
+	constructor() {
+		super(
+			"[data-cy=rename-custom-type-modal]",
+			'[data-cy="custom-type-name-input"]'
+		);
+	}
 }
 
 export const customTypeRenameModal = new CustomTypeRenameModal();
 
 class SliceRenameModal extends RenameModal {
-  constructor() {
-    super("[data-cy=rename-slice-modal]", '[data-cy="slice-name-input"]');
-  }
+	constructor() {
+		super("[data-cy=rename-slice-modal]", '[data-cy="slice-name-input"]');
+	}
 }
 
 export const sliceRenameModal = new SliceRenameModal();

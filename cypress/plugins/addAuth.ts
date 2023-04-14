@@ -6,35 +6,35 @@ import * as os from "node:os";
 const [, , EMAIL, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
-  const fetch = (await import("node-fetch")).default;
+	const fetch = (await import("node-fetch")).default;
 
-  const res = await fetch(
-    new URL("./authentication/signin", PRISMIC_URL).toString(),
-    {
-      method: "post",
-      body: JSON.stringify({
-        email: EMAIL,
-        password: PASSWORD,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+	const res = await fetch(
+		new URL("./authentication/signin", PRISMIC_URL).toString(),
+		{
+			method: "post",
+			body: JSON.stringify({
+				email: EMAIL,
+				password: PASSWORD,
+			}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		}
+	);
 
-  if (!res.headers.has("Set-Cookie")) {
-    throw new Error(
-      "Could not authenticate to prismic. Please check the credentials."
-    );
-  }
+	if (!res.headers.has("Set-Cookie")) {
+		throw new Error(
+			"Could not authenticate to prismic. Please check the credentials."
+		);
+	}
 
-  await fs.writeFile(
-    path.join(os.homedir(), ".prismic"),
-    JSON.stringify({
-      base: new URL(PRISMIC_URL).toString(),
-      cookies: res.headers.get("Set-Cookie")?.split(", ").join("; ") || "",
-    })
-  );
+	await fs.writeFile(
+		path.join(os.homedir(), ".prismic"),
+		JSON.stringify({
+			base: new URL(PRISMIC_URL).toString(),
+			cookies: res.headers.get("Set-Cookie")?.split(", ").join("; ") || "",
+		})
+	);
 };
 
 main();

@@ -1,32 +1,32 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
 class ImageModal extends BaseEditWidgetModal {
-  editName(newName) {
-    cy.getInputByLabel("Name").clear().type(newName);
+	editName(newName) {
+		cy.getInputByLabel("Name").clear().type(newName);
 
-    return this;
-  }
+		return this;
+	}
 
-  editWidth(newWidth) {
-    cy.getInputByLabel("Width (px)").clear().type(newWidth);
+	editWidth(newWidth) {
+		cy.getInputByLabel("Width (px)").clear().type(newWidth);
 
-    return this;
-  }
+		return this;
+	}
 
-  editHeight(newHeight) {
-    cy.getInputByLabel("Height (px)").clear().type(newHeight);
+	editHeight(newHeight) {
+		cy.getInputByLabel("Height (px)").clear().type(newHeight);
 
-    return this;
-  }
+		return this;
+	}
 
-  addThumbnail(name, height, width) {
-    cy.get("[aria-label='Add a thumbnail']").click();
-    this.editName(name);
-    this.editHeight(height);
-    this.editWidth(width);
+	addThumbnail(name, height, width) {
+		cy.get("[aria-label='Add a thumbnail']").click();
+		this.editName(name);
+		this.editHeight(height);
+		this.editWidth(width);
 
-    return this;
-  }
+		return this;
+	}
 }
 
 export const imageModal = new ImageModal();

@@ -1,37 +1,37 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
 class RichTextModal extends BaseEditWidgetModal {
-  editPlaceholder(newPlaceholder) {
-    this.editTextField("Placeholder", newPlaceholder);
+	editPlaceholder(newPlaceholder) {
+		this.editTextField("Placeholder", newPlaceholder);
 
-    return this;
-  }
+		return this;
+	}
 
-  toggleAllowTargetBlank() {
-    cy.get(this.root).contains("Allow target blank for links").click();
+	toggleAllowTargetBlank() {
+		cy.get(this.root).contains("Allow target blank for links").click();
 
-    return this;
-  }
+		return this;
+	}
 
-  toggleAllowMultipleParagraphs() {
-    cy.get(this.root).contains("Allow multiple paragraphs").click();
+	toggleAllowMultipleParagraphs() {
+		cy.get(this.root).contains("Allow multiple paragraphs").click();
 
-    return this;
-  }
+		return this;
+	}
 
-  deselectAllTextTypes() {
-    cy.get(this.root).contains("button", "Unselect All").click();
+	deselectAllTextTypes() {
+		cy.get(this.root).contains("button", "Unselect All").click();
 
-    return this;
-  }
+		return this;
+	}
 
-  toggleTextTypes(types) {
-    types.forEach((type) => {
-      cy.get(this.root).get(`[aria-label="${type}"]`).click();
-    });
+	toggleTextTypes(types) {
+		types.forEach((type) => {
+			cy.get(this.root).get(`[aria-label="${type}"]`).click();
+		});
 
-    return this;
-  }
+		return this;
+	}
 }
 
 export const richTextModal = new RichTextModal();

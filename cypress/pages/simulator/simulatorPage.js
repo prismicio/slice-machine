@@ -1,130 +1,130 @@
 import { MANIFEST_FILE, SIMULATOR_PATH } from "../../consts";
 
 class SimulatorPage {
-  get saveMocksButton() {
-    return cy.contains("Save mock content");
-  }
+	get saveMocksButton() {
+		return cy.contains("Save mock content");
+	}
 
-  get takeScreenshotButton() {
-    return cy.contains("Take a screenshot");
-  }
+	get takeScreenshotButton() {
+		return cy.contains("Take a screenshot");
+	}
 
-  get screenshotToast() {
-    return cy.contains("Tap to view screenshot");
-  }
+	get screenshotToast() {
+		return cy.contains("Tap to view screenshot");
+	}
 
-  get simulatorIframe() {
-    return cy.get("#__iframe-renderer");
-  }
+	get simulatorIframe() {
+		return cy.get("#__iframe-renderer");
+	}
 
-  get widthInput() {
-    return cy.get('input[name="W-screensize-input"]');
-  }
+	get widthInput() {
+		return cy.get('input[name="W-screensize-input"]');
+	}
 
-  get heightInput() {
-    return cy.get('input[name="H-screensize-input"]');
-  }
+	get heightInput() {
+		return cy.get('input[name="H-screensize-input"]');
+	}
 
-  getScreenSizeDropdown(currentValue) {
-    return cy.get("button").contains(currentValue);
-  }
+	getScreenSizeDropdown(currentValue) {
+		return cy.get("button").contains(currentValue);
+	}
 
-  /**
-   * Setup the slice simulator in the example project, and stub the window open event to open in the same page.
-   */
-  setup() {
-    cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
-      return cy.writeFile(SIMULATOR_PATH, file);
-    });
+	/**
+	 * Setup the slice simulator in the example project, and stub the window open event to open in the same page.
+	 */
+	setup() {
+		cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
+			return cy.writeFile(SIMULATOR_PATH, file);
+		});
 
-    cy.readFile(MANIFEST_FILE, "utf-8").then((json) => {
-      const data = {
-        ...json,
-        localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
-      };
+		cy.readFile(MANIFEST_FILE, "utf-8").then((json) => {
+			const data = {
+				...json,
+				localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
+			};
 
-      return cy.writeFile(MANIFEST_FILE, JSON.stringify(data, null, 2));
-    });
+			return cy.writeFile(MANIFEST_FILE, JSON.stringify(data, null, 2));
+		});
 
-    return this;
-  }
+		return this;
+	}
 
-  /**
-   * Use the screen size dropdown menu to change the simulator screen size.
-   *
-   * @param {string} startValue The expected start value of the dropdown button.
-   * @param {string} newValue The new value to set the screen size to.
-   */
-  resizeScreenWithDropdown(startValue, newValue) {
-    this.getScreenSizeDropdown(startValue).click();
-    cy.contains(newValue).click();
+	/**
+	 * Use the screen size dropdown menu to change the simulator screen size.
+	 *
+	 * @param {string} startValue The expected start value of the dropdown button.
+	 * @param {string} newValue The new value to set the screen size to.
+	 */
+	resizeScreenWithDropdown(startValue, newValue) {
+		this.getScreenSizeDropdown(startValue).click();
+		cy.contains(newValue).click();
 
-    return this;
-  }
+		return this;
+	}
 
-  /**
-   * Use the screen size input fields to change the simulator screen size.
-   *
-   * @param {number} newWidth The new value to the the width to.
-   * @param {number} newHeight The new value to the the height to.
-   */
-  resizeScreenWithInput(newWidth, newHeight) {
-    this.widthInput.clear().type(`{rightArrow}${newWidth}`);
-    this.heightInput.clear().type(`{rightArrow}${newHeight}`);
+	/**
+	 * Use the screen size input fields to change the simulator screen size.
+	 *
+	 * @param {number} newWidth The new value to the the width to.
+	 * @param {number} newHeight The new value to the the height to.
+	 */
+	resizeScreenWithInput(newWidth, newHeight) {
+		this.widthInput.clear().type(`{rightArrow}${newWidth}`);
+		this.heightInput.clear().type(`{rightArrow}${newHeight}`);
 
-    return this;
-  }
+		return this;
+	}
 
-  /**
-   * Check that the dimensions of the simulator are equal to the provided ones.
-   *
-   * @param {number} expectedWidth The value which the width should equal.
-   * @param {number} expectedHeight The value which the height should equal.
-   */
-  validateSimulatorSize(expectedWidth, expectedHeight) {
-    this.simulatorIframe
-      .should("have.css", "maxWidth")
-      .and("eq", `${expectedWidth}px`);
-    this.simulatorIframe
-      .should("have.css", "minWidth")
-      .and("eq", `${expectedWidth}px`);
-    this.simulatorIframe
-      .should("have.css", "maxHeight")
-      .and("eq", `${expectedHeight}px`);
-    this.simulatorIframe
-      .should("have.css", "minHeight")
-      .and("eq", `${expectedHeight}px`);
+	/**
+	 * Check that the dimensions of the simulator are equal to the provided ones.
+	 *
+	 * @param {number} expectedWidth The value which the width should equal.
+	 * @param {number} expectedHeight The value which the height should equal.
+	 */
+	validateSimulatorSize(expectedWidth, expectedHeight) {
+		this.simulatorIframe
+			.should("have.css", "maxWidth")
+			.and("eq", `${expectedWidth}px`);
+		this.simulatorIframe
+			.should("have.css", "minWidth")
+			.and("eq", `${expectedWidth}px`);
+		this.simulatorIframe
+			.should("have.css", "maxHeight")
+			.and("eq", `${expectedHeight}px`);
+		this.simulatorIframe
+			.should("have.css", "minHeight")
+			.and("eq", `${expectedHeight}px`);
 
-    return this;
-  }
+		return this;
+	}
 
-  takeAScreenshotAndOpenModal() {
-    this.takeScreenshotButton.click();
+	takeAScreenshotAndOpenModal() {
+		this.takeScreenshotButton.click();
 
-    cy.contains("Screenshot taken", { timeout: 30000 }).should("be.visible");
+		cy.contains("Screenshot taken", { timeout: 30000 }).should("be.visible");
 
-    this.screenshotToast.click();
+		this.screenshotToast.click();
 
-    return this;
-  }
+		return this;
+	}
 
-  /**
-   * Change the slice variations using the variations dropdown in the simulator.
-   *
-   * @param {string} targetVariation the new variation value.
-   */
-  changeVariations(targetVariation) {
-    cy.get("[aria-label='Expand variations']").click({ force: true });
-    cy.contains(targetVariation).click();
+	/**
+	 * Change the slice variations using the variations dropdown in the simulator.
+	 *
+	 * @param {string} targetVariation the new variation value.
+	 */
+	changeVariations(targetVariation) {
+		cy.get("[aria-label='Expand variations']").click({ force: true });
+		cy.contains(targetVariation).click();
 
-    return this;
-  }
+		return this;
+	}
 
-  toggleEditor() {
-    cy.contains("label", "Editor").click();
+	toggleEditor() {
+		cy.contains("label", "Editor").click();
 
-    return this;
-  }
+		return this;
+	}
 }
 
 export const simulatorPage = new SimulatorPage();

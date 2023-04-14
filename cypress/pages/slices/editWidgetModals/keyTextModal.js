@@ -1,11 +1,11 @@
 import { BaseEditWidgetModal } from "./baseEditWidgetModal";
 
 class KeyTextModal extends BaseEditWidgetModal {
-  editPlaceholder(newPlaceholder) {
-    this.editTextField("Placeholder", newPlaceholder);
+	editPlaceholder(newPlaceholder) {
+		this.editTextField("Placeholder", newPlaceholder);
 
-    return this;
-  }
+		return this;
+	}
 }
 
 export const keyTextModal = new KeyTextModal();
