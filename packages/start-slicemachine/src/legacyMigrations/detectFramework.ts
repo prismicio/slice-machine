@@ -10,14 +10,19 @@ export type Framework = {
 	name: string;
 
 	/**
-	 * Package name of the adapter responsible for this framework
+	 * Package name of the adapter responsible for this framework.
 	 */
 	adapterName: string;
 
 	/**
-	 * Semver range of the adapter responsible for this framework
+	 * Semver range of the adapter responsible for this framework.
 	 */
 	adapterVersion: string;
+
+	/**
+	 * Whether or not to run the project init hook to migrate legacy frameworks.
+	 */
+	runProjectInitHook: boolean;
 
 	/**
 	 * A package name/semver range map defining framework compatibility
@@ -35,8 +40,9 @@ export type Framework = {
 export const FRAMEWORKS: Record<string, Framework> = {
 	previousNuxt: {
 		name: "Nuxt 2 (legacy)",
-		adapterName: "@slicemachine/adapter-nuxt",
+		adapterName: "@slicemachine/adapter-nuxt2",
 		adapterVersion: "latest",
+		runProjectInitHook: true,
 		compatibility: {
 			nuxt: "^2.0.0",
 			"nuxt-sm": "*",
@@ -44,8 +50,9 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	nuxt: {
 		name: "Nuxt 2",
-		adapterName: "@slicemachine/adapter-nuxt",
+		adapterName: "@slicemachine/adapter-nuxt2",
 		adapterVersion: "latest",
+		runProjectInitHook: false,
 		compatibility: {
 			nuxt: "^2.0.0",
 		},
@@ -54,6 +61,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		name: "Next.js 11-13 (legacy)",
 		adapterName: "@slicemachine/adapter-next",
 		adapterVersion: "latest",
+		runProjectInitHook: true,
 		compatibility: {
 			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
 			"prismic-reactjs": "*",
@@ -63,6 +71,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		name: "Next.js 11-13",
 		adapterName: "@slicemachine/adapter-next",
 		adapterVersion: "latest",
+		runProjectInitHook: false,
 		compatibility: {
 			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
 		},
@@ -76,6 +85,7 @@ export const UNIVERSAL: Framework = {
 	name: "universal (no framework)",
 	adapterName: "@slicemachine/adapter-universal",
 	adapterVersion: "latest",
+	runProjectInitHook: false,
 	compatibility: {},
 };
 

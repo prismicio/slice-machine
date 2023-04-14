@@ -147,6 +147,15 @@ ${chalk.bgYellow(` ${chalk.black("WARN")} `)} ${chalk.magenta(
 		throw error;
 	}
 
+	if (framework.runProjectInitHook) {
+		await manager.plugins.initPlugins();
+		await manager.project.initProject({
+			log: () => {
+				/* Init silently, will throw if any error */
+			},
+		});
+	}
+
 	// Warn about old sm.json
 	// eslint-disable-next-line no-console
 	return console.log(`
