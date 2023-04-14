@@ -12,6 +12,14 @@ module.exports = {
 		"plugin:@typescript-eslint/recommended",
 		"eslint-config-prettier",
 	],
+	overrides: [
+		{
+			files: ["*.js", "*.jsx"],
+			rules: {
+				"@typescript-eslint/explicit-module-boundary-types": "off",
+			}
+		}
+	],
 	plugins: ["eslint-plugin-tsdoc"],
 	rules: {
 		"no-console": ["warn", { allow: ["info", "warn", "error"] }],
