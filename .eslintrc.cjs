@@ -17,8 +17,8 @@ module.exports = {
 			files: ["*.js", "*.jsx"],
 			rules: {
 				"@typescript-eslint/explicit-module-boundary-types": "off",
-			}
-		}
+			},
+		},
 	],
 	plugins: ["eslint-plugin-tsdoc"],
 	rules: {
