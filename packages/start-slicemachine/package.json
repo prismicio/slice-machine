@@ -68,7 +68,6 @@
 		"depcheck": "^1.4.3",
 		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",
-		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"nodemon": "^2.0.22",
 		"prettier-plugin-jsdoc": "^0.4.2",

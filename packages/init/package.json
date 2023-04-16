@@ -76,7 +76,6 @@
 		"depcheck": "^1.4.3",
 		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",
-		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"execa": "^7.1.1",
 		"hook-std": "^3.0.0",
