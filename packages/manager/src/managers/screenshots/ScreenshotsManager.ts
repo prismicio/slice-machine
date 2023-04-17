@@ -296,6 +296,8 @@ export class ScreenshotsManager extends BaseManager {
 		args: ScreenshotsManagerDeleteScreenshotFolderArgs,
 	): Promise<void> {
 		const res = await this._fetch({
+			// We're sending `args.sliceID` as `sliceName` because it's inconsistently
+			// named in the ACL Provider API.
 			body: { sliceName: args.sliceID },
 			method: "POST",
 			url: new URL("delete-folder", API_ENDPOINTS.AwsAclProvider),
