@@ -3,6 +3,8 @@ import { join } from "node:path";
 
 import semver from "semver";
 
+import { version as pkgVersion } from "../../package.json";
+
 export type Framework = {
 	/**
 	 * Framework's human readable name.
@@ -44,8 +46,11 @@ export type Framework = {
 	devDependencies: Record<string, string>;
 };
 
+const isPrerelease =
+	semver.prerelease(pkgVersion) !== null && process.env.NODE_ENV !== "test";
+
 const DEFAULT_DEV_DEPENDENCIES: Record<string, string> = {
-	"slice-machine-ui": "<1.0.0",
+	"slice-machine-ui": isPrerelease ? "alpha" : "latest",
 };
 
 /**
@@ -63,7 +68,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-nuxt2": "latest",
+			"@slicemachine/adapter-nuxt2": isPrerelease ? "alpha" : "latest",
 		},
 	},
 	"nuxt-3": {
@@ -76,7 +81,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-nuxt": "latest",
+			"@slicemachine/adapter-nuxt": isPrerelease ? "alpha" : "latest",
 		},
 	},
 	"next-11-13": {
@@ -89,7 +94,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-next": "latest",
+			"@slicemachine/adapter-next": isPrerelease ? "alpha" : "latest",
 		},
 	},
 } as const;
@@ -105,7 +110,7 @@ export const UNIVERSAL: Framework = {
 	compatibility: {},
 	devDependencies: {
 		...DEFAULT_DEV_DEPENDENCIES,
-		"@slicemachine/adapter-universal": "latest",
+		"@slicemachine/adapter-universal": isPrerelease ? "alpha" : "latest",
 	},
 };
 
