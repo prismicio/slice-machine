@@ -296,7 +296,7 @@ export class ScreenshotsManager extends BaseManager {
 		args: ScreenshotsManagerDeleteScreenshotFolderArgs,
 	): Promise<void> {
 		const res = await this._fetch({
-			body: { sliceId: args.sliceID },
+			body: { sliceName: args.sliceID },
 			method: "POST",
 			url: new URL("delete-folder", API_ENDPOINTS.AwsAclProvider),
 		});
