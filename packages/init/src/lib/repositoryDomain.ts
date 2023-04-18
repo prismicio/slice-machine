@@ -67,7 +67,7 @@ export const formatRepositoryDomain = (rawDomain: string): string => {
 	/**
 	 * Replace whitespaces and underscores with hyphens
 	 */
-	domain = domain.replaceAll(" ", "-").replaceAll("_", "-");
+	domain = domain.replace(/\s/g, "-").replace(/_/g, "-");
 
 	/**
 	 * Replace not allowed characters
