@@ -9,8 +9,7 @@ const SLICE = {
   library: ".--slices",
 };
 
-// TODO: Enable once mocks are working
-describe.skip("Scenario 008", () => {
+describe("Scenario 008", () => {
   beforeEach(() => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});
