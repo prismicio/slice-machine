@@ -18,30 +18,35 @@ const isCustomTypeModel = (
 export const customTypeLibraryRead: CustomTypeLibraryReadHook<
 	PluginOptions
 > = async (_data, { helpers }) => {
-	const dirPath = buildCustomTypeLibraryDirectoryPath({ helpers });
+	const dir = buildCustomTypeLibraryDirectoryPath({ helpers });
 
 	// Ensure the directory exists.
-	await fs.mkdir(dirPath, { recursive: true });
+	await fs.mkdir(dir, { recursive: true });
 
-	const childDirs = await fs.readdir(dirPath);
+	const childDirs = await fs.readdir(dir, { withFileTypes: true });
 
 	const ids: string[] = [];
 	await Promise.all(
 		childDirs.map(async (childDir) => {
-			const childDirContents = await fs.readdir(path.join(dirPath, childDir), {
-				withFileTypes: true,
-			});
-			const isCustomTypeDir = childDirContents.some((entry) => {
-				return entry.isFile() && entry.name === "index.json";
-			});
+			if (childDir.isDirectory()) {
+				const childDirContents = await fs.readdir(
+					path.join(dir, childDir.name),
+					{
+						withFileTypes: true,
+					},
+				);
+				const isCustomTypeDir = childDirContents.some((entry) => {
+					return entry.isFile() && entry.name === "index.json";
+				});
 
-			if (isCustomTypeDir) {
-				const modelPath = path.join(dirPath, childDir, "index.json");
+				if (isCustomTypeDir) {
+					const modelPath = path.join(dir, childDir.name, "index.json");
 
-				const modelContents = await readJSONFile(modelPath);
+					const modelContents = await readJSONFile(modelPath);
 
-				if (isCustomTypeModel(modelContents)) {
-					ids.push(modelContents.id);
+					if (isCustomTypeModel(modelContents)) {
+						ids.push(modelContents.id);
+					}
 				}
 			}
 		}),
