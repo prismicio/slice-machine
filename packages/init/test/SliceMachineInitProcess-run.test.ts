@@ -242,7 +242,8 @@ it("outputs get started final message", async (ctx) => {
 		    Getting help         https://community.prismic.io
 
 		  GETTING STARTED
-		    Start Slice Machine  npm run slicemachine
+		    Run Slice Machine    npm run slicemachine
+		    Run your project     npm run dev
 		"
 	`);
 });

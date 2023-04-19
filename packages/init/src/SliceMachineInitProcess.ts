@@ -190,7 +190,7 @@ export class SliceMachineInitProcess {
     Getting help         ${chalk.cyan("https://community.prismic.io")}
 
   GETTING STARTED
-    Start Slice Machine  ${chalk.cyan(
+    Run Slice Machine    ${chalk.cyan(
 			this.context.projectInitialization?.patchedScript
 				? await getRunScriptCommand({
 						agent: this.context.packageManager || "npm",
@@ -200,6 +200,12 @@ export class SliceMachineInitProcess {
 						agent: this.context.packageManager || "npm",
 						script: "start-slicemachine",
 				  }),
+		)}
+    Run your project     ${chalk.cyan(
+			await getRunScriptCommand({
+				agent: this.context.packageManager || "npm",
+				script: "dev",
+			}),
 		)}`);
 		} catch {
 			// Noop, it's only the final convenience messsage
