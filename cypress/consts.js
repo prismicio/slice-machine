@@ -19,4 +19,4 @@ export const SLICE_MOCK_FILE = (sliceName) =>
 export const SLICE_MODEL = (sliceName) =>
   `${SLICES_FOLDER}/${sliceName}/model.json`;
 
-export const SIMULATOR_PATH = path.join(ROOT, "pages", "slice-simulator.jsx");
+export const SIMULATOR_PATH = path.join(ROOT, "pages", "slice-simulator.js");
