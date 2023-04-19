@@ -14,7 +14,7 @@ describe("Scenario 008", () => {
     cy.setSliceMachineUserContext({});
   });
 
-  it("edits the different mock fields available in the editor", function () {
+  it("edits the different mock fields available in the editor", () => {
     cy.createSlice(SLICE.library, SLICE.id, SLICE.name);
 
     sliceBuilder
