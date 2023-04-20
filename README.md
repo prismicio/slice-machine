@@ -24,7 +24,7 @@ If you want to dive in without any guidance, follow these steps:
 
 Create a Next.js or Nuxt app:
 ```
-npx create-nuxt-app my-app
+npx create-next-app@latest my-app
 ```
 ```
 npx nuxi@latest init my-app
