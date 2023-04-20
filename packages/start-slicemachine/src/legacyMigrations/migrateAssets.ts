@@ -13,7 +13,6 @@ import { DocumentMock, SharedSliceMock } from "@prismicio/mocks";
 import * as sentryErrorHandlers from "../lib/sentryErrorHandlers";
 
 const MOCKS_FILE_NAME = "mocks.json";
-const MOCK_CONFIG_FILE_NAME = "mock-config.json";
 
 const SharedSliceContentArray = t.array(SharedSliceContent);
 const DocumentArray = t.array(Document);
