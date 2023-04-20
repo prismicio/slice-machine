@@ -100,7 +100,9 @@ it("starts plugin runner", async () => {
 			}),
 		}),
 	);
-	expect(stdout).toMatch(/Started plugin runner/);
+	// TODO: Revert when plugin are introduced to users
+	// expect(stdout).toMatch(/Started plugin runner/);
+	expect(stdout).toMatch(/Loaded adapter/);
 });
 
 it("throws if context is missing framework", async () => {
