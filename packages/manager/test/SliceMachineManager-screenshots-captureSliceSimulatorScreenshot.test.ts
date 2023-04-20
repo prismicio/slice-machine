@@ -65,7 +65,7 @@ it("captures a Slice Simulator screenshot for a given Slice variation", async (c
 	});
 	expect(puppeteerMock.__page__goto).toHaveBeenCalledWith(
 		sliceSimulatorEndpoint,
-		{ waitUntil: "load" },
+		{ waitUntil: ["load", "networkidle0"] },
 	);
 	expect(puppeteerMock.__page__waitForSelector).toHaveBeenCalledWith(
 		"#__iframe-ready",
