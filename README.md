@@ -4,7 +4,7 @@
   </a>
 </p>
 <p align="center">
-  Develop and work with <a href="https://prismic.io">Prismic</a> slices, locally.
+  Develop and work with <a href="https://prismic.io">Prismic</a> Slices, locally.
 </p>
 
 # Slice Machine
@@ -16,91 +16,52 @@
 
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
-As a developer tool, the main goal of Slice Machine is to perfect the process of working with a CMS while developing components locally.
+## Quickstart
 
-### 1. Build reusable website sections
-We call them Slices. Create and iterate on your Slices within your codebase, without going back and forth to a web app.
+For the smoothest onboarding experience, go to [Prismic][prismic-dashboard], create an account, create a new repository, and choose a starter project. You will be guided through a full introduction to Slice Machine.
 
-It takes a few seconds to generate components with corresponding data models. Everything is stored and versioned right inside your code.
+If you want to dive in without any guidance, follow these steps:
 
-### 2. Preview your components locally
-While you build your components, you'll need to preview them. Slice Machine generates updated mocks to display content in the context of your app — without querying any remote content.
+Create a Next.js or Nuxt app:
+```
+npx create-nuxt-app my-app
+```
+```
+npx nuxi@latest init my-app
+```
 
-### 3. Ship your library to a page builder
-Once you're done creating your components locally, publish them to Prismic. You get a full-fledged online content editor, tailored to your components' data models. Content editors can preview Slices from there and create pages without any help!
+Open the folder:
+```
+cd my-app
+```
+Install dependencies:
+```
+npm i
+```
 
-
----
-
-## Install
-
-```bash
+Init Slice Machine:
+```
 npx @slicemachine/init
 ```
 
-### Install required deps
+Open two terminals. In one terminal, run the web app:
 
-```bash
-# using React/Next
-npm i --save next-slicezone prismic-reactjs
-# or using Vue/Nuxt
-npm i --save vue-slicezone nuxt-sm
-````
+```
+npm run dev
+```
 
-Nuxt users: you will have to add `nuxt-sm` to your `nuxt.config.js` modules section.  
-<br>
-### Documentation
-For full documentation, visit the [the official Prismic documentation][prismic-docs].  
-<br>
-### Launch Slice Machine
-
-You should now be ready to launch the plugin:
-```bash
+In the other, run Slice Machine:
+```
 npm run slicemachine
-````
-Once the CLI  gives you information regarding your project, open the given localhost address to start working.
+```
+Now you can use Slice Machine to create content models for your website. You will push your models to Prismic, where editors can use them to create content.
 
----
+You will need to query content from the Prismic API to use it in your application. To learn how to use the Prismic API, visit the [Prismic Documentation][prismic-docs].
 
-### Previewing Slices
-Once you are familiar with the plugin and you created a Slice, you should notice that a folder has been created inside your slices library. It contains a component code and its Prismic data model.
+## Documentation
 
-You should also notice that a `.slicemachine` folder has been generated. It contains (notably) the generated mocks for each of your Slices.
+To discover what's new on this package check out the [changelog][changelog]. For full documentation, visit the official [Prismic documentation][sm-docs].
 
-Import both your component and its mock in a page to preview it:
-
-```javascript
-import { MySlice } from '../slices'
-import MySliceMocks from '../.slicemachine/assets/slices/MySlice/mocks.json'
-
-// In case of Next.js
-const Page = () => (
-  <div>
-    <MySlice slice={MySliceMocks[0]} />
-  </div>
-)
-````
-Note that `MySliceMocks` is an array of Slice variations. You get 1 Slice mock per variation.
-
-### Publishing your library
-Once you're happy with the result, it's time to publish it to Prismic. Note that if you want to be able to use a Slice in one of your pages (Custom types), you will have to click on "Add slices" in the Custom types editor and select the Slices to be used.
-
-Pushing a Custom type to Prismic will push all the Slices that are linked to it.
-
-Inside Prismic.io, you should now be able to create documents and use the Slices you defined locally using Slice Machine 🎉
-
-### Next step
-
-Connect your pages to Prismic!
-
-Next user? Check [this page](https://prismic.io/docs/technologies/query-api-nextjs) out!
-Nuxt user? Check [this page](https://prismic.io/docs/technologies/query-content-from-cms-nuxtjs) instead.
-
-If you use another technology, it's probably listed there: https://prismic.io/docs
-
-Have fun!
-
----
 ## Contributing
 
 Whether you're helping us fix bugs, improve the docs, or spread the word, we'd love to have you as part of the Prismic developer community!
@@ -138,6 +99,8 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 <!-- TODO: Replace link with a more useful one if available -->
 
 [prismic-docs]: https://prismic.io/docs
+[sm-docs]: https://prismic.io/docs/slice-machine
+[prismic-dashboard]: https://prismic.io/dashboard
 [changelog]: /CHANGELOG.md
 
 <!-- TODO: Replace link with a more useful one if available -->
