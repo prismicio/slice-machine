@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }) {
       richTextComponents={{
 		    list: ({ children, key }) => <ul className="list-disc list-inside" key={key}>{children}</ul>
       }}
-      //linkResolver={linkResolver}
+      linkResolver={linkResolver}
       internalLinkComponent={({ href, anchor, children, ...props }) => (
         //adding support for anchors that can be passed to a PrismicLink
         <Link href={href+(anchor ? "#"+anchor : "")}>
