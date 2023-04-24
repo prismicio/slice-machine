@@ -13,7 +13,6 @@ import { DocumentMock, SharedSliceMock } from "@prismicio/mocks";
 import * as sentryErrorHandlers from "../lib/sentryErrorHandlers";
 
 const MOCKS_FILE_NAME = "mocks.json";
-const MOCK_CONFIG_FILE_NAME = "mock-config.json";
 
 const SharedSliceContentArray = t.array(SharedSliceContent);
 const DocumentArray = t.array(Document);
@@ -22,16 +21,6 @@ const createPathToDeprecatedLibrary = (cwd: string) =>
 	path.join(cwd, ".slicemachine");
 const createPathToCustomTypesAssets = (cwd: string) =>
 	path.join(createPathToDeprecatedLibrary(cwd), "assets", "customtypes");
-
-const safeUnlink = (pathToUnlink: string, type: "file" | "folder") => {
-	try {
-		if (type === "file") {
-			fsSync.unlinkSync(pathToUnlink);
-		} else {
-			fsSync.rmSync(pathToUnlink, { recursive: true });
-		}
-	} catch (_) {}
-};
 
 const ensureOrGenerateSliceScreenshot = (
 	variationsIDs: string[],
@@ -166,7 +155,6 @@ export const migrateAssets = async (
 				targetPathToSliceFolder,
 				deprecatedPathToSliceAssets,
 			);
-			safeUnlink(deprecatedPathToMocks, "file");
 		});
 
 		const allCustomTypes = await manager.customTypes.readAllCustomTypes();
@@ -195,16 +183,9 @@ export const migrateAssets = async (
 			sentryErrorHandlers.node("migrateAssets", error);
 		}
 	} finally {
-		safeUnlink(
-			path.join(
-				createPathToDeprecatedLibrary(manager.cwd),
-				MOCK_CONFIG_FILE_NAME,
-			),
-			"file",
-		);
-		safeUnlink(
-			path.join(createPathToDeprecatedLibrary(manager.cwd), "assets"),
-			"folder",
-		);
+		const dotSlicemachine = createPathToDeprecatedLibrary(manager.cwd);
+		if (fsSync.existsSync(dotSlicemachine)) {
+			fsSync.rmSync(dotSlicemachine, { recursive: true });
+		}
 	}
 };

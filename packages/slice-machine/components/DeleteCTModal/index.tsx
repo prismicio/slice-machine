@@ -4,7 +4,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
+import { Close, Flex, Heading, Paragraph, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
@@ -125,22 +125,26 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           </Flex>
         )}
       >
-        <Text>
-          This action will delete the{" "}
-          <Text sx={{ fontWeight: "bold" }}>
-            `customtypes/{customType?.local.id}/`
-          </Text>
-          directory and update associated files in the{" "}
-          <Text sx={{ fontWeight: "bold" }}>`.slicemachine/`</Text>
-          directory.
-        </Text>
-        <br />
-        <Text>
-          The next time you push changes to Prismic, the{" "}
-          <Text sx={{ fontWeight: "bold" }}>"{customType?.local.label}"</Text>{" "}
-          Custom Type and any associated Documents will be deleted from your
-          repository.
-        </Text>
+        <Paragraph>
+          This action will immediately make the following change:
+          <ul>
+            <li>
+              Delete the{" "}
+              <Text sx={{ fontWeight: "bold" }}>
+                customtypes/{customType?.local.id}/
+              </Text>{" "}
+              directory.
+            </li>
+          </ul>
+          The next time you push your changes to Prismic, the following change
+          will happen:
+          <ul>
+            <li>
+              Remove the Custom Type and any associated Documents from your
+              repository.
+            </li>
+          </ul>
+        </Paragraph>
       </Card>
     </SliceMachineModal>
   );

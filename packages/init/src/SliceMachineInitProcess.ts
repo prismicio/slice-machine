@@ -190,7 +190,7 @@ export class SliceMachineInitProcess {
     Getting help         ${chalk.cyan("https://community.prismic.io")}
 
   GETTING STARTED
-    Start Slice Machine  ${chalk.cyan(
+    Run Slice Machine    ${chalk.cyan(
 			this.context.projectInitialization?.patchedScript
 				? await getRunScriptCommand({
 						agent: this.context.packageManager || "npm",
@@ -200,6 +200,12 @@ export class SliceMachineInitProcess {
 						agent: this.context.packageManager || "npm",
 						script: "start-slicemachine",
 				  }),
+		)}
+    Run your project     ${chalk.cyan(
+			await getRunScriptCommand({
+				agent: this.context.packageManager || "npm",
+				script: "dev",
+			}),
 		)}`);
 		} catch {
 			// Noop, it's only the final convenience messsage
@@ -790,11 +796,17 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 					return listr([
 						{
-							title: "Starting plugin runner...",
+							// TODO: Revert when plugin are introduced to users
+							// title: "Starting plugin runner...",
+							title: "Loading adapter...",
 							task: async (_, task) => {
 								await this.manager.plugins.initPlugins();
-								task.title = "Started plugin runner";
-								parentTask.title = `${parentTask.title} and started plugin runner`;
+								// TODO: Revert when plugin are introduced to users
+								// task.title = "Started plugin runner";
+								task.title = "Loaded adapter";
+								// TODO: Revert when plugin are introduced to users
+								// parentTask.title = `${parentTask.title} and started plugin runner`;
+								parentTask.title = `${parentTask.title} and loaded adapter`;
 							},
 						},
 					]);
@@ -1076,7 +1088,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 	protected initializePlugins(): Promise<void> {
 		return listrRun([
 			{
-				title: "Initializing plugins...",
+				// TODO: Revert when plugin are introduced to users
+				// title: "Initializing plugins...",
+				title: "Initializing adapter...",
 				task: async (_, task) => {
 					const updateOutput = (data: Buffer | string | null) => {
 						if (data instanceof Buffer) {
@@ -1090,7 +1104,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						log: updateOutput,
 					});
 
-					task.title = "Initialized plugins";
+					// TODO: Revert when plugin are introduced to users
+					// task.title = "Initialized plugins";
+					task.title = "Initialized adapter";
 				},
 			},
 		]);

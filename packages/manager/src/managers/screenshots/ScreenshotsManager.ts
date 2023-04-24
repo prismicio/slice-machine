@@ -15,8 +15,8 @@ import { InternalError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
-const SLICE_SIMULATOR_WAIT_FOR_TIMEOUT = 10_000; // ms
 const SLICE_SIMULATOR_WAIT_FOR_SELECTOR = "#__iframe-ready";
+const SLICE_SIMULATOR_WAIT_FOR_SELECTOR_TIMEOUT = 10_000; // ms
 const SLICE_SIMULATOR_SCREENSHOT_SELECTOR = "#__iframe-renderer";
 
 const DEFAULT_SCREENSHOT_VIEWPORT: Viewport = {
@@ -215,9 +215,9 @@ export class ScreenshotsManager extends BaseManager {
 		const page = await this._browserContext.newPage();
 		page.setViewport(viewport);
 
-		await page.goto(url.toString(), { waitUntil: "load" });
+		await page.goto(url.toString(), { waitUntil: ["load", "networkidle0"] });
 		await page.waitForSelector(SLICE_SIMULATOR_WAIT_FOR_SELECTOR, {
-			timeout: SLICE_SIMULATOR_WAIT_FOR_TIMEOUT,
+			timeout: SLICE_SIMULATOR_WAIT_FOR_SELECTOR_TIMEOUT,
 		});
 
 		const element = await page.$(SLICE_SIMULATOR_SCREENSHOT_SELECTOR);
@@ -296,7 +296,9 @@ export class ScreenshotsManager extends BaseManager {
 		args: ScreenshotsManagerDeleteScreenshotFolderArgs,
 	): Promise<void> {
 		const res = await this._fetch({
-			body: { sliceId: args.sliceID },
+			// We're sending `args.sliceID` as `sliceName` because it's inconsistently
+			// named in the ACL Provider API.
+			body: { sliceName: args.sliceID },
 			method: "POST",
 			url: new URL("delete-folder", API_ENDPOINTS.AwsAclProvider),
 		});

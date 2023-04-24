@@ -115,8 +115,7 @@ describe("Create Slices", () => {
     cy.renameSlice(sliceName, editedSliceName);
   });
 
-  // TODO enable once fields sorting is fixed
-  it.skip("allows drag n drop to the top position", () => {
+  it("allows drag n drop to the top position", () => {
     // inspired by https://github.com/atlassian/react-beautiful-dnd/blob/master/cypress/integration/reorder.spec.js
     // could not get it to work with mouse events
 

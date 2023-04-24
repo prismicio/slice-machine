@@ -544,6 +544,31 @@ export type AllDocumentTypes =
   | MenuTabDocument
   | PageDocument;
 /** Primary content in CategoryPreviewWithImageBackgrounds → Primary */
+interface CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary {
+  /**
+   * Title field in _CategoryPreviewWithImageBackgrounds → Primary_
+   *
+   * - **Field Type**: Title
+   * - **Placeholder**: This is where it all begins...
+   * - **API ID Path**: category_preview_with_image_backgrounds.primary.title
+   * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
+   */
+  title: prismicT.TitleField;
+}
+/**
+ * Another variation variation for CategoryPreviewWithImageBackgrounds Slice
+ *
+ * - **API ID**: `another-variation`
+ * - **Description**: `CategoryPreviewWithImageBackgrounds`
+ * - **Documentation**: https://prismic.io/docs/core-concepts/reusing-slices
+ */
+export type CategoryPreviewWithImageBackgroundsSliceAnotherVariation =
+  prismicT.SharedSliceVariation<
+    "another-variation",
+    Simplify<CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary>,
+    never
+  >;
+/** Primary content in CategoryPreviewWithImageBackgrounds → Primary */
 interface CategoryPreviewWithImageBackgroundsSliceDefaultSlicePrimary {
   /**
    * Title field in _CategoryPreviewWithImageBackgrounds → Primary_
@@ -564,15 +589,6 @@ interface CategoryPreviewWithImageBackgroundsSliceDefaultSlicePrimary {
    * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
    */
   linkLabel: prismicT.KeyTextField;
-  /**
-   * Text3 field in _CategoryPreviewWithImageBackgrounds → Primary_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: category_preview_with_image_backgrounds.primary.text3
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  text3: prismicT.KeyTextField;
   /**
    * Link field in _CategoryPreviewWithImageBackgrounds → Primary_
    *
@@ -730,7 +746,8 @@ export type CategoryPreviewWithImageBackgroundsSliceDefaultSlice =
   >;
 /** Slice variation for _CategoryPreviewWithImageBackgrounds_ */
 type CategoryPreviewWithImageBackgroundsSliceVariation =
-  CategoryPreviewWithImageBackgroundsSliceDefaultSlice;
+  | CategoryPreviewWithImageBackgroundsSliceAnotherVariation
+  | CategoryPreviewWithImageBackgroundsSliceDefaultSlice;
 /**
  * CategoryPreviewWithImageBackgrounds Shared Slice
  *
@@ -955,6 +972,40 @@ export type ExternalVideoSliceSlice = prismicT.SharedSlice<
   "external_video_slice",
   ExternalVideoSliceSliceVariation
 >;
+/** Primary content in FooBar → Primary */
+interface FooBarSliceDefaultPrimary {
+  /**
+   * Title field in _FooBar → Primary_
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: _None_
+   * - **API ID Path**: foo_bar.primary.title
+   * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
+   */
+  title: prismicT.RichTextField;
+}
+/**
+ * Default variation for FooBar Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: `Default`
+ * - **Documentation**: https://prismic.io/docs/core-concepts/reusing-slices
+ */
+export type FooBarSliceDefault = prismicT.SharedSliceVariation<
+  "default",
+  Simplify<FooBarSliceDefaultPrimary>,
+  never
+>;
+/** Slice variation for _FooBar_ */
+type FooBarSliceVariation = FooBarSliceDefault;
+/**
+ * FooBar Shared Slice
+ *
+ * - **API ID**: `foo_bar`
+ * - **Description**: `FooBar`
+ * - **Documentation**: https://prismic.io/docs/core-concepts/reusing-slices
+ */
+export type FooBarSlice = prismicT.SharedSlice<"foo_bar", FooBarSliceVariation>;
 /** Primary content in HeroBanner → Primary */
 interface HeroBannerSliceDefaultSlicePrimary {
   /**
@@ -2826,6 +2877,8 @@ declare module "@prismicio/client" {
       PageDocumentDataSocialCardsItem,
       PageDocument,
       AllDocumentTypes,
+      CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary,
+      CategoryPreviewWithImageBackgroundsSliceAnotherVariation,
       CategoryPreviewWithImageBackgroundsSliceDefaultSlicePrimary,
       CategoryPreviewWithImageBackgroundsSliceDefaultSlice,
       CategoryPreviewWithImageBackgroundsSliceVariation,
@@ -2844,6 +2897,10 @@ declare module "@prismicio/client" {
       ExternalVideoSliceSliceDefaultSlice,
       ExternalVideoSliceSliceVariation,
       ExternalVideoSliceSlice,
+      FooBarSliceDefaultPrimary,
+      FooBarSliceDefault,
+      FooBarSliceVariation,
+      FooBarSlice,
       HeroBannerSliceDefaultSlicePrimary,
       HeroBannerSliceDefaultSlice,
       HeroBannerSliceWithoutCtaPrimary,

@@ -39,7 +39,7 @@ it("detects framework and package manager", async () => {
 		    },
 		    "devDependencies": {
 		      "@slicemachine/adapter-next": "latest",
-		      "slice-machine-ui": "<1.0.0",
+		      "slice-machine-ui": "latest",
 		    },
 		    "name": "Next.js 11-13",
 		    "prismicDocumentation": "https://prismic.dev/init/next-11-13",
@@ -84,7 +84,7 @@ it("assumes unconventional tags match semver range when detecting framework", as
 		    },
 		    "devDependencies": {
 		      "@slicemachine/adapter-next": "latest",
-		      "slice-machine-ui": "<1.0.0",
+		      "slice-machine-ui": "latest",
 		    },
 		    "name": "Next.js 11-13",
 		    "prismicDocumentation": "https://prismic.dev/init/next-11-13",
@@ -123,7 +123,7 @@ it("falls back to npm if package manager is not detected", async () => {
 		    "compatibility": {},
 		    "devDependencies": {
 		      "@slicemachine/adapter-universal": "latest",
-		      "slice-machine-ui": "<1.0.0",
+		      "slice-machine-ui": "latest",
 		    },
 		    "name": "universal (no framework)",
 		    "prismicDocumentation": "https://prismic.dev/init/universal",

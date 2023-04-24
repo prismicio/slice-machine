@@ -222,17 +222,24 @@ export class PrismicAuthManager {
 			const url = new URL("./validate", API_ENDPOINTS.PrismicAuthentication);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
 
-			const res = await fetch(url.toString(), {
-				headers: {
-					"User-Agent": SLICE_MACHINE_USER_AGENT,
-				},
-			});
-
-			if (!res.ok) {
-				await this.logout();
+			let res;
+			try {
+				res = await fetch(url.toString(), {
+					headers: {
+						"User-Agent": SLICE_MACHINE_USER_AGENT,
+					},
+				});
+			} catch (error) {
+				// Noop, we return if `res` is not defined.
 			}
 
-			return res.ok;
+			if (!res || !res.ok) {
+				await this.logout();
+
+				return false;
+			}
+
+			return true;
 		} else {
 			return false;
 		}

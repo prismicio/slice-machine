@@ -148,8 +148,10 @@ export const mockAWSACLAPI = (
 			rest.post(
 				new URL("delete-folder", endpoint).toString(),
 				async (req, res, ctx) => {
-					const { sliceId } = await req.json<{ sliceId: string }>();
-					if (config.deleteFolderEndpoint?.expectedSliceIDs.includes(sliceId)) {
+					const { sliceName: sliceID } = await req.json<{
+						sliceName: string;
+					}>();
+					if (config.deleteFolderEndpoint?.expectedSliceIDs.includes(sliceID)) {
 						return res(ctx.status(200));
 					} else {
 						return res(ctx.status(401));

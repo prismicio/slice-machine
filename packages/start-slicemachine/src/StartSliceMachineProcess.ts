@@ -142,7 +142,7 @@ export class StartSliceMachineProcess {
 			// crashing early. We need to figure out how to
 			// properly install and load Puppeteer without this
 			// workaround.
-			this._sliceMachineManager.screenshots.initBrowserContext();
+			await this._sliceMachineManager.screenshots.initBrowserContext();
 		} catch {
 			// noop - We'll try again before taking a screenshot.
 		}

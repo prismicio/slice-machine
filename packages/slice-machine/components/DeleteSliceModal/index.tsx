@@ -4,7 +4,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
+import { Close, Flex, Heading, Paragraph, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
@@ -110,24 +110,29 @@ export const DeleteSliceModal: React.FunctionComponent<
           </Flex>
         )}
       >
-        <Text sx={{ wordWrap: "break-word" }}>
-          This action will delete the{" "}
-          <Text sx={{ fontWeight: "bold" }}>
-            `{libName}/{sliceName}/`
-          </Text>
-          directory and update associated files in the{" "}
-          <Text sx={{ fontWeight: "bold" }}>`.slicemachine/`</Text>
-          directory. It will also remove the Slice from the Slice Zones of any
-          Custom Types that use it.
-        </Text>
-        <br />
-        <Text sx={{ wordWrap: "break-word" }}>
-          The next time you push changes to Prismic, the{" "}
-          <Text sx={{ fontWeight: "bold" }}>"{sliceName}"</Text> Slice will be
-          deleted from your repository, and users will no longer be able to add
-          it to Documents. You will need to manually remove it from any
-          Documents that currently use it.
-        </Text>
+        <Paragraph>
+          This action will immediately make the following changes:
+          <ul>
+            <li>
+              Delete the{" "}
+              <Text sx={{ fontWeight: "bold" }}>
+                {libName}/{sliceName}/
+              </Text>{" "}
+              directory.
+            </li>
+            <li>Remove the Slice from all Slice Zones that use it.</li>
+          </ul>
+          The next time you push your changes to Prismic, the following change
+          will happen:
+          <ul>
+            <li>
+              Remove the Slice from the list of available Slices to use in the
+              Page Builder.
+            </li>
+          </ul>
+          You will need to manually remove the Slice from any Pages that
+          currently use it.
+        </Paragraph>
       </Card>
     </SliceMachineModal>
   );

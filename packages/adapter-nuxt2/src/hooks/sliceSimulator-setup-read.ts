@@ -88,7 +88,7 @@ const createStep2 = async ({
 			</template>
 
 			<script>
-			import { SliceSimulator } from "@slicemachine/adapter-nuxt2/simulator"
+			import { SliceSimulator } from "@slicemachine/adapter-nuxt2/dist/simulator.cjs";
 			import { components } from "~/slices";
 
 			export default {
