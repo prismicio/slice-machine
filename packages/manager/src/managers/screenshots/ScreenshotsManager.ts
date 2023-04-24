@@ -106,7 +106,7 @@ export class ScreenshotsManager extends BaseManager {
 			);
 		}
 
-		const browser = await puppeteer.launch();
+		const browser = await puppeteer.launch({ headless: "new" });
 
 		this._browserContext = await browser.createIncognitoBrowserContext();
 	}
