@@ -107,8 +107,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
         backgroundImage: "url(/pattern.png)",
         backgroundRepeat: "repeat",
         backgroundSize: "10px",
-        border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
-        borderRadius: 8,
         display: "flex",
         height: "100%",
         justifyContent: "center",
