@@ -1,26 +1,19 @@
 {
-  "compilerOptions": {
-    "target": "es2019",
-    "module": "commonjs",
-    "removeComments": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "baseUrl": "./src",
-    "typeRoots": ["./node_modules/@types"],
-    "types": ["node", "jest"],
-    "inlineSourceMap": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "outDir": "./build"
-  },
-  "exclude": ["node_modules", "build", "__tests__"]
+	"compilerOptions": {
+		"strict": true,
+		"skipLibCheck": true,
+
+		"target": "esnext",
+		"module": "esnext",
+		"declaration": false,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+
+		"forceConsistentCasingInFileNames": true,
+		"lib": ["esnext"],
+		"types": ["node"]
+	},
+	"exclude": ["node_modules", "dist"]
 }

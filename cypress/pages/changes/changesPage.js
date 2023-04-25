@@ -11,7 +11,6 @@ class ChangesPage {
 
   goTo() {
     cy.visit(`/changes`);
-    this.pushButton.should("be.visible");
     return this;
   }
 

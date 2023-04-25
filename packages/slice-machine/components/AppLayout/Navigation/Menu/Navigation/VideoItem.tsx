@@ -4,26 +4,20 @@ import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 import { MdPlayCircleFilled } from "react-icons/md";
 import { Close, Flex, Paragraph } from "theme-ui";
 import style from "./VideoItem.module.css";
-import Tracker from "@src/tracking/client";
-import { Frameworks } from "@slicemachine/core/build/models";
-import { VIDEO_YOUTUBE_PLAYLIST_LINK } from "../../../../../lib/consts";
+import { telemetry } from "@src/apiClient";
+import { VIDEO_YOUTUBE_PLAYLIST_LINK } from "@lib/consts";
 
 type VideoItemProps = {
   hasSeenTutorialsTooTip: boolean;
   onClose: () => void;
-  framework: Frameworks;
 };
 
-const VideoItem: FC<VideoItemProps> = ({
-  framework,
-  hasSeenTutorialsTooTip,
-  onClose,
-}) => {
+const VideoItem: FC<VideoItemProps> = ({ hasSeenTutorialsTooTip, onClose }) => {
   const id = "video-tool-tip";
   const videoUrl = VIDEO_YOUTUBE_PLAYLIST_LINK;
 
   const handleClose = () => {
-    void Tracker.get().trackClickOnVideoTutorials(framework, videoUrl);
+    void telemetry.track({ event: "open-video-tutorials", video: videoUrl });
     onClose();
   };
 

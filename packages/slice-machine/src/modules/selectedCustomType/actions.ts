@@ -1,19 +1,11 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
-import {
-  CustomTypeSM,
-  TabField,
-} from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
 
 export type SelectedCustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
   | ActionType<typeof cleanupCustomTypeStoreCreator>
   | ActionType<typeof saveCustomTypeCreator>
-  | ActionType<typeof updateFieldMockConfigCreator>
-  | ActionType<typeof deleteFieldMockConfigCreator>
-  | ActionType<typeof updateGroupFieldMockConfigCreator>
-  | ActionType<typeof deleteGroupFieldMockConfigCreator>
   | ActionType<typeof createTabCreator>
   | ActionType<typeof updateTabCreator>
   | ActionType<typeof deleteTabCreator>
@@ -32,7 +24,6 @@ export type SelectedCustomTypeActions =
 export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
   model: CustomTypeSM;
   remoteModel: CustomTypeSM | undefined;
-  mockConfig: CustomTypeMockConfig;
 }>();
 
 export const cleanupCustomTypeStoreCreator = createAction(
@@ -45,43 +36,6 @@ export const saveCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPE/SAVE.RESPONSE",
   "CUSTOM_TYPE/SAVE.FAILURE"
 )<undefined, { customType: CustomTypeSM }>();
-
-// Mock config actions
-export const updateFieldMockConfigCreator = createAction(
-  "CUSTOM_TYPE/UPDATE_FIELD_MOCK_CONFIG"
-)<{
-  customTypeMockConfig: CustomTypeMockConfig;
-  previousFieldId: string;
-  fieldId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any;
-}>();
-
-export const deleteFieldMockConfigCreator = createAction(
-  "CUSTOM_TYPE/DELETE_FIELD_MOCK_CONFIG"
-)<{
-  customTypeMockConfig: CustomTypeMockConfig;
-  fieldId: string;
-}>();
-
-export const updateGroupFieldMockConfigCreator = createAction(
-  "CUSTOM_TYPE/UPDATE_GROUP_FIELD_MOCK_CONFIG"
-)<{
-  customTypeMockConfig: CustomTypeMockConfig;
-  groupId: string;
-  previousFieldId: string;
-  fieldId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any;
-}>();
-
-export const deleteGroupFieldMockConfigCreator = createAction(
-  "CUSTOM_TYPE/DELETE_GROUP_FIELD_MOCK_CONFIG"
-)<{
-  customTypeMockConfig: CustomTypeMockConfig;
-  groupId: string;
-  fieldId: string;
-}>();
 
 // Tab actions
 export const createTabCreator = createAction("CUSTOM_TYPE/CREATE_TAB")<{

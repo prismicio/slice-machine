@@ -3,10 +3,10 @@ import path from "path";
 export const ROOT = "e2e-projects/cypress-next-app";
 
 export const PACKAGE_JSON_FILE = `${ROOT}/package.json`;
-export const MANIFEST_FILE = `${ROOT}/sm.json`;
+export const MANIFEST_FILE = `${ROOT}/slicemachine.config.json`;
 
 export const ASSETS_FOLDER = `${ROOT}/.slicemachine`;
-export const TYPES_FILE = `${ASSETS_FOLDER}/prismicio.d.ts`;
+export const TYPES_FILE = `${ROOT}/prismicio.d.ts`;
 
 export const CUSTOM_TYPES_FOLDER = `${ROOT}/customtypes`;
 export const CUSTOM_TYPE_MODEL = (customTypeId) =>
@@ -19,4 +19,4 @@ export const SLICE_MOCK_FILE = (sliceName) =>
 export const SLICE_MODEL = (sliceName) =>
   `${SLICES_FOLDER}/${sliceName}/model.json`;
 
-export const SIMULATOR_PATH = path.join(ROOT, "pages", "slice-simulator.jsx");
+export const SIMULATOR_PATH = path.join(ROOT, "pages", "slice-simulator.js");

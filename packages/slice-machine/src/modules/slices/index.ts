@@ -9,6 +9,7 @@ import {
   fork,
   put,
   SagaReturnType,
+  select,
   take,
   takeLatest,
 } from "redux-saga/effects";
@@ -20,6 +21,7 @@ import {
   getState,
   renameSlice,
   SaveSliceMockRequest,
+  telemetry,
 } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { Reducer } from "redux";
@@ -27,20 +29,18 @@ import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
-import { SliceSM } from "@slicemachine/core/build/models";
-import Tracker from "../../tracking/client";
+import { SliceSM } from "@lib/models/common/Slice";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
-import { saveSliceCreator } from "../selectedSlice/actions";
+import { updateSliceCreator } from "../selectedSlice/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import axios from "axios";
-import { DeleteSliceResponse } from "@lib/models/common/Slice";
+// import { DeleteSliceResponse } from "@lib/models/common/Slice";
 import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
 import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
+import { selectSliceById } from "../selectedSlice/selectors";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -63,14 +63,13 @@ export const renameSliceCreator = createAsyncAction(
   "SLICES/RENAME.FAILURE"
 )<
   {
+    libName: string;
     sliceId: string;
     newSliceName: string;
-    libName: string;
   },
   {
-    sliceId: string;
-    newSliceName: string;
     libName: string;
+    renamedSlice: SliceSM;
   }
 >();
 
@@ -98,7 +97,7 @@ type SlicesActions =
   | ActionType<typeof createSliceCreator>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
-  | ActionType<typeof saveSliceCreator>
+  | ActionType<typeof updateSliceCreator>
   | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSliceMock>;
@@ -144,14 +143,18 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: action.payload.libraries,
       };
     case getType(renameSliceCreator.success): {
-      const { libName, sliceId, newSliceName } = action.payload;
+      const { libName, renamedSlice } = action.payload;
       const newLibs = state.libraries.map((library) => {
         if (library.name !== libName) return library;
         return {
           ...library,
           components: library.components.map((component) => {
-            if (component.model.id !== sliceId) return component;
-            return renamedComponentUI(component, newSliceName);
+            if (component.model.id !== renamedSlice.id) return component;
+
+            return {
+              ...component,
+              model: renamedSlice,
+            };
           }),
         };
       });
@@ -160,7 +163,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: newLibs,
       };
     }
-    case getType(saveSliceCreator.success): {
+    case getType(updateSliceCreator.success): {
       const newComponentUI = action.payload.component;
 
       const newLibraries = state.libraries.map((library) => {
@@ -219,15 +222,15 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
 
     case getType(updateSliceMock): {
-      const { libraryName, sliceName, mock } = action.payload;
+      const { libraryID, sliceID, mocks } = action.payload;
       const libraries = state.libraries.map((lib) => {
-        if (lib.name !== libraryName) return lib;
+        if (lib.name !== libraryID) return lib;
 
         const components = lib.components.map((component) => {
-          if (component.model.name !== sliceName) return component;
+          if (component.model.id !== sliceID) return component;
           return {
             ...component,
-            mock: mock,
+            mocks,
           };
         });
         return {
@@ -251,32 +254,46 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 export function* createSliceSaga({
   payload,
 }: ReturnType<typeof createSliceCreator.request>) {
-  const { variationId } = (yield call(
-    createSlice,
-    payload.sliceName,
-    payload.libName
-  )) as SagaReturnType<typeof createSlice>;
-  void Tracker.get().trackCreateSlice({
-    id: payload.sliceName,
-    name: payload.sliceName,
-    library: payload.libName,
-  });
-  const { data: serverState } = (yield call(getState)) as SagaReturnType<
-    typeof getState
-  >;
-  yield put(createSliceCreator.success({ libraries: serverState.libraries }));
-  yield put(modalCloseCreator());
-  const addr = `/${payload.libName.replace(/\//g, "--")}/${
-    payload.sliceName
-  }/${variationId}`;
-  yield put(push("/[lib]/[sliceName]/[variation]", addr));
-  yield take(LOCATION_CHANGE);
-  yield put(
-    openToasterCreator({
-      content: "Slice saved",
-      type: ToasterType.SUCCESS,
-    })
-  );
+  try {
+    const { variationId, errors } = (yield call(
+      createSlice,
+      payload.sliceName,
+      payload.libName
+    )) as SagaReturnType<typeof createSlice>;
+    if (errors.length) {
+      throw errors;
+    }
+    void telemetry.track({
+      event: "slice:created",
+      id: payload.sliceName,
+      name: payload.sliceName,
+      library: payload.libName,
+    });
+    const serverState = (yield call(getState)) as SagaReturnType<
+      typeof getState
+    >;
+    yield put(createSliceCreator.success({ libraries: serverState.libraries }));
+    yield put(modalCloseCreator());
+    const addr = `/${payload.libName.replace(/\//g, "--")}/${
+      payload.sliceName
+    }/${variationId}`;
+    yield put(push("/[lib]/[sliceName]/[variation]", addr));
+    yield take(LOCATION_CHANGE);
+    yield put(
+      openToasterCreator({
+        content: "Slice saved",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    // Unknown errors
+    yield put(
+      openToasterCreator({
+        content: "Internal Error: Slice not created",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
 }
 
 // Saga watchers
@@ -292,8 +309,23 @@ export function* renameSliceSaga({
 }: ReturnType<typeof renameSliceCreator.request>) {
   const { libName, sliceId, newSliceName } = payload;
   try {
-    yield call(renameSlice, sliceId, newSliceName, libName);
-    yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
+    const slice = (yield select((store: SliceMachineStoreType) =>
+      selectSliceById(store, libName, sliceId)
+    )) as ReturnType<typeof selectSliceById>;
+    if (!slice) {
+      throw new Error(
+        `Slice "${payload.sliceId} in the "${payload.libName}" library not found.`
+      );
+    }
+
+    const renamedSlice = renameSliceModel({
+      slice: slice.model,
+      newName: newSliceName,
+    });
+
+    yield call(renameSlice, renamedSlice, libName);
+    yield put(renameSliceCreator.success({ libName, renamedSlice }));
+
     yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
@@ -323,7 +355,14 @@ export function* deleteSliceSaga({
 }: ReturnType<typeof deleteSliceCreator.request>) {
   const { libName, sliceId, sliceName } = payload;
   try {
-    yield call(deleteSlice, sliceId, libName);
+    const result = (yield call(
+      deleteSlice,
+      sliceId,
+      libName
+    )) as SagaReturnType<typeof deleteSlice>;
+    if (result.errors.length > 0) {
+      throw result.errors;
+    }
     yield put(deleteSliceCreator.success(payload));
     yield put(
       openToasterCreator({
@@ -332,27 +371,12 @@ export function* deleteSliceSaga({
       })
     );
   } catch (e) {
-    if (axios.isAxiosError(e)) {
-      const apiResponse = e.response?.data as DeleteSliceResponse;
-      if (apiResponse.type === "warning")
-        yield put(deleteSliceCreator.success(payload));
-      yield put(
-        openToasterCreator({
-          content: apiResponse.reason,
-          type:
-            apiResponse.type === "error"
-              ? ToasterType.ERROR
-              : ToasterType.WARNING,
-        })
-      );
-    } else {
-      yield put(
-        openToasterCreator({
-          content: "An unexpected error happened while deleting your slice.",
-          type: ToasterType.ERROR,
-        })
-      );
-    }
+    yield put(
+      openToasterCreator({
+        content: "An unexpected error happened while deleting your slice.",
+        type: ToasterType.ERROR,
+      })
+    );
   }
   yield put(modalCloseCreator());
 }
@@ -371,36 +395,14 @@ export function* watchSliceSagas() {
   yield fork(watchDeleteSlice);
 }
 
-export const renamedComponentUI = (
-  initialComponent: ComponentUI,
-  newName: string
-): ComponentUI => {
-  const { model, screenshots } = initialComponent;
+type RenameSliceModelArgs = {
+  slice: SliceSM;
+  newName: string;
+};
+
+export function renameSliceModel(args: RenameSliceModelArgs): SliceSM {
   return {
-    ...initialComponent,
-    model: renameModel(model, newName),
-    screenshots: renameScreenshots(screenshots, model.name, newName),
+    ...args.slice,
+    name: args.newName,
   };
-};
-
-export const renameScreenshots = (
-  initialScreenshots: Record<string, ScreenshotUI>,
-  prevName: string,
-  newName: string
-): Record<string, ScreenshotUI> => {
-  return Object.entries(initialScreenshots).reduce((acc, [key, screenshot]) => {
-    acc[key] = {
-      ...screenshot,
-      url: screenshot.url.replace(prevName, newName),
-      path: screenshot.path.replace(prevName, newName),
-    };
-    return acc;
-  }, {} as Record<string, ScreenshotUI>);
-};
-
-export const renameModel = (
-  initialModel: SliceSM,
-  newName: string
-): SliceSM => {
-  return { ...initialModel, name: newName };
-};
+}

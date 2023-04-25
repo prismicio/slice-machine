@@ -3,7 +3,14 @@ import { AvailableCustomTypesStoreType } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { refreshStateCreator } from "@src/modules/environment";
-import { call, fork, put, takeLatest } from "redux-saga/effects";
+import {
+  call,
+  fork,
+  put,
+  SagaReturnType,
+  select,
+  takeLatest,
+} from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
@@ -15,14 +22,12 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@lib/models/common/normalizers/customType";
 import { saveCustomTypeCreator } from "../selectedCustomType/actions";
-import axios from "axios";
-import { DeleteCustomTypeResponse } from "@lib/models/common/CustomType";
 import { omit } from "lodash";
 import { deleteSliceCreator } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
@@ -59,8 +64,7 @@ export const renameCustomTypeCreator = createAsyncAction(
     newCustomTypeName: string;
   },
   {
-    customTypeId: string;
-    newCustomTypeName: string;
+    renamedCustomType: CustomTypeSM;
   }
 >();
 
@@ -156,25 +160,20 @@ export const availableCustomTypesReducer: Reducer<
     }
 
     case getType(renameCustomTypeCreator.success): {
-      const customType = state[action.payload.customTypeId];
-      const newName = action.payload.newCustomTypeName;
+      const id = action.payload.renamedCustomType.id;
+      const customType = state[id];
 
       // Rename only applies for custom type with local data
       if (!hasLocal(customType)) return state;
 
-      const newLocalCustomType = {
-        ...customType.local,
-        label: newName,
-      };
-
       const newCustomType = {
         ...customType,
-        local: newLocalCustomType,
+        local: action.payload.renamedCustomType,
       };
 
       return {
         ...state,
-        [customType.local.id]: newCustomType,
+        [id]: newCustomType,
       };
     }
 
@@ -245,7 +244,7 @@ export function* createCustomTypeSaga({
       payload.label,
       payload.repeatable
     );
-    yield call(saveCustomType, newCustomType, {});
+    yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
     yield put(modalCloseCreator());
     yield put(push(`/cts/${payload.id}`));
@@ -269,12 +268,27 @@ export function* renameCustomTypeSaga({
   payload,
 }: ReturnType<typeof renameCustomTypeCreator.request>) {
   try {
-    yield call(
-      renameCustomType,
-      payload.customTypeId,
-      payload.newCustomTypeName
-    );
-    yield put(renameCustomTypeCreator.success(payload));
+    const customType = (yield select(
+      selectCustomTypeById,
+      payload.customTypeId
+    )) as ReturnType<typeof selectCustomTypeById>;
+    if (!customType) {
+      throw new Error(`Custom Type "${payload.newCustomTypeName} not found.`);
+    }
+
+    if (!hasLocal(customType)) {
+      throw new Error(
+        `Can't rename a deleted CustomType (${payload.newCustomTypeName})`
+      );
+    }
+
+    const renamedCustomType = renameCustomTypeModel({
+      customType: customType.local,
+      newName: payload.newCustomTypeName,
+    });
+
+    yield call(renameCustomType, renamedCustomType);
+    yield put(renameCustomTypeCreator.success({ renamedCustomType }));
     yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
@@ -296,7 +310,13 @@ export function* deleteCustomTypeSaga({
   payload,
 }: ReturnType<typeof deleteCustomTypeCreator.request>) {
   try {
-    yield call(deleteCustomType, payload.customTypeId);
+    const result = (yield call(
+      deleteCustomType,
+      payload.customTypeId
+    )) as SagaReturnType<typeof deleteCustomType>;
+    if (result.errors.length > 0) {
+      throw result.errors;
+    }
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
       openToasterCreator({
@@ -305,28 +325,13 @@ export function* deleteCustomTypeSaga({
       })
     );
   } catch (e) {
-    if (axios.isAxiosError(e)) {
-      const apiResponse = e.response?.data as DeleteCustomTypeResponse;
-      if (apiResponse.type === "warning")
-        yield put(deleteCustomTypeCreator.success(payload));
-      yield put(
-        openToasterCreator({
-          content: apiResponse.reason,
-          type:
-            apiResponse.type === "error"
-              ? ToasterType.ERROR
-              : ToasterType.WARNING,
-        })
-      );
-    } else {
-      yield put(
-        openToasterCreator({
-          content:
-            "An unexpected error happened while deleting your custom type.",
-          type: ToasterType.ERROR,
-        })
-      );
-    }
+    yield put(
+      openToasterCreator({
+        content:
+          "An unexpected error happened while deleting your custom type.",
+        type: ToasterType.ERROR,
+      })
+    );
   }
   yield put(modalCloseCreator());
 }
@@ -350,4 +355,18 @@ function* handleCustomTypeRequests() {
 // Saga Exports
 export function* watchAvailableCustomTypesSagas() {
   yield fork(handleCustomTypeRequests);
+}
+
+type RenameCustomTypeModelArgs = {
+  customType: CustomTypeSM;
+  newName: string;
+};
+
+export function renameCustomTypeModel(
+  args: RenameCustomTypeModelArgs
+): CustomTypeSM {
+  return {
+    ...args.customType,
+    label: args.newName,
+  };
 }

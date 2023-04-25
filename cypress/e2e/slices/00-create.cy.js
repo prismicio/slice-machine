@@ -1,10 +1,11 @@
 import { SLICE_MOCK_FILE } from "../../consts";
 import { simulatorPage } from "../../pages/simulator/simulatorPage";
+import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 
 const sliceName = "TestSlice";
 const editedSliceName = "EditedSliceName";
 const sliceId = "test_slice"; // generated automatically from the slice name
-const lib = "slices";
+const lib = ".--slices";
 
 describe("Create Slices", () => {
   beforeEach(() => {
@@ -14,6 +15,11 @@ describe("Create Slices", () => {
 
   it("A user can create and rename a slice", () => {
     cy.createSlice(lib, sliceId, sliceName);
+
+    sliceBuilder.addNewWidgetField("Title", "Key Text");
+    sliceBuilder.addNewWidgetField("Description", "Rich Text");
+
+    cy.contains("Save to File System").click();
 
     // remove widget
     cy.get('[data-cy="slice-menu-button"]').first().click();
@@ -69,7 +75,7 @@ describe("Create Slices", () => {
 
     simulatorPage.setup();
 
-    cy.get("[data-testid=simulator-open-button]").click();
+    sliceBuilder.openSimulator();
 
     cy.getInputByLabel("Description").first().clear();
     cy.getInputByLabel("Description").first().type("👋");
@@ -115,6 +121,9 @@ describe("Create Slices", () => {
 
     // TODO: use faster fixtures
     cy.createSlice(lib, sliceId, sliceName);
+
+    sliceBuilder.addNewWidgetField("Title", "Key Text");
+    sliceBuilder.addNewWidgetField("Description", "Rich Text");
 
     cy.get('ul[data-cy="slice-non-repeatable-zone"] > li')
       .eq(1)

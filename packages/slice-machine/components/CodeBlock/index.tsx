@@ -2,19 +2,11 @@ import React from "react";
 import { type ThemeUIStyleObject, Flex, useThemeUI } from "theme-ui";
 import hljs from "highlight.js";
 
-export type Language = "javascript" | "bash" | "xml" | "html" | "json";
-
-const DEFAULT_LANGUAGES: Array<Language> = [
-  "javascript",
-  "bash",
-  "xml",
-  "html",
-  "json",
-];
+const DEFAULT_LANGUAGES = ["javascript", "bash", "xml", "html", "json"];
 
 const CodeBlock: React.FC<{
   children: string;
-  lang?: Language;
+  lang?: string;
   sx?: ThemeUIStyleObject;
   codeStyle?: React.CSSProperties;
   codeClass?: string;
@@ -22,7 +14,8 @@ const CodeBlock: React.FC<{
 }> = ({ children, lang, sx, codeStyle, codeClass, Header }) => {
   const { theme } = useThemeUI();
   const text = lang
-    ? hljs.highlight(children, { language: lang }).value
+    ? hljs.highlight(children, { language: lang === "vue" ? "html" : lang })
+        .value
     : hljs.highlightAuto(children, DEFAULT_LANGUAGES).value;
 
   return (

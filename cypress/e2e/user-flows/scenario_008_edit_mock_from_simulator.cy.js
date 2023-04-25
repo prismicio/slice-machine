@@ -1,12 +1,11 @@
 import { simulatorPage } from "../../pages/simulator/simulatorPage";
 import { editorPage } from "../../pages/simulator/editorPage";
 import { sliceBuilder } from "../../pages/slices/sliceBuilder";
-import { SLICE_MOCK_FILE } from "../../consts";
 
 const SLICE = {
   id: "scenario008",
   name: "Scenario008",
-  library: "slices",
+  library: ".--slices",
 };
 
 describe("Scenario 008", () => {
@@ -28,33 +27,11 @@ describe("Scenario 008", () => {
       .addNewWidgetField("ImageField", "Image")
       .save();
 
-    // force mock value for the boolean and select fields
-    cy.modifyFile(SLICE_MOCK_FILE(SLICE.name), (mock) =>
-      mock.map((variation) =>
-        variation.variation === "default"
-          ? variation
-          : {
-              ...variation,
-              primary: {
-                ...variation.primary,
-                booleanfield: {
-                  ...variation.primary.booleanfield,
-                  value: false,
-                },
-                selectfield: {
-                  ...variation.primary.selectfield,
-                  value: "1",
-                },
-              },
-            }
-      )
-    );
-
     simulatorPage.setup();
     sliceBuilder.openSimulator();
 
     // Wait for the editor to be fully loaded
-    editorPage.contains("Title").should("be.visible");
+    editorPage.contains("Scenario008 • SecondVariation").should("be.visible");
 
     simulatorPage.changeVariations("Default");
     cy.contains("Scenario008 • Default").should("be.visible");
@@ -68,12 +45,28 @@ describe("Scenario 008", () => {
     simulatorPage.toggleEditor();
     cy.contains("Scenario008 • SecondVariation").should("be.visible");
 
+    // Need to know the initial of Boolean and Select fields to know if the update worked
+    cy.getInputByLabel("SelectField")
+      .invoke("text")
+      .then((currentValue) => {
+        cy.wrap(currentValue == "1" ? "2" : "1").as("newSelectValue");
+      });
+    cy.getInputByLabel("BooleanField")
+      .invoke("attr", "aria-checked")
+      .then((currentValue) => {
+        cy.wrap(currentValue == "true" ? "false" : "true").as(
+          "newBooleanValue"
+        );
+      });
+
     // editor # change field values
     editorPage.type("SimpleTextField", "SimpleTextContent");
     editorPage.type("RichTextField", "RichTextContent");
     editorPage.type("NumberField", "42", "have.value");
     editorPage.toggleBooleanField("BooleanField");
-    editorPage.select("SelectField", "2");
+    cy.get("@newSelectValue").then((value) => {
+      editorPage.select("SelectField", value);
+    });
 
     editorPage
       .changeImage("ImageField")
@@ -93,10 +86,14 @@ describe("Scenario 008", () => {
     );
     cy.getInputByLabel("RichTextField").should("contain", "RichTextContent");
     cy.getInputByLabel("NumberField").should("have.value", "42");
-    cy.getInputByLabel("BooleanField")
-      .invoke("attr", "aria-checked")
-      .should("equal", "true");
-    cy.getInputByLabel("SelectField").should("contain", "2");
+    cy.get("@newBooleanValue").then((value) => {
+      cy.getInputByLabel("BooleanField")
+        .invoke("attr", "aria-checked")
+        .should("equal", value);
+    });
+    cy.get("@newSelectValue").then((value) => {
+      cy.getInputByLabel("SelectField").should("contain", value);
+    });
 
     cy.getInputByLabel("Alt text").should("have.value", "An ananas maybe");
     cy.get("@newImageSrc").then((newImageSrc) => {

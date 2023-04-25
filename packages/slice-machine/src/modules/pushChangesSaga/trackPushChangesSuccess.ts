@@ -1,38 +1,35 @@
-import Tracker from "@src/tracking/client";
 import { ChangesPushSagaPayload } from ".";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { telemetry } from "@src/apiClient";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 
 type trackingParameters = ChangesPushSagaPayload & { startTime: number };
 
-export async function trackPushChangesSuccess(params: trackingParameters) {
+export function trackPushChangesSuccess(params: trackingParameters) {
   const {
     startTime,
     confirmDeleteDocuments,
-    unSyncedCustomTypes,
-    unSyncedSlices,
-    modelsStatuses,
+    changedCustomTypes,
+    changedSlices,
   } = params;
 
-  const customTypesStats = unSyncedCustomTypes.reduce<{
+  const customTypesStats = changedCustomTypes.reduce<{
     customTypesCreated: number;
     customTypesModified: number;
     customTypesDeleted: number;
   }>(
     (acc, customType) => {
-      const status = modelsStatuses.customTypes[customType.id];
-      if (status === ModelStatus.New)
+      if (customType.status === ModelStatus.New)
         return {
           ...acc,
           customTypesCreated: acc.customTypesCreated + 1,
         };
-      else if (status === ModelStatus.Modified)
+      else if (customType.status === ModelStatus.Modified)
         return {
           ...acc,
           customTypesModified: acc.customTypesModified + 1,
         };
-      else if (status === ModelStatus.Deleted)
+      else if (customType.status === ModelStatus.Deleted)
         return {
           ...acc,
           customTypesDeleted: acc.customTypesDeleted + 1,
@@ -46,24 +43,23 @@ export async function trackPushChangesSuccess(params: trackingParameters) {
     }
   );
 
-  const slicesStats = unSyncedSlices.reduce<{
+  const slicesStats = changedSlices.reduce<{
     slicesCreated: number;
     slicesModified: number;
     slicesDeleted: number;
   }>(
     (acc, slice) => {
-      const status = modelsStatuses.slices[slice.model.id];
-      if (status === ModelStatus.New)
+      if (slice.status === ModelStatus.New)
         return {
           ...acc,
           slicesCreated: acc.slicesCreated + 1,
         };
-      else if (status === ModelStatus.Modified)
+      else if (slice.status === ModelStatus.Modified)
         return {
           ...acc,
           slicesModified: acc.slicesModified + 1,
         };
-      else if (status === ModelStatus.Deleted)
+      else if (slice.status === ModelStatus.Deleted)
         return {
           ...acc,
           slicesDeleted: acc.slicesDeleted + 1,
@@ -77,14 +73,15 @@ export async function trackPushChangesSuccess(params: trackingParameters) {
     }
   );
 
-  const total = unSyncedSlices.length + unSyncedCustomTypes.length;
-  const missingScreenshots: number = unSyncedSlices.reduce(
-    (sum: number, slice: ComponentUI) => sum + countMissingScreenshots(slice),
+  const total = changedSlices.length + changedCustomTypes.length;
+  const missingScreenshots: number = changedSlices.reduce(
+    (sum, sliceChange) => sum + countMissingScreenshots(sliceChange.slice),
     0
   );
   const duration = Date.now() - startTime;
 
-  return Tracker.get().trackChangesPushed({
+  return telemetry.track({
+    event: "changes:pushed",
     ...customTypesStats,
     ...slicesStats,
     total: total,

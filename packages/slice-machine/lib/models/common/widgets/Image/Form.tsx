@@ -15,7 +15,7 @@ import {
   AddThumbnailButton,
   ConstraintForm,
 } from "./components";
-import { TabFields } from "@slicemachine/core/build/models/CustomType";
+import { TabFields } from "@lib/models/common/CustomType";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -91,7 +91,6 @@ type FieldValues = {
     };
     thumbnails: Array<Thumbnail>;
   };
-  mockConfig: Record<string, unknown>;
 };
 
 type FormProps = {

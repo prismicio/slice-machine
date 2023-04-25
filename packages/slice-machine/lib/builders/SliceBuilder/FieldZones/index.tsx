@@ -5,18 +5,14 @@ import { transformKeyAccessor } from "@utils/str";
 
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
-import type { Models } from "@slicemachine/core";
-import { WidgetsArea } from "@slicemachine/core/build/models/Slice";
 
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 
-import {
-  CustomTypeMockConfig,
-  SliceMockConfig,
-} from "@models/common/MockConfig";
 import { DropResult } from "react-beautiful-dnd";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 
 const dataTipText = ` The non-repeatable zone
@@ -28,12 +24,10 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
   indeterminate number of times, like FAQs`;
 
 type FieldZonesProps = {
-  mockConfig: CustomTypeMockConfig;
-  variation: Models.VariationSM;
+  variation: VariationSM;
 };
 
 const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
-  mockConfig,
   variation,
 }) => {
   const {
@@ -44,26 +38,13 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     updateSliceWidgetMock,
     deleteSliceWidgetMock,
   } = useSliceMachineActions();
-  const _onDeleteItem = (widgetArea: Models.WidgetsArea) => (key: string) => {
-    deleteSliceWidgetMock(variation.id, mockConfig, widgetArea, key);
+  const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
+    deleteSliceWidgetMock(variation.id, widgetArea, key);
     removeSliceWidget(variation.id, widgetArea, key);
   };
 
-  const _getFieldMockConfig =
-    (widgetArea: Models.WidgetsArea) =>
-    ({ apiId }: { apiId: string }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return SliceMockConfig.getFieldMockConfig(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
-        mockConfig,
-        variation.id,
-        widgetArea,
-        apiId
-      );
-    };
-
   const _onSave =
-    (widgetArea: Models.WidgetsArea) =>
+    (widgetArea: WidgetsArea) =>
     ({
       apiId: previousKey,
       newKey,
@@ -72,13 +53,14 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     }: {
       apiId: string;
       newKey: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockValue: any;
     }) => {
       if (mockValue) {
         updateSliceWidgetMock(
           variation.id,
-          mockConfig,
           widgetArea,
           previousKey,
           newKey,
@@ -86,14 +68,14 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           mockValue
         );
       } else {
-        deleteSliceWidgetMock(variation.id, mockConfig, widgetArea, newKey);
+        deleteSliceWidgetMock(variation.id, widgetArea, newKey);
       }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       replaceSliceWidget(variation.id, widgetArea, previousKey, newKey, value);
     };
 
   const _onSaveNewField =
-    (widgetArea: Models.WidgetsArea) =>
+    (widgetArea: WidgetsArea) =>
     ({
       id,
       label,
@@ -103,8 +85,8 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       label: string;
       widgetTypeName: string;
     }) => {
+      // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const widget = Widgets[widgetTypeName];
       if (!widget) {
@@ -122,30 +104,27 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       );
     };
 
-  const _onDragEnd =
-    (widgetArea: Models.WidgetsArea) => (result: DropResult) => {
-      if (ensureDnDDestination(result)) return;
+  const _onDragEnd = (widgetArea: WidgetsArea) => (result: DropResult) => {
+    if (ensureDnDDestination(result)) return;
 
-      reorderSliceWidget(
-        variation.id,
-        widgetArea,
-        result.source.index,
-        result.destination?.index ?? undefined
-      );
-    };
+    reorderSliceWidget(
+      variation.id,
+      widgetArea,
+      result.source.index,
+      result.destination?.index ?? undefined
+    );
+  };
 
   return (
     <>
       <Zone
         tabId={undefined}
-        mockConfig={mockConfig}
         title="Non-Repeatable Zone"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.primary}
         EditModal={EditModal}
         widgetsArray={sliceBuilderWidgetsArray}
-        getFieldMockConfig={_getFieldMockConfig(WidgetsArea.Primary)}
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
         onSave={_onSave(WidgetsArea.Primary)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
@@ -165,14 +144,12 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       <Zone
         tabId={undefined}
         isRepeatable
-        mockConfig={mockConfig}
         title="Repeatable Zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.items}
         EditModal={EditModal}
-        getFieldMockConfig={_getFieldMockConfig(WidgetsArea.Items)}
         onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
         onSave={_onSave(WidgetsArea.Items)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Items)}

@@ -9,13 +9,14 @@ import {
   softDeleteDocumentsDrawer,
 } from "../../pages/changes/drawers";
 
-describe("I am an existing SM user and I want to push local changes", () => {
+// TODO: enable when transactional push requests responses can be mocked
+describe.skip("I am an existing SM user and I want to push local changes", () => {
   const random = Date.now();
 
   const slice = {
     id: `test_push${random}`,
     name: `TestPush${random}`,
-    library: "slices",
+    library: ".--slices",
   };
 
   const customType = {

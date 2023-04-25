@@ -1,27 +1,8 @@
-import {
-  VariationSM,
-  Screenshot,
-  Component,
-} from "@slicemachine/core/build/models";
-import { BackendEnvironment } from "./Environment";
-import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
+import { VariationSM } from "./Slice";
+import { Component, Screenshot } from "./Library";
 
-export const createScreenshotUrl = (
-  baseUrl: string,
-  pathToScreenshot: string,
-  hash: string
-): string =>
-  `${baseUrl}/api/__preview?q=${encodeURIComponent(
-    pathToScreenshot
-  )}&uniq=${hash}`;
-
-export const createScreenshotUI = (
-  baseUrl: string,
-  screenshot: Screenshot
-): ScreenshotUI => ({
-  path: screenshot.path,
+export const createScreenshotUI = (screenshot: Screenshot): ScreenshotUI => ({
   hash: screenshot.hash,
-  url: createScreenshotUrl(baseUrl, screenshot.path, screenshot.hash),
 });
 
 export const buildScreenshotUrls = (
@@ -29,20 +10,19 @@ export const buildScreenshotUrls = (
     | {
         [variationId: string]: Screenshot;
       }
-    | undefined,
-  baseUrl: string
+    | undefined
 ): { [v: string]: ScreenshotUI } => {
   if (!screenshots) {
     return {};
   }
   return Object.entries(screenshots).reduce(
     (acc, [variationId, screenshot]) => {
-      return screenshot.path
+      return screenshot.hash
         ? {
             ...acc,
             [variationId]: {
               ...screenshot,
-              ...createScreenshotUI(baseUrl, screenshot),
+              ...createScreenshotUI(screenshot),
             },
           }
         : acc;
@@ -52,24 +32,18 @@ export const buildScreenshotUrls = (
 };
 
 export interface ScreenshotUI extends Screenshot {
-  url: string;
+  url?: string;
 }
 
 export interface ComponentUI extends Component {
   screenshots: Record<VariationSM["id"], ScreenshotUI>;
-  mockConfig: CustomTypeMockConfig;
 }
 
 export const ComponentUI = {
-  build(component: Component, env: BackendEnvironment): ComponentUI {
+  build(component: Component): ComponentUI {
     return {
       ...component,
-      screenshots: buildScreenshotUrls(component.screenshots, env.baseUrl),
-      mockConfig: SliceMockConfig.getSliceMockConfig(
-        env.mockConfig,
-        component.from,
-        component.model.name
-      ),
+      screenshots: buildScreenshotUrls(component.screenshots),
     };
   },
   variation(

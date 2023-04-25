@@ -1,6 +1,6 @@
 /** This test needs to run AFTER create_slice. const values below are copied from there. */
 describe("simulator tooltip", () => {
-  const lib = "slices";
+  const lib = ".--slices";
   const sliceName = "DuplicateSlices";
   const sliceId = "DuplicateSlices";
 

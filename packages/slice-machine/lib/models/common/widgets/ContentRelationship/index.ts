@@ -5,7 +5,7 @@ import { MdSettingsEthernet } from "react-icons/md";
 
 import { Widget } from "../Widget";
 import { linkConfigSchema } from "../Link";
-import { Link } from "@prismicio/types-internal/lib/customtypes";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { hasLocal } from "@lib/models/common/ModelData";

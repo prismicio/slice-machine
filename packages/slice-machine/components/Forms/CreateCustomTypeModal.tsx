@@ -17,7 +17,7 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { FormikErrors } from "formik";
 
-import Tracker from "@src/tracking/client";
+import { telemetry } from "@src/apiClient";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
 
@@ -50,10 +50,11 @@ const CreateCustomTypeModal: React.FC = () => {
   const createCustomTypeAndTrack = ({ id, label, repeatable }: FormValues) => {
     const name = label || id;
 
-    void Tracker.get().trackCreateCustomType({
+    void telemetry.track({
+      event: "custom-type:created",
       id,
       name,
-      repeatable,
+      type: repeatable ? "repeatable" : "single",
     });
     createCustomType(id, name, repeatable);
     closeModals();

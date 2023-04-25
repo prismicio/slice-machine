@@ -1,6 +1,4 @@
 import { DropDownMenu } from "@components/DropDownSelector";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/models";
 import { RiCloseLine } from "react-icons/ri";
 import { useState } from "react";
 
@@ -20,6 +18,8 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { VariationSM } from "@lib/models/common/Slice";
 
 type ToolbarProps = {
   slice: ComponentUI;

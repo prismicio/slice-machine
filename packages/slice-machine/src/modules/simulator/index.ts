@@ -12,25 +12,21 @@ import {
   race,
   take,
   delay,
-  CallEffect,
-  SagaReturnType,
 } from "redux-saga/effects";
 import {
   checkSimulatorSetup,
+  getSimulatorSetupSteps,
   saveSliceMock,
   SaveSliceMockRequest,
 } from "@src/apiClient";
 import {
-  getFramework,
   selectIsSimulatorAvailableForFramework,
   updateManifestCreator,
 } from "@src/modules/environment";
-import { Frameworks } from "@slicemachine/core/build/models";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
-import Tracker from "@src/tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { updateSliceMock } from "../slices";
 
@@ -39,6 +35,7 @@ import { ModalKeysEnum } from "../modal/types";
 import { updateSelectedSliceMocks } from "../selectedSlice/actions";
 
 export const initialState: SimulatorStoreType = {
+  setupSteps: null,
   iframeStatus: null,
   setupStatus: {
     manifest: null,
@@ -56,9 +53,13 @@ export const checkSimulatorSetupCreator = createAsyncAction(
     callback?: () => void;
   },
   {
+    setupSteps: NonNullable<SimulatorStoreType["setupSteps"]>;
     setupStatus: SimulatorStoreType["setupStatus"];
   },
-  Error
+  {
+    setupSteps?: NonNullable<SimulatorStoreType["setupSteps"]>;
+    error: Error;
+  }
 >();
 
 export const connectToSimulatorIframeCreator = createAsyncAction(
@@ -85,6 +86,7 @@ type SimulatorActions = ActionType<
 >;
 
 // Selectors
+
 export const selectSetupStatus = (
   state: SliceMachineStoreType
 ): SimulatorStoreType["setupStatus"] => state.simulator.setupStatus;
@@ -96,6 +98,10 @@ export const selectIsWaitingForIFrameCheck = (
 export const selectIframeStatus = (
   state: SliceMachineStoreType
 ): string | null => state.simulator.iframeStatus;
+
+export const selectSetupSteps = (
+  state: SliceMachineStoreType
+): SimulatorStoreType["setupSteps"] => state.simulator.setupSteps;
 
 export const selectSavingMock = (state: SliceMachineStoreType): boolean =>
   state.simulator.savingMock;
@@ -127,6 +133,7 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
     case getType(checkSimulatorSetupCreator.failure):
       return {
         ...state,
+        setupSteps: action.payload.setupSteps || null,
         setupStatus: {
           ...state.setupStatus,
           manifest: "ko",
@@ -135,6 +142,7 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
     case getType(checkSimulatorSetupCreator.success):
       return {
         ...state,
+        setupSteps: action.payload.setupSteps,
         setupStatus: {
           ...state.setupStatus,
           manifest: "ok",
@@ -171,13 +179,16 @@ export function* checkSetupSaga(
 ) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { data: setupStatus }: { data: SimulatorCheckResponse } = yield call(
-      checkSimulatorSetup
-    );
+    const setupStatus: SimulatorCheckResponse = yield call(checkSimulatorSetup);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const setupSteps: Awaited<ReturnType<typeof getSimulatorSetupSteps>> =
+      yield call(getSimulatorSetupSteps);
 
     if (setupStatus.manifest === "ok") {
       yield put(
         checkSimulatorSetupCreator.success({
+          setupSteps: setupSteps.steps,
           setupStatus,
         })
       );
@@ -187,11 +198,10 @@ export function* checkSetupSaga(
       }
       return;
     }
-    yield call(failCheckSetupSaga);
-    yield call(trackOpenSetupModalSaga);
+    yield call(failCheckSetupSaga, { setupSteps: setupSteps.steps });
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    yield put(checkSimulatorSetupCreator.failure(error as Error));
+    yield put(checkSimulatorSetupCreator.failure({ error: error as Error }));
   }
 }
 
@@ -199,24 +209,26 @@ function* connectToSimulatorIframe() {
   yield put(connectToSimulatorIframeCreator.request());
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    timeout,
-    iframeCheckKO,
+    iframeCheckOk,
   }: {
-    iframeCheckKO: ReturnType<typeof connectToSimulatorIframeCreator.failure>;
-    timeout: CallEffect<true>;
+    iframeCheckOk: ReturnType<typeof connectToSimulatorIframeCreator.success>;
   } = yield race({
     iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
     iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-    timeout: delay(5000),
+    timeout: delay(20000),
   });
-  if (timeout || iframeCheckKO) {
-    yield put(connectToSimulatorIframeCreator.failure());
+
+  if (iframeCheckOk) {
+    yield put(connectToSimulatorIframeCreator.success());
     return;
   }
-  yield put(connectToSimulatorIframeCreator.success());
+
+  yield put(connectToSimulatorIframeCreator.failure());
 }
 
-export function* failCheckSetupSaga() {
+export function* failCheckSetupSaga({
+  setupSteps,
+}: { setupSteps?: NonNullable<SimulatorStoreType["setupSteps"]> } = {}) {
   const isPreviewAvailableForFramework = (yield select(
     selectIsSimulatorAvailableForFramework
   )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
@@ -224,42 +236,41 @@ export function* failCheckSetupSaga() {
   if (!isPreviewAvailableForFramework) {
     return;
   }
-  yield put(checkSimulatorSetupCreator.failure(new Error()));
+
+  yield put(
+    checkSimulatorSetupCreator.failure({
+      setupSteps,
+      error: new Error(),
+    })
+  );
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
-}
-
-export function* trackOpenSetupModalSaga() {
-  const framework: Frameworks = (yield select(getFramework)) as ReturnType<
-    typeof getFramework
-  >;
-
-  void Tracker.get().trackSliceSimulatorSetup(framework);
 }
 
 export function* saveSliceMockSaga({
   payload,
 }: ReturnType<typeof saveSliceMockCreator.request>): Generator {
   try {
-    const data = (yield call(saveSliceMock, payload)) as SagaReturnType<
-      typeof saveSliceMock
+    const { errors } = (yield call(saveSliceMock, payload)) as Awaited<
+      ReturnType<typeof saveSliceMock>
     >;
+    if (errors.length) {
+      throw errors;
+    }
     yield put(
       openToasterCreator({
         type: ToasterType.SUCCESS,
         content: "Saved",
       })
     );
-    yield put(updateSliceMock(data));
+    yield put(updateSliceMock(payload));
 
-    yield put(updateSelectedSliceMocks({ mocks: data.mock }));
+    yield put(updateSelectedSliceMocks({ mocks: payload.mocks }));
     yield put(saveSliceMockCreator.success());
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Error saving content";
     yield put(
       openToasterCreator({
         type: ToasterType.ERROR,
-        content: message,
+        content: "Error saving content",
       })
     );
     yield put(saveSliceMockCreator.failure());

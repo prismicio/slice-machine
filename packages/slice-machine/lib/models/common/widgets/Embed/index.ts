@@ -1,9 +1,8 @@
 import { FiCode } from "react-icons/fi";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
-import { Embed } from "@prismicio/types-internal/lib/customtypes";
+import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**  {
   "type" : "Embed",
@@ -30,7 +29,6 @@ export const EmbedWidget: Widget<Embed, typeof schema> = {
       placeholder: "",
     },
   }),
-  MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: "Embed",

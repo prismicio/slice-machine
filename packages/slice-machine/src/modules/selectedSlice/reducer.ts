@@ -4,22 +4,19 @@ import { getType } from "typesafe-actions";
 import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
-  deleteSliceWidgetMockCreator,
   initSliceStoreCreator,
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
   SelectedSliceActions,
-  updateSliceWidgetMockCreator,
   updateSelectedSliceMocks,
 } from "./actions";
 import { SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
 import { Variation } from "@lib/models/common/Variation";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { SliceSM } from "@slicemachine/core/build/models";
-import { renamedComponentUI, renameSliceCreator } from "../slices";
+import { SliceSM } from "@lib/models/common/Slice";
+import { renameSliceCreator } from "../slices";
 import { refreshStateCreator } from "../environment";
 import {
   generateSliceCustomScreenshotCreator,
@@ -139,37 +136,6 @@ export const selectedSliceReducer: Reducer<
         variationId
       )((v) => Variation.deleteWidget(v, widgetsArea, key));
     }
-    case getType(updateSliceWidgetMockCreator): {
-      if (!prevState) return prevState;
-
-      const updatedConfig = SliceMockConfig.updateFieldMockConfig(
-        action.payload.mockConfig,
-        action.payload.variationId,
-        action.payload.widgetArea,
-        action.payload.previousKey,
-        action.payload.newKey,
-        action.payload.mockValue
-      );
-
-      return {
-        ...prevState,
-        mockConfig: updatedConfig,
-      };
-    }
-    case getType(deleteSliceWidgetMockCreator): {
-      if (!prevState) return prevState;
-
-      const updatedConfig = SliceMockConfig.deleteFieldMockConfig(
-        action.payload.mockConfig,
-        action.payload.variationId,
-        action.payload.widgetArea,
-        action.payload.newKey
-      );
-      return {
-        ...prevState,
-        mockConfig: updatedConfig,
-      };
-    }
     case getType(copyVariationSliceCreator): {
       if (!prevState) return prevState;
       const { key, name, copied } = action.payload;
@@ -186,8 +152,12 @@ export const selectedSliceReducer: Reducer<
     }
     case getType(renameSliceCreator.success): {
       if (!prevState) return prevState;
-      const { newSliceName } = action.payload;
-      return renamedComponentUI(prevState, newSliceName);
+      const { renamedSlice } = action.payload;
+
+      return {
+        ...prevState,
+        model: renamedSlice,
+      };
     }
 
     case getType(updateSelectedSliceMocks): {
@@ -195,7 +165,7 @@ export const selectedSliceReducer: Reducer<
       const { mocks } = action.payload;
       return {
         ...prevState,
-        mock: mocks,
+        mocks,
       };
     }
     default:

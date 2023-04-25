@@ -2,6 +2,19 @@ import equal from "fast-deep-equal";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "../slices";
 
+export const selectSliceById = (
+  store: SliceMachineStoreType,
+  libraryName: string,
+  sliceId: string
+) => {
+  const libraries = getLibraries(store) || [];
+
+  const library = libraries.find((library) => library.name === libraryName);
+  const slice = library?.components.find((c) => c.model.id === sliceId);
+
+  return slice;
+};
+
 export const selectCurrentSlice = (
   store: SliceMachineStoreType,
   lib: string,
@@ -36,10 +49,5 @@ export const isSelectedSliceTouched = (
     selectedSlice.model.variations
   );
 
-  const sameMockConfig = equal(
-    librarySlice.mockConfig,
-    selectedSlice.mockConfig
-  );
-
-  return !sameVariations || !sameMockConfig;
+  return !sameVariations;
 };

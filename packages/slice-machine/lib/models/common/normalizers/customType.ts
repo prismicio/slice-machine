@@ -1,5 +1,5 @@
 import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export const normalizeFrontendCustomType = (
   localCustomType: CustomTypeSM,

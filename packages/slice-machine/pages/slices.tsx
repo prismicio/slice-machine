@@ -27,7 +27,7 @@ import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { Button } from "@components/Button";
 import { GoPlus } from "react-icons/go";
-import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
+import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
@@ -70,7 +70,16 @@ const SlicesIndex: React.FunctionComponent = () => {
     createSlice(sliceName, from);
   };
 
-  const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
+  const localLibraries: LibraryUI[] = libraries.filter(
+    (library) => library.isLocal
+  );
+  const sortedLibraries: LibraryUI[] = libraries.map((library) => {
+    // Sort slices
+    library.components = [...library.components].sort((slice1, slice2) => {
+      return slice1.model.name.localeCompare(slice2.model.name);
+    });
+    return library;
+  });
 
   const { modelsStatuses, authStatus, isOnline } = useModelStatus({
     slices: frontendSlices,
@@ -123,7 +132,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 : []
             }
           />
-          {libraries && (
+          {sortedLibraries && (
             <Flex
               sx={{
                 flex: 1,
@@ -163,7 +172,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   />
                 </Flex>
               ) : (
-                libraries.map((lib) => {
+                sortedLibraries.map((lib) => {
                   const { name, isLocal, components } = lib;
                   return (
                     <Flex

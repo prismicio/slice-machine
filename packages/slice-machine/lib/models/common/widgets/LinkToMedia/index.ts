@@ -1,13 +1,11 @@
 import * as yup from "yup";
 import { MdAttachment } from "react-icons/md";
 
-import { MockConfigForm } from "./Mock/Form";
-
 import { Widget } from "../Widget";
 
 import { linkConfigSchema } from "@lib/models/common/widgets/Link";
 import Form, { FormFields } from "./Form";
-import { Link } from "@prismicio/types-internal/lib/customtypes";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const Meta = {
   icon: MdAttachment,
@@ -33,7 +31,6 @@ const schema = yup.object().shape({
 });
 
 export const LinkToMediaWidget: Widget<Link, typeof schema> = {
-  MockConfigForm,
   Meta,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,

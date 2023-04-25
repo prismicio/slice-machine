@@ -21,12 +21,11 @@ import "src/css/tabs.css";
 import "src/css/drawer.css";
 import "src/css/toaster.css";
 import "src/css/intercom.css";
+import "src/css/starry-night.css";
 
 import "src/css/hljs.css";
 
 import ServerState from "../lib/models/server/ServerState";
-import { getIsTrackingAvailable } from "../src/modules/environment";
-import Tracker from "../src/tracking/client";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
@@ -74,7 +73,7 @@ function MyApp({
 
   useEffect(() => {
     async function getInitialState() {
-      const { data: serverState } = await getState();
+      const serverState = await getState();
       setServerState(serverState);
     }
     void getInitialState();
@@ -100,11 +99,6 @@ function MyApp({
         remoteSlices: serverState.remoteSlices,
       },
     });
-
-    const state = store.getState();
-    const tracking = getIsTrackingAvailable(state);
-
-    Tracker.get().initialize(tracking);
 
     setSMStore({ store, persistor });
   }, [serverState, smStore]);

@@ -12,7 +12,6 @@ import { isRemoteOnly } from "@lib/models/common/ModelData";
 import { ToasterType } from "@src/modules/toaster";
 import { getModelId } from "@lib/models/common/ModelData";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
-import { LimitType } from "@slicemachine/client/build/models/BulkChanges";
 import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
 
 export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
@@ -32,7 +31,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
 
   if (!isDeleteDocumentsDrawerOpen) return null;
 
-  if (modalData?.type !== LimitType.HARD) {
+  if (modalData?.type !== "HARD") {
     openToaster("No change data", ToasterType.ERROR);
     return null;
   }

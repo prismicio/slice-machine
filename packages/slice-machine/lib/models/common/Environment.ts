@@ -1,30 +1,23 @@
+import type { PackageManager } from "@slicemachine/manager";
+
 import PrismicData from "./PrismicData";
-import type { Models } from "@slicemachine/core";
-import type { Client, ApplicationMode } from "@slicemachine/client";
+import type { Manifest } from "./Manifest";
 import { PackageChangelog } from "./versions";
-import { PackageManager } from "./PackageManager";
-import { CustomTypeMockConfig } from "./MockConfig";
 
 export interface BackendEnvironment {
-  applicationMode: ApplicationMode;
   cwd: string;
   prismicData: PrismicData;
-  manifest: Models.Manifest;
+  manifest: Manifest;
   repo: string;
-  mockConfig: CustomTypeMockConfig;
-  framework: Models.Frameworks;
   baseUrl: string;
-  client: Client;
 }
 
 export interface FrontEndEnvironment {
   shortId?: string;
   intercomHash?: string;
-  manifest: Models.Manifest;
+  manifest: Manifest;
   repo: string;
   changelog?: PackageChangelog;
   packageManager: PackageManager;
-  mockConfig: CustomTypeMockConfig;
-  framework: Models.Frameworks;
-  sliceMachineAPIUrl: string;
+  supportsSliceSimulator: boolean;
 }

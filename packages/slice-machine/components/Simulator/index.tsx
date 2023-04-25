@@ -7,13 +7,9 @@ import { Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
-import Tracker from "@src/tracking/client";
+import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
-import {
-  getCurrentVersion,
-  getFramework,
-  selectSimulatorUrl,
-} from "@src/modules/environment";
+import { selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -22,7 +18,6 @@ import {
 } from "./components/Toolbar/ScreensizeInput";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
-import { Slices } from "@slicemachine/core/build/models";
 import { renderSliceMock } from "@prismicio/mocks";
 
 import { ThemeProvider } from "@prismicio/editor-ui";
@@ -42,6 +37,7 @@ import {
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
 import SetupModal from "./components/SetupModal";
+import { Slices } from "@lib/models/common/Slice";
 
 export enum UiState {
   LOADING_SETUP = "LOADING_SETUP",
@@ -55,15 +51,12 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   const { checkSimulatorSetup, connectToSimulatorIframe, saveSliceMock } =
     useSliceMachineActions();
   const {
-    framework,
     simulatorUrl,
     iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
   } = useSelector((state: SliceMachineStoreType) => ({
-    framework: getFramework(state),
     simulatorUrl: selectSimulatorUrl(state),
-    version: getCurrentVersion(state),
     iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
@@ -74,9 +67,20 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     checkSimulatorSetup();
-    void Tracker.get().trackOpenSliceSimulator(framework);
-    Tracker.get().editor.startNewSession();
+    void telemetry.track({ event: "slice-simulator:open" });
   }, []);
+
+  const startedNewEditorSessionRef = useRef(false);
+
+  useEffect(() => {
+    startedNewEditorSessionRef.current = true;
+  }, []);
+
+  const trackWidgetUsed = (sliceId: string) => {
+    if (!startedNewEditorSessionRef.current) return;
+    startedNewEditorSessionRef.current = false;
+    void telemetry.track({ event: "editor:widget-used", sliceId });
+  };
 
   const currentState: UiState = (() => {
     if (manifestStatus === "ko") {
@@ -114,9 +118,9 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
-      void Tracker.get().trackSliceSimulatorIsNotRunning(framework);
+      void telemetry.track({ event: "slice-simulator:is-not-running" });
     }
-  }, [currentState, framework]);
+  }, [currentState]);
 
   useEffect(() => {
     if (currentState === UiState.SUCCESS) {
@@ -145,7 +149,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     if (editorState?.variation === variation.id) return editorState;
 
     return (
-      slice.mock?.find((m) => m.variation === variation.id) ||
+      slice.mocks?.find((m) => m.variation === variation.id) ||
       defaultSharedSliceContent(variation.id)
     );
   }, [editorState, variation.id]);
@@ -193,9 +197,9 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         onSaveMock={() =>
           editorState &&
           saveSliceMock({
-            sliceName: slice.model.name,
-            libraryName: slice.from,
-            mock: (slice.mock || [])
+            libraryID: slice.from,
+            sliceID: slice.model.id,
+            mocks: (slice.mocks || [])
               .filter((mock) => mock.variation !== editorState.variation)
               .concat(editorState),
           })
@@ -274,15 +278,16 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             >
               <ThemeProvider mode="light">
                 <SharedSliceEditor
-                  /** because of a re-render issue on the richtext
-                  /* we enforce re-rendering the editor when the variation change.
-                  /* this change should be removed once the editor is fixed.
-                  */
+                  /**
+                   * Because of a re-render issue on the richtext /* we enforce
+                   * re-rendering the editor when the variation change. /* this
+                   * change should be removed once the editor is fixed.
+                   */
                   key={variation.id}
                   content={editorContent}
                   onContentChange={(c) => {
-                    setEditorState(c);
-                    Tracker.get().editor.trackWidgetUsed(slice.model.id);
+                    setEditorState(c as SharedSliceContent);
+                    trackWidgetUsed(slice.model.id);
                   }}
                   sharedSlice={sharedSlice}
                 />

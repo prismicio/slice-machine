@@ -33,7 +33,11 @@ export default function configureStore(
     process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+          trace: true,
+          traceLimit: 25,
+        })
       : compose;
 
   const rootReducer = createReducer();

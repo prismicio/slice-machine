@@ -1,24 +1,23 @@
-import { useMemo } from "react";
 import Card from "@components/Card";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { Box, Flex, Heading, Text } from "theme-ui";
 
+import { useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  getFramework,
-  getLinkToStorybookDocs,
-  getLinkToTroubleshootingDocs,
-  selectIsSimulatorAvailableForFramework,
-} from "@src/modules/environment";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
+import { selectSetupSteps } from "@src/modules/simulator";
+import { telemetry } from "@src/apiClient";
 
-import { getStepperConfigurationByFramework } from "./steps";
+import HTMLRenderer from "@components/HTMLRenderer";
+
+import TextWithInlineCode from "./TextWithInlineCode";
 
 const TitleCard: React.FC<{
   number: number;
   title: string;
-  excerpt: string;
+  excerpt?: string;
 }> & { tabsRole: string } = ({ number, title, excerpt, ...rest }) => (
   <Tab
     className="react-tabs__vertical__tab"
@@ -31,24 +30,26 @@ const TitleCard: React.FC<{
       }}
     >
       <NumberBox number={number} />
-      <Box sx={{ ml: 3 }}>
+      <Box sx={{ ml: 3, alignSelf: "center" }}>
         <Heading
           as="h4"
           sx={{ color: "whiteButtonText", fontSize: "14px", fontWeight: "600" }}
         >
-          {title}
+          <TextWithInlineCode>{title}</TextWithInlineCode>
         </Heading>
-        <Text
-          as="p"
-          sx={{
-            mt: 2,
-            color: "textClear",
-            fontSize: "13px",
-            lineHeight: "24px",
-          }}
-        >
-          {excerpt}
-        </Text>
+        {excerpt && (
+          <Text
+            as="p"
+            sx={{
+              mt: 2,
+              color: "textClear",
+              fontSize: "13px",
+              lineHeight: "24px",
+            }}
+          >
+            <TextWithInlineCode>{excerpt}</TextWithInlineCode>
+          </Text>
+        )}
       </Box>
     </Flex>
   </Tab>
@@ -76,43 +77,19 @@ const NumberBox: React.FC<{ number: number }> = ({ number }) => (
 );
 
 const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
-  const {
-    linkToTroubleshootingDocs,
-    framework,
-    linkToStorybookDocs,
-    isSimulatorAvailableForFramework,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    framework: getFramework(state),
-    linkToStorybookDocs: getLinkToStorybookDocs(state),
-    isSimulatorAvailableForFramework:
-      selectIsSimulatorAvailableForFramework(state),
-    linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
-  }));
-
-  const setupData = useMemo(
-    () => getStepperConfigurationByFramework(framework),
-    [framework]
+  const { isSimulatorAvailableForFramework, setupSteps } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      isSimulatorAvailableForFramework:
+        selectIsSimulatorAvailableForFramework(state),
+      setupSteps: selectSetupSteps(state),
+    })
   );
 
-  const Steps = useMemo(
-    () =>
-      setupData.steps.map((Step, i) => {
-        return (
-          <TabPanel
-            key={`next-step-${i + 1}`}
-            selectedClassName="react-tabs__vertical__tab-panel--selected"
-            className="react-tabs__vertical__tab-panel"
-          >
-            <Step
-              stepNumber={i + 1}
-              linkToStorybookDocs={linkToStorybookDocs}
-              linkToTroubleshootingDocs={linkToTroubleshootingDocs}
-            />
-          </TabPanel>
-        );
-      }),
-    [setupData, linkToStorybookDocs, linkToTroubleshootingDocs]
-  );
+  const steps = setupSteps || [];
+
+  useEffect(() => {
+    if (isOpen) void telemetry.track({ event: "slice-simulator:setup" });
+  }, [isOpen]);
 
   return (
     <SliceMachineModal isOpen={isOpen}>
@@ -120,7 +97,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
         bodySx={{
           p: 0,
           bg: "grey07",
-          height: setupData.steps.length === 4 ? "640px" : "480px",
+          height: steps.length === 4 ? "640px" : "480px",
         }}
         Header={({ radius }: { radius: string | number }) => (
           <Flex
@@ -143,17 +120,29 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       >
         <Tabs defaultFocus className="react-tabs__vertical">
           <TabList className="react-tabs__vertical__tab-list">
-            {setupData.excerpts.map((t, i) => (
+            {steps.map((step, i) => (
               <TitleCard
                 number={i + 1}
-                key={t.title}
-                title={t.title}
-                excerpt={t.excerpt}
+                key={step.title}
+                title={step.title}
+                excerpt={step.description}
               />
             ))}
           </TabList>
           {isSimulatorAvailableForFramework ? (
-            Steps
+            <>
+              {steps.map((step) => {
+                return (
+                  <TabPanel
+                    key={step.title}
+                    selectedClassName="react-tabs__vertical__tab-panel--selected"
+                    className="react-tabs__vertical__tab-panel"
+                  >
+                    <HTMLRenderer html={step.body} />
+                  </TabPanel>
+                );
+              })}
+            </>
           ) : (
             <TabPanel
               selectedClassName="react-tabs__vertical__tab-panel--selected"

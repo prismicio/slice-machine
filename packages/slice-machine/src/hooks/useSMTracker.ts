@@ -1,23 +1,18 @@
 import { useEffect } from "react";
 
-import Tracker from "@src/tracking/client";
+import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  getFramework,
-  getRepoName,
-  getShortId,
-  getIntercomHash,
-} from "@src/modules/environment";
+import { getRepoName } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
+import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useRouter } from "next/router";
 
+import { managerClient } from "../managerClient";
+
 const useSMTracker = () => {
-  const { libraries, repoName, shortId, intercomHash, framework } = useSelector(
+  const { libraries, repoName } = useSelector(
     (state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
-      shortId: getShortId(state),
-      intercomHash: getIntercomHash(state),
       repoName: getRepoName(state),
       libraries: getLibraries(state),
     })
@@ -26,21 +21,16 @@ const useSMTracker = () => {
   const router = useRouter();
 
   useEffect(() => {
-    void Tracker.get().groupLibraries(libraries, repoName);
+    void group(libraries, repoName);
 
     // For initial loading
-    void Tracker.get().trackPageView(framework);
+    void trackPageView();
   }, []);
-
-  // Handles if the user login/logout outside of the app.
-  useEffect(() => {
-    if (shortId && intercomHash) void Tracker.get().identifyUser();
-  }, [shortId, intercomHash]);
 
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void Tracker.get().trackPageView(framework);
+      void trackPageView();
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views
@@ -57,3 +47,39 @@ const useSMTracker = () => {
 };
 
 export default useSMTracker;
+
+function group(
+  libs: readonly LibraryUI[],
+  repositoryName: string | undefined
+): ReturnType<typeof telemetry.group> | void {
+  if (repositoryName === undefined) return;
+  const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
+
+  return telemetry.group({
+    repositoryName,
+    manualLibsCount: libs.filter((l) => l.meta.isManual).length,
+    downloadedLibsCount: downloadedLibs.length,
+    npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
+    downloadedLibs: downloadedLibs.map((l) =>
+      l.meta.name != null ? l.meta.name : "Unknown"
+    ),
+  });
+}
+
+async function trackPageView(): ReturnType<typeof telemetry.track> {
+  const sliceMachineConfig =
+    await managerClient.project.getSliceMachineConfig();
+  const adapter =
+    typeof sliceMachineConfig.adapter === "string"
+      ? sliceMachineConfig.adapter
+      : sliceMachineConfig.adapter.resolve;
+  return telemetry.track({
+    event: "page-view",
+    url: window.location.href,
+    path: window.location.pathname,
+    search: window.location.search,
+    title: document.title,
+    referrer: document.referrer,
+    adapter,
+  });
+}

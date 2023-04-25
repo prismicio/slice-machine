@@ -1,8 +1,4 @@
-import {
-  CUSTOM_TYPE_MODEL,
-  PACKAGE_JSON_FILE,
-  MANIFEST_FILE,
-} from "../../consts";
+import { CUSTOM_TYPE_MODEL } from "../../consts";
 
 const customTypeName = "My Test";
 const customTypeId = "my_test";
@@ -36,20 +32,5 @@ describe("Custom Types specs", () => {
       .its("json")
       .should("have.a.property", "Foo Bar")
       .should("not.have.a.property", "Foo Bar ");
-  });
-
-  it("generates types if `generateTypes` is `true` and `@prismicio/types` is installed", () => {
-    cy.modifyFile(MANIFEST_FILE, (manifestContents) => ({
-      ...manifestContents,
-      generateTypes: true,
-    }));
-    cy.modifyFile(PACKAGE_JSON_FILE, (packageJsonContents) => ({
-      ...packageJsonContents,
-      dependencies: {
-        ...packageJsonContents.dependencies,
-        "@prismicio/types": "latest",
-      },
-    }));
-    cy.createCustomType(customTypeId, customTypeName);
   });
 });

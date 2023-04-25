@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Flex, Text } from "theme-ui";
+import type { PackageManager } from "@slicemachine/manager";
 import { PackageChangelog, PackageVersion } from "@models/common/versions";
-import { PackageManager } from "@models/common/PackageManager";
 import CodeBlock from "@components/CodeBlock";
 
 interface UpdateCommandBoxProps {
@@ -17,13 +17,9 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
 }) => {
   const isLatest =
     selectedVersion.versionNumber === changelog.versions[0].versionNumber;
-  const packageToInstall = `slice-machine-ui@${
-    isLatest ? "latest" : selectedVersion.versionNumber
-  }`;
-  const updateCommand =
-    packageManager === "yarn"
-      ? `yarn add --dev ${packageToInstall}`
-      : `npm install --save-dev ${packageToInstall}`;
+  const version = isLatest ? "latest" : selectedVersion.versionNumber;
+  const packageSpec = `slice-machine-ui@${version}`;
+  const installCommand = getInstallCommand(packageManager, packageSpec);
 
   return (
     <Flex
@@ -51,12 +47,12 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
         <CodeBlock
           codeStyle={{ color: "white", minWidth: "480px", padding: "8px" }}
         >
-          {updateCommand}
+          {installCommand}
         </CodeBlock>
 
         <Button
           variant="secondary"
-          onClick={() => void navigator.clipboard.writeText(updateCommand)}
+          onClick={() => void navigator.clipboard.writeText(installCommand)}
         >
           Copy
         </Button>
@@ -64,3 +60,21 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
     </Flex>
   );
 };
+
+function getInstallCommand(
+  packageManager: PackageManager,
+  packageSpec: string
+): string {
+  switch (packageManager) {
+    case "bun":
+      return `bun add --development ${packageSpec}`;
+    case "npm":
+      return `npm install --save-dev ${packageSpec}`;
+    case "pnpm":
+    case "pnpm@6":
+      return `pnpm add --save-dev ${packageSpec}`;
+    case "yarn":
+    case "yarn@berry":
+      return `yarn add --dev ${packageSpec}`;
+  }
+}

@@ -1,44 +1,44 @@
 import React from "react";
-import * as Renderers from "./Renderers";
+import useSWR from "swr";
+import { managerClient } from "@src/managerClient";
 
-import type { Item, RenderHintBaseFN, WidgetsType } from "./CodeBlock";
-
-import { Frameworks } from "@slicemachine/core/build/models/Framework";
-
-const FrameworkRenderers = {
-  [Frameworks.nuxt]: Renderers.nuxt,
-  [Frameworks.previousNuxt]: Renderers.previousNuxt,
-  [Frameworks.next]: Renderers.next,
-  [Frameworks.vue]: Renderers.vue,
-  [Frameworks.react]: Renderers.react,
-  [Frameworks.svelte]: Renderers.svelte,
-  [Frameworks.vanillajs]: Renderers.vanillajs,
-  [Frameworks.none]: null,
-  [Frameworks.gatsby]: null,
-  [Frameworks.previousNext]: Renderers.previousNext,
-};
+import CodeBlock, { Item, RenderHintBaseFN } from "./CodeBlock";
 
 interface HintProps {
-  framework: Frameworks;
   show: boolean;
-  Widgets: WidgetsType;
   item: Item;
-  typeName: string;
   renderHintBase: RenderHintBaseFN;
-  isRepeatable: boolean;
 }
 
-const Hint: React.FC<HintProps> = ({ framework, show, Widgets, ...rest }) => {
-  const Render = FrameworkRenderers[framework];
+const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
+  const fieldPathString = renderHintBase({ item });
 
-  if (!Render) {
-    console.error(`Framework "${framework}" not supported`);
+  // TODO: Call `swr`'s global `mutate` function when something changes to clear the cache.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { data, error } = useSWR(fieldPathString, async () => {
+    return await managerClient.snippets.readSnippets({
+      fieldPath: fieldPathString.split("."),
+      model: item.value,
+    });
+  });
+
+  if (error) {
+    console.error(error);
+  }
+
+  if (!data || error) {
+    return null;
+  }
+
+  const snippets = data.snippets || [];
+
+  if (!snippets[0]) {
     return null;
   }
 
   return (
     <div style={{ display: show ? "initial" : "none" }}>
-      <Render Widgets={Widgets} {...rest} />
+      <CodeBlock code={snippets[0].code} lang={snippets[0].language} />
     </div>
   );
 };

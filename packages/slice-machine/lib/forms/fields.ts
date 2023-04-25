@@ -42,6 +42,7 @@ const defaultRequired = ["Field is required"];
 
 type FieldLevelValidationFn = (arg: {
   value: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fields: any;
   initialId: string;
 }) => boolean | string | undefined;
@@ -49,6 +50,7 @@ type FieldLevelValidationFn = (arg: {
 export interface InputType {
   type: FormTypes.INPUT;
   label: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   validate: any;
   defaultValue: string | undefined;
   fieldLevelValidation: FieldLevelValidationFn | undefined | null;

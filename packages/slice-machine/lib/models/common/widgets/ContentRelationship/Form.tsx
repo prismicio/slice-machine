@@ -1,12 +1,12 @@
 import * as yup from "yup";
-import Select from "react-select";
 import { Label, Box } from "theme-ui";
 
 import { DefaultFields } from "@lib/forms/defaults";
 
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
 
-import { Col, Flex as FlexGrid } from "components/Flex";
+import Select from "react-select";
+import { Col, Flex as FlexGrid } from "@components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";

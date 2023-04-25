@@ -4,7 +4,6 @@ import { FiLink2 } from "react-icons/fi";
 
 import { Widget } from "../Widget";
 import { Link } from "@prismicio/types-internal/lib/customtypes";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
 
 /**
 * {
@@ -88,7 +87,6 @@ const schema = yup.object().shape({
 });
 
 export const LinkWidget: Widget<Link, typeof schema> = {
-  MockConfigForm: DeprecatedMockConfigMessage,
   Meta,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,

@@ -1,3 +1,4 @@
+import { changesPage } from "../../pages/changes/changesPage";
 import { customTypeBuilder } from "../../pages/customTypes/customTypeBuilder";
 import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 
@@ -8,7 +9,7 @@ const customTypeId = `my_test_${random}`;
 
 const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
-const sliceLib = "slices";
+const sliceLib = ".--slices";
 
 describe("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {
@@ -35,12 +36,6 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
 
   it("Create a Slice with multiple fields (repeatable and non-repeatable)", () => {
     cy.createSlice(sliceLib, sliceId, sliceName);
-
-    // clear the Slice
-    cy.get('[data-cy="slice-menu-button"]').each(($element) => {
-      cy.wrap($element).click();
-      cy.contains("Delete field").click();
-    });
 
     cy.addStaticFieldToSlice(
       "Key Text",
@@ -76,7 +71,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Push the newly created custom type and slice", () => {
-    cy.pushLocalChanges();
+    changesPage.goTo().pushChanges().isUpToDate();
   });
 
   it("Add the Slice to the Custom Type", () => {
@@ -94,9 +89,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Push the custom type with the Slice associated", () => {
-    cy.pushLocalChanges();
-    cy.contains("Up to date").should("be.visible");
-    cy.get("[data-cy=push-changes]").should("be.disabled");
+    changesPage.goTo().pushChanges().isUpToDate();
   });
 
   it("Displays and fill the satisfaction survey and the survey never reappears after", () => {

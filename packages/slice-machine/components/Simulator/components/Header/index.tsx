@@ -2,7 +2,6 @@ import router from "next/router";
 import { Text, Flex, Switch, Label } from "theme-ui";
 
 import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
-import * as Models from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { Button } from "@components/Button";
@@ -12,6 +11,7 @@ import { selectSavingMock } from "@src/modules/simulator";
 
 import * as Links from "@lib/builders/SliceBuilder/links";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { VariationSM } from "@lib/models/common/Slice";
 
 const redirect = (
   model: ComponentUI,
@@ -33,7 +33,7 @@ const redirect = (
 
 type PropTypes = {
   slice: ComponentUI;
-  variation: Models.VariationSM;
+  variation: VariationSM;
   isDisplayEditor: boolean;
   toggleIsDisplayEditor: () => void;
   onSaveMock: () => void;

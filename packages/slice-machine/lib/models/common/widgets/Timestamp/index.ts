@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { MdDateRange } from "react-icons/md";
-import { MockConfigForm } from "./Mock/Form";
 
 /** {
     "type" : "Timestamp",
@@ -14,7 +13,7 @@ import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
-import { Timestamp } from "@prismicio/types-internal/lib/customtypes";
+import { Timestamp } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = DefaultFields;
@@ -35,7 +34,6 @@ const Meta = {
 };
 
 export const TimestampWidget: Widget<Timestamp, typeof schema> = {
-  MockConfigForm,
   create: (label: string) => ({
     type: "Timestamp",
     config: {

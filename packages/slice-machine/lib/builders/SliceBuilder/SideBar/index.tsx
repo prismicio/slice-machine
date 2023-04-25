@@ -1,27 +1,22 @@
 import React from "react";
 
-import { Box, Button as ThemeButton, Flex } from "theme-ui";
-import Link from "next/link";
+import { Box, Flex } from "theme-ui";
 
 import Card from "@components/Card";
 
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
 
-import { getStorybookUrl } from "@src/modules/environment";
-import { createStorybookUrl } from "@src/utils/storybook";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import type Models from "@slicemachine/core/build/models";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { Button } from "@components/Button";
 import { AiOutlineCamera } from "react-icons/ai";
+import { VariationSM } from "@lib/models/common/Slice";
 import ReactTooltip from "react-tooltip";
 
 type SideBarProps = {
   component: ComponentUI;
-  variation: Models.VariationSM;
+  variation: VariationSM;
   isTouched: boolean;
 };
 
@@ -44,10 +39,6 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 }) => {
   const { screenshots } = component;
   const { openScreenshotsModal } = useScreenshotChangesModal();
-
-  const { storybookUrl } = useSelector((state: SliceMachineStoreType) => ({
-    storybookUrl: getStorybookUrl(state),
-  }));
 
   return (
     <Box
@@ -95,20 +86,6 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           }}
         />
       </Card>
-      {storybookUrl && (
-        <Link
-          href={createStorybookUrl({
-            storybook: storybookUrl,
-            libraryName: component.from,
-            sliceName: component.model.name,
-            variationId: variation.id,
-          })}
-        >
-          <ThemeButton variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
-            Open Storybook
-          </ThemeButton>
-        </Link>
-      )}
       <ScreenshotChangesModal
         slices={[component]}
         defaultVariationSelector={{

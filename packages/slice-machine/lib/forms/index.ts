@@ -38,24 +38,25 @@ export const createValidationArgs = (
   return null;
 };
 
-export const createInitialValues = <T extends Record<string, any>>(
-  FormFields: T
-) => {
-  return Object.entries(FormFields).reduce<{
-    [key in keyof typeof FormFields]?: any;
-  }>((acc, [key, val]) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-    const value = handleDefaultValue(val);
-    if (value !== undefined) {
-      return {
-        ...acc,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        [key]: value,
-      };
-    }
-    return acc;
-  }, {});
-};
+export const createInitialValues =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  <T extends Record<string, any>>(FormFields: T) => {
+    return Object.entries(FormFields).reduce<{
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [key in keyof typeof FormFields]?: any;
+    }>((acc, [key, val]) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+      const value = handleDefaultValue(val);
+      if (value !== undefined) {
+        return {
+          ...acc,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          [key]: value,
+        };
+      }
+      return acc;
+    }, {});
+  };
 
 export const createValidationSchema = (FormFields: {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any

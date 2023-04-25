@@ -14,19 +14,23 @@ else
   _PRISMIC_REPO=$REPOSITORY
 fi
 
-if [[ "$PRISMIC_URL" == 'https://wroom-qa.com' ]] || [[ "$PRISMIC_URL" == 'http://wroom.test' ]] ; then 
-  MODE="dev"
+if [[ "$PRISMIC_URL" == 'https://wroom-qa.com' ]] || [[ "$PRISMIC_URL" == 'http://wroom.test' ]] ; then
+  export SM_ENV="development"
 elif [[ "$PRISMIC_URL" == 'https://wroom.io' ]]; then
-  MODE="stage"
+  export SM_ENV="staging"
 else
-  MODE="prod"
+  export SM_ENV="production"
 fi
 
 rm -rf e2e-projects/cypress-next-app \
 && npx --yes create-next-app e2e-projects/cypress-next-app \
-&& npx --yes ts-node ./cypress/plugins/addAuth.ts ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
-&& npx --yes ts-node ./cypress/plugins/createRepo.ts "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}"  \
+&& npx --yes vite-node ./cypress/plugins/addAuth.ts -- ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
+&& npx --yes vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}" \
+&& npm --workspace=packages/plugin-kit --workspace=packages/manager --workspace=packages/adapter-next --workspace=packages/init --workspace=packages/start-slicemachine --workspace=packages/slice-machine pack --silent --pack-destination ./e2e-projects/cypress-next-app \
 && cd e2e-projects/cypress-next-app \
-&& node ../../packages/init/build/index.js --mode "${MODE}" --repository "${_PRISMIC_REPO}" \
+&& npm i *.tgz \
+&& npx @slicemachine/init --repository ${_PRISMIC_REPO} \
+&& npm i --save-dev slice-machine-ui*.tgz \
 && npm i \
-&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"node ../../packages/slice-machine/bin/start.js\""
+&& npx --yes json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\"" \
+&& npx --yes json -I -f slicemachine.config.json -e "this.localSliceSimulatorURL=\"http://localhost:3000/slice-simulator\""

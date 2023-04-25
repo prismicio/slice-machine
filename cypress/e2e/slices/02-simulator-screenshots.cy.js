@@ -8,7 +8,7 @@ describe("I am an existing SM user and I want to take a screenshot from the slic
   const slice = {
     id: `test_screenshots${random}`,
     name: `TestScreenshots${random}`,
-    library: "slices",
+    library: ".--slices",
     newVariationName: "foo",
   };
 

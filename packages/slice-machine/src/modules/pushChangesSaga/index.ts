@@ -1,4 +1,4 @@
-import { getState, pushChanges } from "../../apiClient";
+import { getState, pushChanges, telemetry } from "../../apiClient";
 import {
   call,
   fork,
@@ -22,22 +22,27 @@ import {
   InvalidCustomTypeResponse,
   PushChangesPayload,
 } from "@lib/models/common/TransactionalPush";
-import {
-  Limit,
-  LimitType,
-} from "@slicemachine/client/build/models/BulkChanges";
-import axios from "axios";
-import Tracker from "@src/tracking/client";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
+import {
+  isUnauthenticatedError,
+  isUnauthorizedError,
+  SliceMachineManagerClient,
+} from "@slicemachine/manager/client";
+import {
+  ChangedCustomType,
+  ChangedSlice,
+} from "@lib/models/common/ModelStatus";
 
 export type ChangesPushSagaPayload = PushChangesPayload & {
-  unSyncedSlices: ReadonlyArray<ComponentUI>;
-  unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
-  modelsStatuses: ModelStatusInformation["modelsStatuses"];
+  changedSlices: ReadonlyArray<ChangedSlice>;
+  changedCustomTypes: ReadonlyArray<ChangedCustomType>;
 };
+
+type Limit = NonNullable<
+  Awaited<
+    ReturnType<SliceMachineManagerClient["prismicRepository"]["pushChanges"]>
+  >
+>;
 
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
@@ -56,44 +61,58 @@ export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
 });
 
 const MODAL_KEY_MAP = {
-  INVALID_CUSTOM_TYPES: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
-  [LimitType.SOFT]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
-  [LimitType.HARD]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
+  ["INVALID_CUSTOM_TYPES"]: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
+  ["SOFT"]: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
+  ["HARD"]: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
 };
 
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator.request>): Generator {
   const startTime = Date.now();
+  const { changedSlices, changedCustomTypes } = payload;
+
+  const sliceChanges = changedSlices.map((sliceChange) => ({
+    id: sliceChange.slice.model.id,
+    type: "Slice" as const,
+    libraryID: sliceChange.slice.from,
+    status: sliceChange.status,
+  }));
+  const customTypeChanges = changedCustomTypes.map((customTypeChange) => ({
+    id: customTypeChange.customType.id,
+    type: "CustomType" as const,
+    status: customTypeChange.status,
+  }));
+
+  // Creating a new payload with the correct format
+  const pushPayload = {
+    confirmDeleteDocuments: payload.confirmDeleteDocuments,
+    changes: [...sliceChanges, ...customTypeChanges],
+  };
 
   try {
-    const response = (yield call(pushChanges, {
-      confirmDeleteDocuments: payload.confirmDeleteDocuments,
-    })) as SagaReturnType<typeof pushChanges>;
+    const response = (yield call(pushChanges, pushPayload)) as SagaReturnType<
+      typeof pushChanges
+    >;
 
-    if (response.data) {
+    if (response) {
       // sending failure event
-      yield put(
-        changesPushCreator.failure(
-          response.data.type === "INVALID_CUSTOM_TYPES"
-            ? response.data
-            : sortDocumentLimits(response.data)
-        )
-      );
+      yield put(changesPushCreator.failure(sortDocumentLimits(response)));
       // Tracking when a limit has been reached
-      void Tracker.get().trackChangesLimitReach({
-        limitType: response.data.type,
+      void telemetry.track({
+        event: "changes:limit-reach",
+        limitType: response.type,
       });
       // Open the corresponding drawer
       yield put(
         modalOpenCreator({
-          modalKey: MODAL_KEY_MAP[response.data.type],
+          modalKey: MODAL_KEY_MAP[response.type],
         })
       );
       return;
     }
 
-    const { data: serverState } = (yield call(getState)) as SagaReturnType<
+    const serverState = (yield call(getState)) as SagaReturnType<
       typeof getState
     >;
     yield put(
@@ -121,27 +140,18 @@ export function* changesPushSaga({
       })
     );
   } catch (error) {
-    const errorStatus =
-      axios.isAxiosError(error) && error.response ? error.response.status : 500;
-    switch (errorStatus) {
-      case 401:
-      case 403: {
-        // Opening the login modal
-        yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-
-        break;
-      }
-
-      default: {
-        yield put(
-          openToasterCreator({
-            content:
-              "Something went wrong when pushing your changes. Check your terminal logs.",
-            type: ToasterType.ERROR,
-          })
-        );
-      }
+    if (isUnauthenticatedError(error) || isUnauthorizedError(error)) {
+      yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+      return;
     }
+    // TODO: handle auth errors
+    yield put(
+      openToasterCreator({
+        content:
+          "Something went wrong when pushing your changes. Check your terminal logs.",
+        type: ToasterType.ERROR,
+      })
+    );
   }
 }
 

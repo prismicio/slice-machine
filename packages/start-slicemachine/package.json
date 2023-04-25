@@ -1,0 +1,87 @@
+{
+	"name": "start-slicemachine",
+	"version": "0.6.1-dev-plugins.14",
+	"description": "Start Slice Machine from within a project.",
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/start-slicemachine"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch --mode development",
+		"format": "prettier --write .",
+		"lint": "eslint --ext .js,.ts .",
+		"prepublishOnly": "npm run build",
+		"size": "size-limit",
+		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
+		"types": "tsc --noEmit",
+		"unit": "vitest run --coverage",
+		"unit:watch": "vitest watch",
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "better-npm-audit audit -l high -p"
+	},
+	"bin": {
+		"start-slicemachine": "./bin/start-slicemachine.js"
+	},
+	"dependencies": {
+		"@slicemachine/manager": "0.1.1-dev-plugins.14",
+		"body-parser": "^1.20.2",
+		"chalk": "^4.1.2",
+		"cors": "^2.8.5",
+		"express": "^4.18.2",
+		"http-proxy-middleware": "^2.0.6",
+		"mri": "^1.2.0",
+		"node-fetch": "^3.3.1",
+		"open": "^8.4.2",
+		"serve-static": "^1.15.0"
+	},
+	"devDependencies": {
+		"@size-limit/preset-small-lib": "^8.2.4",
+		"@types/body-parser": "^1.19.2",
+		"@types/cors": "^2.8.13",
+		"@types/express": "^4.17.17",
+		"@types/nodemon": "^1.19.2",
+		"@types/serve-static": "^1.15.1",
+		"@typescript-eslint/eslint-plugin": "~5.55.0",
+		"@typescript-eslint/parser": "^5.55.0",
+		"@vitest/coverage-c8": "^0.27.3",
+		"better-npm-audit": "^3.7.3",
+		"depcheck": "^1.4.3",
+		"eslint": "^8.37.0",
+		"eslint-config-prettier": "^8.7.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"nodemon": "^2.0.22",
+		"prettier-plugin-jsdoc": "^0.4.2",
+		"size-limit": "^8.2.4",
+		"typescript": "^4.9.5",
+		"vite": "^4.1.4",
+		"vite-plugin-sdk": "^0.1.1",
+		"vitest": "^0.27.3"
+	},
+	"engines": {
+		"node": ">=14.15.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

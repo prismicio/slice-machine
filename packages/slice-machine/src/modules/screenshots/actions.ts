@@ -1,7 +1,9 @@
 import { ActionType, createAsyncAction } from "typesafe-actions";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import type {
+  ScreenDimensions,
+  ScreenshotGenerationMethod,
+} from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { ScreenshotTaken } from "@lib/models/tracking";
 
 export type SelectedSliceActions =
   | ActionType<typeof generateSliceScreenshotCreator>
@@ -16,7 +18,7 @@ export const generateSliceScreenshotCreator = createAsyncAction(
     variationId: string;
     component: ComponentUI;
     screenDimensions: ScreenDimensions;
-    method: ScreenshotTaken["props"]["method"];
+    method: ScreenshotGenerationMethod;
   },
   {
     variationId: string;
@@ -34,7 +36,7 @@ export const generateSliceCustomScreenshotCreator = createAsyncAction(
     variationId: string;
     component: ComponentUI;
     file: Blob;
-    method: ScreenshotTaken["props"]["method"];
+    method: ScreenshotGenerationMethod;
   },
   { variationId: string; screenshot: ScreenshotUI; component: ComponentUI }
 >();

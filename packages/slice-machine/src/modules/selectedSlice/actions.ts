@@ -1,7 +1,5 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
-import { Models } from "@slicemachine/core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
@@ -10,7 +8,8 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import { ComponentMocks } from "@slicemachine/core/build/models";
+import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -20,7 +19,7 @@ export type SelectedSliceActions =
   | ActionType<typeof removeSliceWidgetCreator>
   | ActionType<typeof updateSliceWidgetMockCreator>
   | ActionType<typeof deleteSliceWidgetMockCreator>
-  | ActionType<typeof saveSliceCreator>
+  | ActionType<typeof updateSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof refreshStateCreator>
@@ -31,7 +30,7 @@ export type SelectedSliceActions =
 export const updateSelectedSliceMocks = createAction(
   "SELECTED_SLICE/UPDATE_MOCKS"
 )<{
-  mocks: ComponentMocks;
+  mocks: SharedSliceContent[];
 }>();
 
 export const initSliceStoreCreator =
@@ -39,14 +38,14 @@ export const initSliceStoreCreator =
 
 export const addSliceWidgetCreator = createAction("SLICE/ADD_WIDGET")<{
   variationId: string;
-  widgetsArea: Models.WidgetsArea;
+  widgetsArea: WidgetsArea;
   key: string;
   value: NestableWidget;
 }>();
 
 export const replaceSliceWidgetCreator = createAction("SLICE/REPLACE_WIDGET")<{
   variationId: string;
-  widgetsArea: Models.WidgetsArea;
+  widgetsArea: WidgetsArea;
   previousKey: string;
   newKey: string;
   value: NestableWidget;
@@ -54,14 +53,14 @@ export const replaceSliceWidgetCreator = createAction("SLICE/REPLACE_WIDGET")<{
 
 export const reorderSliceWidgetCreator = createAction("SLICE/REORDER_WIDGET")<{
   variationId: string;
-  widgetsArea: Models.WidgetsArea;
+  widgetsArea: WidgetsArea;
   start: number;
   end: number | undefined;
 }>();
 
 export const removeSliceWidgetCreator = createAction("SLICE/REMOVE_WIDGET")<{
   variationId: string;
-  widgetsArea: Models.WidgetsArea;
+  widgetsArea: WidgetsArea;
   key: string;
 }>();
 
@@ -69,10 +68,10 @@ export const updateSliceWidgetMockCreator = createAction(
   "SLICE/UPDATE_WIDGET_MOCK"
 )<{
   variationId: string;
-  mockConfig: SliceMockConfig;
-  widgetArea: Models.WidgetsArea;
+  widgetArea: WidgetsArea;
   previousKey: string;
   newKey: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockValue: any;
 }>();
 
@@ -80,18 +79,18 @@ export const deleteSliceWidgetMockCreator = createAction(
   "SLICE/DELETE_WIDGET_MOCK"
 )<{
   variationId: string;
-  mockConfig: SliceMockConfig;
-  widgetArea: Models.WidgetsArea;
+  widgetArea: WidgetsArea;
   newKey: string;
 }>();
 
-export const saveSliceCreator = createAsyncAction(
-  "SLICE/SAVE.REQUEST",
-  "SLICE/SAVE.RESPONSE",
-  "SLICE/SAVE.FAILURE"
+export const updateSliceCreator = createAsyncAction(
+  "SLICE/UPDATE.REQUEST",
+  "SLICE/UPDATE.RESPONSE",
+  "SLICE/UPDATE.FAILURE"
 )<
   {
     component: ComponentUI;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setData: (data: any) => void;
   },
   {
@@ -102,5 +101,5 @@ export const saveSliceCreator = createAsyncAction(
 export const copyVariationSliceCreator = createAction("SLICE/COPY_VARIATION")<{
   key: string;
   name: string;
-  copied: Models.VariationSM;
+  copied: VariationSM;
 }>();

@@ -1,6 +1,6 @@
 const sliceName = "DuplicateSlices";
 const sliceId = "duplicate_slices";
-const lib = "slices";
+const lib = ".--slices";
 
 describe("Duplicate Slices", () => {
   beforeEach(() => {
@@ -16,8 +16,7 @@ describe("Duplicate Slices", () => {
     cy.get("[data-cy=create-slice]").click();
     cy.get("[data-cy=create-slice-modal]").should("be.visible");
 
-    cy.get("input[data-cy=slice-name-input]").type(sliceName);
-    cy.get("form").click();
+    cy.get("input[data-cy=slice-name-input]").type(sliceName).blur();
     cy.get("[type=submit]").should("be.disabled");
     cy.get("[data-cy=slice-name-input-error]").contains(
       "Slice name is already taken."

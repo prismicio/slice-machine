@@ -1,5 +1,6 @@
-import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
 import equal from "fast-deep-equal";
+import { Screenshot } from "../Library";
+import { SliceSM } from "../Slice";
 import { ModelStatus } from ".";
 import { LocalAndRemoteSlice } from "../ModelData";
 

@@ -9,8 +9,7 @@ import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
 
 import { optionValues } from "./options";
-import { RichText } from "@prismicio/types-internal/lib/customtypes";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
+import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**
  * {
@@ -61,5 +60,4 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
   schema,
   TYPE_NAME: "StructuredText",
   Form,
-  MockConfigForm: DeprecatedMockConfigMessage,
 };

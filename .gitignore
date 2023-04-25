@@ -25,18 +25,22 @@ composer.lock
 *.swp
 *.swo
 .metals
+*.code-workspace
 
 # Project Specific
 node_modules
 *.log
 /lib
 tmp
+.cache
 .changelog
 coverage/
 .nyc_output/
 .eslintcache
 unpubTest
 my-test-project
+dist
+*.tgz
 
 .now
 .vercel

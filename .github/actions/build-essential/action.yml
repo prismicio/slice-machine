@@ -1,8 +1,8 @@
-name: 'Build essential packages'
-description: 'Build essential packages'
+name: Build essential packages
+description: Build essential packages
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - name: Build essential packages used by others
       shell: bash
-      run: npm run build:essential
+      run: npm run build-essential

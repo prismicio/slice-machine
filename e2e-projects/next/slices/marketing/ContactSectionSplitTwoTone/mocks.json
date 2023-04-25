@@ -1,1 +1,102 @@
-[{"__TYPE__":"SharedSliceContent","variation":"default-slice","primary":{"title":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Lorem commodo enim adipisicing esse adipisicing. Nostrud ex in sint reprehenderit magna nostrud cupidatat duis deserunt aliquip qui aute id voluptate."}}]},"description":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Dolore magna adipisicing eiusmod qui elit nisi esse cillum excepteur cillum ea non ea. Cupidatat elit culpa fugiat."}}]},"address":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Exercitation ad pariatur laboris cillum fugiat aute qui. Ullamco ullamco laboris deserunt amet adipisicing labore qui qui ipsum fugiat tempor cupidatat non ullamco. Laboris cillum qui cupidatat Lorem anim labore tempor laborum cupidatat sit laborum enim minim."}}]},"phone":{"__TYPE__":"FieldContent","value":"tiny","type":"Text"},"email":{"__TYPE__":"FieldContent","value":"be","type":"Text"},"careerText":{"__TYPE__":"StructuredTextContent","value":[{"type":"paragraph","content":{"text":"Aliqua laborum nisi nisi cillum commodo qui adipisicing."}}]},"careerLink":{"__TYPE__":"LinkContent","value":{"url":"http://google.com","__TYPE__":"ExternalLink"}},"CareerLinkText":{"__TYPE__":"FieldContent","value":"lungs","type":"Text"},"cta":{"__TYPE__":"FieldContent","value":"total","type":"Text"}},"items":[{"__TYPE__":"GroupItemContent","value":[["field",{"__TYPE__":"FieldContent","value":"product","type":"Text"}],["fieldPlaceholder",{"__TYPE__":"FieldContent","value":"case","type":"Text"}]]}]}]
+[
+  {
+    "__TYPE__": "SharedSliceContent",
+    "variation": "default-slice",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Occaecat non magna cupidatat tempor eu officia et labore."
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Anim sit sint deserunt. Exercitation qui quis ut deserunt eu. Cupidatat consectetur eu velit dolor esse magna Lorem cillum cillum est."
+            }
+          }
+        ]
+      },
+      "address": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Laboris qui elit incididunt enim cupidatat consequat. Et non excepteur nostrud sunt amet culpa proident irure laboris ullamco sint magna nostrud enim. Nulla duis ut ullamco aliqua tempor exercitation ex minim."
+            }
+          }
+        ]
+      },
+      "phone": {
+        "__TYPE__": "FieldContent",
+        "value": "drink",
+        "type": "Text"
+      },
+      "email": {
+        "__TYPE__": "FieldContent",
+        "value": "owner",
+        "type": "Text"
+      },
+      "careerText": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Proident velit veniam incididunt ullamco sint minim sint veniam sit mollit."
+            }
+          }
+        ]
+      },
+      "careerLink": {
+        "__TYPE__": "LinkContent",
+        "value": {
+          "__TYPE__": "ExternalLink",
+          "url": "http://google.com"
+        }
+      },
+      "CareerLinkText": {
+        "__TYPE__": "FieldContent",
+        "value": "cheese",
+        "type": "Text"
+      },
+      "cta": {
+        "__TYPE__": "FieldContent",
+        "value": "answer",
+        "type": "Text"
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "field",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "compare",
+              "type": "Text"
+            }
+          ],
+          [
+            "fieldPlaceholder",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "push",
+              "type": "Text"
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

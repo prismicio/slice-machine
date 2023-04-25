@@ -2,7 +2,6 @@ import * as localStorageHelpers from "../helpers/localStorage";
 import * as filesystemHelpers from "../helpers/filesystem";
 import * as customTypesHelpers from "../helpers/customTypes";
 import * as slicesHelpers from "../helpers/slices";
-import * as repositoryHelpers from "../helpers/repository";
 import * as imageHelpers from "../helpers/images";
 
 /* -- LOCAL STORAGE -- */
@@ -31,11 +30,6 @@ Object.keys(slicesHelpers).forEach((slicesHelper) => {
   Cypress.Commands.add(slicesHelper, slicesHelpers[slicesHelper]);
 });
 
-/* REPOSITORY */
-Object.keys(repositoryHelpers).forEach((repositoryHelper) => {
-  Cypress.Commands.add(repositoryHelper, repositoryHelpers[repositoryHelper]);
-});
-
 /* IMAGES */
 Object.keys(imageHelpers).forEach((imageHelper) => {
   Cypress.Commands.add(
@@ -54,4 +48,11 @@ Cypress.Commands.add("getInputByLabel", (label) => {
       const selector = `[id="${id}"],[name="${id}"]`;
       return cy.get(selector);
     });
+});
+
+// The current cy.reload() always fails because it never receives a load event.
+Cypress.Commands.overwrite("reload", () => {
+  return cy.url().then((url) => {
+    cy.visit(url);
+  });
 });

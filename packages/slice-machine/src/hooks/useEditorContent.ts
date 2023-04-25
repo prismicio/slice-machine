@@ -3,7 +3,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { defaultSharedSliceContent } from "@src/utils/editor";
 import { renderSliceMock } from "@prismicio/mocks";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { Slices } from "@slicemachine/core/build/models";
+import { Slices } from "@lib/models/common/Slice";
 
 function useEditorContentOnce({
   variationID,
@@ -12,19 +12,18 @@ function useEditorContentOnce({
   variationID: string;
   slice: ComponentUI;
 }) {
-  const editorContent: SharedSliceContent =
-    slice.mock?.find((m) => m.variation === variationID) ||
-    defaultSharedSliceContent(variationID);
+  return useMemo(() => {
+    const editorContent: SharedSliceContent =
+      slice.mocks?.find((m) => m.variation === variationID) ||
+      defaultSharedSliceContent(variationID);
 
-  const apiContent = useMemo(
-    () => ({
+    const apiContent = {
       ...(renderSliceMock(Slices.fromSM(slice.model), editorContent) as object),
       id: slice.model.id,
-    }),
-    [slice.model, editorContent]
-  );
+    };
 
-  return { editorContent, apiContent };
+    return { editorContent, apiContent };
+  }, [slice.mocks, slice.model, variationID]);
 }
 
 export default useEditorContentOnce;

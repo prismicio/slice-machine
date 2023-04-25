@@ -2,8 +2,7 @@ import { MdDateRange } from "react-icons/md";
 import { createDefaultWidgetValues } from "../../../../utils";
 
 import { Widget } from "../Widget";
-import { Date } from "@prismicio/types-internal/lib/customtypes";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
+import { Date } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /** {
   "type" : "Date",
@@ -30,7 +29,6 @@ export const DateWidget: Widget<Date, typeof schema> = {
       placeholder: "",
     },
   }),
-  MockConfigForm: DeprecatedMockConfigMessage,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: "Date",

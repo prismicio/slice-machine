@@ -15,15 +15,11 @@ import {
   reorderFieldCreator,
   replaceFieldCreator,
   replaceSharedSliceCreator,
-  deleteFieldMockConfigCreator,
-  updateFieldMockConfigCreator,
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
   saveCustomTypeCreator,
-  updateGroupFieldMockConfigCreator,
-  deleteGroupFieldMockConfigCreator,
 } from "./actions";
 import { Tab } from "@models/common/CustomType/tab";
 import { SliceZone } from "@models/common/CustomType/sliceZone";
@@ -31,9 +27,8 @@ import { AnyWidget } from "@models/common/widgets/Widget";
 import * as Widgets from "@models/common/widgets/withGroup";
 import StateHelpers from "./stateHelpers";
 import { CustomType } from "@models/common/CustomType";
-import { CustomTypeMockConfig } from "@models/common/MockConfig";
-import { SlicesSM } from "@slicemachine/core/build/models/Slices";
-import { GroupSM } from "@slicemachine/core/build/models/Group";
+import { SlicesSM } from "@lib/models/common/Slices";
+import { GroupSM } from "@lib/models/common/Group";
 import { Group } from "@lib/models/common/CustomType/group";
 
 // Reducer
@@ -50,8 +45,6 @@ export const selectedCustomTypeReducer: Reducer<
         model: action.payload.model,
         initialModel: action.payload.model,
         remoteModel: action.payload.remoteModel,
-        mockConfig: action.payload.mockConfig,
-        initialMockConfig: action.payload.mockConfig,
       };
     case getType(saveCustomTypeCreator.success): {
       if (!state) return state;
@@ -59,7 +52,6 @@ export const selectedCustomTypeReducer: Reducer<
       return {
         ...state,
         initialModel: state.model,
-        initialMockConfig: state.mockConfig,
       };
     }
     case getType(createTabCreator):
@@ -206,64 +198,6 @@ export const selectedCustomTypeReducer: Reducer<
           SliceZone.removeSharedSlice(sliceZone, sliceId)
         )
       );
-    }
-    case getType(updateFieldMockConfigCreator): {
-      if (!state) return state;
-      if (!action.payload.customTypeMockConfig) return state;
-      const updatedConfig = CustomTypeMockConfig.updateFieldMockConfig(
-        action.payload.customTypeMockConfig,
-        action.payload.previousFieldId,
-        action.payload.fieldId,
-        action.payload.value
-      );
-      return {
-        ...state,
-        mockConfig: updatedConfig,
-      };
-    }
-    case getType(deleteFieldMockConfigCreator):
-      if (!state) return state;
-      if (!action.payload.customTypeMockConfig) return state;
-
-      const updatedConfig = CustomTypeMockConfig.deleteFieldMockConfig(
-        action.payload.customTypeMockConfig,
-        action.payload.fieldId
-      );
-
-      return {
-        ...state,
-        mockConfig: updatedConfig,
-      };
-    case getType(updateGroupFieldMockConfigCreator): {
-      if (!state) return state;
-
-      const updatedConfig = CustomTypeMockConfig.updateGroupFieldMockConfig(
-        action.payload.customTypeMockConfig,
-        action.payload.groupId,
-        action.payload.previousFieldId,
-        action.payload.fieldId,
-        action.payload.value
-      );
-
-      return {
-        ...state,
-        mockConfig: updatedConfig,
-      };
-    }
-    case getType(deleteGroupFieldMockConfigCreator): {
-      if (!state) return state;
-      if (!action.payload.customTypeMockConfig) return state;
-
-      const updatedConfig = CustomTypeMockConfig.deleteGroupFieldMockConfig(
-        action.payload.customTypeMockConfig,
-        action.payload.groupId,
-        action.payload.fieldId
-      );
-
-      return {
-        ...state,
-        mockConfig: updatedConfig,
-      };
     }
     case getType(addFieldIntoGroupCreator): {
       const { tabId, groupId, fieldId, field } = action.payload;

@@ -15,10 +15,9 @@ import {
 import {
   generateSliceScreenshotApiClient,
   generateSliceCustomScreenshotApiClient,
+  telemetry,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import Tracker from "@src/tracking/client";
-import { isError } from "@lib/models/common/Screenshots";
 
 export function* generateSliceScreenshotSaga({
   payload,
@@ -27,33 +26,34 @@ export function* generateSliceScreenshotSaga({
   try {
     const response = (yield call(generateSliceScreenshotApiClient, {
       libraryName: component.from,
-      sliceName: component.model.name,
-      href: component.href,
+      sliceId: component.model.id,
       variationId,
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
 
-    // If screenshot is null, then no screenshots were taken
-    if (isError(response.data)) {
+    if (!response) {
       throw Error("No screenshot saved");
     }
 
     yield put(
       openToasterCreator({
-        url: response.data.screenshot.url,
+        url: response.url,
         type: ToasterType.SCREENSHOT_CAPTURED,
       })
     );
 
-    void Tracker.get().trackScreenshotTaken({
+    void telemetry.track({
+      event: "screenshot-taken",
       type: "automatic",
-      method: method,
+      method,
     });
 
     yield put(
       generateSliceScreenshotCreator.success({
         variationId,
-        screenshot: response.data.screenshot,
+        screenshot: {
+          url: response.url,
+        },
         component,
       })
     );
@@ -77,20 +77,25 @@ export function* generateSliceCustomScreenshotSaga({
     form.append("libraryName", component.from);
     form.append("sliceName", component.model.name);
     form.append("variationId", variationId);
-    const response = (yield call(
-      generateSliceCustomScreenshotApiClient,
-      form
-    )) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
+    const response = (yield call(generateSliceCustomScreenshotApiClient, {
+      libraryName: component.from,
+      sliceId: component.model.id,
+      variationId,
+      file,
+    })) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
 
-    void Tracker.get().trackScreenshotTaken({
-      type: "custom",
-      method: method,
-    });
+    if (!response?.url) {
+      throw Error("No screenshot saved");
+    }
+
+    void telemetry.track({ event: "screenshot-taken", type: "custom", method });
 
     yield put(
       generateSliceCustomScreenshotCreator.success({
         variationId,
-        screenshot: response.data,
+        screenshot: {
+          url: response.url,
+        },
         component,
       })
     );

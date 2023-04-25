@@ -6,26 +6,28 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: [
-      "../../tsconfig-node.json",
-      "./scripts/tsconfig.json",
-      "./server/tsconfig.json",
-      "./tsconfig.json",
-    ],
+    project: ["../../tsconfig-node.json", "./tsconfig.json"],
     tsconfigRootDir: __dirname,
   },
-  plugins: ["@typescript-eslint", "import", "jest"],
+  plugins: ["@typescript-eslint", "import"],
   extends: [
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:jest/recommended",
     "eslint-config-prettier",
   ],
   ignorePatterns: ["build", "templates", "**/tests/**", "helpers/**"],
   rules: {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
+    ],
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/strict-boolean-expressions": "warn",
-    "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "^_" }],
   },
 };

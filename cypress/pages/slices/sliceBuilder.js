@@ -73,8 +73,27 @@ class SliceBuilder extends BaseBuilder {
     return this;
   }
 
+  // TODO: find a way to avoid having to redirect to the simulator url using cy.visit()
   openSimulator() {
-    cy.contains("Simulate Slice").click();
+    let simUrl;
+    // intercept the browser trying to open a new tab since Cypress does not support multi-tabs testing.
+    cy.window().then((win) => {
+      cy.stub(win, "open")
+        .as("windowOpen")
+        .callsFake((url) => {
+          simUrl = url;
+          console.log(
+            `window.open() won't be called as it currently generates a timeout in cypress. Calling cy.visit('${url}') instead.`
+          );
+          // win.open.wrappedMethod.call(win, url, "_self");
+        });
+    });
+    cy.contains("Simulate Slice")
+      .click()
+      .then(() => {
+        cy.get("@windowOpen").should("be.called");
+        cy.visit(simUrl);
+      });
     return this;
   }
 

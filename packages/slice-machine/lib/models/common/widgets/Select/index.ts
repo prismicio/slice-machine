@@ -8,8 +8,7 @@ import { removeProp } from "../../../../utils";
 import FormFields from "./FormFields";
 
 import { Widget } from "../Widget";
-import { Select } from "@prismicio/types-internal/lib/customtypes";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
+import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**
  * {
@@ -40,7 +39,6 @@ const schema = yup.object().shape({
 export const SelectWidget: Widget<Select, typeof schema> = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  MockConfigForm: DeprecatedMockConfigMessage,
   create: (label: string) => ({
     type: "Select",
     config: {

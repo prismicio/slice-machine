@@ -2,8 +2,7 @@ import { AiOutlineFieldNumber } from "react-icons/ai";
 import { createDefaultWidgetValues } from "../../../../utils";
 
 import { Widget } from "../Widget";
-import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes";
-import { DeprecatedMockConfigMessage } from "../../DeprecatedMockConfigMessage";
+import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /** {
     "type" : "Number",
@@ -30,7 +29,6 @@ export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
       placeholder: "",
     },
   }),
-  MockConfigForm: DeprecatedMockConfigMessage,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: "Number",

@@ -4,8 +4,10 @@ import { useThemeUI, Text, Button, Flex, Box } from "theme-ui";
 import { BsCode } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
 import { MdCheck } from "react-icons/md";
-import Code, { Language } from "@components/CodeBlock";
+import Code from "@components/CodeBlock";
 import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
+
+import { NestableWidget, UID } from "@prismicio/types-internal/lib/customtypes";
 
 const buttonIconStyle: React.CSSProperties = {
   position: "relative",
@@ -14,23 +16,14 @@ const buttonIconStyle: React.CSSProperties = {
 
 export interface Item {
   key: string;
-  value: {
-    config: Record<string, unknown>;
-    fields?: Array<unknown>;
-    type: string;
-  };
+  value: NestableWidget | UID;
 }
 
 export type RenderHintBaseFN = (args: { item: Item }) => string;
 
-export type WidgetsType = Record<
-  string,
-  { CUSTOM_NAME: string; TYPE_NAME: string }
->;
-
 type CodeBlockProps = {
   code: string | null | undefined;
-  lang?: Language;
+  lang?: string;
 };
 const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
   const { theme } = useThemeUI();
@@ -39,7 +32,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
 
   const copy = (): void => {
     code &&
-      navigator.clipboard.writeText(code).then(() => {
+      void navigator.clipboard.writeText(code).then(() => {
         setIsCopied(true);
         setTimeout(() => {
           setIsCopied(false);
