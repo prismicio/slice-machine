@@ -49,6 +49,7 @@ const Screenshot: ComponentWithSliceProps = ({ slice, variation }) => {
           width: screenWidth,
           height: screenHeight,
         }}
+        isScreenshot
       />
     </Box>
   );
