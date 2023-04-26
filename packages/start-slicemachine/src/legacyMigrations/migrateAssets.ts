@@ -21,8 +21,6 @@ const createPathToDeprecatedLibrary = (cwd: string) =>
 	path.join(cwd, ".slicemachine");
 const createPathToCustomTypesAssets = (cwd: string) =>
 	path.join(createPathToDeprecatedLibrary(cwd), "assets", "customtypes");
-const createPathToDeprecatedPrismicioDTS = (cwd: string) =>
-	path.join(cwd, "prismicio.d.ts");
 
 const ensureOrGenerateSliceScreenshot = (
 	variationsIDs: string[],
@@ -189,9 +187,15 @@ export const migrateAssets = async (
 		if (fsSync.existsSync(dotSlicemachine)) {
 			fsSync.rmSync(dotSlicemachine, { recursive: true });
 		}
-		const prismicioDTS = createPathToDeprecatedPrismicioDTS(manager.cwd);
+
+		const prismicioTypesDTS = path.join(manager.cwd, "prismicio-types.d.ts")
+		const sliceMachinePrismicioDTS = path.join(dotSlicemachine, "prismicio.d.ts");
+		if (fsSync.existsSync(sliceMachinePrismicioDTS)) {
+			fsSync.renameSync(sliceMachinePrismicioDTS, prismicioTypesDTS);
+		}
+		const prismicioDTS = path.join(manager.cwd, "prismicio.d.ts");
 		if (fsSync.existsSync(prismicioDTS)) {
-			fsSync.rmSync(prismicioDTS);
+			fsSync.renameSync(prismicioDTS, prismicioTypesDTS);
 		}
 	}
 };
