@@ -33,16 +33,38 @@ const ensureOrGenerateSliceScreenshot = (
 			`screenshot-${variationID}.png`,
 		);
 		if (!fsSync.existsSync(targetPathToVariationScreenshot)) {
-			const deprecatedPathToVariationScreenshot = path.join(
-				deprecatedPathToSliceAssets,
+			const deprecatedPathToCustomVariation = path.join(
+				targetPathToSliceFolder,
 				variationID,
+			);
+			const deprecatedPathToCustomVariationScreenshot = path.join(
+				deprecatedPathToCustomVariation,
 				"preview.png",
 			);
-			if (fsSync.existsSync(deprecatedPathToVariationScreenshot)) {
+			if (fsSync.existsSync(deprecatedPathToCustomVariationScreenshot)) {
 				fsSync.renameSync(
-					deprecatedPathToVariationScreenshot,
+					deprecatedPathToCustomVariationScreenshot,
 					targetPathToVariationScreenshot,
 				);
+				try {
+					if (
+						fsSync.readdirSync(deprecatedPathToCustomVariation).length === 0
+					) {
+						fsSync.rmSync(deprecatedPathToCustomVariation, { recursive: true });
+					}
+				} catch {}
+			} else {
+				const deprecatedPathToVariationScreenshot = path.join(
+					deprecatedPathToSliceAssets,
+					variationID,
+					"preview.png",
+				);
+				if (fsSync.existsSync(deprecatedPathToVariationScreenshot)) {
+					fsSync.renameSync(
+						deprecatedPathToVariationScreenshot,
+						targetPathToVariationScreenshot,
+					);
+				}
 			}
 		}
 	});
