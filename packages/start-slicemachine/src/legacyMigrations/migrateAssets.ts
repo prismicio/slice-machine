@@ -199,6 +199,5 @@ export const migrateAssets = async (
 		if (fsSync.existsSync(dotSlicemachine)) {
 			fsSync.rmSync(dotSlicemachine, { recursive: true });
 		}
-
 	}
 };
