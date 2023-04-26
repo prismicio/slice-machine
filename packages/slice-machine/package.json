@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "_moduleAliases": {
@@ -42,7 +42,7 @@
     "puppeteer": "^19.11.0",
     "react": "^18.2.0",
     "semver": "^7.3.8",
-    "start-slicemachine": "0.7.0",
+    "start-slicemachine": "0.7.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {

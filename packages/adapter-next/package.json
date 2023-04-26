@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-next",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Slice Machine adapter for Next.js.",
 	"keywords": [
 		"typescript",
