@@ -17,14 +17,24 @@ import {
 } from "./components";
 import { TabFields } from "@lib/models/common/CustomType";
 
+const nullableNumberSchema = () => {
+  return yup
+    .number()
+    .nullable()
+    .transform((value: string | number, originalValue: string | number) =>
+      // When the user empties the field, it should convert it to null so that "auto" dimensions are set
+      originalValue === "" ? null : value
+    );
+};
+
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
   constraint: {
     validate: () =>
       yup.object().defined().shape({
-        width: yup.number().nullable(),
-        height: yup.number().nullable(),
+        width: nullableNumberSchema(),
+        height: nullableNumberSchema(),
       }),
   },
   thumbnails: {
