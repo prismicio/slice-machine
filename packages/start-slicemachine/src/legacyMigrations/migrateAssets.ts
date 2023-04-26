@@ -188,7 +188,7 @@ export const migrateAssets = async (
 		if (!fsSync.existsSync(prismicioTypesDTS)) {
 			const sliceMachinePrismicioDTS = path.join(
 				dotSlicemachine,
-				"prismicio.d.ts"
+				"prismicio.d.ts",
 			);
 			const prismicioDTS = path.join(manager.cwd, "prismicio.d.ts");
 			if (fsSync.existsSync(sliceMachinePrismicioDTS)) {
