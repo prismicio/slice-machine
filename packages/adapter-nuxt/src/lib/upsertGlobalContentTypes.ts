@@ -23,7 +23,7 @@ export const upsertGlobalContentTypes = async ({
 	helpers,
 	options,
 }: UpsertGlobalTypesArgs): Promise<void> => {
-	const filePath = helpers.joinPathFromRoot("prismicio.d.ts");
+	const filePath = helpers.joinPathFromRoot("prismicio-types.d.ts");
 
 	const [customTypeModelDescriptors, sharedSliceModelDescriptors] =
 		await Promise.all([
