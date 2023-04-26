@@ -158,8 +158,8 @@ jobs:
       - name: Set up Node
         uses: ./.github/actions/setup-node
 
-      - name: Build Slice Machine UI, init and start scripts
-        run: npm run build --workspace packages/init --workspace packages/slice-machine --workspace packages/start-slicemachine
+      - name: Build Slice Machine UI, next-adapter, init and start scripts
+        run: npm run build --workspace packages/init --workspace packages/slice-machine --workspace packages/start-slicemachine --workspace packages/adapter-next
 
       - name: Running End to End tests
         run: npm run test:e2e
