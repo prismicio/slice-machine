@@ -183,6 +183,7 @@ export const migrateAssets = async (
 			sentryErrorHandlers.node("migrateAssets", error);
 		}
 	} finally {
+		const dotSlicemachine = createPathToDeprecatedLibrary(manager.cwd);
 		const prismicioTypesDTS = path.join(manager.cwd, "prismicio-types.d.ts")
 		if (!fsSync.existsSync(prismicioTypesDTS)) {
 			const sliceMachinePrismicioDTS = path.join(dotSlicemachine, "prismicio.d.ts");
@@ -195,7 +196,6 @@ export const migrateAssets = async (
 			}
 		}
 
-		const dotSlicemachine = createPathToDeprecatedLibrary(manager.cwd);
 		if (fsSync.existsSync(dotSlicemachine)) {
 			fsSync.rmSync(dotSlicemachine, { recursive: true });
 		}
