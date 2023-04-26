@@ -33,7 +33,7 @@ test("creates a Slice component, model, and global types file on Slice creation"
 	expect(
 		await fs.readdir(path.join(ctx.project.root, "slices", "QuxQuux")),
 	).toStrictEqual(["index.vue", "model.json"]);
-	expect(await fs.readdir(ctx.project.root)).toContain("prismicio.d.ts");
+	expect(await fs.readdir(ctx.project.root)).toContain("prismicio-types.d.ts");
 });
 
 test("upserts a library index.js file", async (ctx) => {

@@ -24,7 +24,7 @@ test("creates a Custom Type model and global types file on Slice creation", asyn
 	expect(
 		await fs.readdir(path.join(ctx.project.root, "customtypes", model.id)),
 	).toStrictEqual(["index.json"]);
-	expect(await fs.readdir(ctx.project.root)).toContain("prismicio.d.ts");
+	expect(await fs.readdir(ctx.project.root)).toContain("prismicio-types.d.ts");
 });
 
 test("model file matches the given model", async (ctx) => {
