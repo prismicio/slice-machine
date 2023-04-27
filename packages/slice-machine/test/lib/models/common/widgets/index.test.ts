@@ -60,4 +60,25 @@ describe("Widgets", () => {
       expect(field).toEqual(fieldExpected);
     }
   );
+
+  // Issue: https://github.com/prismicio/slice-machine/issues/672
+  test("allow resetting image constraints to auto when width and height values are empty strings", () => {
+    const field = Widgets.Image.create("Image");
+
+    expect(
+      Widgets.Image.schema.isValidSync(
+        {
+          type: field?.type,
+          config: {
+            ...field?.config,
+            constraint: {
+              width: "",
+              height: "",
+            },
+          },
+        },
+        { stripUnknown: true }
+      )
+    ).toBeTruthy();
+  });
 });
