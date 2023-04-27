@@ -4,7 +4,7 @@ import { describe, test, afterEach, expect, vi } from "vitest";
 import SegmentClient from "analytics-node";
 
 import { render, fireEvent, act } from "../__testutils__";
-import CreateCustomTypeModal from "../../components/Forms/CreateCustomTypeModal";
+import { CreateCustomTypeModal } from "../../components/Forms/CreateCustomTypeModal";
 import { ModalKeysEnum } from "../../src/modules/modal/types";
 
 vi.mock("next/router", () => require("next-router-mock"));

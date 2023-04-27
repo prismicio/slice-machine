@@ -7,8 +7,13 @@ class RenameModal {
   get root() {
     return cy.get(this.rootSelector);
   }
+
   get input() {
     return cy.get(this.inputSelector);
+  }
+
+  get submitButton() {
+    return cy.get("button[type=submit]");
   }
 
   submit() {

@@ -6,10 +6,9 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-import { RESERVED_SLICE_NAME, API_ID_REGEX } from "@lib/consts";
-import camelCase from "lodash/camelCase";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
-import startCase from "lodash/startCase";
+import { SliceModalValues } from "../formsTypes";
+import { validateSliceModalValues } from "../formsValidator";
 
 interface RenameSliceModalProps {
   sliceName: string;
@@ -31,12 +30,12 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
     })
   );
 
-  const handleOnSubmit = (values: { sliceName: string }) => {
+  const handleOnSubmit = (values: SliceModalValues) => {
     renameSlice(libName, sliceId, values.sliceName);
   };
 
   return (
-    <ModalFormCard
+    <ModalFormCard<SliceModalValues>
       dataCy="rename-slice-modal"
       isOpen={isRenameSliceModalOpen}
       widthInPx="530px"
@@ -50,33 +49,9 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
       content={{
         title: "Rename a slice",
       }}
-      validate={({ sliceName }) => {
-        if (!sliceName) {
-          return { sliceName: "Cannot be empty" };
-        }
-        if (!API_ID_REGEX.exec(sliceName)) {
-          return { sliceName: "No special characters allowed" };
-        }
-        const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");
-        if (cased !== sliceName.trim()) {
-          return { sliceName: "Value has to be PascalCased" };
-        }
-        if (RESERVED_SLICE_NAME.includes(sliceName)) {
-          return {
-            sliceName: `${sliceName} is reserved for Slice Machine use`,
-          };
-        }
-
-        const localNames = localLibs.flatMap((lib) =>
-          lib.components.map((slice) => slice.model.name)
-        );
-        const remoteNames = remoteLibs.map((slice) => slice.name);
-        const usedNames = [...localNames, ...remoteNames];
-
-        if (usedNames.includes(sliceName)) {
-          return { sliceName: "Slice name is already taken." };
-        }
-      }}
+      validate={(values) =>
+        validateSliceModalValues(values, localLibs, remoteLibs)
+      }
     >
       {({ touched, errors }) => (
         <Box>
