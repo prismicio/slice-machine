@@ -84,7 +84,7 @@ testSnippet("date", `<>{${model.id}.data.date}</>`);
 
 testSnippet("embed", `<>{${model.id}.data.embed}</>`);
 
-testSnippet("geoPoint", `<>{${model.id}.data.geoPoint}</>`);
+testSnippet("geoPoint", `<>{JSON.stringify(${model.id}.data.geoPoint)}</>`);
 
 testSnippet(
 	"group",
