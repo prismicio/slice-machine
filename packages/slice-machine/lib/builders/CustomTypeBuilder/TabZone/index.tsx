@@ -133,6 +133,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   return (
     <>
       <Zone
+        zoneType="customType"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         title="Static Zone"

@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== "test") {
 
 const FORM_ID = "edit-modal-form";
 
-const EditModal = ({ close, data, fields, onSave }) => {
+const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   const { theme } = useThemeUI();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -161,11 +161,52 @@ const EditModal = ({ close, data, fields, onSave }) => {
             initialValues,
           } = props;
 
+          const fieldModelTabContent = CustomForm ? (
+            <CustomForm
+              key="field-model-tab-content"
+              {...props}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              fields={fields}
+            />
+          ) : (
+            <FlexGrid key="field-model-tab-content">
+              {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */}
+              {Object.entries(FormFields).map(([key, field]) => (
+                <Col key={key}>
+                  <WidgetFormField
+                    fieldName={createFieldNameFromKey(key)}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    formField={field}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    fields={fields}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    initialValues={initialValues}
+                  />
+                </Col>
+              ))}
+            </FlexGrid>
+          );
+
+          const mockDataTabContent = zoneType === "slice" && (
+            <Box key="mock-data-tab-content">
+              <DeprecatedMockConfigMessage />
+            </Box>
+          );
+
+          const tabs = ["Field Model"];
+          const cardContent = [fieldModelTabContent];
+
+          // Only display "Mock Data" tab for slice with the simulator fallback display, see DT-991
+          if (zoneType === "slice") {
+            tabs.push("Mock Data");
+            cardContent.push(mockDataTabContent);
+          }
+
           return (
             <Card
               borderFooter
               footerSx={{ p: 0, mb: 5 }}
-              tabs={["Field Model", "Mock Data"]}
+              tabs={tabs}
               Header={({ radius }) => (
                 <Flex
                   sx={{
@@ -224,31 +265,7 @@ const EditModal = ({ close, data, fields, onSave }) => {
                 </Flex>
               }
             >
-              {CustomForm ? (
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                <CustomForm {...props} fields={fields} />
-              ) : (
-                <FlexGrid>
-                  {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */}
-                  {Object.entries(FormFields).map(([key, field]) => (
-                    <Col key={key}>
-                      <WidgetFormField
-                        fieldName={createFieldNameFromKey(key)}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                        formField={field}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                        fields={fields}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                        initialValues={initialValues}
-                      />
-                    </Col>
-                  ))}
-                </FlexGrid>
-              )}
-
-              <Box>
-                <DeprecatedMockConfigMessage />
-              </Box>
+              {cardContent}
             </Card>
           );
         }}
