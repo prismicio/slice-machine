@@ -106,9 +106,15 @@ export class ScreenshotsManager extends BaseManager {
 			);
 		}
 
-		const browser = await puppeteer.launch({ headless: "new" });
+		try {
+			const browser = await puppeteer.launch({ headless: "new" });
 
-		this._browserContext = await browser.createIncognitoBrowserContext();
+			this._browserContext = await browser.createIncognitoBrowserContext();
+		} catch (error) {
+			throw new InternalError(
+				"Error launching browser. If you're using an Apple Silicon Mac, check if Rosetta is installed.",
+			);
+		}
 	}
 
 	async initS3ACL(): Promise<void> {

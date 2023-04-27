@@ -51,6 +51,7 @@ type IframeRendererProps = {
   screenDimensions: ScreenDimensions;
   simulatorUrl: string | undefined;
   dryRun?: boolean;
+  isScreenshot?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
@@ -58,6 +59,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   screenDimensions: iframeSize,
   simulatorUrl,
   dryRun = false,
+  isScreenshot = false,
 }) => {
   const [client, iframeRef] = useSimulatorClient();
 
@@ -107,8 +109,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
         backgroundImage: "url(/pattern.png)",
         backgroundRepeat: "repeat",
         backgroundSize: "10px",
-        border: (t) => `1px solid ${String(t.colors?.darkBorder)}`,
-        borderRadius: 8,
+        border: isScreenshot
+          ? undefined
+          : (t) => `1px solid ${String(t.colors?.darkBorder)}`,
+        borderRadius: isScreenshot ? undefined : 8,
         display: "flex",
         height: "100%",
         justifyContent: "center",
