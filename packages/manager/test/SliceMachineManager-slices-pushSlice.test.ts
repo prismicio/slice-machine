@@ -18,11 +18,9 @@ it("pushes a Slice using the Custom Types API", async (ctx) => {
 	const sliceReadHookHandler = vi.fn(() => {
 		return { model };
 	});
-	const sliceUpdateHookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("slice:read", sliceReadHookHandler);
-			hook("slice:update", sliceUpdateHookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -69,18 +67,6 @@ it("pushes a Slice using the Custom Types API", async (ctx) => {
 		libraryID: "foo",
 		sliceID: model.id,
 	});
-	expectHookHandlerToHaveBeenCalledWithData(sliceUpdateHookHandler, {
-		libraryID: "foo",
-		model: {
-			...model,
-			variations: [
-				{
-					...model.variations[0],
-					imageUrl: expect.any(String),
-				},
-			],
-		},
-	});
 	expect(sentModel).toStrictEqual({
 		...model,
 		variations: model.variations.map((variation) => {
@@ -96,13 +82,11 @@ it("updates variation screenshot URLs with a default image if no variation scree
 	const model = ctx.mockPrismic.model.sharedSlice({
 		variations: [ctx.mockPrismic.model.sharedSliceVariation()],
 	});
-	const sliceUpdateHookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("slice:read", () => {
 				return { model };
 			});
-			hook("slice:update", sliceUpdateHookHandler);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -145,19 +129,6 @@ it("updates variation screenshot URLs with a default image if no variation scree
 		sliceID: model.id,
 	});
 
-	expectHookHandlerToHaveBeenCalledWithData(sliceUpdateHookHandler, {
-		libraryID: "foo",
-		model: {
-			...model,
-			variations: [
-				{
-					...model.variations[0],
-					imageUrl:
-						"https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
-				},
-			],
-		},
-	});
 	expect(sentModel).toStrictEqual({
 		...model,
 		variations: [
@@ -178,13 +149,11 @@ it("updates variation screenshot URLs with uploaded screenshots", async (ctx) =>
 	const sliceAssetReadHookHandler = vi.fn(() => {
 		return { data: screenshotData };
 	});
-	const sliceUpdateHookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("slice:read", () => {
 				return { model };
 			});
-			hook("slice:update", sliceUpdateHookHandler);
 			hook("slice:asset:read", sliceAssetReadHookHandler);
 		},
 	});
@@ -254,18 +223,6 @@ it("updates variation screenshot URLs with uploaded screenshots", async (ctx) =>
 		libraryID: "foo",
 		sliceID: model.id,
 		assetID: `screenshot-${model.variations[0].id}.png`,
-	});
-	expectHookHandlerToHaveBeenCalledWithData(sliceUpdateHookHandler, {
-		libraryID: "foo",
-		model: {
-			...model,
-			variations: [
-				{
-					...model.variations[0],
-					imageUrl: uploadedScreenshotURL,
-				},
-			],
-		},
 	});
 	expect(sentModel).toStrictEqual({
 		...model,
