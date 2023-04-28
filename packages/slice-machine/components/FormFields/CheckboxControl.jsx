@@ -6,12 +6,14 @@ import { FormFieldCheckbox } from "./";
  * This components allows to set/unset the value of an arbitrary field via
  * checking/unchecking the box
  *
- * Field: the controlled Formik field that we want to manipulate label: a
- * function of text displayed next to the checkbox. Can be either a string or a
- * function controlledValue: the value of the field being controlled
- * setControlledValue: function to update the value of the controlled value in
- * Formik buildControlledValue: function to build the new value based on the
- * current controlled value and the state of the checkbox
+ * @param field - The controlled Formik field that we want to manipulate
+ * @param label - A function of text displayed next to the checkbox. Can be
+ *   either a string or a function
+ * @param controlledValue - The value of the field being controlled
+ * @param setControlledValue - Function to update the value of the controlled
+ *   value in
+ * @param buildControlledValue - Formik function to build the new value based on
+ *   the current controlled value and the state of the checkbox
  */
 const CheckboxControl = ({
   field,

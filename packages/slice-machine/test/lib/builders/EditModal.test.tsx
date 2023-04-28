@@ -36,7 +36,13 @@ describe("EditModal", () => {
     const fields = [field];
 
     render(
-      <EditModal onSave={saveFn} close={closeFn} data={data} fields={fields} />
+      <EditModal
+        onSave={saveFn}
+        close={closeFn}
+        data={data}
+        fields={fields}
+        zoneType="slice"
+      />
     );
 
     const removeButton = document.querySelector(
@@ -85,7 +91,13 @@ describe("EditModal", () => {
     const closeFn = vi.fn();
 
     render(
-      <EditModal onSave={saveFn} close={closeFn} data={data} fields={fields} />
+      <EditModal
+        onSave={saveFn}
+        close={closeFn}
+        data={data}
+        fields={fields}
+        zoneType="slice"
+      />
     );
 
     const labelInput = document.querySelector('input[name="config.label"]');

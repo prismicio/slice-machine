@@ -13,6 +13,7 @@ import ZoneHeader from "./components/ZoneHeader";
 import EmptyState from "./components/EmptyState";
 
 const Zone = ({
+  zoneType /* type of the zone: customType or slice */,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -165,6 +166,8 @@ const Zone = ({
         onSave={onSave}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         fields={poolOfFieldsToCheck}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        zoneType={zoneType}
       />
       <SelectFieldTypeModal
         data={selectModalData}
