@@ -60,7 +60,8 @@ const configurePrismicModule = async ({
 				? mod.exports.default.$args[0]
 				: mod.exports.default;
 	} catch {
-		console.error(`Failed modify ${path.basename(nuxtConfigPath)}`);
+		const errorMessage = `Failed modify ${path.basename(nuxtConfigPath)}`
+		console.error(errorMessage)
 		console.warn(
 			`Ensure that the following has been added to ${path.basename(
 				nuxtConfigPath,
@@ -79,7 +80,7 @@ const configurePrismicModule = async ({
 			}
 		`);
 
-		return;
+		throw errorMessage;
 	}
 
 	// Register Prismic module
