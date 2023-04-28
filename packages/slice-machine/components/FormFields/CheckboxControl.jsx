@@ -3,14 +3,15 @@ import { useState, useEffect } from "react";
 import { FormFieldCheckbox } from "./";
 
 /**
- * This components allows to set/unset the value of an arbitrary field via checking/unchecking the box
+ * This components allows to set/unset the value of an arbitrary field via
+ * checking/unchecking the box
  *
- * field: the controlled Formik field that we want to manipulate
- * label: a function of text displayed next to the checkbox. Can be either a string or a function
- * controlledValue: the value of the field being controlled
- * setControlledValue: function to update the value of the controlled value in Formik
- * buildControlledValue: function to build the new value based on the current controlled value and the state of the checkbox
- *
+ * Field: the controlled Formik field that we want to manipulate label: a
+ * function of text displayed next to the checkbox. Can be either a string or a
+ * function controlledValue: the value of the field being controlled
+ * setControlledValue: function to update the value of the controlled value in
+ * Formik buildControlledValue: function to build the new value based on the
+ * current controlled value and the state of the checkbox
  */
 const CheckboxControl = ({
   field,
@@ -31,7 +32,7 @@ const CheckboxControl = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     buildControlledValue
       ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        setControlledValue(buildControlledValue(controlledValue))
+        setControlledValue(buildControlledValue(controlledValue, isChecked))
       : // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         setControlledValue(buildControlledValue);
     // Adding the missing dependency to this hook triggers an infinite loop
