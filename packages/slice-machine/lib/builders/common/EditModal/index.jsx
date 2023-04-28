@@ -187,17 +187,17 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
             </FlexGrid>
           );
 
-          const mockDataTabContent = zoneType === "slice" && (
-            <Box key="mock-data-tab-content">
-              <DeprecatedMockConfigMessage />
-            </Box>
-          );
-
           const tabs = ["Field Model"];
           const cardContent = [fieldModelTabContent];
 
           // Only display "Mock Data" tab for slice with the simulator fallback display, see DT-991
           if (zoneType === "slice") {
+            const mockDataTabContent = (
+              <Box key="mock-data-tab-content">
+                <DeprecatedMockConfigMessage />
+              </Box>
+            );
+
             tabs.push("Mock Data");
             cardContent.push(mockDataTabContent);
           }
