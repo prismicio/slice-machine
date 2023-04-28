@@ -279,15 +279,10 @@ export class PrismicRepositoryManager extends BaseManager {
 										model,
 									});
 
-								await this.slices.updateSlice({
-									libraryID: change.libraryID,
-									model: modelWithScreenshots,
-								});
-
 								return {
-									type: ChangeTypes.SLICE_INSERT,
 									id: change.id,
 									payload: modelWithScreenshots,
+									type: ChangeTypes.SLICE_INSERT,
 								};
 							}
 							case "MODIFIED": {
@@ -306,15 +301,10 @@ export class PrismicRepositoryManager extends BaseManager {
 										model,
 									});
 
-								await this.slices.updateSlice({
-									libraryID: change.libraryID,
-									model: modelWithScreenshots,
-								});
-
 								return {
-									type: ChangeTypes.SLICE_UPDATE,
 									id: change.id,
 									payload: modelWithScreenshots,
+									type: ChangeTypes.SLICE_UPDATE,
 								};
 							}
 							case "DELETED":
