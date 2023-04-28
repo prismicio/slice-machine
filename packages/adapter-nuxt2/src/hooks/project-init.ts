@@ -51,7 +51,7 @@ const configurePrismicModule = async ({
 		}
 	}
 
-	const mod = await loadFile(nuxtConfigPath); // here maybe
+	const mod = await loadFile(nuxtConfigPath);
 
 	let config;
 	try {
@@ -60,7 +60,7 @@ const configurePrismicModule = async ({
 				? mod.exports.default.$args[0]
 				: mod.exports.default;
 	} catch {
-		const errorMessage = `Failed modify ${path.basename(nuxtConfigPath)}`;
+		const errorMessage = `Failed to update ${path.basename(nuxtConfigPath)}`;
 		console.error(errorMessage);
 		console.warn(
 			`Ensure that the following has been added to ${path.basename(

@@ -181,7 +181,7 @@ test("Slice Simulator page file is not formatted if formatting is disabled", asy
 	);
 });
 
-test("migrates and configures nuxt exporting a function", async (ctx) => {
+test("warns user that Nuxt config could not be updated", async (ctx) => {
 	const log = vi.fn();
 	const installDependencies = vi.fn();
 
@@ -195,7 +195,7 @@ test("migrates and configures nuxt exporting a function", async (ctx) => {
 
 	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
 
-	expect(errorSpy).toHaveBeenCalledWith("Failed modify nuxt.config.ts");
+	expect(errorSpy).toHaveBeenCalledWith("Failed to update nuxt.config.ts");
 	expect(warnSpy.mock.calls).toMatchInlineSnapshot(`
 		[
 		  [
