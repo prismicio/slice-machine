@@ -118,6 +118,21 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
+		case "GeoPoint": {
+			const code = await format(
+				stripIndent`
+					<>{JSON.stringify(${dotPath(fieldPath)})}</>
+				`,
+				helpers,
+			);
+
+			return {
+				label,
+				language: "tsx",
+				code,
+			};
+		}
+
 		default: {
 			return {
 				label,
