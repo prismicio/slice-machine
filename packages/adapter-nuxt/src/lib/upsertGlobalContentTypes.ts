@@ -1,6 +1,7 @@
 import type { SliceMachineContext } from "@slicemachine/plugin-kit";
 import { generateTypes } from "prismic-ts-codegen";
 import * as fs from "node:fs/promises";
+import debounce from "lodash.debounce";
 import * as path from "node:path";
 
 import type { PluginOptions } from "../types";
@@ -18,7 +19,7 @@ type UpsertGlobalTypesArgs = Pick<
  * Creates a globally accessible TypeScript file containing types representing
  * the Prismic repository's content.
  */
-export const upsertGlobalContentTypes = async ({
+const _upsertGlobalContentTypes = async ({
 	actions,
 	helpers,
 	options,
@@ -60,3 +61,8 @@ export const upsertGlobalContentTypes = async ({
 	await fs.mkdir(path.dirname(filePath), { recursive: true });
 	await fs.writeFile(filePath, contents);
 };
+
+export const upsertGlobalContentTypes = debounce(
+	_upsertGlobalContentTypes,
+	1_000,
+);
