@@ -38,6 +38,10 @@ const configurePrismicModule = async ({
 }: ConfigurePrismicModuleArgs) => {
 	let nuxtConfigPath = helpers.joinPathFromRoot("nuxt.config.js");
 
+	const endpoint =
+		project.config.apiEndpoint ||
+		`https://${project.config.repositoryName}.cdn.prismic.io/api/v2`;
+
 	if (!(await checkPathExists(nuxtConfigPath))) {
 		nuxtConfigPath = helpers.joinPathFromRoot("nuxt.config.ts");
 
@@ -47,11 +51,36 @@ const configurePrismicModule = async ({
 		}
 	}
 
-	const mod = await loadFile(nuxtConfigPath);
-	const config =
-		mod.exports.default.$type === "function-call"
-			? mod.exports.default.$args[0]
-			: mod.exports.default;
+	const mod = await loadFile(nuxtConfigPath); // here maybe
+
+	let config;
+	try {
+		config =
+			mod.exports.default.$type === "function-call"
+				? mod.exports.default.$args[0]
+				: mod.exports.default;
+	} catch {
+		console.error(`Failed modify ${path.basename(nuxtConfigPath)}`);
+		console.warn(
+			`Ensure that the following has been added to ${path.basename(
+				nuxtConfigPath,
+			)}.`,
+		);
+		console.warn(stripIndent`
+			{
+				buildModules: ["@nuxtjs/prismic"],
+				prismic: {
+					endpoint: "${endpoint}",
+					modern: true
+				},
+				build: {
+					transpile: ["@prismicio/vue"]
+				}
+			}
+		`);
+
+		return;
+	}
 
 	// Register Prismic module
 	let hasInlinedConfiguration = false;
@@ -75,10 +104,6 @@ const configurePrismicModule = async ({
 		config.buildModules.push(NUXT_PRISMIC);
 	}
 
-	// Append Prismic module configuration
-	const endpoint =
-		project.config.apiEndpoint ||
-		`https://${project.config.repositoryName}.cdn.prismic.io/api/v2`;
 	if (!hasInlinedConfiguration) {
 		if (config.prismic) {
 			config.prismic.endpoint = endpoint;

@@ -180,3 +180,39 @@ test("Slice Simulator page file is not formatted if formatting is disabled", asy
 		}),
 	);
 });
+
+test("migrates and configures nuxt exporting a function", async (ctx) => {
+	const log = vi.fn();
+	const installDependencies = vi.fn();
+
+	const errorSpy = vi
+		.spyOn(console, "error")
+		.mockImplementationOnce(() => undefined);
+	const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+
+	const nuxtConfigPath = path.join(ctx.project.root, "nuxt.config.ts");
+	await fs.writeFile(nuxtConfigPath, "export default () => ({})");
+
+	await ctx.pluginRunner.callHook("project:init", { log, installDependencies });
+
+	expect(errorSpy).toHaveBeenCalledWith("Failed modify nuxt.config.ts");
+	expect(warnSpy.mock.calls).toMatchInlineSnapshot(`
+		[
+		  [
+		    "Ensure that the following has been added to nuxt.config.ts.",
+		  ],
+		  [
+		    "{
+			buildModules: [\\"@nuxtjs/prismic\\"],
+			prismic: {
+				endpoint: \\"https://qwerty.cdn.prismic.io/api/v2\\",
+				modern: true
+			},
+			build: {
+				transpile: [\\"@prismicio/vue\\"]
+			}
+		}",
+		  ],
+		]
+	`);
+});
