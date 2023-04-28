@@ -253,6 +253,9 @@ export class ScreenshotsManager extends BaseManager {
 	async uploadScreenshot(
 		args: ScreenshotsManagerUploadScreenshotArgs,
 	): Promise<ScreenshotsManagerUploadScreenshotReturnType> {
+		if (this._s3ACL === undefined) {
+			await this.initS3ACL();
+		}
 		assertS3ACLInitialized(this._s3ACL);
 
 		const formData = new FormData();
