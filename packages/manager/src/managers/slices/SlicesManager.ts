@@ -426,11 +426,6 @@ export class SlicesManager extends BaseManager {
 					model,
 				});
 
-			const { errors: updateSliceErrors } = await this.updateSlice({
-				libraryID: args.libraryID,
-				model: modelWithScreenshots,
-			});
-
 			const authenticationToken = await this.user.getAuthenticationToken();
 			const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
@@ -469,7 +464,7 @@ export class SlicesManager extends BaseManager {
 
 			return {
 				screenshotURLs,
-				errors: [...readSliceErrors, ...updateSliceErrors],
+				errors: readSliceErrors,
 			};
 		} else {
 			return {
