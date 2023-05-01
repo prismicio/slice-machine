@@ -54,6 +54,7 @@ const Card: React.FC<CardProps> = ({
             : null),
           ...footerSx,
         }}
+        radius={radius}
         withRadius
       >
         {typeof Footer === "object" ? Footer : <Footer />}

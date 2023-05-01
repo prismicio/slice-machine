@@ -38,13 +38,11 @@ export const DeleteSliceModal: React.FunctionComponent<
       style={{
         content: {
           maxWidth: 612,
-          borderRadius: "0px",
         },
       }}
       onRequestClose={closeModals}
     >
       <Card
-        radius={"0px"}
         bodySx={{
           p: 0,
           bg: "white",
@@ -53,13 +51,19 @@ export const DeleteSliceModal: React.FunctionComponent<
           padding: 16,
         }}
         footerSx={{
+          position: "sticky",
+          bottom: 0,
           p: 0,
         }}
-        sx={{ border: "none", borderRadius: "0px" }}
+        sx={{ border: "none" }}
         borderFooter
         Header={() => (
           <Flex
             sx={{
+              position: "sticky",
+              background: "gray",
+              top: 0,
+              zIndex: 1,
               p: "16px",
               alignItems: "center",
               justifyContent: "space-between",
@@ -86,7 +90,7 @@ export const DeleteSliceModal: React.FunctionComponent<
               alignItems: "center",
               paddingRight: 16,
               borderTop: (t) => `1px solid ${String(t.colors?.darkBorders)}`,
-              backgroundColor: "white",
+              backgroundColor: "gray",
             }}
           >
             <Button

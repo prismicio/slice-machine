@@ -112,6 +112,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
                 },
               };
             }}
+            menuPortalTarget={document.body}
           />
         </Box>
       )}
