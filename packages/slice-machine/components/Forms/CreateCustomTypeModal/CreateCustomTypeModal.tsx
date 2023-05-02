@@ -2,8 +2,8 @@ import { SetStateAction, useState } from "react";
 import { Box } from "theme-ui";
 
 import ModalFormCard from "@components/ModalFormCard";
-import { InputBox } from "./components/InputBox";
-import { SelectRepeatable } from "./components/SelectRepeatable";
+import { InputBox } from "../components/InputBox";
+import { SelectRepeatable } from "../components/SelectRepeatable";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -27,7 +27,7 @@ interface FormValues {
   repeatable: boolean;
 }
 
-const CreateCustomTypeModal: React.FC = () => {
+export const CreateCustomTypeModal: React.FC = () => {
   const { createCustomType, closeModals } = useSliceMachineActions();
 
   const {
@@ -172,5 +172,3 @@ const CreateCustomTypeModal: React.FC = () => {
     </ModalFormCard>
   );
 };
-
-export default CreateCustomTypeModal;

@@ -3,7 +3,7 @@ import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Text, Link } from "theme-ui";
 import Container from "components/Container";
 
-import CreateSliceModal from "components/Forms/CreateSliceModal";
+import { CreateSliceModal } from "components/Forms/CreateSliceModal";
 
 import Header from "components/Header";
 import Grid from "components/Grid";
