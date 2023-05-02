@@ -118,7 +118,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
-		case "GeoPoint": {
+		case "GeoPoint":
+		case "Embed": {
 			const code = await format(
 				stripIndent`
 					<>{JSON.stringify(${dotPath(fieldPath)})}</>
