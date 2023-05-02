@@ -2,7 +2,7 @@ import React from "react";
 import { Flex, Link as ThemeLink, Text } from "theme-ui";
 
 import Container from "@components/Container";
-import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
+import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
 import Header from "@components/Header";
 import EmptyState from "@components/EmptyState";
 import { Button } from "@components/Button";

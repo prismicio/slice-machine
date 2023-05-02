@@ -82,7 +82,7 @@ testSnippet(
 
 testSnippet("date", `<>{${model.id}.data.date}</>`);
 
-testSnippet("embed", `<>{${model.id}.data.embed}</>`);
+testSnippet("embed", `<>{JSON.stringify(${model.id}.data.embed)}</>`);
 
 testSnippet("geoPoint", `<>{JSON.stringify(${model.id}.data.geoPoint)}</>`);
 
