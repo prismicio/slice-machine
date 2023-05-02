@@ -359,7 +359,7 @@ export class PrismicAuthManager {
 				null,
 				"\t",
 			);
- 
+
 			await fs.mkdir(path.dirname(authStateFilePath), { recursive: true });
 			await fs.writeFile(authStateFilePath, authStateFileContents);
 		}

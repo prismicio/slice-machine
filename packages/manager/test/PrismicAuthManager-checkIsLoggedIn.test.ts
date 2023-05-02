@@ -7,10 +7,9 @@ import { readPrismicAuthState } from "./__testutils__/readPrismicAuthState";
 
 import { createPrismicAuthManager } from "../src";
 
-import fs from "node:fs/promises"
-import os from "node:os"
-import path from "node:path"
-
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 
 it("returns true if the user is logged in", async (ctx) => {
 	const prismicAuthManager = createPrismicAuthManager();
@@ -96,4 +95,4 @@ it("when .prismic contains invalid json it should reset the file", async (ctx) =
 	expect(authState?.cookies).toBe("");
 	expect(authState?.shortId).toBe(undefined);
 	expect(authState?.intercomHash).toBe(undefined);
-})
+});
