@@ -641,8 +641,7 @@ export class SlicesManager extends BaseManager {
 	): Promise<SharedSlice> {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 
-		// Update the AWS ACL before uploading screenshots as it might have expired
-		await this.screenshots.initS3ACL();
+		let initS3ACL = false;
 
 		const variations = await Promise.all(
 			args.model.variations.map(async (variation) => {
@@ -667,6 +666,12 @@ export class SlicesManager extends BaseManager {
 				// If screenshot hasn't changed, do nothing
 				if (!hasScreenshotChanged) {
 					return variation;
+				}
+
+				// Update the AWS ACL before uploading the first screenshot as it might have expired
+				if (!initS3ACL) {
+					await this.screenshots.initS3ACL();
+					initS3ACL = true;
 				}
 
 				const keyPrefix = [
