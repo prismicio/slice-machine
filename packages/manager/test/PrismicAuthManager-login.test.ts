@@ -1,5 +1,7 @@
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { expect, it } from "vitest";
-
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 import { readPrismicAuthState } from "./__testutils__/readPrismicAuthState";
 
@@ -44,4 +46,23 @@ it("retains existing cookies in the auth state file", async (ctx) => {
 	expect(authState?.cookies).toBe(
 		"foo=bar; prismic-auth=token; SESSION=session",
 	);
+});
+
+it("resets the auth state file when it contains invalid JSON", async (ctx) => {
+	const prismicAuthManager = createPrismicAuthManager();
+
+	const { profile } = mockPrismicUserAPI(ctx);
+
+	fs.writeFile(path.join(os.homedir(), ".prismic"), "");
+
+	await prismicAuthManager.login({
+		email: "foo@prismic.io",
+		cookies: ["prismic-auth=token", "SESSION=session"],
+	});
+
+	const authState = await readPrismicAuthState();
+
+	expect(authState?.cookies).toBe("prismic-auth=token; SESSION=session");
+	expect(authState?.shortId).toBe(profile.shortId);
+	expect(authState?.intercomHash).toBe(profile.intercomHash);
 });
