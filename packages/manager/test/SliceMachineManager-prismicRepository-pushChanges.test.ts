@@ -3,6 +3,7 @@ import { expect, it } from "vitest";
 import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
+import { mockAWSACLAPI } from "./__testutils__/mockAWSACLAPI";
 import { mockCustomTypesAPI } from "./__testutils__/mockCustomTypesAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
@@ -64,6 +65,17 @@ it("pushes changes using the bulk delete API", async (ctx) => {
 	});
 
 	await manager.user.login(createPrismicAuthLoginResponse());
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
+
+	mockAWSACLAPI(ctx, {
+		createEndpoint: {
+			expectedPrismicRepository: sliceMachineConfig.repositoryName,
+			expectedAuthenticationToken: authenticationToken,
+		},
+	});
+
 	await manager.prismicRepository.pushChanges(
 		pushChangesPayload([sharedSliceModel.id], [customTypeModel.id]),
 	);

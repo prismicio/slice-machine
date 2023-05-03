@@ -118,9 +118,10 @@ export class ScreenshotsManager extends BaseManager {
 	}
 
 	async initS3ACL(): Promise<void> {
-		if (this._s3ACL) {
-			return;
-		}
+		// TODO: we need to find a way to create a new AWS ACL only when necessary (e.g., when it has expired).
+		// if (this._s3ACL) {
+		// 	return;
+		// }
 
 		const awsACLURL = new URL("create", API_ENDPOINTS.AwsAclProvider);
 		const awsACLRes = await this._fetch({ url: awsACLURL });
