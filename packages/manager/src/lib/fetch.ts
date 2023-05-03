@@ -12,8 +12,8 @@ const httpsAgent = new https.Agent({
 });
 
 const options: RequestInit = {
-	agent: function (_parsedURL) {
-		if (_parsedURL.protocol == "http:") {
+	agent: function (parsedURL) {
+		if (parsedURL.protocol == "http:") {
 			return httpAgent;
 		} else {
 			return httpsAgent;
