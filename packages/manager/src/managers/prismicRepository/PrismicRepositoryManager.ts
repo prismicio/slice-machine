@@ -259,6 +259,9 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 
 		try {
+			// Update the AWS ACL before uploading screenshots as it might have expired
+			await this.screenshots.initS3ACL();
+
 			const allChanges: AllChangeTypes[] = await Promise.all(
 				args.changes.map(async (change) => {
 					if (change.type === "Slice") {
