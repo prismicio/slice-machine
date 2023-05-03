@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import fetch, { Response } from "node-fetch";
+import fetch, { Response } from "../../lib/fetch";
 import { fold } from "fp-ts/Either";
 
 import { decode } from "../../lib/decode";

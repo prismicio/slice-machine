@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { fileTypeFromBuffer } from "file-type";
-import fetch, { FormData, Blob, Response } from "node-fetch";
+import fetch, { FormData, Blob, Response } from "../../lib/fetch";
 // puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
 import type { BrowserContext, Viewport } from "puppeteer";
 

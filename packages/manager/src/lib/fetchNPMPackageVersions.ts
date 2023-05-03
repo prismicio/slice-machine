@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import fetch from "node-fetch";
+import fetch from "./fetch";
 
 import { decode } from "./decode";
 
