@@ -343,10 +343,11 @@ export class PrismicAuthManager {
 		const authStateFilePath = this._getPersistedAuthStateFilePath();
 
 		let authStateFileContents: string = JSON.stringify({});
+		let rawAuthState = {};
 
 		try {
 			authStateFileContents = await fs.readFile(authStateFilePath, "utf8");
-			JSON.parse(authStateFileContents);
+			rawAuthState = JSON.parse(authStateFileContents);
 		} catch {
 			// Write a default persisted state if it doesn't already exist.
 
@@ -365,9 +366,11 @@ export class PrismicAuthManager {
 		}
 
 		// Decode cookies into a record for convenience.
-		const rawAuthState = JSON.parse(authStateFileContents);
-
-		if (rawAuthState && "cookies" in rawAuthState) {
+		if (
+			rawAuthState &&
+			"cookies" in rawAuthState &&
+			typeof rawAuthState.cookies === "string"
+		) {
 			rawAuthState.cookies = parseCookies(rawAuthState.cookies);
 		}
 
