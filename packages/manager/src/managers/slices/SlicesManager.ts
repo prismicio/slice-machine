@@ -1,7 +1,8 @@
 import * as t from "io-ts";
-import fetch from "../../lib/fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
+import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
 	HookError,
@@ -19,17 +20,17 @@ import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { bufferCodec } from "../../lib/bufferCodec";
 import { decodeHookResult } from "../../lib/decodeHookResult";
+import { createContentDigest } from "../../lib/createContentDigest";
+import { mockSlice } from "../../lib/mockSlice";
+import fetch from "../../lib/fetch";
 
 import { OnlyHookErrors } from "../../types";
 import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
+import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
-import { createContentDigest } from "../../lib/createContentDigest";
-import { mockSlice } from "../../lib/mockSlice";
-import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -434,6 +435,7 @@ export class SlicesManager extends BaseManager {
 				endpoint: API_ENDPOINTS.PrismicModels,
 				repositoryName: sliceMachineConfig.repositoryName,
 				token: authenticationToken,
+				userAgent: SLICE_MACHINE_USER_AGENT,
 				fetch,
 			});
 
@@ -630,6 +632,7 @@ export class SlicesManager extends BaseManager {
 			endpoint: API_ENDPOINTS.PrismicModels,
 			repositoryName: sliceMachineConfig.repositoryName,
 			token: authenticationToken,
+			userAgent: SLICE_MACHINE_USER_AGENT,
 			fetch,
 		});
 

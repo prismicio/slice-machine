@@ -1,5 +1,4 @@
 import * as t from "io-ts";
-import fetch from "../../lib/fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import {
@@ -17,12 +16,14 @@ import {
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
+import fetch from "../../lib/fetch";
 
-import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { OnlyHookErrors } from "../../types";
+import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+import { UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
-import { UnauthorizedError } from "../../errors";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -226,6 +227,7 @@ export class CustomTypesManager extends BaseManager {
 				endpoint: API_ENDPOINTS.PrismicModels,
 				repositoryName: sliceMachineConfig.repositoryName,
 				token: authenticationToken,
+				userAgent: SLICE_MACHINE_USER_AGENT,
 				fetch,
 			});
 
@@ -310,6 +312,7 @@ export class CustomTypesManager extends BaseManager {
 			endpoint: API_ENDPOINTS.PrismicModels,
 			repositoryName: sliceMachineConfig.repositoryName,
 			token: authenticationToken,
+			userAgent: SLICE_MACHINE_USER_AGENT,
 			fetch,
 		});
 
