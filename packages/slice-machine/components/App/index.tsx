@@ -6,7 +6,6 @@ import AppLayout from "../AppLayout";
 
 import LoginModal from "@components/LoginModal";
 import ReviewModal from "@components/ReviewModal";
-import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
 import { MissingLibraries } from "@components/MissingLibraries";
 import ToastContainer from "@components/ToasterContainer";
@@ -26,7 +25,6 @@ const SliceMachineApp: FC<Props> = ({ children }) => {
   }));
 
   useSMTracker();
-  useOnboardingRedirection();
   useServerState();
   useChangelog();
 

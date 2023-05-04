@@ -4,7 +4,6 @@ import { ModalKeysEnum } from "./modal/types";
 import { modalCloseCreator, modalOpenCreator } from "./modal";
 import { startLoadingActionCreator, stopLoadingActionCreator } from "./loading";
 import {
-  finishOnboardingCreator,
   sendAReviewCreator,
   skipReviewCreator,
   updatesViewedCreator,
@@ -137,7 +136,6 @@ const useSliceMachineActions = () => {
   // UserContext module
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
-  const finishOnboarding = () => dispatch(finishOnboardingCreator());
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
   const setSeenSimulatorToolTip = () =>
@@ -450,7 +448,6 @@ const useSliceMachineActions = () => {
     openDeleteDocumentsDrawerOverLimit,
     connectToSimulatorIframe,
     refreshState,
-    finishOnboarding,
     openScreenshotsModal,
     openLoginModal,
     startLoadingLogin,
