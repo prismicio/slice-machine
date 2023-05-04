@@ -93,22 +93,11 @@ it("if plugin init hook has errors it logs them and continues", async () => {
 it("if plugin runner is not started it should inform the user about the issue and continue", async () => {
 	const initProcess = createSliceMachineInitProcess();
 
-	const result = await watchStd(() => {
+	const { stdout, stderr } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
 		return initProcess.initializePlugins();
 	});
 
-	expect(result).toMatchInlineSnapshot(`
-		{
-		  "stderr": [],
-		  "stdout": [
-		    "[15:41:12] Initializing adapter... [started]
-		",
-		    "[15:41:12] Initializing adapter... [failed]
-		",
-		    "[15:41:12] → Plugins have not been initialized. Run \`SliceMachineManager.plugins.prototype.initPlugins()\` before re-calling this method.
-		",
-		  ],
-		}
-	`);
+	expect(stderr.length).toBe(0);
+	expect(stdout).toMatch(/Plugins have not been initialized./);
 });
