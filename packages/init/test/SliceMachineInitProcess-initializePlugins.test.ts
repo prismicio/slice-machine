@@ -90,7 +90,7 @@ it("if plugin init hook has errors it logs them and continues", async () => {
 	expect(stderr.length).toBe(0);
 });
 
-it.only("if plugin runner is not started it should inform the user about the issue and continue", async () => {
+it("if plugin runner is not started it should inform the user about the issue and continue", async () => {
 	const initProcess = createSliceMachineInitProcess();
 
 	const result = await watchStd(() => {
