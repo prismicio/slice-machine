@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import fetch from "node-fetch";
+import fetch from "../../lib/fetch";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import {
