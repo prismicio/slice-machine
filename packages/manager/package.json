@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.2.1",
+	"version": "0.2.2-dev-page-types.0",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
@@ -65,7 +65,7 @@
 		"@prismicio/custom-types-client": "^1.1.0",
 		"@prismicio/mocks": "2.0.0-alpha.2",
 		"@prismicio/types-internal": "2.0.0-alpha.9",
-		"@slicemachine/plugin-kit": "0.2.0",
+		"@slicemachine/plugin-kit": "0.2.1-dev-page-types.0",
 		"@wooorm/starry-night": "^1.6.0",
 		"analytics-node": "^6.2.0",
 		"cookie": "^0.5.0",
