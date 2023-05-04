@@ -74,34 +74,30 @@ it("plugins can log things", async () => {
 	expect(stdout).toMatch(/plugin buffer log/);
 });
 
-it("throws if plugin init hook has errors", async () => {
+it("if plugin init hook has errors it logs them and continues", async () => {
 	const projectInitHookHandler = vi.fn().mockImplementation(() => {
 		throw new Error("plugin error");
 	});
 	await mockAdapter(initProcess, projectInitHookHandler);
 
-	try {
-		await watchStd(() => {
-			// @ts-expect-error - Accessing protected method
-			return initProcess.initializePlugins();
-		});
-	} catch (error) {
-		expect(error).toMatch(/Failed to initialize project/);
-		expect(error).toMatch(/plugin error/);
-	}
+	const { stderr, stdout } = await watchStd(() => {
+		// @ts-expect-error - Accessing protected method
+		return initProcess.initializePlugins();
+	});
 
-	expect.assertions(2);
+	expect(stdout).toMatch(/Failed to initialize project/);
+	expect(stdout).toMatch(/plugin error/);
+	expect(stderr.length).toBe(0);
 });
 
-it("throws if plugin runner is not started", async () => {
+it("if plugin runner is not started it should inform the user about the issue and continue", async () => {
 	const initProcess = createSliceMachineInitProcess();
 
-	await expect(
-		watchStd(() => {
-			// @ts-expect-error - Accessing protected method
-			return initProcess.initializePlugins();
-		}),
-	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Plugins have not been initialized. Run `SliceMachineManager.plugins.prototype.initPlugins()` before re-calling this method."',
-	);
+	const { stdout, stderr } = await watchStd(() => {
+		// @ts-expect-error - Accessing protected method
+		return initProcess.initializePlugins();
+	});
+
+	expect(stderr.length).toBe(0);
+	expect(stdout).toMatch(/Plugins have not been initialized./);
 });
