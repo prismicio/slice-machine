@@ -1,5 +1,5 @@
 // This temporary wrapper around `node-fetch` fixes an issue where quick
-// consecutive network requests causes failed requests.
+// consecutive network requests cause failed requests.
 //
 // See https://github.com/node-fetch/node-fetch/issues/1735 for more details.
 //
