@@ -30,16 +30,15 @@ Start up the dev server.
 ```
 npm run dev
 ```
-
-Now that the dev server is running we can start a Next.js used for testing. Move into the `e2e-projects/next` folder and run the `slicemachine:dev` script;
+Now that the dev server is running you can start the Next.js project used for testing. Move into the `e2e-projects/next` folder and run the `slicemachine:dev` script.
 
 ```
 cd e2e-projects/next
 npm run slicemachine:dev
 ```
 
-Now you can go to your browser and open `localhost:9999` to see the sliceimachine app up and running with some demo slices and custom type.
-You're now ready to start work on your changes and see them updated in the app.
+Now you can go to your browser and open `localhost:9999` to see the Slice Machine app up and running with some demo Slices and Custom Types.
+You're now ready to start working on your changes and see them updated in the app.
 
 <!-- Links -->
 
