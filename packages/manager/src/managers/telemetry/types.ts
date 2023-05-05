@@ -5,12 +5,6 @@ export const SegmentEventType = {
 	command_init_identify: "command:init:identify",
 	command_init_end: "command:init:end",
 	review: "review",
-	onboarding_start: "onboarding:start",
-	onboarding_skip: "onboarding:skip",
-	onboarding_continue_screenIntro: "onboarding:continue:screen-intro",
-	onboarding_continue_screen1: "onboarding:continue:screen-1",
-	onboarding_continue_screen2: "onboarding:continue:screen-2",
-	onboarding_continue_screen3: "onboarding:continue:screen-3",
 	sliceSimulator_setup: "slice-simulator:setup",
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
@@ -34,16 +28,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.command_init_identify]: "SliceMachine Init Identify",
 	[SegmentEventType.command_init_end]: "SliceMachine Init End",
 	[SegmentEventType.review]: "SliceMachine Review",
-	[SegmentEventType.onboarding_start]: "SliceMachine Onboarding Start",
-	[SegmentEventType.onboarding_skip]: "SliceMachine Onboarding Skip",
-	[SegmentEventType.onboarding_continue_screenIntro]:
-		"SliceMachine Onboarding Continue Screen Intro",
-	[SegmentEventType.onboarding_continue_screen1]:
-		"SliceMachine Onboarding Continue Screen 1",
-	[SegmentEventType.onboarding_continue_screen2]:
-		"SliceMachine Onboarding Continue Screen 2",
-	[SegmentEventType.onboarding_continue_screen3]:
-		"SliceMachine Onboarding Continue Screen 3",
 	[SegmentEventType.sliceSimulator_setup]: "SliceMachine Slice Simulator Setup",
 	[SegmentEventType.sliceSimulator_open]: "SliceMachine Slice Simulator Open",
 	[SegmentEventType.sliceSimulator_isNotRunning]:
@@ -95,31 +79,6 @@ type CommandInitEndSegmentEvent = SegmentEvent<
 type ReviewSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.review,
 	{ rating: number; comment: string }
->;
-
-type OnboardingStartSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.onboarding_start
->;
-
-type OnboardingSkipSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.onboarding_skip,
-	{ screenSkipped: number }
->;
-
-type OnboardingContinueScreenIntroSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.onboarding_continue_screenIntro
->;
-
-type OnboardingContinueScreen1SegmentEvent = SegmentEvent<
-	typeof SegmentEventType.onboarding_continue_screen1
->;
-
-type OnboardingContinueScreen2SegmentEvent = SegmentEvent<
-	typeof SegmentEventType.onboarding_continue_screen2
->;
-
-type OnboardingContinueScreen3SegmentEvent = SegmentEvent<
-	typeof SegmentEventType.onboarding_continue_screen3
 >;
 
 type SliceSimulatorSetupSegmentEvent = SegmentEvent<
@@ -220,12 +179,6 @@ export type SegmentEvents =
 	| CommandInitIdentifySegmentEvent
 	| CommandInitEndSegmentEvent
 	| ReviewSegmentEvent
-	| OnboardingStartSegmentEvent
-	| OnboardingSkipSegmentEvent
-	| OnboardingContinueScreenIntroSegmentEvent
-	| OnboardingContinueScreen1SegmentEvent
-	| OnboardingContinueScreen2SegmentEvent
-	| OnboardingContinueScreen3SegmentEvent
 	| SliceSimulatorSetupSegmentEvent
 	| SliceSimulatorOpenSegmentEvent
 	| SliceSimulatorIsNotRunningSegmentEvent

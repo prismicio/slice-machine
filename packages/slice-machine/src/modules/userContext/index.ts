@@ -13,7 +13,6 @@ import { changesPushCreator } from "../pushChangesSaga";
 
 const initialState: UserContextStoreType = {
   hasSendAReview: false,
-  isOnboarded: false,
   updatesViewed: {
     latest: null,
     latestNonBreaking: null,
@@ -29,10 +28,6 @@ export const sendAReviewCreator = createAction("USER_CONTEXT/SEND_REVIEW")();
 
 export const skipReviewCreator = createAction("USER_CONTEXT/SKIP_REVIEW")();
 
-export const finishOnboardingCreator = createAction(
-  "USER_CONTEXT/FINISH_ONBOARDING"
-)();
-
 export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
   UserContextStoreType["updatesViewed"]
 >();
@@ -46,7 +41,6 @@ export const hasSeenSimulatorToolTipCreator = createAction(
 )();
 
 type userContextActions = ActionType<
-  | typeof finishOnboardingCreator
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
   | typeof updatesViewedCreator
@@ -59,10 +53,6 @@ type userContextActions = ActionType<
 // Selectors
 export const userHasSendAReview = (state: SliceMachineStoreType): boolean =>
   state.userContext.hasSendAReview;
-
-export const userHasDoneTheOnboarding = (
-  state: SliceMachineStoreType
-): boolean => state.userContext.isOnboarded;
 
 export const getUpdatesViewed = (
   state: SliceMachineStoreType
@@ -91,11 +81,6 @@ export const userContextReducer: Reducer<
       return {
         ...state,
         hasSendAReview: true,
-      };
-    case getType(finishOnboardingCreator):
-      return {
-        ...state,
-        isOnboarded: true,
       };
     case getType(updatesViewedCreator): {
       return {

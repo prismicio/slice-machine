@@ -18,7 +18,6 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
   getLastSyncChange,
-  userHasDoneTheOnboarding,
   userHasSendAReview,
 } from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -65,7 +64,6 @@ const ReviewModal: React.FunctionComponent = () => {
     isReviewLoading,
     isLoginModalOpen,
     hasSendAReview,
-    hasDoneTheOnboarding,
     customTypes,
     libraries,
     lastSyncChange,
@@ -73,7 +71,6 @@ const ReviewModal: React.FunctionComponent = () => {
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
     isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
     hasSendAReview: userHasSendAReview(store),
-    hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
     customTypes: selectAllCustomTypes(store),
     libraries: getLibraries(store),
     lastSyncChange: getLastSyncChange(store),
@@ -123,9 +120,7 @@ const ReviewModal: React.FunctionComponent = () => {
 
   return (
     <SliceMachineModal
-      isOpen={
-        userHasCreatedEnoughContent && !hasSendAReview && hasDoneTheOnboarding
-      }
+      isOpen={userHasCreatedEnoughContent && !hasSendAReview}
       shouldCloseOnOverlayClick={false}
       onRequestClose={() => skipReview()}
       closeTimeoutMS={500}
