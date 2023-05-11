@@ -11,7 +11,10 @@ export default function SimulatorPage() {
   return (
     <>
       <Head>
-        <title>Slice Simulator{slice ? ` - ${slice.model.name}` : ""}</title>
+        <title>
+          {slice ? `Simulator: ${slice.model.name}` : "Simulator"} - Slice
+          Machine
+        </title>
       </Head>
       <SimulatorWithSlice />
     </>
