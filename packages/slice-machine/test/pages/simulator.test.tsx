@@ -279,7 +279,6 @@ describe.skip("simulator", () => {
     //   })
     // );
 
-    // @ts-expect-error TS(2741) FIXME: Property 'pageProps' is missing in type '{}' but r... Remove this comment to see the full error message
     const App = render(<Simulator />, {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
     });
