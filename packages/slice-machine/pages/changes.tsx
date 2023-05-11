@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import Head from "next/head";
 import { Box, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
@@ -110,41 +111,46 @@ const Changes: React.FunctionComponent = () => {
   ]);
 
   return (
-    <Container sx={{ display: "flex", flex: 1 }}>
-      <Box
-        as={"main"}
-        sx={{ flex: 1, display: "flex", flexDirection: "column" }}
-      >
-        <Header
-          link={{
-            Element: <Text>Changes</Text>,
-            href: "/changes",
-          }}
-          Actions={[
-            <Button
-              key="push-changes"
-              label="Push Changes"
-              onClick={() => onPush(false)} // not deleting documents by default
-              isLoading={isSyncing}
-              disabled={
-                numberOfChanges === 0 ||
-                !isOnline ||
-                authStatus === AuthStatus.UNAUTHORIZED ||
-                authStatus === AuthStatus.FORBIDDEN ||
-                isSyncing
-              }
-              Icon={MdLoop}
-              iconFill="#FFFFFF"
-              data-cy="push-changes"
-            />,
-          ]}
-        />
-        {PageContent}
-      </Box>
-      <SoftDeleteDocumentsDrawer pushChanges={onPush} />
-      <HardDeleteDocumentsDrawer pushChanges={onPush} />
-      <ReferencesErrorDrawer pushChanges={onPush} />
-    </Container>
+    <>
+      <Head>
+        <title>Changes - Slice Machine</title>
+      </Head>
+      <Container sx={{ display: "flex", flex: 1 }}>
+        <Box
+          as={"main"}
+          sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+        >
+          <Header
+            link={{
+              Element: <Text>Changes</Text>,
+              href: "/changes",
+            }}
+            Actions={[
+              <Button
+                key="push-changes"
+                label="Push Changes"
+                onClick={() => onPush(false)} // not deleting documents by default
+                isLoading={isSyncing}
+                disabled={
+                  numberOfChanges === 0 ||
+                  !isOnline ||
+                  authStatus === AuthStatus.UNAUTHORIZED ||
+                  authStatus === AuthStatus.FORBIDDEN ||
+                  isSyncing
+                }
+                Icon={MdLoop}
+                iconFill="#FFFFFF"
+                data-cy="push-changes"
+              />,
+            ]}
+          />
+          {PageContent}
+        </Box>
+        <SoftDeleteDocumentsDrawer pushChanges={onPush} />
+        <HardDeleteDocumentsDrawer pushChanges={onPush} />
+        <ReferencesErrorDrawer pushChanges={onPush} />
+      </Container>
+    </>
   );
 };
 
