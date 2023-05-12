@@ -1,4 +1,5 @@
 import { type FC, type ReactNode, useEffect, useRef, useState } from "react";
+import Head from "next/head";
 import {
   Box,
   Button,
@@ -242,106 +243,114 @@ export default function Onboarding(): JSX.Element {
   }
 
   return (
-    <OnboardingGrid>
-      <Flex
-        sx={{
-          gridArea: "top-right",
-          alignItems: "center",
-          justifyContent: "end",
-          padding: "1em 4em",
-        }}
-      >
-        {!!state.step && (
-          <Button
-            variant="transparent"
-            onClick={finish}
-            title="skip onboarding"
-            tabIndex={0}
-            sx={{
-              color: "textClear",
-            }}
-          >
-            skip
-          </Button>
-        )}
-      </Flex>
-
-      {STEPS.map((Component, i) => (
+    <>
+      <Head>
+        <title>Welcome - Slice Machine</title>
+      </Head>
+      <OnboardingGrid>
         <Flex
-          key={`step-${i + 1}`}
           sx={{
-            display: i === state.step ? "flex" : "none",
-            gridArea: "content",
+            gridArea: "top-right",
             alignItems: "center",
-            justifyContent: "center",
-            alignContent: "center",
-            flexDirection: "column",
-            opacity: i === state.step ? "1" : "0",
-            pointerEvents: i === state.step ? "all" : "none",
-            transition: `opacity .2s ease-in`,
+            justifyContent: "end",
+            padding: "1em 4em",
           }}
         >
-          {Component}
+          {!!state.step && (
+            <Button
+              variant="transparent"
+              onClick={finish}
+              title="skip onboarding"
+              tabIndex={0}
+              sx={{
+                color: "textClear",
+              }}
+            >
+              skip
+            </Button>
+          )}
         </Flex>
-      ))}
 
-      <Flex
-        sx={{
-          gridArea: "footer",
-          alignItems: "start",
-          justifyContent: "center",
-          padingTop: "16px", // half height of a button
-        }}
-      >
-        {!!state.step && (
-          <StepIndicator current={state.step - 1} maxSteps={STEPS.length - 1} />
-        )}
-      </Flex>
-
-      <Flex
-        sx={{
-          gridArea: "footer-left",
-          alignItems: "start",
-          justifyContent: "space-around",
-        }}
-      >
-        {state.step >= 2 && (
-          <IconButton
-            tabIndex={0}
-            title="previous slide"
+        {STEPS.map((Component, i) => (
+          <Flex
+            key={`step-${i + 1}`}
             sx={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              background: "#F1F1F4",
-              border: "1px solid rgba(62, 62, 72, 0.15)",
+              display: i === state.step ? "flex" : "none",
+              gridArea: "content",
+              alignItems: "center",
+              justifyContent: "center",
+              alignContent: "center",
+              flexDirection: "column",
+              opacity: i === state.step ? "1" : "0",
+              pointerEvents: i === state.step ? "all" : "none",
+              transition: `opacity .2s ease-in`,
             }}
-            onClick={prevSlide}
           >
-            <BiChevronLeft />
-          </IconButton>
-        )}
-      </Flex>
+            {Component}
+          </Flex>
+        ))}
 
-      <Flex
-        sx={{
-          gridArea: "footer-right",
-          alignItems: "start",
-          justifyContent: "end",
-          padding: "0em 4em",
-        }}
-      >
-        {!!state.step && (
-          <Button
-            data-cy="continue"
-            onClick={nextSlide}
-            title="continue"
-            tabIndex={0}
-          >
-            Continue
-          </Button>
-        )}
-      </Flex>
-    </OnboardingGrid>
+        <Flex
+          sx={{
+            gridArea: "footer",
+            alignItems: "start",
+            justifyContent: "center",
+            padingTop: "16px", // half height of a button
+          }}
+        >
+          {!!state.step && (
+            <StepIndicator
+              current={state.step - 1}
+              maxSteps={STEPS.length - 1}
+            />
+          )}
+        </Flex>
+
+        <Flex
+          sx={{
+            gridArea: "footer-left",
+            alignItems: "start",
+            justifyContent: "space-around",
+          }}
+        >
+          {state.step >= 2 && (
+            <IconButton
+              tabIndex={0}
+              title="previous slide"
+              sx={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: "#F1F1F4",
+                border: "1px solid rgba(62, 62, 72, 0.15)",
+              }}
+              onClick={prevSlide}
+            >
+              <BiChevronLeft />
+            </IconButton>
+          )}
+        </Flex>
+
+        <Flex
+          sx={{
+            gridArea: "footer-right",
+            alignItems: "start",
+            justifyContent: "end",
+            padding: "0em 4em",
+          }}
+        >
+          {!!state.step && (
+            <Button
+              data-cy="continue"
+              onClick={nextSlide}
+              title="continue"
+              tabIndex={0}
+            >
+              Continue
+            </Button>
+          )}
+        </Flex>
+      </OnboardingGrid>
+    </>
   );
 }

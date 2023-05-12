@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Head from "next/head";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Text, Link } from "theme-ui";
 import Container from "components/Container";
@@ -92,6 +93,9 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   return (
     <>
+      <Head>
+        <title>Slices - Slice Machine</title>
+      </Head>
       <Container
         sx={{
           display: "flex",

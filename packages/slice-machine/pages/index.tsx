@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 import { Flex, Link as ThemeLink, Text } from "theme-ui";
 
 import Container from "@components/Container";
@@ -35,70 +36,75 @@ const CustomTypes: React.FunctionComponent = () => {
   });
 
   return (
-    <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-      <Header
-        link={{
-          Element: (
-            <>
-              <MdSpaceDashboard /> <Text ml={2}>Custom Types</Text>
-            </>
-          ),
-          href: "/",
-        }}
-        Actions={
-          sortedCustomTypes.length > 0
-            ? [
-                <Button
-                  key="create-custom-type"
-                  label="Create a Custom Type"
-                  onClick={openCreateCustomTypeModal}
-                  isLoading={isCreatingCustomType}
-                  disabled={isCreatingCustomType}
-                  Icon={GoPlus}
-                  iconFill="#FFFFFF"
-                  data-cy="create-ct"
-                />,
-              ]
-            : []
-        }
-      />
-      {sortedCustomTypes.length === 0 ? (
-        <Flex
-          sx={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <EmptyState
-            title={"What are Custom Types?"}
-            onCreateNew={openCreateCustomTypeModal}
-            isLoading={isCreatingCustomType}
-            buttonText={"Create one"}
-            videoPublicIdUrl={VIDEO_WHAT_ARE_CUSTOM_TYPES}
-            documentationComponent={
+    <>
+      <Head>
+        <title>Custom Types - Slice Machine</title>
+      </Head>
+      <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Header
+          link={{
+            Element: (
               <>
-                Custom Types are models for your documents. They are the place
-                where you define and configure Fields and Slices for your
-                content. They will be stored locally, and you will be able to
-                push them to your repository.{" "}
-                <ThemeLink
-                  target={"_blank"}
-                  href={"https://prismic.io/docs/core-concepts/custom-types "}
-                  sx={(theme) => ({ color: theme?.colors?.primary })}
-                >
-                  Learn more
-                </ThemeLink>
-                .
+                <MdSpaceDashboard /> <Text ml={2}>Custom Types</Text>
               </>
-            }
-          />
-        </Flex>
-      ) : (
-        <CustomTypeTable customTypes={sortedCustomTypes} />
-      )}
-      <CreateCustomTypeModal />
-    </Container>
+            ),
+            href: "/",
+          }}
+          Actions={
+            sortedCustomTypes.length > 0
+              ? [
+                  <Button
+                    key="create-custom-type"
+                    label="Create a Custom Type"
+                    onClick={openCreateCustomTypeModal}
+                    isLoading={isCreatingCustomType}
+                    disabled={isCreatingCustomType}
+                    Icon={GoPlus}
+                    iconFill="#FFFFFF"
+                    data-cy="create-ct"
+                  />,
+                ]
+              : []
+          }
+        />
+        {sortedCustomTypes.length === 0 ? (
+          <Flex
+            sx={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <EmptyState
+              title={"What are Custom Types?"}
+              onCreateNew={openCreateCustomTypeModal}
+              isLoading={isCreatingCustomType}
+              buttonText={"Create one"}
+              videoPublicIdUrl={VIDEO_WHAT_ARE_CUSTOM_TYPES}
+              documentationComponent={
+                <>
+                  Custom Types are models for your documents. They are the place
+                  where you define and configure Fields and Slices for your
+                  content. They will be stored locally, and you will be able to
+                  push them to your repository.{" "}
+                  <ThemeLink
+                    target={"_blank"}
+                    href={"https://prismic.io/docs/core-concepts/custom-types "}
+                    sx={(theme) => ({ color: theme?.colors?.primary })}
+                  >
+                    Learn more
+                  </ThemeLink>
+                  .
+                </>
+              }
+            />
+          </Flex>
+        ) : (
+          <CustomTypeTable customTypes={sortedCustomTypes} />
+        )}
+        <CreateCustomTypeModal />
+      </Container>
+    </>
   );
 };
 

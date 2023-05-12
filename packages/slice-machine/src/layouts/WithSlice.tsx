@@ -12,7 +12,7 @@ export type ComponentWithSliceProps = React.FC<{
 }>;
 
 export const createComponentWithSlice = (C: ComponentWithSliceProps) => {
-  const Wrapper: React.FC<{ pageProps: AppProps }> & {
+  const Wrapper: React.FC<{ pageProps?: AppProps }> & {
     CustomLayout?: React.FC<{ children: ReactNode }>;
   } = ({ pageProps }) => {
     const { slice, variation } = useCurrentSlice();

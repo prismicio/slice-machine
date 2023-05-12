@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 
 import CustomTypeBuilder from "../../lib/builders/CustomTypeBuilder";
@@ -57,12 +58,17 @@ const CustomTypeBuilderWithRouter = () => {
   }
 
   return (
-    <CustomTypeBuilderWithProvider
-      customType={selectedCustomType.local}
-      remoteCustomType={
-        hasRemote(selectedCustomType) ? selectedCustomType.remote : undefined
-      }
-    />
+    <>
+      <Head>
+        <title>{selectedCustomType.local.label} - Slice Machine</title>
+      </Head>
+      <CustomTypeBuilderWithProvider
+        customType={selectedCustomType.local}
+        remoteCustomType={
+          hasRemote(selectedCustomType) ? selectedCustomType.remote : undefined
+        }
+      />
+    </>
   );
 };
 
