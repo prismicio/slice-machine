@@ -3,6 +3,11 @@
   "version": "1.0.3",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/prismicio/slice-machine.git",
+    "directory": "packages/slice-machine"
+  },
   "_moduleAliases": {
     "@lib": "build/lib",
     "@models": "build/lib/models"
