@@ -1,4 +1,4 @@
 {
   "compilerOptions": { "noEmit": true },
-  "include": ["packages/*/.eslintrc.js"]
+  "include": ["packages/*/.storybook/*", "packages/*/.eslintrc.js"]
 }
