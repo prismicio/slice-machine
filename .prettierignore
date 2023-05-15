@@ -1,5 +1,6 @@
 # Ignore artifacts:
 .github/
+/packages/*/storybook-static
 packages/slice-machine/.next
 packages/slice-machine/build
 packages/slice-machine/tests/project/
