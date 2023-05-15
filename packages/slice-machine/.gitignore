@@ -54,3 +54,6 @@ tests/project/node_modules
 
 # Sentry
 .sentryclirc
+
+# Storybook
+/storybook-static
