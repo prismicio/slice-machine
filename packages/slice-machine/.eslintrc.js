@@ -14,8 +14,8 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "eslint-config-prettier",
     "plugin:storybook/recommended",
+    "eslint-config-prettier",
   ],
   ignorePatterns: ["build", "templates", "**/tests/**", "helpers/**"],
   rules: {
