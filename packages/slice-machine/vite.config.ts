@@ -1,3 +1,4 @@
+import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import * as url from "node:url";
@@ -6,7 +7,7 @@ import * as path from "node:path";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), vanillaExtractPlugin()],
   resolve: {
     alias: {
       "@builders": path.resolve(__dirname, "./lib/builders"),

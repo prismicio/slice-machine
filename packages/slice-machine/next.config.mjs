@@ -2,24 +2,23 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
 import { withSentryConfig } from "@sentry/nextjs";
+import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
 import semver from "semver";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-/** @type {{version: string}} */
+/** @type {{ version: string }} */
 const pkg = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "package.json"), "utf8")
 );
 
-/**
- * @type string
- */
+/** @type string */
 
 const RELEASE_NUMBER = pkg.version;
 const isStableVersion =
   /^\d+\.\d+\.\d+$/.test(RELEASE_NUMBER) && semver.lte("0.1.0", RELEASE_NUMBER);
 
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
 let nextConfig = {
   swcMinify: true,
   publicRuntimeConfig: {
@@ -83,4 +82,6 @@ if (process.env.NODE_ENV !== "development") {
   }
 }
 
-export default nextConfig;
+const withVanillaExtract = createVanillaExtractPlugin();
+
+export default withVanillaExtract(nextConfig);
