@@ -17,7 +17,7 @@ module.exports = {
     "plugin:storybook/recommended",
     "eslint-config-prettier",
   ],
-  ignorePatterns: ["build", "templates", "**/tests/**", "helpers/**"],
+  ignorePatterns: ["build", "templates", "helpers/**"],
   rules: {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [

@@ -42,15 +42,8 @@ next-env.d.ts
 
 conf.json
 
-tests/project/node_modules
-
 # prov
 /api-dump
-
-/tests/project/.slicemachine
-/tests/project/cypress/videos
-
-/tests/project/.next
 
 # Sentry
 .sentryclirc

@@ -24,7 +24,6 @@
     "jsx": "preserve",
     "outDir": "./build",
     "paths": {
-      "@/*": ["/*"],
       "@lib/*": ["lib/*"],
       "@utils/*": ["lib/utils/*"],
       "@builders/*": ["lib/builders/*"],

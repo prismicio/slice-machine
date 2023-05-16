@@ -22,8 +22,6 @@ yarn-error.log*
 
 conf.json
 
-tests/project/node_modules
-
 # prov
 /api-dump
 
