@@ -36,6 +36,8 @@
   },
   "exclude": ["node_modules", "build", "storybook-static"],
   "include": [
+    ".storybook/*",
+    ".eslintrc.js",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
