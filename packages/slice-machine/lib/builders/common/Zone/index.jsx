@@ -14,6 +14,7 @@ import EmptyState from "./components/EmptyState";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
+  customTypeFormat /* custom type format: page, custom or undefined */,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -120,6 +121,8 @@ const Zone = ({
         )
       }
       <Card
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+        customTypeFormat={customTypeFormat}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

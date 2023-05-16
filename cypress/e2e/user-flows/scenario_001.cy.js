@@ -19,7 +19,6 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.createCustomType(customTypeId, customTypeName);
     customTypeBuilder.goTo(customTypeId);
 
-    cy.addFieldToCustomType("UID", "ID Field", "uid");
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
     customTypeBuilder.save();

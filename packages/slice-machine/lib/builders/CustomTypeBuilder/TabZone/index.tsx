@@ -49,6 +49,8 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
       poolOfFields: selectCurrentPoolOfFields(store),
     })
   );
+  // TODO: Retrieve format from currentCustomType
+  const customTypeFormat = "custom";
 
   if (!currentCustomType || !poolOfFields) {
     return null;
@@ -134,6 +136,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     <>
       <Zone
         zoneType="customType"
+        customTypeFormat={customTypeFormat}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         title="Static Zone"
@@ -156,15 +159,23 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
         dataCy="ct-static-zone"
       />
-      <SliceZone
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        tabId={tabId}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sliceZone={sliceZone}
-        onRemoveSharedSlice={onRemoveSharedSlice}
-        onCreateSliceZone={onCreateSliceZone}
-        onSelectSharedSlices={onSelectSharedSlices}
-      />
+      {
+        // TODO: Add condition to also display the slice zone for the Main tab of "page" format
+
+        // Only display the slice zone for Page Types "Main" tab
+        // or Custom Types that have a Slice Zone defined (for backward compatibility)
+        sliceZone && (
+          <SliceZone
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            tabId={tabId}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            sliceZone={sliceZone}
+            onRemoveSharedSlice={onRemoveSharedSlice}
+            onCreateSliceZone={onCreateSliceZone}
+            onSelectSharedSlices={onSelectSharedSlices}
+          />
+        )
+      }
     </>
   );
 };
