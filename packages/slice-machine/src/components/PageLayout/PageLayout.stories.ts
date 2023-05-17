@@ -7,7 +7,10 @@ type Story = StoryObj<typeof meta>;
 const meta = {
   title: "Slice Machine UI/PageLayout",
   component: PageLayout,
-  parameters: { layout: "fullscreen" },
+  parameters: {
+    docs: { story: { height: 256, inline: false } },
+    layout: "fullscreen",
+  },
   tags: ["autodocs"],
 } satisfies Meta<typeof PageLayout>;
 

@@ -1,3 +1,18 @@
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
+import { Text } from "@prismicio/editor-ui";
 
-export const PageLayout: FC = () => <span>PageLayout</span>;
+import * as styles from "./PageLayout.css";
+
+type PageLayoutProps = Readonly<{
+  children?: ReactNode;
+}>;
+
+export const PageLayout: FC<PageLayoutProps> = ({
+  children,
+  ...otherProps
+}) => (
+  <div {...otherProps} className={styles.root}>
+    <Text>PageLayout</Text>
+    {children}
+  </div>
+);
