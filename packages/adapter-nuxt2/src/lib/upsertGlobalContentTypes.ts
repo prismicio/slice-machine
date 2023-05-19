@@ -1,5 +1,5 @@
 import type { SliceMachineContext } from "@slicemachine/plugin-kit";
-import { detectTypesProvider, generateTypes } from "prismic-ts-codegen";
+import { generateTypes } from "prismic-ts-codegen";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
@@ -9,7 +9,10 @@ import { NON_EDITABLE_FILE_BANNER } from "../constants";
 /**
  * Arguments for `upsertGlobalContentTypes()`.
  */
-type UpsertGlobalTypesArgs = SliceMachineContext<PluginOptions>;
+type UpsertGlobalTypesArgs = Pick<
+	SliceMachineContext<PluginOptions>,
+	"actions" | "helpers" | "options"
+>;
 
 /**
  * Creates a globally accessible TypeScript file containing types representing
@@ -19,7 +22,6 @@ export const upsertGlobalContentTypes = async ({
 	actions,
 	helpers,
 	options,
-	project,
 }: UpsertGlobalTypesArgs): Promise<void> => {
 	const filePath = helpers.joinPathFromRoot("prismicio-types.d.ts");
 
@@ -47,7 +49,7 @@ export const upsertGlobalContentTypes = async ({
 			includeCreateClientInterface: true,
 			includeContentNamespace: true,
 		},
-		typesProvider: await detectTypesProvider({ cwd: project.root }),
+		typesProvider: "@prismicio/types",
 	});
 
 	contents = `${NON_EDITABLE_FILE_BANNER}\n\n${contents}`;

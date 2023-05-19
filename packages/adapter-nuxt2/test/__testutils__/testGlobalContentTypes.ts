@@ -113,6 +113,7 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 				generateTypesConfig: {
 					...resolveTypesConfigModels(model),
 					...args.generateTypesConfig,
+					typesProvider: "@prismicio/types",
 				},
 			});
 		},
@@ -139,100 +140,9 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 				generateTypesConfig: {
 					...resolveTypesConfigModels(model),
 					...args.generateTypesConfig,
+					typesProvider: "@prismicio/types",
 				},
 				format: false,
-			});
-		},
-	);
-
-	it.concurrent(
-		"global types file uses @prismicio/types types provider if no types provider is detected",
-		async (ctx) => {
-			const model = resolveModel(ctx, args.model);
-
-			await args.hookCall({
-				ctx,
-				model,
-				pluginRunner: ctx.pluginRunner,
-			});
-
-			await expectGlobalContentTypes(ctx, {
-				generateTypesConfig: {
-					...resolveTypesConfigModels(model),
-					...args.generateTypesConfig,
-					typesProvider: "@prismicio/types",
-				},
-			});
-		},
-	);
-
-	it.concurrent(
-		"global types file uses @prismicio/client types provider if @prismicio/client@>=7 is detected",
-		async (ctx) => {
-			await fs.mkdir(
-				path.join(ctx.project.root, "node_modules/@prismicio/client"),
-				{ recursive: true },
-			);
-			await fs.writeFile(
-				path.join(
-					ctx.project.root,
-					"node_modules/@prismicio/client/package.json",
-				),
-				JSON.stringify({
-					name: "@prismicio/client",
-					version: "7.0.0",
-				}),
-			);
-
-			const model = resolveModel(ctx, args.model);
-
-			await args.hookCall({
-				ctx,
-				model,
-				pluginRunner: ctx.pluginRunner,
-			});
-
-			await expectGlobalContentTypes(ctx, {
-				generateTypesConfig: {
-					...resolveTypesConfigModels(model),
-					...args.generateTypesConfig,
-					typesProvider: "@prismicio/client",
-				},
-			});
-		},
-	);
-
-	it.concurrent(
-		"global types file uses @prismicio/types types provider if @prismicio/client@>=7 cannot be resolved and @prismicio/types can be resolved",
-		async (ctx) => {
-			await fs.mkdir(
-				path.join(ctx.project.root, "node_modules/@prismicio/types"),
-				{
-					recursive: true,
-				},
-			);
-			await fs.writeFile(
-				path.join(
-					ctx.project.root,
-					"node_modules/@prismicio/types/package.json",
-				),
-				JSON.stringify({ name: "@prismicio/types" }),
-			);
-
-			const model = resolveModel(ctx, args.model);
-
-			await args.hookCall({
-				ctx,
-				model,
-				pluginRunner: ctx.pluginRunner,
-			});
-
-			await expectGlobalContentTypes(ctx, {
-				generateTypesConfig: {
-					...resolveTypesConfigModels(model),
-					...args.generateTypesConfig,
-					typesProvider: "@prismicio/types",
-				},
 			});
 		},
 	);
