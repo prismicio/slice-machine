@@ -4,8 +4,8 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as tsm from "ts-morph";
 
-import { expectGlobalContentTypes } from "./__testutils__/expectGlobalContentTypes";
 import { parseSourceFile } from "./__testutils__/parseSourceFile";
+import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -88,19 +88,16 @@ test("updates the Slice in the library index", async (ctx) => {
 	).toMatch('"./NewModel/index.vue"');
 });
 
-test("global types file contains new model", async (ctx) => {
-	await ctx.pluginRunner.callHook("slice:create", {
-		libraryID: "slices",
-		model: oldModel,
-	});
-	await ctx.pluginRunner.callHook("slice:rename", {
-		libraryID: "slices",
-		model: newModel,
-	});
-
-	await expectGlobalContentTypes(ctx, {
-		generateTypesConfig: {
-			sharedSliceModels: [newModel],
-		},
-	});
+testGlobalContentTypes({
+	model: newModel,
+	hookCall: async ({ pluginRunner }) => {
+		await pluginRunner.callHook("slice:create", {
+			libraryID: "slices",
+			model: oldModel,
+		});
+		await pluginRunner.callHook("slice:rename", {
+			libraryID: "slices",
+			model: newModel,
+		});
+	},
 });
