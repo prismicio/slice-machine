@@ -4,8 +4,8 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as tsm from "ts-morph";
 
-import { expectGlobalContentTypes } from "./__testutils__/expectGlobalContentTypes";
 import { parseSourceFile } from "./__testutils__/parseSourceFile";
+import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -82,19 +82,13 @@ test("removes the Slice from the library index", async (ctx) => {
 	).toBeUndefined();
 });
 
-test("global types file does not contain types for the model", async (ctx) => {
-	await ctx.pluginRunner.callHook("slice:create", {
-		libraryID: "slices",
-		model,
-	});
-	await ctx.pluginRunner.callHook("slice:delete", {
-		libraryID: "slices",
-		model,
-	});
-
-	await expectGlobalContentTypes(ctx, {
-		generateTypesConfig: {
-			sharedSliceModels: [],
-		},
-	});
+testGlobalContentTypes({
+	model,
+	hookCall: async ({ pluginRunner }) => {
+		await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
+		await pluginRunner.callHook("slice:delete", { libraryID: "slices", model });
+	},
+	generateTypesConfig: {
+		sharedSliceModels: [],
+	},
 });

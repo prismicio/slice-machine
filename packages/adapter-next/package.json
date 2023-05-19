@@ -64,7 +64,7 @@
 		"fs-extra": "^11.1.0",
 		"node-fetch": "^3.3.1",
 		"pascal-case": "^3.1.2",
-		"prismic-ts-codegen": "^0.1.5"
+		"prismic-ts-codegen": "^0.1.8"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.2.0",
@@ -87,6 +87,7 @@
 		"prettier": "^2.8.4",
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"react": "^18.2.0",
+		"rollup-plugin-preserve-directives": "^0.1.1",
 		"size-limit": "^8.2.4",
 		"ts-morph": "^17.0.1",
 		"typescript": "^4.9.5",
