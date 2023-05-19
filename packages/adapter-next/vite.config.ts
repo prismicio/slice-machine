@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, Plugin } from "vite";
 import sdk from "vite-plugin-sdk";
 import react from "@vitejs/plugin-react";
 import preserveDirectives from "rollup-plugin-preserve-directives";
@@ -18,7 +18,11 @@ export default defineConfig({
 			},
 		},
 		rollupOptions: {
-			plugins: [preserveDirectives()],
+			plugins: [
+				// @ts-expect-error - rollup-plugin-preserve-directives has a bundling issue when used in an ESM environment.
+				// See: https://github.com/Ephem/rollup-plugin-preserve-directives/issues/1
+				preserveDirectives.default() as Plugin,
+			],
 		},
 	},
 	test: {
