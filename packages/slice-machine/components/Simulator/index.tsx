@@ -281,6 +281,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                  * change should be removed once the editor is fixed.
                  */
                 key={variation.id}
+                config={SHARED_SLICE_EDITOR_CONFIG}
                 content={editorContent}
                 onContentChange={(c) => {
                   setEditorState(c as SharedSliceContent);
@@ -303,3 +304,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 };
 
 export default Simulator;
+
+// TODO: change this config depending on the environment.
+const SHARED_SLICE_EDITOR_CONFIG = {
+  embeds: {
+    url: "https://jntc6tzga1.execute-api.us-east-1.amazonaws.com/beta",
+  },
+  unsplash: { url: "https://unsplash.wroom.io" },
+};
