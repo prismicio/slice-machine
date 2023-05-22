@@ -5,7 +5,6 @@ import { PageLayout } from "./PageLayout";
 type Story = StoryObj<typeof meta>;
 
 const meta = {
-  title: "Slice Machine UI/PageLayout",
   component: PageLayout,
   parameters: {
     docs: { story: { height: 256, inline: false } },

@@ -5,7 +5,13 @@ const config: StorybookConfig = {
   core: { disableTelemetry: true },
   docs: { autodocs: true },
   framework: "@storybook/react-vite",
-  stories: ["../src/**/*.stories.ts?(x)"],
+  stories: [
+    {
+      directory: "../src/components",
+      files: "**/*.stories.ts?(x)",
+      titlePrefix: "Slice Machine UI",
+    },
+  ],
 };
 
 export default config;
