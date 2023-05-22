@@ -25,7 +25,6 @@ const meta: Meta<typeof Table> = {
     docs: { story: { height: 256, inline: false } },
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
   render: () => {
     const data = Array.from({ length: 10 }, (_, index) => ({
       id: index,

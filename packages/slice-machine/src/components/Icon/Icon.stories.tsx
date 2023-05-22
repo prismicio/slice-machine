@@ -9,7 +9,6 @@ type Story = StoryObj<typeof meta>;
 const meta: Meta<typeof Icon> = {
   title: "Slice Machine UI/Icon",
   component: Icon,
-  tags: ["autodocs"],
   render: () => (
     <>
       {iconNames.map((name) => (

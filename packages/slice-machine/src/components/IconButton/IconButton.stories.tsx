@@ -15,7 +15,6 @@ const meta: Meta<typeof IconButton> = {
     },
     onClick: {},
   },
-  tags: ["autodocs"],
   render: (args) => <IconButton {...args} />,
 };
 
