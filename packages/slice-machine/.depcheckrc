@@ -7,6 +7,7 @@ ignores:
     "@vanilla-extract/next-plugin",
     "@vitest/coverage-c8",
     "jest-environment-jsdom",
-    "semver"
+    "semver",
+    "unfetch"
   ]
 skip - missing: true
