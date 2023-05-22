@@ -4,6 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Icon as IconEditor,
+  Text,
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -68,32 +69,36 @@ const meta: Meta<typeof Table> = {
                     <Icon name="reusable" />
                   )}
                 </TableCell>
-                <TableCell>{name}</TableCell>
+                <TableCell>
+                  <span style={{ fontWeight: 600 }}>{name}</span>
+                </TableCell>
                 <TableCell>{apiId}</TableCell>
                 <TableCell>
-                  {limit === "single" ? "Reusable" : "Unique"}
+                  {limit === "single" ? "Unique" : "Reusable"}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger>
                       <IconButton icon="kebabDots" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
+                    <DropdownMenuContent align="end">
                       <DropdownMenuItem
                         startIcon={<IconEditor name="edit" />}
                         onSelect={() => {
                           console.log(`Rename clicked for ${name}`);
                         }}
                       >
-                        Rename
+                        <Text>Rename</Text>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        startIcon={<IconEditor name="delete" />}
+                        startIcon={
+                          <IconEditor color="tomato11" name="delete" />
+                        }
                         onSelect={() => {
                           console.log(`Remove clicked for ${name}`);
                         }}
                       >
-                        Remove
+                        <Text color="tomato11">Remove</Text>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
