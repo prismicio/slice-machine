@@ -18,7 +18,9 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/,
       },
+      sort: "alpha",
     },
+    options: { storySort: { method: "alphabetical" } },
   },
 };
 
