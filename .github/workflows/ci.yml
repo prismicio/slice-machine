@@ -145,44 +145,44 @@ jobs:
           user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
           acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
 
-  # e2e:
-  #   needs: prepare
-  #   runs-on: [ubuntu-latest]
-  #   steps: 
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
+  e2e:
+    needs: prepare
+    runs-on: [ubuntu-latest]
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  #     - name: Restore cache
-  #       uses: ./.github/actions/restore-cache
+      - name: Restore cache
+        uses: ./.github/actions/restore-cache
 
-  #     - name: Set up Node
-  #       uses: ./.github/actions/setup-node
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
 
-  #     - name: Build Slice Machine UI, next-adapter, init and start scripts
-  #       run: npm run build --workspace packages/init --workspace packages/slice-machine --workspace packages/start-slicemachine --workspace packages/adapter-next
+      - name: Build Slice Machine UI, next-adapter, init and start scripts
+        run: npm run build --workspace packages/init --workspace packages/slice-machine --workspace packages/start-slicemachine --workspace packages/adapter-next
 
-  #     - name: Running End to End tests
-  #       run: npm run test:e2e
-  #       env:
-  #         EMAIL: ${{ secrets.EMAIL }}
-  #         PASSWORD: ${{ secrets.PASSWORD }}
-  #         PRISMIC_URL: ${{ secrets.PRISMIC_URL }}
-  #         wroom_endpoint: ${{ secrets.PRISMIC_URL }}
-  #         authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
-  #         customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
-  #         user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
-  #         acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
+      - name: Running End to End tests
+        run: npm run test:e2e
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          PRISMIC_URL: ${{ secrets.PRISMIC_URL }}
+          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
+          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
+          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
+          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
+          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
 
-  #     - name: Upload End to End screenshots
-  #       uses: actions/upload-artifact@v3
-  #       if: failure()
-  #       with:
-  #         name: e2e-tests-screenshots
-  #         path: cypress/screenshots/
+      - name: Upload End to End screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-tests-screenshots
+          path: cypress/screenshots/
 
   deployment:
     runs-on: ubuntu-latest
-    needs: [prettier, packages, packages-win32]
+    needs: [prettier, packages, packages-win32, e2e]
     if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
     environment: alpha
     steps: 
