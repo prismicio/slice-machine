@@ -18,8 +18,7 @@ import { TableRow } from "./TableRow";
 
 type Story = StoryObj<typeof meta>;
 
-const meta: Meta<typeof Table> = {
-  title: "Slice Machine UI/Table",
+const meta = {
   component: Table,
   parameters: {
     docs: { story: { height: 256, inline: false } },
@@ -109,8 +108,8 @@ const meta: Meta<typeof Table> = {
       </div>
     );
   },
-};
+} satisfies Meta<typeof Table>;
 
 export default meta;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;

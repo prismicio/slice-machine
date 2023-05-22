@@ -11,6 +11,8 @@ type TableRowProps = Readonly<{
   onClick?: MouseEventHandler<HTMLTableRowElement>;
 }>;
 
+const tableRowTag = "prismicTableRow";
+
 export const TableRow: FC<TableRowProps> = ({
   children,
   className,
@@ -20,6 +22,7 @@ export const TableRow: FC<TableRowProps> = ({
 
   return (
     <tr
+      data-tag={tableRowTag}
       className={clsx(
         styles.root,
         {
@@ -34,7 +37,9 @@ export const TableRow: FC<TableRowProps> = ({
         }
 
         const target = event.target as HTMLElement;
-        const isClickOnTableRow = !!target?.closest("tr");
+        const isClickOnTableRow = !!target?.closest(
+          `tr[data-tag=${tableRowTag}]`
+        );
 
         // Prevent a click event propagation from outside of the table DOM structure
         // E.g.: Dropdown menu item selection that will trigger this onClick function

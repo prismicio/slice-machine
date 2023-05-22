@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { Text } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -6,35 +7,35 @@ import { iconNames } from "./iconNames";
 
 type Story = StoryObj<typeof meta>;
 
-const meta: Meta<typeof Icon> = {
-  title: "Slice Machine UI/Icon",
-  component: Icon,
-  render: () => (
-    <>
-      {iconNames.map((name) => (
-        <div
-          key={name}
-          style={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: 8,
-            minWidth: 60,
-            gap: 8,
-            border: "1px dotted #DDD",
-            borderRadius: 4,
-            marginRight: 8,
-            marginBottom: 8,
-          }}
-        >
-          <Icon name={name} />
-          <Text>{name}</Text>
-        </div>
-      ))}
-    </>
-  ),
-};
+const Icons: FC = () => (
+  <>
+    {iconNames.map((name) => (
+      <div
+        key={name}
+        style={{
+          display: "inline-flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: 8,
+          minWidth: 60,
+          gap: 8,
+          border: "1px dotted #DDD",
+          borderRadius: 4,
+          marginRight: 8,
+          marginBottom: 8,
+        }}
+      >
+        <Icon name={name} />
+        <Text>{name}</Text>
+      </div>
+    ))}
+  </>
+);
+
+const meta = {
+  component: Icons,
+} satisfies Meta<typeof Icons>;
 
 export default meta;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;

@@ -5,8 +5,7 @@ import { IconButton } from "./IconButton";
 
 type Story = StoryObj<typeof meta>;
 
-const meta: Meta<typeof IconButton> = {
-  title: "Slice Machine UI/IconButton",
+const meta = {
   component: IconButton,
   argTypes: {
     icon: {
@@ -16,12 +15,12 @@ const meta: Meta<typeof IconButton> = {
     onClick: {},
   },
   render: (args) => <IconButton {...args} />,
-};
+} satisfies Meta<typeof IconButton>;
 
 export default meta;
 
-export const Default: Story = {
+export const Default = {
   args: {
     icon: "fieldList",
   },
-};
+} satisfies Story;
