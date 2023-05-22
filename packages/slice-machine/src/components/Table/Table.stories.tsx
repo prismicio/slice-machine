@@ -57,13 +57,8 @@ const meta: Meta<typeof Table> = {
             {data.map(({ id, name, apiId, limit }) => (
               <TableRow
                 key={id}
-                onClick={(event) => {
-                  const target = event.target as HTMLElement;
-                  const isClickOnSelect = target?.closest("div[role=menuitem]");
-
-                  if (!isClickOnSelect) {
-                    console.log(`Table row clicked for ${name}`);
-                  }
+                onClick={() => {
+                  console.log(`Table row clicked for ${name}`);
                 }}
               >
                 <TableCell>

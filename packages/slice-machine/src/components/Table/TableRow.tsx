@@ -28,7 +28,20 @@ export const TableRow: FC<TableRowProps> = ({
         },
         className
       )}
-      onClick={onClick}
+      onClick={(event) => {
+        if (!onClick) {
+          return;
+        }
+
+        const target = event.target as HTMLElement;
+        const isClickOnTableRow = !!target?.closest("tr");
+
+        // Prevent a click event propagation from outside of the table DOM structure
+        // E.g.: Dropdown menu item selection that will trigger this onClick function
+        if (isClickOnTableRow) {
+          onClick(event);
+        }
+      }}
     >
       {children}
     </tr>

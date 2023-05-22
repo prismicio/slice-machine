@@ -13,6 +13,7 @@ export const root = style([
   }),
   {
     display: "block",
+    minWidth: 600,
   },
 ]);
 
