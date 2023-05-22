@@ -47,12 +47,17 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
           padding: 16,
         }}
         footerSx={{
+          position: "sticky",
+          bottom: 0,
           p: 0,
         }}
         sx={{ border: "none" }}
         Header={() => (
           <Flex
             sx={{
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
               p: "16px",
               alignItems: "center",
               justifyContent: "space-between",

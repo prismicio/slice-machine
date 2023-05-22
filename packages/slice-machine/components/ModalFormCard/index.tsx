@@ -71,7 +71,7 @@ function ModalCard<Values extends FormikValues>({
       contentLabel={title}
       style={{
         content: {
-          width: widthInPx || "900px",
+          width: widthInPx ?? "900px",
         },
       }}
     >
@@ -95,16 +95,27 @@ function ModalCard<Values extends FormikValues>({
           setFieldValue,
           setValues,
         }) => (
-          <Form id={formId} {...(dataCy ? { "data-cy": dataCy } : null)}>
+          <Form
+            id={formId}
+            {...(dataCy != null ? { "data-cy": dataCy } : null)}
+          >
             <Card
               borderFooter
-              footerSx={{ p: 3 }}
+              footerSx={{
+                p: 3,
+                position: "sticky",
+                bottom: 0,
+                background: "gray",
+              }}
               bodySx={{ px: 4, py: 4 }}
               sx={{ border: "none" }}
               {...cardProps}
               Header={({ radius }: { radius: string | number }) => (
                 <Flex
                   sx={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 1,
                     p: "16px",
                     pl: 4,
                     bg: "headSection",
@@ -122,7 +133,11 @@ function ModalCard<Values extends FormikValues>({
               )}
               Footer={
                 !omitFooter ? (
-                  <Flex sx={{ alignItems: "space-between" }}>
+                  <Flex
+                    sx={{
+                      alignItems: "space-between",
+                    }}
+                  >
                     <Box sx={{ ml: "auto" }} />
                     <ThemeButton
                       mr={2}

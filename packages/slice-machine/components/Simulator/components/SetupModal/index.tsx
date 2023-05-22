@@ -102,6 +102,9 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
         Header={({ radius }: { radius: string | number }) => (
           <Flex
             sx={{
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
               p: "16px",
               pl: 4,
               bg: "grey07",

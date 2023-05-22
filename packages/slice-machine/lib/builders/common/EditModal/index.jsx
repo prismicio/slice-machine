@@ -205,11 +205,14 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
           return (
             <Card
               borderFooter
-              footerSx={{ p: 0, mb: 5 }}
+              footerSx={{ position: "sticky", bottom: 0, p: 0 }}
               tabs={tabs}
               Header={({ radius }) => (
                 <Flex
                   sx={{
+                    position: "sticky",
+                    zIndex: 1,
+                    top: 0,
                     p: 3,
                     bg: "headSection",
                     alignItems: "center",
@@ -235,7 +238,13 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
               )}
               Footer={
                 <Flex
-                  sx={{ alignItems: "space-between", bg: "headSection", p: 3 }}
+                  sx={{
+                    position: "sticky",
+                    bottom: 0,
+                    alignItems: "space-between",
+                    bg: "headSection",
+                    p: 3,
+                  }}
                 >
                   <Box sx={{ ml: "auto" }} />
                   <Button
