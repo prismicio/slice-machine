@@ -11,7 +11,6 @@ const meta = {
     docs: { story: { height: 256, inline: false } },
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
 } satisfies Meta<typeof PageLayout>;
 
 export default meta;
