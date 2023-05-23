@@ -4,7 +4,7 @@ import clsx from "clsx";
 import * as styles from "./Table.css";
 
 type TableProps = Readonly<{
-  children?: ReactNode;
+  children: ReactNode;
   className?: string;
 }>;
 

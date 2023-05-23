@@ -6,7 +6,7 @@ import { TableRowProvider } from "./TableRowContext";
 import * as styles from "./TableHead.css";
 
 type TableHeadProps = Readonly<{
-  children?: ReactNode;
+  children: ReactNode;
   className?: string;
 }>;
 

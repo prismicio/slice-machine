@@ -6,7 +6,7 @@ import { useTableRowScope } from "./TableRowContext";
 import * as styles from "./TableRow.css";
 
 type TableRowProps = Readonly<{
-  children?: ReactNode;
+  children: ReactNode;
   className?: string;
   onClick?: MouseEventHandler<HTMLTableRowElement>;
 }>;
