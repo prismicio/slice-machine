@@ -160,12 +160,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         dataCy="ct-static-zone"
       />
       {
-<<<<<<< HEAD
         // TODO: DT-1316 - Add condition to also display the slice zone for the Main tab of "page" format
-=======
-        // TODO: Add condition to also display the slice zone for the Main tab of "page" format
->>>>>>> 25ddf36d8 (feat(page types): update Custom Types creation and edition with default values and restrictions)
-
         // Only display the slice zone for Page Types "Main" tab
         // or Custom Types that have a Slice Zone defined (for backward compatibility)
         sliceZone && (
