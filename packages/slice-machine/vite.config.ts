@@ -1,3 +1,4 @@
+import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import * as url from "node:url";
@@ -6,21 +7,18 @@ import * as path from "node:path";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [react()],
-  test: {
+  plugins: [react(), vanillaExtractPlugin()],
+  resolve: {
     alias: {
       "@builders": path.resolve(__dirname, "./lib/builders"),
       "@components": path.resolve(__dirname, "./components"),
       "@lib": path.resolve(__dirname, "./lib"),
       "@models": path.resolve(__dirname, "./lib/models"),
       "@src": path.resolve(__dirname, "./src"),
-      "@tests": path.resolve(__dirname, "./tests"),
       "@utils": path.resolve(__dirname, "./lib/utils"),
-      components: path.resolve(__dirname, "./components"),
-      lib: path.resolve(__dirname, "./lib"),
-      tests: path.resolve(__dirname, "./tests"),
-      "\\.(css)$": path.resolve(__dirname, "./tests/__mocks__/styleMock.js"),
     },
+  },
+  test: {
     include: ["./test/**/*.test.{ts,tsx}"],
     coverage: {
       provider: "c8",

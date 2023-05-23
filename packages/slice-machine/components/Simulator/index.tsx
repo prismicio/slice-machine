@@ -20,8 +20,6 @@ import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 import { renderSliceMock } from "@prismicio/mocks";
 
-import { ThemeProvider } from "@prismicio/editor-ui";
-
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 import useThrottle from "@src/hooks/useThrottle";
@@ -276,22 +274,21 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   : { display: "none" }),
               }}
             >
-              <ThemeProvider mode="light">
-                <SharedSliceEditor
-                  /**
-                   * Because of a re-render issue on the richtext /* we enforce
-                   * re-rendering the editor when the variation change. /* this
-                   * change should be removed once the editor is fixed.
-                   */
-                  key={variation.id}
-                  content={editorContent}
-                  onContentChange={(c) => {
-                    setEditorState(c as SharedSliceContent);
-                    trackWidgetUsed(slice.model.id);
-                  }}
-                  sharedSlice={sharedSlice}
-                />
-              </ThemeProvider>
+              <SharedSliceEditor
+                /**
+                 * Because of a re-render issue on the richtext /* we enforce
+                 * re-rendering the editor when the variation change. /* this
+                 * change should be removed once the editor is fixed.
+                 */
+                key={variation.id}
+                config={SHARED_SLICE_EDITOR_CONFIG}
+                content={editorContent}
+                onContentChange={(c) => {
+                  setEditorState(c as SharedSliceContent);
+                  trackWidgetUsed(slice.model.id);
+                }}
+                sharedSlice={sharedSlice}
+              />
             </Box>
           ) : null}
         </Flex>
@@ -307,3 +304,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 };
 
 export default Simulator;
+
+// TODO: change this config depending on the environment.
+const SHARED_SLICE_EDITOR_CONFIG = {
+  embeds: {
+    url: "https://jntc6tzga1.execute-api.us-east-1.amazonaws.com/beta",
+  },
+  unsplash: { url: "https://unsplash.wroom.io" },
+};

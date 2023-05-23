@@ -3,8 +3,11 @@ ignores:
     "monocle-ts",
     "newtype-ts",
     "start-slicemachine",
+    "@storybook/addon-essentials",
+    "@vanilla-extract/next-plugin",
     "@vitest/coverage-c8",
     "jest-environment-jsdom",
-    "semver"
+    "semver",
+    "unfetch"
   ]
 skip - missing: true
