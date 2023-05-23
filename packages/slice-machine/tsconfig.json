@@ -10,7 +10,7 @@
     "noUnusedParameters": true,
     "baseUrl": "./",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node", "vite/client"],
+    "types": ["node"],
     "inlineSourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

@@ -4,33 +4,34 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Icon as IconEditor,
+  Icon,
+  IconButton,
   Text,
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Icon } from "../Icon/Icon";
-import { IconButton } from "../IconButton";
 import { Table } from "./Table";
 import { TableBody } from "./TableBody";
 import { TableCell } from "./TableCell";
 import { TableHead } from "./TableHead";
 import { TableRow } from "./TableRow";
+import { UniqueIcon } from "../Icons/UniqueIcon";
+import { ReusableIcon } from "../Icons/ReusableIcon";
 
 type Story = StoryObj<typeof meta>;
 
 const TableExample: FC = () => {
   const data = Array.from({ length: 10 }, (_, index) => ({
     id: index,
-    name:
+    label:
       index === 3 || index === 7
-        ? `The very very long page name that is annoying ${index}`
-        : `My name ${index}`,
+        ? `The very very long label that is annoying ${index}`
+        : `My label ${index}`,
     apiId:
       index === 5 || index === 7
         ? `very_very_very_long_api_id_${index}`
         : `api_id_${index}`,
-    limit: index % 2 ? "repeatable" : "single",
+    repeatable: !!(index % 2),
   }));
 
   return (
@@ -38,52 +39,48 @@ const TableExample: FC = () => {
       <TableHead>
         <TableRow>
           <TableCell>
-            <Icon name="fieldList" />
+            <Icon name="notes" size="medium" />
           </TableCell>
-          <TableCell>Name</TableCell>
+          <TableCell>Label</TableCell>
           <TableCell>API ID</TableCell>
           <TableCell>Limit</TableCell>
           <TableCell />
         </TableRow>
       </TableHead>
       <TableBody>
-        {data.map(({ id, name, apiId, limit }) => (
+        {data.map(({ id, label, apiId, repeatable }) => (
           <TableRow
             key={id}
             onClick={() => {
-              console.log(`Table row clicked for ${name}`);
+              console.log(`Table row clicked for ${label}`);
             }}
           >
             <TableCell>
-              {limit === "single" ? (
-                <Icon name="unique" />
-              ) : (
-                <Icon name="reusable" />
-              )}
+              {repeatable ? <ReusableIcon /> : <UniqueIcon />}
             </TableCell>
             <TableCell>
-              <span style={{ fontWeight: 600 }}>{name}</span>
+              <span style={{ fontWeight: 600 }}>{label}</span>
             </TableCell>
             <TableCell>{apiId}</TableCell>
-            <TableCell>{limit === "single" ? "Unique" : "Reusable"}</TableCell>
+            <TableCell>{repeatable ? "Reusable" : "Unique"}</TableCell>
             <TableCell>
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <IconButton icon="kebabDots" />
+                  <IconButton icon="moreVert" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
-                    startIcon={<IconEditor name="edit" />}
+                    startIcon={<Icon name="edit" />}
                     onSelect={() => {
-                      console.log(`Rename clicked for ${name}`);
+                      console.log(`Rename clicked for ${label}`);
                     }}
                   >
                     <Text>Rename</Text>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    startIcon={<IconEditor color="tomato11" name="delete" />}
+                    startIcon={<Icon color="tomato11" name="delete" />}
                     onSelect={() => {
-                      console.log(`Remove clicked for ${name}`);
+                      console.log(`Remove clicked for ${label}`);
                     }}
                   >
                     <Text color="tomato11">Remove</Text>
