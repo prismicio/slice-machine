@@ -11,7 +11,7 @@ const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
 const sliceLib = ".--slices";
 
-// TODO: Use this test suite for Page Types since new Custom Type don't have Slice Zone anymore
+// TODO: DT-1316 - Use this test suite for Page Types since new Custom Type don't have Slice Zone anymore
 describe.skip("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {
     cy.clearProject();

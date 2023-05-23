@@ -221,7 +221,7 @@ describe("Custom Type Builder", () => {
     );
   });
 
-  // TODO: Use this test for Page Types since new Custom Type don't have Slice Zone anymore
+  // TODO: DT-1316 - Use this test for Page Types since new Custom Type don't have Slice Zone anymore
   test.skip("should send a tracking event when the user adds a slice", async () => {
     const customTypeId = "a-page";
 

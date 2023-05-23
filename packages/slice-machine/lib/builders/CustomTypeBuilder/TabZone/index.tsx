@@ -49,7 +49,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
       poolOfFields: selectCurrentPoolOfFields(store),
     })
   );
-  // TODO: Retrieve format from currentCustomType
+  // TODO: DT-1308 - Retrieve format from currentCustomType
   const customTypeFormat = "custom";
 
   if (!currentCustomType || !poolOfFields) {
@@ -160,7 +160,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         dataCy="ct-static-zone"
       />
       {
-        // TODO: Add condition to also display the slice zone for the Main tab of "page" format
+        // TODO: DT-1316 - Add condition to also display the slice zone for the Main tab of "page" format
 
         // Only display the slice zone for Page Types "Main" tab
         // or Custom Types that have a Slice Zone defined (for backward compatibility)
