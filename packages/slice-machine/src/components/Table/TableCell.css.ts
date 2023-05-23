@@ -4,7 +4,7 @@ import { style } from "@vanilla-extract/css";
 export const root = style([
   sprinkles({
     all: "unset",
-    color: colors.grey11,
+    color: colors.grey12,
   }),
   {
     display: "table-cell",
@@ -59,6 +59,9 @@ export const tableCellContent = style([
     selectors: {
       [`${tableDataCell}:last-child > &`]: {
         justifyContent: "flex-end",
+      },
+      [`${tableHeadCell}:first-child > &`]: {
+        paddingLeft: vars.size[8],
       },
     },
   },
