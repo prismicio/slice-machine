@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { HookError } from "@slicemachine/plugin-kit";
-import fetch from "node-fetch";
+import fetch from "../../lib/fetch";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";

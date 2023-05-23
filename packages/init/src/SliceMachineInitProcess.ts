@@ -1086,29 +1086,32 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 	}
 
 	protected initializePlugins(): Promise<void> {
-		return listrRun([
-			{
-				// TODO: Revert when plugin are introduced to users
-				// title: "Initializing plugins...",
-				title: "Initializing adapter...",
-				task: async (_, task) => {
-					const updateOutput = (data: Buffer | string | null) => {
-						if (data instanceof Buffer) {
-							task.output = data.toString();
-						} else if (typeof data === "string") {
-							task.output = data;
-						}
-					};
-
-					await this.manager.project.initProject({
-						log: updateOutput,
-					});
-
+		return listrRun(
+			[
+				{
 					// TODO: Revert when plugin are introduced to users
-					// task.title = "Initialized plugins";
-					task.title = "Initialized adapter";
+					// title: "Initializing plugins...",
+					title: "Initializing adapter...",
+					task: async (_, task) => {
+						const updateOutput = (data: Buffer | string | null) => {
+							if (data instanceof Buffer) {
+								task.output = data.toString();
+							} else if (typeof data === "string") {
+								task.output = data;
+							}
+						};
+
+						await this.manager.project.initProject({
+							log: updateOutput,
+						});
+
+						// TODO: Revert when plugin are introduced to users
+						// task.title = "Initialized plugins";
+						task.title = "Initialized adapter";
+					},
 				},
-			},
-		]);
+			],
+			{ exitOnError: false },
+		).catch(() => void 0);
 	}
 }

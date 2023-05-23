@@ -156,6 +156,10 @@ const ScreenshotChangesModal = ({
         Header={({ radius }: { radius: string | number }) => (
           <Flex
             sx={{
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+              background: "gray",
               p: "16px",
               alignItems: "center",
               justifyContent: "space-between",

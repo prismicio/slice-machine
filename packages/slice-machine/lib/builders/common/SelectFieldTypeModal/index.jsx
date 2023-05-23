@@ -33,6 +33,9 @@ const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
         Header={({ radius }) => (
           <Flex
             sx={{
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
               p: 3,
               pl: 4,
               bg: "headSection",

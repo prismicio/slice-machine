@@ -10,7 +10,9 @@ export const CustomTabList = ({ children, ...otherProps }) => (
       px: (theme) => `calc(${theme.space[3]}px + 8px)`,
       borderBottom: `1px solid #DFE1E5`,
       bg: "headSection",
-      position: "relative",
+      position: "sticky",
+      zIndex: 1,
+      top: 64,
     }}
     {...otherProps}
   >
@@ -31,7 +33,6 @@ export const CustomTab = ({ children, ...otherProps }) => {
         padding: "8px 0px",
         border: "none",
         bottom: "-1px",
-        border: "none",
         opacity: "0.8",
         transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
         borderRadius: "0",

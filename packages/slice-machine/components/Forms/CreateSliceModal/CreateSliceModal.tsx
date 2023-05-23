@@ -76,6 +76,7 @@ export const CreateSliceModal: React.FunctionComponent<
                 },
               };
             }}
+            menuPortalTarget={document.body}
           />
         </Box>
       )}

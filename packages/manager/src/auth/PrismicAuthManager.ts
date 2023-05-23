@@ -5,7 +5,7 @@ import * as os from "node:os";
 import * as http from "node:http";
 
 import * as h3 from "h3";
-import fetch from "node-fetch";
+import fetch from "../lib/fetch";
 import cookie from "cookie";
 import cors from "cors";
 import getPort from "get-port";

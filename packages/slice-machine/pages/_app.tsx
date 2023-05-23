@@ -113,7 +113,7 @@ function MyApp({
   return (
     <>
       <Head>
-        <title>SliceMachine</title>
+        <title>Slice Machine</title>
       </Head>
       <ThemeUIThemeProvider theme={theme}>
         <BaseStyles>
