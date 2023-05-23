@@ -20,10 +20,6 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: Table,
-  parameters: {
-    docs: { story: { height: 256, inline: false } },
-    layout: "fullscreen",
-  },
   render: () => {
     const data = Array.from({ length: 10 }, (_, index) => ({
       id: index,
@@ -39,73 +35,69 @@ const meta = {
     }));
 
     return (
-      <div style={{ padding: 50 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <Icon name="fieldList" />
+            </TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>API ID</TableCell>
+            <TableCell>Limit</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map(({ id, name, apiId, limit }) => (
+            <TableRow
+              key={id}
+              onClick={() => {
+                console.log(`Table row clicked for ${name}`);
+              }}
+            >
               <TableCell>
-                <Icon name="fieldList" />
+                {limit === "single" ? (
+                  <Icon name="unique" />
+                ) : (
+                  <Icon name="reusable" />
+                )}
               </TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>API ID</TableCell>
-              <TableCell>Limit</TableCell>
-              <TableCell />
+              <TableCell>
+                <span style={{ fontWeight: 600 }}>{name}</span>
+              </TableCell>
+              <TableCell>{apiId}</TableCell>
+              <TableCell>
+                {limit === "single" ? "Unique" : "Reusable"}
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <IconButton icon="kebabDots" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      startIcon={<IconEditor name="edit" />}
+                      onSelect={() => {
+                        console.log(`Rename clicked for ${name}`);
+                      }}
+                    >
+                      <Text>Rename</Text>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      startIcon={<IconEditor color="tomato11" name="delete" />}
+                      onSelect={() => {
+                        console.log(`Remove clicked for ${name}`);
+                      }}
+                    >
+                      <Text color="tomato11">Remove</Text>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map(({ id, name, apiId, limit }) => (
-              <TableRow
-                key={id}
-                onClick={() => {
-                  console.log(`Table row clicked for ${name}`);
-                }}
-              >
-                <TableCell>
-                  {limit === "single" ? (
-                    <Icon name="unique" />
-                  ) : (
-                    <Icon name="reusable" />
-                  )}
-                </TableCell>
-                <TableCell>
-                  <span style={{ fontWeight: 600 }}>{name}</span>
-                </TableCell>
-                <TableCell>{apiId}</TableCell>
-                <TableCell>
-                  {limit === "single" ? "Unique" : "Reusable"}
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <IconButton icon="kebabDots" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        startIcon={<IconEditor name="edit" />}
-                        onSelect={() => {
-                          console.log(`Rename clicked for ${name}`);
-                        }}
-                      >
-                        <Text>Rename</Text>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        startIcon={
-                          <IconEditor color="tomato11" name="delete" />
-                        }
-                        onSelect={() => {
-                          console.log(`Remove clicked for ${name}`);
-                        }}
-                      >
-                        <Text color="tomato11">Remove</Text>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
     );
   },
 } satisfies Meta<typeof Table>;
