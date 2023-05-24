@@ -13,7 +13,17 @@ describe("[Custom types factory]", () => {
         tabs: [
           {
             key: "Main",
-            value: [],
+            value: [
+              {
+                key: "uid",
+                value: {
+                  type: "UID",
+                  config: {
+                    label: "UID",
+                  },
+                },
+              },
+            ],
           },
         ],
       };
