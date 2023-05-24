@@ -1,34 +1,30 @@
 import { colors, selectors, sprinkles, vars } from "@prismicio/editor-ui";
 import { style } from "@vanilla-extract/css";
 
-import * as stylesTableBody from "./TableBody.css";
+export const root = sprinkles({
+  all: "unset",
+  borderBottomColor: colors.grey6,
+  borderBottomStyle: "solid",
+  borderBottomWidth: 1,
+  display: "revert",
+});
 
-export const root = style([
+export const tableRowBody = style([
   sprinkles({
-    all: "unset",
-    borderBottomColor: colors.grey6,
-    borderBottomStyle: "solid",
-    borderBottomWidth: 1,
-    display: "revert",
+    backgroundColor: {
+      ...selectors.focusVisible(colors.grey5),
+      ...selectors.hover(colors.grey4),
+    },
+    transitionDuration: 250,
+    transitionProperty: "background-color",
+    transitionTimingFunction: "easeInOut",
   }),
   {
-    selectors: {
-      [`${stylesTableBody.root} > &:last-child`]: {
-        border: vars.borderStyle.none,
-      },
+    ":last-child": {
+      border: vars.borderStyle.none,
     },
   },
 ]);
-
-export const tableRowBody = sprinkles({
-  backgroundColor: {
-    ...selectors.focusVisible(colors.grey5),
-    ...selectors.hover(colors.grey4),
-  },
-  transitionDuration: 250,
-  transitionProperty: "background-color",
-  transitionTimingFunction: "easeInOut",
-});
 
 export const tableRowClickable = sprinkles({
   cursor: "pointer",
