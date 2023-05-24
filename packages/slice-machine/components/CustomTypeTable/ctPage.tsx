@@ -11,6 +11,7 @@ import {
   LocalAndRemoteCustomType,
   LocalOnlyCustomType,
 } from "@lib/models/common/ModelData";
+import { CustomTypes } from "@lib/models/common/CustomType";
 
 export const CustomTypeTable: React.FC<{
   customTypes: (LocalOnlyCustomType | LocalAndRemoteCustomType)[];
@@ -35,6 +36,7 @@ export const CustomTypeTable: React.FC<{
     <>
       <Box
         as={"table"}
+        data-tag="legacy"
         sx={{
           mt: "36px",
         }}
@@ -77,7 +79,7 @@ export const CustomTypeTable: React.FC<{
                 </Box>
                 <Box as={"td"} style={{ width: thirdColumnWidth }}>
                   {customType.local.repeatable
-                    ? "Repeatable Type"
+                    ? "Reusable Type"
                     : "Single Type"}
                 </Box>
                 <Box as={"td"} style={{ width: fourthColumnWidth }}>
@@ -118,8 +120,20 @@ export const CustomTypeTable: React.FC<{
           ))}
         </tbody>
       </Box>
-      <RenameCustomTypeModal customType={customTypeToEdit} />
-      <DeleteCustomTypeModal customType={customTypeToEdit} />
+      <RenameCustomTypeModal
+        customType={
+          customTypeToEdit
+            ? CustomTypes.fromSM(customTypeToEdit.local)
+            : undefined
+        }
+      />
+      <DeleteCustomTypeModal
+        customType={
+          customTypeToEdit
+            ? CustomTypes.fromSM(customTypeToEdit.local)
+            : undefined
+        }
+      />
     </>
   );
 };

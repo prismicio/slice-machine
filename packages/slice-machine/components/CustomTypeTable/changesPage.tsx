@@ -51,7 +51,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
   isOnline,
 }) => {
   return (
-    <Box as={"table"}>
+    <Box as={"table"} data-tag="legacy">
       <thead>
         <tr className="transparent small">
           <Box as={"th"} sx={{ width: firstColumnWidth, fontWeight: 600 }}>

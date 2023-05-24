@@ -10,20 +10,17 @@ import { FormikErrors } from "formik";
 import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  LocalAndRemoteCustomType,
-  LocalOnlyCustomType,
-} from "@lib/models/common/ModelData";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 interface RenameCustomTypeModalProps {
-  customType?: LocalOnlyCustomType | LocalAndRemoteCustomType;
+  customType?: CustomType;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   customType,
 }) => {
-  const customTypeName = customType?.local.label ?? "";
-  const customTypeId = customType?.local.id ?? "";
+  const customTypeName = customType?.label ?? "";
+  const customTypeId = customType?.id ?? "";
   const { renameCustomType, closeModals } = useSliceMachineActions();
 
   const handleOnSubmit = (values: { customTypeName: string }) => {
