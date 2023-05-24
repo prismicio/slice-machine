@@ -60,6 +60,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
       event: "custom-type:created",
       id,
       name,
+      format: "custom", // TODO: DT-1308 - Retrieve format from currentCustomType
       type: repeatable ? "repeatable" : "single",
     });
     createCustomType(id, name, repeatable);
