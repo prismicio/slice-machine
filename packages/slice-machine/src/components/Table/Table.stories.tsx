@@ -10,11 +10,7 @@ import {
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Table } from "./Table";
-import { TableBody } from "./TableBody";
-import { TableCell } from "./TableCell";
-import { TableHead } from "./TableHead";
-import { TableRow } from "./TableRow";
+import { Table, TableBody, TableHead, TableCell, TableRow } from "./Table";
 import { UniqueIcon } from "../Icons/UniqueIcon";
 import { ReusableIcon } from "../Icons/ReusableIcon";
 
@@ -60,7 +56,7 @@ const TableExample: FC = () => {
             </TableCell>
             <TableCell>{label}</TableCell>
             <TableCell>{apiId}</TableCell>
-            <TableCell>{repeatable ? "Reusable" : "Unique"}</TableCell>
+            <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
             <TableCell>
               <DropdownMenu>
                 <DropdownMenuTrigger>
