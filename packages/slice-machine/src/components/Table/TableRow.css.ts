@@ -9,9 +9,9 @@ export const root = style([
     borderBottomColor: colors.grey6,
     borderBottomStyle: "solid",
     borderBottomWidth: 1,
+    display: "revert",
   }),
   {
-    display: "table-row",
     selectors: {
       [`${stylesTableBody.root} > &:last-child`]: {
         border: vars.borderStyle.none,

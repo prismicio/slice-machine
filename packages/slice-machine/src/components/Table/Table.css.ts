@@ -8,11 +8,11 @@ export const root = style([
     borderRadius: 6,
     borderStyle: "solid",
     borderWidth: 1,
+    display: "revert",
     fontFamily: "body",
     width: "100%",
   }),
   {
-    display: "block",
     minWidth: 600,
   },
 ]);

@@ -58,9 +58,7 @@ const TableExample: FC = () => {
             <TableCell>
               {repeatable ? <ReusableIcon /> : <UniqueIcon />}
             </TableCell>
-            <TableCell>
-              <span style={{ fontWeight: 600 }}>{label}</span>
-            </TableCell>
+            <TableCell>{label}</TableCell>
             <TableCell>{apiId}</TableCell>
             <TableCell>{repeatable ? "Reusable" : "Unique"}</TableCell>
             <TableCell>

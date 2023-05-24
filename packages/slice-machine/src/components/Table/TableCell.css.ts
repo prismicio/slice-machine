@@ -4,37 +4,35 @@ import { style } from "@vanilla-extract/css";
 export const root = style([
   sprinkles({
     all: "unset",
-    color: colors.grey12,
+    color: colors.grey11,
+    display: "revert",
   }),
   {
-    display: "table-cell",
+    verticalAlign: "middle",
+    ":first-child": {
+      padding: `${vars.size[16]} ${vars.size[0]} ${vars.size[16]} ${vars.size[8]}`,
+      width: vars.size[32],
+    },
+    ":last-child": {
+      padding: `${vars.size[16]} ${vars.size[16]} ${vars.size[16]} ${vars.size[8]}`,
+    },
     selectors: {
-      "&:last-child": {
-        padding: `${vars.size[16]} ${vars.size[16]} ${vars.size[16]} ${vars.size[8]}`,
-      },
-      "&:first-child": {
-        padding: `${vars.size[16]} ${vars.size[0]} ${vars.size[16]} ${vars.size[8]}`,
-        width: vars.size[32],
-      },
       "&:not(last-child):not(first-child)": {
         padding: `${vars.size[16]} ${vars.size[8]}`,
       },
     },
-    verticalAlign: "middle",
   },
 ]);
 
 export const tableHeadCell = style([
   {
     fontSize: 12,
-    fontWeight: "initial",
-    selectors: {
-      [`&:first-child`]: {
-        borderTopLeftRadius: vars.borderRadius[6],
-      },
-      [`&:last-child`]: {
-        borderTopRightRadius: vars.borderRadius[6],
-      },
+    fontWeight: "500",
+    ":first-child": {
+      borderTopLeftRadius: vars.borderRadius[6],
+    },
+    ":last-child": {
+      borderTopRightRadius: vars.borderRadius[6],
     },
   },
 ]);
@@ -45,6 +43,14 @@ export const tableDataCell = style([
   }),
   {
     fontSize: 14,
+    fontWeight: "400",
+    selectors: {
+      ["&:nth-child(2)"]: {
+        fontWeight: "600",
+        // TODO: DT-1362 - Condition for dark and light mode, need mode export
+        color: colors.grey12.lightMode,
+      },
+    },
   },
 ]);
 
