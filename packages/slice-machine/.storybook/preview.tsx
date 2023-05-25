@@ -3,7 +3,10 @@ import "@prismicio/editor-ui/style.css";
 import type { Preview } from "@storybook/react";
 
 const preview: Preview = {
-  argTypes: { className: { control: { disable: true } } },
+  argTypes: {
+    children: { control: { disable: true } },
+    className: { control: { disable: true } },
+  },
   decorators: [
     (Story) => (
       <ThemeProvider mode="light">
