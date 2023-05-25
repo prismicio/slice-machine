@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt",
-	"version": "0.1.3-dev-page-types.3",
+	"version": "0.1.3-dev-page-types.4",
 	"description": "Slice Machine adapter for Nuxt 3.",
 	"keywords": [
 		"typescript",
@@ -59,7 +59,7 @@
 	"dependencies": {
 		"@prismicio/slice-simulator-core": "^0.2.7",
 		"@prismicio/types-internal": "2.0.0-alpha.9",
-		"@slicemachine/plugin-kit": "0.2.1-dev-page-types.3",
+		"@slicemachine/plugin-kit": "0.2.1-dev-page-types.4",
 		"common-tags": "^1.8.2",
 		"fs-extra": "^11.1.0",
 		"magicast": "^0.2.1",
