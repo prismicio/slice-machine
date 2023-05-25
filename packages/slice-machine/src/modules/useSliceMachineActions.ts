@@ -144,8 +144,15 @@ const useSliceMachineActions = () => {
     dispatch(hasSeenTutorialsTooTipCreator());
 
   // Custom types module
-  const createCustomType = (id: string, label: string, repeatable: boolean) =>
-    dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
+  const createCustomType = (
+    id: string,
+    label: string,
+    repeatable: boolean,
+    format?: "page" | "custom" | null
+  ) =>
+    dispatch(
+      createCustomTypeCreator.request({ id, label, repeatable, format })
+    );
   const renameCustomType = (customTypeId: string, newCustomTypeName: string) =>
     dispatch(
       renameCustomTypeCreator.request({
