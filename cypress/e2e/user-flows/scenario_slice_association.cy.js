@@ -11,8 +11,7 @@ const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
 const sliceLib = ".--slices";
 
-// TODO: DT-1316 - Use this test suite for Page Types since new Custom Type don't have Slice Zone anymore
-describe.skip("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
+describe("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {
     cy.clearProject();
   });
@@ -23,6 +22,19 @@ describe.skip("I am an existing SM user (Next) and I want to associate a Slice t
 
   it("Create a Custom type with multiple fields", () => {
     cy.createCustomType(customTypeId, customTypeName);
+
+    cy.contains("Add a new Slice")
+    cy.contains("SEO & Metadata").click()
+    cy.should("not.have.text", "Add a new Slice")
+    cy.contains("Add Tab").click()
+    cy.getInputByLabel("New Tab ID").type("a new tab")
+    cy.get("#create-tab").submit()
+    cy.contains("a new tab").click()
+    cy.should("not.have.text", "Add a new Slice")
+
+
+    cy.contains("Main").click()
+
 
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
