@@ -68,33 +68,33 @@ export const cell = style([
   {
     verticalAlign: "middle",
     ":first-child": {
-      paddingRight: 0,
+      paddingRight: vars.space[0],
       width: vars.size[32],
     },
     ":last-child": {
-      paddingRight: 16,
+      paddingRight: vars.space[16],
     },
     selectors: {
       [`${head} &`]: {
         fontSize: 12,
         fontWeight: 500,
       },
-      [`${head} ${row}:first-child &:first-child`]: {
+      [`${head} ${row}:first-child > &:first-child`]: {
         borderTopLeftRadius: vars.borderRadius[6],
       },
-      [`${head} ${row}:first-child &:last-child`]: {
+      [`${head} ${row}:first-child > &:last-child`]: {
         borderTopRightRadius: vars.borderRadius[6],
       },
-      [`${body} ${row}:last-child &:first-child`]: {
+      [`${body} ${row}:last-child > &:first-child`]: {
         borderBottomLeftRadius: vars.borderRadius[6],
       },
-      [`${body} ${row}:last-child &:last-child`]: {
+      [`${body} ${row}:last-child > &:last-child`]: {
         borderBottomRightRadius: vars.borderRadius[6],
       },
       [`${body} &`]: {
-        borderTopStyle: "solid",
+        borderTopStyle: vars.borderStyle["solid"],
         fontSize: 14,
-        fontWeight: "400",
+        fontWeight: 400,
       },
       [`${body} &:nth-child(2)`]: {
         // TODO: DT-1362 - Condition for dark and light mode, need mode export
@@ -115,13 +115,13 @@ export const cellContent = style([
   {
     selectors: {
       [`${head} &`]: {
-        height: 16,
+        height: vars.size[16],
       },
       [`${head} ${cell}:first-child > &`]: {
         paddingLeft: vars.size[8],
       },
       [`${body} &`]: {
-        height: 32,
+        height: vars.size[32],
       },
       [`${body} ${cell}:last-child > &`]: {
         justifyContent: "flex-end",

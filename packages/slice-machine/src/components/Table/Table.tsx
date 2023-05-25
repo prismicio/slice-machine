@@ -1,23 +1,18 @@
 import {
+  type FC,
+  type MouseEventHandler,
+  type PropsWithChildren,
   createContext,
-  FC,
-  MouseEventHandler,
-  ReactNode,
   useContext,
 } from "react";
-import clsx from "clsx";
+import { clsx } from "clsx";
 
 import * as styles from "./Table.css";
 
-type TableProps = Readonly<{
-  children: ReactNode;
-  className?: string;
-}>;
-
-export const Table: FC<TableProps> = ({ children, className }) => {
+export const Table: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <div className={clsx(styles.root, className)}>
-      <table className={clsx(styles.table)}>{children}</table>
+    <div className={styles.root}>
+      <table className={styles.table}>{children}</table>
     </div>
   );
 };
@@ -26,69 +21,49 @@ type TableSection = "head" | "body";
 
 const TableSectionContext = createContext<TableSection>("body");
 
-export function useTableSection() {
+function useTableSection() {
   return useContext(TableSectionContext);
 }
 
-type TableHeadProps = Readonly<{
-  children: ReactNode;
-  className?: string;
-}>;
-
-export const TableHead: FC<TableHeadProps> = ({ children, className }) => {
+export const TableHead: FC<PropsWithChildren> = ({ children }) => {
   return (
     <TableSectionContext.Provider value="head">
-      <thead className={clsx(styles.head, className)}>{children}</thead>
+      <thead className={styles.head}>{children}</thead>
     </TableSectionContext.Provider>
   );
 };
 
-type TableBodyProps = Readonly<{
-  children: ReactNode;
-  className?: string;
-}>;
-
-export const TableBody: FC<TableBodyProps> = ({ children, className }) => {
+export const TableBody: FC<PropsWithChildren> = ({ children }) => {
   return (
     <TableSectionContext.Provider value="body">
-      <tbody className={clsx(styles.body, className)}>{children}</tbody>
+      <tbody className={styles.body}>{children}</tbody>
     </TableSectionContext.Provider>
   );
 };
 
-type TableRowProps = Readonly<{
-  children: ReactNode;
-  className?: string;
+type TableRowProps = PropsWithChildren<{
   onClick?: MouseEventHandler<HTMLTableRowElement>;
 }>;
 
 const tableRowTag = "prismicTableRow";
 
-export const TableRow: FC<TableRowProps> = ({
-  children,
-  className,
-  onClick,
-}) => {
+export const TableRow: FC<TableRowProps> = ({ children, onClick }) => {
   const section = useTableSection();
 
   return (
     <tr
       data-tag={tableRowTag}
-      className={clsx(
-        styles.row,
-        {
-          [styles.rowClickable]: !!onClick,
-          [styles.bodyRow]: section === "body",
-        },
-        className
-      )}
+      className={clsx(styles.row, {
+        [styles.rowClickable]: !!onClick,
+        [styles.bodyRow]: section === "body",
+      })}
       onClick={(event) => {
         if (!onClick) {
           return;
         }
 
         const target = event.target as HTMLElement;
-        const isClickOnTableRow = !!target?.closest(
+        const isClickOnTableRow = !!target.closest(
           `tr[data-tag=${tableRowTag}]`
         );
 
@@ -104,18 +79,13 @@ export const TableRow: FC<TableRowProps> = ({
   );
 };
 
-type TableCellProps = Readonly<{
-  children?: ReactNode;
-  className?: string;
-}>;
-
-export const TableCell: FC<TableCellProps> = ({ children, className }) => {
+export const TableCell: FC<PropsWithChildren> = ({ children }) => {
   const section = useTableSection();
   const CellComponent = section === "head" ? "th" : "td";
 
   return (
-    <CellComponent className={clsx(styles.cell, className)}>
-      <div className={clsx(styles.cellContent)}>{children}</div>
+    <CellComponent className={styles.cell}>
+      <div className={styles.cellContent}>{children}</div>
     </CellComponent>
   );
 };
