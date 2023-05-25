@@ -1,6 +1,7 @@
 // This file defines the root `@slicemachine/manager` export.
 // Non-Node.js-compatible exports should be defined in `./client.ts`.
 
+export type { CustomTypeFormat } from "./managers/customTypes/types";
 export type { PrismicRepository } from "./managers/prismicRepository/types";
 
 export type { SliceMachineManager } from "./managers/SliceMachineManager";

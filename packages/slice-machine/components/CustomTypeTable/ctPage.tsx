@@ -36,7 +36,7 @@ export const CustomTypeTable: React.FC<{
     <>
       <Box
         as={"table"}
-        data-tag="legacy"
+        data-legacy-component
         sx={{
           mt: "36px",
         }}

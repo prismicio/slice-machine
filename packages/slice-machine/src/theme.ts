@@ -920,8 +920,8 @@ const AppTheme = (): Theme =>
         color: "#6E56CF",
         bg: "#F1EEFE",
       },
-      // "data-tag=legacy" prevent conflict between old and new table
-      ["table[data-tag=legacy]"]: {
+      // "data-legacy-component" prevent conflict between old and new table
+      ["table[data-legacy-component]"]: {
         width: "100%",
         borderCollapse: "collapse",
         borderSpacing: 0,

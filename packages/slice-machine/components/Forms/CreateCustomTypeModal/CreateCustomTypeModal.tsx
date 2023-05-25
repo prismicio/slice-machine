@@ -1,6 +1,5 @@
 import { SetStateAction, useState } from "react";
 import { Box } from "theme-ui";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { FormikErrors } from "formik";
 import { useSelector } from "react-redux";
 
@@ -20,6 +19,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { telemetry } from "@src/apiClient";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
+import type { CustomTypeFormat } from "@slicemachine/manager";
 
 interface FormValues {
   id: string;
@@ -28,7 +28,7 @@ interface FormValues {
 }
 
 type CreateCustomTypeModalProps = {
-  format?: Exclude<CustomType["format"], undefined>;
+  format?: CustomTypeFormat;
 };
 
 export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
