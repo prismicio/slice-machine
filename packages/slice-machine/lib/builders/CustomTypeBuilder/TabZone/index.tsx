@@ -160,18 +160,18 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         // TODO: DT-1316 - Add condition to also display the slice zone for the Main tab of "page" format
         // Only display the slice zone for Page Types "Main" tab
         // or Custom Types that have a Slice Zone defined (for backward compatibility)
-        // sliceZone && (
-        <SliceZone
-          format={currentCustomType.format}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          tabId={tabId}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          sliceZone={sliceZone}
-          onRemoveSharedSlice={onRemoveSharedSlice}
-          onCreateSliceZone={onCreateSliceZone}
-          onSelectSharedSlices={onSelectSharedSlices}
-        />
-        // )
+        sliceZone && (
+          <SliceZone
+            format={currentCustomType.format}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            tabId={tabId}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            sliceZone={sliceZone}
+            onRemoveSharedSlice={onRemoveSharedSlice}
+            onCreateSliceZone={onCreateSliceZone}
+            onSelectSharedSlices={onSelectSharedSlices}
+          />
+        )
       }
     </>
   );
