@@ -23,18 +23,16 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   it("Create a Custom type with multiple fields", () => {
     cy.createCustomType(customTypeId, customTypeName);
 
-    cy.contains("Add a new Slice")
-    cy.contains("SEO & Metadata").click()
-    cy.should("not.have.text", "Add a new Slice")
-    cy.contains("Add Tab").click()
-    cy.getInputByLabel("New Tab ID").type("a new tab")
-    cy.get("#create-tab").submit()
-    cy.contains("a new tab").click()
-    cy.should("not.have.text", "Add a new Slice")
+    cy.contains("Add a new Slice");
+    cy.contains("SEO & Metadata").click();
+    cy.should("not.have.text", "Add a new Slice");
+    cy.contains("Add Tab").click();
+    cy.getInputByLabel("New Tab ID").type("a new tab");
+    cy.get("#create-tab").submit();
+    cy.contains("a new tab").click();
+    cy.should("not.have.text", "Add a new Slice");
 
-
-    cy.contains("Main").click()
-
+    cy.contains("Main").click();
 
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
