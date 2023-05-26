@@ -1,3 +1,4 @@
+import { CustomTypeFormat } from "../customTypes/types";
 import type { LimitType } from "../prismicRepository/types";
 
 export const SegmentEventType = {
@@ -112,7 +113,12 @@ type OpenVideoTutorialsSegmentEvent = SegmentEvent<
 
 type CustomTypeCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.customType_created,
-	{ id: string; name: string; type: "repeatable" | "single" }
+	{
+		id: string;
+		name: string;
+		format: CustomTypeFormat;
+		type: "repeatable" | "single";
+	}
 >;
 
 type CustomTypeFieldAddedSegmentEvent = SegmentEvent<
@@ -132,7 +138,12 @@ type CustomTypeSliceZoneUpdatedSegmentEvent = SegmentEvent<
 
 type CustomTypeSavedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.customType_saved,
-	{ id: string; name: string; type: "repeatable" | "single" }
+	{
+		id: string;
+		name: string;
+		format: CustomTypeFormat;
+		type: "repeatable" | "single";
+	}
 >;
 
 type SliceCreatedSegmentEvent = SegmentEvent<

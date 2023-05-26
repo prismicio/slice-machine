@@ -28,11 +28,11 @@ interface FormValues {
 }
 
 type CreateCustomTypeModalProps = {
-  format?: CustomTypeFormat;
+  format: CustomTypeFormat;
 };
 
 export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
-  format: _,
+  format,
 }) => {
   const { createCustomType, closeModals } = useSliceMachineActions();
 
@@ -60,6 +60,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
       event: "custom-type:created",
       id,
       name,
+      format,
       type: repeatable ? "repeatable" : "single",
     });
     createCustomType(id, name, repeatable);

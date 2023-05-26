@@ -8,11 +8,17 @@ import { SlicesSM } from "../Slices";
 
 export * from "./tab";
 
+export const CustomTypeFormat = {
+  page: "page",
+  custom: "custom",
+};
+
 export const CustomTypeSM = t.exact(
   t.intersection([
     t.type({
       id: t.string,
       label: StringOrNull,
+      format: withFallback(t.keyof(CustomTypeFormat), "custom"),
       repeatable: withFallback(t.boolean, true),
       tabs: t.array(TabSM),
       status: withFallback(t.boolean, true),

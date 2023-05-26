@@ -23,6 +23,7 @@ export const createCustomType = (
   return {
     id,
     label,
+    format: "custom",
     repeatable,
     tabs: [
       {

@@ -27,7 +27,8 @@ export function* saveCustomTypeSaga() {
     void telemetry.track({
       event: "custom-type:saved",
       id: currentCustomType.id,
-      name: currentCustomType.label || currentCustomType.id,
+      name: currentCustomType.label ?? currentCustomType.id,
+      format: currentCustomType.format,
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));

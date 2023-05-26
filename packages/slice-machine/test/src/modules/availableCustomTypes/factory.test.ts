@@ -8,6 +8,7 @@ describe("[Custom types factory]", () => {
       const expectedCustomType: CustomTypeSM = {
         id: "id",
         label: "lama",
+        format: "custom",
         repeatable: true,
         status: true,
         tabs: [
@@ -33,6 +34,7 @@ describe("[Custom types factory]", () => {
       const expectedCustomType: CustomTypeSM = {
         id: "id",
         label: "lama",
+        format: "custom",
         repeatable: false,
         status: true,
         tabs: [

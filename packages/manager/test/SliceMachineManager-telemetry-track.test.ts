@@ -99,6 +99,7 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		id: "test",
 		name: "testing",
 		type: "repeatable" as const,
+		format: "custom" as const,
 	};
 
 	await manager.telemetry.track({
