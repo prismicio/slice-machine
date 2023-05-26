@@ -147,19 +147,6 @@ export type BlogPageDocument<Lang extends string = string> =
     "blog-page",
     Lang
   >;
-/** Content for customtypecustomnow documents */
-type CustomDocumentData = Record<string, never>;
-/**
- * Customtypecustomnow document from Prismic
- *
- * - **API ID**: `custom`
- * - **Repeatable**: `true`
- * - **Documentation**: https://prismic.io/docs/core-concepts/custom-types
- *
- * @typeParam Lang - Language API ID of the document.
- */
-export type CustomDocument<Lang extends string = string> =
-  prismicT.PrismicDocumentWithUID<Simplify<CustomDocumentData>, "custom", Lang>;
 /** Content for Home Page documents */
 interface HomePageDocumentData {
   /**
@@ -371,26 +358,11 @@ export type MenuTabDocument<Lang extends string = string> =
     "menu-tab",
     Lang
   >;
-/** Content for pagetypenow documents */
-type PageDocumentData = Record<string, never>;
-/**
- * Pagetypenow document from Prismic
- *
- * - **API ID**: `page`
- * - **Repeatable**: `true`
- * - **Documentation**: https://prismic.io/docs/core-concepts/custom-types
- *
- * @typeParam Lang - Language API ID of the document.
- */
-export type PageDocument<Lang extends string = string> =
-  prismicT.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 export type AllDocumentTypes =
   | BlogPageDocument
-  | CustomDocument
   | HomePageDocument
   | MenuDocument
-  | MenuTabDocument
-  | PageDocument;
+  | MenuTabDocument;
 /** Primary content in CategoryPreviewWithImageBackgrounds → Primary */
 interface CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary {
   /**
@@ -2673,8 +2645,6 @@ declare module "@prismicio/client" {
       BlogPageDocumentDataSlicesSlice,
       BlogPageDocumentDataSocialCardsItem,
       BlogPageDocument,
-      CustomDocumentData,
-      CustomDocument,
       HomePageDocumentData,
       HomePageDocumentDataSlicesSlice,
       HomePageDocumentDataSocialCardsItem,
@@ -2685,8 +2655,6 @@ declare module "@prismicio/client" {
       MenuTabDocumentData,
       MenuTabDocumentDataSlicesSlice,
       MenuTabDocument,
-      PageDocumentData,
-      PageDocument,
       AllDocumentTypes,
       CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary,
       CategoryPreviewWithImageBackgroundsSliceAnotherVariation,
