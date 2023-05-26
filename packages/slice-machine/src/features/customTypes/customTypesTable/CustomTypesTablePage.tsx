@@ -53,7 +53,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
       >
         <ErrorBoundary
           title="Request failed"
-          description={customTypesConfig.errorDescription}
+          description={`An error occurred while fetching your ${customTypesConfig.title}.`}
           renderError={(error) => {
             return (
               <Box

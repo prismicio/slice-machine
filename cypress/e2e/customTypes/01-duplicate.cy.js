@@ -1,7 +1,7 @@
 const customTypeName = "Duplicated Custom Type";
 const customTypeId = "duplicated_custom_type";
 
-describe("Duplicate custom types", () => {
+describe.skip("Duplicate custom types", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();

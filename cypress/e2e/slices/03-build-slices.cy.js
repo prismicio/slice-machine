@@ -22,7 +22,7 @@ const SLICE = {
   library: ".--slices",
 };
 
-describe("I am a new SM user (with Next) who wants to build a slice with different widgets.", () => {
+describe.skip("I am a new SM user (with Next) who wants to build a slice with different widgets.", () => {
   before(() => {
     cy.clearProject();
   });

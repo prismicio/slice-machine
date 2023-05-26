@@ -158,7 +158,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
     >
       {({ errors, setValues, setFieldValue, values, touched }) => (
         <Box>
-          <SelectRepeatable />
+          <SelectRepeatable format={format} />
           <InputBox
             name="label"
             label={`${customTypeConfig.name} Name`}
@@ -171,7 +171,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
             name="id"
             dataCy="ct-id-input"
             label={`${customTypeConfig.name} ID`}
-            placeholder={`ID to query the ${customTypeConfig.name} in the API (e.g. 'BlogPost')`}
+            placeholder={customTypeConfig.inputPlaceholder}
             error={touched.id ? errors.id : undefined}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />

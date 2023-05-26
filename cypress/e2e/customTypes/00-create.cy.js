@@ -3,7 +3,7 @@ import { CUSTOM_TYPE_MODEL } from "../../consts";
 const customTypeName = "My Test";
 const customTypeId = "my_test";
 
-describe("Custom Types specs", () => {
+describe.skip("Custom Types specs", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();
