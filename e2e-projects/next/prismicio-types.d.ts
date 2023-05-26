@@ -147,76 +147,19 @@ export type BlogPageDocument<Lang extends string = string> =
     "blog-page",
     Lang
   >;
-/** Content for Footer documents */
-interface FooterDocumentData {
-  /**
-   * Newsletter Title field in _Footer_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: footer.newsletter_title
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  newsletter_title: prismicT.KeyTextField;
-  /**
-   * Newsletter Description field in _Footer_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: footer.newsletter_description
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  newsletter_description: prismicT.KeyTextField;
-  /**
-   * Newsletter Button field in _Footer_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: footer.newsletter_button
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  newsletter_button: prismicT.KeyTextField;
-  /**
-   * Copyright field in _Footer_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: footer.copyright
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  copyright: prismicT.KeyTextField;
-  /**
-   * Slice Zone field in _Footer_
-   *
-   * - **Field Type**: Slice Zone
-   * - **Placeholder**: _None_
-   * - **API ID Path**: footer.body[]
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/core-concepts/slices
-   */
-  body: prismicT.SliceZone<FooterDocumentDataBodySlice>;
-}
-/** Slice for _Footer → Slice Zone_ */
-type FooterDocumentDataBodySlice = FooterColumnSlice;
+/** Content for customtypecustomnow documents */
+type CustomDocumentData = Record<string, never>;
 /**
- * Footer document from Prismic
+ * Customtypecustomnow document from Prismic
  *
- * - **API ID**: `footer`
- * - **Repeatable**: `false`
+ * - **API ID**: `custom`
+ * - **Repeatable**: `true`
  * - **Documentation**: https://prismic.io/docs/core-concepts/custom-types
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type FooterDocument<Lang extends string = string> =
-  prismicT.PrismicDocumentWithoutUID<
-    Simplify<FooterDocumentData>,
-    "footer",
-    Lang
-  >;
+export type CustomDocument<Lang extends string = string> =
+  prismicT.PrismicDocumentWithUID<Simplify<CustomDocumentData>, "custom", Lang>;
 /** Content for Home Page documents */
 interface HomePageDocumentData {
   /**
@@ -428,105 +371,10 @@ export type MenuTabDocument<Lang extends string = string> =
     "menu-tab",
     Lang
   >;
-/** Content for Page documents */
-interface PageDocumentData {
-  /**
-   * Slice Zone field in _Page_
-   *
-   * - **Field Type**: Slice Zone
-   * - **Placeholder**: _None_
-   * - **API ID Path**: page.slices[]
-   * - **Tab**: Page
-   * - **Documentation**: https://prismic.io/docs/core-concepts/slices
-   */
-  slices: prismicT.SliceZone<PageDocumentDataSlicesSlice>;
-  /**
-   * Meta Title field in _Page_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: My title for Search Engine
-   * - **API ID Path**: page.meta_title
-   * - **Tab**: SEO Metadata
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  meta_title: prismicT.KeyTextField;
-  /**
-   * Meta Description field in _Page_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: The description that will appear in search engine
-   * - **API ID Path**: page.meta_description
-   * - **Tab**: SEO Metadata
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  meta_description: prismicT.KeyTextField;
-  /**
-   * CanonicalLink field in _Page_
-   *
-   * - **Field Type**: Link
-   * - **Placeholder**: _None_
-   * - **API ID Path**: page.canonicalLink
-   * - **Tab**: SEO Metadata
-   * - **Documentation**:
-   *   https://prismic.io/docs/core-concepts/link-content-relationship
-   */
-  canonicalLink: prismicT.LinkField;
-  /**
-   * Social Cards - Facebook & Twitter field in _Page_
-   *
-   * - **Field Type**: Group
-   * - **Placeholder**: _None_
-   * - **API ID Path**: page.social_cards[]
-   * - **Tab**: SEO Metadata
-   * - **Documentation**: https://prismic.io/docs/core-concepts/group
-   */
-  social_cards: prismicT.GroupField<Simplify<PageDocumentDataSocialCardsItem>>;
-}
-/** Slice for _Page → Slice Zone_ */
-type PageDocumentDataSlicesSlice =
-  | PromoSectionImageTilesSlice
-  | PromoSectionFullWidthWithOverlappingImageTilesSlice
-  | PromoSectionWithBackgroundImageSlice
-  | PromoSectionFadingBackgroundTestimonialsSlice
-  | CategoryPreviewWithScrollingCardsSlice
-  | ExternalVideoSliceSlice
-  | HeaderSectionSimpleCenteredSlice
-  | CategoryPreviewWithImageBackgroundsSlice
-  | HeroBannerSlice
-  | ChartSliceSlice;
-/** Item in Page → Social Cards - Facebook & Twitter */
-export interface PageDocumentDataSocialCardsItem {
-  /**
-   * Social Card Image field in _Page → Social Cards - Facebook & Twitter_
-   *
-   * - **Field Type**: Image
-   * - **Placeholder**: _None_
-   * - **API ID Path**: page.social_cards[].social_card_image
-   * - **Documentation**: https://prismic.io/docs/core-concepts/image
-   */
-  social_card_image: prismicT.ImageField<never>;
-  /**
-   * Social Card Title field in _Page → Social Cards - Facebook & Twitter_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: page.social_cards[].social_card_title
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  social_card_title: prismicT.KeyTextField;
-  /**
-   * Social card description field in _Page → Social Cards - Facebook &
-   * Twitter_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: page.social_cards[].social_card_description
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  social_card_description: prismicT.KeyTextField;
-}
+/** Content for pagetypenow documents */
+type PageDocumentData = Record<string, never>;
 /**
- * Page document from Prismic
+ * Pagetypenow document from Prismic
  *
  * - **API ID**: `page`
  * - **Repeatable**: `true`
@@ -538,7 +386,7 @@ export type PageDocument<Lang extends string = string> =
   prismicT.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 export type AllDocumentTypes =
   | BlogPageDocument
-  | FooterDocument
+  | CustomDocument
   | HomePageDocument
   | MenuDocument
   | MenuTabDocument
@@ -972,40 +820,6 @@ export type ExternalVideoSliceSlice = prismicT.SharedSlice<
   "external_video_slice",
   ExternalVideoSliceSliceVariation
 >;
-/** Primary content in FooBar → Primary */
-interface FooBarSliceDefaultPrimary {
-  /**
-   * Title field in _FooBar → Primary_
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: _None_
-   * - **API ID Path**: foo_bar.primary.title
-   * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
-   */
-  title: prismicT.RichTextField;
-}
-/**
- * Default variation for FooBar Slice
- *
- * - **API ID**: `default`
- * - **Description**: `Default`
- * - **Documentation**: https://prismic.io/docs/core-concepts/reusing-slices
- */
-export type FooBarSliceDefault = prismicT.SharedSliceVariation<
-  "default",
-  Simplify<FooBarSliceDefaultPrimary>,
-  never
->;
-/** Slice variation for _FooBar_ */
-type FooBarSliceVariation = FooBarSliceDefault;
-/**
- * FooBar Shared Slice
- *
- * - **API ID**: `foo_bar`
- * - **Description**: `FooBar`
- * - **Documentation**: https://prismic.io/docs/core-concepts/reusing-slices
- */
-export type FooBarSlice = prismicT.SharedSlice<"foo_bar", FooBarSliceVariation>;
 /** Primary content in HeroBanner → Primary */
 interface HeroBannerSliceDefaultSlicePrimary {
   /**
@@ -2859,9 +2673,8 @@ declare module "@prismicio/client" {
       BlogPageDocumentDataSlicesSlice,
       BlogPageDocumentDataSocialCardsItem,
       BlogPageDocument,
-      FooterDocumentData,
-      FooterDocumentDataBodySlice,
-      FooterDocument,
+      CustomDocumentData,
+      CustomDocument,
       HomePageDocumentData,
       HomePageDocumentDataSlicesSlice,
       HomePageDocumentDataSocialCardsItem,
@@ -2873,8 +2686,6 @@ declare module "@prismicio/client" {
       MenuTabDocumentDataSlicesSlice,
       MenuTabDocument,
       PageDocumentData,
-      PageDocumentDataSlicesSlice,
-      PageDocumentDataSocialCardsItem,
       PageDocument,
       AllDocumentTypes,
       CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary,
@@ -2897,10 +2708,6 @@ declare module "@prismicio/client" {
       ExternalVideoSliceSliceDefaultSlice,
       ExternalVideoSliceSliceVariation,
       ExternalVideoSliceSlice,
-      FooBarSliceDefaultPrimary,
-      FooBarSliceDefault,
-      FooBarSliceVariation,
-      FooBarSlice,
       HeroBannerSliceDefaultSlicePrimary,
       HeroBannerSliceDefaultSlice,
       HeroBannerSliceWithoutCtaPrimary,

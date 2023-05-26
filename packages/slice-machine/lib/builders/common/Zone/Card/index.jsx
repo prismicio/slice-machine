@@ -14,7 +14,6 @@ import Li from "components/Li";
 
 const FieldZone = ({
   fields,
-  customTypeFormat,
   title,
   tabId,
   enterEditMode,
@@ -69,8 +68,6 @@ const FieldZone = ({
                   item,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   index,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  customTypeFormat,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
                   tabId,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

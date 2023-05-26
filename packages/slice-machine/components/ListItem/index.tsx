@@ -21,7 +21,6 @@ type Item<F extends TabField> = { key: string; value: F };
 interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   item: Item<F>;
   index: number;
-  customTypeFormat?: "page" | "custom";
   deleteItem: (key: string) => void;
   enterEditMode: (
     itemInfo: [string, F],
@@ -41,7 +40,6 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
 function ListItem<F extends TabField, S extends AnyObjectSchema>({
   item,
   index,
-  customTypeFormat,
   deleteItem,
   enterEditMode,
   modelFieldName,
@@ -133,9 +131,8 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                         />
                       )}
                       {
-                        // Prevent deletion of UID for any Custom Type expect the legacy one
-                        // that don't have a format property
-                        (!customTypeFormat || type !== "UID") && (
+                        // Prevent deletion of UID for any Custom Type
+                        type !== "UID" && (
                           <Menu>
                             <MenuButton
                               className="sliceMenuButton"

@@ -62,7 +62,7 @@ export const CustomTypeTable: React.FC<{
           {customTypes.map((customType) => (
             <Link
               passHref
-              href={`/cts/${customType.local.id}`}
+              href={`/${customType.local.format}-types/${customType.local.id}`}
               key={customType.local.id}
             >
               <tr tabIndex={0}>

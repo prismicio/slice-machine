@@ -1,6 +1,6 @@
 {
-  "id": "page",
-  "label": "pagetypenow",
+  "id": "custom",
+  "label": "customtypecustomnow",
   "format": "custom",
   "repeatable": true,
   "status": true,

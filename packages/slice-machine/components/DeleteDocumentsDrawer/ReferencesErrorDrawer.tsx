@@ -42,8 +42,9 @@ export const ReferencesErrorDrawer: React.FunctionComponent<{
 
       return (
         <CustomTypesReferencesCard
-          name={customType.local.label ?? customType.local.id}
+          format={customType.local.format}
           id={customType.local.id}
+          name={customType.local.label ?? customType.local.id}
         />
       );
     }

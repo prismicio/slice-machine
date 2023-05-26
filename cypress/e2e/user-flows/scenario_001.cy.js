@@ -26,7 +26,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     // Links to CTs available locally
     menu.navigateTo("Changes");
     cy.contains(customTypeId).click();
-    cy.url().should("include", `/cts/${customTypeId}`);
+    cy.url().should("include", `/custom-types/${customTypeId}`);
 
     menu.navigateTo("Changes");
     changesPage.pushChanges().isUpToDate();

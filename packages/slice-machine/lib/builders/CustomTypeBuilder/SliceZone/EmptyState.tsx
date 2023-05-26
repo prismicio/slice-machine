@@ -1,8 +1,14 @@
 import { Text, Flex, Button } from "theme-ui";
 
+import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+
 const EmptyState: React.FC<{
+  format: CustomTypeFormat;
   onAddNewSlice: () => void;
-}> = ({ onAddNewSlice }) => {
+}> = ({ format, onAddNewSlice }) => {
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+
   return (
     <Flex
       sx={{
@@ -21,7 +27,9 @@ const EmptyState: React.FC<{
         <Text variant={"small"} sx={{ mb: 2 }}>
           Add your Slices
         </Text>
-        <Text sx={{ mb: "24px" }}>Add Slices to your Custom Type</Text>
+        <Text sx={{ mb: "24px" }}>
+          Add Slices to your {customTypesConfig.name}
+        </Text>
         <Button
           data-cy="update-slices"
           variant="buttons.darkSmall"

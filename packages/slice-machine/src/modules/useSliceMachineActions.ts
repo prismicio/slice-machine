@@ -73,6 +73,7 @@ import type {
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -148,22 +149,32 @@ const useSliceMachineActions = () => {
     id: string,
     label: string,
     repeatable: boolean,
-    format?: "page" | "custom" | null
+    format: CustomTypeFormat
   ) =>
     dispatch(
       createCustomTypeCreator.request({ id, label, repeatable, format })
     );
-  const renameCustomType = (customTypeId: string, newCustomTypeName: string) =>
+  const renameCustomType = (
+    customTypeId: string,
+    format: CustomTypeFormat,
+    newCustomTypeName: string
+  ) =>
     dispatch(
       renameCustomTypeCreator.request({
         customTypeId,
+        format,
         newCustomTypeName,
       })
     );
-  const deleteCustomType = (customTypeId: string, customTypeName: string) =>
+  const deleteCustomType = (
+    customTypeId: string,
+    format: CustomTypeFormat,
+    customTypeName: string
+  ) =>
     dispatch(
       deleteCustomTypeCreator.request({
         customTypeId,
+        format,
         customTypeName,
       })
     );

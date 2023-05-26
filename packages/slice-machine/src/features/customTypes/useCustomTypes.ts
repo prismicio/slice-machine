@@ -18,6 +18,7 @@ type UseCustomTypesReturnType = {
 export function useCustomTypes(
   format: CustomTypeFormat
 ): UseCustomTypesReturnType {
+  console.log("!!!! NEW FETCH !!!!", format);
   const updateCustomTypes = useCallback(
     (data: CustomType[]) => updateData(getCustomTypes, [format], data),
     [format]
@@ -38,6 +39,8 @@ async function getCustomTypes(format: CustomTypeFormat): Promise<CustomType[]> {
     throw errors;
   }
 
+  console.log({ models });
+
   return models.map(({ model }) => model);
 }
 
@@ -47,25 +50,34 @@ async function getCustomTypes(format: CustomTypeFormat): Promise<CustomType[]> {
  */
 export function useCustomTypesAutoRevalidation(
   customTypes: CustomType[],
+  format: CustomTypeFormat,
   updateCustomTypes: (data: CustomType[]) => void
 ): void {
   const { storeCustomTypes } = useSelector((store: SliceMachineStoreType) => ({
     storeCustomTypes: selectAllCustomTypes(store).filter(hasLocal),
   }));
+  console.log({ storeCustomTypes });
 
   useEffect(() => {
+    const storeCustomTypesFiltered = storeCustomTypes.filter(
+      ({ local }) => local.format === format
+    );
+
     if (
-      storeCustomTypes.length !== customTypes.length ||
-      storeCustomTypes.some(
+      storeCustomTypesFiltered.length !== customTypes.length ||
+      storeCustomTypesFiltered.some(
         (ct) =>
           ct.local.label !==
           customTypes.find((ct2: CustomType) => ct2.id === ct.local.id)?.label
       )
     ) {
-      const newCustomTypes: CustomType[] = storeCustomTypes.map(({ local }) =>
-        CustomTypes.fromSM(local)
+      const newCustomTypes: CustomType[] = storeCustomTypesFiltered.map(
+        ({ local }) => CustomTypes.fromSM(local)
       );
+
+      console.log({ format, newCustomTypes, storeCustomTypesFiltered });
+
       updateCustomTypes(newCustomTypes);
     }
-  }, [storeCustomTypes, customTypes, updateCustomTypes]);
+  }, [format, updateCustomTypes, customTypes, storeCustomTypes]);
 }

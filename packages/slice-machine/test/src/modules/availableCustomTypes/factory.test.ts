@@ -67,11 +67,13 @@ describe("[Custom types factory]", () => {
           },
         ],
       };
-      expect(createCustomType("id", "lama", true)).toEqual(expectedCustomType);
+      expect(createCustomType("id", "lama", true, "custom")).toEqual(
+        expectedCustomType
+      );
     });
 
     it("should create a custom type with repeatable false", () => {
-      const result = createCustomType("id", "lama", false);
+      const result = createCustomType("id", "lama", false, "custom");
       expect(result.id).toBe("id");
       expect(result.label).toBe("lama");
       expect(result.tabs).not.toHaveLength(0);

@@ -12,8 +12,8 @@ import { Breadcrumb } from "@src/components/Breadcrumb/Breadcrumb";
 import { CustomTypesTable } from "@src/features/customTypes/CustomTypesTable";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
-const PageTypesPage: FC = () => {
-  const format = "page";
+const CustomTypesPage: FC = () => {
+  const format = "custom";
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const { openCreateCustomTypeModal } = useSliceMachineActions();
   const { isCreatingCustomType } = useSelector(
@@ -87,4 +87,4 @@ const PageTypesPage: FC = () => {
   );
 };
 
-export default PageTypesPage;
+export default CustomTypesPage;

@@ -40,9 +40,13 @@ import { type CustomTypeFormat } from "@slicemachine/manager";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
+  isCreatingCustomType: boolean;
 };
 
-export const CustomTypesTable: FC<CustomTypesTableProps> = ({ format }) => {
+export const CustomTypesTable: FC<CustomTypesTableProps> = ({
+  format,
+  isCreatingCustomType,
+}) => {
   const [selectedCustomType, setSelectedCustomType] = useState<CustomType>();
   const {
     openCreateCustomTypeModal,
@@ -56,24 +60,26 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({ format }) => {
       return customType1.id.localeCompare(customType2.id);
     }
   );
-  const customTypesPageConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
 
-  useCustomTypesAutoRevalidation(customTypes, updateCustomTypes);
+  useCustomTypesAutoRevalidation(customTypes, format, updateCustomTypes);
 
   if (sortedCustomTypes.length === 0) {
     return (
       <BlankSlate style={{ marginTop: tokens.size[72] }}>
         <BlankSlateImage>
-          <Image src={customTypesPageConfig.blankSlateImage} sizing="contain" />
+          <Image src={customTypesConfig.blankSlateImage} sizing="contain" />
         </BlankSlateImage>
-        <BlankSlateTitle size="big">
-          {customTypesPageConfig.title}
-        </BlankSlateTitle>
+        <BlankSlateTitle size="big">{customTypesConfig.title}</BlankSlateTitle>
         <BlankSlateDescription>
-          {customTypesPageConfig.blankSlateDescription}
+          {customTypesConfig.blankSlateDescription}
         </BlankSlateDescription>
         <BlankSlateActions>
-          <Button size="medium" onClick={openCreateCustomTypeModal}>
+          <Button
+            size="medium"
+            onClick={openCreateCustomTypeModal}
+            loading={isCreatingCustomType}
+          >
             Create
           </Button>
         </BlankSlateActions>
@@ -97,13 +103,13 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({ format }) => {
         </TableHead>
         <TableBody>
           {sortedCustomTypes.map((customType: CustomType) => {
-            const { id, label, repeatable } = customType;
+            const { repeatable, label, id } = customType;
 
             return (
               <TableRow
                 key={id}
                 onClick={() => {
-                  void router.push(`/cts/${id}`);
+                  void router.push(`/${format}-types/${id}`);
                 }}
               >
                 <TableCell>
@@ -147,8 +153,14 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({ format }) => {
 
       {selectedCustomType && (
         <>
-          <RenameCustomTypeModal customType={selectedCustomType} />
-          <DeleteCustomTypeModal customType={selectedCustomType} />
+          <RenameCustomTypeModal
+            customType={selectedCustomType}
+            format={format}
+          />
+          <DeleteCustomTypeModal
+            customType={selectedCustomType}
+            format={format}
+          />
         </>
       )}
     </>

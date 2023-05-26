@@ -25,6 +25,7 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { deleteSliceCreator } from "@src/modules/slices";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -214,8 +215,14 @@ describe("[Available Custom types module]", () => {
 
   describe("[createCustomTypeSaga]", () => {
     it("should call the api and dispatch the good actions on success", () => {
-      const actionPayload = { id: "id", label: "label", repeatable: true };
+      const actionPayload = {
+        format: "custom" as CustomTypeFormat,
+        id: "id",
+        label: "label",
+        repeatable: true,
+      };
       const customTypeCreated = createCustomType(
+        actionPayload.format,
         actionPayload.id,
         actionPayload.label,
         actionPayload.repeatable
@@ -232,7 +239,7 @@ describe("[Available Custom types module]", () => {
           createCustomTypeCreator.success({ newCustomType: customTypeCreated })
         );
       saga.next().put(modalCloseCreator());
-      saga.next().put(push("/cts/id"));
+      saga.next().put(push("/custom-types/id"));
       saga.next().put(
         openToasterCreator({
           content: "Custom type saved",

@@ -1,5 +1,6 @@
 import { CustomTypeSM, TabSM } from "@lib/models/common/CustomType";
 import { SlicesSM } from "@lib/models/common/Slices";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
 
 const DEFAULT_SEO_TAB: TabSM = {
   key: "SEO & Metadata",
@@ -85,7 +86,7 @@ export const createCustomType = (
   id: string,
   label: string,
   repeatable: boolean,
-  format?: "page" | "custom" | null // pass format here
+  format: CustomTypeFormat
 ): CustomTypeSM => {
   const mainTab = makeMainTab(repeatable, format);
 
@@ -98,7 +99,7 @@ export const createCustomType = (
   return {
     id,
     label,
-    format: "custom",
+    format,
     repeatable,
     tabs,
     status: true,

@@ -78,15 +78,15 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
       explanations={
         <>
           <Text sx={{ fontWeight: "bold", mb: 1, lineHeight: "24px" }}>
-            Your Custom Type{modalData.details.customTypes.length > 1 && "s"}{" "}
-            cannot be deleted.
+            Your Page/Custom Type
+            {modalData.details.customTypes.length > 1 && "s"} cannot be deleted.
           </Text>
           <Text sx={{ mb: 24 }}>
             {modalData.details.customTypes.length > 1
-              ? "These Custom Types have"
-              : "This Custom Type has"}{" "}
+              ? "These Page/Custom Types have"
+              : "This Page/Custom Type has"}{" "}
             too many associated Documents. Archive and delete these Documents
-            manually and then try deleting the Custom Types again.
+            manually and then try deleting the Page/Custom Types again.
           </Text>
           {associatedDocumentsCards}
         </>

@@ -1,13 +1,13 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 import CustomTypeBuilder from "../../lib/builders/CustomTypeBuilder";
-import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { selectCustomTypeById } from "../../src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useEffect } from "react";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 
 type CustomTypeBuilderWithProviderProps = {
@@ -33,7 +33,7 @@ const CustomTypeBuilderWithRouter = () => {
     (store: SliceMachineStoreType) => ({
       selectedCustomType: selectCustomTypeById(
         store,
-        router.query.ct as string
+        router.query.customType as string
       ),
     })
   );

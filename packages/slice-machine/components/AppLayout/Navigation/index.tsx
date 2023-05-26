@@ -4,10 +4,13 @@ import useWindowSize from "src/hooks/useWindowSize";
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
-import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
 import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
 import { useNetwork } from "@src/hooks/useNetwork";
 import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
+import { DatabaseIcon } from "@src/components/Icons/DatabaseIcon";
+import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
+import { RadarIcon } from "@src/components/Icons/RadarIcon";
+import { PageStackIcon } from "@src/components/Icons/PageStackIcon";
 
 export interface LinkProps {
   title: string;
@@ -24,12 +27,20 @@ const getNavigationLinks = (
   numberOfChanges: number
 ): LinkProps[] => [
   {
-    title: "Custom Types",
+    title: "Page Types",
     href: "/",
     match(pathname: string) {
-      return pathname === "/" || pathname.indexOf("/cts") === 0;
+      return pathname === "/" || pathname.indexOf("/page-types") === 0;
     },
-    Icon: MdSpaceDashboard,
+    Icon: () => <PageStackIcon />,
+  },
+  {
+    title: "Custom Types",
+    href: "/custom-types",
+    match(pathname: string) {
+      return pathname.indexOf("/custom-types") === 0;
+    },
+    Icon: () => <DatabaseIcon />,
   },
   {
     title: "Slices",
@@ -37,7 +48,7 @@ const getNavigationLinks = (
     match(pathname: string) {
       return pathname.indexOf("/slices") === 0;
     },
-    Icon: MdHorizontalSplit,
+    Icon: () => <SliceListIcon />,
   },
   {
     title: "Changes",
@@ -45,7 +56,7 @@ const getNavigationLinks = (
     match(pathname: string) {
       return pathname.indexOf("/changes") === 0;
     },
-    Icon: MdLoop,
+    Icon: () => <RadarIcon />,
     RightElement: displayNumberOfChanges ? (
       <ChangesIndicator
         numberOfChanges={numberOfChanges}
