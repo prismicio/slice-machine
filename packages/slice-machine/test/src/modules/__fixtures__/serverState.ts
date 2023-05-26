@@ -27,6 +27,7 @@ export const dummyServerState: Pick<
     {
       id: "about",
       label: "My Cool About Page",
+      format: "custom",
       repeatable: false,
       status: true,
       tabs: [
