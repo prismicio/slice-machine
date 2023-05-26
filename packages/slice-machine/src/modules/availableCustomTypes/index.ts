@@ -247,7 +247,6 @@ export function* createCustomTypeSaga({
 
   try {
     const newCustomType = createCustomType(
-      payload.format,
       payload.id,
       payload.label,
       payload.repeatable,
