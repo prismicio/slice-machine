@@ -34,7 +34,6 @@
   "dependencies": {
     "@extractus/oembed-extractor": "^3.1.8",
     "@prismicio/editor-fields": "0.4.0",
-    "@prismicio/editor-support": "0.4.0",
     "@prismicio/editor-ui": "0.4.0",
     "@prismicio/mocks": "2.0.0-alpha.2",
     "@prismicio/types-internal": "2.0.0-beta.1",

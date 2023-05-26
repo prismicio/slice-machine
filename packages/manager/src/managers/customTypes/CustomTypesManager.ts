@@ -99,7 +99,7 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async readAllCustomTypes(
-		args: CustomTypesManagerReadAllCustomTypesArgs,
+		args?: CustomTypesManagerReadAllCustomTypesArgs,
 	): Promise<SliceMachineManagerReadAllCustomTypeReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
@@ -116,7 +116,7 @@ export class CustomTypesManager extends BaseManager {
 				const { model, errors } = await this.readCustomType({ id });
 				res.errors = [...res.errors, ...errors];
 
-				if (model && (!args.format || args.format === model.format)) {
+				if (model && (!args?.format || args.format === model.format)) {
 					res.models.push({ model });
 				}
 			}

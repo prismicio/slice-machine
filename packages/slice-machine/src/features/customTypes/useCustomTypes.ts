@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { managerClient } from "@src/managerClient";
-import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
+import { updateData, useRequest } from "./Suspense";
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
