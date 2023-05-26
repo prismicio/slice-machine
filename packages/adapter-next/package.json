@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-next",
-	"version": "0.1.3-dev-page-types.5",
+	"version": "0.1.3-dev-page-types.6",
 	"description": "Slice Machine adapter for Next.js.",
 	"keywords": [
 		"typescript",
@@ -59,7 +59,7 @@
 	"dependencies": {
 		"@prismicio/slice-simulator-core": "^0.2.7",
 		"@prismicio/types-internal": "2.0.0-beta.1",
-		"@slicemachine/plugin-kit": "0.2.1-dev-page-types.5",
+		"@slicemachine/plugin-kit": "0.2.1-dev-page-types.6",
 		"common-tags": "^1.8.2",
 		"fs-extra": "^11.1.0",
 		"node-fetch": "^3.3.1",
