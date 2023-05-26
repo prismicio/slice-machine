@@ -16,18 +16,30 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": "./dist/index.cjs",
-			"import": "./dist/index.js"
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
 		},
 		"./cli": {
-			"require": "./dist/cli.cjs",
-			"import": "./dist/cli.js"
+			"require": {
+				"types": "./dist/cli/index.d.ts",
+				"default": "./dist/cli.cjs"
+			},
+			"import": {
+				"types": "./dist/cli/index.d.ts",
+				"default": "./dist/cli.js"
+			}
 		},
 		"./package.json": "./package.json"
 	},
-	"main": "dist/index.cjs",
-	"module": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"bin": {
 		"slicemachine-init": "./bin/slicemachine-init.js"
 	},

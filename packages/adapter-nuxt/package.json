@@ -16,25 +16,37 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": "./dist/index.cjs",
-			"import": "./dist/index.js"
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
 		},
 		"./simulator": {
-			"require": "./dist/simulator.cjs",
-			"import": "./dist/simulator.js"
+			"require": {
+				"types": "./dist/simulator/index.d.ts",
+				"default": "./dist/simulator.cjs"
+			},
+			"import": {
+				"types": "./dist/simulator/index.d.ts",
+				"default": "./dist/simulator.js"
+			}
 		},
 		"./package.json": "./package.json"
 	},
-	"main": "dist/index.cjs",
-	"module": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"typesVersions": {
 		"*": {
 			"*": [
-				"dist/index.d.ts"
+				"./dist/index.d.ts"
 			],
 			"simulator": [
-				"dist/simulator/index.d.ts"
+				"./dist/simulator/index.d.ts"
 			]
 		}
 	},

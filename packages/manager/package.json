@@ -13,32 +13,50 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": "./dist/index.cjs",
-			"import": "./dist/index.js"
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
 		},
 		"./client": {
-			"require": "./dist/client.cjs",
-			"import": "./dist/client.js"
+			"require": {
+				"types": "./dist/client/index.d.ts",
+				"default": "./dist/client.cjs"
+			},
+			"import": {
+				"types": "./dist/client/index.d.ts",
+				"default": "./dist/client.js"
+			}
 		},
 		"./test": {
-			"require": "./dist/test.cjs",
-			"import": "./dist/test.js"
+			"require": {
+				"types": "./dist/test/index.d.ts",
+				"default": "./dist/test.cjs"
+			},
+			"import": {
+				"types": "./dist/test/index.d.ts",
+				"default": "./dist/test.js"
+			}
 		},
 		"./package.json": "./package.json"
 	},
-	"main": "dist/index.cjs",
-	"module": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"typesVersions": {
 		"*": {
 			"*": [
-				"dist/index.d.ts"
+				"./dist/index.d.ts"
 			],
 			"client": [
-				"dist/client/index.d.ts"
+				"./dist/client/index.d.ts"
 			],
 			"test": [
-				"dist/test/index.d.ts"
+				"./dist/test/index.d.ts"
 			]
 		}
 	},
