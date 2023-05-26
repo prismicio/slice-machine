@@ -35,7 +35,6 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   format,
 }) => {
   const { createCustomType, closeModals } = useSliceMachineActions();
-  const format = "page";
 
   const {
     customTypeIds,

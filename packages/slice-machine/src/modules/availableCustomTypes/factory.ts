@@ -89,7 +89,11 @@ export const createCustomType = (
 ): CustomTypeSM => {
   const mainTab = makeMainTab(repeatable, format);
 
-  const tabs: TabSM[] = [mainTab, DEFAULT_SEO_TAB];
+  const tabs: TabSM[] = [mainTab];
+
+  if (format === "page") {
+    tabs.push(DEFAULT_SEO_TAB);
+  }
 
   return {
     id,
