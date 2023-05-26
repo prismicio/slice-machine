@@ -107,7 +107,8 @@ it("removes deleted slice from custom types referencing it", async (ctx) => {
 	expect(deleteSliceHook).toHaveBeenCalledOnce();
 	expect(updateCustomTypeHook).toHaveBeenCalledOnce();
 	expectHookHandlerToHaveBeenCalledWithData(updateCustomTypeHook, {
-		model: mockCustomTypeWithoutSlice,
+		// TODO: update prismicio/mock libray
+		model: { ...mockCustomTypeWithoutSlice, format: "custom" },
 	});
 	expect(res).toStrictEqual({
 		errors: [],

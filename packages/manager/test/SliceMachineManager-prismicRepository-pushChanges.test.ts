@@ -90,7 +90,8 @@ it("pushes changes using the bulk delete API", async (ctx) => {
 			{
 				id: customTypeModel.id,
 				type: ChangeTypes.CUSTOM_TYPE_UPDATE,
-				payload: customTypeModel,
+				// TODO: update prismicio/mock librarys
+				payload: { ...customTypeModel, format: "custom" },
 			},
 		],
 		confirmDeleteDocuments: false,
