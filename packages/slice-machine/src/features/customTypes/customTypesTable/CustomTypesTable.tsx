@@ -31,12 +31,12 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
 import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { CUSTOM_TYPES_CONFIG } from "./customTypesConfig";
 import {
   useCustomTypes,
   useCustomTypesAutoRevalidation,
 } from "./useCustomTypes";
 import { type CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;

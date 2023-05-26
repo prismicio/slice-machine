@@ -16,15 +16,17 @@ import { type SliceMachineStoreType } from "@src/redux/type";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
 import { Breadcrumb } from "@src/components/Breadcrumb/Breadcrumb";
-import { CustomTypesTable } from "@src/features/customTypes/CustomTypesTable";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import type { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CustomTypesTable } from "./CustomTypesTable";
 
-type CustomTypesPageProps = {
+type CustomTypesTablePageProps = {
   format: CustomTypeFormat;
 };
 
-export const CustomTypesPage: FC<CustomTypesPageProps> = ({ format }) => {
+export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
+  format,
+}) => {
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const { openCreateCustomTypeModal } = useSliceMachineActions();
   const { isCreatingCustomType } = useSelector(

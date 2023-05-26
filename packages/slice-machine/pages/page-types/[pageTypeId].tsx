@@ -1,7 +1,7 @@
-import { CustomTypePage as CustomTypePageTemplate } from "@src/features/customType/CustomTypePage";
+import { CustomTypesBuilderPage as CustomTypesBuilderPageTemplate } from "@src/features/customTypes/customTypesBuilder/CustomTypesBuilderPage";
 
-const PageTypePage = () => {
-  return <CustomTypePageTemplate />;
+const PageTypesBuilderPage = () => {
+  return <CustomTypesBuilderPageTemplate format="page" />;
 };
 
-export default PageTypePage;
+export default PageTypesBuilderPage;

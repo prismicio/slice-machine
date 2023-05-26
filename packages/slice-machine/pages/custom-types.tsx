@@ -1,9 +1,9 @@
 import { type FC } from "react";
 
-import { CustomTypesPage as CustomTypesPageTemplate } from "@src/features/customTypes/CustomTypesPage";
+import { CustomTypesTablePage as CustomTypesTablePageTemplate } from "@src/features/customTypes/customTypesTable/CustomTypesTablePage";
 
-const CustomTypesPage: FC = () => {
-  return <CustomTypesPageTemplate format="custom" />;
+const CustomTypesTablePage: FC = () => {
+  return <CustomTypesTablePageTemplate format="custom" />;
 };
 
-export default CustomTypesPage;
+export default CustomTypesTablePage;

@@ -11,6 +11,7 @@ import { DatabaseIcon } from "@src/components/Icons/DatabaseIcon";
 import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
 import { RadarIcon } from "@src/components/Icons/RadarIcon";
 import { PageStackIcon } from "@src/components/Icons/PageStackIcon";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 export interface LinkProps {
   title: string;
@@ -30,13 +31,16 @@ const getNavigationLinks = (
     title: "Page Types",
     href: "/",
     match(pathname: string) {
-      return pathname === "/" || pathname.indexOf("/page-types") === 0;
+      return (
+        pathname === "/" ||
+        pathname.indexOf(`/${CUSTOM_TYPES_CONFIG["page"].urlPathSegment}`) === 0
+      );
     },
     Icon: () => <PageStackIcon />,
   },
   {
     title: "Custom Types",
-    href: "/custom-types",
+    href: `/${CUSTOM_TYPES_CONFIG["custom"].urlPathSegment}`,
     match(pathname: string) {
       return pathname.indexOf("/custom-types") === 0;
     },
