@@ -37,6 +37,8 @@ import {
   hasLocal,
   hasLocalAndRemote,
 } from "@lib/models/common/ModelData";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -48,7 +50,7 @@ export const createCustomTypeCreator = createAsyncAction(
     id: string;
     label: string;
     repeatable: boolean;
-    format?: "page" | "custom" | null;
+    format: CustomTypeFormat;
   },
   {
     newCustomType: CustomTypeSM;
@@ -62,6 +64,7 @@ export const renameCustomTypeCreator = createAsyncAction(
 )<
   {
     customTypeId: string;
+    format: CustomTypeFormat;
     newCustomTypeName: string;
   },
   {
@@ -77,6 +80,7 @@ export const deleteCustomTypeCreator = createAsyncAction(
   {
     customTypeId: string;
     customTypeName: string;
+    format: CustomTypeFormat;
   },
   {
     customTypeId: string;
@@ -239,6 +243,8 @@ export const availableCustomTypesReducer: Reducer<
 export function* createCustomTypeSaga({
   payload,
 }: ReturnType<typeof createCustomTypeCreator.request>) {
+  const customTypeConfig = CUSTOM_TYPES_CONFIG[payload.format];
+
   try {
     const newCustomType = createCustomType(
       payload.id,
@@ -249,17 +255,17 @@ export function* createCustomTypeSaga({
     yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
     yield put(modalCloseCreator());
-    yield put(push(`/cts/${payload.id}`));
+    yield put(push(`/${customTypeConfig.urlPathSegment}/${payload.id}`));
     yield put(
       openToasterCreator({
-        content: "Custom type saved",
+        content: `${customTypeConfig.name} saved`,
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        content: "Internal Error: Custom type not saved",
+        content: `Internal Error: ${customTypeConfig.name} not saved`,
         type: ToasterType.ERROR,
       })
     );
@@ -269,18 +275,22 @@ export function* createCustomTypeSaga({
 export function* renameCustomTypeSaga({
   payload,
 }: ReturnType<typeof renameCustomTypeCreator.request>) {
+  const customTypeConfig = CUSTOM_TYPES_CONFIG[payload.format];
+
   try {
     const customType = (yield select(
       selectCustomTypeById,
       payload.customTypeId
     )) as ReturnType<typeof selectCustomTypeById>;
     if (!customType) {
-      throw new Error(`Custom Type "${payload.newCustomTypeName} not found.`);
+      throw new Error(
+        `${customTypeConfig.name} "${payload.newCustomTypeName} not found.`
+      );
     }
 
     if (!hasLocal(customType)) {
       throw new Error(
-        `Can't rename a deleted CustomType (${payload.newCustomTypeName})`
+        `Can't rename a deleted ${customTypeConfig.name} (${payload.newCustomTypeName})`
       );
     }
 
@@ -294,14 +304,14 @@ export function* renameCustomTypeSaga({
     yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
-        content: "Custom type updated",
+        content: `${customTypeConfig.name} updated`,
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        content: "Internal Error: Custom type not saved",
+        content: `Internal Error: ${customTypeConfig.name} not saved`,
         type: ToasterType.ERROR,
       })
     );
@@ -311,6 +321,8 @@ export function* renameCustomTypeSaga({
 export function* deleteCustomTypeSaga({
   payload,
 }: ReturnType<typeof deleteCustomTypeCreator.request>) {
+  const customTypeConfig = CUSTOM_TYPES_CONFIG[payload.format];
+
   try {
     const result = (yield call(
       deleteCustomType,
@@ -322,15 +334,14 @@ export function* deleteCustomTypeSaga({
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
       openToasterCreator({
-        content: `Successfully deleted Custom Type “${payload.customTypeName}”`,
+        content: `Successfully deleted ${customTypeConfig.name} “${payload.customTypeName}”`,
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        content:
-          "An unexpected error happened while deleting your custom type.",
+        content: `An unexpected error happened while deleting your ${customTypeConfig.name}.`,
         type: ToasterType.ERROR,
       })
     );

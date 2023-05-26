@@ -23,7 +23,10 @@ export function createCustomType(id, name) {
   createCustomTypeModal.idInput.should("have.value", id);
   createCustomTypeModal.submit();
 
-  cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
+  cy.location("pathname", { timeout: 15000 }).should(
+    "eq",
+    `/custom-types/${id}`
+  );
   cy.readFile(TYPES_FILE).should("contains", name);
   cy.readFile(CUSTOM_TYPE_MODEL(id));
 

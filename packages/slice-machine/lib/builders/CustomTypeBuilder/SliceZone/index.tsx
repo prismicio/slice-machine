@@ -18,6 +18,7 @@ import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -73,20 +74,22 @@ const mapAvailableAndSharedSlices = (
 };
 
 interface SliceZoneProps {
-  tabId: string;
-  sliceZone?: SlicesSM | null | undefined;
+  format: CustomTypeFormat;
+  onCreateSliceZone: () => void;
+  onRemoveSharedSlice: (sliceId: string) => void;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onSelectSharedSlices: Function;
-  onRemoveSharedSlice: (sliceId: string) => void;
-  onCreateSliceZone: () => void;
+  sliceZone?: SlicesSM | null | undefined;
+  tabId: string;
 }
 
 const SliceZone: React.FC<SliceZoneProps> = ({
-  tabId,
-  sliceZone,
-  onSelectSharedSlices,
-  onRemoveSharedSlice,
+  format,
   onCreateSliceZone,
+  onRemoveSharedSlice,
+  onSelectSharedSlices,
+  sliceZone,
+  tabId,
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
   const { libraries, slices } = useSelector((store: SliceMachineStoreType) => ({
@@ -152,13 +155,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         }
       />
       {!slicesInSliceZone.length ? (
-        <EmptyState onAddNewSlice={onAddNewSlice} />
+        <EmptyState format={format} onAddNewSlice={onAddNewSlice} />
       ) : (
         <SlicesList
           slices={slicesInSliceZone}
           modelsStatuses={modelsStatuses}
           authStatus={authStatus}
           isOnline={isOnline}
+          format={format}
         />
       )}
       <UpdateSliceZoneModal

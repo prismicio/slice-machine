@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { managerClient } from "@src/managerClient";
-import { updateData, useRequest } from "./Suspense";
+import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import type { CustomTypeFormat } from "@slicemachine/manager";
+import { managerClient } from "@src/managerClient";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import type { SliceMachineStoreType } from "@src/redux/type";
 import { hasLocal } from "@lib/models/common/ModelData";
@@ -47,6 +47,7 @@ async function getCustomTypes(format: CustomTypeFormat): Promise<CustomType[]> {
  */
 export function useCustomTypesAutoRevalidation(
   customTypes: CustomType[],
+  format: CustomTypeFormat,
   updateCustomTypes: (data: CustomType[]) => void
 ): void {
   const { storeCustomTypes } = useSelector((store: SliceMachineStoreType) => ({
@@ -54,18 +55,31 @@ export function useCustomTypesAutoRevalidation(
   }));
 
   useEffect(() => {
+    const storeCustomTypesFiltered = storeCustomTypes.filter(
+      ({ local }) => local.format === format
+    );
+
     if (
-      storeCustomTypes.length !== customTypes.length ||
-      storeCustomTypes.some(
-        (ct) =>
-          ct.local.label !==
-          customTypes.find((ct2: CustomType) => ct2.id === ct.local.id)?.label
-      )
+      storeCustomTypesFiltered.length !== customTypes.length ||
+      storeCustomTypesFiltered.some((ct) => {
+        // We check the `id`, `repeatable` and `label` properties as they are
+        // displayed in the Custom Types table.
+        const currentCustomType = customTypes.find(
+          (ct2: CustomType) => ct2.id === ct.local.id
+        );
+
+        return (
+          !currentCustomType ||
+          ct.local.repeatable !== currentCustomType.repeatable ||
+          ct.local.label !== currentCustomType.label
+        );
+      })
     ) {
-      const newCustomTypes: CustomType[] = storeCustomTypes.map(({ local }) =>
-        CustomTypes.fromSM(local)
+      const newCustomTypes: CustomType[] = storeCustomTypesFiltered.map(
+        ({ local }) => CustomTypes.fromSM(local)
       );
+
       updateCustomTypes(newCustomTypes);
     }
-  }, [storeCustomTypes, customTypes, updateCustomTypes]);
+  }, [format, updateCustomTypes, customTypes, storeCustomTypes]);
 }

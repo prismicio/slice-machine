@@ -49,8 +49,6 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
       poolOfFields: selectCurrentPoolOfFields(store),
     })
   );
-  // TODO: DT-1308 - Retrieve format from currentCustomType
-  const customTypeFormat = "custom";
 
   if (!currentCustomType || !poolOfFields) {
     return null;
@@ -136,7 +134,6 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     <>
       <Zone
         zoneType="customType"
-        customTypeFormat={customTypeFormat}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         title="Static Zone"
@@ -165,6 +162,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         // or Custom Types that have a Slice Zone defined (for backward compatibility)
         sliceZone && (
           <SliceZone
+            format={currentCustomType.format}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             tabId={tabId}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

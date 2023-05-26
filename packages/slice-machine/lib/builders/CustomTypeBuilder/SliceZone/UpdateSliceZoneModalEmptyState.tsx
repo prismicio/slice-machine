@@ -1,11 +1,11 @@
 import { Flex, Text, Button } from "theme-ui";
 import Link from "next/link";
 
-import { MdHorizontalSplit } from "react-icons/md";
+import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
 
 const UpdateSliceZoneModalEmptyState = () => (
   <Flex sx={{ flexDirection: "column", alignItems: "center" }}>
-    <MdHorizontalSplit size={40} />
+    <SliceListIcon />
     <Text variant={"small"} sx={{ mt: 2 }}>
       No Slices in your project
     </Text>

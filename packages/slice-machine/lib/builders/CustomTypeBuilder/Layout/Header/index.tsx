@@ -3,7 +3,6 @@ import { Text } from "theme-ui";
 import Header from "@components/Header";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { MdSpaceDashboard } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
@@ -14,6 +13,9 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { AiFillSave } from "react-icons/ai";
 import { Button } from "@components/Button";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { DatabaseIcon } from "@src/components/Icons/DatabaseIcon";
+import { PageStackIcon } from "@src/components/Icons/PageStackIcon";
 
 const CustomTypeHeader = () => {
   const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
@@ -29,14 +31,20 @@ const CustomTypeHeader = () => {
 
   if (!currentCustomType) return null;
 
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[currentCustomType?.format];
+
   return (
     <>
       <Header
         link={{
           Element: (
             <>
-              <MdSpaceDashboard />
-              <Text>Custom Types</Text>
+              {currentCustomType.format === "custom" ? (
+                <DatabaseIcon />
+              ) : (
+                <PageStackIcon />
+              )}
+              <Text>{customTypesConfig.title}</Text>
             </>
           ),
           href: "/",

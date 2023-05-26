@@ -69,6 +69,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -98,6 +99,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -133,6 +135,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -188,6 +191,7 @@ describe("[Available Custom types module]", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
@@ -214,11 +218,17 @@ describe("[Available Custom types module]", () => {
 
   describe("[createCustomTypeSaga]", () => {
     it("should call the api and dispatch the good actions on success", () => {
-      const actionPayload = { id: "id", label: "label", repeatable: true };
+      const actionPayload = {
+        format: "custom" as const, // CustomTypeFormat,
+        id: "id",
+        label: "label",
+        repeatable: true,
+      };
       const customTypeCreated = createCustomType(
         actionPayload.id,
         actionPayload.label,
-        actionPayload.repeatable
+        actionPayload.repeatable,
+        actionPayload.format
       );
       const saga = testSaga(
         createCustomTypeSaga,
@@ -232,21 +242,28 @@ describe("[Available Custom types module]", () => {
           createCustomTypeCreator.success({ newCustomType: customTypeCreated })
         );
       saga.next().put(modalCloseCreator());
-      saga.next().put(push("/cts/id"));
+      saga.next().put(push("/custom-types/id"));
       saga.next().put(
         openToasterCreator({
-          content: "Custom type saved",
+          content: "Custom Type saved",
           type: ToasterType.SUCCESS,
         })
       );
       saga.next().isDone();
     });
+
     it("should call the api and dispatch the good actions on failure", () => {
-      const actionPayload = { id: "id", label: "label", repeatable: true };
+      const actionPayload = {
+        id: "id",
+        label: "label",
+        repeatable: true,
+        format: "custom" as const,
+      };
       const customTypeCreated = createCustomType(
         actionPayload.id,
         actionPayload.label,
-        actionPayload.repeatable
+        actionPayload.repeatable,
+        actionPayload.format
       );
       const saga = testSaga(
         createCustomTypeSaga,
@@ -256,7 +273,7 @@ describe("[Available Custom types module]", () => {
       saga.next().call(saveCustomType, customTypeCreated);
       saga.throw(new Error()).put(
         openToasterCreator({
-          content: "Internal Error: Custom type not saved",
+          content: "Internal Error: Custom Type not saved",
           type: ToasterType.ERROR,
         })
       );
@@ -270,6 +287,7 @@ describe("[Available Custom types module]", () => {
       label: "label_1",
       repeatable: false,
       status: true,
+      format: "custom",
       tabs: [],
     };
     const customType2: CustomTypeSM = {
@@ -277,6 +295,7 @@ describe("[Available Custom types module]", () => {
       label: "label_2",
       repeatable: false,
       status: true,
+      format: "custom",
       tabs: [],
     };
     const updatedCustomType2: CustomTypeSM = {
@@ -284,6 +303,7 @@ describe("[Available Custom types module]", () => {
       label: "label NEW",
       repeatable: false,
       status: true,
+      format: "custom",
       tabs: [],
     };
 
@@ -307,6 +327,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         newCustomTypeName: "newName",
+        format: "custom" as const,
       };
       const saga = testSaga(
         renameCustomTypeSaga,
@@ -318,6 +339,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -339,7 +361,7 @@ describe("[Available Custom types module]", () => {
       saga.next().put(modalCloseCreator());
       saga.next().put(
         openToasterCreator({
-          content: "Custom type updated",
+          content: "Custom Type updated",
           type: ToasterType.SUCCESS,
         })
       );
@@ -349,6 +371,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         newCustomTypeName: "newName",
+        format: "custom" as const,
       };
       const saga = testSaga(
         renameCustomTypeSaga,
@@ -360,6 +383,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -379,7 +403,7 @@ describe("[Available Custom types module]", () => {
         .call(renameCustomType, renamedCustomType);
       saga.throw(new Error()).put(
         openToasterCreator({
-          content: "Internal Error: Custom type not saved",
+          content: "Internal Error: Custom Type not saved",
           type: ToasterType.ERROR,
         })
       );
@@ -392,6 +416,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         customTypeName: "name",
+        format: "custom" as const,
       };
       const saga = testSaga(
         deleteCustomTypeSaga,
@@ -416,6 +441,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         customTypeName: "name",
+        format: "custom" as const,
       };
       const saga = testSaga(
         deleteCustomTypeSaga,
@@ -426,7 +452,7 @@ describe("[Available Custom types module]", () => {
       saga.throw(new Error()).put(
         openToasterCreator({
           content:
-            "An unexpected error happened while deleting your custom type.",
+            "An unexpected error happened while deleting your Custom Type.",
           type: ToasterType.ERROR,
         })
       );

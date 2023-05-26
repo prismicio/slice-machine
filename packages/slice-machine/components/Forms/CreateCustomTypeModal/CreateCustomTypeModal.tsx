@@ -20,6 +20,7 @@ import { telemetry } from "@src/apiClient";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
 import type { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 interface FormValues {
   id: string;
@@ -50,7 +51,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
     ),
     isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   }));
-
+  const customTypeConfig = CUSTOM_TYPES_CONFIG[format];
   const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
 
   const createCustomTypeAndTrack = ({ id, label, repeatable }: FormValues) => {
@@ -129,7 +130,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
         }
 
         if (!errors.label && customTypeLabels.includes(label)) {
-          errors.label = "Custom Type name is already taken.";
+          errors.label = `${customTypeConfig.name} name is already taken.`;
         }
 
         if (!id || !id.length) {
@@ -152,7 +153,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
         return Object.keys(errors).length > 0 ? errors : undefined;
       }}
       content={{
-        title: "Create a new custom type",
+        title: `Create a new ${customTypeConfig.name}`,
       }}
     >
       {({ errors, setValues, setFieldValue, values, touched }) => (
@@ -160,17 +161,17 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           <SelectRepeatable />
           <InputBox
             name="label"
-            label="Custom Type Name"
+            label={`${customTypeConfig.name} Name`}
             dataCy="ct-name-input"
-            placeholder="A display name for the Custom type"
+            placeholder={`A display name for the ${customTypeConfig.name}`}
             error={touched.label ? errors.label : undefined}
             onChange={(e) => handleLabelChange(e, values, setValues)}
           />
           <InputBox
             name="id"
             dataCy="ct-id-input"
-            label="Custom Type ID"
-            placeholder="ID to query the Custom Type in the API (e.g. 'BlogPost')"
+            label={`${customTypeConfig.name} ID`}
+            placeholder={`ID to query the ${customTypeConfig.name} in the API (e.g. 'BlogPost')`}
             error={touched.id ? errors.id : undefined}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />

@@ -27,7 +27,8 @@ it("returns the adapter's `custom-type:read` return value", async (ctx) => {
 	const res = await manager.customTypes.readCustomType({ id: model.id });
 
 	expect(res).toStrictEqual({
-		model,
+		// TODO: update prismic/mock
+		model: { ...model, format: "custom" },
 		errors: [],
 	});
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
@@ -91,7 +92,8 @@ it("ignores plugins that implement `custom-type-library:read`", async (ctx) => {
 	const res = await manager.customTypes.readCustomType({ id: model.id });
 
 	expect(res).toStrictEqual({
-		model,
+		// TODO: update prismic/mocks
+		model: { ...model, format: "custom" },
 		errors: [],
 	});
 });

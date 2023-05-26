@@ -84,7 +84,7 @@ describe("I am an existing SM user (Next) and I want to associate a Slice to a C
   });
 
   it("Add the Slice to the Custom Type", () => {
-    cy.visit(`/cts/${customTypeId}`);
+    cy.visit(`/custom-types/${customTypeId}`);
 
     cy.get("[data-cy=update-slices]").click();
     // forcing this because the input itself is invisible and an svg is displayed

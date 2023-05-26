@@ -9,6 +9,7 @@ import {
   LocalOrRemoteCustomType,
   hasLocal,
 } from "@lib/models/common/ModelData";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 interface CustomTypeTableProps extends ModelStatusInformation {
   customTypes: LocalOrRemoteCustomType[];
@@ -70,7 +71,9 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
           hasLocal(customType) ? (
             <Link
               passHref
-              href={`/cts/${customType.local.id}`}
+              href={`/${
+                CUSTOM_TYPES_CONFIG[customType.local.format].urlPathSegment
+              }/${customType.local.id}`}
               key={customType.local.id}
             >
               <tr tabIndex={0}>

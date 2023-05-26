@@ -119,7 +119,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     <>
       <Zone
         zoneType="slice"
-        customTypeFormat={undefined}
         tabId={undefined}
         title="Non-Repeatable Zone"
         dataTip={dataTipText}
@@ -145,7 +144,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       <Box mt={4} />
       <Zone
         zoneType="slice"
-        customTypeFormat={undefined}
         tabId={undefined}
         isRepeatable
         title="Repeatable Zone"
