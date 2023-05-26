@@ -10,13 +10,10 @@ import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  LocalAndRemoteCustomType,
-  LocalOnlyCustomType,
-} from "@lib/models/common/ModelData";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 type DeleteCTModalProps = {
-  customType?: LocalOnlyCustomType | LocalAndRemoteCustomType;
+  customType?: CustomType;
 };
 
 export const DeleteCustomTypeModal: React.FunctionComponent<
@@ -111,16 +108,13 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 borderRadius: 6,
               }}
             />
-            {customType?.local && (
+            {customType && (
               <Button
                 label="Delete"
                 variant="danger"
                 isLoading={isDeletingCustomType}
                 onClick={() =>
-                  deleteCustomType(
-                    customType?.local.id,
-                    customType?.local.label ?? ""
-                  )
+                  deleteCustomType(customType.id, customType.label ?? "")
                 }
                 sx={{ minHeight: 39, minWidth: 78 }}
               />
@@ -134,7 +128,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <li>
               Delete the{" "}
               <Text sx={{ fontWeight: "bold" }}>
-                customtypes/{customType?.local.id}/
+                customtypes/{customType?.id}/
               </Text>{" "}
               directory.
             </li>

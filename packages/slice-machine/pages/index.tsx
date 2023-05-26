@@ -1,29 +1,23 @@
-import React from "react";
+import { type FC, Suspense } from "react";
+import { Icon, Button, ErrorBoundary, Box, vars } from "@prismicio/editor-ui";
 import Head from "next/head";
-import { Flex, Link as ThemeLink, Text } from "theme-ui";
-
-import Container from "@components/Container";
-import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
-import Header from "@components/Header";
-import EmptyState from "@components/EmptyState";
-import { Button } from "@components/Button";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { MdSpaceDashboard } from "react-icons/md";
-import { CustomTypeTable } from "@components/CustomTypeTable/ctPage";
-import { GoPlus } from "react-icons/go";
-import { VIDEO_WHAT_ARE_CUSTOM_TYPES } from "../lib/consts";
-import { hasLocal } from "@lib/models/common/ModelData";
 
-const CustomTypes: React.FunctionComponent = () => {
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { isLoading } from "@src/modules/loading";
+import { type SliceMachineStoreType } from "@src/redux/type";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
+import { Breadcrumb } from "@src/components/Breadcrumb/Breadcrumb";
+import { CustomTypesTable } from "@src/features/customTypes/CustomTypesTable";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+
+const CustomTypesPage: FC = () => {
+  const format = "custom";
+  const customTypesPageConfig = CUSTOM_TYPES_CONFIG[format];
   const { openCreateCustomTypeModal } = useSliceMachineActions();
-  const { customTypes, isCreatingCustomType } = useSelector(
+  const { isCreatingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
-      customTypes: selectAllCustomTypes(store).filter(hasLocal),
       isCreatingCustomType: isLoading(
         store,
         LoadingKeysEnum.CREATE_CUSTOM_TYPE
@@ -31,81 +25,63 @@ const CustomTypes: React.FunctionComponent = () => {
     })
   );
 
-  const sortedCustomTypes = customTypes.sort((customType1, customType2) => {
-    return customType1.local.id.localeCompare(customType2.local.id);
-  });
-
   return (
     <>
       <Head>
-        <title>Custom Types - Slice Machine</title>
+        <title>{customTypesPageConfig.title} - Slice Machine</title>
       </Head>
-      <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Header
-          link={{
-            Element: (
-              <>
-                <MdSpaceDashboard /> <Text ml={2}>Custom Types</Text>
-              </>
-            ),
-            href: "/",
+      <div
+        style={{
+          display: "flex",
+          width: vars.size["100%"],
+          flexDirection: "column",
+          margin: `${vars.size[16]} 0`,
+        }}
+      >
+        <ErrorBoundary
+          title="Request failed"
+          description={customTypesPageConfig.errorDescription}
+          renderError={(error) => {
+            return (
+              <Box
+                height={"100%"}
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {error}
+              </Box>
+            );
           }}
-          Actions={
-            sortedCustomTypes.length > 0
-              ? [
-                  <Button
-                    key="create-custom-type"
-                    label="Create a Custom Type"
-                    onClick={openCreateCustomTypeModal}
-                    isLoading={isCreatingCustomType}
-                    disabled={isCreatingCustomType}
-                    Icon={GoPlus}
-                    iconFill="#FFFFFF"
-                    data-cy="create-ct"
-                  />,
-                ]
-              : []
-          }
-        />
-        {sortedCustomTypes.length === 0 ? (
-          <Flex
-            sx={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <EmptyState
-              title={"What are Custom Types?"}
-              onCreateNew={openCreateCustomTypeModal}
-              isLoading={isCreatingCustomType}
-              buttonText={"Create one"}
-              videoPublicIdUrl={VIDEO_WHAT_ARE_CUSTOM_TYPES}
-              documentationComponent={
-                <>
-                  Custom Types are models for your documents. They are the place
-                  where you define and configure Fields and Slices for your
-                  content. They will be stored locally, and you will be able to
-                  push them to your repository.{" "}
-                  <ThemeLink
-                    target={"_blank"}
-                    href={"https://prismic.io/docs/core-concepts/custom-types "}
-                    sx={(theme) => ({ color: theme?.colors?.primary })}
-                  >
-                    Learn more
-                  </ThemeLink>
-                  .
-                </>
-              }
-            />
-          </Flex>
-        ) : (
-          <CustomTypeTable customTypes={sortedCustomTypes} />
-        )}
-        <CreateCustomTypeModal />
-      </Container>
+        >
+          <Suspense fallback="Loading...">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: vars.size[16],
+                height: vars.size[32],
+              }}
+            >
+              <Breadcrumb>{customTypesPageConfig.title}</Breadcrumb>
+              <Button
+                data-cy="create-ct"
+                endIcon={<Icon name="add" />}
+                loading={isCreatingCustomType}
+                onClick={openCreateCustomTypeModal}
+              >
+                Create
+              </Button>
+            </div>
+
+            <CustomTypesTable format={format} />
+            <CreateCustomTypeModal format={format} />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
     </>
   );
 };
 
-export default CustomTypes;
+export default CustomTypesPage;

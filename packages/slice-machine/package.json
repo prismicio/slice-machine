@@ -36,7 +36,7 @@
     "@prismicio/editor-fields": "0.4.0",
     "@prismicio/editor-ui": "0.4.0",
     "@prismicio/mocks": "2.0.0-alpha.2",
-    "@prismicio/types-internal": "2.0.0-alpha.9",
+    "@prismicio/types-internal": "2.0.0-beta.1",
     "@slicemachine/manager": "0.2.2-dev-page-types.4",
     "@vanilla-extract/css": "1.11.0",
     "clsx": "1.2.1",

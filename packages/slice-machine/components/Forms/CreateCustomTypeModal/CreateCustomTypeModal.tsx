@@ -1,11 +1,12 @@
 import { SetStateAction, useState } from "react";
 import { Box } from "theme-ui";
+import { FormikErrors } from "formik";
+import { useSelector } from "react-redux";
 
 import ModalFormCard from "@components/ModalFormCard";
 import { InputBox } from "../components/InputBox";
 import { SelectRepeatable } from "../components/SelectRepeatable";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
   selectAllCustomTypeIds,
@@ -15,11 +16,10 @@ import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { FormikErrors } from "formik";
-
 import { telemetry } from "@src/apiClient";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
+import type { CustomTypeFormat } from "@slicemachine/manager";
 
 interface FormValues {
   id: string;
@@ -27,7 +27,13 @@ interface FormValues {
   repeatable: boolean;
 }
 
-export const CreateCustomTypeModal: React.FC = () => {
+type CreateCustomTypeModalProps = {
+  format?: CustomTypeFormat;
+};
+
+export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
+  format: _,
+}) => {
   const { createCustomType, closeModals } = useSliceMachineActions();
 
   const {

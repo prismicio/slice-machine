@@ -19,7 +19,7 @@ export const SelectRepeatable: React.FC = () => {
             marginLeft: 2,
           }}
         >
-          Repeatable type
+          Reusable type
           <Box as="p" sx={{ fontSize: "12px", color: "textClear", mt: 1 }}>
             Best for multiple instances like blog posts, authors, products...
           </Box>
