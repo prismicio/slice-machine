@@ -110,12 +110,18 @@ export const createSliceMachineExpressApp = async (
 		});
 
 		app.get("/page-types/:id", (_req, res) => {
-			res.sendFile(path.join(sliceMachineOutDir, "page-types/[pageType].html"));
+			res.sendFile(
+				path.join(sliceMachineOutDir, "page-types/[pageTypeId].html"),
+			);
+		});
+
+		app.get("/custom-types", (_req, res) => {
+			res.sendFile(path.join(sliceMachineOutDir, "custom-types.html"));
 		});
 
 		app.get("/custom-types/:id", (_req, res) => {
 			res.sendFile(
-				path.join(sliceMachineOutDir, "custom-types/[customType].html"),
+				path.join(sliceMachineOutDir, "custom-types/[customTypeId].html"),
 			);
 		});
 
