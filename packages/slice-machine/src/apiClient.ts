@@ -20,7 +20,7 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 export const getState = async (): Promise<ServerState> => {
   const rawState = await managerClient.getState();
-  console.log({ rawState });
+
   // `rawState` from the client contains non-SM-specific models. We need to
   // transform the data to something SM recognizes.
   const state: ServerState = {

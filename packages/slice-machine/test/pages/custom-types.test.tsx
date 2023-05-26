@@ -20,7 +20,7 @@ import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
 import { createTestPlugin } from "../__testutils__/createTestPlugin";
 import { createTestProject } from "../__testutils__/createTestProject";
 
-import CreateCustomTypeBuilder from "../../pages/custom-types/[customType]";
+import CreateCustomTypeBuilder from "../../pages/custom-types/[customTypeId]";
 
 vi.mock("next/router", () => import("next-router-mock"));
 
@@ -133,8 +133,8 @@ describe("Custom Type Builder", () => {
     const customTypeId = "a-page";
 
     Router.push({
-      pathname: "custom-types/[customType]",
-      query: { customType: customTypeId },
+      pathname: "custom-types/[customTypeId]",
+      query: { customTypeId },
     });
 
     render(<CreateCustomTypeBuilder />, {
@@ -228,8 +228,8 @@ describe("Custom Type Builder", () => {
     const customTypeId = "a-page";
 
     Router.push({
-      pathname: "custom-types/[customType]",
-      query: { customType: customTypeId },
+      pathname: "custom-types/[customTypeId]",
+      query: { customTypeId },
     });
 
     // duplicated state for library context :/
@@ -352,8 +352,8 @@ describe("Custom Type Builder", () => {
     const customTypeId = "a-page";
 
     Router.push({
-      pathname: "custom-types/[custom-type]",
-      query: { customType: customTypeId },
+      pathname: "custom-types/[customTypeId]",
+      query: { customTypeId },
     });
 
     render(<CreateCustomTypeBuilder />, {
@@ -495,8 +495,8 @@ describe("Custom Type Builder", () => {
     const customTypeId = "a-page";
 
     Router.push({
-      pathname: "custom-types/[customType]",
-      query: { customType: customTypeId },
+      pathname: "custom-types/[customTypeId]",
+      query: { customTypeId },
     });
 
     render(<CreateCustomTypeBuilder />, {
