@@ -62,4 +62,12 @@ describe("Custom Types specs", () => {
 
     cy.contains("Add a new slice").should("not.exist");
   });
+
+  it("When creating a repeatable page-type it should add meta data tab", () => {
+    cy.createCustomType(customTypeId, customTypeName);
+    cy.contains("Metadata").click();
+    cy.contains("Meta Title");
+    cy.contains("Meta Description");
+    cy.contains("Meta Image");
+  });
 });

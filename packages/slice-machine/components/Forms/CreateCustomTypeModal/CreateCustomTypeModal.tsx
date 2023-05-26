@@ -63,7 +63,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
       format,
       type: repeatable ? "repeatable" : "single",
     });
-    createCustomType(id, name, repeatable);
+    createCustomType(id, name, repeatable, format);
     closeModals();
     setIsIdFieldPristine(true);
   };

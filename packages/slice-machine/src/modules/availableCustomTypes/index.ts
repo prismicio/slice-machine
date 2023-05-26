@@ -48,6 +48,7 @@ export const createCustomTypeCreator = createAsyncAction(
     id: string;
     label: string;
     repeatable: boolean;
+    format?: "page" | "custom" | null;
   },
   {
     newCustomType: CustomTypeSM;
@@ -242,7 +243,8 @@ export function* createCustomTypeSaga({
     const newCustomType = createCustomType(
       payload.id,
       payload.label,
-      payload.repeatable
+      payload.repeatable,
+      payload.format
     );
     yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
