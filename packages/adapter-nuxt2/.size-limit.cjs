@@ -1,10 +1,30 @@
 const pkg = require("./package.json");
 
-module.exports = [pkg.module, pkg.main].filter(Boolean).map((path) => ({
-	path,
-	modifyEsbuildConfig(config) {
-		config.platform = "node";
+function getObjectValues(input, acc = []) {
+	if (typeof input === "string") {
+		return input;
+	} else {
+		return [
+			...acc,
+			...Object.values(input).flatMap((value) => getObjectValues(value)),
+		];
+	}
+}
 
-		return config;
-	},
-}));
+module.exports = [
+	...new Set([pkg.main, pkg.module, ...getObjectValues(pkg.exports)]),
+]
+	.sort()
+	.filter((path) => {
+		return path && path !== "./package.json" && !path.endsWith(".d.ts");
+	})
+	.map((path) => {
+		return {
+			path,
+			modifyEsbuildConfig(config) {
+				config.platform = "node";
+
+				return config;
+			},
+		};
+	});

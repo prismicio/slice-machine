@@ -1,18 +1,22 @@
 const pkg = require("./package.json");
 
+function getObjectValues(input, acc = []) {
+	if (typeof input === "string") {
+		return input;
+	} else {
+		return [
+			...acc,
+			...Object.values(input).flatMap((value) => getObjectValues(value)),
+		];
+	}
+}
+
 module.exports = [
-	...new Set([
-		...Object.values(pkg.exports).flatMap((exportTypes) => {
-			if (typeof exportTypes === "string") {
-				return exportTypes;
-			} else {
-				return Object.values(exportTypes);
-			}
-		}),
-	]),
+	...new Set([pkg.main, pkg.module, ...getObjectValues(pkg.exports)]),
 ]
+	.sort()
 	.filter((path) => {
-		return path && path !== "./package.json";
+		return path && path !== "./package.json" && !path.endsWith(".d.ts");
 	})
 	.map((path) => {
 		return {
