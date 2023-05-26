@@ -18,7 +18,6 @@ type UseCustomTypesReturnType = {
 export function useCustomTypes(
   format: CustomTypeFormat
 ): UseCustomTypesReturnType {
-  console.log("!!!! NEW FETCH !!!!", format);
   const updateCustomTypes = useCallback(
     (data: CustomType[]) => updateData(getCustomTypes, [format], data),
     [format]
@@ -39,8 +38,6 @@ async function getCustomTypes(format: CustomTypeFormat): Promise<CustomType[]> {
     throw errors;
   }
 
-  console.log({ models });
-
   return models.map(({ model }) => model);
 }
 
@@ -56,7 +53,6 @@ export function useCustomTypesAutoRevalidation(
   const { storeCustomTypes } = useSelector((store: SliceMachineStoreType) => ({
     storeCustomTypes: selectAllCustomTypes(store).filter(hasLocal),
   }));
-  console.log({ storeCustomTypes });
 
   useEffect(() => {
     const storeCustomTypesFiltered = storeCustomTypes.filter(
@@ -74,8 +70,6 @@ export function useCustomTypesAutoRevalidation(
       const newCustomTypes: CustomType[] = storeCustomTypesFiltered.map(
         ({ local }) => CustomTypes.fromSM(local)
       );
-
-      console.log({ format, newCustomTypes, storeCustomTypesFiltered });
 
       updateCustomTypes(newCustomTypes);
     }
