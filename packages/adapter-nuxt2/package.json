@@ -13,7 +13,6 @@
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
-	"type": "module",
 	"exports": {
 		".": {
 			"require": {
