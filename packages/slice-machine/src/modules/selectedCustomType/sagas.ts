@@ -28,7 +28,7 @@ export function* saveCustomTypeSaga() {
       event: "custom-type:saved",
       id: currentCustomType.id,
       name: currentCustomType.label ?? currentCustomType.id,
-      format: "custom", // TODO: DT-1308 - Retrieve format from currentCustomType
+      format: currentCustomType.format,
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));

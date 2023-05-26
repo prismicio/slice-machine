@@ -24,7 +24,7 @@ describe("CreateCustomTypeModal", () => {
     const fakeName = "testing-name";
     const fakeRepo = "foo";
 
-    render(<CreateCustomTypeModal />, {
+    render(<CreateCustomTypeModal format="custom" />, {
       preloadedState: {
         // @ts-expect-error TS(2739) FIXME: Type '{ repo: string; }' is missing the following ... Remove this comment to see the full error message
         environment: {
@@ -65,6 +65,7 @@ describe("CreateCustomTypeModal", () => {
         properties: {
           id: fakeId,
           name: fakeName,
+          format: "custom",
           type: "repeatable",
           nodeVersion: process.versions.node,
         },

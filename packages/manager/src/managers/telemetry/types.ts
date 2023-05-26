@@ -1,3 +1,4 @@
+import { CustomTypeFormat } from "../customTypes/types";
 import type { LimitType } from "../prismicRepository/types";
 
 export const SegmentEventType = {
@@ -115,7 +116,7 @@ type CustomTypeCreatedSegmentEvent = SegmentEvent<
 	{
 		id: string;
 		name: string;
-		format: "page" | "custom";
+		format: CustomTypeFormat;
 		type: "repeatable" | "single";
 	}
 >;
@@ -140,7 +141,7 @@ type CustomTypeSavedSegmentEvent = SegmentEvent<
 	{
 		id: string;
 		name: string;
-		format: "page" | "custom";
+		format: CustomTypeFormat;
 		type: "repeatable" | "single";
 	}
 >;
