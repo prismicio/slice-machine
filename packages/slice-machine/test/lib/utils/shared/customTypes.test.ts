@@ -48,6 +48,7 @@ describe("Slice IO", () => {
       label: "SomeCustomType",
       repeatable: false,
       status: false,
+      format: "custom",
       tabs: [
         {
           key: "tab1",

@@ -191,6 +191,7 @@ describe("[Available Custom types module]", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
