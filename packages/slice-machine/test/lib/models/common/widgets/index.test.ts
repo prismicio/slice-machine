@@ -37,6 +37,7 @@ describe("Widgets", () => {
         id: "fake_slice",
         label: null,
         repeatable: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",

@@ -25,7 +25,6 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { deleteSliceCreator } from "@src/modules/slices";
-import { CustomTypeFormat } from "@slicemachine/manager";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -70,6 +69,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -99,6 +99,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -134,6 +135,7 @@ describe("[Available Custom types module]", () => {
         label: "lama",
         repeatable: false,
         status: true,
+        format: "custom",
         tabs: [
           {
             key: "Main",
@@ -254,7 +256,7 @@ describe("[Available Custom types module]", () => {
         id: "id",
         label: "label",
         repeatable: true,
-        format: "custom",
+        format: "custom" as const,
       };
       const customTypeCreated = createCustomType(
         actionPayload.id,
@@ -284,6 +286,7 @@ describe("[Available Custom types module]", () => {
       label: "label_1",
       repeatable: false,
       status: true,
+      format: "custom",
       tabs: [],
     };
     const customType2: CustomTypeSM = {
@@ -291,6 +294,7 @@ describe("[Available Custom types module]", () => {
       label: "label_2",
       repeatable: false,
       status: true,
+      format: "custom",
       tabs: [],
     };
     const updatedCustomType2: CustomTypeSM = {
@@ -298,6 +302,7 @@ describe("[Available Custom types module]", () => {
       label: "label NEW",
       repeatable: false,
       status: true,
+      format: "custom",
       tabs: [],
     };
 
@@ -321,7 +326,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         newCustomTypeName: "newName",
-        format: "custom",
+        format: "custom" as const,
       };
       const saga = testSaga(
         renameCustomTypeSaga,
@@ -365,7 +370,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         newCustomTypeName: "newName",
-        format: "custom",
+        format: "custom" as const,
       };
       const saga = testSaga(
         renameCustomTypeSaga,
@@ -410,7 +415,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         customTypeName: "name",
-        format: "custom",
+        format: "custom" as const,
       };
       const saga = testSaga(
         deleteCustomTypeSaga,
@@ -435,7 +440,7 @@ describe("[Available Custom types module]", () => {
       const actionPayload = {
         customTypeId: "id",
         customTypeName: "name",
-        format: "custom",
+        format: "custom" as const,
       };
       const saga = testSaga(
         deleteCustomTypeSaga,

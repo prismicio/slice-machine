@@ -3,11 +3,12 @@ import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 describe("Slice IO", () => {
-  const baseCustomTypeModel = {
+  const baseCustomTypeModel: CustomTypeSM = {
     id: "some_custom_type",
     label: "SomeCustomType",
     repeatable: false,
     status: false,
+    format: "custom",
     tabs: [],
   };
   const customTypeModel: CustomTypeSM = baseCustomTypeModel;

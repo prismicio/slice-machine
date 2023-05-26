@@ -1,6 +1,5 @@
 import { describe, expect } from "vitest";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 describe("[Custom types factory]", () => {
   describe("[createCustomType]", () => {

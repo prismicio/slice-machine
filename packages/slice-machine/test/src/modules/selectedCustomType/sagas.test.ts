@@ -16,6 +16,7 @@ const customTypeModel: CustomTypeSM = {
   label: "My Cool About Page",
   repeatable: false,
   status: true,
+  format: "custom",
   tabs: [
     {
       key: "Main",
