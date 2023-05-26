@@ -2,6 +2,7 @@ import React from "react";
 import { Flex, Text, Card, Link } from "theme-ui";
 
 import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 type AssociatedDocumentsCardProps = {
   ctName: string;
@@ -68,7 +69,7 @@ export const CustomTypesReferencesCard: React.FC<{
       </Text>
     </Flex>
     <Link
-      href={`/${format}-types/${id}`}
+      href={`/${CUSTOM_TYPES_CONFIG[format].urlPathSegment}/${id}`}
       key={id}
       target="_blank"
       variant="cardSmall"

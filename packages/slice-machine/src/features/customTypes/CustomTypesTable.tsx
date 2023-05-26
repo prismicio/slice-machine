@@ -109,7 +109,9 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
               <TableRow
                 key={id}
                 onClick={() => {
-                  void router.push(`/${format}-types/${id}`);
+                  void router.push(
+                    `/${customTypesConfig.urlPathSegment}/${id}`
+                  );
                 }}
               >
                 <TableCell>

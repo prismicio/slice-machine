@@ -10,14 +10,15 @@ import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 
-type CustomTypeBuilderWithProviderProps = {
+type CustomTypePageWithProviderProps = {
   customType: CustomTypeSM;
   remoteCustomType: CustomTypeSM | undefined;
 };
 
-const CustomTypeBuilderWithProvider: React.FC<
-  CustomTypeBuilderWithProviderProps
-> = ({ customType, remoteCustomType }) => {
+const CustomTypePageWithProvider: React.FC<CustomTypePageWithProviderProps> = ({
+  customType,
+  remoteCustomType,
+}) => {
   const { initCustomTypeStore } = useSliceMachineActions();
 
   useEffect(() => {
@@ -62,7 +63,7 @@ export const CustomTypePage = () => {
       <Head>
         <title>{selectedCustomType.local.label} - Slice Machine</title>
       </Head>
-      <CustomTypeBuilderWithProvider
+      <CustomTypePageWithProvider
         customType={selectedCustomType.local}
         remoteCustomType={
           hasRemote(selectedCustomType) ? selectedCustomType.remote : undefined

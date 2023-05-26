@@ -255,7 +255,7 @@ export function* createCustomTypeSaga({
     yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
     yield put(modalCloseCreator());
-    yield put(push(`/${payload.format}-types/${payload.id}`));
+    yield put(push(`/${customTypeConfig.urlPathSegment}/${payload.id}`));
     yield put(
       openToasterCreator({
         content: `${customTypeConfig.name} saved`,
