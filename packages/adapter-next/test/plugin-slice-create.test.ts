@@ -6,8 +6,8 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as tsm from "ts-morph";
 
-import { expectGlobalContentTypes } from "./__testutils__/expectGlobalContentTypes";
 import { parseSourceFile } from "./__testutils__/parseSourceFile";
+import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -174,34 +174,6 @@ test("model.json is not formatted if formatting is disabled", async (ctx) => {
 	);
 });
 
-test("global types file contains TypeScript types for the model", async (ctx) => {
-	await ctx.pluginRunner.callHook("slice:create", {
-		libraryID: "slices",
-		model,
-	});
-
-	await expectGlobalContentTypes(ctx, {
-		generateTypesConfig: {
-			sharedSliceModels: [model],
-		},
-	});
-});
-
-test("global types file is not formatted if formatting is disabled", async (ctx) => {
-	ctx.project.config.adapter.options.format = false;
-	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
-	await pluginRunner.init();
-
-	await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
-
-	await expectGlobalContentTypes(ctx, {
-		generateTypesConfig: {
-			sharedSliceModels: [model],
-		},
-		format: false,
-	});
-});
-
 test("component file contains default export containing a component", async (ctx) => {
 	await ctx.pluginRunner.callHook("slice:create", {
 		libraryID: "slices",
@@ -345,4 +317,11 @@ test("component file is not formatted if formatting is disabled", async (ctx) =>
 			parser: "typescript",
 		}),
 	);
+});
+
+testGlobalContentTypes({
+	model,
+	hookCall: async ({ pluginRunner }) => {
+		await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
+	},
 });

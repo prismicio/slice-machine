@@ -77,14 +77,20 @@ testSnippet("color", `<>{${model.id}.data.color}</>`);
 
 testSnippet(
 	"contentRelationship",
-	`<PrismicLink field={${model.id}.data.contentRelationship}>Link</PrismicLink>`,
+	`<PrismicNextLink field={${model.id}.data.contentRelationship}>Link</PrismicNextLink>`,
 );
 
 testSnippet("date", `<>{${model.id}.data.date}</>`);
 
-testSnippet("embed", `<>{JSON.stringify(${model.id}.data.embed)}</>`);
+testSnippet(
+	"embed",
+	`<div dangerouslySetInnerHTML={{ __html: ${model.id}.data.embed.html }} />`,
+);
 
-testSnippet("geoPoint", `<>{JSON.stringify(${model.id}.data.geoPoint)}</>`);
+testSnippet(
+	"geoPoint",
+	`<>{${model.id}.data.geoPoint.latitude}, {${model.id}.data.geoPoint.longitude}</>`,
+);
 
 testSnippet(
 	"group",
@@ -93,18 +99,7 @@ testSnippet(
 ))}</>`,
 );
 
-testSnippet("image", [
-	{
-		label: "React (next/image)",
-		language: "tsx",
-		code: `<PrismicNextImage field={${model.id}.data.image} />`,
-	},
-	{
-		label: "React",
-		language: "tsx",
-		code: `<PrismicImage field={${model.id}.data.image} />`,
-	},
-]);
+testSnippet("image", `<PrismicNextImage field={${model.id}.data.image} />`);
 
 testSnippet("integrationFields", `<>{${model.id}.data.integrationFields}</>`);
 
@@ -112,20 +107,28 @@ testSnippet("keyText", `<>{${model.id}.data.keyText}</>`);
 
 testSnippet(
 	"link",
-	`<PrismicLink field={${model.id}.data.link}>Link</PrismicLink>`,
+	`<PrismicNextLink field={${model.id}.data.link}>Link</PrismicNextLink>`,
 );
 
 testSnippet(
 	"linkToMedia",
-	`<PrismicLink field={${model.id}.data.linkToMedia}>Link</PrismicLink>`,
+	`<PrismicNextLink field={${model.id}.data.linkToMedia}>Link</PrismicNextLink>`,
 );
 
 testSnippet("number", `<>{${model.id}.data.number}</>`);
 
-testSnippet(
-	"richText",
-	`<PrismicRichText field={${model.id}.data.richText} />`,
-);
+testSnippet("richText", [
+	{
+		label: "React (components)",
+		language: "tsx",
+		code: `<PrismicRichText field={${model.id}.data.richText} />`,
+	},
+	{
+		label: "React (plain text)",
+		language: "tsx",
+		code: `<PrismicText field={${model.id}.data.richText} />`,
+	},
+]);
 
 testSnippet("select", `<>{${model.id}.data.select}</>`);
 
@@ -136,6 +139,17 @@ testSnippet(
 
 testSnippet("timestamp", `<>{${model.id}.data.timestamp}</>`);
 
-testSnippet("title", `<PrismicRichText field={${model.id}.data.title} />`);
+testSnippet("title", [
+	{
+		label: "React (components)",
+		language: "tsx",
+		code: `<PrismicRichText field={${model.id}.data.title} />`,
+	},
+	{
+		label: "React (plain text)",
+		language: "tsx",
+		code: `<PrismicText field={${model.id}.data.title} />`,
+	},
+]);
 
 testSnippet("uid", `<>{${model.id}.data.uid}</>`);

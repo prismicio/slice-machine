@@ -6,8 +6,8 @@ import { stripIndent } from "common-tags";
 
 import type { PluginOptions } from "../types";
 
-const dotPath = (segments: string[]): string => {
-	return segments.join(".");
+const dotPath = (...segments: (string | string[])[]): string => {
+	return segments.flat().join(".");
 };
 
 const format = async (input: string, helpers: SliceMachineHelpers) => {
@@ -33,16 +33,28 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 
 	switch (data.model.type) {
 		case "StructuredText": {
-			return {
-				label,
-				language: "tsx",
-				code: await format(
-					stripIndent`
-						<PrismicRichText field={${dotPath(fieldPath)}} />
-					`,
-					helpers,
-				),
-			};
+			return [
+				{
+					label: `${label} (components)`,
+					language: "tsx",
+					code: await format(
+						stripIndent`
+							<PrismicRichText field={${dotPath(fieldPath)}} />
+						`,
+						helpers,
+					),
+				},
+				{
+					label: `${label} (plain text)`,
+					language: "tsx",
+					code: await format(
+						stripIndent`
+							<PrismicText field={${dotPath(fieldPath)}} />
+						`,
+						helpers,
+					),
+				},
+			];
 		}
 
 		case "Link": {
@@ -51,7 +63,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				language: "tsx",
 				code: await format(
 					stripIndent`
-						<PrismicLink field={${dotPath(fieldPath)}}>Link</PrismicLink>
+						<PrismicNextLink field={${dotPath(fieldPath)}}>Link</PrismicNextLink>
 					`,
 					helpers,
 				),
@@ -59,28 +71,16 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case "Image": {
-			return [
-				{
-					label: `${label} (next/image)`,
-					language: "tsx",
-					code: await format(
-						stripIndent`
+			return {
+				label,
+				language: "tsx",
+				code: await format(
+					stripIndent`
 							<PrismicNextImage field={${dotPath(fieldPath)}} />
 						`,
-						helpers,
-					),
-				},
-				{
-					label,
-					language: "tsx",
-					code: await format(
-						stripIndent`
-							<PrismicImage field={${dotPath(fieldPath)}} />
-						`,
-						helpers,
-					),
-				},
-			];
+					helpers,
+				),
+			};
 		}
 
 		case "Group": {
@@ -118,11 +118,25 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
-		case "GeoPoint":
+		case "GeoPoint": {
+			const code = await format(
+				stripIndent`
+					<>{${dotPath(fieldPath, "latitude")}}, {${dotPath(fieldPath, "longitude")}}</>
+				`,
+				helpers,
+			);
+
+			return {
+				label,
+				language: "tsx",
+				code,
+			};
+		}
+
 		case "Embed": {
 			const code = await format(
 				stripIndent`
-					<>{JSON.stringify(${dotPath(fieldPath)})}</>
+					<div dangerouslySetInnerHTML={{ __html: ${dotPath(fieldPath, "html")} }} />
 				`,
 				helpers,
 			);
