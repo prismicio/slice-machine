@@ -39,6 +39,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     reorderCustomTypeField,
     replaceCustomTypeField,
     createSliceZone,
+    deleteSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
   } = useSliceMachineActions();
@@ -118,6 +119,10 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     createSliceZone(tabId);
   };
 
+  const onDeleteSliceZone = () => {
+    deleteSliceZone(tabId);
+  };
+
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
     void telemetry.track({
       event: "custom-type:slice-zone-updated",
@@ -156,23 +161,18 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
         dataCy="ct-static-zone"
       />
-      {
-        // TODO: DT-1316 - Add condition to also display the slice zone for the Main tab of "page" format
-        // Only display the slice zone for Page Types "Main" tab
-        // or Custom Types that have a Slice Zone defined (for backward compatibility)
-        sliceZone && (
-          <SliceZone
-            format={currentCustomType.format}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            tabId={tabId}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            sliceZone={sliceZone}
-            onRemoveSharedSlice={onRemoveSharedSlice}
-            onCreateSliceZone={onCreateSliceZone}
-            onSelectSharedSlices={onSelectSharedSlices}
-          />
-        )
-      }
+
+      <SliceZone
+        format={currentCustomType.format}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        tabId={tabId}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        sliceZone={sliceZone}
+        onRemoveSharedSlice={onRemoveSharedSlice}
+        onCreateSliceZone={onCreateSliceZone}
+        onDeleteSliceZone={onDeleteSliceZone}
+        onSelectSharedSlices={onSelectSharedSlices}
+      />
     </>
   );
 };

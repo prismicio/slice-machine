@@ -189,6 +189,11 @@ export const Tab = {
       sliceZone: SliceZoneOperations.createEmpty(key),
     };
   },
+  deleteSliceZone(tab: TabSM): TabSM {
+    const { sliceZone: _, ...restTab } = tab;
+
+    return restTab;
+  },
 
   organiseFields(tabSM: TabSM) {
     const { fields, groups } = tabSM.value.reduce<OrganisedFields>(

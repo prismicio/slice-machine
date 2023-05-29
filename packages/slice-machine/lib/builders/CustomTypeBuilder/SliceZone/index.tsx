@@ -1,24 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
+import { useSelector } from "react-redux";
+import { Switch, vars } from "@prismicio/editor-ui";
 
-import ZoneHeader from "../../common/Zone/components/ZoneHeader";
-
-import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
-
-import { SlicesList } from "./List";
-import EmptyState from "./EmptyState";
 import { SlicesSM } from "@lib/models/common/Slices";
 import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
-import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CustomTypeFormat } from "@slicemachine/manager";
+import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
+import ZoneHeader from "../../common/Zone/components/ZoneHeader";
+import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
+import { SlicesList } from "./List";
+import EmptyState from "./EmptyState";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -76,6 +76,7 @@ const mapAvailableAndSharedSlices = (
 interface SliceZoneProps {
   format: CustomTypeFormat;
   onCreateSliceZone: () => void;
+  onDeleteSliceZone: () => void;
   onRemoveSharedSlice: (sliceId: string) => void;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onSelectSharedSlices: Function;
@@ -86,6 +87,7 @@ interface SliceZoneProps {
 const SliceZone: React.FC<SliceZoneProps> = ({
   format,
   onCreateSliceZone,
+  onDeleteSliceZone,
   onRemoveSharedSlice,
   onSelectSharedSlices,
   sliceZone,
@@ -96,9 +98,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     libraries: getLibraries(store),
     slices: getFrontendSlices(store),
   }));
-
   const { modelsStatuses, authStatus, isOnline } = useModelStatus({ slices });
-
   const { availableSlices, slicesInSliceZone, notFound } = useMemo(
     () =>
       sliceZone
@@ -106,6 +106,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         : { availableSlices: [], slicesInSliceZone: [], notFound: [] },
     [sliceZone, libraries]
   );
+  const [isSliceZoneActive, setIsSliceZoneActive] = useState(!!sliceZone);
+  const [isDeleteSliceZoneModalOpen, setIsDeleteSliceZoneModalOpen] =
+    useState(false);
 
   useEffect(() => {
     if (notFound?.length) {
@@ -134,7 +137,24 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   return (
     <Box my={3}>
       <ZoneHeader
-        Heading={<Heading as="h6">Slice Zone</Heading>}
+        Heading={
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Heading as="h6" style={{ marginRight: vars.size[8] }}>
+              Slice Zone
+            </Heading>
+            <Switch
+              checked={isSliceZoneActive}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  onCreateSliceZone();
+                  setIsSliceZoneActive(true);
+                } else {
+                  setIsDeleteSliceZoneModalOpen(true);
+                }
+              }}
+            />
+          </div>
+        }
         Actions={
           <Flex sx={{ alignItems: "center" }}>
             {sliceZone ? (
@@ -154,7 +174,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           </Flex>
         }
       />
-      {!slicesInSliceZone.length ? (
+      {sliceZone && !slicesInSliceZone.length ? (
         <EmptyState format={format} onAddNewSlice={onAddNewSlice} />
       ) : (
         <SlicesList
@@ -175,6 +195,17 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }
         close={() => setFormIsOpen(false)}
+      />
+      <DeleteSliceZoneModal
+        isDeleteSliceZoneModalOpen={isDeleteSliceZoneModalOpen}
+        closeDeleteSliceZoneModal={() => {
+          setIsDeleteSliceZoneModalOpen(false);
+        }}
+        deleteSliceZone={() => {
+          onDeleteSliceZone();
+          setIsSliceZoneActive(false);
+          setIsDeleteSliceZoneModalOpen(false);
+        }}
       />
     </Box>
   );
