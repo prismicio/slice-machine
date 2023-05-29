@@ -71,7 +71,7 @@ const WidgetForm = ({
           }}
         >
           <Label htmlFor="origin" mb="1">
-            Custom types
+            Types
           </Label>
           <Select
             isMulti
