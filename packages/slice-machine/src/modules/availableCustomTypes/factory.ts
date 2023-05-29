@@ -36,6 +36,7 @@ const DEFAULT_SEO_TAB: TabSM = {
             width: 2400,
             height: 1260,
           },
+          thumbnails: [],
         },
       },
     },
