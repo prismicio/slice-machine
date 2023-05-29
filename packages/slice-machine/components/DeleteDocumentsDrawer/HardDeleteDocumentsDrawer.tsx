@@ -78,7 +78,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
       explanations={
         <>
           <Text sx={{ fontWeight: "bold", mb: 1, lineHeight: "24px" }}>
-            Your Page/Custom Type
+            Your Page/Custom Type{" "}
             {modalData.details.customTypes.length > 1 && "s"} cannot be deleted.
           </Text>
           <Text sx={{ mb: 24 }}>
