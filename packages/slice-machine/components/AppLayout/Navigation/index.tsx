@@ -28,7 +28,7 @@ const getNavigationLinks = (
   numberOfChanges: number
 ): LinkProps[] => [
   {
-    title: CUSTOM_TYPES_CONFIG["page"].title,
+    title: CUSTOM_TYPES_CONFIG["page"].name({ start: true, plural: true }),
     href: "/",
     match(pathname: string) {
       return (
@@ -39,7 +39,7 @@ const getNavigationLinks = (
     Icon: () => <PageStackIcon />,
   },
   {
-    title: CUSTOM_TYPES_CONFIG["custom"].title,
+    title: CUSTOM_TYPES_CONFIG["custom"].name({ start: true, plural: true }),
     href: `/${CUSTOM_TYPES_CONFIG["custom"].urlPathSegment}`,
     match(pathname: string) {
       return (

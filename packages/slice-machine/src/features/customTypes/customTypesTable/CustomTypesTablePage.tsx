@@ -41,7 +41,10 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
   return (
     <>
       <Head>
-        <title>{customTypesConfig.title} - Slice Machine</title>
+        <title>
+          {customTypesConfig.name({ start: true, plural: true })} - Slice
+          Machine
+        </title>
       </Head>
       <div
         style={{
@@ -53,7 +56,9 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
       >
         <ErrorBoundary
           title="Request failed"
-          description={`An error occurred while fetching your ${customTypesConfig.title}.`}
+          description={`An error occurred while fetching your ${customTypesConfig.name(
+            { start: false, plural: true }
+          )}.`}
           renderError={(error) => {
             return (
               <Box
@@ -79,7 +84,9 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                     height: vars.size[32],
                   }}
                 >
-                  <Breadcrumb>{customTypesConfig.title}</Breadcrumb>
+                  <Breadcrumb>
+                    {customTypesConfig.name({ start: true, plural: true })}
+                  </Breadcrumb>
                   <Button endIcon={<Icon name="add" />} disabled>
                     Create
                   </Button>
@@ -98,7 +105,9 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                 height: vars.size[32],
               }}
             >
-              <Breadcrumb>{customTypesConfig.title}</Breadcrumb>
+              <Breadcrumb>
+                {customTypesConfig.name({ start: true, plural: true })}
+              </Breadcrumb>
               <Button
                 data-cy="create-ct"
                 endIcon={<Icon name="add" />}

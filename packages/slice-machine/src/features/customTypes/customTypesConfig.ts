@@ -1,10 +1,9 @@
 export const CUSTOM_TYPES_CONFIG = {
   custom: {
-    title: "Custom types",
-    name: "Custom type",
+    name: ({ start, plural }: CustomTypesConfigNameArgs) =>
+      `${start ? "Custom" : "custom"} ${plural ? "types" : "type"}`,
     urlPathSegment: "custom-types",
     urlDynamicSegment: "customTypeId",
-
     hintSingle: "e.g. global nav, settings, footer",
     hintRepeatable: "e.g. side menu, testimonial, author",
     inputPlaceholder: `ID to query the custom type in the API (e.g. 'Author')`,
@@ -13,8 +12,8 @@ export const CUSTOM_TYPES_CONFIG = {
       "Custom types are models that your editors can use to create menus or objects in the Page Builder.",
   },
   page: {
-    title: "Page types",
-    name: "Page type",
+    name: ({ start, plural }: CustomTypesConfigNameArgs) =>
+      `${start ? "Page" : "page"} ${plural ? "types" : "type"}`,
     urlPathSegment: "page-types",
     urlDynamicSegment: "pageTypeId",
     blankSlateImage: "/blank-slate-page-types.png",
@@ -24,4 +23,9 @@ export const CUSTOM_TYPES_CONFIG = {
     blankSlateDescription:
       "Page types are models that your editors will use to create website pages in the Page Builder.",
   },
+};
+
+type CustomTypesConfigNameArgs = {
+  start: boolean;
+  plural: boolean;
 };

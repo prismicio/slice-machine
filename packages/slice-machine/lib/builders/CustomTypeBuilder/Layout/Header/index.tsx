@@ -44,7 +44,9 @@ const CustomTypeHeader = () => {
               ) : (
                 <PageStackIcon />
               )}
-              <Text>{customTypesConfig.title}</Text>
+              <Text>
+                {customTypesConfig.name({ start: true, plural: true })}
+              </Text>
             </>
           ),
           href:

@@ -28,7 +28,8 @@ const EmptyState: React.FC<{
           Add your Slices
         </Text>
         <Text sx={{ mb: "24px" }}>
-          Add Slices to your {customTypesConfig.name}
+          Add Slices to your{" "}
+          {customTypesConfig.name({ start: false, plural: false })}
         </Text>
         <Button
           data-cy="update-slices"

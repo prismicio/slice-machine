@@ -74,7 +74,7 @@ export const CustomTypesReferencesCard: React.FC<{
       target="_blank"
       variant="cardSmall"
     >
-      View {CUSTOM_TYPES_CONFIG[format].name}
+      View {CUSTOM_TYPES_CONFIG[format].name({ start: false, plural: false })}
     </Link>
   </Card>
 );

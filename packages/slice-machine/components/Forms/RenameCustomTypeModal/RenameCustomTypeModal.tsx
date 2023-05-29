@@ -42,7 +42,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
     customTypeLabels: selectAllCustomTypeLabels(store),
     isRenamingCustomType: isLoading(store, LoadingKeysEnum.RENAME_CUSTOM_TYPE),
   }));
-  const customTypeConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
 
   return (
     <ModalFormCard
@@ -57,7 +57,12 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
         customTypeName: customTypeName,
       }}
       isLoading={isRenamingCustomType}
-      content={{ title: `Rename a ${customTypeConfig.name}` }}
+      content={{
+        title: `Rename a ${customTypesConfig.name({
+          start: false,
+          plural: false,
+        })}`,
+      }}
       validate={({ customTypeName: newName }) => {
         const errors: FormikErrors<{
           customTypeName: string;
@@ -72,7 +77,10 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
           customTypeLabels.includes(newName) &&
           customTypeName !== newName
         ) {
-          errors.customTypeName = `${customTypeConfig.name} name is already taken.`;
+          errors.customTypeName = `${customTypesConfig.name({
+            start: true,
+            plural: false,
+          })} name is already taken.`;
         }
 
         return Object.keys(errors).length > 0 ? errors : undefined;
@@ -82,8 +90,14 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
         <Box>
           <InputBox
             name="customTypeName"
-            label={`${customTypeConfig.name} Name`}
-            placeholder={`A display name for the ${customTypeConfig.name}`}
+            label={`${customTypesConfig.name({
+              start: true,
+              plural: false,
+            })} Name`}
+            placeholder={`A display name for the ${customTypesConfig.name({
+              start: false,
+              plural: false,
+            })}`}
             error={errors.customTypeName}
             dataCy="custom-type-name-input"
           />

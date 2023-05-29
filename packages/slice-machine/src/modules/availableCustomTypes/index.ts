@@ -243,7 +243,7 @@ export const availableCustomTypesReducer: Reducer<
 export function* createCustomTypeSaga({
   payload,
 }: ReturnType<typeof createCustomTypeCreator.request>) {
-  const customTypeConfig = CUSTOM_TYPES_CONFIG[payload.format];
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[payload.format];
 
   try {
     const newCustomType = createCustomType(
@@ -255,17 +255,23 @@ export function* createCustomTypeSaga({
     yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
     yield put(modalCloseCreator());
-    yield put(push(`/${customTypeConfig.urlPathSegment}/${payload.id}`));
+    yield put(push(`/${customTypesConfig.urlPathSegment}/${payload.id}`));
     yield put(
       openToasterCreator({
-        content: `${customTypeConfig.name} saved`,
+        content: `${customTypesConfig.name({
+          start: true,
+          plural: false,
+        })} saved`,
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        content: `Internal Error: ${customTypeConfig.name} not saved`,
+        content: `Internal Error: ${customTypesConfig.name({
+          start: true,
+          plural: false,
+        })} not saved`,
         type: ToasterType.ERROR,
       })
     );
@@ -275,7 +281,7 @@ export function* createCustomTypeSaga({
 export function* renameCustomTypeSaga({
   payload,
 }: ReturnType<typeof renameCustomTypeCreator.request>) {
-  const customTypeConfig = CUSTOM_TYPES_CONFIG[payload.format];
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[payload.format];
 
   try {
     const customType = (yield select(
@@ -284,13 +290,18 @@ export function* renameCustomTypeSaga({
     )) as ReturnType<typeof selectCustomTypeById>;
     if (!customType) {
       throw new Error(
-        `${customTypeConfig.name} "${payload.newCustomTypeName} not found.`
+        `${customTypesConfig.name({ start: true, plural: false })} "${
+          payload.newCustomTypeName
+        } not found.`
       );
     }
 
     if (!hasLocal(customType)) {
       throw new Error(
-        `Can't rename a deleted ${customTypeConfig.name} (${payload.newCustomTypeName})`
+        `Can't rename a deleted ${customTypesConfig.name({
+          start: false,
+          plural: false,
+        })} (${payload.newCustomTypeName})`
       );
     }
 
@@ -304,14 +315,20 @@ export function* renameCustomTypeSaga({
     yield put(modalCloseCreator());
     yield put(
       openToasterCreator({
-        content: `${customTypeConfig.name} updated`,
+        content: `${customTypesConfig.name({
+          start: true,
+          plural: false,
+        })} updated`,
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        content: `Internal Error: ${customTypeConfig.name} not saved`,
+        content: `Internal Error: ${customTypesConfig.name({
+          start: true,
+          plural: false,
+        })} not saved`,
         type: ToasterType.ERROR,
       })
     );
@@ -321,7 +338,7 @@ export function* renameCustomTypeSaga({
 export function* deleteCustomTypeSaga({
   payload,
 }: ReturnType<typeof deleteCustomTypeCreator.request>) {
-  const customTypeConfig = CUSTOM_TYPES_CONFIG[payload.format];
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[payload.format];
 
   try {
     const result = (yield call(
@@ -334,14 +351,19 @@ export function* deleteCustomTypeSaga({
     yield put(deleteCustomTypeCreator.success(payload));
     yield put(
       openToasterCreator({
-        content: `Successfully deleted ${customTypeConfig.name} “${payload.customTypeName}”`,
+        content: `Successfully deleted ${customTypesConfig.name({
+          start: false,
+          plural: false,
+        })} “${payload.customTypeName}”`,
         type: ToasterType.SUCCESS,
       })
     );
   } catch (e) {
     yield put(
       openToasterCreator({
-        content: `An unexpected error happened while deleting your ${customTypeConfig.name}.`,
+        content: `An unexpected error happened while deleting your ${customTypesConfig.name(
+          { start: false, plural: false }
+        )}.`,
         type: ToasterType.ERROR,
       })
     );

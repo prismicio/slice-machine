@@ -429,7 +429,7 @@ describe("[Available Custom types module]", () => {
         .put(deleteCustomTypeCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
-          content: `Successfully deleted Custom type “${actionPayload.customTypeName}”`,
+          content: `Successfully deleted custom type “${actionPayload.customTypeName}”`,
           type: ToasterType.SUCCESS,
         })
       );
@@ -452,7 +452,7 @@ describe("[Available Custom types module]", () => {
       saga.throw(new Error()).put(
         openToasterCreator({
           content:
-            "An unexpected error happened while deleting your Custom type.",
+            "An unexpected error happened while deleting your custom type.",
           type: ToasterType.ERROR,
         })
       );

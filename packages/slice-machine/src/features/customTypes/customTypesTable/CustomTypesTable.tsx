@@ -70,7 +70,9 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
         <BlankSlateImage>
           <Image src={customTypesConfig.blankSlateImage} sizing="contain" />
         </BlankSlateImage>
-        <BlankSlateTitle size="big">{customTypesConfig.title}</BlankSlateTitle>
+        <BlankSlateTitle size="big">
+          {customTypesConfig.name({ start: true, plural: true })}
+        </BlankSlateTitle>
         <BlankSlateDescription>
           {customTypesConfig.blankSlateDescription}
         </BlankSlateDescription>

@@ -83,7 +83,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 color={theme.colors?.greyIcon as string}
               />
               <Heading sx={{ fontSize: "14px", fontWeight: "bold", ml: 1 }}>
-                Delete {customTypesConfig.name}
+                Delete {customTypesConfig.name({ start: false, plural: false })}
               </Heading>
             </Flex>
             <Close type="button" onClick={() => closeModals()} />
@@ -144,8 +144,9 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           will happen:
           <ul>
             <li>
-              Remove the {customTypesConfig.name} and any associated Documents
-              from your repository.
+              Remove the{" "}
+              {customTypesConfig.name({ start: false, plural: false })} and any
+              associated Documents from your repository.
             </li>
           </ul>
         </Paragraph>
