@@ -160,6 +160,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
         renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
         dataCy="ct-static-zone"
+        isRepeatableCustomType={currentCustomType.repeatable}
       />
 
       <SliceZone

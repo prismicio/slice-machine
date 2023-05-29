@@ -34,6 +34,7 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   CustomEditElements?: JSX.Element[];
   widget: Widget<F, S>;
   draggableId: string;
+  isRepeatableCustomType?: boolean;
   children: React.ReactNode;
 }
 
@@ -44,15 +45,12 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
   enterEditMode,
   modelFieldName,
   renderFieldAccessor,
-
   HintElement,
-
   CustomEditElement,
   CustomEditElements,
   widget,
-
   draggableId,
-
+  isRepeatableCustomType,
   children,
 }: ListItemProps<F, S>): JSX.Element {
   const { theme } = useThemeUI();
@@ -131,8 +129,8 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                         />
                       )}
                       {
-                        // Prevent deletion of UID for any Custom Type
-                        type !== "UID" && (
+                        // Prevent deletion of UID for repeatable Custom/Page Type
+                        !(isRepeatableCustomType === true && type == "UID") && (
                           <Menu>
                             <MenuButton
                               className="sliceMenuButton"

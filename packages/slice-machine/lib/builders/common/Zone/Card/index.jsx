@@ -26,6 +26,7 @@ const FieldZone = ({
   renderHintBase,
   isRepeatable,
   dataCy,
+  isRepeatableCustomType,
 }) => {
   return (
     <DragDropContext
@@ -87,6 +88,8 @@ const FieldZone = ({
                   deleteItem: onDeleteItem,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
                   draggableId: `list-item-${item.key}`,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  isRepeatableCustomType,
                 };
 
                 if (widget.CustomListItem) {
