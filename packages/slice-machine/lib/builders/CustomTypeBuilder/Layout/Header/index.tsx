@@ -47,7 +47,10 @@ const CustomTypeHeader = () => {
               <Text>{customTypesConfig.title}</Text>
             </>
           ),
-          href: "/",
+          href:
+            currentCustomType?.format === "custom"
+              ? `/${customTypesConfig.urlPathSegment}`
+              : "/",
         }}
         subtitle={{
           Element: (

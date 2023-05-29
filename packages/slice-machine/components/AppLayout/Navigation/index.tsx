@@ -43,9 +43,8 @@ const getNavigationLinks = (
     href: `/${CUSTOM_TYPES_CONFIG["custom"].urlPathSegment}`,
     match(pathname: string) {
       return (
-        pathname.indexOf(
-          `/${CUSTOM_TYPES_CONFIG["custom"].urlPathSegment}}`
-        ) === 0
+        pathname.indexOf(`/${CUSTOM_TYPES_CONFIG["custom"].urlPathSegment}`) ===
+        0
       );
     },
     Icon: () => <DatabaseIcon />,
