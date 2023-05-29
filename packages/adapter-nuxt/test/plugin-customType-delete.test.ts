@@ -3,7 +3,7 @@ import { createMockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
-import { expectGlobalContentTypes } from "./__testutils__/expectGlobalContentTypes";
+import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -30,13 +30,13 @@ test("deletes the Custom Type directory", async (ctx) => {
 	).not.includes(model.id);
 });
 
-test("global types file does not contain types for the model", async (ctx) => {
-	await ctx.pluginRunner.callHook("custom-type:create", { model });
-	await ctx.pluginRunner.callHook("custom-type:delete", { model });
-
-	await expectGlobalContentTypes(ctx, {
-		generateTypesConfig: {
-			customTypeModels: [],
-		},
-	});
+testGlobalContentTypes({
+	model,
+	hookCall: async ({ pluginRunner }) => {
+		await pluginRunner.callHook("custom-type:create", { model });
+		await pluginRunner.callHook("custom-type:delete", { model });
+	},
+	generateTypesConfig: {
+		customTypeModels: [],
+	},
 });

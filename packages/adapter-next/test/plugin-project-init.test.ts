@@ -15,16 +15,9 @@ test("installs dependencies", async (ctx) => {
 	expect(installDependencies).toHaveBeenCalledWith({
 		dependencies: {
 			"@prismicio/client": "latest",
-			"@prismicio/helpers": "latest",
 			"@prismicio/react": "latest",
 			"@prismicio/next": "latest",
 		},
-	});
-	expect(installDependencies).toHaveBeenCalledWith({
-		dependencies: {
-			"@prismicio/types": "latest",
-		},
-		dev: true,
 	});
 });
 
@@ -188,15 +181,15 @@ test("creates a Slice Simulator page file", async (ctx) => {
 	expect(file.getImportDeclarationOrThrow("../slices").getText()).toBe(
 		'import { components } from "../slices";',
 	);
-	expect(file.getVariableStatementOrThrow("SliceSimulatorPage").getText()).toBe(
+	expect(file.getFunctionOrThrow("SliceSimulatorPage").getText()).toBe(
 		`
-const SliceSimulatorPage = () => {
+export default function SliceSimulatorPage() {
   return (
     <SliceSimulator
       sliceZone={(props) => <SliceZone {...props} components={components} />}
     />
   );
-};
+}
 		`.trim(),
 	);
 	expect(/^default export SliceSimulatorPage;?$/.test(contents));
@@ -309,15 +302,15 @@ test("creates a Slice Simulator TypeScript page file when TypeScript is enabled"
 	expect(file.getImportDeclarationOrThrow("../slices").getText()).toBe(
 		'import { components } from "../slices";',
 	);
-	expect(file.getVariableStatementOrThrow("SliceSimulatorPage").getText()).toBe(
+	expect(file.getFunctionOrThrow("SliceSimulatorPage").getText()).toBe(
 		`
-const SliceSimulatorPage = () => {
+export default function SliceSimulatorPage() {
   return (
     <SliceSimulator
       sliceZone={(props) => <SliceZone {...props} components={components} />}
     />
   );
-};
+}
 		`.trim(),
 	);
 	expect(/^default export SliceSimulatorPage;?$/.test(contents));

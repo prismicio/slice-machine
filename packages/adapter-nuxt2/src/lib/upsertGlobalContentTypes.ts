@@ -49,6 +49,7 @@ export const upsertGlobalContentTypes = async ({
 			includeCreateClientInterface: true,
 			includeContentNamespace: true,
 		},
+		typesProvider: "@prismicio/types",
 	});
 
 	contents = `${NON_EDITABLE_FILE_BANNER}\n\n${contents}`;

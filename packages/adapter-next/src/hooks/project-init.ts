@@ -24,17 +24,9 @@ const installDependencies = async ({
 	await installDependencies({
 		dependencies: {
 			"@prismicio/client": "latest",
-			"@prismicio/helpers": "latest",
 			"@prismicio/react": "latest",
 			"@prismicio/next": "latest",
 		},
-	});
-
-	await installDependencies({
-		dependencies: {
-			"@prismicio/types": "latest",
-		},
-		dev: true,
 	});
 };
 
@@ -197,15 +189,13 @@ const createSliceSimulatorPage = async ({
 
 		import { components } from "../slices";
 
-		const SliceSimulatorPage = () => {
+		export default function SliceSimulatorPage() {
 			return (
 				<SliceSimulator
 					sliceZone={(props) => <SliceZone {...props} components={components} />}
 				/>
 			);
-		};
-
-		export default SliceSimulatorPage;
+		}
 	`;
 
 	if (options.format) {

@@ -3,7 +3,7 @@ import { createMockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
-import { expectGlobalContentTypes } from "./__testutils__/expectGlobalContentTypes";
+import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -47,19 +47,16 @@ test("updates model.json file with new model", async (ctx) => {
 	).toStrictEqual(newModel);
 });
 
-test("global types file contains new model", async (ctx) => {
-	await ctx.pluginRunner.callHook("slice:create", {
-		libraryID: "slices",
-		model: oldModel,
-	});
-	await ctx.pluginRunner.callHook("slice:update", {
-		libraryID: "slices",
-		model: newModel,
-	});
-
-	await expectGlobalContentTypes(ctx, {
-		generateTypesConfig: {
-			sharedSliceModels: [newModel],
-		},
-	});
+testGlobalContentTypes({
+	model: newModel,
+	hookCall: async ({ pluginRunner }) => {
+		await pluginRunner.callHook("slice:create", {
+			libraryID: "slices",
+			model: oldModel,
+		});
+		await pluginRunner.callHook("slice:update", {
+			libraryID: "slices",
+			model: newModel,
+		});
+	},
 });

@@ -7,16 +7,11 @@ import { source } from "common-tags";
 import { createRequire } from "node:module";
 import fetch, { Response } from "node-fetch";
 
-import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSOrTSXFileExtension } from "../lib/getJSOrTSXFileExtension";
 
 import type { PluginOptions } from "../types";
 
-const REQUIRED_DEPENDENCIES = [
-	"@prismicio/react",
-	"@prismicio/client",
-	"@prismicio/helpers",
-];
+const REQUIRED_DEPENDENCIES = ["@prismicio/react"];
 
 type Args = SliceMachineContext<PluginOptions>;
 
@@ -90,56 +85,26 @@ const createStep2 = async ({
 	})}`;
 	const filePath = helpers.joinPathFromRoot("pages", fileName);
 
-	let fileContents: string;
+	const fileContents = await helpers.format(
+		source`
+			import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+			import { SliceZone } from "@prismicio/react";
 
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
+			import { components } from "../slices";
 
-	if (isTypeScriptProject) {
-		fileContents = await helpers.format(
-			source`
-				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-				import { SliceZone } from "@prismicio/react";
-
-				import { components } from "../slices";
-
-				export default function SliceSimulatorPage(): JSX.Element {
-					return (
-						<SliceSimulator
-							sliceZone={(props) => <SliceZone {...props} components={components} />}
-						/>
-					);
-				};
-			`,
-			filePath,
-			{
-				includeNewlineAtEnd: false,
-			},
-		);
-	} else {
-		fileContents = await helpers.format(
-			source`
-				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-				import { SliceZone } from "@prismicio/react";
-
-				import { components } from "../slices";
-
-				export default function SliceSimulatorPage() {
-					return (
-						<SliceSimulator
-							sliceZone={(props) => <SliceZone {...props} components={components} />}
-						/>
-					);
-				};
-			`,
-			filePath,
-			{
-				includeNewlineAtEnd: false,
-			},
-		);
-	}
+			export default function SliceSimulatorPage() {
+				return (
+					<SliceSimulator
+						sliceZone={(props) => <SliceZone {...props} components={components} />}
+					/>
+				);
+			}
+		`,
+		filePath,
+		{
+			includeNewlineAtEnd: false,
+		},
+	);
 
 	return {
 		title: "Create a page for the simulator",
