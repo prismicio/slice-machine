@@ -9,7 +9,7 @@ import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
-import type { CustomTypeFormat } from "@slicemachine/manager/*";
+import type { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 
 type CustomTypesBuilderPageProps = {
@@ -25,7 +25,7 @@ export const CustomTypesBuilderPage: FC<CustomTypesBuilderPageProps> = ({
     (store: SliceMachineStoreType) => ({
       selectedCustomType: selectCustomTypeById(
         store,
-        router.query[`${customTypesConfig.urlDynamicSegment}`] as string
+        router.query[`${customTypesConfig.builderPageDynamicSegment}`] as string
       ),
     })
   );

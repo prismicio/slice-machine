@@ -1,5 +1,5 @@
 import { describe, expect } from "vitest";
-import { createCustomType } from "@src/modules/availableCustomTypes/factory";
+import { createCustomType } from "@src/features/customTypes/customTypesTable/createCustomType";
 
 describe("[Custom types factory]", () => {
   describe("[createCustomType]", () => {

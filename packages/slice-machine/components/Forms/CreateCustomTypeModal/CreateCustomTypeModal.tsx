@@ -20,7 +20,7 @@ import { telemetry } from "@src/apiClient";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
 import type { CustomTypeFormat } from "@slicemachine/manager";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 interface FormValues {
   id: string;
@@ -51,7 +51,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
     ),
     isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   }));
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
   const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
 
   const createCustomTypeAndTrack = ({ id, label, repeatable }: FormValues) => {
@@ -130,7 +130,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
         }
 
         if (!errors.label && customTypeLabels.includes(label)) {
-          errors.label = `${customTypesConfig.name({
+          errors.label = `${customTypesMessages.name({
             start: true,
             plural: false,
           })} name is already taken.`;
@@ -156,7 +156,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
         return Object.keys(errors).length > 0 ? errors : undefined;
       }}
       content={{
-        title: `Create a new ${customTypesConfig.name({
+        title: `Create a new ${customTypesMessages.name({
           start: false,
           plural: false,
         })}`,
@@ -167,12 +167,12 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           <SelectRepeatable format={format} />
           <InputBox
             name="label"
-            label={`${customTypesConfig.name({
+            label={`${customTypesMessages.name({
               start: true,
               plural: false,
             })} Name`}
             dataCy="ct-name-input"
-            placeholder={`A display name for the ${customTypesConfig.name({
+            placeholder={`A display name for the ${customTypesMessages.name({
               start: false,
               plural: false,
             })}`}
@@ -182,11 +182,11 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           <InputBox
             name="id"
             dataCy="ct-id-input"
-            label={`${customTypesConfig.name({
+            label={`${customTypesMessages.name({
               start: true,
               plural: false,
             })} ID`}
-            placeholder={customTypesConfig.inputPlaceholder}
+            placeholder={customTypesMessages.inputPlaceholder}
             error={touched.id ? errors.id : undefined}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />

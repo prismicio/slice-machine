@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import SimulatorButton from "./SimulatorButton";
-import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
+import { SliceListIcon } from "@src/icons/SliceListIcon";
 
 const Header: React.FC<{
   component: ComponentUI;

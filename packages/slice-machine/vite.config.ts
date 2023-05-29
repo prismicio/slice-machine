@@ -19,7 +19,6 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["./test/**/*.test.{ts,tsx}"],
     coverage: {
       provider: "c8",
       reporter: ["lcovonly", "text"],

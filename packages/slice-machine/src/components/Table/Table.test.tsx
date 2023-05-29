@@ -11,6 +11,7 @@ import {
 } from "@src/components/Table";
 import { render, screen } from "test/__testutils__";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 vi.mock("next/router", () => require("next-router-mock"));
 
 const renderTable = () => {

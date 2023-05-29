@@ -8,7 +8,7 @@ import { SlicesSM } from "../Slices";
 
 export * from "./tab";
 
-export const CustomTypeFormat = {
+const CustomTypeFormat = {
   page: "page",
   custom: "custom",
 };

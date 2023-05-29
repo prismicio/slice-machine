@@ -106,7 +106,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         : { availableSlices: [], slicesInSliceZone: [], notFound: [] },
     [sliceZone, libraries]
   );
-  const [isSliceZoneActive, setIsSliceZoneActive] = useState(!!sliceZone);
+
   const [isDeleteSliceZoneModalOpen, setIsDeleteSliceZoneModalOpen] =
     useState(false);
 
@@ -143,11 +143,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               Slice Zone
             </Heading>
             <Switch
-              checked={isSliceZoneActive}
+              checked={!!sliceZone}
               onCheckedChange={(checked) => {
                 if (checked) {
                   onCreateSliceZone();
-                  setIsSliceZoneActive(true);
                 } else {
                   setIsDeleteSliceZoneModalOpen(true);
                 }
@@ -203,7 +202,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         }}
         deleteSliceZone={() => {
           onDeleteSliceZone();
-          setIsSliceZoneActive(false);
           setIsDeleteSliceZoneModalOpen(false);
         }}
       />

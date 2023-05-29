@@ -10,8 +10,8 @@ import {
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Table, TableBody, TableHead, TableCell, TableRow } from "./Table";
-import { UniqueIcon } from "../Icons/UniqueIcon";
-import { ReusableIcon } from "../Icons/ReusableIcon";
+import { UniqueIcon } from "../../icons/UniqueIcon";
+import { ReusableIcon } from "../../icons/ReusableIcon";
 
 type Story = StoryObj<typeof meta>;
 

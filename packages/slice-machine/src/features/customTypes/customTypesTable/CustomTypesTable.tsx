@@ -25,8 +25,8 @@ import {
   TableHead,
   TableRow,
 } from "@src/components/Table";
-import { ReusableIcon } from "@src/components/Icons/ReusableIcon";
-import { UniqueIcon } from "@src/components/Icons/UniqueIcon";
+import { ReusableIcon } from "@src/icons/ReusableIcon";
+import { UniqueIcon } from "@src/icons/UniqueIcon";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
 import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
@@ -37,6 +37,7 @@ import {
 } from "./useCustomTypes";
 import { type CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
@@ -61,6 +62,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
     }
   );
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
   useCustomTypesAutoRevalidation(customTypes, format, updateCustomTypes);
 
@@ -71,10 +73,10 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
           <Image src={customTypesConfig.blankSlateImage} sizing="contain" />
         </BlankSlateImage>
         <BlankSlateTitle size="big">
-          {customTypesConfig.name({ start: true, plural: true })}
+          {customTypesMessages.name({ start: true, plural: true })}
         </BlankSlateTitle>
         <BlankSlateDescription>
-          {customTypesConfig.blankSlateDescription}
+          {customTypesMessages.blankSlateDescription}
         </BlankSlateDescription>
         <BlankSlateActions>
           <Button
@@ -112,7 +114,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                 key={id}
                 onClick={() => {
                   void router.push(
-                    `/${customTypesConfig.urlPathSegment}/${id}`
+                    CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id)
                   );
                 }}
               >

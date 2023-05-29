@@ -19,7 +19,7 @@ import {
   renameCustomType,
   saveCustomType,
 } from "@src/apiClient";
-import { createCustomType } from "@src/modules/availableCustomTypes/factory";
+import { createCustomType } from "@src/features/customTypes/customTypesTable/createCustomType";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";

@@ -2,9 +2,9 @@ import React, { FC } from "react";
 import { useField } from "formik";
 import { Box, Radio } from "theme-ui";
 
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { FlexCard } from "./FlexCard";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CustomTypeFormat } from "@slicemachine/manager";
 
 type SelectRepeatableProps = {
   format: CustomTypeFormat;
@@ -12,7 +12,7 @@ type SelectRepeatableProps = {
 
 export const SelectRepeatable: FC<SelectRepeatableProps> = ({ format }) => {
   const [field, , helpers] = useField<boolean>("repeatable");
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
   return (
     <Box mb={2}>
@@ -30,7 +30,7 @@ export const SelectRepeatable: FC<SelectRepeatableProps> = ({ format }) => {
         >
           Reusable type
           <Box as="p" sx={{ fontSize: "12px", color: "textClear", mt: 1 }}>
-            {customTypesConfig.hintRepeatable}
+            {customTypesMessages.hintRepeatable}
           </Box>
         </Box>
       </FlexCard>
@@ -48,7 +48,7 @@ export const SelectRepeatable: FC<SelectRepeatableProps> = ({ format }) => {
         >
           Single type
           <Box as="p" sx={{ fontSize: "12px", color: "textClear", mt: 1 }}>
-            {customTypesConfig.hintSingle}
+            {customTypesMessages.hintSingle}
           </Box>
         </Box>
       </FlexCard>

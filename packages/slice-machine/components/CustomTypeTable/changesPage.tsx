@@ -71,9 +71,9 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
           hasLocal(customType) ? (
             <Link
               passHref
-              href={`/${
-                CUSTOM_TYPES_CONFIG[customType.local.format].urlPathSegment
-              }/${customType.local.id}`}
+              href={CUSTOM_TYPES_CONFIG[
+                customType.local.format
+              ].getBuilderPagePathname(customType.local.id)}
               key={customType.local.id}
             >
               <tr tabIndex={0}>

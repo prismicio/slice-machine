@@ -38,7 +38,7 @@ cd e2e-projects/next
 npm run slicemachine:dev
 ```
 
-Now you can go to your browser and open `localhost:9999` to see the Slice Machine app up and running with some demo Slices and types.
+Now you can go to your browser and open `localhost:9999` to see the Slice Machine app up and running with some demo slices and types.
 You're now ready to start working on your changes and see them updated in the app.
 
 <!-- Links -->
