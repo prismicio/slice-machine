@@ -53,7 +53,11 @@ const DEFAULT_MAIN: TabSM = {
 };
 
 function makeMainTab(repeatable: boolean, format: CustomTypeFormat): TabSM {
-  if (repeatable === false) return DEFAULT_MAIN;
+  if (repeatable === false) {
+    return format === "page"
+      ? { ...DEFAULT_MAIN, sliceZone: DEFAULT_SLICE_ZONE }
+      : DEFAULT_MAIN;
+  }
 
   const tabWithUID: TabSM = {
     ...DEFAULT_MAIN,
@@ -70,13 +74,12 @@ function makeMainTab(repeatable: boolean, format: CustomTypeFormat): TabSM {
     ],
   };
 
-  if (format === "page")
-    return {
-      ...tabWithUID,
-      sliceZone: DEFAULT_SLICE_ZONE,
-    };
-
-  return tabWithUID;
+  return format === "page"
+    ? {
+        ...tabWithUID,
+        sliceZone: DEFAULT_SLICE_ZONE,
+      }
+    : tabWithUID;
 }
 
 export const createCustomType = (
@@ -93,14 +96,10 @@ export const createCustomType = (
     tabs.push(DEFAULT_SEO_TAB);
   }
 
-  // TODO: don't cast this
-
-  const fmt = format as CustomTypeSM["format"];
-
   return {
     id,
     label,
-    format: fmt,
+    format,
     repeatable,
     tabs,
     status: true,
