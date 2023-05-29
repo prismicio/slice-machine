@@ -39,7 +39,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
         <>
           <ChangesSectionHeader>
             <Box>
-              <Text variant="heading">Page/Custom Types</Text>
+              <Text variant="heading">Types</Text>
               <Text variant="grey" sx={{ ml: "8px" }}>
                 {unSyncedCustomTypes.length}
               </Text>

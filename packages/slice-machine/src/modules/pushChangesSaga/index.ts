@@ -135,7 +135,7 @@ export function* changesPushSaga({
     // Display success toaster
     yield put(
       openToasterCreator({
-        content: "All slices and custom types have been pushed",
+        content: "All slices and types have been pushed",
         type: ToasterType.SUCCESS,
       })
     );

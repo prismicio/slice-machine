@@ -129,7 +129,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                         />
                       )}
                       {
-                        // Prevent deletion of UID for repeatable Custom/Page Type
+                        // Prevent deletion of UID for repeatable type
                         !(isRepeatableCustomType === true && type == "UID") && (
                           <Menu>
                             <MenuButton

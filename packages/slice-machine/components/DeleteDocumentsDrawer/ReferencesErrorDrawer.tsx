@@ -75,13 +75,13 @@ export const ReferencesErrorDrawer: React.FunctionComponent<{
       explanations={
         <>
           <Text sx={{ fontWeight: "bold", mb: 1, lineHeight: "24px" }}>
-            You have{hasMoreThanOne ? "" : " a"} Custom Type
+            You have{hasMoreThanOne ? "" : " a"} type
             {hasMoreThanOne ? "s" : ""} that reference{" "}
             {hasMoreThanOne ? "" : "s"} one or more missing Slices
           </Text>
           <Text sx={{ mb: 24 }}>
             Before pushing, remove references to any missing Slices by opening{" "}
-            the affected Custom Type{hasMoreThanOne ? "s" : ""} and clicking the{" "}
+            the affected type{hasMoreThanOne ? "s" : ""} and clicking the{" "}
             <b>Save</b> button.
           </Text>
           {associatedDocumentsCards}

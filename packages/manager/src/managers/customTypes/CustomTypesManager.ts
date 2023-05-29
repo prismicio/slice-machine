@@ -250,7 +250,7 @@ export class CustomTypesManager extends BaseManager {
 					await client.insertCustomType(model);
 				} else if (error instanceof prismicCustomTypesClient.ForbiddenError) {
 					throw new UnauthorizedError(
-						"You do not have access to push Custom Types to this Prismic repository.",
+						"You do not have access to push types to this Prismic repository.",
 					);
 				} else {
 					throw error;

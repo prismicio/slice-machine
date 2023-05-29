@@ -121,8 +121,8 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
           </Text>
           <Text sx={{ mb: 24 }}>
             {modalData.details.customTypes.length > 1
-              ? "These Page/Custom Types have"
-              : "This Page/Custom Type has"}{" "}
+              ? "These types have"
+              : "This type has"}{" "}
             associated Documents, which will also be deleted. This might create
             broken links in your repository.
           </Text>

@@ -373,8 +373,8 @@ export const NonSharedSlice = {
               This Slice was created with the Legacy Builder, and is
               incompatible with Slice Machine. You cannot edit, push, or delete
               it in Slice Machine. In order to proceed, manually remove the
-              Slice from your Custom Type model. Then create a new Slice with
-              the same fields using Slice Machine.
+              Slice from your type model. Then create a new Slice with the same
+              fields using Slice Machine.
             </Text>
           </ReactTooltip>
           <ScreenshotPreview

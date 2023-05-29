@@ -245,7 +245,7 @@ describe("[Available Custom types module]", () => {
       saga.next().put(push("/custom-types/id"));
       saga.next().put(
         openToasterCreator({
-          content: "Custom Type saved",
+          content: "Custom type saved",
           type: ToasterType.SUCCESS,
         })
       );
@@ -273,7 +273,7 @@ describe("[Available Custom types module]", () => {
       saga.next().call(saveCustomType, customTypeCreated);
       saga.throw(new Error()).put(
         openToasterCreator({
-          content: "Internal Error: Custom Type not saved",
+          content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
         })
       );
@@ -361,7 +361,7 @@ describe("[Available Custom types module]", () => {
       saga.next().put(modalCloseCreator());
       saga.next().put(
         openToasterCreator({
-          content: "Custom Type updated",
+          content: "Custom type updated",
           type: ToasterType.SUCCESS,
         })
       );
@@ -403,7 +403,7 @@ describe("[Available Custom types module]", () => {
         .call(renameCustomType, renamedCustomType);
       saga.throw(new Error()).put(
         openToasterCreator({
-          content: "Internal Error: Custom Type not saved",
+          content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
         })
       );
@@ -429,7 +429,7 @@ describe("[Available Custom types module]", () => {
         .put(deleteCustomTypeCreator.success(actionPayload));
       saga.next().put(
         openToasterCreator({
-          content: `Successfully deleted Custom Type “${actionPayload.customTypeName}”`,
+          content: `Successfully deleted Custom type “${actionPayload.customTypeName}”`,
           type: ToasterType.SUCCESS,
         })
       );
@@ -452,7 +452,7 @@ describe("[Available Custom types module]", () => {
       saga.throw(new Error()).put(
         openToasterCreator({
           content:
-            "An unexpected error happened while deleting your Custom Type.",
+            "An unexpected error happened while deleting your Custom type.",
           type: ToasterType.ERROR,
         })
       );
