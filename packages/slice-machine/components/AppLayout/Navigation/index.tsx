@@ -42,7 +42,11 @@ const getNavigationLinks = (
     title: "Custom Types",
     href: `/${CUSTOM_TYPES_CONFIG["custom"].urlPathSegment}`,
     match(pathname: string) {
-      return pathname.indexOf("/custom-types") === 0;
+      return (
+        pathname.indexOf(
+          `/${CUSTOM_TYPES_CONFIG["custom"].urlPathSegment}}`
+        ) === 0
+      );
     },
     Icon: () => <DatabaseIcon />,
   },
