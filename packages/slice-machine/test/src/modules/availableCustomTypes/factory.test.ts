@@ -120,6 +120,7 @@ describe("[Custom types factory]", () => {
                         "width": 2400,
                       },
                       "label": "Meta Image",
+                      "thumbnails": [],
                     },
                     "type": "Image",
                   },
