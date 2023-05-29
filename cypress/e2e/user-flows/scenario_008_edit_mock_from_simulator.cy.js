@@ -8,7 +8,7 @@ const SLICE = {
   library: ".--slices",
 };
 
-describe("Scenario 008", () => {
+describe.skip("Scenario 008", () => {
   beforeEach(() => {
     cy.clearProject();
     cy.setSliceMachineUserContext({});

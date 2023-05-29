@@ -113,7 +113,7 @@ describe("[pushChanges module]", () => {
 
       saga.next().put(
         openToasterCreator({
-          content: "All slices and custom types have been pushed",
+          content: "All slices and types have been pushed",
           type: ToasterType.SUCCESS,
         })
       );

@@ -10,18 +10,18 @@ import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  LocalAndRemoteCustomType,
-  LocalOnlyCustomType,
-} from "@lib/models/common/ModelData";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 type DeleteCTModalProps = {
-  customType?: LocalOnlyCustomType | LocalAndRemoteCustomType;
+  customType?: CustomType;
+  format: CustomTypeFormat;
 };
 
 export const DeleteCustomTypeModal: React.FunctionComponent<
   DeleteCTModalProps
-> = ({ customType }) => {
+> = ({ customType, format }) => {
   const { isDeleteCustomTypeModalOpen, isDeletingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
       isDeleteCustomTypeModalOpen: isModalOpen(
@@ -34,7 +34,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
       ),
     })
   );
-
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const { closeModals, deleteCustomType } = useSliceMachineActions();
 
   const { theme } = useThemeUI();
@@ -83,7 +83,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 color={theme.colors?.greyIcon as string}
               />
               <Heading sx={{ fontSize: "14px", fontWeight: "bold", ml: 1 }}>
-                Delete Custom Type
+                Delete {customTypesConfig.name({ start: false, plural: false })}
               </Heading>
             </Flex>
             <Close type="button" onClick={() => closeModals()} />
@@ -111,15 +111,16 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 borderRadius: 6,
               }}
             />
-            {customType?.local && (
+            {customType && (
               <Button
                 label="Delete"
                 variant="danger"
                 isLoading={isDeletingCustomType}
                 onClick={() =>
                   deleteCustomType(
-                    customType?.local.id,
-                    customType?.local.label ?? ""
+                    customType.id,
+                    format,
+                    customType.label ?? ""
                   )
                 }
                 sx={{ minHeight: 39, minWidth: 78 }}
@@ -134,7 +135,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <li>
               Delete the{" "}
               <Text sx={{ fontWeight: "bold" }}>
-                customtypes/{customType?.local.id}/
+                customtypes/{customType?.id}/
               </Text>{" "}
               directory.
             </li>
@@ -143,8 +144,9 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           will happen:
           <ul>
             <li>
-              Remove the Custom Type and any associated Documents from your
-              repository.
+              Remove the{" "}
+              {customTypesConfig.name({ start: false, plural: false })} and any
+              associated Documents from your repository.
             </li>
           </ul>
         </Paragraph>

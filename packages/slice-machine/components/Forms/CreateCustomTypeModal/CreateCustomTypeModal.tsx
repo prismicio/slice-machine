@@ -1,11 +1,12 @@
 import { SetStateAction, useState } from "react";
 import { Box } from "theme-ui";
+import { FormikErrors } from "formik";
+import { useSelector } from "react-redux";
 
 import ModalFormCard from "@components/ModalFormCard";
 import { InputBox } from "../components/InputBox";
 import { SelectRepeatable } from "../components/SelectRepeatable";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
   selectAllCustomTypeIds,
@@ -15,11 +16,11 @@ import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { FormikErrors } from "formik";
-
 import { telemetry } from "@src/apiClient";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
+import type { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 interface FormValues {
   id: string;
@@ -27,7 +28,13 @@ interface FormValues {
   repeatable: boolean;
 }
 
-export const CreateCustomTypeModal: React.FC = () => {
+type CreateCustomTypeModalProps = {
+  format: CustomTypeFormat;
+};
+
+export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
+  format,
+}) => {
   const { createCustomType, closeModals } = useSliceMachineActions();
 
   const {
@@ -44,7 +51,7 @@ export const CreateCustomTypeModal: React.FC = () => {
     ),
     isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   }));
-
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
 
   const createCustomTypeAndTrack = ({ id, label, repeatable }: FormValues) => {
@@ -54,9 +61,10 @@ export const CreateCustomTypeModal: React.FC = () => {
       event: "custom-type:created",
       id,
       name,
+      format,
       type: repeatable ? "repeatable" : "single",
     });
-    createCustomType(id, name, repeatable);
+    createCustomType(id, name, repeatable, format);
     closeModals();
     setIsIdFieldPristine(true);
   };
@@ -122,7 +130,10 @@ export const CreateCustomTypeModal: React.FC = () => {
         }
 
         if (!errors.label && customTypeLabels.includes(label)) {
-          errors.label = "Custom Type name is already taken.";
+          errors.label = `${customTypesConfig.name({
+            start: true,
+            plural: false,
+          })} name is already taken.`;
         }
 
         if (!id || !id.length) {
@@ -145,25 +156,37 @@ export const CreateCustomTypeModal: React.FC = () => {
         return Object.keys(errors).length > 0 ? errors : undefined;
       }}
       content={{
-        title: "Create a new custom type",
+        title: `Create a new ${customTypesConfig.name({
+          start: false,
+          plural: false,
+        })}`,
       }}
     >
       {({ errors, setValues, setFieldValue, values, touched }) => (
         <Box>
-          <SelectRepeatable />
+          <SelectRepeatable format={format} />
           <InputBox
             name="label"
-            label="Custom Type Name"
+            label={`${customTypesConfig.name({
+              start: true,
+              plural: false,
+            })} Name`}
             dataCy="ct-name-input"
-            placeholder="A display name for the Custom type"
+            placeholder={`A display name for the ${customTypesConfig.name({
+              start: false,
+              plural: false,
+            })}`}
             error={touched.label ? errors.label : undefined}
             onChange={(e) => handleLabelChange(e, values, setValues)}
           />
           <InputBox
             name="id"
             dataCy="ct-id-input"
-            label="Custom Type ID"
-            placeholder="ID to query the Custom Type in the API (e.g. 'BlogPost')"
+            label={`${customTypesConfig.name({
+              start: true,
+              plural: false,
+            })} ID`}
+            placeholder={customTypesConfig.inputPlaceholder}
             error={touched.id ? errors.id : undefined}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />

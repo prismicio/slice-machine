@@ -1,6 +1,9 @@
 import React from "react";
 import { Flex, Text, Card, Link } from "theme-ui";
 
+import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+
 type AssociatedDocumentsCardProps = {
   ctName: string;
   numberOfDocuments: number;
@@ -42,9 +45,10 @@ export const AssociatedDocumentsCard: React.FC<
 );
 
 export const CustomTypesReferencesCard: React.FC<{
-  name: string;
+  format: CustomTypeFormat;
   id: string;
-}> = ({ name, id }) => (
+  name: string;
+}> = ({ format, id, name }) => (
   <Card
     sx={{
       mb: 12,
@@ -64,8 +68,13 @@ export const CustomTypesReferencesCard: React.FC<{
         Missing Slices
       </Text>
     </Flex>
-    <Link href={`/cts/${id}`} key={id} target="_blank" variant="cardSmall">
-      View Custom Type
+    <Link
+      href={`/${CUSTOM_TYPES_CONFIG[format].urlPathSegment}/${id}`}
+      key={id}
+      target="_blank"
+      variant="cardSmall"
+    >
+      View {CUSTOM_TYPES_CONFIG[format].name({ start: false, plural: false })}
     </Link>
   </Card>
 );

@@ -21,7 +21,7 @@ OPTIONS
 
   --no-push               For starters, prevent anything from being pushed
   --no-push-slices        For starters, prevent slices from being pushed
-  --no-push-custom-types  For starters, prevent custom types from being pushed
+  --no-push-custom-types  For starters, prevent types from being pushed
   --no-push-documents     For starters, prevent documents from being pushed
 
   --help, -h              Display CLI help

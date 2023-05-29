@@ -105,16 +105,24 @@ export const createSliceMachineExpressApp = async (
 			res.sendFile(path.join(sliceMachineOutDir, "slices.html"));
 		});
 
-		app.get("/onboarding", (_req, res) => {
-			res.sendFile(path.join(sliceMachineOutDir, "onboarding.html"));
-		});
-
 		app.get("/changes", (_req, res) => {
 			res.sendFile(path.join(sliceMachineOutDir, "changes.html"));
 		});
 
-		app.get("/cts/:id", (_req, res) => {
-			res.sendFile(path.join(sliceMachineOutDir, "cts/[ct].html"));
+		app.get("/page-types/:id", (_req, res) => {
+			res.sendFile(
+				path.join(sliceMachineOutDir, "page-types/[pageTypeId].html"),
+			);
+		});
+
+		app.get("/custom-types", (_req, res) => {
+			res.sendFile(path.join(sliceMachineOutDir, "custom-types.html"));
+		});
+
+		app.get("/custom-types/:id", (_req, res) => {
+			res.sendFile(
+				path.join(sliceMachineOutDir, "custom-types/[customTypeId].html"),
+			);
 		});
 
 		app.get("/:lib/:sliceID/:variation", (_req, res) => {

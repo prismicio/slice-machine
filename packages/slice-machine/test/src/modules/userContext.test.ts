@@ -4,7 +4,6 @@ import {
   userContextReducer,
   sendAReviewCreator,
   skipReviewCreator,
-  finishOnboardingCreator,
   updatesViewedCreator,
 } from "@src/modules/userContext";
 import { UserContextStoreType } from "@src/modules/userContext/types";
@@ -22,10 +21,9 @@ describe("[UserContext module]", () => {
     });
 
     it("should update hasSendAReview to true when given USER_CONTEXT/SEND_REVIEW action", () => {
-      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false; isOnboarded: false;... Remove this comment to see the full error message
+      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false;... Remove this comment to see the full error message
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
-        isOnboarded: false,
         updatesViewed: {
           latest: null,
           latestNonBreaking: null,
@@ -37,17 +35,15 @@ describe("[UserContext module]", () => {
       const expectedState = {
         ...initialState,
         hasSendAReview: true,
-        isOnboarded: false,
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);
     });
 
     it("should update hasSendAReview to true when given USER_CONTEXT/SKIP_REVIEW action", () => {
-      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false; isOnboarded: false;... Remove this comment to see the full error message
+      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false;... Remove this comment to see the full error message
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
-        isOnboarded: false,
         updatesViewed: {
           latest: null,
           latestNonBreaking: null,
@@ -59,39 +55,15 @@ describe("[UserContext module]", () => {
       const expectedState = {
         ...initialState,
         hasSendAReview: true,
-        isOnboarded: false,
-      };
-
-      expect(userContextReducer(initialState, action)).toEqual(expectedState);
-    });
-
-    it("should update hasSendAReview to true when given USER_CONTEXT/FINISH_ONBOARDING action", () => {
-      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false; isOnboarded: false;... Remove this comment to see the full error message
-      const initialState: UserContextStoreType = {
-        hasSendAReview: false,
-        isOnboarded: false,
-        updatesViewed: {
-          latest: null,
-          latestNonBreaking: null,
-        },
-      };
-
-      const action = finishOnboardingCreator();
-
-      const expectedState = {
-        ...initialState,
-        hasSendAReview: false,
-        isOnboarded: true,
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);
     });
 
     it("should update dismissedUpdate to the value of the update dismissed", () => {
-      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false; isOnboarded: false;... Remove this comment to see the full error message
+      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false;... Remove this comment to see the full error message
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
-        isOnboarded: false,
         updatesViewed: {
           latest: null,
           latestNonBreaking: null,

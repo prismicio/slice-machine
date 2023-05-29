@@ -29,6 +29,7 @@ const Zone = ({
   renderHintBase /* render base (eg. path to slice) content for hints */,
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
   dataCy,
+  isRepeatableCustomType,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
@@ -143,6 +144,8 @@ const Zone = ({
         onDeleteItem={onDeleteItem}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dataCy={dataCy}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        isRepeatableCustomType={isRepeatableCustomType}
         newField={
           newFieldData && (
             <NewField

@@ -5,7 +5,6 @@ import { Box } from "theme-ui";
 import Navigation from "./Navigation";
 
 const AsIs: { [x: string]: boolean } = {
-  "/onboarding": true,
   "/[lib]/[sliceName]/[variation]/simulator": true,
 };
 

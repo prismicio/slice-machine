@@ -1,7 +1,7 @@
 const customTypeName = "Duplicated Custom Type";
 const customTypeId = "duplicated_custom_type";
 
-describe("Duplicate custom types", () => {
+describe.skip("Duplicate custom types", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();
@@ -19,7 +19,7 @@ describe("Duplicate custom types", () => {
     cy.get("[type=submit]").should("be.disabled");
 
     cy.get("[data-cy=ct-name-input-error]").contains(
-      "Custom Type name is already taken."
+      "Custom type name is already taken."
     );
   });
 

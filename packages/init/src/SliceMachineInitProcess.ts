@@ -876,7 +876,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							},
 						},
 						{
-							title: "Pushing custom types...",
+							title: "Pushing types...",
 							skip: () => {
 								if (!this.options.push) {
 									return `--no-push used`;
@@ -904,16 +904,16 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 
 								let pushed = 0;
-								task.title = `Pushing custom types... (0/${ids.length})`;
+								task.title = `Pushing types... (0/${ids.length})`;
 								await Promise.all(
 									ids.map(async (id) => {
 										await this.manager.customTypes.pushCustomType({ id });
 										pushed++;
-										task.title = `Pushing custom types... (${pushed}/${ids.length})`;
+										task.title = `Pushing types... (${pushed}/${ids.length})`;
 									}),
 								);
 
-								task.title = "Pushed all custom types";
+								task.title = "Pushed all types";
 							},
 						},
 						{

@@ -34,6 +34,7 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   CustomEditElements?: JSX.Element[];
   widget: Widget<F, S>;
   draggableId: string;
+  isRepeatableCustomType?: boolean;
   children: React.ReactNode;
 }
 
@@ -44,22 +45,19 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
   enterEditMode,
   modelFieldName,
   renderFieldAccessor,
-
   HintElement,
-
   CustomEditElement,
   CustomEditElements,
   widget,
-
   draggableId,
-
+  isRepeatableCustomType,
   children,
 }: ListItemProps<F, S>): JSX.Element {
   const { theme } = useThemeUI();
   const {
     key,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    value: { config },
+    value: { config, type },
   } = item;
 
   return (
@@ -130,43 +128,48 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                           }
                         />
                       )}
-                      <Menu>
-                        <MenuButton
-                          className="sliceMenuButton"
-                          data-cy="slice-menu-button"
-                          style={{
-                            padding: "0",
-                            cursor: "pointer",
-                            width: "32px",
-                            height: "32px",
-                            border: "none",
-                            background: "transparent",
-                            outline: "0",
-                          }}
-                        >
-                          <BsThreeDotsVertical
-                            size={20}
-                            color={theme.colors?.icons as string}
-                            style={{ pointerEvents: "none" }}
-                          />
-                        </MenuButton>
-                        <MenuList
-                          style={{
-                            background: theme.colors?.gray as string,
-                            border: "1px solid",
-                            borderRadius: "3px",
-                            borderColor: theme.colors?.borders as string,
-                            outline: "0",
-                          }}
-                        >
-                          <MenuItem
-                            style={{ padding: "6px", cursor: "pointer" }}
-                            onSelect={() => deleteItem(key)}
-                          >
-                            Delete field
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
+                      {
+                        // Prevent deletion of UID for repeatable type
+                        !(isRepeatableCustomType === true && type == "UID") && (
+                          <Menu>
+                            <MenuButton
+                              className="sliceMenuButton"
+                              data-cy="slice-menu-button"
+                              style={{
+                                padding: "0",
+                                cursor: "pointer",
+                                width: "32px",
+                                height: "32px",
+                                border: "none",
+                                background: "transparent",
+                                outline: "0",
+                              }}
+                            >
+                              <BsThreeDotsVertical
+                                size={20}
+                                color={theme.colors?.icons as string}
+                                style={{ pointerEvents: "none" }}
+                              />
+                            </MenuButton>
+                            <MenuList
+                              style={{
+                                background: theme.colors?.gray as string,
+                                border: "1px solid",
+                                borderRadius: "3px",
+                                borderColor: theme.colors?.borders as string,
+                                outline: "0",
+                              }}
+                            >
+                              <MenuItem
+                                style={{ padding: "6px", cursor: "pointer" }}
+                                onSelect={() => deleteItem(key)}
+                              >
+                                Delete field
+                              </MenuItem>
+                            </MenuList>
+                          </Menu>
+                        )
+                      }
                     </Flex>
                   </Flex>
                   {HintElement ? HintElement : null}

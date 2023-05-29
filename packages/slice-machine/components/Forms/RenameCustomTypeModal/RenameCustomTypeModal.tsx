@@ -10,24 +10,25 @@ import { FormikErrors } from "formik";
 import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  LocalAndRemoteCustomType,
-  LocalOnlyCustomType,
-} from "@lib/models/common/ModelData";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 interface RenameCustomTypeModalProps {
-  customType?: LocalOnlyCustomType | LocalAndRemoteCustomType;
+  customType?: CustomType;
+  format: CustomTypeFormat;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   customType,
+  format,
 }) => {
-  const customTypeName = customType?.local.label ?? "";
-  const customTypeId = customType?.local.id ?? "";
+  const customTypeName = customType?.label ?? "";
+  const customTypeId = customType?.id ?? "";
   const { renameCustomType, closeModals } = useSliceMachineActions();
 
   const handleOnSubmit = (values: { customTypeName: string }) => {
-    renameCustomType(customTypeId, values.customTypeName);
+    renameCustomType(customTypeId, format, values.customTypeName);
   };
   const {
     isRenameCustomTypeModalOpen,
@@ -41,6 +42,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
     customTypeLabels: selectAllCustomTypeLabels(store),
     isRenamingCustomType: isLoading(store, LoadingKeysEnum.RENAME_CUSTOM_TYPE),
   }));
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
 
   return (
     <ModalFormCard
@@ -55,7 +57,12 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
         customTypeName: customTypeName,
       }}
       isLoading={isRenamingCustomType}
-      content={{ title: "Rename a custom type" }}
+      content={{
+        title: `Rename a ${customTypesConfig.name({
+          start: false,
+          plural: false,
+        })}`,
+      }}
       validate={({ customTypeName: newName }) => {
         const errors: FormikErrors<{
           customTypeName: string;
@@ -70,7 +77,10 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
           customTypeLabels.includes(newName) &&
           customTypeName !== newName
         ) {
-          errors.customTypeName = "Custom Type name is already taken.";
+          errors.customTypeName = `${customTypesConfig.name({
+            start: true,
+            plural: false,
+          })} name is already taken.`;
         }
 
         return Object.keys(errors).length > 0 ? errors : undefined;
@@ -80,8 +90,14 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
         <Box>
           <InputBox
             name="customTypeName"
-            label="Custom Type Name"
-            placeholder="A display name for the Custom type"
+            label={`${customTypesConfig.name({
+              start: true,
+              plural: false,
+            })} Name`}
+            placeholder={`A display name for the ${customTypesConfig.name({
+              start: false,
+              plural: false,
+            })}`}
             error={errors.customTypeName}
             dataCy="custom-type-name-input"
           />

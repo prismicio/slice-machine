@@ -11,8 +11,11 @@ import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import React, { useEffect } from "react";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 interface SlicesListProps extends ModelStatusInformation {
+  format: CustomTypeFormat;
   slices: ReadonlyArray<SliceZoneSlice>;
 }
 
@@ -21,15 +24,20 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   modelsStatuses,
   authStatus,
   isOnline,
+  format,
 }) => {
   const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
+  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
 
   const { openToaster } = useSliceMachineActions();
 
   useEffect(() => {
     if (hasLegacySlices)
       openToaster(
-        "This Custom Type contains Slices that are incompatible.",
+        `This ${customTypesConfig.name({
+          start: false,
+          plural: false,
+        })} contains Slices that are incompatible.`,
         ToasterType.WARNING
       );
   }, [hasLegacySlices]);

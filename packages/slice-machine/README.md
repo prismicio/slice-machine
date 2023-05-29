@@ -17,7 +17,7 @@
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
 - 🧰 &nbsp;Build [Slices][prismic-docs-slices] in a specialized development environment.
-- 📄 &nbsp;Manage and configure your [Custom Types][prismic-docs-custom-types].
+- 📄 &nbsp;Manage and configure your [custom types][prismic-docs-custom-types].
 - ⚒️ &nbsp;Integrate into your website's framework using code generation.
 
 ## Install

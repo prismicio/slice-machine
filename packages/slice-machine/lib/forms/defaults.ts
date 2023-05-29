@@ -46,7 +46,7 @@ export const DefaultFields: Record<string, InputType> = {
     "Placeholder",
     {
       required: "This field is required",
-      max: true,
+      max: [100, "String is too long. Max: 100"],
     },
     undefined,
     undefined,

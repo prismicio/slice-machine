@@ -24,10 +24,15 @@ import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGE
 import { UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
+import { CustomTypeFormat } from "./types";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
 	errors: (DecodeError | HookError)[];
+};
+
+type CustomTypesManagerReadAllCustomTypesArgs = {
+	format?: CustomTypeFormat;
 };
 
 type SliceMachineManagerReadAllCustomTypeReturnType = {
@@ -93,7 +98,9 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	async readAllCustomTypes(): Promise<SliceMachineManagerReadAllCustomTypeReturnType> {
+	async readAllCustomTypes(
+		args?: CustomTypesManagerReadAllCustomTypesArgs,
+	): Promise<SliceMachineManagerReadAllCustomTypeReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		const res: SliceMachineManagerReadAllCustomTypeReturnType = {
@@ -109,7 +116,7 @@ export class CustomTypesManager extends BaseManager {
 				const { model, errors } = await this.readCustomType({ id });
 				res.errors = [...res.errors, ...errors];
 
-				if (model) {
+				if (model && (!args?.format || args.format === model.format)) {
 					res.models.push({ model });
 				}
 			}
@@ -243,7 +250,7 @@ export class CustomTypesManager extends BaseManager {
 					await client.insertCustomType(model);
 				} else if (error instanceof prismicCustomTypesClient.ForbiddenError) {
 					throw new UnauthorizedError(
-						"You do not have access to push Custom Types to this Prismic repository.",
+						"You do not have access to push types to this Prismic repository.",
 					);
 				} else {
 					throw error;

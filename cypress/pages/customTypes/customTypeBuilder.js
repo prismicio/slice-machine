@@ -36,7 +36,7 @@ class CustomTypeBuilder extends BaseBuilder {
   }
 
   goTo(ctId) {
-    cy.visit(`/cts/${ctId}`);
+    cy.visit(`/custom-types/${ctId}`);
     this.saveButton.should("be.visible");
     return this;
   }

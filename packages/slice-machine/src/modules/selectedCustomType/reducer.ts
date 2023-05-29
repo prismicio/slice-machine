@@ -10,6 +10,7 @@ import {
   addFieldCreator,
   deleteTabCreator,
   createSliceZoneCreator,
+  deleteSliceZoneCreator,
   deleteFieldCreator,
   deleteSharedSliceCreator,
   reorderFieldCreator,
@@ -173,6 +174,23 @@ export const selectedCustomTypeReducer: Reducer<
       )((tab) => {
         const i = findAvailableKey(tabIndex, existingSliceZones);
         return Tab.createSliceZone(tab, `slices${i !== 0 ? i.toString() : ""}`);
+      });
+    }
+    case getType(deleteSliceZoneCreator): {
+      if (!state) return state;
+      const { tabId } = action.payload;
+      const tabIndex = state.model.tabs.findIndex((t) => t.key === tabId);
+
+      if (tabIndex === -1) {
+        console.error(`No tabId ${tabId} found in tabs`);
+        return state;
+      }
+
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) => {
+        return Tab.deleteSliceZone(tab);
       });
     }
     case getType(replaceSharedSliceCreator): {

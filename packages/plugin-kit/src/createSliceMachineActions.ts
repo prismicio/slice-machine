@@ -165,7 +165,7 @@ export class SliceMachineActions {
 		});
 
 		if (!model) {
-			throw new Error(`Custom Type \`${args.id}\` not found.`, { cause });
+			throw new Error(`Custom type \`${args.id}\` not found.`, { cause });
 		}
 
 		return model;
@@ -182,7 +182,7 @@ export class SliceMachineActions {
 			);
 
 			if (!library) {
-				throw new Error(`Couldn't read Custom Type library.`, {
+				throw new Error(`Couldn't read custom type library.`, {
 					cause,
 				});
 			}

@@ -140,6 +140,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           `slice.primary${transformKeyAccessor(key)}`
         }
         dataCy="slice-non-repeatable-zone"
+        isRepeatableCustomType={undefined}
       />
       <Box mt={4} />
       <Zone
@@ -164,6 +165,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           `slice.items[i]${transformKeyAccessor(key)}`
         }
         dataCy="slice-repeatable-zone"
+        isRepeatableCustomType={undefined}
       />
     </>
   );

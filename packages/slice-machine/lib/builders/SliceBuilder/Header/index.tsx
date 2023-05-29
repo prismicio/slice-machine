@@ -4,7 +4,6 @@ import VariationModal from "./VariationModal";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
-import { MdHorizontalSplit } from "react-icons/md";
 import HeaderCommon from "@components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@lib/models/common/Slice";
@@ -16,6 +15,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import SimulatorButton from "./SimulatorButton";
+import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
 
 const Header: React.FC<{
   component: ComponentUI;
@@ -62,7 +62,7 @@ const Header: React.FC<{
           link={{
             Element: (
               <>
-                <MdHorizontalSplit /> <Text>Slices</Text>
+                <SliceListIcon /> <Text>Slices</Text>
               </>
             ),
             href: "/slices",

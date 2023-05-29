@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.7.3",
+	"version": "0.7.3-dev-page-types.8",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
@@ -43,7 +43,7 @@
 		"start-slicemachine": "./bin/start-slicemachine.js"
 	},
 	"dependencies": {
-		"@slicemachine/manager": "0.2.2",
+		"@slicemachine/manager": "0.2.2-dev-page-types.8",
 		"body-parser": "^1.20.2",
 		"chalk": "^4.1.2",
 		"cors": "^2.8.5",
@@ -55,6 +55,7 @@
 		"serve-static": "^1.15.0"
 	},
 	"devDependencies": {
+		"@prismicio/types-internal": "2.0.0-beta.1",
 		"@size-limit/preset-small-lib": "^8.2.4",
 		"@types/body-parser": "^1.19.2",
 		"@types/cors": "^2.8.13",

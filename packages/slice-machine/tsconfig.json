@@ -24,7 +24,6 @@
     "jsx": "preserve",
     "outDir": "./build",
     "paths": {
-      "@/*": ["/*"],
       "@lib/*": ["lib/*"],
       "@utils/*": ["lib/utils/*"],
       "@builders/*": ["lib/builders/*"],
@@ -34,8 +33,10 @@
     },
     "incremental": true
   },
-  "exclude": ["node_modules", "build"],
+  "exclude": ["node_modules", "build", "storybook-static"],
   "include": [
+    ".storybook/*",
+    ".eslintrc.js",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",

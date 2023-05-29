@@ -4,7 +4,6 @@ import { ModalKeysEnum } from "./modal/types";
 import { modalCloseCreator, modalOpenCreator } from "./modal";
 import { startLoadingActionCreator, stopLoadingActionCreator } from "./loading";
 import {
-  finishOnboardingCreator,
   sendAReviewCreator,
   skipReviewCreator,
   updatesViewedCreator,
@@ -41,6 +40,7 @@ import {
   deleteSharedSliceCreator,
   replaceSharedSliceCreator,
   createSliceZoneCreator,
+  deleteSliceZoneCreator,
   saveCustomTypeCreator,
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator,
@@ -74,6 +74,7 @@ import type {
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import { CustomTypeFormat } from "@slicemachine/manager/*";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -137,7 +138,6 @@ const useSliceMachineActions = () => {
   // UserContext module
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
-  const finishOnboarding = () => dispatch(finishOnboardingCreator());
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
   const setSeenSimulatorToolTip = () =>
@@ -146,19 +146,36 @@ const useSliceMachineActions = () => {
     dispatch(hasSeenTutorialsTooTipCreator());
 
   // Custom types module
-  const createCustomType = (id: string, label: string, repeatable: boolean) =>
-    dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
-  const renameCustomType = (customTypeId: string, newCustomTypeName: string) =>
+  const createCustomType = (
+    id: string,
+    label: string,
+    repeatable: boolean,
+    format: CustomTypeFormat
+  ) =>
+    dispatch(
+      createCustomTypeCreator.request({ id, label, repeatable, format })
+    );
+  const renameCustomType = (
+    customTypeId: string,
+    format: CustomTypeFormat,
+    newCustomTypeName: string
+  ) =>
     dispatch(
       renameCustomTypeCreator.request({
         customTypeId,
+        format,
         newCustomTypeName,
       })
     );
-  const deleteCustomType = (customTypeId: string, customTypeName: string) =>
+  const deleteCustomType = (
+    customTypeId: string,
+    format: CustomTypeFormat,
+    customTypeName: string
+  ) =>
     dispatch(
       deleteCustomTypeCreator.request({
         customTypeId,
+        format,
         customTypeName,
       })
     );
@@ -197,6 +214,8 @@ const useSliceMachineActions = () => {
     );
   const createSliceZone = (tabId: string) =>
     dispatch(createSliceZoneCreator({ tabId }));
+  const deleteSliceZone = (tabId: string) =>
+    dispatch(deleteSliceZoneCreator({ tabId }));
   const deleteCustomTypeSharedSlice = (tabId: string, sliceId: string) =>
     dispatch(deleteSharedSliceCreator({ tabId, sliceId }));
   const replaceCustomTypeSharedSlice = (
@@ -450,7 +469,6 @@ const useSliceMachineActions = () => {
     openDeleteDocumentsDrawerOverLimit,
     connectToSimulatorIframe,
     refreshState,
-    finishOnboarding,
     openScreenshotsModal,
     openLoginModal,
     startLoadingLogin,
@@ -471,6 +489,7 @@ const useSliceMachineActions = () => {
     reorderCustomTypeField,
     replaceCustomTypeField,
     createSliceZone,
+    deleteSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
 

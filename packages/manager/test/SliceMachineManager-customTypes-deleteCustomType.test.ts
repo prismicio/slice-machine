@@ -25,7 +25,10 @@ it("calls plugins' `custom-type:delete` hook", async (ctx) => {
 
 	const res = await manager.customTypes.deleteCustomType({ id: model.id });
 
-	expectHookHandlerToHaveBeenCalledWithData(hookHandler, { model });
+	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
+		// TODO: update prismic/mock
+		model: { ...model, format: "custom" },
+	});
 	expect(res).toStrictEqual({
 		errors: [],
 	});

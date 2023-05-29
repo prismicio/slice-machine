@@ -23,9 +23,16 @@ export function createCustomType(id, name) {
   createCustomTypeModal.idInput.should("have.value", id);
   createCustomTypeModal.submit();
 
-  cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
+  cy.location("pathname", { timeout: 15000 }).should(
+    "eq",
+    `/custom-types/${id}`
+  );
   cy.readFile(TYPES_FILE).should("contains", name);
   cy.readFile(CUSTOM_TYPE_MODEL(id));
+
+  // All new Custom Types have a default UID field
+  cy.contains("UID").should("be.visible");
+  cy.contains("data.uid").should("be.visible");
 }
 
 /**
@@ -116,4 +123,29 @@ export function addSlicesToCustomType(sliceIds) {
   customTypeBuilder.updateSliceZoneButton.click();
   sliceIds.forEach((sliceId) => updateSliceZoneModal.selectSlice(sliceId));
   updateSliceZoneModal.submit();
+}
+
+/**
+ * Get the Menu button of the relevant widget.
+ *
+ * @param {string} name Name of the widget field.
+ */
+export function getWidgetFieldMenu(name) {
+  return cy
+    .contains("div", name)
+    .parent()
+    .find("[data-cy='slice-menu-button']");
+}
+
+/**
+ * Delete the relevant widget.
+ *
+ * @param {string} name Name of the widget field.
+ */
+export function deleteWidgetField(name) {
+  cy.getWidgetFieldMenu(name).click();
+
+  cy.contains("div", "Delete field").click({ force: true });
+
+  cy.contains("div", name).should("not.exist");
 }

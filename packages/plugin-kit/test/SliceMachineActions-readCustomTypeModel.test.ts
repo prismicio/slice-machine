@@ -38,5 +38,5 @@ it("throws when no Custom Type model is returned", async () => {
 	await pluginRunner.init();
 
 	const fn = () => pluginRunner.rawActions.readCustomTypeModel({ id: "foo" });
-	await expect(fn).rejects.toThrowError("Custom Type `foo` not found.");
+	await expect(fn).rejects.toThrowError("Custom type `foo` not found.");
 });

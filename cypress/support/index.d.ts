@@ -5,7 +5,6 @@ declare namespace Cypress {
   interface Chainable {
     setSliceMachineUserContext(
       hasSendAReview?: boolean,
-      isOnboarded?: boolean,
       viewedUpdates?: Record<string, unknown>,
       hasSeenTutorialsTooTip?: boolean,
       hasSeenSimulatorToolTip?: boolean
@@ -16,10 +15,5 @@ declare namespace Cypress {
     getInputByLabel<E extends Node = HTMLElement>(
       label: string
     ): Chainable<JQuery<E>>;
-  }
-
-  interface Chainer<Subject> {
-    (chainer: "be.playing"): Chainable<Subject>;
-    (chainer: "not.be.playing"): Chainable<Subject>;
   }
 }

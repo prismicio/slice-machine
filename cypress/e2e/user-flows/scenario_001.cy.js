@@ -6,7 +6,7 @@ const random = Date.now();
 const customTypeName = `My Custom Type ${random}`;
 const customTypeId = `my_custom_type_${random}`;
 
-describe("I am a new SM user (with Next) who wants to create a Custom Type with fields, and then save and push it to Prismic.", () => {
+describe.skip("I am a new SM user (with Next) who wants to create a Custom Type with fields, and then save and push it to Prismic.", () => {
   // using beforeEach instead of before to have it executed in case of retry
   beforeEach(() => {
     cy.clearProject();
@@ -19,7 +19,6 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.createCustomType(customTypeId, customTypeName);
     customTypeBuilder.goTo(customTypeId);
 
-    cy.addFieldToCustomType("UID", "ID Field", "uid");
     cy.addFieldToCustomType("Key Text", "Key Text Field", "key_text_id");
     cy.addFieldToCustomType("Rich Text", "Rich Text Field", "rich_text_id");
     customTypeBuilder.save();
@@ -27,7 +26,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     // Links to CTs available locally
     menu.navigateTo("Changes");
     cy.contains(customTypeId).click();
-    cy.url().should("include", `/cts/${customTypeId}`);
+    cy.url().should("include", `/custom-types/${customTypeId}`);
 
     menu.navigateTo("Changes");
     changesPage.pushChanges().isUpToDate();

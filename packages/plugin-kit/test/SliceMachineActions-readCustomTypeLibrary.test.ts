@@ -32,5 +32,5 @@ it("throws when no Custom Type library is returned", async () => {
 	await pluginRunner.init();
 
 	const fn = () => pluginRunner.rawActions.readCustomTypeLibrary();
-	await expect(fn).rejects.toThrowError("Couldn't read Custom Type library.");
+	await expect(fn).rejects.toThrowError("Couldn't read custom type library.");
 });

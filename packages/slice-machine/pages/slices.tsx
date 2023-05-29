@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Text, Link } from "theme-ui";
 import Container from "components/Container";
 
@@ -33,6 +32,7 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 import { DeleteSliceModal } from "@components/DeleteSliceModal";
+import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const {
@@ -114,7 +114,7 @@ const SlicesIndex: React.FunctionComponent = () => {
             link={{
               Element: (
                 <>
-                  <MdHorizontalSplit /> <Text>Slices</Text>
+                  <SliceListIcon /> <Text>Slices</Text>
                 </>
               ),
               href: "/slices",

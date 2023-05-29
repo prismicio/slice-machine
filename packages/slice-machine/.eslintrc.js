@@ -6,7 +6,7 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: ["../../tsconfig-node.json", "./tsconfig.json"],
+    project: ["./tsconfig.json"],
     tsconfigRootDir: __dirname,
   },
   plugins: ["@typescript-eslint", "import"],
@@ -14,9 +14,10 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:storybook/recommended",
     "eslint-config-prettier",
   ],
-  ignorePatterns: ["build", "templates", "**/tests/**", "helpers/**"],
+  ignorePatterns: ["build", "templates", "helpers/**"],
   rules: {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [

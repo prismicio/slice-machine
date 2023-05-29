@@ -80,6 +80,8 @@ const mockAdapter = async (
 		variations: [ctx.mockPrismic.model.sharedSliceVariation()],
 	});
 	const customTypeModel = ctx.mockPrismic.model.customType();
+	// TODO: maybe update @prismic/mock with the new custom-type format
+	const customTypeModelWithFormat = { ...customTypeModel, format: "custom" };
 
 	const sliceLibraryReadHookHandler = vi.fn(({ libraryID }) => {
 		if (options?.throwsOn?.includes("slice-library:read")) {
@@ -126,7 +128,7 @@ const mockAdapter = async (
 		adapter,
 		models: {
 			sharedSliceModel,
-			customTypeModel,
+			customTypeModel: customTypeModelWithFormat,
 		},
 		spiedHookHandlers: {
 			sliceLibraryReadHookHandler,
@@ -180,7 +182,9 @@ const mockPrismicAPIs = async (
 			return res(ctx.status(404));
 		},
 		async onCustomTypeInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual(args.models.customTypeModel);
+			const want = args.models.customTypeModel;
+			const got = await req.json();
+			expect(got).toStrictEqual(want);
 
 			return res(ctx.status(201));
 		},
@@ -243,7 +247,7 @@ it("pushes data to Prismic", async (ctx) => {
 	});
 
 	expect(stdout).toMatch(/Pushed all slices/);
-	expect(stdout).toMatch(/Pushed all custom types/);
+	expect(stdout).toMatch(/Pushed all types/);
 	expect(stdout).toMatch(/Pushed all documents/);
 	expect(stdout).toMatch(/Pushed data to Prismic/);
 });
@@ -371,7 +375,7 @@ it("throws when it fails to read slice libraries", async (ctx) => {
 
 // Custom types
 
-it("pushes custom types to Prismic", async (ctx) => {
+it("pushes types to Prismic", async (ctx) => {
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
 	await mockPrismicAPIs(ctx, { initProcess, models });
 	const spiedManager = spyManager(initProcess);
@@ -386,10 +390,10 @@ it("pushes custom types to Prismic", async (ctx) => {
 	).toHaveBeenCalledOnce();
 	expect(spiedHookHandlers.customTypeReadHookHandler).toHaveBeenCalledOnce();
 	expect(spiedManager.customTypes.pushCustomType).toHaveBeenCalledOnce();
-	expect(stdout).toMatch(/Pushed all custom types/);
+	expect(stdout).toMatch(/Pushed all types/);
 });
 
-it("skips pushing custom types to Prismic when no-push-custom-types flag is set", async (ctx) => {
+it("skips pushing types to Prismic when no-push-custom-types flag is set", async (ctx) => {
 	const initProcess = createSliceMachineInitProcess({ pushCustomTypes: false });
 	setContext(initProcess, {
 		packageManager: "npm",
@@ -415,7 +419,7 @@ it("skips pushing custom types to Prismic when no-push-custom-types flag is set"
 	expect(spiedManager.customTypes.pushCustomType).not.toHaveBeenCalled();
 });
 
-it("skips pushing custom types to Prismic when no-push flag is set", async (ctx) => {
+it("skips pushing types to Prismic when no-push flag is set", async (ctx) => {
 	const initProcess = createSliceMachineInitProcess({ push: false });
 	setContext(initProcess, {
 		packageManager: "npm",
@@ -441,7 +445,7 @@ it("skips pushing custom types to Prismic when no-push flag is set", async (ctx)
 	expect(spiedManager.customTypes.pushCustomType).not.toHaveBeenCalled();
 });
 
-it("skips pushing custom types to Prismic when no custom types are available", async (ctx) => {
+it("skips pushing types to Prismic when no types are available", async (ctx) => {
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess, {
 		empty: ["custom-type-library:read"],
 	});
@@ -621,7 +625,7 @@ it("pushes data to Prismic", async (ctx) => {
 	});
 
 	expect(stdout).toMatch(/Pushed all slices/);
-	expect(stdout).toMatch(/Pushed all custom types/);
+	expect(stdout).toMatch(/Pushed all types/);
 	// expect(stdout).toMatch(/Pushed all documents/);
 	expect(stdout).toMatch(/Pushed data to Prismic/);
 });
