@@ -1,8 +1,9 @@
 import React from "react";
 import { Flex, Text, Card, Link } from "theme-ui";
 
-import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 type AssociatedDocumentsCardProps = {
   ctName: string;
@@ -69,12 +70,12 @@ export const CustomTypesReferencesCard: React.FC<{
       </Text>
     </Flex>
     <Link
-      href={`/${CUSTOM_TYPES_CONFIG[format].urlPathSegment}/${id}`}
+      href={CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id)}
       key={id}
       target="_blank"
       variant="cardSmall"
     >
-      View {CUSTOM_TYPES_CONFIG[format].name({ start: false, plural: false })}
+      View {CUSTOM_TYPES_MESSAGES[format].name({ start: false, plural: false })}
     </Link>
   </Card>
 );

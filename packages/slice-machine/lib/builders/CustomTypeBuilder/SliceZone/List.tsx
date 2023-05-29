@@ -11,8 +11,8 @@ import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import React, { useEffect } from "react";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 interface SlicesListProps extends ModelStatusInformation {
   format: CustomTypeFormat;
@@ -27,14 +27,14 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   format,
 }) => {
   const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
   const { openToaster } = useSliceMachineActions();
 
   useEffect(() => {
     if (hasLegacySlices)
       openToaster(
-        `This ${customTypesConfig.name({
+        `This ${customTypesMessages.name({
           start: false,
           plural: false,
         })} contains Slices that are incompatible.`,

@@ -11,8 +11,8 @@ import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 interface RenameCustomTypeModalProps {
   customType?: CustomType;
@@ -42,7 +42,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
     customTypeLabels: selectAllCustomTypeLabels(store),
     isRenamingCustomType: isLoading(store, LoadingKeysEnum.RENAME_CUSTOM_TYPE),
   }));
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
   return (
     <ModalFormCard
@@ -58,7 +58,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
       }}
       isLoading={isRenamingCustomType}
       content={{
-        title: `Rename a ${customTypesConfig.name({
+        title: `Rename a ${customTypesMessages.name({
           start: false,
           plural: false,
         })}`,
@@ -77,7 +77,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
           customTypeLabels.includes(newName) &&
           customTypeName !== newName
         ) {
-          errors.customTypeName = `${customTypesConfig.name({
+          errors.customTypeName = `${customTypesMessages.name({
             start: true,
             plural: false,
           })} name is already taken.`;
@@ -90,11 +90,11 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
         <Box>
           <InputBox
             name="customTypeName"
-            label={`${customTypesConfig.name({
+            label={`${customTypesMessages.name({
               start: true,
               plural: false,
             })} Name`}
-            placeholder={`A display name for the ${customTypesConfig.name({
+            placeholder={`A display name for the ${customTypesMessages.name({
               start: false,
               plural: false,
             })}`}

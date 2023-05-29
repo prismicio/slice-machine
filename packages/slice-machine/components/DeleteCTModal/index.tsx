@@ -11,8 +11,8 @@ import { Button } from "@components/Button";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 type DeleteCTModalProps = {
   customType?: CustomType;
@@ -34,7 +34,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
       ),
     })
   );
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
   const { closeModals, deleteCustomType } = useSliceMachineActions();
 
   const { theme } = useThemeUI();
@@ -83,7 +83,8 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 color={theme.colors?.greyIcon as string}
               />
               <Heading sx={{ fontSize: "14px", fontWeight: "bold", ml: 1 }}>
-                Delete {customTypesConfig.name({ start: false, plural: false })}
+                Delete{" "}
+                {customTypesMessages.name({ start: false, plural: false })}
               </Heading>
             </Flex>
             <Close type="button" onClick={() => closeModals()} />
@@ -145,8 +146,8 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           <ul>
             <li>
               Remove the{" "}
-              {customTypesConfig.name({ start: false, plural: false })} and any
-              associated Documents from your repository.
+              {customTypesMessages.name({ start: false, plural: false })} and
+              any associated Documents from your repository.
             </li>
           </ul>
         </Paragraph>

@@ -1,7 +1,7 @@
 import { Flex, Text, Button } from "theme-ui";
 import Link from "next/link";
 
-import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
+import { SliceListIcon } from "@src/icons/SliceListIcon";
 
 const UpdateSliceZoneModalEmptyState = () => (
   <Flex sx={{ flexDirection: "column", alignItems: "center" }}>

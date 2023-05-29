@@ -32,7 +32,7 @@ type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 };
 
 type CustomTypesManagerReadAllCustomTypesArgs = {
-	format?: CustomTypeFormat;
+	format: CustomTypeFormat;
 };
 
 type SliceMachineManagerReadAllCustomTypeReturnType = {
@@ -116,7 +116,7 @@ export class CustomTypesManager extends BaseManager {
 				const { model, errors } = await this.readCustomType({ id });
 				res.errors = [...res.errors, ...errors];
 
-				if (model && (!args?.format || args.format === model.format)) {
+				if (model && (!args || args.format === model.format)) {
 					res.models.push({ model });
 				}
 			}

@@ -15,9 +15,9 @@ import { isLoading } from "@src/modules/loading";
 import { type SliceMachineStoreType } from "@src/redux/type";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
-import { Breadcrumb } from "@src/components/Breadcrumb/Breadcrumb";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
-import type { CustomTypeFormat } from "@slicemachine/manager/*";
+import { Breadcrumb } from "@src/components/Breadcrumb";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import type { CustomTypeFormat } from "@slicemachine/manager";
 import { CustomTypesTable } from "./CustomTypesTable";
 
 type CustomTypesTablePageProps = {
@@ -27,7 +27,7 @@ type CustomTypesTablePageProps = {
 export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
   format,
 }) => {
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
   const { openCreateCustomTypeModal } = useSliceMachineActions();
   const { isCreatingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
@@ -42,7 +42,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
     <>
       <Head>
         <title>
-          {customTypesConfig.name({ start: true, plural: true })} - Slice
+          {customTypesMessages.name({ start: true, plural: true })} - Slice
           Machine
         </title>
       </Head>
@@ -56,7 +56,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
       >
         <ErrorBoundary
           title="Request failed"
-          description={`An error occurred while fetching your ${customTypesConfig.name(
+          description={`An error occurred while fetching your ${customTypesMessages.name(
             { start: false, plural: true }
           )}.`}
           renderError={(error) => {
@@ -85,7 +85,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                   }}
                 >
                   <Breadcrumb>
-                    {customTypesConfig.name({ start: true, plural: true })}
+                    {customTypesMessages.name({ start: true, plural: true })}
                   </Breadcrumb>
                   <Button endIcon={<Icon name="add" />} disabled>
                     Create
@@ -106,7 +106,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
               }}
             >
               <Breadcrumb>
-                {customTypesConfig.name({ start: true, plural: true })}
+                {customTypesMessages.name({ start: true, plural: true })}
               </Breadcrumb>
               <Button
                 data-cy="create-ct"

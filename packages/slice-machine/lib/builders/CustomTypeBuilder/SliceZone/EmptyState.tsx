@@ -1,13 +1,13 @@
 import { Text, Flex, Button } from "theme-ui";
 
-import { CustomTypeFormat } from "@slicemachine/manager/*";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 const EmptyState: React.FC<{
   format: CustomTypeFormat;
   onAddNewSlice: () => void;
 }> = ({ format, onAddNewSlice }) => {
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
   return (
     <Flex
@@ -29,7 +29,7 @@ const EmptyState: React.FC<{
         </Text>
         <Text sx={{ mb: "24px" }}>
           Add Slices to your{" "}
-          {customTypesConfig.name({ start: false, plural: false })}
+          {customTypesMessages.name({ start: false, plural: false })}
         </Text>
         <Button
           data-cy="update-slices"

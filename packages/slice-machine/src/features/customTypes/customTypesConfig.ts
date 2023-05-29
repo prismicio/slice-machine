@@ -1,31 +1,25 @@
-export const CUSTOM_TYPES_CONFIG = {
-  custom: {
-    name: ({ start, plural }: CustomTypesConfigNameArgs) =>
-      `${start ? "Custom" : "custom"} ${plural ? "types" : "type"}`,
-    urlPathSegment: "custom-types",
-    urlDynamicSegment: "customTypeId",
-    hintSingle: "e.g. global nav, settings, footer",
-    hintRepeatable: "e.g. side menu, testimonial, author",
-    inputPlaceholder: `ID to query the custom type in the API (e.g. 'Author')`,
-    blankSlateImage: "/blank-slate-custom-types.png",
-    blankSlateDescription:
-      "Custom types are models that your editors can use to create menus or objects in the Page Builder.",
-  },
-  page: {
-    name: ({ start, plural }: CustomTypesConfigNameArgs) =>
-      `${start ? "Page" : "page"} ${plural ? "types" : "type"}`,
-    urlPathSegment: "page-types",
-    urlDynamicSegment: "pageTypeId",
-    blankSlateImage: "/blank-slate-page-types.png",
-    hintSingle: "e.g. home, privacy policy, sign up",
-    hintRepeatable: "e.g. product, landing page, blog post",
-    inputPlaceholder: `ID to query the page type in the API (e.g. 'BlogPost')`,
-    blankSlateDescription:
-      "Page types are models that your editors will use to create website pages in the Page Builder.",
-  },
-};
+import { DatabaseIcon } from "@src/icons/DatabaseIcon";
+import { PageStackIcon } from "@src/icons/PageStackIcon";
 
-type CustomTypesConfigNameArgs = {
-  start: boolean;
-  plural: boolean;
+export const CUSTOM_TYPES_CONFIG = {
+  page: {
+    blankSlateImage: "/blank-slate-page-types.png",
+    builderPageDynamicSegment: "pageTypeId",
+    getBuilderPagePathname: (pageTypeId: string) => `/page-types/${pageTypeId}`,
+    matchesTablePagePathname: (pathname: string) =>
+      pathname === CUSTOM_TYPES_CONFIG.page.tablePagePathname ||
+      pathname.startsWith("/page-types"),
+    tablePagePathname: "/",
+    Icon: PageStackIcon,
+  },
+  custom: {
+    blankSlateImage: "/blank-slate-custom-types.png",
+    builderPageDynamicSegment: "customTypeId",
+    getBuilderPagePathname: (customTypeId: string) =>
+      `/custom-types/${customTypeId}`,
+    matchesTablePagePathname: (pathname: string) =>
+      pathname.startsWith(CUSTOM_TYPES_CONFIG.custom.tablePagePathname),
+    tablePagePathname: "/custom-types",
+    Icon: DatabaseIcon,
+  },
 };

@@ -32,7 +32,7 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 import { DeleteSliceModal } from "@components/DeleteSliceModal";
-import { SliceListIcon } from "@src/components/Icons/SliceListIcon";
+import { SliceListIcon } from "@src/icons/SliceListIcon";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const {
