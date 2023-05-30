@@ -40,6 +40,7 @@ import {
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { CustomTypes } from "@lib/models/common/CustomType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -248,11 +249,13 @@ export function* createCustomTypeSaga({
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[payload.format];
 
   try {
-    const newCustomType = createCustomType(
-      payload.id,
-      payload.label,
-      payload.repeatable,
-      payload.format
+    const newCustomType = CustomTypes.toSM(
+      createCustomType(
+        payload.id,
+        payload.label,
+        payload.repeatable,
+        payload.format
+      )
     );
     yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
