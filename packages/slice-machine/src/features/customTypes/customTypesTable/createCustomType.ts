@@ -1,4 +1,5 @@
-import type { CustomTypeSM, TabSM } from "@lib/models/common/CustomType";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { CustomTypes, TabSM } from "@lib/models/common/CustomType";
 import type { SlicesSM } from "@lib/models/common/Slices";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 
@@ -7,7 +8,7 @@ export function createCustomType(
   label: string,
   repeatable: boolean,
   format: CustomTypeFormat
-): CustomTypeSM {
+): CustomType {
   const mainTab = makeMainTab(repeatable, format);
 
   const tabs: TabSM[] = [mainTab];
@@ -16,14 +17,14 @@ export function createCustomType(
     tabs.push(DEFAULT_SEO_TAB);
   }
 
-  return {
+  return CustomTypes.fromSM({
     id,
     label,
     format,
     repeatable,
     tabs,
     status: true,
-  };
+  });
 }
 
 function makeMainTab(repeatable: boolean, format: CustomTypeFormat): TabSM {
