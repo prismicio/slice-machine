@@ -1,11 +1,10 @@
 import { clsx } from "clsx";
-import type { FC, ReactNode } from "react";
+import type { FC, PropsWithChildren } from "react";
 import { Text } from "@prismicio/editor-ui";
 
 import * as styles from "./PageLayout.css";
 
-type PageLayoutProps = Readonly<{
-  children?: ReactNode;
+type PageLayoutProps = PropsWithChildren<{
   className?: string;
 }>;
 
