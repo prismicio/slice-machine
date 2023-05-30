@@ -107,4 +107,55 @@ describe("[Custom types factory]", () => {
       `);
     });
   });
+
+  it("when non repeatable page type", () => {
+    const result = createCustomType("foo", "bar", false, "page");
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "format": "page",
+        "id": "foo",
+        "json": {
+          "Main": {
+            "slices": {
+              "config": {
+                "choices": {},
+              },
+              "fieldset": "Slice Zone",
+              "type": "Slices",
+            },
+          },
+          "SEO & Metadata": {
+            "meta_description": {
+              "config": {
+                "label": "Meta Description",
+                "placeholder": "A brief summary of the page",
+              },
+              "type": "StructuredText",
+            },
+            "meta_image": {
+              "config": {
+                "constraint": {
+                  "height": 1260,
+                  "width": 2400,
+                },
+                "label": "Meta Image",
+                "thumbnails": [],
+              },
+              "type": "Image",
+            },
+            "meta_title": {
+              "config": {
+                "label": "Meta Title",
+                "placeholder": "A title of the page used for social media and search engines",
+              },
+              "type": "Text",
+            },
+          },
+        },
+        "label": "bar",
+        "repeatable": false,
+        "status": true,
+      }
+    `);
+  });
 });

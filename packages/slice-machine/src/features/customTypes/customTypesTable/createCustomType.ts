@@ -1,6 +1,4 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { CustomTypes, TabSM } from "@lib/models/common/CustomType";
-import type { SlicesSM } from "@lib/models/common/Slices";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 
 export function createCustomType(
@@ -11,99 +9,99 @@ export function createCustomType(
 ): CustomType {
   const mainTab = makeMainTab(repeatable, format);
 
-  const tabs: TabSM[] = [mainTab];
-
-  if (format === "page") {
-    tabs.push(DEFAULT_SEO_TAB);
-  }
-
-  return CustomTypes.fromSM({
+  return {
     id,
     label,
     format,
     repeatable,
-    tabs,
+    json: mainTab,
     status: true,
-  });
+  };
 }
 
-function makeMainTab(repeatable: boolean, format: CustomTypeFormat): TabSM {
-  if (repeatable === false) {
-    return format === "page"
-      ? { ...DEFAULT_MAIN, sliceZone: DEFAULT_SLICE_ZONE }
-      : DEFAULT_MAIN;
+function makeMainTab(
+  repeatable: boolean,
+  format: CustomTypeFormat
+): CustomType["json"] {
+  if (repeatable === false && format === "page") {
+    return { ...DEFAULT_MAIN_WITH_SLICE_ZONE, ...DEFAULT_SEO_TAB };
   }
 
-  const tabWithUID: TabSM = {
-    ...DEFAULT_MAIN,
-    value: [
-      {
-        key: "uid",
-        value: {
-          type: "UID",
-          config: {
-            label: "UID",
-          },
-        },
-      },
-    ],
-  };
+  if (repeatable === false) {
+    return DEFAULT_MAIN;
+  }
 
-  return format === "page"
-    ? {
-        ...tabWithUID,
-        sliceZone: DEFAULT_SLICE_ZONE,
-      }
-    : tabWithUID;
+  if (format === "page") {
+    return {
+      ...DEFAULT_MAIN_WITH_UID_AND_SLICE_ZONE,
+      ...DEFAULT_SEO_TAB,
+    };
+  }
+
+  return DEFAULT_MAIN_WITH_UID;
 }
 
-const DEFAULT_MAIN: TabSM = {
-  key: "Main",
-  value: [],
+const DEFAULT_MAIN: CustomType["json"] = {
+  Main: {},
 };
 
-const DEFAULT_SLICE_ZONE: SlicesSM = {
-  key: "slices",
-  value: [],
+const DEFAULT_MAIN_WITH_SLICE_ZONE: CustomType["json"] = {
+  Main: {
+    slices: {
+      config: {
+        choices: {},
+      },
+      fieldset: "Slice Zone",
+      type: "Slices",
+    },
+  },
 };
 
-const DEFAULT_SEO_TAB: TabSM = {
-  key: "SEO & Metadata",
-  value: [
-    {
-      key: "meta_title",
-      value: {
-        type: "Text",
-        config: {
-          label: "Meta Title",
-          placeholder:
-            "A title of the page used for social media and search engines",
-        },
+const DEFAULT_MAIN_WITH_UID: CustomType["json"] = {
+  Main: {
+    uid: {
+      config: {
+        label: "UID",
       },
+      type: "UID",
     },
-    {
-      key: "meta_description",
-      value: {
-        type: "StructuredText",
-        config: {
-          label: "Meta Description",
-          placeholder: "A brief summary of the page",
-        },
+  },
+};
+
+const DEFAULT_MAIN_WITH_UID_AND_SLICE_ZONE: CustomType["json"] = {
+  Main: {
+    ...DEFAULT_MAIN_WITH_UID.Main,
+    ...DEFAULT_MAIN_WITH_SLICE_ZONE.Main,
+  },
+};
+
+const DEFAULT_SEO_TAB: CustomType["json"] = {
+  "SEO & Metadata": {
+    meta_description: {
+      config: {
+        label: "Meta Description",
+        placeholder: "A brief summary of the page",
       },
+      type: "StructuredText",
     },
-    {
-      key: "meta_image",
-      value: {
-        type: "Image",
-        config: {
-          label: "Meta Image",
-          constraint: {
-            width: 2400,
-            height: 1260,
-          },
-          thumbnails: [],
+    meta_image: {
+      config: {
+        constraint: {
+          height: 1260,
+          width: 2400,
         },
+        label: "Meta Image",
+        thumbnails: [],
       },
+      type: "Image",
     },
-  ],
+    meta_title: {
+      config: {
+        label: "Meta Title",
+        placeholder:
+          "A title of the page used for social media and search engines",
+      },
+      type: "Text",
+    },
+  },
 };
