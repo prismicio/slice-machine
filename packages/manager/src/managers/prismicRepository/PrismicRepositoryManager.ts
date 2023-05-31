@@ -22,8 +22,10 @@ import {
 	PrismicRepositoryUserAgent,
 	PrismicRepositoryUserAgents,
 	RawLimit,
+	StarterID,
 	TransactionalMergeArgs,
 	TransactionalMergeReturnType,
+	FrameworkWroomTelemetryID,
 } from "./types";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { UnauthenticatedError } from "../../errors";
@@ -40,7 +42,8 @@ type PrismicRepositoryManagerCheckExistsArgs = {
 
 type PrismicRepositoryManagerCreateArgs = {
 	domain: string;
-	framework: string; // TODO: Type(?)
+	framework: FrameworkWroomTelemetryID;
+	starterID: StarterID | undefined;
 };
 
 type PrismicRepositoryManagerDeleteArgs = {
@@ -153,7 +156,9 @@ export class PrismicRepositoryManager extends BaseManager {
 		const body = {
 			...DEFAULT_REPOSITORY_SETTINGS,
 			domain: args.domain,
-			framework: args.framework, // This property appears to be optional for the API
+			// These properties are optional in the API but needed for tracking
+			framework: args.framework,
+			starterID: args.starterID,
 		};
 
 		const res = await this._fetch({

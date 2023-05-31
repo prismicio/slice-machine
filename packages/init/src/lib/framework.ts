@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-
 import semver from "semver";
+
+import { FrameworkWroomTelemetryID } from "@slicemachine/manager";
 
 import { version as pkgVersion } from "../../package.json";
 
@@ -12,9 +13,14 @@ export type Framework = {
 	name: string;
 
 	/**
-	 * Framework's name sent to Prismic
+	 * Framework 's id sent to Segment from Slice Machine
 	 */
-	prismicName: string;
+	sliceMachineTelemetryID: "next-11-13" | "nuxt-2" | "nuxt-3" | "universal";
+
+	/**
+	 * Framework's id sent to Segment from wroom.
+	 */
+	wroomTelemetryID: FrameworkWroomTelemetryID;
 
 	/**
 	 * A link to the Prismic documentation for the framework
@@ -60,7 +66,8 @@ const DEFAULT_DEV_DEPENDENCIES: Record<string, string> = {
 export const FRAMEWORKS: Record<string, Framework> = {
 	"nuxt-2": {
 		name: "Nuxt 2",
-		prismicName: "nuxt-2",
+		sliceMachineTelemetryID: "nuxt-2",
+		wroomTelemetryID: "nuxt",
 		prismicDocumentation: "https://prismic.dev/init/nuxt-2",
 		adapterName: "@slicemachine/adapter-nuxt2",
 		compatibility: {
@@ -73,7 +80,8 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	"nuxt-3": {
 		name: "Nuxt 3",
-		prismicName: "nuxt-3",
+		sliceMachineTelemetryID: "nuxt-3",
+		wroomTelemetryID: "nuxt",
 		prismicDocumentation: "https://prismic.dev/init/nuxt-3",
 		adapterName: "@slicemachine/adapter-nuxt",
 		compatibility: {
@@ -86,7 +94,8 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	"next-11-13": {
 		name: "Next.js 11-13",
-		prismicName: "next-11-13",
+		sliceMachineTelemetryID: "next-11-13",
+		wroomTelemetryID: "next",
 		prismicDocumentation: "https://prismic.dev/init/next-11-13",
 		adapterName: "@slicemachine/adapter-next",
 		compatibility: {
@@ -104,7 +113,8 @@ export const FRAMEWORKS: Record<string, Framework> = {
  */
 export const UNIVERSAL: Framework = {
 	name: "universal (no framework)",
-	prismicName: "universal",
+	sliceMachineTelemetryID: "universal",
+	wroomTelemetryID: "other",
 	prismicDocumentation: "https://prismic.dev/init/universal",
 	adapterName: "@slicemachine/adapter-universal",
 	compatibility: {},
