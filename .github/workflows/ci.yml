@@ -16,7 +16,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps --no-audit
+        run: npm i --legacy-peer-deps --no-audit
 
       - name: Build essentials
         uses: ./.github/actions/build-essential
