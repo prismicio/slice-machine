@@ -108,7 +108,7 @@ describe("[Custom types factory]", () => {
     });
   });
 
-  it("when non repeatable page type", () => {
+  it("when non repeatable page type is should contain Main with a slice-zone, no uid, and a SEO tab", () => {
     const result = createCustomType("foo", "bar", false, "page");
     expect(result).toMatchInlineSnapshot(`
       {
