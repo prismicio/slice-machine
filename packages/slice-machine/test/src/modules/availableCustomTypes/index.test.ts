@@ -23,7 +23,7 @@ import { createCustomType } from "@src/features/customTypes/customTypesTable/cre
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
+import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
 import { deleteSliceCreator } from "@src/modules/slices";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
@@ -224,11 +224,13 @@ describe("[Available Custom types module]", () => {
         label: "label",
         repeatable: true,
       };
-      const customTypeCreated = createCustomType(
-        actionPayload.id,
-        actionPayload.label,
-        actionPayload.repeatable,
-        actionPayload.format
+      const customTypeCreated = CustomTypes.toSM(
+        createCustomType(
+          actionPayload.id,
+          actionPayload.label,
+          actionPayload.repeatable,
+          actionPayload.format
+        )
       );
       const saga = testSaga(
         createCustomTypeSaga,
@@ -259,11 +261,13 @@ describe("[Available Custom types module]", () => {
         repeatable: true,
         format: "custom" as const,
       };
-      const customTypeCreated = createCustomType(
-        actionPayload.id,
-        actionPayload.label,
-        actionPayload.repeatable,
-        actionPayload.format
+      const customTypeCreated = CustomTypes.toSM(
+        createCustomType(
+          actionPayload.id,
+          actionPayload.label,
+          actionPayload.repeatable,
+          actionPayload.format
+        )
       );
       const saga = testSaga(
         createCustomTypeSaga,
