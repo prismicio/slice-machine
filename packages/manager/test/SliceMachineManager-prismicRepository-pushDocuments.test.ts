@@ -151,7 +151,8 @@ it("throws if not logged in", async () => {
 	await expect(async () => {
 		await manager.prismicRepository.create({
 			domain: "foo",
-			framework: "bar",
+			framework: "other",
+			starterID: undefined,
 		});
 	}).rejects.toThrow(/not logged in/i);
 });

@@ -57,7 +57,7 @@ it.skip("creates repository from context", async (ctx) => {
 	expect(spiedManager.prismicRepository.create).toHaveBeenCalledOnce();
 	expect(spiedManager.prismicRepository.create).toHaveBeenNthCalledWith(1, {
 		domain: "new-repo",
-		framework: UNIVERSAL.prismicName,
+		framework: UNIVERSAL.sliceMachineTelemetryID,
 	});
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.repository?.exists).toBe(true);
