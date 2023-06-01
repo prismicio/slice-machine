@@ -22,7 +22,6 @@ import {
 	PrismicRepositoryUserAgent,
 	PrismicRepositoryUserAgents,
 	RawLimit,
-	StarterID,
 	TransactionalMergeArgs,
 	TransactionalMergeReturnType,
 	FrameworkWroomTelemetryID,
@@ -43,7 +42,8 @@ type PrismicRepositoryManagerCheckExistsArgs = {
 type PrismicRepositoryManagerCreateArgs = {
 	domain: string;
 	framework: FrameworkWroomTelemetryID;
-	starterID?: StarterID;
+	// TODO(DT-1386): Handle starter detection for Segment
+	// starterID?: StarterID;
 };
 
 type PrismicRepositoryManagerDeleteArgs = {
@@ -158,7 +158,8 @@ export class PrismicRepositoryManager extends BaseManager {
 			domain: args.domain,
 			// These properties are optional in the API but needed for tracking
 			framework: args.framework,
-			starterID: args.starterID,
+			// TODO(DT-1386): Handle starter detection for Segment
+			// starterID: args.starterID,
 		};
 
 		const res = await this._fetch({

@@ -50,7 +50,6 @@ it.skip("creates a Prismic repository", async (ctx) => {
 	await manager.prismicRepository.create({
 		domain: "foo",
 		framework: "other",
-		starterID: undefined,
 	});
 
 	expect(count).toBe(1);
@@ -86,7 +85,6 @@ it("throws if the repository API call was unsuccessful", async (ctx) => {
 		await manager.prismicRepository.create({
 			domain: "foo",
 			framework: "other",
-			starterID: undefined,
 		});
 	}).rejects.toThrow(/failed to create repository/i);
 });
@@ -105,7 +103,6 @@ it("throws if not logged in", async () => {
 		await manager.prismicRepository.create({
 			domain: "foo",
 			framework: "other",
-			starterID: undefined,
 		});
 	}).rejects.toThrow(/not logged in/i);
 });
