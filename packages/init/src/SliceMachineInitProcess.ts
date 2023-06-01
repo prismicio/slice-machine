@@ -13,12 +13,10 @@ import {
 	PrismicRepository,
 	SliceMachineManager,
 	PackageManager,
-	StarterID,
 } from "@slicemachine/manager";
 
 import pkg from "../package.json";
 import { detectFramework, Framework } from "./lib/framework";
-import { detectStarterId } from "./lib/starters";
 import { getRunScriptCommand } from "./lib/getRunScriptCommand";
 import { getExecuteCommand } from "./lib/getExecuteCommand";
 import {
@@ -68,7 +66,8 @@ type SliceMachineInitProcessContext = {
 	projectInitialization?: {
 		patchedScript?: boolean;
 	};
-	starterID?: StarterID;
+	// TODO(DT-1386): Handle starter detection for Segment
+	// starterID?: StarterID;
 };
 
 export class SliceMachineInitProcess {
@@ -271,22 +270,23 @@ export class SliceMachineInitProcess {
 								)}`;
 							},
 						},
-						{
-							title: "Detecting starter...",
-							task: async (_, task) => {
-								this.context.starterID = await detectStarterId(
-									this.manager.cwd,
-								);
+						// TODO(DT-1386): Handle starter detection for Segment
+						// {
+						// 	title: "Detecting starter...",
+						// 	task: async (_, task) => {
+						// 		this.context.starterID = await detectStarterId(
+						// 			this.manager.cwd,
+						// 		);
 
-								if (this.context.starterID) {
-									task.title = `Detected starter ${chalk.cyan(
-										this.context.starterID,
-									)}`;
-								} else {
-									task.title = "No starter detected";
-								}
-							},
-						},
+						// 		if (this.context.starterID) {
+						// 			task.title = `Detected starter ${chalk.cyan(
+						// 				this.context.starterID,
+						// 			)}`;
+						// 		} else {
+						// 			task.title = "No starter detected";
+						// 		}
+						// 	},
+						// },
 					]),
 			},
 		]);
@@ -703,7 +703,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					await this.manager.prismicRepository.create({
 						domain: this.context.repository.domain,
 						framework: this.context.framework.wroomTelemetryID,
-						starterID: this.context.starterID,
+						// TODO(DT-1386): Handle starter detection for Segment
+						// starterID: this.context.starterID,
 					});
 
 					this.context.repository.exists = true;
