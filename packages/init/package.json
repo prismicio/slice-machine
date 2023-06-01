@@ -69,7 +69,7 @@
 		"@types/listr": "^0.14.4",
 		"@types/prompts": "^2.4.3",
 		"@types/semver": "^7.3.13",
-		"@typescript-eslint/eslint-plugin": "^5.55.0",
+		"@typescript-eslint/eslint-plugin": "~5.55.0",
 		"@typescript-eslint/parser": "^5.55.0",
 		"@vitest/coverage-c8": "^0.27.3",
 		"better-npm-audit": "^3.7.3",
