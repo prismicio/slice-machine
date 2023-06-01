@@ -43,7 +43,7 @@ type PrismicRepositoryManagerCheckExistsArgs = {
 type PrismicRepositoryManagerCreateArgs = {
 	domain: string;
 	framework: FrameworkWroomTelemetryID;
-	starterID: StarterID | undefined;
+	starterID?: StarterID;
 };
 
 type PrismicRepositoryManagerDeleteArgs = {
