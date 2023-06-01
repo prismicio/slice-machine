@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { SharedSliceEditor } from "@prismicio/editor-fields";
+import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
@@ -32,6 +32,8 @@ import {
   selectIsWaitingForIFrameCheck,
   selectSetupStatus,
 } from "@src/modules/simulator";
+
+import { selectApiEndpoint } from "@src/modules/environment";
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
 import SetupModal from "./components/SetupModal";
@@ -53,12 +55,16 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
+    apiEndpoint,
   } = useSelector((state: SliceMachineStoreType) => ({
     simulatorUrl: selectSimulatorUrl(state),
     iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
+    apiEndpoint: selectApiEndpoint(state),
   }));
+
+  const editorConfig = makeEditorConfig(apiEndpoint);
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
   const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
@@ -281,7 +287,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                  * change should be removed once the editor is fixed.
                  */
                 key={variation.id}
-                config={SHARED_SLICE_EDITOR_CONFIG}
+                config={editorConfig}
                 content={editorContent}
                 onContentChange={(c) => {
                   setEditorState(c as SharedSliceContent);
@@ -305,10 +311,26 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 
 export default Simulator;
 
-// TODO(DT-1333): change this config depending on the environment.
-const SHARED_SLICE_EDITOR_CONFIG = {
-  embeds: {
-    url: "https://oembed.pismic.io",
-  },
-  unsplash: { url: "https://unsplash.prismic.io" },
-};
+function makeEditorConfig(apiEndpoint: string): EditorConfig {
+  const DEFAULT_EDITOR_CONFIG = {
+    embeds: {
+      url: "https://oembed.pismic.io",
+    },
+    unsplash: { url: "https://unsplash.prismic.io" },
+  };
+
+  try {
+    const { hostname } = new URL(apiEndpoint);
+
+    if (/(.wroom.io?|.wroom.test?|.wroom-qa.io?)/.test(hostname)) {
+      return {
+        embeds: {
+          url: "https://oembed.wroom.io",
+        },
+        unsplash: { url: "https://unsplash.wroom.io" },
+      };
+    }
+  } catch {}
+
+  return DEFAULT_EDITOR_CONFIG;
+}

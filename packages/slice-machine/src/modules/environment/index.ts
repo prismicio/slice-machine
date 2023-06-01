@@ -67,6 +67,9 @@ export const selectSimulatorUrl = (
 export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
 
+export const selectApiEndpoint = (store: SliceMachineStoreType): string =>
+  store.environment.manifest.apiEndpoint;
+
 export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
 ): boolean => {
