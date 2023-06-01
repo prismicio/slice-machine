@@ -308,7 +308,7 @@ export default Simulator;
 // TODO(DT-1333): change this config depending on the environment.
 const SHARED_SLICE_EDITOR_CONFIG = {
   embeds: {
-    url: "https://jntc6tzga1.execute-api.us-east-1.amazonaws.com/beta",
+    url: "https://oembed.pismic.io",
   },
-  unsplash: { url: "https://unsplash.wroom.io" },
+  unsplash: { url: "https://unsplash.prismic.io" },
 };
