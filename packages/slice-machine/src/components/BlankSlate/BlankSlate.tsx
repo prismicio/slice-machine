@@ -1,7 +1,7 @@
 import type { CSSProperties, FC, PropsWithChildren } from "react";
 import { ButtonGroup } from "@prismicio/editor-ui";
 import { Text } from "@prismicio/editor-ui";
-import * as styles from "./SliceMachineBlankSlate.css";
+import * as styles from "./BlankSlate.css";
 
 export interface BlankSlateProps extends PropsWithChildren {
   style?: CSSProperties;

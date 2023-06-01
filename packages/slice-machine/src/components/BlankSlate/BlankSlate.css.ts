@@ -41,6 +41,7 @@ export const centeredBlock = style([
     borderWidth: 1,
     borderStyle: "solid",
     borderRadius: 6,
+    overflow: "hidden",
   }),
   { order: 0, maxWidth: 498 },
 ]);

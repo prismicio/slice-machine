@@ -43,7 +43,7 @@ import {
   BlankSlateActions,
   BlankSlateCenteredBlock,
   BlankSlateContent,
-} from "@src/components/SliceMachineBlankSlate";
+} from "@src/components/BlankSlate";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
@@ -110,22 +110,6 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
       </BlankSlate>
     );
   }
-
-  /**
-   * <BlankSlateImage>
-   *             <Image src={customTypesConfig.blankSlateImage} sizing="contain" />
-   *           </BlankSlateImage>
-   *
-   *     <BlankSlateActions>
-   *       <Button
-   *         size="medium"
-   *         onClick={openCreateCustomTypeModal}
-   *         loading={isCreatingCustomType}
-   *       >
-   *         Create
-   *       </Button>
-   *     </BlankSlateActions>;
-   */
 
   return (
     <>

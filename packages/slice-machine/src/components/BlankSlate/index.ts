@@ -6,4 +6,4 @@ export {
   BlankSlateTitle,
   BlankSlateCenteredBlock,
   BlankSlateContent,
-} from "./SliceMachineBlankSlate";
+} from "./BlankSlate";
