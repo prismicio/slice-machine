@@ -5,12 +5,12 @@ import { createSliceMachineInitProcess } from "../src";
 
 import { watchStd } from "./__testutils__/watchStd";
 
-it("detects framework and package manager", async () => {
+it("detects framework, starter and package manager", async () => {
 	const initProcess = createSliceMachineInitProcess({ cwd: "/base" });
 	vol.fromJSON(
 		{
 			"./package.json": JSON.stringify({
-				name: "package-base",
+				name: "nuxt-starter-prismic-multi-page",
 				version: "0.0.0",
 				dependencies: {
 					next: "^13.0.0",
@@ -43,9 +43,11 @@ it("detects framework and package manager", async () => {
 		    },
 		    "name": "Next.js 11-13",
 		    "prismicDocumentation": "https://prismic.dev/init/next-11-13",
-		    "prismicName": "next-11-13",
+		    "sliceMachineTelemetryID": "next-11-13",
+		    "wroomTelemetryID": "next",
 		  },
 		  "packageManager": "npm",
+		  "starterID": "nuxt_multi_page",
 		}
 	`);
 });
@@ -88,9 +90,11 @@ it("assumes unconventional tags match semver range when detecting framework", as
 		    },
 		    "name": "Next.js 11-13",
 		    "prismicDocumentation": "https://prismic.dev/init/next-11-13",
-		    "prismicName": "next-11-13",
+		    "sliceMachineTelemetryID": "next-11-13",
+		    "wroomTelemetryID": "next",
 		  },
 		  "packageManager": "npm",
+		  "starterID": undefined,
 		}
 	`);
 });
@@ -127,9 +131,11 @@ it("falls back to npm if package manager is not detected", async () => {
 		    },
 		    "name": "universal (no framework)",
 		    "prismicDocumentation": "https://prismic.dev/init/universal",
-		    "prismicName": "universal",
+		    "sliceMachineTelemetryID": "universal",
+		    "wroomTelemetryID": "other",
 		  },
 		  "packageManager": "npm",
+		  "starterID": undefined,
 		}
 	`);
 });

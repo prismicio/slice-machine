@@ -13,10 +13,12 @@ import {
 	PrismicRepository,
 	SliceMachineManager,
 	PackageManager,
+	StarterID,
 } from "@slicemachine/manager";
 
 import pkg from "../package.json";
 import { detectFramework, Framework } from "./lib/framework";
+import { detectStarterId } from "./lib/starters";
 import { getRunScriptCommand } from "./lib/getRunScriptCommand";
 import { getExecuteCommand } from "./lib/getExecuteCommand";
 import {
@@ -66,6 +68,7 @@ type SliceMachineInitProcessContext = {
 	projectInitialization?: {
 		patchedScript?: boolean;
 	};
+	starterID?: StarterID;
 };
 
 export class SliceMachineInitProcess {
@@ -149,7 +152,7 @@ export class SliceMachineInitProcess {
 
 		await this.manager.telemetry.track({
 			event: "command:init:end",
-			framework: this.context.framework.prismicName,
+			framework: this.context.framework.sliceMachineTelemetryID,
 			repository: this.context.repository.domain,
 			success: true,
 		});
@@ -220,7 +223,7 @@ export class SliceMachineInitProcess {
 
 		return this.manager.telemetry.track({
 			event: "command:init:end",
-			framework: this.context.framework?.prismicName ?? "unknown",
+			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
 			repository: this.context.repository?.domain,
 			success: false,
 			error: safeError,
@@ -266,6 +269,22 @@ export class SliceMachineInitProcess {
 								)} and package manager ${chalk.cyan(
 									this.context.packageManager,
 								)}`;
+							},
+						},
+						{
+							title: "Detecting starter...",
+							task: async (_, task) => {
+								this.context.starterID = await detectStarterId(
+									this.manager.cwd,
+								);
+
+								if (this.context.starterID) {
+									task.title = `Detected starter ${chalk.cyan(
+										this.context.starterID,
+									)}`;
+								} else {
+									task.title = "No starter detected";
+								}
 							},
 						},
 					]),
@@ -683,7 +702,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 					await this.manager.prismicRepository.create({
 						domain: this.context.repository.domain,
-						framework: this.context.framework.prismicName,
+						framework: this.context.framework.wroomTelemetryID,
+						starterID: this.context.starterID,
 					});
 
 					this.context.repository.exists = true;
