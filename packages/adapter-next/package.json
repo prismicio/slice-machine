@@ -64,7 +64,7 @@
 		"fs-extra": "^11.1.0",
 		"node-fetch": "^3.3.1",
 		"pascal-case": "^3.1.2",
-		"prismic-ts-codegen": "0.1.9"
+		"prismic-ts-codegen": "^0.1.10"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.2.0",
