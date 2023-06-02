@@ -1,9 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { StarterID } from "@slicemachine/manager";
+import { StarterId } from "@slicemachine/manager";
 
-const STARTERS_REPOSITORY_NAME_TO_ID: Record<string, StarterID> = {
+const STARTERS_REPOSITORY_NAME_TO_ID: Record<string, StarterId> = {
 	"nextjs-starter-prismic-multi-page": "next_multi_page",
 	"nextjs-starter-prismic-blog": "next_blog",
 	"nextjs-starter-prismic-multi-language": "next_multi_lang",
@@ -14,7 +14,7 @@ const STARTERS_REPOSITORY_NAME_TO_ID: Record<string, StarterID> = {
 
 export const detectStarterId = async (
 	cwd: string,
-): Promise<StarterID | undefined> => {
+): Promise<StarterId | undefined> => {
 	const path = join(cwd, "package.json");
 
 	try {
