@@ -15,8 +15,6 @@ import {
   BlankSlateActions,
   Image,
   tokens,
-  ProgressCircle,
-  Box,
 } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 
@@ -121,6 +119,8 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
         <TableBody>
           {sortedCustomTypes.map((customType: CustomType) => {
             const { repeatable, label, id } = customType;
+            const isCustomTypeBeingConverted =
+              customTypeBeingConverted === customType.id;
 
             return (
               <TableRow
@@ -138,47 +138,44 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                 <TableCell>{id}</TableCell>
                 <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
                 <TableCell>
-                  {customTypeBeingConverted === customType.id ? (
-                    <Box width={32} justifyContent="center" display="flex">
-                      <ProgressCircle />
-                    </Box>
-                  ) : (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <IconButton icon="moreVert" />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
+                      <IconButton
+                        icon="moreVert"
+                        loading={isCustomTypeBeingConverted}
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        startIcon={<Icon name="edit" />}
+                        onSelect={() => {
+                          setSelectedCustomType(customType);
+                          openRenameCustomTypeModal();
+                        }}
+                      >
+                        <Text>Rename</Text>
+                      </DropdownMenuItem>
+                      {format === "custom" && (
                         <DropdownMenuItem
-                          startIcon={<Icon name="edit" />}
+                          startIcon={<Icon name="driveFileMove" />}
                           onSelect={() => {
-                            setSelectedCustomType(customType);
-                            openRenameCustomTypeModal();
+                            void convertCustomType(customType);
                           }}
                         >
-                          <Text>Rename</Text>
+                          <Text>Convert to page type</Text>
                         </DropdownMenuItem>
-                        {format === "custom" && (
-                          <DropdownMenuItem
-                            startIcon={<Icon name="arrowForward" />}
-                            onSelect={() => {
-                              void convertCustomType(customType);
-                            }}
-                          >
-                            <Text>Convert to page type</Text>
-                          </DropdownMenuItem>
-                        )}
-                        <DropdownMenuItem
-                          startIcon={<Icon color="tomato11" name="delete" />}
-                          onSelect={() => {
-                            setSelectedCustomType(customType);
-                            openDeleteCustomTypeModal();
-                          }}
-                        >
-                          <Text color="tomato11">Remove</Text>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
+                      )}
+                      <DropdownMenuItem
+                        startIcon={<Icon color="tomato11" name="delete" />}
+                        onSelect={() => {
+                          setSelectedCustomType(customType);
+                          openDeleteCustomTypeModal();
+                        }}
+                      >
+                        <Text color="tomato11">Remove</Text>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             );

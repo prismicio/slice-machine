@@ -35,7 +35,7 @@
     "@extractus/oembed-extractor": "^3.1.8",
     "@prismicio/editor-fields": "0.4.1",
     "@prismicio/editor-support": "0.4.1",
-    "@prismicio/editor-ui": "0.4.1",
+    "@prismicio/editor-ui": "0.4.2",
     "@prismicio/mocks": "2.0.0-alpha.2",
     "@prismicio/types-internal": "2.0.0-beta.1",
     "@slicemachine/manager": "0.3.2-dev-next-release.0",
