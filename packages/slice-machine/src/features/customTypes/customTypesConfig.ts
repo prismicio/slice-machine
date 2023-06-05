@@ -3,7 +3,7 @@ import { PageStackIcon } from "@src/icons/PageStackIcon";
 
 export const CUSTOM_TYPES_CONFIG = {
   page: {
-    blankSlateImage: "/blank-slate-page-types-v2.png",
+    blankSlateImage: "/blank-slate-page-types.png",
     builderPageDynamicSegment: "pageTypeId",
     getBuilderPagePathname: (pageTypeId: string) => `/page-types/${pageTypeId}`,
     matchesTablePagePathname: (pathname: string) =>
@@ -13,7 +13,7 @@ export const CUSTOM_TYPES_CONFIG = {
     Icon: PageStackIcon,
   },
   custom: {
-    blankSlateImage: "/blank-slate-custom-types-v2.png",
+    blankSlateImage: "/blank-slate-custom-types.png",
     builderPageDynamicSegment: "customTypeId",
     getBuilderPagePathname: (customTypeId: string) =>
       `/custom-types/${customTypeId}`,

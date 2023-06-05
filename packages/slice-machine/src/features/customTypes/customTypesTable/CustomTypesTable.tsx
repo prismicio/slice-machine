@@ -34,14 +34,12 @@ import {
   useCustomTypesAutoRevalidation,
 } from "./useCustomTypes";
 import { convertCustomToPageType } from "./convertCustomToPageType";
-
 import {
   BlankSlate,
   BlankSlateImage,
   BlankSlateTitle,
   BlankSlateDescription,
   BlankSlateActions,
-  BlankSlateCenteredBlock,
   BlankSlateContent,
 } from "@src/components/BlankSlate";
 
@@ -85,28 +83,26 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   if (sortedCustomTypes.length === 0) {
     return (
       <BlankSlate style={{ marginTop: tokens.size[72] }}>
-        <BlankSlateCenteredBlock>
-          <BlankSlateImage>
-            <Image src={customTypesConfig.blankSlateImage} sizing="cover" />
-          </BlankSlateImage>
-          <BlankSlateContent>
-            <BlankSlateTitle>
-              {customTypesMessages.name({ start: true, plural: true })}
-            </BlankSlateTitle>
-            <BlankSlateDescription>
-              {customTypesMessages.blankSlateDescription}
-            </BlankSlateDescription>
-            <BlankSlateActions>
-              <Button
-                size="medium"
-                onClick={openCreateCustomTypeModal}
-                loading={isCreatingCustomType}
-              >
-                Create
-              </Button>
-            </BlankSlateActions>
-          </BlankSlateContent>
-        </BlankSlateCenteredBlock>
+        <BlankSlateImage>
+          <Image src={customTypesConfig.blankSlateImage} sizing="cover" />
+        </BlankSlateImage>
+        <BlankSlateContent>
+          <BlankSlateTitle>
+            {customTypesMessages.name({ start: true, plural: true })}
+          </BlankSlateTitle>
+          <BlankSlateDescription>
+            {customTypesMessages.blankSlateDescription}
+          </BlankSlateDescription>
+          <BlankSlateActions>
+            <Button
+              size="medium"
+              onClick={openCreateCustomTypeModal}
+              loading={isCreatingCustomType}
+            >
+              Create
+            </Button>
+          </BlankSlateActions>
+        </BlankSlateContent>
       </BlankSlate>
     );
   }
