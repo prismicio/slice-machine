@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
+import * as styles from "./Logo.css";
 
 const LogoIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
@@ -63,50 +64,14 @@ const Logo: React.FC = () => {
   const addr = apiEndpoint.replace(".cdn", "").replace("/api/v2", "");
 
   return (
-    <div
-      style={{
-        padding: "0 14px",
-      }}
-    >
-      <LogoIcon
-        style={{
-          marginBottom: "32px",
-        }}
-      />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontFamily: "Poppins",
-              fontStyle: "normal",
-              fontWeight: 500,
-              fontSize: "18px",
-              lineHeight: "32px",
-              letterSpacing: "-0.016em",
-              color: "#1A1523",
-              margin: 0,
-            }}
-          >
-            {repoName}
-          </h1>
+    <div className={styles.container}>
+      <LogoIcon className={styles.icon} />
 
-          <h6
-            style={{
-              fontStyle: "normal",
-              fontWeight: 400,
-              fontSize: "12px",
-              lineHeight: "16px",
-              color: "#6F6E77",
-              margin: 0,
-            }}
-          >
-            {repoDomain}
-          </h6>
+      <div className={styles.flex}>
+        <div>
+          <h1 style={styles.title}>{repoName}</h1>
+
+          <h6 style={styles.repoUrl}>{repoDomain}</h6>
         </div>
 
         <a href={addr} target="_blank" title="open prismic repository">
