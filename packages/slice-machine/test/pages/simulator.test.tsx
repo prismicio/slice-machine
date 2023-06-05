@@ -34,10 +34,6 @@ vi.mock("@prismicio/slice-simulator-com", () => {
 
 describe.skip("simulator", () => {
   beforeAll(async () => {
-    const div = document.createElement("div");
-    div.setAttribute("id", "__next");
-    document.body.appendChild(div);
-
     // USE THIS IF light mode is not enabled on ThemeProvider
     // Object.defineProperty(window, "matchMedia", {
     //   writable: true,

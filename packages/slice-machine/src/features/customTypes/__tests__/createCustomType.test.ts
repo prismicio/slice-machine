@@ -1,11 +1,10 @@
 import { describe, expect } from "vitest";
 import { createCustomType } from "@src/features/customTypes/customTypesTable/createCustomType";
 
-describe("[Custom types factory]", () => {
-  describe("[createCustomType]", () => {
-    it("should create a custom type with repeatable true", () => {
-      expect(createCustomType("id", "lama", true, "custom"))
-        .toMatchInlineSnapshot(`
+describe("createCustomType test suite", () => {
+  it("should create a custom type with repeatable true", () => {
+    expect(createCustomType("id", "lama", true, "custom"))
+      .toMatchInlineSnapshot(`
           {
             "format": "custom",
             "id": "id",
@@ -24,15 +23,15 @@ describe("[Custom types factory]", () => {
             "status": true,
           }
         `);
-    });
+  });
 
-    it("should create a custom type with repeatable false", () => {
-      const result = createCustomType("id", "lama", false, "custom");
-      expect(result.id).toBe("id");
-      expect(result.label).toBe("lama");
-      expect(result.format).toBe("custom");
-      expect(result.json).toHaveProperty("Main");
-      expect(result).toMatchInlineSnapshot(`
+  it("should create a custom type with repeatable false", () => {
+    const result = createCustomType("id", "lama", false, "custom");
+    expect(result.id).toBe("id");
+    expect(result.label).toBe("lama");
+    expect(result.format).toBe("custom");
+    expect(result.json).toHaveProperty("Main");
+    expect(result).toMatchInlineSnapshot(`
         {
           "format": "custom",
           "id": "id",
@@ -44,15 +43,15 @@ describe("[Custom types factory]", () => {
           "status": true,
         }
       `);
-    });
+  });
 
-    it("should create a page type with a slice zone", () => {
-      const result = createCustomType("🥪", "label", true, "page");
-      expect(result.format).toBe("page");
-      expect(result.json).toHaveProperty("Main");
-      expect(result.json.Main).toHaveProperty("slices");
-      expect(result.json).toHaveProperty("SEO & Metadata");
-      expect(result).toMatchInlineSnapshot(`
+  it("should create a page type with a slice zone", () => {
+    const result = createCustomType("🥪", "label", true, "page");
+    expect(result.format).toBe("page");
+    expect(result.json).toHaveProperty("Main");
+    expect(result.json.Main).toHaveProperty("slices");
+    expect(result.json).toHaveProperty("SEO & Metadata");
+    expect(result).toMatchInlineSnapshot(`
         {
           "format": "page",
           "id": "🥪",
@@ -105,12 +104,12 @@ describe("[Custom types factory]", () => {
           "status": true,
         }
       `);
-    });
   });
+});
 
-  it("when non repeatable page type is should contain Main with a slice-zone, no uid, and a SEO tab", () => {
-    const result = createCustomType("foo", "bar", false, "page");
-    expect(result).toMatchInlineSnapshot(`
+it("when non repeatable page type is should contain Main with a slice-zone, no uid, and a SEO tab", () => {
+  const result = createCustomType("foo", "bar", false, "page");
+  expect(result).toMatchInlineSnapshot(`
       {
         "format": "page",
         "id": "foo",
@@ -157,5 +156,4 @@ describe("[Custom types factory]", () => {
         "status": true,
       }
     `);
-  });
 });
