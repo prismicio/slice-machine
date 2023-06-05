@@ -45,8 +45,8 @@ export const image = style([
 export const content = style([
   block,
   sprinkles({
-    padding: 32,
     display: "revert",
+    padding: 32,
   }),
 ]);
 
@@ -54,8 +54,8 @@ export const title = style([
   block,
   {
     fontSize: 18,
-    lineHeight: "32px",
     fontWeight: 600,
+    lineHeight: "32px",
   },
 ]);
 

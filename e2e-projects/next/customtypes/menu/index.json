@@ -1,0 +1,46 @@
+{
+  "id": "menu",
+  "label": "Menu",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "topPromoBanner": {
+        "config": {
+          "label": "topPromoBanner",
+          "placeholder": "Banner a the top of the page.."
+        },
+        "type": "Text"
+      },
+      "logo": {
+        "config": {
+          "label": "Logo",
+          "constraint": {
+            "width": 64,
+            "height": 64
+          },
+          "thumbnails": []
+        },
+        "type": "Image"
+      },
+      "menuTabs": {
+        "config": {
+          "label": "MenuTabs",
+          "fields": {
+            "menuTab": {
+              "config": {
+                "label": "menuTab",
+                "customtypes": [
+                  "menu-tab"
+                ],
+                "select": "document"
+              },
+              "type": "Link"
+            }
+          }
+        },
+        "type": "Group"
+      }
+    }
+  }
+}
