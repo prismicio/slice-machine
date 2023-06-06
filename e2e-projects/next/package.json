@@ -25,13 +25,13 @@
     "recharts": "^2.1.11"
   },
   "devDependencies": {
-    "@slicemachine/adapter-next": "0.2.2-dev-next-release.3",
+    "@slicemachine/adapter-next": "0.3.0",
     "autoprefixer": "^10.4.4",
     "eslint": "^8.37.0",
     "eslint-config-next": "^12.1.4",
     "postcss": "^8.4.12",
-    "slice-machine-ui": "1.1.2-dev-next-release.3",
-    "start-slicemachine": "0.8.2-dev-next-release.3",
+    "slice-machine-ui": "1.2.0",
+    "start-slicemachine": "0.9.0",
     "tailwindcss": "^3.0.23"
   }
 }
