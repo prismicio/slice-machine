@@ -130,3 +130,5 @@ SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
 [conventional-commits-href]: https://conventionalcommits.org
 [license-src]: https://img.shields.io/npm/l/slice-machine-ui.svg
 [license-href]: https://npmjs.com/package/slice-machine-ui
+
+Test release
