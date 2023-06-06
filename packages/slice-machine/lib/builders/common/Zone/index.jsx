@@ -194,7 +194,9 @@ Zone.propTypes = {
   onDragEnd: func.isRequired,
   onDeleteItem: func.isRequired,
   poolOfFieldsToCheck: arrayOf(shape({ key: string, value: object })),
-  availableCustomTypes: arrayOf(shape({ id: string, label: string, format: string, repeatable: bool })),
+  availableCustomTypes: arrayOf(
+    shape({ id: string, label: string, format: string, repeatable: bool })
+  ),
   renderHintBase: func.isRequired,
   renderFieldAccessor: func.isRequired,
   widgetsArray: array.isRequired,

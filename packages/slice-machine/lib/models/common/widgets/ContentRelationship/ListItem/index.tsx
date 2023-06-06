@@ -1,16 +1,20 @@
 import { Fragment, useState } from "react";
 
-
 import { Box, Button, Flex, useThemeUI } from "theme-ui";
 
 import ListItem from "@components/ListItem";
 import ItemHeader from "@components/ItemHeader";
 // import { Link } from "@prismicio/types-internal/lib/customtypes";
 
-import { ContentRelationshipWidget } from "@models/common/widgets/ContentRelationship"
+import { ContentRelationshipWidget } from "@models/common/widgets/ContentRelationship";
 
-
-const ListElement = ({ customType, fieldAccessor }: { customType: string, fieldAccessor: string }) => {
+const ListElement = ({
+  customType,
+  fieldAccessor,
+}: {
+  customType: string;
+  fieldAccessor: string;
+}) => {
   const { theme } = useThemeUI();
   return (
     <Box
@@ -38,13 +42,11 @@ const ListElement = ({ customType, fieldAccessor }: { customType: string, fieldA
           sliceFieldName={fieldAccessor}
           WidgetIcon={Box}
         />
-        <Flex>
-            meta
-        </Flex>
+        <Flex>meta</Flex>
       </Flex>
     </Box>
-  )
-}
+  );
+};
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -55,22 +57,21 @@ const CustomListItem = ({
   deleteItem,
   enterEditMode,
 }: {
-  item: any,
-  draggableId: string,
-  widget: typeof ContentRelationshipWidget,
-  index: number,
+  item: any;
+  draggableId: string;
+  widget: typeof ContentRelationshipWidget;
+  index: number;
   enterEditMode: (
     itemInfo: [string, any],
     modelFieldName: string | undefined,
     index: number
   ) => void;
-  deleteItem: (key: string) => void
+  deleteItem: (key: string) => void;
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(false)
+  console.log({ groupItem, widget });
 
-  console.log({ groupItem, widget })
-  
   return (
     <Fragment>
       <ListItem
@@ -86,7 +87,7 @@ const CustomListItem = ({
             key={`show-hide-content-relationship-${groupItem.key}`}
             mr={2}
             variant="buttons.darkSmall"
-            onClick={() => setIsOpen(t => !t)}
+            onClick={() => setIsOpen((t) => !t)}
           >
             show/hide
           </Button>,
@@ -95,14 +96,18 @@ const CustomListItem = ({
           isOpen ? (
             <Box sx={{ ml: 5 }}>
               <ul>
-                {
-                  (groupItem.value.config?.customtypes ?? []).map(({ customTypeId }) => {
-                    const fieldAccessor = `data.${groupItem.key}.${customTypeId}`
+                {(groupItem.value.config?.customtypes ?? []).map(
+                  ({ customTypeId }) => {
+                    const fieldAccessor = `data.${groupItem.key}.${customTypeId}`;
                     return (
-                      <ListElement key={customTypeId} customType={customTypeId} fieldAccessor={fieldAccessor} />
+                      <ListElement
+                        key={customTypeId}
+                        customType={customTypeId}
+                        fieldAccessor={fieldAccessor}
+                      />
                     );
-                  })
-                }
+                  }
+                )}
               </ul>
             </Box>
           ) : null

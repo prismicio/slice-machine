@@ -17,17 +17,26 @@ const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
   customtypes: {
-    validate: yup.array().of(
-      yup.object().shape({
-        customTypeId: yup.string().required(),
-        fetchFields: yup.boolean().optional(),
-      })
-    ).nullable(),
+    validate: yup
+      .array()
+      .of(
+        yup.object().shape({
+          customTypeId: yup.string().required(),
+          fetchFields: yup.boolean().optional(),
+        })
+      )
+      .nullable(),
   },
 };
 
 type FormProps = {
-  config: { label: string; select: string; customtypes?: ({ customTypeId: string; } & { fetchFields?: boolean | undefined; })[] | undefined };
+  config: {
+    label: string;
+    select: string;
+    customtypes?:
+      | ({ customTypeId: string } & { fetchFields?: boolean | undefined })[]
+      | undefined;
+  };
   id: string;
   // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
@@ -55,8 +64,11 @@ const WidgetForm = ({
       })
     : null;
 
-
-  console.log({ selectedCts: formValues.config.customtypes, options, selectValues })
+  console.log({
+    selectedCts: formValues.config.customtypes,
+    options,
+    selectValues,
+  });
 
   return (
     <FlexGrid>

@@ -35,12 +35,15 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
-  customtypes: yup.array().of(
-    yup.object().shape({
-      customTypeId: yup.string().required(),
-      fetchFields: yup.boolean().optional(),
-    })
-  ).nullable(),
+  customtypes: yup
+    .array()
+    .of(
+      yup.object().shape({
+        customTypeId: yup.string().required(),
+        fetchFields: yup.boolean().optional(),
+      })
+    )
+    .nullable(),
 });
 
 const schema = yup.object().shape({
