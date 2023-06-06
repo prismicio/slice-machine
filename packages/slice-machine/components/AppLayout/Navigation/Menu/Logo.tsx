@@ -30,9 +30,13 @@ const Logo: React.FC = () => {
 
       <div className={styles.flex}>
         <div>
-          <h1 style={styles.title}>{repoName}</h1>
+          <h1 className={styles.title} data-no-base-style>
+            {repoName}
+          </h1>
 
-          <h2 style={styles.repoUrl}>{repoDomain}</h2>
+          <h2 className={styles.repoUrl} data-no-base-style>
+            {repoDomain}
+          </h2>
         </div>
 
         <a href={addr} target="_blank" title="open prismic repository">

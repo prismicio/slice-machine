@@ -16,16 +16,16 @@ export const flex = style([
   }),
 ]);
 
-export const title = {
+export const title = style({
   // TODO: sprinkles doesn't do fonts or colors and style is over ridden by some global selector (probably theme-ui), so this needs to go inline
   fontWeight: 500,
   fontSize: "18px",
   lineHeight: "32px",
   color: "#1A1523",
   margin: 0,
-};
+});
 
-export const repoUrl = {
+export const repoUrl = style({
   // TODO: same as above
   fontStyle: "normal",
   fontWeight: 400,
@@ -33,4 +33,4 @@ export const repoUrl = {
   lineHeight: "16px",
   color: "#6F6E77",
   margin: 0,
-};
+});

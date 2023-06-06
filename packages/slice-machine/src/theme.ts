@@ -879,11 +879,11 @@ const AppTheme = (): Theme =>
         lineHeight: "body",
         fontWeight: "body",
       },
-      h1: {
+      "h1:not([data-no-base-style])": {
         variant: "textStyles.display",
         fontSize: 1,
       },
-      h2: {
+      "h2:not([data-no-base-style])": {
         variant: "textStyles.heading",
         fontSize: 5,
       },
