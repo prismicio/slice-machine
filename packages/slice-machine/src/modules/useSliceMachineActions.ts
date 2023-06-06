@@ -48,8 +48,15 @@ import {
   replaceFieldIntoGroupCreator,
   cleanupCustomTypeStoreCreator,
 } from "./selectedCustomType";
-import { CustomTypeSM, TabField } from "@lib/models/common/CustomType";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+import {
+  CustomTypeSM,
+  CustomTypes,
+  TabField,
+} from "@lib/models/common/CustomType";
+import {
+  CustomType,
+  NestableWidget,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
@@ -188,6 +195,12 @@ const useSliceMachineActions = () => {
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
+  const saveCustomTypeSuccess = (customType: CustomType) =>
+    dispatch(
+      saveCustomTypeCreator.success({
+        customType: CustomTypes.toSM(customType),
+      })
+    );
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) =>
@@ -481,6 +494,7 @@ const useSliceMachineActions = () => {
     initCustomTypeStore,
     cleanupCustomTypeStore,
     saveCustomType,
+    saveCustomTypeSuccess,
     createCustomTypeTab,
     updateCustomTypeTab,
     deleteCustomTypeTab,

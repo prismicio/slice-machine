@@ -31,13 +31,14 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
 import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { type CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import {
   useCustomTypes,
   useCustomTypesAutoRevalidation,
 } from "./useCustomTypes";
-import { type CustomTypeFormat } from "@slicemachine/manager";
-import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { convertCustomToPageType } from "./convertCustomToPageType";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
@@ -53,6 +54,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
     openDeleteCustomTypeModal,
+    saveCustomTypeSuccess,
   } = useSliceMachineActions();
   const router = useRouter();
   const { customTypes, updateCustomTypes } = useCustomTypes(format);
@@ -63,8 +65,17 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   );
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
+  const [customTypeBeingConverted, setCustomTypeBeingConverted] = useState<
+    string | undefined
+  >();
 
   useCustomTypesAutoRevalidation(customTypes, format, updateCustomTypes);
+
+  const convertCustomType = async (customType: CustomType) => {
+    setCustomTypeBeingConverted(customType.id);
+    await convertCustomToPageType(customType, saveCustomTypeSuccess);
+    setCustomTypeBeingConverted(undefined);
+  };
 
   if (sortedCustomTypes.length === 0) {
     return (
@@ -108,6 +119,8 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
         <TableBody>
           {sortedCustomTypes.map((customType: CustomType) => {
             const { repeatable, label, id } = customType;
+            const isCustomTypeBeingConverted =
+              customTypeBeingConverted === customType.id;
 
             return (
               <TableRow
@@ -126,8 +139,11 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                 <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
                 <TableCell>
                   <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <IconButton icon="moreVert" />
+                    <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
+                      <IconButton
+                        icon="moreVert"
+                        loading={isCustomTypeBeingConverted}
+                      />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
@@ -139,6 +155,16 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                       >
                         <Text>Rename</Text>
                       </DropdownMenuItem>
+                      {format === "custom" && (
+                        <DropdownMenuItem
+                          startIcon={<Icon name="driveFileMove" />}
+                          onSelect={() => {
+                            void convertCustomType(customType);
+                          }}
+                        >
+                          <Text>Convert to page type</Text>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem
                         startIcon={<Icon color="tomato11" name="delete" />}
                         onSelect={() => {
