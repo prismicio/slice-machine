@@ -20,7 +20,7 @@ export const root = style([
     borderWidth: 1,
     overflow: "hidden",
   }),
-  { maxWidth: 498 },
+  { maxWidth: 498, minHeight: 400 },
 ]);
 
 export const image = style([
@@ -29,8 +29,8 @@ export const image = style([
     borderBottomColor: colors.grey6,
     borderBottomStyle: "solid",
     borderBottomWidth: 1,
+    overflow: "hidden",
   }),
-  { height: 314 },
 ]);
 
 export const content = style([column, sprinkles({ padding: 32 })]);
