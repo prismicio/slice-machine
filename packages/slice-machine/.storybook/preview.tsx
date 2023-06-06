@@ -6,6 +6,7 @@ const preview: Preview = {
   argTypes: {
     children: { control: { disable: true } },
     className: { control: { disable: true } },
+    style: { control: { disable: true } },
   },
   decorators: [
     (Story) => (

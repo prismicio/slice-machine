@@ -82,7 +82,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
 
   if (sortedCustomTypes.length === 0) {
     return (
-      <BlankSlate style={{ marginTop: tokens.size[72] }}>
+      <BlankSlate style={{ alignSelf: "center", marginTop: tokens.size[72] }}>
         <BlankSlateImage>
           <Image src={customTypesConfig.blankSlateImage} sizing="cover" />
         </BlankSlateImage>
