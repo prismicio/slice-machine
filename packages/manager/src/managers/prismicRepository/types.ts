@@ -148,7 +148,7 @@ export type FrameworkWroomTelemetryID = "next" | "nuxt" | "other";
  * Values from:
  * https://github.com/prismicio/wroom/blob/65d4f53fd46df7d366d80e7ba9c965339ac7369d/conf/application.conf#L938
  */
-export type StarterID =
+export type StarterId =
 	| "next_multi_page"
 	| "next_blog"
 	| "next_multi_lang"

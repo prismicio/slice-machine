@@ -5,7 +5,7 @@ export type { CustomTypeFormat } from "./managers/customTypes/types";
 export type {
 	PrismicRepository,
 	FrameworkWroomTelemetryID,
-	StarterID,
+	StarterId,
 } from "./managers/prismicRepository/types";
 
 export type { SliceMachineManager } from "./managers/SliceMachineManager";
