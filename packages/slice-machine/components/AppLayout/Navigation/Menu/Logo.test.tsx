@@ -20,8 +20,8 @@ describe("Navigation logo", () => {
   });
 
   test("should display the repo name and domain from the api endpoint and a link the repo", async () => {
-    expect(await container.findByText("Foo")).toBeInTheDocument();
-    expect(await container.findByText("foo.prismic.io")).toBeInTheDocument();
+    expect(await container.findByText("Foo")).toBeVisible();
+    expect(await container.findByText("foo.prismic.io")).toBeVisible();
     expect(
       await container.findByTitle("open prismic repository")
     ).toHaveAttribute("href", "https://foo.prismic.io");
