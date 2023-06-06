@@ -64,7 +64,7 @@
 		"@antfu/ni": "^0.20.0",
 		"@prismicio/custom-types-client": "1.2.0-alpha.0",
 		"@prismicio/mocks": "2.0.0-alpha.2",
-		"@prismicio/types-internal": "2.0.0-beta.1",
+		"@prismicio/types-internal": "2.1.0-alpha.4",
 		"@slicemachine/plugin-kit": "0.3.1",
 		"@wooorm/starry-night": "^1.6.0",
 		"analytics-node": "^6.2.0",

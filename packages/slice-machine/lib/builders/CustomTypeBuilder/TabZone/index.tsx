@@ -25,6 +25,8 @@ import { SlicesSM } from "@lib/models/common/Slices";
 import { TabField, TabFields } from "@lib/models/common/CustomType";
 import { telemetry } from "@src/apiClient";
 import { DropResult } from "react-beautiful-dnd";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { hasLocal } from "@lib/models/common/ModelData";
 
 interface TabZoneProps {
   tabId: string;
@@ -44,10 +46,11 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     replaceCustomTypeSharedSlice,
   } = useSliceMachineActions();
 
-  const { currentCustomType, poolOfFields } = useSelector(
+  const { currentCustomType, poolOfFields, localCustomTypes } = useSelector(
     (store: SliceMachineStoreType) => ({
       currentCustomType: selectCurrentCustomType(store),
       poolOfFields: selectCurrentPoolOfFields(store),
+      localCustomTypes: selectAllCustomTypes(store).filter(hasLocal),
     })
   );
 
@@ -148,6 +151,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         poolOfFieldsToCheck={poolOfFields}
+        availableCustomTypes={localCustomTypes}
         showHints={true}
         EditModal={EditModal}
         widgetsArray={ctBuilderArray}

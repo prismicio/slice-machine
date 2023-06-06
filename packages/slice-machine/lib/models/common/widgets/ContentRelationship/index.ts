@@ -6,9 +6,8 @@ import { MdSettingsEthernet } from "react-icons/md";
 import { Widget } from "../Widget";
 import { linkConfigSchema } from "../Link";
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { useSelector } from "react-redux";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { hasLocal } from "@lib/models/common/ModelData";
+
+import CustomListItem from "./ListItem";
 
 /**
  * {
@@ -16,7 +15,7 @@ import { hasLocal } from "@lib/models/common/ModelData";
       "config": {
         "select": "document",
         "customtypes": [
-          "page"
+          { customTypeId: "page" }
         ],
         "label": "relationship"
       }
@@ -36,7 +35,12 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
-  customtypes: yup.array(yup.string()).strict().optional(),
+  customtypes: yup.array().of(
+    yup.object().shape({
+      customTypeId: yup.string().required(),
+      fetchFields: yup.boolean().optional(),
+    })
+  ).nullable(),
 });
 
 const schema = yup.object().shape({
@@ -62,23 +66,5 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,
-  prepareInitialValues: (initialValues) => {
-    const customTypes =
-      // TODO: fix this error
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      useSelector(selectAllCustomTypes).filter(hasLocal);
-
-    if (!initialValues?.customtypes) {
-      return initialValues;
-    }
-
-    return {
-      ...initialValues,
-      customtypes: initialValues.customtypes.filter((ct) =>
-        customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === ct
-        )
-      ),
-    };
-  },
+  CustomListItem,
 };

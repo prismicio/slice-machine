@@ -38,6 +38,17 @@ interface BlogPageDocumentData {
    */
   description: prismic.RichTextField;
   /**
+   * Crr field in _Blog Page_
+   *
+   * - **Field Type**: Content Relationship
+   * - **Placeholder**: _None_
+   * - **API ID Path**: blog-page.crr
+   * - **Tab**: Main
+   * - **Documentation**:
+   *   https://prismic.io/docs/core-concepts/link-content-relationship
+   */
+  crr: prismic.RelationField<"[object Object]" | "[object Object]">;
+  /**
    * Slice Zone field in _Blog Page_
    *
    * - **Field Type**: Slice Zone

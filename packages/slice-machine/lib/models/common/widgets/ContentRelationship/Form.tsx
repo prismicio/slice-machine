@@ -17,12 +17,17 @@ const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
   customtypes: {
-    validate: () => yup.array().of(yup.string()),
+    validate: yup.array().of(
+      yup.object().shape({
+        customTypeId: yup.string().required(),
+        fetchFields: yup.boolean().optional(),
+      })
+    ).nullable(),
   },
 };
 
 type FormProps = {
-  config: { label: string; select: string; customtypes?: string[] };
+  config: { label: string; select: string; customtypes?: ({ customTypeId: string; } & { fetchFields?: boolean | undefined; })[] | undefined };
   id: string;
   // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
@@ -33,6 +38,7 @@ const WidgetForm = ({
   fields,
   setFieldValue,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
+  // TODO [CR]: pass this as additional data from CT zone
   const customTypes = useSelector(selectAllCustomTypes).filter(hasLocal);
 
   const options = customTypes.map((ct) => ({
@@ -41,13 +47,16 @@ const WidgetForm = ({
   }));
 
   const selectValues = formValues.config.customtypes
-    ? formValues.config.customtypes.map((id) => {
+    ? formValues.config.customtypes.map(({ customTypeId }) => {
         const ct = customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === id
+          (frontendCustomType) => frontendCustomType.local.id === customTypeId
         );
         return { value: ct?.local.id, label: ct?.local.label };
       })
     : null;
+
+
+  console.log({ selectedCts: formValues.config.customtypes, options, selectValues })
 
   return (
     <FlexGrid>
@@ -78,12 +87,10 @@ const WidgetForm = ({
             name="origin"
             options={options}
             onChange={(v) => {
-              if (v) {
-                setFieldValue(
-                  "config.customtypes",
-                  v.map(({ value }) => value)
-                );
-              }
+              setFieldValue(
+                "config.customtypes",
+                v.map(({ value }) => ({ customTypeId: value }))
+              );
             }}
             value={selectValues}
             theme={(theme) => {
