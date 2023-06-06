@@ -62,16 +62,17 @@ export function useCustomTypesAutoRevalidation(
     if (
       storeCustomTypesFiltered.length !== customTypes.length ||
       storeCustomTypesFiltered.some((ct) => {
-        // We check the `id`, `repeatable` and `label` properties as they are
-        // displayed in the Custom Types table.
+        // We compare the stringified version of the custom type from the store and
+        // the one from suspense because it could not be the same after some
+        // modifications (rename, add/remove field, new tab, etc.)
         const currentCustomType = customTypes.find(
           (ct2: CustomType) => ct2.id === ct.local.id
         );
 
         return (
           !currentCustomType ||
-          ct.local.repeatable !== currentCustomType.repeatable ||
-          ct.local.label !== currentCustomType.label
+          JSON.stringify(CustomTypes.fromSM(ct.local)) !==
+            JSON.stringify(currentCustomType)
         );
       })
     ) {
