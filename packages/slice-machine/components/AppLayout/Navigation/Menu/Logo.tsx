@@ -11,7 +11,6 @@ function firstLetterToUpperCase(word: string): string {
 }
 
 const Logo: React.FC = () => {
-  // TODO: reuse selector from DT-1333
   const apiEndpoint = useSelector((state: SliceMachineStoreType) => {
     return state.environment.manifest.apiEndpoint;
   });
