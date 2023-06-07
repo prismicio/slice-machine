@@ -4,6 +4,7 @@
   "engines": {
     "node": ">=14"
   },
+  "packageManager": "yarn@3.6.0",
   "scripts": {
     "dev": "concurrently --prefix-colors auto \"npm:dev:*\"",
     "dev:manager": "npm --workspace @slicemachine/manager run dev",
