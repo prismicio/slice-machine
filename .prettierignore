@@ -1,6 +1,8 @@
 # Ignore artifacts:
 .github/
+/.yarn
 /packages/*/storybook-static
+/.pnp.*
 packages/slice-machine/.next
 packages/slice-machine/build
 packages/slice-machine/templates/
