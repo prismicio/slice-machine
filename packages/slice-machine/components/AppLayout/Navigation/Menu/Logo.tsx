@@ -29,6 +29,7 @@ const Logo: React.FC = () => {
 
       <div className={styles.flex}>
         <div>
+          {/**TODO: DT-1396 ind a better way to prevent BaseStyles from overriding other styles */}
           <h1 className={styles.title} data-no-base-style>
             {repoName}
           </h1>
