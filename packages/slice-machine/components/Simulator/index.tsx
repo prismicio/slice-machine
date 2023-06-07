@@ -9,7 +9,7 @@ import Header from "./components/Header";
 
 import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
-import { selectSimulatorUrl } from "@src/modules/environment";
+import { selectEndpoints, selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -33,7 +33,6 @@ import {
   selectSetupStatus,
 } from "@src/modules/simulator";
 
-import { selectApiEndpoint } from "@src/modules/environment";
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
 import SetupModal from "./components/SetupModal";
@@ -55,16 +54,23 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
-    apiEndpoint,
+    endpoints,
   } = useSelector((state: SliceMachineStoreType) => ({
     simulatorUrl: selectSimulatorUrl(state),
     iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
-    apiEndpoint: selectApiEndpoint(state),
+    endpoints: selectEndpoints(state),
   }));
 
-  const editorConfig = makeEditorConfig(apiEndpoint);
+  const editorConfig: EditorConfig = {
+    embeds: {
+      url: endpoints.Oembed,
+    },
+    unsplash: {
+      url: endpoints.Unsplash,
+    },
+  };
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
   const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
@@ -310,27 +316,3 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 };
 
 export default Simulator;
-
-function makeEditorConfig(apiEndpoint: string): EditorConfig {
-  const DEFAULT_EDITOR_CONFIG = {
-    embeds: {
-      url: "https://oembed.pismic.io",
-    },
-    unsplash: { url: "https://unsplash.prismic.io" },
-  };
-
-  try {
-    const { hostname } = new URL(apiEndpoint);
-
-    if (/(.wroom.io?|.wroom.test?|.wroom-qa.io?)/.test(hostname)) {
-      return {
-        embeds: {
-          url: "https://oembed.wroom.io",
-        },
-        unsplash: { url: "https://unsplash.wroom.io" },
-      };
-    }
-  } catch {}
-
-  return DEFAULT_EDITOR_CONFIG;
-}
