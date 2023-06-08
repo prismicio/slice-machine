@@ -4,6 +4,7 @@ import { detect as niDetect } from "@antfu/ni";
 import { VERSION_KIND } from "./constants/VERSION_KIND";
 
 export type PackageManager = NonNullable<Awaited<ReturnType<typeof niDetect>>>;
+export type { APIEndpoints } from "./constants/API_ENDPOINTS";
 
 export type PackageChangelog = {
 	currentVersion: string;

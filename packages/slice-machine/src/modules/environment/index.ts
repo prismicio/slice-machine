@@ -6,7 +6,7 @@ import {
   createAsyncAction,
   getType,
 } from "typesafe-actions";
-import type { PackageManager } from "@slicemachine/manager";
+import type { PackageManager, APIEndpoints } from "@slicemachine/manager";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
 import { LibraryUI } from "@models/common/LibraryUI";
@@ -66,6 +66,9 @@ export const selectSimulatorUrl = (
 
 export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
+
+export const selectEndpoints = (store: SliceMachineStoreType): APIEndpoints =>
+  store.environment.endpoints;
 
 export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
