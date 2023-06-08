@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.2.0",
+  "version": "1.2.1-dev-next-release.0",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -38,7 +38,7 @@
     "@prismicio/editor-ui": "0.4.2",
     "@prismicio/mocks": "2.0.0-alpha.2",
     "@prismicio/types-internal": "2.0.0-beta.1",
-    "@slicemachine/manager": "0.4.0",
+    "@slicemachine/manager": "0.4.1-dev-next-release.0",
     "@vanilla-extract/css": "1.11.0",
     "clsx": "1.2.1",
     "fast-deep-equal": "^3.1.3",
@@ -52,7 +52,7 @@
     "puppeteer": "^19.11.0",
     "react": "^18.2.0",
     "semver": "^7.3.8",
-    "start-slicemachine": "0.9.0",
+    "start-slicemachine": "0.9.1-dev-next-release.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
