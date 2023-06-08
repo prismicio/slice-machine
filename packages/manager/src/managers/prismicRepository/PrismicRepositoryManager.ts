@@ -25,6 +25,7 @@ import {
 	TransactionalMergeArgs,
 	TransactionalMergeReturnType,
 	FrameworkWroomTelemetryID,
+	StarterId,
 } from "./types";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { UnauthenticatedError } from "../../errors";
@@ -42,8 +43,7 @@ type PrismicRepositoryManagerCheckExistsArgs = {
 type PrismicRepositoryManagerCreateArgs = {
 	domain: string;
 	framework: FrameworkWroomTelemetryID;
-	// TODO(DT-1386): Handle starter detection for Segment
-	// starterID?: StarterID;
+	starterId?: StarterId;
 };
 
 type PrismicRepositoryManagerDeleteArgs = {
@@ -158,8 +158,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			domain: args.domain,
 			// These properties are optional in the API but needed for tracking
 			framework: args.framework,
-			// TODO(DT-1386): Handle starter detection for Segment
-			// starterID: args.starterID,
+			starterId: args.starterId,
 		};
 
 		const res = await this._fetch({
