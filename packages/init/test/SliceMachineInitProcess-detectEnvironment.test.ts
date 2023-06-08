@@ -47,6 +47,7 @@ it("detects framework, starter and package manager", async () => {
 		    "wroomTelemetryID": "next",
 		  },
 		  "packageManager": "npm",
+		  "starterId": "nuxt_multi_page",
 		}
 	`);
 });
@@ -93,6 +94,7 @@ it("assumes unconventional tags match semver range when detecting framework", as
 		    "wroomTelemetryID": "next",
 		  },
 		  "packageManager": "npm",
+		  "starterId": undefined,
 		}
 	`);
 });
@@ -133,6 +135,7 @@ it("falls back to npm if package manager is not detected", async () => {
 		    "wroomTelemetryID": "other",
 		  },
 		  "packageManager": "npm",
+		  "starterId": undefined,
 		}
 	`);
 });
