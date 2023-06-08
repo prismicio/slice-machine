@@ -80,7 +80,7 @@
 		"@vitest/coverage-c8": "^0.27.3",
 		"better-npm-audit": "^3.7.3",
 		"depcheck": "^1.4.3",
-		"eslint": "~8.37.0",
+		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-tsdoc": "^0.2.17",
