@@ -63,14 +63,16 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     endpoints: selectEndpoints(state),
   }));
 
-  const editorConfig: EditorConfig = {
-    embeds: {
-      url: endpoints.Oembed,
-    },
-    unsplash: {
-      url: endpoints.Unsplash,
-    },
-  };
+  const editorConfig: EditorConfig = useMemo(() => {
+    return {
+      embeds: {
+        url: endpoints.PrismicOembed,
+      },
+      unsplash: {
+        url: endpoints.PrismicUnsplash,
+      },
+    };
+  }, [endpoints.PrismicOembed, endpoints.PrismicUnsplash]);
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
   const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);

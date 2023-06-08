@@ -7,8 +7,8 @@ export type APIEndpoints = {
 	PrismicModels: string;
 	PrismicUser: string;
 	AwsAclProvider: string;
-	Oembed: string;
-	Unsplash: string;
+	PrismicOembed: string;
+	PrismicUnsplash: string;
 };
 
 export const API_ENDPOINTS: APIEndpoints = (() => {
@@ -22,8 +22,12 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				PrismicModels: addTrailingSlash(process.env.customtypesapi_endpoint),
 				PrismicUser: addTrailingSlash(process.env.user_service_endpoint),
 				AwsAclProvider: addTrailingSlash(process.env.acl_provider_endpoint),
-				Oembed: "https://oembed.wroom.io/",
-				Unsplash: "https://unsplash.wroom.io/",
+				PrismicOembed: addTrailingSlash(
+					process.env.oembed_endpoint ?? "https://oembed.wroom.io",
+				),
+				PrismicUnsplash: addTrailingSlash(
+					process.env.unsplash_endpoint ?? "https://unsplash.wroom.io",
+				),
 			};
 
 			const missingAPIEndpoints = Object.keys(apiEndpoints).filter((key) => {
@@ -51,8 +55,8 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				PrismicUser: "https://user.wroom.io/",
 				AwsAclProvider:
 					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
-				Oembed: "https://oembed.wroom.io/",
-				Unsplash: "https://unsplash.wroom.io/",
+				PrismicOembed: "https://oembed.wroom.io/",
+				PrismicUnsplash: "https://unsplash.wroom.io/",
 			};
 		}
 
@@ -65,8 +69,8 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				PrismicUser: "https://user.internal-prismic.io/",
 				AwsAclProvider:
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
-				Oembed: "https://oembed.prismic.io/",
-				Unsplash: "https://unsplash.prismic.io/",
+				PrismicOembed: "https://oembed.prismic.io/",
+				PrismicUnsplash: "https://unsplash.prismic.io/",
 			};
 		}
 	}

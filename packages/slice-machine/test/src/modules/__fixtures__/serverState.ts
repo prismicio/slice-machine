@@ -27,8 +27,8 @@ export const dummyServerState: Pick<
       PrismicUser: "https://user.internal-prismic.io/",
       AwsAclProvider:
         "https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
-      Oembed: "https://oembed.prismic.io/",
-      Unsplash: "https://unsplash.prismic.io/",
+      PrismicOembed: "https://oembed.prismic.io/",
+      PrismicUnsplash: "https://unsplash.prismic.io/",
     },
     shortId: "shortId",
     supportsSliceSimulator: true,
