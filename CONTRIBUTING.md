@@ -18,24 +18,25 @@ Clone the `slice-machine` repository to your local machine.
 git clone https://github.com/prismicio/slice-machine.git
 ```
 
-Move into the folder and install the dependencies.
+Move into the folder, enable [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html) and install the dependencies.
 
 ```
 cd slice-machine
-npm install
+corepack enable
+yarn
 ```
 
 Start up the dev server.
 
 ```
-npm run dev
+yarn dev
 ```
 
 Now that the dev server is running you can start the Next.js project used for testing. Move into the `e2e-projects/next` folder and run the `slicemachine:dev` script.
 
 ```
 cd e2e-projects/next
-npm run slicemachine:dev
+yarn slicemachine:dev
 ```
 
 Now you can go to your browser and open `localhost:9999` to see the Slice Machine app up and running with some demo slices and types.
