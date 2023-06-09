@@ -53,14 +53,8 @@
       "yarn workspace slice-machine-ui lint:precommit"
     ]
   },
-  "//": "Order matters!",
   "workspaces": [
-    "packages/plugin-kit",
-    "packages/manager",
-    "packages/start-slicemachine",
-    "packages/init",
-    "packages/slice-machine",
-    "packages/adapter-*",
-    "e2e-projects/next"
+    "e2e-projects/next",
+    "packages/*"
   ]
 }
