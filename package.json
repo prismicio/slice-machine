@@ -22,7 +22,7 @@
     "lint-staged": "lint-staged",
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "test": "lerna run test --stream",
+    "test": "yarn workspaces foreach --parallel --verbose run test",
     "test:e2e": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
     "test:e2e:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
     "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact",
