@@ -1,5 +1,4 @@
 {
-  "name": "root",
   "private": true,
   "engines": {
     "node": ">=14"
@@ -16,10 +15,10 @@
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
     "postinstall": "husky install",
-    "build": "yarn workspaces foreach --exclude root --verbose run build && yarn workspaces foreach --exclude root --verbose run test",
+    "build": "yarn workspaces foreach --verbose run build && yarn workspaces foreach --verbose run test",
     "build-essential": "yarn workspace @slicemachine/plugin-kit build && yarn workspace @slicemachine/manager build",
     "audit": "lerna run audit",
-    "lint": "yarn workspaces foreach --exclude root --verbose run lint",
+    "lint": "yarn workspaces foreach --verbose run lint",
     "lint-staged": "lint-staged",
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
