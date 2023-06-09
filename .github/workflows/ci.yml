@@ -16,7 +16,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps --no-audit
+        run: yarn install
 
       - name: Build essentials
         uses: ./.github/actions/build-essential
@@ -34,7 +34,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: yarn install
 
       - name: Build essentials
         uses: ./.github/actions/build-essential
@@ -53,7 +53,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Prettier
-        run: npm run prettier:check
+        run: yarn prettier:check
 
   packages:
     needs: prepare
@@ -63,14 +63,14 @@ jobs:
       matrix:
         package:
           # Don't forget to replicate this list under `packages-win32` matrix
-          - packages/plugin-kit
-          - packages/manager
-          - packages/init
-          - packages/slice-machine
-          - packages/start-slicemachine
-          - packages/adapter-next
-          - packages/adapter-nuxt
-          - packages/adapter-nuxt2
+          - "@slicemachine/plugin-kit"
+          - "@slicemachine/manager"
+          - "@slicemachine/init"
+          - slice-machine-ui
+          - start-slicemachine
+          - "@slicemachine/adapter-next"
+          - "@slicemachine/adapter-nuxt"
+          - "@slicemachine/adapter-nuxt2"
 
     steps:
       - name: Checkout
@@ -83,19 +83,19 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Validate dependencies
-        run: npm run depcheck --workspace ${{ matrix.package }}
+        run: yarn workspace ${{ matrix.package }} depcheck
 
       - name: Audit dependencies
-        run: npm run audit --workspace ${{ matrix.package }}
+        run: yarn workspace ${{ matrix.package }} audit
 
       - name: Lint
-        run: npm run lint --workspace ${{ matrix.package }}
+        run: yarn workspace ${{ matrix.package }} lint
 
       - name: Types
-        run: npm run types --workspace ${{ matrix.package }}
+        run: yarn workspace ${{ matrix.package }} types
 
       - name: Unit
-        run: npm run unit --workspace ${{ matrix.package }}
+        run: yarn workspace ${{ matrix.package }} unit
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
@@ -114,14 +114,14 @@ jobs:
       matrix:
         package:
           # Don't forget to replicate this list under `packages` matrix
-          - packages/plugin-kit
-          - packages/manager
-          - packages/init
-          - packages/slice-machine
-          - packages/start-slicemachine
-          - packages/adapter-next
-          - packages/adapter-nuxt
-          - packages/adapter-nuxt2
+          - "@slicemachine/plugin-kit"
+          - "@slicemachine/manager"
+          - "@slicemachine/init"
+          - slice-machine-ui
+          - start-slicemachine
+          - "@slicemachine/adapter-next"
+          - "@slicemachine/adapter-nuxt"
+          - "@slicemachine/adapter-nuxt2"
 
     steps:
       - name: Checkout
@@ -134,7 +134,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Unit
-        run: npm run unit --workspace ${{ matrix.package }}
+        run: yarn workspace ${{ matrix.package }} unit
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
@@ -148,7 +148,7 @@ jobs:
   e2e:
     needs: prepare
     runs-on: [ubuntu-latest]
-    steps: 
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -159,10 +159,10 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Build Slice Machine UI, next-adapter, init and start scripts
-        run: npm run build --workspace packages/init --workspace packages/slice-machine --workspace packages/start-slicemachine --workspace packages/adapter-next
+        run: yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/init,slice-machine-ui,start-slicemachine}' --verbose run build
 
       - name: Running End to End tests
-        run: npm run test:e2e
+        run: yarn test:e2e
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
@@ -185,7 +185,7 @@ jobs:
     needs: [prettier, packages, packages-win32, e2e]
     if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
     environment: alpha
-    steps: 
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -194,7 +194,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm ci
+          yarn install
           git checkout .
 
       - name: Build essentials
@@ -202,7 +202,6 @@ jobs:
 
       - name: Version And Publish
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
           PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
@@ -211,6 +210,5 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
-          npm run bump:alpha --preid="${{ github.ref_name }}"
-          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-          npm run publish:alpha
+          yarn bump:alpha --preid="${{ github.ref_name }}"
+          yarn publish:alpha
