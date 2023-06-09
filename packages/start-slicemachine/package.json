@@ -37,7 +37,7 @@
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
 		"depcheck": "depcheck --config=.depcheckrc",
-		"audit": "better-npm-audit audit -l high -p"
+		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"bin": "./bin/start-slicemachine.js",
 	"dependencies": {
@@ -63,7 +63,6 @@
 		"@typescript-eslint/eslint-plugin": "~5.55.0",
 		"@typescript-eslint/parser": "^5.55.0",
 		"@vitest/coverage-c8": "^0.27.3",
-		"better-npm-audit": "^3.7.3",
 		"depcheck": "^1.4.3",
 		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.7.0",

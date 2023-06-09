@@ -7437,7 +7437,6 @@ __metadata:
     "@typescript-eslint/parser": ^5.55.0
     "@vitejs/plugin-react": ^3.1.0
     "@vitest/coverage-c8": ^0.27.3
-    better-npm-audit: ^3.7.3
     common-tags: ^1.8.2
     depcheck: ^1.4.3
     eslint: ^8.37.0
@@ -7480,7 +7479,6 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.55.0
     "@typescript-eslint/parser": ^5.55.0
     "@vitest/coverage-c8": ^0.27.3
-    better-npm-audit: ^3.7.3
     common-tags: ^1.8.2
     depcheck: ^1.4.3
     eslint: ^8.37.0
@@ -7523,7 +7521,6 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.55.0
     "@typescript-eslint/parser": ^5.55.0
     "@vitest/coverage-c8": ^0.27.3
-    better-npm-audit: ^3.7.3
     common-tags: ^1.8.2
     depcheck: ^1.4.3
     eslint: ^8.37.0
@@ -7565,7 +7562,6 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.55.0
     "@typescript-eslint/parser": ^5.55.0
     "@vitest/coverage-c8": ^0.27.3
-    better-npm-audit: ^3.7.3
     chalk: ^4.1.2
     depcheck: ^1.4.3
     eslint: ^8.37.0
@@ -7616,7 +7612,6 @@ __metadata:
     "@vitest/coverage-c8": ^0.27.3
     "@wooorm/starry-night": ^1.6.0
     analytics-node: ^6.2.0
-    better-npm-audit: ^3.7.3
     cookie: ^0.5.0
     cors: ^2.8.5
     depcheck: ^1.4.3
@@ -7679,7 +7674,6 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.55.0
     "@typescript-eslint/parser": ^5.55.0
     "@vitest/coverage-c8": ^0.27.3
-    better-npm-audit: ^3.7.3
     common-tags: ^1.8.2
     defu: ^6.1.2
     depcheck: ^1.4.3
@@ -11294,7 +11288,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.0.0, ajv@npm:^8.0.1, ajv@npm:^8.9.0":
+"ajv@npm:^8.0.0, ajv@npm:^8.9.0":
   version: 8.12.0
   resolution: "ajv@npm:8.12.0"
   dependencies:
@@ -12211,20 +12205,6 @@ __metadata:
   version: 2.2.3
   resolution: "before-after-hook@npm:2.2.3"
   checksum: a1a2430976d9bdab4cd89cb50d27fa86b19e2b41812bf1315923b0cba03371ebca99449809226425dd3bcef20e010db61abdaff549278e111d6480034bebae87
-  languageName: node
-  linkType: hard
-
-"better-npm-audit@npm:^3.7.3":
-  version: 3.7.3
-  resolution: "better-npm-audit@npm:3.7.3"
-  dependencies:
-    commander: ^8.0.0
-    dayjs: ^1.10.6
-    lodash.get: ^4.4.2
-    table: ^6.7.1
-  bin:
-    better-npm-audit: index.js
-  checksum: 7ab97903fcbc70869fb67710873bb4720591a5e051084614f8468e323cdd4940816daaed38a1f3cb11a8bc6caa4c985c1f3f588eb34eb8ab64955411768817ac
   languageName: node
   linkType: hard
 
@@ -14983,7 +14963,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.10.4, dayjs@npm:^1.10.6":
+"dayjs@npm:^1.10.4":
   version: 1.11.8
   resolution: "dayjs@npm:1.11.8"
   checksum: 4fe04b6df98ba6e5f89b49d80bba603cbf01e21a1b4a24ecb163c94c0ba5324a32ac234a139cee654f89d5277a2bcebca5347e6676c28a0a6d1a90f1d34a42b8
@@ -21619,13 +21599,6 @@ __metadata:
   dependencies:
     lodash._reinterpolate: ^3.0.0
   checksum: 863e025478b092997e11a04e9d9e735875eeff1ffcd6c61742aa8272e3c2cddc89ce795eb9726c4e74cef5991f722897ff37df7738a125895f23fc7d12a7bb59
-  languageName: node
-  linkType: hard
-
-"lodash.truncate@npm:^4.4.2":
-  version: 4.4.2
-  resolution: "lodash.truncate@npm:4.4.2"
-  checksum: b463d8a382cfb5f0e71c504dcb6f807a7bd379ff1ea216669aa42c52fc28c54e404bfbd96791aa09e6df0de2c1d7b8f1b7f4b1a61f324d38fe98bc535aeee4f5
   languageName: node
   linkType: hard
 
@@ -29736,7 +29709,6 @@ __metadata:
     "@vanilla-extract/vite-plugin": 3.8.1
     "@vitejs/plugin-react": ^3.1.0
     "@vitest/coverage-c8": ^0.27.3
-    better-npm-audit: ^3.7.3
     cloudinary-react: ^1.8.1
     clsx: 1.2.1
     concurrently: ^7.6.0
@@ -30252,7 +30224,6 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ~5.55.0
     "@typescript-eslint/parser": ^5.55.0
     "@vitest/coverage-c8": ^0.27.3
-    better-npm-audit: ^3.7.3
     body-parser: ^1.20.2
     chalk: ^4.1.2
     cors: ^2.8.5
@@ -30983,19 +30954,6 @@ __metadata:
   version: 5.3.3
   resolution: "tabbable@npm:5.3.3"
   checksum: 1aa56e1bb617cc10616c407f4e756f0607f3e2d30f9803664d70b85db037ca27e75918ed1c71443f3dc902e21dc9f991ce4b52d63a538c9b69b3218d3babcd70
-  languageName: node
-  linkType: hard
-
-"table@npm:^6.7.1":
-  version: 6.8.1
-  resolution: "table@npm:6.8.1"
-  dependencies:
-    ajv: ^8.0.1
-    lodash.truncate: ^4.4.2
-    slice-ansi: ^4.0.0
-    string-width: ^4.2.3
-    strip-ansi: ^6.0.1
-  checksum: 08249c7046125d9d0a944a6e96cfe9ec66908d6b8a9db125531be6eb05fa0de047fd5542e9d43b4f987057f00a093b276b8d3e19af162a9c40db2681058fd306
   languageName: node
   linkType: hard
 
