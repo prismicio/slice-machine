@@ -1,4 +1,4 @@
-import { addTrailingSlash, removeTrailingSlash } from "../lib/addTrailingSlash";
+import { addTrailingSlash, removeTrailingSlash } from "../lib/trailingSlash";
 import { APPLICATION_MODE } from "./APPLICATION_MODE";
 
 export type APIEndpoints = {
