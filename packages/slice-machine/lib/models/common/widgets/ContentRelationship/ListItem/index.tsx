@@ -43,7 +43,7 @@ const ListElement = ({
           sliceFieldName={fieldAccessor}
           WidgetIcon={Box}
         />
-        <Flex>{ hasFetchFields ? "data" : "meta" }</Flex>
+        <Flex>{hasFetchFields ? "data" : "meta"}</Flex>
       </Flex>
     </Box>
   );
@@ -57,7 +57,7 @@ const CustomListItem = ({
   deleteItem,
   enterEditMode,
 }: {
-  item: { key: string, value: { config: LinkConfig }};
+  item: { key: string; value: { config: LinkConfig } };
   draggableId: string;
   widget: typeof ContentRelationshipWidget;
   index: number;

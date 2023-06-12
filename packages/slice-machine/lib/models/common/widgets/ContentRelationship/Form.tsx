@@ -14,10 +14,10 @@ import { hasLocal } from "../../ModelData";
 import { Switch } from "@prismicio/editor-ui";
 
 type SelectedValue = {
-  value: string,
-  label: string,
-  fetchFields: boolean
-}
+  value: string;
+  label: string;
+  fetchFields: boolean;
+};
 
 const FormFields = {
   label: DefaultFields.label,
@@ -35,7 +35,11 @@ type FormProps = {
   id: string;
 };
 
-const CustomTypesList = ({ selectedValues }: { selectedValues: SelectedValue[] }) => {
+const CustomTypesList = ({
+  selectedValues,
+}: {
+  selectedValues: SelectedValue[];
+}) => {
   return (
     <Card p={3}>
       <FieldArray
@@ -44,14 +48,17 @@ const CustomTypesList = ({ selectedValues }: { selectedValues: SelectedValue[] }
           <>
             <Box mb={3}>
               {selectedValues.map((v, i) => (
-                <Flex key={v.value} sx={{ alignItems: "center", justifyContent: "space-between"}}>
+                <Flex
+                  key={v.value}
+                  sx={{ alignItems: "center", justifyContent: "space-between" }}
+                >
                   <p>{v.value}</p>
                   <Flex sx={{ alignItems: "center" }}>
                     <Switch
                       checked={v.fetchFields}
                       onCheckedChange={(s) => {
-                        console.log({ s })
-                        replace(i, { customTypeId: v.value, fetchFields: s })
+                        console.log({ s });
+                        replace(i, { customTypeId: v.value, fetchFields: s });
                       }}
                     />
                     <Close
@@ -62,7 +69,6 @@ const CustomTypesList = ({ selectedValues }: { selectedValues: SelectedValue[] }
                       }}
                     />
                   </Flex>
-                  
                 </Flex>
               ))}
             </Box>
@@ -70,8 +76,8 @@ const CustomTypesList = ({ selectedValues }: { selectedValues: SelectedValue[] }
         )}
       />
     </Card>
-  )
-}
+  );
+};
 
 const WidgetForm = ({
   initialValues,
@@ -86,24 +92,28 @@ const WidgetForm = ({
     label: ct.local.label,
   }));
 
-  const selectedValues = (formValues.config.customtypes ?? [])
-    .reduce<SelectedValue[]>((acc, customType) => {
-        if (customType === undefined) {
-          return acc;
-        }
-        const { customTypeId, fetchFields } = customType;
-        const ct = customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === customTypeId
-        );
-        if (ct) {
-          return [...acc, {
-            value: ct.local.id,
-            label: ct.local.label,
-            fetchFields: fetchFields ?? false
-          }]
-        }
-        return acc;
-      }, [] as SelectedValue[]);
+  const selectedValues = (formValues.config.customtypes ?? []).reduce<
+    SelectedValue[]
+  >((acc, customType) => {
+    if (customType === undefined) {
+      return acc;
+    }
+    const { customTypeId, fetchFields } = customType;
+    const ct = customTypes.find(
+      (frontendCustomType) => frontendCustomType.local.id === customTypeId
+    );
+    if (ct) {
+      return [
+        ...acc,
+        {
+          value: ct.local.id,
+          label: ct.local.label,
+          fetchFields: fetchFields ?? false,
+        },
+      ];
+    }
+    return acc;
+  }, [] as SelectedValue[]);
 
   console.log({
     selectedCts: formValues.config.customtypes,
@@ -140,7 +150,7 @@ const WidgetForm = ({
             isMulti
             name="origin"
             options={options}
-            onChange={(v: { value: string, label: string }[]) => {
+            onChange={(v: { value: string; label: string }[]) => {
               setFieldValue(
                 "config.customtypes",
                 v.map(({ value }) => ({ customTypeId: value }))
