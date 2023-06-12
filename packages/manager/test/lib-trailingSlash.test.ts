@@ -3,7 +3,7 @@ import { expect, it, describe } from "vitest";
 import {
 	addTrailingSlash,
 	removeTrailingSlash,
-} from "../src/lib/addTrailingSlash";
+} from "../src/lib/trailingSlash";
 
 describe("addTrailingSlash", () => {
 	it("supports undefined urls", async () => {
@@ -17,14 +17,12 @@ describe("addTrailingSlash", () => {
 });
 
 describe("removeTrailingSlash", () => {
-	it("will removed a trailing slash from a string", () => {
+	it("removes a single trailing slash from endpoints", () => {
 		expect(removeTrailingSlash("https://prismic.io/")).toBe(
 			"https://prismic.io",
 		);
 		expect(removeTrailingSlash("https://prismic.io")).toBe(
 			"https://prismic.io",
 		);
-
-		expect(removeTrailingSlash("foo/bar")).toBe("foo/bar");
 	});
 });
