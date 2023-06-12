@@ -1,5 +1,4 @@
-import * as yup from "yup";
-import { Label, Box } from "theme-ui";
+import { Label, Box, Card, Flex, Close } from "theme-ui";
 
 import { DefaultFields } from "@lib/forms/defaults";
 
@@ -10,23 +9,19 @@ import { Col, Flex as FlexGrid } from "@components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { FormikProps } from "formik";
+import { FieldArray, FormikProps } from "formik";
 import { hasLocal } from "../../ModelData";
+import { Switch } from "@prismicio/editor-ui";
+
+type SelectedValue = {
+  value: string,
+  label: string,
+  fetchFields: boolean
+}
 
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
-  customtypes: {
-    validate: yup
-      .array()
-      .of(
-        yup.object().shape({
-          customTypeId: yup.string().required(),
-          fetchFields: yup.boolean().optional(),
-        })
-      )
-      .nullable(),
-  },
 };
 
 type FormProps = {
@@ -38,8 +33,45 @@ type FormProps = {
       | undefined;
   };
   id: string;
-  // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
+
+const CustomTypesList = ({ selectedValues }: { selectedValues: SelectedValue[] }) => {
+  return (
+    <Card p={3}>
+      <FieldArray
+        name="config.customtypes"
+        render={({ push, remove, replace }) => (
+          <>
+            <Box mb={3}>
+              {selectedValues.map((v, i) => (
+                <Flex key={v.value} sx={{ alignItems: "center", justifyContent: "space-between"}}>
+                  <p>{v.value}</p>
+                  <Flex sx={{ alignItems: "center" }}>
+                    <Switch
+                      checked={v.fetchFields}
+                      onCheckedChange={(s) => {
+                        console.log({ s })
+                        replace(i, { customTypeId: v.value, fetchFields: s })
+                      }}
+                    />
+                    <Close
+                      onClick={() => remove(i)}
+                      sx={{
+                        ml: 2,
+                        width: "26px",
+                      }}
+                    />
+                  </Flex>
+                  
+                </Flex>
+              ))}
+            </Box>
+          </>
+        )}
+      />
+    </Card>
+  )
+}
 
 const WidgetForm = ({
   initialValues,
@@ -47,7 +79,6 @@ const WidgetForm = ({
   fields,
   setFieldValue,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
-  // TODO [CR]: pass this as additional data from CT zone
   const customTypes = useSelector(selectAllCustomTypes).filter(hasLocal);
 
   const options = customTypes.map((ct) => ({
@@ -55,19 +86,29 @@ const WidgetForm = ({
     label: ct.local.label,
   }));
 
-  const selectValues = formValues.config.customtypes
-    ? formValues.config.customtypes.map(({ customTypeId }) => {
+  const selectedValues = (formValues.config.customtypes ?? [])
+    .reduce<SelectedValue[]>((acc, customType) => {
+        if (customType === undefined) {
+          return acc;
+        }
+        const { customTypeId, fetchFields } = customType;
         const ct = customTypes.find(
           (frontendCustomType) => frontendCustomType.local.id === customTypeId
         );
-        return { value: ct?.local.id, label: ct?.local.label };
-      })
-    : null;
+        if (ct) {
+          return [...acc, {
+            value: ct.local.id,
+            label: ct.local.label,
+            fetchFields: fetchFields ?? false
+          }]
+        }
+        return acc;
+      }, [] as SelectedValue[]);
 
   console.log({
     selectedCts: formValues.config.customtypes,
     options,
-    selectValues,
+    selectedValues,
   });
 
   return (
@@ -94,17 +135,18 @@ const WidgetForm = ({
           <Label htmlFor="origin" mb="1">
             Types
           </Label>
+          <CustomTypesList selectedValues={selectedValues} />
           <Select
             isMulti
             name="origin"
             options={options}
-            onChange={(v) => {
+            onChange={(v: { value: string, label: string }[]) => {
               setFieldValue(
                 "config.customtypes",
                 v.map(({ value }) => ({ customTypeId: value }))
               );
             }}
-            value={selectValues}
+            value={selectedValues}
             theme={(theme) => {
               return {
                 ...theme,

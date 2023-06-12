@@ -42,8 +42,7 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
         customTypeId: yup.string().required(),
         fetchFields: yup.boolean().optional(),
       })
-    )
-    .nullable(),
+    ).required().min(1, "Select at least 1 custom type"),
 });
 
 const schema = yup.object().shape({

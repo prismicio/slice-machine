@@ -8,6 +8,17 @@ type Simplify<T> = {
 /** Content for Blog Page documents */
 interface BlogPageDocumentData {
   /**
+   * Crr field in _Blog Page_
+   *
+   * - **Field Type**: Content Relationship
+   * - **Placeholder**: _None_
+   * - **API ID Path**: blog-page.crr
+   * - **Tab**: Main
+   * - **Documentation**:
+   *   https://prismic.io/docs/core-concepts/link-content-relationship
+   */
+  crr: prismic.RelationField<"[object Object]">;
+  /**
    * Title field in _Blog Page_
    *
    * - **Field Type**: Title
@@ -37,17 +48,6 @@ interface BlogPageDocumentData {
    * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
    */
   description: prismic.RichTextField;
-  /**
-   * Crr field in _Blog Page_
-   *
-   * - **Field Type**: Content Relationship
-   * - **Placeholder**: _None_
-   * - **API ID Path**: blog-page.crr
-   * - **Tab**: Main
-   * - **Documentation**:
-   *   https://prismic.io/docs/core-concepts/link-content-relationship
-   */
-  crr: prismic.RelationField<"[object Object]" | "[object Object]">;
   /**
    * Slice Zone field in _Blog Page_
    *
@@ -101,6 +101,17 @@ interface BlogPageDocumentData {
   social_cards: prismic.GroupField<
     Simplify<BlogPageDocumentDataSocialCardsItem>
   >;
+  /**
+   * Link field in _Blog Page_
+   *
+   * - **Field Type**: Content Relationship
+   * - **Placeholder**: _None_
+   * - **API ID Path**: blog-page.link
+   * - **Tab**: SEO Metadata
+   * - **Documentation**:
+   *   https://prismic.io/docs/core-concepts/link-content-relationship
+   */
+  link: prismic.RelationField<"[object Object]" | "[object Object]">;
 }
 /** Slice for _Blog Page → Slice Zone_ */
 type BlogPageDocumentDataSlicesSlice =

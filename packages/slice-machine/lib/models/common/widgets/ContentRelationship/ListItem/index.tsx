@@ -4,15 +4,17 @@ import { Box, Button, Flex, useThemeUI } from "theme-ui";
 
 import ListItem from "@components/ListItem";
 import ItemHeader from "@components/ItemHeader";
-// import { Link } from "@prismicio/types-internal/lib/customtypes";
 
 import { ContentRelationshipWidget } from "@models/common/widgets/ContentRelationship";
+import { LinkConfig } from "@prismicio/types-internal/lib/customtypes";
 
 const ListElement = ({
   customType,
+  hasFetchFields,
   fieldAccessor,
 }: {
   customType: string;
+  hasFetchFields: boolean;
   fieldAccessor: string;
 }) => {
   const { theme } = useThemeUI();
@@ -37,18 +39,16 @@ const ListElement = ({
       >
         <ItemHeader
           theme={theme}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           text={customType}
           sliceFieldName={fieldAccessor}
           WidgetIcon={Box}
         />
-        <Flex>meta</Flex>
+        <Flex>{ hasFetchFields ? "data" : "meta" }</Flex>
       </Flex>
     </Box>
   );
 };
 
-/* eslint-disable */
 const CustomListItem = ({
   widget,
   item: groupItem,
@@ -57,11 +57,12 @@ const CustomListItem = ({
   deleteItem,
   enterEditMode,
 }: {
-  item: any;
+  item: { key: string, value: { config: LinkConfig }};
   draggableId: string;
   widget: typeof ContentRelationshipWidget;
   index: number;
   enterEditMode: (
+    // TODO [CR] type this
     itemInfo: [string, any],
     modelFieldName: string | undefined,
     index: number
@@ -97,12 +98,13 @@ const CustomListItem = ({
             <Box sx={{ ml: 5 }}>
               <ul>
                 {(groupItem.value.config?.customtypes ?? []).map(
-                  ({ customTypeId }) => {
+                  ({ customTypeId, fetchFields }) => {
                     const fieldAccessor = `data.${groupItem.key}.${customTypeId}`;
                     return (
                       <ListElement
                         key={customTypeId}
                         customType={customTypeId}
+                        hasFetchFields={fetchFields ?? false}
                         fieldAccessor={fieldAccessor}
                       />
                     );
