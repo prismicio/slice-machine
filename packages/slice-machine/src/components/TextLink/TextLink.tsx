@@ -9,44 +9,44 @@ import * as textStyles from "@prismicio/editor-ui/dist/components/Text/Text.css"
 
 type IconProps = Readonly<{
   className?: string;
-  size?: number;
 }>;
 
 type Variant = keyof typeof textStyles.variant;
 
 export interface TextLinkProps {
-  href: string;
   children: string;
+  color?: keyof typeof styles.colorVariant;
   endIcon?: ReactNode;
+  href: string;
   textVariant?: Variant;
 }
 
-const iconVariantMapping: Readonly<Record<Variant, number>> = {
-  normal: 22,
-  bold: 22,
-  small: 20,
-  extraSmall: 18,
-  smallBold: 20,
-  emphasized: 18,
-  h1: 26,
-  h2: 24,
-  h3: 22,
-  h4: 20,
-  inherit: 22,
-};
-
 export const TextLink: FC<TextLinkProps> = (props) => {
-  const { href, children, textVariant = "smallBold", endIcon } = props;
+  const {
+    children,
+    color = "primary",
+    endIcon,
+    href,
+    textVariant = "smallBold",
+  } = props;
 
   return (
-    <a href={href} target="_blank" className={styles.root} rel="noreferrer">
+    <a
+      href={href}
+      target="_blank"
+      className={clsx(styles.root, styles.colorVariant[color])}
+      rel="noreferrer"
+    >
       <Text color="inherit" variant={textVariant} className={styles.text}>
         {children}
       </Text>
       {isValidElement<IconProps>(endIcon)
         ? cloneElement(endIcon, {
-            className: clsx(endIcon.props.className, styles.endIcon),
-            size: iconVariantMapping[textVariant],
+            className: clsx(
+              endIcon.props.className,
+              styles.endIcon,
+              styles.iconVariant[textVariant]
+            ),
           })
         : null}
     </a>

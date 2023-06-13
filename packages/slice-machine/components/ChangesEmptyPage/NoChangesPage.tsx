@@ -38,7 +38,7 @@ export const NoChangesPage = () => {
             textVariant="normal"
             href="/hi"
           >
-            Create a page
+            Create content
           </TextLink>
         </BlankSlateActions>
       </BlankSlateContent>
