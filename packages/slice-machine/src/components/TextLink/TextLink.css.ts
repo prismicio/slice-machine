@@ -41,6 +41,7 @@ export const text = style([
   }),
 ]);
 
+/* TODO move paddingLeft to iconVariant style objects */
 export const endIcon = style([
   sprinkles({
     paddingLeft: 4,
