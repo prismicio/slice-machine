@@ -43,4 +43,8 @@ export const title = style({
 
 export const desc = style({ fontWeight: 400 });
 
-export const actions = sprinkles({ marginTop: 16 });
+export const actions = sprinkles({
+  gap: 16,
+  alignItems: "center",
+  marginTop: 16,
+});
