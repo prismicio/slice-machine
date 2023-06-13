@@ -13,8 +13,17 @@ import { Button, Image, tokens } from "@prismicio/editor-ui";
 
 import { FiExternalLink } from "react-icons/fi";
 import { TextLink } from "@src/components/TextLink";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getDocumentsListEndpoint } from "@src/modules/environment";
 
 export const NoChangesPage = () => {
+  const { documentsListEndpoint } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      documentsListEndpoint: getDocumentsListEndpoint(state),
+    })
+  );
+
   return (
     <BlankSlate
       style={{ width: "100%", alignSelf: "center", marginTop: tokens.size[72] }}
@@ -36,7 +45,7 @@ export const NoChangesPage = () => {
           <TextLink
             endIcon={<FiExternalLink />}
             textVariant="normal"
-            href="/hi"
+            href={documentsListEndpoint}
           >
             Create content
           </TextLink>

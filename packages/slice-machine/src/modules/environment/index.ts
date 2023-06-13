@@ -64,6 +64,10 @@ export const selectSimulatorUrl = (
   return store.environment.manifest.localSliceSimulatorURL;
 };
 
+export const getDocumentsListEndpoint = (
+  store: SliceMachineStoreType
+): string => `https://${store.environment.repo}.prismic.io/documents/working`;
+
 export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
 
