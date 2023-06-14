@@ -39,7 +39,7 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
           variant="secondary"
           type="button"
           key={index}
-          onClick={() => form.setFieldValue("rating", rating)}
+          onClick={() => void form.setFieldValue("rating", rating)}
           className={field.value === rating ? "selected" : ""}
           sx={{
             "&:not(:last-of-type)": {
