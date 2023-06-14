@@ -3,7 +3,6 @@ import { CreateElement, ExtendedVue } from "vue/types/vue";
 
 import {
 	getDefaultProps,
-	getDefaultManagedState,
 	getDefaultSlices,
 	getDefaultMessage,
 	onClickHandler,
@@ -13,14 +12,13 @@ import {
 	SliceSimulatorState,
 	SliceSimulatorOptions,
 	SliceSimulatorProps as BaseSliceSimulatorProps,
-	StateManagerEventType,
-	StateManagerStatus,
-	CoreManager,
-} from "@prismicio/slice-simulator-core";
+	StateEventType,
+	SimulatorManager,
+} from "@prismicio/simulator/kit";
 
 export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state">;
 
-const coreManager = new CoreManager();
+const simulatorManager = new SimulatorManager();
 
 export const SliceSimulator = {
 	name: "SliceSimulator",
@@ -38,50 +36,32 @@ export const SliceSimulator = {
 	},
 	data() {
 		return {
-			coreManager,
-			managedState: getDefaultManagedState(),
+			manager: simulatorManager,
 			slices: getDefaultSlices(),
 			message: getDefaultMessage(),
 		};
 	},
 	mounted(this: SliceSimulatorOptions) {
-		this.coreManager.stateManager.on(
-			StateManagerEventType.ManagedState,
-			(managedState) => {
-				this.managedState = managedState;
-			},
-			"simulator-managed-state",
-		);
-		this.coreManager.stateManager.on(
-			StateManagerEventType.Slices,
+		this.manager.state.on(
+			StateEventType.Slices,
 			(slices) => {
 				this.slices = slices;
 			},
 			"simulator-slices",
 		);
-		this.coreManager.stateManager.on(
-			StateManagerEventType.Message,
+		this.manager.state.on(
+			StateEventType.Message,
 			(message) => {
 				this.message = message;
 			},
 			"simulator-message",
 		);
 
-		this.coreManager.init(getDefaultProps().state);
+		this.manager.init();
 	},
 	destroyed(this: SliceSimulatorOptions) {
-		this.coreManager.stateManager.off(
-			StateManagerEventType.ManagedState,
-			"simulator-managed-state",
-		);
-		this.coreManager.stateManager.off(
-			StateManagerEventType.Slices,
-			"simulator-slices",
-		);
-		this.coreManager.stateManager.off(
-			StateManagerEventType.Message,
-			"simulator-message",
-		);
+		this.manager.state.off(StateEventType.Slices, "simulator-slices");
+		this.manager.state.off(StateEventType.Message, "simulator-message");
 	},
 	render(this: SliceSimulatorOptions & Vue, h: CreateElement) {
 		const children: VNodeChildren = [];
@@ -101,10 +81,6 @@ export const SliceSimulator = {
 					{
 						attrs: { id: "root" },
 						class: simulatorRootClass,
-						style:
-							this.managedState.status !== StateManagerStatus.Loaded
-								? { display: "none" }
-								: undefined,
 						on: {
 							"!click": onClickHandler,
 							"!submit": disableEventHandler,
