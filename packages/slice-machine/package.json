@@ -65,6 +65,7 @@
     "@storybook/react-vite": "7.0.10",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "14.4.3",
     "@theme-ui/color": "^0.15.5",
     "@types/marked": "^4.0.8",
     "@types/react": "^18.0.28",

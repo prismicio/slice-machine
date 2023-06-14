@@ -1,4 +1,5 @@
 import { render as rtlRender, RenderOptions } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Store, AnyAction } from "redux";
 
 import { Provider } from "react-redux";
@@ -14,6 +15,10 @@ export type RenderArgs = Partial<
   } & RenderOptions
 >;
 
+type RenderReturnType = ReturnType<typeof rtlRender> & {
+  user: ReturnType<typeof userEvent.setup>;
+};
+
 function render(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ui: any,
@@ -22,7 +27,13 @@ function render(
     store = configureStore(preloadedState).store,
     ...renderOptions
   }: RenderArgs = {}
-) {
+): RenderReturnType {
+  if (!document.getElementById("__next")) {
+    const div = document.createElement("div");
+    div.setAttribute("id", "__next");
+    document.body.appendChild(div);
+  }
+
   function Wrapper({
     children,
   }: {
@@ -37,7 +48,11 @@ function render(
       </ThemeUIThemeProvider>
     );
   }
-  return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
+  return {
+    user: userEvent.setup(),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    ...rtlRender(ui, { wrapper: Wrapper, ...renderOptions }),
+  };
 }
 
 // re-export everything
