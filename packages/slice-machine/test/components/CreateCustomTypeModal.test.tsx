@@ -15,10 +15,6 @@ describe("CreateCustomTypeModal", () => {
     vi.clearAllMocks();
   });
 
-  const div = document.createElement("div");
-  div.setAttribute("id", "__next");
-  document.body.appendChild(div);
-
   test("when a slice is created the tracker should be called", async () => {
     const fakeId = "testing_id";
     const fakeName = "testing-name";
