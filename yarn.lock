@@ -29484,6 +29484,17 @@ __metadata:
     lint-staged: 13.2.0
     prettier: 2.8.4
     start-server-and-test: 1.15.5
+  dependenciesMeta:
+    "@sentry/cli":
+      built: true
+    cypress:
+      built: true
+    esbuild:
+      built: true
+    msw:
+      built: true
+    puppeteer:
+      built: true
   languageName: unknown
   linkType: soft
 
