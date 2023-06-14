@@ -148,6 +148,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                       <IconButton
                         icon="moreVert"
                         loading={isCustomTypeBeingConverted}
+                        data-testid="tableRowSettings"
                       />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

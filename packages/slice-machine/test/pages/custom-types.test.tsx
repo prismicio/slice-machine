@@ -1,14 +1,6 @@
 // @vitest-environment jsdom
 
-import {
-  describe,
-  test,
-  afterEach,
-  beforeEach,
-  expect,
-  beforeAll,
-  vi,
-} from "vitest";
+import { describe, test, afterEach, beforeEach, expect, vi } from "vitest";
 import Router from "next/router";
 import mockRouter from "next-router-mock";
 import SegmentClient from "analytics-node";
@@ -25,12 +17,6 @@ import CreateCustomTypeBuilder from "../../pages/custom-types/[customTypeId]";
 vi.mock("next/router", () => import("next-router-mock"));
 
 describe("Custom Type Builder", () => {
-  beforeAll(async () => {
-    const div = document.createElement("div");
-    div.setAttribute("id", "__next");
-    document.body.appendChild(div);
-  });
-
   afterEach(() => {
     vi.clearAllMocks();
   });

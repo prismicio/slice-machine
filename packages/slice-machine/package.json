@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.2.0",
+  "version": "1.2.1-dev-next-release.3",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -82,8 +82,10 @@
     "@storybook/addon-essentials": "7.0.10",
     "@storybook/react": "7.0.10",
     "@storybook/react-vite": "7.0.10",
+    "@testing-library/dom": "9.3.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "14.0.0",
+    "@testing-library/user-event": "14.4.3",
     "@types/marked": "4.0.8",
     "@types/react": "18.0.28",
     "@types/react-beautiful-dnd": "13.1.3",

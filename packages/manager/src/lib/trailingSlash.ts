@@ -3,3 +3,7 @@ export const addTrailingSlash = (
 ): string | undefined => {
 	return url?.replace(/\/?$/, "/");
 };
+
+export const removeTrailingSlash = (url: string): string => {
+	return url.replace(/\/$/, "");
+};

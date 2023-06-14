@@ -1,6 +1,7 @@
 ignores:
   [
     "@storybook/addon-essentials",
+    "@testing-library/dom",
     "@vanilla-extract/next-plugin",
     "@vitest/coverage-c8",
     "monocle-ts",

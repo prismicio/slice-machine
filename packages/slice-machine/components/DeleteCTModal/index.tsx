@@ -4,7 +4,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { Close, Flex, Heading, Paragraph, Text, useThemeUI } from "theme-ui";
+import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
@@ -130,7 +130,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           </Flex>
         )}
       >
-        <Paragraph>
+        <div>
           This action will immediately make the following change:
           <ul>
             <li>
@@ -150,7 +150,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
               any associated Documents from your repository.
             </li>
           </ul>
-        </Paragraph>
+        </div>
       </Card>
     </SliceMachineModal>
   );

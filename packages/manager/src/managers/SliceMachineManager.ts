@@ -52,6 +52,7 @@ type SliceMachineManagerGetStateReturnType = {
 		changelog?: PackageChangelog;
 		packageManager: PackageManager;
 		supportsSliceSimulator: boolean;
+		endpoints: APIEndpoints;
 	};
 	libraries: {
 		name: string;
@@ -254,6 +255,7 @@ export class SliceMachineManager {
 				repo: sliceMachineConfig.repositoryName,
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
+				endpoints: this.getAPIEndpoints(),
 			},
 			libraries,
 			customTypes,

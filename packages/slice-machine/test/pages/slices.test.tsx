@@ -1,14 +1,6 @@
 // @vitest-environment jsdom
 
-import {
-  describe,
-  test,
-  afterEach,
-  beforeEach,
-  expect,
-  beforeAll,
-  vi,
-} from "vitest";
+import { describe, test, afterEach, beforeEach, expect, vi } from "vitest";
 import mockRouter from "next-router-mock";
 import SegmentClient from "analytics-node";
 
@@ -24,12 +16,6 @@ import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test"
 vi.mock("next/router", () => import("next-router-mock"));
 
 describe("slices", () => {
-  beforeAll(() => {
-    const div = document.createElement("div");
-    div.setAttribute("id", "__next");
-    document.body.appendChild(div);
-  });
-
   afterEach(() => {
     vi.clearAllMocks();
   });
