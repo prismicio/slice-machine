@@ -1,8 +1,10 @@
-ignores: [
-  "@size-limit/preset-small-lib",
-  "@vitest/coverage-c8",
-  "prettier-plugin-jsdoc",
-  "ts-expect",
-  "typescript"
-]
+ignores:
+  [
+    "@size-limit/preset-small-lib",
+    "@vitest/coverage-c8",
+    "monocle-ts",
+    "newtype-ts",
+    "prettier-plugin-jsdoc",
+    "typescript",
+  ]
 skip - missing: true

@@ -33,18 +33,16 @@
     "lerna:update": "npx --yes lerna-update-wizard"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0",
-    "husky": "^8.0.3",
-    "lerna": "^3.22.1",
-    "lint-staged": "^13.2.0",
-    "prettier": "^2.8.4"
-  },
-  "dependencies": {
-    "cypress": "^12.8.0",
-    "cypress-localstorage-commands": "^2.2.2",
-    "cypress-real-events": "^1.7.6",
-    "cypress-wait-until": "^1.7.2",
-    "start-server-and-test": "^1.15.5"
+    "concurrently": "7.6.0",
+    "cypress": "12.8.0",
+    "cypress-localstorage-commands": "2.2.2",
+    "cypress-real-events": "1.7.6",
+    "cypress-wait-until": "1.7.2",
+    "husky": "8.0.3",
+    "lerna": "3.22.1",
+    "lint-staged": "13.2.0",
+    "prettier": "2.8.4",
+    "start-server-and-test": "1.15.5"
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
