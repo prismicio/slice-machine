@@ -8,11 +8,6 @@ export const root = style([
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
-    color: {
-      ...colors.indigo11,
-      ...selectors.hover(colors.indigo10),
-      ...selectors.active(colors.indigo11),
-    },
   }),
   {
     ":focus-visible": {

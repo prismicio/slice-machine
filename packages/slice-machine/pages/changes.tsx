@@ -11,7 +11,7 @@ import {
   AuthErrorPage,
   NoChangesPage,
   OfflinePage,
-} from "@components/ChangesEmptyPage";
+} from "@src/components/ChangesEmptyPage";
 import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";

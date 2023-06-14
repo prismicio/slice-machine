@@ -29,7 +29,7 @@ export const NoChangesPage = () => {
       style={{ width: "100%", alignSelf: "center", marginTop: tokens.size[72] }}
     >
       <BlankSlateImage>
-        <Image src={"/blank-slate-changes-uptodate.png"} sizing="cover" />
+        <Image src="/blank-slate-changes-uptodate.png" sizing="cover" />
       </BlankSlateImage>
       <BlankSlateContent>
         <BlankSlateTitle>Everything up-to-date</BlankSlateTitle>
