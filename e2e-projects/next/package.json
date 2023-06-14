@@ -28,7 +28,7 @@
     "@tailwindcss/typography": "0.5.2",
     "autoprefixer": "10.4.4",
     "eslint": "8.37.0",
-    "eslint-config-next": "12.1.4",
+    "eslint-config-next": "13.4.2",
     "postcss": "8.4.21",
     "slice-machine-ui": "workspace:*",
     "start-slicemachine": "workspace:*",
