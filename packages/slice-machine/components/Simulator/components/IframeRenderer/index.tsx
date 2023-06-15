@@ -2,7 +2,7 @@ import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
 import { Flex } from "theme-ui";
 
-import { SimulatorClient } from "@prismicio/slice-simulator-com";
+import { SimulatorClient } from "@prismicio/simulator";
 import { useElementSize } from "@src/hooks/useElementSize";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";

@@ -1,23 +1,22 @@
 "use client";
 
 import * as React from "react";
+
 import {
-	CoreManager,
 	SliceSimulatorProps as BaseSliceSimulatorProps,
+	SimulatorManager,
 	SliceSimulatorState,
-	StateManagerEventType,
-	StateManagerStatus,
+	StateEventType,
 	disableEventHandler,
-	getDefaultManagedState,
 	getDefaultMessage,
 	getDefaultProps,
 	getDefaultSlices,
 	onClickHandler,
 	simulatorClass,
 	simulatorRootClass,
-} from "@prismicio/slice-simulator-core";
+} from "@prismicio/simulator/kit";
 
-const coreManager = new CoreManager();
+const simulatorManager = new SimulatorManager();
 
 export type SliceSimulatorSliceZoneProps = {
 	slices: SliceSimulatorState["slices"];
@@ -54,52 +53,31 @@ export const SliceSimulator = ({
 }: SliceSimulatorProps): JSX.Element => {
 	const defaultProps = getDefaultProps();
 
-	const [managedState, setManagedState] = React.useState(() =>
-		getDefaultManagedState(),
-	);
 	const [slices, setSlices] = React.useState(() => getDefaultSlices());
 	const [message, setMessage] = React.useState(() => getDefaultMessage());
 
 	React.useEffect(() => {
-		coreManager.stateManager.on(
-			StateManagerEventType.ManagedState,
-			(_managedState) => {
-				setManagedState(_managedState);
-			},
-			"simulator-managed-state",
-		);
-		coreManager.stateManager.on(
-			StateManagerEventType.Slices,
+		simulatorManager.state.on(
+			StateEventType.Slices,
 			(_slices) => {
 				setSlices(_slices);
 			},
 			"simulator-slices",
 		);
-		coreManager.stateManager.on(
-			StateManagerEventType.Message,
+		simulatorManager.state.on(
+			StateEventType.Message,
 			(_message) => {
 				setMessage(_message);
 			},
 			"simulator-message",
 		);
 
-		coreManager.init(defaultProps.state);
+		simulatorManager.init();
 
 		return () => {
-			coreManager.stateManager.off(
-				StateManagerEventType.ManagedState,
-				"simulator-managed-state",
-			);
+			simulatorManager.state.off(StateEventType.Slices, "simulator-slices");
 
-			coreManager.stateManager.off(
-				StateManagerEventType.Slices,
-				"simulator-slices",
-			);
-
-			coreManager.stateManager.off(
-				StateManagerEventType.Message,
-				"simulator-message",
-			);
+			simulatorManager.state.off(StateEventType.Message, "simulator-message");
 		};
 	}, []);
 
@@ -129,11 +107,6 @@ export const SliceSimulator = ({
 				<div
 					id="root"
 					className={simulatorRootClass}
-					style={
-						managedState.status !== StateManagerStatus.Loaded
-							? { display: "none" }
-							: undefined
-					}
 					onClickCapture={onClickHandler as unknown as React.MouseEventHandler}
 					onSubmitCapture={
 						disableEventHandler as unknown as React.FormEventHandler
