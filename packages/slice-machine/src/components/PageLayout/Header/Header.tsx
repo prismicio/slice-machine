@@ -1,7 +1,8 @@
 import router from "next/router";
 import { ReactElement } from "react";
 
-import { ButtonGroup, IconButton } from "@prismicio/editor-ui";
+import { ButtonGroup } from "@prismicio/editor-ui";
+import { IconButton } from "@src/components/IconButton";
 
 import { Breadcrumb } from "@src/components/Breadcrumb";
 

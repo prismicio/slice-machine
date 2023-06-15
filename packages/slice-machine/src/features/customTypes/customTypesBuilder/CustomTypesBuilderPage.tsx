@@ -16,6 +16,8 @@ import { Header } from "@src/components/PageLayout/Header";
 import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
 import { Button } from "@prismicio/editor-ui";
 
+import { IconButton } from "@src/components/IconButton";
+
 type CustomTypesBuilderPageProps = {
   format: CustomTypeFormat;
 };
@@ -99,13 +101,13 @@ const CustomTypesBuilderPageWithProvider: React.FC<
           currentCustomType.label ?? currentCustomType.id
         }`}
         Actions={[
-          <Button variant="secondary" key="action-1">
-            snippet
-          </Button>,
+          <IconButton variant="primary" key="open-snippet" icon="add" />,
           <Button key="save-to-fs">save</Button>,
         ]}
       />
-      <CustomTypeBuilder />
+      <div style={{ gridArea: "content" }}>
+        <CustomTypeBuilder />
+      </div>
     </PageLayout>
   );
 };

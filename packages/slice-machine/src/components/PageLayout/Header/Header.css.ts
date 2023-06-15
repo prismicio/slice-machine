@@ -19,6 +19,6 @@ export const flex = style([
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 4,
+    gap: 8,
   }),
 ]);
