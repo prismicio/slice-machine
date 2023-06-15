@@ -7726,8 +7726,11 @@ __metadata:
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
+    msw: ^1.1.0
     puppeteer: ^19
   peerDependenciesMeta:
+    msw:
+      optional: true
     puppeteer:
       optional: true
   languageName: unknown
