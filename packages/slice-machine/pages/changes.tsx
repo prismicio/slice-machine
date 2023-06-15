@@ -7,11 +7,10 @@ import { MdLoop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "../src/redux/type";
 import { ChangesItems } from "@components/ChangesItems";
-import {
-  AuthErrorPage,
-  NoChangesPage,
-  OfflinePage,
-} from "@src/components/ChangesEmptyPage";
+import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyPage";
+
+import { NoChangesPage } from "@src/components/ChangesEmptyPage";
+
 import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
