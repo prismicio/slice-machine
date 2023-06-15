@@ -11,12 +11,20 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
-import { PageLayout } from "@src/components/PageLayout";
-import { Header } from "@src/components/PageLayout/Header";
-import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
+import {
+  MainContainer,
+  MainContainerHader,
+} from "@src/components/MainContainer";
+import {
+  isSelectedCustomTypeTouched,
+  selectCurrentCustomType,
+} from "@src/modules/selectedCustomType";
 import { Button } from "@prismicio/editor-ui";
 
-import { IconButton } from "@src/components/IconButton";
+import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { PageTypeSnippet } from "./PageTypeSnippet";
 
 type CustomTypesBuilderPageProps = {
   format: CustomTypeFormat;
@@ -78,36 +86,54 @@ type CustomTypesBuilderPageWithProviderProps = {
 const CustomTypesBuilderPageWithProvider: React.FC<
   CustomTypesBuilderPageWithProviderProps
 > = ({ customType, remoteCustomType }) => {
-  const { initCustomTypeStore } = useSliceMachineActions();
+  const { initCustomTypeStore, saveCustomType } = useSliceMachineActions();
 
   useEffect(() => {
     initCustomTypeStore(customType, remoteCustomType);
   }, []);
 
-  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
-    currentCustomType: selectCurrentCustomType(store),
-  }));
+  const { currentCustomType, hasPendingModifications, isSavingCustomType } =
+    useSelector((store: SliceMachineStoreType) => ({
+      currentCustomType: selectCurrentCustomType(store),
+      hasPendingModifications: isSelectedCustomTypeTouched(store),
+      isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
+    }));
 
   if (currentCustomType === null) {
     // TODO handle currentCustomType not found
     return null;
   }
 
+  const config = CUSTOM_TYPES_CONFIG[currentCustomType.format];
+  const messages = CUSTOM_TYPES_MESSAGES[currentCustomType.format];
+
+  const Actions = [
+    ...(currentCustomType.format === "page"
+      ? [<PageTypeSnippet key="trigger-snippet-view" />]
+      : []),
+    <Button
+      key="save-to-fs"
+      data-cy="builder-save-button"
+      onClick={saveCustomType}
+      loading={isSavingCustomType}
+      disabled={!hasPendingModifications || isSavingCustomType}
+    >
+      save
+    </Button>,
+  ];
+
   return (
-    <PageLayout>
-      <Header
-        backTo="/"
-        breadcrumb={`Page types / ${
+    <MainContainer>
+      <MainContainerHader
+        backTo={config.tablePagePathname}
+        breadcrumb={`${messages.name({ start: true, plural: true })} / ${
           currentCustomType.label ?? currentCustomType.id
         }`}
-        Actions={[
-          <IconButton variant="primary" key="open-snippet" icon="add" />,
-          <Button key="save-to-fs">save</Button>,
-        ]}
+        Actions={Actions}
       />
       <div style={{ gridArea: "content" }}>
         <CustomTypeBuilder />
       </div>
-    </PageLayout>
+    </MainContainer>
   );
 };

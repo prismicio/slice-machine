@@ -1,8 +1,7 @@
 import router from "next/router";
 import { ReactElement } from "react";
 
-import { ButtonGroup } from "@prismicio/editor-ui";
-import { IconButton } from "@src/components/IconButton";
+import { Button, ButtonGroup, Icon } from "@prismicio/editor-ui";
 
 import { Breadcrumb } from "@src/components/Breadcrumb";
 
@@ -18,7 +17,11 @@ export const Header = ({ Actions, backTo, breadcrumb }: HeaderProps) => (
   <header className={styles.root}>
     <div className={styles.flex}>
       {backTo !== undefined ? (
-        <IconButton icon="arrowBack" onClick={() => void router.push(backTo)} />
+        <Button
+          variant="secondary"
+          startIcon={<Icon name="arrowBack" />}
+          onClick={() => void router.push(backTo)}
+        />
       ) : null}
       <Breadcrumb>{breadcrumb}</Breadcrumb>
     </div>

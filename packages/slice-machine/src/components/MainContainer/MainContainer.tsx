@@ -1,20 +1,18 @@
 import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
-import { Text } from "@prismicio/editor-ui";
 
-import * as styles from "./PageLayout.css";
+import * as styles from "./MainContainer.css";
 
-type PageLayoutProps = PropsWithChildren<{
+type MainContainerProps = PropsWithChildren<{
   className?: string;
 }>;
 
-export const PageLayout: FC<PageLayoutProps> = ({
+export const MainContainer: FC<MainContainerProps> = ({
   children,
   className,
   ...otherProps
 }) => (
   <div {...otherProps} className={clsx(styles.root, className)}>
-    <Text>PageLayout</Text>
     {children}
   </div>
 );
