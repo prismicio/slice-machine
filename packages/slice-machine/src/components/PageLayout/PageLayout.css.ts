@@ -1,19 +1,21 @@
-import { colors, sprinkles } from "@prismicio/editor-ui";
+import { sprinkles } from "@prismicio/editor-ui";
 import { style } from "@vanilla-extract/css";
+
+import { vars } from "@prismicio/editor-ui";
 
 export const root = style([
   sprinkles({
     all: "unset",
-    backgroundColor: colors.grey2,
     display: "grid",
     height: "100%",
-    position: "absolute",
+    position: "relative",
     width: "100%",
   }),
   {
     gridTemplateAreas: `
-    "pane header"
-    "pane content"
-  `,
+      "header"
+      "content"
+    `,
+    margin: `${vars.size[16]} 0`,
   },
 ]);

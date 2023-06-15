@@ -11,6 +11,10 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
+import { PageLayout } from "@src/components/PageLayout";
+import { Header } from "@src/components/PageLayout/Header";
+import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
+import { Button } from "@prismicio/editor-ui";
 
 type CustomTypesBuilderPageProps = {
   format: CustomTypeFormat;
@@ -78,5 +82,30 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     initCustomTypeStore(customType, remoteCustomType);
   }, []);
 
-  return <CustomTypeBuilder />;
+  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store),
+  }));
+
+  if (currentCustomType === null) {
+    // TODO handle currentCustomType not found
+    return null;
+  }
+
+  return (
+    <PageLayout>
+      <Header
+        backTo="/"
+        breadcrumb={`Page types / ${
+          currentCustomType.label ?? currentCustomType.id
+        }`}
+        Actions={[
+          <Button variant="secondary" key="action-1">
+            snippet
+          </Button>,
+          <Button key="save-to-fs">save</Button>,
+        ]}
+      />
+      <CustomTypeBuilder />
+    </PageLayout>
+  );
 };
