@@ -5427,6 +5427,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/helpers@npm:^2.3.9":
+  version: 2.3.9
+  resolution: "@prismicio/helpers@npm:2.3.9"
+  dependencies:
+    "@prismicio/richtext": ^2.1.4
+    "@prismicio/types": ^0.2.7
+    imgix-url-builder: ^0.0.3
+  checksum: 58fd10130a50230ce21a9a016ce48bd52cfcef6c7857589a1fce61004027550559cf4d7833359cbec10c93646421705f4b7569c7818381438165ec1e4b04c36d
+  languageName: node
+  linkType: hard
+
 "@prismicio/mock@npm:0.2.0":
   version: 0.2.0
   resolution: "@prismicio/mock@npm:0.2.0"
@@ -5489,7 +5500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/richtext@npm:^2.1.5":
+"@prismicio/richtext@npm:^2.1.4, @prismicio/richtext@npm:^2.1.5":
   version: 2.1.5
   resolution: "@prismicio/richtext@npm:2.1.5"
   dependencies:
@@ -13514,6 +13525,7 @@ __metadata:
     "@headlessui/react": ^1.5.0
     "@heroicons/react": ^1.0.6
     "@prismicio/client": ^7.0.0
+    "@prismicio/helpers": ^2.3.9
     "@prismicio/next": ^1.1.0
     "@prismicio/react": ^2.6.0
     "@slicemachine/adapter-next": "workspace:*"
