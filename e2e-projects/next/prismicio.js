@@ -2,6 +2,8 @@ import * as prismic from '@prismicio/client'
 import { enableAutoPreviews } from '@prismicio/next'
 import slicemachineConfig from './slicemachine.config.json'
 
+export const repositoryName = slicemachineConfig.repositoryName
+
 //Update the Link Resolver to match your project's route structure
 export function linkResolver(doc) {
   switch (doc.type) {
@@ -18,7 +20,7 @@ export function linkResolver(doc) {
 
 // This factory function allows smooth preview setup
 export function createClient(config = {}) {
-  const client = prismic.createClient(slicemachineConfig.repositoryName, {
+  const client = prismic.createClient(repositoryName, {
     ...config,
     routes: routeResolver.routes
   })
