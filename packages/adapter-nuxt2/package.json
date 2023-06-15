@@ -57,7 +57,7 @@
 		"audit": "better-npm-audit audit -l high -p"
 	},
 	"dependencies": {
-		"@prismicio/simulator": "^0.1.3",
+		"@prismicio/simulator": "^0.1.4",
 		"@prismicio/types-internal": "2.0.0-beta.1",
 		"@slicemachine/plugin-kit": "0.4.0",
 		"common-tags": "^1.8.2",
