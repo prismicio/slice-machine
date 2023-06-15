@@ -20,14 +20,14 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      provider: "c8",
+      provider: "v8",
       reporter: ["lcovonly", "text"],
     },
     // Required to register jest-dom matchers and retain TypeScript support.
     globals: true,
     setupFiles: ["./test/__setup__.ts"],
     deps: {
-      inline: true,
+      inline: ["vuetify"],
     },
   },
 });

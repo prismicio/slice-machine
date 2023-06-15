@@ -22,7 +22,7 @@ export default defineConfig({
 		},
 		setupFiles: ["./test/__setup__.ts"],
 		deps: {
-			inline: true,
+			inline: ["vuetify"],
 		},
 	},
 });

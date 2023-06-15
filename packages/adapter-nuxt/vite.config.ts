@@ -21,12 +21,12 @@ export default defineConfig({
 	test: {
 		testTimeout: 10000,
 		coverage: {
-			provider: "c8",
+			provider: "v8",
 			reporter: ["lcovonly", "text"],
 		},
 		setupFiles: "./test/__setup__.ts",
 		deps: {
-			inline: true,
+			inline: ["vuetify"],
 		},
 	},
 });
