@@ -13,7 +13,7 @@ import type { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import {
   MainContainer,
-  MainContainerHader,
+  MainContainerHeader,
 } from "@src/components/MainContainer";
 import {
   isSelectedCustomTypeTouched,
@@ -124,7 +124,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
 
   return (
     <MainContainer>
-      <MainContainerHader
+      <MainContainerHeader
         backTo={config.tablePagePathname}
         breadcrumb={`${messages.name({ start: true, plural: true })} / ${
           currentCustomType.label ?? currentCustomType.id
