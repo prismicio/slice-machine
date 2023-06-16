@@ -26,13 +26,13 @@ else
 fi
 
 rm -rf e2e-projects/cypress-next-app \
-&& yarn dlx --quiet create-next-app --app --eslint --import-alias '@/*' --src-dir --tailwind --typescript --use-npm e2e-projects/cypress-next-app \
+&& yarn dlx --quiet create-next-app --app --eslint --import-alias '@/*' --tailwind --typescript --use-npm e2e-projects/cypress-next-app \
 && yarn dlx --quiet vite-node ./cypress/plugins/addAuth.ts -- ${EMAIL} ${PASSWORD} ${PRISMIC_URL} \
 && yarn dlx --quiet vite-node ./cypress/plugins/createRepo.ts -- "${_PRISMIC_REPO}" "${PASSWORD}" "${PRISMIC_URL}" \
 && yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/init,@slicemachine/manager,@slicemachine/plugin-kit,slice-machine-ui,start-slicemachine}' --topological --verbose pack --out "${THIS_DIR}"/e2e-projects/cypress-next-app/%s-%v.tgz \
 && cd e2e-projects/cypress-next-app \
 && npm i *.tgz \
 && npx @slicemachine/init --repository ${_PRISMIC_REPO} \
-&& npm i --save-dev slice-machine-ui*.tgz slicemachine-adapter-next*.tgz \
+&& npm i --save-dev slice-machine-ui*.tgz @slicemachine-adapter-next*.tgz \
 && npx json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\"" \
 && npx json -I -f slicemachine.config.json -e "this.localSliceSimulatorURL=\"http://localhost:3000/slice-simulator\""
