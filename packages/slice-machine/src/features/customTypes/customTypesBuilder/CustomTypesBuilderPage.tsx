@@ -86,6 +86,8 @@ type CustomTypesBuilderPageWithProviderProps = {
 const CustomTypesBuilderPageWithProvider: React.FC<
   CustomTypesBuilderPageWithProviderProps
 > = ({ customType, remoteCustomType }) => {
+  const router = useRouter();
+
   const { initCustomTypeStore, saveCustomType } = useSliceMachineActions();
 
   useEffect(() => {
@@ -125,7 +127,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
   return (
     <MainContainer>
       <MainContainerHeader
-        backTo={config.tablePagePathname}
+        backTo={() => void router.push(config.tablePagePathname)}
         breadcrumb={`${messages.name({ start: true, plural: true })} / ${
           currentCustomType.label ?? currentCustomType.id
         }`}

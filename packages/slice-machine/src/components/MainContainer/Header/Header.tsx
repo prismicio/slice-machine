@@ -1,4 +1,3 @@
-import router from "next/router";
 import { ReactElement } from "react";
 
 import { Button, ButtonGroup, Icon } from "@prismicio/editor-ui";
@@ -9,7 +8,7 @@ import * as styles from "./Header.css";
 
 type HeaderProps = {
   Actions?: ReactElement[];
-  backTo?: string;
+  backTo?: () => void;
   breadcrumb: string;
 };
 
@@ -20,7 +19,7 @@ export const Header = ({ Actions, backTo, breadcrumb }: HeaderProps) => (
         <Button
           variant="secondary"
           startIcon={<Icon name="arrowBack" />}
-          onClick={() => void router.push(backTo)}
+          onClick={backTo}
         />
       ) : null}
       <Breadcrumb>{breadcrumb}</Breadcrumb>
