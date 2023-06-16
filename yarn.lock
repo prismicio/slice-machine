@@ -30492,6 +30492,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
+    "@prismicio/mocks": ^2.0.0-alpha.2
     "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:^"
