@@ -27,6 +27,9 @@
     "depcheck": "depcheck --config=.depcheckrc",
     "audit": "yarn npm audit --environment production --severity high"
   },
+  "bin": {
+    "start-slicemachine": "./bin/start-slicemachine.cjs"
+  },
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@extractus/oembed-extractor": "^3.1.8",

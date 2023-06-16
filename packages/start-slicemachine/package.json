@@ -16,6 +16,10 @@
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.js"
 		},
+		"./cli": {
+			"require": "./dist/cli.cjs",
+			"import": "./dist/cli.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"main": "dist/index.cjs",

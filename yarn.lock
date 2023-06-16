@@ -13541,7 +13541,6 @@ __metadata:
     react-dom: ^18.2.0
     recharts: ^2.1.11
     slice-machine-ui: "workspace:*"
-    start-slicemachine: "workspace:*"
     tailwindcss: 3.0.23
   languageName: unknown
   linkType: soft
@@ -30045,6 +30044,8 @@ __metadata:
     vite: 4.3.9
     vitest: 0.32.0
     yup: ^0.32.11
+  bin:
+    start-slicemachine: ./bin/start-slicemachine.cjs
   languageName: unknown
   linkType: soft
 
@@ -30488,7 +30489,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"start-slicemachine@workspace:*, start-slicemachine@workspace:^, start-slicemachine@workspace:packages/start-slicemachine":
+"start-slicemachine@workspace:^, start-slicemachine@workspace:packages/start-slicemachine":
   version: 0.0.0-use.local
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:

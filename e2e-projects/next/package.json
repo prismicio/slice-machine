@@ -32,7 +32,6 @@
     "eslint-config-next": "13.4.2",
     "postcss": "8.4.21",
     "slice-machine-ui": "workspace:*",
-    "start-slicemachine": "workspace:*",
     "tailwindcss": "3.0.23"
   }
 }
