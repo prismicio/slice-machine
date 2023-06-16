@@ -24,12 +24,12 @@
     "jsx": "preserve",
     "outDir": "./build",
     "paths": {
-      "@lib/*": ["lib/*"],
-      "@utils/*": ["lib/utils/*"],
       "@builders/*": ["lib/builders/*"],
+      "@components/*": ["components/*"],
+      "@lib/*": ["lib/*"],
       "@models/*": ["lib/models/*"],
       "@src/*": ["src/*"],
-      "@components/*": ["components/*"]
+      "@utils/*": ["lib/utils/*"]
     },
     "incremental": true
   },
