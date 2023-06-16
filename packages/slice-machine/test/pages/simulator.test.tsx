@@ -21,7 +21,7 @@ mockRouter.useParser(
   createDynamicRouteParser(["/[lib]/[sliceName]/[variation]/simulator"])
 );
 // mock simulator client, it would be nice not to have to do this :/
-vi.mock("@prismicio/slice-simulator-com", () => {
+vi.mock("@prismicio/simulator", () => {
   return {
     SimulatorClient: vi.fn().mockReturnValue({
       connect: vi.fn().mockResolvedValue(undefined),

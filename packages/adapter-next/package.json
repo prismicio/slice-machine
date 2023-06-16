@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-next",
-	"version": "0.3.1-dev-next-release.3",
+	"version": "0.3.1-dev-next-release.4",
 	"description": "Slice Machine adapter for Next.js.",
 	"keywords": [
 		"typescript",
@@ -57,7 +57,7 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@prismicio/slice-simulator-core": "^0.2.7",
+		"@prismicio/simulator": "^0.1.4",
 		"@prismicio/types-internal": "^2.0.0",
 		"@slicemachine/plugin-kit": "workspace:^",
 		"common-tags": "^1.8.2",

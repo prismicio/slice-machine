@@ -5299,7 +5299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:^7.0.0":
+"@prismicio/client@npm:^7.0.0, @prismicio/client@npm:^7.1.0":
   version: 7.1.0
   resolution: "@prismicio/client@npm:7.1.0"
   dependencies:
@@ -5509,25 +5509,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/slice-simulator-com@npm:^0.4.1, @prismicio/slice-simulator-com@npm:^0.4.2":
-  version: 0.4.2
-  resolution: "@prismicio/slice-simulator-com@npm:0.4.2"
+"@prismicio/simulator@npm:^0.1.4":
+  version: 0.1.4
+  resolution: "@prismicio/simulator@npm:0.1.4"
   dependencies:
-    "@prismicio/types": ^0.2.7
+    "@prismicio/client": ^7.1.0
+    "@types/statuses": ^2.0.1
     statuses: ^2.0.1
-  checksum: a10903f8c2cb0b03e40f91075f79c3d751e81be91634010db8f8eb170111b06e6f60e4d903d2872e6b1b7399dca7d6dc09f430dbd26b22170970905991da2108
-  languageName: node
-  linkType: hard
-
-"@prismicio/slice-simulator-core@npm:^0.2.7":
-  version: 0.2.7
-  resolution: "@prismicio/slice-simulator-core@npm:0.2.7"
-  dependencies:
-    "@prismicio/slice-simulator-com": ^0.4.1
-    "@prismicio/types": ^0.2.7
-    fp-ts: ^2.13.1
-    io-ts: ^2.2.19
-  checksum: cb43974f38fef314bab9c2f187507b7c529511bec152cb414c55eebb8e6869bf1fae26800aa546cac4261359bdf92607554c864974129dc0d92c71d2c7a7ca01
+  checksum: f6a9b01b2c5df2243e96c2d57f12db5d477b0782309126fd07afa4091b20cee3dd27632f8d1ae0d9c10b20322213d930c144dd727955d2e2d141686b55810d75
   languageName: node
   linkType: hard
 
@@ -7494,7 +7483,7 @@ __metadata:
   resolution: "@slicemachine/adapter-next@workspace:packages/adapter-next"
   dependencies:
     "@prismicio/mock": 0.2.0
-    "@prismicio/slice-simulator-core": ^0.2.7
+    "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
@@ -7542,7 +7531,7 @@ __metadata:
   resolution: "@slicemachine/adapter-nuxt2@workspace:packages/adapter-nuxt2"
   dependencies:
     "@prismicio/mock": 0.2.0
-    "@prismicio/slice-simulator-core": ^0.2.7
+    "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
@@ -7588,7 +7577,7 @@ __metadata:
   resolution: "@slicemachine/adapter-nuxt@workspace:packages/adapter-nuxt"
   dependencies:
     "@prismicio/mock": 0.2.0
-    "@prismicio/slice-simulator-core": ^0.2.7
+    "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
@@ -10013,6 +10002,13 @@ __metadata:
   version: 2.0.1
   resolution: "@types/stack-utils@npm:2.0.1"
   checksum: 205fdbe3326b7046d7eaf5e494d8084f2659086a266f3f9cf00bccc549c8e36e407f88168ad4383c8b07099957ad669f75f2532ed4bc70be2b037330f7bae019
+  languageName: node
+  linkType: hard
+
+"@types/statuses@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@types/statuses@npm:2.0.1"
+  checksum: 332d5440e3cf66e4fd14afba9b60f9e739acd17ce0e2b9a1fe9783c615dccd21eb4b51b38c9957e058beeddea5f5a84c08aca974467fb27f89301e5b39c6a470
   languageName: node
   linkType: hard
 
@@ -19902,7 +19898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"io-ts@npm:^2.2.16, io-ts@npm:^2.2.19, io-ts@npm:^2.2.20":
+"io-ts@npm:^2.2.16, io-ts@npm:^2.2.20":
   version: 2.2.20
   resolution: "io-ts@npm:2.2.20"
   peerDependencies:
@@ -29962,7 +29958,7 @@ __metadata:
     "@prismicio/editor-support": ^0.4.1
     "@prismicio/editor-ui": ^0.4.2
     "@prismicio/mocks": ^2.0.0-alpha.2
-    "@prismicio/slice-simulator-com": ^0.4.2
+    "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0
     "@reach/menu-button": ^0.18.0
     "@sentry/nextjs": ^7.43.0
