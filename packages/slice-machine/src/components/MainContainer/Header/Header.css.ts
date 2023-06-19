@@ -14,7 +14,7 @@ export const root = style([
   },
 ]);
 
-export const flex = style([
+export const spaceBetweenFlex = style([
   sprinkles({
     display: "flex",
     alignItems: "center",

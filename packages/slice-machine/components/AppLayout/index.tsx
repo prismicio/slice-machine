@@ -31,6 +31,9 @@ const AppLayout: FC<Props> = ({ children }) => {
           px: [2, 4, null],
           overflow: "auto",
           display: "flex",
+          "& > :first-child": {
+            flex: 1,
+          },
         }}
       >
         {children}

@@ -14,6 +14,7 @@ import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import {
   MainContainer,
   MainContainerHeader,
+  MainContainerContent,
 } from "@src/components/MainContainer";
 import {
   isSelectedCustomTypeTouched,
@@ -109,7 +110,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
   const config = CUSTOM_TYPES_CONFIG[currentCustomType.format];
   const messages = CUSTOM_TYPES_MESSAGES[currentCustomType.format];
 
-  const Actions = [
+  const actions = [
     ...(currentCustomType.format === "page"
       ? [<PageTypeSnippet key="trigger-snippet-view" />]
       : []),
@@ -131,11 +132,11 @@ const CustomTypesBuilderPageWithProvider: React.FC<
         breadcrumb={`${messages.name({ start: true, plural: true })} / ${
           currentCustomType.label ?? currentCustomType.id
         }`}
-        Actions={Actions}
+        actions={actions}
       />
-      <div style={{ gridArea: "content" }}>
+      <MainContainerContent>
         <CustomTypeBuilder />
-      </div>
+      </MainContainerContent>
     </MainContainer>
   );
 };

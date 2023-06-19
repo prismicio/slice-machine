@@ -7,8 +7,6 @@ export const root = style([
   sprinkles({
     all: "unset",
     display: "grid",
-    position: "relative",
-    width: "100%",
   }),
   {
     gridTemplateAreas: `
@@ -16,6 +14,10 @@ export const root = style([
       "content"
     `,
     gridTemplateRows: "min-content 1fr",
-    margin: `${vars.size[16]} 0`,
+    padding: vars.size[16],
   },
 ]);
+
+export const content = style({
+  gridArea: "content",
+});

@@ -7,6 +7,10 @@ type MainContainerProps = PropsWithChildren<{
   className?: string;
 }>;
 
+export const MainContainerContent: FC<PropsWithChildren> = ({ children }) => (
+  <div className={styles.content}>{children}</div>
+);
+
 export const MainContainer: FC<MainContainerProps> = ({
   children,
   className,

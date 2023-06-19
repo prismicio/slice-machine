@@ -7,14 +7,14 @@ import { Breadcrumb } from "@src/components/Breadcrumb";
 import * as styles from "./Header.css";
 
 type HeaderProps = {
-  Actions?: ReactElement[];
+  actions?: ReactElement[];
   backTo?: () => void;
   breadcrumb: string;
 };
 
-export const Header = ({ Actions, backTo, breadcrumb }: HeaderProps) => (
+export const Header = ({ actions, backTo, breadcrumb }: HeaderProps) => (
   <header className={styles.root}>
-    <div className={styles.flex}>
+    <div className={styles.spaceBetweenFlex}>
       {backTo !== undefined ? (
         <Button
           variant="secondary"
@@ -24,6 +24,6 @@ export const Header = ({ Actions, backTo, breadcrumb }: HeaderProps) => (
       ) : null}
       <Breadcrumb>{breadcrumb}</Breadcrumb>
     </div>
-    {Actions ? <ButtonGroup>{Actions}</ButtonGroup> : null}
+    {actions ? <ButtonGroup>{actions}</ButtonGroup> : null}
   </header>
 );
