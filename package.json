@@ -66,6 +66,10 @@
       "yarn workspace slice-machine-ui lint:precommit"
     ]
   },
+  "resolutions": {
+    "connected-next-router/react-redux": "8.0.7",
+    "react-beautiful-dnd/react-redux": "8.0.7"
+  },
   "workspaces": [
     "e2e-projects/next",
     "packages/*"
