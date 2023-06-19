@@ -38,12 +38,10 @@ export const colorVariant = styleVariants({
   ],
 });
 
-export const text = style([
-  sprinkles({
-    display: "flex",
-    alignItems: "center",
-  }),
-]);
+export const text = sprinkles({
+  display: "flex",
+  alignItems: "center",
+});
 
 /* TODO move paddingLeft to iconVariant style objects */
 export const endIcon = style([
