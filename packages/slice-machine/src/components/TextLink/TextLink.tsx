@@ -11,14 +11,15 @@ type IconProps = Readonly<{
   className?: string;
 }>;
 
-type Variant = keyof typeof textStyles.variant;
-
 export interface TextLinkProps {
   children: string;
   color?: keyof typeof styles.colorVariant;
   endIcon?: ReactNode;
   href: string;
-  textVariant?: Variant;
+  textVariant?: keyof Pick<
+    typeof textStyles.variant,
+    "normal" | "smallBold" | "inherit"
+  >;
 }
 
 export const TextLink: FC<TextLinkProps> = (props) => {

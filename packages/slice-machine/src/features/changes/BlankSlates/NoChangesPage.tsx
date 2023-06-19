@@ -15,14 +15,17 @@ import { FiExternalLink } from "react-icons/fi";
 import { TextLink } from "@src/components/TextLink";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getDocumentsListEndpoint } from "@src/modules/environment";
+import { getRepoName } from "@src/modules/environment";
+
+import { createDocumentsListEndpointFromRepoName } from "@lib/utils/repo";
 
 export const NoChangesPage = () => {
-  const { documentsListEndpoint } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      documentsListEndpoint: getDocumentsListEndpoint(state),
-    })
-  );
+  const { repoName } = useSelector((state: SliceMachineStoreType) => ({
+    repoName: getRepoName(state),
+  }));
+
+  const documentsListEndpoint =
+    createDocumentsListEndpointFromRepoName(repoName);
 
   return (
     <BlankSlate

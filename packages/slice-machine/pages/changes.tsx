@@ -9,7 +9,7 @@ import { SliceMachineStoreType } from "../src/redux/type";
 import { ChangesItems } from "@components/ChangesItems";
 import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyPage";
 
-import { NoChangesPage } from "@src/components/ChangesEmptyPage";
+import { NoChangesPage } from "@src/features/changes/BlankSlates";
 
 import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";

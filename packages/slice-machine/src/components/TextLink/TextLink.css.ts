@@ -27,6 +27,15 @@ export const colorVariant = styleVariants({
       },
     }),
   ],
+  secondary: [
+    sprinkles({
+      color: {
+        ...colors.indigo11,
+        ...selectors.hover(colors.indigo10),
+        ...selectors.active(colors.indigo11),
+      },
+    }),
+  ],
 });
 
 export const text = style([
@@ -49,49 +58,9 @@ export const iconVariant = styleVariants({
       fontSize: "1.2rem",
     },
   ],
-  bold: [
-    {
-      fontSize: "1.4rem",
-    },
-  ],
-  small: [
-    {
-      fontSize: "1rem",
-    },
-  ],
   smallBold: [
     {
       fontSize: "1rem",
-    },
-  ],
-  extraSmall: [
-    {
-      fontSize: ".9rem",
-    },
-  ],
-  emphasized: [
-    {
-      fontSize: "1rem",
-    },
-  ],
-  h1: [
-    {
-      fontSize: "2rem",
-    },
-  ],
-  h2: [
-    {
-      fontSize: "1.8rem",
-    },
-  ],
-  h3: [
-    {
-      fontSize: "1.6rem",
-    },
-  ],
-  h4: [
-    {
-      fontSize: "1.4rem",
     },
   ],
   inherit: [
