@@ -78,7 +78,7 @@ describe("[Custom types factory]", () => {
                   "label": "Meta Description",
                   "placeholder": "A brief summary of the page",
                 },
-                "type": "StructuredText",
+                "type": "Text",
               },
               "meta_image": {
                 "config": {
@@ -130,7 +130,7 @@ describe("[Custom types factory]", () => {
                 "label": "Meta Description",
                 "placeholder": "A brief summary of the page",
               },
-              "type": "StructuredText",
+              "type": "Text",
             },
             "meta_image": {
               "config": {
