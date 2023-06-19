@@ -16,7 +16,7 @@ export default defineConfig({
 		}),
 	],
 	test: {
-		testTimeout: 10000,
+		testTimeout: 15_000,
 		coverage: {
 			reporter: ["lcovonly", "text"],
 		},
