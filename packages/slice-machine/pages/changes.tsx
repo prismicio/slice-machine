@@ -7,7 +7,7 @@ import { MdLoop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "../src/redux/type";
 import { ChangesItems } from "@components/ChangesItems";
-import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyPage";
+import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
 
 import { NoChangesPage } from "@src/features/changes/BlankSlates";
 
