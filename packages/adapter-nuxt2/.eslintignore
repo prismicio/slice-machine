@@ -11,9 +11,6 @@ dist
 logs
 *.log
 
-# lerna
-lerna-debug.log*
-
 # tests
 coverage
 .eslintcache
