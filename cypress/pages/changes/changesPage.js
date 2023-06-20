@@ -17,7 +17,9 @@ class ChangesPage {
   /**
    * Push Changes to the Repository, assert the number of changes as well.
    *
-   * @param {number} numberOfChanges number of changes that should be pushed, this number is used for assertions. If this is undefined, no assertions will be made on the number of changes left after the push
+   * @param {number} numberOfChanges Number of changes that should be pushed,
+   *   this number is used for assertions. If this is undefined, no assertions
+   *   will be made on the number of changes left after the push
    */
   pushChanges(numberOfChanges) {
     if (numberOfChanges !== undefined) {
@@ -47,7 +49,7 @@ class ChangesPage {
   }
 
   isUpToDate() {
-    cy.contains("Up to date").should("be.visible");
+    cy.contains("Everything up-to-date").should("be.visible");
     this.pushButton.should("be.disabled");
 
     return this;
