@@ -77,7 +77,7 @@ describe("createCustomType test suite", () => {
                   "label": "Meta Description",
                   "placeholder": "A brief summary of the page",
                 },
-                "type": "StructuredText",
+                "type": "Text",
               },
               "meta_image": {
                 "config": {
@@ -129,7 +129,7 @@ it("when non repeatable page type is should contain Main with a slice-zone, no u
                 "label": "Meta Description",
                 "placeholder": "A brief summary of the page",
               },
-              "type": "StructuredText",
+              "type": "Text",
             },
             "meta_image": {
               "config": {
