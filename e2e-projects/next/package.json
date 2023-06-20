@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "0.1.1-dev-next-release.4",
+  "version": "0.1.1-dev-next-release.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -25,13 +25,13 @@
     "recharts": "^2.1.11"
   },
   "devDependencies": {
-    "@slicemachine/adapter-next": "0.3.1-dev-next-release.5",
+    "@slicemachine/adapter-next": "0.3.1-dev-next-release.6",
     "autoprefixer": "^10.4.4",
     "eslint": "^8.37.0",
     "eslint-config-next": "^12.1.4",
     "postcss": "^8.4.12",
-    "slice-machine-ui": "1.2.1-dev-next-release.5",
-    "start-slicemachine": "0.9.1-dev-next-release.5",
+    "slice-machine-ui": "1.2.1-dev-next-release.6",
+    "start-slicemachine": "0.9.1-dev-next-release.6",
     "tailwindcss": "^3.0.23"
   }
 }
