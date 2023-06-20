@@ -35,11 +35,9 @@ export const colorVariant = {
 };
 
 /* TODO move paddingLeft to iconVariant style objects */
-export const endIcon = style([
-  sprinkles({
-    paddingLeft: 4,
-  }),
-]);
+export const endIcon = sprinkles({
+  paddingLeft: 4,
+});
 
 export const iconVariant = styleVariants({
   normal: [
