@@ -7,11 +7,10 @@ import { MdLoop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "../src/redux/type";
 import { ChangesItems } from "@components/ChangesItems";
-import {
-  AuthErrorPage,
-  NoChangesPage,
-  OfflinePage,
-} from "@components/ChangesEmptyPage";
+import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
+
+import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
+
 import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
@@ -90,7 +89,7 @@ const Changes: React.FunctionComponent = () => {
       return <AuthErrorPage />;
     }
     if (numberOfChanges === 0) {
-      return <NoChangesPage />;
+      return <NoChangesBlankSlate />;
     }
     return (
       <ChangesItems

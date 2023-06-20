@@ -95,7 +95,6 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
           </BlankSlateDescription>
           <BlankSlateActions>
             <Button
-              size="medium"
               onClick={openCreateCustomTypeModal}
               loading={isCreatingCustomType}
             >
