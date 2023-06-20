@@ -40,7 +40,7 @@ export const NoChangesBlankSlate = () => {
           Ready to get going?
         </BlankSlateDescription>
         <BlankSlateActions>
-          <Button size="medium" onClick={() => void router.push("/")}>
+          <Button onClick={() => void router.push("/")}>
             Create a page type
           </Button>
           <TextLink
