@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { SharedSliceEditor } from "@prismicio/editor-fields";
+import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
@@ -9,7 +9,7 @@ import Header from "./components/Header";
 
 import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
-import { selectSimulatorUrl } from "@src/modules/environment";
+import { selectEndpoints, selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Toolbar } from "./components/Toolbar";
 import {
@@ -32,6 +32,7 @@ import {
   selectIsWaitingForIFrameCheck,
   selectSetupStatus,
 } from "@src/modules/simulator";
+
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
 import SetupModal from "./components/SetupModal";
@@ -53,12 +54,25 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     iframeStatus,
     manifestStatus,
     isWaitingForIFrameCheck,
+    endpoints,
   } = useSelector((state: SliceMachineStoreType) => ({
     simulatorUrl: selectSimulatorUrl(state),
     iframeStatus: selectIframeStatus(state),
     manifestStatus: selectSetupStatus(state).manifest,
     isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
+    endpoints: selectEndpoints(state),
   }));
+
+  const editorConfig: EditorConfig = useMemo(() => {
+    return {
+      embeds: {
+        url: endpoints.PrismicOembed,
+      },
+      unsplash: {
+        url: endpoints.PrismicUnsplash,
+      },
+    };
+  }, [endpoints.PrismicOembed, endpoints.PrismicUnsplash]);
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
   const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
@@ -281,7 +295,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                  * change should be removed once the editor is fixed.
                  */
                 key={variation.id}
-                config={SHARED_SLICE_EDITOR_CONFIG}
+                config={editorConfig}
                 content={editorContent}
                 onContentChange={(c) => {
                   setEditorState(c as SharedSliceContent);
@@ -304,11 +318,3 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
 };
 
 export default Simulator;
-
-// TODO(DT-1333): change this config depending on the environment.
-const SHARED_SLICE_EDITOR_CONFIG = {
-  embeds: {
-    url: "https://jntc6tzga1.execute-api.us-east-1.amazonaws.com/beta",
-  },
-  unsplash: { url: "https://unsplash.wroom.io" },
-};

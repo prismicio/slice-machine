@@ -1,4 +1,4 @@
-import type { PackageManager } from "@slicemachine/manager";
+import type { PackageManager, APIEndpoints } from "@slicemachine/manager";
 
 import PrismicData from "./PrismicData";
 import type { Manifest } from "./Manifest";
@@ -20,4 +20,5 @@ export interface FrontEndEnvironment {
   changelog?: PackageChangelog;
   packageManager: PackageManager;
   supportsSliceSimulator: boolean;
+  endpoints: APIEndpoints;
 }

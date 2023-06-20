@@ -21,7 +21,7 @@ mockRouter.useParser(
   createDynamicRouteParser(["/[lib]/[sliceName]/[variation]/simulator"])
 );
 // mock simulator client, it would be nice not to have to do this :/
-vi.mock("@prismicio/slice-simulator-com", () => {
+vi.mock("@prismicio/simulator", () => {
   return {
     SimulatorClient: vi.fn().mockReturnValue({
       connect: vi.fn().mockResolvedValue(undefined),
@@ -34,10 +34,6 @@ vi.mock("@prismicio/slice-simulator-com", () => {
 
 describe.skip("simulator", () => {
   beforeAll(async () => {
-    const div = document.createElement("div");
-    div.setAttribute("id", "__next");
-    document.body.appendChild(div);
-
     // USE THIS IF light mode is not enabled on ThemeProvider
     // Object.defineProperty(window, "matchMedia", {
     //   writable: true,
