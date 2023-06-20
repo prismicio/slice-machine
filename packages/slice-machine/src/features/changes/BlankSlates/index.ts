@@ -1,1 +1,1 @@
-export { NoChangesPage } from "./NoChangesPage";
+export { NoChangesBlankSlate } from "./NoChangesBlankSlate";

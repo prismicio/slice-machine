@@ -5,21 +5,17 @@ import clsx from "clsx";
 import { Text } from "@prismicio/editor-ui";
 
 import * as styles from "./TextLink.css";
-import * as textStyles from "@prismicio/editor-ui/dist/components/Text/Text.css";
 
 type IconProps = Readonly<{
   className?: string;
 }>;
 
-export interface TextLinkProps {
+interface TextLinkProps {
   children: string;
   color?: keyof typeof styles.colorVariant;
   endIcon?: ReactNode;
   href: string;
-  textVariant?: keyof Pick<
-    typeof textStyles.variant,
-    "normal" | "smallBold" | "inherit"
-  >;
+  textVariant?: "normal" | "smallBold" | "inherit";
 }
 
 export const TextLink: FC<TextLinkProps> = (props) => {
@@ -29,14 +25,16 @@ export const TextLink: FC<TextLinkProps> = (props) => {
     endIcon,
     href,
     textVariant = "smallBold",
+    ...otherProps
   } = props;
 
   return (
     <a
       href={href}
       target="_blank"
-      className={clsx(styles.root, styles.colorVariant[color])}
       rel="noreferrer"
+      {...otherProps}
+      className={clsx(styles.root, styles.colorVariant[color])}
     >
       <Text color="inherit" variant={textVariant} className={styles.text}>
         {children}

@@ -19,7 +19,7 @@ import { getRepoName } from "@src/modules/environment";
 
 import { createDocumentsListEndpointFromRepoName } from "@lib/utils/repo";
 
-export const NoChangesPage = () => {
+export const NoChangesBlankSlate = () => {
   const { repoName } = useSelector((state: SliceMachineStoreType) => ({
     repoName: getRepoName(state),
   }));
@@ -28,9 +28,7 @@ export const NoChangesPage = () => {
     createDocumentsListEndpointFromRepoName(repoName);
 
   return (
-    <BlankSlate
-      style={{ width: "100%", alignSelf: "center", marginTop: tokens.size[72] }}
-    >
+    <BlankSlate style={{ alignSelf: "center", marginTop: tokens.size[72] }}>
       <BlankSlateImage>
         <Image src="/blank-slate-changes-uptodate.png" sizing="cover" />
       </BlankSlateImage>

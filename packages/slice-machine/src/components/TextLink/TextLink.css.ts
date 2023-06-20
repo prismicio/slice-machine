@@ -54,17 +54,23 @@ export const iconVariant = styleVariants({
   normal: [
     {
       fontSize: "1.2rem",
+      width: "18px",
+      height: "18px",
     },
   ],
   smallBold: [
     {
       fontSize: "1rem",
+      width: "16px",
+      height: "16px",
     },
   ],
   inherit: [
     sprinkles({ fontFamily: "inherit" }),
     {
       fontSize: "inherit",
+      width: "inherit",
+      height: "inherit",
     },
   ],
 });

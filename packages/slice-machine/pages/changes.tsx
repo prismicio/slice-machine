@@ -9,7 +9,7 @@ import { SliceMachineStoreType } from "../src/redux/type";
 import { ChangesItems } from "@components/ChangesItems";
 import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
 
-import { NoChangesPage } from "@src/features/changes/BlankSlates";
+import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
 
 import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
@@ -89,7 +89,7 @@ const Changes: React.FunctionComponent = () => {
       return <AuthErrorPage />;
     }
     if (numberOfChanges === 0) {
-      return <NoChangesPage />;
+      return <NoChangesBlankSlate />;
     }
     return (
       <ChangesItems
