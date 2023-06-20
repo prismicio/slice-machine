@@ -36,7 +36,7 @@ export const TextLink: FC<TextLinkProps> = (props) => {
       {...otherProps}
       className={clsx(styles.root, styles.colorVariant[color])}
     >
-      <Text color="inherit" variant={textVariant} className={styles.text}>
+      <Text component="span" color="inherit" variant={textVariant}>
         {children}
       </Text>
       {isValidElement<IconProps>(endIcon)

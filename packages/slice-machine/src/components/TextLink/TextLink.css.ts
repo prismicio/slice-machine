@@ -17,31 +17,22 @@ export const root = style([
   },
 ]);
 
-export const colorVariant = styleVariants({
-  primary: [
-    sprinkles({
-      color: {
-        ...colors.purple9,
-        ...selectors.hover(colors.purple8),
-        ...selectors.active(colors.purple9),
-      },
-    }),
-  ],
-  secondary: [
-    sprinkles({
-      color: {
-        ...colors.indigo11,
-        ...selectors.hover(colors.indigo10),
-        ...selectors.active(colors.indigo11),
-      },
-    }),
-  ],
-});
-
-export const text = sprinkles({
-  display: "flex",
-  alignItems: "center",
-});
+export const colorVariant = {
+  primary: sprinkles({
+    color: {
+      ...colors.purple9,
+      ...selectors.hover(colors.purple8),
+      ...selectors.active(colors.purple9),
+    },
+  }),
+  secondary: sprinkles({
+    color: {
+      ...colors.indigo11,
+      ...selectors.hover(colors.indigo10),
+      ...selectors.active(colors.indigo11),
+    },
+  }),
+};
 
 /* TODO move paddingLeft to iconVariant style objects */
 export const endIcon = style([
