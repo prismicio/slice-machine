@@ -75,6 +75,7 @@ async function trackPageView(): ReturnType<typeof telemetry.track> {
       : sliceMachineConfig.adapter.resolve;
   return telemetry.track({
     event: "page-view",
+    repository: sliceMachineConfig.repositoryName,
     url: window.location.href,
     path: window.location.pathname,
     search: window.location.search,
