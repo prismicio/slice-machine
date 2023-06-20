@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "slicemachine": "start-slicemachine",
-    "slicemachine:dev": "./slicemachine.sh"
+    "slicemachine:dev": "NODE_ENV=development start-slicemachine"
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
