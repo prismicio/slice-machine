@@ -31,7 +31,7 @@ export const Default = {
             My blank slate description
           </BlankSlateDescription>
           <BlankSlateActions>
-            <Button size="medium">Create</Button>
+            <Button>Create</Button>
           </BlankSlateActions>
         </BlankSlateContent>
       </>

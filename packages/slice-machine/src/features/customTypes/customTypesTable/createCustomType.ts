@@ -82,7 +82,7 @@ const DEFAULT_SEO_TAB: CustomType["json"] = {
         label: "Meta Description",
         placeholder: "A brief summary of the page",
       },
-      type: "StructuredText",
+      type: "Text",
     },
     meta_image: {
       config: {

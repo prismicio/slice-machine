@@ -31,7 +31,7 @@ export const BlankSlateActions: FC<PropsWithChildren> = (props) => (
   <ButtonGroup
     {...props}
     className={styles.actions}
-    size="large"
+    size="medium"
     variant="secondary"
   />
 );
