@@ -1238,3 +1238,126 @@ describe("/api/exit-preview route", () => {
 		});
 	});
 });
+
+describe("/api/revalidate route", () => {
+	describe("App Route", () => {
+		beforeEach(async (ctx) => {
+			await fs.mkdir(path.join(ctx.project.root, "app"), { recursive: true });
+		});
+
+		test("creates a route handler", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "app", "api", "revalidate", "route.js"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import { NextResponse } from \\"next/server\\";
+				import { revalidateTag } from \\"next/cache\\";
+
+				export async function POST() {
+				  revalidateTag(\\"prismic\\");
+
+				  return NextResponse.json({ revalidated: true, now: Date.now() });
+				}
+				"
+			`);
+		});
+
+		test("creates a route in the src directory if it exists", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await fs.mkdir(path.join(ctx.project.root, "src", "app"), {
+				recursive: true,
+			});
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(
+					ctx.project.root,
+					"src",
+					"app",
+					"api",
+					"revalidate",
+					"route.js",
+				),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import { NextResponse } from \\"next/server\\";
+				import { revalidateTag } from \\"next/cache\\";
+
+				export async function POST() {
+				  revalidateTag(\\"prismic\\");
+
+				  return NextResponse.json({ revalidated: true, now: Date.now() });
+				}
+				"
+			`);
+		});
+
+		test("creates a TypeScript file when TypeScript is enabled", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await fs.writeFile(
+				path.join(ctx.project.root, "tsconfig.json"),
+				JSON.stringify({}),
+			);
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "app", "api", "revalidate", "route.ts"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import { NextResponse } from \\"next/server\\";
+				import { revalidateTag } from \\"next/cache\\";
+
+				export async function POST() {
+				  revalidateTag(\\"prismic\\");
+
+				  return NextResponse.json({ revalidated: true, now: Date.now() });
+				}
+				"
+			`);
+		});
+	});
+
+	describe("Pages Route", () => {
+		test("doesn't create a route handler", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const apiDir = await fs.readdir(
+				path.join(ctx.project.root, "pages", "api"),
+			);
+
+			expect(apiDir).not.includes("revalidate.js");
+		});
+	});
+});

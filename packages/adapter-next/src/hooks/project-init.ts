@@ -238,6 +238,10 @@ const createPreviewRoute = async ({
 		),
 	);
 
+	if (await checkPathExists(filePath)) {
+		return;
+	}
+
 	let contents: string;
 
 	if (hasAppRouter) {
@@ -337,6 +341,10 @@ const createExitPreviewRoute = async ({
 		),
 	);
 
+	if (await checkPathExists(filePath)) {
+		return;
+	}
+
 	let contents: string;
 
 	if (hasAppRouter) {
@@ -409,6 +417,55 @@ const modifySliceMachineConfig = async ({
 	);
 };
 
+const createRevalidateRoute = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const hasAppRouter = await checkHasAppRouter({ helpers });
+
+	if (!hasAppRouter) {
+		return;
+	}
+
+	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+
+	const isTypeScriptProject = await checkIsTypeScriptProject({
+		helpers,
+		options,
+	});
+
+	const filePath = helpers.joinPathFromRoot(
+		...[
+			hasSrcDirectory ? "src" : undefined,
+			`app/api/revalidate/route.${isTypeScriptProject ? "ts" : "js"}`,
+		].filter((segment): segment is NonNullable<typeof segment> =>
+			Boolean(segment),
+		),
+	);
+
+	if (await checkPathExists(filePath)) {
+		return;
+	}
+
+	let contents = stripIndent`
+		import { NextResponse } from "next/server";
+		import { revalidateTag } from "next/cache";
+
+		export async function POST() {
+			revalidateTag("prismic");
+
+			return NextResponse.json({ revalidated: true, now: Date.now() });
+		}
+	`;
+
+	if (options.format) {
+		contents = await helpers.format(contents, filePath);
+	}
+
+	await fs.mkdir(path.dirname(filePath), { recursive: true });
+	await fs.writeFile(filePath, contents);
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
@@ -421,6 +478,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			createSliceSimulatorPage(context),
 			createPreviewRoute(context),
 			createExitPreviewRoute(context),
+			createRevalidateRoute(context),
 		]),
 	);
 };
