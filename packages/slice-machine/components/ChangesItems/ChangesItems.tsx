@@ -5,7 +5,7 @@ import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
 
-import Grid from "components/Grid";
+import Grid from "@components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { WrapperType } from "@lib/models/ui/Slice/wrappers";
 import { SharedSlice } from "@lib/models/ui/Slice";

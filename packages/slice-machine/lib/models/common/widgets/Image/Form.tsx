@@ -9,7 +9,7 @@ import WidgetFormField from "@lib/builders/common/EditModal/Field";
 import { FieldArray } from "formik";
 
 import { Label, Card, Flex } from "theme-ui";
-import { Col, Flex as FlexGrid } from "components/Flex";
+import { Col, Flex as FlexGrid } from "@components/Flex";
 import {
   ThumbnailButton,
   AddThumbnailButton,

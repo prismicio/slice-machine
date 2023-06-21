@@ -79,7 +79,7 @@ const WidgetForm = ({
             options={options}
             onChange={(v) => {
               if (v) {
-                setFieldValue(
+                void setFieldValue(
                   "config.customtypes",
                   v.map(({ value }) => value)
                 );

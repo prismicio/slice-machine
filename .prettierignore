@@ -1,6 +1,8 @@
 # Ignore artifacts:
 .github/
+/.yarn
 /packages/*/storybook-static
+/.pnp.*
 packages/slice-machine/.next
 packages/slice-machine/build
 packages/slice-machine/templates/
@@ -11,10 +13,8 @@ packages/init/build
 packages/next-slicezone/dist
 packages/nuxt-sm/src/sm-resolver.js
 packages/**/package.json
-packages/**/package-lock.json
 README.md
 package.json
-package-lock.json
 e2e-projects/**
 dist
 packages/init/playground

@@ -136,7 +136,7 @@ it("throws on plugin error", async () => {
 	await manager.plugins.initPlugins();
 
 	await expect(manager.project.initProject()).rejects.toMatchInlineSnapshot(
-		"[SliceMachineError: Failed to initialize project: Error: Error in `test-plugin-c2eeaa5b70ee428d99fd973d06175d73bc4c7bb6` during `project:init` hook: foo]",
+		"[SliceMachineError: Failed to initialize project: Error: Error in `test-plugin-eedbb24bca17d77948a18f01465a74020438f9ed` during `project:init` hook: foo]",
 	);
 });
 

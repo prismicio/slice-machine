@@ -1,4 +1,4 @@
-import { MANIFEST_FILE, SIMULATOR_PATH } from "../../consts";
+import { MANIFEST_FILE } from "../../consts";
 
 class SimulatorPage {
   get saveMocksButton() {
@@ -30,13 +30,10 @@ class SimulatorPage {
   }
 
   /**
-   * Setup the slice simulator in the example project, and stub the window open event to open in the same page.
+   * Setup the slice simulator in the example project, and stub the window open
+   * event to open in the same page.
    */
   setup() {
-    cy.fixture("slice-simulator.jsx", "utf-8").then((file) => {
-      return cy.writeFile(SIMULATOR_PATH, file);
-    });
-
     cy.readFile(MANIFEST_FILE, "utf-8").then((json) => {
       const data = {
         ...json,
@@ -110,7 +107,7 @@ class SimulatorPage {
   /**
    * Change the slice variations using the variations dropdown in the simulator.
    *
-   * @param {string} targetVariation the new variation value.
+   * @param {string} targetVariation The new variation value.
    */
   changeVariations(targetVariation) {
     cy.get("[aria-label='Expand variations']").click({ force: true });

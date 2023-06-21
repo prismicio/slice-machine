@@ -8,12 +8,12 @@ import {
 import { PackageManager } from "../types";
 
 const EXTRA_INSTALL_FLAGS: Record<PackageManager, string[]> = {
-	npm: ["--color=always", "--loglevel=info"],
-	pnpm: ["--color"], // TODO: Validate that flags are correct
-	yarn: ["--color"],
-	"yarn@berry": ["--color"], // TODO: Validate that flags are correct
-	"pnpm@6": ["--color"], // TODO: Validate that flags are correct
-	bun: ["--color"], // TODO: Validate that flags are correct
+	npm: ["--color=always", "--loglevel=info"], // Default: `--color=true --loglevel=notice`.
+	pnpm: [], // Default: `--color=auto --loglevel=info`.
+	yarn: [], // TODO: Add the correct options.
+	"yarn@berry": [], // TODO: Add the correct options.
+	"pnpm@6": [], // // TODO: Add the correct options.
+	bun: [], // TODO: Add the correct options.
 };
 
 type InstallDependenciesArgs = {
