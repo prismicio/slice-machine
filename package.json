@@ -1,67 +1,77 @@
 {
-  "name": "root",
   "private": true,
   "engines": {
     "node": ">=14"
   },
+  "packageManager": "yarn@3.6.0",
   "scripts": {
-    "dev": "concurrently --prefix-colors auto \"npm:dev:*\"",
-    "dev:manager": "npm --workspace @slicemachine/manager run dev",
-    "dev:start-slicemachine": "npm --workspace start-slicemachine run dev",
-    "dev:plugin-kit": "npm --workspace @slicemachine/plugin-kit run dev",
-    "dev:slice-machine-ui": "npm --workspace slice-machine-ui run dev",
-    "dev:adapter-next": "npm --workspace @slicemachine/adapter-next run dev",
-    "dev:e2e-next": "cd ./e2e-projects/next && npm run dev -- --port 8000",
+    "dev": "concurrently --prefix-colors auto \"yarn:dev:*\"",
+    "dev:manager": "yarn workspace @slicemachine/manager dev",
+    "dev:start-slicemachine": "yarn workspace start-slicemachine dev",
+    "dev:plugin-kit": "yarn workspace @slicemachine/plugin-kit dev",
+    "dev:slice-machine-ui": "yarn workspace slice-machine-ui dev",
+    "dev:adapter-next": "yarn workspace @slicemachine/adapter-next dev",
+    "dev:e2e-next": "cd ./e2e-projects/next && yarn dev --port 8000",
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
-    "prepare": "husky install",
-    "build": "npm --workspaces --if-present run build && npm --workspaces --if-present run test",
-    "build-essential": "npm --workspace @slicemachine/plugin-kit run build && npm --workspace @slicemachine/manager run build",
-    "audit": "lerna run audit",
-    "lint": "npm --workspaces --if-present run lint",
+    "postinstall": "husky install",
+    "build": "yarn workspaces foreach --topological-dev --verbose run build && yarn run test",
+    "build-essential": "yarn workspace @slicemachine/plugin-kit build && yarn workspace @slicemachine/manager build",
+    "audit": "yarn workspaces foreach --parallel --verbose run audit",
+    "lint": "yarn workspaces foreach --verbose run lint",
     "lint-staged": "lint-staged",
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "test": "lerna run test --stream",
-    "test:e2e": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
-    "test:e2e:dev": "npm run cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
-    "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
-    "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
+    "test": "yarn workspaces foreach --parallel --topological-dev --verbose run test",
+    "test:e2e": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
+    "test:e2e:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
     "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact",
     "bump:alpha": "lerna version prerelease --preid $npm_config_preid --no-changelog --exact --yes",
     "bump:production": "lerna version --conventional-graduate --exact",
-    "publish:alpha": "lerna publish from-package --dist-tag alpha --no-verify-access --yes",
-    "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
-    "lerna:update": "npx --yes lerna-update-wizard"
+    "publish:alpha": "lerna publish from-package --dist-tag alpha --yes",
+    "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package"
+  },
+  "dependenciesMeta": {
+    "@sentry/cli": {
+      "built": true
+    },
+    "cypress": {
+      "built": true
+    },
+    "esbuild": {
+      "built": true
+    },
+    "msw": {
+      "built": true
+    },
+    "puppeteer": {
+      "built": true
+    }
   },
   "devDependencies": {
-    "concurrently": "^7.6.0",
-    "husky": "^8.0.3",
-    "lerna": "^3.22.1",
-    "lint-staged": "^13.2.0",
-    "prettier": "^2.8.4"
-  },
-  "dependencies": {
-    "cypress": "^12.8.0",
-    "cypress-localstorage-commands": "^2.2.2",
-    "cypress-real-events": "^1.7.6",
-    "cypress-wait-until": "^1.7.2",
-    "start-server-and-test": "^1.15.5"
+    "concurrently": "7.6.0",
+    "cypress": "12.8.0",
+    "cypress-localstorage-commands": "2.2.2",
+    "cypress-real-events": "1.7.6",
+    "cypress-wait-until": "1.7.2",
+    "husky": "8.0.3",
+    "lerna": "7.0.2",
+    "lint-staged": "13.2.0",
+    "prettier": "2.8.4",
+    "start-server-and-test": "1.15.5"
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
       "prettier --write --ignore-unknown",
-      "npm --prefix ./packages/slice-machine run lint:precommit"
+      "yarn workspace slice-machine-ui lint:precommit"
     ]
   },
-  "//": "Order matters!",
+  "resolutions": {
+    "connected-next-router/react-redux": "8.0.7",
+    "react-beautiful-dnd/react-redux": "8.0.7"
+  },
   "workspaces": [
-    "packages/plugin-kit",
-    "packages/manager",
-    "packages/start-slicemachine",
-    "packages/init",
-    "packages/slice-machine",
-    "packages/adapter-*",
-    "e2e-projects/next"
+    "e2e-projects/next",
+    "packages/*"
   ]
 }

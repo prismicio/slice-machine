@@ -1,10 +1,5 @@
 {
-  "packages": ["e2e-projects/next", "packages/*"],
-  "command": {
-    "publish": {
-      "conventionalCommits": false
-    }
-  },
-  "version": "independent",
-  "npmClient": "npm"
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "npmClient": "yarn",
+  "version": "independent"
 }

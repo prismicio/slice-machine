@@ -98,11 +98,11 @@ const CreateCustomtypeForm = ({
               error={errors.id}
               onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
                 if (values.id !== event.target.value) {
-                  setFieldValue("id", event.target.value.trim());
+                  void setFieldValue("id", event.target.value.trim());
                 }
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFieldValue("id", e.target.value);
+                void setFieldValue("id", e.target.value);
               }}
             />
             <Button

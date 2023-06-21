@@ -35,7 +35,7 @@ it("creates new Slice Machine configuration", async () => {
 	expect(vol.toJSON()["/slicemachine.config.json"]).toMatchInlineSnapshot(`
 		"{
 		  \\"repositoryName\\": \\"repo-admin\\",
-		  \\"adapter\\": \\"test-plugin-0194c5b16375a550d23fd066d6a455d02ea4a5ef\\",
+		  \\"adapter\\": \\"test-plugin-7fcf4ed34a26d3f3e72c0035521cad79705ff215\\",
 		  \\"libraries\\": [\\"./slices\\"]
 		}
 		"
@@ -69,7 +69,7 @@ it("updates existing Slice Machine configuration", async () => {
 	expect(vol.toJSON()["/slicemachine.config.json"]).toMatchInlineSnapshot(`
 		"{
 		  \\"repositoryName\\": \\"repo-admin\\",
-		  \\"adapter\\": \\"test-plugin-500ac0533b8aa48f3fd6d4bc7174bda57aa0444c\\",
+		  \\"adapter\\": \\"test-plugin-2c924b07a7188bdb084a6bd464c8701d66349123\\",
 		  \\"libraries\\": [\\"./my-slices\\"]
 		}
 		"

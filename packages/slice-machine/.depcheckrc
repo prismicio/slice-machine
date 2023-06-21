@@ -1,13 +1,12 @@
 ignores:
   [
+    "@storybook/addon-essentials",
+    "@testing-library/dom",
+    "@vanilla-extract/next-plugin",
+    "@vitest/coverage-v8",
     "monocle-ts",
     "newtype-ts",
-    "start-slicemachine",
-    "@storybook/addon-essentials",
-    "@vanilla-extract/next-plugin",
-    "@vitest/coverage-c8",
-    "jest-environment-jsdom",
     "semver",
-    "unfetch"
+    "start-slicemachine"
   ]
 skip - missing: true

@@ -1,9 +1,7 @@
-# asserts everything is text
-* text eol=lf
-
-# treats lock files as binaries to prevent merge headache
-package-lock.json -diff
-yarn.lock -diff
+* text=auto eol=lf
+/.yarn/plugins/** binary
+/.yarn/releases/** binary
+/.pnp.* binary
 
 # treats assets as binaries
 *.png binary

@@ -63,7 +63,7 @@ export const CreateSliceModal: React.FunctionComponent<
             name="origin"
             options={libraries.map((v) => ({ value: v.name, label: v.name }))}
             onChange={(v: { label: string; value: string } | null) =>
-              v ? setFieldValue("from", v.value) : null
+              v ? void setFieldValue("from", v.value) : null
             }
             defaultValue={{ value: values.from, label: values.from }}
             theme={(theme) => {

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import { Box, Flex, Text, Link } from "theme-ui";
-import Container from "components/Container";
+import Container from "@components/Container";
 
-import { CreateSliceModal } from "components/Forms/CreateSliceModal";
+import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
 
-import Header from "components/Header";
-import Grid from "components/Grid";
+import Header from "@components/Header";
+import Grid from "@components/Grid";
 
-import { SharedSlice } from "lib/models/ui/Slice";
-import EmptyState from "components/EmptyState";
+import { SharedSlice } from "@lib/models/ui/Slice";
+import EmptyState from "@components/EmptyState";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
