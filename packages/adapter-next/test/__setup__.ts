@@ -1,7 +1,7 @@
 import { beforeEach } from "vitest";
 import {
 	createSliceMachinePluginRunner,
-	SliceMachinePlugin,
+	SliceMachineConfig,
 	SliceMachinePluginRunner,
 	SliceMachineProject,
 } from "@slicemachine/plugin-kit";
@@ -11,13 +11,14 @@ import * as path from "node:path";
 import * as os from "node:os";
 
 import adapter, { PluginOptions } from "../src";
+import * as pkg from "../package.json";
 
 declare module "vitest" {
 	export interface TestContext {
 		project: SliceMachineProject & {
 			config: {
 				adapter: {
-					resolve: SliceMachinePlugin;
+					resolve: string;
 					options: PluginOptions;
 				};
 			};
@@ -32,20 +33,32 @@ beforeEach(async (ctx) => {
 		path.join(os.tmpdir(), "@slicemachine__adapter-next___"),
 	);
 
+	const config = {
+		adapter: {
+			resolve: pkg.name,
+			options: {},
+		},
+		libraries: ["./slices"],
+		repositoryName: "qwerty",
+		apiEndpoint: "https://qwerty.cdn.prismic.io/api/v2",
+	} satisfies SliceMachineConfig;
+
+	await fs.writeFile(
+		path.join(tmpRoot, "slicemachine.config.json"),
+		JSON.stringify(config),
+	);
+
 	ctx.project = {
 		root: tmpRoot,
-		config: {
-			adapter: {
-				resolve: adapter,
-				options: {},
-			},
-			libraries: ["./slices"],
-			repositoryName: "qwerty",
-			apiEndpoint: "https://qwerty.cdn.prismic.io/api/v2",
-		},
+		config,
 	};
 
-	ctx.pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+	ctx.pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[pkg.name]: adapter,
+		},
+	});
 
 	ctx.mock = createMockFactory({ seed: ctx.meta.name });
 
