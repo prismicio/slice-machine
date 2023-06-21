@@ -103,9 +103,9 @@ const NewField: React.FC<NewField> = ({
       field: keyof typeof FormFields,
       value: string,
       shouldValidate?: boolean
-    ) => void
+    ) => Promise<unknown>
   ) => {
-    setFieldValue("id", e.target.value);
+    void setFieldValue("id", e.target.value);
     setIsIdFieldPristine(false);
   };
 

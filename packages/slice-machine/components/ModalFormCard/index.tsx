@@ -24,7 +24,7 @@ type ModalCardProps<T extends FormikValues> = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value: any,
       shouldValidate?: boolean | undefined
-    ) => void;
+    ) => Promise<void | FormikErrors<FormikValues>>;
     values: T;
     setValues: (
       values: SetStateAction<T>,

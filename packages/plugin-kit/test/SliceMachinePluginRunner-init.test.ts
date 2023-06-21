@@ -22,7 +22,7 @@ it("inits adapter", async () => {
 	expect(loadPlugin).toHaveBeenCalledOnce();
 	expect(setupPlugin).toHaveBeenCalledOnce();
 	// @ts-expect-error - Issue with Vitest types
-	expect(setupPlugin.calls[0][1]).toBe("adapter");
+	expect(setupPlugin.mock.calls[0][1]).toBe("adapter");
 	expect(validateAdapter).toHaveBeenCalledOnce();
 });
 
@@ -46,7 +46,11 @@ it("inits plugins", async () => {
 	expect(setupPlugin).toHaveBeenCalledTimes(3);
 	expect(
 		// @ts-expect-error - Issue with Vitest types
-		setupPlugin.calls.map(([loadedPlugin, as]) => [loadedPlugin.meta.name, as]),
+		setupPlugin.mock.calls.map(([loadedPlugin, as]) => [
+			// @ts-expect-error - Issue with Vitest types
+			loadedPlugin.meta.name,
+			as,
+		]),
 	).toMatchInlineSnapshot(`
 		[
 		  [

@@ -50,8 +50,7 @@ const loginAndFetchUserDataWithStdin = async (
 	await new Promise((res) => setTimeout(res, 50));
 
 	const port: number =
-		// @ts-expect-error - Mocked instance
-		spiedManager.user.getLoginSessionInfo.results[0][1].port;
+		spiedManager.user.getLoginSessionInfo.mock.results[0].value.port;
 
 	const body = JSON.stringify(prismicAuthLoginResponse);
 
@@ -107,8 +106,7 @@ it("logs in user if logged out", async (ctx) => {
 	expect(open).toHaveBeenCalledOnce();
 	expect(open).toHaveBeenNthCalledWith(
 		1,
-		// @ts-expect-error - Mocked instance
-		spiedManager.user.getLoginSessionInfo.results[0][1].url,
+		spiedManager.user.getLoginSessionInfo.mock.results[0].value.url,
 	);
 	expect(stdout.join("\n")).toMatch(/Logged in/);
 });

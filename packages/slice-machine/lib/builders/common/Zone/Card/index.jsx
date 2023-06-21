@@ -2,7 +2,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { Box, Text } from "theme-ui";
 
-import ListItem from "components/ListItem";
+import ListItem from "@components/ListItem";
 
 import Hint from "./components/Hints";
 
@@ -10,7 +10,7 @@ import { findWidgetByConfigOrType } from "../../../utils";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 
-import Li from "components/Li";
+import Li from "@components/Li";
 
 const FieldZone = ({
   fields,

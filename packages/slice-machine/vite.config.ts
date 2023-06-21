@@ -16,18 +16,21 @@ export default defineConfig({
       "@models": path.resolve(__dirname, "./lib/models"),
       "@src": path.resolve(__dirname, "./src"),
       "@utils": path.resolve(__dirname, "./lib/utils"),
+      test: path.resolve(__dirname, "./test"),
     },
   },
   test: {
     coverage: {
-      provider: "c8",
+      provider: "v8",
       reporter: ["lcovonly", "text"],
     },
     // Required to register jest-dom matchers and retain TypeScript support.
     globals: true,
     setupFiles: ["./test/__setup__.ts"],
     deps: {
-      inline: true,
+      inline:
+        // TODO: Replace with true once https://github.com/vitest-dev/vitest/issues/2806 is fixed.
+        [/^(?!.*vitest).*$/],
     },
   },
 });
