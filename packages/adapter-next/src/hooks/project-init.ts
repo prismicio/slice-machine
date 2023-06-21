@@ -5,7 +5,7 @@ import type {
 	ProjectInitHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
-import { stripIndent } from "common-tags";
+import { source } from "common-tags";
 
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
@@ -43,6 +43,7 @@ const createPrismicIOFile = async ({
 		options,
 	});
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const filename = isTypeScriptProject ? "prismicio.ts" : "prismicio.js";
 	const filePath = hasSrcDirectory
@@ -53,10 +54,118 @@ const createPrismicIOFile = async ({
 		return;
 	}
 
+	let createClientContents: string;
+
+	if (hasAppRouter) {
+		if (isTypeScriptProject) {
+			createClientContents = source`
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
+					const client = prismic.createClient(repositoryName, {
+						routes,
+						fetchOptions:
+							process.env.NODE_ENV === 'production'
+								? { next: { tags: ['prismic'] }, cache: 'force-cache' }
+								: { next: { revalidate: 5 } },
+						...config,
+					});
+
+					prismicNext.enableAutoPreviews({
+						client,
+						previewData: config.previewData,
+						req: config.req,
+					});
+
+					return client;
+				};
+			`;
+		} else {
+			createClientContents = source`
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config = {}) => {
+					const client = prismic.createClient(repositoryName, {
+						routes,
+						fetchOptions:
+							process.env.NODE_ENV === 'production'
+								? { next: { tags: ['prismic'] }, cache: 'force-cache' }
+								: { next: { revalidate: 5 } },
+						...config,
+					});
+
+					prismicNext.enableAutoPreviews({
+						client,
+						previewData: config.previewData,
+						req: config.req,
+					});
+
+					return client;
+				};
+			`;
+		}
+	} else {
+		if (isTypeScriptProject) {
+			createClientContents = source`
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
+					const client = prismic.createClient(repositoryName, {
+						routes,
+						...config,
+					});
+
+					prismicNext.enableAutoPreviews({
+						client,
+						previewData: config.previewData,
+						req: config.req,
+					});
+
+					return client;
+				};
+			`;
+		} else {
+			createClientContents = source`
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config = {}) => {
+					const client = prismic.createClient(repositoryName, {
+						routes,
+						...config,
+					});
+
+					prismicNext.enableAutoPreviews({
+						client,
+						previewData: config.previewData,
+						req: config.req,
+					});
+
+					return client;
+				};
+			`;
+		}
+	}
+
 	let contents: string;
 
 	if (isTypeScriptProject) {
-		contents = stripIndent`
+		contents = source`
 			import * as prismic from "@prismicio/client";
 			import * as prismicNext from "@prismicio/next";
 			import config from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
@@ -67,8 +176,7 @@ const createPrismicIOFile = async ({
 			export const repositoryName = config.repositoryName;
 
 			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field
-			 * is resolved.
+			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 			 *
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 */
@@ -84,29 +192,10 @@ const createPrismicIOFile = async ({
 				},
 			];
 
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param config - Configuration for the Prismic client.
-			 */
-			export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				prismicNext.enableAutoPreviews({
-					client,
-					previewData: config.previewData,
-					req: config.req,
-				});
-
-				return client;
-			};
+			${createClientContents}
 		`;
 	} else {
-		contents = stripIndent`
+		contents = source`
 			import * as prismic from "@prismicio/client";
 			import * as prismicNext from "@prismicio/next";
 			import config from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
@@ -117,8 +206,7 @@ const createPrismicIOFile = async ({
 			export const repositoryName = config.repositoryName;
 
 			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field
-			 * is resolved.
+			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 			 *
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 *
@@ -136,26 +224,7 @@ const createPrismicIOFile = async ({
 				},
 			];
 
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
-			 */
-			export const createClient = (config = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				prismicNext.enableAutoPreviews({
-					client,
-					previewData: config.previewData,
-					req: config.req,
-				});
-
-				return client;
-			};
+			${createClientContents}
 		`;
 	}
 
@@ -193,7 +262,7 @@ const createSliceSimulatorPage = async ({
 
 	await fs.mkdir(path.dirname(filePath), { recursive: true });
 
-	let contents = stripIndent`
+	let contents = source`
 		import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
 		import { SliceZone } from "@prismicio/react";
 
@@ -246,7 +315,7 @@ const createPreviewRoute = async ({
 
 	if (hasAppRouter) {
 		if (isTypeScriptProject) {
-			contents = stripIndent`
+			contents = source`
 				import { NextRequest } from "next/server";
 				import { draftMode } from "next/headers";
 				import { redirectToPreviewURL } from "@prismicio/next";
@@ -262,7 +331,7 @@ const createPreviewRoute = async ({
 				}
 			`;
 		} else {
-			contents = stripIndent`
+			contents = source`
 				import { draftMode } from "next/headers";
 				import { redirectToPreviewURL } from "@prismicio/next";
 
@@ -279,7 +348,7 @@ const createPreviewRoute = async ({
 		}
 	} else {
 		if (isTypeScriptProject) {
-			contents = stripIndent`
+			contents = source`
 				import { NextApiRequest, NextApiResponse } from "next";
 				import { setPreviewData, redirectToPreviewURL } from "@prismicio/next";
 
@@ -294,7 +363,7 @@ const createPreviewRoute = async ({
 				};
 			`;
 		} else {
-			contents = stripIndent`
+			contents = source`
 				import { setPreviewData, redirectToPreviewURL } from "@prismicio/next";
 
 				import { createClient } from "../../prismicio";
@@ -357,7 +426,7 @@ const createExitPreviewRoute = async ({
 		`;
 	} else {
 		if (isTypeScriptProject) {
-			contents = stripIndent`
+			contents = source`
 				import { NextApiRequest, NextApiResponse } from "next";
 				import { exitPreview } from "@prismicio/next";
 
@@ -366,7 +435,7 @@ const createExitPreviewRoute = async ({
 				}
 			`;
 		} else {
-			contents = stripIndent`
+			contents = source`
 				import { exitPreview } from "@prismicio/next";
 
 				export async function handler(req, res) {
@@ -447,7 +516,7 @@ const createRevalidateRoute = async ({
 		return;
 	}
 
-	let contents = stripIndent`
+	let contents = source`
 		import { NextResponse } from "next/server";
 		import { revalidateTag } from "next/cache";
 

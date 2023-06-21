@@ -128,73 +128,6 @@ describe("modify slicemachine.config.json", () => {
 });
 
 describe("prismicio.js file", () => {
-	test("creates a prismicio.js file", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
-
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
-		});
-
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "prismicio.js"),
-			"utf8",
-		);
-
-		expect(contents).toMatchInlineSnapshot(`
-			"import * as prismic from \\"@prismicio/client\\";
-			import * as prismicNext from \\"@prismicio/next\\";
-			import config from \\"./slicemachine.config.json\\";
-
-			/** The project's Prismic repository name. */
-			export const repositoryName = config.repositoryName;
-
-			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field is
-			 * resolved.
-			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-			 *
-			 * @type {prismic.ClientConfig[\\"routes\\"]}
-			 */
-			// TODO: Update the routes array to match your project's route structure.
-			const routes = [
-			  {
-			    type: \\"homepage\\",
-			    path: \\"/\\",
-			  },
-			  {
-			    type: \\"page\\",
-			    path: \\"/:uid\\",
-			  },
-			];
-
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-			 *   Prismic client.
-			 */
-			export const createClient = (config = {}) => {
-			  const client = prismic.createClient(repositoryName, {
-			    routes,
-			    ...config,
-			  });
-
-			  prismicNext.enableAutoPreviews({
-			    client,
-			    previewData: config.previewData,
-			    req: config.req,
-			  });
-
-			  return client;
-			};
-			"
-		`);
-	});
-
 	test("does not overwrite prismicio file if it already exists", async (ctx) => {
 		const log = vi.fn();
 		const installDependencies = vi.fn();
@@ -212,75 +145,6 @@ describe("prismicio.js file", () => {
 		const postHookContents = await fs.readFile(filePath, "utf8");
 
 		expect(postHookContents).toBe(contents);
-	});
-
-	test("creates a prismicio.js file in the src directory if it exists", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
-
-		await fs.mkdir(path.join(ctx.project.root, "src"), { recursive: true });
-
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
-		});
-
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "src", "prismicio.js"),
-			"utf8",
-		);
-
-		expect(contents).toMatchInlineSnapshot(`
-			"import * as prismic from \\"@prismicio/client\\";
-			import * as prismicNext from \\"@prismicio/next\\";
-			import config from \\"../slicemachine.config.json\\";
-
-			/** The project's Prismic repository name. */
-			export const repositoryName = config.repositoryName;
-
-			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field is
-			 * resolved.
-			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-			 *
-			 * @type {prismic.ClientConfig[\\"routes\\"]}
-			 */
-			// TODO: Update the routes array to match your project's route structure.
-			const routes = [
-			  {
-			    type: \\"homepage\\",
-			    path: \\"/\\",
-			  },
-			  {
-			    type: \\"page\\",
-			    path: \\"/:uid\\",
-			  },
-			];
-
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-			 *   Prismic client.
-			 */
-			export const createClient = (config = {}) => {
-			  const client = prismic.createClient(repositoryName, {
-			    routes,
-			    ...config,
-			  });
-
-			  prismicNext.enableAutoPreviews({
-			    client,
-			    previewData: config.previewData,
-			    req: config.req,
-			  });
-
-			  return client;
-			};
-			"
-		`);
 	});
 
 	test("prismicio file is formatted by default", async (ctx) => {
@@ -335,143 +199,574 @@ describe("prismicio.js file", () => {
 		);
 	});
 
-	test("creates a prismicio.ts file when TypeScript is enabled", async (ctx) => {
-		ctx.project.config.adapter.options.typescript = true;
-		const pluginRunner = createSliceMachinePluginRunner({
-			project: ctx.project,
-			nativePlugins: {
-				[ctx.project.config.adapter.resolve]: adapter,
-			},
+	describe("App Router", () => {
+		beforeEach(async (ctx) => {
+			await fs.mkdir(path.join(ctx.project.root, "app"), { recursive: true });
 		});
-		await pluginRunner.init();
 
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+		test("creates a prismicio.js file", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		await pluginRunner.callHook("project:init", { log, installDependencies });
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
 
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "prismicio.ts"),
-			"utf8",
-		);
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "prismicio.js"),
+				"utf8",
+			);
 
-		expect(contents).toMatchInlineSnapshot(`
-			"import * as prismic from \\"@prismicio/client\\";
-			import * as prismicNext from \\"@prismicio/next\\";
-			import config from \\"./slicemachine.config.json\\";
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"./slicemachine.config.json\\";
 
-			/** The project's Prismic repository name. */
-			export const repositoryName = config.repositoryName;
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
 
-			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field is
-			 * resolved.
-			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-			 */
-			// TODO: Update the routes array to match your project's route structure.
-			const routes: prismic.ClientConfig[\\"routes\\"] = [
-			  {
-			    type: \\"homepage\\",
-			    path: \\"/\\",
-			  },
-			  {
-			    type: \\"page\\",
-			    path: \\"/:uid\\",
-			  },
-			];
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 *
+				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
 
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param config - Configuration for the Prismic client.
-			 */
-			export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-			  const client = prismic.createClient(repositoryName, {
-			    routes,
-			    ...config,
-			  });
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
+				 *   Prismic client.
+				 */
+				export const createClient = (config = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    fetchOptions:
+				      process.env.NODE_ENV === \\"production\\"
+				        ? { next: { tags: [\\"prismic\\"] }, cache: \\"force-cache\\" }
+				        : { next: { revalidate: 5 } },
+				    ...config,
+				  });
 
-			  prismicNext.enableAutoPreviews({
-			    client,
-			    previewData: config.previewData,
-			    req: config.req,
-			  });
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
 
-			  return client;
-			};
-			"
-		`);
+				  return client;
+				};
+				"
+			`);
+		});
+
+		test("creates a prismicio.js file in the src directory if it exists", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await fs.mkdir(path.join(ctx.project.root, "src"), { recursive: true });
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "src", "prismicio.js"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"../slicemachine.config.json\\";
+
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
+
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 *
+				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
+
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
+				 *   Prismic client.
+				 */
+				export const createClient = (config = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    ...config,
+				  });
+
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
+
+				  return client;
+				};
+				"
+			`);
+		});
+
+		test("creates a prismicio.ts file when TypeScript is enabled", async (ctx) => {
+			ctx.project.config.adapter.options.typescript = true;
+			const pluginRunner = createSliceMachinePluginRunner({
+				project: ctx.project,
+				nativePlugins: {
+					[ctx.project.config.adapter.resolve]: adapter,
+				},
+			});
+			await pluginRunner.init();
+
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await pluginRunner.callHook("project:init", { log, installDependencies });
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "prismicio.ts"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"./slicemachine.config.json\\";
+
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
+
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
+
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    fetchOptions:
+				      process.env.NODE_ENV === \\"production\\"
+				        ? { next: { tags: [\\"prismic\\"] }, cache: \\"force-cache\\" }
+				        : { next: { revalidate: 5 } },
+				    ...config,
+				  });
+
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
+
+				  return client;
+				};
+				"
+			`);
+		});
+
+		test("creates a prismicio.ts file when TypeScript is detected", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await fs.writeFile(
+				path.join(ctx.project.root, "tsconfig.json"),
+				JSON.stringify({}),
+			);
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "prismicio.ts"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"./slicemachine.config.json\\";
+
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
+
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
+
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    fetchOptions:
+				      process.env.NODE_ENV === \\"production\\"
+				        ? { next: { tags: [\\"prismic\\"] }, cache: \\"force-cache\\" }
+				        : { next: { revalidate: 5 } },
+				    ...config,
+				  });
+
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
+
+				  return client;
+				};
+				"
+			`);
+		});
 	});
 
-	test("creates a prismicio.ts file when TypeScript is detected", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+	describe("Pages Router", () => {
+		test("creates a prismicio.js file", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		await fs.writeFile(
-			path.join(ctx.project.root, "tsconfig.json"),
-			JSON.stringify({}),
-		);
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
 
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "prismicio.js"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"./slicemachine.config.json\\";
+
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
+
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 *
+				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
+
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
+				 *   Prismic client.
+				 */
+				export const createClient = (config = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    ...config,
+				  });
+
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
+
+				  return client;
+				};
+				"
+			`);
 		});
 
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "prismicio.ts"),
-			"utf8",
-		);
+		test("creates a prismicio.js file in the src directory if it exists", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		expect(contents).toMatchInlineSnapshot(`
-		"import * as prismic from \\"@prismicio/client\\";
-		import * as prismicNext from \\"@prismicio/next\\";
-		import config from \\"./slicemachine.config.json\\";
+			await fs.mkdir(path.join(ctx.project.root, "src"), { recursive: true });
 
-		/** The project's Prismic repository name. */
-		export const repositoryName = config.repositoryName;
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
 
-		/**
-		 * A list of Route Resolver objects that define how a document's \`url\` field is
-		 * resolved.
-		 *
-		 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-		 */
-		// TODO: Update the routes array to match your project's route structure.
-		const routes: prismic.ClientConfig[\\"routes\\"] = [
-		  {
-		    type: \\"homepage\\",
-		    path: \\"/\\",
-		  },
-		  {
-		    type: \\"page\\",
-		    path: \\"/:uid\\",
-		  },
-		];
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "src", "prismicio.js"),
+				"utf8",
+			);
 
-		/**
-		 * Creates a Prismic client for the project's repository. The client is used to
-		 * query content from the Prismic API.
-		 *
-		 * @param config - Configuration for the Prismic client.
-		 */
-		export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-		  const client = prismic.createClient(repositoryName, {
-		    routes,
-		    ...config,
-		  });
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"../slicemachine.config.json\\";
 
-		  prismicNext.enableAutoPreviews({
-		    client,
-		    previewData: config.previewData,
-		    req: config.req,
-		  });
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
 
-		  return client;
-		};
-		"
-	`);
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 *
+				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
+
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
+				 *   Prismic client.
+				 */
+				export const createClient = (config = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    ...config,
+				  });
+
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
+
+				  return client;
+				};
+				"
+			`);
+		});
+
+		test("creates a prismicio.ts file when TypeScript is enabled", async (ctx) => {
+			ctx.project.config.adapter.options.typescript = true;
+			const pluginRunner = createSliceMachinePluginRunner({
+				project: ctx.project,
+				nativePlugins: {
+					[ctx.project.config.adapter.resolve]: adapter,
+				},
+			});
+			await pluginRunner.init();
+
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await pluginRunner.callHook("project:init", { log, installDependencies });
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "prismicio.ts"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"./slicemachine.config.json\\";
+
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
+
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
+
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    ...config,
+				  });
+
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
+
+				  return client;
+				};
+				"
+			`);
+		});
+
+		test("creates a prismicio.ts file when TypeScript is detected", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await fs.writeFile(
+				path.join(ctx.project.root, "tsconfig.json"),
+				JSON.stringify({}),
+			);
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "prismicio.ts"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import * as prismic from \\"@prismicio/client\\";
+				import * as prismicNext from \\"@prismicio/next\\";
+				import config from \\"./slicemachine.config.json\\";
+
+				/** The project's Prismic repository name. */
+				export const repositoryName = config.repositoryName;
+
+				/**
+				 * A list of Route Resolver objects that define how a document's \`url\` field is
+				 * resolved.
+				 *
+				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+				 */
+				// TODO: Update the routes array to match your project's route structure.
+				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				  {
+				    type: \\"homepage\\",
+				    path: \\"/\\",
+				  },
+				  {
+				    type: \\"page\\",
+				    path: \\"/:uid\\",
+				  },
+				];
+
+				/**
+				 * Creates a Prismic client for the project's repository. The client is used to
+				 * query content from the Prismic API.
+				 *
+				 * @param config - Configuration for the Prismic client.
+				 */
+				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
+				  const client = prismic.createClient(repositoryName, {
+				    routes,
+				    ...config,
+				  });
+
+				  prismicNext.enableAutoPreviews({
+				    client,
+				    previewData: config.previewData,
+				    req: config.req,
+				  });
+
+				  return client;
+				};
+				"
+			`);
+		});
 	});
 });
 
