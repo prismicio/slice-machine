@@ -212,4 +212,5 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
           yarn bump:alpha
+          yarn config set npmAuthToken $NODE_AUTH_TOKEN
           yarn publish:alpha
