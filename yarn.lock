@@ -7052,7 +7052,7 @@ __metadata:
     parse-multipart-data: 1.5.0
     prettier: ^2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    puppeteer: 19.11.0
+    puppeteer: 19.11.1
     r19: ^0.1.7
     rc9: ^2.0.1
     rehype-stringify: ^9.0.3
@@ -26309,9 +26309,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer-core@npm:19.11.0":
-  version: 19.11.0
-  resolution: "puppeteer-core@npm:19.11.0"
+"puppeteer-core@npm:19.11.1":
+  version: 19.11.1
+  resolution: "puppeteer-core@npm:19.11.1"
   dependencies:
     "@puppeteer/browsers": 0.5.0
     chromium-bidi: 0.4.7
@@ -26329,7 +26329,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: fe88d3055649ecebacbbd367bbe96e4ba1aea08f9c13589393cdc701934b34724afcbeba668195a9b9c70fd5a1cf6db230ead66b48767275e60898602a9ff784
+  checksum: 06126e478b8b653e83b98b51cec35dceef8ab576abd1369afd45360c5bac3711443e58ebe3b852d40801a118e4cb7ddf5d3154518b5a9294ee93f7a42d9f22d4
   languageName: node
   linkType: hard
 
@@ -26351,17 +26351,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:19.11.0":
-  version: 19.11.0
-  resolution: "puppeteer@npm:19.11.0"
+"puppeteer@npm:19.11.1, puppeteer@npm:^19.11.1":
+  version: 19.11.1
+  resolution: "puppeteer@npm:19.11.1"
   dependencies:
     "@puppeteer/browsers": 0.5.0
     cosmiconfig: 8.1.3
     https-proxy-agent: 5.0.1
     progress: 2.0.3
     proxy-from-env: 1.1.0
-    puppeteer-core: 19.11.0
-  checksum: 3e23568483ad00f35c23cc581bf7db32ac7835f1d0a31bbd764327e0c1a4515ef99554d1916ab4c56e0bde0c881b33491a248bac6b5972a78a58ca938f4a5b25
+    puppeteer-core: 19.11.1
+  checksum: fd2b8ff106b21e5ea5b5552bc6f98e8b9b4c5b6fdb50d012268e21c1061d98f9f942cb606913376bc0cf29e80b81e0413ecbbfa8d642cb688fa96095d45c189e
   languageName: node
   linkType: hard
 
@@ -28634,6 +28634,7 @@ __metadata:
     next-router-mock: 0.8.0
     node-fetch: 3.3.1
     parse-multipart-data: 1.5.0
+    puppeteer: ^19.11.1
     rc-drawer: ^4.4.3
     react: ^18.2.0
     react-beautiful-dnd: ^13.1.1

@@ -114,7 +114,7 @@
 		"msw": "1.1.0",
 		"parse-multipart-data": "1.5.0",
 		"prettier-plugin-jsdoc": "0.4.2",
-		"puppeteer": "19.11.0",
+		"puppeteer": "19.11.1",
 		"size-limit": "8.2.4",
 		"typescript": "4.9.5",
 		"vite": "4.3.9",
