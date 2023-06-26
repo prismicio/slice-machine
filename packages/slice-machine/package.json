@@ -59,6 +59,7 @@
     "monocle-ts": "^2.3.13",
     "newtype-ts": "^0.3.5",
     "next": "^12.3.4",
+    "puppeteer": "^19.11.1",
     "rc-drawer": "^4.4.3",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
