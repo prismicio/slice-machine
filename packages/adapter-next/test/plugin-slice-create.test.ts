@@ -38,6 +38,36 @@ test("creates a Slice component, model, and global types file on Slice creation"
 	expect(await fs.readdir(ctx.project.root)).toContain("prismicio-types.d.ts");
 });
 
+test("supports configuring the location of the global types file", async (ctx) => {
+	ctx.project.config.adapter.options.generatedTypesFilePath =
+		"./foo/bar/baz.ts";
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
+	await pluginRunner.init();
+
+	await pluginRunner.callHook("slice:create", {
+		libraryID: "slices",
+		model,
+	});
+
+	expect(
+		await fs.readdir(
+			path.dirname(
+				path.join(
+					ctx.project.root,
+					ctx.project.config.adapter.options.generatedTypesFilePath,
+				),
+			),
+		),
+	).toContain(
+		path.basename(ctx.project.config.adapter.options.generatedTypesFilePath),
+	);
+});
+
 test("upserts a library index.js file", async (ctx) => {
 	await ctx.pluginRunner.callHook("slice:create", {
 		libraryID: "slices",
