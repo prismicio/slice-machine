@@ -11,7 +11,7 @@ import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { checkPathExists } from "../lib/checkPathExists";
-import { getJSOrTSXFileExtension } from "../lib/getJSOrTSXFileExtension";
+import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
 import type { PluginOptions } from "../types";
@@ -45,7 +45,8 @@ const createPrismicIOFile = async ({
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
-	const filename = isTypeScriptProject ? "prismicio.ts" : "prismicio.js";
+	const extension = await getJSFileExtension({ helpers, options });
+	const filename = `prismicio.${extension}`;
 	const filePath = hasSrcDirectory
 		? helpers.joinPathFromRoot("src", filename)
 		: helpers.joinPathFromRoot(filename);
@@ -244,7 +245,7 @@ const createSliceSimulatorPage = async ({
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
-	const extension = await getJSOrTSXFileExtension({ helpers, options });
+	const extension = await getJSFileExtension({ helpers, options, jsx: true });
 	const filePath = helpers.joinPathFromRoot(
 		...[
 			hasSrcDirectory ? "src" : undefined,
@@ -295,7 +296,7 @@ const createPreviewRoute = async ({
 		options,
 	});
 
-	const extension = isTypeScriptProject ? "ts" : "js";
+	const extension = await getJSFileExtension({ helpers, options });
 	const filePath = helpers.joinPathFromRoot(
 		...[
 			hasSrcDirectory ? "src" : undefined,
@@ -398,7 +399,7 @@ const createExitPreviewRoute = async ({
 		options,
 	});
 
-	const extension = isTypeScriptProject ? "ts" : "js";
+	const extension = await getJSFileExtension({ helpers, options });
 	const filePath = helpers.joinPathFromRoot(
 		...[
 			hasSrcDirectory ? "src" : undefined,
@@ -515,15 +516,11 @@ const createRevalidateRoute = async ({
 
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
-
+	const extension = await getJSFileExtension({ helpers, options });
 	const filePath = helpers.joinPathFromRoot(
 		...[
 			hasSrcDirectory ? "src" : undefined,
-			`app/api/revalidate/route.${isTypeScriptProject ? "ts" : "js"}`,
+			`app/api/revalidate/route.${extension}`,
 		].filter((segment): segment is NonNullable<typeof segment> =>
 			Boolean(segment),
 		),

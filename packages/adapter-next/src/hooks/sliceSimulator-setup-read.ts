@@ -7,7 +7,7 @@ import { source } from "common-tags";
 import { createRequire } from "node:module";
 import fetch, { Response } from "node-fetch";
 
-import { getJSOrTSXFileExtension } from "../lib/getJSOrTSXFileExtension";
+import { getJSFileExtension } from "../lib/getJSFileExtension";
 
 import type { PluginOptions } from "../types";
 
@@ -79,10 +79,8 @@ const createStep2 = async ({
 	helpers,
 	options,
 }: Args): Promise<SliceSimulatorSetupStep> => {
-	const fileName = `slice-simulator.${await getJSOrTSXFileExtension({
-		helpers,
-		options,
-	})}`;
+	const extension = await getJSFileExtension({ helpers, options, jsx: true });
+	const fileName = `slice-simulator.${extension}`;
 	const filePath = helpers.joinPathFromRoot("pages", fileName);
 
 	const fileContents = await helpers.format(

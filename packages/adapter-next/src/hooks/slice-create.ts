@@ -9,7 +9,7 @@ import * as path from "node:path";
 
 import { buildSliceDirectoryPath } from "../lib/buildSliceDirectoryPath";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
-import { getJSOrTSXFileExtension } from "../lib/getJSOrTSXFileExtension";
+import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { pascalCase } from "../lib/pascalCase";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { updateSliceModelFile } from "../lib/updateSliceModelFile";
@@ -24,10 +24,8 @@ type Args = {
 } & SliceMachineContext<PluginOptions>;
 
 const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
-	const filePath = path.join(
-		dir,
-		`index.${await getJSOrTSXFileExtension({ helpers, options })}`,
-	);
+	const extension = await getJSFileExtension({ helpers, options, jsx: true });
+	const filePath = path.join(dir, `index.${extension}`);
 	const model = data.model;
 	const pascalName = pascalCase(model.name);
 
