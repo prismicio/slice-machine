@@ -6,9 +6,9 @@ import { NON_EDITABLE_FILE_BANNER } from "../constants";
 
 import { PluginOptions } from "../types";
 
-import { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
 import { pascalCase } from "./pascalCase";
 import { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
+import { getJSFileExtension } from "./getJSFileExtension";
 
 type UpsertSliceLibraryIndexFileArgs = {
 	libraryID: string;
@@ -17,17 +17,16 @@ type UpsertSliceLibraryIndexFileArgs = {
 export const upsertSliceLibraryIndexFile = async (
 	args: UpsertSliceLibraryIndexFileArgs,
 ): Promise<void> => {
-	const isTypeScriptProject = await checkIsTypeScriptProject({
+	const extension = await getJSFileExtension({
 		helpers: args.helpers,
 		options: args.options,
 	});
-
 	const filePath = path.join(
 		buildSliceLibraryDirectoryPath({
 			libraryID: args.libraryID,
 			helpers: args.helpers,
 		}),
-		isTypeScriptProject ? "index.ts" : "index.js",
+		`index.${extension}`,
 	);
 
 	const slices = await args.actions.readAllSliceModelsForLibrary({
