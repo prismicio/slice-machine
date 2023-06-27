@@ -34,7 +34,6 @@ export const PageTypeSnippet = () => {
     <Dialog
       trigger={
         <Button
-          key="open-snippet"
           variant="secondary"
           startIcon={<Icon name="add" />}
         >

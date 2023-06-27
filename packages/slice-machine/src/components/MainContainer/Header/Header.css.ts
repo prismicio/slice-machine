@@ -14,11 +14,8 @@ export const root = style([
   },
 ]);
 
-export const spaceBetweenFlex = style([
-  sprinkles({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 8,
-  }),
-]);
+export const navigation = sprinkles({
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+});

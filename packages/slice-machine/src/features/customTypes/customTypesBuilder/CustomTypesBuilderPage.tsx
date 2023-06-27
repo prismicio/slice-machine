@@ -103,7 +103,6 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     }));
 
   if (currentCustomType === null) {
-    // TODO handle currentCustomType not found
     return null;
   }
 
@@ -121,7 +120,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
       loading={isSavingCustomType}
       disabled={!hasPendingModifications || isSavingCustomType}
     >
-      save
+      Save
     </Button>,
   ];
 
