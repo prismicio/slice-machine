@@ -464,12 +464,29 @@ const modifySliceMachineConfig = async ({
 	project.config.localSliceSimulatorURL ||=
 		"http://localhost:3000/slice-simulator";
 
-	// Nest default Slice Library in `src` if used.
+	// Nest the default Slice Library in the src directory if it exists and
+	// is empty.
 	if (
-		JSON.stringify(project.config.libraries) === JSON.stringify(["./slices"]) &&
-		hasSrcDirectory
+		hasSrcDirectory &&
+		JSON.stringify(project.config.libraries) === JSON.stringify(["./slices"])
 	) {
-		project.config.libraries = ["./src/slices"];
+		try {
+			const entries = await fs.readdir(helpers.joinPathFromRoot("slices"));
+
+			if (!entries.map((entry) => path.parse(entry).name).includes("index")) {
+				project.config.libraries = ["./src/slices"];
+			}
+		} catch (error) {
+			if (
+				error instanceof Error &&
+				"code" in error &&
+				error.code === "ENOENT"
+			) {
+				// The directory does not exist, which means we
+				// can safely nest the library.
+				project.config.libraries = ["./src/slices"];
+			}
+		}
 	}
 
 	const filePath = helpers.joinPathFromRoot("slicemachine.config.json");

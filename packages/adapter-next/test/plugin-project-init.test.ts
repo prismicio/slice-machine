@@ -95,6 +95,30 @@ describe("modify slicemachine.config.json", () => {
 		expect(contents.libraries).toStrictEqual(["./src/slices"]);
 	});
 
+	test("does not nest the default Slice Library under src directory if it is not empty", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await fs.mkdir(path.join(ctx.project.root, "src"), { recursive: true });
+
+		await fs.mkdir(path.join(ctx.project.root, "slices"), { recursive: true });
+		await fs.writeFile(path.join(ctx.project.root, "slices", "index.js"), "");
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = JSON.parse(
+			await fs.readFile(
+				path.join(ctx.project.root, "slicemachine.config.json"),
+				"utf8",
+			),
+		);
+
+		expect(contents.libraries).toStrictEqual(["./slices"]);
+	});
+
 	test("does not modify Slice Library if it is not the default", async (ctx) => {
 		const log = vi.fn();
 		const installDependencies = vi.fn();
