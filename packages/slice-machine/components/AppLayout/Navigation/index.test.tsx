@@ -17,7 +17,7 @@ const mockRouter = vi.mocked(Router);
 
 vi.mock("next/router", () => import("next-router-mock"));
 
-function renderApp(): RenderReturnType {
+function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
   return render(<SideNavigation />, {
     preloadedState: {
       availableCustomTypes: {},
@@ -55,7 +55,7 @@ function renderApp(): RenderReturnType {
         },
         changelog: {
           currentVersion: "",
-          updateAvailable: true,
+          updateAvailable: canUpdate,
           latestNonBreakingVersion: null,
           versions: [],
         },
@@ -69,7 +69,7 @@ function renderApp(): RenderReturnType {
 
 describe("Side Navigation", () => {
   test("Logo and repo area", async () => {
-    renderApp();
+    renderApp({ canUpdate: true });
     expect(await screen.findByText("foo")).toBeVisible();
     expect(await screen.findByText("foo.prismic.io")).toBeVisible();
     const link = await screen.findByTitle("Open prismic repository");
@@ -77,9 +77,15 @@ describe("Side Navigation", () => {
     expect(link).toHaveAttribute("target", "_blank");
   });
 
-  test("Update box", () => {
-    renderApp();
-    expect(screen.findByText("Updates Available"));
+  test("Update box when update is available", async () => {
+    renderApp({ canUpdate: true });
+    expect(await screen.findByText("Updates Available")).toBeVisible();
+  });
+
+  test("Update box when there are no updates", async () => {
+    renderApp({ canUpdate: false });
+    const element = await act(() => screen.queryByText("Updates Available"));
+    expect(element).toBeNull();
   });
 
   test.each([
@@ -95,7 +101,7 @@ describe("Side Navigation", () => {
   ])(
     "internal navigation links: when clicking title %s it should navigate to %s",
     async (title, path) => {
-      const { user } = renderApp();
+      const { user } = renderApp({ canUpdate: true });
 
       await act(() => mockRouter.push("/"));
 
@@ -110,7 +116,7 @@ describe("Side Navigation", () => {
   );
 
   test("Video Item", async () => {
-    const { user } = renderApp();
+    const { user } = renderApp({ canUpdate: true });
     const link = await screen.findByText("Tutorial");
     expect(link.parentElement).toHaveAttribute(
       "href",
