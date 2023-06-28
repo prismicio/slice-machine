@@ -6856,7 +6856,6 @@ __metadata:
     react: 18.2.0
     rollup-plugin-preserve-directives: 0.1.1
     size-limit: 8.2.4
-    ts-morph: 17.0.1
     typescript: 4.9.5
     vite: 4.3.9
     vite-plugin-sdk: 0.1.1
