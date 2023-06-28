@@ -1,6 +1,7 @@
 import { colors, sprinkles, vars, selectors, mode } from "@prismicio/editor-ui";
 import { style } from "@vanilla-extract/css";
 
+// TODO: watch this PR https://github.com/vanilla-extract-css/vanilla-extract/pull/1105
 const block = style([
   sprinkles({
     boxSizing: "border-box",
