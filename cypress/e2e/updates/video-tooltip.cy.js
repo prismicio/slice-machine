@@ -4,10 +4,7 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
-      "have.class",
-      "show"
-    );
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("have.class", "show");
 
     cy.get("[data-testid=video-tooltip-close-button]").click();
 
@@ -24,9 +21,7 @@ describe("video tooltip", () => {
   it("should no display when hasSeenTutorialsToolTip is truthy", () => {
     cy.setSliceMachineUserContext({});
 
-    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
-      "not.exist"
-    );
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("not.exist");
   });
 
   it("should close the tooltip when the user clicks the videos button", () => {
@@ -34,15 +29,16 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
-      "have.class",
-      "show"
-    );
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("have.class", "show");
 
     cy.contains("Tutorial")
       .should("have.attr", "target", "_blank")
-      .should("have.attr", "href", "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH")
-      .click()
+      .should(
+        "have.attr",
+        "href",
+        "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH"
+      )
+      .click();
 
     cy.getSliceMachineUserContext().should((data) => {
       expect(data.hasSeenTutorialsToolTip).equal(
@@ -57,10 +53,7 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
-      "have.class",
-      "show"
-    );
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("have.class", "show");
 
     cy.contains("Tutorial")
       .trigger("mouseenter")

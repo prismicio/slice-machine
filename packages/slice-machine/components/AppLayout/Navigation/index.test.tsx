@@ -13,7 +13,7 @@ import { act } from "react-dom/test-utils";
 
 import Router from "next/router";
 
-const mockRouter = vi.mocked(Router); // This is a bid hacky but works :) maybe add it to the ctx object?
+const mockRouter = vi.mocked(Router);
 
 vi.mock("next/router", () => import("next-router-mock"));
 
