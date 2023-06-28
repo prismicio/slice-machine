@@ -129,9 +129,9 @@ const SimulatorButton: React.FC<{
 
   const { setSeenSimulatorToolTip } = useSliceMachineActions();
 
-  const { hasSeenSimulatorTooTip } = useSelector(
+  const { hasSeenTutorialsToolTip } = useSelector(
     (store: SliceMachineStoreType) => ({
-      hasSeenSimulatorTooTip: userHasSeenSimulatorToolTip(store),
+      hasSeenTutorialsToolTip: userHasSeenSimulatorToolTip(store),
     })
   );
 
@@ -140,12 +140,16 @@ const SimulatorButton: React.FC<{
       if (ref.current) {
         return;
       }
-      if (node && isSimulatorAvailableForFramework && !hasSeenSimulatorTooTip) {
+      if (
+        node &&
+        isSimulatorAvailableForFramework &&
+        !hasSeenTutorialsToolTip
+      ) {
         setTimeout(() => ReactTooltip.show(node), 5000);
       }
       ref.current = node;
     },
-    [isSimulatorAvailableForFramework, hasSeenSimulatorTooTip]
+    [isSimulatorAvailableForFramework, hasSeenTutorialsToolTip]
   );
 
   const onCloseToolTip = () => {
@@ -188,7 +192,7 @@ const SimulatorButton: React.FC<{
         />
       </span>
       {isSimulatorAvailableForFramework ? (
-        !hasSeenSimulatorTooTip ? (
+        !hasSeenTutorialsToolTip ? (
           <SimulatorOnboardingTooltip onCloseToolTip={onCloseToolTip} />
         ) : isTouched ? (
           <NeedToSaveTooltip />

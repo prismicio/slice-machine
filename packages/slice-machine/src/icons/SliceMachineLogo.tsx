@@ -1,22 +1,7 @@
-import React from "react";
+import type { FC, SVGProps } from "react";
 
-interface SliceMachineLogoProps {
-  fill?: string;
-  width?: string;
-  height?: string;
-}
-const SliceMachineLogo: React.FC<SliceMachineLogoProps> = ({
-  fill,
-  width,
-  height,
-}) => (
-  <svg
-    width={width}
-    height={height}
-    viewBox="0 0 72 72"
-    fill={fill}
-    xmlns="http://www.w3.org/2000/svg"
-  >
+const SliceMachineLogo: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

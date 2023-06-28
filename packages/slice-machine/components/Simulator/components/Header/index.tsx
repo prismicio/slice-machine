@@ -5,7 +5,7 @@ import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopove
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { Button } from "@components/Button";
-import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
+import SliceMachineLogo from "@src/icons/SliceMachineLogo";
 import { useSelector } from "react-redux";
 import { selectSavingMock } from "@src/modules/simulator";
 
