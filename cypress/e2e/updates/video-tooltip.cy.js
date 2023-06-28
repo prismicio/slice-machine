@@ -4,7 +4,7 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    cy.get("[data-testid=video-tooltip]", { timeout: 6_000 }).should(
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
       "have.class",
       "show"
     );
@@ -24,7 +24,7 @@ describe("video tooltip", () => {
   it("should no display when hasSeenTutorialsToolTip is truthy", () => {
     cy.setSliceMachineUserContext({});
 
-    cy.get("[data-testid=video-tooltip]", { timeout: 6_000 }).should(
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
       "not.exist"
     );
   });
@@ -34,16 +34,15 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    cy.get("[data-testid=video-tooltip]", { timeout: 6_000 }).should(
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
       "have.class",
       "show"
     );
 
     cy.contains("Tutorial")
       .should("have.attr", "target", "_blank")
-      .invoke("attr", "target", "")
-      .invoke("attr", "href", "#")
-      .click();
+      .should("have.attr", "href", "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH")
+      .click()
 
     cy.getSliceMachineUserContext().should((data) => {
       expect(data.hasSeenTutorialsToolTip).equal(
@@ -58,7 +57,7 @@ describe("video tooltip", () => {
 
     cy.visit("/");
 
-    cy.get("[data-testid=video-tooltip]", { timeout: 6_000 }).should(
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should(
       "have.class",
       "show"
     );

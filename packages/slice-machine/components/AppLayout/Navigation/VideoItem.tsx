@@ -35,8 +35,14 @@ const VideoItem: FC<VideoItemProps> = ({
     [hasSeenTutorialsToolTip]
   );
   return (
-    <div ref={setRef}>
-      <SideNavListItem data-for={id} data-tip="" data-testid="video-toolbar">
+    <div
+      data-hello
+      ref={setRef}
+      data-for={id}
+      data-tip=""
+      data-testid="video-toolbar"
+    >
+      <SideNavListItem>
         <SideNavLink
           title="Tutorial"
           href={VIDEO_YOUTUBE_PLAYLIST_LINK}
@@ -67,7 +73,6 @@ const VideoItem: FC<VideoItemProps> = ({
           role="tooltip"
           getContent={() => (
             <Flex
-              data-testid="video-tooltip"
               sx={{
                 maxWidth: "268px",
                 flexDirection: "column",
