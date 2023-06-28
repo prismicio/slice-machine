@@ -135,9 +135,14 @@ export const list = style([
   },
 ]);
 
-export const listBottom = style({
-  marginTop: "auto",
-});
+export const listBottom = style([
+  sprinkles({
+    paddingTop: 48,
+  }),
+  {
+    marginTop: "auto",
+  },
+]);
 
 export const listItem = style([
   blockWithDisplayRevert,
