@@ -55,7 +55,7 @@ function renderApp(): RenderReturnType {
         },
         changelog: {
           currentVersion: "",
-          updateAvailable: false,
+          updateAvailable: true,
           latestNonBreakingVersion: null,
           versions: [],
         },
@@ -75,6 +75,11 @@ describe("Side Navigation", () => {
     const link = await screen.findByTitle("Open prismic repository");
     expect(link).toHaveAttribute("href", "https://foo.prismic.io");
     expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  test("Update box", () => {
+    renderApp();
+    expect(screen.findByText("Updates Available"));
   });
 
   test.each([
