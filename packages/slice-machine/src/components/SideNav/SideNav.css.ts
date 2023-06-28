@@ -23,7 +23,8 @@ const interactiveElement = style([
     transitionTimingFunction: "easeOut",
   }),
   {
-    transitionProperty: "background-color, border-color, boxShadow",
+    transitionProperty:
+      "background-color, border-color, boxShadow, fill, color",
   },
 ]);
 
