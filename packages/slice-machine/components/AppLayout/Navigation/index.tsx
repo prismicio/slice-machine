@@ -131,7 +131,7 @@ const Navigation: FC = () => {
         </SideNavListItem>
       </SideNavList>
 
-      {(changelog.updateAvailable || true) && (
+      {changelog.updateAvailable && (
         <UpdateInfo
           href="/changelog"
           onClick={handleChangeLogNavigationFromUpdateBox}
