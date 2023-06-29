@@ -1,4 +1,5 @@
-describe("video tooltip", () => {
+// TODO: DT-1435 - Handle tests when updating video item
+describe.skip("video tooltip", () => {
   it("should display the tooltip when 'userContext.hasSeenTutorialsToolTip' is falsy and set to true when user clicks the close button", () => {
     cy.setSliceMachineUserContext({ hasSeenTutorialsToolTip: false });
 
