@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box } from "theme-ui";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import ModalFormCard from "../../ModalFormCard";
@@ -6,15 +7,15 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FormikErrors } from "formik";
 import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
+
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { useEffect, useState } from "react";
+
+import { renameCustomType } from "@src/features/customTypes/actions/renameCustomType";
 
 interface RenameCustomTypeModalProps {
-  customType?: CustomType;
+  customType: CustomType;
   format: CustomTypeFormat;
   onClose: () => void;
 }
@@ -26,30 +27,24 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
 }) => {
   const customTypeName = customType?.label ?? "";
   const customTypeId = customType?.id ?? "";
-  const { renameCustomType } = useSliceMachineActions();
+  const { renameCustomTypeSuccess } = useSliceMachineActions();
 
-  const [didSubmit, setDidSubmit] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
 
-  const handleOnSubmit = (values: { customTypeName: string }) => {
-    renameCustomType(customTypeId, format, values.customTypeName);
-    setDidSubmit(true);
+  const handleOnSubmit = async (values: { customTypeName: string }) => {
+    setIsRenaming(true);
+    await renameCustomType({
+      model: customType,
+      newName: values.customTypeName,
+      onSuccess: renameCustomTypeSuccess,
+    });
+    setIsRenaming(false);
+    onClose();
   };
 
-  const { customTypeLabels, isRenamingCustomType } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      customTypeLabels: selectAllCustomTypeLabels(store),
-      isRenamingCustomType: isLoading(
-        store,
-        LoadingKeysEnum.RENAME_CUSTOM_TYPE
-      ),
-    })
-  );
-
-  useEffect(() => {
-    if (!isRenamingCustomType && didSubmit) {
-      onClose();
-    }
-  }, [didSubmit, isRenamingCustomType, onClose]);
+  const { customTypeLabels } = useSelector((store: SliceMachineStoreType) => ({
+    customTypeLabels: selectAllCustomTypeLabels(store),
+  }));
 
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
@@ -61,11 +56,11 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
       formId={`rename-custom-type-modal-${customTypeId}`}
       close={onClose}
       buttonLabel="Rename"
-      onSubmit={handleOnSubmit}
+      onSubmit={(values) => void handleOnSubmit(values)}
       initialValues={{
         customTypeName: customTypeName,
       }}
-      isLoading={isRenamingCustomType}
+      isLoading={isRenaming}
       content={{
         title: `Rename a ${customTypesMessages.name({
           start: false,

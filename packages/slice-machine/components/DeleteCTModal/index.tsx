@@ -1,36 +1,38 @@
 import SliceMachineModal from "@components/SliceMachineModal";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
+import { deleteCustomType } from "@src/features/customTypes/actions/deleteCustomType";
+import { useState } from "react";
+
 type DeleteCTModalProps = {
-  customType?: CustomType;
+  customType: CustomType;
   format: CustomTypeFormat;
-  onClose: () => void;
+  onClose: (didDelete?: boolean) => void;
 };
 
 export const DeleteCustomTypeModal: React.FunctionComponent<
   DeleteCTModalProps
 > = ({ customType, format, onClose }) => {
-  const { isDeletingCustomType } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isDeletingCustomType: isLoading(
-        store,
-        LoadingKeysEnum.DELETE_CUSTOM_TYPE
-      ),
-    })
-  );
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
-  const { deleteCustomType } = useSliceMachineActions();
+
+  const [isDeleting, setIsdeleting] = useState(false);
+
+  const { deleteCustomTypeSuccess } = useSliceMachineActions();
+
+  const onConfirm = async () => {
+    setIsdeleting(true);
+    await deleteCustomType(customType, () =>
+      deleteCustomTypeSuccess(customType.id)
+    );
+    onClose(true);
+  };
 
   const { theme } = useThemeUI();
 
@@ -43,7 +45,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
           maxWidth: 612,
         },
       }}
-      onRequestClose={onClose}
+      onRequestClose={() => onClose()}
     >
       <Card
         bodySx={{
@@ -107,18 +109,12 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 borderRadius: 6,
               }}
             />
-            {customType && (
+            {customType !== undefined && (
               <Button
                 label="Delete"
                 variant="danger"
-                isLoading={isDeletingCustomType}
-                onClick={() =>
-                  deleteCustomType(
-                    customType.id,
-                    format,
-                    customType.label ?? ""
-                  )
-                }
+                isLoading={isDeleting}
+                onClick={() => void onConfirm()}
                 sx={{ minHeight: 39, minWidth: 78 }}
               />
             )}

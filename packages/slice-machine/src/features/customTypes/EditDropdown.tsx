@@ -14,7 +14,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 
-import { convertCustomToPageType } from "./convertCustomToPageType";
+import { convertCustomToPageType } from "./actions/convertCustomToPageType";
 
 import { CUSTOM_TYPES_CONFIG } from "./customTypesConfig";
 
@@ -31,10 +31,12 @@ export const EditDropdown: FC<EditDropdownProps> = ({ format, customType }) => {
   const router = useRouter();
   const { saveCustomTypeSuccess } = useSliceMachineActions();
 
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
   const [isCustomTypeBeingConverted, setCustomTypeBeingConverted] =
     useState(false);
 
-  const convertCustomType = async (customType: CustomType) => {
+  const convertCustomType = async () => {
     setCustomTypeBeingConverted(true);
     await convertCustomToPageType(customType, saveCustomTypeSuccess);
     setCustomTypeBeingConverted(false);
@@ -42,8 +44,17 @@ export const EditDropdown: FC<EditDropdownProps> = ({ format, customType }) => {
     void router.replace(url);
   };
 
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isRenaming, setIsRenaming] = useState(false);
+  const onCloseDeleteModal = (didDelete: boolean | undefined) => {
+    if (didDelete !== undefined && didDelete) {
+      if (customType.format !== undefined) {
+        const url = CUSTOM_TYPES_CONFIG[customType.format].tablePagePathname;
+        void router.replace(url);
+        setTimeout(() => {
+          setIsDeleting(false);
+        }, 800);
+      } // else fallbacks to default NOT_FOUND behaviour
+    }
+  };
 
   return (
     <>
@@ -68,9 +79,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({ format, customType }) => {
           {format === "custom" && (
             <DropdownMenuItem
               startIcon={<Icon name="driveFileMove" />}
-              onSelect={() => {
-                void convertCustomType(customType);
-              }}
+              onSelect={() => void convertCustomType()}
             >
               <Text>Convert to page type</Text>
             </DropdownMenuItem>
@@ -89,7 +98,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({ format, customType }) => {
         <DeleteCustomTypeModal
           customType={customType}
           format={format}
-          onClose={() => setIsDeleting(false)}
+          onClose={onCloseDeleteModal}
         />
       ) : null}
       {isRenaming ? (

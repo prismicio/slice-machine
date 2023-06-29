@@ -169,18 +169,6 @@ const useSliceMachineActions = () => {
         newCustomTypeName,
       })
     );
-  const deleteCustomType = (
-    customTypeId: string,
-    format: CustomTypeFormat,
-    customTypeName: string
-  ) =>
-    dispatch(
-      deleteCustomTypeCreator.request({
-        customTypeId,
-        format,
-        customTypeName,
-      })
-    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -194,6 +182,20 @@ const useSliceMachineActions = () => {
     dispatch(
       saveCustomTypeCreator.success({
         customType: CustomTypes.toSM(customType),
+      })
+    );
+
+  const deleteCustomTypeSuccess = (id: string) =>
+    dispatch(
+      deleteCustomTypeCreator.success({
+        customTypeId: id,
+      })
+    );
+
+  const renameCustomTypeSuccess = (customType: CustomType) =>
+    dispatch(
+      renameCustomTypeCreator.success({
+        renamedCustomType: CustomTypes.toSM(customType),
       })
     );
   const createCustomTypeTab = (tabId: string) =>
@@ -485,7 +487,8 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     createCustomType,
     renameCustomType,
-    deleteCustomType,
+    deleteCustomTypeSuccess,
+    renameCustomTypeSuccess,
     initCustomTypeStore,
     cleanupCustomTypeStore,
     saveCustomType,
