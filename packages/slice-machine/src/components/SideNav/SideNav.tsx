@@ -1,4 +1,5 @@
 import {
+  HTMLAttributes,
   type FC,
   type HTMLProps,
   type LiHTMLAttributes,
@@ -110,30 +111,37 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
         props.disabled !== true && props.onClick && props.onClick(event);
       }}
       data-active={active}
-      data-right-element={RightElement !== undefined}
     >
       <Icon className={styles.linkIcon} />
-      <span>{title}</span>
-      {RightElement}
+      <div className={styles.linkContent}>
+        <span className={styles.linkText}>{title}</span>
+        {RightElement}
+      </div>
     </a>
   );
 };
 
-type ChangesIndicatorProps = {
-  numberOfChanges: number;
-};
+type RightElementProps = PropsWithChildren<
+  {
+    type?: "pill" | "text";
+  } & HTMLAttributes<HTMLSpanElement>
+>;
 
-export const ChangesIndicator: FC<ChangesIndicatorProps> = ({
-  numberOfChanges,
+export const RightElement: FC<RightElementProps> = ({
+  type = "text",
+  children,
+  ...props
 }) => {
-  const formattedNumber = numberOfChanges > 9 ? "9+" : numberOfChanges;
-
   return (
-    <div className={styles.changesIndicator}>
-      <span className={styles.changesIndicatorText} data-cy="changes-number">
-        {formattedNumber}
-      </span>
-    </div>
+    <span
+      {...props}
+      className={clsx({
+        [styles.rightElementPill]: type === "pill",
+        [styles.rightElementText]: type === "text",
+      })}
+    >
+      {children}
+    </span>
   );
 };
 

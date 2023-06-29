@@ -16,7 +16,7 @@ import {
   SideNavLogo,
   SideNavList,
   UpdateInfo,
-  ChangesIndicator,
+  RightElement,
   SideNav,
   SideNavRepository,
 } from "@src/components/SideNav/SideNav";
@@ -47,6 +47,7 @@ const Navigation: FC = () => {
   const latestVersion =
     changelog.versions.length > 0 ? changelog.versions[0] : null;
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+  const formattedNumberOfChanges = numberOfChanges > 9 ? "+9" : numberOfChanges;
   const displayNumberOfChanges = numberOfChanges !== 0 && isOnline;
   const { setUpdatesViewed, setSeenTutorialsToolTip } =
     useSliceMachineActions();
@@ -112,7 +113,9 @@ const Navigation: FC = () => {
             Icon={RadarIcon}
             RightElement={
               displayNumberOfChanges && (
-                <ChangesIndicator numberOfChanges={numberOfChanges} />
+                <RightElement type="pill" data-cy="changes-number">
+                  {formattedNumberOfChanges}
+                </RightElement>
               )
             }
           />
@@ -153,6 +156,9 @@ const Navigation: FC = () => {
             Icon={(props) => <LightningIcon {...props} />}
             active={currentPath.startsWith("/changelog")}
             onClick={handleNavigation}
+            RightElement={
+              <RightElement>v{changelog.currentVersion}</RightElement>
+            }
           />
         </SideNavListItem>
       </SideNavList>

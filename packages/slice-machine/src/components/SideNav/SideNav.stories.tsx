@@ -10,10 +10,10 @@ import {
   SideNavListItem,
   SideNavLink,
   SideNavSeparator,
-  ChangesIndicator,
   SideNavListTitle,
   UpdateInfo,
   SideNavRepository,
+  RightElement,
 } from "./SideNav";
 
 type Story = StoryObj<typeof meta>;
@@ -62,7 +62,7 @@ export const Default = {
               title="Changes active"
               href="/changes-active"
               Icon={RadarIcon}
-              RightElement={<ChangesIndicator numberOfChanges={4} />}
+              RightElement={<RightElement type="pill">4</RightElement>}
               active
             />
           </SideNavListItem>
@@ -74,7 +74,30 @@ export const Default = {
               title="Changes not active"
               href="/changes-not-active"
               Icon={RadarIcon}
-              RightElement={<ChangesIndicator numberOfChanges={4} />}
+              RightElement={<RightElement type="pill">4</RightElement>}
+            />
+          </SideNavListItem>
+
+          <SideNavSeparator />
+
+          <SideNavListItem>
+            <SideNavLink
+              title="Changes active"
+              href="/changes-active"
+              Icon={RadarIcon}
+              RightElement={<RightElement type="pill">+9</RightElement>}
+              active
+            />
+          </SideNavListItem>
+
+          <SideNavSeparator />
+
+          <SideNavListItem>
+            <SideNavLink
+              title="Changes not active"
+              href="/changes-not-active"
+              Icon={RadarIcon}
+              RightElement={<RightElement type="pill">+9</RightElement>}
             />
           </SideNavListItem>
 
@@ -98,6 +121,7 @@ export const Default = {
               href="/changelog"
               Icon={LightningIcon}
               onClick={() => void 0}
+              RightElement={<RightElement>v1.0.0</RightElement>}
             />
           </SideNavListItem>
         </SideNavList>

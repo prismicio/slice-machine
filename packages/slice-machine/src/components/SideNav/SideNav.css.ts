@@ -198,6 +198,7 @@ export const link = style([
     fontSize: "14px",
     height: "48px",
     width: "256px",
+    lineHeight: "24px",
     ":focus": {
       boxShadow: vars.boxShadow.focus,
     },
@@ -227,10 +228,6 @@ export const link = style([
       "&[data-active=true]:hover": {
         backgroundColor: vars.color.greyLight1,
       },
-      // Link with right element
-      "&[data-right-element=true]": {
-        paddingRight: 0,
-      },
     },
   },
 ]);
@@ -251,29 +248,37 @@ export const linkIcon = style([
   },
 ]);
 
-export const changesIndicator = style([
+export const linkContent = style([
   block,
   sprinkles({
-    width: 44,
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    width: "100%",
   }),
+]);
+
+export const linkText = style([
+  blockWithDisplayRevert,
   {
-    marginLeft: "auto",
+    alignSelf: "baseline",
   },
 ]);
 
-export const changesIndicatorText = style([
-  blockWithDisplayRevert,
+export const rightElementPill = style([
+  block,
   sprinkles({
+    alignItems: "center",
     borderStyle: "solid",
-    borderWidth: 2,
+    borderWidth: 1,
+    display: "flex",
     height: 20,
-    maxWidth: 32,
+    justifyContent: "center",
+    minWidth: 20,
     paddingBlock: 0,
     paddingInline: 4,
   }),
   {
+    alignSelf: "center",
     borderRadius: "32px",
     fontSize: "12px",
     fontWeight: 500,
@@ -281,8 +286,8 @@ export const changesIndicatorText = style([
     selectors: {
       // Not Active
       [`${link}:not([data-active=true]) &`]: {
-        backgroundColor: vars.color.purple10,
-        borderColor: vars.color.purple10,
+        backgroundColor: vars.color.purple9,
+        borderColor: vars.color.purple8,
         color: vars.color.purple12,
       },
       // Active
@@ -291,6 +296,22 @@ export const changesIndicatorText = style([
         color: vars.color.greyLight11,
       },
     },
+  },
+]);
+
+export const rightElementText = style([
+  blockWithDisplayRevert,
+  sprinkles({
+    color: colors.grey11,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  }),
+  {
+    alignSelf: "baseline",
+    fontSize: "12px",
+    lineHeight: "16px",
+    maxWidth: "68px",
   },
 ]);
 
