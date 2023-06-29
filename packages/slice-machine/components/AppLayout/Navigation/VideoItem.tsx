@@ -1,72 +1,78 @@
 import { type FC, useCallback, useRef, RefCallback } from "react";
 import ReactTooltip from "react-tooltip";
-import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
-import { MdPlayCircleFilled } from "react-icons/md";
 import { Close, Flex, Paragraph } from "theme-ui";
-import style from "./VideoItem.module.css";
-import { telemetry } from "@src/apiClient";
+
 import { VIDEO_YOUTUBE_PLAYLIST_LINK } from "@lib/consts";
+import { telemetry } from "@src/apiClient";
+import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
+import { PlayCircleIcon } from "@src/icons/PlayCircle";
+
+import style from "./VideoItem.module.css";
 
 type VideoItemProps = {
-  hasSeenTutorialsTooTip: boolean;
+  hasSeenTutorialsToolTip: boolean;
   onClose: () => void;
 };
 
-const VideoItem: FC<VideoItemProps> = ({ hasSeenTutorialsTooTip, onClose }) => {
+const VideoItem: FC<VideoItemProps> = ({
+  hasSeenTutorialsToolTip,
+  onClose,
+}) => {
   const id = "video-tool-tip";
   const videoUrl = VIDEO_YOUTUBE_PLAYLIST_LINK;
-
-  const handleClose = () => {
-    void telemetry.track({ event: "open-video-tutorials", video: videoUrl });
-    onClose();
-  };
-
   const ref = useRef<HTMLDivElement | null>(null);
+
   const setRef: RefCallback<HTMLDivElement> = useCallback(
     (node) => {
       if (ref.current) {
         return;
       }
-      if (node && !hasSeenTutorialsTooTip) {
+      if (node && !hasSeenTutorialsToolTip) {
         setTimeout(() => ReactTooltip.show(node), 5000);
       }
       ref.current = node;
     },
-    [hasSeenTutorialsTooTip]
+    [hasSeenTutorialsToolTip]
   );
-
   return (
-    <>
-      <Item
-        ref={setRef}
-        data-for={id}
-        data-tip=""
-        data-testid="video-toolbar"
-        link={{
-          title: "Video tutorials",
-          Icon: MdPlayCircleFilled,
-          href: videoUrl,
-          target: "_blank",
-          match: () => false,
-        }}
-        theme={"emphasis"}
-        onClick={handleClose}
-      />
-      {!hasSeenTutorialsTooTip && (
+    <div
+      data-hello
+      ref={setRef}
+      data-for={id}
+      data-tip=""
+      data-testid="video-toolbar"
+    >
+      <SideNavListItem>
+        <SideNavLink
+          title="Tutorial"
+          href={VIDEO_YOUTUBE_PLAYLIST_LINK}
+          target="_blank"
+          Icon={(props) => <PlayCircleIcon {...props} />}
+          onClick={() => {
+            void telemetry.track({
+              event: "open-video-tutorials",
+              video: videoUrl,
+            });
+            window.open(VIDEO_YOUTUBE_PLAYLIST_LINK, "_blank");
+            onClose();
+          }}
+        />
+      </SideNavListItem>
+
+      {!hasSeenTutorialsToolTip && (
         <ReactTooltip
           id={id}
           effect="solid"
-          backgroundColor="#5B3DF5"
+          backgroundColor="#5741c3"
           clickable
           className={style.videoTutorialsContainer}
-          afterHide={handleClose}
+          afterHide={onClose}
           offset={{
             left: 80,
           }}
           role="tooltip"
           getContent={() => (
             <Flex
-              data-testid="video-tooltip"
               sx={{
                 maxWidth: "268px",
                 flexDirection: "column",
@@ -85,7 +91,7 @@ const VideoItem: FC<VideoItemProps> = ({ hasSeenTutorialsTooTip, onClose }) => {
                 </Paragraph>
                 <Close
                   data-testid="video-tooltip-close-button"
-                  onClick={handleClose}
+                  onClick={onClose}
                   sx={{
                     width: "26px",
                   }}
@@ -99,7 +105,7 @@ const VideoItem: FC<VideoItemProps> = ({ hasSeenTutorialsTooTip, onClose }) => {
           )}
         />
       )}
-    </>
+    </div>
   );
 };
 

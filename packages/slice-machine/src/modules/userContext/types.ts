@@ -11,7 +11,7 @@ export type UserContextStoreType = {
     latest: string | null;
     latestNonBreaking: string | null;
   };
-  hasSeenTutorialsTooTip: boolean;
+  hasSeenTutorialsToolTip: boolean;
   hasSeenSimulatorToolTip: boolean;
   authStatus: AuthStatus;
   lastSyncChange: number | null;

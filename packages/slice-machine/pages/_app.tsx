@@ -4,11 +4,7 @@ import { Provider } from "react-redux";
 import configureStore from "../src/redux/store";
 import App, { AppContext } from "next/app";
 import { PersistGate } from "redux-persist/integration/react";
-import {
-  ThemeProvider as ThemeUIThemeProvider,
-  BaseStyles,
-  useThemeUI,
-} from "theme-ui";
+import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import theme from "../src/theme";
 
@@ -116,25 +112,23 @@ function MyApp({
         <title>Slice Machine</title>
       </Head>
       <ThemeUIThemeProvider theme={theme}>
-        <BaseStyles>
-          <RemoveDarkMode>
-            <ThemeProvider mode="light">
-              {!smStore || !serverState ? (
-                <LoadingPage />
-              ) : (
-                <Provider store={smStore.store}>
-                  <ConnectedRouter Router={Router}>
-                    <PersistGate loading={null} persistor={smStore.persistor}>
-                      <ComponentLayout>
-                        <Component {...pageProps} />
-                      </ComponentLayout>
-                    </PersistGate>
-                  </ConnectedRouter>
-                </Provider>
-              )}
-            </ThemeProvider>
-          </RemoveDarkMode>
-        </BaseStyles>
+        <RemoveDarkMode>
+          <ThemeProvider mode="light">
+            {!smStore || !serverState ? (
+              <LoadingPage />
+            ) : (
+              <Provider store={smStore.store}>
+                <ConnectedRouter Router={Router}>
+                  <PersistGate loading={null} persistor={smStore.persistor}>
+                    <ComponentLayout>
+                      <Component {...pageProps} />
+                    </ComponentLayout>
+                  </PersistGate>
+                </ConnectedRouter>
+              </Provider>
+            )}
+          </ThemeProvider>
+        </RemoveDarkMode>
       </ThemeUIThemeProvider>
     </>
   );
