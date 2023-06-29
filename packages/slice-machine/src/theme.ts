@@ -879,6 +879,14 @@ const AppTheme = (): Theme =>
         lineHeight: "body",
         fontWeight: "body",
       },
+      h1: {
+        variant: "textStyles.display",
+        fontSize: 1,
+      },
+      h2: {
+        variant: "textStyles.heading",
+        fontSize: 5,
+      },
       h3: {
         variant: "textStyles.heading",
         fontSize: 4,
