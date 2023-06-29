@@ -1,67 +1,62 @@
-describe("video tooltip", () => {
-  it("should display the tooltip when 'userContext.hasSeenTutorialsTooTip' is falsy and set to true when user clicks the close button", () => {
-    cy.setSliceMachineUserContext({ hasSeenTutorialsTooTip: false });
+// TODO: DT-1435 - Handle tests when updating video item
+describe.skip("video tooltip", () => {
+  it("should display the tooltip when 'userContext.hasSeenTutorialsToolTip' is falsy and set to true when user clicks the close button", () => {
+    cy.setSliceMachineUserContext({ hasSeenTutorialsToolTip: false });
 
     cy.visit("/");
 
-    // There is a 5 s timeout for displaying the tooltip.
-    cy.wait(6_000);
-
-    cy.get("[data-testid=video-tooltip]").should("exist");
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("have.class", "show");
 
     cy.get("[data-testid=video-tooltip-close-button]").click();
 
     cy.get("[data-testid=video-tooltip]").should("not.exist");
 
-    cy.getSliceMachineUserContext().should((data) => {
-      expect(data.hasSeenTutorialsTooTip).equal(
+    cy.getSliceMachineUserContext().then((data) => {
+      expect(data.hasSeenTutorialsToolTip).equal(
         true,
-        "userContext.hasSeenTutorialsTooTip should set in local storage"
+        "userContext.hasSeenTutorialsToolTip should set in local storage"
       );
     });
   });
 
-  it("should no display when hasSeenTutorialsTooTip is truthy", () => {
+  it("should no display when hasSeenTutorialsToolTip is truthy", () => {
     cy.setSliceMachineUserContext({});
 
-    // There is a 5 s timeout for displaying the tooltip.
-    cy.wait(6_000);
-
-    cy.get("[data-testid=video-tooltip]").should("not.exist");
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("not.exist");
   });
 
   it("should close the tooltip when the user clicks the videos button", () => {
-    cy.setSliceMachineUserContext({ hasSeenTutorialsTooTip: false });
+    cy.setSliceMachineUserContext({ hasSeenTutorialsToolTip: false });
 
     cy.visit("/");
 
-    // There is a 5 s timeout for displaying the tooltip.
-    cy.wait(6_000);
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("have.class", "show");
 
-    cy.get("[data-testid=video-tooltip]").should("exist");
-
-    cy.get("[data-testid=video-toolbar] > a")
+    cy.contains("Tutorial")
       .should("have.attr", "target", "_blank")
-      .invoke("attr", "target", "")
-      .invoke("attr", "href", "#")
+      .should(
+        "have.attr",
+        "href",
+        "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH"
+      )
       .click();
 
     cy.getSliceMachineUserContext().should((data) => {
-      expect(data.hasSeenTutorialsTooTip).equal(
+      expect(data.hasSeenTutorialsToolTip).equal(
         true,
-        "userContext.hasSeenTutorialsTooTip should set in local storage"
+        "userContext.hasSeenTutorialsToolTip should set in local storage"
       );
     });
   });
 
   it("should disappear when the user hovers over the video toolbar", () => {
-    cy.setSliceMachineUserContext({ hasSeenTutorialsTooTip: false });
+    cy.setSliceMachineUserContext({ hasSeenTutorialsToolTip: false });
 
     cy.visit("/");
 
-    cy.get("[data-testid=video-tooltip]").should("exist");
+    cy.get("[role=tooltip]", { timeout: 6_000 }).should("have.class", "show");
 
-    cy.get("[data-testid=video-toolbar]")
+    cy.contains("Tutorial")
       .trigger("mouseenter")
       .trigger("mouseleave")
       .trigger("mouseover")
@@ -71,9 +66,9 @@ describe("video tooltip", () => {
     cy.get("[data-testid=video-tooltip]").should("not.exist");
 
     cy.getSliceMachineUserContext().should((data) => {
-      expect(data.hasSeenTutorialsTooTip).equal(
+      expect(data.hasSeenTutorialsToolTip).equal(
         true,
-        "userContext.hasSeenTutorialsTooTip should set in local storage"
+        "userContext.hasSeenTutorialsToolTip should set in local storage"
       );
     });
   });

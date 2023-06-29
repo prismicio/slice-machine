@@ -17,7 +17,7 @@ const initialState: UserContextStoreType = {
     latest: null,
     latestNonBreaking: null,
   },
-  hasSeenTutorialsTooTip: false,
+  hasSeenTutorialsToolTip: false,
   hasSeenSimulatorToolTip: false,
   authStatus: AuthStatus.UNKNOWN,
   lastSyncChange: null,
@@ -32,7 +32,7 @@ export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
   UserContextStoreType["updatesViewed"]
 >();
 
-export const hasSeenTutorialsTooTipCreator = createAction(
+export const hasSeenTutorialsToolTipCreator = createAction(
   "USER_CONTEXT/VIEW_TUTORIALS_TOOL_TIP"
 )();
 
@@ -44,7 +44,7 @@ type userContextActions = ActionType<
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
   | typeof updatesViewedCreator
-  | typeof hasSeenTutorialsTooTipCreator
+  | typeof hasSeenTutorialsToolTipCreator
   | typeof hasSeenSimulatorToolTipCreator
   | typeof refreshStateCreator
   | typeof changesPushCreator.success
@@ -58,9 +58,9 @@ export const getUpdatesViewed = (
   state: SliceMachineStoreType
 ): UserContextStoreType["updatesViewed"] => state.userContext.updatesViewed;
 
-export const userHashasSeenTutorialsTooTip = (
+export const userHasSeenTutorialsToolTip = (
   state: SliceMachineStoreType
-): boolean => state.userContext.hasSeenTutorialsTooTip || false;
+): boolean => state.userContext.hasSeenTutorialsToolTip || false;
 
 export const userHasSeenSimulatorToolTip = (
   state: SliceMachineStoreType
@@ -88,10 +88,10 @@ export const userContextReducer: Reducer<
         updatesViewed: action.payload,
       };
     }
-    case getType(hasSeenTutorialsTooTipCreator): {
+    case getType(hasSeenTutorialsToolTipCreator): {
       return {
         ...state,
-        hasSeenTutorialsTooTip: true,
+        hasSeenTutorialsToolTip: true,
       };
     }
     case getType(hasSeenSimulatorToolTipCreator): {

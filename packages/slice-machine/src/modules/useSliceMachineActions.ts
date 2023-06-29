@@ -7,7 +7,7 @@ import {
   sendAReviewCreator,
   skipReviewCreator,
   updatesViewedCreator,
-  hasSeenTutorialsTooTipCreator,
+  hasSeenTutorialsToolTipCreator,
   hasSeenSimulatorToolTipCreator,
 } from "./userContext";
 import { getChangelogCreator, refreshStateCreator } from "./environment";
@@ -150,7 +150,7 @@ const useSliceMachineActions = () => {
   const setSeenSimulatorToolTip = () =>
     dispatch(hasSeenSimulatorToolTipCreator());
   const setSeenTutorialsToolTip = () =>
-    dispatch(hasSeenTutorialsTooTipCreator());
+    dispatch(hasSeenTutorialsToolTipCreator());
 
   // Custom types module
   const createCustomType = (

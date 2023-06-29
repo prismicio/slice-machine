@@ -2,8 +2,6 @@ import { useRouter } from "next/router";
 import type { FC, ReactNode } from "react";
 import { Box } from "theme-ui";
 
-import Navigation from "./Navigation";
-
 const AsIs: { [x: string]: boolean } = {
   "/[lib]/[sliceName]/[variation]/simulator": true,
 };
@@ -26,7 +24,6 @@ const AppLayout: FC<Props> = ({ children }) => {
         flexDirection: ["column", "row", null],
       }}
     >
-      <Navigation />
       <Box
         as="main"
         sx={{
