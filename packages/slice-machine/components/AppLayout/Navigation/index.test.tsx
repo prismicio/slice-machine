@@ -105,9 +105,10 @@ describe("Side Navigation", () => {
 
       await act(() => mockRouter.push("/"));
 
-      const link = screen.getByText(title);
+      const link = screen.getByText(title).parentElement
+        ?.parentElement as HTMLElement;
 
-      expect(link.parentElement).toHaveAttribute("href", path);
+      expect(link).toHaveAttribute("href", path);
 
       await user.click(link);
 
@@ -117,12 +118,13 @@ describe("Side Navigation", () => {
 
   test("Video Item", async () => {
     const { user } = renderApp({ canUpdate: true });
-    const link = await screen.findByText("Tutorial");
-    expect(link.parentElement).toHaveAttribute(
+    const link = (await screen.findByText("Tutorial")).parentElement
+      ?.parentElement as HTMLElement;
+    expect(link).toHaveAttribute(
       "href",
       "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH"
     );
-    expect(link.parentElement).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("target", "_blank");
 
     await user.hover(link);
 
