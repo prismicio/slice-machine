@@ -815,7 +815,9 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"\\"use client\\";
+
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../../slices\\";
@@ -875,7 +877,9 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"\\"use client\\";
+
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../../slices\\";
@@ -966,7 +970,9 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"\\"use client\\";
+
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../../slices\\";
@@ -999,7 +1005,9 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"\\"use client\\";
+
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";
@@ -1056,7 +1064,9 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"\\"use client\\";
+
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";
@@ -1147,7 +1157,9 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"\\"use client\\";
+
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";

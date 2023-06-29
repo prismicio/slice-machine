@@ -264,6 +264,8 @@ const createSliceSimulatorPage = async ({
 	await fs.mkdir(path.dirname(filePath), { recursive: true });
 
 	let contents = source`
+		"use client"
+
 		import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
 		import { SliceZone } from "@prismicio/react";
 
