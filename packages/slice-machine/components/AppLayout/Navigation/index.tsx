@@ -157,7 +157,9 @@ const Navigation: FC = () => {
             active={currentPath.startsWith("/changelog")}
             onClick={handleNavigation}
             RightElement={
-              <RightElement>v{changelog.currentVersion}</RightElement>
+              <RightElement>
+                {changelog.currentVersion && `v${changelog.currentVersion}`}
+              </RightElement>
             }
           />
         </SideNavListItem>
