@@ -59,8 +59,8 @@ export const Default = {
 
           <SideNavListItem>
             <SideNavLink
-              title="Right element active"
-              href="/right-element-active"
+              title="Changes active"
+              href="/changes-active"
               Icon={RadarIcon}
               RightElement={<ChangesIndicator numberOfChanges={4} />}
               active
@@ -71,8 +71,8 @@ export const Default = {
 
           <SideNavListItem>
             <SideNavLink
-              title="Right element not active"
-              href="/right-element-not-active"
+              title="Changes not active"
+              href="/changes-not-active"
               Icon={RadarIcon}
               RightElement={<ChangesIndicator numberOfChanges={4} />}
             />

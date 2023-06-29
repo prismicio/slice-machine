@@ -227,6 +227,10 @@ export const link = style([
       "&[data-active=true]:hover": {
         backgroundColor: vars.color.greyLight1,
       },
+      // Link with right element
+      "&[data-right-element=true]": {
+        paddingRight: 0,
+      },
     },
   },
 ]);
@@ -250,26 +254,40 @@ export const linkIcon = style([
 export const changesIndicator = style([
   block,
   sprinkles({
-    alignItems: "center",
+    width: 44,
     display: "flex",
-    height: 16,
     justifyContent: "center",
-    width: 16,
   }),
   {
-    borderRadius: "50%",
-    fontSize: "9px",
+    marginLeft: "auto",
+  },
+]);
+
+export const changesIndicatorText = style([
+  blockWithDisplayRevert,
+  sprinkles({
+    borderStyle: "solid",
+    borderWidth: 2,
+    height: 20,
+    maxWidth: 32,
+    paddingBlock: 0,
+    paddingInline: 4,
+  }),
+  {
+    borderRadius: "32px",
+    fontSize: "12px",
     fontWeight: 500,
     lineHeight: "16px",
-    marginLeft: "auto",
     selectors: {
       // Not Active
       [`${link}:not([data-active=true]) &`]: {
         backgroundColor: vars.color.purple10,
+        borderColor: vars.color.purple10,
         color: vars.color.purple12,
       },
       // Active
       [`${link}[data-active=true] &`]: {
+        borderColor: "transparent",
         color: vars.color.greyLight11,
       },
     },

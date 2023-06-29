@@ -110,6 +110,7 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
         props.disabled !== true && props.onClick && props.onClick(event);
       }}
       data-active={active}
+      data-right-element={RightElement !== undefined}
     >
       <Icon className={styles.linkIcon} />
       <span>{title}</span>
@@ -128,9 +129,11 @@ export const ChangesIndicator: FC<ChangesIndicatorProps> = ({
   const formattedNumber = numberOfChanges > 9 ? "9+" : numberOfChanges;
 
   return (
-    <span className={styles.changesIndicator} data-cy="changes-number">
-      {formattedNumber}
-    </span>
+    <div className={styles.changesIndicator}>
+      <span className={styles.changesIndicatorText} data-cy="changes-number">
+        {formattedNumber}
+      </span>
+    </div>
   );
 };
 
