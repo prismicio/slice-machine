@@ -27,7 +27,6 @@ describe.skip("Scenario 008", () => {
       .addNewWidgetField("ImageField", "Image")
       .save();
 
-    simulatorPage.setup();
     sliceBuilder.openSimulator();
 
     // Wait for the editor to be fully loaded

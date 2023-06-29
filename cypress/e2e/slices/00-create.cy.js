@@ -76,8 +76,6 @@ describe("Create Slices", () => {
 
     // simulator
 
-    simulatorPage.setup();
-
     sliceBuilder.openSimulator();
 
     cy.getInputByLabel("Description").first().clear();
