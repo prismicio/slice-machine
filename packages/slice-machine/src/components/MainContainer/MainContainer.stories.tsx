@@ -21,10 +21,12 @@ export const Default = {
         <MainContainerHeader
           backTo={() => console.log("back to")}
           breadcrumb="folder/file"
-          actions={[
-            <Button key="action-1">Action 1</Button>,
-            <Button key="action-2">Action 2</Button>,
-          ]}
+          actions={
+            <>
+              <Button key="action-1">Action 1</Button>
+              <Button key="action-2">Action 2</Button>
+            </>
+          }
         />
         <MainContainerContent>Main Content</MainContainerContent>
       </>

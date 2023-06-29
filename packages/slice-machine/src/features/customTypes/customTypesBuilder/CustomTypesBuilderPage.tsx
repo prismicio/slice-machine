@@ -5,7 +5,7 @@ import { FC, useEffect } from "react";
 
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
+import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
 import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
@@ -25,7 +25,7 @@ import { Button } from "@prismicio/editor-ui";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { PageTypeSnippet } from "./PageTypeSnippet";
+import { PageSnippetDialog } from "./PageSnippetDialog";
 
 type CustomTypesBuilderPageProps = {
   format: CustomTypeFormat;
@@ -111,7 +111,12 @@ const CustomTypesBuilderPageWithProvider: React.FC<
 
   const actions = [
     ...(currentCustomType.format === "page"
-      ? [<PageTypeSnippet key="trigger-snippet-view" />]
+      ? [
+          <PageSnippetDialog
+            key="trigger-snippet-view"
+            model={CustomTypes.fromSM(currentCustomType)}
+          />,
+        ]
       : []),
     <Button
       key="save-to-fs"
