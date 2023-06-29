@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { managerClient } from "@src/managerClient";
-import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
+import { CUSTOM_TYPES_MESSAGES } from "./customTypesMessages";
 
 export async function convertCustomToPageType(
   customType: CustomType,

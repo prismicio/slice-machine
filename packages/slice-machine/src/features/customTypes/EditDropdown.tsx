@@ -14,7 +14,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 
-import { convertCustomToPageType } from "./customTypesTable/convertCustomToPageType";
+import { convertCustomToPageType } from "./convertCustomToPageType";
 
 import { CUSTOM_TYPES_CONFIG } from "./customTypesConfig";
 
