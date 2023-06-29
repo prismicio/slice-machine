@@ -1,16 +1,5 @@
-import { type FC, useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Text,
-  Icon,
-  IconButton,
-  Button,
-  Image,
-  tokens,
-} from "@prismicio/editor-ui";
+import { type FC } from "react";
+import { Icon, Button, Image, tokens } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 
 import {
@@ -23,8 +12,6 @@ import {
 import { ReusableIcon } from "@src/icons/ReusableIcon";
 import { UniqueIcon } from "@src/icons/UniqueIcon";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
-import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { type CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
@@ -33,7 +20,7 @@ import {
   useCustomTypes,
   useCustomTypesAutoRevalidation,
 } from "./useCustomTypes";
-import { convertCustomToPageType } from "./convertCustomToPageType";
+
 import {
   BlankSlate,
   BlankSlateImage,
@@ -42,6 +29,7 @@ import {
   BlankSlateActions,
   BlankSlateContent,
 } from "@src/components/BlankSlate";
+import { EditDropdown } from "../EditDropdown";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
@@ -52,13 +40,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   format,
   isCreatingCustomType,
 }) => {
-  const [selectedCustomType, setSelectedCustomType] = useState<CustomType>();
-  const {
-    openCreateCustomTypeModal,
-    openRenameCustomTypeModal,
-    openDeleteCustomTypeModal,
-    saveCustomTypeSuccess,
-  } = useSliceMachineActions();
+  const { openCreateCustomTypeModal } = useSliceMachineActions();
   const router = useRouter();
   const { customTypes, updateCustomTypes } = useCustomTypes(format);
   const sortedCustomTypes = customTypes.sort(
@@ -68,17 +50,8 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   );
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
-  const [customTypeBeingConverted, setCustomTypeBeingConverted] = useState<
-    string | undefined
-  >();
 
   useCustomTypesAutoRevalidation(customTypes, format, updateCustomTypes);
-
-  const convertCustomType = async (customType: CustomType) => {
-    setCustomTypeBeingConverted(customType.id);
-    await convertCustomToPageType(customType, saveCustomTypeSuccess);
-    setCustomTypeBeingConverted(undefined);
-  };
 
   if (sortedCustomTypes.length === 0) {
     return (
@@ -123,8 +96,6 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
         <TableBody>
           {sortedCustomTypes.map((customType: CustomType) => {
             const { repeatable, label, id } = customType;
-            const isCustomTypeBeingConverted =
-              customTypeBeingConverted === customType.id;
 
             return (
               <TableRow
@@ -142,64 +113,13 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                 <TableCell>{id}</TableCell>
                 <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
-                      <IconButton
-                        icon="moreVert"
-                        loading={isCustomTypeBeingConverted}
-                        data-testid="tableRowSettings"
-                      />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        startIcon={<Icon name="edit" />}
-                        onSelect={() => {
-                          setSelectedCustomType(customType);
-                          openRenameCustomTypeModal();
-                        }}
-                      >
-                        <Text>Rename</Text>
-                      </DropdownMenuItem>
-                      {format === "custom" && (
-                        <DropdownMenuItem
-                          startIcon={<Icon name="driveFileMove" />}
-                          onSelect={() => {
-                            void convertCustomType(customType);
-                          }}
-                        >
-                          <Text>Convert to page type</Text>
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem
-                        startIcon={<Icon color="tomato11" name="delete" />}
-                        onSelect={() => {
-                          setSelectedCustomType(customType);
-                          openDeleteCustomTypeModal();
-                        }}
-                      >
-                        <Text color="tomato11">Remove</Text>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <EditDropdown format={format} customType={customType} />
                 </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-
-      {selectedCustomType && (
-        <>
-          <RenameCustomTypeModal
-            customType={selectedCustomType}
-            format={format}
-          />
-          <DeleteCustomTypeModal
-            customType={selectedCustomType}
-            format={format}
-          />
-        </>
-      )}
     </>
   );
 };

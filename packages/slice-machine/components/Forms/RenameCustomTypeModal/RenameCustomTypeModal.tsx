@@ -4,8 +4,6 @@ import ModalFormCard from "../../ModalFormCard";
 import { InputBox } from "../components/InputBox";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { FormikErrors } from "formik";
 import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
@@ -13,44 +11,55 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { useEffect, useState } from "react";
 
 interface RenameCustomTypeModalProps {
   customType?: CustomType;
   format: CustomTypeFormat;
+  onClose: () => void;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   customType,
   format,
+  onClose,
 }) => {
   const customTypeName = customType?.label ?? "";
   const customTypeId = customType?.id ?? "";
-  const { renameCustomType, closeModals } = useSliceMachineActions();
+  const { renameCustomType } = useSliceMachineActions();
+
+  const [didSubmit, setDidSubmit] = useState(false);
 
   const handleOnSubmit = (values: { customTypeName: string }) => {
     renameCustomType(customTypeId, format, values.customTypeName);
+    setDidSubmit(true);
   };
-  const {
-    isRenameCustomTypeModalOpen,
-    customTypeLabels,
-    isRenamingCustomType,
-  } = useSelector((store: SliceMachineStoreType) => ({
-    isRenameCustomTypeModalOpen: isModalOpen(
-      store,
-      ModalKeysEnum.RENAME_CUSTOM_TYPE
-    ),
-    customTypeLabels: selectAllCustomTypeLabels(store),
-    isRenamingCustomType: isLoading(store, LoadingKeysEnum.RENAME_CUSTOM_TYPE),
-  }));
+
+  const { customTypeLabels, isRenamingCustomType } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      customTypeLabels: selectAllCustomTypeLabels(store),
+      isRenamingCustomType: isLoading(
+        store,
+        LoadingKeysEnum.RENAME_CUSTOM_TYPE
+      ),
+    })
+  );
+
+  useEffect(() => {
+    if (!isRenamingCustomType && didSubmit) {
+      onClose();
+    }
+  }, [didSubmit, isRenamingCustomType, onClose]);
+
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
   return (
     <ModalFormCard
+      isOpen
       dataCy="rename-custom-type-modal"
-      isOpen={isRenameCustomTypeModalOpen}
       widthInPx="530px"
       formId={`rename-custom-type-modal-${customTypeId}`}
-      close={closeModals}
+      close={onClose}
       buttonLabel="Rename"
       onSubmit={handleOnSubmit}
       initialValues={{

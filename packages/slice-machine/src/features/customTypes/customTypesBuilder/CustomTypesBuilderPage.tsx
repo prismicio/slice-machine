@@ -26,6 +26,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { PageSnippetDialog } from "./PageSnippetDialog";
+import { EditDropdown } from "../EditDropdown";
 
 type CustomTypesBuilderPageProps = {
   format: CustomTypeFormat;
@@ -110,6 +111,11 @@ const CustomTypesBuilderPageWithProvider: React.FC<
   const messages = CUSTOM_TYPES_MESSAGES[currentCustomType.format];
 
   const actions = [
+    <EditDropdown
+      key="edit-dropdown"
+      format={currentCustomType.format}
+      customType={CustomTypes.fromSM(currentCustomType)}
+    />,
     ...(currentCustomType.format === "page"
       ? [
           <PageSnippetDialog

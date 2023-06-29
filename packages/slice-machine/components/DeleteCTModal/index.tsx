@@ -1,8 +1,6 @@
 import SliceMachineModal from "@components/SliceMachineModal";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
@@ -17,17 +15,14 @@ import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMess
 type DeleteCTModalProps = {
   customType?: CustomType;
   format: CustomTypeFormat;
+  onClose: () => void;
 };
 
 export const DeleteCustomTypeModal: React.FunctionComponent<
   DeleteCTModalProps
-> = ({ customType, format }) => {
-  const { isDeleteCustomTypeModalOpen, isDeletingCustomType } = useSelector(
+> = ({ customType, format, onClose }) => {
+  const { isDeletingCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
-      isDeleteCustomTypeModalOpen: isModalOpen(
-        store,
-        ModalKeysEnum.DELETE_CUSTOM_TYPE
-      ),
       isDeletingCustomType: isLoading(
         store,
         LoadingKeysEnum.DELETE_CUSTOM_TYPE
@@ -35,20 +30,20 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
     })
   );
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
-  const { closeModals, deleteCustomType } = useSliceMachineActions();
+  const { deleteCustomType } = useSliceMachineActions();
 
   const { theme } = useThemeUI();
 
   return (
     <SliceMachineModal
-      isOpen={isDeleteCustomTypeModalOpen}
+      isOpen
       shouldCloseOnOverlayClick={true}
       style={{
         content: {
           maxWidth: 612,
         },
       }}
-      onRequestClose={closeModals}
+      onRequestClose={onClose}
     >
       <Card
         bodySx={{
@@ -87,7 +82,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 {customTypesMessages.name({ start: false, plural: false })}
               </Heading>
             </Flex>
-            <Close type="button" onClick={() => closeModals()} />
+            <Close type="button" onClick={() => onClose()} />
           </Flex>
         )}
         Footer={() => (
@@ -104,7 +99,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <Button
               label="Cancel"
               variant="secondary"
-              onClick={() => closeModals()}
+              onClick={() => onClose()}
               sx={{
                 mr: "10px",
                 fontWeight: "bold",
