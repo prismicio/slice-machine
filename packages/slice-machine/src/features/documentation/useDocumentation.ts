@@ -12,11 +12,7 @@ async function getDocumentation(str: string): Promise<Documentation[]> {
     kind: args.kind,
     data: args.data,
   });
-  if (
-    errors.length > 0 ||
-    documentation === undefined ||
-    documentation.length === 0
-  ) {
+  if (errors.length > 0 || documentation.length === 0) {
     throw errors;
   }
 
