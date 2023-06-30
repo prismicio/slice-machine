@@ -21,6 +21,10 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
     data: { model },
   });
 
+  if (documentation.length === 0) {
+    return null;
+  }
+
   return (
     <Dialog
       trigger={

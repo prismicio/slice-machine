@@ -43,5 +43,5 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = (
 		];
 	}
 
-	return undefined;
+	return [];
 };

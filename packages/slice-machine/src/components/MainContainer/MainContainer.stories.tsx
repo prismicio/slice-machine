@@ -23,8 +23,8 @@ export const Default = {
           breadcrumb="folder/file"
           actions={
             <>
-              <Button key="action-1">Action 1</Button>
-              <Button key="action-2">Action 2</Button>
+              <Button>Action 1</Button>
+              <Button>Action 2</Button>
             </>
           }
         />
