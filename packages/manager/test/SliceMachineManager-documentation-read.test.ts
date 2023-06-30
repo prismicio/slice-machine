@@ -7,7 +7,7 @@ import { createSliceMachineManager } from "../src";
 
 const mockedDocumentation = { label: "My label", content: "" };
 
-it("calls plugins' `slice:create` hook", async (ctx) => {
+it("calls plugins' `documentation:read` hook", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
 	const hookHandler = vi.fn(() => {
 		return [mockedDocumentation];

@@ -27,7 +27,7 @@ export type DocumentationReadHookData = {
 /**
  * Return value for `documentation:read` hook handlers.
  */
-export type DocumentationReadHookReturnType = Documentation[] | undefined;
+export type DocumentationReadHookReturnType = Documentation[];
 
 /**
  * Base version of a `documentation:read` hook handler without plugin runner
