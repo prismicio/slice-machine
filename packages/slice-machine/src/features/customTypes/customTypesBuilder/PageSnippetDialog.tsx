@@ -2,6 +2,7 @@ import { FC, Suspense } from "react";
 import {
   Button,
   Dialog,
+  DialogContent,
   DialogHeader,
   ErrorBoundary,
   ScrollArea,
@@ -21,6 +22,10 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
     data: { model },
   });
 
+  if (documentation.length === 0) {
+    return null;
+  }
+
   return (
     <Dialog
       trigger={
@@ -31,24 +36,21 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
     >
       {/** Icon="code" once editor-ui PR is merged */}
       <DialogHeader icon="add" title="Page snippet" />
-      <ScrollArea
-        style={{
-          display: "flex",
-          gridArea: "content",
-          height: "100%",
-        }}
-      >
+      <DialogContent>
         {documentation.length > 1 ? (
           <ContentTabs
+            style={{ flex: 1 }}
             tabs={documentation.map(({ label, content }, i) => ({
               label: label ?? `Tab ${i + 1}`,
               content: <MarkdownRenderer markdown={content} />,
             }))}
           />
         ) : (
-          <MarkdownRenderer markdown={documentation[0].content} />
+          <ScrollArea style={{ flex: 1, padding: 16 }}>
+            <MarkdownRenderer markdown={documentation[0].content} />
+          </ScrollArea>
         )}
-      </ScrollArea>
+      </DialogContent>
     </Dialog>
   );
 };

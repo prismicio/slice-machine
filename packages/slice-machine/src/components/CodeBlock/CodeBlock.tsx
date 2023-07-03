@@ -1,12 +1,15 @@
-import { CSSProperties, ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import * as styles from "./CodeBlock.css";
 import { Text, IconButton } from "@prismicio/editor-ui";
 
-import theme from "./theme";
+import { theme } from "./theme";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
-import * as FileIcons from "@src/icons/FileIcons";
+import { JavaScript } from "@src/icons/JavaScript";
+import { TypeScript } from "@src/icons/TypeScript";
+import { Vue } from "@src/icons/Vue";
+
 import { CodeIcon } from "@src/icons/CodeIcon";
 
 type CodeBlockProps = {
@@ -25,12 +28,12 @@ const FileIcon = ({ fileName }: { fileName: string }) => {
     switch (extension) {
       case "ts":
       case "tsx":
-        return <FileIcons.Typescript />;
+        return <TypeScript />;
       case "js":
       case "jsx":
-        return <FileIcons.Javascript />;
+        return <JavaScript />;
       case "vue":
-        return <FileIcons.Vue />;
+        return <Vue />;
       default:
         return <CodeIcon />;
     }
@@ -42,12 +45,20 @@ const FileIcon = ({ fileName }: { fileName: string }) => {
 const Copy = ({ code }: { code: string }) => {
   const [isCopied, setIsCopied] = useState(false);
 
+  useEffect(() => {
+    if (isCopied) {
+      const timeoutId = setTimeout(() => {
+        setIsCopied(false);
+      }, 1200);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [isCopied]);
+
   const copy = (): void => {
     void navigator.clipboard.writeText(code).then(() => {
       setIsCopied(true);
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 1200);
     });
   };
   return (
@@ -92,7 +103,7 @@ export const CodeBlock = ({
             borderBottomRightRadius: "4px",
           }}
           children={String(code).replace(/\n$/, "")}
-          style={theme as { [key: string]: CSSProperties }}
+          style={theme}
           language={match[1]}
           PreTag="div"
         />

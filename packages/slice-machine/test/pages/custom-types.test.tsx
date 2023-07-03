@@ -293,7 +293,7 @@ describe("Custom Type Builder", () => {
       });
     }
 
-    const saveButton = screen.getByText("Save");
+    const saveButton = screen.getByTestId("modal-form-card-validate");
 
     await act(async () => {
       fireEvent.click(saveButton);
@@ -428,7 +428,7 @@ describe("Custom Type Builder", () => {
       expect.any(Function)
     );
 
-    const saveCustomType = screen.getByText("Save to File System");
+    const saveCustomType = screen.getByTestId("builder-save-button");
 
     await act(async () => {
       fireEvent.click(saveCustomType);
@@ -577,7 +577,7 @@ describe("Custom Type Builder", () => {
       expect.any(Function)
     );
 
-    const saveCustomType = screen.getByText("Save to File System");
+    const saveCustomType = screen.getByTestId("builder-save-button");
 
     await act(async () => {
       fireEvent.click(saveCustomType);

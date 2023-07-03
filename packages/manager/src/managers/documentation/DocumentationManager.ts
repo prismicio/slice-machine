@@ -10,7 +10,7 @@ import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 
 type DocumentationManagerReadReturnType = {
-	documentation: Documentation[] | undefined;
+	documentation: Documentation[];
 	errors: (DecodeError | HookError)[];
 };
 
@@ -26,26 +26,19 @@ export class DocumentationManager extends BaseManager {
 		args: DocumentationReadHookData,
 	): Promise<DocumentationManagerReadReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
-		try {
-			const hookResult = await this.sliceMachinePluginRunner.callHook(
-				"documentation:read",
-				args,
-			);
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"documentation:read",
+			args,
+		);
 
-			const { data, errors } = decodeHookResult(
-				t.array(documentationCodec),
-				hookResult,
-			);
+		const { data, errors } = decodeHookResult(
+			t.array(documentationCodec),
+			hookResult,
+		);
 
-			return {
-				documentation: data.flat(),
-				errors,
-			};
-		} catch (e) {
-			return {
-				documentation: undefined,
-				errors: [],
-			};
-		}
+		return {
+			documentation: data.flat(),
+			errors,
+		};
 	}
 }

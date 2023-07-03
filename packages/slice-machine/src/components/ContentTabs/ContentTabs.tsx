@@ -1,17 +1,23 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { FC, ReactNode } from "react";
-import { Text } from "@prismicio/editor-ui";
+import type { CSSProperties, FC, ReactNode } from "react";
+import { ScrollArea, Text } from "@prismicio/editor-ui";
 
 import * as styles from "./ContentTabs.css";
 
 type ContentTabsProps = {
+  style?: CSSProperties;
   tabs: Tab[];
 };
 
 type Tab = { label: string; content: ReactNode };
 
-export const ContentTabs: FC<ContentTabsProps> = ({ tabs }) => (
-  <Tabs.Root defaultValue={tabs[0].label} orientation="vertical">
+export const ContentTabs: FC<ContentTabsProps> = ({ tabs, ...otherProps }) => (
+  <Tabs.Root
+    {...otherProps}
+    className={styles.root}
+    defaultValue={tabs[0].label}
+    orientation="vertical"
+  >
     <Tabs.List className={styles.list} aria-label="content tabs">
       {tabs.map(({ label }, i) => {
         return (
@@ -34,7 +40,7 @@ export const ContentTabs: FC<ContentTabsProps> = ({ tabs }) => (
           key={`${label}-content${i + 1}`}
           value={label}
         >
-          {content}
+          <ScrollArea className={styles.scrollArea}>{content}</ScrollArea>
         </Tabs.Content>
       );
     })}
