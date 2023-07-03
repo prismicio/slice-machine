@@ -120,9 +120,9 @@ const CustomTypesBuilderPageWithProvider: React.FC<
       : []),
     <Button
       key="save-to-fs"
-      data-cy="builder-save-button"
       onClick={saveCustomType}
       loading={isSavingCustomType}
+      data-testid="builder-save-button"
       disabled={!hasPendingModifications || isSavingCustomType}
     >
       Save
