@@ -26,9 +26,6 @@ import UpdateModal, {
 } from "../TabModal/update";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
 import { TabSM } from "@lib/models/common/CustomType";
 
 enum ModalType {
@@ -68,13 +65,15 @@ const Icon = ({
 
 interface CustomTypeTabsProps {
   sx?: ThemeUIStyleObject;
+  tabs: TabSM[];
   renderTab: (tab: TabSM) => JSX.Element;
 }
 
-const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
-  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
-    currentCustomType: selectCurrentCustomType(store),
-  }));
+const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({
+  sx,
+  tabs,
+  renderTab,
+}) => {
   const { theme } = useThemeUI();
   const { createCustomTypeTab, updateCustomTypeTab, deleteCustomTypeTab } =
     useSliceMachineActions();
@@ -82,21 +81,16 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [state, setState] = useState<ModalState | undefined>();
 
-  if (!currentCustomType) return null;
-
   return (
     <Box sx={{ bg: "backgroundClear" }}>
-      <FlexWrapper
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sx={sx}
-      >
+      <FlexWrapper sx={sx}>
         <Tabs
           selectedIndex={tabIndex}
           onSelect={(index) => setTabIndex(index)}
           style={{ width: "100%" }}
         >
           <TabList>
-            {currentCustomType.tabs.map((tab, i) => (
+            {tabs.map((tab, i) => (
               <Tab
                 key={tab.key}
                 style={{
@@ -118,7 +112,7 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
                           title: "Edit Tab",
                           type: ModalType.UPDATE,
                           key: tab.key,
-                          allowDelete: currentCustomType.tabs.length > 1,
+                          allowDelete: tabs.length > 1,
                         });
                       }}
                     />
@@ -140,7 +134,7 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
               </Button>
             </Tab>
           </TabList>
-          {currentCustomType.tabs.map((tab) => (
+          {tabs.map((tab) => (
             <TabPanel key={tab.key}>{renderTab(tab)}</TabPanel>
           ))}
           <TabPanel key={"new-tab"} />
@@ -150,12 +144,12 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
         <CreateModal
           {...state}
           isOpen
-          tabIds={currentCustomType.tabs.map((e) => e.key.toLowerCase())}
+          tabIds={tabs.map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
           onSubmit={({ id }: { id: string }) => {
             createCustomTypeTab(id);
             // current.tabs is not updated yet
-            setTabIndex(currentCustomType.tabs.length);
+            setTabIndex(tabs.length);
           }}
         />
       ) : null}
@@ -163,7 +157,7 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
         <UpdateModal
           {...state}
           isOpen
-          tabIds={currentCustomType.tabs
+          tabIds={tabs
             .filter((e) => e.key !== state.key)
             .map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}

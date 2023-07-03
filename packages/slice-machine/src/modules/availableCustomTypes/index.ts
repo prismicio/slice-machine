@@ -164,8 +164,6 @@ export const availableCustomTypesReducer: Reducer<
         local: action.payload.renamedCustomType,
       };
 
-      console.log({ renamedCtLabel: action.payload.renamedCustomType.label });
-
       return {
         ...state,
         [id]: newCustomType,

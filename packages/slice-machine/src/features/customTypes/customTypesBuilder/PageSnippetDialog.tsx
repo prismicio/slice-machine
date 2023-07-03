@@ -65,7 +65,13 @@ export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
         description={`An error occurred while fetching page types snippets.`}
         renderError={() => null}
       >
-        <Suspense>
+        <Suspense
+          fallback={
+            <Button variant="secondary" startIcon={<CodeIcon />}>
+              Page snippet
+            </Button>
+          }
+        >
           <PageSnippetContent model={model} />
         </Suspense>
       </ErrorBoundary>

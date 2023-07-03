@@ -20,7 +20,7 @@ import { CUSTOM_TYPES_CONFIG } from "./customTypesConfig";
 
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
 import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CustomTypeFormat } from "@slicemachine/manager";
 
 type EditDropdownProps = {
   format: CustomTypeFormat;
@@ -39,20 +39,29 @@ export const EditDropdown: FC<EditDropdownProps> = ({ format, customType }) => {
   const convertCustomType = async () => {
     setCustomTypeBeingConverted(true);
     await convertCustomToPageType(customType, saveCustomTypeSuccess);
-    setCustomTypeBeingConverted(false);
-    const url = CUSTOM_TYPES_CONFIG.page.getBuilderPagePathname(customType.id);
-    void router.replace(url);
+    const customPagePathname =
+      CUSTOM_TYPES_CONFIG.custom.getBuilderPagePathname(customType.id);
+    if (router.asPath === customPagePathname) {
+      const pagePagePathname = CUSTOM_TYPES_CONFIG.page.getBuilderPagePathname(
+        customType.id
+      );
+      void router.replace(pagePagePathname);
+      setTimeout(() => {
+        setCustomTypeBeingConverted(false);
+      }, 1400);
+    } else {
+      setCustomTypeBeingConverted(false);
+    }
   };
 
   const onCloseDeleteModal = (didDelete: boolean | undefined) => {
-    if (didDelete !== undefined && didDelete) {
-      if (customType.format !== undefined) {
-        const url = CUSTOM_TYPES_CONFIG[customType.format].tablePagePathname;
-        void router.replace(url);
-        setTimeout(() => {
-          setIsDeleting(false);
-        }, 800);
-      } // else fallbacks to default NOT_FOUND behaviour
+    if (didDelete === true) {
+      const { tablePagePathname } =
+        CUSTOM_TYPES_CONFIG[customType.format ?? "custom"];
+      void router.replace(tablePagePathname);
+      setTimeout(() => {
+        setIsDeleting(false);
+      }, 1400);
     }
   };
 

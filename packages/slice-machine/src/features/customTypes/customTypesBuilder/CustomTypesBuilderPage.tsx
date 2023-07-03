@@ -94,7 +94,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
 
   useEffect(() => {
     initCustomTypeStore(customType, remoteCustomType);
-  }, []);
+  }, [customType, remoteCustomType]);
 
   const { currentCustomType, hasPendingModifications, isSavingCustomType } =
     useSelector((store: SliceMachineStoreType) => ({
@@ -145,7 +145,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
         actions={actions}
       />
       <MainContainerContent>
-        <CustomTypeBuilder />
+        <CustomTypeBuilder customType={currentCustomType} />
       </MainContainerContent>
     </MainContainer>
   );
