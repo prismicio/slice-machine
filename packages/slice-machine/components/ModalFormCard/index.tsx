@@ -151,6 +151,7 @@ function ModalCard<Values extends FormikValues>({
                       label={buttonLabel}
                       form={formId}
                       type="submit"
+                      data-testid="modal-form-card-validate"
                       disabled={!isValid || isSubmitting || isLoading}
                       isLoading={isLoading}
                       sx={{
