@@ -3,7 +3,6 @@ import {
   createCustomTypeSaga,
   createCustomTypeCreator,
   availableCustomTypesReducer,
-  renameCustomTypeCreator,
   deleteCustomTypeCreator,
 } from "@src/modules/availableCustomTypes";
 import { testSaga } from "redux-saga-test-plan";
@@ -275,47 +274,6 @@ describe("[Available Custom types module]", () => {
         })
       );
       saga.next().isDone();
-    });
-  });
-
-  it("should update the custom types state given CUSTOM_TYPES/RENAME.RESPONSE action", () => {
-    const customType1: CustomTypeSM = {
-      id: "id_1",
-      label: "label_1",
-      repeatable: false,
-      status: true,
-      format: "custom",
-      tabs: [],
-    };
-    const customType2: CustomTypeSM = {
-      id: "id_2",
-      label: "label_2",
-      repeatable: false,
-      status: true,
-      format: "custom",
-      tabs: [],
-    };
-    const updatedCustomType2: CustomTypeSM = {
-      id: "id_2",
-      label: "label NEW",
-      repeatable: false,
-      status: true,
-      format: "custom",
-      tabs: [],
-    };
-
-    const existingCustomTypes: AvailableCustomTypesStoreType = {
-      id_1: { local: customType1 },
-      id_2: { local: customType2, remote: customType2 },
-    };
-
-    const action = renameCustomTypeCreator.success({
-      renamedCustomType: updatedCustomType2,
-    });
-
-    expect(availableCustomTypesReducer(existingCustomTypes, action)).toEqual({
-      id_1: { local: customType1 },
-      id_2: { local: updatedCustomType2, remote: customType2 },
     });
   });
 });
