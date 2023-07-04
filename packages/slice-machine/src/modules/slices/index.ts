@@ -13,6 +13,13 @@ import {
   take,
   takeLatest,
 } from "redux-saga/effects";
+import { Reducer } from "redux";
+import { LOCATION_CHANGE, push } from "connected-next-router";
+
+import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
+import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
+import { SliceSM } from "@lib/models/common/Slice";
+import { LibraryUI } from "@models/common/LibraryUI";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
@@ -20,27 +27,27 @@ import {
   deleteSlice,
   getState,
   renameSlice,
+  saveCustomType,
   SaveSliceMockRequest,
   telemetry,
 } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
-import { Reducer } from "redux";
-import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { LibraryUI } from "@models/common/LibraryUI";
-import { SliceSM } from "@lib/models/common/Slice";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { LOCATION_CHANGE, push } from "connected-next-router";
 import { updateSliceCreator } from "../selectedSlice/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-// import { DeleteSliceResponse } from "@lib/models/common/Slice";
-import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
-import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
 import { selectSliceById } from "../selectedSlice/selectors";
+import {
+  replaceSharedSliceCreator,
+  ReplaceSharedSliceCreatorPayload,
+  saveCustomTypeCreator,
+  selectCurrentCustomType,
+} from "../selectedCustomType";
+import { SlicesStoreType } from "./types";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -51,6 +58,7 @@ export const createSliceCreator = createAsyncAction(
   {
     sliceName: string;
     libName: string;
+    replaceSharedSliceCreatorPayload?: ReplaceSharedSliceCreatorPayload;
   },
   {
     libraries: readonly LibraryUI[];
@@ -273,6 +281,21 @@ export function* createSliceSaga({
       typeof getState
     >;
     yield put(createSliceCreator.success({ libraries: serverState.libraries }));
+    // When creating a slice from a custom type, we add it directly to the slice zone and save
+    if (payload.replaceSharedSliceCreatorPayload !== undefined) {
+      yield put(
+        replaceSharedSliceCreator(payload.replaceSharedSliceCreatorPayload)
+      );
+      const currentCustomType = (yield select(
+        selectCurrentCustomType
+      )) as ReturnType<typeof selectCurrentCustomType>;
+      if (currentCustomType) {
+        yield call(saveCustomType, currentCustomType);
+        yield put(
+          saveCustomTypeCreator.success({ customType: currentCustomType })
+        );
+      }
+    }
     yield put(modalCloseCreator());
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.sliceName

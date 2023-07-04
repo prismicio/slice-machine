@@ -1,44 +1,59 @@
-import { Text, Flex, Button } from "theme-ui";
+import { Flex } from "theme-ui";
+import { Button, Icon, Image } from "@prismicio/editor-ui";
 
-import { CustomTypeFormat } from "@slicemachine/manager";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import {
+  BlankSlate,
+  BlankSlateActions,
+  BlankSlateContent,
+  BlankSlateDescription,
+  BlankSlateImage,
+  BlankSlateTitle,
+} from "@src/components/BlankSlate";
 
 const EmptyState: React.FC<{
-  format: CustomTypeFormat;
   onAddNewSlice: () => void;
-}> = ({ format, onAddNewSlice }) => {
-  const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
-
+  onCreateNewSlice: () => void;
+  isCreatingSlice: boolean;
+  projectHasAvailableSlices: boolean;
+}> = ({
+  onCreateNewSlice,
+  onAddNewSlice,
+  isCreatingSlice,
+  projectHasAvailableSlices,
+}) => {
   return (
-    <Flex
-      sx={{
-        justifyContent: "center",
-        mt: "40px",
-        alignItems: "center",
-        pb: "40px",
-      }}
-    >
-      <Flex
-        sx={{
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Text variant={"small"} sx={{ mb: 2 }}>
-          Add your Slices
-        </Text>
-        <Text sx={{ mb: "24px" }}>
-          Add Slices to your{" "}
-          {customTypesMessages.name({ start: false, plural: false })}
-        </Text>
-        <Button
-          data-cy="update-slices"
-          variant="buttons.darkSmall"
-          onClick={onAddNewSlice}
-        >
-          Add a new Slice
-        </Button>
-      </Flex>
+    <Flex sx={{ justifyContent: "center" }}>
+      <BlankSlate>
+        <BlankSlateImage>
+          <Image src="/blank-slate-page-types.png" sizing="cover" />
+        </BlankSlateImage>
+        <BlankSlateContent>
+          <BlankSlateTitle>Add your Slices</BlankSlateTitle>
+          <BlankSlateDescription>
+            Slices are website sections that you can reuse on different pages
+            with different content. Each Slice has its own component in your
+            code.
+          </BlankSlateDescription>
+          <BlankSlateActions>
+            <Button
+              startIcon={<Icon name="add" />}
+              onClick={onCreateNewSlice}
+              loading={isCreatingSlice}
+            >
+              New slice
+            </Button>
+            {projectHasAvailableSlices && (
+              <Button
+                startIcon={<Icon name="edit" />}
+                onClick={onAddNewSlice}
+                disabled={isCreatingSlice}
+              >
+                Update Slices
+              </Button>
+            )}
+          </BlankSlateActions>
+        </BlankSlateContent>
+      </BlankSlate>
     </Flex>
   );
 };

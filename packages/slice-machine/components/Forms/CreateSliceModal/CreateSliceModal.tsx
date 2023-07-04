@@ -1,4 +1,5 @@
 import { Box, Label } from "theme-ui";
+import { ReactNode } from "react";
 
 import Select from "react-select";
 import ModalFormCard from "@components/ModalFormCard";
@@ -16,13 +17,22 @@ type CreateSliceModalProps = {
   close: () => void;
   libraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;
+  actionMessage?: ReactNode;
 };
 
 type FormValues = { sliceName: string; from: string };
 
 export const CreateSliceModal: React.FunctionComponent<
   CreateSliceModalProps
-> = ({ isOpen, isCreatingSlice, onSubmit, close, libraries, remoteSlices }) => {
+> = ({
+  isOpen,
+  isCreatingSlice,
+  onSubmit,
+  close,
+  libraries,
+  remoteSlices,
+  actionMessage,
+}) => {
   return (
     <ModalFormCard
       dataCy="create-slice-modal"
@@ -46,6 +56,7 @@ export const CreateSliceModal: React.FunctionComponent<
       content={{
         title: "Create a new slice",
       }}
+      actionMessage={actionMessage}
     >
       {({ touched, values, setFieldValue, errors }) => (
         <Box>
