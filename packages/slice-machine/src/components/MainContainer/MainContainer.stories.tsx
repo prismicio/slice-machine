@@ -10,6 +10,7 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
+  argTypes: { children: { control: { disable: true } } },
 } satisfies Meta<typeof MainContainer>;
 
 export default meta;

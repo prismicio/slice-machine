@@ -11,8 +11,9 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
 import { ContentTabs } from "@src/components/ContentTabs";
-import { CodeIcon } from "@src/icons/CodeIcon";
 import { useDocumentation } from "@src/features/documentation/useDocumentation";
+
+import { Icon } from "@prismicio/editor-ui";
 
 type PageSnippetContentProps = { model: CustomType };
 
@@ -29,13 +30,12 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
   return (
     <Dialog
       trigger={
-        <Button variant="secondary" startIcon={<CodeIcon />}>
+        <Button variant="secondary" startIcon={<Icon name="code" />}>
           Page snippet
         </Button>
       }
     >
-      {/** Icon="code" once editor-ui PR is merged */}
-      <DialogHeader icon="add" title="Page snippet" />
+      <DialogHeader icon="code" title="Page snippet" />
       <DialogContent>
         {documentation.length > 1 ? (
           <ContentTabs
