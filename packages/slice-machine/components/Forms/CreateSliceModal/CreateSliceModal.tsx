@@ -77,6 +77,12 @@ export const CreateSliceModal: React.FunctionComponent<
               v ? void setFieldValue("from", v.value) : null
             }
             defaultValue={{ value: values.from, label: values.from }}
+            styles={{
+              option: (provided, state) => ({
+                ...provided,
+                color: state.isSelected ? "dimgrey" : "text",
+              }),
+            }}
             theme={(theme) => {
               return {
                 ...theme,
