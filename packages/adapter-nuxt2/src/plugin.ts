@@ -21,9 +21,9 @@ import { sliceDelete } from "./hooks/slice-delete";
 import { sliceLibraryRead } from "./hooks/sliceLibrary-read";
 import { sliceRead } from "./hooks/slice-read";
 import { sliceRename } from "./hooks/slice-rename";
-import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { sliceUpdate } from "./hooks/slice-update";
 import { snippetRead } from "./hooks/snippet-read";
+import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -57,7 +57,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		hook("custom-type-library:read", customTypeLibraryRead);
 
 		hook("snippet:read", snippetRead);
-
+		hook("documentation:read", documentationRead);
 		hook("slice-simulator:setup:read", sliceSimulatorSetupRead);
 	},
 });
