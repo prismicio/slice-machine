@@ -6,6 +6,7 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: ContentTabs,
+  argTypes: { tabs: { control: { disable: true } } },
 } satisfies Meta<typeof ContentTabs>;
 
 export default meta;

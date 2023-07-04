@@ -14,6 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: BlankSlate,
+  argTypes: { children: { control: { disable: true } } },
 } satisfies Meta<typeof BlankSlate>;
 
 export default meta;
