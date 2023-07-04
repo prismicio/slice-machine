@@ -15,29 +15,36 @@ import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMess
 import { renameCustomType } from "@src/features/customTypes/actions/renameCustomType";
 
 interface RenameCustomTypeModalProps {
+  isChangesLocal?: boolean;
   customType: CustomType;
   format: CustomTypeFormat;
   onClose: () => void;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
+  isChangesLocal,
   customType,
   format,
   onClose,
 }) => {
   const customTypeName = customType?.label ?? "";
   const customTypeId = customType?.id ?? "";
-  const { renameCustomTypeSuccess } = useSliceMachineActions();
+  const { renameAvailableCustomTypeSuccess, renameSelectedCustomType } =
+    useSliceMachineActions();
 
   const [isRenaming, setIsRenaming] = useState(false);
 
   const handleOnSubmit = async (values: { customTypeName: string }) => {
     setIsRenaming(true);
-    await renameCustomType({
-      model: customType,
-      newName: values.customTypeName,
-      onSuccess: renameCustomTypeSuccess,
-    });
+    if (isChangesLocal === true) {
+      renameSelectedCustomType(values.customTypeName);
+    } else {
+      await renameCustomType({
+        model: customType,
+        newName: values.customTypeName,
+        onSuccess: renameAvailableCustomTypeSuccess,
+      });
+    }
     setIsRenaming(false);
     onClose();
   };

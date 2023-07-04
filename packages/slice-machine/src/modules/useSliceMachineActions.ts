@@ -19,7 +19,7 @@ import ServerState from "@models/server/ServerState";
 import {
   createCustomTypeCreator,
   deleteCustomTypeCreator,
-  renameCustomTypeCreator,
+  renameAvailableCustomType,
 } from "./availableCustomTypes";
 import {
   createSliceCreator,
@@ -47,6 +47,7 @@ import {
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
   cleanupCustomTypeStoreCreator,
+  renameSelectedCustomTypeLabel,
 } from "./selectedCustomType";
 import {
   CustomTypeSM,
@@ -157,18 +158,6 @@ const useSliceMachineActions = () => {
     dispatch(
       createCustomTypeCreator.request({ id, label, repeatable, format })
     );
-  const renameCustomType = (
-    customTypeId: string,
-    format: CustomTypeFormat,
-    newCustomTypeName: string
-  ) =>
-    dispatch(
-      renameCustomTypeCreator.request({
-        customTypeId,
-        format,
-        newCustomTypeName,
-      })
-    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -178,6 +167,11 @@ const useSliceMachineActions = () => {
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
+
+  /** Success actions = sync store state from external actions.
+   * If its name contains "Creator", it means it is still used in a saga
+   * and that `.request` and `.failure` need to be preserved
+   */
   const saveCustomTypeSuccess = (customType: CustomType) =>
     dispatch(
       saveCustomTypeCreator.success({
@@ -192,12 +186,15 @@ const useSliceMachineActions = () => {
       })
     );
 
-  const renameCustomTypeSuccess = (customType: CustomType) =>
+  const renameAvailableCustomTypeSuccess = (customType: CustomType) =>
     dispatch(
-      renameCustomTypeCreator.success({
+      renameAvailableCustomType({
         renamedCustomType: CustomTypes.toSM(customType),
       })
     );
+
+  /** End of sucess actions */
+
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) =>
@@ -213,6 +210,8 @@ const useSliceMachineActions = () => {
     dispatch(deleteFieldCreator({ tabId, fieldId }));
   const reorderCustomTypeField = (tabId: string, start: number, end: number) =>
     dispatch(reorderFieldCreator({ tabId, start, end }));
+  const renameSelectedCustomType = (newLabel: string) =>
+    dispatch(renameSelectedCustomTypeLabel({ newLabel }));
   const replaceCustomTypeField = (
     tabId: string,
     previousFieldId: string,
@@ -486,9 +485,9 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
-    renameCustomType,
+    renameSelectedCustomType,
     deleteCustomTypeSuccess,
-    renameCustomTypeSuccess,
+    renameAvailableCustomTypeSuccess,
     initCustomTypeStore,
     cleanupCustomTypeStore,
     saveCustomType,
@@ -504,7 +503,6 @@ const useSliceMachineActions = () => {
     deleteSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,

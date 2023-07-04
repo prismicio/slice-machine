@@ -112,6 +112,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
 
   const actions = [
     <EditDropdown
+      isChangesLocal
       key="edit-dropdown"
       format={currentCustomType.format}
       customType={CustomTypes.fromSM(currentCustomType)}

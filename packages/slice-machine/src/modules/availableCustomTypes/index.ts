@@ -1,6 +1,11 @@
 import { Reducer } from "redux";
 import { AvailableCustomTypesStoreType } from "./types";
-import { ActionType, createAsyncAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
@@ -48,20 +53,11 @@ export const createCustomTypeCreator = createAsyncAction(
   }
 >();
 
-export const renameCustomTypeCreator = createAsyncAction(
-  "CUSTOM_TYPES/RENAME.REQUEST",
-  "CUSTOM_TYPES/RENAME.RESPONSE",
-  "CUSTOM_TYPES/RENAME.FAILURE"
-)<
-  {
-    customTypeId: string;
-    format: CustomTypeFormat;
-    newCustomTypeName: string;
-  },
-  {
-    renamedCustomType: CustomTypeSM;
-  }
->();
+export const renameAvailableCustomType = createAction(
+  "CUSTOM_TYPES/RENAME_CUSTOM_TYPE"
+)<{
+  renamedCustomType: CustomTypeSM;
+}>();
 
 export const deleteCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPES/DELETE.REQUEST",
@@ -81,7 +77,7 @@ export const deleteCustomTypeCreator = createAsyncAction(
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createCustomTypeCreator>
-  | ActionType<typeof renameCustomTypeCreator>
+  | ActionType<typeof renameAvailableCustomType>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof deleteCustomTypeCreator>
   | ActionType<typeof deleteSliceCreator.success>;
@@ -155,7 +151,7 @@ export const availableCustomTypesReducer: Reducer<
       };
     }
 
-    case getType(renameCustomTypeCreator.success): {
+    case getType(renameAvailableCustomType): {
       const id = action.payload.renamedCustomType.id;
       const customType = state[id];
 

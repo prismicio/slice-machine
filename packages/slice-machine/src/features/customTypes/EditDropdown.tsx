@@ -23,11 +23,16 @@ import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
 import { CustomTypeFormat } from "@slicemachine/manager";
 
 type EditDropdownProps = {
+  isChangesLocal?: boolean;
   format: CustomTypeFormat;
   customType: CustomType;
 };
 
-export const EditDropdown: FC<EditDropdownProps> = ({ format, customType }) => {
+export const EditDropdown: FC<EditDropdownProps> = ({
+  format,
+  customType,
+  isChangesLocal,
+}) => {
   const router = useRouter();
   const { saveCustomTypeSuccess } = useSliceMachineActions();
 
@@ -112,8 +117,9 @@ export const EditDropdown: FC<EditDropdownProps> = ({ format, customType }) => {
       ) : null}
       {isRenaming ? (
         <RenameCustomTypeModal
-          customType={customType}
           format={format}
+          customType={customType}
+          isChangesLocal={isChangesLocal}
           onClose={() => setIsRenaming(false)}
         />
       ) : null}
