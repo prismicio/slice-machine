@@ -270,7 +270,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           setIsDeleteSliceZoneModalOpen(false);
         }}
       />
-      {localLibraries?.length != 0 && (
+      {localLibraries?.length !== 0 && (
         <CreateSliceModal
           isCreatingSlice={isCreatingSlice}
           isOpen={isCreateSliceModalOpen}
