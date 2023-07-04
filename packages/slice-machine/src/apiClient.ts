@@ -316,3 +316,6 @@ export const telemetry = {
   group: managerClient.telemetry.group,
   track: managerClient.telemetry.track,
 };
+
+export const getSliceMachineConfig =
+  managerClient.project.getSliceMachineConfig;
