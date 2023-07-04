@@ -1,16 +1,17 @@
+import { IconButton, Text } from "@prismicio/editor-ui";
 import { type ReactNode, useEffect, useState } from "react";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
+import { prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
-import * as styles from "./CodeBlock.css";
-import { Text, IconButton } from "@prismicio/editor-ui";
-
-import { theme } from "./theme";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
+import { CodeIcon } from "@src/icons/CodeIcon";
 import { JavaScript } from "@src/icons/JavaScript";
 import { TypeScript } from "@src/icons/TypeScript";
 import { Vue } from "@src/icons/Vue";
 
-import { CodeIcon } from "@src/icons/CodeIcon";
+import * as styles from "./CodeBlock.css";
+
+SyntaxHighlighter.registerLanguage("tsx", tsx);
 
 type CodeBlockProps = {
   className?: string;
@@ -103,7 +104,7 @@ export const CodeBlock = ({
             borderBottomRightRadius: "4px",
           }}
           children={String(code).replace(/\n$/, "")}
-          style={theme}
+          style={prism}
           language={match[1]}
           PreTag="div"
         />
