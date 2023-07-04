@@ -24,6 +24,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { isModalOpen } from "@src/modules/modal";
 import { isLoading } from "@src/modules/loading";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { SliceZoneBlankState } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankState";
 import { ReplaceSharedSliceCreatorPayload } from "@src/modules/selectedCustomType";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
@@ -31,7 +32,6 @@ import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 import { SlicesList } from "./List";
-import EmptyState from "./EmptyState";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -234,7 +234,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         }
       />
       {sliceZone && !slicesInSliceZone.length ? (
-        <EmptyState
+        <SliceZoneBlankState
           onAddNewSlice={onAddNewSlice}
           onCreateNewSlice={onCreateNewSlice}
           isCreatingSlice={isCreatingSlice}
