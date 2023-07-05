@@ -14,6 +14,9 @@ type MarkdownRenderer = FC<{
 }>;
 
 const MarkdownCodeBlock = (props: CodeProps) => {
+  if (props.inline === true) {
+    return <code {...props} className={styles.inlineCode} />;
+  }
   const maybeFileInfo = (() => {
     if (props.node?.data?.meta !== undefined) {
       const fileName = (props.node?.data?.meta as string).replace(/\[|\]/g, "");

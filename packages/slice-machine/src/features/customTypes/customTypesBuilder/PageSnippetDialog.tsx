@@ -6,12 +6,12 @@ import {
   DialogHeader,
   ErrorBoundary,
   ScrollArea,
+  Icon,
 } from "@prismicio/editor-ui";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
 import { ContentTabs } from "@src/components/ContentTabs";
-import { CodeIcon } from "@src/icons/CodeIcon";
 import { useDocumentation } from "@src/features/documentation/useDocumentation";
 
 type PageSnippetContentProps = { model: CustomType };
@@ -29,13 +29,12 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
   return (
     <Dialog
       trigger={
-        <Button variant="secondary" startIcon={<CodeIcon />}>
+        <Button variant="secondary" startIcon={<Icon name="code" />}>
           Page snippet
         </Button>
       }
     >
-      {/** Icon="code" once editor-ui PR is merged */}
-      <DialogHeader icon="add" title="Page snippet" />
+      <DialogHeader icon="code" title="Page snippet" />
       <DialogContent>
         {documentation.length > 1 ? (
           <ContentTabs
@@ -65,7 +64,13 @@ export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
         description={`An error occurred while fetching page types snippets.`}
         renderError={() => null}
       >
-        <Suspense>
+        <Suspense
+          fallback={
+            <Button variant="secondary" startIcon={<Icon name="code" />}>
+              Page snippet
+            </Button>
+          }
+        >
           <PageSnippetContent model={model} />
         </Suspense>
       </ErrorBoundary>
