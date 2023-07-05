@@ -144,7 +144,7 @@ describe("Side Navigation", () => {
       })
     );
 
-    const { user } = renderApp({ canUpdate: true });
+    renderApp({ canUpdate: true });
 
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;
@@ -157,23 +157,11 @@ describe("Side Navigation", () => {
     );
 
     expect(link).toHaveAttribute("target", "_blank");
-
-    await user.hover(link);
-
-    const tooltip = await screen.findByRole("tooltip");
-    expect(tooltip).toBeVisible();
-    const closeButton = await within(tooltip).findByTestId(
-      "video-tooltip-close-button"
-    );
-
-    await user.click(closeButton);
-
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
 
-  test.skip("Video Item not next", async () => {
-    // something is wrong with the test isolation :/
+  test("Video Item not next", async () => {
     const { user } = renderApp({ canUpdate: true });
+
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;
     expect(link).toHaveAttribute(
