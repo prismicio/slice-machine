@@ -19,10 +19,10 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		const { model } = data.data;
 		const extension = await getJSFileExtension({ helpers, options, jsx: true });
 
-		const appFilePath = `~/app/${
+		const appFilePath = `${
 			model.repeatable ? "[uid]" : model.id
 		}/page.${extension}`;
-		const pagesFilePath = `~/pages/${
+		const pagesFilePath = `${
 			model.repeatable ? "[uid]" : model.id
 		}.${extension}`;
 
@@ -31,84 +31,107 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		if (isTypeScriptProject) {
 			if (model.repeatable) {
 				appFileContent = stripIndent`
+					import { Metadata } from "next";
 					import { notFound } from "next/navigation";
-					import { asText } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
 					import { components } from "@/slices";
 
-					export default async function Page({ params }: { params: { uid: string } }) {
+					type Params = { uid: string };
+
+					export const dynamicParams = false;
+
+					export default async function Page({ params }: { params: Params }) {
 						const client = createClient();
-						const page = await client.getByUID("${model.id}", params.uid).catch(() => notFound());
+						const page = await client
+							.getByUID("${model.id}", params.uid)
+							.catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
+
+					export async function generateMetadata({
+						params,
+					}: {
+						params: Params;
+					}): Promise<Metadata> {
+						const client = createClient();
+						const page = await client.getByUID("${model.id}", params.uid);
+
+						return {
+							title: page.data.meta_title,
+							description: page.data.meta_description,
+						};
+					}
+
+					export async function generateStaticParams() {
+						const client = createClient();
+						const pages = await client.getAllByType("${model.id}");
+
+						return pages.map((page) => {
+							return { uid: page.uid };
+						});
+					}
 				`;
 				pagesFileContent = stripIndent`
-					import type { InferGetStaticPropsType, GetStaticPropsContext } from "next";
+					import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+					import Head from "next/head";
+					import { isFilled, asLink } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
-					import { asLink } from "@prismicio/client";
 
-					import { createClient } from "@/prismicio";
 					import { components } from "@/slices";
+					import { createClient } from "@/prismicio";
 
-					type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
-					type PageParams = { uid: string };
+					type Params = { uid: string };
 
-					export default function Page({ page }: PageProps) {
+					export default function Page({
+						page,
+					}: InferGetStaticPropsType<typeof getStaticProps>) {
 						return (
-							<main>
+							<>
+								<Head>
+									<title>{page.data.meta_title}</title>
+									{isFilled.keyText(page.data.meta_description) ? (
+										<meta name="description" content={page.data.meta_description} />
+									) : null}
+								</Head>
 								<SliceZone slices={page.data.slices} components={components} />
-							</main>
+							</>
 						);
-					};
+					}
 
 					export async function getStaticProps({
 						params,
-						previewData
-					}: GetStaticPropsContext<PageParams>) {
+						previewData,
+					}: GetStaticPropsContext<Params>) {
+						// The \`previewData\` parameter allows your app to preview
+						// drafts from the Page Builder.
 						const client = createClient({ previewData });
 
-						if (params && params.uid) {
-							const page = await client.getByUID("${model.id}", params.uid);
-
-							if (page) {
-								return {
-									props: {
-										page,
-									},
-								};
-							}
-						}
+						const page = await client.getByUID("${model.id}", params!.uid);
 
 						return {
-							notFound: true,
-						}
-					};
+							props: { page },
+						};
+					}
 
 					export async function getStaticPaths() {
 						const client = createClient();
 
-						/**
-						 * Query all Documents from the API.
-						 */
 						const pages = await client.getAllByType("${model.id}");
 
-						/**
-						 * Define a path for every Document.
-						 */
 						return {
 							paths: pages.map((page) => {
 								return asLink(page);
 							}),
 							fallback: false,
 						};
-					};
+					}
 				`;
 			} else {
 				appFileContent = stripIndent`
-					import { notFound } from "next/navigation";
+					import { Metadata } from "next";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -116,107 +139,151 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					export default async function Page() {
 						const client = createClient();
-						const page = await client.getSingle("${model.id}").catch(() => notFound());
+						const page = await client.getSingle("${model.id}");
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
-				`;
-				pagesFileContent = stripIndent`
-					import type { InferGetStaticPropsType, GetStaticPropsContext } from "next";
-					import { SliceZone } from "@prismicio/react";
 
-					import { createClient } from "@/prismicio";
-					import { components } from "@/slices";
-
-					type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
-
-					export default function Page({ page }: PageProps) {
-						return (
-							<main>
-								<SliceZone slices={page.data.slices} components={components} />
-							</main>
-						);
-					};
-
-					export async function getStaticProps({ previewData }: GetStaticPropsContext) {
-						const client = createClient({ previewData });
-
+					export async function generateMetadata(): Promise<Metadata> {
+						const client = createClient();
 						const page = await client.getSingle("${model.id}");
 
 						return {
-							props: {
-								page,
-							},
+							title: page.data.meta_title,
+							description: page.data.meta_description,
 						};
-					};
+					}
+				`;
+				pagesFileContent = stripIndent`
+					import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+					import Head from "next/head";
+					import { isFilled } from "@prismicio/client";
+					import { SliceZone } from "@prismicio/react";
+
+					import { components } from "@/slices";
+					import { createClient } from "@/prismicio";
+
+					export default function Page({
+						page,
+					}: InferGetStaticPropsType<typeof getStaticProps>) {
+						return (
+							<>
+								<Head>
+									<title>{page.data.meta_title}</title>
+									{isFilled.keyText(page.data.meta_description) ? (
+										<meta name="description" content={page.data.meta_description} />
+									) : null}
+								</Head>
+								<SliceZone slices={page.data.slices} components={components} />
+							</>
+						);
+					}
+
+					export async function getStaticProps({ previewData }: GetStaticPropsContext) {
+						// The \`previewData\` parameter allows your app to preview
+						// drafts from the Page Builder.
+						const client = createClient({ previewData });
+
+						// The query fetches the page's data based on the current URL.
+						const page = await client.getSingle("${model.id}");
+
+						return {
+							props: { page },
+						};
+					}
 				`;
 			}
 		} else {
 			if (model.repeatable) {
 				appFileContent = stripIndent`
 					import { notFound } from "next/navigation";
-					import { asText } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
 					import { components } from "@/slices";
+
+					export const dynamicParams = false;
 
 					export default async function Page({ params }) {
 						const client = createClient();
-						const page = await client.getByUID("${model.id}", params.uid).catch(() => notFound());
+						const page = await client
+							.getByUID("${model.id}", params.uid)
+							.catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
+
+					export async function generateMetadata({ params }) {
+						const client = createClient();
+						const page = await client.getByUID("${model.id}", params.uid);
+
+						return {
+							title: page.data.meta_title,
+							description: page.data.meta_description,
+						};
+					}
+
+					export async function generateStaticParams() {
+						const client = createClient();
+						const pages = await client.getAllByType("${model.id}");
+
+						return pages.map((page) => {
+							return { uid: page.uid };
+						});
+					}
 				`;
 				pagesFileContent = stripIndent`
+					import Head from "next/head";
+					import { isFilled, asLink } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
-					import { asLink } from "@prismicio/client";
 
-					import { createClient } from "@/prismicio";
 					import { components } from "@/slices";
+					import { createClient } from "@/prismicio";
 
 					export default function Page({ page }) {
 						return (
-							<main>
+							<>
+								<Head>
+									<title>{page.data.meta_title}</title>
+									{isFilled.keyText(page.data.meta_description) ? (
+										<meta name="description" content={page.data.meta_description} />
+									) : null}
+								</Head>
 								<SliceZone slices={page.data.slices} components={components} />
-							</main>
+							</>
 						);
-					};
+					}
 
-					export async function getStaticProps({ params, previewData }) {
+					export async function getStaticProps({
+						params,
+						previewData,
+					}) {
+						// The \`previewData\` parameter allows your app to preview
+						// drafts from the Page Builder.
 						const client = createClient({ previewData });
 
 						const page = await client.getByUID("${model.id}", params.uid);
 
 						return {
-							props: {
-								page,
-							},
+							props: { page },
 						};
-					};
+					}
 
 					export async function getStaticPaths() {
 						const client = createClient();
 
-						/**
-						 * Query all Documents from the API.
-						 */
 						const pages = await client.getAllByType("${model.id}");
 
-						/**
-						 * Define a path for every Document.
-						 */
 						return {
 							paths: pages.map((page) => {
 								return asLink(page);
 							}),
 							fallback: false,
 						};
-					};
+					}
 				`;
 			} else {
 				appFileContent = stripIndent`
-					import { notFound } from "next/navigation";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -224,36 +291,55 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					export default async function Page() {
 						const client = createClient();
-						const page = await client.getSingle("${model.id}").catch(() => notFound());
+						const page = await client.getSingle("${model.id}");
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
-				`;
-				pagesFileContent = stripIndent`
-					import { SliceZone } from "@prismicio/react";
 
-					import { createClient } from "@/prismicio";
-					import { components } from "@/slices";
-
-					export default function Page({ page }) {
-						return (
-							<main>
-								<SliceZone slices={page.data.slices} components={components} />
-							</main>
-						);
-					};
-
-					export async function getStaticProps({ previewData }) {
-						const client = createClient({ previewData });
-
+					export async function generateMetadata() {
+						const client = createClient();
 						const page = await client.getSingle("${model.id}");
 
 						return {
-							props: {
-								page,
-							},
+							title: page.data.meta_title,
+							description: page.data.meta_description,
 						};
-					};
+					}
+				`;
+				pagesFileContent = stripIndent`
+					import Head from "next/head";
+					import { isFilled } from "@prismicio/client";
+					import { SliceZone } from "@prismicio/react";
+
+					import { components } from "@/slices";
+					import { createClient } from "@/prismicio";
+
+					export default function Page({ page }) {
+						return (
+							<>
+								<Head>
+									<title>{page.data.meta_title}</title>
+									{isFilled.keyText(page.data.meta_description) ? (
+										<meta name="description" content={page.data.meta_description} />
+									) : null}
+								</Head>
+								<SliceZone slices={page.data.slices} components={components} />
+							</>
+						);
+					}
+
+					export async function getStaticProps({ previewData }) {
+						// The \`previewData\` parameter allows your app to preview
+						// drafts from the Page Builder.
+						const client = createClient({ previewData });
+
+						// The query fetches the page's data based on the current URL.
+						const page = await client.getSingle("${model.id}");
+
+						return {
+							props: { page },
+						};
+					}
 				`;
 			}
 		}
@@ -279,29 +365,27 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			{
 				label: "App Router",
 				content: source`
-					## Creating ${model.label}'s page
+					## Create your ${model.label}'s page component
 
-					To render **${
-						model.label
-					}**, create a new page in Next's [app directory](https://nextjs.org/docs/app/building-your-application/routing) (e.g. \`${appFilePath}\`), with the following content.
+					Add a new route by creating an \`app/${appFilePath}\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`app/marketing/${appFilePath}\`.)
 
-					${`~~~${extension} [${appFilePath}]\n${appFileContent}\n~~~`}
+					Paste in this code:
 
-					> For more information about fetching content from Prismic, checkout the [fetching data documentation](https://prismic.io/docs/fetch-data-nextjs).
+					${`~~~${extension} [app/${appFilePath}]\n${appFileContent}\n~~~`}
+
+					Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.
 				`,
 			},
 			{
 				label: "Page Router",
 				content: source`
-					## Creating ${model.label}'s page
+					## Create your ${model.label}'s page component
 
-					To render **${
-						model.label
-					}**, create a new page in Next's [pages directory](https://nextjs.org/docs/pages/building-your-application/routing) (e.g. \`${pagesFilePath}\`), with the following content.
+					Add a new route by creating a \`pages/${pagesFilePath}\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`pages/marketing/${pagesFilePath}\`.)
 
-					${`~~~${extension} [${pagesFilePath}]\n${pagesFileContent}\n~~~`}
+					${`~~~${extension} [pages/${pagesFilePath}]\n${pagesFileContent}\n~~~`}
 
-					> For more information about fetching content from Prismic, checkout the [fetching data documentation](https://prismic.io/docs/fetch-data-nextjs).
+					Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.
 				`,
 			},
 		];

@@ -10,7 +10,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 ) => {
 	if (data.kind === "PageSnippet") {
 		const { model } = data.data;
-		const filePath = `~/pages/${model.repeatable ? "_uid" : model.id}.vue`;
+		const filePath = `${model.repeatable ? "_uid" : model.id}.vue`;
 
 		let fileContent: string;
 
@@ -31,6 +31,16 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					},
 					data() {
 						return { components };
+					},
+					head() {
+						return {
+							title: this.page.data.meta_title,
+							meta: [{
+								hid: "description",
+								name: "description",
+								content: this.page.data.meta_description,
+							}],
+						};
 					},
 				};
 				</script>
@@ -53,6 +63,16 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					data() {
 						return { components };
 					},
+					head() {
+						return {
+							title: this.page.data.meta_title,
+							meta: [{
+								hid: "description",
+								name: "description",
+								content: this.page.data.meta_description,
+							}],
+						};
+					},
 				};
 				</script>
 			`;
@@ -73,15 +93,15 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			{
 				label: "Options API",
 				content: source`
-					## Creating ${model.label}'s page
+					## Create your ${model.label}'s page component
 
-					To render **${
-						model.label
-					}**, create a new page in Nuxt's [pages directory](https://v2.nuxt.com/docs/directory-structure/pages) (e.g. \`${filePath}\`), with the following content.
+					Add a new route by creating an \`~/pages/${filePath}\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`~/pages/marketing/${filePath}\`.)
 
-					${`~~~vue [${filePath}]\n${fileContent}\n~~~`}
+					Paste in this code:
 
-					> For more information about fetching content from Prismic, checkout the [fetching data documentation](https://prismic.io/docs/nuxt-fetch-data).
+					${`~~~vue [~/pages/${filePath}]\n${fileContent}\n~~~`}
+
+					Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/nuxt-setup) for more information.
 				`,
 			},
 		];
