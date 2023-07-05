@@ -1,12 +1,11 @@
 import { FC } from "react";
-import { Box, Button, Icon, Image } from "@prismicio/editor-ui";
+import { Box, Button, Icon } from "@prismicio/editor-ui";
 
 import {
   BlankSlate,
   BlankSlateActions,
   BlankSlateContent,
   BlankSlateDescription,
-  BlankSlateImage,
   BlankSlateTitle,
 } from "@src/components/BlankSlate";
 
@@ -25,10 +24,7 @@ export const SliceZoneBlankState: FC<SliceZoneBlankStateProps> = ({
 }) => {
   return (
     <Box justifyContent="center">
-      <BlankSlate>
-        <BlankSlateImage>
-          <Image src="/blank-slate-page-types.png" sizing="cover" />
-        </BlankSlateImage>
+      <BlankSlate backgroundImage="/blank-slate-slice-zone.png">
         <BlankSlateContent>
           <BlankSlateTitle>Add your Slices</BlankSlateTitle>
           <BlankSlateDescription>
