@@ -60,7 +60,7 @@ const ToolTip: FC<{
         </Flex>
         <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
           {isNext
-            ? "Learn how to turn a client's Next.js website into a page builder powered by Prismic."
+            ? "Learn how to turn a Next.js website into a page builder powered by Prismic."
             : "Follow our Quick Start guide to learn the basics of Slice Machine"}
         </Paragraph>
       </Flex>
