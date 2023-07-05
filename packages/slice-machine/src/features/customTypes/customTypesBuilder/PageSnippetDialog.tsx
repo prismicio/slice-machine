@@ -6,14 +6,13 @@ import {
   DialogHeader,
   ErrorBoundary,
   ScrollArea,
+  Icon,
 } from "@prismicio/editor-ui";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
 import { ContentTabs } from "@src/components/ContentTabs";
 import { useDocumentation } from "@src/features/documentation/useDocumentation";
-
-import { Icon } from "@prismicio/editor-ui";
 
 type PageSnippetContentProps = { model: CustomType };
 
@@ -67,7 +66,7 @@ export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
       >
         <Suspense
           fallback={
-            <Button variant="secondary" startIcon={<CodeIcon />}>
+            <Button variant="secondary" startIcon={<Icon name="code" />}>
               Page snippet
             </Button>
           }
