@@ -1,11 +1,12 @@
-import type { SliceMachineConfig } from "@slicemachine/manager/*";
-import { getSliceMachineConfig } from "@src/apiClient";
+import type { SliceMachineConfig } from "@slicemachine/manager";
+import { managerClient } from "../managerClient";
 import { useState, useEffect } from "react";
 
 export const useSliceMachineConfig = () => {
   const [config, setConfig] = useState<SliceMachineConfig | null>(null);
   useEffect(() => {
-    getSliceMachineConfig()
+    managerClient.project
+      .getSliceMachineConfig()
       .then(setConfig)
       .catch(() => setConfig(null));
   }, []);
