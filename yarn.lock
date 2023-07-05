@@ -4715,7 +4715,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.2":
+"@prismicio/editor-fields@npm:^0.4.2":
   version: 0.4.2
   resolution: "@prismicio/editor-fields@npm:0.4.2"
   dependencies:
@@ -4757,7 +4757,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.1":
+"@prismicio/editor-support@npm:0.4.1, @prismicio/editor-support@npm:^0.4.1":
   version: 0.4.1
   resolution: "@prismicio/editor-support@npm:0.4.1"
   dependencies:
@@ -4774,7 +4774,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.3":
+"@prismicio/editor-ui@npm:^0.4.3":
   version: 0.4.3
   resolution: "@prismicio/editor-ui@npm:0.4.3"
   dependencies:
@@ -29509,9 +29509,9 @@ __metadata:
   dependencies:
     "@emotion/react": ^11.10.6
     "@extractus/oembed-extractor": ^3.1.8
-    "@prismicio/editor-fields": 0.4.2
-    "@prismicio/editor-support": 0.4.1
-    "@prismicio/editor-ui": 0.4.3
+    "@prismicio/editor-fields": ^0.4.2
+    "@prismicio/editor-support": ^0.4.1
+    "@prismicio/editor-ui": ^0.4.3
     "@prismicio/mocks": ^2.0.0-alpha.2
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0
