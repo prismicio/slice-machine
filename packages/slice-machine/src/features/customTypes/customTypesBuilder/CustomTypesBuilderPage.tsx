@@ -92,9 +92,14 @@ const CustomTypesBuilderPageWithProvider: React.FC<
 
   const { initCustomTypeStore, saveCustomType } = useSliceMachineActions();
 
-  useEffect(() => {
-    initCustomTypeStore(customType, remoteCustomType);
-  }, [customType, remoteCustomType]);
+  useEffect(
+    () => {
+      initCustomTypeStore(customType, remoteCustomType);
+    },
+    [
+      /* leave this empty to prevent local updates to disappear */
+    ]
+  );
 
   const { currentCustomType, hasPendingModifications, isSavingCustomType } =
     useSelector((store: SliceMachineStoreType) => ({
