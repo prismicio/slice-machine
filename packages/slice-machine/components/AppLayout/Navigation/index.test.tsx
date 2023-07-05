@@ -116,7 +116,42 @@ describe("Side Navigation", () => {
     }
   );
 
-  test("Video Item", async () => {
+  test.skip("Video Item with next", async () => {
+    // TODO: figure out the testinng strategy for the apiClient.
+
+    // const config = {
+    //   "repositoryName": "cimsirp",
+    //   "libraries": [
+    //       "slices/ecommerce",
+    //       "slices/marketing",
+    //       "slices/navigation"
+    //   ],
+    //   "adapter": "@slicemachine/adapter-next",
+    //   "localSliceSimulatorURL": "http://localhost:8000/slice-simulator"
+    // }
+    const { user } = renderApp({ canUpdate: true });
+    const link = (await screen.findByText("Tutorial")).parentElement
+      ?.parentElement as HTMLElement;
+    expect(link).toHaveAttribute(
+      "href",
+      "https://prismic.io/academy/prismic-and-nextjs"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+
+    await user.hover(link);
+
+    const tooltip = await screen.findByRole("tooltip");
+    expect(tooltip).toBeVisible();
+    const closeButton = await within(tooltip).findByTestId(
+      "video-tooltip-close-button"
+    );
+
+    await user.click(closeButton);
+
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+  });
+
+  test("Video Item not next", async () => {
     const { user } = renderApp({ canUpdate: true });
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;

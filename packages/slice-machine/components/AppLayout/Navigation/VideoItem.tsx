@@ -119,7 +119,7 @@ const VideoItem: FC<VideoItemProps> = ({
         />
       </SideNavListItem>
 
-      {(!hasSeenTutorialsToolTip || true) && (
+      {!hasSeenTutorialsToolTip && (
         <ToolTip isNext={isNext} id={id} onClose={onClose} />
       )}
     </div>
