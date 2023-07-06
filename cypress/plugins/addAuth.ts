@@ -1,13 +1,12 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
+import fetch from "node-fetch";
 
 // File called from the cypress setup in cypress-setup.sh
 const [, , EMAIL, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
-  const fetch = (await import("node-fetch")).default;
-
   const res = await fetch(
     new URL("./authentication/signin", PRISMIC_URL).toString(),
     {
