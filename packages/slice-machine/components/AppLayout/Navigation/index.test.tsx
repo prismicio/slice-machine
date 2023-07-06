@@ -17,6 +17,7 @@ import Router from "next/router";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
 import { createSliceMachineManager } from "@slicemachine/manager";
+import { cache } from "@prismicio/editor-support/Suspense";
 
 const mockRouter = vi.mocked(Router);
 
@@ -73,6 +74,10 @@ function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
 }
 
 describe("Side Navigation", () => {
+  beforeEach(() => {
+    cache.clear();
+  });
+
   test("Logo and repo area", async () => {
     renderApp({ canUpdate: true });
     expect(await screen.findByText("foo")).toBeVisible();
