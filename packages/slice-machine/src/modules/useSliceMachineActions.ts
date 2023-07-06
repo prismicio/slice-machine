@@ -47,6 +47,7 @@ import {
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
   cleanupCustomTypeStoreCreator,
+  type ReplaceSharedSliceCreatorPayload,
 } from "./selectedCustomType";
 import {
   CustomTypeSM,
@@ -418,8 +419,18 @@ const useSliceMachineActions = () => {
     dispatch(copyVariationSliceCreator({ key, name, copied }));
   };
 
-  const createSlice = (sliceName: string, libName: string) =>
-    dispatch(createSliceCreator.request({ sliceName, libName }));
+  const createSlice = (
+    sliceName: string,
+    libName: string,
+    replaceSharedSliceCreatorPayload?: ReplaceSharedSliceCreatorPayload
+  ) =>
+    dispatch(
+      createSliceCreator.request({
+        sliceName,
+        libName,
+        replaceSharedSliceCreatorPayload,
+      })
+    );
 
   const renameSlice = (
     libName: string,

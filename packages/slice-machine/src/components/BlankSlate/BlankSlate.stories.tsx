@@ -39,3 +39,22 @@ export const Default = {
     ),
   },
 } satisfies Story;
+
+export const Background = {
+  args: {
+    backgroundImage: "/blank-slate-slice-zone.png",
+    children: (
+      <>
+        <BlankSlateContent>
+          <BlankSlateTitle>My blank slate title</BlankSlateTitle>
+          <BlankSlateDescription>
+            My blank slate description
+          </BlankSlateDescription>
+          <BlankSlateActions>
+            <Button>Create</Button>
+          </BlankSlateActions>
+        </BlankSlateContent>
+      </>
+    ),
+  },
+} satisfies Story;

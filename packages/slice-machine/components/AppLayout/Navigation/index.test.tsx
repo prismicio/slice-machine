@@ -5,13 +5,19 @@ import {
   within,
   screen,
   type RenderReturnType,
+  waitFor,
 } from "../../../test/__testutils__";
 import SideNavigation from "./index";
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 import { act } from "react-dom/test-utils";
+import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
 import Router from "next/router";
+import { createTestPlugin } from "test/__testutils__/createTestPlugin";
+import { createTestProject } from "test/__testutils__/createTestProject";
+import { createSliceMachineManager } from "@slicemachine/manager";
+import { cache } from "@prismicio/editor-support/Suspense";
 
 const mockRouter = vi.mocked(Router);
 
@@ -68,6 +74,10 @@ function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
 }
 
 describe("Side Navigation", () => {
+  beforeEach(() => {
+    cache.clear();
+  });
+
   test("Logo and repo area", async () => {
     renderApp({ canUpdate: true });
     expect(await screen.findByText("foo")).toBeVisible();
@@ -116,8 +126,47 @@ describe("Side Navigation", () => {
     }
   );
 
-  test("Video Item", async () => {
+  test("Video Item with next", async (ctx) => {
+    const adapter = createTestPlugin({
+      meta: {
+        name: "@slicemachine/adapter-next",
+      },
+    });
+    const cwd = await createTestProject({
+      adapter,
+    });
+    const manager = createSliceMachineManager({
+      nativePlugins: { [adapter.meta.name]: adapter },
+      cwd,
+    });
+
+    await manager.plugins.initPlugins();
+
+    ctx.msw.use(
+      createSliceMachineManagerMSWHandler({
+        url: "http://localhost:3000/_manager",
+        sliceMachineManager: manager,
+      })
+    );
+
+    renderApp({ canUpdate: true });
+
+    const link = (await screen.findByText("Tutorial")).parentElement
+      ?.parentElement as HTMLElement;
+
+    await waitFor(() =>
+      expect(link).toHaveAttribute(
+        "href",
+        "https://prismic.io/academy/prismic-and-nextjs"
+      )
+    );
+
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  test("Video Item not next", async () => {
     const { user } = renderApp({ canUpdate: true });
+
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;
     expect(link).toHaveAttribute(
@@ -133,7 +182,6 @@ describe("Side Navigation", () => {
     const closeButton = await within(tooltip).findByTestId(
       "video-tooltip-close-button"
     );
-
     await user.click(closeButton);
 
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();

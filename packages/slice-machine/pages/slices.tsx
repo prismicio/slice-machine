@@ -120,7 +120,7 @@ const SlicesIndex: React.FunctionComponent = () => {
               href: "/slices",
             }}
             Actions={
-              localLibraries?.length != 0 && sliceCount != 0
+              localLibraries?.length !== 0 && sliceCount !== 0
                 ? [
                     <Button
                       key="create-slice"

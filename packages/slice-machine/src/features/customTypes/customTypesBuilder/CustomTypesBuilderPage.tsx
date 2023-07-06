@@ -95,12 +95,17 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     initCustomTypeStore(customType, remoteCustomType);
   }, []);
 
-  const { currentCustomType, hasPendingModifications, isSavingCustomType } =
-    useSelector((store: SliceMachineStoreType) => ({
-      currentCustomType: selectCurrentCustomType(store),
-      hasPendingModifications: isSelectedCustomTypeTouched(store),
-      isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
-    }));
+  const {
+    currentCustomType,
+    hasPendingModifications,
+    isSavingCustomType,
+    isCreatingSlice,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store),
+    hasPendingModifications: isSelectedCustomTypeTouched(store),
+    isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
+    isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
+  }));
 
   if (currentCustomType === null) {
     return null;
@@ -123,7 +128,9 @@ const CustomTypesBuilderPageWithProvider: React.FC<
       onClick={saveCustomType}
       loading={isSavingCustomType}
       data-testid="builder-save-button"
-      disabled={!hasPendingModifications || isSavingCustomType}
+      disabled={
+        !hasPendingModifications || isSavingCustomType || isCreatingSlice
+      }
     >
       Save
     </Button>,
