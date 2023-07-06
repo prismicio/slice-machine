@@ -79,7 +79,6 @@ const VideoItem: FC<VideoItemProps> = ({
 
   const config = useSliceMachineConfig();
 
-  // TODO: Plugins should be able to define their own video tutorials link
   const isNext = config?.adapter === "@slicemachine/adapter-next";
   const videoUrl = isNext ? PRISMIC_ACADEMY_URL : VIDEO_YOUTUBE_PLAYLIST_LINK;
 
