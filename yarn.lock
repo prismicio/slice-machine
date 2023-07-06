@@ -1824,12 +1824,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.22.5
   resolution: "@babel/runtime@npm:7.22.5"
   dependencies:
     regenerator-runtime: ^0.13.11
   checksum: 12a50b7de2531beef38840d17af50c55a094253697600cee255311222390c68eed704829308d4fd305e1b3dfbce113272e428e9d9d45b1730e0fede997eaceb1
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.3.1":
+  version: 7.22.6
+  resolution: "@babel/runtime@npm:7.22.6"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: e585338287c4514a713babf4fdb8fc2a67adcebab3e7723a739fc62c79cfda875b314c90fd25f827afb150d781af97bc16c85bfdbfa2889f06053879a1ddb597
   languageName: node
   linkType: hard
 
@@ -2882,11 +2891,11 @@ __metadata:
   linkType: hard
 
 "@floating-ui/dom@npm:^1.3.0":
-  version: 1.4.3
-  resolution: "@floating-ui/dom@npm:1.4.3"
+  version: 1.4.4
+  resolution: "@floating-ui/dom@npm:1.4.4"
   dependencies:
     "@floating-ui/core": ^1.3.1
-  checksum: f377960b5a61a685c77b2cdda1243122437008e138d29cdf2c5861d74650742057f011fb75580e6eab045a1c6109ad743202dd3f25b832ef70ef49d391b8f4ea
+  checksum: e8e43c786e24f8f111a72d7d17c3a9563cab8eddf2a2b3dacc2785370a97313a8dda0f3470b2b2ef2d3b9d6f1fd706ccf786d9441e54e283ed47c90aa0c0b1e1
   languageName: node
   linkType: hard
 
@@ -4922,21 +4931,6 @@ __metadata:
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
   checksum: 77974bfb7611d3e2bd31068090b3695efb6b5e32ea70aa41138af6448508a785f34a0e917c5ae615a9b2a3bea97358fcdea0699dbec4b98cc931d724ea57968f
-  languageName: node
-  linkType: hard
-
-"@prismicio/types-internal@npm:2.0.0-beta.1":
-  version: 2.0.0-beta.1
-  resolution: "@prismicio/types-internal@npm:2.0.0-beta.1"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-  peerDependencies:
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-  checksum: 9288f307e27529f2dd40a687e6f3841e10fbaff7d1b7c1fe18a9381ab92e744af4147bf8cef994be16ec234631e843fce7ad8c844960f948eacfce4a0ccb6715
   languageName: node
   linkType: hard
 
@@ -7565,7 +7559,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 2.0.0-beta.1
+    "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
@@ -7612,7 +7606,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 2.0.0-beta.1
+    "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
@@ -7658,7 +7652,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 2.0.0-beta.1
+    "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
@@ -7752,7 +7746,7 @@ __metadata:
     "@prismicio/custom-types-client": ^1.2.0-alpha.0
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.0.0-alpha.2
-    "@prismicio/types-internal": 2.0.0-beta.1
+    "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/analytics-node": 3.1.11
@@ -29616,6 +29610,8 @@ __metadata:
     vite: 4.3.9
     vitest: 0.32.0
     yup: ^0.32.11
+  bin:
+    start-slicemachine: ./bin/start-slicemachine.cjs
   languageName: unknown
   linkType: soft
 
