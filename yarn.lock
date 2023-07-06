@@ -7614,7 +7614,7 @@ __metadata:
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.0.0-beta.1
     "@size-limit/preset-small-lib": 8.2.4
-    "@slicemachine/plugin-kit": 0.4.1-dev-next-release.5
+    "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
     "@types/fs-extra": 11.0.1
     "@types/prettier": 2.7.2
@@ -7816,7 +7816,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@slicemachine/plugin-kit@0.4.1-dev-next-release.5, @slicemachine/plugin-kit@workspace:*, @slicemachine/plugin-kit@workspace:^, @slicemachine/plugin-kit@workspace:packages/plugin-kit":
+"@slicemachine/plugin-kit@workspace:*, @slicemachine/plugin-kit@workspace:^, @slicemachine/plugin-kit@workspace:packages/plugin-kit":
   version: 0.0.0-use.local
   resolution: "@slicemachine/plugin-kit@workspace:packages/plugin-kit"
   dependencies:
