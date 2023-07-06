@@ -36,15 +36,6 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 
 	if (isTypeScriptProject) {
 		contents = stripIndent`
-			<template>
-				<section
-					:data-slice-type="slice.slice_type"
-					:data-slice-variation="slice.variation"
-				>
-					Placeholder component for ${model.id} (variation: {{ slice.variation }}) Slices
-				</section>
-			</template>
-
 			<script setup lang="ts">
 			import { Content } from "@prismicio/client";
 
@@ -54,9 +45,24 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 				["slice", "index", "slices", "context"]
 			));
 			</script>
+
+			<template>
+				<section
+					:data-slice-type="slice.slice_type"
+					:data-slice-variation="slice.variation"
+				>
+					Placeholder component for ${model.id} (variation: {{ slice.variation }}) Slices
+				</section>
+			</template>
 		`;
 	} else {
 		contents = stripIndent`
+			<script setup>
+			// The array passed to \`getSliceComponentProps\` is purely optional.
+			// Consider it as a visual hint for you when templating your slice.
+			defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
+			</script>
+
 			<template>
 				<section
 					:data-slice-type="slice.slice_type"
@@ -65,12 +71,6 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 					Placeholder component for {{ model.id }} (variation: {{ slice.variation }}) Slices
 				</section>
 			</template>
-
-			<script setup>
-			// The array passed to \`getSliceComponentProps\` is purely optional.
-			// Consider it as a visual hint for you when templating your slice.
-			defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
-			</script>
 		`;
 	}
 

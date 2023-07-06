@@ -185,6 +185,14 @@ export type {
 	ProjectInitHookReturnType,
 } from "./hooks/project-init";
 
+// documentation
+export type {
+	Documentation,
+	DocumentationReadHook,
+	DocumentationReadHookData,
+	DocumentationReadHookReturnType,
+} from "./hooks/documentation-read";
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Internal (for Slice Machine)

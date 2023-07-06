@@ -39,6 +39,7 @@ import { VersionsManager } from "./versions/VersionsManager";
 
 import { TelemetryManager } from "./telemetry/TelemetryManager";
 import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
+import { DocumentationManager } from "./documentation/DocumentationManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -113,6 +114,7 @@ export class SliceMachineManager {
 	simulator: SimulatorManager;
 	slices: SlicesManager;
 	snippets: SnippetsManager;
+	documentation: DocumentationManager;
 	telemetry: TelemetryManager;
 	user: UserManager;
 	versions: VersionsManager;
@@ -136,6 +138,7 @@ export class SliceMachineManager {
 		this.snippets = new SnippetsManager(this);
 		this.screenshots = new ScreenshotsManager(this);
 		this.simulator = new SimulatorManager(this);
+		this.documentation = new DocumentationManager(this);
 
 		this.versions = new VersionsManager(this);
 

@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: Table,
+  argTypes: { children: { control: { disable: true } } },
 } satisfies Meta<typeof Table>;
 
 export default meta;

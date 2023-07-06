@@ -21,6 +21,7 @@ type Story = StoryObj<typeof meta>;
 const meta = {
   component: SideNav,
   parameters: { layout: "fullscreen" },
+  argTypes: { children: { control: { disable: true } } },
 } satisfies Meta<typeof SideNav>;
 
 export default meta;

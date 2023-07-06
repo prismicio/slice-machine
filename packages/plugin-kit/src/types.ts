@@ -24,6 +24,7 @@ import { SliceRenameHookBase } from "./hooks/slice-rename";
 import { SliceSimulatorSetupReadHookBase } from "./hooks/sliceSimulator-setup-read";
 import { SliceUpdateHookBase } from "./hooks/slice-update";
 import { SnippetReadHookBase } from "./hooks/snippet-read";
+import { DocumentationReadHookBase } from "./hooks/documentation-read";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
@@ -151,6 +152,7 @@ export const SliceMachineHookType = {
 	customType_asset_delete: "custom-type:asset:delete",
 	customType_asset_read: "custom-type:asset:read",
 	customTypeLibrary_read: "custom-type-library:read",
+	documentation_read: "documentation:read",
 
 	snippet_read: "snippet:read",
 
@@ -199,6 +201,9 @@ export type SliceMachineHooks = {
 
 	// Snippets
 	[SliceMachineHookType.snippet_read]: Hook<SnippetReadHookBase>;
+
+	// Documentation
+	[SliceMachineHookType.documentation_read]: Hook<DocumentationReadHookBase>;
 
 	// Slice Simulator
 	[SliceMachineHookType.sliceSimulator_setup_read]: Hook<SliceSimulatorSetupReadHookBase>;
