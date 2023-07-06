@@ -7,9 +7,9 @@ import {
   useState,
 } from "react";
 
-type RouteChange = Readonly<{ source: Route; destination: Route }>;
+type RouteChange = { source: Route; destination: Route };
 
-export type Route = Readonly<Pick<NextRouter, "asPath" | "query">>;
+export type Route = Pick<NextRouter, "asPath" | "query">;
 
 const RouteChangeContext = createContext<RouteChange | undefined>(undefined);
 

@@ -3,12 +3,8 @@ import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import { managerClient } from "@src/managerClient";
 
-type UseCustomTypeReturnType = Readonly<{
-  customType: CustomType | undefined;
-}>;
-
-export function useCustomType(id: string): UseCustomTypeReturnType {
-  return { customType: useRequest(readCustomType, [id]) };
+export function useCustomType(id: string): CustomType | undefined {
+  return useRequest(readCustomType, [id]);
 }
 
 async function readCustomType(id: string): Promise<CustomType | undefined> {

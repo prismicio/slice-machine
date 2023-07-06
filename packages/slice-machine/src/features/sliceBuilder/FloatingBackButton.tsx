@@ -41,10 +41,10 @@ function getSourceCustomTypeId(source: Route): string | undefined {
     : undefined;
 }
 
-type BackButtonProps = Readonly<{ sourceCustomTypeId: string }>;
+type BackButtonProps = { sourceCustomTypeId: string };
 
 const BackButton: FC<BackButtonProps> = ({ sourceCustomTypeId }) => {
-  const { customType: sourceCustomType } = useCustomType(sourceCustomTypeId);
+  const sourceCustomType = useCustomType(sourceCustomTypeId);
   const [visible, setVisible] = useState(true);
   const router = useRouter();
   if (sourceCustomType !== undefined && visible) {
