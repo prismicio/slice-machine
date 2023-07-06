@@ -8,7 +8,14 @@ import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
 import pkg from "../../package.json";
-import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
+import {
+  render,
+  fireEvent,
+  act,
+  screen,
+  waitFor,
+  within,
+} from "../__testutils__";
 import { createTestPlugin } from "../__testutils__/createTestPlugin";
 import { createTestProject } from "../__testutils__/createTestProject";
 
@@ -293,7 +300,7 @@ describe("Custom Type Builder", () => {
       });
     }
 
-    const saveButton = screen.getByTestId("modal-form-card-validate");
+    const saveButton = within(screen.getByRole("dialog")).getByText("Save");
 
     await act(async () => {
       fireEvent.click(saveButton);
