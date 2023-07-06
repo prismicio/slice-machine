@@ -4,28 +4,20 @@ import { useSelector } from "react-redux";
 import { FC, useEffect } from "react";
 
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
+import { readBuilderPageDynamicSegment } from "@src/features/customTypes/customTypesConfig";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
-import type { CustomTypeFormat } from "@slicemachine/manager";
-import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 
-type CustomTypesBuilderPageProps = {
-  format: CustomTypeFormat;
-};
-
-export const CustomTypesBuilderPage: FC<CustomTypesBuilderPageProps> = ({
-  format,
-}) => {
+export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const { selectedCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
       selectedCustomType: selectCustomTypeById(
         store,
-        router.query[`${customTypesConfig.builderPageDynamicSegment}`] as string
+        readBuilderPageDynamicSegment(router.query) as string
       ),
     })
   );

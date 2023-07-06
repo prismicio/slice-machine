@@ -33,6 +33,7 @@ import { AppInitialProps } from "next/dist/shared/lib/utils";
 import { Store } from "redux";
 import { Persistor } from "redux-persist/es/types";
 import { ConnectedRouter } from "connected-next-router";
+import { RouteChangeProvider } from "../src/hooks/useRouteChange";
 import { getState } from "../src/apiClient";
 import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/customType";
 import Router from "next/router";
@@ -120,9 +121,11 @@ function MyApp({
               <Provider store={smStore.store}>
                 <ConnectedRouter Router={Router}>
                   <PersistGate loading={null} persistor={smStore.persistor}>
-                    <ComponentLayout>
-                      <Component {...pageProps} />
-                    </ComponentLayout>
+                    <RouteChangeProvider>
+                      <ComponentLayout>
+                        <Component {...pageProps} />
+                      </ComponentLayout>
+                    </RouteChangeProvider>
                   </PersistGate>
                 </ConnectedRouter>
               </Provider>
