@@ -2,7 +2,6 @@ import { FC, Suspense } from "react";
 import {
   Button,
   Dialog,
-  DialogContent,
   DialogHeader,
   ErrorBoundary,
   ScrollArea,
@@ -10,9 +9,11 @@ import {
 } from "@prismicio/editor-ui";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
-import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
 import { ContentTabs } from "@src/components/ContentTabs";
+import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
 import { useDocumentation } from "@src/features/documentation/useDocumentation";
+
+import * as styles from "./PageSnippetDialog.css";
 
 type PageSnippetContentProps = { model: CustomType };
 
@@ -28,6 +29,7 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
 
   return (
     <Dialog
+      size="small"
       trigger={
         <Button variant="secondary" startIcon={<Icon name="code" />}>
           Page snippet
@@ -35,7 +37,7 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
       }
     >
       <DialogHeader icon="code" title="Page snippet" />
-      <DialogContent>
+      <section className={styles.content}>
         {documentation.length > 1 ? (
           <ContentTabs
             style={{ flex: 1 }}
@@ -49,7 +51,7 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
             <MarkdownRenderer markdown={documentation[0].content} />
           </ScrollArea>
         )}
-      </DialogContent>
+      </section>
     </Dialog>
   );
 };
