@@ -23,6 +23,19 @@ export const root = style([
   { maxWidth: 498, minHeight: 400 },
 ]);
 
+export const withBackground = style([
+  sprinkles({
+    borderWidth: 0,
+    textAlign: "center",
+    width: "100%",
+  }),
+  {
+    backgroundSize: "cover",
+    height: "50vh",
+    maxWidth: "100%",
+  },
+]);
+
 export const image = style([
   column,
   sprinkles({
@@ -33,7 +46,17 @@ export const image = style([
   }),
 ]);
 
-export const content = style([column, sprinkles({ padding: 32 })]);
+export const content = style([
+  column,
+  sprinkles({ padding: 32 }),
+  {
+    selectors: {
+      [`${withBackground} &`]: {
+        padding: "64px",
+      },
+    },
+  },
+]);
 
 export const title = style({
   fontSize: 18,
@@ -41,10 +64,28 @@ export const title = style({
   lineHeight: "32px",
 });
 
-export const desc = style({ fontWeight: 400 });
-
-export const actions = sprinkles({
-  gap: 16,
-  alignItems: "center",
-  marginTop: 16,
+export const desc = style({
+  fontWeight: 400,
+  lineHeight: "24px",
+  selectors: {
+    [`${withBackground} &`]: {
+      width: "464px",
+      alignSelf: "center",
+    },
+  },
 });
+
+export const actions = style([
+  sprinkles({
+    gap: 16,
+    alignItems: "center",
+    marginTop: 16,
+  }),
+  {
+    selectors: {
+      [`${withBackground} &`]: {
+        justifyContent: "center",
+      },
+    },
+  },
+]);

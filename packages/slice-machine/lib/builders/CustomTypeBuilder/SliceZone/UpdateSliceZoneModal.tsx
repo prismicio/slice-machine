@@ -1,6 +1,5 @@
 import ModalFormCard from "../../../../components/ModalFormCard";
 
-import UpdateSliceZoneModalEmptyState from "./UpdateSliceZoneModalEmptyState";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
@@ -25,11 +24,8 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
   availableSlices,
   slicesInSliceZone,
 }) => {
-  const projectHasAvailableSlices = !!availableSlices.length;
-
   return (
     <ModalFormCard
-      widthInPx={projectHasAvailableSlices ? undefined : "500px"}
       isOpen={isOpen}
       formId={formId}
       close={close}
@@ -41,19 +37,16 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: slicesInSliceZone.map((slice) => slice.model.id),
       }}
       content={{
-        title: "Update Slice Zone",
+        title: "Update Slices",
       }}
-      omitFooter={!projectHasAvailableSlices}
       dataCy="update-slices-modal"
     >
-      {projectHasAvailableSlices
-        ? ({ values }) => (
-            <UpdateSliceZoneModalList
-              values={values}
-              availableSlices={availableSlices}
-            />
-          )
-        : () => <UpdateSliceZoneModalEmptyState />}
+      {({ values }) => (
+        <UpdateSliceZoneModalList
+          values={values}
+          availableSlices={availableSlices}
+        />
+      )}
     </ModalFormCard>
   );
 };
