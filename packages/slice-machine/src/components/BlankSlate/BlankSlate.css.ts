@@ -25,7 +25,6 @@ export const root = style([
 
 export const withBackground = style([
   sprinkles({
-    borderWidth: 0,
     textAlign: "center",
     width: "100%",
   }),
