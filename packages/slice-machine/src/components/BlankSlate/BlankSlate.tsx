@@ -11,6 +11,7 @@ interface BlankSlateProps extends PropsWithChildren {
 
 export const BlankSlate: FC<BlankSlateProps> = ({
   backgroundImage,
+  style,
   ...props
 }) => {
   const hasBackground = backgroundImage !== undefined;
@@ -22,6 +23,7 @@ export const BlankSlate: FC<BlankSlateProps> = ({
       })}
       style={{
         backgroundImage: hasBackground ? `url(${backgroundImage})` : undefined,
+        ...style,
       }}
     />
   );
