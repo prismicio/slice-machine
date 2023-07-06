@@ -42,6 +42,7 @@ export const MarkdownRenderer: MarkdownRenderer = ({ markdown }) => {
   return (
     <ReactMarkdown
       children={markdown}
+      linkTarget="_blank"
       remarkPlugins={[remarkGfm]}
       components={{
         code: (props) => <MarkdownCodeBlock {...props} />,
