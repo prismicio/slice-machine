@@ -78,9 +78,10 @@ export const CreateSliceModal: React.FunctionComponent<
             }
             defaultValue={{ value: values.from, label: values.from }}
             styles={{
-              option: (provided, state) => ({
+              option: (provided) => ({
                 ...provided,
-                color: state.isSelected ? "dimgrey" : "text",
+                // Color of item text (Dark/Shade-01)
+                color: "#161618",
               }),
             }}
             theme={(theme) => {
@@ -88,8 +89,8 @@ export const CreateSliceModal: React.FunctionComponent<
                 ...theme,
                 colors: {
                   ...theme.colors,
-                  text: "text",
-                  primary: "background",
+                  // Background of selected item (Gray/Shade-05)
+                  primary: "#E9E8EA",
                 },
               };
             }}
