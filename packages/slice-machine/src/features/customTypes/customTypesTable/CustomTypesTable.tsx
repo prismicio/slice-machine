@@ -142,7 +142,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                 <TableCell>{id}</TableCell>
                 <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
                 <TableCell>
-                  <DropdownMenu>
+                  <DropdownMenu modal>
                     <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
                       <IconButton
                         icon="moreVert"

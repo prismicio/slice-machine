@@ -65,7 +65,7 @@ export const Default = {
               <TableCell>{apiId}</TableCell>
               <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
               <TableCell>
-                <DropdownMenu>
+                <DropdownMenu modal>
                   <DropdownMenuTrigger>
                     <IconButton icon="moreVert" />
                   </DropdownMenuTrigger>
