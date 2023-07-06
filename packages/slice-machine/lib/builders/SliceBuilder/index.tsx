@@ -16,6 +16,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { SliceSM, VariationSM } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
+import { FloatingBackButton } from "@src/features/sliceBuilder/FloatingBackButton";
 import { isSelectedSliceTouched } from "@src/modules/selectedSlice/selectors";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
@@ -129,6 +130,7 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
       >
         <FieldZones variation={variation} />
       </FlexEditor>
+      <FloatingBackButton />
     </Box>
   );
 };

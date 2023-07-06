@@ -1,46 +1,39 @@
+import { Button } from "@prismicio/editor-ui";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { type FC, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { FC, useEffect } from "react";
 
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
-import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
-import type { CustomTypeFormat } from "@slicemachine/manager";
-import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import {
   MainContainer,
   MainContainerHeader,
   MainContainerContent,
 } from "@src/components/MainContainer";
+import { readBuilderPageDynamicSegment } from "@src/features/customTypes/customTypesConfig";
+import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
   isSelectedCustomTypeTouched,
   selectCurrentCustomType,
 } from "@src/modules/selectedCustomType";
-import { Button } from "@prismicio/editor-ui";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@src/redux/type";
 
+import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { PageSnippetDialog } from "./PageSnippetDialog";
 
-type CustomTypesBuilderPageProps = {
-  format: CustomTypeFormat;
-};
-
-export const CustomTypesBuilderPage: FC<CustomTypesBuilderPageProps> = ({
-  format,
-}) => {
+export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
-  const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const { selectedCustomType } = useSelector(
     (store: SliceMachineStoreType) => ({
       selectedCustomType: selectCustomTypeById(
         store,
-        router.query[`${customTypesConfig.builderPageDynamicSegment}`] as string
+        readBuilderPageDynamicSegment(router.query) as string
       ),
     })
   );
