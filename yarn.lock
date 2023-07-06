@@ -4925,6 +4925,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/types-internal@npm:2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@prismicio/types-internal@npm:2.0.0-beta.1"
+  dependencies:
+    monocle-ts: ^2.3.11
+    newtype-ts: ^0.3.5
+    tslib: ^2.3.1
+  peerDependencies:
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    io-ts-types: ^0.5.16
+  checksum: 9288f307e27529f2dd40a687e6f3841e10fbaff7d1b7c1fe18a9381ab92e744af4147bf8cef994be16ec234631e843fce7ad8c844960f948eacfce4a0ccb6715
+  languageName: node
+  linkType: hard
+
 "@prismicio/types-internal@npm:^1.0.1":
   version: 1.5.3
   resolution: "@prismicio/types-internal@npm:1.5.3"
@@ -7550,7 +7565,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": 2.0.0-beta.1
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
@@ -7597,9 +7612,9 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": 2.0.0-beta.1
     "@size-limit/preset-small-lib": 8.2.4
-    "@slicemachine/plugin-kit": "workspace:^"
+    "@slicemachine/plugin-kit": 0.4.1-dev-next-release.5
     "@types/common-tags": 1.8.1
     "@types/fs-extra": 11.0.1
     "@types/prettier": 2.7.2
@@ -7643,7 +7658,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": 2.0.0-beta.1
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
@@ -7737,7 +7752,7 @@ __metadata:
     "@prismicio/custom-types-client": ^1.2.0-alpha.0
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.0.0-alpha.2
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": 2.0.0-beta.1
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/analytics-node": 3.1.11
@@ -7801,7 +7816,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@slicemachine/plugin-kit@workspace:*, @slicemachine/plugin-kit@workspace:^, @slicemachine/plugin-kit@workspace:packages/plugin-kit":
+"@slicemachine/plugin-kit@0.4.1-dev-next-release.5, @slicemachine/plugin-kit@workspace:*, @slicemachine/plugin-kit@workspace:^, @slicemachine/plugin-kit@workspace:packages/plugin-kit":
   version: 0.0.0-use.local
   resolution: "@slicemachine/plugin-kit@workspace:packages/plugin-kit"
   dependencies:
@@ -29601,8 +29616,6 @@ __metadata:
     vite: 4.3.9
     vitest: 0.32.0
     yup: ^0.32.11
-  bin:
-    start-slicemachine: ./bin/start-slicemachine.cjs
   languageName: unknown
   linkType: soft
 

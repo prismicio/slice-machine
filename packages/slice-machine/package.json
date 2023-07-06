@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.4.1-dev-next-release.0",
+  "version": "1.2.1-dev-next-release.5",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -27,9 +27,6 @@
     "depcheck": "depcheck --config=.depcheckrc",
     "audit": "yarn npm audit --environment production --severity high"
   },
-  "bin": {
-    "start-slicemachine": "./bin/start-slicemachine.cjs"
-  },
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@extractus/oembed-extractor": "^3.1.8",
@@ -43,6 +40,12 @@
     "@reach/menu-button": "^0.18.0",
     "@sentry/nextjs": "^7.43.0",
     "@slicemachine/manager": "workspace:^",
+    "@storybook/addon-essentials": "7.0.10",
+    "@storybook/react": "7.0.10",
+    "@storybook/react-vite": "7.0.10",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "14.4.3",
     "@theme-ui/color": "^0.15.5",
     "@vanilla-extract/css": "^1.11.0",
     "cloudinary-react": "^1.8.1",
@@ -80,6 +83,7 @@
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.2",
     "remark-gfm": "^3.0.1",
+    "semver": "^7.3.8",
     "start-slicemachine": "workspace:^",
     "swr": "^1.3.0",
     "theme-ui": "^0.15.5",
