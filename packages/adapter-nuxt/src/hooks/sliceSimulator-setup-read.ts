@@ -94,16 +94,16 @@ const createStep2 = async ({
 
 	const fileContents = await helpers.format(
 		source`
+			<script ${scriptAttributes.join(" ")}>
+			import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
+			import { components } from "~/slices";
+			</script>
+
 			<template>
 				<SliceSimulator #default="{ slices }">
 					<SliceZone :slices="slices" :components="components" />
 				</SliceSimulator>
 			</template>
-
-			<script ${scriptAttributes.join(" ")}>
-			import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
-			import { components } from "~/slices";
-			</script>
 		`,
 		filePath,
 		{
