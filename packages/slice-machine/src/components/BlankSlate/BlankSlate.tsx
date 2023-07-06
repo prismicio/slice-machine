@@ -18,7 +18,7 @@ export const BlankSlate: FC<BlankSlateProps> = ({
     <article
       {...props}
       className={clsx(styles.root, {
-        [styles.hasBackground]: hasBackground,
+        [styles.withBackground]: hasBackground,
       })}
       style={{
         backgroundImage: hasBackground ? `url(${backgroundImage})` : undefined,

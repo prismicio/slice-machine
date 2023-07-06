@@ -23,7 +23,7 @@ export const root = style([
   { maxWidth: 498, minHeight: 400 },
 ]);
 
-export const hasBackground = style([
+export const withBackground = style([
   sprinkles({
     borderWidth: 0,
     textAlign: "center",
@@ -51,7 +51,7 @@ export const content = style([
   sprinkles({ padding: 32 }),
   {
     selectors: {
-      [`${hasBackground} &`]: {
+      [`${withBackground} &`]: {
         padding: "64px",
       },
     },
@@ -68,7 +68,7 @@ export const desc = style({
   fontWeight: 400,
   lineHeight: "24px",
   selectors: {
-    [`${hasBackground} &`]: {
+    [`${withBackground} &`]: {
       width: "464px",
       alignSelf: "center",
     },
@@ -83,7 +83,7 @@ export const actions = style([
   }),
   {
     selectors: {
-      [`${hasBackground} &`]: {
+      [`${withBackground} &`]: {
         justifyContent: "center",
       },
     },
