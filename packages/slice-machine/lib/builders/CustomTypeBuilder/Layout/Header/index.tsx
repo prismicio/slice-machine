@@ -21,12 +21,12 @@ const CustomTypeHeader = () => {
   const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
     currentCustomType: selectCurrentCustomType(store),
   }));
-  const { hasPendingModifications, isSavingCustomType } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { hasPendingModifications, isSavingCustomType, isCreatingSlice } =
+    useSelector((store: SliceMachineStoreType) => ({
       hasPendingModifications: isSelectedCustomTypeTouched(store),
       isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
-    })
-  );
+      isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
+    }));
   const { saveCustomType } = useSliceMachineActions();
 
   if (!currentCustomType) return null;
@@ -61,7 +61,9 @@ const CustomTypeHeader = () => {
             key="builder-save-button"
             label="Save to File System"
             isLoading={isSavingCustomType}
-            disabled={!hasPendingModifications || isSavingCustomType}
+            disabled={
+              !hasPendingModifications || isSavingCustomType || isCreatingSlice
+            }
             onClick={saveCustomType}
             Icon={AiFillSave}
             iconFill="#FFFFFF"

@@ -1,24 +1,37 @@
 import { useEffect, useMemo, useState } from "react";
-import { Text, Box, Flex, Heading, Button } from "theme-ui";
+import { Text, Box, Flex, Heading } from "theme-ui";
 import { useSelector } from "react-redux";
-import { Switch, vars } from "@prismicio/editor-ui";
+import { Switch, vars, Button, Icon } from "@prismicio/editor-ui";
 
+import { snakelize } from "@lib/utils/str";
 import { SlicesSM } from "@lib/models/common/Slices";
 import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
+import { SliceMachineStoreType } from "@src/redux/type";
+import {
+  getFrontendSlices,
+  getLibraries,
+  getRemoteSlices,
+} from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { CustomTypeFormat } from "@slicemachine/manager";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { isModalOpen } from "@src/modules/modal";
+import { isLoading } from "@src/modules/loading";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { SliceZoneBlankState } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankState";
+import { ReplaceSharedSliceCreatorPayload } from "@src/modules/selectedCustomType";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 import { SlicesList } from "./List";
-import EmptyState from "./EmptyState";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -94,21 +107,49 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   tabId,
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
-  const { libraries, slices } = useSelector((store: SliceMachineStoreType) => ({
+  const {
+    isCreateSliceModalOpen,
+    isCreatingSlice,
+    remoteSlices,
+    libraries,
+    slices,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
+    isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
+    remoteSlices: getRemoteSlices(store),
     libraries: getLibraries(store),
     slices: getFrontendSlices(store),
   }));
+  const localLibraries: LibraryUI[] = libraries.filter(
+    (library) => library.isLocal
+  );
   const { modelsStatuses, authStatus, isOnline } = useModelStatus({ slices });
-  const { availableSlices, slicesInSliceZone, notFound } = useMemo(
+  const availableAndSharedSlices = useMemo(
     () =>
       sliceZone
         ? mapAvailableAndSharedSlices(sliceZone, libraries)
         : { availableSlices: [], slicesInSliceZone: [], notFound: [] },
     [sliceZone, libraries]
   );
-
+  const { notFound } = availableAndSharedSlices;
+  const { openCreateSliceModal, closeModals, createSlice } =
+    useSliceMachineActions();
   const [isDeleteSliceZoneModalOpen, setIsDeleteSliceZoneModalOpen] =
     useState(false);
+  const [slicesToDisplay, setSlicesToDisplay] = useState({
+    availableSlices: availableAndSharedSlices.availableSlices,
+    slicesInSliceZone: availableAndSharedSlices.slicesInSliceZone,
+  });
+  const { availableSlices, slicesInSliceZone } = slicesToDisplay;
+
+  useEffect(() => {
+    if (!isCreatingSlice) {
+      setSlicesToDisplay({
+        availableSlices: availableAndSharedSlices.availableSlices,
+        slicesInSliceZone: availableAndSharedSlices.slicesInSliceZone,
+      });
+    }
+  }, [isCreatingSlice, availableAndSharedSlices]);
 
   useEffect(() => {
     if (notFound?.length) {
@@ -132,6 +173,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       onCreateSliceZone();
     }
     setFormIsOpen(true);
+  };
+
+  const onCreateNewSlice = () => {
+    if (!sliceZone) {
+      onCreateSliceZone();
+    }
+    openCreateSliceModal();
   };
 
   return (
@@ -162,19 +210,36 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               </Text>
             ) : null}
             {!!slicesInSliceZone.length && (
-              <Button
-                variant="buttons.darkSmall"
-                onClick={onAddNewSlice}
-                data-cy="update-slices"
-              >
-                Update Slice Zone
-              </Button>
+              <Flex sx={{ gap: "8px" }}>
+                <Button
+                  variant="secondary"
+                  startIcon={<Icon name="add" />}
+                  onClick={onCreateNewSlice}
+                  loading={isCreatingSlice}
+                >
+                  New slice
+                </Button>
+                <Button
+                  variant="secondary"
+                  startIcon={<Icon name="edit" />}
+                  onClick={onAddNewSlice}
+                  disabled={isCreatingSlice}
+                  data-cy="update-slices"
+                >
+                  Update Slices
+                </Button>
+              </Flex>
             )}
           </Flex>
         }
       />
       {sliceZone && !slicesInSliceZone.length ? (
-        <EmptyState format={format} onAddNewSlice={onAddNewSlice} />
+        <SliceZoneBlankState
+          onAddNewSlice={onAddNewSlice}
+          onCreateNewSlice={onCreateNewSlice}
+          isCreatingSlice={isCreatingSlice}
+          projectHasAvailableSlices={availableSlices.length > 0}
+        />
       ) : (
         <SlicesList
           slices={slicesInSliceZone}
@@ -205,6 +270,29 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           setIsDeleteSliceZoneModalOpen(false);
         }}
       />
+      {localLibraries?.length !== 0 && (
+        <CreateSliceModal
+          isCreatingSlice={isCreatingSlice}
+          isOpen={isCreateSliceModalOpen}
+          close={closeModals}
+          libraries={localLibraries}
+          remoteSlices={remoteSlices}
+          actionMessage={
+            CUSTOM_TYPES_MESSAGES[format].createSliceFromTypeActionMessage
+          }
+          onSubmit={({ sliceName, from }) => {
+            const replaceSharedSliceCreatorPayload: ReplaceSharedSliceCreatorPayload =
+              {
+                tabId,
+                sliceKeys: sharedSlicesInSliceZone
+                  .map((slice) => slice.model.id)
+                  .concat([snakelize(sliceName)]),
+                preserve: nonSharedSlicesKeysInSliceZone,
+              };
+            createSlice(sliceName, from, replaceSharedSliceCreatorPayload);
+          }}
+        />
+      )}
     </Box>
   );
 };
