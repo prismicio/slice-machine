@@ -8,7 +8,14 @@ import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
 import pkg from "../../package.json";
-import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
+import {
+  render,
+  fireEvent,
+  act,
+  screen,
+  waitFor,
+  within,
+} from "../__testutils__";
 import { createTestPlugin } from "../__testutils__/createTestPlugin";
 import { createTestProject } from "../__testutils__/createTestProject";
 
@@ -280,7 +287,7 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByText("Add a new Slice");
+    const addButton = screen.getByText("Update Slices");
     await act(async () => {
       fireEvent.click(addButton);
     });
@@ -293,7 +300,7 @@ describe("Custom Type Builder", () => {
       });
     }
 
-    const saveButton = screen.getByText("Save");
+    const saveButton = within(screen.getByRole("dialog")).getByText("Save");
 
     await act(async () => {
       fireEvent.click(saveButton);
@@ -428,7 +435,7 @@ describe("Custom Type Builder", () => {
       expect.any(Function)
     );
 
-    const saveCustomType = screen.getByText("Save to File System");
+    const saveCustomType = screen.getByTestId("builder-save-button");
 
     await act(async () => {
       fireEvent.click(saveCustomType);
@@ -577,7 +584,7 @@ describe("Custom Type Builder", () => {
       expect.any(Function)
     );
 
-    const saveCustomType = screen.getByText("Save to File System");
+    const saveCustomType = screen.getByTestId("builder-save-button");
 
     await act(async () => {
       fireEvent.click(saveCustomType);

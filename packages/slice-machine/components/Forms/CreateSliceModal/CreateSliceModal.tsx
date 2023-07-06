@@ -1,4 +1,5 @@
 import { Box, Label } from "theme-ui";
+import { ReactNode } from "react";
 
 import Select from "react-select";
 import ModalFormCard from "@components/ModalFormCard";
@@ -16,13 +17,22 @@ type CreateSliceModalProps = {
   close: () => void;
   libraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;
+  actionMessage?: ReactNode;
 };
 
 type FormValues = { sliceName: string; from: string };
 
 export const CreateSliceModal: React.FunctionComponent<
   CreateSliceModalProps
-> = ({ isOpen, isCreatingSlice, onSubmit, close, libraries, remoteSlices }) => {
+> = ({
+  isOpen,
+  isCreatingSlice,
+  onSubmit,
+  close,
+  libraries,
+  remoteSlices,
+  actionMessage,
+}) => {
   return (
     <ModalFormCard
       dataCy="create-slice-modal"
@@ -46,6 +56,7 @@ export const CreateSliceModal: React.FunctionComponent<
       content={{
         title: "Create a new slice",
       }}
+      actionMessage={actionMessage}
     >
       {({ touched, values, setFieldValue, errors }) => (
         <Box>
@@ -66,13 +77,20 @@ export const CreateSliceModal: React.FunctionComponent<
               v ? void setFieldValue("from", v.value) : null
             }
             defaultValue={{ value: values.from, label: values.from }}
+            styles={{
+              option: (provided) => ({
+                ...provided,
+                // Color of item text (Dark/Shade-01)
+                color: "#161618",
+              }),
+            }}
             theme={(theme) => {
               return {
                 ...theme,
                 colors: {
                   ...theme.colors,
-                  text: "text",
-                  primary: "background",
+                  // Background of selected item (Gray/Shade-05)
+                  primary: "#E9E8EA",
                 },
               };
             }}

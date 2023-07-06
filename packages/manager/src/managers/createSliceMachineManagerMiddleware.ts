@@ -36,7 +36,7 @@ const omitProcedures = defineOmits<SliceMachineManager>()([
 	"telemetry._sliceMachineManager",
 	"user._sliceMachineManager",
 	"versions._sliceMachineManager",
-
+	"documentation._sliceMachineManager",
 	"getSliceMachinePluginRunner",
 	"getPrismicAuthManager",
 	"screenshots.browserContext",

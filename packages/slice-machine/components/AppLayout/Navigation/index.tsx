@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { Suspense, type FC } from "react";
 import { BaseStyles } from "theme-ui";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -142,12 +142,14 @@ const Navigation: FC = () => {
       )}
 
       <SideNavList position="bottom">
-        <BaseStyles>
-          <VideoItem
-            hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
-            onClose={setSeenTutorialsToolTip}
-          />
-        </BaseStyles>
+        <Suspense>
+          <BaseStyles>
+            <VideoItem
+              hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
+              onClose={setSeenTutorialsToolTip}
+            />
+          </BaseStyles>
+        </Suspense>
 
         <SideNavListItem>
           <SideNavLink
@@ -157,7 +159,9 @@ const Navigation: FC = () => {
             active={currentPath.startsWith("/changelog")}
             onClick={handleNavigation}
             RightElement={
-              <RightElement>v{changelog.currentVersion}</RightElement>
+              <RightElement>
+                {changelog.currentVersion && `v${changelog.currentVersion}`}
+              </RightElement>
             }
           />
         </SideNavListItem>

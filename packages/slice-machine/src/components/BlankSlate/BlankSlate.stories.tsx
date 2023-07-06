@@ -14,6 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: BlankSlate,
+  argTypes: { children: { control: { disable: true } } },
 } satisfies Meta<typeof BlankSlate>;
 
 export default meta;
@@ -25,6 +26,25 @@ export const Default = {
         <BlankSlateImage>
           <Image src="/blank-slate-page-types.png" sizing="cover" />
         </BlankSlateImage>
+        <BlankSlateContent>
+          <BlankSlateTitle>My blank slate title</BlankSlateTitle>
+          <BlankSlateDescription>
+            My blank slate description
+          </BlankSlateDescription>
+          <BlankSlateActions>
+            <Button>Create</Button>
+          </BlankSlateActions>
+        </BlankSlateContent>
+      </>
+    ),
+  },
+} satisfies Story;
+
+export const Background = {
+  args: {
+    backgroundImage: "/blank-slate-slice-zone.png",
+    children: (
+      <>
         <BlankSlateContent>
           <BlankSlateTitle>My blank slate title</BlankSlateTitle>
           <BlankSlateDescription>

@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: Table,
+  argTypes: { children: { control: { disable: true } } },
 } satisfies Meta<typeof Table>;
 
 export default meta;
@@ -64,7 +65,7 @@ export const Default = {
               <TableCell>{apiId}</TableCell>
               <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
               <TableCell>
-                <DropdownMenu>
+                <DropdownMenu modal>
                   <DropdownMenuTrigger>
                     <IconButton icon="moreVert" />
                   </DropdownMenuTrigger>

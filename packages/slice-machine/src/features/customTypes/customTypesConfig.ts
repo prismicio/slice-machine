@@ -1,3 +1,5 @@
+import type { NextRouter } from "next/router";
+
 import { DatabaseIcon } from "@src/icons/DatabaseIcon";
 import { PageStackIcon } from "@src/icons/PageStackIcon";
 
@@ -23,3 +25,22 @@ export const CUSTOM_TYPES_CONFIG = {
     Icon: DatabaseIcon,
   },
 };
+
+export function matchesBuilderPagePathname(
+  pathname: string,
+  customTypeId: string
+): boolean {
+  return Object.values(CUSTOM_TYPES_CONFIG).some(({ getBuilderPagePathname }) =>
+    pathname.startsWith(getBuilderPagePathname(customTypeId))
+  );
+}
+
+export function readBuilderPageDynamicSegment(
+  query: NextRouter["query"]
+): string | undefined {
+  const customTypesConfigValues = Object.values(CUSTOM_TYPES_CONFIG);
+  for (const { builderPageDynamicSegment } of customTypesConfigValues) {
+    const value = query[builderPageDynamicSegment];
+    if (typeof value === "string") return value;
+  }
+}
