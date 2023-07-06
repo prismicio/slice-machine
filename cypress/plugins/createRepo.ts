@@ -2,13 +2,12 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 import cookie from "cookie";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 // File called from the cypress setup in cypress-setup.sh
 const [, , DOMAIN_NAME, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
-
   const prismicAuthState = JSON.parse(
     await fs.readFile(path.join(os.homedir(), ".prismic"), "utf8")
   );
