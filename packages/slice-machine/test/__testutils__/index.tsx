@@ -15,7 +15,7 @@ export type RenderArgs = Partial<
   } & RenderOptions
 >;
 
-type RenderReturnType = ReturnType<typeof rtlRender> & {
+export type RenderReturnType = ReturnType<typeof rtlRender> & {
   user: ReturnType<typeof userEvent.setup>;
 };
 
