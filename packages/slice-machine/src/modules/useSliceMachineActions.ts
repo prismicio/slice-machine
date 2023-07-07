@@ -21,11 +21,7 @@ import {
   deleteCustomTypeCreator,
   renameAvailableCustomType,
 } from "./availableCustomTypes";
-import {
-  createSliceCreator,
-  deleteSliceCreator,
-  renameSliceCreator,
-} from "./slices";
+import { createSlice, deleteSliceCreator, renameSliceCreator } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
 import {
@@ -48,7 +44,6 @@ import {
   replaceFieldIntoGroupCreator,
   cleanupCustomTypeStoreCreator,
   renameSelectedCustomTypeLabel,
-  type ReplaceSharedSliceCreatorPayload,
 } from "./selectedCustomType";
 import {
   CustomTypeSM,
@@ -84,6 +79,7 @@ import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 import { CustomTypeFormat } from "@slicemachine/manager";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -106,8 +102,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openScreenshotsModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
-  const openCreateSliceModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openRenameSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const openCreateCustomTypeModal = () =>
@@ -169,9 +163,10 @@ const useSliceMachineActions = () => {
     dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
 
-  /** Success actions = sync store state from external actions.
-   * If its name contains "Creator", it means it is still used in a saga
-   * and that `.request` and `.failure` need to be preserved
+  /**
+   * Success actions = sync store state from external actions. If its name
+   * contains "Creator", it means it is still used in a saga and that `.request`
+   * and `.failure` need to be preserved
    */
   const saveCustomTypeSuccess = (customType: CustomType) =>
     dispatch(
@@ -415,18 +410,8 @@ const useSliceMachineActions = () => {
     dispatch(copyVariationSliceCreator({ key, name, copied }));
   };
 
-  const createSlice = (
-    sliceName: string,
-    libName: string,
-    replaceSharedSliceCreatorPayload?: ReplaceSharedSliceCreatorPayload
-  ) =>
-    dispatch(
-      createSliceCreator.request({
-        sliceName,
-        libName,
-        replaceSharedSliceCreatorPayload,
-      })
-    );
+  const createSliceSuccess = (libraries: readonly LibraryUI[]) =>
+    dispatch(createSlice({ libraries }));
 
   const renameSlice = (
     libName: string,
@@ -529,7 +514,7 @@ const useSliceMachineActions = () => {
     generateSliceCustomScreenshot,
     updateSlice,
     copyVariationSlice,
-    createSlice,
+    createSliceSuccess,
     renameSlice,
     deleteSlice,
     sendAReview,
@@ -541,7 +526,6 @@ const useSliceMachineActions = () => {
     openScreenshotPreviewModal,
     openDeleteSliceModal,
     openSimulatorSetupModal,
-    openCreateSliceModal,
     openRenameSliceModal,
     closeModals,
     openToaster,

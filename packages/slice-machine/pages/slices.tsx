@@ -1,75 +1,49 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import { Box, Flex, Text, Link } from "theme-ui";
-import Container from "@components/Container";
-
-import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-
-import Header from "@components/Header";
-import Grid from "@components/Grid";
-
-import { SharedSlice } from "@lib/models/ui/Slice";
-import EmptyState from "@components/EmptyState";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
+import { GoPlus } from "react-icons/go";
+
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { SharedSlice } from "@lib/models/ui/Slice";
+import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
+import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
+import Header from "@components/Header";
+import Container from "@components/Container";
+import Grid from "@components/Grid";
+import EmptyState from "@components/EmptyState";
+import { Button } from "@components/Button";
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
+import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
+import { DeleteSliceModal } from "@components/DeleteSliceModal";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   getFrontendSlices,
   getLibraries,
   getRemoteSlices,
 } from "@src/modules/slices";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
-import { Button } from "@components/Button";
-import { GoPlus } from "react-icons/go";
-import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
-import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
-import { DeleteSliceModal } from "@components/DeleteSliceModal";
 import { SliceListIcon } from "@src/icons/SliceListIcon";
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const {
-    openCreateSliceModal,
-    closeModals,
-    createSlice,
-    openRenameSliceModal,
-    openDeleteSliceModal,
-  } = useSliceMachineActions();
+  const { openRenameSliceModal, openDeleteSliceModal } =
+    useSliceMachineActions();
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
-  const {
-    isCreateSliceModalOpen,
-    isCreatingSlice,
-    remoteSlices,
-    libraries,
-    frontendSlices,
-  } = useSelector((store: SliceMachineStoreType) => ({
-    isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
-    isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
-    remoteSlices: getRemoteSlices(store),
-    libraries: getLibraries(store),
-    frontendSlices: getFrontendSlices(store),
-  }));
-
-  const _onCreate = ({
-    sliceName,
-    from,
-  }: {
-    sliceName: string;
-    from: string;
-  }) => {
-    createSlice(sliceName, from);
-  };
+  const { remoteSlices, libraries, frontendSlices } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      remoteSlices: getRemoteSlices(store),
+      libraries: getLibraries(store),
+      frontendSlices: getFrontendSlices(store),
+    })
+  );
+  const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
     (library) => library.isLocal
@@ -125,12 +99,12 @@ const SlicesIndex: React.FunctionComponent = () => {
                     <Button
                       key="create-slice"
                       label="Create a Slice"
-                      onClick={openCreateSliceModal}
-                      isLoading={isCreatingSlice}
-                      disabled={isCreatingSlice}
                       Icon={GoPlus}
                       iconFill="#FFFFFF"
                       data-cy="create-slice"
+                      onClick={() => {
+                        setIsCreateSliceModalOpen(true);
+                      }}
                     />,
                   ]
                 : []
@@ -153,8 +127,9 @@ const SlicesIndex: React.FunctionComponent = () => {
                 >
                   <EmptyState
                     title={"What are Slices?"}
-                    onCreateNew={openCreateSliceModal}
-                    isLoading={isCreatingSlice}
+                    onCreateNew={() => {
+                      setIsCreateSliceModalOpen(true);
+                    }}
                     buttonText={"Create one"}
                     videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                     documentationComponent={
@@ -252,21 +227,20 @@ const SlicesIndex: React.FunctionComponent = () => {
           )}
         </Box>
       </Container>
-      {localLibraries && localLibraries.length > 0 && (
-        <>
-          <ScreenshotChangesModal
-            slices={sliceFilterFn(slices)}
-            defaultVariationSelector={defaultVariationSelector}
-          />
-          <CreateSliceModal
-            isCreatingSlice={isCreatingSlice}
-            isOpen={isCreateSliceModalOpen}
-            close={closeModals}
-            libraries={localLibraries}
-            remoteSlices={remoteSlices}
-            onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
-          />
-        </>
+      {localLibraries?.length > 0 && (
+        <ScreenshotChangesModal
+          slices={sliceFilterFn(slices)}
+          defaultVariationSelector={defaultVariationSelector}
+        />
+      )}
+      {localLibraries?.length > 0 && isCreateSliceModalOpen && (
+        <CreateSliceModal
+          localLibraries={localLibraries}
+          remoteSlices={remoteSlices}
+          onClose={() => {
+            setIsCreateSliceModalOpen(false);
+          }}
+        />
       )}
       <RenameSliceModal
         sliceId={sliceForEdit?.model.id ?? ""}

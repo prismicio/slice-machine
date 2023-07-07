@@ -10,7 +10,6 @@ import {
   ScreenshotRequest,
 } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
@@ -78,28 +77,6 @@ export const saveCustomType = async (
 };
 
 /** Slice Routes * */
-export const createSlice = async (
-  sliceName: string,
-  libName: string
-): Promise<{
-  variationId: string;
-  errors: Awaited<
-    ReturnType<SliceMachineManagerClient["slices"]["createSlice"]>
-  >["errors"];
-}> => {
-  const model = buildEmptySliceModel({ sliceName });
-
-  const { errors } = await managerClient.slices.createSlice({
-    libraryID: libName,
-    model,
-  });
-
-  return {
-    variationId: model.variations[0].id,
-    errors,
-  };
-};
-
 export const renameSlice = async (
   slice: SliceSM,
   libName: string
