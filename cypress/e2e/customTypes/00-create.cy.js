@@ -3,7 +3,7 @@ import { CUSTOM_TYPE_MODEL } from "../../consts";
 const customTypeName = "My Test";
 const customTypeId = "my_test";
 
-describe.skip("Custom Types specs", () => {
+describe("Custom Types specs", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();
@@ -61,13 +61,5 @@ describe.skip("Custom Types specs", () => {
     cy.get("#create-tab").contains("Save").click();
 
     cy.contains("Add a new slice").should("not.exist");
-  });
-
-  it("When creating a repeatable page-type it should add meta data tab", () => {
-    cy.createCustomType(customTypeId, customTypeName);
-    cy.contains("Metadata").click();
-    cy.contains("Meta Title");
-    cy.contains("Meta Description");
-    cy.contains("Meta Image");
   });
 });

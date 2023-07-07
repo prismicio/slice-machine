@@ -52,13 +52,13 @@ export function renameCustomType(id, actualName, newName) {
 
   customTypeRenameModal.root.should("be.visible");
   customTypeRenameModal.input.should("have.value", actualName);
-  customTypeRenameModal.input.clear().type(`${newName} - Edited`);
+  customTypeRenameModal.input.clear().type(newName);
   customTypeRenameModal.submit();
   customTypeRenameModal.root.should("not.exist");
 
-  customTypesList.getCustomTypeLabel(id).contains("Edited");
+  customTypesList.getCustomTypeRow(id).contains(newName);
 
-  cy.readFile(TYPES_FILE).should("contains", `${newName} - Edited`);
+  cy.readFile(TYPES_FILE).should("contains", newName);
   cy.readFile(CUSTOM_TYPE_MODEL(id)).then((model) => {
     expect(JSON.stringify(model)).to.contain(newName);
   });

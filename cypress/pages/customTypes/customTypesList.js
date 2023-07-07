@@ -1,14 +1,14 @@
 class CustomTypesList {
   get emptyStateButton() {
-    return cy.get("[data-cy=empty-state-main-button]");
+    return cy.get("[data-cy=create-ct]");
   }
 
   getOptionDopDownButton(id) {
-    return this.getCustomTypeRow(id).get('[data-cy="edit-custom-type-menu"]');
+    return this.getCustomTypeRow(id).get('[data-testid="tableRowSettings"]');
   }
 
   get optionDopDownMenu() {
-    return cy.get('[data-cy="edit-custom-type-menu-dropdown"]');
+    return cy.get('[role="menu"][data-state="open"]');
   }
 
   get deleteButton() {
@@ -28,7 +28,7 @@ class CustomTypesList {
   }
 
   goTo() {
-    cy.visit("/");
+    cy.visit("/custom-types");
     return this;
   }
 }
