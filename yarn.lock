@@ -1824,12 +1824,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.22.5
   resolution: "@babel/runtime@npm:7.22.5"
   dependencies:
     regenerator-runtime: ^0.13.11
   checksum: 12a50b7de2531beef38840d17af50c55a094253697600cee255311222390c68eed704829308d4fd305e1b3dfbce113272e428e9d9d45b1730e0fede997eaceb1
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.3.1":
+  version: 7.22.6
+  resolution: "@babel/runtime@npm:7.22.6"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: e585338287c4514a713babf4fdb8fc2a67adcebab3e7723a739fc62c79cfda875b314c90fd25f827afb150d781af97bc16c85bfdbfa2889f06053879a1ddb597
   languageName: node
   linkType: hard
 
@@ -2882,11 +2891,11 @@ __metadata:
   linkType: hard
 
 "@floating-ui/dom@npm:^1.3.0":
-  version: 1.4.3
-  resolution: "@floating-ui/dom@npm:1.4.3"
+  version: 1.4.4
+  resolution: "@floating-ui/dom@npm:1.4.4"
   dependencies:
     "@floating-ui/core": ^1.3.1
-  checksum: f377960b5a61a685c77b2cdda1243122437008e138d29cdf2c5861d74650742057f011fb75580e6eab045a1c6109ad743202dd3f25b832ef70ef49d391b8f4ea
+  checksum: e8e43c786e24f8f111a72d7d17c3a9563cab8eddf2a2b3dacc2785370a97313a8dda0f3470b2b2ef2d3b9d6f1fd706ccf786d9441e54e283ed47c90aa0c0b1e1
   languageName: node
   linkType: hard
 
@@ -4715,7 +4724,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.2":
+"@prismicio/editor-fields@npm:^0.4.2":
   version: 0.4.2
   resolution: "@prismicio/editor-fields@npm:0.4.2"
   dependencies:
@@ -4757,7 +4766,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.1":
+"@prismicio/editor-support@npm:0.4.1, @prismicio/editor-support@npm:^0.4.1":
   version: 0.4.1
   resolution: "@prismicio/editor-support@npm:0.4.1"
   dependencies:
@@ -4774,7 +4783,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.3":
+"@prismicio/editor-ui@npm:^0.4.3":
   version: 0.4.3
   resolution: "@prismicio/editor-ui@npm:0.4.3"
   dependencies:
@@ -29509,9 +29518,9 @@ __metadata:
   dependencies:
     "@emotion/react": ^11.10.6
     "@extractus/oembed-extractor": ^3.1.8
-    "@prismicio/editor-fields": 0.4.2
-    "@prismicio/editor-support": 0.4.1
-    "@prismicio/editor-ui": 0.4.3
+    "@prismicio/editor-fields": ^0.4.2
+    "@prismicio/editor-support": ^0.4.1
+    "@prismicio/editor-ui": ^0.4.3
     "@prismicio/mocks": ^2.0.0-alpha.2
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0

@@ -21,10 +21,10 @@ import { sliceDelete } from "./hooks/slice-delete";
 import { sliceLibraryRead } from "./hooks/sliceLibrary-read";
 import { sliceRead } from "./hooks/slice-read";
 import { sliceRename } from "./hooks/slice-rename";
-import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { sliceUpdate } from "./hooks/slice-update";
 import { snippetRead } from "./hooks/snippet-read";
 import { documentationRead } from "./hooks/documentation-read";
+import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {

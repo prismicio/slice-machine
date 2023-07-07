@@ -91,13 +91,15 @@ export const deleteSliceZoneCreator = createAction(
   tabId: string;
 }>();
 
-export const replaceSharedSliceCreator = createAction(
-  "CUSTOM_TYPE/REPLACE_SHARED_SLICE"
-)<{
+export type ReplaceSharedSliceCreatorPayload = {
   tabId: string;
   sliceKeys: string[];
   preserve: string[];
-}>();
+};
+
+export const replaceSharedSliceCreator = createAction(
+  "CUSTOM_TYPE/REPLACE_SHARED_SLICE"
+)<ReplaceSharedSliceCreatorPayload>();
 
 export const deleteSharedSliceCreator = createAction(
   "CUSTOM_TYPE/DELETE_SHARED_SLICE"

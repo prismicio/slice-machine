@@ -7,11 +7,11 @@ import {
   FormikTouched,
   FormikValues,
 } from "formik";
-import { Flex, Heading, Close, Box, Button as ThemeButton } from "theme-ui";
-import { Button } from "@components/Button";
+import { ReactNode, SetStateAction } from "react";
+import { Flex, Heading, Close, Button as ThemeButton } from "theme-ui";
 
+import { Button } from "@components/Button";
 import Card from "../Card";
-import { SetStateAction } from "react";
 
 type ModalCardProps<T extends FormikValues> = {
   children: (props: {
@@ -44,6 +44,7 @@ type ModalCardProps<T extends FormikValues> = {
   omitFooter?: boolean;
   isLoading?: boolean;
   dataCy?: string;
+  actionMessage?: ReactNode;
 };
 
 function ModalCard<Values extends FormikValues>({
@@ -61,6 +62,7 @@ function ModalCard<Values extends FormikValues>({
   isLoading = false,
   buttonLabel = "Save",
   dataCy,
+  actionMessage,
 }: ModalCardProps<Values>): JSX.Element {
   Modal.setAppElement("#__next");
   return (
@@ -138,30 +140,33 @@ function ModalCard<Values extends FormikValues>({
                       alignItems: "space-between",
                     }}
                   >
-                    <Box sx={{ ml: "auto" }} />
-                    <ThemeButton
-                      mr={2}
-                      type="button"
-                      onClick={close}
-                      variant="secondary"
-                    >
-                      Cancel
-                    </ThemeButton>
-                    <Button
-                      label={buttonLabel}
-                      form={formId}
-                      type="submit"
-                      data-testid="modal-form-card-validate"
-                      disabled={!isValid || isSubmitting || isLoading}
-                      isLoading={isLoading}
-                      sx={{
-                        fontWeight: "400",
-                        paddingBlock: "8px",
-                        paddingInline: "16px",
-                        fontSize: "14px",
-                        borderRadius: "4px",
-                      }}
-                    />
+                    <Flex sx={{ fontSize: "14px", alignItems: "center" }}>
+                      {actionMessage}
+                    </Flex>
+                    <Flex sx={{ ml: "auto" }}>
+                      <ThemeButton
+                        mr={2}
+                        type="button"
+                        onClick={close}
+                        variant="secondary"
+                      >
+                        Cancel
+                      </ThemeButton>
+                      <Button
+                        label={buttonLabel}
+                        form={formId}
+                        type="submit"
+                        disabled={!isValid || isSubmitting || isLoading}
+                        isLoading={isLoading}
+                        sx={{
+                          fontWeight: "400",
+                          paddingBlock: "8px",
+                          paddingInline: "16px",
+                          fontSize: "14px",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </Flex>
                   </Flex>
                 ) : null
               }

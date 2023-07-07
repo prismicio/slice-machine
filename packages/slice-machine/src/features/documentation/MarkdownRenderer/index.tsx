@@ -19,7 +19,8 @@ const MarkdownCodeBlock = (props: CodeProps) => {
   }
   const maybeFileInfo = (() => {
     if (props.node?.data?.meta !== undefined) {
-      const fileName = (props.node?.data?.meta as string).replace(/\[|\]/g, "");
+      const meta = props.node?.data?.meta as string;
+      const fileName = meta.substring(1, meta.length - 1);
       return {
         fileName,
         language: props.className?.split("-")[1],
@@ -42,6 +43,7 @@ export const MarkdownRenderer: MarkdownRenderer = ({ markdown }) => {
   return (
     <ReactMarkdown
       children={markdown}
+      linkTarget="_blank"
       remarkPlugins={[remarkGfm]}
       components={{
         code: (props) => <MarkdownCodeBlock {...props} />,

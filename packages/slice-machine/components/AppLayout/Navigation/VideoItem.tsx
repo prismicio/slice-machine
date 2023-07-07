@@ -1,9 +1,12 @@
 import { type FC, useCallback, useRef, RefCallback } from "react";
 import ReactTooltip from "react-tooltip";
 import { Close, Flex, Paragraph } from "theme-ui";
+import { useRequest } from "@prismicio/editor-support/Suspense";
 
-import { VIDEO_YOUTUBE_PLAYLIST_LINK } from "@lib/consts";
+import { SliceMachineConfig } from "@slicemachine/manager";
+import { VIDEO_YOUTUBE_PLAYLIST_LINK, PRISMIC_ACADEMY_URL } from "@lib/consts";
 import { telemetry } from "@src/apiClient";
+import { managerClient } from "@src/managerClient";
 import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
 import { PlayCircleIcon } from "@src/icons/PlayCircle";
 
@@ -14,13 +17,70 @@ type VideoItemProps = {
   onClose: () => void;
 };
 
+const ToolTip: FC<{
+  id: string;
+  onClose: VideoItemProps["onClose"];
+  isNext: boolean;
+}> = ({ id, onClose, isNext }) => (
+  <ReactTooltip
+    id={id}
+    effect="solid"
+    place="right"
+    backgroundColor="#5741c3"
+    clickable
+    className={style.videoTutorialsContainer}
+    afterHide={onClose}
+    offset={{
+      left: 80,
+    }}
+    role="tooltip"
+    getContent={() => (
+      <Flex
+        sx={{
+          maxWidth: "268px",
+          flexDirection: "column",
+        }}
+      >
+        <Flex
+          sx={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 1,
+          }}
+        >
+          <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
+            {isNext ? "Just starting?" : "Need Help?"}
+          </Paragraph>
+          <Close
+            data-testid="video-tooltip-close-button"
+            onClick={onClose}
+            sx={{
+              width: "26px",
+            }}
+          />
+        </Flex>
+        <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
+          {isNext
+            ? "Learn how to turn a Next.js website into a page builder powered by Prismic."
+            : "Follow our Quick Start guide to learn the basics of Slice Machine"}
+        </Paragraph>
+      </Flex>
+    )}
+  />
+);
+
 const VideoItem: FC<VideoItemProps> = ({
   hasSeenTutorialsToolTip,
   onClose,
 }) => {
   const id = "video-tool-tip";
-  const videoUrl = VIDEO_YOUTUBE_PLAYLIST_LINK;
   const ref = useRef<HTMLDivElement | null>(null);
+
+  const config = useSliceMachineConfig();
+
+  const isNext = config?.adapter === "@slicemachine/adapter-next";
+  const videoUrl = isNext ? PRISMIC_ACADEMY_URL : VIDEO_YOUTUBE_PLAYLIST_LINK;
 
   const setRef: RefCallback<HTMLDivElement> = useCallback(
     (node) => {
@@ -34,18 +94,19 @@ const VideoItem: FC<VideoItemProps> = ({
     },
     [hasSeenTutorialsToolTip]
   );
+
   return (
     <div
       data-hello
       ref={setRef}
       data-for={id}
-      data-tip=""
+      data-tip
       data-testid="video-toolbar"
     >
       <SideNavListItem>
         <SideNavLink
           title="Tutorial"
-          href={VIDEO_YOUTUBE_PLAYLIST_LINK}
+          href={videoUrl}
           target="_blank"
           Icon={(props) => <PlayCircleIcon {...props} />}
           onClick={() => {
@@ -53,60 +114,30 @@ const VideoItem: FC<VideoItemProps> = ({
               event: "open-video-tutorials",
               video: videoUrl,
             });
-            window.open(VIDEO_YOUTUBE_PLAYLIST_LINK, "_blank");
+            window.open(videoUrl, "_blank");
             onClose();
           }}
         />
       </SideNavListItem>
 
       {!hasSeenTutorialsToolTip && (
-        <ReactTooltip
-          id={id}
-          effect="solid"
-          backgroundColor="#5741c3"
-          clickable
-          className={style.videoTutorialsContainer}
-          afterHide={onClose}
-          offset={{
-            left: 80,
-          }}
-          role="tooltip"
-          getContent={() => (
-            <Flex
-              sx={{
-                maxWidth: "268px",
-                flexDirection: "column",
-              }}
-            >
-              <Flex
-                sx={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mb: 1,
-                }}
-              >
-                <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
-                  Need Help?
-                </Paragraph>
-                <Close
-                  data-testid="video-tooltip-close-button"
-                  onClick={onClose}
-                  sx={{
-                    width: "26px",
-                  }}
-                />
-              </Flex>
-              <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
-                Follow our Quick Start guide to learn the basics of Slice
-                Machine
-              </Paragraph>
-            </Flex>
-          )}
-        />
+        <ToolTip isNext={isNext} id={id} onClose={onClose} />
       )}
     </div>
   );
 };
+
+async function getSliceMachineConfig() {
+  try {
+    return await managerClient.project.getSliceMachineConfig();
+  } catch (e) {
+    console.error(e);
+    return undefined;
+  }
+}
+
+function useSliceMachineConfig(): SliceMachineConfig | undefined {
+  return useRequest(getSliceMachineConfig, []);
+}
 
 export default VideoItem;
