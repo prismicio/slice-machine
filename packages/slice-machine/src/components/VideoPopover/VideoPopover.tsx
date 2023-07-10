@@ -4,19 +4,6 @@ import { Popover, Button } from "@prismicio/editor-ui";
 import { Video as CldVideo } from "cloudinary-react";
 import { CloseIcon } from "@src/icons/CloseIcon";
 
-export const Video: FC<VideoProps> = (props) => (
-  <CldVideo
-    {...props}
-    publicId="Tooltips/pa-course-overview_eaopsn"
-    cloudName="dmtf1daqp"
-    autoPlay={false} // change later
-    controls={true}
-    // loop={loop}
-    // poster={poster} // TODO: get a thumbnail
-    // onPlay={onPlay}
-  />
-);
-
 export const VideoContainer: FC<{
   onClose: () => void;
   onPlay: () => void;
@@ -31,7 +18,15 @@ export const VideoContainer: FC<{
         </button>
       </div>
 
-      <Video className={styles.videoPlayer} onPlay={onPlay} />
+      <CldVideo
+        publicId="Tooltips/pa-course-overview_eaopsn"
+        cloudName="dmtf1daqp"
+        className={styles.videoPlayer}
+        onPlay={onPlay}
+        autoPlay={false}
+        controls={true}
+        // poster={poster} // TODO: get a thumbnail
+      />
 
       <div className={styles.videoFooter}>
         <p className={styles.videoDescription}>
@@ -51,7 +46,6 @@ export const VideoContainer: FC<{
   );
 };
 
-// https://res.cloudinary.com/dmtf1daqp/video/upload/v1688550649/Tooltips/pa-course-overview_eaopsn.mov
 export const VideoPopover: React.FC<
   PropsWithChildren<{
     open: boolean;
@@ -60,12 +54,12 @@ export const VideoPopover: React.FC<
   }>
 > = ({ children, onClose, onPlay, open }) => {
   const [isOpen, setOpen] = useState<boolean>(open);
-  // const handleHover = () => setOpen((wasOpen) => !wasOpen);
+  // const handleHover = () => setOpen((wasOpen) => !wasOpen); // TODO: handled by the editor component?
 
-  const h = (v: boolean) => {
+  const handleHover = (v: boolean) => {
     console.log("Hover");
     console.log({ v });
-    setOpen(v);
+    setOpen((wasOpen) => !wasOpen);
   };
 
   return (
@@ -73,8 +67,8 @@ export const VideoPopover: React.FC<
       open={isOpen}
       anchor={children}
       align="start"
-      onOpenChange={h}
-      onMouseOverChange={h}
+      onOpenChange={handleHover}
+      onMouseOverChange={handleHover}
       openDelay={0}
       closeDelay={0}
     >
