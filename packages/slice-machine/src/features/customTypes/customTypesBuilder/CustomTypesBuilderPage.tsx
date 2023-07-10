@@ -43,8 +43,9 @@ export const CustomTypesBuilderPage: FC = () => {
   const { cleanupCustomTypeStore } = useSliceMachineActions();
 
   useEffect(() => {
-    if (!selectedCustomType || !hasLocal(selectedCustomType))
+    if (!selectedCustomType || !hasLocal(selectedCustomType)) {
       void router.replace("/");
+    }
   }, [selectedCustomType, router]);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ type CustomTypesBuilderPageWithProviderProps = {
   remoteCustomType: CustomTypeSM | undefined;
 };
 
-const CustomTypesBuilderPageWithProvider: React.FC<
+export const CustomTypesBuilderPageWithProvider: React.FC<
   CustomTypesBuilderPageWithProviderProps
 > = ({ customType, remoteCustomType }) => {
   const router = useRouter();
