@@ -1,4 +1,4 @@
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
 	ExtendSliceMachineHook,
