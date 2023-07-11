@@ -22,12 +22,12 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
 > = ({ customType, format, onClose }) => {
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
-  const [isDeleting, setIsdeleting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { deleteCustomTypeSuccess } = useSliceMachineActions();
 
   const onConfirm = async () => {
-    setIsdeleting(true);
+    setIsDeleting(true);
     await deleteCustomType({
       customType,
       onSuccess: () => deleteCustomTypeSuccess(customType.id),
