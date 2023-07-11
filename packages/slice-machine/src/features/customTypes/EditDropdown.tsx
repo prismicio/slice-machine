@@ -36,8 +36,10 @@ export const EditDropdown: FC<EditDropdownProps> = ({
   const router = useRouter();
   const { saveCustomTypeSuccess } = useSliceMachineActions();
 
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isRenaming, setIsRenaming] = useState(false);
+  const [isDeleteCustomTypeModalOpen, setIsDeleteCustomTypeModalOpen] =
+    useState(false);
+  const [isRenameCustomTypeModalOpen, setIsRenameCustomTypeModalOpen] =
+    useState(false);
   const [isCustomTypeBeingConverted, setCustomTypeBeingConverted] =
     useState(false);
 
@@ -66,10 +68,10 @@ export const EditDropdown: FC<EditDropdownProps> = ({
       if (router.asPath !== tablePagePathname) {
         void router.replace(tablePagePathname);
         setTimeout(() => {
-          setIsDeleting(false);
+          setIsDeleteCustomTypeModalOpen(false);
         }, 1400);
       } else {
-        setIsDeleting(false);
+        setIsDeleteCustomTypeModalOpen(false);
       }
     }
   };
@@ -89,7 +91,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({
           <DropdownMenuItem
             startIcon={<Icon name="edit" />}
             onSelect={() => {
-              setIsRenaming(true);
+              setIsRenameCustomTypeModalOpen(true);
             }}
           >
             <Text>Rename</Text>
@@ -105,26 +107,26 @@ export const EditDropdown: FC<EditDropdownProps> = ({
           <DropdownMenuItem
             startIcon={<Icon color="tomato11" name="delete" />}
             onSelect={() => {
-              setIsDeleting(true);
+              setIsDeleteCustomTypeModalOpen(true);
             }}
           >
             <Text color="tomato11">Remove</Text>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isDeleting ? (
+      {isDeleteCustomTypeModalOpen ? (
         <DeleteCustomTypeModal
-          customType={customType}
           format={format}
+          customType={customType}
           onClose={onCloseDeleteModal}
         />
       ) : null}
-      {isRenaming ? (
+      {isRenameCustomTypeModalOpen ? (
         <RenameCustomTypeModal
           format={format}
           customType={customType}
           isChangesLocal={isChangesLocal}
-          onClose={() => setIsRenaming(false)}
+          onClose={() => setIsRenameCustomTypeModalOpen(false)}
         />
       ) : null}
     </>

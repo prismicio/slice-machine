@@ -28,9 +28,10 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
 
   const onConfirm = async () => {
     setIsdeleting(true);
-    await deleteCustomType(customType, () =>
-      deleteCustomTypeSuccess(customType.id)
-    );
+    await deleteCustomType({
+      customType,
+      onSuccess: () => deleteCustomTypeSuccess(customType.id),
+    });
     onClose(true);
   };
 

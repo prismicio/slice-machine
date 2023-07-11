@@ -1,7 +1,7 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { managerClient } from "@src/managerClient";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
+import { CustomTypeFormat } from "@slicemachine/manager";
 import { toast } from "react-toastify";
 
 type RenameCustomTypeArgs = {

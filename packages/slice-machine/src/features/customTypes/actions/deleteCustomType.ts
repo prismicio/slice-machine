@@ -4,10 +4,15 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { CustomTypeFormat } from "@slicemachine/manager/*";
 import { toast } from "react-toastify";
 
-export async function deleteCustomType(
-  customType: CustomType,
-  onSuccess: () => void
-) {
+type DeleteCustomTypeArgs = {
+  customType: CustomType;
+  onSuccess: () => void;
+};
+
+export async function deleteCustomType({
+  customType,
+  onSuccess,
+}: DeleteCustomTypeArgs) {
   const customTypesMessages =
     CUSTOM_TYPES_MESSAGES[customType.format as CustomTypeFormat];
 
