@@ -80,7 +80,7 @@ type CustomTypesBuilderPageWithProviderProps = {
   remoteCustomType: CustomTypeSM | undefined;
 };
 
-export const CustomTypesBuilderPageWithProvider: React.FC<
+const CustomTypesBuilderPageWithProvider: React.FC<
   CustomTypesBuilderPageWithProviderProps
 > = ({ customType, remoteCustomType }) => {
   const router = useRouter();

@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
-import { describe, vitest, vi, TestContext } from "vitest";
+import { describe, vi, TestContext } from "vitest";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+
+import mockRouter from "next-router-mock";
 
 import {
   CustomTypeFormat,
@@ -11,8 +13,16 @@ import { CustomTypes } from "@lib/models/common/CustomType";
 import { render, screen, waitFor, within } from "test/__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
-import { CustomTypesBuilderPageWithProvider } from "../customTypesBuilder/CustomTypesBuilderPage";
+import { CustomTypesBuilderPage } from "../customTypesBuilder/CustomTypesBuilderPage";
 import pkg from "../../../../package.json";
+
+import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
+mockRouter.useParser(
+  createDynamicRouteParser([
+    "/page-types/[pageTypeId]",
+    "/custom-types/[customTypeId]",
+  ])
+);
 
 const formats = [
   {
@@ -23,31 +33,36 @@ const formats = [
   },
 ];
 
-import Router from "next/router"
-const mockRouter = vi.mocked(Router);
 vi.mock("next/router", () => import("next-router-mock"));
 
-describe.skip.each(formats)(
+describe.each(formats)(
   "CustomTypeBuilderPage > All formats > $format type",
   (args) => {
     const format = args.format as CustomTypeFormat;
 
-    test(`should delete a ${format} type from the dropdown`, async (ctx) => {
-      const { user } = await renderCustomTypesBuilderPage({ ctx });
+    test.skip(`should delete a ${format} type from the dropdown`, async (ctx) => {
+      const ctIndex = format === "custom" ? 0 : 1;
+      const basePath = ["/custom-types", "/page-types"][ctIndex];
+      const tablePath = ["/custom-types", "/"][ctIndex];
+      const customType = customTypesMocks[ctIndex];
+
+      await mockRouter.push(`${basePath}/${customType.id}`);
+      const { user } = await renderCustomTypesBuilderPage({ ctx, customType });
 
       await user.click(screen.getByTestId("editDropdown"));
       await user.click(await screen.findByText("Remove"));
       expect(await screen.findByText(`Delete ${format} type`)).toBeVisible();
       await user.click(screen.getByRole("button", { name: "Delete" }));
 
-      await waitFor(() => {
-        expect(
-          screen.queryByText(customTypesMocks[format === "custom" ? 0 : 1].id)
-        ).not.toBeInTheDocument();
-      });
+      await waitFor(() => expect(mockRouter.asPath).toEqual(tablePath));
     });
     test(`should rename a ${format} type from the dropdown`, async (ctx) => {
-      const { user } = await renderCustomTypesBuilderPage({ ctx });
+      const ctIndex = format === "custom" ? 0 : 1;
+      const basePath = ["/custom-types", "/page-types"][ctIndex];
+      const customType = customTypesMocks[ctIndex];
+
+      await mockRouter.push(`${basePath}/${customType.id}`);
+      const { user } = await renderCustomTypesBuilderPage({ ctx, customType });
 
       await user.click(screen.getByTestId("editDropdown"));
       await user.click(await screen.findByText("Rename"));
@@ -71,22 +86,16 @@ describe.skip.each(formats)(
       // Submit the form
       await user.click(screen.getByRole("button", { name: "Rename" }));
 
-      // Check that the old custom type label is not visible anymore
-      await waitFor(() => {
-        expect(
-          screen.queryByText(customTypesMocks[format === "custom" ? 0 : 1].id)
-        ).not.toBeInTheDocument();
-      });
-
-      // Check that the renamed custom type is visible
-      expect(screen.getByText(renamedCustomType)).toBeVisible();
+      const preText = ["Custom types / ", "Page types / "][ctIndex];
+      expect(screen.getByText(preText + renamedCustomType)).toBeVisible();
     });
   }
 );
 
 describe("CustomTypesBuilderPage > Custom type", () => {
   test("should convert a custom type to page type from the dropdown", async (ctx) => {
-    const customType = customTypesMocks[0]
+    const customType = customTypesMocks[0];
+    await mockRouter.push(`/custom-types/${customType.id}`);
     const { user } = await renderCustomTypesBuilderPage({ ctx, customType });
 
     // Click on the table row settings button
@@ -96,12 +105,8 @@ describe("CustomTypesBuilderPage > Custom type", () => {
     await user.click(await screen.findByText("Convert to page type"));
 
     await waitFor(() =>
-      expect(screen.getByText("Page types /")).toBeVisible()
-    )
-
-    // expect(mockRouter.asPath).toEqual(`/page-types/${customType.id}`);
-
-    // expect(screen.getByText("Page types /")).toBeVisible();
+      expect(mockRouter.asPath).toEqual(`/page-types/${customType.id}`)
+    );
   });
 });
 
@@ -128,9 +133,8 @@ type RenderCustomTypesBuilderPageArgs = {
 
 async function renderCustomTypesBuilderPage({
   ctx,
-  customType
+  customType,
 }: RenderCustomTypesBuilderPageArgs) {
-
   const adapter = createTestPlugin({
     setup: ({ hook }) => {
       hook("custom-type:create", () => void 0);
@@ -141,7 +145,7 @@ async function renderCustomTypesBuilderPage({
         return { ids: customTypesMocks.map((customType) => customType.id) };
       });
       hook("custom-type:read", () => {
-        return { model: customType }
+        return { model: customType };
       });
     },
   });
@@ -166,7 +170,6 @@ async function renderCustomTypesBuilderPage({
     })
   );
 
-
   const customTypeMockStore = {
     preloadedState: {
       availableCustomTypes: customTypesMocks.reduce(
@@ -179,12 +182,10 @@ async function renderCustomTypesBuilderPage({
     },
   };
 
-  const renderResults = render(
-    <CustomTypesBuilderPageWithProvider customType={CustomTypes.toSM(customType)} remoteCustomType={undefined} />,
-    customTypeMockStore
-  );
+  const renderResults = render(<CustomTypesBuilderPage />, customTypeMockStore);
 
-  const preText = customType.format === "page" ? "Page types / " : "Custom types / ";
+  const preText =
+    customType.format === "page" ? "Page types / " : "Custom types / ";
   expect(
     await screen.findByText(preText + (customType.label as string))
   ).toBeVisible();

@@ -63,10 +63,14 @@ export const EditDropdown: FC<EditDropdownProps> = ({
     if (didDelete === true) {
       const { tablePagePathname } =
         CUSTOM_TYPES_CONFIG[customType.format ?? "custom"];
-      void router.replace(tablePagePathname);
-      setTimeout(() => {
+      if (router.asPath !== tablePagePathname) {
+        void router.replace(tablePagePathname);
+        setTimeout(() => {
+          setIsDeleting(false);
+        }, 1400);
+      } else {
         setIsDeleting(false);
-      }, 1400);
+      }
     }
   };
 
