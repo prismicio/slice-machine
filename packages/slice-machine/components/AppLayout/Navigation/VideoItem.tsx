@@ -95,6 +95,14 @@ const VideoItem: FC<VideoItemProps> = ({
     [hasSeenTutorialsToolTip]
   );
 
+  const trackAndClose = () => {
+    void telemetry.track({
+      event: "open-video-tutorials",
+      video: videoUrl,
+    });
+    onClose();
+  };
+
   return (
     <div
       data-hello
@@ -110,18 +118,14 @@ const VideoItem: FC<VideoItemProps> = ({
           target="_blank"
           Icon={(props) => <PlayCircleIcon {...props} />}
           onClick={() => {
-            void telemetry.track({
-              event: "open-video-tutorials",
-              video: videoUrl,
-            });
             window.open(videoUrl, "_blank");
-            onClose();
+            trackAndClose();
           }}
         />
       </SideNavListItem>
 
       {!hasSeenTutorialsToolTip && (
-        <ToolTip isNext={isNext} id={id} onClose={onClose} />
+        <ToolTip isNext={isNext} id={id} onClose={trackAndClose} />
       )}
     </div>
   );
