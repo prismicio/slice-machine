@@ -19,7 +19,7 @@ export default function Changelog() {
     })
   );
 
-  const latestVersion = changelog.versions[0];
+  const latestVersion = changelog.sliceMachine.versions[0];
 
   const [selectedVersion, setSelectedVersion] = useState<
     PackageVersion | undefined
@@ -41,11 +41,11 @@ export default function Changelog() {
         selectVersion={(version) => setSelectedVersion(version)}
       />
 
-      {changelog.versions.length === 0 || !selectedVersion ? (
+      {changelog.sliceMachine.versions.length === 0 || !selectedVersion ? (
         <Flex
           sx={{
-            width: "650px",
-            minWidth: "650px",
+            width: "754px",
+            minWidth: "754px",
             height: "100%",
             borderRight: "1px solid",
             borderColor: "grey01",

@@ -34,8 +34,8 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
   return (
     <Flex
       sx={{
-        width: "650px",
-        minWidth: "650px",
+        width: "754px",
+        minWidth: "754px",
         height: "100%",
         borderRight: "1px solid",
         borderColor: "grey01",

@@ -280,17 +280,23 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
   const [
     currentVersion,
     latestNonBreakingVersion,
-    updateAvailable,
-    versionsWithKind,
+    sliceMachineUpdateAvailable,
+    sliceMachineVersionWithKind,
+    adapterUpdateAvailable,
+    adapterVersions,
+    adapterName,
   ] = await Promise.all([
     managerClient.versions.getRunningSliceMachineVersion(),
     managerClient.versions.getLatestNonBreakingSliceMachineVersion(),
-    managerClient.versions.checkIsUpdateAvailable(),
+    managerClient.versions.checkIsSliceMachineUpdateAvailable(),
     managerClient.versions.getAllStableSliceMachineVersionsWithKind(),
+    managerClient.versions.checkIsAdapterUpdateAvailable(),
+    managerClient.versions.getAllStableAdapterVersions(),
+    managerClient.project.getAdapterName(),
   ]);
 
-  const versionsWithMetadata = await Promise.all(
-    versionsWithKind.map(async (versionWithKind) => {
+  const sliceMachineVersionsWithMetadata = await Promise.all(
+    sliceMachineVersionWithKind.map(async (versionWithKind) => {
       const releaseNotes =
         await managerClient.versions.getSliceMachineReleaseNotesForVersion({
           version: versionWithKind.version,
@@ -305,10 +311,17 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
   );
 
   return {
-    currentVersion,
-    updateAvailable,
-    latestNonBreakingVersion: latestNonBreakingVersion ?? null,
-    versions: versionsWithMetadata,
+    sliceMachine: {
+      currentVersion,
+      latestNonBreakingVersion: latestNonBreakingVersion ?? null,
+      updateAvailable: sliceMachineUpdateAvailable,
+      versions: sliceMachineVersionsWithMetadata,
+    },
+    adapter: {
+      name: adapterName,
+      updateAvailable: adapterUpdateAvailable,
+      versions: adapterVersions,
+    },
   };
 };
 
