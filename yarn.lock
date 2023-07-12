@@ -7585,7 +7585,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: ^0.1.12
+    prismic-ts-codegen: 0.1.11
     react: 18.2.0
     rollup-plugin-preserve-directives: 0.1.1
     size-limit: 8.2.4
@@ -7632,7 +7632,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: ^0.1.12
+    prismic-ts-codegen: 0.1.11
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -7678,7 +7678,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: ^0.1.12
+    prismic-ts-codegen: 0.1.11
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -9270,6 +9270,18 @@ __metadata:
     mkdirp: ^1.0.4
     path-browserify: ^1.0.1
   checksum: 848fff5f7a6428d7c2f055de20cf8df864a967aac0cc03adc558d853442085a8fd9dec70429da24d67d263794b315edb0791c46d23ad9ae513251a7702df8031
+  languageName: node
+  linkType: hard
+
+"@ts-morph/common@npm:~0.19.0":
+  version: 0.19.0
+  resolution: "@ts-morph/common@npm:0.19.0"
+  dependencies:
+    fast-glob: ^3.2.12
+    minimatch: ^7.4.3
+    mkdirp: ^2.1.6
+    path-browserify: ^1.0.1
+  checksum: 6b02a63ded0ce77e2bf86e135c17a6d5126307bbb926a4085d3cc2acaf28cb732780cf8d16961e9600efcc599876f706a2c9e8d135f7668704bb04a1a6fd37ec
   languageName: node
   linkType: hard
 
@@ -13760,6 +13772,13 @@ __metadata:
   version: 11.0.3
   resolution: "code-block-writer@npm:11.0.3"
   checksum: f0a2605f19963d7087267c9b0fd0b05a6638a50e7b29b70f97aa01a514f59475b0626f8aa092188df853ee6d96745426dfa132d6a677795df462c6ce32c21639
+  languageName: node
+  linkType: hard
+
+"code-block-writer@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "code-block-writer@npm:12.0.0"
+  checksum: 9f6505a4d668c9131c6f3f686359079439e66d5f50c236614d52fcfa53aeb0bc615b2c6c64ef05b5511e3b0433ccfd9f7756ad40eb3b9298af6a7d791ab1981d
   languageName: node
   linkType: hard
 
@@ -22943,6 +22962,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^7.4.3":
+  version: 7.4.6
+  resolution: "minimatch@npm:7.4.6"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 1a6c8d22618df9d2a88aabeef1de5622eb7b558e9f8010be791cb6b0fa6e102d39b11c28d75b855a1e377b12edc7db8ff12a99c20353441caa6a05e78deb5da9
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^8.0.2":
   version: 8.0.4
   resolution: "minimatch@npm:8.0.4"
@@ -23148,6 +23176,15 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+  languageName: node
+  linkType: hard
+
+"mkdirp@npm:^2.1.6":
+  version: 2.1.6
+  resolution: "mkdirp@npm:2.1.6"
+  bin:
+    mkdirp: dist/cjs/src/bin.js
+  checksum: 8a1d09ffac585e55f41c54f445051f5bc33a7de99b952bb04c576cafdf1a67bb4bae8cb93736f7da6838771fbf75bc630430a3a59e1252047d2278690bd150ee
   languageName: node
   linkType: hard
 
@@ -26616,7 +26653,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^1.18.2 || ^2.0.0, prettier@npm:^2.8.0, prettier@npm:^2.8.4":
+"prettier@npm:^1.18.2 || ^2.0.0, prettier@npm:^2.8.0, prettier@npm:^2.8.4, prettier@npm:^2.8.8":
   version: 2.8.8
   resolution: "prettier@npm:2.8.8"
   bin:
@@ -26685,9 +26722,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prismic-ts-codegen@npm:^0.1.12":
-  version: 0.1.12
-  resolution: "prismic-ts-codegen@npm:0.1.12"
+"prismic-ts-codegen@npm:0.1.11":
+  version: 0.1.11
+  resolution: "prismic-ts-codegen@npm:0.1.11"
   dependencies:
     "@prismicio/custom-types-client": ^1.1.0
     common-tags: ^1.8.2
@@ -26697,7 +26734,8 @@ __metadata:
     meow: ^12.0.1
     node-fetch: ^3.3.1
     pascal-case: ^3.1.2
-    quick-lru: ^6.1.1
+    prettier: ^2.8.8
+    ts-morph: ^18.0.0
   peerDependencies:
     "@prismicio/client": ^6.6 || ^7
     "@prismicio/types": ^0.2.8
@@ -26708,7 +26746,7 @@ __metadata:
       optional: true
   bin:
     prismic-ts-codegen: bin/prismic-ts-codegen.mjs
-  checksum: 3ee7d99353081d202c28d7e39694caa2a0388b3ad2905d655a3f0c3aa6dc9e0d0004c9ee8ac81d6b923b125b27b1d8b5520f7e68bf869a916e6adb8f0cdb5415
+  checksum: a7fd46d5cb08d9460f3290e584da578ddcdf10a70bfa532a4901c61421c65ad0a202cd286e8d995d77099ce44f949ec0a992cf812faacb9eed240381d35ddc9e
   languageName: node
   linkType: hard
 
@@ -31248,6 +31286,16 @@ __metadata:
     "@ts-morph/common": ~0.18.0
     code-block-writer: ^11.0.3
   checksum: 4748ab45d0fb0be235f69399ea217cf1c5984ad2ef3ff9eba5a417571f73098c6f1f765fc011eaadc48179471b977f1e44f72eb993932e5c74c5031ab6c60f3a
+  languageName: node
+  linkType: hard
+
+"ts-morph@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "ts-morph@npm:18.0.0"
+  dependencies:
+    "@ts-morph/common": ~0.19.0
+    code-block-writer: ^12.0.0
+  checksum: e3d3099b9a632dfcea2ddc75f00e0d0866b4f6d27b73f9e0ff96cf64fe24ce8074098d6709873afce9edb852c2127c40ad4013f54fdf68dafe0231f1a71827c8
   languageName: node
   linkType: hard
 
