@@ -1,16 +1,14 @@
 import { type FC, useCallback, useRef, RefCallback } from "react";
 import ReactTooltip from "react-tooltip";
 import { Close, Flex, Paragraph } from "theme-ui";
-import { useRequest } from "@prismicio/editor-support/Suspense";
 
-import { SliceMachineConfig } from "@slicemachine/manager";
 import { VIDEO_YOUTUBE_PLAYLIST_LINK, PRISMIC_ACADEMY_URL } from "@lib/consts";
 import { telemetry } from "@src/apiClient";
-import { managerClient } from "@src/managerClient";
 import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
 import { PlayCircleIcon } from "@src/icons/PlayCircle";
 
 import style from "./VideoItem.module.css";
+import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
 
 type VideoItemProps = {
   hasSeenTutorialsToolTip: boolean;
@@ -126,18 +124,5 @@ const VideoItem: FC<VideoItemProps> = ({
     </div>
   );
 };
-
-async function getSliceMachineConfig() {
-  try {
-    return await managerClient.project.getSliceMachineConfig();
-  } catch (e) {
-    console.error(e);
-    return undefined;
-  }
-}
-
-function useSliceMachineConfig(): SliceMachineConfig | undefined {
-  return useRequest(getSliceMachineConfig, []);
-}
 
 export default VideoItem;
