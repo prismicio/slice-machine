@@ -50,7 +50,7 @@ const ToolTip: FC<{
           }}
         >
           <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
-            "Need Help?"
+            Need Help?
           </Paragraph>
           <Close
             data-testid="video-tooltip-close-button"
