@@ -55,7 +55,6 @@ const TabZone: React.FC<TabZoneProps> = ({
     poolOfFields: selectCurrentPoolOfFields(store),
   }));
 
-  // TODO: fix this
   if (!poolOfFields) {
     return null;
   }

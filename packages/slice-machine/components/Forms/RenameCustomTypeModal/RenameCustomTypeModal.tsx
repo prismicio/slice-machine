@@ -41,7 +41,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
     } else {
       await renameCustomType({
         model: customType,
-        newName: values.customTypeName,
+        newLabel: values.customTypeName,
         onSuccess: renameAvailableCustomTypeSuccess,
       });
     }
@@ -61,8 +61,8 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
       dataCy="rename-custom-type-modal"
       widthInPx="530px"
       formId={`rename-custom-type-modal-${customTypeId}`}
-      close={onClose}
       buttonLabel="Rename"
+      close={onClose}
       onSubmit={(values) => void handleOnSubmit(values)}
       initialValues={{
         customTypeName: customTypeName,

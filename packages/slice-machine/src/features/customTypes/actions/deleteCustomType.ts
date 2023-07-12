@@ -28,6 +28,12 @@ export async function deleteCustomType({
       })} deleted`
     );
   } catch (e) {
+    const errorMessage = `Internal Error: ${customTypesMessages.name({
+      start: true,
+      plural: false,
+    })} could not be deleted`;
+    console.error(errorMessage, e);
+
     toast.error(
       `Internal Error: ${customTypesMessages.name({
         start: true,

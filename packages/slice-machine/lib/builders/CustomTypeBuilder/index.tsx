@@ -4,10 +4,10 @@ import TabZone from "./TabZone";
 import { Tabs } from "./Layout";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 
-type CustomTypeBuilderArgs = {
+type CustomTypeBuilderProps = {
   customType: CustomTypeSM;
 };
-const CustomTypeBuilder = ({ customType }: CustomTypeBuilderArgs) => {
+const CustomTypeBuilder = ({ customType }: CustomTypeBuilderProps) => {
   return (
     <Tabs
       tabs={customType.tabs}

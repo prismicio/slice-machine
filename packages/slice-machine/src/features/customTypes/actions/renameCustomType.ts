@@ -6,12 +6,12 @@ import { toast } from "react-toastify";
 
 type RenameCustomTypeArgs = {
   model: CustomType;
-  newName: string;
+  newLabel: string;
   onSuccess: (renamedCustomType: CustomType) => void;
 };
 export async function renameCustomType({
   model,
-  newName,
+  newLabel,
   onSuccess,
 }: RenameCustomTypeArgs) {
   const customTypesMessages =
@@ -20,7 +20,7 @@ export async function renameCustomType({
   try {
     const renamedCustomType = {
       ...model,
-      label: newName,
+      label: newLabel,
     };
 
     await managerClient.customTypes.renameCustomType({
@@ -36,6 +36,12 @@ export async function renameCustomType({
       })} renamed`
     );
   } catch (e) {
+    const errorMessage = `Internal Error: ${customTypesMessages.name({
+      start: true,
+      plural: false,
+    })} could not be renamed`;
+    console.error(errorMessage, e);
+
     toast.error(
       `Internal Error: ${customTypesMessages.name({
         start: true,
