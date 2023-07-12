@@ -1,7 +1,7 @@
 import React from "react";
 import * as RadixHoverCard from "@radix-ui/react-hover-card";
 
-import * as styles from "./HovevrCard.css";
+import * as styles from "./HoverCard.css";
 
 export const HoverCard: React.FC<
   React.PropsWithChildren<

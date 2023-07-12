@@ -1,6 +1,7 @@
 import React, { useState, FC, PropsWithChildren } from "react";
 import * as styles from "./VideoPopover.css";
-import { Popover, Button } from "@prismicio/editor-ui";
+import { HoverCard } from "../HoverrCard";
+import { Button } from "@prismicio/editor-ui";
 import { Video as CldVideo } from "cloudinary-react";
 import { CloseIcon } from "@src/icons/CloseIcon";
 
@@ -30,8 +31,9 @@ export const VideoContainer: FC<{
 
       <div className={styles.videoFooter}>
         <p className={styles.videoDescription}>
-          Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
-          vitae etiam
+          Lorem ipsum dolor sit amet consectetur.
+          <br />
+          Aenean purus aliquam vel eget vitae etiam
         </p>
 
         <Button
@@ -54,25 +56,20 @@ export const VideoPopover: React.FC<
   }>
 > = ({ children, onClose, onPlay, open }) => {
   const [isOpen, setOpen] = useState<boolean>(open);
-  // const handleHover = () => setOpen((wasOpen) => !wasOpen); // TODO: handled by the editor component?
 
-  const handleHover = (v: boolean) => {
-    console.log("Hover");
-    console.log({ v });
+  const handleClose = React.useCallback(() => {
+    onClose();
     setOpen((wasOpen) => !wasOpen);
-  };
+  }, [onClose, setOpen]);
 
   return (
-    <Popover
-      open={isOpen}
+    <HoverCard
       anchor={children}
-      align="start"
-      onOpenChange={handleHover}
-      onMouseOverChange={handleHover}
-      openDelay={0}
-      closeDelay={0}
+      open={isOpen}
+      onOpenChange={handleClose}
+      openDelay={500}
     >
-      <VideoContainer onClose={onClose} onPlay={onPlay} />
-    </Popover>
+      <VideoContainer onClose={handleClose} onPlay={onPlay} />
+    </HoverCard>
   );
 };
