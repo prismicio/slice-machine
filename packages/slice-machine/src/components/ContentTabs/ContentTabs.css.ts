@@ -36,6 +36,10 @@ export const trigger = style([
   },
 ]);
 
+export const triggerText = style({
+  lineHeight: "32px",
+});
+
 export const content = style([
   column,
   sprinkles({ minHeight: 0, outline: "none" }),

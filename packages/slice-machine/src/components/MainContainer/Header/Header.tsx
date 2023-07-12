@@ -2,14 +2,12 @@ import { ReactNode } from "react";
 
 import { Button, ButtonGroup, Icon } from "@prismicio/editor-ui";
 
-import { Breadcrumb } from "@src/components/Breadcrumb";
-
 import * as styles from "./Header.css";
 
 type HeaderProps = {
   actions?: ReactNode;
   backTo?: () => void;
-  breadcrumb: string;
+  breadcrumb: ReactNode;
 };
 
 export const Header = ({ actions, backTo, breadcrumb }: HeaderProps) => (
@@ -22,7 +20,7 @@ export const Header = ({ actions, backTo, breadcrumb }: HeaderProps) => (
           onClick={backTo}
         />
       ) : null}
-      <Breadcrumb>{breadcrumb}</Breadcrumb>
+      {breadcrumb}
     </div>
     {actions !== undefined ? <ButtonGroup>{actions}</ButtonGroup> : null}
   </header>
