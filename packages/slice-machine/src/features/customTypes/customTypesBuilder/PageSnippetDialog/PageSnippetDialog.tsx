@@ -13,15 +13,14 @@ import { ContentTabs } from "@src/components/ContentTabs";
 import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
 import { useDocumentation } from "@src/features/documentation/useDocumentation";
 
-import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
-
 import * as styles from "./PageSnippetDialog.css";
 import { telemetry } from "@src/apiClient";
+import { useAdapterName } from "@src/hooks/useAdapterName";
 
 type PageSnippetContentProps = { model: CustomType };
 
 const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
-  const config = useSliceMachineConfig();
+  const adapter = useAdapterName();
   const documentation = useDocumentation({
     kind: "PageSnippet",
     data: { model },
@@ -32,14 +31,12 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
   }
 
   const trackOpenSnippet = () => {
-    void telemetry.track({
-      event: "page-type:open-snippet",
-      ...(config !== undefined
-        ? {
-            framework: config.adapter,
-          }
-        : {}),
-    });
+    if (adapter !== undefined) {
+      void telemetry.track({
+        event: "page-type:open-snippet",
+        framework: adapter,
+      });
+    }
   };
 
   return (
