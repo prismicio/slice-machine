@@ -53,12 +53,14 @@ function buildEmptySliceModel(sliceName: string): SharedSlice {
       {
         id: DEFAULT_VARIATION_ID,
         name: pascalize(DEFAULT_VARIATION_ID),
-        // TODO: What should this be?
+        // Property not used yet. Fallback to "...".
         docURL: "...",
-        // TODO: What should this be?
+        // "initial" is fine here as default value.
         version: "initial",
         description: pascalize(DEFAULT_VARIATION_ID),
-        // TODO: What should this be? The type requires it.
+        // Empty string is fine, we don't want to save imageUrl.
+        // We don't want to compare local and remote image with imageUrl.
+        // It will be striped anyway when doing the comparison.
         imageUrl: "",
       },
     ],

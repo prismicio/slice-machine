@@ -14,6 +14,7 @@ import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMess
 import { managerClient } from "@src/managerClient";
 import { validateSliceModalValues } from "../formsValidator";
 import { InputBox } from "../components/InputBox";
+import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 
 type CreateSliceModalProps = {
   onClose: () => void;
@@ -82,10 +83,11 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
 
         // Redirect to the slice page
         const variationId = newSlice.variations[0].id;
-        const sliceLocation = `/${libraryName.replace(
-          /\//g,
-          "--"
-        )}/${sliceName}/${variationId}`;
+        const sliceLocation = SLICES_CONFIG.getBuilderPagePathname({
+          libraryName,
+          sliceName,
+          variationId,
+        });
         void router.push(sliceLocation);
       },
     });
