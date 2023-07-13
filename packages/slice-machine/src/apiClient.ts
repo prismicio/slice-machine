@@ -10,7 +10,6 @@ import {
   ScreenshotRequest,
 } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { buildEmptySliceModel } from "@lib/utils/slices/buildEmptySliceModel";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
@@ -77,42 +76,7 @@ export const saveCustomType = async (
   });
 };
 
-export const renameCustomType = (
-  customType: CustomTypeSM
-): ReturnType<SliceMachineManagerClient["customTypes"]["renameCustomType"]> => {
-  return managerClient.customTypes.renameCustomType({
-    model: CustomTypes.fromSM(customType),
-  });
-};
-
-export const deleteCustomType = async (customTypeID: string) =>
-  await managerClient.customTypes.deleteCustomType({
-    id: customTypeID,
-  });
-
 /** Slice Routes * */
-export const createSlice = async (
-  sliceName: string,
-  libName: string
-): Promise<{
-  variationId: string;
-  errors: Awaited<
-    ReturnType<SliceMachineManagerClient["slices"]["createSlice"]>
-  >["errors"];
-}> => {
-  const model = buildEmptySliceModel({ sliceName });
-
-  const { errors } = await managerClient.slices.createSlice({
-    libraryID: libName,
-    model,
-  });
-
-  return {
-    variationId: model.variations[0].id,
-    errors,
-  };
-};
-
 export const renameSlice = async (
   slice: SliceSM,
   libName: string
@@ -280,17 +244,23 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
   const [
     currentVersion,
     latestNonBreakingVersion,
-    updateAvailable,
-    versionsWithKind,
+    sliceMachineUpdateAvailable,
+    sliceMachineVersionWithKind,
+    adapterUpdateAvailable,
+    adapterVersions,
+    adapterName,
   ] = await Promise.all([
     managerClient.versions.getRunningSliceMachineVersion(),
     managerClient.versions.getLatestNonBreakingSliceMachineVersion(),
-    managerClient.versions.checkIsUpdateAvailable(),
+    managerClient.versions.checkIsSliceMachineUpdateAvailable(),
     managerClient.versions.getAllStableSliceMachineVersionsWithKind(),
+    managerClient.versions.checkIsAdapterUpdateAvailable(),
+    managerClient.versions.getAllStableAdapterVersions(),
+    managerClient.project.getAdapterName(),
   ]);
 
-  const versionsWithMetadata = await Promise.all(
-    versionsWithKind.map(async (versionWithKind) => {
+  const sliceMachineVersionsWithMetadata = await Promise.all(
+    sliceMachineVersionWithKind.map(async (versionWithKind) => {
       const releaseNotes =
         await managerClient.versions.getSliceMachineReleaseNotesForVersion({
           version: versionWithKind.version,
@@ -305,10 +275,17 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
   );
 
   return {
-    currentVersion,
-    updateAvailable,
-    latestNonBreakingVersion: latestNonBreakingVersion ?? null,
-    versions: versionsWithMetadata,
+    sliceMachine: {
+      currentVersion,
+      latestNonBreakingVersion: latestNonBreakingVersion ?? null,
+      updateAvailable: sliceMachineUpdateAvailable,
+      versions: sliceMachineVersionsWithMetadata,
+    },
+    adapter: {
+      name: adapterName,
+      updateAvailable: adapterUpdateAvailable,
+      versions: adapterVersions,
+    },
   };
 };
 

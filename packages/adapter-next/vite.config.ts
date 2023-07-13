@@ -6,7 +6,7 @@ import preserveDirectives from "rollup-plugin-preserve-directives";
 export default defineConfig({
 	plugins: [
 		sdk({
-			internalDependencies: ["node-fetch"],
+			internalDependencies: ["fp-ts", "node-fetch"],
 		}),
 		react(),
 	],

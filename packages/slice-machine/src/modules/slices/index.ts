@@ -10,11 +10,9 @@ import {
   put,
   SagaReturnType,
   select,
-  take,
   takeLatest,
 } from "redux-saga/effects";
 import { Reducer } from "redux";
-import { LOCATION_CHANGE, push } from "connected-next-router";
 
 import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
 import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
@@ -22,15 +20,7 @@ import { SliceSM } from "@lib/models/common/Slice";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  createSlice,
-  deleteSlice,
-  getState,
-  renameSlice,
-  saveCustomType,
-  SaveSliceMockRequest,
-  telemetry,
-} from "@src/apiClient";
+import { deleteSlice, renameSlice, SaveSliceMockRequest } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -41,29 +31,12 @@ import {
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
 import { selectSliceById } from "../selectedSlice/selectors";
-import {
-  replaceSharedSliceCreator,
-  ReplaceSharedSliceCreatorPayload,
-  saveCustomTypeCreator,
-  selectCurrentCustomType,
-} from "../selectedCustomType";
 import { SlicesStoreType } from "./types";
 
 // Action Creators
-export const createSliceCreator = createAsyncAction(
-  "SLICES/CREATE.REQUEST",
-  "SLICES/CREATE.RESPONSE",
-  "SLICES/CREATE.FAILURE"
-)<
-  {
-    sliceName: string;
-    libName: string;
-    replaceSharedSliceCreatorPayload?: ReplaceSharedSliceCreatorPayload;
-  },
-  {
-    libraries: readonly LibraryUI[];
-  }
->();
+export const createSlice = createAction("SLICES/CREATE_SLICE")<{
+  libraries: Readonly<LibraryUI[]>;
+}>();
 
 export const renameSliceCreator = createAsyncAction(
   "SLICES/RENAME.REQUEST",
@@ -102,7 +75,7 @@ export const updateSliceMock =
 
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
-  | ActionType<typeof createSliceCreator>
+  | ActionType<typeof createSlice>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
   | ActionType<typeof updateSliceCreator>
@@ -145,7 +118,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: action.payload.libraries,
         remoteSlices: action.payload.remoteSlices,
       };
-    case getType(createSliceCreator.success):
+    case getType(createSlice):
       return {
         ...state,
         libraries: action.payload.libraries,
@@ -259,73 +232,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 };
 
 // Sagas
-export function* createSliceSaga({
-  payload,
-}: ReturnType<typeof createSliceCreator.request>) {
-  try {
-    const { variationId, errors } = (yield call(
-      createSlice,
-      payload.sliceName,
-      payload.libName
-    )) as SagaReturnType<typeof createSlice>;
-    if (errors.length) {
-      throw errors;
-    }
-    void telemetry.track({
-      event: "slice:created",
-      id: payload.sliceName,
-      name: payload.sliceName,
-      library: payload.libName,
-    });
-    const serverState = (yield call(getState)) as SagaReturnType<
-      typeof getState
-    >;
-    yield put(createSliceCreator.success({ libraries: serverState.libraries }));
-    // When creating a slice from a custom type, we add it directly to the slice zone and save
-    if (payload.replaceSharedSliceCreatorPayload !== undefined) {
-      yield put(
-        replaceSharedSliceCreator(payload.replaceSharedSliceCreatorPayload)
-      );
-      const currentCustomType = (yield select(
-        selectCurrentCustomType
-      )) as ReturnType<typeof selectCurrentCustomType>;
-      if (currentCustomType) {
-        yield call(saveCustomType, currentCustomType);
-        yield put(
-          saveCustomTypeCreator.success({ customType: currentCustomType })
-        );
-      }
-    }
-    yield put(modalCloseCreator());
-    const addr = `/${payload.libName.replace(/\//g, "--")}/${
-      payload.sliceName
-    }/${variationId}`;
-    yield put(push("/[lib]/[sliceName]/[variation]", addr));
-    yield take(LOCATION_CHANGE);
-    yield put(
-      openToasterCreator({
-        content: "Slice saved",
-        type: ToasterType.SUCCESS,
-      })
-    );
-  } catch (e) {
-    // Unknown errors
-    yield put(
-      openToasterCreator({
-        content: "Internal Error: Slice not created",
-        type: ToasterType.ERROR,
-      })
-    );
-  }
-}
-
-// Saga watchers
-function* handleSliceRequests() {
-  yield takeLatest(
-    getType(createSliceCreator.request),
-    withLoader(createSliceSaga, LoadingKeysEnum.CREATE_SLICE)
-  );
-}
 
 export function* renameSliceSaga({
   payload,
@@ -413,7 +319,6 @@ function* watchDeleteSlice() {
 
 // Saga Exports
 export function* watchSliceSagas() {
-  yield fork(handleSliceRequests);
   yield fork(watchRenameSlice);
   yield fork(watchDeleteSlice);
 }

@@ -287,7 +287,7 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByText("Update Slices");
+    const addButton = screen.getAllByText("Update Slices")[0];
     await act(async () => {
       fireEvent.click(addButton);
     });

@@ -3,10 +3,6 @@ import {
   createCustomTypeSaga,
   createCustomTypeCreator,
   availableCustomTypesReducer,
-  renameCustomTypeCreator,
-  renameCustomTypeSaga,
-  selectCustomTypeById,
-  deleteCustomTypeSaga,
   deleteCustomTypeCreator,
 } from "@src/modules/availableCustomTypes";
 import { testSaga } from "redux-saga-test-plan";
@@ -14,11 +10,7 @@ import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes
 import { refreshStateCreator } from "@src/modules/environment";
 
 import { dummyServerState } from "../__fixtures__/serverState";
-import {
-  deleteCustomType,
-  renameCustomType,
-  saveCustomType,
-} from "@src/apiClient";
+import { saveCustomType } from "@src/apiClient";
 import { createCustomType } from "@src/features/customTypes/customTypesTable/createCustomType";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
@@ -281,187 +273,6 @@ describe("[Available Custom types module]", () => {
           type: ToasterType.ERROR,
         })
       );
-      saga.next().isDone();
-    });
-  });
-
-  it("should update the custom types state given CUSTOM_TYPES/RENAME.RESPONSE action", () => {
-    const customType1: CustomTypeSM = {
-      id: "id_1",
-      label: "label_1",
-      repeatable: false,
-      status: true,
-      format: "custom",
-      tabs: [],
-    };
-    const customType2: CustomTypeSM = {
-      id: "id_2",
-      label: "label_2",
-      repeatable: false,
-      status: true,
-      format: "custom",
-      tabs: [],
-    };
-    const updatedCustomType2: CustomTypeSM = {
-      id: "id_2",
-      label: "label NEW",
-      repeatable: false,
-      status: true,
-      format: "custom",
-      tabs: [],
-    };
-
-    const existingCustomTypes: AvailableCustomTypesStoreType = {
-      id_1: { local: customType1 },
-      id_2: { local: customType2, remote: customType2 },
-    };
-
-    const action = renameCustomTypeCreator.success({
-      renamedCustomType: updatedCustomType2,
-    });
-
-    expect(availableCustomTypesReducer(existingCustomTypes, action)).toEqual({
-      id_1: { local: customType1 },
-      id_2: { local: updatedCustomType2, remote: customType2 },
-    });
-  });
-
-  describe("[renameCustomTypeSaga]", () => {
-    it("should call the api and dispatch the good actions on success", () => {
-      const actionPayload = {
-        customTypeId: "id",
-        newCustomTypeName: "newName",
-        format: "custom" as const,
-      };
-      const saga = testSaga(
-        renameCustomTypeSaga,
-        renameCustomTypeCreator.request(actionPayload)
-      );
-
-      const originalCustomType: CustomTypeSM = {
-        id: "id",
-        label: "lama",
-        repeatable: false,
-        status: true,
-        format: "custom",
-        tabs: [
-          {
-            key: "Main",
-            value: [],
-          },
-        ],
-      };
-
-      const renamedCustomType: CustomTypeSM = {
-        ...originalCustomType,
-        label: actionPayload.newCustomTypeName,
-      };
-
-      saga.next().select(selectCustomTypeById, originalCustomType.id);
-      saga
-        .next({ local: originalCustomType })
-        .call(renameCustomType, renamedCustomType);
-      saga.next().put(renameCustomTypeCreator.success({ renamedCustomType }));
-      saga.next().put(modalCloseCreator());
-      saga.next().put(
-        openToasterCreator({
-          content: "Custom type updated",
-          type: ToasterType.SUCCESS,
-        })
-      );
-      saga.next().isDone();
-    });
-    it("should call the api and dispatch the good actions on failure", () => {
-      const actionPayload = {
-        customTypeId: "id",
-        newCustomTypeName: "newName",
-        format: "custom" as const,
-      };
-      const saga = testSaga(
-        renameCustomTypeSaga,
-        renameCustomTypeCreator.request(actionPayload)
-      );
-
-      const originalCustomType: CustomTypeSM = {
-        id: "id",
-        label: "lama",
-        repeatable: false,
-        status: true,
-        format: "custom",
-        tabs: [
-          {
-            key: "Main",
-            value: [],
-          },
-        ],
-      };
-
-      const renamedCustomType: CustomTypeSM = {
-        ...originalCustomType,
-        label: actionPayload.newCustomTypeName,
-      };
-
-      saga.next().select(selectCustomTypeById, originalCustomType.id);
-      saga
-        .next({ local: originalCustomType })
-        .call(renameCustomType, renamedCustomType);
-      saga.throw(new Error()).put(
-        openToasterCreator({
-          content: "Internal Error: Custom type not saved",
-          type: ToasterType.ERROR,
-        })
-      );
-      saga.next().isDone();
-    });
-  });
-
-  describe("[deleteCustomTypeSaga]", () => {
-    it("should call the api and dispatch the good actions on success", () => {
-      const actionPayload = {
-        customTypeId: "id",
-        customTypeName: "name",
-        format: "custom" as const,
-      };
-      const saga = testSaga(
-        deleteCustomTypeSaga,
-        deleteCustomTypeCreator.request(actionPayload)
-      );
-
-      saga.next().call(deleteCustomType, actionPayload.customTypeId);
-      saga
-        .next({ errors: [] })
-        .put(deleteCustomTypeCreator.success(actionPayload));
-      saga.next().put(
-        openToasterCreator({
-          content: `Successfully deleted custom type “${actionPayload.customTypeName}”`,
-          type: ToasterType.SUCCESS,
-        })
-      );
-
-      saga.next().put(modalCloseCreator());
-      saga.next().isDone();
-    });
-    it("should call the api and dispatch the good actions on unknown failure", () => {
-      const actionPayload = {
-        customTypeId: "id",
-        customTypeName: "name",
-        format: "custom" as const,
-      };
-      const saga = testSaga(
-        deleteCustomTypeSaga,
-        deleteCustomTypeCreator.request(actionPayload)
-      );
-
-      saga.next().call(deleteCustomType, actionPayload.customTypeId);
-      saga.throw(new Error()).put(
-        openToasterCreator({
-          content:
-            "An unexpected error happened while deleting your custom type.",
-          type: ToasterType.ERROR,
-        })
-      );
-
-      saga.next().put(modalCloseCreator());
       saga.next().isDone();
     });
   });

@@ -44,7 +44,9 @@ const Navigation: FC = () => {
   const repoDomain = new URL(apiEndpoint).hostname.replace(".cdn", "");
   const repoAddress = apiEndpoint.replace(".cdn.", ".").replace("/api/v2", "");
   const latestVersion =
-    changelog.versions.length > 0 ? changelog.versions[0] : null;
+    changelog.sliceMachine.versions.length > 0
+      ? changelog.sliceMachine.versions[0]
+      : null;
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
   const formattedNumberOfChanges = numberOfChanges > 9 ? "+9" : numberOfChanges;
   const displayNumberOfChanges = numberOfChanges !== 0 && isOnline;
@@ -63,7 +65,7 @@ const Navigation: FC = () => {
   ) => {
     setUpdatesViewed({
       latest: latestVersion && latestVersion.versionNumber,
-      latestNonBreaking: changelog.latestNonBreakingVersion,
+      latestNonBreaking: changelog.sliceMachine.latestNonBreakingVersion,
     });
     handleNavigation(event);
   };
@@ -133,7 +135,8 @@ const Navigation: FC = () => {
         </SideNavListItem>
       </SideNavList>
 
-      {changelog.updateAvailable && (
+      {(changelog.sliceMachine.updateAvailable ||
+        changelog.adapter.updateAvailable) && (
         <UpdateInfo
           href="/changelog"
           onClick={handleChangeLogNavigationFromUpdateBox}
@@ -157,7 +160,8 @@ const Navigation: FC = () => {
             onClick={handleNavigation}
             RightElement={
               <RightElement>
-                {changelog.currentVersion && `v${changelog.currentVersion}`}
+                {changelog.sliceMachine.currentVersion &&
+                  `v${changelog.sliceMachine.currentVersion}`}
               </RightElement>
             }
           />

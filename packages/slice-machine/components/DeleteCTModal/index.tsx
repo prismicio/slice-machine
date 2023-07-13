@@ -1,54 +1,53 @@
 import SliceMachineModal from "@components/SliceMachineModal";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import Card from "@components/Card";
 import { MdOutlineDelete } from "react-icons/md";
 import { Button } from "@components/Button";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
+import { deleteCustomType } from "@src/features/customTypes/actions/deleteCustomType";
+import { useState } from "react";
+
 type DeleteCTModalProps = {
-  customType?: CustomType;
+  customType: CustomType;
   format: CustomTypeFormat;
+  onClose: (didDelete?: boolean) => void;
+  onDeleteCustomTypeSuccess: () => void;
 };
 
 export const DeleteCustomTypeModal: React.FunctionComponent<
   DeleteCTModalProps
-> = ({ customType, format }) => {
-  const { isDeleteCustomTypeModalOpen, isDeletingCustomType } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isDeleteCustomTypeModalOpen: isModalOpen(
-        store,
-        ModalKeysEnum.DELETE_CUSTOM_TYPE
-      ),
-      isDeletingCustomType: isLoading(
-        store,
-        LoadingKeysEnum.DELETE_CUSTOM_TYPE
-      ),
-    })
-  );
+> = ({ customType, format, onClose, onDeleteCustomTypeSuccess }) => {
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
-  const { closeModals, deleteCustomType } = useSliceMachineActions();
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const { deleteCustomTypeSuccess } = useSliceMachineActions();
+
+  const onConfirm = async () => {
+    setIsDeleting(true);
+    await deleteCustomType({
+      customType,
+      onSuccess: () => deleteCustomTypeSuccess(customType.id),
+    });
+    onDeleteCustomTypeSuccess();
+  };
 
   const { theme } = useThemeUI();
 
   return (
     <SliceMachineModal
-      isOpen={isDeleteCustomTypeModalOpen}
+      isOpen
       shouldCloseOnOverlayClick={true}
       style={{
         content: {
           maxWidth: 612,
         },
       }}
-      onRequestClose={closeModals}
+      onRequestClose={() => onClose()}
     >
       <Card
         bodySx={{
@@ -87,7 +86,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 {customTypesMessages.name({ start: false, plural: false })}
               </Heading>
             </Flex>
-            <Close type="button" onClick={() => closeModals()} />
+            <Close type="button" onClick={() => onClose()} />
           </Flex>
         )}
         Footer={() => (
@@ -104,7 +103,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             <Button
               label="Cancel"
               variant="secondary"
-              onClick={() => closeModals()}
+              onClick={() => onClose()}
               sx={{
                 mr: "10px",
                 fontWeight: "bold",
@@ -112,18 +111,12 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
                 borderRadius: 6,
               }}
             />
-            {customType && (
+            {customType !== undefined && (
               <Button
                 label="Delete"
                 variant="danger"
-                isLoading={isDeletingCustomType}
-                onClick={() =>
-                  deleteCustomType(
-                    customType.id,
-                    format,
-                    customType.label ?? ""
-                  )
-                }
+                isLoading={isDeleting}
+                onClick={() => void onConfirm()}
                 sx={{ minHeight: 39, minWidth: 78 }}
               />
             )}

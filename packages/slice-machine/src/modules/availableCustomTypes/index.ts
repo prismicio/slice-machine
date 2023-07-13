@@ -1,23 +1,17 @@
 import { Reducer } from "redux";
 import { AvailableCustomTypesStoreType } from "./types";
-import { ActionType, createAsyncAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { refreshStateCreator } from "@src/modules/environment";
-import {
-  call,
-  fork,
-  put,
-  SagaReturnType,
-  select,
-  takeLatest,
-} from "redux-saga/effects";
+import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  deleteCustomType,
-  renameCustomType,
-  saveCustomType,
-} from "@src/apiClient";
+import { saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/features/customTypes/customTypesTable/createCustomType";
@@ -59,20 +53,11 @@ export const createCustomTypeCreator = createAsyncAction(
   }
 >();
 
-export const renameCustomTypeCreator = createAsyncAction(
-  "CUSTOM_TYPES/RENAME.REQUEST",
-  "CUSTOM_TYPES/RENAME.RESPONSE",
-  "CUSTOM_TYPES/RENAME.FAILURE"
-)<
-  {
-    customTypeId: string;
-    format: CustomTypeFormat;
-    newCustomTypeName: string;
-  },
-  {
-    renamedCustomType: CustomTypeSM;
-  }
->();
+export const renameAvailableCustomType = createAction(
+  "CUSTOM_TYPES/RENAME_CUSTOM_TYPE"
+)<{
+  renamedCustomType: CustomTypeSM;
+}>();
 
 export const deleteCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPES/DELETE.REQUEST",
@@ -92,7 +77,7 @@ export const deleteCustomTypeCreator = createAsyncAction(
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createCustomTypeCreator>
-  | ActionType<typeof renameCustomTypeCreator>
+  | ActionType<typeof renameAvailableCustomType>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof deleteCustomTypeCreator>
   | ActionType<typeof deleteSliceCreator.success>;
@@ -166,12 +151,9 @@ export const availableCustomTypesReducer: Reducer<
       };
     }
 
-    case getType(renameCustomTypeCreator.success): {
+    case getType(renameAvailableCustomType): {
       const id = action.payload.renamedCustomType.id;
       const customType = state[id];
-
-      // Rename only applies for custom type with local data
-      if (!hasLocal(customType)) return state;
 
       const newCustomType = {
         ...customType,
@@ -283,130 +265,15 @@ export function* createCustomTypeSaga({
   }
 }
 
-export function* renameCustomTypeSaga({
-  payload,
-}: ReturnType<typeof renameCustomTypeCreator.request>) {
-  const customTypesMessages = CUSTOM_TYPES_MESSAGES[payload.format];
-
-  try {
-    const customType = (yield select(
-      selectCustomTypeById,
-      payload.customTypeId
-    )) as ReturnType<typeof selectCustomTypeById>;
-    if (!customType) {
-      throw new Error(
-        `${customTypesMessages.name({ start: true, plural: false })} "${
-          payload.newCustomTypeName
-        } not found.`
-      );
-    }
-
-    if (!hasLocal(customType)) {
-      throw new Error(
-        `Can't rename a deleted ${customTypesMessages.name({
-          start: false,
-          plural: false,
-        })} (${payload.newCustomTypeName})`
-      );
-    }
-
-    const renamedCustomType = renameCustomTypeModel({
-      customType: customType.local,
-      newName: payload.newCustomTypeName,
-    });
-
-    yield call(renameCustomType, renamedCustomType);
-    yield put(renameCustomTypeCreator.success({ renamedCustomType }));
-    yield put(modalCloseCreator());
-    yield put(
-      openToasterCreator({
-        content: `${customTypesMessages.name({
-          start: true,
-          plural: false,
-        })} updated`,
-        type: ToasterType.SUCCESS,
-      })
-    );
-  } catch (e) {
-    yield put(
-      openToasterCreator({
-        content: `Internal Error: ${customTypesMessages.name({
-          start: true,
-          plural: false,
-        })} not saved`,
-        type: ToasterType.ERROR,
-      })
-    );
-  }
-}
-
-export function* deleteCustomTypeSaga({
-  payload,
-}: ReturnType<typeof deleteCustomTypeCreator.request>) {
-  const customTypesMessages = CUSTOM_TYPES_MESSAGES[payload.format];
-
-  try {
-    const result = (yield call(
-      deleteCustomType,
-      payload.customTypeId
-    )) as SagaReturnType<typeof deleteCustomType>;
-    if (result.errors.length > 0) {
-      throw result.errors;
-    }
-    yield put(deleteCustomTypeCreator.success(payload));
-    yield put(
-      openToasterCreator({
-        content: `Successfully deleted ${customTypesMessages.name({
-          start: false,
-          plural: false,
-        })} “${payload.customTypeName}”`,
-        type: ToasterType.SUCCESS,
-      })
-    );
-  } catch (e) {
-    yield put(
-      openToasterCreator({
-        content: `An unexpected error happened while deleting your ${customTypesMessages.name(
-          { start: false, plural: false }
-        )}.`,
-        type: ToasterType.ERROR,
-      })
-    );
-  }
-  yield put(modalCloseCreator());
-}
-
 // Saga watchers
 function* handleCustomTypeRequests() {
   yield takeLatest(
     getType(createCustomTypeCreator.request),
     withLoader(createCustomTypeSaga, LoadingKeysEnum.CREATE_CUSTOM_TYPE)
   );
-  yield takeLatest(
-    getType(renameCustomTypeCreator.request),
-    withLoader(renameCustomTypeSaga, LoadingKeysEnum.RENAME_CUSTOM_TYPE)
-  );
-  yield takeLatest(
-    getType(deleteCustomTypeCreator.request),
-    withLoader(deleteCustomTypeSaga, LoadingKeysEnum.DELETE_CUSTOM_TYPE)
-  );
 }
 
 // Saga Exports
 export function* watchAvailableCustomTypesSagas() {
   yield fork(handleCustomTypeRequests);
-}
-
-type RenameCustomTypeModelArgs = {
-  customType: CustomTypeSM;
-  newName: string;
-};
-
-export function renameCustomTypeModel(
-  args: RenameCustomTypeModelArgs
-): CustomTypeSM {
-  return {
-    ...args.customType,
-    label: args.newName,
-  };
 }

@@ -1,23 +1,8 @@
 import { HookError, SliceMachinePluginOptions } from "@slicemachine/plugin-kit";
 import { detect as niDetect } from "@antfu/ni";
 
-import { VERSION_KIND } from "./constants/VERSION_KIND";
-
 export type PackageManager = NonNullable<Awaited<ReturnType<typeof niDetect>>>;
 export type { APIEndpoints } from "./constants/API_ENDPOINTS";
-
-export type PackageChangelog = {
-	currentVersion: string;
-	updateAvailable: boolean;
-	latestNonBreakingVersion: string | null;
-	versions: PackageVersion[];
-};
-
-export type PackageVersion = {
-	versionNumber: string;
-	releaseNote: string | null;
-	kind: (typeof VERSION_KIND)[keyof typeof VERSION_KIND] | undefined;
-};
 
 /**
  * A string, object, or instance representing a registered plugin.

@@ -97,8 +97,9 @@ vi.mock("fs/promises", async () => {
 	};
 });
 
-const MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH =
-	"/foo/bar/baz/slice-machine-ui/package.json";
+export const MOCK_BASE_DIRECTORY = "/foo/bar/baz";
+
+const MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH = `${MOCK_BASE_DIRECTORY}/baz/slice-machine-ui/package.json`;
 
 vi.mock("module", async () => {
 	const actual = (await vi.importActual(
@@ -115,6 +116,8 @@ vi.mock("module", async () => {
 				resolve: (id: string) => {
 					if (id === "slice-machine-ui/package.json") {
 						return MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH;
+					} else if (id.startsWith("test-plugin-")) {
+						return `${MOCK_BASE_DIRECTORY}/${id}`;
 					}
 
 					return actualCreateRequire(id);

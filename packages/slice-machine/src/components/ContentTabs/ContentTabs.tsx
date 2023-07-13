@@ -26,7 +26,11 @@ export const ContentTabs: FC<ContentTabsProps> = ({ tabs, ...otherProps }) => (
             key={`${label}-trig${i + 1}`}
             value={label}
           >
-            <Text component="span" color="inherit">
+            <Text
+              className={styles.triggerText}
+              component="span"
+              color="inherit"
+            >
               {label}
             </Text>
           </Tabs.Trigger>

@@ -20,6 +20,7 @@ export const SegmentEventType = {
 	changes_pushed: "changes:pushed",
 	changes_limitReach: "changes:limit-reach",
 	editor_widgetUsed: "editor:widget-used",
+	open_page_snippet: "page-type:open-snippet",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -46,6 +47,8 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
 	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
 	[SegmentEventType.editor_widgetUsed]: "SliceMachine Editor Widget Used",
+	[SegmentEventType.open_page_snippet]:
+		"SliceMachine Opens Page Type Snippet Dialog",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -104,6 +107,11 @@ type PageViewSegmentEvent = SegmentEvent<
 		referrer: string;
 		adapter: string;
 	}
+>;
+
+type OpenPageSnippetSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.open_page_snippet,
+	{ framework: string }
 >;
 
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
@@ -203,4 +211,5 @@ export type SegmentEvents =
 	| ScreenshotTakenSegmentEvent
 	| ChangesPushedSegmentEvent
 	| ChangesLimitReachSegmentEvent
-	| EditorWidgetUsedSegmentEvent;
+	| EditorWidgetUsedSegmentEvent
+	| OpenPageSnippetSegmentEvent;

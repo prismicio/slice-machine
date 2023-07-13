@@ -1,8 +1,6 @@
 // A list of slice names that are reserved for internal uses.
 export const RESERVED_SLICE_NAME = ["components"];
 
-export const DEFAULT_VARIATION_ID = "default";
-
 export const acceptedImagesTypes = ["png", "jpg", "jpeg"];
 
 // regex for new fields creation to allow _ only as - is breaking graphQl APIs
