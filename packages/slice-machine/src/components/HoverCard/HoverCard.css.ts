@@ -12,6 +12,7 @@ export const container = style([
   sprinkles({
     borderRadius: 6,
     backgroundColor: colors.grey1,
+    boxShadow: 2,
   }),
 ]);
 

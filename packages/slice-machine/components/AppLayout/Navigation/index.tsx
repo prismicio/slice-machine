@@ -1,5 +1,4 @@
 import { Suspense, type FC } from "react";
-import { BaseStyles } from "theme-ui";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
@@ -143,12 +142,10 @@ const Navigation: FC = () => {
 
       <SideNavList position="bottom">
         <Suspense>
-          <BaseStyles>
-            <VideoItem
-              hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
-              onClose={setSeenTutorialsToolTip}
-            />
-          </BaseStyles>
+          <VideoItem
+            hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
+            onClose={setSeenTutorialsToolTip}
+          />
         </Suspense>
 
         <SideNavListItem>

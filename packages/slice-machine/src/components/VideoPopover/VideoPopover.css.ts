@@ -5,7 +5,7 @@ const block = style([
   sprinkles({
     boxSizing: "border-box",
     fontFamily: "body",
-    // all: "unset", // can be applied out of oder :/
+    // all: "unset", // TODO: this causes some issues
   }),
 ]);
 
@@ -14,10 +14,10 @@ export const videoContainer = style([
   sprinkles({
     backgroundColor: colors.grey1,
     borderRadius: 6,
+    boxShadow: 3,
   }),
   {
     width: "304px",
-    height: "332px",
   },
 ]);
 
@@ -33,6 +33,8 @@ export const videoHeader = style([
     paddingLeft: 16,
   }),
   {
+    borderTopRightRadius: "inherit",
+    borderTopLeftRadius: "inherit",
     lineHeight: "16px",
     fontSize: "12px",
     fontWeight: "600",
@@ -44,6 +46,8 @@ export const videoPlayer = style([
     width: "100%",
   }),
   {
+    display: "block",
+    // width: "304px",
     height: "auto",
   },
 ]);
@@ -59,9 +63,10 @@ export const videoDescription = style([
   block,
   sprinkles({
     color: colors.grey11,
-    marginBottom: 16,
+    marginBottom: 12,
   }),
   {
+    lineBreak: "auto",
     fontSize: "12px",
     fontWeight: "400",
     lineHeight: "16px",

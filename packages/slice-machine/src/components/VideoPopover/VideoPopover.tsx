@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import * as styles from "./VideoPopover.css";
-import { HoverCard } from "../HoverCard";
+import { HoverCard, HoverCardProps } from "../HoverCard";
 import { Button } from "@prismicio/editor-ui";
 import { Video as CldVideo } from "cloudinary-react";
 import { CloseIcon } from "@src/icons/CloseIcon";
@@ -29,8 +29,6 @@ export const VideoContainer: FC<{
       </div>
 
       <CldVideo
-        // publicId="Tooltips/pa-course-overview_eaopsn"
-        // cloudName="dmtf1daqp"
         publicId={publicId}
         cloudName={cloudName}
         poster={thumbnail}
@@ -38,15 +36,13 @@ export const VideoContainer: FC<{
         onPlay={onPlay}
         autoPlay={false}
         controls={true}
-        // poster={poster} // TODO: get a thumbnail
       />
 
       <div className={styles.videoFooter}>
-        <p className={styles.videoDescription}>
-          Lorem ipsum dolor sit amet consectetur.
-          <br />
-          Aenean purus aliquam vel eget vitae etiam
-        </p>
+        <div className={styles.videoDescription}>
+          Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
+          vitae etiam
+        </div>
 
         <Button
           variant="secondary"
@@ -88,6 +84,8 @@ export const VideoPopover: React.FC<
     cloudName: string;
     delay?: number;
     thumbnail?: string;
+    side?: HoverCardProps["side"];
+    sideOffset?: HoverCardProps["sideOffset"];
   }>
 > = ({
   children,
@@ -98,6 +96,8 @@ export const VideoPopover: React.FC<
   publicId,
   cloudName,
   thumbnail,
+  side,
+  sideOffset,
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -111,7 +111,6 @@ export const VideoPopover: React.FC<
     [setOpen]
   );
 
-  // timeout system to open the tooltip
   useTimerWhen(open, handleDefaultOpening, delay);
 
   const handleChange = (value: boolean) => {
@@ -128,6 +127,8 @@ export const VideoPopover: React.FC<
       open={isOpen}
       onOpenChange={handleChange}
       openDelay={delay}
+      side={side}
+      sideOffset={sideOffset}
     >
       <VideoContainer
         onClose={handleClose}
