@@ -15,11 +15,21 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
   selectedVersion,
   packageManager,
 }) => {
-  const isLatest =
-    selectedVersion.versionNumber === changelog.versions[0].versionNumber;
-  const version = isLatest ? "latest" : selectedVersion.versionNumber;
-  const packageSpec = `slice-machine-ui@${version}`;
-  const installCommand = getInstallCommand(packageManager, packageSpec);
+  const isLatestSliceMachineVersion =
+    selectedVersion.versionNumber ===
+    changelog.sliceMachine.versions[0].versionNumber;
+  const sliceMachineVersionToInstall = isLatestSliceMachineVersion
+    ? "latest"
+    : selectedVersion.versionNumber;
+  const packagesSpecs = getPackagesSpecs({
+    sliceMachineVersionToInstall,
+    isLatestSliceMachineVersion,
+    adapterName: changelog.adapter.name,
+  });
+  const installCommand = getInstallCommand(packageManager, packagesSpecs);
+  const isOnlyAdapterUpdate =
+    changelog.adapter.updateAvailable &&
+    !changelog.sliceMachine.updateAvailable;
 
   return (
     <Flex
@@ -39,6 +49,18 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
       >
         How to install
       </Text>
+      {isOnlyAdapterUpdate && isLatestSliceMachineVersion && (
+        <Text
+          sx={{
+            fontSize: "12px",
+            fontWeight: 500,
+            lineHeight: "16px",
+          }}
+        >
+          It looks like you are using an outdated version of the adapter. Run
+          this command to update your adapter:
+        </Text>
+      )}
       <Flex
         sx={{
           gap: "8px",
@@ -63,18 +85,40 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
 
 function getInstallCommand(
   packageManager: PackageManager,
-  packageSpec: string
+  packagesSpecs: string[]
 ): string {
+  const packagesSpecsStr = packagesSpecs.join(" ");
+
   switch (packageManager) {
     case "bun":
-      return `bun add --development ${packageSpec}`;
+      return `bun add --development ${packagesSpecsStr}`;
     case "npm":
-      return `npm install --save-dev ${packageSpec}`;
+      return `npm install --save-dev ${packagesSpecsStr}`;
     case "pnpm":
     case "pnpm@6":
-      return `pnpm add --save-dev ${packageSpec}`;
+      return `pnpm add --save-dev ${packagesSpecsStr}`;
     case "yarn":
     case "yarn@berry":
-      return `yarn add --dev ${packageSpec}`;
+      return `yarn add --dev ${packagesSpecsStr}`;
   }
+}
+
+type GetPackagesSpecsArgs = {
+  sliceMachineVersionToInstall: string;
+  isLatestSliceMachineVersion: boolean;
+  adapterName: string;
+};
+
+function getPackagesSpecs({
+  sliceMachineVersionToInstall,
+  isLatestSliceMachineVersion,
+  adapterName,
+}: GetPackagesSpecsArgs) {
+  const packagesSpecs = [`slice-machine-ui@${sliceMachineVersionToInstall}`];
+
+  if (isLatestSliceMachineVersion) {
+    packagesSpecs.push(`${adapterName}@latest`);
+  }
+
+  return packagesSpecs;
 }

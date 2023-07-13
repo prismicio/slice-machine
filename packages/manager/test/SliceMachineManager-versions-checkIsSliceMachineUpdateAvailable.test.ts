@@ -24,7 +24,7 @@ it("returns true if an update is available", async (ctx) => {
 		versions: ["1.0.0", "2.0.0"],
 	});
 
-	const res = await manager.versions.checkIsUpdateAvailable();
+	const res = await manager.versions.checkIsSliceMachineUpdateAvailable();
 
 	expect(res).toStrictEqual(true);
 });
@@ -46,7 +46,7 @@ it("returns false if an update is not available", async (ctx) => {
 		versions: ["1.0.0"],
 	});
 
-	const res = await manager.versions.checkIsUpdateAvailable();
+	const res = await manager.versions.checkIsSliceMachineUpdateAvailable();
 
 	expect(res).toStrictEqual(false);
 });

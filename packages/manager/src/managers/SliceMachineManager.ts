@@ -14,7 +14,7 @@ import {
 
 import { createContentDigest } from "../lib/createContentDigest";
 
-import { PackageChangelog, PackageManager, SliceMachineConfig } from "../types";
+import { PackageManager, SliceMachineConfig } from "../types";
 import {
 	PrismicAuthManager,
 	PrismicUserProfile,
@@ -50,7 +50,6 @@ type SliceMachineManagerGetStateReturnType = {
 			localSliceSimulatorURL?: string;
 		};
 		repo: string;
-		changelog?: PackageChangelog;
 		packageManager: PackageManager;
 		supportsSliceSimulator: boolean;
 		endpoints: APIEndpoints;
