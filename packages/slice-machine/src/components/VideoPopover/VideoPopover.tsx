@@ -86,6 +86,7 @@ export const VideoPopover: React.FC<
     thumbnail?: string;
     side?: HoverCardProps["side"];
     sideOffset?: HoverCardProps["sideOffset"];
+    arrowSize?: number;
   }>
 > = ({
   children,
@@ -98,6 +99,7 @@ export const VideoPopover: React.FC<
   thumbnail,
   side,
   sideOffset,
+  arrowSize,
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -129,6 +131,7 @@ export const VideoPopover: React.FC<
       openDelay={delay}
       side={side}
       sideOffset={sideOffset}
+      arrowSize={arrowSize}
     >
       <VideoContainer
         onClose={handleClose}

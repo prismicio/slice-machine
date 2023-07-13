@@ -87,7 +87,7 @@ const MaybeVideoTooltipWrapper: FC<
         cloudName="dmtf1daqp"
         publicId={videoUrl}
         onClose={onClose}
-        // thumbnail="" TODO: get a thumbnail
+        thumbnail="/phill.png"
         onPlay={() => {
           void telemetry.track({
             event: "open-video-tutorials",
