@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Flex, Text } from "theme-ui";
+import { AiFillWarning } from "react-icons/ai";
 import type { PackageManager } from "@slicemachine/manager";
 import { PackageChangelog, PackageVersion } from "@models/common/versions";
 import CodeBlock from "@components/CodeBlock";
@@ -32,54 +33,61 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
     !changelog.sliceMachine.updateAvailable;
 
   return (
-    <Flex
-      sx={{
-        flexDirection: "column",
-        gap: "16px",
-        padding: "16px",
-        bg: "grey01",
-      }}
-    >
-      <Text
-        sx={{
-          fontSize: "16px",
-          fontWeight: 500,
-          lineHeight: "20px",
-        }}
-      >
-        How to install
-      </Text>
+    <>
       {isOnlyAdapterUpdate && isLatestSliceMachineVersion && (
-        <Text
+        <Flex
           sx={{
-            fontSize: "12px",
-            fontWeight: 500,
-            lineHeight: "16px",
+            padding: "16px",
+            bg: "lightOrange",
+            color: "darkOrange",
+            fontSize: "13px",
+            lineHeight: "24px",
+            borderRadius: "4px",
+            gap: "16px",
           }}
         >
+          <AiFillWarning size="24px" />
           It looks like you are using an outdated version of the adapter. Run
           this command to update your adapter:
-        </Text>
+        </Flex>
       )}
       <Flex
         sx={{
-          gap: "8px",
+          flexDirection: "column",
+          gap: "16px",
+          padding: "16px",
+          bg: "grey01",
         }}
       >
-        <CodeBlock
-          codeStyle={{ color: "white", minWidth: "480px", padding: "8px" }}
+        <Text
+          sx={{
+            fontSize: "16px",
+            fontWeight: 500,
+            lineHeight: "20px",
+          }}
         >
-          {installCommand}
-        </CodeBlock>
+          How to install
+        </Text>
+        <Flex
+          sx={{
+            gap: "8px",
+          }}
+        >
+          <CodeBlock
+            codeStyle={{ color: "white", minWidth: "480px", padding: "8px" }}
+          >
+            {installCommand}
+          </CodeBlock>
 
-        <Button
-          variant="secondary"
-          onClick={() => void navigator.clipboard.writeText(installCommand)}
-        >
-          Copy
-        </Button>
+          <Button
+            variant="secondary"
+            onClick={() => void navigator.clipboard.writeText(installCommand)}
+          >
+            Copy
+          </Button>
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 
