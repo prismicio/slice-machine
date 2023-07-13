@@ -1,21 +1,17 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   slicesReducer,
-  createSliceSaga,
-  createSliceCreator,
   deleteSliceCreator,
   // getFrontendSlices,
   deleteSliceSaga,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
-import SegmentClient from "analytics-node";
 
-import { createSlice, deleteSlice, getState } from "@src/apiClient";
+import { deleteSlice } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { SlicesStoreType } from "@src/modules/slices/types";
-import { LOCATION_CHANGE, push } from "connected-next-router";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 // import { generateComponentUI, generateLibraryUI, generateSliceSM } from "./__fixtures__/sliceUtilsFactory";
@@ -76,52 +72,6 @@ describe("[Slices module]", () => {
       ] as unknown as LibraryUI[];
 
       expect(result).toEqual(expectState);
-    });
-  });
-
-  describe("[createSliceSaga]", () => {
-    it("should call the api and dispatch the good actions", async () => {
-      vi.spyOn(console, "error").mockImplementationOnce(() => undefined);
-
-      const variationId = "variationId";
-      const actionPayload = {
-        sliceName: "MySlice",
-        libName: "MyLib/Components",
-      };
-      const serverState = { libraries: [] };
-      const saga = testSaga(
-        createSliceSaga,
-        createSliceCreator.request(actionPayload)
-      );
-
-      saga
-        .next()
-        .call(createSlice, actionPayload.sliceName, actionPayload.libName);
-      saga.next({ variationId, errors: [] }).call(getState);
-      saga
-        .next(serverState)
-        .put(createSliceCreator.success({ libraries: serverState.libraries }));
-      saga.next().put(modalCloseCreator());
-      saga
-        .next()
-        .put(
-          push(
-            "/[lib]/[sliceName]/[variation]",
-            "/MyLib--Components/MySlice/variationId"
-          )
-        );
-      saga.next().take(LOCATION_CHANGE);
-      saga.next().put(
-        openToasterCreator({
-          content: "Slice saved",
-          type: ToasterType.SUCCESS,
-        })
-      );
-      saga.next().isDone();
-
-      // Wait for network request to be performed
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
     });
   });
 

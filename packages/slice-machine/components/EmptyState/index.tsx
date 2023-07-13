@@ -1,13 +1,13 @@
-import { Button, Text, Heading, Box, Spinner } from "theme-ui";
+import { Button, Text, Heading, Box } from "theme-ui";
 import React from "react";
 import { Video } from "cloudinary-react";
+
 import { telemetry } from "@src/apiClient";
 
 interface Props {
   title: string;
   onCreateNew: () => void;
   buttonText: string;
-  isLoading: boolean;
   documentationComponent: React.ReactNode;
   videoPublicIdUrl: string;
 }
@@ -16,7 +16,6 @@ const EmptyState: React.FunctionComponent<Props> = ({
   title,
   onCreateNew,
   buttonText,
-  isLoading,
   documentationComponent,
   videoPublicIdUrl,
 }) => (
@@ -103,7 +102,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
             mr: 4,
           }}
         >
-          {isLoading ? <Spinner color="#FFF" size={14} /> : buttonText}
+          {buttonText}
         </Button>
         <Text
           sx={{

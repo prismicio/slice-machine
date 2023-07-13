@@ -168,7 +168,7 @@ const TabZone: React.FC<TabZoneProps> = ({
       />
 
       <SliceZone
-        format={customType.format}
+        customType={customType}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
