@@ -374,7 +374,7 @@ export interface MenuDocumentDataMenuTabsItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  menuTab: prismic.RelationField<"menu-tab">;
+  menuTab: prismic.ContentRelationshipField<"menu-tab">;
 }
 /**
  * Menu document from Prismic
@@ -535,13 +535,75 @@ export interface PageDocumentDataSocialCardsItem {
  */
 export type PageDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
+/** Content for Page Type documents */
+interface PageTypeDocumentData {
+  /**
+   * Slice Zone field in _Page Type_
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: _None_
+   * - **API ID Path**: page_type.slices[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/core-concepts/slices
+   */
+  slices: prismic.SliceZone<PageTypeDocumentDataSlicesSlice>;
+  /**
+   * Meta Description field in _Page Type_
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: page_type.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
+   */
+  meta_description: prismic.RichTextField;
+  /**
+   * Meta Image field in _Page Type_
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: _None_
+   * - **API ID Path**: page_type.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/core-concepts/image
+   */
+  meta_image: prismic.ImageField<never>;
+  /**
+   * Meta Title field in _Page Type_
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search
+   *   engines
+   * - **API ID Path**: page_type.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
+   */
+  meta_title: prismic.KeyTextField;
+}
+/** Slice for _Page Type → Slice Zone_ */
+type PageTypeDocumentDataSlicesSlice = never;
+/**
+ * Page Type document from Prismic
+ *
+ * - **API ID**: `page_type`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/core-concepts/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type PageTypeDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<
+    Simplify<PageTypeDocumentData>,
+    "page_type",
+    Lang
+  >;
 export type AllDocumentTypes =
   | BlogPageDocument
   | FooterDocument
   | HomePageDocument
   | MenuDocument
   | MenuTabDocument
-  | PageDocument;
+  | PageDocument
+  | PageTypeDocument;
 /** Primary content in CategoryPreviewWithImageBackgrounds → Primary */
 interface CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary {
   /**
@@ -597,7 +659,7 @@ interface CategoryPreviewWithImageBackgroundsSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
   /**
    * Left Image field in _CategoryPreviewWithImageBackgrounds → Primary_
    *
@@ -639,7 +701,7 @@ interface CategoryPreviewWithImageBackgroundsSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  leftImageLink: prismic.RelationField;
+  leftImageLink: prismic.ContentRelationshipField;
   /**
    * Top Right Image field in _CategoryPreviewWithImageBackgrounds → Primary_
    *
@@ -683,7 +745,7 @@ interface CategoryPreviewWithImageBackgroundsSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  topRightImageLink: prismic.RelationField;
+  topRightImageLink: prismic.ContentRelationshipField;
   /**
    * Bottom Right Image field in _CategoryPreviewWithImageBackgrounds →
    * Primary_
@@ -728,7 +790,7 @@ interface CategoryPreviewWithImageBackgroundsSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  bottomRightImageLink: prismic.RelationField;
+  bottomRightImageLink: prismic.ContentRelationshipField;
 }
 /**
  * Default slice variation for CategoryPreviewWithImageBackgrounds Slice
@@ -787,7 +849,7 @@ interface CategoryPreviewWithScrollingCardsSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  CTALink: prismic.RelationField;
+  CTALink: prismic.ContentRelationshipField;
 }
 /** Item in CategoryPreviewWithScrollingCards → Items */
 export interface CategoryPreviewWithScrollingCardsSliceDefaultSliceItem {
@@ -818,7 +880,7 @@ export interface CategoryPreviewWithScrollingCardsSliceDefaultSliceItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
 }
 /**
  * Default slice variation for CategoryPreviewWithScrollingCards Slice
@@ -944,7 +1006,7 @@ interface ExternalVideoSliceSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/integration-fields
    */
-  video: prismic.IntegrationFields;
+  video: prismic.IntegrationField;
 }
 /**
  * Default slice variation for ExternalVideoSlice Slice
@@ -1018,7 +1080,7 @@ interface HeroBannerSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  CTALink: prismic.RelationField;
+  CTALink: prismic.ContentRelationshipField;
 }
 /**
  * Default slice variation for HeroBanner Slice
@@ -1205,7 +1267,7 @@ interface ProductListWithCtaSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
 }
 /** Item in ProductListWithCta → Items */
 export interface ProductListWithCtaSliceDefaultSliceItem {
@@ -1218,7 +1280,7 @@ export interface ProductListWithCtaSliceDefaultSliceItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/integration-fields
    */
-  topProduct: prismic.IntegrationFields;
+  topProduct: prismic.IntegrationField;
   /**
    * Product Link field in _ProductListWithCta → Items_
    *
@@ -1228,7 +1290,7 @@ export interface ProductListWithCtaSliceDefaultSliceItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  productLink: prismic.RelationField<"product-page">;
+  productLink: prismic.ContentRelationshipField<"product-page">;
 }
 /**
  * Default slice variation for ProductListWithCta Slice
@@ -1274,7 +1336,7 @@ export interface ProductListWithCtaSliceCustomProductsItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/integration-fields
    */
-  topProduct: prismic.IntegrationFields;
+  topProduct: prismic.IntegrationField;
   /**
    * Product Link field in _ProductListWithCta → Items_
    *
@@ -1284,7 +1346,7 @@ export interface ProductListWithCtaSliceCustomProductsItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  productLink: prismic.RelationField<"product-page">;
+  productLink: prismic.ContentRelationshipField<"product-page">;
 }
 /**
  * Custom Products variation for ProductListWithCta Slice
@@ -1325,7 +1387,7 @@ interface ProductOverviewWithImageGridSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/integration-fields
    */
-  product: prismic.IntegrationFields;
+  product: prismic.IntegrationField;
   /**
    * Product Descripition field in _ProductOverviewWithImageGrid → Primary_
    *
@@ -1422,7 +1484,7 @@ interface PromoSectionFadingBackgroundTestimonialsSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
   /**
    * Title of quotes section field in
    * _PromoSectionFadingBackgroundTestimonials → Primary_
@@ -1597,7 +1659,7 @@ interface PromoSectionFullWidthWithOverlappingImageTilesSliceDefaultSlicePrimary
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  ctaLink: prismic.RelationField;
+  ctaLink: prismic.ContentRelationshipField;
   /**
    * Call to Action Label field in
    * _PromoSectionFullWidthWithOverlappingImageTiles → Primary_
@@ -1677,7 +1739,7 @@ interface PromoSectionImageTilesSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
   /**
    * BackgroundColor field in _PromoSectionImageTiles → Primary_
    *
@@ -1769,7 +1831,7 @@ interface PromoSectionImageTilesSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/integration-fields
    */
-  intent: prismic.IntegrationFields;
+  intent: prismic.IntegrationField;
 }
 /**
  * Default slice variation for PromoSectionImageTiles Slice
@@ -1836,7 +1898,7 @@ interface PromoSectionWithBackgroundImageSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
   /**
    * Link Label field in _PromoSectionWithBackgroundImage → Primary_
    *
@@ -1871,7 +1933,7 @@ interface PromoSectionWithBackgroundImageSliceCameraInsurancePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
 }
 /**
  * Camera Insurance variation for PromoSectionWithBackgroundImage Slice
@@ -1933,7 +1995,7 @@ export interface BlogSectionThreeColumnCardsSliceDefaultSliceItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  article: prismic.RelationField;
+  article: prismic.ContentRelationshipField;
   /**
    * Image field in _BlogSectionThreeColumnCards → Items_
    *
@@ -2516,7 +2578,7 @@ interface HeroSectionSplitSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  cta1: prismic.RelationField;
+  cta1: prismic.ContentRelationshipField;
   /**
    * CTALabel1 field in _HeroSectionSplit → Primary_
    *
@@ -2535,7 +2597,7 @@ interface HeroSectionSplitSliceDefaultSlicePrimary {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  cta2: prismic.RelationField;
+  cta2: prismic.ContentRelationshipField;
   /**
    * CTALabel2 field in _HeroSectionSplit → Primary_
    *
@@ -2715,7 +2777,7 @@ export interface FooterColumnSliceDefaultSliceItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  link: prismic.RelationField;
+  link: prismic.ContentRelationshipField;
   /**
    * Link Label field in _FooterColumn → Items_
    *
@@ -2783,7 +2845,7 @@ export interface MenuSubTabSliceDefaultSliceItem {
    * - **Documentation**:
    *   https://prismic.io/docs/core-concepts/link-content-relationship
    */
-  subSectionLink: prismic.RelationField;
+  subSectionLink: prismic.ContentRelationshipField;
 }
 /**
  * Default slice variation for MenuSubTab Slice
@@ -2840,6 +2902,9 @@ declare module "@prismicio/client" {
       PageDocumentDataSlicesSlice,
       PageDocumentDataSocialCardsItem,
       PageDocument,
+      PageTypeDocumentData,
+      PageTypeDocumentDataSlicesSlice,
+      PageTypeDocument,
       AllDocumentTypes,
       CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary,
       CategoryPreviewWithImageBackgroundsSliceAnotherVariation,

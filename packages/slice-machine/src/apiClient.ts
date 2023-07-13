@@ -77,19 +77,6 @@ export const saveCustomType = async (
   });
 };
 
-export const renameCustomType = (
-  customType: CustomTypeSM
-): ReturnType<SliceMachineManagerClient["customTypes"]["renameCustomType"]> => {
-  return managerClient.customTypes.renameCustomType({
-    model: CustomTypes.fromSM(customType),
-  });
-};
-
-export const deleteCustomType = async (customTypeID: string) =>
-  await managerClient.customTypes.deleteCustomType({
-    id: customTypeID,
-  });
-
 /** Slice Routes * */
 export const createSlice = async (
   sliceName: string,

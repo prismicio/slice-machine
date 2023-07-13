@@ -17,22 +17,29 @@ import { AnyObjectSchema } from "yup";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  selectCurrentCustomType,
-  selectCurrentPoolOfFields,
-} from "../../../../src/modules/selectedCustomType";
+import { selectCurrentPoolOfFields } from "../../../../src/modules/selectedCustomType";
 import { SlicesSM } from "@lib/models/common/Slices";
-import { TabField, TabFields } from "@lib/models/common/CustomType";
+import {
+  CustomTypeSM,
+  TabField,
+  TabFields,
+} from "@lib/models/common/CustomType";
 import { telemetry } from "@src/apiClient";
 import { DropResult } from "react-beautiful-dnd";
 
 interface TabZoneProps {
+  customType: CustomTypeSM;
   tabId: string;
   sliceZone?: SlicesSM | null | undefined;
   fields: TabFields;
 }
 
-const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
+const TabZone: React.FC<TabZoneProps> = ({
+  customType,
+  tabId,
+  fields,
+  sliceZone,
+}) => {
   const {
     deleteCustomTypeField,
     addCustomTypeField,
@@ -44,14 +51,11 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     replaceCustomTypeSharedSlice,
   } = useSliceMachineActions();
 
-  const { currentCustomType, poolOfFields } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      currentCustomType: selectCurrentCustomType(store),
-      poolOfFields: selectCurrentPoolOfFields(store),
-    })
-  );
+  const { poolOfFields } = useSelector((store: SliceMachineStoreType) => ({
+    poolOfFields: selectCurrentPoolOfFields(store),
+  }));
 
-  if (!currentCustomType || !poolOfFields) {
+  if (!poolOfFields) {
     return null;
   }
 
@@ -78,7 +82,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     void telemetry.track({
       event: "custom-type:field-added",
       id,
-      name: currentCustomType.id,
+      name: customType.id,
       type: widget.TYPE_NAME,
       zone: "static",
     });
@@ -126,7 +130,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
     void telemetry.track({
       event: "custom-type:slice-zone-updated",
-      customTypeId: currentCustomType.id,
+      customTypeId: customType.id,
     });
     replaceCustomTypeSharedSlice(tabId, keys, preserve);
   };
@@ -160,11 +164,11 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
         renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
         dataCy="ct-static-zone"
-        isRepeatableCustomType={currentCustomType.repeatable}
+        isRepeatableCustomType={customType.repeatable}
       />
 
       <SliceZone
-        format={currentCustomType.format}
+        format={customType.format}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

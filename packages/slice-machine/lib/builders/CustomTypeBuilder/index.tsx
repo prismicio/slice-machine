@@ -2,18 +2,22 @@ import { Box } from "theme-ui";
 
 import TabZone from "./TabZone";
 import { Tabs } from "./Layout";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
-const CustomTypeBuilder = () => {
+type CustomTypeBuilderProps = {
+  customType: CustomTypeSM;
+};
+const CustomTypeBuilder = ({ customType }: CustomTypeBuilderProps) => {
   return (
     <Tabs
+      tabs={customType.tabs}
       renderTab={({ value, sliceZone, key }) => (
         <Box sx={{ mt: 4 }}>
           <TabZone
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             fields={value}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             sliceZone={sliceZone}
             tabId={key}
+            customType={customType}
           />
         </Box>
       )}

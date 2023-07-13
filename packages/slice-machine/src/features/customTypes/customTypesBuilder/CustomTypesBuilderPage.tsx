@@ -5,6 +5,7 @@ import { type FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
+import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 import {
@@ -21,11 +22,12 @@ import {
   selectCurrentCustomType,
 } from "@src/modules/selectedCustomType";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
+
+import { EditDropdown } from "../EditDropdown";
+import { PageSnippetDialog } from "./PageSnippetDialog";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
-import { PageSnippetDialog } from "./PageSnippetDialog";
 
 export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
@@ -41,8 +43,9 @@ export const CustomTypesBuilderPage: FC = () => {
   const { cleanupCustomTypeStore } = useSliceMachineActions();
 
   useEffect(() => {
-    if (!selectedCustomType || !hasLocal(selectedCustomType))
+    if (!selectedCustomType || !hasLocal(selectedCustomType)) {
       void router.replace("/");
+    }
   }, [selectedCustomType, router]);
 
   useEffect(() => {
@@ -84,9 +87,14 @@ const CustomTypesBuilderPageWithProvider: React.FC<
 
   const { initCustomTypeStore, saveCustomType } = useSliceMachineActions();
 
-  useEffect(() => {
-    initCustomTypeStore(customType, remoteCustomType);
-  }, []);
+  useEffect(
+    () => {
+      initCustomTypeStore(customType, remoteCustomType);
+    },
+    [
+      /* leave this empty to prevent local updates to disappear */
+    ]
+  );
 
   const {
     currentCustomType,
@@ -108,6 +116,12 @@ const CustomTypesBuilderPageWithProvider: React.FC<
   const messages = CUSTOM_TYPES_MESSAGES[currentCustomType.format];
 
   const actions = [
+    <EditDropdown
+      isChangesLocal
+      key="edit-dropdown"
+      format={currentCustomType.format}
+      customType={CustomTypes.fromSM(currentCustomType)}
+    />,
     ...(currentCustomType.format === "page"
       ? [
           <PageSnippetDialog
@@ -139,7 +153,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
         actions={actions}
       />
       <MainContainerContent>
-        <CustomTypeBuilder />
+        <CustomTypeBuilder customType={currentCustomType} />
       </MainContainerContent>
     </MainContainer>
   );

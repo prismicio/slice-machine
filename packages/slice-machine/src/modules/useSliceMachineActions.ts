@@ -19,7 +19,7 @@ import ServerState from "@models/server/ServerState";
 import {
   createCustomTypeCreator,
   deleteCustomTypeCreator,
-  renameCustomTypeCreator,
+  renameAvailableCustomType,
 } from "./availableCustomTypes";
 import {
   createSliceCreator,
@@ -47,6 +47,7 @@ import {
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
   cleanupCustomTypeStoreCreator,
+  renameSelectedCustomTypeLabel,
   type ReplaceSharedSliceCreatorPayload,
 } from "./selectedCustomType";
 import {
@@ -111,13 +112,8 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  const openRenameCustomTypeModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-
-  const openDeleteCustomTypeModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
   const openDeleteSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
   const openDeleteDocumentsDrawer = () =>
@@ -163,30 +159,6 @@ const useSliceMachineActions = () => {
     dispatch(
       createCustomTypeCreator.request({ id, label, repeatable, format })
     );
-  const renameCustomType = (
-    customTypeId: string,
-    format: CustomTypeFormat,
-    newCustomTypeName: string
-  ) =>
-    dispatch(
-      renameCustomTypeCreator.request({
-        customTypeId,
-        format,
-        newCustomTypeName,
-      })
-    );
-  const deleteCustomType = (
-    customTypeId: string,
-    format: CustomTypeFormat,
-    customTypeName: string
-  ) =>
-    dispatch(
-      deleteCustomTypeCreator.request({
-        customTypeId,
-        format,
-        customTypeName,
-      })
-    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -196,12 +168,34 @@ const useSliceMachineActions = () => {
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
+
+  /** Success actions = sync store state from external actions.
+   * If its name contains "Creator", it means it is still used in a saga
+   * and that `.request` and `.failure` need to be preserved
+   */
   const saveCustomTypeSuccess = (customType: CustomType) =>
     dispatch(
       saveCustomTypeCreator.success({
         customType: CustomTypes.toSM(customType),
       })
     );
+
+  const deleteCustomTypeSuccess = (id: string) =>
+    dispatch(
+      deleteCustomTypeCreator.success({
+        customTypeId: id,
+      })
+    );
+
+  const renameAvailableCustomTypeSuccess = (customType: CustomType) =>
+    dispatch(
+      renameAvailableCustomType({
+        renamedCustomType: CustomTypes.toSM(customType),
+      })
+    );
+
+  /** End of sucess actions */
+
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) =>
@@ -217,6 +211,8 @@ const useSliceMachineActions = () => {
     dispatch(deleteFieldCreator({ tabId, fieldId }));
   const reorderCustomTypeField = (tabId: string, start: number, end: number) =>
     dispatch(reorderFieldCreator({ tabId, start, end }));
+  const renameSelectedCustomType = (newLabel: string) =>
+    dispatch(renameSelectedCustomTypeLabel({ newLabel }));
   const replaceCustomTypeField = (
     tabId: string,
     previousFieldId: string,
@@ -500,8 +496,9 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
-    renameCustomType,
-    deleteCustomType,
+    renameSelectedCustomType,
+    deleteCustomTypeSuccess,
+    renameAvailableCustomTypeSuccess,
     initCustomTypeStore,
     cleanupCustomTypeStore,
     saveCustomType,
@@ -517,7 +514,6 @@ const useSliceMachineActions = () => {
     deleteSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,
@@ -542,9 +538,7 @@ const useSliceMachineActions = () => {
     setSeenTutorialsToolTip,
     setSeenSimulatorToolTip,
     openCreateCustomTypeModal,
-    openRenameCustomTypeModal,
     openScreenshotPreviewModal,
-    openDeleteCustomTypeModal,
     openDeleteSliceModal,
     openSimulatorSetupModal,
     openCreateSliceModal,

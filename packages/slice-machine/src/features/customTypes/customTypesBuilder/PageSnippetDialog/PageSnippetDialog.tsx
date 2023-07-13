@@ -63,7 +63,7 @@ export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
     <div>
       <ErrorBoundary
         title="Request failed"
-        description={`An error occurred while fetching page types snippets.`}
+        description="An error occurred while fetching page types snippets."
         renderError={() => null}
       >
         <Suspense

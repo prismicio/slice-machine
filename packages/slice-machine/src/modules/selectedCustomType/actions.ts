@@ -20,7 +20,8 @@ export type SelectedCustomTypeActions =
   | ActionType<typeof replaceFieldIntoGroupCreator>
   | ActionType<typeof reorderFieldIntoGroupCreator>
   | ActionType<typeof deleteFieldIntoGroupCreator>
-  | ActionType<typeof deleteSharedSliceCreator>;
+  | ActionType<typeof deleteSharedSliceCreator>
+  | ActionType<typeof renameSelectedCustomTypeLabel>;
 
 export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
   model: CustomTypeSM;
@@ -105,6 +106,12 @@ export const deleteSharedSliceCreator = createAction(
 )<{
   tabId: string;
   sliceId: string;
+}>();
+
+export const renameSelectedCustomTypeLabel = createAction(
+  "CUSTOM_TYPE/RENAME_CUSTOM_TYPE"
+)<{
+  newLabel: string;
 }>();
 
 // Group actions (can be grouped into the field actions probably)
