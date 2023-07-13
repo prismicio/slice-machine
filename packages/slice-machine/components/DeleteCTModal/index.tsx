@@ -15,11 +15,12 @@ type DeleteCTModalProps = {
   customType: CustomType;
   format: CustomTypeFormat;
   onClose: (didDelete?: boolean) => void;
+  onDeleteCustomTypeSuccess: () => void;
 };
 
 export const DeleteCustomTypeModal: React.FunctionComponent<
   DeleteCTModalProps
-> = ({ customType, format, onClose }) => {
+> = ({ customType, format, onClose, onDeleteCustomTypeSuccess }) => {
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -32,7 +33,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
       customType,
       onSuccess: () => deleteCustomTypeSuccess(customType.id),
     });
-    onClose(true);
+    onDeleteCustomTypeSuccess();
   };
 
   const { theme } = useThemeUI();

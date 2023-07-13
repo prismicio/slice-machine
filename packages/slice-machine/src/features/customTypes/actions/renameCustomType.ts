@@ -42,11 +42,6 @@ export async function renameCustomType({
     })} could not be renamed`;
     console.error(errorMessage, e);
 
-    toast.error(
-      `Internal Error: ${customTypesMessages.name({
-        start: true,
-        plural: false,
-      })} could not be renamed`
-    );
+    toast.error(errorMessage);
   }
 }

@@ -61,18 +61,16 @@ export const EditDropdown: FC<EditDropdownProps> = ({
     }
   };
 
-  const onCloseDeleteModal = (didDelete: boolean | undefined) => {
-    if (didDelete === true) {
-      const { tablePagePathname } =
-        CUSTOM_TYPES_CONFIG[customType.format ?? "custom"];
-      if (router.asPath !== tablePagePathname) {
-        void router.replace(tablePagePathname);
-        setTimeout(() => {
-          setIsDeleteCustomTypeModalOpen(false);
-        }, 1400);
-      } else {
+  const onDeleteCustomType = () => {
+    const { tablePagePathname } =
+      CUSTOM_TYPES_CONFIG[customType.format ?? "custom"];
+    if (router.asPath !== tablePagePathname) {
+      void router.replace(tablePagePathname);
+      setTimeout(() => {
         setIsDeleteCustomTypeModalOpen(false);
-      }
+      }, 1400);
+    } else {
+      setIsDeleteCustomTypeModalOpen(false);
     }
   };
 
@@ -118,7 +116,8 @@ export const EditDropdown: FC<EditDropdownProps> = ({
         <DeleteCustomTypeModal
           format={format}
           customType={customType}
-          onClose={onCloseDeleteModal}
+          onClose={() => setIsDeleteCustomTypeModalOpen(false)}
+          onDeleteCustomTypeSuccess={onDeleteCustomType}
         />
       ) : null}
       {isRenameCustomTypeModalOpen ? (
