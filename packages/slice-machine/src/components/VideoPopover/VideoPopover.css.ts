@@ -5,12 +5,19 @@ const block = style([
   sprinkles({
     boxSizing: "border-box",
     fontFamily: "body",
-    // all: "unset", // TODO: this causes some issues
+    all: "unset", // TODO: this causes some issues
+  }),
+]);
+
+const blockWithDisplayRevert = style([
+  block,
+  sprinkles({
+    display: "revert",
   }),
 ]);
 
 export const videoContainer = style([
-  block,
+  blockWithDisplayRevert,
   sprinkles({
     backgroundColor: colors.grey1,
     borderRadius: 6,
@@ -53,14 +60,14 @@ export const videoPlayer = style([
 ]);
 
 export const videoFooter = style([
-  block,
+  blockWithDisplayRevert,
   sprinkles({
     padding: 16,
   }),
 ]);
 
 export const videoDescription = style([
-  block,
+  blockWithDisplayRevert,
   sprinkles({
     color: colors.grey11,
     marginBottom: 12,
