@@ -6,7 +6,7 @@ async function getAdapterName() {
   try {
     return await managerClient.project.getAdapterName();
   } catch (e) {
-    console.error(e);
+    console.error("Error while trying to get adapter name", e);
     return undefined;
   }
 }

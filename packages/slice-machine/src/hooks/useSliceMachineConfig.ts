@@ -7,7 +7,7 @@ async function getSliceMachineConfig() {
   try {
     return await managerClient.project.getSliceMachineConfig();
   } catch (e) {
-    console.error(e);
+    console.error("Error while trying to get SliceMachine config", e);
     return undefined;
   }
 }

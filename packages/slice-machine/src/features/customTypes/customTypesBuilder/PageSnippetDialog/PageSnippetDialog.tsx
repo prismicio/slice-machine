@@ -44,8 +44,8 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
       size="small"
       trigger={
         <Button
-          onClick={() => trackOpenSnippet()}
           variant="secondary"
+          onClick={trackOpenSnippet}
           startIcon={<Icon name="code" />}
         >
           Page snippet

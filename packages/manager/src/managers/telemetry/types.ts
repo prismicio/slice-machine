@@ -111,7 +111,7 @@ type PageViewSegmentEvent = SegmentEvent<
 
 type OpenPageSnippetSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.open_page_snippet,
-	{ framework?: string }
+	{ framework: string }
 >;
 
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
