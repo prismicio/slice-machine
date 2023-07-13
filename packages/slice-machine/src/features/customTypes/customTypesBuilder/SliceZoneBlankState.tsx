@@ -12,14 +12,12 @@ import {
 export type SliceZoneBlankStateProps = {
   onAddNewSlice: () => void;
   onCreateNewSlice: () => void;
-  isCreatingSlice: boolean;
   projectHasAvailableSlices: boolean;
 };
 
 export const SliceZoneBlankState: FC<SliceZoneBlankStateProps> = ({
   onCreateNewSlice,
   onAddNewSlice,
-  isCreatingSlice,
   projectHasAvailableSlices,
 }) => {
   return (
@@ -33,19 +31,11 @@ export const SliceZoneBlankState: FC<SliceZoneBlankStateProps> = ({
             code.
           </BlankSlateDescription>
           <BlankSlateActions>
-            <Button
-              startIcon={<Icon name="add" />}
-              onClick={onCreateNewSlice}
-              loading={isCreatingSlice}
-            >
+            <Button startIcon={<Icon name="add" />} onClick={onCreateNewSlice}>
               New slice
             </Button>
             {projectHasAvailableSlices && (
-              <Button
-                startIcon={<Icon name="edit" />}
-                onClick={onAddNewSlice}
-                disabled={isCreatingSlice}
-              >
+              <Button startIcon={<Icon name="edit" />} onClick={onAddNewSlice}>
                 Update Slices
               </Button>
             )}

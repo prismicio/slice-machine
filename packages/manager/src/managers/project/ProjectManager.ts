@@ -193,6 +193,27 @@ export class ProjectManager extends BaseManager {
 		return path.dirname(sliceMachinePackageJSONPath);
 	}
 
+	async getAdapterName(): Promise<string> {
+		const sliceMachineConfig = await this.getSliceMachineConfig();
+		const adapterName =
+			typeof sliceMachineConfig.adapter === "string"
+				? sliceMachineConfig.adapter
+				: sliceMachineConfig.adapter.resolve;
+
+		return adapterName;
+	}
+
+	async locateAdapterDir(): Promise<string> {
+		const projectRoot = await this.getRoot();
+		const adapterName = await this.getAdapterName();
+		const require = createRequire(path.join(projectRoot, "index.js"));
+		const adapterPackageJSONPath = require.resolve(
+			`${adapterName}/package.json`,
+		);
+
+		return path.dirname(adapterPackageJSONPath);
+	}
+
 	async initProject(args?: ProjectManagerInitProjectArgs): Promise<void> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 

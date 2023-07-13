@@ -3,9 +3,13 @@ import { VersionTags } from ".";
 
 interface VersionTagProps {
   type: VersionTags;
+  hasUpToDateVersions: boolean;
 }
 
-export const VersionTag: React.FC<VersionTagProps> = ({ type }) => (
+export const VersionTag: React.FC<VersionTagProps> = ({
+  type,
+  hasUpToDateVersions,
+}) => (
   <Text
     sx={{
       padding: "0px 4px",
@@ -19,10 +23,16 @@ export const VersionTag: React.FC<VersionTagProps> = ({ type }) => (
         bg: "grey02",
         color: "code.gray",
       }),
-      ...(type === VersionTags.Current && {
-        bg: "lightGreen",
-        color: "code.green",
-      }),
+      ...(type === VersionTags.Current &&
+        hasUpToDateVersions && {
+          bg: "lightGreen",
+          color: "code.green",
+        }),
+      ...(type === VersionTags.Current &&
+        !hasUpToDateVersions && {
+          bg: "lightOrange",
+          color: "code.orange",
+        }),
     }}
   >
     {type}

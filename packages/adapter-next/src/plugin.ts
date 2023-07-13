@@ -58,7 +58,9 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		hook("custom-type-library:read", customTypeLibraryRead);
 
 		hook("snippet:read", snippetRead);
+
 		hook("documentation:read", documentationRead);
+
 		hook("slice-simulator:setup:read", sliceSimulatorSetupRead);
 	},
 });

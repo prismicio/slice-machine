@@ -19,13 +19,9 @@ import ServerState from "@models/server/ServerState";
 import {
   createCustomTypeCreator,
   deleteCustomTypeCreator,
-  renameCustomTypeCreator,
+  renameAvailableCustomType,
 } from "./availableCustomTypes";
-import {
-  createSliceCreator,
-  deleteSliceCreator,
-  renameSliceCreator,
-} from "./slices";
+import { createSlice, deleteSliceCreator, renameSliceCreator } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
 import {
@@ -47,7 +43,7 @@ import {
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
   cleanupCustomTypeStoreCreator,
-  type ReplaceSharedSliceCreatorPayload,
+  renameSelectedCustomTypeLabel,
 } from "./selectedCustomType";
 import {
   CustomTypeSM,
@@ -83,6 +79,7 @@ import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 import { CustomTypeFormat } from "@slicemachine/manager";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -105,19 +102,12 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openScreenshotsModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
-  const openCreateSliceModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openRenameSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  const openRenameCustomTypeModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-
-  const openDeleteCustomTypeModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_CUSTOM_TYPE }));
   const openDeleteSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
   const openDeleteDocumentsDrawer = () =>
@@ -163,30 +153,6 @@ const useSliceMachineActions = () => {
     dispatch(
       createCustomTypeCreator.request({ id, label, repeatable, format })
     );
-  const renameCustomType = (
-    customTypeId: string,
-    format: CustomTypeFormat,
-    newCustomTypeName: string
-  ) =>
-    dispatch(
-      renameCustomTypeCreator.request({
-        customTypeId,
-        format,
-        newCustomTypeName,
-      })
-    );
-  const deleteCustomType = (
-    customTypeId: string,
-    format: CustomTypeFormat,
-    customTypeName: string
-  ) =>
-    dispatch(
-      deleteCustomTypeCreator.request({
-        customTypeId,
-        format,
-        customTypeName,
-      })
-    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -196,12 +162,35 @@ const useSliceMachineActions = () => {
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
+
+  /**
+   * Success actions = sync store state from external actions. If its name
+   * contains "Creator", it means it is still used in a saga and that `.request`
+   * and `.failure` need to be preserved
+   */
   const saveCustomTypeSuccess = (customType: CustomType) =>
     dispatch(
       saveCustomTypeCreator.success({
         customType: CustomTypes.toSM(customType),
       })
     );
+
+  const deleteCustomTypeSuccess = (id: string) =>
+    dispatch(
+      deleteCustomTypeCreator.success({
+        customTypeId: id,
+      })
+    );
+
+  const renameAvailableCustomTypeSuccess = (customType: CustomType) =>
+    dispatch(
+      renameAvailableCustomType({
+        renamedCustomType: CustomTypes.toSM(customType),
+      })
+    );
+
+  /** End of sucess actions */
+
   const createCustomTypeTab = (tabId: string) =>
     dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) =>
@@ -217,6 +206,8 @@ const useSliceMachineActions = () => {
     dispatch(deleteFieldCreator({ tabId, fieldId }));
   const reorderCustomTypeField = (tabId: string, start: number, end: number) =>
     dispatch(reorderFieldCreator({ tabId, start, end }));
+  const renameSelectedCustomType = (newLabel: string) =>
+    dispatch(renameSelectedCustomTypeLabel({ newLabel }));
   const replaceCustomTypeField = (
     tabId: string,
     previousFieldId: string,
@@ -419,18 +410,8 @@ const useSliceMachineActions = () => {
     dispatch(copyVariationSliceCreator({ key, name, copied }));
   };
 
-  const createSlice = (
-    sliceName: string,
-    libName: string,
-    replaceSharedSliceCreatorPayload?: ReplaceSharedSliceCreatorPayload
-  ) =>
-    dispatch(
-      createSliceCreator.request({
-        sliceName,
-        libName,
-        replaceSharedSliceCreatorPayload,
-      })
-    );
+  const createSliceSuccess = (libraries: readonly LibraryUI[]) =>
+    dispatch(createSlice({ libraries }));
 
   const renameSlice = (
     libName: string,
@@ -500,8 +481,9 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
-    renameCustomType,
-    deleteCustomType,
+    renameSelectedCustomType,
+    deleteCustomTypeSuccess,
+    renameAvailableCustomTypeSuccess,
     initCustomTypeStore,
     cleanupCustomTypeStore,
     saveCustomType,
@@ -517,7 +499,6 @@ const useSliceMachineActions = () => {
     deleteSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,
@@ -533,7 +514,7 @@ const useSliceMachineActions = () => {
     generateSliceCustomScreenshot,
     updateSlice,
     copyVariationSlice,
-    createSlice,
+    createSliceSuccess,
     renameSlice,
     deleteSlice,
     sendAReview,
@@ -542,12 +523,9 @@ const useSliceMachineActions = () => {
     setSeenTutorialsToolTip,
     setSeenSimulatorToolTip,
     openCreateCustomTypeModal,
-    openRenameCustomTypeModal,
     openScreenshotPreviewModal,
-    openDeleteCustomTypeModal,
     openDeleteSliceModal,
     openSimulatorSetupModal,
-    openCreateSliceModal,
     openRenameSliceModal,
     closeModals,
     openToaster,

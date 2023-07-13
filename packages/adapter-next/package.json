@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-next",
-	"version": "0.3.4",
+	"version": "0.3.5-dev-next-release.1",
 	"description": "Slice Machine adapter for Next.js.",
 	"keywords": [
 		"typescript",
@@ -69,7 +69,7 @@
 		"newtype-ts": "^0.3.5",
 		"node-fetch": "^3.3.1",
 		"pascal-case": "^3.1.2",
-		"prismic-ts-codegen": "0.1.11"
+		"prismic-ts-codegen": "^0.1.13"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.2.0",

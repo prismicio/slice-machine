@@ -7,14 +7,16 @@ interface VersionBadgeProps {
   isSelected: boolean;
   onClick: () => void;
   versionNumber: string;
-  tag: VersionTags | null;
+  tags: VersionTags[];
+  hasUpToDateVersions: boolean;
 }
 
 export const VersionBadge: React.FC<VersionBadgeProps> = ({
   isSelected,
   onClick,
   versionNumber,
-  tag,
+  tags,
+  hasUpToDateVersions,
 }) => {
   return (
     <Flex
@@ -39,7 +41,15 @@ export const VersionBadge: React.FC<VersionBadgeProps> = ({
       onClick={onClick}
     >
       <Text>{versionNumber}</Text>
-      {tag && <VersionTag type={tag} />}
+      <Flex
+        sx={{
+          gap: "8px",
+        }}
+      >
+        {tags.map((tag) => (
+          <VersionTag type={tag} hasUpToDateVersions={hasUpToDateVersions} />
+        ))}
+      </Flex>
     </Flex>
   );
 };

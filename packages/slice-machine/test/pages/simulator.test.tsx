@@ -114,7 +114,9 @@ describe.skip("simulator", () => {
       },
       environment: {
         changelog: {
-          currentVersion: "0.0.0",
+          sliceMachine: {
+            currentVersion: "0.0.0",
+          },
         },
         manifest: {
           localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
@@ -287,7 +289,9 @@ describe.skip("simulator", () => {
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slice Simulator Open",
-        properties: { version: state.environment.changelog.currentVersion },
+        properties: {
+          version: state.environment.changelog.sliceMachine.currentVersion,
+        },
       }),
       expect.any(Function)
     );

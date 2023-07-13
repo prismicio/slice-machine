@@ -21,19 +21,29 @@ export const Navigation: React.FC<NavigationProps> = ({
   selectVersion,
 }) => {
   const latestVersion: string | undefined =
-    changelog.versions[0]?.versionNumber;
+    changelog.sliceMachine.versions[0]?.versionNumber;
+  const hasUpToDateVersions =
+    !changelog.adapter.updateAvailable &&
+    !changelog.sliceMachine.updateAvailable;
 
-  function findVersionTag(versionNumber: string): VersionTags | null {
-    switch (versionNumber) {
-      case latestVersion:
-        return VersionTags.Latest;
-      case changelog.latestNonBreakingVersion:
-        return VersionTags.LatestNonBreaking;
-      case changelog.currentVersion:
-        return VersionTags.Current;
-      default:
-        return null;
+  function findVersionTags(versionNumber: string): VersionTags[] {
+    const tags = [];
+
+    // Display Latest or LatestNonBreaking tag
+    if (versionNumber === latestVersion) {
+      tags.push(VersionTags.Latest);
+    } else if (
+      versionNumber === changelog.sliceMachine.latestNonBreakingVersion
+    ) {
+      tags.push(VersionTags.LatestNonBreaking);
     }
+
+    // Display Current tag
+    if (versionNumber === changelog.sliceMachine.currentVersion) {
+      tags.push(VersionTags.Current);
+    }
+
+    return tags;
   }
 
   return (
@@ -84,7 +94,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           overflow: "auto",
         }}
       >
-        {changelog.versions.map((version, index) => (
+        {changelog.sliceMachine.versions.map((version, index) => (
           <VersionBadge
             key={`versionBadge-${version.versionNumber}-${index}`}
             isSelected={
@@ -92,7 +102,8 @@ export const Navigation: React.FC<NavigationProps> = ({
             }
             onClick={() => selectVersion(version)}
             versionNumber={version.versionNumber}
-            tag={findVersionTag(version.versionNumber)}
+            tags={findVersionTags(version.versionNumber)}
+            hasUpToDateVersions={hasUpToDateVersions}
           />
         ))}
       </Flex>

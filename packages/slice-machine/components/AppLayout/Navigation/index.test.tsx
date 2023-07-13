@@ -60,10 +60,17 @@ function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
           apiEndpoint: "https://foo.cdn.prismic.io/api/v2",
         },
         changelog: {
-          currentVersion: "",
-          updateAvailable: canUpdate,
-          latestNonBreakingVersion: null,
-          versions: [],
+          sliceMachine: {
+            currentVersion: "",
+            updateAvailable: canUpdate,
+            latestNonBreakingVersion: null,
+            versions: [],
+          },
+          adapter: {
+            name: "",
+            updateAvailable: canUpdate,
+            versions: [],
+          },
         },
       } as unknown as FrontEndEnvironment,
       userContext: {
