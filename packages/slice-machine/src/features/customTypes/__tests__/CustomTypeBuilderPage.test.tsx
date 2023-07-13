@@ -86,8 +86,11 @@ describe.each(formats)(
       // Submit the form
       await user.click(screen.getByRole("button", { name: "Rename" }));
 
-      const preText = ["Custom types / ", "Page types / "][ctIndex];
-      expect(screen.getByText(preText + renamedCustomType)).toBeVisible();
+      const folder =
+        customType.format === "page" ? "Page types" : "Custom types";
+      expect(
+        screen.getByTestId(`breadcrumb-${folder}-${renamedCustomType}`)
+      ).toBeVisible();
     });
   }
 );
@@ -186,9 +189,7 @@ async function renderCustomTypesBuilderPage({
 
   const folder = customType.format === "page" ? "Page types" : "Custom types";
   expect(
-    await screen.findByText(
-      `breadcrumb-${folder}-${customType.label as string}`
-    )
+    screen.getByTestId(`breadcrumb-${folder}-${customType.label as string}`)
   ).toBeVisible();
 
   return renderResults;
