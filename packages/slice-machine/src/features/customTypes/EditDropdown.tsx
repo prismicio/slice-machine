@@ -53,9 +53,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({
         customType.id
       );
       void router.replace(pagePagePathname);
-      setTimeout(() => {
-        setCustomTypeBeingConverted(false);
-      }, 1400);
+      setCustomTypeBeingConverted(false);
     } else {
       setCustomTypeBeingConverted(false);
     }
@@ -66,9 +64,6 @@ export const EditDropdown: FC<EditDropdownProps> = ({
       CUSTOM_TYPES_CONFIG[customType.format ?? "custom"];
     if (router.asPath !== tablePagePathname) {
       void router.replace(tablePagePathname);
-      setTimeout(() => {
-        setIsDeleteCustomTypeModalOpen(false);
-      }, 1400);
     } else {
       setIsDeleteCustomTypeModalOpen(false);
     }

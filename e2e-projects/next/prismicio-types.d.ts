@@ -596,63 +596,6 @@ export type PageTypeDocument<Lang extends string = string> =
     "page_type",
     Lang
   >;
-/** Content for ReuSa documents */
-interface ReusaDocumentData {
-  /**
-   * Slice Zone field in _ReuSa_
-   *
-   * - **Field Type**: Slice Zone
-   * - **Placeholder**: _None_
-   * - **API ID Path**: reusa.slices[]
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/core-concepts/slices
-   */
-  slices: prismic.SliceZone<ReusaDocumentDataSlicesSlice>;
-  /**
-   * Meta Description field in _ReuSa_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: A brief summary of the page
-   * - **API ID Path**: reusa.meta_description
-   * - **Tab**: SEO & Metadata
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  meta_description: prismic.KeyTextField;
-  /**
-   * Meta Image field in _ReuSa_
-   *
-   * - **Field Type**: Image
-   * - **Placeholder**: _None_
-   * - **API ID Path**: reusa.meta_image
-   * - **Tab**: SEO & Metadata
-   * - **Documentation**: https://prismic.io/docs/core-concepts/image
-   */
-  meta_image: prismic.ImageField<never>;
-  /**
-   * Meta Title field in _ReuSa_
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: A title of the page used for social media and search
-   *   engines
-   * - **API ID Path**: reusa.meta_title
-   * - **Tab**: SEO & Metadata
-   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
-   */
-  meta_title: prismic.KeyTextField;
-}
-/** Slice for _ReuSa → Slice Zone_ */
-type ReusaDocumentDataSlicesSlice = never;
-/**
- * ReuSa document from Prismic
- *
- * - **API ID**: `reusa`
- * - **Repeatable**: `true`
- * - **Documentation**: https://prismic.io/docs/core-concepts/custom-types
- *
- * @typeParam Lang - Language API ID of the document.
- */
-export type ReusaDocument<Lang extends string = string> =
-  prismic.PrismicDocumentWithUID<Simplify<ReusaDocumentData>, "reusa", Lang>;
 export type AllDocumentTypes =
   | BlogPageDocument
   | FooterDocument
@@ -660,8 +603,7 @@ export type AllDocumentTypes =
   | MenuDocument
   | MenuTabDocument
   | PageDocument
-  | PageTypeDocument
-  | ReusaDocument;
+  | PageTypeDocument;
 /** Primary content in CategoryPreviewWithImageBackgrounds → Primary */
 interface CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary {
   /**
@@ -2963,9 +2905,6 @@ declare module "@prismicio/client" {
       PageTypeDocumentData,
       PageTypeDocumentDataSlicesSlice,
       PageTypeDocument,
-      ReusaDocumentData,
-      ReusaDocumentDataSlicesSlice,
-      ReusaDocument,
       AllDocumentTypes,
       CategoryPreviewWithImageBackgroundsSliceAnotherVariationPrimary,
       CategoryPreviewWithImageBackgroundsSliceAnotherVariation,
