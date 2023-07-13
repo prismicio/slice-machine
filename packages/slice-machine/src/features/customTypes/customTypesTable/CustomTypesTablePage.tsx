@@ -84,9 +84,12 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                     height: vars.size[32],
                   }}
                 >
-                  <Breadcrumb>
-                    {customTypesMessages.name({ start: true, plural: true })}
-                  </Breadcrumb>
+                  <Breadcrumb
+                    folder={customTypesMessages.name({
+                      start: true,
+                      plural: true,
+                    })}
+                  />
                   <Button endIcon={<Icon name="add" />} disabled>
                     Create
                   </Button>
@@ -105,9 +108,9 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                 height: vars.size[32],
               }}
             >
-              <Breadcrumb>
-                {customTypesMessages.name({ start: true, plural: true })}
-              </Breadcrumb>
+              <Breadcrumb
+                folder={customTypesMessages.name({ start: true, plural: true })}
+              />
               <Button
                 data-cy="create-ct"
                 endIcon={<Icon name="add" />}

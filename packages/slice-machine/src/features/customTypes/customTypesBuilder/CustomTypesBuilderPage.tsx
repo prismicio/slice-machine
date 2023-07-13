@@ -28,6 +28,7 @@ import { PageSnippetDialog } from "./PageSnippetDialog";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
+import { Breadcrumb } from "@src/components/Breadcrumb";
 
 export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
@@ -140,9 +141,12 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     <MainContainer>
       <MainContainerHeader
         backTo={() => void router.push(config.tablePagePathname)}
-        breadcrumb={`${messages.name({ start: true, plural: true })} / ${
-          currentCustomType.label ?? currentCustomType.id
-        }`}
+        breadcrumb={
+          <Breadcrumb
+            folder={messages.name({ start: true, plural: true })}
+            page={currentCustomType.label ?? currentCustomType.id}
+          />
+        }
         actions={actions}
       />
       <MainContainerContent>

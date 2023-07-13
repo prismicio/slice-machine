@@ -12,6 +12,21 @@ export default meta;
 
 export const Default = {
   args: {
-    children: "My Page",
+    folder: "folder",
+    page: "page",
+  },
+} satisfies Story;
+
+export const FolderOnly = {
+  args: {
+    folder: "folder",
+  },
+} satisfies Story;
+
+export const CustomSeparator = {
+  args: {
+    folder: "folder",
+    page: "page",
+    separator: ">",
   },
 } satisfies Story;

@@ -90,7 +90,9 @@ export const CodeBlock = ({
         {fileInfo !== undefined ? (
           <div className={styles.fileInfo}>
             <FileIcon fileName={fileInfo.fileName} />
-            <Text color="grey11">{fileInfo.fileName}</Text>
+            <Text className={styles.fileName} color="grey11">
+              {fileInfo.fileName}
+            </Text>
           </div>
         ) : (
           <span />
@@ -103,6 +105,8 @@ export const CodeBlock = ({
           customStyle={{
             margin: 0,
             border: "none",
+            fontSize: "12px",
+            lineHeight: "18px",
             borderRadius: "none",
             backgroundColor: "#FFF",
             borderBottomLeftRadius: "4px",

@@ -14,10 +14,13 @@ import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
 import { useDocumentation } from "@src/features/documentation/useDocumentation";
 
 import * as styles from "./PageSnippetDialog.css";
+import { telemetry } from "@src/apiClient";
+import { useAdapterName } from "@src/hooks/useAdapterName";
 
 type PageSnippetContentProps = { model: CustomType };
 
 const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
+  const adapter = useAdapterName();
   const documentation = useDocumentation({
     kind: "PageSnippet",
     data: { model },
@@ -27,11 +30,24 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
     return null;
   }
 
+  const trackOpenSnippet = () => {
+    if (adapter !== undefined) {
+      void telemetry.track({
+        event: "page-type:open-snippet",
+        framework: adapter,
+      });
+    }
+  };
+
   return (
     <Dialog
       size="small"
       trigger={
-        <Button variant="secondary" startIcon={<Icon name="code" />}>
+        <Button
+          variant="secondary"
+          onClick={trackOpenSnippet}
+          startIcon={<Icon name="code" />}
+        >
           Page snippet
         </Button>
       }

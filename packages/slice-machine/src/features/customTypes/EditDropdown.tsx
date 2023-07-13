@@ -71,7 +71,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal>
         <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
           <Button
             loading={isCustomTypeBeingConverted}
