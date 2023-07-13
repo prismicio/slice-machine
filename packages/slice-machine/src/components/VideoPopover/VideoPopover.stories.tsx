@@ -18,6 +18,9 @@ export const Default = {
     open: true,
     onClose: noop,
     onPlay: noop,
+    cloudName: "dmtf1daqp",
+    publicId: "Tooltips/pa-course-overview_eaopsn",
+    delay: 5000,
     children: (
       <button style={{ position: "absolute", left: "20px", bottom: "20px" }}>
         Popover
@@ -27,5 +30,12 @@ export const Default = {
 } satisfies Story;
 
 export const VideoPlayer = {
-  render: () => <VideoContainer onClose={noop} onPlay={noop} />,
+  render: () => (
+    <VideoContainer
+      cloudName="dmtf1daqp"
+      publicId="Tooltips/pa-course-overview_eaopsn"
+      onClose={noop}
+      onPlay={noop}
+    />
+  ),
 };

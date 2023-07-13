@@ -14,7 +14,10 @@ import { CloseIcon } from "@src/icons/CloseIcon";
 export const VideoContainer: FC<{
   onClose: () => void;
   onPlay: () => void;
-}> = ({ onClose, onPlay }) => {
+  publicId: string;
+  cloudName: string;
+  thumbnail?: string;
+}> = ({ publicId, cloudName, thumbnail, onClose, onPlay }) => {
   return (
     <div className={styles.videoContainer}>
       <div className={styles.videoHeader}>
@@ -26,8 +29,11 @@ export const VideoContainer: FC<{
       </div>
 
       <CldVideo
-        publicId="Tooltips/pa-course-overview_eaopsn"
-        cloudName="dmtf1daqp"
+        // publicId="Tooltips/pa-course-overview_eaopsn"
+        // cloudName="dmtf1daqp"
+        publicId={publicId}
+        cloudName={cloudName}
+        poster={thumbnail}
         className={styles.videoPlayer}
         onPlay={onPlay}
         autoPlay={false}
@@ -78,9 +84,21 @@ export const VideoPopover: React.FC<
     open: boolean;
     onClose: () => void;
     onPlay: () => void;
+    publicId: string;
+    cloudName: string;
     delay?: number;
+    thumbnail?: string;
   }>
-> = ({ children, onClose, onPlay, open, delay = 5000 }) => {
+> = ({
+  children,
+  onClose,
+  onPlay,
+  open,
+  delay = 5000,
+  publicId,
+  cloudName,
+  thumbnail,
+}) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
   const handleClose = React.useCallback(() => {
@@ -111,7 +129,13 @@ export const VideoPopover: React.FC<
       onOpenChange={handleChange}
       openDelay={delay}
     >
-      <VideoContainer onClose={handleClose} onPlay={onPlay} />
+      <VideoContainer
+        onClose={handleClose}
+        onPlay={onPlay}
+        cloudName={cloudName}
+        publicId={publicId}
+        thumbnail={thumbnail}
+      />
     </HoverCard>
   );
 };

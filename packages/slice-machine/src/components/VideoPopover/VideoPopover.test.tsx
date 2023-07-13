@@ -14,7 +14,13 @@ describe("VideoPopover", () => {
     const onPlay = vi.fn();
     const App = () => {
       return (
-        <VideoPopover open={false} onClose={onClose} onPlay={onPlay}>
+        <VideoPopover
+          cloudName="dmtf1daqp"
+          publicId="Tooltips/pa-course-overview_eaopsn"
+          open={false}
+          onClose={onClose}
+          onPlay={onPlay}
+        >
           <div>Thing</div>
         </VideoPopover>
       );
@@ -37,7 +43,14 @@ describe("VideoPopover", () => {
 
     const App = () => {
       return (
-        <VideoPopover open={true} onClose={onClose} onPlay={onPlay} delay={0}>
+        <VideoPopover
+          open={true}
+          onClose={onClose}
+          onPlay={onPlay}
+          delay={0}
+          cloudName="dmtf1daqp"
+          publicId="Tooltips/pa-course-overview_eaopsn"
+        >
           <div>Thing</div>
         </VideoPopover>
       );
@@ -52,5 +65,7 @@ describe("VideoPopover", () => {
     await waitFor(() => user.click(button));
 
     expect(screen.queryByText("Got it")).not.toBeInTheDocument();
+
+    expect(onClose).toHaveBeenCalled();
   });
 });
