@@ -47,7 +47,11 @@ export const VersionBadge: React.FC<VersionBadgeProps> = ({
         }}
       >
         {tags.map((tag) => (
-          <VersionTag type={tag} hasUpToDateVersions={hasUpToDateVersions} />
+          <VersionTag
+            key={tag}
+            type={tag}
+            hasUpToDateVersions={hasUpToDateVersions}
+          />
         ))}
       </Flex>
     </Flex>
