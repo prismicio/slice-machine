@@ -15,7 +15,11 @@ export const Breadcrumb: FC<BreadcrumProps> = ({
   separator = "/",
 }) => {
   return (
-    <Text color="grey11">
+    <Text
+      color="grey11"
+      aria-label="Breadcrumb"
+      data-testid={`breadcrumb-${folder}-${page ?? ""}`}
+    >
       {folder}
       {page !== undefined ? (
         <>

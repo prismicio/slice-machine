@@ -184,10 +184,11 @@ async function renderCustomTypesBuilderPage({
 
   const renderResults = render(<CustomTypesBuilderPage />, customTypeMockStore);
 
-  const preText =
-    customType.format === "page" ? "Page types / " : "Custom types / ";
+  const folder = customType.format === "page" ? "Page types" : "Custom types";
   expect(
-    await screen.findByText(preText + (customType.label as string))
+    await screen.findByText(
+      `breadcrumb-${folder}-${customType.label as string}`
+    )
   ).toBeVisible();
 
   return renderResults;
