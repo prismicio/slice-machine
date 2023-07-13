@@ -35,7 +35,6 @@ export const videoHeader = style([
   {
     lineHeight: "16px",
     fontSize: "12px",
-    fontStyle: "normal",
     fontWeight: "600",
   },
 ]);
@@ -63,9 +62,7 @@ export const videoDescription = style([
     marginBottom: 16,
   }),
   {
-    fontFamily: "SF Pro Text",
     fontSize: "12px",
-    fontStyle: "normal",
     fontWeight: "400",
     lineHeight: "16px",
   },

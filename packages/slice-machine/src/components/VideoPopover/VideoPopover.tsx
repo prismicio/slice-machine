@@ -1,6 +1,12 @@
-import React, { useState, FC, PropsWithChildren } from "react";
+import React, {
+  useState,
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useCallback,
+} from "react";
 import * as styles from "./VideoPopover.css";
-import { HoverCard } from "../HoverrCard";
+import { HoverCard } from "../HoverCard";
 import { Button } from "@prismicio/editor-ui";
 import { Video as CldVideo } from "cloudinary-react";
 import { CloseIcon } from "@src/icons/CloseIcon";
@@ -48,26 +54,62 @@ export const VideoContainer: FC<{
   );
 };
 
+type Timer = ReturnType<typeof setTimeout> | null;
+
+function useTimerWhen(condition: boolean, fn: () => void, delay: number) {
+  const [timer, setTimer] = useState<Timer>(null);
+  useEffect(() => {
+    if (condition && timer === null) {
+      const timerId = setTimeout(fn, delay);
+      setTimer(timerId);
+    }
+
+    return () => {
+      if (timer !== null) {
+        clearTimeout(timer);
+        setTimer(null);
+      }
+    };
+  }, [condition, fn, delay, timer, setTimer]);
+}
+
 export const VideoPopover: React.FC<
   PropsWithChildren<{
     open: boolean;
     onClose: () => void;
     onPlay: () => void;
+    delay?: number;
   }>
-> = ({ children, onClose, onPlay, open }) => {
-  const [isOpen, setOpen] = useState<boolean>(open);
+> = ({ children, onClose, onPlay, open, delay = 5000 }) => {
+  const [isOpen, setOpen] = useState<boolean>(false);
 
   const handleClose = React.useCallback(() => {
     onClose();
-    setOpen((wasOpen) => !wasOpen);
+    setOpen(false);
   }, [onClose, setOpen]);
+
+  const handleDefaultOpening = useCallback(
+    () => setOpen((wasOpen) => wasOpen === false),
+    [setOpen]
+  );
+
+  // timeout system to open the tooltip
+  useTimerWhen(open, handleDefaultOpening, delay);
+
+  const handleChange = (value: boolean) => {
+    if (value === false) {
+      handleClose();
+    } else {
+      setOpen(value);
+    }
+  };
 
   return (
     <HoverCard
       anchor={children}
       open={isOpen}
-      onOpenChange={handleClose}
-      openDelay={500}
+      onOpenChange={handleChange}
+      openDelay={delay}
     >
       <VideoContainer onClose={handleClose} onPlay={onPlay} />
     </HoverCard>
