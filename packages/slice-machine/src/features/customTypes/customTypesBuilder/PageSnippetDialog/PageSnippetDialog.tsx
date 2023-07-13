@@ -34,7 +34,7 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
   const trackOpenSnippet = () => {
     void telemetry.track({
       event: "page-type:open-snippet",
-      framework: config?.adapter,
+      framework: config?.adapter ?? "not-found",
     });
   };
 
