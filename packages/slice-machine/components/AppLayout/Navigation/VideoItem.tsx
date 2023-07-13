@@ -88,12 +88,6 @@ const MaybeVideoTooltipWrapper: FC<
         publicId={videoUrl}
         onClose={onClose}
         thumbnail="/phill.png"
-        onPlay={() => {
-          void telemetry.track({
-            event: "open-video-tutorials",
-            video: videoUrl,
-          });
-        }}
         open={!hasSeenTutorialsToolTip}
       >
         {children}

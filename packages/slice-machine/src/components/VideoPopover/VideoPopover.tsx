@@ -13,7 +13,7 @@ import { CloseIcon } from "@src/icons/CloseIcon";
 
 export const VideoContainer: FC<{
   onClose: () => void;
-  onPlay: () => void;
+  onPlay?: () => void;
   publicId: string;
   cloudName: string;
   thumbnail?: string;
@@ -79,7 +79,7 @@ export const VideoPopover: React.FC<
   PropsWithChildren<{
     open: boolean;
     onClose: () => void;
-    onPlay: () => void;
+    onPlay?: () => void;
     publicId: string;
     cloudName: string;
     delay?: number;
