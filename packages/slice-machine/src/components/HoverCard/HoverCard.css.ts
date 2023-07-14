@@ -20,6 +20,5 @@ export const arrow = style([
   reset,
   sprinkles({
     fill: colors.grey1,
-    boxShadow: 2,
   }),
 ]);
