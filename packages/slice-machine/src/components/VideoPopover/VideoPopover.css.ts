@@ -5,7 +5,7 @@ const block = style([
   sprinkles({
     boxSizing: "border-box",
     fontFamily: "body",
-    all: "unset", // TODO: this causes some issues
+    all: "unset",
   }),
 ]);
 
