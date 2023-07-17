@@ -24,7 +24,7 @@ export const VideoContainer: FC<{
         <span>Prismic Academy©</span>
 
         <button className={styles.closeButton} onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon width="20px" height="20px" />
         </button>
       </div>
 
@@ -87,6 +87,8 @@ export const VideoPopover: React.FC<
     side?: HoverCardProps["side"];
     sideOffset?: HoverCardProps["sideOffset"];
     arrowSize?: number;
+    align?: HoverCardProps["align"];
+    alignOffset?: HoverCardProps["alignOffset"];
   }>
 > = ({
   children,
@@ -100,6 +102,8 @@ export const VideoPopover: React.FC<
   side,
   sideOffset,
   arrowSize,
+  align,
+  alignOffset,
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -118,7 +122,7 @@ export const VideoPopover: React.FC<
   const handleChange = (value: boolean) => {
     if (value === false) {
       handleClose();
-    } else {
+    } else if (value === true && open === true) {
       setOpen(value);
     }
   };
@@ -132,6 +136,8 @@ export const VideoPopover: React.FC<
       side={side}
       sideOffset={sideOffset}
       arrowSize={arrowSize}
+      align={align}
+      alignOffset={alignOffset}
     >
       <VideoContainer
         onClose={handleClose}

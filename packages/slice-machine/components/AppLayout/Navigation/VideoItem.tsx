@@ -67,12 +67,14 @@ const MaybeVideoTooltipWrapper: FC<
     return (
       <VideoPopover
         side="right"
-        sideOffset={32}
+        sideOffset={24}
         cloudName="dmtf1daqp"
         publicId={videoUrl}
         onClose={onClose}
         thumbnail="/phill.png"
         open={!hasSeenTutorialsToolTip}
+        align="end"
+        alignOffset={8}
       >
         {children}
       </VideoPopover>

@@ -203,6 +203,9 @@ export const link = style([
       boxShadow: vars.boxShadow.focus,
     },
     selectors: {
+      '[data-state="open"] &, &:focus': {
+        boxShadow: vars.boxShadow.focus,
+      },
       // Not Active & Default
       "&:not([data-active=true])": {
         borderColor: vars.color.transparent,
@@ -218,6 +221,9 @@ export const link = style([
       "&:not([data-active=true]):focus": {
         borderColor: vars.color.purple8,
       },
+      "&[data-state=open]": {
+        borderColor: vars.color.purple8,
+      },
       // Active & Default
       "&[data-active=true]": {
         backgroundColor: vars.color.purple12,
@@ -227,6 +233,11 @@ export const link = style([
       // Active & Hover
       "&[data-active=true]:hover": {
         backgroundColor: vars.color.greyLight1,
+      },
+      // Parent list item is open
+      '[data-state="open"] > &, [data-state="open"] > &:hover': {
+        borderColor: vars.color.purple8,
+        boxShadow: vars.boxShadow.focus,
       },
     },
   },

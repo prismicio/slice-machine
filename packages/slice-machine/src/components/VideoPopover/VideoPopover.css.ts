@@ -101,5 +101,6 @@ export const closeButton = style([
     background: "none",
     border: "none",
     outline: "none",
+    ":hover": { cursor: vars.cursor.pointer },
   },
 ]);

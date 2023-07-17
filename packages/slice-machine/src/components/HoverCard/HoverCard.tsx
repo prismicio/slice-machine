@@ -9,6 +9,8 @@ export type HoverCardProps = React.PropsWithChildren<
     side?: RadixHoverCard.HoverCardContentProps["side"];
     sideOffset?: RadixHoverCard.HoverCardContentProps["sideOffset"];
     arrowSize?: number;
+    align?: RadixHoverCard.HoverCardContentProps["align"];
+    alignOffset?: RadixHoverCard.HoverCardContentProps["alignOffset"];
   } & RadixHoverCard.HoverCardProps
 >;
 
@@ -18,6 +20,8 @@ export const HoverCard: React.FC<HoverCardProps> = ({
   side,
   sideOffset,
   arrowSize = 12,
+  align,
+  alignOffset,
   ...rest
 }) => {
   const { arrowWidth, arrowHeight } = React.useMemo(() => {
@@ -41,6 +45,8 @@ export const HoverCard: React.FC<HoverCardProps> = ({
           className={styles.container}
           side={side}
           sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
         >
           {children}
           <RadixHoverCard.Arrow
