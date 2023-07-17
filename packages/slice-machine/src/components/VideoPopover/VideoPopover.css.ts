@@ -75,7 +75,7 @@ export const videoDescription = style([
     lineBreak: "auto",
     fontSize: "12px",
     fontWeight: "400",
-    lineHeight: "16px",
+    lineHeight: "20px",
   },
 ]);
 
