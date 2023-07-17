@@ -8,12 +8,15 @@ import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import { Text } from "@prismicio/editor-ui";
 
 import * as styles from "./MarkdownRenderer.css";
+import { useAdapterName } from "@src/hooks/useAdapterName";
+import { telemetry } from "@src/apiClient";
 
 type MarkdownRenderer = FC<{
   markdown: string;
 }>;
 
 const MarkdownCodeBlock = (props: CodeProps) => {
+  const adapter = useAdapterName();
   if (props.inline === true) {
     return <code {...props} className={styles.inlineCode} />;
   }
@@ -29,10 +32,20 @@ const MarkdownCodeBlock = (props: CodeProps) => {
     return null;
   })();
 
+  const onCopy = () => {
+    if (adapter !== undefined) {
+      void telemetry.track({
+        event: "page-type:copy-snippet",
+        framework: adapter,
+      });
+    }
+  };
+
   return (
     <CodeBlock
       copy
       {...props}
+      onCopy={onCopy}
       code={props.children}
       {...(maybeFileInfo !== null ? { fileInfo: maybeFileInfo } : {})}
     />

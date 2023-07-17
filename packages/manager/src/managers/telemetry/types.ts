@@ -21,6 +21,7 @@ export const SegmentEventType = {
 	changes_limitReach: "changes:limit-reach",
 	editor_widgetUsed: "editor:widget-used",
 	open_page_snippet: "page-type:open-snippet",
+	copy_page_snippet: "page-type:copy-snippet",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -49,6 +50,8 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.editor_widgetUsed]: "SliceMachine Editor Widget Used",
 	[SegmentEventType.open_page_snippet]:
 		"SliceMachine Opens Page Type Snippet Dialog",
+	[SegmentEventType.copy_page_snippet]:
+		"Slice Machine page code snippet copied",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -110,6 +113,11 @@ type PageViewSegmentEvent = SegmentEvent<
 >;
 
 type OpenPageSnippetSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.open_page_snippet,
+	{ framework: string }
+>;
+
+type CopyPageSnippetSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.open_page_snippet,
 	{ framework: string }
 >;
@@ -212,4 +220,5 @@ export type SegmentEvents =
 	| ChangesPushedSegmentEvent
 	| ChangesLimitReachSegmentEvent
 	| EditorWidgetUsedSegmentEvent
-	| OpenPageSnippetSegmentEvent;
+	| OpenPageSnippetSegmentEvent
+	| CopyPageSnippetSegmentEvent;
