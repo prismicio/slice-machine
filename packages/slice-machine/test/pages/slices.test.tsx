@@ -55,7 +55,9 @@ describe("slices", () => {
 
     const environment = {
       changelog: {
-        currentVersion: "0.0.1",
+        sliceMachine: {
+          currentVersion: "0.0.1",
+        },
       },
     };
 

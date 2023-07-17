@@ -105,7 +105,7 @@ describe.each(formats)(
         .closest("tr") as HTMLElement;
 
       // Click on the table row settings button
-      await user.click(within(row).getByTestId("tableRowSettings"));
+      await user.click(within(row).getByTestId("editDropdown"));
 
       // Click on the remove button
       await user.click(await screen.findByText("Remove"));
@@ -133,7 +133,7 @@ describe.each(formats)(
         .closest("tr") as HTMLElement;
 
       // Click on the table row settings button
-      await user.click(within(row).getByTestId("tableRowSettings"));
+      await user.click(within(row).getByTestId("editDropdown"));
 
       // Click on the rename button
       await user.click(await screen.findByText("Rename"));
@@ -198,7 +198,7 @@ describe("CustomTypesTablePage > Custom type", () => {
       .closest("tr") as HTMLElement;
 
     // Click on the table row settings button
-    await user.click(within(row).getByTestId("tableRowSettings"));
+    await user.click(within(row).getByTestId("editDropdown"));
 
     // Click on the convert to page type button
     await user.click(await screen.findByText("Convert to page type"));

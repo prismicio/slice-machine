@@ -15,10 +15,17 @@ export const dummyServerState: Pick<
     },
     packageManager: "npm",
     changelog: {
-      currentVersion: "0.2.0",
-      latestNonBreakingVersion: "0.1.2",
-      updateAvailable: false,
-      versions: [],
+      sliceMachine: {
+        currentVersion: "0.2.0",
+        latestNonBreakingVersion: "0.1.2",
+        updateAvailable: false,
+        versions: [],
+      },
+      adapter: {
+        name: "test-adapter",
+        updateAvailable: false,
+        versions: [],
+      },
     },
     endpoints: {
       PrismicWroom: "https://prismic.io/",

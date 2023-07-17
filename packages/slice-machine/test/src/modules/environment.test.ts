@@ -47,10 +47,17 @@ describe("[Environment module]", () => {
 
     it("should update the environment state given CHANGELOG.RESPONSE action", () => {
       const newChangeLog = {
-        currentVersion: "1.0.0",
-        updateAvailable: true,
-        latestNonBreakingVersion: "0.1.2",
-        versions: [],
+        sliceMachine: {
+          currentVersion: "1.0.0",
+          updateAvailable: true,
+          latestNonBreakingVersion: "0.1.2",
+          versions: [],
+        },
+        adapter: {
+          name: "test-adapter",
+          updateAvailable: true,
+          versions: [],
+        },
       };
       const action = getChangelogCreator.success({
         changelog: newChangeLog,
@@ -78,10 +85,17 @@ describe("[Environment module]", () => {
       } as SliceMachineStoreType;
       const result = getChangelog(sliceMachineStore);
       expect(result).toEqual({
-        currentVersion: "",
-        latestNonBreakingVersion: null,
-        updateAvailable: false,
-        versions: [],
+        sliceMachine: {
+          currentVersion: "",
+          latestNonBreakingVersion: null,
+          updateAvailable: false,
+          versions: [],
+        },
+        adapter: {
+          name: "",
+          updateAvailable: false,
+          versions: [],
+        },
       });
     });
   });

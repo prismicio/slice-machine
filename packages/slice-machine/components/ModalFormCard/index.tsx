@@ -149,6 +149,7 @@ function ModalCard<Values extends FormikValues>({
                         type="button"
                         onClick={close}
                         variant="secondary"
+                        disabled={isSubmitting || isLoading}
                       >
                         Cancel
                       </ThemeButton>
@@ -157,7 +158,7 @@ function ModalCard<Values extends FormikValues>({
                         form={formId}
                         type="submit"
                         disabled={!isValid || isSubmitting || isLoading}
-                        isLoading={isLoading}
+                        isLoading={isSubmitting || isLoading}
                         sx={{
                           fontWeight: "400",
                           paddingBlock: "8px",

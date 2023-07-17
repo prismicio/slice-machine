@@ -20,9 +20,20 @@ export interface ReleaseNote {
   draft: boolean;
 }
 
-export interface PackageChangelog {
+type SliceMachinePackageChangelog = {
   currentVersion: string;
-  updateAvailable: boolean;
   latestNonBreakingVersion: string | null;
+  updateAvailable: boolean;
   versions: PackageVersion[];
+};
+
+type AdapterPackageChangelog = {
+  name: string;
+  updateAvailable: boolean;
+  versions: string[];
+};
+
+export interface PackageChangelog {
+  sliceMachine: SliceMachinePackageChangelog;
+  adapter: AdapterPackageChangelog;
 }

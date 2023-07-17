@@ -9,6 +9,7 @@ import {
   cleanupCustomTypeStoreCreator,
   addFieldCreator,
   deleteTabCreator,
+  renameSelectedCustomTypeLabel,
   createSliceZoneCreator,
   deleteSliceZoneCreator,
   deleteFieldCreator,
@@ -87,6 +88,16 @@ export const selectedCustomTypeReducer: Reducer<
             }
             return t;
           }),
+        },
+      };
+    }
+    case getType(renameSelectedCustomTypeLabel): {
+      if (!state) return state;
+      return {
+        ...state,
+        model: {
+          ...state.model,
+          label: action.payload.newLabel,
         },
       };
     }
