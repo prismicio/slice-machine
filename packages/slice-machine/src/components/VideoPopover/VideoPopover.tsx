@@ -23,7 +23,7 @@ export const VideoContainer: FC<VideoContainerProps> = ({
   return (
     <div className={styles.videoContainer}>
       <div className={styles.videoHeader}>
-        <span>Prismic Academy©</span>
+        <span>Need help?</span>
 
         <button className={styles.closeButton} onClick={onClose}>
           <CloseIcon />
@@ -42,8 +42,8 @@ export const VideoContainer: FC<VideoContainerProps> = ({
 
       <div className={styles.videoFooter}>
         <div className={styles.videoDescription}>
-          Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
-          vitae etiam
+          Learn how to turn a Next.js website into a page builder powered by
+          Prismic.
         </div>
 
         <Button
