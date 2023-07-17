@@ -1,23 +1,25 @@
-import React, {
-  useState,
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useCallback,
-} from "react";
+import { useState, FC, PropsWithChildren, useEffect, useCallback } from "react";
 import * as styles from "./VideoPopover.css";
 import { HoverCard, HoverCardProps } from "../HoverCard";
 import { Button } from "@prismicio/editor-ui";
 import { Video as CldVideo } from "cloudinary-react";
 import { CloseIcon } from "@src/icons/CloseIcon";
 
-export const VideoContainer: FC<{
+type VideoContainerProps = {
   onClose: () => void;
   onPlay?: () => void;
   publicId: string;
   cloudName: string;
   thumbnail?: string;
-}> = ({ publicId, cloudName, thumbnail, onClose, onPlay }) => {
+};
+
+export const VideoContainer: FC<VideoContainerProps> = ({
+  publicId,
+  cloudName,
+  thumbnail,
+  onClose,
+  onPlay,
+}) => {
   return (
     <div className={styles.videoContainer}>
       <div className={styles.videoHeader}>
@@ -75,22 +77,22 @@ function useTimerWhen(condition: boolean, fn: () => void, delay: number) {
   }, [condition, fn, delay, timer, setTimer]);
 }
 
-export const VideoPopover: React.FC<
-  PropsWithChildren<{
-    open: boolean;
-    onClose: () => void;
-    onPlay?: () => void;
-    publicId: string;
-    cloudName: string;
-    delay?: number;
-    thumbnail?: string;
-    side?: HoverCardProps["side"];
-    sideOffset?: HoverCardProps["sideOffset"];
-    arrowSize?: number;
-    align?: HoverCardProps["align"];
-    alignOffset?: HoverCardProps["alignOffset"];
-  }>
-> = ({
+type VideoPopoverProps = PropsWithChildren<{
+  open: boolean;
+  onClose: () => void;
+  onPlay?: () => void;
+  publicId: string;
+  cloudName: string;
+  delay?: number;
+  thumbnail?: string;
+  side?: HoverCardProps["side"];
+  sideOffset?: HoverCardProps["sideOffset"];
+  arrowSize?: number;
+  align?: HoverCardProps["align"];
+  alignOffset?: HoverCardProps["alignOffset"];
+}>;
+
+export const VideoPopover: FC<VideoPopoverProps> = ({
   children,
   onClose,
   onPlay,
@@ -107,7 +109,7 @@ export const VideoPopover: React.FC<
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
-  const handleClose = React.useCallback(() => {
+  const handleClose = useCallback(() => {
     onClose();
     setOpen(false);
   }, [onClose, setOpen]);

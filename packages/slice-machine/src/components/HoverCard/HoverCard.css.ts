@@ -4,6 +4,7 @@ import { style } from "@vanilla-extract/css";
 const reset = sprinkles({
   all: "unset",
   boxSizing: "border-box",
+  display: "revert",
   fontFamily: "body",
 });
 

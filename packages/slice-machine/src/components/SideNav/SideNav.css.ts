@@ -203,6 +203,12 @@ export const link = style([
       boxShadow: vars.boxShadow.focus,
     },
     selectors: {
+      // Not Active & Default
+      "&:not([data-active=true])": {
+        borderColor: vars.color.transparent,
+        backgroundColor: vars.color.greyLight2,
+        color: vars.color.greyLight12,
+      },
       // Not Active & Hover
       "&:not([data-active=true]):hover": {
         borderColor: vars.color.greyLight7,
@@ -210,9 +216,6 @@ export const link = style([
       },
       // Not Active & Focus
       "&:not([data-active=true]):focus": {
-        borderColor: vars.color.purple8,
-      },
-      "&[data-state=open]": {
         borderColor: vars.color.purple8,
       },
       // Active & Default

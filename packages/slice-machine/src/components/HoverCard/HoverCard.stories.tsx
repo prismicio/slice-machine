@@ -7,7 +7,10 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: HoverCard,
-  argTypes: { children: { control: { disable: true } } },
+  argTypes: {
+    anchor: { control: { disable: true } },
+    children: { control: { disable: true } },
+  },
 } satisfies Meta<typeof HoverCard>;
 
 export default meta;

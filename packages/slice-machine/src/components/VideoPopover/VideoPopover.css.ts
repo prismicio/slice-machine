@@ -87,10 +87,8 @@ export const videoButton = style([
     borderRadius: 6,
     width: "100%",
     padding: 8,
+    boxShadow: 1,
   }),
-  {
-    boxShadow: vars.boxShadow[1],
-  },
 ]);
 
 export const closeButton = style([

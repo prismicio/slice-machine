@@ -15,7 +15,7 @@ import { PlayCircleIcon } from "@src/icons/PlayCircle";
 import { VideoPopover } from "@src/components/VideoPopover";
 
 import style from "./VideoItem.module.css";
-import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
+import { useAdapterName } from "@src/hooks/useAdapterName";
 
 type VideoItemProps = {
   hasSeenTutorialsToolTip: boolean;
@@ -24,9 +24,9 @@ type VideoItemProps = {
 
 export const VideoItem = forwardRef<HTMLLIElement, VideoItemProps>(
   ({ onClose, hasSeenTutorialsToolTip }, ref) => {
-    const config = useSliceMachineConfig();
+    const adapterName = useAdapterName();
 
-    const isNext = config?.adapter === "@slicemachine/adapter-next";
+    const isNext = adapterName === "@slicemachine/adapter-next";
     const videoUrl = isNext ? PRISMIC_ACADEMY_URL : VIDEO_YOUTUBE_PLAYLIST_LINK;
 
     return (
@@ -56,12 +56,17 @@ export const VideoItem = forwardRef<HTMLLIElement, VideoItemProps>(
   }
 );
 
-const MaybeVideoTooltipWrapper: FC<
-  VideoItemProps & {
-    isNext: boolean;
-    children: ReactNode;
-  }
-> = ({ isNext, children, onClose, hasSeenTutorialsToolTip }) => {
+type MaybeVideoTooltipWrapperProps = VideoItemProps & {
+  isNext: boolean;
+  children: ReactNode;
+};
+
+const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
+  isNext,
+  children,
+  onClose,
+  hasSeenTutorialsToolTip,
+}) => {
   if (isNext) {
     const videoUrl = "Tooltips/pa-course-overview_eaopsn";
     return (
@@ -91,7 +96,9 @@ const MaybeVideoTooltipWrapper: FC<
   );
 };
 
-const OldVideoItem: FC<VideoItemProps & { children: ReactNode }> = ({
+type OldVideoItemProps = VideoItemProps & { children: ReactNode };
+
+const OldVideoItem: FC<OldVideoItemProps> = ({
   hasSeenTutorialsToolTip,
   onClose,
   children,
@@ -127,10 +134,12 @@ const OldVideoItem: FC<VideoItemProps & { children: ReactNode }> = ({
   );
 };
 
-const ToolTip: FC<{
+type ToolTipProps = {
   id: string;
   onClose: VideoItemProps["onClose"];
-}> = ({ id, onClose }) => (
+};
+
+const ToolTip: FC<ToolTipProps> = ({ id, onClose }) => (
   <ReactTooltip
     id={id}
     effect="solid"
