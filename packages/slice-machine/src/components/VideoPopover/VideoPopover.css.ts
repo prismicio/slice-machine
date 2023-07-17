@@ -54,7 +54,6 @@ export const videoPlayer = style([
   }),
   {
     display: "block",
-    // width: "304px",
     height: "auto",
   },
 ]);
