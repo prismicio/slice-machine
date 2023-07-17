@@ -24,7 +24,7 @@ export const VideoContainer: FC<{
         <span>Prismic Academy©</span>
 
         <button className={styles.closeButton} onClick={onClose}>
-          <CloseIcon width="20px" height="20px" />
+          <CloseIcon />
         </button>
       </div>
 
