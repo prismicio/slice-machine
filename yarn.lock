@@ -5283,6 +5283,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-hover-card@npm:1.0.6":
+  version: 1.0.6
+  resolution: "@radix-ui/react-hover-card@npm:1.0.6"
+  dependencies:
+    "@babel/runtime": ^7.13.10
+    "@radix-ui/primitive": 1.0.1
+    "@radix-ui/react-compose-refs": 1.0.1
+    "@radix-ui/react-context": 1.0.1
+    "@radix-ui/react-dismissable-layer": 1.0.4
+    "@radix-ui/react-popper": 1.1.2
+    "@radix-ui/react-portal": 1.0.3
+    "@radix-ui/react-presence": 1.0.1
+    "@radix-ui/react-primitive": 1.0.3
+    "@radix-ui/react-use-controllable-state": 1.0.1
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0
+    react-dom: ^16.8 || ^17.0 || ^18.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: cf7c92beceb1f9ed9b39d7e92a5c85a0d725160e76ef50325dccfab7c25b906b3235742a1e85e0f18478172adc5ec326ef6e3f2cc786a697cb140c01768a8242
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-id@npm:1.0.0":
   version: 1.0.0
   resolution: "@radix-ui/react-id@npm:1.0.0"
@@ -7585,7 +7613,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: ^0.1.13
+    prismic-ts-codegen: ^0.1.15
     react: 18.2.0
     rollup-plugin-preserve-directives: 0.1.1
     size-limit: 8.2.4
@@ -7632,7 +7660,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: ^0.1.13
+    prismic-ts-codegen: ^0.1.15
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -7678,7 +7706,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: ^0.1.13
+    prismic-ts-codegen: ^0.1.15
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -26685,9 +26713,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prismic-ts-codegen@npm:^0.1.13":
-  version: 0.1.13
-  resolution: "prismic-ts-codegen@npm:0.1.13"
+"prismic-ts-codegen@npm:^0.1.15":
+  version: 0.1.15
+  resolution: "prismic-ts-codegen@npm:0.1.15"
   dependencies:
     "@prismicio/custom-types-client": ^1.1.0
     common-tags: ^1.8.2
@@ -26708,7 +26736,7 @@ __metadata:
       optional: true
   bin:
     prismic-ts-codegen: bin/prismic-ts-codegen.mjs
-  checksum: 1719e17cc6565bcbd5238a3b6f84cf0e7aff3bb16de594c3f5f44f743b93d4e2a69b32801b57ed761f89358f9ff34f3592842d3306f785b50cddce63fb4d3c2d
+  checksum: 6cd6c613897706117d0c14319655cd9ec0b2aaa1d96df0e610ebfd4334093dd2852e9f8cd431c3defe0d3f1ac48670e31dfbe0eaf55975eba7b5cc6513b5d6da
   languageName: node
   linkType: hard
 
@@ -29492,6 +29520,7 @@ __metadata:
     "@prismicio/mocks": 2.0.0-alpha.2
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 2.0.0
+    "@radix-ui/react-hover-card": 1.0.6
     "@radix-ui/react-tabs": 1.0.4
     "@reach/menu-button": 0.18.0
     "@sentry/nextjs": 7.43.0

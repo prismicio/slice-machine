@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt2",
-	"version": "0.3.5-dev-next-release.3",
+	"version": "0.3.5",
 	"description": "Slice Machine adapter for Nuxt 2.",
 	"keywords": [
 		"typescript",
@@ -70,7 +70,7 @@
 		"newtype-ts": "^0.3.5",
 		"node-fetch": "^3.3.1",
 		"pascal-case": "^3.1.2",
-		"prismic-ts-codegen": "^0.1.13"
+		"prismic-ts-codegen": "^0.1.15"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.2.0",
