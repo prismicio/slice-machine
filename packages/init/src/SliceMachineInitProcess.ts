@@ -1010,6 +1010,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									return;
 								}
 
+								await this.loginIfNecessary();
+								this.validateWriteAccess();
+
 								const signaturePath = path.resolve(
 									documentsDirectoryPath,
 									"index.json",
