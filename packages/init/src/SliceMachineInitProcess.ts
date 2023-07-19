@@ -122,7 +122,6 @@ export class SliceMachineInitProcess {
 			);
 
 			await this.beginCoreDependenciesInstallation();
-			await this.loginAndFetchUserData();
 
 			if (this.options.repository) {
 				await this.useRepositoryFlag();
@@ -350,6 +349,20 @@ export class SliceMachineInitProcess {
 		]);
 	}
 
+	protected loginIfNecessary(): Promise<void> {
+		return listrRun([
+			{
+				title: "",
+				task: async (_) => {
+					const isLoggedIn = await this.manager.user.checkIsLoggedIn();
+					if (!isLoggedIn || this.context.userProfile === undefined) {
+						await this.loginAndFetchUserData();
+					}
+				},
+			},
+		]);
+	}
+
 	protected loginAndFetchUserData(): Promise<void> {
 		return listrRun([
 			{
@@ -423,66 +436,93 @@ export class SliceMachineInitProcess {
 		]);
 	}
 
+	protected validateWriteAccess(): void {
+		assertExists(
+			this.context.repository,
+			"Repository selection must be available through context to proceed",
+		);
+		assertExists(
+			this.context.userRepositories,
+			"User repositories must be available through context to run `useRepositoryFlag`",
+		);
+		const { domain } = this.context.repository;
+		const maybeRepository = this.context.userRepositories.find(
+			(repository) => repository.domain === domain,
+		);
+
+		if (maybeRepository) {
+			if (!this.manager.prismicRepository.hasWriteAccess(maybeRepository)) {
+				throw new Error(
+					`Cannot run init command with repository ${chalk.cyan(
+						maybeRepository.domain,
+					)}: you are not a developer or admin of this repository`,
+				);
+			}
+		} else {
+			throw new Error(
+				`Cannot validate write access: repository ${chalk.cyan(
+					domain,
+				)} does not exist`,
+			);
+		}
+	}
+
 	protected useRepositoryFlag(): Promise<void> {
 		return listrRun([
 			{
 				title: `Flag ${chalk.cyan("repository")} used, validating input...`,
 				task: async (_, task) => {
 					assertExists(
-						this.context.userRepositories,
-						"User repositories must be available through context to run `useRepositoryFlag`",
-					);
-					assertExists(
 						this.options.repository,
 						"Flag `repository` must be set to run `useRepositoryFlag`",
 					);
-
 					const domain = formatRepositoryDomain(this.options.repository);
+					const validation = await validateRepositoryDomainAndAvailability({
+						domain,
+						existsFn: (domain) =>
+							this.manager.prismicRepository.checkExists({ domain }),
+					});
 
-					const maybeRepository = this.context.userRepositories.find(
-						(repository) => repository.domain === domain,
-					);
+					const errorMessage = getErrorMessageForRepositoryDomainValidation({
+						validation: {
+							...validation,
+							AlreadyExists: false,
+							hasErrors: false,
+						},
+						displayDomain: chalk.cyan(domain),
+					});
 
-					if (maybeRepository) {
-						if (
-							!this.manager.prismicRepository.hasWriteAccess(maybeRepository)
-						) {
-							throw new Error(
-								`Cannot run init command with repository ${chalk.cyan(
-									maybeRepository.domain,
-								)}: you are not a developer or admin of this repository`,
-							);
-						}
-					} else {
-						const validation = await validateRepositoryDomainAndAvailability({
-							domain,
-							existsFn: (domain) =>
-								this.manager.prismicRepository.checkExists({ domain }),
-						});
-						const errorMessage = getErrorMessageForRepositoryDomainValidation({
-							validation,
-							displayDomain: chalk.cyan(domain),
-						});
-
-						if (errorMessage) {
-							throw new Error(errorMessage);
-						}
+					if (errorMessage) {
+						throw new Error(errorMessage);
 					}
 
 					task.title = `Selected repository ${chalk.cyan(
 						domain,
 					)} (flag ${chalk.cyan("repository")} used)`;
 
-					this.context.repository = {
-						domain,
-						exists: !!maybeRepository,
-					};
+					if (validation.AlreadyExists) {
+						this.context.repository = {
+							domain,
+							exists: true,
+						};
+					} else {
+						await this.loginAndFetchUserData();
+						assertExists(
+							this.context.userRepositories,
+							"User repositories must be available through context to run `useRepositoryFlag`",
+						);
+						this.context.repository = {
+							domain,
+							exists: false,
+						};
+					}
 				},
 			},
 		]);
 	}
 
 	protected async selectRepository(): Promise<void> {
+		await this.loginIfNecessary();
 		assertExists(
 			this.context.userRepositories,
 			"User repositories must be available through context to run `selectRepository`",
@@ -691,6 +731,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					this.context.repository.domain,
 				)} ...`,
 				task: async (_, task) => {
+					await this.loginIfNecessary();
 					assertExists(
 						this.context.repository,
 						"Repository selection must be available through context to run `createNewRepository`",
@@ -879,6 +920,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									return;
 								}
 
+								await this.loginIfNecessary();
+								this.validateWriteAccess();
+
 								task.title = "Pushing slices... (initializing ACL)";
 								await this.manager.screenshots.initS3ACL();
 
@@ -922,6 +966,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 									return;
 								}
+
+								await this.loginIfNecessary();
+								this.validateWriteAccess();
 
 								let pushed = 0;
 								task.title = `Pushing types... (0/${ids.length})`;

@@ -106,7 +106,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	//
 	// - Does not expect the consumer to supply a repository object; it
 	//   only requires a repository name, which could be sourced from
-	//   anything (incl. the project's `sm.json`).
+	//   anything (incl. the project's `slicemachine.config.json`).
 	//
 	// - Similarly, it does not expect the consumer to call `readAll()`
 	//   before calling this method.
