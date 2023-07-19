@@ -118,7 +118,7 @@ type OpenPageSnippetSegmentEvent = SegmentEvent<
 >;
 
 type CopyPageSnippetSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.open_page_snippet,
+	typeof SegmentEventType.copy_page_snippet,
 	{ framework: string; repository: string }
 >;
 
