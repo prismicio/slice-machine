@@ -56,7 +56,7 @@ describe("[Selected Custom type sagas]", () => {
         .put(saveCustomTypeCreator.success({ customType: customTypeModel }));
       saga.next().put(
         openToasterCreator({
-          content: "Model & mocks have been generated successfully!",
+          content: "Model has been generated successfully!",
           type: ToasterType.SUCCESS,
         })
       );
