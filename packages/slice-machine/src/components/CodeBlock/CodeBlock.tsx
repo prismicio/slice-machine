@@ -25,6 +25,7 @@ type CodeBlockProps = {
   fileInfo?: {
     fileName: string;
   };
+  onCopy?: () => void;
 };
 
 const FileIcon = ({ fileName }: { fileName: string }) => {
@@ -48,7 +49,7 @@ const FileIcon = ({ fileName }: { fileName: string }) => {
   return Extension;
 };
 
-const Copy = ({ code }: { code: string }) => {
+const Copy = ({ code, onCopy }: { code: string; onCopy?: () => void }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
@@ -65,6 +66,9 @@ const Copy = ({ code }: { code: string }) => {
   const copy = (): void => {
     void navigator.clipboard.writeText(code).then(() => {
       setIsCopied(true);
+      if (onCopy !== undefined) {
+        onCopy();
+      }
     });
   };
   return (
@@ -81,6 +85,7 @@ export const CodeBlock = ({
   className,
   copy,
   code,
+  onCopy,
 }: CodeBlockProps) => {
   const match = /language-(\w+)/.exec(className ?? "");
 
@@ -97,7 +102,7 @@ export const CodeBlock = ({
         ) : (
           <span />
         )}
-        {copy === true ? <Copy code={String(code)} /> : null}
+        {copy === true ? <Copy onCopy={onCopy} code={String(code)} /> : null}
       </div>
       {match !== null && match[1] ? (
         <SyntaxHighlighter
