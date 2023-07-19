@@ -39,3 +39,23 @@ export const VideoPlayer = {
     />
   ),
 };
+
+export const CloseWhenClickingOutSide = {
+  render: () => {
+    return (
+      <div>
+        <VideoPopover
+          open={true}
+          onClose={noop}
+          onPlay={noop}
+          cloudName="dmtf1daqp"
+          publicId="Tooltips/pa-course-overview_eaopsn"
+          delay={5000}
+        >
+          <button>Popover</button>
+        </VideoPopover>
+        <button>Outside</button>
+      </div>
+    );
+  },
+};

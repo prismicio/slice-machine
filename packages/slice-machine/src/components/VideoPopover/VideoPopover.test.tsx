@@ -68,4 +68,74 @@ describe("VideoPopover", () => {
 
     expect(onClose).toHaveBeenCalled();
   });
+
+  test("give it is open, it should close when a user clicks else where on the screen", async () => {
+    const onClose = vi.fn();
+    const onPlay = vi.fn();
+
+    const App = () => {
+      return (
+        <div>
+          <VideoPopover
+            open={true}
+            onClose={onClose}
+            onPlay={onPlay}
+            delay={0}
+            cloudName="dmtf1daqp"
+            publicId="Tooltips/pa-course-overview_eaopsn"
+          >
+            <div>Thing</div>
+          </VideoPopover>
+
+          <button>other</button>
+        </div>
+      );
+    };
+
+    const { user } = render(<App />);
+
+    await waitFor(() => screen.getByText("Got it"));
+
+    const otherButton = screen.getByText("other");
+
+    await user.click(otherButton);
+
+    expect(screen.queryByText("Got it")).not.toBeInTheDocument();
+  });
+
+  test("hovering in and out should not close the popover", async () => {
+    const onClose = vi.fn();
+    const onPlay = vi.fn();
+
+    const App = () => {
+      return (
+        <div>
+          <VideoPopover
+            open={true}
+            onClose={onClose}
+            onPlay={onPlay}
+            delay={0}
+            cloudName="dmtf1daqp"
+            publicId="Tooltips/pa-course-overview_eaopsn"
+          >
+            <div>Thing</div>
+          </VideoPopover>
+
+          <button>other</button>
+        </div>
+      );
+    };
+
+    const { user } = render(<App />);
+
+    const closeButton = await waitFor(() => screen.getByText("Got it"));
+
+    const otherButton = screen.getByText("other");
+
+    await user.hover(closeButton);
+
+    await user.hover(otherButton);
+
+    expect(screen.queryByText("Got it")).toBeInTheDocument();
+  });
 });
