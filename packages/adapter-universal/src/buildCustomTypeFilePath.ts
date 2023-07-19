@@ -1,22 +1,16 @@
-import { SliceMachineHelpers } from "@slicemachine/plugin-kit";
 import * as path from "node:path";
 
-import { buildCustomTypeDirectoryPath } from "./buildCustomTypeDirectoryPath";
+import {
+	buildCustomTypeDirectoryPath,
+	BuildCustomTypeDirectoryPathArgs,
+} from "./buildCustomTypeDirectoryPath";
 
 export type BuildCustomTypeFilePathArgs = {
-	customTypeID: string;
 	filename: string;
-	helpers: SliceMachineHelpers;
-};
+} & BuildCustomTypeDirectoryPathArgs;
 
 export const buildCustomTypeFilePath = (
 	args: BuildCustomTypeFilePathArgs,
 ): string => {
-	return path.join(
-		buildCustomTypeDirectoryPath({
-			customTypeID: args.customTypeID,
-			helpers: args.helpers,
-		}),
-		args.filename,
-	);
+	return path.join(buildCustomTypeDirectoryPath(args), args.filename);
 };

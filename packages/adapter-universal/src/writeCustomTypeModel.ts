@@ -1,16 +1,16 @@
-import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
-import { MODEL_FILENAME } from "./constants";
+import { CUSTOM_TYPE_MODEL_FILENAME } from "./constants";
 import {
 	writeCustomTypeFile,
 	WriteCustomTypeFileArgs,
 } from "./writeCustomTypeFile";
 
-export type WriteCustomTypeModelArgs = Pick<
+export type WriteCustomTypeModelArgs = Omit<
 	WriteCustomTypeFileArgs,
-	"customTypeID" | "format" | "helpers" | "actions"
+	"id" | "filename" | "contents"
 > & {
-	model: SharedSlice;
+	model: CustomType;
 };
 
 /**
@@ -23,11 +23,9 @@ export async function writeCustomTypeModel(
 	args: WriteCustomTypeModelArgs,
 ): Promise<string> {
 	return await writeCustomTypeFile({
-		filename: MODEL_FILENAME,
+		...args,
+		id: args.model.id,
+		filename: CUSTOM_TYPE_MODEL_FILENAME,
 		contents: JSON.stringify(args.model, null, 2),
-		format: args.format,
-		customTypeID: args.customTypeID,
-		actions: args.actions,
-		helpers: args.helpers,
 	});
 }

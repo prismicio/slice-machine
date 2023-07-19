@@ -1,25 +1,29 @@
-import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { SliceMachineHelpers } from "@slicemachine/plugin-kit";
 import * as path from "node:path";
 
 import { pascalCase } from "./lib/pascalCase";
+import {
+	resolveSliceModel,
+	ResolveSliceModelArgs,
+} from "./lib/resolveSliceModel";
 
-import { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
+import {
+	buildSliceLibraryDirectoryPath,
+	BuildSliceLibraryDirectoryPathArgs,
+} from "./buildSliceLibraryDirectoryPath";
 
-export type BuildSliceDirectoryPathArgs = {
-	libraryID: string;
-	model: SharedSlice;
-	helpers: SliceMachineHelpers;
-};
+export type BuildSliceDirectoryPathArgs = BuildSliceLibraryDirectoryPathArgs &
+	ResolveSliceModelArgs;
 
-export const buildSliceDirectoryPath = (
+export async function buildSliceDirectoryPath(
 	args: BuildSliceDirectoryPathArgs,
-): string => {
+): Promise<string> {
+	const model = await resolveSliceModel(args);
+
 	return path.join(
 		buildSliceLibraryDirectoryPath({
 			libraryID: args.libraryID,
 			helpers: args.helpers,
 		}),
-		pascalCase(args.model.name),
+		pascalCase(model.name),
 	);
-};
+}

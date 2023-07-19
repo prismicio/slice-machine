@@ -1,3 +1,8 @@
+import { plugin } from "./plugin";
+export default plugin;
+
+export type { PluginOptions } from "./types";
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Project helpers
@@ -5,6 +10,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 export { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
+
+export { upsertGlobalTypeScriptTypes } from "./upsertGlobalTypeScriptTypes";
+export type { UpsertGlobalTypeScriptTypesArgs } from "./upsertGlobalTypeScriptTypes";
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -23,6 +31,12 @@ export type { BuildSliceLibraryDirectoryPathArgs } from "./buildSliceLibraryDire
 
 export { writeSliceFile } from "./writeSliceFile";
 export type { WriteSliceFileArgs } from "./writeSliceFile";
+
+export { writeSliceModel } from "./writeSliceModel";
+export type { WriteSliceModelArgs } from "./writeSliceModel";
+
+export { readSliceFile } from "./readSliceFile";
+export type { ReadSliceFileArgs } from "./readSliceFile";
 
 export { readSliceModel } from "./readSliceModel";
 export type {
@@ -54,8 +68,14 @@ export type { WriteCustomTypeFileArgs } from "./writeCustomTypeFile";
 export { writeCustomTypeModel } from "./writeCustomTypeModel";
 export type { WriteCustomTypeModelArgs } from "./writeCustomTypeModel";
 
+export { readCustomTypeFile } from "./readCustomTypeFile";
+export type { ReadCustomTypeFileArgs } from "./readCustomTypeFile";
+
 export { readCustomTypeModel } from "./readCustomTypeModel";
 export type {
 	ReadCustomTypeModelArgs,
 	ReadCustomTypeModelReturnType,
 } from "./readCustomTypeModel";
+
+// export { deleteAllCustomTypeFiles } from "./deleteAllCustomTypeFiles";
+// export type { DeleteAllCustomTypeFilesArgs } from "./deleteAllCustomTypeFiles";

@@ -12,8 +12,6 @@ import {
 import { generateTypes, GenerateTypesConfig } from "prismic-ts-codegen";
 import prettier from "prettier";
 
-import adapter from "../../src";
-
 const resolveModel = <TModel extends CustomType | SharedSlice>(
 	ctx: TestContext,
 	model: TModel | ((ctx: TestContext) => TModel),
@@ -35,14 +33,14 @@ const resolveTypesConfigModels = (
 	}
 };
 
-type ExpectGlobalContentTypesArgs = {
+type ExpectGlobalTypeScriptTypesArgs = {
 	generateTypesConfig?: GenerateTypesConfig;
 	format?: boolean;
 };
 
-export const expectGlobalContentTypes = async (
+export const expectGlobalTypeScriptTypes = async (
 	ctx: TestContext,
-	args: ExpectGlobalContentTypesArgs = {},
+	args: ExpectGlobalTypeScriptTypesArgs = {},
 ): Promise<void> => {
 	const contents = await fs.readFile(
 		path.join(ctx.project.root, "prismicio-types.d.ts"),
@@ -68,7 +66,7 @@ export const expectGlobalContentTypes = async (
 	}
 };
 
-type TestGlobalContentTypesArgs<TModel extends CustomType | SharedSlice> = {
+type TestGlobalTypeScriptTypesArgs<TModel extends CustomType | SharedSlice> = {
 	/**
 	 * The Custom Type or Shared Slice model used throughout the test.
 	 */
@@ -97,8 +95,10 @@ type TestGlobalContentTypesArgs<TModel extends CustomType | SharedSlice> = {
 	generateTypesConfig?: Partial<GenerateTypesConfig>;
 };
 
-export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
-	args: TestGlobalContentTypesArgs<TModel>,
+export const testGlobalTypeScriptTypes = <
+	TModel extends CustomType | SharedSlice,
+>(
+	args: TestGlobalTypeScriptTypesArgs<TModel>,
 ): void => {
 	it.concurrent(
 		"global types file contains TypeScript types for the model",
@@ -111,7 +111,7 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 				pluginRunner: ctx.pluginRunner,
 			});
 
-			await expectGlobalContentTypes(ctx, {
+			await expectGlobalTypeScriptTypes(ctx, {
 				generateTypesConfig: {
 					...resolveTypesConfigModels(model),
 					...args.generateTypesConfig,
@@ -140,7 +140,7 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 				pluginRunner,
 			});
 
-			await expectGlobalContentTypes(ctx, {
+			await expectGlobalTypeScriptTypes(ctx, {
 				generateTypesConfig: {
 					...resolveTypesConfigModels(model),
 					...args.generateTypesConfig,
@@ -161,7 +161,7 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 				pluginRunner: ctx.pluginRunner,
 			});
 
-			await expectGlobalContentTypes(ctx, {
+			await expectGlobalTypeScriptTypes(ctx, {
 				generateTypesConfig: {
 					...resolveTypesConfigModels(model),
 					...args.generateTypesConfig,
@@ -197,7 +197,7 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 				pluginRunner: ctx.pluginRunner,
 			});
 
-			await expectGlobalContentTypes(ctx, {
+			await expectGlobalTypeScriptTypes(ctx, {
 				generateTypesConfig: {
 					...resolveTypesConfigModels(model),
 					...args.generateTypesConfig,
@@ -232,7 +232,7 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 				pluginRunner: ctx.pluginRunner,
 			});
 
-			await expectGlobalContentTypes(ctx, {
+			await expectGlobalTypeScriptTypes(ctx, {
 				generateTypesConfig: {
 					...resolveTypesConfigModels(model),
 					...args.generateTypesConfig,

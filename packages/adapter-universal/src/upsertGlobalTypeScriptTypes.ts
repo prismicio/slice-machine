@@ -1,22 +1,20 @@
-import type {
-	SliceMachineActions,
-	SliceMachineHelpers,
-} from "@slicemachine/plugin-kit";
+import type { SliceMachineActions } from "@slicemachine/plugin-kit";
 import { detectTypesProvider, generateTypes } from "prismic-ts-codegen";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
 
-import { NON_EDITABLE_FILE_BANNER } from "./constants";
+import { writeFile, WriteFileArgs } from "./lib/writeFile";
+
+import {
+	GLOBAL_TYPESCRIPT_TYPES_FILENAME,
+	NON_EDITABLE_FILE_BANNER,
+} from "./constants";
 
 /**
  * Arguments for `upsertGlobalContentTypes()`.
  */
-type UpsertGlobalTypeScriptTypesArgs = {
+export type UpsertGlobalTypeScriptTypesArgs = {
 	filePath?: string;
-	format?: boolean;
 	actions: SliceMachineActions;
-	helpers: SliceMachineHelpers;
-};
+} & Omit<WriteFileArgs, "filePath" | "contents">;
 
 /**
  * Creates a globally accessible TypeScript file containing types representing
@@ -28,10 +26,6 @@ export const upsertGlobalTypeScriptTypes = async (
 	args: UpsertGlobalTypeScriptTypesArgs,
 ): Promise<string> => {
 	const project = await args.helpers.getProject();
-
-	const filePath = args.helpers.joinPathFromRoot(
-		args.filePath || "prismicio-types.d.ts",
-	);
 
 	const [customTypeModelDescriptors, sharedSliceModelDescriptors] =
 		await Promise.all([
@@ -62,12 +56,9 @@ export const upsertGlobalTypeScriptTypes = async (
 
 	contents = `${NON_EDITABLE_FILE_BANNER}\n\n${contents}`;
 
-	if (args.format) {
-		contents = await args.helpers.format(contents, filePath);
-	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
-
-	return filePath;
+	return await writeFile({
+		filePath: GLOBAL_TYPESCRIPT_TYPES_FILENAME,
+		...args,
+		contents,
+	});
 };

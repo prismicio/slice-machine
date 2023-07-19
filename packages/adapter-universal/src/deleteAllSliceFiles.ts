@@ -1,23 +1,16 @@
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { SliceMachineHelpers } from "@slicemachine/plugin-kit";
 import * as fs from "node:fs/promises";
 
-import { buildSliceDirectoryPath } from "./buildSliceDirectoryPath";
+import {
+	buildSliceDirectoryPath,
+	BuildSliceDirectoryPathArgs,
+} from "./buildSliceDirectoryPath";
 
-export type DeleteAllSliceFilesArgs = {
-	libraryID: string;
-	model: SharedSlice;
-	helpers: SliceMachineHelpers;
-};
+export type DeleteAllSliceFilesArgs = BuildSliceDirectoryPathArgs;
 
 export async function deleteAllSliceFiles(
 	args: DeleteAllSliceFilesArgs,
 ): Promise<string> {
-	const dir = buildSliceDirectoryPath({
-		libraryID: args.libraryID,
-		model: args.model,
-		helpers: args.helpers,
-	});
+	const dir = await buildSliceDirectoryPath(args);
 
 	await fs.rm(dir, { recursive: true });
 

@@ -1,4 +1,4 @@
-import { beforeEach } from "vitest";
+import { vi, beforeEach } from "vitest";
 import {
 	createSliceMachinePluginRunner,
 	SliceMachineConfig,
@@ -10,17 +10,13 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 
-import adapter, { PluginOptions } from "../src";
-import * as pkg from "../package.json";
+import { createMemoryAdapter } from "./__testutils__/createMemoryTestAdapter";
 
 declare module "vitest" {
 	export interface TestContext {
 		project: SliceMachineProject & {
 			config: {
-				adapter: {
-					resolve: string;
-					options: PluginOptions;
-				};
+				libraries: string[];
 			};
 		};
 		pluginRunner: SliceMachinePluginRunner;
@@ -29,38 +25,41 @@ declare module "vitest" {
 }
 
 beforeEach(async (ctx) => {
-	const tmpRoot = await fs.mkdtemp(
-		path.join(os.tmpdir(), "@slicemachine__adapter-next___"),
+	vi.clearAllMocks();
+
+	await fs.mkdir(os.tmpdir(), { recursive: true });
+	const root = await fs.mkdtemp(
+		path.join(os.tmpdir(), `@slicemachine__adapter-next___`),
 	);
+	await fs.writeFile(path.join(root, "package.json"), JSON.stringify({}));
+
+	const adapter = createMemoryAdapter();
 
 	const config = {
-		adapter: {
-			resolve: pkg.name,
-			options: {},
-		},
+		adapter: adapter.meta.name,
 		libraries: ["./slices"],
 		repositoryName: "qwerty",
 		apiEndpoint: "https://qwerty.cdn.prismic.io/api/v2",
 	} satisfies SliceMachineConfig;
 
 	await fs.writeFile(
-		path.join(tmpRoot, "slicemachine.config.json"),
+		path.join(root, "slicemachine.config.json"),
 		JSON.stringify(config),
 	);
 
 	ctx.project = {
-		root: tmpRoot,
+		root,
 		config,
 	};
 
 	ctx.pluginRunner = createSliceMachinePluginRunner({
 		project: ctx.project,
 		nativePlugins: {
-			[pkg.name]: adapter,
+			[adapter.meta.name]: adapter,
 		},
 	});
 
-	ctx.mock = createMockFactory({ seed: ctx.meta.name });
+	ctx.mock = createMockFactory({ seed: ctx.task.name });
 
 	await ctx.pluginRunner.init();
 
