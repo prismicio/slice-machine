@@ -7,6 +7,13 @@ export default defineConfig({
 			internalDependencies: ["fp-ts", "node-fetch"],
 		}),
 	],
+	build: {
+		rollupOptions: {
+			output: {
+				exports: "named",
+			},
+		},
+	},
 	test: {
 		testTimeout: 15_000,
 		coverage: {
