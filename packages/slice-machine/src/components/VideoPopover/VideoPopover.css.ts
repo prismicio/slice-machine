@@ -93,7 +93,11 @@ export const videoButton = style([
 
 export const closeButton = style([
   block,
-  sprinkles({ color: colors.purple12 }),
+  sprinkles({
+    color: colors.purple12,
+    padding: 6,
+    display: "flex",
+  }),
   {
     background: "none",
     border: "none",
