@@ -7560,6 +7560,7 @@ __metadata:
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
+    "@slicemachine/adapter-universal": "workspace:^"
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
     "@types/fs-extra": 11.0.1
@@ -7691,7 +7692,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@slicemachine/adapter-universal@workspace:packages/adapter-universal":
+"@slicemachine/adapter-universal@workspace:^, @slicemachine/adapter-universal@workspace:packages/adapter-universal":
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-universal@workspace:packages/adapter-universal"
   dependencies:

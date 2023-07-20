@@ -5,12 +5,15 @@ import type {
 	ProjectInitHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
+import {
+	checkHasProjectFile,
+	writeProjectFile,
+} from "@slicemachine/adapter-universal";
 import { source } from "common-tags";
 
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
-import { checkPathExists } from "../lib/checkPathExists";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
@@ -46,12 +49,13 @@ const createPrismicIOFile = async ({
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = `prismicio.${extension}`;
-	const filePath = hasSrcDirectory
-		? helpers.joinPathFromRoot("src", filename)
-		: helpers.joinPathFromRoot(filename);
+	const filename = path.join(
+		...[hasSrcDirectory ? "src" : undefined, `prismicio.${extension}`].filter(
+			(segment): segment is NonNullable<typeof segment> => Boolean(segment),
+		),
+	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
@@ -229,11 +233,12 @@ const createPrismicIOFile = async ({
 		`;
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
@@ -246,7 +251,7 @@ const createSliceSimulatorPage = async ({
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options, jsx: true });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			hasAppRouter
@@ -257,11 +262,9 @@ const createSliceSimulatorPage = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
 
 	let contents = source`
 		"use client"
@@ -280,11 +283,12 @@ const createSliceSimulatorPage = async ({
 		}
 	`;
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 const createPreviewRoute = async ({
@@ -299,7 +303,7 @@ const createPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			hasAppRouter
@@ -310,7 +314,7 @@ const createPreviewRoute = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
@@ -382,12 +386,12 @@ const createPreviewRoute = async ({
 		}
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 const createExitPreviewRoute = async ({
@@ -402,7 +406,7 @@ const createExitPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			hasAppRouter
@@ -413,14 +417,14 @@ const createExitPreviewRoute = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
 	let contents: string;
 
 	if (hasAppRouter) {
-		contents = `
+		contents = source`
 			import { exitPreview } from "@prismicio/next";
 
 			export async function GET() {
@@ -448,12 +452,12 @@ const createExitPreviewRoute = async ({
 		}
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 const modifySliceMachineConfig = async ({
@@ -492,18 +496,12 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	const filePath = helpers.joinPathFromRoot("slicemachine.config.json");
-
-	let contents = JSON.stringify(project.config);
-
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.writeFile(
-		helpers.joinPathFromRoot("slicemachine.config.json"),
-		contents,
-	);
+	await writeProjectFile({
+		filename: "slicemachine.config.json",
+		contents: JSON.stringify(project.config, null, 2),
+		format: options.format,
+		helpers,
+	});
 };
 
 const createRevalidateRoute = async ({
@@ -519,7 +517,7 @@ const createRevalidateRoute = async ({
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = helpers.joinPathFromRoot(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			`app/api/revalidate/route.${extension}`,
@@ -528,7 +526,7 @@ const createRevalidateRoute = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
@@ -543,12 +541,12 @@ const createRevalidateRoute = async ({
 		}
 	`;
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 export const projectInit: ProjectInitHook<PluginOptions> = async (

@@ -1,22 +1,18 @@
 import type { CustomTypeAssetReadHook } from "@slicemachine/plugin-kit";
-import * as fs from "node:fs/promises";
-
-import { buildCustomTypeAssetPath } from "../lib/buildCustomTypeAssetPath";
+import { readCustomTypeFile } from "@slicemachine/adapter-universal";
 
 import type { PluginOptions } from "../types";
 
 export const customTypeAssetRead: CustomTypeAssetReadHook<
 	PluginOptions
 > = async (data, context) => {
-	const filePath = buildCustomTypeAssetPath({
+	const customTypeFile = await readCustomTypeFile({
 		customTypeID: data.customTypeID,
-		assetID: data.assetID,
+		filename: data.assetID,
 		helpers: context.helpers,
 	});
 
-	const assetData = await fs.readFile(filePath);
-
 	return {
-		data: assetData,
+		data: customTypeFile,
 	};
 };

@@ -1,8 +1,9 @@
+import { checkHasProjectFile } from "@slicemachine/adapter-universal";
 import { SliceMachineContext } from "@slicemachine/plugin-kit";
+import * as path from "node:path";
 
 import { PluginOptions } from "../types";
 import { checkHasSrcDirectory } from "./checkHasSrcDirectory";
-import { checkPathExists } from "./checkPathExists";
 
 type CheckHasAppRouterArgs = Pick<
 	SliceMachineContext<PluginOptions>,
@@ -14,9 +15,8 @@ export async function checkHasAppRouter(
 ): Promise<boolean> {
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers: args.helpers });
 
-	return await checkPathExists(
-		hasSrcDirectory
-			? args.helpers.joinPathFromRoot("src", "app")
-			: args.helpers.joinPathFromRoot("app"),
-	);
+	return await checkHasProjectFile({
+		filename: hasSrcDirectory ? path.join("src", "app") : path.join("app"),
+		helpers: args.helpers,
+	});
 }

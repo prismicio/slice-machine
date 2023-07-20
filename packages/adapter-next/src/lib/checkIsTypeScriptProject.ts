@@ -1,7 +1,7 @@
 import { SliceMachineContext } from "@slicemachine/plugin-kit";
+import { checkIsTypeScriptProject as baseCheckIsTypeScriptProject } from "@slicemachine/adapter-universal";
 
 import { PluginOptions } from "../types";
-import { checkPathExists } from "./checkPathExists";
 
 type CheckIsTypeScriptProjectArgs = {
 	helpers: SliceMachineContext<PluginOptions>["helpers"];
@@ -11,7 +11,8 @@ type CheckIsTypeScriptProjectArgs = {
 export const checkIsTypeScriptProject = async (
 	args: CheckIsTypeScriptProjectArgs,
 ): Promise<boolean> => {
-	const tsConfigPath = args.helpers.joinPathFromRoot("tsconfig.json");
-
-	return args.options.typescript ?? (await checkPathExists(tsConfigPath));
+	return (
+		args.options.typescript ??
+		baseCheckIsTypeScriptProject({ helpers: args.helpers })
+	);
 };

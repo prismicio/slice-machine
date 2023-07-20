@@ -1,24 +1,14 @@
 import type { CustomTypeReadHook } from "@slicemachine/plugin-kit";
-import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import * as path from "node:path";
-
-import { buildCustomTypeDirectoryPath } from "../lib/buildCustomTypeDirectoryPath";
-import { readJSONFile } from "../lib/readJSONFile";
+import { readCustomTypeModel } from "@slicemachine/adapter-universal";
 
 import type { PluginOptions } from "../types";
 
 export const customTypeRead: CustomTypeReadHook<PluginOptions> = async (
 	data,
-	{ helpers },
+	context,
 ) => {
-	const filePath = path.join(
-		buildCustomTypeDirectoryPath({ customTypeID: data.id, helpers }),
-		"index.json",
-	);
-
-	const model = await readJSONFile<CustomType>(filePath);
-
-	return {
-		model,
-	};
+	return readCustomTypeModel({
+		customTypeID: data.id,
+		helpers: context.helpers,
+	});
 };
