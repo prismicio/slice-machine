@@ -164,24 +164,19 @@ function useOnClickOutside<T extends HTMLElement = HTMLElement>(
   handler: () => void
 ) {
   useEffect(() => {
-    function checkWhereWasClicked(event: MouseEvent) {
-     if (
+    function handleClicksOutside(event: MouseEvent) {
+      if (
         event.target instanceof Node &&
         ref.current?.contains(event.target) === false
       ) {
         handler();
       }
-        ref.current !== null &&
-        event.target !== null &&
-        ref.current.contains(event.target as Node) === false
-      ) {
-        handler();
-      }
     }
 
-    document.addEventListener("mousedown", checkWhereWasClicked);
+    if (ref.current !== null) {
+      document.addEventListener("mousedown", handleClicksOutside);
+    }
 
-    return () =>
-      document.removeEventListener("mousedown", checkWhereWasClicked);
+    return () => document.removeEventListener("mousedown", handleClicksOutside);
   }, [ref, handler]);
 }
