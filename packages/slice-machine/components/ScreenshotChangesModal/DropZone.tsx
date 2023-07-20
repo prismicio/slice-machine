@@ -47,7 +47,9 @@ const DropZone: React.FC<DropZoneProps> = ({
     event.preventDefault();
     setIsDragActive(false);
     const maybeFile = event.dataTransfer.files?.[0];
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (maybeFile) {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (imageTypes.find((t) => `image/${t}` === maybeFile.type)) {
         if (maybeFile.size > 128000000) {
           return openToaster(

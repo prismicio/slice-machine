@@ -11,6 +11,7 @@ import { Text, Box, Button, Label, Input, Flex } from "theme-ui";
 
 const Error = ({ msg }: { msg?: string }) => (
   <Text as="span" sx={{ fontSize: 12, color: "error", mt: "5px", ml: 2 }}>
+    {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing */}
     {msg || "Error!"}
   </Text>
 );
@@ -40,16 +41,19 @@ const VariationModal: React.FunctionComponent<{
     name?: string;
     origin: { value: string };
   }) {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const idError = !(id && id.length) ? { id: "Required!" } : null;
     const existingIdError = variations.find((v) => v.id === id)
       ? { id: "This id already exists!" }
       : null;
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const nameError = !(name && name.length) ? { name: "Required!" } : null;
     const originError = !(
       origin.value.length && variations.find((v) => v.id === origin.value)
     )
       ? { id: "Yuu must select an existing variation!" }
       : null;
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const invalidIdError = id &&
       id.length &&
       !/^[A-Za-z0-9]+([A-Za-z0-9]+)*$/.exec(id) && {
@@ -95,6 +99,7 @@ const VariationModal: React.FunctionComponent<{
 
   useEffect(() => {
     reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialVariation, isOpen]);
 
   // eslint-disable-next-line @typescript-eslint/require-await

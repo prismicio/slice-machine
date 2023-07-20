@@ -52,6 +52,7 @@ const VariationScreenshot: React.FC<{
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
   const maybeScreenshot = slice.screenshots[variationID];
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const ViewRenderer = maybeScreenshot
     ? viewRenderer[ScreenshotView.Default]
     : viewRenderer[ScreenshotView.EmptyState];
@@ -84,6 +85,7 @@ const VariationScreenshot: React.FC<{
             label={"Capture screenshot from Slice Simulator"}
           />
         ) : null}
+        {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
         {maybeScreenshot ? (
           <FileInputRenderer {...fileInputProps} isDragActive={false}>
             <>

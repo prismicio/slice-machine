@@ -78,6 +78,7 @@ const WidgetForm = ({
             name="origin"
             options={options}
             onChange={(v) => {
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               if (v) {
                 void setFieldValue(
                   "config.customtypes",

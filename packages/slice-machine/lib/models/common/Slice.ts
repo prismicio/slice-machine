@@ -76,12 +76,14 @@ export const Variations = {
           variation.imageUrl === IMAGE_PLACEHOLDER_URL
             ? undefined
             : variation.imageUrl,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         primary: Object.entries(variation.primary || {}).map(
           ([key, value]) => ({
             key,
             value,
           })
         ),
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         items: Object.entries(variation.items || {}).map(([key, value]) => ({
           key,
           value,

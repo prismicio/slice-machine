@@ -56,6 +56,7 @@ const FieldZone = ({
                 } = item;
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
                 const widget = findWidgetByConfigOrType(Widgets, config, type);
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 if (!widget) {
                   return (
                     <Li>
@@ -92,6 +93,7 @@ const FieldZone = ({
                   isRepeatableCustomType,
                 };
 
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 if (widget.CustomListItem) {
                   const { CustomListItem } = widget;
                   return <CustomListItem {...props} />;
@@ -108,7 +110,7 @@ const FieldZone = ({
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     renderHintBase={renderHintBase}
                     Widgets={Widgets}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
                     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
                   />
                 );

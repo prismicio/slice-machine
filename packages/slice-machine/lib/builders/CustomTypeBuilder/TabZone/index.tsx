@@ -55,6 +55,7 @@ const TabZone: React.FC<TabZoneProps> = ({
     poolOfFields: selectCurrentPoolOfFields(store),
   }));
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!poolOfFields) {
     return null;
   }

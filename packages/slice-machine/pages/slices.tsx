@@ -60,6 +60,7 @@ const SlicesIndex: React.FunctionComponent = () => {
     slices: frontendSlices,
   });
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const slices = (libraries || []).map((l) => l.components).flat();
   const sliceCount = slices.length;
 
@@ -110,6 +111,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 : []
             }
           />
+          {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
           {sortedLibraries && (
             <Flex
               sx={{

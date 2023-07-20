@@ -23,7 +23,7 @@ export const getDraggedDomPosition = (event) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .slice(0, sourceIndex)
       .reduce((total, curr) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
         const style = curr.currentStyle || window.getComputedStyle(curr);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         const marginBottom = parseFloat(style.marginBottom);

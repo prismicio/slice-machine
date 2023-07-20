@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
   if (!data.isOpen) {
     return null;
   }
@@ -65,11 +65,11 @@ const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 const { Meta, TYPE_NAME, CUSTOM_NAME } = widget;
                 return (
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
                   <Col key={CUSTOM_NAME || TYPE_NAME}>
                     <FieldTypeCard
                       {...Meta}
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/strict-boolean-expressions
                       onSelect={() => onSelect(CUSTOM_NAME || TYPE_NAME)}
                     />
                   </Col>

@@ -25,6 +25,7 @@ const useSMTracker = () => {
 
     // For initial loading
     void trackPageView();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // For handling page change

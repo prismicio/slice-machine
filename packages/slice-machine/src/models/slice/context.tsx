@@ -40,6 +40,7 @@ export const SliceHandler: FC<Props> = ({ children }) => {
   const variation = (() => {
     if (!slice) {
       return undefined;
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     } else if (variationParam) {
       const maybeVariation = ComponentUI.variation(slice, variationParam);
       if (!maybeVariation) return ComponentUI.variation(slice);
@@ -59,6 +60,7 @@ export const SliceHandler: FC<Props> = ({ children }) => {
   //     void router.replace(`/${lib.name}/${slice.model.name}/${variation.id}`);
   // }, [lib, slice, variation, variationParam]);
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!urlLib || !urlSliceName) {
     return <>{children}</>;
   }

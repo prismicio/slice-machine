@@ -15,9 +15,12 @@ export const Variation = {
     start: number,
     end: number
   ): VariationSM {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const widgets = variation[widgetsArea] || [];
     const reorderedWidget: { key: string; value: NestableWidget } | undefined =
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       widgets && widgets[start];
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!reorderedWidget)
       throw new Error(
         `Unable to reorder the widget at index ${start}. the list of widgets contains only ${widgets.length} elements.`
@@ -47,6 +50,7 @@ export const Variation = {
     newKey: string,
     newValue: NestableWidget
   ): VariationSM {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const widgets = variation[widgetsArea] || [];
 
     return {
