@@ -126,6 +126,7 @@ export class SliceMachineInitProcess {
 			if (this.options.repository) {
 				await this.useRepositoryFlag();
 			} else {
+				await this.loginAndFetchUserData();
 				await this.selectRepository();
 			}
 
@@ -135,6 +136,7 @@ export class SliceMachineInitProcess {
 			);
 
 			if (!this.context.repository.exists) {
+				await this.loginAndFetchUserData();
 				await this.createNewRepository();
 			}
 
@@ -349,18 +351,99 @@ export class SliceMachineInitProcess {
 		]);
 	}
 
-	protected loginIfNecessary(): Promise<void> {
-		return listrRun([
-			{
-				title: "",
-				task: async (_) => {
-					const isLoggedIn = await this.manager.user.checkIsLoggedIn();
-					if (!isLoggedIn || this.context.userProfile === undefined) {
-						await this.loginAndFetchUserData();
-					}
+	protected async loginOutsideOfListr(): Promise<void> {
+		const isLoggedIn = await this.manager.user.checkIsLoggedIn();
+		if (!isLoggedIn) {
+			await new Promise((resolve) => {
+				const initialRawMode = !!process.stdin.isRaw;
+				process.stdin.setRawMode?.(true);
+				process.stdin.once("data", (data: Buffer) => {
+					process.stdin.setRawMode?.(initialRawMode);
+					process.stdin.pause();
+					resolve(data.toString("utf-8"));
+				});
+			});
+
+			const { port, url } = await this.manager.user.getLoginSessionInfo();
+			await this.manager.user.nodeLoginSession({
+				port,
+				onListenCallback() {
+					open(url);
 				},
-			},
-		]);
+			});
+		}
+
+		this.context.userProfile = await this.manager.user.getProfile();
+
+		await this.manager.telemetry.identify({
+			userID: this.context.userProfile.shortId,
+			intercomHash: this.context.userProfile.intercomHash,
+		});
+		await this.manager.telemetry.track({
+			event: "command:init:identify",
+			repository: this.options.repository,
+		});
+
+		this.context.userRepositories =
+			await this.manager.prismicRepository.readAll();
+	}
+
+	protected async fetchUserProfile(): Promise<void> {
+		this.context.userProfile = await this.manager.user.getProfile();
+
+		await this.manager.telemetry.identify({
+			userID: this.context.userProfile.shortId,
+			intercomHash: this.context.userProfile.intercomHash,
+		});
+		await this.manager.telemetry.track({
+			event: "command:init:identify",
+			repository: this.options.repository,
+		});
+	}
+
+	protected async fetchUserRepositories(): Promise<void> {
+		this.context.userRepositories =
+			await this.manager.prismicRepository.readAll();
+	}
+
+	protected validateWriteAccess(): void {
+		assertExists(
+			this.context.repository,
+			"Repository selection must be available through context to proceed",
+		);
+		assertExists(
+			this.context.userRepositories,
+			"User repositories must be available through context to validate write access",
+		);
+		const { domain } = this.context.repository;
+		const maybeRepository = this.context.userRepositories.find(
+			(repository) => repository.domain === domain,
+		);
+
+		if (maybeRepository) {
+			if (!this.manager.prismicRepository.hasWriteAccess(maybeRepository)) {
+				throw new Error(
+					`Cannot run init command with repository ${chalk.cyan(
+						maybeRepository.domain,
+					)}: you are not a developer or admin of this repository`,
+				);
+			}
+		} else {
+			throw new Error(
+				`Cannot validate write access: repository ${chalk.cyan(
+					domain,
+				)} does not exist`,
+			);
+		}
+	}
+
+	protected async loginIfNecessary(): Promise<void> {
+		const isLoggedIn = await this.manager.user.checkIsLoggedIn();
+		if (!isLoggedIn) {
+			return await this.loginAndFetchUserData();
+		}
+		await this.fetchUserRepositories();
+		this.validateWriteAccess();
 	}
 
 	protected loginAndFetchUserData(): Promise<void> {
@@ -401,18 +484,7 @@ export class SliceMachineInitProcess {
 							{
 								title: "Fetching user profile...",
 								task: async (_, task) => {
-									this.context.userProfile =
-										await this.manager.user.getProfile();
-
-									await this.manager.telemetry.identify({
-										userID: this.context.userProfile.shortId,
-										intercomHash: this.context.userProfile.intercomHash,
-									});
-									await this.manager.telemetry.track({
-										event: "command:init:identify",
-										repository: this.options.repository,
-									});
-
+									await this.fetchUserProfile();
 									parentTask.title = `Logged in as ${chalk.cyan(
 										this.context.userProfile?.email,
 									)}`;
@@ -422,9 +494,7 @@ export class SliceMachineInitProcess {
 							{
 								title: "Fetching user repositories...",
 								task: async (_, task) => {
-									this.context.userRepositories =
-										await this.manager.prismicRepository.readAll();
-
+									await this.fetchUserRepositories();
 									task.title = "Fetched user repositories";
 								},
 							},
@@ -434,37 +504,6 @@ export class SliceMachineInitProcess {
 				},
 			},
 		]);
-	}
-
-	protected validateWriteAccess(): void {
-		assertExists(
-			this.context.repository,
-			"Repository selection must be available through context to proceed",
-		);
-		assertExists(
-			this.context.userRepositories,
-			"User repositories must be available through context to run `useRepositoryFlag`",
-		);
-		const { domain } = this.context.repository;
-		const maybeRepository = this.context.userRepositories.find(
-			(repository) => repository.domain === domain,
-		);
-
-		if (maybeRepository) {
-			if (!this.manager.prismicRepository.hasWriteAccess(maybeRepository)) {
-				throw new Error(
-					`Cannot run init command with repository ${chalk.cyan(
-						maybeRepository.domain,
-					)}: you are not a developer or admin of this repository`,
-				);
-			}
-		} else {
-			throw new Error(
-				`Cannot validate write access: repository ${chalk.cyan(
-					domain,
-				)} does not exist`,
-			);
-		}
 	}
 
 	protected useRepositoryFlag(): Promise<void> {
@@ -506,11 +545,11 @@ export class SliceMachineInitProcess {
 							exists: true,
 						};
 					} else {
-						await this.loginAndFetchUserData();
-						assertExists(
-							this.context.userRepositories,
-							"User repositories must be available through context to run `useRepositoryFlag`",
-						);
+						// await this.loginAndFetchUserData();
+						// assertExists(
+						// 	this.context.userRepositories,
+						// 	"User repositories must be available through context to run `useRepositoryFlag`",
+						// );
 						this.context.repository = {
 							domain,
 							exists: false,
@@ -522,7 +561,6 @@ export class SliceMachineInitProcess {
 	}
 
 	protected async selectRepository(): Promise<void> {
-		await this.loginIfNecessary();
 		assertExists(
 			this.context.userRepositories,
 			"User repositories must be available through context to run `selectRepository`",
@@ -533,7 +571,7 @@ export class SliceMachineInitProcess {
 		}
 
 		if (!this.context.repository) {
-			await this.selectNewRepository();
+			await this.selectAndCreateNewRepository();
 		}
 
 		assertExists(
@@ -592,7 +630,7 @@ export class SliceMachineInitProcess {
 		}
 	}
 
-	protected async selectNewRepository(): Promise<void> {
+	protected async selectAndCreateNewRepository(): Promise<void> {
 		let suggestedName = "";
 
 		// TODO: Improve concurrency
@@ -717,6 +755,8 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 			domain,
 			exists: false,
 		};
+
+		await this.createNewRepository();
 	}
 
 	protected createNewRepository(): Promise<void> {
@@ -731,7 +771,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					this.context.repository.domain,
 				)} ...`,
 				task: async (_, task) => {
-					await this.loginIfNecessary();
 					assertExists(
 						this.context.repository,
 						"Repository selection must be available through context to run `createNewRepository`",
@@ -921,7 +960,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 
 								await this.loginIfNecessary();
-								this.validateWriteAccess();
 
 								task.title = "Pushing slices... (initializing ACL)";
 								await this.manager.screenshots.initS3ACL();
@@ -968,7 +1006,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 
 								await this.loginIfNecessary();
-								this.validateWriteAccess();
 
 								let pushed = 0;
 								task.title = `Pushing types... (0/${ids.length})`;
@@ -1011,7 +1048,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 
 								await this.loginIfNecessary();
-								this.validateWriteAccess();
 
 								const signaturePath = path.resolve(
 									documentsDirectoryPath,

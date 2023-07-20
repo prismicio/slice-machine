@@ -444,7 +444,10 @@ export class PrismicRepositoryManager extends BaseManager {
 		userAgent?: PrismicRepositoryUserAgents;
 		repository?: string;
 	}): Promise<Response> {
-		const cookies = await this.user.getAuthenticationCookies();
+		let cookies;
+		try {
+			cookies = await this.user.getAuthenticationCookies();
+		} catch {}
 
 		const extraHeaders: Record<string, string> = {};
 
@@ -461,8 +464,13 @@ export class PrismicRepositoryManager extends BaseManager {
 			body: args.body ? JSON.stringify(args.body) : undefined,
 			headers: {
 				// Some endpoints rely on the authorization header...
-				Authorization: `Bearer ${cookies["prismic-auth"]}`,
-				Cookie: serializeCookies(cookies),
+
+				...(cookies !== undefined
+					? {
+							Authorization: `Bearer ${cookies["prismic-auth"]}`,
+							Cookie: serializeCookies(cookies),
+					  }
+					: {}),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,
 			},
