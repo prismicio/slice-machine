@@ -135,13 +135,20 @@ export class SliceMachineInitProcess {
 				"Repository selection must be available through context to proceed",
 			);
 
-			if (!this.context.repository.exists) {
+			await this.finishCoreDependenciesInstallation();
+			await this.upsertSliceMachineConfigurationAndStartPluginRunner();
+
+			const isLoginRequired = await this.checkIsLoginRequired();
+			if (isLoginRequired) {
 				await this.loginAndFetchUserData();
+				if (this.context.repository.exists) {
+					this.validateWriteAccess();
+				}
+			}
+			if (!this.context.repository.exists) {
 				await this.createNewRepository();
 			}
 
-			await this.finishCoreDependenciesInstallation();
-			await this.upsertSliceMachineConfigurationAndStartPluginRunner();
 			await this.pushDataToPrismic();
 			await this.initializeProject();
 			await this.initializePlugins();
@@ -214,6 +221,31 @@ export class SliceMachineInitProcess {
 		} catch {
 			// Noop, it's only the final convenience messsage
 		}
+	}
+
+	protected async checkIsLoginRequired(): Promise<boolean> {
+		try {
+			assertExists(this.context.repository, "");
+			if (this.context.repository.exists === false) {
+				return true;
+			}
+			const [slices, ctLibrary, documentsGlob] = await Promise.all([
+				this.readAllSlices(),
+				this.manager.customTypes.readCustomTypeLibrary(),
+				this.readDocuments(),
+			]);
+			if (
+				slices.length > 0 ||
+				ctLibrary.ids.length > 0 ||
+				(documentsGlob !== undefined && documentsGlob.documents.length > 0)
+			) {
+				return true;
+			}
+		} catch (e) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected trackError = (error: unknown): Promise<void> => {
@@ -400,15 +432,6 @@ export class SliceMachineInitProcess {
 		}
 	}
 
-	protected async loginIfNecessary(): Promise<void> {
-		const isLoggedIn = await this.manager.user.checkIsLoggedIn();
-		if (!isLoggedIn) {
-			return await this.loginAndFetchUserData();
-		}
-		await this.fetchUserRepositories();
-		this.validateWriteAccess();
-	}
-
 	protected loginAndFetchUserData(): Promise<void> {
 		return listrRun([
 			{
@@ -502,17 +525,10 @@ export class SliceMachineInitProcess {
 						domain,
 					)} (flag ${chalk.cyan("repository")} used)`;
 
-					if (validation.AlreadyExists) {
-						this.context.repository = {
-							domain,
-							exists: true,
-						};
-					} else {
-						this.context.repository = {
-							domain,
-							exists: false,
-						};
-					}
+					this.context.repository = {
+						domain,
+						exists: validation.AlreadyExists ?? false,
+					};
 				},
 			},
 		]);
@@ -529,7 +545,7 @@ export class SliceMachineInitProcess {
 		}
 
 		if (!this.context.repository) {
-			await this.selectAndCreateNewRepository();
+			await this.selectNewRepository();
 		}
 
 		assertExists(
@@ -588,7 +604,7 @@ export class SliceMachineInitProcess {
 		}
 	}
 
-	protected async selectAndCreateNewRepository(): Promise<void> {
+	protected async selectNewRepository(): Promise<void> {
 		let suggestedName = "";
 
 		// TODO: Improve concurrency
@@ -713,8 +729,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 			domain,
 			exists: false,
 		};
-
-		await this.createNewRepository();
 	}
 
 	protected createNewRepository(): Promise<void> {
@@ -873,6 +887,55 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		]);
 	}
 
+	protected async readAllSlices(): Promise<
+		{ libraryID: string; sliceID: string }[]
+	> {
+		const { libraries, errors } =
+			await this.manager.slices.readAllSliceLibraries();
+
+		if (errors.length > 0) {
+			// TODO: Provide better error message.
+			throw new Error(`Failed to read slice libraries: ${errors.join(", ")}`);
+		}
+
+		const slices: { libraryID: string; sliceID: string }[] = [];
+		for (const library of libraries) {
+			if (library.sliceIDs) {
+				for (const sliceID of library.sliceIDs) {
+					slices.push({
+						libraryID: library.libraryID,
+						sliceID,
+					});
+				}
+			}
+		}
+
+		return slices;
+	}
+
+	protected async readDocuments(): Promise<{
+		signature: string;
+		documents: string[];
+		directoryPath: string;
+	} | undefined> {
+		const root = await this.manager.project.getRoot();
+		const documentsDirectoryPath = path.resolve(root, "documents");
+		try {
+			await fs.access(documentsDirectoryPath);
+		} catch {
+			return
+		}
+		const signaturePath = path.resolve(documentsDirectoryPath, "index.json");
+		const rawSignature = await fs.readFile(signaturePath, "utf-8");
+		const signature: string = JSON.parse(rawSignature).signature;
+
+		const documents = await globby("*/*.json", {
+			cwd: documentsDirectoryPath,
+		});
+
+		return { signature, documents, directoryPath: documentsDirectoryPath };
+	}
+
 	protected pushDataToPrismic(): Promise<void> {
 		return listrRun([
 			{
@@ -889,35 +952,13 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 							},
 							task: async (_, task) => {
-								const { libraries, errors } =
-									await this.manager.slices.readAllSliceLibraries();
-
-								if (errors.length > 0) {
-									// TODO: Provide better error message.
-									throw new Error(
-										`Failed to read slice libraries: ${errors.join(", ")}`,
-									);
-								}
-
-								const slices: { libraryID: string; sliceID: string }[] = [];
-								for (const library of libraries) {
-									if (library.sliceIDs) {
-										for (const sliceID of library.sliceIDs) {
-											slices.push({
-												libraryID: library.libraryID,
-												sliceID,
-											});
-										}
-									}
-								}
+								const slices = await this.readAllSlices();
 
 								if (slices.length === 0) {
 									task.skip("No slice to push");
 
 									return;
 								}
-
-								await this.loginIfNecessary();
 
 								task.title = "Pushing slices... (initializing ACL)";
 								await this.manager.screenshots.initS3ACL();
@@ -963,8 +1004,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									return;
 								}
 
-								await this.loginIfNecessary();
-
 								let pushed = 0;
 								task.title = `Pushing types... (0/${ids.length})`;
 								await Promise.all(
@@ -993,72 +1032,60 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									"Repository selection must be available through context to run `pushDataToPrismic`",
 								);
 
-								const root = await this.manager.project.getRoot();
-								const documentsDirectoryPath = path.resolve(root, "documents");
-
 								try {
-									await fs.access(documentsDirectoryPath);
+									const documentsRead =
+										await this.readDocuments();
+
+									if (documentsRead === undefined || documentsRead.documents.length === 0) {
+										parentTask.title = "Pushed data to Prismic";
+										task.skip("No document to push");
+
+										return;
+									}
+									
+									const { signature, documents, directoryPath } = documentsRead;
+
+									// TODO: Replace `unknown` with a Prismic document type.
+									// The exact format is not know at this time, hence the `unknown`.
+									const recordDocument: Record<string, unknown> = {};
+
+									await Promise.all(
+										documents.map(async (documentPath) => {
+											const filename = path.basename(documentPath, ".json");
+											const fileContent = await fs.readFile(
+												path.resolve(directoryPath, documentPath),
+												"utf-8",
+											);
+
+											try {
+												// TOOD: Validate the contents of the JSON file and skip on invalid documents.
+												const parsedContents = JSON.parse(fileContent);
+
+												recordDocument[filename] = parsedContents;
+											} catch {
+												// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+												// eslint-disable-next-line no-console
+												console.log(
+													`Skipped document due to its invalid format: ${documentPath}`,
+												);
+											}
+										}),
+									);
+
+									await this.manager.prismicRepository.pushDocuments({
+										domain: this.context.repository.domain,
+										documents: recordDocument,
+										signature,
+									});
+
+									task.title = "Pushed all documents";
+									parentTask.title = "Pushed data to Prismic";
 								} catch {
 									parentTask.title = "Pushed data to Prismic";
 									task.skip("No document to push");
 
 									return;
 								}
-
-								await this.loginIfNecessary();
-
-								const signaturePath = path.resolve(
-									documentsDirectoryPath,
-									"index.json",
-								);
-								const rawSignature = await fs.readFile(signaturePath, "utf-8");
-								const signature: string = JSON.parse(rawSignature).signature;
-
-								const documentsGlob = await globby("*/*.json", {
-									cwd: documentsDirectoryPath,
-								});
-								if (documentsGlob.length === 0) {
-									parentTask.title = "Pushed data to Prismic";
-									task.skip("No document to push");
-
-									return;
-								}
-
-								// TODO: Replace `unknown` with a Prismic document type.
-								// The exact format is not know at this time, hence the `unknown`.
-								const documents: Record<string, unknown> = {};
-
-								await Promise.all(
-									documentsGlob.map(async (documentPath) => {
-										const filename = path.basename(documentPath, ".json");
-										const fileContent = await fs.readFile(
-											path.resolve(documentsDirectoryPath, documentPath),
-											"utf-8",
-										);
-
-										try {
-											// TOOD: Validate the contents of the JSON file and skip on invalid documents.
-											const parsedContents = JSON.parse(fileContent);
-
-											documents[filename] = parsedContents;
-										} catch {
-											// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
-											// eslint-disable-next-line no-console
-											console.log(
-												`Skipped document due to its invalid format: ${documentPath}`,
-											);
-										}
-									}),
-								);
-
-								await this.manager.prismicRepository.pushDocuments({
-									domain: this.context.repository.domain,
-									documents,
-									signature,
-								});
-
-								task.title = "Pushed all documents";
-								parentTask.title = "Pushed data to Prismic";
 							},
 						},
 						{
