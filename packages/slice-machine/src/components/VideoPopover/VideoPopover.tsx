@@ -11,6 +11,7 @@ import { HoverCard, HoverCardProps } from "../HoverCard";
 import { Button } from "@prismicio/editor-ui";
 import { Video as CldVideo } from "cloudinary-react";
 import { CloseIcon } from "@src/icons/CloseIcon";
+import useOnClickOutside from "@src/hooks/useOnClickOutside";
 
 type VideoPopoverProps = PropsWithChildren<{
   open: boolean;
@@ -157,26 +158,4 @@ function useTimerWhen(condition: boolean, fn: () => void, delay: number) {
       }
     };
   }, [condition, fn, delay, timer, setTimer]);
-}
-
-function useOnClickOutside<T extends HTMLElement = HTMLElement>(
-  ref: React.MutableRefObject<T | null>,
-  handler: () => void
-) {
-  useEffect(() => {
-    function handleClicksOutside(event: MouseEvent) {
-      if (
-        event.target instanceof Node &&
-        ref.current?.contains(event.target) === false
-      ) {
-        handler();
-      }
-    }
-
-    if (ref.current !== null) {
-      document.addEventListener("mousedown", handleClicksOutside);
-    }
-
-    return () => document.removeEventListener("mousedown", handleClicksOutside);
-  }, [ref, handler]);
 }
