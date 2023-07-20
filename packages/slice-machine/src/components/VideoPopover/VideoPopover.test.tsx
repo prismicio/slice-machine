@@ -128,7 +128,7 @@ describe("VideoPopover", () => {
 
     const { user } = render(<App />);
 
-    const closeButton = await waitFor(() => screen.getByText("Got it"));
+    const closeButton = await screen.findByText("Got it");
 
     const otherButton = screen.getByText("other");
 
