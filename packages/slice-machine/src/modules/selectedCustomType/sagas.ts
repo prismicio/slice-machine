@@ -34,7 +34,10 @@ export function* saveCustomTypeSaga() {
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
     yield put(
       openToasterCreator({
-        content: "Model has been generated successfully!",
+        content: `${
+          currentCustomType.format === "page" ? "Page type" : "Custom type"
+        } saved successfully at customtypes/${currentCustomType.id}.json`,
+        // content: "Model has been generated successfully!",
         type: ToasterType.SUCCESS,
       })
     );
