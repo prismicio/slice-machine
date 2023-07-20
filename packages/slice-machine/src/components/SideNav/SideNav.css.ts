@@ -316,7 +316,7 @@ export const rightElementText = style([
     alignSelf: "baseline",
     fontSize: "12px",
     lineHeight: "16px",
-    maxWidth: "68px",
+    maxWidth: "82px",
   },
 ]);
 

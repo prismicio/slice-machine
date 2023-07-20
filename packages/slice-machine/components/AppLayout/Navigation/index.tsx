@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 import VideoItem from "@components/AppLayout/Navigation/VideoItem";
-import { useNetwork } from "@src/hooks/useNetwork";
-import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { LightningIcon } from "@src/icons/Lightning";
 import { RadarIcon } from "@src/icons/RadarIcon";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
@@ -28,6 +26,7 @@ import {
   getChangelog,
   getRepoName,
 } from "@src/modules/environment";
+import { ChangesRightElement } from "./ChangesRightElement";
 
 const Navigation: FC = () => {
   const { changelog, repoName, apiEndpoint, hasSeenTutorialsToolTip } =
@@ -37,8 +36,6 @@ const Navigation: FC = () => {
       apiEndpoint: getApiEndpoint(store),
       hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
     }));
-  const isOnline = useNetwork();
-  const { unSyncedSlices, unSyncedCustomTypes } = useUnSyncChanges();
   const router = useRouter();
   const currentPath = router.asPath;
   const repoDomain = new URL(apiEndpoint).hostname.replace(".cdn", "");
@@ -47,9 +44,6 @@ const Navigation: FC = () => {
     changelog.sliceMachine.versions.length > 0
       ? changelog.sliceMachine.versions[0]
       : null;
-  const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
-  const formattedNumberOfChanges = numberOfChanges > 9 ? "+9" : numberOfChanges;
-  const displayNumberOfChanges = numberOfChanges !== 0 && isOnline;
   const { setUpdatesViewed, setSeenTutorialsToolTip } =
     useSliceMachineActions();
 
@@ -112,13 +106,7 @@ const Navigation: FC = () => {
             active={currentPath.startsWith("/changes")}
             onClick={handleNavigation}
             Icon={RadarIcon}
-            RightElement={
-              displayNumberOfChanges && (
-                <RightElement type="pill" data-cy="changes-number">
-                  {formattedNumberOfChanges}
-                </RightElement>
-              )
-            }
+            RightElement={<ChangesRightElement />}
           />
         </SideNavListItem>
 
