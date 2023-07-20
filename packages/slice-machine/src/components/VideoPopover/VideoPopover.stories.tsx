@@ -50,7 +50,7 @@ export const CloseWhenClickingOutSide = {
           onPlay={noop}
           cloudName="dmtf1daqp"
           publicId="Tooltips/pa-course-overview_eaopsn"
-          delay={5000}
+          delay={1500}
         >
           <button>Popover</button>
         </VideoPopover>
