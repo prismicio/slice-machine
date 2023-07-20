@@ -913,17 +913,20 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		return slices;
 	}
 
-	protected async readDocuments(): Promise<{
-		signature: string;
-		documents: string[];
-		directoryPath: string;
-	} | undefined> {
+	protected async readDocuments(): Promise<
+		| {
+				signature: string;
+				documents: string[];
+				directoryPath: string;
+		  }
+		| undefined
+	> {
 		const root = await this.manager.project.getRoot();
 		const documentsDirectoryPath = path.resolve(root, "documents");
 		try {
 			await fs.access(documentsDirectoryPath);
 		} catch {
-			return
+			return;
 		}
 		const signaturePath = path.resolve(documentsDirectoryPath, "index.json");
 		const rawSignature = await fs.readFile(signaturePath, "utf-8");
@@ -1033,16 +1036,18 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								);
 
 								try {
-									const documentsRead =
-										await this.readDocuments();
+									const documentsRead = await this.readDocuments();
 
-									if (documentsRead === undefined || documentsRead.documents.length === 0) {
+									if (
+										documentsRead === undefined ||
+										documentsRead.documents.length === 0
+									) {
 										parentTask.title = "Pushed data to Prismic";
 										task.skip("No document to push");
 
 										return;
 									}
-									
+
 									const { signature, documents, directoryPath } = documentsRead;
 
 									// TODO: Replace `unknown` with a Prismic document type.
