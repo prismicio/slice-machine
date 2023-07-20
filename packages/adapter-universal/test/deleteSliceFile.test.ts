@@ -1,10 +1,9 @@
 import { expect, it } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
-import * as fsSync from "node:fs";
 import * as path from "node:path";
 
-import { deleteAllSliceFiles, writeSliceFile, writeSliceModel } from "../src";
+import { writeSliceFile, deleteSliceFile } from "../src";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -16,7 +15,9 @@ const mock = createMockFactory({ seed: import.meta.url });
 const model = mock.model.sharedSlice();
 model.name = "FooBar";
 
-it("deletes all of a Slice's files and directories", async (ctx) => {
+const filename = "foo.js";
+
+it("deletes a Slice's file", async (ctx) => {
 	ctx.pluginRunner.callHook("slice:create", {
 		libraryID: ctx.project.config.libraries[0],
 		model,
@@ -25,39 +26,28 @@ it("deletes all of a Slice's files and directories", async (ctx) => {
 	await writeSliceFile({
 		libraryID: ctx.project.config.libraries[0],
 		sliceID: model.id,
-		filename: "foo.js",
-		contents: "",
+		filename,
+		contents: "contents",
 		actions: ctx.pluginRunner.rawActions,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	await writeSliceModel({
+	await deleteSliceFile({
 		libraryID: ctx.project.config.libraries[0],
-		model,
+		sliceID: model.id,
+		filename,
+		actions: ctx.pluginRunner.rawActions,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	const sliceDirectoryPath = path.join(
-		ctx.project.root,
-		ctx.project.config.libraries[0],
-		"FooBar",
-	);
-
-	expect(await fs.readdir(sliceDirectoryPath)).toStrictEqual([
-		"foo.js",
-		"model.json",
-	]);
-
-	await deleteAllSliceFiles({
-		libraryID: ctx.project.config.libraries[0],
-		model,
-		helpers: ctx.pluginRunner.rawHelpers,
-	});
-
-	expect(fsSync.existsSync(sliceDirectoryPath)).toBe(false);
+	expect(
+		await fs.readdir(
+			path.join(ctx.project.root, ctx.project.config.libraries[0], "FooBar"),
+		),
+	).not.includes(filename);
 });
 
-it("returns the path to the delete directory", async (ctx) => {
+it("returns the path to the deleted file", async (ctx) => {
 	ctx.pluginRunner.callHook("slice:create", {
 		libraryID: ctx.project.config.libraries[0],
 		model,
@@ -66,23 +56,51 @@ it("returns the path to the delete directory", async (ctx) => {
 	await writeSliceFile({
 		libraryID: ctx.project.config.libraries[0],
 		sliceID: model.id,
-		filename: "foo.js",
-		contents: "",
+		filename,
+		contents: "contents",
 		actions: ctx.pluginRunner.rawActions,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	await writeSliceModel({
+	const res = await deleteSliceFile({
 		libraryID: ctx.project.config.libraries[0],
-		model,
+		sliceID: model.id,
+		filename,
+		actions: ctx.pluginRunner.rawActions,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	const res = await deleteAllSliceFiles({
+	expect(res).toBe(
+		path.join(ctx.project.config.libraries[0], "FooBar", filename),
+	);
+});
+
+it("accepts a model in place of sliceID", async (ctx) => {
+	await writeSliceFile({
 		libraryID: ctx.project.config.libraries[0],
 		model,
+		filename,
+		contents: "contents",
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	expect(res).toBe(path.join(ctx.project.config.libraries[0], "FooBar"));
+	await deleteSliceFile({
+		libraryID: ctx.project.config.libraries[0],
+		model,
+		filename,
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	expect(
+		await fs.readdir(
+			path.dirname(
+				path.join(
+					ctx.project.root,
+					ctx.project.config.libraries[0],
+					"FooBar",
+					filename,
+				),
+			),
+		),
+	).not.includes(filename);
 });

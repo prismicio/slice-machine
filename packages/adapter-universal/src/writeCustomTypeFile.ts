@@ -1,11 +1,10 @@
-import { writeFile, WriteFileArgs } from "./lib/writeFile";
-
 import {
 	buildCustomTypeFilePath,
 	BuildCustomTypeFilePathArgs,
 } from "./buildCustomTypeFilePath";
+import { writeProjectFile, WriteProjectFileArgs } from "./writeProjectFile";
 
-export type WriteCustomTypeFileArgs = Omit<WriteFileArgs, "filePath"> &
+export type WriteCustomTypeFileArgs = Omit<WriteProjectFileArgs, "filePath"> &
 	BuildCustomTypeFilePathArgs;
 
 /**
@@ -17,9 +16,15 @@ export async function writeCustomTypeFile(
 	args: WriteCustomTypeFileArgs,
 ): Promise<string> {
 	const filePath = buildCustomTypeFilePath(args);
-
-	return await writeFile({
+	const relativeFilePath = buildCustomTypeFilePath({
 		...args,
-		filePath,
+		absolute: false,
 	});
+
+	await writeProjectFile({
+		...args,
+		filename: relativeFilePath,
+	});
+
+	return filePath;
 }

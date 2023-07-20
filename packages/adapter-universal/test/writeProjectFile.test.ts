@@ -1,34 +1,22 @@
 import { expect, it } from "vitest";
-import { createMockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
-import { writeCustomTypeFile } from "../src";
-
-/**
- * !!! DO NOT use this mock factory in tests !!!
- *
- * @remarks
- * Its seed is not specific to be used outside the most general cases.
- */
-const mock = createMockFactory({ seed: import.meta.url });
-const model = mock.model.customType();
-model.id = "foo_bar";
+import { writeProjectFile } from "../src";
 
 const filename = "foo.js";
 
-it("writes a file in a custom type's directory", async (ctx) => {
+it("writes a file in a project's directory", async (ctx) => {
 	const contents = "contents";
 
-	await writeCustomTypeFile({
-		customTypeID: model.id,
+	await writeProjectFile({
 		filename,
 		contents,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
 	const actualContents = await fs.readFile(
-		path.join(ctx.project.root, "customtypes", model.id, filename),
+		path.join(ctx.project.root, filename),
 		"utf8",
 	);
 
@@ -43,8 +31,7 @@ it("formats contents if `format` is true", async (ctx) => {
 		JSON.stringify({ semi: false }),
 	);
 
-	await writeCustomTypeFile({
-		customTypeID: model.id,
+	await writeProjectFile({
 		filename,
 		contents,
 		format: true,
@@ -52,7 +39,7 @@ it("formats contents if `format` is true", async (ctx) => {
 	});
 
 	const actualContents = await fs.readFile(
-		path.join(ctx.project.root, "customtypes", model.id, filename),
+		path.join(ctx.project.root, filename),
 		"utf8",
 	);
 
@@ -67,15 +54,14 @@ it("does not format contents by default", async (ctx) => {
 		JSON.stringify({ semi: false }),
 	);
 
-	await writeCustomTypeFile({
-		customTypeID: model.id,
+	await writeProjectFile({
 		filename,
 		contents,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
 	const actualContents = await fs.readFile(
-		path.join(ctx.project.root, "customtypes", model.id, filename),
+		path.join(ctx.project.root, filename),
 		"utf8",
 	);
 
@@ -85,12 +71,11 @@ it("does not format contents by default", async (ctx) => {
 it("returns the path to the saved file", async (ctx) => {
 	const contents = "contents";
 
-	const filePath = await writeCustomTypeFile({
-		customTypeID: model.id,
+	const filePath = await writeProjectFile({
 		filename,
 		contents,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	expect(filePath).toBe(path.join("customtypes", model.id, filename));
+	expect(filePath).toBe(path.join(ctx.project.root, filename));
 });

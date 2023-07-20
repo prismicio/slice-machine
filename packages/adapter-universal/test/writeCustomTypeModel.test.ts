@@ -64,7 +64,5 @@ it("returns the path to the saved file", async (ctx) => {
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	expect(filePath).toBe(
-		path.join(ctx.project.root, "customtypes", model.id, "index.json"),
-	);
+	expect(filePath).toBe(path.join("customtypes", model.id, "index.json"));
 });

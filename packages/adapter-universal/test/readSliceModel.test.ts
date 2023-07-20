@@ -20,6 +20,11 @@ const model = mock.model.sharedSlice();
 model.name = "FooBar";
 
 it("returns a Slice's model", async (ctx) => {
+	await ctx.pluginRunner.callHook("slice:create", {
+		libraryID: ctx.project.config.libraries[0],
+		model,
+	});
+
 	await writeSliceModel({
 		libraryID: ctx.project.config.libraries[0],
 		model,

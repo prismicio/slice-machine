@@ -1,13 +1,11 @@
-import * as fs from "node:fs/promises";
-
 import {
 	buildSliceFilePath,
 	BuildSliceFilePathArgs,
 } from "./buildSliceFilePath";
+import { readProjectFile, ReadProjectFileArgs } from "./readProjectFile";
+import { BufferEncoding } from "./types";
 
-type BufferEncoding = Extract<Parameters<typeof fs.readFile>[1], string>;
-
-export type ReadSliceFileArgs = BuildSliceFilePathArgs;
+export type ReadSliceFileArgs = BuildSliceFilePathArgs & ReadProjectFileArgs;
 
 export async function readSliceFile(args: ReadSliceFileArgs): Promise<Buffer>;
 export async function readSliceFile(
@@ -18,5 +16,9 @@ export async function readSliceFile(
 ): Promise<Buffer | string> {
 	const filePath = await buildSliceFilePath(args);
 
-	return await fs.readFile(filePath, args.encoding);
+	return await readProjectFile({
+		filename: filePath,
+		encoding: args.encoding as BufferEncoding,
+		helpers: args.helpers,
+	});
 }

@@ -20,10 +20,7 @@ export async function buildSliceDirectoryPath(
 	const model = await resolveSliceModel(args);
 
 	return path.join(
-		buildSliceLibraryDirectoryPath({
-			libraryID: args.libraryID,
-			helpers: args.helpers,
-		}),
+		buildSliceLibraryDirectoryPath(args),
 		pascalCase(model.name),
 	);
 }

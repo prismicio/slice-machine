@@ -6,14 +6,14 @@ import {
 } from "./buildCustomTypeLibraryDirectoryPath";
 
 export type BuildCustomTypeDirectoryPathArgs = {
-	id: string;
+	customTypeID: string;
 } & BuildCustomTypeLibraryDirectoryPathArgs;
 
 export const buildCustomTypeDirectoryPath = (
 	args: BuildCustomTypeDirectoryPathArgs,
 ): string => {
 	return path.join(
-		buildCustomTypeLibraryDirectoryPath({ helpers: args.helpers }),
-		args.id,
+		buildCustomTypeLibraryDirectoryPath(args),
+		args.customTypeID,
 	);
 };

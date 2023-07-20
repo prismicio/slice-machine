@@ -1,8 +1,9 @@
 import { expect, it } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
-import { Buffer } from "node:buffer";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
-import { readCustomTypeFile, writeCustomTypeFile } from "../src";
+import { writeCustomTypeFile, deleteCustomTypeFile } from "../src";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -11,46 +12,43 @@ import { readCustomTypeFile, writeCustomTypeFile } from "../src";
  * Its seed is not specific to be used outside the most general cases.
  */
 const mock = createMockFactory({ seed: import.meta.url });
-const model = mock.model.customType();
+const model = mock.model.sharedSlice();
 model.id = "foo_bar";
 
 const filename = "foo.js";
 
-it("reads a custom type's file", async (ctx) => {
-	const contents = "contents";
-
+it("deletes a custom type's file", async (ctx) => {
 	await writeCustomTypeFile({
 		customTypeID: model.id,
 		filename,
-		contents,
+		contents: "contents",
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	const res = await readCustomTypeFile({
+	await deleteCustomTypeFile({
 		customTypeID: model.id,
 		filename,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	expect(res).toStrictEqual(Buffer.from(contents));
+	expect(
+		await fs.readdir(path.join(ctx.project.root, "customtypes", model.id)),
+	).not.includes(filename);
 });
 
-it("encodes the contents if configured with an encoding", async (ctx) => {
-	const contents = "contents";
-
+it("returns the path to the deleted file", async (ctx) => {
 	await writeCustomTypeFile({
 		customTypeID: model.id,
 		filename,
-		contents,
+		contents: "contents",
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	const res = await readCustomTypeFile({
+	const res = await deleteCustomTypeFile({
 		customTypeID: model.id,
 		filename,
-		encoding: "utf8",
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	expect(res).toStrictEqual(contents);
+	expect(res).toBe(path.join("customtypes", model.id, filename));
 });

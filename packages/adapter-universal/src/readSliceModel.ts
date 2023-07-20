@@ -25,6 +25,7 @@ export async function readSliceModel(
 ): Promise<ReadSliceModelReturnType> {
 	const libraryDir = buildSliceLibraryDirectoryPath({
 		libraryID: args.libraryID,
+		absolute: true,
 		helpers: args.helpers,
 	});
 

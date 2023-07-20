@@ -1,7 +1,7 @@
 import type { SliceMachineActions } from "@slicemachine/plugin-kit";
 import { detectTypesProvider, generateTypes } from "prismic-ts-codegen";
 
-import { writeFile, WriteFileArgs } from "./lib/writeFile";
+import { writeProjectFile, WriteProjectFileArgs } from "./writeProjectFile";
 
 import {
 	GLOBAL_TYPESCRIPT_TYPES_FILENAME,
@@ -12,9 +12,9 @@ import {
  * Arguments for `upsertGlobalContentTypes()`.
  */
 export type UpsertGlobalTypeScriptTypesArgs = {
-	filePath?: string;
+	filename?: string;
 	actions: SliceMachineActions;
-} & Omit<WriteFileArgs, "filePath" | "contents">;
+} & Omit<WriteProjectFileArgs, "filename" | "contents">;
 
 /**
  * Creates a globally accessible TypeScript file containing types representing
@@ -56,8 +56,8 @@ export const upsertGlobalTypeScriptTypes = async (
 
 	contents = `${NON_EDITABLE_FILE_BANNER}\n\n${contents}`;
 
-	return await writeFile({
-		filePath: GLOBAL_TYPESCRIPT_TYPES_FILENAME,
+	return await writeProjectFile({
+		filename: GLOBAL_TYPESCRIPT_TYPES_FILENAME,
 		...args,
 		contents,
 	});

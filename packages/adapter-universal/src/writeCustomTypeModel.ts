@@ -8,7 +8,7 @@ import {
 
 export type WriteCustomTypeModelArgs = Omit<
 	WriteCustomTypeFileArgs,
-	"id" | "filename" | "contents"
+	"customTypeID" | "filename" | "contents"
 > & {
 	model: CustomType;
 };
@@ -24,7 +24,7 @@ export async function writeCustomTypeModel(
 ): Promise<string> {
 	return await writeCustomTypeFile({
 		...args,
-		id: args.model.id,
+		customTypeID: args.model.id,
 		filename: CUSTOM_TYPE_MODEL_FILENAME,
 		contents: JSON.stringify(args.model, null, 2),
 	});

@@ -142,12 +142,7 @@ it("returns the path to the saved file", async (ctx) => {
 	});
 
 	expect(filePath).toBe(
-		path.join(
-			ctx.project.root,
-			ctx.project.config.libraries[0],
-			"FooBar",
-			filename,
-		),
+		path.join(ctx.project.config.libraries[0], "FooBar", filename),
 	);
 });
 

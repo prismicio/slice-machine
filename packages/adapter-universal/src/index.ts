@@ -14,6 +14,18 @@ export { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
 export { upsertGlobalTypeScriptTypes } from "./upsertGlobalTypeScriptTypes";
 export type { UpsertGlobalTypeScriptTypesArgs } from "./upsertGlobalTypeScriptTypes";
 
+export { checkHasProjectFile } from "./checkHasProjectFile";
+export type { CheckHasProjectFileArgs } from "./checkHasProjectFile";
+
+export { writeProjectFile } from "./writeProjectFile";
+export type { WriteProjectFileArgs } from "./writeProjectFile";
+
+export { readProjectFile } from "./readProjectFile";
+export type { ReadProjectFileArgs } from "./readProjectFile";
+
+export { deleteProjectFile } from "./deleteProjectFile";
+export type { DeleteProjectFileArgs } from "./deleteProjectFile";
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Slice helpers
@@ -43,6 +55,9 @@ export type {
 	ReadSliceModelArgs,
 	ReadSliceModelReturnType,
 } from "./readSliceModel";
+
+export { deleteSliceFile } from "./deleteSliceFile";
+export type { DeleteSliceFileArgs } from "./deleteSliceFile";
 
 export { deleteAllSliceFiles } from "./deleteAllSliceFiles";
 export type { DeleteAllSliceFilesArgs } from "./deleteAllSliceFiles";
@@ -77,5 +92,8 @@ export type {
 	ReadCustomTypeModelReturnType,
 } from "./readCustomTypeModel";
 
-// export { deleteAllCustomTypeFiles } from "./deleteAllCustomTypeFiles";
-// export type { DeleteAllCustomTypeFilesArgs } from "./deleteAllCustomTypeFiles";
+export { deleteCustomTypeFile } from "./deleteCustomTypeFile";
+export type { DeleteCustomTypeFileArgs } from "./deleteCustomTypeFile";
+
+export { deleteAllCustomTypeFiles } from "./deleteAllCustomTypeFiles";
+export type { DeleteAllCustomTypeFilesArgs } from "./deleteAllCustomTypeFiles";

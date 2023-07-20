@@ -24,7 +24,7 @@ it("returns a custom type's model", async (ctx) => {
 	});
 
 	const res = await readCustomTypeModel({
-		id: model.id,
+		customTypeID: model.id,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
@@ -34,7 +34,7 @@ it("returns a custom type's model", async (ctx) => {
 it("throws if the custom type model does not exist", async (ctx) => {
 	await expect(async () => {
 		await readCustomTypeModel({
-			id: model.id,
+			customTypeID: model.id,
 			helpers: ctx.pluginRunner.rawHelpers,
 		});
 	}).rejects.toThrow(/no such file or directory/i);
@@ -42,7 +42,7 @@ it("throws if the custom type model does not exist", async (ctx) => {
 
 it("throws if the model file cannot be read", async (ctx) => {
 	await writeCustomTypeFile({
-		id: model.id,
+		customTypeID: model.id,
 		filename: "model.json",
 		contents: "invalid-json",
 		helpers: ctx.pluginRunner.rawHelpers,
@@ -50,7 +50,7 @@ it("throws if the model file cannot be read", async (ctx) => {
 
 	await expect(async () => {
 		await readCustomTypeModel({
-			id: model.id,
+			customTypeID: model.id,
 			helpers: ctx.pluginRunner.rawHelpers,
 		});
 	}).rejects.toThrow(/no such file or directory/i);

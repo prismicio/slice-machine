@@ -3,7 +3,7 @@ import * as path from "node:path";
 
 import { buildSliceFilePath } from "../src";
 
-it("returns a path to a Slice's file", async (ctx) => {
+it("returns a relative path to a Slice's file", async (ctx) => {
 	const model = ctx.mock.model.sharedSlice();
 	model.name = "FooBar";
 
@@ -16,6 +16,29 @@ it("returns a path to a Slice's file", async (ctx) => {
 		filename: "quux.ext",
 		libraryID: ctx.project.config.libraries[0],
 		sliceID: model.id,
+		helpers: ctx.pluginRunner.rawHelpers,
+		actions: ctx.pluginRunner.rawActions,
+	});
+
+	expect(res).toBe(
+		path.join(ctx.project.config.libraries[0], "FooBar", "quux.ext"),
+	);
+});
+
+it("returns an absolute path if configured with `absolute`", async (ctx) => {
+	const model = ctx.mock.model.sharedSlice();
+	model.name = "FooBar";
+
+	ctx.pluginRunner.callHook("slice:create", {
+		libraryID: ctx.project.config.libraries[0],
+		model,
+	});
+
+	const res = await buildSliceFilePath({
+		filename: "quux.ext",
+		libraryID: ctx.project.config.libraries[0],
+		sliceID: model.id,
+		absolute: true,
 		helpers: ctx.pluginRunner.rawHelpers,
 		actions: ctx.pluginRunner.rawActions,
 	});
@@ -48,12 +71,7 @@ it("transforms the Slice's name into pascalcase", async (ctx) => {
 	});
 
 	expect(res).toBe(
-		path.join(
-			ctx.project.root,
-			ctx.project.config.libraries[0],
-			"FooBar",
-			"quux.ext",
-		),
+		path.join(ctx.project.config.libraries[0], "FooBar", "quux.ext"),
 	);
 });
 
@@ -75,12 +93,7 @@ it("supports numbers in Slice names", async (ctx) => {
 	});
 
 	expect(res).toBe(
-		path.join(
-			ctx.project.root,
-			ctx.project.config.libraries[0],
-			"FooBar2",
-			"quux.ext",
-		),
+		path.join(ctx.project.config.libraries[0], "FooBar2", "quux.ext"),
 	);
 });
 
@@ -96,11 +109,6 @@ it("accepts a model in place of sliceID", async (ctx) => {
 	});
 
 	expect(res).toBe(
-		path.join(
-			ctx.project.root,
-			ctx.project.config.libraries[0],
-			"FooBar",
-			"quux.ext",
-		),
+		path.join(ctx.project.config.libraries[0], "FooBar", "quux.ext"),
 	);
 });

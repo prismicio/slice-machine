@@ -1,13 +1,12 @@
-import * as fs from "node:fs/promises";
-
 import {
 	buildCustomTypeFilePath,
 	BuildCustomTypeFilePathArgs,
 } from "./buildCustomTypeFilePath";
+import { readProjectFile, ReadProjectFileArgs } from "./readProjectFile";
+import { BufferEncoding } from "./types";
 
-type BufferEncoding = Extract<Parameters<typeof fs.readFile>[1], string>;
-
-export type ReadCustomTypeFileArgs = BuildCustomTypeFilePathArgs;
+export type ReadCustomTypeFileArgs = BuildCustomTypeFilePathArgs &
+	ReadProjectFileArgs;
 
 export async function readCustomTypeFile(
 	args: ReadCustomTypeFileArgs,
@@ -20,5 +19,9 @@ export async function readCustomTypeFile(
 ): Promise<Buffer | string> {
 	const filePath = buildCustomTypeFilePath(args);
 
-	return await fs.readFile(filePath, args.encoding);
+	return await readProjectFile({
+		filename: filePath,
+		encoding: args.encoding as BufferEncoding,
+		helpers: args.helpers,
+	});
 }
