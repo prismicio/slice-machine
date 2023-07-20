@@ -351,43 +351,6 @@ export class SliceMachineInitProcess {
 		]);
 	}
 
-	protected async loginOutsideOfListr(): Promise<void> {
-		const isLoggedIn = await this.manager.user.checkIsLoggedIn();
-		if (!isLoggedIn) {
-			await new Promise((resolve) => {
-				const initialRawMode = !!process.stdin.isRaw;
-				process.stdin.setRawMode?.(true);
-				process.stdin.once("data", (data: Buffer) => {
-					process.stdin.setRawMode?.(initialRawMode);
-					process.stdin.pause();
-					resolve(data.toString("utf-8"));
-				});
-			});
-
-			const { port, url } = await this.manager.user.getLoginSessionInfo();
-			await this.manager.user.nodeLoginSession({
-				port,
-				onListenCallback() {
-					open(url);
-				},
-			});
-		}
-
-		this.context.userProfile = await this.manager.user.getProfile();
-
-		await this.manager.telemetry.identify({
-			userID: this.context.userProfile.shortId,
-			intercomHash: this.context.userProfile.intercomHash,
-		});
-		await this.manager.telemetry.track({
-			event: "command:init:identify",
-			repository: this.options.repository,
-		});
-
-		this.context.userRepositories =
-			await this.manager.prismicRepository.readAll();
-	}
-
 	protected async fetchUserProfile(): Promise<void> {
 		this.context.userProfile = await this.manager.user.getProfile();
 
@@ -545,11 +508,6 @@ export class SliceMachineInitProcess {
 							exists: true,
 						};
 					} else {
-						// await this.loginAndFetchUserData();
-						// assertExists(
-						// 	this.context.userRepositories,
-						// 	"User repositories must be available through context to run `useRepositoryFlag`",
-						// );
 						this.context.repository = {
 							domain,
 							exists: false,
