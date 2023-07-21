@@ -6,6 +6,7 @@ import { LoadingKeysEnum } from "../loading/types";
 import { saveCustomTypeCreator } from "./actions";
 import { selectCurrentCustomType } from "./index";
 import { saveCustomType, telemetry } from "@src/apiClient";
+import { ToastMessageWithPath } from "@components/ToasterContainer";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -34,12 +35,12 @@ export function* saveCustomTypeSaga() {
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
     yield put(
       openToasterCreator({
-        content: `${
-          currentCustomType.format === "page" ? "Page type" : "Custom type"
-        } saved successfully at './customtypes/${
-          currentCustomType.id
-        }/index.json'`,
-        // content: "Model has been generated successfully!",
+        content: ToastMessageWithPath({
+          message: `${
+            currentCustomType.format === "page" ? "Page type" : "Custom type"
+          } saved successfully at `,
+          path: `./customtypes/${currentCustomType.id}/index.json'`,
+        }),
         type: ToasterType.SUCCESS,
       })
     );

@@ -4,6 +4,7 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { pascalize, snakelize } from "@lib/utils/str";
 import { managerClient } from "@src/managerClient";
 import { telemetry } from "@src/apiClient";
+import { SliceToastMessage } from "@components/ToasterContainer";
 
 type CreateSliceArgs = {
   sliceName: string;
@@ -34,7 +35,9 @@ export async function createSlice(args: CreateSliceArgs) {
     await onSuccess(newSlice);
 
     toast.success(
-      `Slice saved successfully at './${libraryName}/${newSlice.name}/model.json'`
+      SliceToastMessage({
+        path: `./${libraryName}/${newSlice.name}/model.json`,
+      })
     );
   } catch (e) {
     const errorMessage = "Internal Error: Slice not created";

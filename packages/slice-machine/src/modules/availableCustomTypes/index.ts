@@ -35,6 +35,7 @@ import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { CustomTypes } from "@lib/models/common/CustomType";
+import { ToastMessageWithPath } from "@components/ToasterContainer";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -245,12 +246,13 @@ export function* createCustomTypeSaga({
     yield put(push(customTypesConfig.getBuilderPagePathname(payload.id)));
     yield put(
       openToasterCreator({
-        content: `${customTypesMessages.name({
-          start: true,
-          plural: false,
-        })} saved successfully at './customtypes/${
-          newCustomType.id
-        }/index.json'`,
+        content: ToastMessageWithPath({
+          message: `${customTypesMessages.name({
+            start: true,
+            plural: false,
+          })} saved successfully at `,
+          path: `./customtypes/${newCustomType.id}/index.json'`,
+        }),
         type: ToasterType.SUCCESS,
       })
     );

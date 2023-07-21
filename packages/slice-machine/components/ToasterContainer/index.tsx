@@ -48,3 +48,19 @@ const ToastContainer: React.FunctionComponent = () => {
 };
 
 export default ToastContainer;
+
+export const ToastMessageWithPath: React.FC<{
+  message: string;
+  path: string;
+}> = ({ message, path }) => (
+  <span>
+    {message}
+    <code>{path}</code>
+  </span>
+);
+
+export const SliceToastMessage: React.FC<{
+  path: string;
+}> = (props) => (
+  <ToastMessageWithPath message="Slice saved successfully at " {...props} />
+);
