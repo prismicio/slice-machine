@@ -248,7 +248,9 @@ export function* createCustomTypeSaga({
         content: `${customTypesMessages.name({
           start: true,
           plural: false,
-        })} saved`,
+        })} saved successfully at './customtypes/${
+          newCustomType.id
+        }/index.json'`,
         type: ToasterType.SUCCESS,
       })
     );

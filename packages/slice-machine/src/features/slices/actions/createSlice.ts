@@ -34,9 +34,7 @@ export async function createSlice(args: CreateSliceArgs) {
     await onSuccess(newSlice);
 
     toast.success(
-      `Slice saved successfully at ${libraryName}/${pascalize(
-        newSlice.name
-      )}.json`
+      `Slice saved successfully at './${libraryName}/${newSlice.name}/model.json'`
     );
   } catch (e) {
     const errorMessage = "Internal Error: Slice not created";

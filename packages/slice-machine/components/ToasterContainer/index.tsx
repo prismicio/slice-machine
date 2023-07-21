@@ -37,6 +37,12 @@ const ToastContainer: React.FunctionComponent = () => {
       closeButton={false}
       position={toast.POSITION.TOP_CENTER}
       icon={getIconAccordingToasterType}
+      style={{
+        left: "50%",
+        textOverflow: "ellipsis",
+        overflow: "hidden",
+        textWrap: "nowrap",
+      }}
     />
   );
 };

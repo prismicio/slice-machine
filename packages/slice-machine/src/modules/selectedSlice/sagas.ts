@@ -43,7 +43,7 @@ export function* updateSliceSaga({
       done: true,
       error: null,
       // message: "Model saved",
-      message: `Slice saved successfully at ${component.from}/${component.model.id}.json`,
+      message: `Slice saved successfully at './${component.from}/${component.model.name}/model.json'`,
     });
 
     const { mocks } = (yield call(readSliceMocks, {

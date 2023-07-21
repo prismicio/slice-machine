@@ -36,7 +36,9 @@ export function* saveCustomTypeSaga() {
       openToasterCreator({
         content: `${
           currentCustomType.format === "page" ? "Page type" : "Custom type"
-        } saved successfully at customtypes/${currentCustomType.id}.json`,
+        } saved successfully at './customtypes/${
+          currentCustomType.id
+        }/index.json'`,
         // content: "Model has been generated successfully!",
         type: ToasterType.SUCCESS,
       })
