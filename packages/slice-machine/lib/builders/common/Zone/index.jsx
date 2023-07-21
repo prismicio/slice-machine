@@ -76,7 +76,7 @@ const Zone = ({
       <ZoneHeader
         Heading={<Heading as="h6">{title}</Heading>}
         Actions={
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
           fields.length ? (
             <Fragment>
               <Button
@@ -96,6 +96,7 @@ const Zone = ({
                 ml={2}
                 variant="buttons.darkSmall"
                 onClick={() => enterSelectMode()}
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 data-cy={`add-${isRepeatable ? "Repeatable" : "Static"}-field`}
               >
                 <FaPlus
@@ -112,10 +113,11 @@ const Zone = ({
         }
       />
       {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         !fields.length && !newFieldData && (
           <EmptyState
             onEnterSelectMode={() => enterSelectMode()}
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             zoneName={isRepeatable ? "Repeatable" : "Static"}
           />
         )
@@ -147,10 +149,11 @@ const Zone = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         isRepeatableCustomType={isRepeatableCustomType}
         newField={
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           newFieldData && (
             <NewField
               {...newFieldData}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
               fields={poolOfFieldsToCheck || fields}
               onSave={(...args) => {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-call

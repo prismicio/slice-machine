@@ -92,6 +92,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     () => {
       initCustomTypeStore(customType, remoteCustomType);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       /* leave this empty to prevent local updates to disappear */
     ]

@@ -37,6 +37,7 @@ const TitleCard: React.FC<{
         >
           <TextWithInlineCode>{title}</TextWithInlineCode>
         </Heading>
+        {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
         {excerpt && (
           <Text
             as="p"
@@ -85,6 +86,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     })
   );
 
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const steps = setupSteps || [];
 
   useEffect(() => {

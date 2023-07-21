@@ -29,7 +29,7 @@ const FORM_ID = "edit-modal-form";
 const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   const { theme } = useThemeUI();
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
   if (!data.isOpen) {
     return null;
   }
@@ -47,6 +47,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     initialModelValues.type
   );
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!maybeWidget) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
     return <div>{initialModelValues.type} not found</div>;
@@ -62,7 +63,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   const initialConfig = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ...createInitialValues(removeProp(FormFields, "id")),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
     ...(maybeWidget.prepareInitialValues
       ? // eslint-disable-next-line
         maybeWidget.prepareInitialValues(initialModelValues.config)
@@ -91,6 +92,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     }
   })();
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (err) {
     console.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
@@ -102,7 +104,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   const initialValues = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     id: apiId,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
     config: validatedSchema ? validatedSchema.config : initialConfig,
   };
 
@@ -161,6 +163,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
             initialValues,
           } = props;
 
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           const fieldModelTabContent = CustomForm ? (
             <CustomForm
               key="field-model-tab-content"
@@ -225,7 +228,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                 >
                   <ItemHeader
                     theme={theme}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
                     text={label || id}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     WidgetIcon={WidgetIcon}
@@ -259,7 +262,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                   <Button
                     form={formId}
                     type="submit"
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
                     disabled={!isValid && isSubmitting}
                     sx={{
                       fontWeight: "400",

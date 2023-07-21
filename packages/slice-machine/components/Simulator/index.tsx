@@ -75,11 +75,13 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   }, [endpoints.PrismicOembed, endpoints.PrismicUnsplash]);
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
 
   useEffect(() => {
     checkSimulatorSetup();
     void telemetry.track({ event: "slice-simulator:open" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const startedNewEditorSessionRef = useRef(false);
@@ -99,6 +101,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       return UiState.FAILED_SETUP;
     }
     if (manifestStatus === "ok") {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (isWaitingForIFrameCheck || !iframeStatus) {
         return UiState.LOADING_IFRAME;
       }
@@ -117,6 +120,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       }, 3000);
       setupIntervalId.current = id;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentState]);
 
   useEffect(() => {
@@ -126,6 +130,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       }
       connectToSimulatorIframe();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manifestStatus]);
 
   useEffect(() => {
@@ -161,9 +166,11 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     if (editorState?.variation === variation.id) return editorState;
 
     return (
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       slice.mocks?.find((m) => m.variation === variation.id) ||
       defaultSharedSliceContent(variation.id)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorState, variation.id]);
 
   // this is temporary, it allows to retain the slice ID generated
@@ -176,6 +183,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           [k: string]: unknown;
         }
       ).id,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -187,6 +195,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       ...(renderSliceMock(sharedSlice, editorContent) as object),
       id: renderedSliceId,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [sharedSlice, editorContent]
   );
 
@@ -211,6 +220,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           saveSliceMock({
             libraryID: slice.from,
             sliceID: slice.model.id,
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             mocks: (slice.mocks || [])
               .filter((mock) => mock.variation !== editorState.variation)
               .concat(editorState),
@@ -307,6 +317,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
           ) : null}
         </Flex>
       </Box>
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {!!slice.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
           sliceName={slice.model.name}

@@ -42,6 +42,7 @@ export const SliceZone = {
     })(
       SlicesSM.decode({
         key,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         value: Object.entries(slices.config?.choices || []).map(
           ([key, value]) => ({ key, value })
         ),

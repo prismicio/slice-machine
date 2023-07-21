@@ -112,12 +112,14 @@ const HTMLRenderer = ({
 }: HTMLRendererProps): JSX.Element => {
   const parserOptions: HTMLReactParserOptions = {
     replace: (domNode) => {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (domNode instanceof Element && domNode.attribs) {
         const children = domToReact(domNode.children, parserOptions);
 
         const resolvedComponents = { ...components, ...defaultComponents };
         const Comp = resolvedComponents[domNode.name];
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (Comp) {
           return (
             <Comp name={domNode.name} {...domNode.attribs}>

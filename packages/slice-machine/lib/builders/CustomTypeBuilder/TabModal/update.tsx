@@ -34,6 +34,7 @@ const InputBox = ({
       autoComplete="off"
       {...rest}
     />
+    {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
     {error ? <Text sx={{ color: "error", mt: 1 }}>{error}</Text> : null}
   </Box>
 );

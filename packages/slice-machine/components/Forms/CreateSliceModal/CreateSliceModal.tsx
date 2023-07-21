@@ -128,6 +128,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
             name="sliceName"
             label="Slice Name"
             placeholder="Pascalised Slice API ID (e.g. TextBlock)"
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}
             dataCy="slice-name-input"
           />

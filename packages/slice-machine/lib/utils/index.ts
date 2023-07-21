@@ -30,6 +30,7 @@ export const ensureWidgetTypeExistence = (
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   const widget: Widget<any, any> = Widgets[type];
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!widget) {
     console.log(`Could not find widget with type name "${type}".`);
     return true;

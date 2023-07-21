@@ -30,10 +30,13 @@ export const InputBox: React.FunctionComponent<InputBoxProps> = ({
       as={Input}
       autoComplete="off"
       {...(onChange ? { onChange } : null)}
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       {...(dataCy ? { "data-cy": dataCy } : null)}
     />
+    {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
     {error ? (
       <Text
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         data-cy={dataCy ? `${dataCy}-error` : "input-error"}
         sx={{ color: "error", mt: 1 }}
       >

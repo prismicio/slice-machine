@@ -3,6 +3,7 @@ import { IconButtonProps } from "@theme-ui/components";
 import { IconType } from "react-icons/lib";
 
 const defaultActiveSx = (active: boolean, hasError: boolean | null): object => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (hasError) {
     return {
       border: ({ colors }: { colors: Record<string, string> }) =>

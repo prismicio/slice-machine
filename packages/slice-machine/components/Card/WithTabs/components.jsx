@@ -34,6 +34,7 @@ export const CustomTab = ({ children, ...otherProps }) => {
         opacity: "0.8",
         transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
         borderRadius: "0",
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         ...(otherProps.selected
           ? {
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

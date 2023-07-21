@@ -15,7 +15,7 @@
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
     "dev": "next dev",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
-    "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
+    "lint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx .",
     "prepack": "$npm_execpath run build",
     "storybook": "storybook dev --no-open --port 6006",
     "storybook-build": "storybook build",
@@ -23,7 +23,7 @@
     "types": "tsc --noEmit",
     "unit": "vitest run --coverage",
     "unit:watch": "vitest watch",
-    "lint:precommit": "eslint",
+    "lint:precommit": "eslint --max-warnings 0",
     "depcheck": "depcheck --config=.depcheckrc",
     "audit": "yarn npm audit --environment production --severity high"
   },

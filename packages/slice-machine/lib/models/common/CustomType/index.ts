@@ -80,6 +80,7 @@ export type DeleteCustomTypeResponse =
 
 export const CustomType = {
   getSliceZones(ct: CustomTypeSM): ReadonlyArray<SlicesSM | null> {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     return ct.tabs.map((t) => t.sliceZone || null);
   },
 };

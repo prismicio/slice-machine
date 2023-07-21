@@ -27,6 +27,7 @@ const VarationsPopover: React.FunctionComponent<{
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [current, setCurrent] = useState<VariationSM>(
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     defaultValue || variations[0]
   );
 

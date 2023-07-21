@@ -7,5 +7,6 @@ export const useChangelog = () => {
 
   useEffect(() => {
     getChangelog();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

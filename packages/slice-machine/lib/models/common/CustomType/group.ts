@@ -10,6 +10,7 @@ export const Group = {
       ...group,
       config: {
         ...group.config,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         fields: [...(group.config?.fields || []), newField],
       },
     };
@@ -19,6 +20,7 @@ export const Group = {
       ...group,
       config: {
         ...group.config,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         fields: (group.config?.fields || []).filter(({ key }) => key !== wkey),
       },
     };
@@ -29,6 +31,7 @@ export const Group = {
     if (!reorderedWidget)
       throw new Error(`Unable to reorder the widget at index ${start}.`);
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const reorderedArea = (group.config?.fields || []).reduce<
       Array<{ key: string; value: NestableWidget }>
     >((acc, field, index) => {
@@ -61,6 +64,7 @@ export const Group = {
       ...group,
       config: {
         ...group.config,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         fields: (group.config?.fields || []).map((t) => {
           if (t.key === previousKey) {
             return {

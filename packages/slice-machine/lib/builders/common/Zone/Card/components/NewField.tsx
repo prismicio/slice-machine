@@ -55,6 +55,7 @@ const NewField: React.FC<NewField> = ({
   // @ts-expect-error We have to create a widget map or a service instead of using export name
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widget: AnyWidget = Widgets[widgetTypeName];
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!widget) {
     console.error(
       `Widget of type "${widgetTypeName}" not found. This is a problem on our side!`
@@ -86,6 +87,7 @@ const NewField: React.FC<NewField> = ({
       shouldValidate?: boolean
     ) => void
   ) => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (isIdFieldPristine && !FormFields.id.disabled) {
       setValues({
         ...values,
@@ -127,6 +129,7 @@ const NewField: React.FC<NewField> = ({
               ml: "34px",
               alignItems: "center",
               variant: "styles.listItem",
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
               border: (t) => `1px solid ${t.colors?.borders?.toString() || ""}`,
             }}
           >
@@ -170,9 +173,11 @@ const NewField: React.FC<NewField> = ({
                   as={RefInput}
                   innerRef={fieldRef}
                   sx={getInputFieldStyles(
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     FormFields.label.disabled
                       ? InputFieldStyles.DISABLED
-                      : errors.label
+                      : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                      errors.label
                       ? InputFieldStyles.ERROR
                       : undefined
                   )}
@@ -203,9 +208,11 @@ const NewField: React.FC<NewField> = ({
                   }
                   as={RefInput}
                   sx={getInputFieldStyles(
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     FormFields.id.disabled
                       ? InputFieldStyles.DISABLED
-                      : errors.id
+                      : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                      errors.id
                       ? InputFieldStyles.ERROR
                       : undefined
                   )}

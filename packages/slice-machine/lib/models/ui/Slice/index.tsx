@@ -242,6 +242,7 @@ export const SharedSlice = {
     const variationId = defaultVariation.id;
     const link = LinkUtil.variation(slice.href, slice.model.name, variationId);
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
     const screenshotUrl = slice.screenshots?.[variationId]?.url;
@@ -285,6 +286,7 @@ export const SharedSlice = {
                 borderRadius: "4px 4px 0 0",
               }}
             />
+            {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
             {showActions && !isDeleted(StatusOrCustom) ? (
               <ScreenshotMissingBanner slice={slice} />
             ) : null}
@@ -392,7 +394,7 @@ export const NonSharedSlice = {
             }}
           >
             <TextWithTooltip
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
               text={slice?.value?.fieldset || slice.key}
               as="h6"
               sx={{

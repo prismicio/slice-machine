@@ -32,6 +32,7 @@ export default function configureStore(
   const composeEnhancers =
     process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({

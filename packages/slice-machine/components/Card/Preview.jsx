@@ -22,6 +22,7 @@ const PreviewCard = ({
         border: ({ colors }) => `2px solid ${colors.primary}`,
         boxShadow: "0 0 0 3px rgba(81, 99, 186, 0.2)",
       },
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       border: selected
         ? "2px solid rgba(81, 99, 186, 1)"
         : "2px solid rgba(81, 99, 186, 0.2)",
