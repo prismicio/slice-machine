@@ -512,6 +512,8 @@ export class SliceMachineInitProcess {
 						const errorMessage = getErrorMessageForRepositoryDomainValidation({
 							validation: {
 								...validation,
+								// We don't want to throw if repo already exists.
+								// User most probably just created it via their dashboard.
 								AlreadyExists: false,
 							},
 							displayDomain: chalk.cyan(domain),
