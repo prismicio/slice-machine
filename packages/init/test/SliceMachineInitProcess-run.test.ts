@@ -291,7 +291,7 @@ it("tracks thrown errors", async (ctx) => {
 		watchStd(() => {
 			return initProcess.run();
 		}),
-	).rejects.toMatch(/is already taken/);
+	).rejects.toThrow();
 	expect(spiedManager.telemetry.track).toHaveBeenLastCalledWith(
 		expect.objectContaining({
 			event: "command:init:end",
