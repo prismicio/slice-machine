@@ -39,11 +39,6 @@ const ToastContainer: React.FunctionComponent = () => {
       icon={getIconAccordingToasterType}
       style={{
         left: "50%",
-        textOverflow: "ellipsis",
-        overflow: "hidden",
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        textWrap: "nowrap",
       }}
     />
   );
@@ -52,8 +47,8 @@ const ToastContainer: React.FunctionComponent = () => {
 export default ToastContainer;
 
 function truncated(str: string): string {
-  const ellipsis = "&hellip;";
-  const maxLength = 42;
+  const ellipsis = "...";
+  const maxLength = 28;
   if (str.length <= maxLength) return str;
   return str.slice(0, maxLength) + ellipsis;
 }

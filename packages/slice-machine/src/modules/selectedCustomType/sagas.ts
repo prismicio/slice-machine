@@ -34,15 +34,15 @@ export function* saveCustomTypeSaga() {
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
-    const message = CUSTOM_TYPES_MESSAGES[currentCustomType.format].name({
+    const formatName = CUSTOM_TYPES_MESSAGES[currentCustomType.format].name({
       start: true,
       plural: false,
     });
     yield put(
       openToasterCreator({
         content: ToastMessageWithPath({
-          message: `${message} saved successfully at `,
-          path: `./customtypes/${currentCustomType.id}/index.json'`,
+          message: `${formatName} saved successfully at `,
+          path: `./customtypes/${currentCustomType.id}/index.json`,
         }),
         type: ToasterType.SUCCESS,
       })

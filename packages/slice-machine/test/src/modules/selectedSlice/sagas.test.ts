@@ -11,7 +11,19 @@ const { dummySliceState } = getSelectedSliceDummyData();
 describe("[Selected Slice sagas]", () => {
   describe("[updateSliceSaga]", () => {
     it("should call the api and dispatch the success action", () => {
-      const mockSetData = vi.fn();
+      const mockSetData = vi.fn<
+        {
+          error: boolean;
+          done: boolean;
+          loading: boolean;
+          message: {
+            props: {
+              message: string;
+              path: string;
+            };
+          };
+        }[]
+      >();
       const saga = testSaga(
         updateSliceSaga,
         updateSliceCreator.request({
@@ -35,25 +47,14 @@ describe("[Selected Slice sagas]", () => {
 
       saga.next().isDone();
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const mockSetDataCalls = mockSetData.mock.lastCall[0] as unknown as {
-        error: boolean;
-        done: boolean;
-        loading: boolean;
-        message: {
-          props: {
-            message: string;
-            path: string;
-          };
-        };
-      };
-      expect(mockSetDataCalls.error).toBe(null);
-      expect(mockSetDataCalls.done).toBe(true);
-      expect(mockSetDataCalls.loading).toBe(false);
-      expect(mockSetDataCalls.message.props.message).toBe(
+      const mockSetDataCalls = mockSetData.mock.lastCall?.[0];
+      expect(mockSetDataCalls?.error).toBe(null);
+      expect(mockSetDataCalls?.done).toBe(true);
+      expect(mockSetDataCalls?.loading).toBe(false);
+      expect(mockSetDataCalls?.message.props.message).toBe(
         "Slice saved successfully at "
       );
-      expect(mockSetDataCalls.message.props.path).toBe(
+      expect(mockSetDataCalls?.message.props.path).toBe(
         "./slices/libName/DummySlice/model.json"
       );
     });
