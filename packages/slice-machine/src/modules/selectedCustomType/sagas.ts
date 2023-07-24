@@ -7,6 +7,7 @@ import { saveCustomTypeCreator } from "./actions";
 import { selectCurrentCustomType } from "./index";
 import { saveCustomType, telemetry } from "@src/apiClient";
 import { ToastMessageWithPath } from "@components/ToasterContainer";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -33,12 +34,14 @@ export function* saveCustomTypeSaga() {
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
+    const message = CUSTOM_TYPES_MESSAGES[currentCustomType.format].name({
+      start: true,
+      plural: false,
+    });
     yield put(
       openToasterCreator({
         content: ToastMessageWithPath({
-          message: `${
-            currentCustomType.format === "page" ? "Page type" : "Custom type"
-          } saved successfully at `,
+          message: `${message} saved successfully at `,
           path: `./customtypes/${currentCustomType.id}/index.json'`,
         }),
         type: ToasterType.SUCCESS,
