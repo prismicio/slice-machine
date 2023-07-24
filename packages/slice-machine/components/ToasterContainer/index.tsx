@@ -31,7 +31,7 @@ const getIconAccordingToasterType = ({
 const ToastContainer: React.FunctionComponent = () => {
   return (
     <ReactToastifyContainer
-      autoClose={2500}
+      autoClose={false}
       hideProgressBar
       transition={Slide}
       closeButton={false}
@@ -49,15 +49,26 @@ const ToastContainer: React.FunctionComponent = () => {
 
 export default ToastContainer;
 
+function truncated(str: string): string {
+  const ellipsis = "&hellip;";
+  const maxLength = 42;
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength) + ellipsis;
+}
+
 export const ToastMessageWithPath: React.FC<{
   message: string;
   path: string;
-}> = ({ message, path }) => (
-  <span>
-    {message}
-    <code>{path}</code>
-  </span>
-);
+}> = ({ message, path }) => {
+  const maybeTruncatedPath = truncated(path);
+
+  return (
+    <span>
+      {message}
+      <code>{maybeTruncatedPath}</code>
+    </span>
+  );
+};
 
 export const SliceToastMessage: React.FC<{
   path: string;
