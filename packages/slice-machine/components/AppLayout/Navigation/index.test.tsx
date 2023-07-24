@@ -177,7 +177,7 @@ describe("Side Navigation", () => {
 
     expect(within(changesItem).queryByText("1")).not.toBeInTheDocument();
     expect(
-      within(changesItem).queryByText("Login required")
+      within(changesItem).queryByText("Logged out")
     ).not.toBeInTheDocument();
   });
 
@@ -193,7 +193,7 @@ describe("Side Navigation", () => {
       .getByText("Changes")
       .closest("a") as HTMLAnchorElement;
 
-    expect(within(changesItem).getByText("Login required")).toBeVisible();
+    expect(within(changesItem).getByText("Logged out")).toBeVisible();
   });
 
   test("should display the information that user is disconnected on the 'Changes' item when forbidden", async () => {
@@ -208,7 +208,7 @@ describe("Side Navigation", () => {
       .getByText("Changes")
       .closest("a") as HTMLAnchorElement;
 
-    expect(within(changesItem).getByText("Login required")).toBeVisible();
+    expect(within(changesItem).getByText("Logged out")).toBeVisible();
   });
 
   test("should display the information that user is disconnected on the 'Changes' item when offline", async () => {
@@ -224,7 +224,7 @@ describe("Side Navigation", () => {
       .getByText("Changes")
       .closest("a") as HTMLAnchorElement;
 
-    expect(within(changesItem).getByText("Login required")).toBeVisible();
+    expect(within(changesItem).getByText("Logged out")).toBeVisible();
   });
 
   test("should not display the information that user is disconnected when user is online", async () => {
@@ -241,7 +241,7 @@ describe("Side Navigation", () => {
       .closest("a") as HTMLAnchorElement;
 
     expect(
-      within(changesItem).queryByText("Login required")
+      within(changesItem).queryByText("Logged out")
     ).not.toBeInTheDocument();
   });
 

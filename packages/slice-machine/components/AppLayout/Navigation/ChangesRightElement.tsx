@@ -16,7 +16,7 @@ export const ChangesRightElement: FC = () => {
     authStatus === AuthStatus.UNAUTHORIZED ||
     authStatus === AuthStatus.FORBIDDEN
   ) {
-    return <RightElement>Login required</RightElement>;
+    return <RightElement>Logged out</RightElement>;
   }
 
   if (numberOfChanges === 0) {
