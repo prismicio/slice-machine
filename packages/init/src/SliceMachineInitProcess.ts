@@ -425,9 +425,9 @@ export class SliceMachineInitProcess {
 			}
 		} else {
 			throw new Error(
-				`Cannot validate write access: repository ${chalk.cyan(
+				`Cannot validate write access for repository ${chalk.cyan(
 					domain,
-				)} does not exist`,
+				)}: you are not part of this repository`,
 			);
 		}
 	}
