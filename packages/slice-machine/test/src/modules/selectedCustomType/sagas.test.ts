@@ -54,12 +54,20 @@ describe("[Selected Custom type sagas]", () => {
       saga
         .next({ errors: [] })
         .put(saveCustomTypeCreator.success({ customType: customTypeModel }));
-      saga.next().put(
-        openToasterCreator({
-          content: "Model has been generated successfully!",
-          type: ToasterType.SUCCESS,
-        })
-      );
+
+      saga
+        .next()
+        .inspect(
+          (action: {
+            payload: { action: { type: string; payload: { type: string } } };
+          }) => {
+            expect(action.payload.action.type).toBe("TOASTER/OPEN");
+            expect(action.payload.action.payload.type).toBe(
+              ToasterType.SUCCESS
+            );
+          }
+        );
+
       saga.next().isDone();
 
       // Wait for network request to be performed

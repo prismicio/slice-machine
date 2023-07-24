@@ -34,12 +34,28 @@ describe("[Selected Slice sagas]", () => {
       );
 
       saga.next().isDone();
-      expect(mockSetData).toHaveBeenCalledWith({
-        error: null,
-        done: true,
-        loading: false,
-        message: "Model saved",
-      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const mockSetDataCalls = mockSetData.mock.lastCall[0] as unknown as {
+        error: boolean;
+        done: boolean;
+        loading: boolean;
+        message: {
+          props: {
+            message: string;
+            path: string;
+          };
+        };
+      };
+      expect(mockSetDataCalls.error).toBe(null);
+      expect(mockSetDataCalls.done).toBe(true);
+      expect(mockSetDataCalls.loading).toBe(false);
+      expect(mockSetDataCalls.message.props.message).toBe(
+        "Slice saved successfully at "
+      );
+      expect(mockSetDataCalls.message.props.path).toBe(
+        "./slices/libName/DummySlice/model.json"
+      );
     });
     it("should open a error toaster on internal error", () => {
       const mockSetData = vi.fn();
