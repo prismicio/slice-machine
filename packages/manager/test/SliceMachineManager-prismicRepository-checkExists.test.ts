@@ -108,7 +108,7 @@ it("throws if the repository API call was unsuccessful", async (ctx) => {
 	}).rejects.toThrow(/failed to check repository/i);
 });
 
-it("works if not logged in", async () => {
+it("works if not logged in", async (ctx) => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -117,6 +117,16 @@ it("works if not logged in", async () => {
 	});
 
 	await manager.user.logout();
+
+	mockPrismicRepositoryAPI(ctx, {
+		existsEndpoint: {
+			expectedAuthenticationToken: "",
+			expectedCookies: [""],
+			isSuccessful: true,
+			domain: "foo",
+			exists: false,
+		},
+	});
 
 	const res = await manager.prismicRepository.checkExists({ domain: "foo" });
 	expect(res).toBe(false);
