@@ -36,7 +36,7 @@ export async function createSlice(args: CreateSliceArgs) {
 
     toast.success(
       SliceToastMessage({
-        path: `./${libraryName}/${newSlice.name}/model.json`,
+        path: `${libraryName}/${newSlice.name}/model.json`,
       })
     );
   } catch (e) {
