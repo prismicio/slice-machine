@@ -251,7 +251,7 @@ export function* createCustomTypeSaga({
             start: true,
             plural: false,
           })} saved successfully at `,
-          path: `./customtypes/${newCustomType.id}/index.json'`,
+          path: `./customtypes/${newCustomType.id}/index.json`,
         }),
         type: ToasterType.SUCCESS,
       })
