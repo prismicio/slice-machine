@@ -31,7 +31,7 @@ const getIconAccordingToasterType = ({
 const ToastContainer: React.FunctionComponent = () => {
   return (
     <ReactToastifyContainer
-      autoClose={false}
+      autoClose={2500}
       hideProgressBar
       transition={Slide}
       closeButton={false}
