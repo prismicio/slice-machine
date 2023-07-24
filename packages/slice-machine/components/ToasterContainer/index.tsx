@@ -37,8 +37,38 @@ const ToastContainer: React.FunctionComponent = () => {
       closeButton={false}
       position={toast.POSITION.TOP_CENTER}
       icon={getIconAccordingToasterType}
+      style={{
+        left: "50%",
+      }}
     />
   );
 };
 
 export default ToastContainer;
+
+function truncated(str: string): string {
+  const ellipsis = "...";
+  const maxLength = 28;
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength) + ellipsis;
+}
+
+export const ToastMessageWithPath: React.FC<{
+  message: string;
+  path: string;
+}> = ({ message, path }) => {
+  const maybeTruncatedPath = truncated(path);
+
+  return (
+    <span>
+      {message}
+      <code>{maybeTruncatedPath}</code>
+    </span>
+  );
+};
+
+export const SliceToastMessage: React.FC<{
+  path: string;
+}> = (props) => (
+  <ToastMessageWithPath message="Slice saved successfully at " {...props} />
+);

@@ -5,12 +5,14 @@ import {
   put,
   SagaReturnType,
 } from "redux-saga/effects";
+
 import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { updateSliceCreator } from "./actions";
 import { readSliceMocks, updateSliceApiClient } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { SliceToastMessage } from "@components/ToasterContainer";
 
 export function* updateSliceSaga({
   payload,
@@ -42,7 +44,9 @@ export function* updateSliceSaga({
       loading: false,
       done: true,
       error: null,
-      message: "Model saved",
+      message: SliceToastMessage({
+        path: `./${component.from}/${component.model.name}/model.json`,
+      }),
     });
 
     const { mocks } = (yield call(readSliceMocks, {
