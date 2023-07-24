@@ -50,10 +50,6 @@ export const mockPrismicRepositoryAPI = (
 				(req, res, ctx) => {
 					if (
 						(config.existsEndpoint?.isSuccessful ?? true) &&
-						req.headers.get("Authorization") ===
-							`Bearer ${config.existsEndpoint?.expectedAuthenticationToken}` &&
-						req.headers.get("Cookie") ===
-							config.existsEndpoint?.expectedCookies.join("; ") &&
 						req.headers.get("User-Agent") === "slice-machine"
 					) {
 						// The real API returns "false" if the
@@ -61,7 +57,7 @@ export const mockPrismicRepositoryAPI = (
 						// opposite of what you might expect).
 
 						if (
-							config.existsEndpoint.existingRepositories.includes(
+							config.existsEndpoint?.existingRepositories.includes(
 								req.params.domain as string,
 							)
 						) {

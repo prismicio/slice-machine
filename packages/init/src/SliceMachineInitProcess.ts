@@ -508,17 +508,18 @@ export class SliceMachineInitProcess {
 							this.manager.prismicRepository.checkExists({ domain }),
 					});
 
-					const errorMessage = getErrorMessageForRepositoryDomainValidation({
-						validation: {
-							...validation,
-							AlreadyExists: false,
-							hasErrors: false,
-						},
-						displayDomain: chalk.cyan(domain),
-					});
+					if (validation.LessThan4 || validation.MoreThan30) {
+						const errorMessage = getErrorMessageForRepositoryDomainValidation({
+							validation: {
+								...validation,
+								AlreadyExists: false,
+							},
+							displayDomain: chalk.cyan(domain),
+						});
 
-					if (errorMessage) {
-						throw new Error(errorMessage);
+						if (errorMessage) {
+							throw new Error(errorMessage);
+						}
 					}
 
 					task.title = `Selected repository ${chalk.cyan(
