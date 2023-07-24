@@ -55,7 +55,7 @@ describe("[Selected Slice sagas]", () => {
         "Slice saved successfully at "
       );
       expect(mockSetDataCalls?.message.props.path).toBe(
-        "./slices/libName/DummySlice/model.json"
+        "slices/libName/DummySlice/model.json"
       );
     });
     it("should open a error toaster on internal error", () => {

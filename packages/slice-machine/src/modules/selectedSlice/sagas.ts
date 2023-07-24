@@ -45,7 +45,7 @@ export function* updateSliceSaga({
       done: true,
       error: null,
       message: SliceToastMessage({
-        path: `./${component.from}/${component.model.name}/model.json`,
+        path: `${component.from}/${component.model.name}/model.json`,
       }),
     });
 
