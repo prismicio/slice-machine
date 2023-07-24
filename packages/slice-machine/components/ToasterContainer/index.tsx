@@ -41,6 +41,8 @@ const ToastContainer: React.FunctionComponent = () => {
         left: "50%",
         textOverflow: "ellipsis",
         overflow: "hidden",
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         textWrap: "nowrap",
       }}
     />
