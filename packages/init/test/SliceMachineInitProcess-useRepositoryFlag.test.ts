@@ -206,6 +206,24 @@ it("throws if repository name is too long", async () => {
 	);
 });
 
+it("throws if context is missing user repositories", async () => {
+	const domain = "new-repo";
+	const initProcess = createSliceMachineInitProcess({ repository: domain });
+	setDefaultContext(initProcess);
+	updateContext(initProcess, {
+		userRepositories: undefined,
+	});
+
+	await expect(
+		watchStd(() => {
+			// @ts-expect-error - Accessing protected method
+			return initProcess.useRepositoryFlag();
+		}),
+	).rejects.toThrowErrorMatchingInlineSnapshot(
+		'"User repositories must be available through context to run `useRepositoryFlag`"',
+	);
+});
+
 it("throws if options is missing repository", async () => {
 	const initProcess = createSliceMachineInitProcess();
 	setDefaultContext(initProcess);
