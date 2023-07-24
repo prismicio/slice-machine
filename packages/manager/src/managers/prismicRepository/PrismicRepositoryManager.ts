@@ -134,7 +134,12 @@ export class PrismicRepositoryManager extends BaseManager {
 			`./app/dashboard/repositories/${args.domain}/exists`,
 			API_ENDPOINTS.PrismicWroom,
 		);
-		const res = await this._fetch({ url });
+		const res = await fetch(url.toString(), {
+			method: "GET",
+			headers: {
+				"User-Agent": SLICE_MACHINE_USER_AGENT,
+			},
+		});
 		const text = await res.text();
 
 		if (res.ok) {
@@ -444,10 +449,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		userAgent?: PrismicRepositoryUserAgents;
 		repository?: string;
 	}): Promise<Response> {
-		let cookies;
-		try {
-			cookies = await this.user.getAuthenticationCookies();
-		} catch {}
+		const cookies = await this.user.getAuthenticationCookies();
 
 		const extraHeaders: Record<string, string> = {};
 
