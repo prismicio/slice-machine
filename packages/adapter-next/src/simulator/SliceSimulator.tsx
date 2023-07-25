@@ -16,6 +16,9 @@ import {
 	simulatorRootClass,
 } from "@prismicio/simulator/kit";
 
+const PRISMIC_TOOLBAR_STYLES =
+	"iframe#prismic-toolbar-v2 { visibility: hidden !important; }";
+
 const simulatorManager = new SimulatorManager();
 
 export type SliceSimulatorSliceZoneProps = {
@@ -82,39 +85,44 @@ export const SliceSimulator = ({
 	}, []);
 
 	return (
-		<div
-			className={[simulatorClass, className].filter(Boolean).join(" ")}
-			style={{
-				zIndex:
-					typeof zIndex === "undefined"
-						? defaultProps.zIndex
-						: zIndex ?? undefined,
-				position: "fixed",
-				top: 0,
-				left: 0,
-				width: "100%",
-				height: "100vh",
-				overflow: "auto",
-				background:
-					typeof background === "undefined"
-						? defaultProps.background
-						: background ?? undefined,
-			}}
-		>
-			{message ? (
-				<article dangerouslySetInnerHTML={{ __html: message }} />
-			) : slices.length ? (
-				<div
-					id="root"
-					className={simulatorRootClass}
-					onClickCapture={onClickHandler as unknown as React.MouseEventHandler}
-					onSubmitCapture={
-						disableEventHandler as unknown as React.FormEventHandler
-					}
-				>
-					<SliceZoneComp slices={slices} />
-				</div>
-			) : null}
-		</div>
+		<>
+			<div
+				className={[simulatorClass, className].filter(Boolean).join(" ")}
+				style={{
+					zIndex:
+						typeof zIndex === "undefined"
+							? defaultProps.zIndex
+							: zIndex ?? undefined,
+					position: "fixed",
+					top: 0,
+					left: 0,
+					width: "100%",
+					height: "100vh",
+					overflow: "auto",
+					background:
+						typeof background === "undefined"
+							? defaultProps.background
+							: background ?? undefined,
+				}}
+			>
+				{message ? (
+					<article dangerouslySetInnerHTML={{ __html: message }} />
+				) : slices.length ? (
+					<div
+						id="root"
+						className={simulatorRootClass}
+						onClickCapture={
+							onClickHandler as unknown as React.MouseEventHandler
+						}
+						onSubmitCapture={
+							disableEventHandler as unknown as React.FormEventHandler
+						}
+					>
+						<SliceZoneComp slices={slices} />
+					</div>
+				) : null}
+			</div>
+			<style>{PRISMIC_TOOLBAR_STYLES}</style>
+		</>
 	);
 };
