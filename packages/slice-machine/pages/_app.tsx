@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@prismicio/editor-ui";
+import { ThemeProvider, TooltipProvider } from "@prismicio/editor-ui";
 import { type FC, type ReactNode, useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import configureStore from "../src/redux/store";
@@ -118,22 +118,24 @@ function MyApp({
       <ThemeUIThemeProvider theme={theme}>
         <RemoveDarkMode>
           <ThemeProvider mode="light">
-            {!smStore || !serverState ? (
-              <LoadingPage />
-            ) : (
-              <Provider store={smStore.store}>
-                <ConnectedRouter Router={Router}>
-                  <PersistGate loading={null} persistor={smStore.persistor}>
-                    <RouteChangeProvider>
-                      <ComponentLayout>
-                        <Component {...pageProps} />
-                      </ComponentLayout>
-                    </RouteChangeProvider>
-                  </PersistGate>
-                </ConnectedRouter>
-                <ToastContainer />
-              </Provider>
-            )}
+            <TooltipProvider>
+              {!smStore || !serverState ? (
+                <LoadingPage />
+              ) : (
+                <Provider store={smStore.store}>
+                  <ConnectedRouter Router={Router}>
+                    <PersistGate loading={null} persistor={smStore.persistor}>
+                      <RouteChangeProvider>
+                        <ComponentLayout>
+                          <Component {...pageProps} />
+                        </ComponentLayout>
+                      </RouteChangeProvider>
+                    </PersistGate>
+                  </ConnectedRouter>
+                  <ToastContainer />
+                </Provider>
+              )}
+            </TooltipProvider>
           </ThemeProvider>
         </RemoveDarkMode>
       </ThemeUIThemeProvider>

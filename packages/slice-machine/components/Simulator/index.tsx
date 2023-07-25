@@ -68,6 +68,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       embeds: {
         url: endpoints.PrismicOembed,
       },
+      env: "prod",
       unsplash: {
         url: endpoints.PrismicUnsplash,
       },
@@ -308,7 +309,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                 config={editorConfig}
                 content={editorContent}
                 onContentChange={(c) => {
-                  setEditorState(c as SharedSliceContent);
+                  setEditorState(c);
                   trackWidgetUsed(slice.model.id);
                 }}
                 sharedSlice={sharedSlice}
