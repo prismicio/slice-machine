@@ -67,8 +67,10 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       handleRemoteResponse(openToaster)(data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!variation) return null;
   else
     return (

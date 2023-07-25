@@ -80,8 +80,10 @@ const ReviewModal: React.FunctionComponent = () => {
     useSliceMachineActions();
 
   const sliceCount =
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     libraries && libraries.length
       ? libraries.reduce((count, lib) => {
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           if (!lib) return count;
           return count + lib.components.length;
         }, 0)
@@ -96,6 +98,7 @@ const ReviewModal: React.FunctionComponent = () => {
   );
 
   const hasPushedAnHourAgo = Boolean(
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     lastSyncChange && Date.now() - lastSyncChange >= 3600000
   );
 

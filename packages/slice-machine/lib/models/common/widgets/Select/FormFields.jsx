@@ -10,12 +10,12 @@ import { FormFieldArray } from "@components/FormFields";
 
 const label = (controlledValue) =>
   `use first value as default ${
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/strict-boolean-expressions
     controlledValue ? `("${controlledValue}")` : ""
   }`;
 
 const buildControlledValue = (controlledValue, isChecked) =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
   isChecked ? controlledValue : undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -33,8 +33,9 @@ const FormFields = {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return (
             value === undefined ||
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             (this.parent &&
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
               this.parent.options &&
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
               this.parent.options.find((e) => e === value))
@@ -72,7 +73,7 @@ const FormFields = {
         name: "non-empty values",
         message: "Values cannot be empty",
         test(value) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/strict-boolean-expressions
           return !value.some((e) => !e || !e.length);
         },
       },

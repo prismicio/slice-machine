@@ -1,29 +1,40 @@
 // @vitest-environment jsdom
 import { describe, test, expect, vi } from "vitest";
+import Router from "next/router";
+import { act } from "react-dom/test-utils";
+import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
+import { createSliceMachineManager } from "@slicemachine/manager";
+
+import { FrontEndEnvironment } from "@lib/models/common/Environment";
+import { UserContextStoreType } from "@src/modules/userContext/types";
+import { AuthStatus } from "@src/modules/userContext/types";
+import { createTestPlugin } from "test/__testutils__/createTestPlugin";
+import { createTestProject } from "test/__testutils__/createTestProject";
 import {
   render,
   within,
   screen,
   type RenderReturnType,
   waitFor,
-} from "../../../test/__testutils__";
+} from "test/__testutils__";
 import SideNavigation from "./index";
-import { FrontEndEnvironment } from "@lib/models/common/Environment";
-import { UserContextStoreType } from "@src/modules/userContext/types";
-import { act } from "react-dom/test-utils";
-import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
-
-import Router from "next/router";
-import { createTestPlugin } from "test/__testutils__/createTestPlugin";
-import { createTestProject } from "test/__testutils__/createTestProject";
-import { createSliceMachineManager } from "@slicemachine/manager";
 import { cache } from "@prismicio/editor-support/Suspense";
 
 const mockRouter = vi.mocked(Router);
 
 vi.mock("next/router", () => import("next-router-mock"));
 
-function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
+type renderSideNavigationArgs = {
+  canUpdate: boolean;
+  hasChanges?: boolean;
+  authStatus?: AuthStatus;
+};
+
+function renderSideNavigation({
+  canUpdate,
+  hasChanges = false,
+  authStatus = AuthStatus.AUTHORIZED,
+}: renderSideNavigationArgs): RenderReturnType {
   return render(<SideNavigation />, {
     preloadedState: {
       availableCustomTypes: {},
@@ -52,7 +63,17 @@ function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
             },
           },
         ],
-        remoteSlices: [],
+        remoteSlices: hasChanges
+          ? [
+              {
+                name: "slices/a",
+                id: "a",
+                type: "SharedSlice",
+                variations: [],
+                description: "",
+              },
+            ]
+          : [],
       },
       environment: {
         repo: "foo",
@@ -75,6 +96,7 @@ function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
       } as unknown as FrontEndEnvironment,
       userContext: {
         hasSeenTutorialsToolTip: false,
+        authStatus: authStatus,
       } as unknown as UserContextStoreType,
     },
   });
@@ -83,10 +105,11 @@ function renderApp({ canUpdate }: { canUpdate: boolean }): RenderReturnType {
 describe("Side Navigation", () => {
   beforeEach(() => {
     cache.clear();
+    localStorage.clear();
   });
 
   test("Logo and repo area", async () => {
-    renderApp({ canUpdate: true });
+    renderSideNavigation({ canUpdate: true });
     expect(await screen.findByText("foo")).toBeVisible();
     expect(await screen.findByText("foo.prismic.io")).toBeVisible();
     const link = await screen.findByTitle("Open prismic repository");
@@ -95,12 +118,12 @@ describe("Side Navigation", () => {
   });
 
   test("Update box when update is available", async () => {
-    renderApp({ canUpdate: true });
+    renderSideNavigation({ canUpdate: true });
     expect(await screen.findByText("Updates Available")).toBeVisible();
   });
 
   test("Update box when there are no updates", async () => {
-    renderApp({ canUpdate: false });
+    renderSideNavigation({ canUpdate: false });
     const element = await act(() => screen.queryByText("Updates Available"));
     expect(element).toBeNull();
   });
@@ -118,7 +141,7 @@ describe("Side Navigation", () => {
   ])(
     "internal navigation links: when clicking title %s it should navigate to %s",
     async (title, path) => {
-      const { user } = renderApp({ canUpdate: true });
+      const { user } = renderSideNavigation({ canUpdate: true });
 
       await act(() => mockRouter.push("/"));
 
@@ -132,6 +155,95 @@ describe("Side Navigation", () => {
       expect(mockRouter.asPath).toBe(path);
     }
   );
+
+  test("should display the number of changes on the 'Changes' item", async () => {
+    renderSideNavigation({ canUpdate: true, hasChanges: true });
+
+    expect(await screen.findByText("Changes")).toBeVisible();
+    const changesItem = screen
+      .getByText("Changes")
+      .closest("a") as HTMLAnchorElement;
+
+    expect(within(changesItem).getByText("1")).toBeVisible();
+  });
+
+  test("should not display the number of changes or 'Disconnect' on the 'Changes' item", async () => {
+    renderSideNavigation({ canUpdate: true, hasChanges: false });
+
+    expect(await screen.findByText("Changes")).toBeVisible();
+    const changesItem = screen
+      .getByText("Changes")
+      .closest("a") as HTMLAnchorElement;
+
+    expect(within(changesItem).queryByText("1")).not.toBeInTheDocument();
+    expect(
+      within(changesItem).queryByText("Logged out")
+    ).not.toBeInTheDocument();
+  });
+
+  test("should display the information that user is disconnected on the 'Changes' item when unauthorized", async () => {
+    renderSideNavigation({
+      canUpdate: true,
+      hasChanges: true,
+      authStatus: AuthStatus.UNAUTHORIZED,
+    });
+
+    expect(await screen.findByText("Changes")).toBeVisible();
+    const changesItem = screen
+      .getByText("Changes")
+      .closest("a") as HTMLAnchorElement;
+
+    expect(within(changesItem).getByText("Logged out")).toBeVisible();
+  });
+
+  test("should display the information that user is disconnected on the 'Changes' item when forbidden", async () => {
+    renderSideNavigation({
+      canUpdate: true,
+      hasChanges: true,
+      authStatus: AuthStatus.FORBIDDEN,
+    });
+
+    expect(await screen.findByText("Changes")).toBeVisible();
+    const changesItem = screen
+      .getByText("Changes")
+      .closest("a") as HTMLAnchorElement;
+
+    expect(within(changesItem).getByText("Logged out")).toBeVisible();
+  });
+
+  test("should display the information that user is disconnected on the 'Changes' item when offline", async () => {
+    vi.spyOn(navigator, "onLine", "get").mockReturnValueOnce(false);
+
+    renderSideNavigation({
+      canUpdate: true,
+      hasChanges: true,
+    });
+
+    expect(await screen.findByText("Changes")).toBeVisible();
+    const changesItem = screen
+      .getByText("Changes")
+      .closest("a") as HTMLAnchorElement;
+
+    expect(within(changesItem).getByText("Logged out")).toBeVisible();
+  });
+
+  test("should not display the information that user is disconnected when user is online", async () => {
+    vi.spyOn(navigator, "onLine", "get").mockReturnValueOnce(true);
+
+    renderSideNavigation({
+      canUpdate: true,
+      hasChanges: true,
+    });
+
+    expect(await screen.findByText("Changes")).toBeVisible();
+    const changesItem = screen
+      .getByText("Changes")
+      .closest("a") as HTMLAnchorElement;
+
+    expect(
+      within(changesItem).queryByText("Logged out")
+    ).not.toBeInTheDocument();
+  });
 
   test("Video Item with next", async (ctx) => {
     const adapter = createTestPlugin({
@@ -156,7 +268,7 @@ describe("Side Navigation", () => {
       })
     );
 
-    renderApp({ canUpdate: true });
+    renderSideNavigation({ canUpdate: true });
 
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;
@@ -172,7 +284,7 @@ describe("Side Navigation", () => {
   });
 
   test("Video Item not next", async () => {
-    const { user } = renderApp({ canUpdate: true });
+    const { user } = renderSideNavigation({ canUpdate: true });
 
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;

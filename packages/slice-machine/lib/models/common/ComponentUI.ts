@@ -17,6 +17,7 @@ export const buildScreenshotUrls = (
   }
   return Object.entries(screenshots).reduce(
     (acc, [variationId, screenshot]) => {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       return screenshot.hash
         ? {
             ...acc,
@@ -51,6 +52,7 @@ export const ComponentUI = {
     variationId?: string
   ): VariationSM | undefined {
     if (component.model.variations.length) {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (variationId)
         return component.model.variations.find((v) => v.id === variationId);
       return component.model.variations[0];

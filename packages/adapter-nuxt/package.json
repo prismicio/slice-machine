@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt",
-	"version": "0.3.6",
+	"version": "0.3.7-dev-next-release.4",
 	"description": "Slice Machine adapter for Nuxt 3.",
 	"keywords": [
 		"typescript",
@@ -46,7 +46,7 @@
 		"build": "vite build",
 		"dev": "vite build --watch",
 		"format": "prettier --write .",
-		"lint": "eslint --ext .js,.ts .",
+		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
 		"size": "size-limit",
 		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",

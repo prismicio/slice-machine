@@ -14,6 +14,7 @@ function useEditorContentOnce({
 }) {
   return useMemo(() => {
     const editorContent: SharedSliceContent =
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       slice.mocks?.find((m) => m.variation === variationID) ||
       defaultSharedSliceContent(variationID);
 

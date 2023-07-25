@@ -75,6 +75,7 @@ export const Input = (
   defaultValue: string | undefined,
   placeholder: string
 ): InputType => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const { min, max, required, matches } = conditions || {};
   return {
     type: FormTypes.INPUT,

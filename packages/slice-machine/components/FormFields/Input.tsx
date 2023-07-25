@@ -73,16 +73,20 @@ export const FormFieldInput = ({
   initialValues,
   isDisabled,
 }: FormFieldInputProps) => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const style = meta.error
     ? InputFieldStyles.ERROR
-    : isDisabled || formField.disabled
+    : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    isDisabled || formField.disabled
     ? InputFieldStyles.DISABLED
     : undefined;
 
   return (
     <Box sx={sx}>
       <Label variant="label.primary" htmlFor={fieldName}>
+        {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing */}
         {formField.label || fieldName}
+        {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
         {meta.touched && meta.error ? (
           <Text as="span" variant="text.labelError">
             {meta.error}
@@ -93,6 +97,7 @@ export const FormFieldInput = ({
         id={fieldName}
         name={fieldName}
         type="text"
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
         placeholder={formField.placeholder || formField.label || fieldName}
         {...(formField.fieldLevelValidation && initialValues
           ? {
@@ -108,6 +113,7 @@ export const FormFieldInput = ({
         {...field}
         as={Input}
         sx={getInputFieldStyles(style)}
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
         disabled={isDisabled || formField.disabled}
       />
     </Box>

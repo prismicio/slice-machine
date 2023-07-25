@@ -122,11 +122,11 @@ export class SliceMachineInitProcess {
 			);
 
 			await this.beginCoreDependenciesInstallation();
-			await this.loginAndFetchUserData();
 
 			if (this.options.repository) {
 				await this.useRepositoryFlag();
 			} else {
+				await this.loginAndFetchUserData();
 				await this.selectRepository();
 			}
 
@@ -135,12 +135,20 @@ export class SliceMachineInitProcess {
 				"Repository selection must be available through context to proceed",
 			);
 
+			await this.finishCoreDependenciesInstallation();
+			await this.upsertSliceMachineConfigurationAndStartPluginRunner();
+
+			const isLoginRequired = await this.checkIsLoginRequired();
+			if (isLoginRequired) {
+				await this.loginAndFetchUserData();
+				if (this.context.repository.exists) {
+					this.validateWriteAccess();
+				}
+			}
 			if (!this.context.repository.exists) {
 				await this.createNewRepository();
 			}
 
-			await this.finishCoreDependenciesInstallation();
-			await this.upsertSliceMachineConfigurationAndStartPluginRunner();
 			await this.pushDataToPrismic();
 			await this.initializeProject();
 			await this.initializePlugins();
@@ -213,6 +221,31 @@ export class SliceMachineInitProcess {
 		} catch {
 			// Noop, it's only the final convenience messsage
 		}
+	}
+
+	protected async checkIsLoginRequired(): Promise<boolean> {
+		try {
+			assertExists(this.context.repository, "");
+			if (this.context.repository.exists === false) {
+				return true;
+			}
+			const [slices, ctLibrary, documentsGlob] = await Promise.all([
+				this.readAllSlices(),
+				this.manager.customTypes.readCustomTypeLibrary(),
+				this.readDocuments(),
+			]);
+			if (
+				slices.length > 0 ||
+				ctLibrary.ids.length > 0 ||
+				(documentsGlob !== undefined && documentsGlob.documents.length > 0)
+			) {
+				return true;
+			}
+		} catch (e) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected trackError = (error: unknown): Promise<void> => {
@@ -350,6 +383,55 @@ export class SliceMachineInitProcess {
 		]);
 	}
 
+	protected async fetchUserProfile(): Promise<void> {
+		this.context.userProfile = await this.manager.user.getProfile();
+
+		await this.manager.telemetry.identify({
+			userID: this.context.userProfile.shortId,
+			intercomHash: this.context.userProfile.intercomHash,
+		});
+		await this.manager.telemetry.track({
+			event: "command:init:identify",
+			repository: this.options.repository,
+		});
+	}
+
+	protected async fetchUserRepositories(): Promise<void> {
+		this.context.userRepositories =
+			await this.manager.prismicRepository.readAll();
+	}
+
+	protected validateWriteAccess(): void {
+		assertExists(
+			this.context.repository,
+			"Repository selection must be available through context to proceed",
+		);
+		assertExists(
+			this.context.userRepositories,
+			"User repositories must be available through context to validate write access",
+		);
+		const { domain } = this.context.repository;
+		const maybeRepository = this.context.userRepositories.find(
+			(repository) => repository.domain === domain,
+		);
+
+		if (maybeRepository) {
+			if (!this.manager.prismicRepository.hasWriteAccess(maybeRepository)) {
+				throw new Error(
+					`Cannot run init command with repository ${chalk.cyan(
+						maybeRepository.domain,
+					)}: you are not a developer or admin of this repository`,
+				);
+			}
+		} else {
+			throw new Error(
+				`Cannot validate write access for repository ${chalk.cyan(
+					domain,
+				)}: you are not part of this repository`,
+			);
+		}
+	}
+
 	protected loginAndFetchUserData(): Promise<void> {
 		return listrRun([
 			{
@@ -388,18 +470,7 @@ export class SliceMachineInitProcess {
 							{
 								title: "Fetching user profile...",
 								task: async (_, task) => {
-									this.context.userProfile =
-										await this.manager.user.getProfile();
-
-									await this.manager.telemetry.identify({
-										userID: this.context.userProfile.shortId,
-										intercomHash: this.context.userProfile.intercomHash,
-									});
-									await this.manager.telemetry.track({
-										event: "command:init:identify",
-										repository: this.options.repository,
-									});
-
+									await this.fetchUserProfile();
 									parentTask.title = `Logged in as ${chalk.cyan(
 										this.context.userProfile?.email,
 									)}`;
@@ -409,9 +480,7 @@ export class SliceMachineInitProcess {
 							{
 								title: "Fetching user repositories...",
 								task: async (_, task) => {
-									this.context.userRepositories =
-										await this.manager.prismicRepository.readAll();
-
+									await this.fetchUserRepositories();
 									task.title = "Fetched user repositories";
 								},
 							},
@@ -429,38 +498,24 @@ export class SliceMachineInitProcess {
 				title: `Flag ${chalk.cyan("repository")} used, validating input...`,
 				task: async (_, task) => {
 					assertExists(
-						this.context.userRepositories,
-						"User repositories must be available through context to run `useRepositoryFlag`",
-					);
-					assertExists(
 						this.options.repository,
 						"Flag `repository` must be set to run `useRepositoryFlag`",
 					);
-
 					const domain = formatRepositoryDomain(this.options.repository);
+					const validation = await validateRepositoryDomainAndAvailability({
+						domain,
+						existsFn: (domain) =>
+							this.manager.prismicRepository.checkExists({ domain }),
+					});
 
-					const maybeRepository = this.context.userRepositories.find(
-						(repository) => repository.domain === domain,
-					);
-
-					if (maybeRepository) {
-						if (
-							!this.manager.prismicRepository.hasWriteAccess(maybeRepository)
-						) {
-							throw new Error(
-								`Cannot run init command with repository ${chalk.cyan(
-									maybeRepository.domain,
-								)}: you are not a developer or admin of this repository`,
-							);
-						}
-					} else {
-						const validation = await validateRepositoryDomainAndAvailability({
-							domain,
-							existsFn: (domain) =>
-								this.manager.prismicRepository.checkExists({ domain }),
-						});
+					if (validation.LessThan4 || validation.MoreThan30) {
 						const errorMessage = getErrorMessageForRepositoryDomainValidation({
-							validation,
+							validation: {
+								...validation,
+								// We don't want to throw if repo already exists.
+								// User most probably just created it via their dashboard.
+								AlreadyExists: false,
+							},
 							displayDomain: chalk.cyan(domain),
 						});
 
@@ -475,7 +530,7 @@ export class SliceMachineInitProcess {
 
 					this.context.repository = {
 						domain,
-						exists: !!maybeRepository,
+						exists: validation.AlreadyExists ?? false,
 					};
 				},
 			},
@@ -835,6 +890,58 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		]);
 	}
 
+	protected async readAllSlices(): Promise<
+		{ libraryID: string; sliceID: string }[]
+	> {
+		const { libraries, errors } =
+			await this.manager.slices.readAllSliceLibraries();
+
+		if (errors.length > 0) {
+			// TODO: Provide better error message.
+			throw new Error(`Failed to read slice libraries: ${errors.join(", ")}`);
+		}
+
+		const slices: { libraryID: string; sliceID: string }[] = [];
+		for (const library of libraries) {
+			if (library.sliceIDs) {
+				for (const sliceID of library.sliceIDs) {
+					slices.push({
+						libraryID: library.libraryID,
+						sliceID,
+					});
+				}
+			}
+		}
+
+		return slices;
+	}
+
+	protected async readDocuments(): Promise<
+		| {
+				signature: string;
+				documents: string[];
+				directoryPath: string;
+		  }
+		| undefined
+	> {
+		const root = await this.manager.project.getRoot();
+		const documentsDirectoryPath = path.resolve(root, "documents");
+		try {
+			await fs.access(documentsDirectoryPath);
+		} catch {
+			return;
+		}
+		const signaturePath = path.resolve(documentsDirectoryPath, "index.json");
+		const rawSignature = await fs.readFile(signaturePath, "utf-8");
+		const signature: string = JSON.parse(rawSignature).signature;
+
+		const documents = await globby("*/*.json", {
+			cwd: documentsDirectoryPath,
+		});
+
+		return { signature, documents, directoryPath: documentsDirectoryPath };
+	}
+
 	protected pushDataToPrismic(): Promise<void> {
 		return listrRun([
 			{
@@ -851,27 +958,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 							},
 							task: async (_, task) => {
-								const { libraries, errors } =
-									await this.manager.slices.readAllSliceLibraries();
-
-								if (errors.length > 0) {
-									// TODO: Provide better error message.
-									throw new Error(
-										`Failed to read slice libraries: ${errors.join(", ")}`,
-									);
-								}
-
-								const slices: { libraryID: string; sliceID: string }[] = [];
-								for (const library of libraries) {
-									if (library.sliceIDs) {
-										for (const sliceID of library.sliceIDs) {
-											slices.push({
-												libraryID: library.libraryID,
-												sliceID,
-											});
-										}
-									}
-								}
+								const slices = await this.readAllSlices();
 
 								if (slices.length === 0) {
 									task.skip("No slice to push");
@@ -951,70 +1038,62 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									"Repository selection must be available through context to run `pushDataToPrismic`",
 								);
 
-								const root = await this.manager.project.getRoot();
-								const documentsDirectoryPath = path.resolve(root, "documents");
-
 								try {
-									await fs.access(documentsDirectoryPath);
+									const documentsRead = await this.readDocuments();
+
+									if (
+										documentsRead === undefined ||
+										documentsRead.documents.length === 0
+									) {
+										parentTask.title = "Pushed data to Prismic";
+										task.skip("No document to push");
+
+										return;
+									}
+
+									const { signature, documents, directoryPath } = documentsRead;
+
+									// TODO: Replace `unknown` with a Prismic document type.
+									// The exact format is not know at this time, hence the `unknown`.
+									const recordDocument: Record<string, unknown> = {};
+
+									await Promise.all(
+										documents.map(async (documentPath) => {
+											const filename = path.basename(documentPath, ".json");
+											const fileContent = await fs.readFile(
+												path.resolve(directoryPath, documentPath),
+												"utf-8",
+											);
+
+											try {
+												// TOOD: Validate the contents of the JSON file and skip on invalid documents.
+												const parsedContents = JSON.parse(fileContent);
+
+												recordDocument[filename] = parsedContents;
+											} catch {
+												// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+												// eslint-disable-next-line no-console
+												console.log(
+													`Skipped document due to its invalid format: ${documentPath}`,
+												);
+											}
+										}),
+									);
+
+									await this.manager.prismicRepository.pushDocuments({
+										domain: this.context.repository.domain,
+										documents: recordDocument,
+										signature,
+									});
+
+									task.title = "Pushed all documents";
+									parentTask.title = "Pushed data to Prismic";
 								} catch {
 									parentTask.title = "Pushed data to Prismic";
 									task.skip("No document to push");
 
 									return;
 								}
-
-								const signaturePath = path.resolve(
-									documentsDirectoryPath,
-									"index.json",
-								);
-								const rawSignature = await fs.readFile(signaturePath, "utf-8");
-								const signature: string = JSON.parse(rawSignature).signature;
-
-								const documentsGlob = await globby("*/*.json", {
-									cwd: documentsDirectoryPath,
-								});
-								if (documentsGlob.length === 0) {
-									parentTask.title = "Pushed data to Prismic";
-									task.skip("No document to push");
-
-									return;
-								}
-
-								// TODO: Replace `unknown` with a Prismic document type.
-								// The exact format is not know at this time, hence the `unknown`.
-								const documents: Record<string, unknown> = {};
-
-								await Promise.all(
-									documentsGlob.map(async (documentPath) => {
-										const filename = path.basename(documentPath, ".json");
-										const fileContent = await fs.readFile(
-											path.resolve(documentsDirectoryPath, documentPath),
-											"utf-8",
-										);
-
-										try {
-											// TOOD: Validate the contents of the JSON file and skip on invalid documents.
-											const parsedContents = JSON.parse(fileContent);
-
-											documents[filename] = parsedContents;
-										} catch {
-											// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
-											// eslint-disable-next-line no-console
-											console.log(
-												`Skipped document due to its invalid format: ${documentPath}`,
-											);
-										}
-									}),
-								);
-
-								await this.manager.prismicRepository.pushDocuments({
-									domain: this.context.repository.domain,
-									documents,
-									signature,
-								});
-
-								task.title = "Pushed all documents";
-								parentTask.title = "Pushed data to Prismic";
 							},
 						},
 						{

@@ -58,6 +58,7 @@ const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
     if (setColorMode) {
       setColorMode("light");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <>{children}</>;
@@ -105,6 +106,7 @@ function MyApp({
     setSMStore({ store, persistor });
   }, [serverState, smStore]);
 
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const ComponentLayout = Component.CustomLayout || SliceMachineApp;
 
   return (

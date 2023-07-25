@@ -22,16 +22,20 @@ const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
     });
   });
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (error) {
     console.error(error);
   }
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!data || error) {
     return null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const snippets = data.snippets || [];
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!snippets[0]) {
     return null;
   }

@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 function copyStyles(sourceDoc, targetDoc) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
   Array.from(sourceDoc.styleSheets).forEach((styleSheet) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
     if (styleSheet.cssRules) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       const newStyleEl = sourceDoc.createElement("style");
@@ -29,6 +29,7 @@ const WindowPortal = ({ children, onClose }) => {
   });
 
   const _onClose = () => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (win) {
       setTimeout(() => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -44,6 +45,7 @@ const WindowPortal = ({ children, onClose }) => {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (win) {
       copyStyles(document, win.document);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -52,10 +54,11 @@ const WindowPortal = ({ children, onClose }) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       win.addEventListener("beforeunload", _onClose);
       return () =>
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/strict-boolean-expressions
         (win && win.removeEventListener("beforeunload", _onClose)) ||
         _onClose();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [win]);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
   return state.isAppended ? createPortal(children, state.container) : null;

@@ -31,6 +31,7 @@ const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
           : null),
       }}
     >
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {MaybeCustomComponent ? (
         <MaybeCustomComponent
           meta={meta}

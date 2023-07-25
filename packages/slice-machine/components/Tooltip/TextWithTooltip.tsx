@@ -48,6 +48,7 @@ export const TextWithTooltip: React.FC<TextWithTooltipProps> = ({
       >
         {text}
       </Text>
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {showTooltip && (
         <ReactTooltip
           id={text}

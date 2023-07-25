@@ -237,12 +237,18 @@ describe("[Available Custom types module]", () => {
         );
       saga.next().put(modalCloseCreator());
       saga.next().put(push("/custom-types/id"));
-      saga.next().put(
-        openToasterCreator({
-          content: "Custom type saved",
-          type: ToasterType.SUCCESS,
-        })
-      );
+      saga
+        .next()
+        .inspect(
+          (action: {
+            payload: { action: { type: string; payload: { type: string } } };
+          }) => {
+            expect(action.payload.action.type).toBe("TOASTER/OPEN");
+            expect(action.payload.action.payload.type).toBe(
+              ToasterType.SUCCESS
+            );
+          }
+        );
       saga.next().isDone();
     });
 

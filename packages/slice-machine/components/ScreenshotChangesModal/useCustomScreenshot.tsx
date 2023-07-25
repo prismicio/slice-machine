@@ -33,6 +33,7 @@ const FileInputRenderer: React.FC<HandleFileProp> = ({
         flex: 1,
       }}
     >
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing */}
       {children || "Select file"}
     </Label>
     <input

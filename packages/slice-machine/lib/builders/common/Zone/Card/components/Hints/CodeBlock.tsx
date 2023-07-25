@@ -30,6 +30,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const copy = (): void => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     code &&
       void navigator.clipboard.writeText(code).then(() => {
         setIsCopied(true);
@@ -39,6 +40,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
       });
   };
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return code ? (
     <Flex
       sx={{

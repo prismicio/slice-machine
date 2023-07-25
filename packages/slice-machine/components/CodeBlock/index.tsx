@@ -13,6 +13,7 @@ const CodeBlock: React.FC<{
   Header?: React.FC;
 }> = ({ children, lang, sx, codeStyle, codeClass, Header }) => {
   const { theme } = useThemeUI();
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const text = lang
     ? hljs.highlight(children, { language: lang === "vue" ? "html" : lang })
         .value
@@ -22,6 +23,7 @@ const CodeBlock: React.FC<{
     <Flex as="pre" sx={sx}>
       {Header ? <Header /> : null}
       <code
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         className={`hljs${codeClass ? ` ${codeClass}` : ""}`}
         style={{
           overflowX: "auto",

@@ -39,6 +39,7 @@ const Card: React.FC<CardProps> = ({
     {SubHeader ? <SubHeader radius={radius} /> : null}
     <CardBox bg={bg} background={background} sx={bodySx} withRadius={!Footer}>
       {Body ? <Body /> : null}
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {children ? children : null}
     </CardBox>
     {Footer ? (

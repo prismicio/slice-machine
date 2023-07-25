@@ -106,7 +106,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	//
 	// - Does not expect the consumer to supply a repository object; it
 	//   only requires a repository name, which could be sourced from
-	//   anything (incl. the project's `sm.json`).
+	//   anything (incl. the project's `slicemachine.config.json`).
 	//
 	// - Similarly, it does not expect the consumer to call `readAll()`
 	//   before calling this method.
@@ -134,7 +134,11 @@ export class PrismicRepositoryManager extends BaseManager {
 			`./app/dashboard/repositories/${args.domain}/exists`,
 			API_ENDPOINTS.PrismicWroom,
 		);
-		const res = await this._fetch({ url });
+		const res = await this._fetch({
+			url,
+			skipAuthentication: true,
+		});
+
 		const text = await res.text();
 
 		if (res.ok) {
@@ -443,8 +447,16 @@ export class PrismicRepositoryManager extends BaseManager {
 		body?: unknown;
 		userAgent?: PrismicRepositoryUserAgents;
 		repository?: string;
+		skipAuthentication?: boolean;
 	}): Promise<Response> {
-		const cookies = await this.user.getAuthenticationCookies();
+		let cookies;
+		try {
+			cookies = await this.user.getAuthenticationCookies();
+		} catch (e) {
+			if (!args.skipAuthentication) {
+				throw e;
+			}
+		}
 
 		const extraHeaders: Record<string, string> = {};
 
@@ -461,8 +473,13 @@ export class PrismicRepositoryManager extends BaseManager {
 			body: args.body ? JSON.stringify(args.body) : undefined,
 			headers: {
 				// Some endpoints rely on the authorization header...
-				Authorization: `Bearer ${cookies["prismic-auth"]}`,
-				Cookie: serializeCookies(cookies),
+
+				...(cookies !== undefined
+					? {
+							Authorization: `Bearer ${cookies["prismic-auth"]}`,
+							Cookie: serializeCookies(cookies),
+					  }
+					: {}),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,
 			},

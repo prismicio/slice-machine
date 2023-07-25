@@ -32,6 +32,7 @@ export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
         ...sx,
       }}
     >
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {hideMissingWarning ? null : src ? (
         <MemoedImage src={src} />
       ) : (

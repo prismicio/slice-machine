@@ -133,6 +133,7 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
     case getType(checkSimulatorSetupCreator.failure):
       return {
         ...state,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         setupSteps: action.payload.setupSteps || null,
         setupStatus: {
           ...state.setupStatus,
@@ -218,6 +219,7 @@ function* connectToSimulatorIframe() {
     timeout: delay(20000),
   });
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (iframeCheckOk) {
     yield put(connectToSimulatorIframeCreator.success());
     return;
