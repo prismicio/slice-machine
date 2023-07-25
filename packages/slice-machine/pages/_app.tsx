@@ -39,6 +39,7 @@ import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/c
 import Router from "next/router";
 
 import { NextPage } from "next";
+import ToastContainer from "@components/ToasterContainer";
 
 type NextPageWithLayout = NextPage & {
   CustomLayout?: React.FC<{ children: ReactNode }>;
@@ -120,17 +121,20 @@ function MyApp({
             {!smStore || !serverState ? (
               <LoadingPage />
             ) : (
-              <Provider store={smStore.store}>
-                <ConnectedRouter Router={Router}>
-                  <PersistGate loading={null} persistor={smStore.persistor}>
-                    <RouteChangeProvider>
-                      <ComponentLayout>
-                        <Component {...pageProps} />
-                      </ComponentLayout>
-                    </RouteChangeProvider>
-                  </PersistGate>
-                </ConnectedRouter>
-              </Provider>
+              <>
+                <Provider store={smStore.store}>
+                  <ConnectedRouter Router={Router}>
+                    <PersistGate loading={null} persistor={smStore.persistor}>
+                      <RouteChangeProvider>
+                        <ComponentLayout>
+                          <Component {...pageProps} />
+                        </ComponentLayout>
+                      </RouteChangeProvider>
+                    </PersistGate>
+                  </ConnectedRouter>
+                </Provider>
+                <ToastContainer />
+              </>
             )}
           </ThemeProvider>
         </RemoveDarkMode>

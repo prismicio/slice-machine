@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import LoginModal from "@components/LoginModal";
 import ReviewModal from "@components/ReviewModal";
 import { MissingLibraries } from "@components/MissingLibraries";
-import ToastContainer from "@components/ToasterContainer";
 import { SliceHandler } from "@src/models/slice/context";
 import useServerState from "@src/hooks/useServerState";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -52,7 +51,6 @@ const SliceMachineApp: FC<Props> = ({ children }) => {
         </AppLayout>
         <LoginModal />
         <ReviewModal />
-        <ToastContainer />
       </BaseStyles>
     </div>
   );

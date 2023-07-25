@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   ToastContainer as ReactToastifyContainer,
@@ -29,6 +29,10 @@ const getIconAccordingToasterType = ({
 };
 
 const ToastContainer: React.FunctionComponent = () => {
+  useEffect(() => {
+    console.log("TOAST MOUNTED");
+    return () => console.log("TOAST CONTAINER UNMOUNTED");
+  });
   return (
     <ReactToastifyContainer
       autoClose={2500}
