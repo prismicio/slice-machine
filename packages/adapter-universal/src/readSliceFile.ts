@@ -14,7 +14,10 @@ export async function readSliceFile(
 export async function readSliceFile(
 	args: ReadSliceFileArgs & { encoding?: BufferEncoding },
 ): Promise<Buffer | string> {
-	const filePath = await buildSliceFilePath(args);
+	const filePath = await buildSliceFilePath({
+		...args,
+		absolute: false,
+	});
 
 	return await readProjectFile({
 		filename: filePath,

@@ -41,6 +41,12 @@ export type { BuildSliceFilePathArgs } from "./buildSliceFilePath";
 export { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
 export type { BuildSliceLibraryDirectoryPathArgs } from "./buildSliceLibraryDirectoryPath";
 
+export { readSliceLibrary } from "./readSliceLibrary";
+export type {
+	ReadSliceLibraryArgs,
+	ReadSliceLibraryReturnType,
+} from "./readSliceLibrary";
+
 export { writeSliceFile } from "./writeSliceFile";
 export type { WriteSliceFileArgs } from "./writeSliceFile";
 
@@ -76,6 +82,12 @@ export type { BuildCustomTypeFilePathArgs } from "./buildCustomTypeFilePath";
 
 export { buildCustomTypeLibraryDirectoryPath } from "./buildCustomTypeLibraryDirectoryPath";
 export type { BuildCustomTypeLibraryDirectoryPathArgs } from "./buildCustomTypeLibraryDirectoryPath";
+
+export { readCustomTypeLibrary } from "./readCustomTypeLibrary";
+export type {
+	ReadCustomTypeLibraryArgs,
+	ReadCustomTypeLibraryReturnType,
+} from "./readCustomTypeLibrary";
 
 export { writeCustomTypeFile } from "./writeCustomTypeFile";
 export type { WriteCustomTypeFileArgs } from "./writeCustomTypeFile";
