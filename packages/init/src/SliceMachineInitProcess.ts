@@ -224,9 +224,9 @@ export class SliceMachineInitProcess {
 			if (!this.options.startSlicemachine) {
 				// eslint-disable-next-line no-console
 				console.log(`
-		GETTING STARTED
-			Run Slice Machine    ${chalk.cyan(runSmCommand)}
-			Run your project     ${chalk.cyan(runProjectCommand)}
+  GETTING STARTED
+    Run Slice Machine    ${chalk.cyan(runSmCommand)}
+    Run your project     ${chalk.cyan(runProjectCommand)}
 				`);
 			} else {
 				const pkgJSONPath = path.join(this.manager.cwd, "package.json");
@@ -256,7 +256,9 @@ export class SliceMachineInitProcess {
 					.join("")}${chalk.cyan(finalSmCommand.command)}
 			 `);
 
-				const { stdout } = await execaCommand(finalSmCommand.command).pipeStdout(process.stdout);
+				const { stdout } = await execaCommand(finalSmCommand.command, {
+					env: { FORCE_COLOR: "true" },
+				}).pipeStdout(process.stdout);
 				// eslint-disable-next-line no-console
 				console.log(stdout);
 			}
