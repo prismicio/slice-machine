@@ -18,7 +18,7 @@ const args = mri<Args>(process.argv.slice(2), {
 		version: "v",
 	},
 	default: {
-		open: false,
+		open: true,
 		help: false,
 		version: false,
 	},

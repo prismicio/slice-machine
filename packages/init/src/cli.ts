@@ -23,6 +23,7 @@ OPTIONS
   --no-push-slices        For starters, prevent slices from being pushed
   --no-push-custom-types  For starters, prevent types from being pushed
   --no-push-documents     For starters, prevent documents from being pushed
+  --no-start-slicemachine Prevents init from running SliceMachine
 
   --help, -h              Display CLI help
   --version, -v           Display CLI version
@@ -47,6 +48,10 @@ OPTIONS
 				default: true,
 			},
 			pushDocuments: {
+				type: "boolean",
+				default: true,
+			},
+			startSlicemachine: {
 				type: "boolean",
 				default: true,
 			},
