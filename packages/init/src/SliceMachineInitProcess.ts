@@ -2,7 +2,10 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import chalk from "chalk";
+
+import { execaCommand } from "execa";
 import type { ExecaChildProcess } from "execa";
+
 import open from "open";
 import logSymbols from "log-symbols";
 import { globby } from "globby";
@@ -39,6 +42,7 @@ export type SliceMachineInitProcessOptions = {
 	pushSlices?: boolean;
 	pushCustomTypes?: boolean;
 	pushDocuments?: boolean;
+	startSlicemachine?: boolean;
 	cwd?: string;
 } & Record<string, unknown>;
 
@@ -47,6 +51,7 @@ const DEFAULT_OPTIONS: SliceMachineInitProcessOptions = {
 	pushSlices: true,
 	pushCustomTypes: true,
 	pushDocuments: true,
+	startSlicemachine: true,
 };
 
 export const createSliceMachineInitProcess = (
@@ -199,10 +204,9 @@ export class SliceMachineInitProcess {
 			this.context.framework.prismicDocumentation,
 		)}
     Getting help         ${chalk.cyan("https://community.prismic.io")}
+	`);
 
-  GETTING STARTED
-    Run Slice Machine    ${chalk.cyan(
-			this.context.projectInitialization?.patchedScript
+			const runSmCommand = this.context.projectInitialization?.patchedScript
 				? await getRunScriptCommand({
 						agent: this.context.packageManager || "npm",
 						script: "slicemachine",
@@ -210,14 +214,52 @@ export class SliceMachineInitProcess {
 				: await getExecuteCommand({
 						agent: this.context.packageManager || "npm",
 						script: "start-slicemachine",
-				  }),
-		)}
-    Run your project     ${chalk.cyan(
-			await getRunScriptCommand({
+				  });
+
+			const runProjectCommand = await getRunScriptCommand({
 				agent: this.context.packageManager || "npm",
 				script: "dev",
-			}),
-		)}`);
+			});
+
+			if (!this.options.startSlicemachine) {
+				// eslint-disable-next-line no-console
+				console.log(`
+		GETTING STARTED
+			Run Slice Machine    ${chalk.cyan(runSmCommand)}
+			Run your project     ${chalk.cyan(runProjectCommand)}
+				`);
+			} else {
+				const pkgJSONPath = path.join(this.manager.cwd, "package.json");
+				const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
+				const scripts = pkg.scripts || {};
+
+				const finalSmCommand = (() => {
+					if (
+						scripts["dev"] &&
+						typeof scripts["dev"] === "string" &&
+						scripts["dev"].includes(":slicemachine")
+					) {
+						return {
+							command: runProjectCommand,
+							name: "dev script",
+							spacing: 3,
+						};
+					}
+
+					return { command: runSmCommand, name: "slicemachine", spacing: 1 };
+				})();
+
+				// eslint-disable-next-line no-console
+				console.log(`  START SLICEMACHINE
+    Running ${finalSmCommand.name}${[...Array(finalSmCommand.spacing)]
+					.map(() => " ")
+					.join("")}${chalk.cyan(finalSmCommand.command)}
+			 `);
+
+				const { stdout } = await execaCommand(finalSmCommand.command).pipeStdout(process.stdout);
+				// eslint-disable-next-line no-console
+				console.log(stdout);
+			}
 		} catch {
 			// Noop, it's only the final convenience messsage
 		}
