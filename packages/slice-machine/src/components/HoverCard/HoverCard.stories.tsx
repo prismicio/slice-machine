@@ -1,23 +1,95 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import {
+  HoverCard,
+  HoverCardDescription,
+  HoverCardCloseButton,
+  HoverCardMedia,
+  HoverCardTitle,
+} from "./HoverCard";
 import { Button } from "@prismicio/editor-ui";
-
-import { HoverCard } from "./HoverCard";
-
-type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: HoverCard,
-  argTypes: {
-    anchor: { control: { disable: true } },
-    children: { control: { disable: true } },
-  },
+  parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof HoverCard>;
+
+type Story = StoryObj<typeof meta>;
 
 export default meta;
 
-export const Default = {
+const noop = () => void 0;
+
+export const Image = {
   args: {
-    anchor: <Button>Create</Button>,
-    children: <p>My Hover Card Content</p>,
+    open: true,
+    onClose: noop,
+    openDelay: 1500,
+    trigger: <Button>HoverCard</Button>,
+    children: (
+      <>
+        <HoverCardTitle>Prismic Academy©</HoverCardTitle>
+        <HoverCardMedia component="image" src="phil.png" />
+        <HoverCardDescription>
+          Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
+          vitae etiam
+        </HoverCardDescription>
+        <HoverCardCloseButton>Got It</HoverCardCloseButton>
+      </>
+    ),
   },
 } satisfies Story;
+
+export const Video = {
+  args: {
+    open: true,
+    onClose: noop,
+    openDelay: 1500,
+    trigger: <Button>HoverCard</Button>,
+    children: (
+      <>
+        <HoverCardTitle>Prismic Academy©</HoverCardTitle>
+        <HoverCardMedia
+          component="video"
+          cloudName="dmtf1daqp"
+          publicId="Tooltips/pa-course-overview_eaopsn"
+          poster="phil.png"
+        />
+        <HoverCardDescription>
+          Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
+          vitae etiam
+        </HoverCardDescription>
+        <HoverCardCloseButton>Got It</HoverCardCloseButton>
+      </>
+    ),
+  },
+} satisfies Story;
+
+export const CloseWhenClickingOutSide = {
+  render: () => {
+    return (
+      <div>
+        <HoverCard
+          open={true}
+          onClose={noop}
+          openDelay={1500}
+          trigger={<Button>HoverCard</Button>}
+          side="right"
+        >
+          <HoverCardTitle>Prismic Academy©</HoverCardTitle>
+          <HoverCardMedia
+            component="video"
+            cloudName="dmtf1daqp"
+            publicId="Tooltips/pa-course-overview_eaopsn"
+            poster="phil.png"
+          />
+          <HoverCardDescription>
+            Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel
+            eget vitae etiam
+          </HoverCardDescription>
+          <HoverCardCloseButton>Got It</HoverCardCloseButton>
+        </HoverCard>
+        <Button>Outside</Button>
+      </div>
+    );
+  },
+};

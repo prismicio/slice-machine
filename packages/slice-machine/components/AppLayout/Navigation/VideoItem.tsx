@@ -12,10 +12,16 @@ import { VIDEO_YOUTUBE_PLAYLIST_LINK, PRISMIC_ACADEMY_URL } from "@lib/consts";
 import { telemetry } from "@src/apiClient";
 import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
 import { PlayCircleIcon } from "@src/icons/PlayCircle";
-import { VideoPopover } from "@src/components/VideoPopover";
+import {
+  HoverCard,
+  HoverCardDescription,
+  HoverCardCloseButton,
+  HoverCardMedia,
+  HoverCardTitle,
+} from "@src/components/HoverCard";
+import { useAdapterName } from "@src/hooks/useAdapterName";
 
 import style from "./VideoItem.module.css";
-import { useAdapterName } from "@src/hooks/useAdapterName";
 
 type VideoItemProps = {
   hasSeenTutorialsToolTip: boolean;
@@ -68,21 +74,30 @@ const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
   hasSeenTutorialsToolTip,
 }) => {
   if (isNext) {
-    const videoUrl = "Tooltips/pa-course-overview_eaopsn";
     return (
-      <VideoPopover
-        side="right"
-        sideOffset={24}
-        cloudName="dmtf1daqp"
-        publicId={videoUrl}
-        onClose={onClose}
-        thumbnail="/phill.png"
+      <HoverCard
         open={!hasSeenTutorialsToolTip}
+        side="right"
+        onClose={onClose}
+        trigger={children}
+        sideOffset={24}
         align="end"
         alignOffset={8}
       >
-        {children}
-      </VideoPopover>
+        <HoverCardTitle>Need help?</HoverCardTitle>
+        <HoverCardMedia
+          component="video"
+          cloudName="dmtf1daqp"
+          publicId="Tooltips/pa-course-overview_eaopsn"
+          poster="/phil.png"
+          controls
+        />
+        <HoverCardDescription>
+          Learn how to turn a Next.js website into a page builder powered by
+          Prismic.
+        </HoverCardDescription>
+        <HoverCardCloseButton>Got It</HoverCardCloseButton>
+      </HoverCard>
     );
   }
 
