@@ -36,7 +36,7 @@ import { ConnectedRouter } from "connected-next-router";
 import { RouteChangeProvider } from "../src/hooks/useRouteChange";
 import { getState } from "../src/apiClient";
 import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/customType";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
 import { NextPage } from "next";
 import ToastContainer from "@components/ToasterContainer";
@@ -69,6 +69,7 @@ function MyApp({
   Component,
   pageProps,
 }: AppContextWithComponentLayout & AppInitialProps) {
+  const router = useRouter();
   const [serverState, setServerState] = useState<ServerState | null>(null);
   const [smStore, setSMStore] = useState<{
     store: Store;
@@ -109,6 +110,8 @@ function MyApp({
 
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const ComponentLayout = Component.CustomLayout || SliceMachineApp;
+  const isSimulator =
+    false || router.pathname === "/[lib]/[sliceName]/[variation]/simulator";
 
   return (
     <>
@@ -133,7 +136,7 @@ function MyApp({
                     </PersistGate>
                   </ConnectedRouter>
                 </Provider>
-                <ToastContainer />
+                {isSimulator === false && <ToastContainer />}
               </>
             )}
           </ThemeProvider>
