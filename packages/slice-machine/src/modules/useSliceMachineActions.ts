@@ -9,6 +9,7 @@ import {
   updatesViewedCreator,
   hasSeenTutorialsToolTipCreator,
   hasSeenSimulatorToolTipCreator,
+  hasSeenChangesToolTipCreator,
 } from "./userContext";
 import { getChangelogCreator, refreshStateCreator } from "./environment";
 import {
@@ -142,6 +143,7 @@ const useSliceMachineActions = () => {
     dispatch(hasSeenSimulatorToolTipCreator());
   const setSeenTutorialsToolTip = () =>
     dispatch(hasSeenTutorialsToolTipCreator());
+  const setSeenChangesToolTip = () => dispatch(hasSeenChangesToolTipCreator());
 
   // Custom types module
   const createCustomType = (
@@ -522,6 +524,7 @@ const useSliceMachineActions = () => {
     setUpdatesViewed,
     setSeenTutorialsToolTip,
     setSeenSimulatorToolTip,
+    setSeenChangesToolTip,
     openCreateCustomTypeModal,
     openScreenshotPreviewModal,
     openDeleteSliceModal,

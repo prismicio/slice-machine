@@ -13,6 +13,7 @@ export type UserContextStoreType = {
   };
   hasSeenTutorialsToolTip: boolean;
   hasSeenSimulatorToolTip: boolean;
+  hasSeenChangesToolTip: boolean;
   authStatus: AuthStatus;
   lastSyncChange: number | null;
 };
