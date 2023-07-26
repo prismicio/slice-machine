@@ -1,7 +1,5 @@
 import type { SliceAssetReadHook } from "@slicemachine/plugin-kit";
-import * as fs from "node:fs/promises";
-
-import { buildSliceAssetPath } from "../lib/buildSliceAssetPath";
+import { readSliceFile } from "@slicemachine/adapter-universal";
 
 import type { PluginOptions } from "../types";
 
@@ -9,17 +7,15 @@ export const sliceAssetRead: SliceAssetReadHook<PluginOptions> = async (
 	data,
 	context,
 ) => {
-	const filePath = await buildSliceAssetPath({
+	const file = await readSliceFile({
 		libraryID: data.libraryID,
 		sliceID: data.sliceID,
-		assetID: data.assetID,
-		helpers: context.helpers,
+		filename: data.assetID,
 		actions: context.actions,
+		helpers: context.helpers,
 	});
 
-	const assetData = await fs.readFile(filePath);
-
 	return {
-		data: assetData,
+		data: file,
 	};
 };

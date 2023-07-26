@@ -1,7 +1,8 @@
 import type { SliceUpdateHook } from "@slicemachine/plugin-kit";
-
-import { updateSliceModelFile } from "../lib/updateSliceModelFile";
-import { upsertGlobalContentTypes } from "../lib/upsertGlobalContentTypes";
+import {
+	upsertGlobalTypeScriptTypes,
+	writeSliceModel,
+} from "@slicemachine/adapter-universal";
 
 import type { PluginOptions } from "../types";
 
@@ -9,11 +10,17 @@ export const sliceUpdate: SliceUpdateHook<PluginOptions> = async (
 	data,
 	context,
 ) => {
-	await updateSliceModelFile({
+	await writeSliceModel({
 		libraryID: data.libraryID,
 		model: data.model,
-		...context,
+		format: context.options.format,
+		helpers: context.helpers,
 	});
 
-	await upsertGlobalContentTypes(context);
+	await upsertGlobalTypeScriptTypes({
+		filename: context.options.generatedTypesFilePath,
+		format: context.options.format,
+		helpers: context.helpers,
+		actions: context.actions,
+	});
 };

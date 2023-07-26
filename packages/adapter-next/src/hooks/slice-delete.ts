@@ -1,41 +1,37 @@
-import type {
-	SliceDeleteHook,
-	SliceDeleteHookData,
-	SliceMachineContext,
-} from "@slicemachine/plugin-kit";
-import * as fs from "node:fs/promises";
+import {
+	deleteAllSliceFiles,
+	upsertGlobalTypeScriptTypes,
+} from "@slicemachine/adapter-universal";
+import type { SliceDeleteHook } from "@slicemachine/plugin-kit";
 
-import { buildSliceDirectoryPath } from "../lib/buildSliceDirectoryPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-import { upsertGlobalContentTypes } from "../lib/upsertGlobalContentTypes";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
-
-type Args = {
-	data: SliceDeleteHookData;
-} & SliceMachineContext<PluginOptions>;
-
-const deleteSliceDir = async ({ data, helpers }: Args) => {
-	const dir = buildSliceDirectoryPath({
-		libraryID: data.libraryID,
-		model: data.model,
-		helpers,
-	});
-
-	await fs.rm(dir, { recursive: true });
-};
 
 export const sliceDelete: SliceDeleteHook<PluginOptions> = async (
 	data,
 	context,
 ) => {
-	await deleteSliceDir({ data, ...context });
+	await deleteAllSliceFiles({
+		libraryID: data.libraryID,
+		model: data.model,
+		actions: context.actions,
+		helpers: context.helpers,
+	});
 
 	rejectIfNecessary(
 		await Promise.allSettled([
-			upsertGlobalContentTypes(context),
-			upsertSliceLibraryIndexFile({ libraryID: data.libraryID, ...context }),
+			upsertSliceLibraryIndexFile({
+				libraryID: data.libraryID,
+				...context,
+			}),
+			upsertGlobalTypeScriptTypes({
+				filename: context.options.generatedTypesFilePath,
+				format: context.options.format,
+				helpers: context.helpers,
+				actions: context.actions,
+			}),
 		]),
 	);
 };
