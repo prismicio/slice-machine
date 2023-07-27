@@ -121,20 +121,18 @@ function MyApp({
             {!smStore || !serverState ? (
               <LoadingPage />
             ) : (
-              <>
-                <Provider store={smStore.store}>
-                  <ConnectedRouter Router={Router}>
-                    <PersistGate loading={null} persistor={smStore.persistor}>
-                      <RouteChangeProvider>
-                        <ComponentLayout>
-                          <Component {...pageProps} />
-                        </ComponentLayout>
-                      </RouteChangeProvider>
-                    </PersistGate>
-                  </ConnectedRouter>
-                </Provider>
+              <Provider store={smStore.store}>
+                <ConnectedRouter Router={Router}>
+                  <PersistGate loading={null} persistor={smStore.persistor}>
+                    <RouteChangeProvider>
+                      <ComponentLayout>
+                        <Component {...pageProps} />
+                      </ComponentLayout>
+                    </RouteChangeProvider>
+                  </PersistGate>
+                </ConnectedRouter>
                 <ToastContainer />
-              </>
+              </Provider>
             )}
           </ThemeProvider>
         </RemoveDarkMode>
