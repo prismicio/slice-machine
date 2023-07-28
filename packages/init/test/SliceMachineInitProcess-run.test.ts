@@ -183,6 +183,7 @@ it("runs it all", async (ctx) => {
 	const initProcess = createSliceMachineInitProcess({
 		repository: repositoryName,
 		cwd: "/",
+		startSlicemachine: false,
 	});
 	await prepareEnvironment(ctx, initProcess, repositoryName);
 
@@ -225,6 +226,7 @@ it("outputs get started final message", async (ctx) => {
 	const initProcess = createSliceMachineInitProcess({
 		repository: repositoryName,
 		cwd: "/",
+		startSlicemachine: false,
 	});
 	await prepareEnvironment(ctx, initProcess, repositoryName);
 
@@ -233,19 +235,22 @@ it("outputs get started final message", async (ctx) => {
 	});
 
 	// Pretty final message
-	expect(stdout.pop()).toMatchInlineSnapshot(`
+	expect(stdout.pop()).toMatchSnapshot(`
 		"
-		  YOUR REPOSITORY
-		    Dashboard            https://repo-admin.prismic.io
-		    API                  https://repo-admin.cdn.prismic.io/api/v2
-
-		  RESOURCES
-		    Documentation        https://prismic.dev/init/universal
-		    Getting help         https://community.prismic.io
-
-		  GETTING STARTED
-		    Run Slice Machine    npm run slicemachine
-		    Run your project     npm run dev
+		YOUR REPOSITORY
+			Dashboard            https://repo-admin.prismic.io
+			API                  https://repo-admin.cdn.prismic.io/api/v2
+		
+		RESOURCES
+			Documentation        https://prismic.dev/init/next-11-13
+			Getting help         https://community.prismic.io
+		
+		
+		GETTING STARTED
+			Run Slice Machine    npm run slicemachine
+			Run your project     npm run dev
+		
+		Getting help             https://community.prismic.io
 		"
 	`);
 });
@@ -255,6 +260,7 @@ it("adapts get started final message depending on context", async (ctx) => {
 	const initProcess = createSliceMachineInitProcess({
 		repository: repositoryName,
 		cwd: "/",
+		startSlicemachine: false,
 	});
 	await prepareEnvironment(ctx, initProcess, repositoryName);
 	await vol.promises.writeFile(

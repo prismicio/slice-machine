@@ -192,20 +192,6 @@ export class SliceMachineInitProcess {
 				`https://${this.context.repository.domain}.cdn.${wroomHost}`,
 			).toString();
 
-			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
-			// eslint-disable-next-line no-console
-			console.log(`
-  YOUR REPOSITORY
-    Dashboard            ${chalk.cyan(dashboardURL)}
-    API                  ${chalk.cyan(apiURL)}
-
-  RESOURCES
-    Documentation        ${chalk.cyan(
-			this.context.framework.prismicDocumentation,
-		)}
-    Getting help         ${chalk.cyan("https://community.prismic.io")}
-	`);
-
 			const runSmCommand = this.context.projectInitialization?.patchedScript
 				? await getRunScriptCommand({
 						agent: this.context.packageManager || "npm",
@@ -221,47 +207,66 @@ export class SliceMachineInitProcess {
 				script: "dev",
 			});
 
-			if (!this.options.startSlicemachine) {
-				// eslint-disable-next-line no-console
-				console.log(`
+			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+			// eslint-disable-next-line no-console
+			console.log(`
+  YOUR REPOSITORY
+    Dashboard            ${chalk.cyan(dashboardURL)}
+    API                  ${chalk.cyan(apiURL)}
+
+  RESOURCES
+    Documentation        ${chalk.cyan(
+			this.context.framework.prismicDocumentation,
+		)}
+
   GETTING STARTED
     Run Slice Machine    ${chalk.cyan(runSmCommand)}
     Run your project     ${chalk.cyan(runProjectCommand)}
-				`);
-			} else {
-				const pkgJSONPath = path.join(this.manager.cwd, "package.json");
-				const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
-				const scripts = pkg.scripts || {};
 
-				const finalSmCommand = (() => {
-					if (
-						scripts["dev"] &&
-						typeof scripts["dev"] === "string" &&
-						scripts["dev"].includes(":slicemachine")
-					) {
-						return {
-							command: runProjectCommand,
-							name: "dev script",
-							spacing: 3,
-						};
+  Getting help           ${chalk.cyan("https://community.prismic.io")}
+	`);
+
+			if (this.options.startSlicemachine) {
+				const { startSlicemachine } = await prompt<
+					boolean,
+					"startSlicemachine"
+				>({
+					type: "confirm",
+					name: "startSlicemachine",
+					message: "Would you like to launch Slicemachine?",
+					initial: true,
+				});
+
+				if (startSlicemachine) {
+					const pkgJSONPath = path.join(this.manager.cwd, "package.json");
+					const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
+					const scripts = pkg.scripts || {};
+
+					const finalSmCommand = (() => {
+						if (
+							scripts["dev"] &&
+							typeof scripts["dev"] === "string" &&
+							scripts["dev"].includes(":slicemachine")
+						) {
+							return {
+								command: runProjectCommand,
+								name: "dev script",
+							};
+						}
+
+						return { command: runSmCommand, name: "slicemachine" };
+					})();
+
+					const commandReturnValue = await execaCommand(
+						finalSmCommand.command,
+						{
+							env: { FORCE_COLOR: "true" },
+						},
+					).pipeStdout?.(process.stdout);
+					if (commandReturnValue !== undefined) {
+						// eslint-disable-next-line no-console
+						console.log(commandReturnValue.stdout);
 					}
-
-					return { command: runSmCommand, name: "slicemachine", spacing: 1 };
-				})();
-
-				// eslint-disable-next-line no-console
-				console.log(`  START SLICEMACHINE
-    Running ${finalSmCommand.name}${[...Array(finalSmCommand.spacing)]
-					.map(() => " ")
-					.join("")}${chalk.cyan(finalSmCommand.command)}
-			 `);
-
-				const commandReturnValue = await execaCommand(finalSmCommand.command, {
-					env: { FORCE_COLOR: "true" },
-				}).pipeStdout?.(process.stdout);
-				if (commandReturnValue !== undefined) {
-					// eslint-disable-next-line no-console
-					console.log(commandReturnValue.stdout);
 				}
 			}
 		} catch {
