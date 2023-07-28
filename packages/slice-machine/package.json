@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@slicemachine/manager": "workspace:^",
-    "puppeteer": "^19.11.1",
     "start-slicemachine": "workspace:^"
   },
   "devDependencies": {

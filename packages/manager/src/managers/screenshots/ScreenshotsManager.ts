@@ -1,8 +1,6 @@
 import * as t from "io-ts";
 import { fileTypeFromBuffer } from "file-type";
 import fetch, { FormData, Blob, Response } from "../../lib/fetch";
-// puppeteer is lazy-loaded in captureSliceSimulatorScreenshot
-import type { BrowserContext, Viewport } from "puppeteer";
 
 import { checkIsURLAccessible } from "../../lib/checkIsURLAccessible";
 import { createContentDigest } from "../../lib/createContentDigest";
@@ -11,13 +9,18 @@ import { decode } from "../../lib/decode";
 import { S3ACL } from "../../types";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-import { InternalError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
 const SLICE_SIMULATOR_WAIT_FOR_SELECTOR = "#__iframe-ready";
 const SLICE_SIMULATOR_WAIT_FOR_SELECTOR_TIMEOUT = 10_000; // ms
 const SLICE_SIMULATOR_SCREENSHOT_SELECTOR = "#__iframe-renderer";
+
+// TODO(DT-1534): Use Puppeteer types if we want reactive Puppeteer screenshots
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Viewport = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BrowserContext = any;
 
 const DEFAULT_SCREENSHOT_VIEWPORT: Viewport = {
 	width: 1200,
@@ -92,29 +95,29 @@ export class ScreenshotsManager extends BaseManager {
 	private _s3ACL: S3ACL | undefined;
 
 	async initBrowserContext(): Promise<void> {
-		if (this._browserContext) {
-			return;
-		}
-
-		let puppeteer: typeof import("puppeteer");
-		try {
-			// Lazy-load Puppeteer only once it is needed.
-			puppeteer = await import("puppeteer");
-		} catch {
-			throw new InternalError(
-				"Screenshots require Puppeteer but Puppeteer was not found. Check that the `puppeteer` package is installed before trying again.",
-			);
-		}
-
-		try {
-			const browser = await puppeteer.launch({ headless: "new" });
-
-			this._browserContext = await browser.createIncognitoBrowserContext();
-		} catch (error) {
-			throw new InternalError(
-				"Error launching browser. If you're using an Apple Silicon Mac, check if Rosetta is installed.",
-			);
-		}
+		// TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
+		//
+		// if (this._browserContext) {
+		// 	return;
+		// }
+		//
+		// let puppeteer: typeof import("puppeteer");
+		// try {
+		// 	// Lazy-load Puppeteer only once it is needed.
+		// 	puppeteer = await import("puppeteer");
+		// } catch {
+		// 	throw new InternalError(
+		// 		"Screenshots require Puppeteer but Puppeteer was not found. Check that the `puppeteer` package is installed before trying again.",
+		// 	);
+		// }
+		// try {
+		// 	const browser = await puppeteer.launch({ headless: "new" });
+		// 	this._browserContext = await browser.createIncognitoBrowserContext();
+		// } catch (error) {
+		// 	throw new InternalError(
+		// 		"Error launching browser. If you're using an Apple Silicon Mac, check if Rosetta is installed.",
+		// 	);
+		// }
 	}
 
 	async initS3ACL(): Promise<void> {
