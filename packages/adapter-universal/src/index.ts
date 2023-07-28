@@ -62,6 +62,9 @@ export type {
 	ReadSliceModelReturnType,
 } from "./readSliceModel";
 
+export { renameSlice } from "./renameSlice";
+export type { RenameSliceArgs } from "./renameSlice";
+
 export { deleteSliceFile } from "./deleteSliceFile";
 export type { DeleteSliceFileArgs } from "./deleteSliceFile";
 

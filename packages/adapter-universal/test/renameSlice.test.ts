@@ -3,8 +3,7 @@ import { createMockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
-import { writeSliceFile, writeSliceModel } from "../src";
-import { renameSlice } from "../src/renameSlice";
+import { writeSliceFile, writeSliceModel, renameSlice } from "../src";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
