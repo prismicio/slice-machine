@@ -63,33 +63,3 @@ export const Video = {
     ),
   },
 } satisfies Story;
-
-export const CloseWhenClickingOutSide = {
-  render: () => {
-    return (
-      <div>
-        <HoverCard
-          open={true}
-          onClose={noop}
-          openDelay={1500}
-          trigger={<Button>HoverCard</Button>}
-          side="right"
-        >
-          <HoverCardTitle>Prismic Academy©</HoverCardTitle>
-          <HoverCardMedia
-            component="video"
-            cloudName="dmtf1daqp"
-            publicId="Tooltips/pa-course-overview_eaopsn"
-            poster="phil.png"
-          />
-          <HoverCardDescription>
-            Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel
-            eget vitae etiam
-          </HoverCardDescription>
-          <HoverCardCloseButton>Got It</HoverCardCloseButton>
-        </HoverCard>
-        <Button>Outside</Button>
-      </div>
-    );
-  },
-};

@@ -40,7 +40,7 @@ export const ChangesListItem = forwardRef<HTMLLIElement, ChangesListItemProps>(
     return (
       <HoverCard
         open={open}
-        openDelay={1500}
+        openDelay={3000}
         onClose={onClose}
         side="right"
         sideOffset={24}
