@@ -63,7 +63,7 @@ describe("HoverCard", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  test("give it is open, it should close when a user clicks else where on the screen", async () => {
+  test("give it is open, it should not close when a user clicks else where on the screen", async () => {
     const onClose = vi.fn();
 
     const App = () => {
@@ -91,7 +91,7 @@ describe("HoverCard", () => {
 
     await user.click(otherButton);
 
-    expect(screen.queryByText("Content")).not.toBeInTheDocument();
+    expect(screen.queryByText("Content")).toBeVisible();
   });
 
   test("hovering in and out should not close the HoverCard", async () => {

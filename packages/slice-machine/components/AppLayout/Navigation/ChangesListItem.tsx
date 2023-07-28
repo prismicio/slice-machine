@@ -14,7 +14,11 @@ import {
   HoverCardMedia,
   HoverCardTitle,
 } from "@src/components/HoverCard";
-import { userHasSeenChangesToolTip } from "@src/modules/userContext";
+import {
+  userHasSeenChangesToolTip,
+  userHasSeenSimulatorToolTip,
+  userHasSeenTutorialsToolTip,
+} from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ChangesRightElement } from "./ChangesRightElement";
 
@@ -36,7 +40,7 @@ export const ChangesListItem = forwardRef<HTMLLIElement, ChangesListItemProps>(
     return (
       <HoverCard
         open={open}
-        openDelay={1500}
+        openDelay={3000}
         onClose={onClose}
         side="right"
         sideOffset={24}
@@ -67,12 +71,19 @@ export const ChangesListItem = forwardRef<HTMLLIElement, ChangesListItemProps>(
 );
 
 const useOpenChangesHoverCard = () => {
-  const { hasSeenChangesToolTip, isSavingCustomType, isSavingSlice } =
-    useSelector((store: SliceMachineStoreType) => ({
-      hasSeenChangesToolTip: userHasSeenChangesToolTip(store),
-      isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
-      isSavingSlice: isLoading(store, LoadingKeysEnum.SAVE_SLICE),
-    }));
+  const {
+    hasSeenChangesToolTip,
+    hasSeenSimulatorToolTip,
+    hasSeenTutorialsToolTip,
+    isSavingCustomType,
+    isSavingSlice,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    hasSeenChangesToolTip: userHasSeenChangesToolTip(store),
+    hasSeenSimulatorToolTip: userHasSeenSimulatorToolTip(store),
+    hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
+    isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
+    isSavingSlice: isLoading(store, LoadingKeysEnum.SAVE_SLICE),
+  }));
 
   const isSaving = isSavingCustomType || isSavingSlice;
   const [prevIsSaving, setPrevIsSaving] = useState(isSaving);
@@ -81,5 +92,11 @@ const useOpenChangesHoverCard = () => {
     setPrevIsSaving(isSaving);
   }
 
-  return !hasSeenChangesToolTip && !isSaving && prevIsSaving;
+  return (
+    !hasSeenChangesToolTip &&
+    hasSeenTutorialsToolTip &&
+    hasSeenSimulatorToolTip &&
+    !isSaving &&
+    prevIsSaving
+  );
 };

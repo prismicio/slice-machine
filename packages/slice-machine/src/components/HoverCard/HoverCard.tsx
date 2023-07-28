@@ -5,7 +5,6 @@ import React, {
   FC,
   PropsWithChildren,
   useCallback,
-  useRef,
   createContext,
   useContext,
   createElement,
@@ -15,7 +14,6 @@ import React, {
 import { Button } from "@prismicio/editor-ui";
 
 import { useDelayedAction } from "@src/hooks/useDelayedAction";
-import useOnClickOutside from "@src/hooks/useOnClickOutside";
 import { CloseIcon } from "@src/icons/CloseIcon";
 import { BaseHoverCard, BaseHoverCardProps } from "../BaseHoverCard";
 
@@ -94,18 +92,13 @@ type HoverCardWrapperProps = PropsWithChildren<{
 }>;
 
 const HoverCardWrapper = ({ handleClose, children }: HoverCardWrapperProps) => {
-  const ref = useRef(null);
-  useOnClickOutside(ref, handleClose);
-
   return (
     <HoverCardContext.Provider
       value={{
         handleClose,
       }}
     >
-      <div className={styles.root} ref={ref}>
-        {children}
-      </div>
+      <div className={styles.root}>{children}</div>
     </HoverCardContext.Provider>
   );
 };
