@@ -16,6 +16,7 @@ import { injectTestAdapter } from "./__testutils__/injectTestAdapter";
 import { loginUser } from "./__testutils__/loginUser";
 import { watchStd } from "./__testutils__/watchStd";
 import { spyManager, SpyManagerReturnType } from "./__testutils__/spyManager";
+import { prompt } from "prompts";
 
 const existingRepo = "existing-repo";
 const prepareEnvironment = async (
@@ -178,7 +179,7 @@ const prepareEnvironment = async (
 	return { spiedManager };
 };
 
-it("runs it all", async (ctx) => {
+it("runs without launching Slicemachine", async (ctx) => {
 	const repositoryName = "repo-admin";
 	const initProcess = createSliceMachineInitProcess({
 		repository: repositoryName,
@@ -186,6 +187,29 @@ it("runs it all", async (ctx) => {
 		startSlicemachine: false,
 	});
 	await prepareEnvironment(ctx, initProcess, repositoryName);
+
+	const { stdout } = await watchStd(() => {
+		return initProcess.run();
+	});
+
+	// Starts
+	expect(stdout).toMatch(/Init command started/);
+	// Uses repository name
+	expect(stdout.join("")).toContain(repositoryName);
+	// Succeed
+	expect(stdout).toMatch(/Init command successful/);
+});
+
+it("runs and asks for slicemachine launch", async (ctx) => {
+	const repositoryName = "repo-admin";
+	const initProcess = createSliceMachineInitProcess({
+		repository: repositoryName,
+		cwd: "/",
+	});
+	await prepareEnvironment(ctx, initProcess, repositoryName);
+
+	// starts Slicemachine
+	prompt.inject(["Y"]);
 
 	const { stdout } = await watchStd(() => {
 		return initProcess.run();
@@ -234,23 +258,13 @@ it("outputs get started final message", async (ctx) => {
 		return initProcess.run();
 	});
 
-	// Pretty final message
+	expect(stdout).toMatch(/Init command successful/);
 	expect(stdout.pop()).toMatchInlineSnapshot(`
 		"
-		YOUR REPOSITORY
-			Dashboard            https://repo-admin.prismic.io
-			API                  https://repo-admin.cdn.prismic.io/api/v2
-		
-		RESOURCES
-			Documentation        https://prismic.dev/init/next-11-13
-			Getting help         https://community.prismic.io
-		
-		
 		GETTING STARTED
-			Run Slice Machine    npm run slicemachine
-			Run your project     npm run dev
-		
-		Getting help             https://community.prismic.io
+		  Run Slice Machine    npm run slicemachine
+		  Run your project     npm run dev
+			
 		"
 	`);
 });

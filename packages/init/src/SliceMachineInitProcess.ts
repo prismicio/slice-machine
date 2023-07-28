@@ -179,19 +179,6 @@ export class SliceMachineInitProcess {
 		);
 
 		try {
-			const apiEndpoints = this.manager.getAPIEndpoints();
-			const wroomHost = new URL(apiEndpoints.PrismicWroom).host;
-
-			const dashboardURL = new URL(
-				`https://${this.context.repository.domain}.${wroomHost}`,
-			)
-				.toString()
-				.replace(/\/$/, "");
-			const apiURL = new URL(
-				"./api/v2",
-				`https://${this.context.repository.domain}.cdn.${wroomHost}`,
-			).toString();
-
 			const runSmCommand = this.context.projectInitialization?.patchedScript
 				? await getRunScriptCommand({
 						agent: this.context.packageManager || "npm",
@@ -210,53 +197,44 @@ export class SliceMachineInitProcess {
 			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
 			// eslint-disable-next-line no-console
 			console.log(`
-  YOUR REPOSITORY
-    Dashboard            ${chalk.cyan(dashboardURL)}
-    API                  ${chalk.cyan(apiURL)}
-
-  RESOURCES
-    Documentation        ${chalk.cyan(
-			this.context.framework.prismicDocumentation,
-		)}
-
-  GETTING STARTED
-    Run Slice Machine    ${chalk.cyan(runSmCommand)}
-    Run your project     ${chalk.cyan(runProjectCommand)}
-
-  Getting help           ${chalk.cyan("https://community.prismic.io")}
+GETTING STARTED
+  Run Slice Machine    ${chalk.cyan(runSmCommand)}
+  Run your project     ${chalk.cyan(runProjectCommand)}
 	`);
 
 			if (this.options.startSlicemachine) {
+				const pkgJSONPath = path.join(this.manager.cwd, "package.json");
+				const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
+				const scripts = pkg.scripts || {};
+
+				const finalSmCommand = (() => {
+					if (
+						scripts["dev"] &&
+						typeof scripts["dev"] === "string" &&
+						scripts["dev"].includes(":slicemachine")
+					) {
+						return {
+							command: runProjectCommand,
+							message: `Would you like to launch your project + Slicemachine (${runProjectCommand})?`,
+						};
+					}
+
+					return {
+						command: runSmCommand,
+						message: `Would you like to launch Slicemachine (${runSmCommand})?`,
+					};
+				})();
 				const { startSlicemachine } = await prompt<
 					boolean,
 					"startSlicemachine"
 				>({
 					type: "confirm",
 					name: "startSlicemachine",
-					message: "Would you like to launch Slicemachine?",
+					message: finalSmCommand.message,
 					initial: true,
 				});
 
 				if (startSlicemachine) {
-					const pkgJSONPath = path.join(this.manager.cwd, "package.json");
-					const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
-					const scripts = pkg.scripts || {};
-
-					const finalSmCommand = (() => {
-						if (
-							scripts["dev"] &&
-							typeof scripts["dev"] === "string" &&
-							scripts["dev"].includes(":slicemachine")
-						) {
-							return {
-								command: runProjectCommand,
-								name: "dev script",
-							};
-						}
-
-						return { command: runSmCommand, name: "slicemachine" };
-					})();
-
 					const commandReturnValue = await execaCommand(
 						finalSmCommand.command,
 						{
