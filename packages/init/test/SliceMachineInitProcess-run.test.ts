@@ -235,7 +235,7 @@ it("outputs get started final message", async (ctx) => {
 	});
 
 	// Pretty final message
-	expect(stdout.pop()).toMatchSnapshot(`
+	expect(stdout.pop()).toMatchInlineSnapshot(`
 		"
 		YOUR REPOSITORY
 			Dashboard            https://repo-admin.prismic.io
