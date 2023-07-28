@@ -1,10 +1,10 @@
 import type { SliceRenameHook } from "@slicemachine/plugin-kit";
-import * as fse from "fs-extra";
+import {
+	renameSlice,
+	upsertGlobalTypeScriptTypes,
+} from "@slicemachine/adapter-universal";
 
-import { buildSliceDirectoryPath } from "../lib/buildSliceDirectoryPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-import { updateSliceModelFile } from "../lib/updateSliceModelFile";
-import { upsertGlobalContentTypes } from "../lib/upsertGlobalContentTypes";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
@@ -13,34 +13,26 @@ export const sliceRename: SliceRenameHook<PluginOptions> = async (
 	data,
 	context,
 ) => {
-	const { model: currentModel } = await context.actions.readSliceModel({
-		libraryID: data.libraryID,
-		sliceID: data.model.id,
-	});
-
-	await fse.move(
-		buildSliceDirectoryPath({
-			libraryID: data.libraryID,
-			model: currentModel,
-			helpers: context.helpers,
-		}),
-		buildSliceDirectoryPath({
-			libraryID: data.libraryID,
-			model: data.model,
-			helpers: context.helpers,
-		}),
-	);
-
-	await updateSliceModelFile({
+	await renameSlice({
 		libraryID: data.libraryID,
 		model: data.model,
-		...context,
+		format: context.options.format,
+		actions: context.actions,
+		helpers: context.helpers,
 	});
 
 	rejectIfNecessary(
 		await Promise.allSettled([
-			upsertGlobalContentTypes(context),
-			upsertSliceLibraryIndexFile({ libraryID: data.libraryID, ...context }),
+			upsertSliceLibraryIndexFile({
+				libraryID: data.libraryID,
+				...context,
+			}),
+			upsertGlobalTypeScriptTypes({
+				filename: context.options.generatedTypesFilePath,
+				format: context.options.format,
+				helpers: context.helpers,
+				actions: context.actions,
+			}),
 		]),
 	);
 };
