@@ -3,8 +3,7 @@ import * as path from "node:path";
 
 import chalk from "chalk";
 
-import { execaCommand } from "execa";
-import type { ExecaChildProcess } from "execa";
+import { execaCommand, type ExecaChildProcess } from "execa";
 
 import open from "open";
 import logSymbols from "log-symbols";
