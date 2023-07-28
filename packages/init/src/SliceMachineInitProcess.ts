@@ -256,11 +256,13 @@ export class SliceMachineInitProcess {
 					.join("")}${chalk.cyan(finalSmCommand.command)}
 			 `);
 
-				const { stdout } = await execaCommand(finalSmCommand.command, {
+				const commandReturnValue = await execaCommand(finalSmCommand.command, {
 					env: { FORCE_COLOR: "true" },
-				}).pipeStdout(process.stdout);
-				// eslint-disable-next-line no-console
-				console.log(stdout);
+				}).pipeStdout?.(process.stdout);
+				if (commandReturnValue !== undefined) {
+					// eslint-disable-next-line no-console
+					console.log(commandReturnValue.stdout);
+				}
 			}
 		} catch {
 			// Noop, it's only the final convenience messsage
