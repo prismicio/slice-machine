@@ -7722,12 +7722,17 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: ^0.1.14
+    prismic-ts-codegen: 0.1.16
     size-limit: 8.2.4
     typescript: 4.9.5
     vite: 4.3.9
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
+  peerDependencies:
+    prismic-ts-codegen: ^0.1.16
+  peerDependenciesMeta:
+    prismic-ts-codegen:
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -26790,9 +26795,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prismic-ts-codegen@npm:^0.1.14":
-  version: 0.1.15
-  resolution: "prismic-ts-codegen@npm:0.1.15"
+"prismic-ts-codegen@npm:0.1.16":
+  version: 0.1.16
+  resolution: "prismic-ts-codegen@npm:0.1.16"
   dependencies:
     "@prismicio/custom-types-client": ^1.1.0
     common-tags: ^1.8.2
@@ -26813,7 +26818,7 @@ __metadata:
       optional: true
   bin:
     prismic-ts-codegen: bin/prismic-ts-codegen.mjs
-  checksum: 6cd6c613897706117d0c14319655cd9ec0b2aaa1d96df0e610ebfd4334093dd2852e9f8cd431c3defe0d3f1ac48670e31dfbe0eaf55975eba7b5cc6513b5d6da
+  checksum: 1cf373437906002dd7221ad84bbade6358831db850e19a3d1ede1e81bccd2239ff5f5e7236c6523ca2bef065c36d2a7d128136446421332ae22ca571d43f5749
   languageName: node
   linkType: hard
 
