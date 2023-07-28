@@ -31,7 +31,7 @@ Usage:
     start-slicemachine [options...]
 
 Options:
-    --open         Open Slice Machine automatically
+    --no-open      Don't open Slice Machine automatically
     --port, -p     Specify the port on which to run Slice Machine
     --help, -h     Show help text
     --version, -v  Show version
