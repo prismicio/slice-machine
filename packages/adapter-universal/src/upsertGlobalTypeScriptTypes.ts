@@ -57,8 +57,8 @@ export const upsertGlobalTypeScriptTypes = async (
 	contents = `${NON_EDITABLE_FILE_BANNER}\n\n${contents}`;
 
 	return await writeProjectFile({
-		filename: GLOBAL_TYPESCRIPT_TYPES_FILENAME,
 		...args,
+		filename: args.filename || GLOBAL_TYPESCRIPT_TYPES_FILENAME,
 		contents,
 	});
 };
