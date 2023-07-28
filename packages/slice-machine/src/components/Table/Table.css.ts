@@ -43,6 +43,7 @@ export const row = style([block, {}]);
 
 export const bodyRow = sprinkles({
   backgroundColor: {
+    ...colors.grey1,
     ...selectors.focusVisible(colors.grey5),
     ...selectors.hover(colors.grey4),
   },

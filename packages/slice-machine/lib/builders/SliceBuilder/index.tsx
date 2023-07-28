@@ -1,11 +1,11 @@
+import { Button } from "@prismicio/editor-ui";
 import React, { useState, useEffect } from "react";
 
 import { handleRemoteResponse } from "@src/modules/toaster/utils";
 
-import { Box } from "theme-ui";
+import { BaseStyles, Box, Grid } from "theme-ui";
 
 import FieldZones from "./FieldZones";
-import FlexEditor from "./FlexEditor";
 import SideBar from "./SideBar";
 import Header from "./Header";
 
@@ -13,10 +13,20 @@ import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBackButton,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@components/AppLayout";
+import SimulatorButton from "@lib/builders/SliceBuilder/Header/SimulatorButton";
 import { SliceSM, VariationSM } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import { isSelectedSliceTouched } from "@src/modules/selectedSlice/selectors";
 import { getRemoteSlice } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
@@ -71,7 +81,7 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
   }, [data]);
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!variation) return null;
+  if (!variation) return <AppLayout />;
   else
     return (
       <SliceBuilderForVariation
@@ -101,39 +111,62 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
   isTouched,
   data,
 }) => {
+  const { isSimulatorAvailableForFramework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      isSimulatorAvailableForFramework:
+        selectIsSimulatorAvailableForFramework(state),
+    })
+  );
+
   const sliceModel: LocalAndRemoteSlice | LocalOnlySlice = {
     local: slice.model,
     localScreenshots: slice.screenshots,
     ...(remoteSlice ? { remote: remoteSlice } : {}),
   };
-
   const { modelsStatuses } = useModelStatus({ slices: [sliceModel] });
 
   return (
-    <Box sx={{ flex: 1 }}>
-      <Header
-        component={slice}
-        status={modelsStatuses.slices[slice.model.id]}
-        isTouched={isTouched}
-        variation={variation}
-        onSave={updateSlice}
-        isLoading={data.loading}
-        imageLoading={data.imageLoading}
-      />
-      <FlexEditor
-        sx={{ py: 4 }}
-        SideBar={
-          <SideBar
-            component={slice}
-            variation={variation}
-            isTouched={isTouched}
+    <AppLayout>
+      <AppLayoutHeader>
+        <AppLayoutBackButton url="/slices" />
+        <AppLayoutBreadcrumb folder="Slices" page={slice.model.name} />
+        <AppLayoutActions>
+          <SimulatorButton
+            isSimulatorAvailableForFramework={isSimulatorAvailableForFramework}
+            isTouched={!!isTouched}
           />
-        }
-      >
-        <FieldZones variation={variation} />
-      </FlexEditor>
-      <FloatingBackButton />
-    </Box>
+          <Button
+            loading={data.loading}
+            disabled={!isTouched || data.loading}
+            onClick={updateSlice}
+            data-cy="builder-save-button"
+          >
+            Save
+          </Button>
+        </AppLayoutActions>
+      </AppLayoutHeader>
+      <AppLayoutContent>
+        <BaseStyles>
+          <Header
+            component={slice}
+            status={modelsStatuses.slices[slice.model.id]}
+            variation={variation}
+            imageLoading={data.imageLoading}
+          />
+          <Grid columns="1fr 320px" gap="16px" sx={{ pt: 4 }}>
+            <Box>
+              <FieldZones variation={variation} />
+            </Box>
+            <SideBar
+              component={slice}
+              variation={variation}
+              isTouched={isTouched}
+            />
+          </Grid>
+        </BaseStyles>
+        <FloatingBackButton />
+      </AppLayoutContent>
+    </AppLayout>
   );
 };
 

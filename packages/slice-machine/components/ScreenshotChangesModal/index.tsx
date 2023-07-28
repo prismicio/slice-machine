@@ -186,7 +186,6 @@ const ScreenshotChangesModal = ({
           }}
         >
           <Box
-            as="aside"
             sx={{
               p: 3,
               bg: "grey07",
@@ -206,7 +205,6 @@ const ScreenshotChangesModal = ({
             ))}
           </Box>
           <Box
-            as="main"
             sx={{
               p: 3,
               flexGrow: 99999,

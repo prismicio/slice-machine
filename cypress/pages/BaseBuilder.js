@@ -1,6 +1,6 @@
 export class BaseBuilder {
   get saveButton() {
-    return cy.contains("Save to File System");
+    return cy.contains("Save");
   }
 
   get addStaticFieldButton() {
