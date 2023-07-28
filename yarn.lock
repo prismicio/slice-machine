@@ -7586,7 +7586,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 2.8.4
     prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: 0.1.11
+    prismic-ts-codegen: ^0.1.16
     react: 18.2.0
     rollup-plugin-preserve-directives: 0.1.1
     size-limit: 8.2.4
@@ -26795,7 +26795,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prismic-ts-codegen@npm:0.1.16":
+"prismic-ts-codegen@npm:0.1.16, prismic-ts-codegen@npm:^0.1.16":
   version: 0.1.16
   resolution: "prismic-ts-codegen@npm:0.1.16"
   dependencies:

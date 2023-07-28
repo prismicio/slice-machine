@@ -92,6 +92,7 @@ const createComponentFile = async ({
 		model: data.model,
 		filename,
 		contents,
+		format: options.format,
 		actions,
 		helpers,
 	});

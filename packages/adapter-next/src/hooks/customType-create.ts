@@ -4,27 +4,22 @@ import {
 	writeCustomTypeModel,
 } from "@slicemachine/adapter-universal";
 
-import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-
 import type { PluginOptions } from "../types";
 
 export const customTypeCreate: CustomTypeCreateHook<PluginOptions> = async (
 	data,
 	context,
 ) => {
-	rejectIfNecessary(
-		await Promise.allSettled([
-			writeCustomTypeModel({
-				model: data.model,
-				format: context.options.format,
-				helpers: context.helpers,
-			}),
-			upsertGlobalTypeScriptTypes({
-				filename: context.options.generatedTypesFilePath,
-				format: context.options.format,
-				helpers: context.helpers,
-				actions: context.actions,
-			}),
-		]),
-	);
+	await writeCustomTypeModel({
+		model: data.model,
+		format: context.options.format,
+		helpers: context.helpers,
+	});
+
+	await upsertGlobalTypeScriptTypes({
+		filename: context.options.generatedTypesFilePath,
+		format: context.options.format,
+		helpers: context.helpers,
+		actions: context.actions,
+	});
 };
