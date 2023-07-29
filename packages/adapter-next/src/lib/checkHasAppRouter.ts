@@ -16,7 +16,7 @@ export async function checkHasAppRouter(
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers: args.helpers });
 
 	return await checkHasProjectFile({
-		filename: hasSrcDirectory ? path.join("src", "app") : path.join("app"),
+		filename: hasSrcDirectory ? path.join("src", "app") : "app",
 		helpers: args.helpers,
 	});
 }
