@@ -19,6 +19,7 @@ const initialState: UserContextStoreType = {
   },
   hasSeenTutorialsToolTip: false,
   hasSeenSimulatorToolTip: false,
+  hasSeenChangesToolTip: false,
   authStatus: AuthStatus.UNKNOWN,
   lastSyncChange: null,
 };
@@ -40,12 +41,17 @@ export const hasSeenSimulatorToolTipCreator = createAction(
   "USER_CONTEXT/VIEW_SIMULATOR_TOOL_TIP"
 )();
 
+export const hasSeenChangesToolTipCreator = createAction(
+  "USER_CONTEXT/VIEW_CHANGES_TOOL_TIP"
+)();
+
 type userContextActions = ActionType<
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
   | typeof updatesViewedCreator
   | typeof hasSeenTutorialsToolTipCreator
   | typeof hasSeenSimulatorToolTipCreator
+  | typeof hasSeenChangesToolTipCreator
   | typeof refreshStateCreator
   | typeof changesPushCreator.success
 >;
@@ -65,6 +71,10 @@ export const userHasSeenTutorialsToolTip = (
 export const userHasSeenSimulatorToolTip = (
   state: SliceMachineStoreType
 ): boolean => state.userContext.hasSeenSimulatorToolTip || false;
+
+export const userHasSeenChangesToolTip = (
+  state: SliceMachineStoreType
+): boolean => state.userContext.hasSeenChangesToolTip || false;
 
 export const getLastSyncChange = (
   state: SliceMachineStoreType
@@ -98,6 +108,12 @@ export const userContextReducer: Reducer<
       return {
         ...state,
         hasSeenSimulatorToolTip: true,
+      };
+    }
+    case getType(hasSeenChangesToolTipCreator): {
+      return {
+        ...state,
+        hasSeenChangesToolTip: true,
       };
     }
     case getType(refreshStateCreator): {

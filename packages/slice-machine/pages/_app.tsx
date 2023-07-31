@@ -39,6 +39,7 @@ import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/c
 import Router from "next/router";
 
 import { NextPage } from "next";
+import ToastContainer from "@components/ToasterContainer";
 
 type NextPageWithLayout = NextPage & {
   CustomLayout?: React.FC<{ children: ReactNode }>;
@@ -130,6 +131,7 @@ function MyApp({
                     </RouteChangeProvider>
                   </PersistGate>
                 </ConnectedRouter>
+                <ToastContainer />
               </Provider>
             )}
           </ThemeProvider>
