@@ -85,6 +85,11 @@ export const trigger = style([
   {
     padding: "8px 8px 8px 15px",
     selectors: {
+      [`&:not([data-state='active']) + &:not([data-state='active']) `]: {
+        borderImage: `linear-gradient(to bottom, ${vars.color.transparent} 33%, ${vars.color.greyLight10} 33%, ${vars.color.greyLight10} 66% ,${vars.color.transparent} 66%)`,
+        borderRightStyle: "none",
+        borderImageSlice: 1,
+      },
       [`&[data-state='active']`]: {
         // active
         color: vars.color.greyLight12,
@@ -101,46 +106,6 @@ export const trigger = style([
         borderRadius: "6px 6px 0px 0px",
         borderColor: vars.color.greyLight6,
         borderBottomColor: vars.color.transparent,
-      },
-    },
-  },
-]);
-
-export const triggerSeperator = style([
-  reset,
-  sprinkles({
-    width: 1,
-    backgroundColor: colors.transparent,
-    flexShrink: 0,
-  }),
-  {
-    height: "21px",
-    selectors: {
-      [`${trigger}:not([data-state='active']) ~ &`]: {
-        // all of non active triggers
-        backgroundColor: vars.color.greyLight7,
-      },
-      [`${trigger}[data-state='active'] + &`]: {
-        // end of the active trigger
-        backgroundColor: vars.color.transparent,
-      },
-      [`&:has(+${trigger}[data-state='active'])`]: {
-        // before the active trigger
-        backgroundColor: vars.color.transparent,
-      },
-      [`${list} &:last-child`]: {
-        // last item in the list should not have a visable seperator.
-        backgroundColor: vars.color.transparent,
-      },
-
-      // hover states
-      [`${trigger}:hover + &`]: {
-        // end
-        backgroundColor: vars.color.transparent,
-      },
-      [`&:has(+${trigger}:hover)`]: {
-        // start
-        backgroundColor: vars.color.transparent,
       },
     },
   },

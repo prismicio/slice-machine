@@ -1,5 +1,4 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import * as Separator from "@radix-ui/react-separator";
 import * as styles from "./Window.css";
 import { FC, HTMLAttributes, PropsWithChildren, SVGProps } from "react";
 
@@ -58,23 +57,11 @@ export const WindowTabsList: FC<Tabs.TabsListProps> = (props) => (
   <Tabs.List {...props} className={styles.list} />
 );
 
-const WindowTabsSeperator: FC<Separator.SeparatorProps> = (props) => (
-  <Separator.Root
-    decorative
-    orientation="vertical"
-    className={styles.triggerSeperator}
-    {...props}
-  />
-);
-
 export const WindowTabsTrigger: FC<Tabs.TabsTriggerProps> = (props) => (
-  <>
-    <Tabs.Trigger {...props} className={styles.trigger}>
-      {props.children}
-      <VerticalThreeDotsIcon className={styles.triggerIcon} />
-    </Tabs.Trigger>
-    <WindowTabsSeperator />
-  </>
+  <Tabs.Trigger {...props} className={styles.trigger}>
+    {props.children}
+    <VerticalThreeDotsIcon className={styles.triggerIcon} />
+  </Tabs.Trigger>
 );
 
 export const WindowTabsContent: FC<Tabs.TabsContentProps> = (props) => (
