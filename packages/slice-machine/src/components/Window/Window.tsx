@@ -68,11 +68,13 @@ const WindowTabsSeperator: FC<Separator.SeparatorProps> = (props) => (
 );
 
 export const WindowTabsTrigger: FC<Tabs.TabsTriggerProps> = (props) => (
-  <Tabs.Trigger {...props} className={styles.trigger}>
+  <>
+    <Tabs.Trigger {...props} className={styles.trigger}>
+      {props.children}
+      <VerticalThreeDotsIcon className={styles.triggerIcon} />
+    </Tabs.Trigger>
     <WindowTabsSeperator />
-    {props.children}
-    <VerticalThreeDotsIcon className={styles.triggerIcon} />
-  </Tabs.Trigger>
+  </>
 );
 
 export const WindowTabsContent: FC<Tabs.TabsContentProps> = (props) => (

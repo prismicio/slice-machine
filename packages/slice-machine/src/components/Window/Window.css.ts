@@ -64,6 +64,8 @@ export const list = style([
     display: "flex",
     flexShrink: 0,
     backgroundColor: colors.grey2,
+    overflowX: "auto",
+    alignItems: "center",
   }),
 ]);
 
@@ -78,22 +80,27 @@ export const trigger = style([
     borderStyle: "solid",
     borderColor: colors.transparent,
     backgroundColor: colors.grey2,
-    // squash tab
-    overflow: "hidden",
     whiteSpace: "nowrap",
   }),
   {
-    padding: "8px 8px 8px 0px",
+    padding: "8px 8px 8px 15px",
     selectors: {
       [`&[data-state='active']`]: {
+        // active
         color: vars.color.greyLight12,
         borderRadius: "6px 6px 0px 0px",
         backgroundColor: vars.color.greyLight1,
         boxShadow: vars.boxShadow[3],
         borderColor: vars.color.greyLight1,
         borderBottomColor: vars.color.transparent,
-        // unsquash tab
-        overflow: "visible",
+      },
+
+      [`&:not([data-state='active']):hover`]: {
+        // hover state
+        backgroundColor: vars.color.greyLight1,
+        borderRadius: "6px 6px 0px 0px",
+        borderColor: vars.color.greyLight6,
+        borderBottomColor: vars.color.transparent,
       },
     },
   },
@@ -107,13 +114,34 @@ export const triggerSeperator = style([
     flexShrink: 0,
   }),
   {
-    marginRight: "15px",
-    height: "66%",
+    height: "21px",
     selectors: {
-      [`${trigger}:not([data-state='active']) + ${trigger}:not([data-state='active']) &`]:
-        {
-          backgroundColor: vars.color.greyLight7,
-        },
+      [`${trigger}:not([data-state='active']) ~ &`]: {
+        // all of non active triggers
+        backgroundColor: vars.color.greyLight7,
+      },
+      [`${trigger}[data-state='active'] + &`]: {
+        // end of the active trigger
+        backgroundColor: vars.color.transparent,
+      },
+      [`&:has(+${trigger}[data-state='active'])`]: {
+        // before the active trigger
+        backgroundColor: vars.color.transparent,
+      },
+      [`${list} &:last-child`]: {
+        // last item in the list should not have a visable seperator.
+        backgroundColor: vars.color.transparent,
+      },
+
+      // hover states
+      [`${trigger}:hover + &`]: {
+        // end
+        backgroundColor: vars.color.transparent,
+      },
+      [`&:has(+${trigger}:hover)`]: {
+        // start
+        backgroundColor: vars.color.transparent,
+      },
     },
   },
 ]);
@@ -126,6 +154,9 @@ export const triggerIcon = style([
   {
     selectors: {
       [`${trigger}[data-state='active'] &`]: {
+        fill: vars.color.greyLight11,
+      },
+      [`${trigger}:hover &`]: {
         fill: vars.color.greyLight11,
       },
     },
