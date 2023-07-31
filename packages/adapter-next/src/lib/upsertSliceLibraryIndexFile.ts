@@ -3,7 +3,7 @@ import {
 	buildSliceDirectoryPath,
 	buildSliceLibraryDirectoryPath,
 	writeProjectFile,
-} from "@slicemachine/adapter-universal";
+} from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
 import * as path from "node:path";
 import { NON_EDITABLE_FILE_BANNER } from "../constants";

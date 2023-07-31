@@ -1,5 +1,5 @@
-import { checkHasProjectFile } from "@slicemachine/adapter-universal";
 import { SliceMachineContext } from "@slicemachine/plugin-kit";
+import { checkHasProjectFile } from "@slicemachine/plugin-kit/fs";
 import * as path from "node:path";
 
 import { PluginOptions } from "../types";

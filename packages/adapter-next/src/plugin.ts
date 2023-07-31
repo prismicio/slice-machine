@@ -16,7 +16,7 @@ import {
 	writeCustomTypeModel,
 	writeSliceFile,
 	writeSliceModel,
-} from "@slicemachine/adapter-universal";
+} from "@slicemachine/plugin-kit/fs";
 
 import { rejectIfNecessary } from "./lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
