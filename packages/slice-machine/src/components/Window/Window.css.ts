@@ -73,21 +73,47 @@ export const trigger = style([
     display: "flex",
     alignItems: "center",
     gap: 8,
+    color: colors.grey11,
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: colors.transparent,
     backgroundColor: colors.grey2,
+    // squash tab
+    overflow: "hidden",
+    whiteSpace: "nowrap",
   }),
   {
-    padding: "8px 8px 8px 16px",
+    padding: "8px 8px 8px 0px",
     selectors: {
       [`&[data-state='active']`]: {
+        color: vars.color.greyLight12,
         borderRadius: "6px 6px 0px 0px",
         backgroundColor: vars.color.greyLight1,
         boxShadow: vars.boxShadow[3],
         borderColor: vars.color.greyLight1,
         borderBottomColor: vars.color.transparent,
+        // unsquash tab
+        overflow: "visible",
       },
+    },
+  },
+]);
+
+export const triggerSeperator = style([
+  reset,
+  sprinkles({
+    width: 1,
+    backgroundColor: colors.transparent,
+    flexShrink: 0,
+  }),
+  {
+    marginRight: "15px",
+    height: "66%",
+    selectors: {
+      [`${trigger}:not([data-state='active']) + ${trigger}:not([data-state='active']) &`]:
+        {
+          backgroundColor: vars.color.greyLight7,
+        },
     },
   },
 ]);

@@ -29,9 +29,13 @@ export const Default: Story = {
           <WindowTabsList>
             <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
             <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
+            <WindowTabsTrigger value="extra">Extra tab</WindowTabsTrigger>
           </WindowTabsList>
           <WindowTabsContent value="main">Content for Main</WindowTabsContent>
           <WindowTabsContent value="seo">Content for seo</WindowTabsContent>
+          <WindowTabsContent value="extra">
+            Content for extra tab
+          </WindowTabsContent>
         </WindowTabs>
       </>
     ),
@@ -45,9 +49,13 @@ export const WindowWithOutFrame: Story = {
         <WindowTabsList>
           <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
           <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
+          <WindowTabsTrigger value="extra">Extra tab</WindowTabsTrigger>
         </WindowTabsList>
         <WindowTabsContent value="main">Content for Main</WindowTabsContent>
         <WindowTabsContent value="seo">Content for seo</WindowTabsContent>
+        <WindowTabsContent value="extra">
+          Content for extra tab
+        </WindowTabsContent>
       </WindowTabs>
     ),
   },
