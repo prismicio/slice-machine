@@ -44,9 +44,6 @@
     },
     "msw": {
       "built": true
-    },
-    "puppeteer": {
-      "built": true
     }
   },
   "devDependencies": {
