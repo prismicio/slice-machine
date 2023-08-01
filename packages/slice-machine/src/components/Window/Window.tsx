@@ -1,6 +1,7 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import * as styles from "./Window.css";
-import { FC, HTMLAttributes, PropsWithChildren, SVGProps } from "react";
+import { FC, HTMLAttributes, PropsWithChildren, SVGProps, useRef } from "react";
+import { ScrollArea } from "@prismicio/editor-ui";
 
 type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
 
@@ -54,15 +55,31 @@ export const WindowTabs: FC<Tabs.TabsProps> = (props) => (
 );
 
 export const WindowTabsList: FC<Tabs.TabsListProps> = (props) => (
-  <Tabs.List {...props} className={styles.list} />
+  <ScrollArea direction="horizontal">
+    <Tabs.List {...props} className={styles.list} />
+  </ScrollArea>
 );
 
-export const WindowTabsTrigger: FC<Tabs.TabsTriggerProps> = (props) => (
-  <Tabs.Trigger {...props} className={styles.trigger}>
-    {props.children}
-    <VerticalThreeDotsIcon className={styles.triggerIcon} />
-  </Tabs.Trigger>
-);
+export const WindowTabsTrigger: FC<Tabs.TabsTriggerProps> = (props) => {
+  const ref = useRef<HTMLButtonElement>(null);
+  const handleClick = () => {
+    ref.current?.scrollIntoView({ behavior: "smooth", inline: "center" });
+  };
+  return (
+    <Tabs.Trigger
+      {...props}
+      ref={ref}
+      className={styles.trigger}
+      onClick={(event) => {
+        handleClick();
+        props.onClick && props.onClick(event);
+      }}
+    >
+      {props.children}
+      <VerticalThreeDotsIcon className={styles.triggerIcon} />
+    </Tabs.Trigger>
+  );
+};
 
 export const WindowTabsContent: FC<Tabs.TabsContentProps> = (props) => (
   <Tabs.Content {...props} className={styles.content} />

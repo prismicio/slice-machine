@@ -64,7 +64,7 @@ export const list = style([
     display: "flex",
     flexShrink: 0,
     backgroundColor: colors.grey2,
-    overflowX: "auto",
+    overflow: "hidden",
     alignItems: "center",
   }),
 ]);
