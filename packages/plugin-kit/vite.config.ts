@@ -7,6 +7,11 @@ export default defineConfig({
 			internalDependencies: ["fp-ts"],
 		}),
 	],
+	build: {
+		lib: {
+			entry: ["./src/index.ts", "./src/fs/index.ts"],
+		},
+	},
 	test: {
 		coverage: {
 			provider: "v8",

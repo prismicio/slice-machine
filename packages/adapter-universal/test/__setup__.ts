@@ -10,7 +10,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 
-import { createMemoryAdapter } from "./__testutils__/createMemoryTestAdapter";
+import { createMemoryAdapter } from "./__testutils__/createMemoryAdapter";
 
 declare module "vitest" {
 	export interface TestContext {
