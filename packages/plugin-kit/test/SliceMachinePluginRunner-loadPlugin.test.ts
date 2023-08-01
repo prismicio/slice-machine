@@ -124,7 +124,7 @@ it("loads plugin from direct definition with options", async () => {
 });
 
 it("throws when plugin could not be loaded", async (ctx) => {
-	const nonExistentModuleName = ctx.meta.name;
+	const nonExistentModuleName = ctx.task.name;
 
 	await expect(
 		// @ts-expect-error - Calling private method

@@ -7,7 +7,6 @@ import * as os from "node:os";
 import { createMemoryAdapter } from "./__testutils__/createMemoryAdapter";
 
 import {
-	createSliceMachinePluginRunner,
 	SliceMachineConfig,
 	SliceMachinePluginRunner,
 	SliceMachineProject,
@@ -60,6 +59,8 @@ beforeEach(async (ctx) => {
 		config,
 	};
 
+	// We need to use a dynamic import because a top-level import conflicts with Vitest mocking.
+	const { createSliceMachinePluginRunner } = await import("../src");
 	ctx.pluginRunner = createSliceMachinePluginRunner({
 		project: ctx.project,
 		nativePlugins: {

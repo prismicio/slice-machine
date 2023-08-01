@@ -4,7 +4,7 @@ import {
 	SharedSlice,
 } from "@prismicio/types-internal/lib/customtypes";
 
-import { defineSliceMachinePlugin, SliceMachinePlugin } from "../../src";
+import { SliceMachinePlugin } from "../../src";
 
 type CreateMemoryAdapterArgs = {
 	customTypeModels?: CustomType[];
@@ -57,7 +57,8 @@ export function createMemoryAdapter(
 		]),
 	);
 
-	return defineSliceMachinePlugin({
+	// `defineSliceMachinePlugin()` cannot be used because it conflicts with Vitest mocking.
+	return {
 		meta: {
 			name: "slicemachine-adapter-memory",
 		},
@@ -209,5 +210,5 @@ export function createMemoryAdapter(
 				sliceLibraries.get(libraryID)?.get(sliceID)?.assets.delete(assetID);
 			});
 		},
-	});
+	};
 }
