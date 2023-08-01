@@ -53,11 +53,16 @@ export const WindowWithOutFrame: Story = {
   args: {
     children: (
       <WindowTabs defaultValue="main">
-        <WindowTabsList>
-          <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
-          <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
-          <WindowTabsTrigger value="extra">Extra tab</WindowTabsTrigger>
-        </WindowTabsList>
+        <WindowTabsListContainer>
+          <WindowTabsList>
+            <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
+            <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
+            <WindowTabsTrigger value="extra">Extra tab</WindowTabsTrigger>
+          </WindowTabsList>
+
+          <AddButton />
+        </WindowTabsListContainer>
+
         <WindowTabsContent value="main">Content for Main</WindowTabsContent>
         <WindowTabsContent value="seo">Content for seo</WindowTabsContent>
         <WindowTabsContent value="extra">
@@ -76,16 +81,22 @@ export const WindowWithTabsWithLLongNames: Story = {
           <WindowFrameDots />
         </WindowFrame>
         <WindowTabs defaultValue="main">
-          <WindowTabsList>
-            <WindowTabsTrigger value="main">Main Page</WindowTabsTrigger>
-            <WindowTabsTrigger value="seo">SEO and meta data</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab1">
-              Tab with a long name
-            </WindowTabsTrigger>
-            <WindowTabsTrigger value="tab2">
-              Tab with an even longer name
-            </WindowTabsTrigger>
-          </WindowTabsList>
+          <WindowTabsListContainer>
+            <WindowTabsList>
+              <WindowTabsTrigger value="main">Main Page</WindowTabsTrigger>
+              <WindowTabsTrigger value="seo">
+                SEO and meta data
+              </WindowTabsTrigger>
+              <WindowTabsTrigger value="tab1">
+                Tab with a long name
+              </WindowTabsTrigger>
+              <WindowTabsTrigger value="tab2">
+                Tab with an even longer name
+              </WindowTabsTrigger>
+            </WindowTabsList>
+            <AddButton />
+          </WindowTabsListContainer>
+
           <WindowTabsContent value="main">Content for Main</WindowTabsContent>
           <WindowTabsContent value="seo">Content for seo</WindowTabsContent>
 
@@ -110,26 +121,31 @@ export const WindowWithLotsOfTabs: Story = {
           <WindowFrameDots />
         </WindowFrame>
         <WindowTabs defaultValue="main">
-          <WindowTabsList>
-            <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
-            <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab1">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab2">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab3">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab4">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab5">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab6">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab7">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab8">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab9">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab10">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab11">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab12">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab13">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab14">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab15">tab</WindowTabsTrigger>
-            <WindowTabsTrigger value="tab16">tab</WindowTabsTrigger>
-          </WindowTabsList>
+          <WindowTabsListContainer>
+            <WindowTabsList>
+              <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
+              <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab1">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab2">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab3">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab4">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab5">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab6">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab7">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab8">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab9">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab10">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab11">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab12">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab13">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab14">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab15">tab</WindowTabsTrigger>
+              <WindowTabsTrigger value="tab16">tab</WindowTabsTrigger>
+            </WindowTabsList>
+
+            <AddButton />
+          </WindowTabsListContainer>
+
           <WindowTabsContent value="main">Content for Main</WindowTabsContent>
           <WindowTabsContent value="seo">Content for seo</WindowTabsContent>
 

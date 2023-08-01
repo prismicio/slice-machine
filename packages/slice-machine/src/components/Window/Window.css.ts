@@ -66,8 +66,12 @@ export const listContainer = style([
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: colors.grey2,
-    borderStyle: "none",
+    borderBottomStyle: "solid",
+    borderBottomWidth: 1,
   }),
+  {
+    borderBottomColor: vars.color.greyLight6,
+  },
 ]);
 
 export const addButton = style([
@@ -102,7 +106,7 @@ export const trigger = style([
     whiteSpace: "nowrap",
   }),
   {
-    padding: "8px 8px 8px 15px",
+    padding: "8px 8px 8px 0px",
     selectors: {
       [`&:hover`]: {
         borderColor: vars.color.transparent,
@@ -110,16 +114,6 @@ export const trigger = style([
         borderBottomColor: vars.color.transparent,
       },
 
-      [`&:not([data-state='active']):not(&:hover) + &:not([data-state='active'])`]:
-        {
-          borderImage: `linear-gradient(to bottom, ${vars.color.transparent} 33%, ${vars.color.greyLight10} 33%, ${vars.color.greyLight10} 66% ,${vars.color.transparent} 66%)`,
-          borderRightStyle: "none",
-          borderImageSlice: 1,
-        },
-
-      // ["&:not([data-state='active'])"]: {
-      //   borderBottomColor: vars.color.greyLight6
-      // },
       [`&:hover + &`]: {
         borderRightStyle: "none",
         borderLeftColor: "none",
@@ -132,7 +126,6 @@ export const trigger = style([
         backgroundColor: vars.color.greyLight1,
         boxShadow: vars.boxShadow[3],
         borderColor: vars.color.greyLight1,
-        borderBottomColor: vars.color.transparent,
       },
 
       [`&[data-state='active']:hover`]: {
@@ -163,6 +156,24 @@ export const triggerIcon = style([
       [`${trigger}:hover &`]: {
         fill: vars.color.greyLight11,
       },
+    },
+  },
+]);
+
+export const tabLabel = style([
+  reset,
+  sprinkles({
+    borderWidth: 1,
+    borderStyle: "solid",
+    paddingLeft: 16,
+  }),
+  {
+    borderColor: vars.color.transparent,
+    selectors: {
+      [`${trigger}:not([data-state='active']):not(:hover) + ${trigger}:not([data-state='active']):not(:hover) &`]:
+        {
+          borderLeftColor: vars.color.greyLight8,
+        },
     },
   },
 ]);
