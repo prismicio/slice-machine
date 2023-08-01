@@ -8,6 +8,8 @@ import {
   WindowTabsTrigger,
   WindowTabsContent,
   WindowFrameDots,
+  WindowTabsListContainer,
+  AddButton,
 } from "./Window";
 
 const meta: Meta<typeof Window> = {
@@ -26,11 +28,16 @@ export const Default: Story = {
           <WindowFrameDots />
         </WindowFrame>
         <WindowTabs defaultValue="main">
-          <WindowTabsList>
-            <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
-            <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
-            <WindowTabsTrigger value="extra">Extra tab</WindowTabsTrigger>
-          </WindowTabsList>
+          <WindowTabsListContainer>
+            <WindowTabsList>
+              <WindowTabsTrigger value="main">Main</WindowTabsTrigger>
+              <WindowTabsTrigger value="seo">SEO</WindowTabsTrigger>
+              <WindowTabsTrigger value="extra">Extra tab</WindowTabsTrigger>
+            </WindowTabsList>
+
+            <AddButton />
+          </WindowTabsListContainer>
+
           <WindowTabsContent value="main">Content for Main</WindowTabsContent>
           <WindowTabsContent value="seo">Content for seo</WindowTabsContent>
           <WindowTabsContent value="extra">

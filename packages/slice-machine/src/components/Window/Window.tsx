@@ -1,7 +1,7 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import * as styles from "./Window.css";
 import { FC, HTMLAttributes, PropsWithChildren, SVGProps, useRef } from "react";
-import { ScrollArea } from "@prismicio/editor-ui";
+import { ScrollArea, IconButton } from "@prismicio/editor-ui";
 
 type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
 
@@ -54,10 +54,20 @@ export const WindowTabs: FC<Tabs.TabsProps> = (props) => (
   <Tabs.Root {...props} className={styles.tabs} />
 );
 
+export const WindowTabsListContainer: FC<DivProps> = (props) => (
+  <div {...props} className={styles.listContainer} />
+);
+
 export const WindowTabsList: FC<Tabs.TabsListProps> = (props) => (
   <ScrollArea direction="horizontal">
     <Tabs.List {...props} className={styles.list} />
   </ScrollArea>
+);
+
+export const AddButton: FC<{ onClick?: () => void }> = (props) => (
+  <div className={styles.addButton}>
+    <IconButton {...props} icon="add" size="medium" />
+  </div>
 );
 
 export const WindowTabsTrigger: FC<Tabs.TabsTriggerProps> = (props) => {

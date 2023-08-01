@@ -58,6 +58,25 @@ export const tabs = style([
   }),
 ]);
 
+export const listContainer = style([
+  reset,
+  sprinkles({
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: colors.grey2,
+    borderStyle: "none",
+  }),
+]);
+
+export const addButton = style([
+  reset,
+  sprinkles({
+    padding: 8,
+  }),
+]);
+
 export const list = style([
   reset,
   sprinkles({
@@ -97,6 +116,10 @@ export const trigger = style([
           borderRightStyle: "none",
           borderImageSlice: 1,
         },
+
+      // ["&:not([data-state='active'])"]: {
+      //   borderBottomColor: vars.color.greyLight6
+      // },
       [`&:hover + &`]: {
         borderRightStyle: "none",
         borderLeftColor: "none",
