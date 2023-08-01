@@ -14,7 +14,7 @@ export const root = style([
   sprinkles({
     display: "flex",
     flexDirection: "column",
-    height: "100%", // not working :/
+    height: "100%",
     width: "100%",
     borderRadius: 6,
     borderWidth: 1,
@@ -85,11 +85,23 @@ export const trigger = style([
   {
     padding: "8px 8px 8px 15px",
     selectors: {
-      [`&:not([data-state='active']) + &:not([data-state='active']) `]: {
-        borderImage: `linear-gradient(to bottom, ${vars.color.transparent} 33%, ${vars.color.greyLight10} 33%, ${vars.color.greyLight10} 66% ,${vars.color.transparent} 66%)`,
-        borderRightStyle: "none",
-        borderImageSlice: 1,
+      [`&:hover`]: {
+        borderColor: vars.color.transparent,
+        borderStyle: "soild",
+        borderBottomColor: vars.color.transparent,
       },
+
+      [`&:not([data-state='active']):not(&:hover) + &:not([data-state='active'])`]:
+        {
+          borderImage: `linear-gradient(to bottom, ${vars.color.transparent} 33%, ${vars.color.greyLight10} 33%, ${vars.color.greyLight10} 66% ,${vars.color.transparent} 66%)`,
+          borderRightStyle: "none",
+          borderImageSlice: 1,
+        },
+      [`&:hover + &`]: {
+        borderRightStyle: "none",
+        borderLeftColor: "none",
+      },
+
       [`&[data-state='active']`]: {
         // active
         color: vars.color.greyLight12,
@@ -100,8 +112,12 @@ export const trigger = style([
         borderBottomColor: vars.color.transparent,
       },
 
+      [`&[data-state='active']:hover`]: {
+        borderBottomColor: vars.color.transparent,
+      },
+
       [`&:not([data-state='active']):hover`]: {
-        // hover state
+        borderLeftStyle: "none",
         backgroundColor: vars.color.greyLight1,
         borderRadius: "6px 6px 0px 0px",
         borderColor: vars.color.greyLight6,
@@ -131,6 +147,7 @@ export const triggerIcon = style([
 export const content = style([
   reset,
   sprinkles({
+    height: "100%",
     flexGrow: 1,
     backgroundColor: colors.grey1,
   }),
