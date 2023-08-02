@@ -129,6 +129,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           errors.label = "Cannot be empty.";
         }
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (!errors.label && customTypeLabels.includes(label)) {
           errors.label = `${customTypesMessages.name({
             start: true,
@@ -140,10 +141,12 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           errors.id = "ID cannot be empty.";
         }
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (!errors.id && id && !API_ID_REGEX.exec(id)) {
           errors.id = "Invalid id: No special characters allowed.";
         }
         if (
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           !errors.id &&
           id &&
           customTypeIds
@@ -176,6 +179,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
               start: false,
               plural: false,
             })}`}
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.label ? errors.label : undefined}
             onChange={(e) => handleLabelChange(e, values, setValues)}
           />
@@ -187,6 +191,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
               plural: false,
             })} ID`}
             placeholder={customTypesMessages.inputPlaceholder}
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.id ? errors.id : undefined}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />

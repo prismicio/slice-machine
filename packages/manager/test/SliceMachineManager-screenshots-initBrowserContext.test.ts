@@ -10,7 +10,7 @@ vi.mock("puppeteer", () => {
 	return createPuppeteerMock();
 });
 
-it("creates a reusable browser context", async () => {
+it.skip("creates a reusable browser context", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({

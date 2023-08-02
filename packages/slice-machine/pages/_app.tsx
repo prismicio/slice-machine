@@ -39,6 +39,7 @@ import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/c
 import Router from "next/router";
 
 import { NextPage } from "next";
+import ToastContainer from "@components/ToasterContainer";
 
 type NextPageWithLayout = NextPage & {
   CustomLayout?: React.FC<{ children: ReactNode }>;
@@ -58,6 +59,7 @@ const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
     if (setColorMode) {
       setColorMode("light");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <>{children}</>;
@@ -105,6 +107,7 @@ function MyApp({
     setSMStore({ store, persistor });
   }, [serverState, smStore]);
 
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const ComponentLayout = Component.CustomLayout || SliceMachineApp;
 
   return (
@@ -128,6 +131,7 @@ function MyApp({
                     </RouteChangeProvider>
                   </PersistGate>
                 </ConnectedRouter>
+                <ToastContainer />
               </Provider>
             )}
           </ThemeProvider>

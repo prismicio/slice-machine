@@ -42,7 +42,7 @@ const FormFieldArray = ({
       >
         {label}
         {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
           meta.touched && meta.error ? (
             <Text as="span" variant="text.labelError">
               {
@@ -62,7 +62,7 @@ const FormFieldArray = ({
         render={(arrayHelpers) => (
           <div>
             {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
               field.value && field.value.length > 0
                 ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                   field.value.map((opt, i) => (

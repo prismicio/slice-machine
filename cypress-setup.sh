@@ -32,7 +32,7 @@ rm -rf e2e-projects/cypress-next-app \
 && yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/init,@slicemachine/manager,@slicemachine/plugin-kit,slice-machine-ui,start-slicemachine}' --topological --verbose pack --out "${THIS_DIR}"/e2e-projects/cypress-next-app/%s-%v.tgz \
 && cd e2e-projects/cypress-next-app \
 && npm i *.tgz \
-&& npx @slicemachine/init --repository ${_PRISMIC_REPO} \
+&& npx @slicemachine/init --repository ${_PRISMIC_REPO} --no-start-slicemachine \
 && npm i --save-dev slice-machine-ui*.tgz @slicemachine-adapter-next*.tgz \
 && npx json -I -f package.json -e "this.scripts.slicemachine=\"start-slicemachine\"" \
 && npx json -I -f slicemachine.config.json -e "this.localSliceSimulatorURL=\"http://localhost:3000/slice-simulator\""

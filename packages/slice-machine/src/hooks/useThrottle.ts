@@ -19,6 +19,7 @@ function useThrottle<T>(
     return () => {
       clearTimeout(handler);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limit, ...args]);
 
   return throttledValue;

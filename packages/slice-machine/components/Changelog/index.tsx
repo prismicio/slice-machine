@@ -23,6 +23,7 @@ export default function Changelog() {
 
   const [selectedVersion, setSelectedVersion] = useState<
     PackageVersion | undefined
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   >(latestVersion || undefined);
 
   useEffect(() => {

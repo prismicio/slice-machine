@@ -82,10 +82,13 @@ const thumbText = (
   } = {},
   allowAuto = false
 ) => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (allowAuto && !width && !height) {
     return "auto";
   }
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (width || height) {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     return `${width ? width : "auto"}x${height ? height : "auto"}`;
   }
   return "...";
@@ -169,8 +172,11 @@ const Form: React.FC<FormProps> = (props) => {
                       error={
                         errors.thumbnails &&
                         touched.thumbnails &&
+                        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                         touched.thumbnails[i] &&
+                        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                         errors.thumbnails &&
+                        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                         errors.thumbnails[i]
                           ? true
                           : false

@@ -25,6 +25,7 @@ const WidgetForm = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const withDefaultValues = Object.entries(rest).reduce(
             (acc, [key, value]) => {
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               if (typeof value !== Boolean && !value) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                 const maybeDefaultValue = FormFields[key]?.defaultValue;

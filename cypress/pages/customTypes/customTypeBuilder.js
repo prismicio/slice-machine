@@ -18,7 +18,7 @@ class CustomTypeBuilder extends BaseBuilder {
   }
 
   get successToast() {
-    return cy.contains("Model & mocks have been generated successfully!");
+    return cy.contains("Model has been generated successfully!");
   }
 
   addTab(tabId) {

@@ -8,6 +8,7 @@ import * as Sentry from "@sentry/nextjs";
 
 const useServerState = () => {
   const { refreshState } = useSliceMachineActions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleRefreshState = useCallback(refreshState, []);
   const { data: serverState } = useSwr<ServerState>("getState", async () => {
     return await getState();

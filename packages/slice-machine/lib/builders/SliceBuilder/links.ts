@@ -17,9 +17,11 @@ export function variation({
   all: [string, string, object];
 } {
   const href = `/[lib]/[sliceName]/[variation]${
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     isSimulator ? "/simulator" : ""
   }`;
   const as = `/${lib}/${sliceName}/${variationId}${
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     isSimulator ? "/simulator" : ""
   }`;
 

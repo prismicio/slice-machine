@@ -7,6 +7,7 @@ export const selectSliceById = (
   libraryName: string,
   sliceId: string
 ) => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const libraries = getLibraries(store) || [];
 
   const library = libraries.find((library) => library.name === libraryName);
@@ -30,6 +31,7 @@ export const selectCurrentSlice = (
   );
   const slice = library?.components.find((c) => c.model.name === sliceName);
 
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   return slice || null;
 };
 

@@ -35,6 +35,7 @@ export const KebabMenuDropdown: React.FC<KebabMenuDropdownProps> = ({
           <KebabMenuList
             menuOptions={menuOptions}
             closeMenu={() => setIsOpen(false)}
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             dataCy={dataCy && `${dataCy}-dropdown`}
           />
         )}
