@@ -1,13 +1,13 @@
-import {
-	upsertGlobalTypeScriptTypes,
-	writeSliceFile,
-	writeSliceModel,
-} from "@slicemachine/adapter-universal";
 import type {
 	SliceCreateHook,
 	SliceCreateHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
+import {
+	upsertGlobalTypeScriptTypes,
+	writeSliceFile,
+	writeSliceModel,
+} from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";

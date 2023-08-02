@@ -8,7 +8,7 @@ import type {
 import {
 	checkHasProjectFile,
 	writeProjectFile,
-} from "@slicemachine/adapter-universal";
+} from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
 
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
