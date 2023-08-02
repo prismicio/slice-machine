@@ -15,7 +15,12 @@ export type Framework = {
 	/**
 	 * Framework 's id sent to Segment from Slice Machine
 	 */
-	sliceMachineTelemetryID: "next-11-13" | "nuxt-2" | "nuxt-3" | "universal";
+	sliceMachineTelemetryID:
+		| "next-11-13"
+		| "nuxt-2"
+		| "nuxt-3"
+		| "svelte-kit-1"
+		| "universal";
 
 	/**
 	 * Framework's id sent to Segment from wroom.
@@ -104,6 +109,20 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
 			"@slicemachine/adapter-next": isPrerelease ? "alpha" : "latest",
+		},
+	},
+	"svelte-kit-1": {
+		name: "SvelteKit",
+		sliceMachineTelemetryID: "svelte-kit-1",
+		wroomTelemetryID: "sveltekit",
+		prismicDocumentation: "https://prismic.dev/init/svelte-kit-1",
+		adapterName: "@slicemachine/adapter-svelte-kit",
+		compatibility: {
+			"@sveltejs/kit": "^11.0.0",
+		},
+		devDependencies: {
+			...DEFAULT_DEV_DEPENDENCIES,
+			"@slicemachine/adapter-svelte-kit": isPrerelease ? "alpha" : "latest",
 		},
 	},
 } as const;
