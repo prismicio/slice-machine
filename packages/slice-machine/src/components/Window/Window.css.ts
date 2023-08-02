@@ -61,16 +61,24 @@ export const tabs = style([
 export const listContainer = style([
   reset,
   sprinkles({
+    position: "relative",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: colors.grey2,
-    borderBottomStyle: "solid",
-    borderBottomWidth: 1,
   }),
   {
-    borderBottomColor: vars.color.greyLight6,
+    selectors: {
+      [`&:before`]: {
+        content: "",
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderBottom: "1px solid #e4e2e4",
+      },
+    },
   },
 ]);
 
@@ -78,6 +86,10 @@ export const addButton = style([
   reset,
   sprinkles({
     padding: 8,
+    borderStyle: "none",
+    borderWidth: 1,
+    borderColor: colors.grey8,
+    borderLeftStyle: "solid",
   }),
 ]);
 
@@ -96,13 +108,14 @@ export const trigger = style([
   reset,
   sprinkles({
     display: "flex",
+    position: "relative",
     alignItems: "center",
     gap: 8,
     color: colors.grey11,
-    borderWidth: 1,
-    borderStyle: "solid",
+    borderWidth: 0,
+    borderStyle: "none",
     borderColor: colors.transparent,
-    backgroundColor: colors.grey2,
+    backgroundColor: colors.transparent,
     whiteSpace: "nowrap",
   }),
   {
@@ -112,6 +125,7 @@ export const trigger = style([
         borderColor: vars.color.transparent,
         borderStyle: "soild",
         borderBottomColor: vars.color.transparent,
+        zIndex: 1,
       },
 
       [`&:hover + &`]: {
@@ -126,6 +140,7 @@ export const trigger = style([
         backgroundColor: vars.color.greyLight1,
         boxShadow: vars.boxShadow[3],
         borderColor: vars.color.greyLight1,
+        zIndex: 1,
       },
 
       [`&[data-state='active']:hover`]: {

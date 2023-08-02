@@ -76,20 +76,18 @@ export const WindowTabsTrigger: FC<Tabs.TabsTriggerProps> = (props) => {
     ref.current?.scrollIntoView({ behavior: "smooth", inline: "center" });
   };
   return (
-    <>
-      <Tabs.Trigger
-        {...props}
-        ref={ref}
-        className={styles.trigger}
-        onClick={(event) => {
-          handleClick();
-          props.onClick && props.onClick(event);
-        }}
-      >
-        <span className={styles.tabLabel}>{props.children}</span>
-        <VerticalThreeDotsIcon className={styles.triggerIcon} />
-      </Tabs.Trigger>
-    </>
+    <Tabs.Trigger
+      {...props}
+      ref={ref}
+      className={styles.trigger}
+      onClick={(event) => {
+        handleClick();
+        props.onClick && props.onClick(event);
+      }}
+    >
+      <span className={styles.tabLabel}>{props.children}</span>
+      <VerticalThreeDotsIcon className={styles.triggerIcon} />
+    </Tabs.Trigger>
   );
 };
 
