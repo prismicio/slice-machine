@@ -203,6 +203,7 @@ export {
 	createSliceMachinePluginRunner,
 	SliceMachinePluginRunner,
 	REQUIRED_ADAPTER_HOOKS,
+	ADAPTER_ONLY_HOOKS,
 } from "./createSliceMachinePluginRunner";
 
 export type { CallHookReturnType } from "./lib/HookSystem";

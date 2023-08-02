@@ -1,46 +1,44 @@
 import { it, expect } from "vitest";
 
-import { createSliceMachineProject } from "./__testutils__/createSliceMachineProject";
-import { createTestAdapter } from "./__testutils__/createTestAdapter";
+import { createMemoryAdapter } from "./__testutils__/createMemoryAdapter";
+import { replaceTestAdapter } from "./__testutils__/replaceTestAdapter";
 
 import { createSliceMachinePluginRunner } from "../src";
 
-it("returns Slice library", async () => {
-	const library = {
-		id: "lib",
-		sliceIDs: ["foo", "bar"],
-	};
-
-	const adapter = createTestAdapter({
-		setup: ({ hook }) => {
-			hook("slice-library:read", async (args) => {
-				if (args.libraryID === library.id) {
-					return library;
-				}
-
-				throw new Error("not implemented");
-			});
+it("returns Slice library", async (ctx) => {
+	const sliceLibraries = [
+		{
+			id: "lib-1",
+			models: [ctx.mock.model.sharedSlice(), ctx.mock.model.sharedSlice()],
 		},
-	});
-	const project = createSliceMachineProject(adapter);
+		{
+			id: "lib-2",
+			models: [ctx.mock.model.sharedSlice(), ctx.mock.model.sharedSlice()],
+		},
+	];
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
+	ctx.project.config.adapter = createMemoryAdapter({ sliceLibraries });
+	ctx.project.config.libraries = sliceLibraries.map((library) => library.id);
+
+	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+
 	await pluginRunner.init();
 
 	const res = await pluginRunner.rawActions.readSliceLibrary({
-		libraryID: library.id,
+		libraryID: sliceLibraries[0].id,
 	});
-	expect(res).toStrictEqual(library);
+	expect(res).toStrictEqual({
+		id: sliceLibraries[0].id,
+		sliceIDs: sliceLibraries[0].models.map((model) => model.id),
+	});
 });
 
-it("throws when no Slice Library is returned", async () => {
-	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
+it("throws when no Slice Library is returned", async (ctx) => {
+	const adapter = createMemoryAdapter({ customTypeModels: [] });
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
+	await replaceTestAdapter(ctx, { adapter });
 
 	const fn = () =>
-		pluginRunner.rawActions.readSliceLibrary({ libraryID: "foo" });
+		ctx.pluginRunner.rawActions.readSliceLibrary({ libraryID: "foo" });
 	await expect(fn).rejects.toThrowError("Slice library `foo` not found.");
 });
