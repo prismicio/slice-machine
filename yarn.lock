@@ -7696,50 +7696,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@slicemachine/adapter-universal@workspace:packages/adapter-universal":
-  version: 0.0.0-use.local
-  resolution: "@slicemachine/adapter-universal@workspace:packages/adapter-universal"
-  dependencies:
-    "@prismicio/mock": 0.2.0
-    "@prismicio/types-internal": ^2.0.0
-    "@size-limit/preset-small-lib": 8.2.4
-    "@slicemachine/plugin-kit": "workspace:^"
-    "@types/common-tags": 1.8.1
-    "@types/fs-extra": 11.0.1
-    "@types/prettier": 2.7.2
-    "@typescript-eslint/eslint-plugin": 5.55.0
-    "@typescript-eslint/parser": 5.55.0
-    "@vitest/coverage-v8": 0.32.0
-    common-tags: ^1.8.2
-    depcheck: 1.4.3
-    eslint: 8.37.0
-    eslint-config-prettier: 8.7.0
-    eslint-plugin-prettier: 4.2.1
-    eslint-plugin-tsdoc: 0.2.17
-    fp-ts: ^2.13.1
-    fs-extra: ^11.1.0
-    io-ts: ^2.2.20
-    io-ts-types: ^0.5.19
-    monocle-ts: ^2.3.13
-    newtype-ts: ^0.3.5
-    node-fetch: ^3.3.1
-    pascal-case: ^3.1.2
-    prettier: 2.8.4
-    prettier-plugin-jsdoc: 0.4.2
-    prismic-ts-codegen: 0.1.16
-    size-limit: 8.2.4
-    typescript: 4.9.5
-    vite: 4.3.9
-    vite-plugin-sdk: 0.1.1
-    vitest: 0.32.0
-  peerDependencies:
-    prismic-ts-codegen: ^0.1.16
-  peerDependenciesMeta:
-    prismic-ts-codegen:
-      optional: true
-  languageName: unknown
-  linkType: soft
-
 "@slicemachine/init@workspace:packages/init":
   version: 0.0.0-use.local
   resolution: "@slicemachine/init@workspace:packages/init"
