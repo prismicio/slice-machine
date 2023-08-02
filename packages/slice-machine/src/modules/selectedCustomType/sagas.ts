@@ -6,6 +6,8 @@ import { LoadingKeysEnum } from "../loading/types";
 import { saveCustomTypeCreator } from "./actions";
 import { selectCurrentCustomType } from "./index";
 import { saveCustomType, telemetry } from "@src/apiClient";
+import { ToastMessageWithPath } from "@components/ToasterContainer";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -32,9 +34,16 @@ export function* saveCustomTypeSaga() {
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
     yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
+    const formatName = CUSTOM_TYPES_MESSAGES[currentCustomType.format].name({
+      start: true,
+      plural: false,
+    });
     yield put(
       openToasterCreator({
-        content: "Model & mocks have been generated successfully!",
+        content: ToastMessageWithPath({
+          message: `${formatName} saved successfully at `,
+          path: `./customtypes/${currentCustomType.id}/index.json`,
+        }),
         type: ToasterType.SUCCESS,
       })
     );

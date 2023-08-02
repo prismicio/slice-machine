@@ -29,6 +29,7 @@ const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
   libraries: ReadonlyArray<LibraryUI> | null
 ) => {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const availableSlices = (libraries || []).reduce<ReadonlyArray<ComponentUI>>(
     (acc, curr: LibraryUI) => {
       return [...acc, ...curr.components];
@@ -127,6 +128,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         onRemoveSharedSlice(key);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notFound]);
 
   const sharedSlicesInSliceZone = slicesInSliceZone

@@ -4,6 +4,7 @@ import type { Preview } from "@storybook/react";
 
 const preview: Preview = {
   argTypes: {
+    children: { control: { disable: true } },
     className: { control: { disable: true } },
     style: { control: { disable: true } },
   },

@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.5.2-dev-next-release.5",
+  "version": "1.7.2-dev-next-release.0",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -15,7 +15,7 @@
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
     "dev": "next dev",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
-    "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
+    "lint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx .",
     "prepack": "$npm_execpath run build",
     "storybook": "storybook dev --no-open --port 6006",
     "storybook-build": "storybook build",
@@ -23,7 +23,7 @@
     "types": "tsc --noEmit",
     "unit": "vitest run --coverage",
     "unit:watch": "vitest watch",
-    "lint:precommit": "eslint",
+    "lint:precommit": "eslint --max-warnings 0",
     "depcheck": "depcheck --config=.depcheckrc",
     "audit": "yarn npm audit --environment production --severity high"
   },
@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@slicemachine/manager": "workspace:^",
-    "puppeteer": "^19.11.1",
     "start-slicemachine": "workspace:^"
   },
   "devDependencies": {
@@ -44,6 +43,7 @@
     "@prismicio/mocks": "2.0.0-alpha.2",
     "@prismicio/simulator": "0.1.4",
     "@prismicio/types-internal": "2.0.0",
+    "@radix-ui/react-hover-card": "1.0.6",
     "@radix-ui/react-tabs": "1.0.4",
     "@reach/menu-button": "0.18.0",
     "@sentry/nextjs": "7.43.0",

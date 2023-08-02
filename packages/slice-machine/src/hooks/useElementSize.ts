@@ -18,5 +18,6 @@ export function useElementSize<E extends Element>(
       callback({ blockSize: height, inlineSize: width }, element);
     });
     resizeObserverRef.current.observe(element);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }

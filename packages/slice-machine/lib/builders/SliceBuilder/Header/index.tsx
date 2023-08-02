@@ -81,12 +81,14 @@ const Header: React.FC<{
               isSimulatorAvailableForFramework={
                 isSimulatorAvailableForFramework
               }
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               isTouched={!!isTouched}
             />,
             <Button
               key="header-save-button"
               label="Save to File System"
               isLoading={isLoading}
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               disabled={!isTouched || isLoading}
               onClick={onSave}
               Icon={AiFillSave}

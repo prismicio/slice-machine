@@ -28,6 +28,7 @@ function Grid<T>({
       }}
     >
       {elems.map((elem: T | undefined, i: number) =>
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         elem ? (
           <span key={`${defineElementKey(elem)}-${i + 1}`}>
             {renderElem(elem, i)}

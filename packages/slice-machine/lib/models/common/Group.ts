@@ -56,6 +56,7 @@ export const Groups = {
     const fields = (() => {
       if (!group.config?.fields) return;
 
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       return Object.entries(group.config?.fields || {}).map(([key, value]) => ({
         key,
         value,

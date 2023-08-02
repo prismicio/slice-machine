@@ -12,10 +12,7 @@ import { isLoading } from "@src/modules/loading";
 
 import EmptyState from "./EmptyState";
 import DefaultView from "./Default";
-import { AiOutlineEye } from "react-icons/ai";
 
-import { Button } from "@components/Button";
-import { SIMULATOR_WINDOW_ID } from "@lib/consts";
 import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 
 enum ScreenshotView {
@@ -39,19 +36,21 @@ const VariationScreenshot: React.FC<{
   variationID: string;
   slice: ComponentUI;
 }> = ({ variationID, slice }) => {
-  const { isLoadingScreenshot, isSimulatorAvailableForFramework } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      isLoadingScreenshot: isLoading(
-        state,
-        LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
-      ),
-      isSimulatorAvailableForFramework:
-        selectIsSimulatorAvailableForFramework(state),
-    })
-  );
+  const {
+    isLoadingScreenshot,
+    isSimulatorAvailableForFramework: _isSimulatorAvailableForFramework,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    isLoadingScreenshot: isLoading(
+      state,
+      LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
+    ),
+    isSimulatorAvailableForFramework:
+      selectIsSimulatorAvailableForFramework(state),
+  }));
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
   const maybeScreenshot = slice.screenshots[variationID];
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const ViewRenderer = maybeScreenshot
     ? viewRenderer[ScreenshotView.Default]
     : viewRenderer[ScreenshotView.EmptyState];
@@ -62,15 +61,17 @@ const VariationScreenshot: React.FC<{
     },
   });
 
-  const openSimulator = () =>
-    window.open(
-      `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
-      SIMULATOR_WINDOW_ID
-    );
+  // TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
+  // const openSimulator = () =>
+  //   window.open(
+  //     `/${slice?.href}/${slice?.model.name}/${variationID}/simulator`,
+  //     SIMULATOR_WINDOW_ID
+  //   );
 
   return (
     <>
-      <Flex sx={{ p: 2, pt: 0, minHeight: "48px" }}>
+      {/* 
+        // TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
         {isSimulatorAvailableForFramework ? (
           <Button
             variant="white"
@@ -83,8 +84,10 @@ const VariationScreenshot: React.FC<{
             iconFill="#1A1523"
             label={"Capture screenshot from Slice Simulator"}
           />
-        ) : null}
-        {maybeScreenshot ? (
+        ) : null} */}
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
+      {maybeScreenshot ? (
+        <Flex sx={{ p: 2, pt: 0, minHeight: "48px" }}>
           <FileInputRenderer {...fileInputProps} isDragActive={false}>
             <>
               <FiUpload
@@ -97,8 +100,8 @@ const VariationScreenshot: React.FC<{
               Upload new screenshot
             </>
           </FileInputRenderer>
-        ) : null}
-      </Flex>
+        </Flex>
+      ) : null}
       <ViewRenderer
         slice={slice}
         variationID={variationID}

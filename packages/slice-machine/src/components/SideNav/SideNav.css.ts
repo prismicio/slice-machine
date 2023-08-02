@@ -228,6 +228,11 @@ export const link = style([
       "&[data-active=true]:hover": {
         backgroundColor: vars.color.greyLight1,
       },
+      // Parent list item is open
+      '[data-state="open"] > &, [data-state="open"] > &:hover': {
+        borderColor: vars.color.purple8,
+        boxShadow: vars.boxShadow.focus,
+      },
     },
   },
 ]);
@@ -311,7 +316,7 @@ export const rightElementText = style([
     alignSelf: "baseline",
     fontSize: "12px",
     lineHeight: "16px",
-    maxWidth: "68px",
+    maxWidth: "82px",
   },
 ]);
 

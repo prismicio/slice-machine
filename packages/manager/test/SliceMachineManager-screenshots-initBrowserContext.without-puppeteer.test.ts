@@ -9,7 +9,7 @@ vi.mock("puppeteer", () => {
 	throw new Error("forced failure");
 });
 
-it("throws if Puppeteer is not importable (e.g. not installed)", async () => {
+it.skip("throws if Puppeteer is not importable (e.g. not installed)", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({

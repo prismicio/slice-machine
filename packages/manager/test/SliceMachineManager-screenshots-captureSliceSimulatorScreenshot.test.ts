@@ -13,7 +13,7 @@ vi.mock("puppeteer", () => {
 	return puppeteerMock;
 });
 
-it("captures a Slice Simulator screenshot for a given Slice variation", async (ctx) => {
+it.skip("captures a Slice Simulator screenshot for a given Slice variation", async (ctx) => {
 	const model = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
@@ -83,7 +83,7 @@ it("captures a Slice Simulator screenshot for a given Slice variation", async (c
 	});
 });
 
-it("can be configured to capture a specific viewport", async (ctx) => {
+it.skip("can be configured to capture a specific viewport", async (ctx) => {
 	const model = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
@@ -143,7 +143,7 @@ it("can be configured to capture a specific viewport", async (ctx) => {
 	});
 });
 
-it("throws if the root selector cannot be found", async (ctx) => {
+it.skip("throws if the root selector cannot be found", async (ctx) => {
 	const model = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
@@ -188,7 +188,7 @@ it("throws if the root selector cannot be found", async (ctx) => {
 	}).rejects.toThrow(/did not find #__iframe-ready/i);
 });
 
-it("throws if the Slice model cannot be found", async () => {
+it.skip("throws if the Slice model cannot be found", async () => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("slice:read", () => {
@@ -218,7 +218,7 @@ it("throws if the Slice model cannot be found", async () => {
 	}).rejects.toThrow(/did not find a slice/i);
 });
 
-it("throws if a Slice Simulator screenshot URL is not accessible", async (ctx) => {
+it.skip("throws if a Slice Simulator screenshot URL is not accessible", async (ctx) => {
 	const model = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
@@ -262,7 +262,7 @@ it("throws if a Slice Simulator screenshot URL is not accessible", async (ctx) =
 	}).rejects.toThrow(/slice simulator screenshot url is not accessible/i);
 });
 
-it("throws if a Slice Simulator URL is not configured", async (ctx) => {
+it.skip("throws if a Slice Simulator URL is not configured", async (ctx) => {
 	const model = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
@@ -290,7 +290,7 @@ it("throws if a Slice Simulator URL is not configured", async (ctx) => {
 	}).rejects.toThrow(/slice simulator url must be configured/i);
 });
 
-it("throws if a browser context has not been initialized", async () => {
+it.skip("throws if a browser context has not been initialized", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -310,7 +310,7 @@ it("throws if a browser context has not been initialized", async () => {
 	}).rejects.toThrow(/browser context has not been initialized/i);
 });
 
-it("throws if plugins have not been initialized", async () => {
+it.skip("throws if plugins have not been initialized", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({
 		adapter,

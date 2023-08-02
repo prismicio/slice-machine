@@ -40,6 +40,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
         })} contains Slices that are incompatible.`,
         ToasterType.WARNING
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLegacySlices]);
 
   return (

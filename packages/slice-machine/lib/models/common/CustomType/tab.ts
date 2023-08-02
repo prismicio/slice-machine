@@ -155,6 +155,7 @@ export const Tab = {
   reorderWidget(tab: TabSM, start: number, end: number): TabSM {
     const reorderedWidget: { key: string; value: TabField } | undefined =
       tab.value[start];
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!reorderedWidget)
       throw new Error(`Unable to reorder the widget at index ${start}.`);
 

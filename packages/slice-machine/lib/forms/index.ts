@@ -70,6 +70,7 @@ export const createValidationSchema = (FormFields: {
         .reduce((acc, [key, formField]) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const { validate, yupType } = formField;
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           if (!validate) {
             return acc;
           }
@@ -84,9 +85,10 @@ export const createValidationSchema = (FormFields: {
           let validator = (Yup as any)[yupType]();
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           Object.entries(validate)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             .filter((e) => e && e[1])
             .forEach(([func, args]) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
               if (args && validator[func]) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 validator = validator[func](

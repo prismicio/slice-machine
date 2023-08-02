@@ -7,6 +7,7 @@ import {
   type PropsWithChildren,
   type ReactNode,
   type SVGProps,
+  forwardRef,
 } from "react";
 import clsx from "clsx";
 
@@ -76,9 +77,10 @@ export const SideNavList: FC<SideNavListProps> = ({
   </ul>
 );
 
-export const SideNavListItem: FC<LiHTMLAttributes<HTMLLIElement>> = (props) => (
-  <li {...props} className={styles.listItem} />
-);
+export const SideNavListItem = forwardRef<
+  HTMLLIElement,
+  LiHTMLAttributes<HTMLLIElement>
+>((props, ref) => <li {...props} className={styles.listItem} ref={ref} />);
 
 export const SideNavListTitle: FC<PropsWithChildren> = (props) => (
   <h3 {...props} className={styles.listTitle} />

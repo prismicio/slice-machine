@@ -65,11 +65,13 @@ export const useUnSyncChanges = (): UnSyncChanges => {
 
   const unSyncedSlices = components.filter(
     (component) =>
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       modelsStatuses.slices[component.model.id] &&
       unSyncStatuses.includes(modelsStatuses.slices[component.model.id])
   );
   const unSyncedCustomTypes = customTypes.filter(
     (customType) =>
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       modelsStatuses.customTypes[getModelId(customType)] &&
       unSyncStatuses.includes(
         modelsStatuses.customTypes[getModelId(customType)]

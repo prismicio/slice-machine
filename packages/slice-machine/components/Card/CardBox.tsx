@@ -21,6 +21,7 @@ export const CardBox: FC<CardBoxProps> = ({
   <Box
     sx={{
       p: 4,
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
       bg: bg || background,
       ...(withRadius
         ? {

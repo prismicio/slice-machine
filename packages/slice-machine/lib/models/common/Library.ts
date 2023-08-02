@@ -26,10 +26,14 @@ export interface ComponentInfo {
 export const ComponentInfo = {
   hasPreviewsMissing(info: ComponentInfo): boolean {
     const { screenshots, model } = info;
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!screenshots) return true;
-    return model.variations
-      .map((v) => v.id)
-      .some((variationId) => !screenshots[variationId]);
+    return (
+      model.variations
+        .map((v) => v.id)
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        .some((variationId) => !screenshots[variationId])
+    );
   },
 };
 

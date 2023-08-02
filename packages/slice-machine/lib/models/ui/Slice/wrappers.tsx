@@ -12,6 +12,7 @@ export const LinkCardWrapper = ({
 }) => {
   //TODO: make the redirection through "connected-next-router" so that the router location is synched with redux
   return (
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
     <Link passHref href={link?.as || ""}>
       <ThemeLink
         sx={{

@@ -27,6 +27,7 @@ const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
       bg: "#FFF",
     }}
   >
+    {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
     {isValid ? (
       <AiOutlinePicture style={{ fontSize: "16px" }} />
     ) : (
@@ -97,6 +98,7 @@ const VariationsList = ({
                   alignItems: "center",
                 }}
               >
+                {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
                 <VariationIcon isValid={!!slice.screenshots[variation.id]} />
                 <Text sx={{ ml: 2 }}>{variation.name}</Text>
               </Flex>
@@ -112,6 +114,7 @@ const variationSetter = (
   defaultVariationSelector: SliceVariationSelector | undefined,
   slices: ComponentUI[]
 ) =>
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   defaultVariationSelector ||
   (slices.length
     ? {
@@ -139,6 +142,7 @@ const ScreenshotChangesModal = ({
 
   useEffect(() => {
     setVariationSelector(variationSetter(defaultVariationSelector, slices));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultVariationSelector, isOpen]);
 
   if (slices.length === 0 || !variationSelector) return null;

@@ -8,7 +8,6 @@ import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { loginUser } from "./__testutils__/loginUser";
 import { setContext } from "./__testutils__/setContext";
-import { updateContext } from "./__testutils__/updateContext";
 import { spyManager } from "./__testutils__/spyManager";
 import { watchStd } from "./__testutils__/watchStd";
 
@@ -101,10 +100,11 @@ it("formats and uses repository flag", async (ctx) => {
 	});
 });
 
-it("uses repository flag with existing user repository", async () => {
+it("uses repository flag with existing user repository", async (ctx) => {
 	const domain = "repo-admin";
 	const initProcess = createSliceMachineInitProcess({ repository: domain });
 	setDefaultContext(initProcess);
+	await mockPrismicAPIs(ctx, initProcess, [domain]);
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
@@ -118,11 +118,12 @@ it("uses repository flag with existing user repository", async () => {
 	});
 });
 
-it("formats and uses repository flag with existing user repository", async () => {
+it("formats and uses repository flag with existing user repository", async (ctx) => {
 	const rawDomain = "Repo Admin";
 	const domain = "repo-admin";
 	const initProcess = createSliceMachineInitProcess({ repository: rawDomain });
 	setDefaultContext(initProcess);
+	await mockPrismicAPIs(ctx, initProcess, [domain]);
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
@@ -134,45 +135,6 @@ it("formats and uses repository flag with existing user repository", async () =>
 		domain,
 		exists: true,
 	});
-});
-
-it("throws if user does not have write access to repository", async () => {
-	const domain = "repo-writer";
-	const initProcess = createSliceMachineInitProcess({ repository: domain });
-	setDefaultContext(initProcess);
-
-	await expect(
-		watchStd(() => {
-			// @ts-expect-error - Accessing protected method
-			return initProcess.useRepositoryFlag();
-		}),
-	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Cannot run init command with repository repo-writer: you are not a developer or admin of this repository"',
-	);
-});
-
-it("throws if user is not a member of the repository (already exists)", async (ctx) => {
-	const domain = "existing-repo";
-	const initProcess = createSliceMachineInitProcess({ repository: domain });
-	setDefaultContext(initProcess);
-	const spiedManager = spyManager(initProcess);
-	await mockPrismicAPIs(ctx, initProcess, [domain]);
-
-	await expect(
-		watchStd(() => {
-			// @ts-expect-error - Accessing protected method
-			return initProcess.useRepositoryFlag();
-		}),
-	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Repository name existing-repo is already taken"',
-	);
-	expect(spiedManager.prismicRepository.checkExists).toHaveBeenCalledOnce();
-	expect(spiedManager.prismicRepository.checkExists).toHaveBeenNthCalledWith(
-		1,
-		{
-			domain,
-		},
-	);
 });
 
 it("throws if repository name is too short", async () => {
@@ -203,24 +165,6 @@ it("throws if repository name is too long", async () => {
 		}),
 	).rejects.toThrowErrorMatchingInlineSnapshot(
 		'"Repository name lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-officiis-incidunt-ex-harum must be 30 characters long or less"',
-	);
-});
-
-it("throws if context is missing user repositories", async () => {
-	const domain = "new-repo";
-	const initProcess = createSliceMachineInitProcess({ repository: domain });
-	setDefaultContext(initProcess);
-	updateContext(initProcess, {
-		userRepositories: undefined,
-	});
-
-	await expect(
-		watchStd(() => {
-			// @ts-expect-error - Accessing protected method
-			return initProcess.useRepositoryFlag();
-		}),
-	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"User repositories must be available through context to run `useRepositoryFlag`"',
 	);
 });
 

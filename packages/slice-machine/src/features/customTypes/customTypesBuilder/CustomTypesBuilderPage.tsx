@@ -92,6 +92,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     () => {
       initCustomTypeStore(customType, remoteCustomType);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       /* leave this empty to prevent local updates to disappear */
     ]
@@ -112,12 +113,6 @@ const CustomTypesBuilderPageWithProvider: React.FC<
   const messages = CUSTOM_TYPES_MESSAGES[currentCustomType.format];
 
   const actions = [
-    <EditDropdown
-      isChangesLocal
-      key="edit-dropdown"
-      format={currentCustomType.format}
-      customType={CustomTypes.fromSM(currentCustomType)}
-    />,
     ...(currentCustomType.format === "page"
       ? [
           <PageSnippetDialog
@@ -126,6 +121,12 @@ const CustomTypesBuilderPageWithProvider: React.FC<
           />,
         ]
       : []),
+    <EditDropdown
+      isChangesLocal
+      key="edit-dropdown"
+      format={currentCustomType.format}
+      customType={CustomTypes.fromSM(currentCustomType)}
+    />,
     <Button
       key="save-to-fs"
       onClick={saveCustomType}

@@ -31,12 +31,13 @@ const DefaultCard = ({
       >
         {HeaderContent}
         {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unsafe-assignment
           close ? <Close onClick={close} type="button" /> : null
         }
       </Flex>
     )}
     Footer={
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       FooterContent ? (
         <Flex sx={{ alignItems: "space-between", bg: "headSection", p: 3 }}>
           <Box sx={{ ml: "auto" }} />

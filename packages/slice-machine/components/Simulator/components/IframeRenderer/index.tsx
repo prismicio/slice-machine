@@ -67,6 +67,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     useSliceMachineActions();
 
   useEffect((): void => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!simulatorUrl) {
       connectToSimulatorFailure();
       return;
@@ -93,6 +94,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .catch(() => {
         connectToSimulatorFailure();
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client, apiContent, simulatorUrl]);
 
   const [viewportSize, setViewportSize] = useState<ScreenDimensions>();
@@ -120,6 +122,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
         ...(dryRun ? { display: "none" } : {}),
       }}
     >
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {simulatorUrl ? (
         <iframe
           id="__iframe-renderer"
@@ -138,6 +141,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           }}
         />
       ) : null}
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {client?.connected ? <div id="__iframe-ready" /> : null}
     </Flex>
   );

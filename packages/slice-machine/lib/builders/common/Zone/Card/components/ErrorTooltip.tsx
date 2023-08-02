@@ -6,6 +6,7 @@ interface ErrorTooltip {
 }
 
 export const ErrorTooltip: React.FC<ErrorTooltip> = ({ error }) => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (error) {
     return (
       <>

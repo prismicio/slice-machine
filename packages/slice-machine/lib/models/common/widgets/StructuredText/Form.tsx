@@ -14,6 +14,7 @@ import { AnyObject } from "yup/lib/types";
 import { isObject, isString } from "lodash";
 
 const isAllSet = (curr: Array<string>): boolean =>
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   !optionValues.find((e) => !curr.includes(e));
 
 const _createInitialOptions = (str: string) => {
@@ -50,16 +51,19 @@ function createValidator(key: "single" | "multi") {
         const val = getValueFromYupContext(ctx, key);
         const otherVal = getValueFromYupContext(ctx, other);
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (otherVal && typeof otherVal === "string") {
           return true;
         }
         if (typeof val !== "string") {
           return false;
         }
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if ((!val || !val.length) && (!otherVal || !otherVal.length)) {
           return false;
         }
         const arr = val.split(",");
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (arr.find((e) => !optionValues.includes(e))) {
           return false;
         }
@@ -113,10 +117,13 @@ const WidgetForm: React.FC<{
     config: { single, multi },
   } = formValues;
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const initialOptions = single
     ? _createInitialOptions(single)
-    : (multi && _createInitialOptions(multi)) || optionValues;
+    : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      (multi && _createInitialOptions(multi)) || optionValues;
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const [isMulti, setIsMulti] = useState(single ? false : true);
 
   const [acceptOptions, setAcceptOptions] = useState(initialOptions);
@@ -128,6 +135,7 @@ const WidgetForm: React.FC<{
       // prevent tests from failing for both values
       setFieldValue(accessors[1 - fieldNameIndex], undefined);
     }, 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMulti, acceptOptions]);
 
   return (
@@ -182,6 +190,7 @@ const WidgetForm: React.FC<{
             }}
             active={acceptOptions.includes(opt.value)}
             onClick={() => {
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               if (acceptOptions.find((e) => e === opt.value)) {
                 return setAcceptOptions(
                   acceptOptions.filter((e) => e !== opt.value)
@@ -191,6 +200,7 @@ const WidgetForm: React.FC<{
             }}
           />
         ))}
+        {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
         {errors.config?.[isMulti ? "multi" : "single"] ? (
           <Box sx={{ position: "absolute" }}>
             <Text as="span" variant="text.labelError" pl={0}>

@@ -34,6 +34,7 @@ export const selectedSliceReducer: Reducer<
       return action.payload;
     }
     case getType(refreshStateCreator):
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (prevState === null || !action.payload.libraries) return prevState;
 
       const updatedSlice = action.payload.libraries

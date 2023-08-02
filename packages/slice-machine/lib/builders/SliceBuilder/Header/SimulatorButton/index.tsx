@@ -1,4 +1,4 @@
-import React, { RefCallback, useCallback, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Box, Flex, Close, Text, useThemeUI } from "theme-ui";
 import { Button } from "@components/Button";
 
@@ -8,7 +8,10 @@ import { useRouter } from "next/router";
 import ReactTooltip from "react-tooltip";
 
 import style from "./style.module.css";
-import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";
+import {
+  userHasSeenSimulatorToolTip,
+  userHasSeenTutorialsToolTip,
+} from "@src/modules/userContext";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -129,28 +132,28 @@ const SimulatorButton: React.FC<{
 
   const { setSeenSimulatorToolTip } = useSliceMachineActions();
 
-  const { hasSeenTutorialsToolTip } = useSelector(
+  const { hasSeenSimulatorTooltip, hasSeenTutorialsToolTip } = useSelector(
     (store: SliceMachineStoreType) => ({
-      hasSeenTutorialsToolTip: userHasSeenSimulatorToolTip(store),
+      hasSeenSimulatorTooltip: userHasSeenSimulatorToolTip(store),
+      hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
     })
   );
 
-  const setRef: RefCallback<HTMLButtonElement> = useCallback(
-    (node) => {
-      if (ref.current) {
-        return;
-      }
-      if (
-        node &&
-        isSimulatorAvailableForFramework &&
-        !hasSeenTutorialsToolTip
-      ) {
-        setTimeout(() => ReactTooltip.show(node), 5000);
-      }
-      ref.current = node;
-    },
-    [isSimulatorAvailableForFramework, hasSeenTutorialsToolTip]
-  );
+  useEffect(() => {
+    const node = ref.current;
+    if (
+      node &&
+      isSimulatorAvailableForFramework &&
+      !hasSeenSimulatorTooltip &&
+      hasSeenTutorialsToolTip
+    ) {
+      setTimeout(() => ReactTooltip.show(node), 5000);
+    }
+  }, [
+    isSimulatorAvailableForFramework,
+    hasSeenSimulatorTooltip,
+    hasSeenTutorialsToolTip,
+  ]);
 
   const onCloseToolTip = () => {
     setSeenSimulatorToolTip();
@@ -168,7 +171,7 @@ const SimulatorButton: React.FC<{
         data-tip={true}
         data-tip-disable={false}
         data-for={"simulator-button-tooltip"}
-        ref={setRef}
+        ref={ref}
       >
         <Button
           data-tip
@@ -192,7 +195,7 @@ const SimulatorButton: React.FC<{
         />
       </span>
       {isSimulatorAvailableForFramework ? (
-        !hasSeenTutorialsToolTip ? (
+        !hasSeenSimulatorTooltip && hasSeenTutorialsToolTip ? (
           <SimulatorOnboardingTooltip onCloseToolTip={onCloseToolTip} />
         ) : isTouched ? (
           <NeedToSaveTooltip />

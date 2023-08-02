@@ -38,7 +38,7 @@ const ConfigErrors = ({ errors }) => (
           </Text>
           <br />
           {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
             value.run ? (
               <Text mt={1}>
                 Try running:{" "}
@@ -53,7 +53,7 @@ const ConfigErrors = ({ errors }) => (
           }
 
           {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
             value.do ? <Text mt={1}>Todo: {value.do}</Text> : null
           }
         </Li>
