@@ -1,0 +1,104 @@
+{
+	"name": "@slicemachine/adapter-svelte-kit",
+	"version": "0.3.10-dev-next-release.0",
+	"description": "Slice Machine adapter for SvelteKit.",
+	"keywords": [
+		"typescript",
+		"prismic"
+	],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"directory": "packages/adapter-svelte-kit"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./simulator": {
+			"types": "./dist/simulator/index.d.ts",
+			"require": "./dist/simulator.cjs",
+			"import": "./dist/simulator.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"dist/index.d.ts"
+			],
+			"simulator": [
+				"dist/simulator/index.d.ts"
+			]
+		}
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"format": "prettier --write .",
+		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
+		"prepack": "$npm_execpath run build",
+		"size": "size-limit",
+		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",
+		"types": "tsc --noEmit",
+		"unit": "vitest run --coverage",
+		"unit:watch": "vitest watch",
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "yarn npm audit --environment production --severity high"
+	},
+	"dependencies": {
+		"@prismicio/simulator": "^0.1.4",
+		"@prismicio/types-internal": "^2.0.0",
+		"@slicemachine/plugin-kit": "workspace:^",
+		"common-tags": "^1.8.2",
+		"fp-ts": "^2.13.1",
+		"fs-extra": "^11.1.0",
+		"io-ts": "^2.2.20",
+		"io-ts-types": "^0.5.19",
+		"monocle-ts": "^2.3.13",
+		"newtype-ts": "^0.3.5",
+		"node-fetch": "^3.3.1",
+		"pascal-case": "^3.1.2",
+		"prismic-ts-codegen": "^0.1.16"
+	},
+	"devDependencies": {
+		"@prismicio/mock": "0.2.0",
+		"@size-limit/preset-small-lib": "8.2.4",
+		"@types/common-tags": "1.8.1",
+		"@types/fs-extra": "11.0.1",
+		"@types/prettier": "2.7.2",
+		"@typescript-eslint/eslint-plugin": "5.55.0",
+		"@typescript-eslint/parser": "5.55.0",
+		"@vitest/coverage-v8": "0.32.0",
+		"depcheck": "1.4.3",
+		"eslint": "8.37.0",
+		"eslint-config-prettier": "8.7.0",
+		"eslint-plugin-prettier": "4.2.1",
+		"eslint-plugin-tsdoc": "0.2.17",
+		"prettier": "2.8.4",
+		"prettier-plugin-jsdoc": "0.4.2",
+		"size-limit": "8.2.4",
+		"typescript": "4.9.5",
+		"vite": "4.3.9",
+		"vite-plugin-sdk": "0.1.1",
+		"vitest": "0.32.0"
+	},
+	"peerDependencies": {
+		"@sveltejs/kit": "^1"
+	},
+	"engines": {
+		"node": ">=14.15.0"
+	}
+}

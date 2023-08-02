@@ -1,0 +1,10 @@
+ignores:
+  [
+    "@size-limit/preset-small-lib",
+    "@vitest/coverage-v8",
+    "monocle-ts",
+    "newtype-ts",
+    "prettier-plugin-jsdoc",
+    "typescript",
+  ]
+skip - missing: true
