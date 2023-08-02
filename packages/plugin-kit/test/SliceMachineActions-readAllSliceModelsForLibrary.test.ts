@@ -1,63 +1,47 @@
 import { it, expect } from "vitest";
 
-import { createSliceMachineProject } from "./__testutils__/createSliceMachineProject";
-import { createTestAdapter } from "./__testutils__/createTestAdapter";
-
 import { createSliceMachinePluginRunner } from "../src";
+import { createMemoryAdapter } from "./__testutils__/createMemoryAdapter";
+import { replaceTestAdapter } from "./__testutils__/replaceTestAdapter";
 
 it("returns all slice models for a library", async (ctx) => {
-	const models = [ctx.mock.model.sharedSlice(), ctx.mock.model.sharedSlice()];
-	const library = {
-		id: "lib",
-		sliceIDs: models.map((model) => model.id),
-	};
-
-	const adapter = createTestAdapter({
-		setup: ({ hook }) => {
-			hook("slice-library:read", async (args) => {
-				if (args.libraryID === library.id) {
-					return library;
-				}
-
-				throw new Error("not implemented");
-			});
-			hook("slice:read", async (args) => {
-				if (args.libraryID === library.id) {
-					const model = models.find((model) => model.id === args.sliceID);
-
-					if (model) {
-						return { model };
-					}
-				}
-
-				throw new Error("not implemented");
-			});
+	const sliceLibraries = [
+		{
+			id: "lib-1",
+			models: [ctx.mock.model.sharedSlice(), ctx.mock.model.sharedSlice()],
 		},
-	});
-	const project = createSliceMachineProject(adapter);
-	project.config.libraries = [library.id];
+		{
+			id: "lib-2",
+			models: [ctx.mock.model.sharedSlice(), ctx.mock.model.sharedSlice()],
+		},
+	];
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
+	ctx.project.config.adapter = createMemoryAdapter({ sliceLibraries });
+	ctx.project.config.libraries = sliceLibraries.map((library) => library.id);
+
+	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+
 	await pluginRunner.init();
 
 	const res = await pluginRunner.rawActions.readAllSliceModelsForLibrary({
-		libraryID: library.id,
+		libraryID: sliceLibraries[0].id,
 	});
+
 	expect(res).toStrictEqual(
-		models.map((model) => {
+		sliceLibraries[0].models.map((model) => {
 			return { model };
 		}),
 	);
 });
 
-it("throws when Slice Library does not exist", async () => {
-	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
+it("throws when Slice Library does not exist", async (ctx) => {
+	const adapter = createMemoryAdapter({ sliceLibraries: [] });
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
+	await replaceTestAdapter(ctx, { adapter });
 
 	const fn = () =>
-		pluginRunner.rawActions.readAllSliceModelsForLibrary({ libraryID: "foo" });
+		ctx.pluginRunner.rawActions.readAllSliceModelsForLibrary({
+			libraryID: "foo",
+		});
 	await expect(fn).rejects.toThrowError("Slice library `foo` not found.");
 });

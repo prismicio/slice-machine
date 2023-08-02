@@ -2,10 +2,11 @@ import {
 	defineSliceMachinePlugin,
 	SliceMachinePluginOptions,
 	SliceMachinePlugin,
+	REQUIRED_ADAPTER_HOOKS,
 } from "../../src";
-import { REQUIRED_ADAPTER_HOOKS } from "../../src/createSliceMachinePluginRunner";
 
 type CreateTestAdapterArgs<TPluginOptions extends SliceMachinePluginOptions> = {
+	name?: string;
 	setup?: SliceMachinePlugin<TPluginOptions>["setup"];
 };
 
@@ -16,7 +17,7 @@ export const createTestAdapter = <
 ): SliceMachinePlugin<TPluginOptions> => {
 	return defineSliceMachinePlugin({
 		meta: {
-			name: "test",
+			name: args.name || "test",
 		},
 		setup: async ({ hook, ...restSetupArgs }) => {
 			const hookedTypes: string[] = [];
