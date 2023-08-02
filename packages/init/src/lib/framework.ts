@@ -114,7 +114,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	"svelte-kit-1": {
 		name: "SvelteKit",
 		sliceMachineTelemetryID: "svelte-kit-1",
-		wroomTelemetryID: "sveltekit",
+		wroomTelemetryID: "svelte-kit",
 		prismicDocumentation: "https://prismic.dev/init/svelte-kit-1",
 		adapterName: "@slicemachine/adapter-svelte-kit",
 		compatibility: {
