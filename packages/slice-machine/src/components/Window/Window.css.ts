@@ -82,6 +82,15 @@ export const listContainer = style([
   },
 ]);
 
+export const scroll = style([
+  {
+    scrollbarWidth: "none",
+    "::-webkit-scrollbar": {
+      display: "none",
+    },
+  },
+]);
+
 export const addButton = style([
   reset,
   sprinkles({
@@ -119,36 +128,32 @@ export const trigger = style([
     whiteSpace: "nowrap",
   }),
   {
-    padding: "8px 8px 8px 0px",
+    padding: "8px 8px 8px 16px",
     selectors: {
-      [`&:hover`]: {
-        borderColor: vars.color.transparent,
-        borderStyle: "soild",
-        borderBottomColor: vars.color.transparent,
-        zIndex: 1,
+      ["&:not([data-state='active']):not(:hover):after"]: {
+        content: "",
+        position: "absolute",
+        width: "1px",
+        background: "#e4e2e4",
+        right: "-1px",
+        top: "8px",
+        bottom: "8px",
+        transition: "all 0.2s",
       },
 
-      [`&:hover + &`]: {
-        borderRightStyle: "none",
-        borderLeftColor: "none",
-      },
-
-      [`&[data-state='active']`]: {
-        // active
+      [`&:focus, &[data-state='active']`]: {
         color: vars.color.greyLight12,
         borderRadius: "6px 6px 0px 0px",
         backgroundColor: vars.color.greyLight1,
         boxShadow: vars.boxShadow[3],
         borderColor: vars.color.greyLight1,
+      },
+
+      [`&[data-state='active']`]: {
         zIndex: 1,
       },
 
-      [`&[data-state='active']:hover`]: {
-        borderBottomColor: vars.color.transparent,
-      },
-
       [`&:not([data-state='active']):hover`]: {
-        borderLeftStyle: "none",
         backgroundColor: vars.color.greyLight1,
         borderRadius: "6px 6px 0px 0px",
         borderColor: vars.color.greyLight6,
@@ -171,24 +176,6 @@ export const triggerIcon = style([
       [`${trigger}:hover &`]: {
         fill: vars.color.greyLight11,
       },
-    },
-  },
-]);
-
-export const tabLabel = style([
-  reset,
-  sprinkles({
-    borderWidth: 1,
-    borderStyle: "solid",
-    paddingLeft: 16,
-  }),
-  {
-    borderColor: vars.color.transparent,
-    selectors: {
-      [`${trigger}:not([data-state='active']):not(:hover) + ${trigger}:not([data-state='active']):not(:hover) &`]:
-        {
-          borderLeftColor: vars.color.greyLight8,
-        },
     },
   },
 ]);

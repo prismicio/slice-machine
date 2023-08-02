@@ -34,22 +34,6 @@ const HorozontalThreeDotsIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-const VerticalThreeDotsIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    {...props}
-  >
-    <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
-      d="M15 11C15 10.4477 15.4477 10 16 10C16.5523 10 17 10.4477 17 11C17 11.5523 16.5523 12 16 12C15.4477 12 15 11.5523 15 11ZM15 16C15 15.4477 15.4477 15 16 15C16.5523 15 17 15.4477 17 16C17 16.5523 16.5523 17 16 17C15.4477 17 15 16.5523 15 16ZM16 20C15.4477 20 15 20.4477 15 21C15 21.5523 15.4477 22 16 22C16.5523 22 17 21.5523 17 21C17 20.4477 16.5523 20 16 20Z"
-    />
-  </svg>
-);
-
 export const WindowTabs: FC<Tabs.TabsProps> = (props) => (
   <Tabs.Root {...props} className={styles.tabs} />
 );
@@ -59,7 +43,7 @@ export const WindowTabsListContainer: FC<DivProps> = (props) => (
 );
 
 export const WindowTabsList: FC<Tabs.TabsListProps> = (props) => (
-  <ScrollArea direction="horizontal">
+  <ScrollArea direction="horizontal" className={styles.scroll}>
     <Tabs.List {...props} className={styles.list} />
   </ScrollArea>
 );
@@ -70,23 +54,40 @@ export const AddButton: FC<{ onClick?: () => void }> = (props) => (
   </div>
 );
 
-export const WindowTabsTrigger: FC<Tabs.TabsTriggerProps> = (props) => {
+export const WindowTabsTrigger: FC<
+  Tabs.TabsTriggerProps & {
+    onInnerButtonClick?: () => void;
+  }
+> = ({ onInnerButtonClick, children, ...props }) => {
+  return (
+    <Tab {...props}>
+      {children}
+      <ThreeDotsButton onClick={onInnerButtonClick} />
+    </Tab>
+  );
+};
+
+export const ThreeDotsButton: FC<{ onClick?: () => void }> = (props) => (
+  <IconButton icon="moreVert" {...props} />
+);
+
+export const Tab: FC<Tabs.TabsTriggerProps> = ({ children, ...props }) => {
   const ref = useRef<HTMLButtonElement>(null);
   const handleClick = () => {
     ref.current?.scrollIntoView({ behavior: "smooth", inline: "center" });
   };
   return (
     <Tabs.Trigger
-      {...props}
+      asChild
       ref={ref}
       className={styles.trigger}
       onClick={(event) => {
         handleClick();
         props.onClick && props.onClick(event);
       }}
+      {...props}
     >
-      <span className={styles.tabLabel}>{props.children}</span>
-      <VerticalThreeDotsIcon className={styles.triggerIcon} />
+      <div>{children}</div>
     </Tabs.Trigger>
   );
 };
