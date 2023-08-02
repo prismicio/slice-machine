@@ -1,5 +1,6 @@
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
+	checkHasProjectFile,
 	deleteAllCustomTypeFiles,
 	deleteAllSliceFiles,
 	deleteCustomTypeFile,
@@ -47,6 +48,26 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			// Add Slice Simulator URL.
 			project.config.localSliceSimulatorURL ||=
 				"http://localhost:5173/slice-simulator";
+
+			// Nest the default Slice library in `./src/lib` if `./slices` is empty.
+			if (
+				(await checkHasProjectFile({
+					filename: "./src/lib",
+					helpers: context.helpers,
+				})) &&
+				project.config.libraries &&
+				JSON.stringify(project.config.libraries) ===
+					JSON.stringify(["./slices"])
+			) {
+				const sliceLibrary = await readSliceLibrary({
+					libraryID: project.config.libraries[0],
+					helpers: context.helpers,
+				});
+
+				if (sliceLibrary.sliceIDs.length < 1) {
+					project.config.libraries = ["./src/lib/slices"];
+				}
+			}
 
 			await writeProjectFile({
 				filename: "slicemachine.config.json",
@@ -281,7 +302,22 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("slice-simulator:setup:read", async (_data, _context) => {
-			return [];
+			return [
+				{
+					title: "Not supported",
+					body: "Slice Simulator is currently not supported with SvelteKit. Support is coming soon.",
+					description: "Support is coming soon.",
+					validate: () => {
+						return [
+							{
+								title: "Not supported",
+								message:
+									"Slice Simulator is currently not supported with SvelteKit. Support is coming soon.",
+							},
+						];
+					},
+				},
+			];
 		});
 	},
 });
