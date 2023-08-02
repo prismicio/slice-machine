@@ -266,7 +266,7 @@ const createSliceSimulatorPage = async ({
 		return;
 	}
 
-	let contents = source`
+	const contents = source`
 		"use client"
 
 		import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
@@ -530,7 +530,7 @@ const createRevalidateRoute = async ({
 		return;
 	}
 
-	let contents = source`
+	const contents = source`
 		import { NextResponse } from "next/server";
 		import { revalidateTag } from "next/cache";
 
