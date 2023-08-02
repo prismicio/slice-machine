@@ -1,7 +1,8 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import * as styles from "./Window.css";
-import { FC, HTMLAttributes, PropsWithChildren, SVGProps, useRef } from "react";
+import { FC, HTMLAttributes, PropsWithChildren, useRef } from "react";
 import { ScrollArea, IconButton } from "@prismicio/editor-ui";
+import { HorozontalThreeDotsIcon } from "@src/icons/HorozontalThreeDotsIcon";
 
 type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
 
@@ -15,23 +16,8 @@ export const WindowFrame: FC<DivProps> = (props) => (
 
 export const WindowFrameDots: FC<DivProps> = (props) => (
   <div className={styles.frameIconContainer} {...props}>
-    <HorozontalThreeDotsIcon />
+    <HorozontalThreeDotsIcon className={styles.frameIcon} />
   </div>
-);
-
-const HorozontalThreeDotsIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="49"
-    height="12"
-    viewBox="0 0 49 12"
-    className={styles.frameIcon}
-    {...props}
-  >
-    <circle cx="5.5" cy="6" r="5.5" />
-    <circle cx="24.5" cy="6" r="5.5" />
-    <circle cx="43.5" cy="6" r="5.5" />
-  </svg>
 );
 
 export const WindowTabs: FC<Tabs.TabsProps> = (props) => (
