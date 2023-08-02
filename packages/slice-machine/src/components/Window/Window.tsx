@@ -42,13 +42,13 @@ export const AddButton: FC<{ onClick?: () => void }> = (props) => (
 
 export const WindowTabsTrigger: FC<
   Tabs.TabsTriggerProps & {
-    onInnerButtonClick?: () => void;
+    onClick?: () => void;
   }
-> = ({ onInnerButtonClick, children, ...props }) => {
+> = ({ onClick, children, ...props }) => {
   return (
     <Tab {...props}>
       {children}
-      <ThreeDotsButton onClick={onInnerButtonClick} />
+      <ThreeDotsButton onClick={onClick} />
     </Tab>
   );
 };
