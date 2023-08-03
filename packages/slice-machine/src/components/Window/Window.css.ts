@@ -97,7 +97,7 @@ export const addButton = style([
     padding: 8,
     borderStyle: "none",
     borderWidth: 1,
-    borderColor: colors.grey8,
+    borderColor: colors.grey6,
     borderLeftStyle: "solid",
   }),
 ]);
@@ -121,8 +121,8 @@ export const trigger = style([
     alignItems: "center",
     gap: 8,
     color: colors.grey11,
-    borderWidth: 0,
-    borderStyle: "none",
+    borderWidth: 1,
+    borderStyle: "solid",
     borderColor: colors.transparent,
     backgroundColor: colors.transparent,
     whiteSpace: "nowrap",
@@ -130,34 +130,29 @@ export const trigger = style([
   {
     padding: "8px 8px 8px 16px",
     selectors: {
-      ["&:not([data-state='active']):not(:hover):after"]: {
-        content: "",
-        position: "absolute",
-        width: "1px",
-        background: "#e4e2e4",
-        right: "-1px",
-        top: "8px",
-        bottom: "8px",
-        transition: "all 0.2s",
-      },
+      ["&:not([data-state='active']):not(:hover):not(:focus) + &:not([data-state='active']):not(:hover):not(:focus):before"]:
+        {
+          content: "",
+          position: "absolute",
+          width: "1px",
+          background: vars.color.greyLight7,
+          left: "-1px",
+          top: "8px",
+          bottom: "8px",
+          transition: "all 0.2s",
+        },
 
-      [`&:focus, &[data-state='active']`]: {
+      [`&:focus, &[data-state='active'], &:not([data-state='active']):hover`]: {
         color: vars.color.greyLight12,
         borderRadius: "6px 6px 0px 0px",
         backgroundColor: vars.color.greyLight1,
-        boxShadow: vars.boxShadow[3],
-        borderColor: vars.color.greyLight1,
+        borderColor: vars.color.greyLight6,
+        borderBottomColor: vars.color.transparent,
       },
 
       [`&[data-state='active']`]: {
+        boxShadow: vars.boxShadow[3],
         zIndex: 1,
-      },
-
-      [`&:not([data-state='active']):hover`]: {
-        backgroundColor: vars.color.greyLight1,
-        borderRadius: "6px 6px 0px 0px",
-        borderColor: vars.color.greyLight6,
-        borderBottomColor: vars.color.transparent,
       },
     },
   },
