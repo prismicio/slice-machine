@@ -2,6 +2,12 @@ import Vue, { PropType, VNodeChildren } from "vue";
 import { CreateElement, ExtendedVue } from "vue/types/vue";
 
 import {
+	SliceSimulatorState,
+	SliceSimulatorOptions,
+	SliceSimulatorProps as BaseSliceSimulatorProps,
+} from "@prismicio/simulator/kit";
+import * as simulatorKit from "@prismicio/simulator/dist/kit.cjs";
+const {
 	getDefaultProps,
 	getDefaultSlices,
 	getDefaultMessage,
@@ -9,12 +15,9 @@ import {
 	disableEventHandler,
 	simulatorClass,
 	simulatorRootClass,
-	SliceSimulatorState,
-	SliceSimulatorOptions,
-	SliceSimulatorProps as BaseSliceSimulatorProps,
 	StateEventType,
 	SimulatorManager,
-} from "@prismicio/simulator/kit";
+} = simulatorKit as unknown as typeof import("@prismicio/simulator/kit");
 
 export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state">;
 
