@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Flex, Heading, Close, Box, Text } from "theme-ui";
+import { Flex, Heading, Close, Box, Text, Link } from "theme-ui";
 
 import Card from "@components/Card";
 import { AiOutlinePicture } from "react-icons/ai";
@@ -15,8 +15,38 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import VariationDropZone from "./VariationDropZone";
+import NextLink from "next/link";
+
+import { FigmaIcon } from "@src/icons/FigmaIcon";
+import OpenIcon from "@src/icons/OpenIcon";
 
 export type SliceVariationSelector = { sliceID: string; variationID: string };
+
+const FigmaVideoLink = () => (
+  <NextLink href="https://google.com" target="_blank" passHref legacyBehavior>
+    <Link
+      sx={{
+        pl: "4px",
+        display: "flex",
+        alignItems: "center",
+        color: "#000",
+        borderRadius: "6px",
+        fontSize: "12px",
+        lineHeight: "24px",
+        border: "1px solid var(--shade-06, #E4E2E4)",
+        boxShadow: "0px 1px 0px 0px rgba(0, 0, 0, 0.04)",
+        width: "100%",
+        textDecoration: "none",
+      }}
+      target="_blank"
+    >
+      <FigmaIcon />
+      See how to paste Figma Frames as Slices™ screenshots in 2 seconds
+      <span style={{ marginRight: "auto" }} />
+      <OpenIcon />
+    </Link>
+  </NextLink>
+);
 
 const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
   <Flex
@@ -209,16 +239,19 @@ const ScreenshotChangesModal = ({
               />
             ))}
           </Box>
-          <Box
+          <Flex
             as="main"
             sx={{
               p: 3,
               flexGrow: 99999,
               flexBasis: 0,
+              flexDirection: "column",
               minWidth: 320,
               maxHeight: "90%",
+              gap: "8px",
             }}
           >
+            <FigmaVideoLink />
             {(() => {
               const slice = slices.find(
                 (s) => s.model.id === variationSelector.sliceID
@@ -230,7 +263,7 @@ const ScreenshotChangesModal = ({
                 />
               ) : null;
             })()}
-          </Box>
+          </Flex>
         </Box>
       </Card>
     </SliceMachineModal>

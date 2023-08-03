@@ -106,6 +106,7 @@ const DropZone: React.FC<DropZoneProps> = ({
         file,
         isDragActive ? "dragAndDrop" : "upload"
       );
+      setIsHover(false);
     },
   });
 
