@@ -3,7 +3,7 @@ import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
-import { Box, Flex, Spinner } from "theme-ui";
+import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
@@ -68,6 +68,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       embeds: {
         url: endpoints.PrismicOembed,
       },
+      env: "prod",
       unsplash: {
         url: endpoints.PrismicUnsplash,
       },
@@ -246,11 +247,13 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             height: "100%",
           }}
         >
-          <Flex
+          <BaseStyles
             sx={{
+              display: "flex",
               height: "100%",
               flexDirection: "column",
               flex: 1,
+              minWidth: 0,
             }}
           >
             <Toolbar
@@ -284,7 +287,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                 ) : null}
               </>
             )}
-          </Flex>
+          </BaseStyles>
           {currentState === UiState.SUCCESS ? (
             <Box
               className="editor"
@@ -308,7 +311,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                 config={editorConfig}
                 content={editorContent}
                 onContentChange={(c) => {
-                  setEditorState(c as SharedSliceContent);
+                  setEditorState(c);
                   trackWidgetUsed(slice.model.id);
                 }}
                 sharedSlice={sharedSlice}

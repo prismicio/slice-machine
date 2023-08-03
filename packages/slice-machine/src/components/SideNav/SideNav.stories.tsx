@@ -20,8 +20,11 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: SideNav,
-  parameters: { layout: "fullscreen" },
   argTypes: { children: { control: { disable: true } } },
+  parameters: {
+    docs: { story: { height: 256, inline: false } },
+    layout: "fullscreen",
+  },
 } satisfies Meta<typeof SideNav>;
 
 export default meta;
@@ -128,5 +131,6 @@ export const Default = {
         </SideNavList>
       </>
     ),
+    style: { minHeight: "100vh", width: "320px" },
   },
 } satisfies Story;

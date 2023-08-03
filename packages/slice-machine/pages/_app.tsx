@@ -1,45 +1,41 @@
-import { ThemeProvider } from "@prismicio/editor-ui";
+import "@prismicio/editor-ui/style.css";
+import "react-datepicker/dist/react-datepicker.css";
+import "react-tabs/style/react-tabs.css";
+import "react-toastify/dist/ReactToastify.css";
+import "rc-drawer/assets/index.css";
+
+import "@src/styles/drawer.css";
+import "@src/styles/globals.css";
+import "@src/styles/hljs.css";
+import "@src/styles/intercom.css";
+import "@src/styles/keyframes.css";
+import "@src/styles/modal.css";
+import "@src/styles/starry-night.css";
+import "@src/styles/tabs.css";
+import "@src/styles/toaster.css";
+
+import { ThemeProvider, TooltipProvider } from "@prismicio/editor-ui";
+import { ConnectedRouter } from "connected-next-router";
+import type { NextPage } from "next";
+import App, { type AppContext, type AppInitialProps } from "next/app";
+import Head from "next/head";
+import Router from "next/router";
 import { type FC, type ReactNode, useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import configureStore from "../src/redux/store";
-import App, { AppContext } from "next/app";
+import type { Store } from "redux";
+import type { Persistor } from "redux-persist/es/types";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
-import theme from "../src/theme";
-
-import LoadingPage from "../components/LoadingPage";
 import SliceMachineApp from "../components/App";
-
-import "@prismicio/editor-ui/style.css";
-import "react-tabs/style/react-tabs.css";
-import "rc-drawer/assets/index.css";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-toastify/dist/ReactToastify.css";
-import "src/css/keyframes.css";
-import "src/css/modal.css";
-import "src/css/tabs.css";
-import "src/css/drawer.css";
-import "src/css/toaster.css";
-import "src/css/intercom.css";
-import "src/css/starry-night.css";
-
-import "src/css/hljs.css";
-
-import ServerState from "../lib/models/server/ServerState";
-
-import Head from "next/head";
-import { AppInitialProps } from "next/dist/shared/lib/utils";
-import { Store } from "redux";
-import { Persistor } from "redux-persist/es/types";
-import { ConnectedRouter } from "connected-next-router";
-import { RouteChangeProvider } from "../src/hooks/useRouteChange";
-import { getState } from "../src/apiClient";
+import LoadingPage from "../components/LoadingPage";
+import ToastContainer from "../components/ToasterContainer";
 import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/customType";
-import Router from "next/router";
-
-import { NextPage } from "next";
-import ToastContainer from "@components/ToasterContainer";
+import type ServerState from "../lib/models/server/ServerState";
+import { RouteChangeProvider } from "../src/hooks/useRouteChange";
+import configureStore from "../src/redux/store";
+import { getState } from "../src/apiClient";
+import theme from "../src/theme";
 
 type NextPageWithLayout = NextPage & {
   CustomLayout?: React.FC<{ children: ReactNode }>;
@@ -118,22 +114,24 @@ function MyApp({
       <ThemeUIThemeProvider theme={theme}>
         <RemoveDarkMode>
           <ThemeProvider mode="light">
-            {!smStore || !serverState ? (
-              <LoadingPage />
-            ) : (
-              <Provider store={smStore.store}>
-                <ConnectedRouter Router={Router}>
-                  <PersistGate loading={null} persistor={smStore.persistor}>
-                    <RouteChangeProvider>
-                      <ComponentLayout>
-                        <Component {...pageProps} />
-                      </ComponentLayout>
-                    </RouteChangeProvider>
-                  </PersistGate>
-                </ConnectedRouter>
-                <ToastContainer />
-              </Provider>
-            )}
+            <TooltipProvider>
+              {!smStore || !serverState ? (
+                <LoadingPage />
+              ) : (
+                <Provider store={smStore.store}>
+                  <ConnectedRouter Router={Router}>
+                    <PersistGate loading={null} persistor={smStore.persistor}>
+                      <RouteChangeProvider>
+                        <ComponentLayout>
+                          <Component {...pageProps} />
+                        </ComponentLayout>
+                      </RouteChangeProvider>
+                    </PersistGate>
+                  </ConnectedRouter>
+                  <ToastContainer />
+                </Provider>
+              )}
+            </TooltipProvider>
           </ThemeProvider>
         </RemoveDarkMode>
       </ThemeUIThemeProvider>

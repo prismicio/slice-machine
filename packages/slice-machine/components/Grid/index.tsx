@@ -24,7 +24,6 @@ function Grid<T>({
         gridTemplateColumns: `repeat(auto-fill, minmax(${gridTemplateMinPx}, 1fr))`,
         gridGap: gridGap,
         pt: 2,
-        mb: 3,
       }}
     >
       {elems.map((elem: T | undefined, i: number) =>

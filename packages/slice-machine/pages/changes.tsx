@@ -1,17 +1,21 @@
+import { Button } from "@prismicio/editor-ui";
 import React, { useEffect, useMemo } from "react";
 import Head from "next/head";
-import { Box, Text } from "theme-ui";
-import Container from "../components/Container";
-import Header from "../components/Header";
-import { MdLoop } from "react-icons/md";
+import { BaseStyles } from "theme-ui";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "../src/redux/type";
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@components/AppLayout";
 import { ChangesItems } from "@components/ChangesItems";
 import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
 
 import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
 
-import { Button } from "@components/Button";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
@@ -114,41 +118,35 @@ const Changes: React.FunctionComponent = () => {
       <Head>
         <title>Changes - Slice Machine</title>
       </Head>
-      <Container sx={{ display: "flex", flex: 1 }}>
-        <Box
-          as={"main"}
-          sx={{ flex: 1, display: "flex", flexDirection: "column" }}
-        >
-          <Header
-            link={{
-              Element: <Text>Changes</Text>,
-              href: "/changes",
-            }}
-            Actions={[
-              <Button
-                key="push-changes"
-                label="Push Changes"
-                onClick={() => onPush(false)} // not deleting documents by default
-                isLoading={isSyncing}
-                disabled={
-                  numberOfChanges === 0 ||
-                  !isOnline ||
-                  authStatus === AuthStatus.UNAUTHORIZED ||
-                  authStatus === AuthStatus.FORBIDDEN ||
-                  isSyncing
-                }
-                Icon={MdLoop}
-                iconFill="#FFFFFF"
-                data-cy="push-changes"
-              />,
-            ]}
-          />
-          {PageContent}
-        </Box>
-        <SoftDeleteDocumentsDrawer pushChanges={onPush} />
-        <HardDeleteDocumentsDrawer pushChanges={onPush} />
-        <ReferencesErrorDrawer pushChanges={onPush} />
-      </Container>
+      <AppLayout>
+        <AppLayoutHeader>
+          <AppLayoutBreadcrumb folder="Changes" />
+          <AppLayoutActions>
+            <Button
+              onClick={() => onPush(false)} // not deleting documents by default
+              loading={isSyncing}
+              disabled={
+                numberOfChanges === 0 ||
+                !isOnline ||
+                authStatus === AuthStatus.UNAUTHORIZED ||
+                authStatus === AuthStatus.FORBIDDEN ||
+                isSyncing
+              }
+              data-cy="push-changes"
+            >
+              Push Changes
+            </Button>
+          </AppLayoutActions>
+        </AppLayoutHeader>
+        <AppLayoutContent>
+          <BaseStyles sx={{ display: "flex", flexDirection: "column" }}>
+            {PageContent}
+            <SoftDeleteDocumentsDrawer pushChanges={onPush} />
+            <HardDeleteDocumentsDrawer pushChanges={onPush} />
+            <ReferencesErrorDrawer pushChanges={onPush} />
+          </BaseStyles>
+        </AppLayoutContent>
+      </AppLayout>
     </>
   );
 };
