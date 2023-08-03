@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@slicemachine/manager": "workspace:^",
+    "react-hotkeys-hook": "4.4.1",
     "start-slicemachine": "workspace:^"
   },
   "devDependencies": {

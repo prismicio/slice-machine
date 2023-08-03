@@ -7,14 +7,14 @@ import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import SliceMachineModal from "@components/SliceMachineModal";
 
-import Views from "./Views";
-
 import { isModalOpen } from "@src/modules/modal";
 
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+
+import VariationDropZone from "./VariationDropZone";
 
 export type SliceVariationSelector = { sliceID: string; variationID: string };
 
@@ -143,7 +143,11 @@ const ScreenshotChangesModal = ({
   useEffect(() => {
     setVariationSelector(variationSetter(defaultVariationSelector, slices));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultVariationSelector, isOpen]);
+  }, [
+    defaultVariationSelector?.sliceID,
+    defaultVariationSelector?.variationID,
+    isOpen,
+  ]);
 
   if (slices.length === 0 || !variationSelector) return null;
 
@@ -220,7 +224,7 @@ const ScreenshotChangesModal = ({
                 (s) => s.model.id === variationSelector.sliceID
               );
               return slice ? (
-                <Views
+                <VariationDropZone
                   variationID={variationSelector.variationID}
                   slice={slice}
                 />

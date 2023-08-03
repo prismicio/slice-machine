@@ -27475,6 +27475,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-hotkeys-hook@npm:4.4.1":
+  version: 4.4.1
+  resolution: "react-hotkeys-hook@npm:4.4.1"
+  peerDependencies:
+    react: ">=16.8.1"
+    react-dom: ">=16.8.1"
+  checksum: c03d5d013ec41f3a63a3dd7d704d2fc98fba227811f7a1222af8651705f1cef983b7ccc4325f9910fec920156b14b4f05101882dc7d0bde1601ba56c01d5f162
+  languageName: node
+  linkType: hard
+
 "react-icons@npm:4.8.0":
   version: 4.8.0
   resolution: "react-icons@npm:4.8.0"
@@ -29468,6 +29478,7 @@ __metadata:
     react-beautiful-dnd: 13.1.1
     react-datepicker: 4.10.0
     react-dom: 18.2.0
+    react-hotkeys-hook: 4.4.1
     react-icons: 4.8.0
     react-markdown: 8.0.7
     react-modal: 3.16.1
