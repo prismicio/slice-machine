@@ -130,6 +130,7 @@ export const trigger = style([
   {
     padding: "8px 8px 8px 16px",
     selectors: {
+      // when two inactive tabs that are not being interacted with, there should be a psuedo boarder inbetween them.
       ["&:not([data-state='active']):not(:hover):not(:focus) + &:not([data-state='active']):not(:hover):not(:focus):before"]:
         {
           content: "",
