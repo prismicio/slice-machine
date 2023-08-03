@@ -10,6 +10,7 @@ import { loadFile, writeFile, type ASTNode } from "magicast";
 
 import { checkPathExists } from "../lib/checkPathExists";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
+import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
 
 import type { PluginOptions } from "../types";
 
@@ -176,15 +177,55 @@ const createSliceSimulatorPage = async ({
 	await fs.writeFile(filePath, contents);
 };
 
+const modifySliceMachineConfig = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+	const project = await helpers.getProject();
+
+	// Add Slice Simulator URL.
+	project.config.localSliceSimulatorURL ||=
+		"http://localhost:3000/slice-simulator";
+
+	// Nest the default Slice Library in the src directory if it exists and
+	// is empty.
+	if (
+		hasSrcDirectory &&
+		JSON.stringify(project.config.libraries) === JSON.stringify(["./slices"])
+	) {
+		try {
+			const entries = await fs.readdir(helpers.joinPathFromRoot("slices"));
+
+			if (!entries.map((entry) => path.parse(entry).name).includes("index")) {
+				project.config.libraries = ["./src/slices"];
+			}
+		} catch (error) {
+			if (
+				error instanceof Error &&
+				"code" in error &&
+				error.code === "ENOENT"
+			) {
+				// The directory does not exist, which means we
+				// can safely nest the library.
+				project.config.libraries = ["./src/slices"];
+			}
+		}
+	}
+
+	await helpers.updateProjectConfig(project.config, options.format);
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
 ) => {
 	rejectIfNecessary(
 		await Promise.allSettled([
-			await installDependencies({ installDependencies: _installDependencies }),
-			await configurePrismicModule(context),
-			await createSliceSimulatorPage(context),
+			installDependencies({ installDependencies: _installDependencies }),
+			configurePrismicModule(context),
+			createSliceSimulatorPage(context),
+			modifySliceMachineConfig(context),
 		]),
 	);
 };
