@@ -36,7 +36,7 @@ it("returns Slice Machine project metadata", async () => {
 	await fs.rm(project.root, { recursive: true });
 });
 
-it("throws on not found config", async () => {
+it("throws when a config cannot be found", async () => {
 	const adapter = createTestAdapter();
 	const project = createSliceMachineProject(adapter);
 	project.root = await fs.mkdtemp(
@@ -55,7 +55,7 @@ it("throws on not found config", async () => {
 	await fs.rm(project.root, { recursive: true });
 });
 
-it("throws on invalid config", async () => {
+it("throws when a config is invalid", async () => {
 	const adapter = createTestAdapter();
 	const project = createSliceMachineProject(adapter);
 	project.root = await fs.mkdtemp(

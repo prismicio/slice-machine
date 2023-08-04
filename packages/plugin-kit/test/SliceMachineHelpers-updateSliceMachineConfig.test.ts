@@ -38,7 +38,9 @@ it("updates Slice Machine project config", async () => {
 		repositoryName: "updatedRepositoryName",
 		adapter: "updatedAdapter",
 	};
-	await pluginRunner.rawHelpers.updateProjectConfig(updatedSMJSON, true);
+	await pluginRunner.rawHelpers.updateSliceMachineConfig(updatedSMJSON, {
+		format: true,
+	});
 
 	const updatedRes = await pluginRunner.rawHelpers.getProject();
 
@@ -71,7 +73,7 @@ it("throws on invalid config provided", async () => {
 
 	expect(() =>
 		// @ts-expect-error - testing runtime type checking
-		pluginRunner.rawHelpers.updateProjectConfig({}),
+		pluginRunner.rawHelpers.updateSliceMachineConfig({ repositoryName: null }),
 	).rejects.toThrowError(/Invalid config/);
 
 	await fs.rm(project.root, { recursive: true });

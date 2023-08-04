@@ -213,7 +213,9 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	await helpers.updateProjectConfig(project.config, options.format);
+	await helpers.updateSliceMachineConfig(project.config, {
+		format: options.format,
+	});
 };
 
 export const projectInit: ProjectInitHook<PluginOptions> = async (

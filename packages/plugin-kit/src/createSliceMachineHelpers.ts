@@ -8,6 +8,10 @@ import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
 
 import { SliceMachineConfig, SliceMachineProject } from "./types";
 
+type UpdateSliceMachineConfigOptions = {
+	format?: boolean;
+};
+
 type FormatOptions = {
 	prettier?: prettier.Options;
 	/**
@@ -74,12 +78,12 @@ export class SliceMachineHelpers {
 		};
 	};
 
-	updateProjectConfig = async (
-		config: SliceMachineConfig,
-		format?: boolean,
+	updateSliceMachineConfig = async (
+		sliceMachineConfig: SliceMachineConfig,
+		options?: UpdateSliceMachineConfigOptions,
 	): Promise<void> => {
-		const { value: sliceMachineConfig, error } =
-			decodeSliceMachineConfig(config);
+		const { value: decodedSliceMachineConfig, error } =
+			decodeSliceMachineConfig(sliceMachineConfig);
 
 		if (error) {
 			// TODO: Write a more friendly and useful message.
@@ -87,9 +91,9 @@ export class SliceMachineHelpers {
 		}
 
 		const configFilePath = this.joinPathFromRoot("slicemachine.config.json");
-		let content = JSON.stringify(sliceMachineConfig);
+		let content = JSON.stringify(decodedSliceMachineConfig, null, 2);
 
-		if (format) {
+		if (options?.format) {
 			content = await this.format(content, configFilePath);
 		}
 
