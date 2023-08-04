@@ -1,12 +1,11 @@
 import { Button } from "@prismicio/editor-ui";
-import React, { useEffect, useRef } from "react";
-import { Box, Flex, Close, Text, useThemeUI } from "theme-ui";
+import React, { PropsWithChildren, useEffect, useRef } from "react";
+import { Text } from "theme-ui";
 
 import { SIMULATOR_WINDOW_ID, VIDEO_SIMULATOR_TOOLTIP } from "@lib/consts";
 import { useRouter } from "next/router";
 import ReactTooltip from "react-tooltip";
 
-import style from "./style.module.css";
 import { PlayCircleIcon } from "@src/icons/PlayCircleIcon";
 import {
   userHasSeenSimulatorToolTip,
@@ -16,8 +15,15 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { telemetry } from "@src/apiClient";
-import Video from "@components/CloudVideo";
+
 import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
+import {
+  HoverCard,
+  HoverCardCloseButton,
+  HoverCardDescription,
+  HoverCardMedia,
+  HoverCardTitle,
+} from "@src/components/HoverCard";
 
 const SimulatorNotSupportedTooltip: React.FC = () => (
   <ReactTooltipPortal>
@@ -34,76 +40,36 @@ const SimulatorNotSupportedTooltip: React.FC = () => (
   </ReactTooltipPortal>
 );
 
-const SimulatorOnboardingTooltip: React.FC<{
-  onCloseToolTip: () => void;
-}> = ({ onCloseToolTip }) => {
-  const { theme } = useThemeUI();
+const SimulatorOnboardingTooltip: React.FC<
+  PropsWithChildren<{
+    open: boolean;
+    onClose: () => void;
+  }>
+> = ({ children, open, onClose }) => {
   return (
-    <ReactTooltipPortal>
-      <ReactTooltip
-        clickable
-        border={false}
-        place="bottom"
-        effect="solid"
-        id="simulator-button-tooltip"
-        className={style.tooltip}
-        arrowColor="#5842C3"
-        afterHide={onCloseToolTip}
-        event="none"
-        textColor={String(theme.colors?.textClear)}
-      >
-        <Flex
-          sx={{
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "12px 16px",
-          }}
-          data-testid="simulator-tooltip"
-        >
-          <Text sx={{ color: "#FFF", fontSize: "12px", fontWeight: "600" }}>
-            Simulate your slices
-          </Text>
-          <Close
-            data-testid="simulator-tooltip-close-button"
-            onClick={onCloseToolTip}
-            sx={{
-              width: "26px",
-              color: "#FFF",
-            }}
-          />
-        </Flex>
-        <Box sx={{ bg: "#FFF" }}>
-          <Video
-            loop={false}
-            autoPlay={false}
-            publicId={VIDEO_SIMULATOR_TOOLTIP}
-            poster="/simulator-video-thumbnail.png"
-            onPlay={() => {
-              void telemetry.track({
-                event: "open-video-tutorials",
-                video: VIDEO_SIMULATOR_TOOLTIP,
-              });
-            }}
-          />
-          <Box sx={{ p: "16px" }}>
-            <Text sx={{ fontSize: "12px", lineHeight: "16px" }}>
-              Minimize context-switching by previewing your Slice components in
-              the simulator.
-            </Text>
-
-            <Flex
-              sx={{
-                alignItems: "center",
-                justifyContent: "flex-end",
-                mt: "24px",
-              }}
-            >
-              <Button onClick={onCloseToolTip}>Got it</Button>
-            </Flex>
-          </Box>
-        </Box>
-      </ReactTooltip>
-    </ReactTooltipPortal>
+    <HoverCard open={open} trigger={children} onClose={onClose}>
+      <HoverCardTitle>Simulate your slices</HoverCardTitle>
+      <HoverCardMedia
+        component="video"
+        cloudName="dmtf1daqp"
+        loop={false}
+        autoPlay={false}
+        publicId={VIDEO_SIMULATOR_TOOLTIP}
+        poster="/simulator-video-thumbnail.png"
+        controls
+        onPlay={() => {
+          void telemetry.track({
+            event: "open-video-tutorials",
+            video: VIDEO_SIMULATOR_TOOLTIP,
+          });
+        }}
+      />
+      <HoverCardDescription>
+        Minimize context-switching by previewing your Slice components in the
+        simulator.
+      </HoverCardDescription>
+      <HoverCardCloseButton>Got It</HoverCardCloseButton>
+    </HoverCard>
   );
 };
 
@@ -163,14 +129,25 @@ const SimulatorButton: React.FC<{
   };
 
   const disabled = !isSimulatorAvailableForFramework || isTouched;
+  const shouldShowSimulatorTooltip =
+    isSimulatorAvailableForFramework &&
+    !hasSeenSimulatorTooltip &&
+    hasSeenTutorialsToolTip;
+  const shouldShowNeedToSaveTooltip =
+    isSimulatorAvailableForFramework &&
+    shouldShowSimulatorTooltip === false &&
+    isTouched;
 
   return (
-    <>
-      <span
-        data-tip={true}
-        data-tip-disable={false}
-        data-for={"simulator-button-tooltip"}
-        ref={ref}
+    <span
+      data-tip={true}
+      data-tip-disable={false}
+      data-for={"simulator-button-tooltip"}
+      ref={ref}
+    >
+      <SimulatorOnboardingTooltip
+        open={shouldShowSimulatorTooltip}
+        onClose={onCloseToolTip}
       >
         <Button
           data-tip
@@ -192,17 +169,13 @@ const SimulatorButton: React.FC<{
         >
           Simulate Slice
         </Button>
-      </span>
-      {isSimulatorAvailableForFramework ? (
-        !hasSeenSimulatorTooltip && hasSeenTutorialsToolTip ? (
-          <SimulatorOnboardingTooltip onCloseToolTip={onCloseToolTip} />
-        ) : isTouched ? (
-          <NeedToSaveTooltip />
-        ) : null
-      ) : (
+      </SimulatorOnboardingTooltip>
+      {isSimulatorAvailableForFramework === false ? (
         <SimulatorNotSupportedTooltip />
-      )}
-    </>
+      ) : shouldShowNeedToSaveTooltip ? (
+        <NeedToSaveTooltip />
+      ) : null}
+    </span>
   );
 };
 
