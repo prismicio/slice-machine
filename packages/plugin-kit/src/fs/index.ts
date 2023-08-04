@@ -102,6 +102,9 @@ export type {
 	ReadCustomTypeModelReturnType,
 } from "./readCustomTypeModel";
 
+export { renameCustomType } from "./renameCustomType";
+export type { RenameCustomTypeArgs } from "./renameCustomType";
+
 export { deleteCustomTypeFile } from "./deleteCustomTypeFile";
 export type { DeleteCustomTypeFileArgs } from "./deleteCustomTypeFile";
 
