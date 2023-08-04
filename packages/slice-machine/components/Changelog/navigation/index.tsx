@@ -1,3 +1,4 @@
+import { tokens } from "@prismicio/editor-ui";
 import React from "react";
 import { Flex, Text } from "theme-ui";
 import { PackageChangelog, PackageVersion } from "@models/common/versions";
@@ -49,20 +50,18 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <Flex
       sx={{
-        width: "244px",
-        minWidth: "244px",
-        height: "100%",
-        borderRight: "1px solid",
-        borderColor: "grey01",
+        minWidth: "228px",
+        borderRight: "1px dashed",
+        borderColor: tokens.color.greyLight6,
         flexDirection: "column",
-        padding: "32px 48px 0px 16px",
+        paddingRight: "48px",
       }}
     >
       <Flex
         sx={{
           flexDirection: "column",
-          borderBottom: "1px solid",
-          borderColor: "grey01",
+          borderBottom: "1px dashed",
+          borderColor: tokens.color.greyLight6,
           paddingBottom: "28px",
         }}
       >

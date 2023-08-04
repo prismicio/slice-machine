@@ -1,19 +1,23 @@
+import { Button, Icon } from "@prismicio/editor-ui";
 import React, { useState } from "react";
 import Head from "next/head";
-import { Box, Flex, Text, Link } from "theme-ui";
+import { BaseStyles, Flex, Text, Link } from "theme-ui";
 import { useSelector } from "react-redux";
-import { GoPlus } from "react-icons/go";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { SharedSlice } from "@lib/models/ui/Slice";
 import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@components/AppLayout";
 import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-import Header from "@components/Header";
-import Container from "@components/Container";
 import Grid from "@components/Grid";
 import EmptyState from "@components/EmptyState";
-import { Button } from "@components/Button";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 import { DeleteSliceModal } from "@components/DeleteSliceModal";
@@ -26,7 +30,6 @@ import {
 } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import { SliceListIcon } from "@src/icons/SliceListIcon";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const { openRenameSliceModal, openDeleteSliceModal } =
@@ -71,190 +74,175 @@ const SlicesIndex: React.FunctionComponent = () => {
       <Head>
         <title>Slices - Slice Machine</title>
       </Head>
-      <Container
-        sx={{
-          display: "flex",
-          flex: 1,
-        }}
-      >
-        <Box
-          as={"main"}
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Header
-            link={{
-              Element: (
-                <>
-                  <SliceListIcon /> <Text>Slices</Text>
-                </>
-              ),
-              href: "/slices",
-            }}
-            Actions={
-              localLibraries?.length !== 0 && sliceCount !== 0
-                ? [
-                    <Button
-                      key="create-slice"
-                      label="Create a Slice"
-                      Icon={GoPlus}
-                      iconFill="#FFFFFF"
-                      data-cy="create-slice"
-                      onClick={() => {
+      <AppLayout>
+        <AppLayoutHeader>
+          <AppLayoutBreadcrumb folder="Slices" />
+          {localLibraries?.length !== 0 && sliceCount !== 0 ? (
+            <AppLayoutActions>
+              <Button
+                data-cy="create-slice"
+                onClick={() => {
+                  setIsCreateSliceModalOpen(true);
+                }}
+                startIcon={<Icon name="add" />}
+              >
+                Create
+              </Button>
+            </AppLayoutActions>
+          ) : undefined}
+        </AppLayoutHeader>
+        <AppLayoutContent>
+          <BaseStyles sx={{ display: "flex", flexDirection: "column" }}>
+            {sortedLibraries.length > 0 ? (
+              <Flex
+                sx={{
+                  flex: 1,
+                  flexDirection: "column",
+                }}
+              >
+                {sliceCount === 0 ? (
+                  <Flex
+                    sx={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <EmptyState
+                      title={"What are Slices?"}
+                      onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
                       }}
-                    />,
-                  ]
-                : []
-            }
-          />
-          {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
-          {sortedLibraries && (
-            <Flex
-              sx={{
-                flex: 1,
-                flexDirection: "column",
-              }}
-            >
-              {sliceCount === 0 ? (
-                <Flex
-                  sx={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <EmptyState
-                    title={"What are Slices?"}
-                    onCreateNew={() => {
-                      setIsCreateSliceModalOpen(true);
-                    }}
-                    buttonText={"Create one"}
-                    videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
-                    documentationComponent={
-                      <>
-                        Slices are sections of your website. Prismic documents
-                        contain a dynamic "Slice Zone" that allows content
-                        creators to add, edit, and rearrange Slices to compose
-                        dynamic layouts for any page design.{" "}
-                        <Link
-                          target={"_blank"}
-                          href={"https://prismic.io/docs/core-concepts/slices"}
-                          sx={(theme) => ({ color: theme?.colors?.primary })}
-                        >
-                          Learn more
-                        </Link>
-                        .
-                      </>
-                    }
-                  />
-                </Flex>
-              ) : (
-                sortedLibraries.map((lib) => {
-                  const { name, isLocal, components } = lib;
-                  return (
-                    <Flex
-                      key={name}
-                      sx={{
-                        flexDirection: "column",
-                        "&:not(last-of-type)": {
-                          mb: 4,
-                        },
-                      }}
-                    >
+                      buttonText={"Create one"}
+                      videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
+                      documentationComponent={
+                        <>
+                          Slices are sections of your website. Prismic documents
+                          contain a dynamic "Slice Zone" that allows content
+                          creators to add, edit, and rearrange Slices to compose
+                          dynamic layouts for any page design.{" "}
+                          <Link
+                            target={"_blank"}
+                            href={
+                              "https://prismic.io/docs/core-concepts/slices"
+                            }
+                            sx={(theme) => ({
+                              color: theme?.colors?.primary,
+                            })}
+                          >
+                            Learn more
+                          </Link>
+                          .
+                        </>
+                      }
+                    />
+                  </Flex>
+                ) : (
+                  sortedLibraries.map((lib) => {
+                    const { name, isLocal, components } = lib;
+                    return (
                       <Flex
+                        key={name}
                         sx={{
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          flexDirection: "column",
+                          "&:not(:last-of-type)": {
+                            mb: 4,
+                          },
                         }}
                       >
                         <Flex
                           sx={{
                             alignItems: "center",
-                            fontSize: 3,
-                            lineHeight: "48px",
-                            fontWeight: "heading",
-                            mb: 1,
+                            justifyContent: "space-between",
                           }}
                         >
-                          <Text>{name}</Text>
+                          <Flex
+                            sx={{
+                              alignItems: "center",
+                              fontSize: 3,
+                              lineHeight: "48px",
+                              fontWeight: "heading",
+                              mb: 1,
+                            }}
+                          >
+                            <Text>{name}</Text>
+                          </Flex>
+                          {!isLocal && (
+                            <p>⚠️ External libraries are read-only</p>
+                          )}
                         </Flex>
-                        {!isLocal && <p>⚠️ External libraries are read-only</p>}
+                        <Grid
+                          elems={components}
+                          defineElementKey={(slice: ComponentUI) =>
+                            slice.model.name
+                          }
+                          renderElem={(slice: ComponentUI) => {
+                            return SharedSlice.render({
+                              slice,
+                              StatusOrCustom: {
+                                status: modelsStatuses.slices[slice.model.id],
+                                authStatus,
+                                isOnline,
+                              },
+                              actions: {
+                                onUpdateScreenshot: (e: React.MouseEvent) => {
+                                  e.preventDefault();
+                                  onOpenModal({
+                                    sliceFilterFn: (s: ComponentUI[]) =>
+                                      s.filter(
+                                        (e) => e.model.id === slice.model.id
+                                      ),
+                                  });
+                                },
+                                openRenameModal: (slice: ComponentUI) => {
+                                  setSliceForEdit(slice);
+                                  openRenameSliceModal();
+                                },
+                                openDeleteModal: (slice: ComponentUI) => {
+                                  setSliceForEdit(slice);
+                                  openDeleteSliceModal();
+                                },
+                              },
+                              showActions: true,
+                            });
+                          }}
+                          gridGap="32px 16px"
+                        />
                       </Flex>
-                      <Grid
-                        elems={components}
-                        defineElementKey={(slice: ComponentUI) =>
-                          slice.model.name
-                        }
-                        renderElem={(slice: ComponentUI) => {
-                          return SharedSlice.render({
-                            slice,
-                            StatusOrCustom: {
-                              status: modelsStatuses.slices[slice.model.id],
-                              authStatus,
-                              isOnline,
-                            },
-                            actions: {
-                              onUpdateScreenshot: (e: React.MouseEvent) => {
-                                e.preventDefault();
-                                onOpenModal({
-                                  sliceFilterFn: (s: ComponentUI[]) =>
-                                    s.filter(
-                                      (e) => e.model.id === slice.model.id
-                                    ),
-                                });
-                              },
-                              openRenameModal: (slice: ComponentUI) => {
-                                setSliceForEdit(slice);
-                                openRenameSliceModal();
-                              },
-                              openDeleteModal: (slice: ComponentUI) => {
-                                setSliceForEdit(slice);
-                                openDeleteSliceModal();
-                              },
-                            },
-                            showActions: true,
-                          });
-                        }}
-                        gridGap="32px 16px"
-                      />
-                    </Flex>
-                  );
-                })
-              )}
-            </Flex>
+                    );
+                  })
+                )}
+              </Flex>
+            ) : undefined}
+          </BaseStyles>
+          {localLibraries?.length > 0 && (
+            <ScreenshotChangesModal
+              slices={sliceFilterFn(slices)}
+              defaultVariationSelector={defaultVariationSelector}
+            />
           )}
-        </Box>
-      </Container>
-      {localLibraries?.length > 0 && (
-        <ScreenshotChangesModal
-          slices={sliceFilterFn(slices)}
-          defaultVariationSelector={defaultVariationSelector}
-        />
-      )}
-      {localLibraries?.length > 0 && isCreateSliceModalOpen && (
-        <CreateSliceModal
-          localLibraries={localLibraries}
-          remoteSlices={remoteSlices}
-          onClose={() => {
-            setIsCreateSliceModalOpen(false);
-          }}
-        />
-      )}
-      <RenameSliceModal
-        sliceId={sliceForEdit?.model.id ?? ""}
-        sliceName={sliceForEdit?.model.name ?? ""}
-        libName={sliceForEdit?.from ?? ""}
-        data-cy="rename-slice-modal"
-      />
-      <DeleteSliceModal
-        sliceId={sliceForEdit?.model.id ?? ""}
-        sliceName={sliceForEdit?.model.name ?? ""}
-        libName={sliceForEdit?.from ?? ""}
-      />
+          {localLibraries?.length > 0 && isCreateSliceModalOpen && (
+            <CreateSliceModal
+              localLibraries={localLibraries}
+              remoteSlices={remoteSlices}
+              onClose={() => {
+                setIsCreateSliceModalOpen(false);
+              }}
+            />
+          )}
+          <RenameSliceModal
+            sliceId={sliceForEdit?.model.id ?? ""}
+            sliceName={sliceForEdit?.model.name ?? ""}
+            libName={sliceForEdit?.from ?? ""}
+            data-cy="rename-slice-modal"
+          />
+          <DeleteSliceModal
+            sliceId={sliceForEdit?.model.id ?? ""}
+            sliceName={sliceForEdit?.model.name ?? ""}
+            libName={sliceForEdit?.from ?? ""}
+          />
+        </AppLayoutContent>
+      </AppLayout>
     </>
   );
 };

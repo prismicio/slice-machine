@@ -14,6 +14,7 @@ export const root = style([
     animationDuration: 300,
     animationName: "fadeIn",
     animationTimingFunction: "easeInOut",
+    backgroundColor: colors.grey1,
     borderColor: colors.grey6,
     borderRadius: 6,
     borderStyle: "solid",

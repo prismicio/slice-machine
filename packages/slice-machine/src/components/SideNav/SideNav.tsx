@@ -1,5 +1,6 @@
 import {
   HTMLAttributes,
+  type CSSProperties,
   type FC,
   type HTMLProps,
   type LiHTMLAttributes,
@@ -16,7 +17,9 @@ import OpenIcon from "@src/icons/OpenIcon";
 
 import * as styles from "./SideNav.css";
 
-export const SideNav: FC<PropsWithChildren> = (props) => (
+type SideNavProps = PropsWithChildren<{ style?: CSSProperties }>;
+
+export const SideNav: FC<SideNavProps> = (props) => (
   <nav {...props} className={styles.root} />
 );
 
@@ -37,7 +40,7 @@ export const SideNavRepository: FC<SideNavRepositoryProps> = ({
 }) => {
   return (
     <div className={styles.repository}>
-      <div>
+      <div className={styles.repositoryInfo}>
         <h1 className={styles.repositoryName}>{repositoryName}</h1>
 
         <h2 className={styles.repositoryDomain}>{repositoryDomain}</h2>

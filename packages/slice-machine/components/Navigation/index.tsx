@@ -2,7 +2,7 @@ import { Suspense, type FC } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
-import VideoItem from "@components/AppLayout/Navigation/VideoItem";
+import VideoItem from "@components/Navigation/VideoItem";
 import { LightningIcon } from "@src/icons/Lightning";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import {
