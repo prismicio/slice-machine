@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
+import prettier from "prettier";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
@@ -36,9 +37,11 @@ it("saves a Slice's model", async (ctx) => {
 });
 
 it("formats contents if `format` is true", async (ctx) => {
+	const prettierConfig = { useTabs: true };
+
 	await fs.writeFile(
 		path.join(ctx.project.root, ".prettierrc"),
-		JSON.stringify({ useTabs: true }),
+		JSON.stringify(prettierConfig),
 	);
 
 	await writeSliceModel({
@@ -58,18 +61,23 @@ it("formats contents if `format` is true", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).not.toBe(JSON.stringify(model, null, 2));
+	expect(contents).toBe(
+		prettier.format(JSON.stringify(model, null, 2), {
+			...prettierConfig,
+			parser: "json",
+		}),
+	);
 });
 
 it("accepts format options", async (ctx) => {
+	const prettierConfig = { useTabs: true };
+
 	await writeSliceModel({
 		libraryID: ctx.project.config.libraries[0],
 		model,
 		format: true,
 		formatOptions: {
-			prettier: {
-				useTabs: true,
-			},
+			prettier: prettierConfig,
 		},
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
@@ -84,10 +92,22 @@ it("accepts format options", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).not.toBe(JSON.stringify(model, null, 2));
+	expect(contents).toBe(
+		prettier.format(JSON.stringify(model, null, 2), {
+			...prettierConfig,
+			parser: "json",
+		}),
+	);
 });
 
 it("does not format contents by default", async (ctx) => {
+	const prettierConfig = { useTabs: true };
+
+	await fs.writeFile(
+		path.join(ctx.project.root, ".prettierrc"),
+		JSON.stringify(prettierConfig),
+	);
+
 	await writeSliceModel({
 		libraryID: ctx.project.config.libraries[0],
 		model,
@@ -104,7 +124,12 @@ it("does not format contents by default", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).toBe(JSON.stringify(model, null, 2));
+	expect(contents).not.toBe(
+		prettier.format(JSON.stringify(model, null, 2), {
+			...prettierConfig,
+			parser: "json",
+		}),
+	);
 });
 
 it("returns the path to the saved file", async (ctx) => {
