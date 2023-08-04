@@ -129,10 +129,12 @@ const SimulatorButton: React.FC<{
   };
 
   const disabled = !isSimulatorAvailableForFramework || isTouched;
+
   const shouldShowSimulatorTooltip =
     isSimulatorAvailableForFramework &&
     !hasSeenSimulatorTooltip &&
     hasSeenTutorialsToolTip;
+
   const shouldShowNeedToSaveTooltip =
     isSimulatorAvailableForFramework &&
     shouldShowSimulatorTooltip === false &&
