@@ -58,3 +58,21 @@ export const Background = {
     ),
   },
 } satisfies Story;
+
+export const Spacious: Story = {
+  args: {
+    backgroundImage: "/blank-slate-slice-zone.png",
+    variation: "spacious",
+    children: (
+      <BlankSlateContent>
+        <BlankSlateTitle>My blank slate title</BlankSlateTitle>
+        <BlankSlateDescription>
+          My blank slate description
+        </BlankSlateDescription>
+        <BlankSlateActions>
+          <Button>Create</Button>
+        </BlankSlateActions>
+      </BlankSlateContent>
+    ),
+  },
+};

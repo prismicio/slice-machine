@@ -23,14 +23,33 @@ export const root = style([
   { maxWidth: 498, minHeight: 400 },
 ]);
 
-export const withBackground = style([
+export const large = style([
   sprinkles({
     textAlign: "center",
     width: "100%",
   }),
   {
-    backgroundSize: "cover",
     height: "50vh",
+    maxWidth: "100%",
+  },
+]);
+
+export const withBackground = style([
+  sprinkles({
+    textAlign: "center",
+  }),
+  {
+    backgroundSize: "cover",
+  },
+]);
+
+export const spacious = style([
+  sprinkles({
+    textAlign: "center",
+    width: "100%",
+  }),
+  {
+    height: "100%",
     maxWidth: "100%",
   },
 ]);
