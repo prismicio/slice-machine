@@ -99,6 +99,6 @@ export class SliceMachineHelpers {
 	};
 
 	joinPathFromRoot = (...paths: string[]): string => {
-		return path.resolve(this._project.root, ...paths);
+		return path.join(this._project.root, ...paths);
 	};
 }
