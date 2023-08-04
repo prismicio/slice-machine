@@ -82,6 +82,8 @@ const DropZone: React.FC<DropZoneProps> = ({
 }) => {
   const maybeScreenshot = slice.screenshots[variationID];
 
+  console.log(maybeScreenshot?.hash, variationID)
+
   const { openToaster } = useSliceMachineActions();
   const [isDragActive, setIsDragActive] = useState(false);
   const [isHover, setIsHover] = useState(false);

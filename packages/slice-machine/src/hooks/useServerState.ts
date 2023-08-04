@@ -17,6 +17,7 @@ const useServerState = () => {
   useEffect(() => {
     let canceled = false;
     if (serverState && !canceled) {
+      console.log("handleRefreshState")
       handleRefreshState(serverState);
 
       Sentry.setUser({ id: serverState.env.shortId });
