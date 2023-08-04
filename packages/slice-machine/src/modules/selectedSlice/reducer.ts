@@ -34,21 +34,20 @@ export const selectedSliceReducer: Reducer<
       return action.payload;
     }
     case getType(refreshStateCreator):
-
-      console.log("refreshStateCreator")
+      console.log("refreshStateCreator");
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (prevState === null || !action.payload.libraries) return prevState;
 
-      console.log("after 1")
+      console.log("after 1");
       const updatedSlice = action.payload.libraries
         .find((l) => l.name === prevState.from)
         ?.components.find((c) => c.model.id === prevState.model.id);
 
-      console.log({ updatedSlice })
+      console.log({ updatedSlice });
       if (updatedSlice === undefined) {
         return prevState;
       }
-      console.log("screenshots update")
+      console.log("screenshots update");
       return {
         ...prevState,
         screenshots: updatedSlice.screenshots,
@@ -112,10 +111,13 @@ export const selectedSliceReducer: Reducer<
     }
     case getType(generateSliceScreenshotCreator.success):
     case getType(generateSliceCustomScreenshotCreator.success): {
-      console.log("pre-prevState")
+      console.log("pre-prevState");
       if (!prevState) return prevState;
       const { component, screenshot, variationId } = action.payload;
-      console.log("generateSliceCustomScreenshotCreator.success", screenshot?.url)
+      console.log(
+        "generateSliceCustomScreenshotCreator.success",
+        screenshot?.url
+      );
       return {
         ...component,
         screenshots: {

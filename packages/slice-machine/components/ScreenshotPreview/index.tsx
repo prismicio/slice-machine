@@ -32,28 +32,24 @@ export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
         ...sx,
       }}
     >
-      {
-        hideMissingWarning ? null : (
-          <>
-            {
-              src !== undefined ? (
-                <Image src={src} alt="Preview image" sx={{ maxHeight: "100%" }} />
-              ) : (
-                <Text
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <MdInfoOutline />
-                  You have no screenshot yet.
-                </Text>
-              )
-            }
-          </>
-        )
-      }
+      {hideMissingWarning ? null : (
+        <>
+          {src !== undefined ? (
+            <Image src={src} alt="Preview image" sx={{ maxHeight: "100%" }} />
+          ) : (
+            <Text
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <MdInfoOutline />
+              You have no screenshot yet.
+            </Text>
+          )}
+        </>
+      )}
     </Flex>
   );
 };
