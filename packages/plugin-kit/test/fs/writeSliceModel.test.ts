@@ -36,6 +36,11 @@ it("saves a Slice's model", async (ctx) => {
 });
 
 it("formats contents if `format` is true", async (ctx) => {
+	await fs.writeFile(
+		path.join(ctx.project.root, ".prettierrc"),
+		JSON.stringify({ useTabs: true }),
+	);
+
 	await writeSliceModel({
 		libraryID: ctx.project.config.libraries[0],
 		model,
@@ -53,7 +58,33 @@ it("formats contents if `format` is true", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).not.toBe(JSON.stringify(model));
+	expect(contents).not.toBe(JSON.stringify(model, null, 2));
+});
+
+it("accepts format options", async (ctx) => {
+	await writeSliceModel({
+		libraryID: ctx.project.config.libraries[0],
+		model,
+		format: true,
+		formatOptions: {
+			prettier: {
+				useTabs: true,
+			},
+		},
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const contents = await fs.readFile(
+		path.join(
+			ctx.project.root,
+			ctx.project.config.libraries[0],
+			"FooBar",
+			"model.json",
+		),
+		"utf8",
+	);
+
+	expect(contents).not.toBe(JSON.stringify(model, null, 2));
 });
 
 it("does not format contents by default", async (ctx) => {

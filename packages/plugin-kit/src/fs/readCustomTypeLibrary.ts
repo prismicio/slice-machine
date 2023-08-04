@@ -17,9 +17,9 @@ export type ReadCustomTypeLibraryReturnType = {
 	ids: string[];
 };
 
-export async function readCustomTypeLibrary(
+export const readCustomTypeLibrary = async (
 	args: ReadCustomTypeLibraryArgs,
-): Promise<ReadCustomTypeLibraryReturnType> {
+): Promise<ReadCustomTypeLibraryReturnType> => {
 	const libraryDir = buildCustomTypeLibraryDirectoryPath({
 		absolute: true,
 		helpers: args.helpers,
@@ -71,4 +71,4 @@ export async function readCustomTypeLibrary(
 	return {
 		ids: ids.sort(),
 	};
-}
+};

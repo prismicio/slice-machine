@@ -14,13 +14,13 @@ import {
 export type BuildSliceDirectoryPathArgs = BuildSliceLibraryDirectoryPathArgs &
 	ResolveSliceModelArgs;
 
-export async function buildSliceDirectoryPath(
+export const buildSliceDirectoryPath = async (
 	args: BuildSliceDirectoryPathArgs,
-): Promise<string> {
+): Promise<string> => {
 	const model = await resolveSliceModel(args);
 
 	return path.join(
 		buildSliceLibraryDirectoryPath(args),
 		pascalCase(model.name),
 	);
-}
+};

@@ -7,12 +7,12 @@ export type DeleteProjectFileArgs = {
 	helpers: SliceMachineHelpers;
 };
 
-export async function deleteProjectFile(
+export const deleteProjectFile = async (
 	args: DeleteProjectFileArgs,
-): Promise<string> {
+): Promise<string> => {
 	const filePath = args.helpers.joinPathFromRoot(args.filename);
 
 	await fs.rm(filePath, { recursive: true });
 
 	return filePath;
-}
+};

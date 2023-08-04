@@ -41,7 +41,27 @@ it("formats contents if `format` is true", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).not.toBe(JSON.stringify(model));
+	expect(contents).not.toBe(JSON.stringify(model, null, 2));
+});
+
+it("accepts format options", async (ctx) => {
+	await writeCustomTypeModel({
+		model,
+		format: true,
+		formatOptions: {
+			prettier: {
+				semi: false,
+			},
+		},
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const contents = await fs.readFile(
+		path.join(ctx.project.root, "customtypes", model.id, "index.json"),
+		"utf8",
+	);
+
+	expect(contents).not.toBe(JSON.stringify(model, null, 2));
 });
 
 it("does not format contents by default", async (ctx) => {

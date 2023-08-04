@@ -12,9 +12,9 @@ export type WriteCustomTypeFileArgs = Omit<WriteProjectFileArgs, "filePath"> &
  *
  * @returns The file path to the written file.
  */
-export async function writeCustomTypeFile(
+export const writeCustomTypeFile = async (
 	args: WriteCustomTypeFileArgs,
-): Promise<string> {
+): Promise<string> => {
 	const filePath = buildCustomTypeFilePath(args);
 	const relativeFilePath = buildCustomTypeFilePath({
 		...args,
@@ -27,4 +27,4 @@ export async function writeCustomTypeFile(
 	});
 
 	return filePath;
-}
+};

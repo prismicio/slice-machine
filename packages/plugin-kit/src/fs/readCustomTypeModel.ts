@@ -12,9 +12,9 @@ export type ReadCustomTypeModelReturnType = {
 	model: CustomType;
 };
 
-export async function readCustomTypeModel(
+export const readCustomTypeModel = async (
 	args: ReadCustomTypeModelArgs,
-): Promise<ReadCustomTypeModelReturnType> {
+): Promise<ReadCustomTypeModelReturnType> => {
 	const model = await readCustomTypeFile({
 		...args,
 		filename: CUSTOM_TYPE_MODEL_FILENAME,
@@ -24,4 +24,4 @@ export async function readCustomTypeModel(
 	return {
 		model: JSON.parse(model),
 	};
-}
+};

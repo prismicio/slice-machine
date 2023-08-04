@@ -83,6 +83,47 @@ it("formats contents if `format` is true", async (ctx) => {
 	expect(actualContents).toBe('const foo = "bar"\n');
 });
 
+it("accepts format options", async (ctx) => {
+	ctx.pluginRunner.callHook("slice:create", {
+		libraryID: ctx.project.config.libraries[0],
+		model,
+	});
+
+	const contents = 'const foo = "bar";';
+
+	await fs.writeFile(
+		path.join(ctx.project.root, ".prettierrc"),
+		JSON.stringify({ semi: false }),
+	);
+
+	await writeSliceFile({
+		libraryID: ctx.project.config.libraries[0],
+		sliceID: model.id,
+		filename,
+		contents,
+		format: true,
+		formatOptions: {
+			prettier: {
+				semi: false,
+			},
+		},
+		actions: ctx.pluginRunner.rawActions,
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const actualContents = await fs.readFile(
+		path.join(
+			ctx.project.root,
+			ctx.project.config.libraries[0],
+			"FooBar",
+			filename,
+		),
+		"utf8",
+	);
+
+	expect(actualContents).toBe('const foo = "bar"\n');
+});
+
 it("does not format contents by default", async (ctx) => {
 	ctx.pluginRunner.callHook("slice:create", {
 		libraryID: ctx.project.config.libraries[0],

@@ -4,11 +4,11 @@ import {
 } from "./buildCustomTypeDirectoryPath";
 import { deleteProjectFile } from "./deleteProjectFile";
 
-export type DeleteAllCustomTypeFilesArgs = BuildCustomTypeDirectoryPathArgs;
+export type DeleteCustomTypeDirectoryArgs = BuildCustomTypeDirectoryPathArgs;
 
-export async function deleteAllCustomTypeFiles(
-	args: DeleteAllCustomTypeFilesArgs,
-): Promise<string> {
+export const deleteCustomTypeDirectory = async (
+	args: DeleteCustomTypeDirectoryArgs,
+): Promise<string> => {
 	const dir = buildCustomTypeDirectoryPath(args);
 	const relativeDir = buildCustomTypeDirectoryPath({
 		...args,
@@ -21,4 +21,4 @@ export async function deleteAllCustomTypeFiles(
 	});
 
 	return dir;
-}
+};

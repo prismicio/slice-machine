@@ -1,21 +1,16 @@
-import * as fs from "node:fs/promises";
-
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
-
 import { TSCONFIG_FILENAME } from "./constants";
+import {
+	checkHasProjectFile,
+	CheckHasProjectFileArgs,
+} from "./checkHasProjectFile";
 
-type CheckIsTypeScriptProjectArgs = {
-	helpers: SliceMachineHelpers;
-};
+type CheckIsTypeScriptProjectArgs = Omit<CheckHasProjectFileArgs, "filename">;
 
 export const checkIsTypeScriptProject = async (
 	args: CheckIsTypeScriptProjectArgs,
 ): Promise<boolean> => {
-	try {
-		await fs.access(args.helpers.joinPathFromRoot(TSCONFIG_FILENAME));
-
-		return true;
-	} catch {
-		return false;
-	}
+	return checkHasProjectFile({
+		...args,
+		filename: TSCONFIG_FILENAME,
+	});
 };

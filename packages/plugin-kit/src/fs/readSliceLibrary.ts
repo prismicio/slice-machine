@@ -18,9 +18,9 @@ export type ReadSliceLibraryReturnType = {
 	sliceIDs: string[];
 };
 
-export async function readSliceLibrary(
+export const readSliceLibrary = async (
 	args: ReadSliceLibraryArgs,
-): Promise<ReadSliceLibraryReturnType> {
+): Promise<ReadSliceLibraryReturnType> => {
 	const libraryDir = buildSliceLibraryDirectoryPath({
 		libraryID: args.libraryID,
 		absolute: true,
@@ -63,4 +63,4 @@ export async function readSliceLibrary(
 		id: args.libraryID,
 		sliceIDs: sliceIDs.sort(),
 	};
-}
+};
