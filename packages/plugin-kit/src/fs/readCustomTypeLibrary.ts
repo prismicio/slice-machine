@@ -33,6 +33,11 @@ export const readCustomTypeLibrary = async (
 
 	const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
 
+	/**
+	 * Paths to models that could not be read due to invalid JSON.
+	 */
+	const unreadableModelPaths: string[] = [];
+
 	const ids: string[] = [];
 	await Promise.all(
 		childDirs.map(async (childDir) => {
@@ -61,12 +66,20 @@ export const readCustomTypeLibrary = async (
 							ids.push(modelContents.id);
 						}
 					} catch {
-						// noop
+						unreadableModelPaths.push(modelPath);
 					}
 				}
 			}
 		}),
 	);
+
+	if (unreadableModelPaths.length > 0) {
+		const formattedPaths = unreadableModelPaths.join(", ");
+
+		throw new Error(
+			`The following custom type models could not be read: [${formattedPaths}]`,
+		);
+	}
 
 	return {
 		ids: ids.sort(),

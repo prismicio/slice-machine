@@ -36,6 +36,11 @@ export const readSliceLibrary = async (
 
 	const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
 
+	/**
+	 * Paths to models that could not be read due to invalid JSON.
+	 */
+	const unreadableModelPaths: string[] = [];
+
 	const sliceIDs: string[] = [];
 	await Promise.all(
 		childDirs.map(async (childDir) => {
@@ -53,11 +58,19 @@ export const readSliceLibrary = async (
 						sliceIDs.push(modelContents.id);
 					}
 				} catch {
-					// noop
+					unreadableModelPaths.push(modelPath);
 				}
 			}
 		}),
 	);
+
+	if (unreadableModelPaths.length > 0) {
+		const formattedPaths = unreadableModelPaths.join(", ");
+
+		throw new Error(
+			`The following Slice models could not be read: [${formattedPaths}]`,
+		);
+	}
 
 	return {
 		id: args.libraryID,

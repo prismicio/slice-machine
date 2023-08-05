@@ -71,7 +71,7 @@ export const readSliceModel = async (
 				model,
 			};
 		} else {
-			if (unreadableModelPaths.length) {
+			if (unreadableModelPaths.length > 0) {
 				throw new Error(
 					`Did not find a Slice model with ID "${args.sliceID}" in the "${
 						args.libraryID
