@@ -1,4 +1,3 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import type {
 	ProjectInitHook,
@@ -463,6 +462,7 @@ const createExitPreviewRoute = async ({
 const modifySliceMachineConfig = async ({
 	helpers,
 	options,
+	actions,
 }: SliceMachineContext<PluginOptions>) => {
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const project = await helpers.getProject();
@@ -475,24 +475,15 @@ const modifySliceMachineConfig = async ({
 	// is empty.
 	if (
 		hasSrcDirectory &&
+		project.config.libraries &&
 		JSON.stringify(project.config.libraries) === JSON.stringify(["./slices"])
 	) {
-		try {
-			const entries = await fs.readdir(helpers.joinPathFromRoot("slices"));
+		const sliceLibrary = await actions.readSliceLibrary({
+			libraryID: project.config.libraries[0],
+		});
 
-			if (!entries.map((entry) => path.parse(entry).name).includes("index")) {
-				project.config.libraries = ["./src/slices"];
-			}
-		} catch (error) {
-			if (
-				error instanceof Error &&
-				"code" in error &&
-				error.code === "ENOENT"
-			) {
-				// The directory does not exist, which means we
-				// can safely nest the library.
-				project.config.libraries = ["./src/slices"];
-			}
+		if (sliceLibrary.sliceIDs.length < 1) {
+			project.config.libraries = ["./src/slices"];
 		}
 	}
 
@@ -517,7 +508,7 @@ const createRevalidateRoute = async ({
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			`app/api/revalidate/route.${extension}`,
