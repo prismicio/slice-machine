@@ -1,8 +1,8 @@
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
-	deleteAllCustomTypeFiles,
-	deleteAllSliceFiles,
+	deleteCustomTypeDirectory,
 	deleteCustomTypeFile,
+	deleteSliceDirectory,
 	deleteSliceFile,
 	readCustomTypeFile,
 	readCustomTypeLibrary,
@@ -10,6 +10,7 @@ import {
 	readSliceFile,
 	readSliceLibrary,
 	readSliceModel,
+	renameCustomType,
 	renameSlice,
 	upsertGlobalTypeScriptTypes,
 	writeCustomTypeFile,
@@ -86,7 +87,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			);
 		});
 		hook("slice:delete", async (data, context) => {
-			await deleteAllSliceFiles({
+			await deleteSliceDirectory({
 				libraryID: data.libraryID,
 				model: data.model,
 				...context,
@@ -185,7 +186,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			});
 		});
 		hook("custom-type:rename", async (data, context) => {
-			await writeCustomTypeModel({
+			await renameCustomType({
 				model: data.model,
 				format: context.options.format,
 				...context,
@@ -198,7 +199,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			});
 		});
 		hook("custom-type:delete", async (data, context) => {
-			await deleteAllCustomTypeFiles({
+			await deleteCustomTypeDirectory({
 				customTypeID: data.model.id,
 				...context,
 			});
