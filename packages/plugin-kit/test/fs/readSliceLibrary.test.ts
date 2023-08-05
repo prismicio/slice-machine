@@ -96,7 +96,7 @@ it("returns an empty list of Slices if the library does not exist", async (ctx) 
 	});
 });
 
-it("ignores Slice libraries with invalid models", async (ctx) => {
+it("throws if an invalid model is found", async (ctx) => {
 	await ctx.pluginRunner.callHook("slice:create", {
 		libraryID: ctx.project.config.libraries[0],
 		model: model1,
@@ -122,13 +122,10 @@ it("ignores Slice libraries with invalid models", async (ctx) => {
 	// Overwrite with invalid JSON
 	await fs.writeFile(model2Path, "invalid json");
 
-	const res = await readSliceLibrary({
-		libraryID: ctx.project.config.libraries[0],
-		helpers: ctx.pluginRunner.rawHelpers,
-	});
-
-	expect(res).toStrictEqual({
-		id: ctx.project.config.libraries[0],
-		sliceIDs: [model1.id],
-	});
+	await expect(async () => {
+		await readSliceLibrary({
+			libraryID: ctx.project.config.libraries[0],
+			helpers: ctx.pluginRunner.rawHelpers,
+		});
+	}).rejects.toThrow(/could not be read/);
 });

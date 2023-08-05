@@ -13,7 +13,7 @@ export type RenameSliceArgs = {
 } & Omit<BuildSliceDirectoryPathArgs, "sliceID"> &
 	WriteSliceModelArgs;
 
-export async function renameSlice(args: RenameSliceArgs): Promise<void> {
+export const renameSlice = async (args: RenameSliceArgs): Promise<void> => {
 	const { model: existingModel } = await args.actions.readSliceModel({
 		libraryID: args.libraryID,
 		sliceID: args.model.id,
@@ -32,4 +32,4 @@ export async function renameSlice(args: RenameSliceArgs): Promise<void> {
 	);
 
 	await writeSliceModel(args);
-}
+};

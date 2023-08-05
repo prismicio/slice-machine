@@ -5,7 +5,7 @@ import * as fsSync from "node:fs";
 import * as path from "node:path";
 
 import {
-	deleteAllSliceFiles,
+	deleteSliceDirectory,
 	writeSliceFile,
 	writeSliceModel,
 } from "../../src/fs";
@@ -52,7 +52,7 @@ it("deletes all of a Slice's files and directories", async (ctx) => {
 		"model.json",
 	]);
 
-	await deleteAllSliceFiles({
+	await deleteSliceDirectory({
 		libraryID: ctx.project.config.libraries[0],
 		model,
 		helpers: ctx.pluginRunner.rawHelpers,
@@ -82,7 +82,7 @@ it("returns the path to the delete directory", async (ctx) => {
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	const res = await deleteAllSliceFiles({
+	const res = await deleteSliceDirectory({
 		libraryID: ctx.project.config.libraries[0],
 		model,
 		helpers: ctx.pluginRunner.rawHelpers,

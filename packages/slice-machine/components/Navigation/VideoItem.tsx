@@ -7,11 +7,12 @@ import {
   forwardRef,
 } from "react";
 import ReactTooltip from "react-tooltip";
-import { Close, Flex, Paragraph, BaseStyles } from "theme-ui";
+import { Close, Flex, Paragraph } from "theme-ui";
+import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
 import { VIDEO_YOUTUBE_PLAYLIST_LINK, PRISMIC_ACADEMY_URL } from "@lib/consts";
 import { telemetry } from "@src/apiClient";
 import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
-import { PlayCircleIcon } from "@src/icons/PlayCircle";
+import { PlayCircleIcon } from "@src/icons/PlayCircleIcon";
 import {
   HoverCard,
   HoverCardDescription,
@@ -155,20 +156,20 @@ type ToolTipProps = {
 };
 
 const ToolTip: FC<ToolTipProps> = ({ id, onClose }) => (
-  <ReactTooltip
-    id={id}
-    effect="solid"
-    place="right"
-    backgroundColor="#5741c3"
-    clickable
-    className={style.videoTutorialsContainer}
-    afterHide={onClose}
-    offset={{
-      left: 80,
-    }}
-    role="tooltip"
-    getContent={() => (
-      <BaseStyles>
+  <ReactTooltipPortal>
+    <ReactTooltip
+      id={id}
+      effect="solid"
+      place="right"
+      backgroundColor="#5741c3"
+      clickable
+      className={style.videoTutorialsContainer}
+      afterHide={onClose}
+      offset={{
+        left: 80,
+      }}
+      role="tooltip"
+      getContent={() => (
         <Flex
           sx={{
             maxWidth: "268px",
@@ -198,9 +199,9 @@ const ToolTip: FC<ToolTipProps> = ({ id, onClose }) => (
             Follow our Quick Start guide to learn the basics of Slice Machine
           </Paragraph>
         </Flex>
-      </BaseStyles>
-    )}
-  />
+      )}
+    />
+  </ReactTooltipPortal>
 );
 
 export default VideoItem;

@@ -12,9 +12,9 @@ export type WriteSliceFileArgs = Omit<WriteProjectFileArgs, "filePath"> &
  *
  * @returns The file path to the written file.
  */
-export async function writeSliceFile(
+export const writeSliceFile = async (
 	args: WriteSliceFileArgs,
-): Promise<string> {
+): Promise<string> => {
 	const filePath = await buildSliceFilePath(args);
 	const relativeFilePath = await buildSliceFilePath({
 		...args,
@@ -27,4 +27,4 @@ export async function writeSliceFile(
 	});
 
 	return filePath;
-}
+};

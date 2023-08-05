@@ -89,5 +89,5 @@ it("throws if the model file cannot be read", async (ctx) => {
 			sliceID: model.id,
 			helpers: ctx.pluginRunner.rawHelpers,
 		});
-	}).rejects.toThrow(/did not find a slice model/i);
+	}).rejects.toThrow(/could not be read/i);
 });

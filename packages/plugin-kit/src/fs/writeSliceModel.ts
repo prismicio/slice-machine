@@ -15,12 +15,12 @@ export type WriteSliceModelArgs = Omit<
  *
  * @returns The file path to the written model.
  */
-export async function writeSliceModel(
+export const writeSliceModel = async (
 	args: WriteSliceModelArgs,
-): Promise<string> {
+): Promise<string> => {
 	return await writeSliceFile({
 		...args,
 		filename: SHARED_SLICE_MODEL_FILENAME,
 		contents: JSON.stringify(args.model, null, 2),
 	});
-}
+};

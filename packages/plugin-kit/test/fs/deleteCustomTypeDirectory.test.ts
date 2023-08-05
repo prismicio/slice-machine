@@ -5,7 +5,7 @@ import * as fsSync from "node:fs";
 import * as path from "node:path";
 
 import {
-	deleteAllCustomTypeFiles,
+	deleteCustomTypeDirectory,
 	writeCustomTypeFile,
 	writeCustomTypeModel,
 } from "../../src/fs";
@@ -46,7 +46,7 @@ it("deletes all of a Slice's files and directories", async (ctx) => {
 		"index.json",
 	]);
 
-	await deleteAllCustomTypeFiles({
+	await deleteCustomTypeDirectory({
 		customTypeID: model.id,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
@@ -62,7 +62,7 @@ it("returns the path to the delete directory", async (ctx) => {
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
-	const res = await deleteAllCustomTypeFiles({
+	const res = await deleteCustomTypeDirectory({
 		customTypeID: model.id,
 		helpers: ctx.pluginRunner.rawHelpers,
 	});

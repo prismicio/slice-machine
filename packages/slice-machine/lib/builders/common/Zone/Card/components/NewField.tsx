@@ -123,6 +123,7 @@ const NewField: React.FC<NewField> = ({
           <Flex
             as="li"
             sx={{
+              bg: "white",
               p: 3,
               px: 3,
               mx: 0,

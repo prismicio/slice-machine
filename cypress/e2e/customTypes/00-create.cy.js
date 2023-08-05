@@ -24,7 +24,7 @@ describe.skip("Custom Types specs", () => {
     cy.get("#create-tab").contains("Save").click();
 
     // save
-    cy.contains("Save to File System").click();
+    cy.contains("Save").click();
 
     // check that the space has been trimmed
     cy.wait(1000);

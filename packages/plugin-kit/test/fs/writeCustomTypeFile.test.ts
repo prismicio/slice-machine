@@ -59,6 +59,30 @@ it("formats contents if `format` is true", async (ctx) => {
 	expect(actualContents).toBe('const foo = "bar"\n');
 });
 
+it("accepts format options", async (ctx) => {
+	const contents = 'const foo = "bar";';
+
+	await writeCustomTypeFile({
+		customTypeID: model.id,
+		filename,
+		contents,
+		format: true,
+		formatOptions: {
+			prettier: {
+				semi: false,
+			},
+		},
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const actualContents = await fs.readFile(
+		path.join(ctx.project.root, "customtypes", model.id, filename),
+		"utf8",
+	);
+
+	expect(actualContents).toBe('const foo = "bar"\n');
+});
+
 it("does not format contents by default", async (ctx) => {
 	const contents = 'const foo = "bar";';
 

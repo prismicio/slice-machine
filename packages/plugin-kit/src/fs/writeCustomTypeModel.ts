@@ -19,13 +19,13 @@ export type WriteCustomTypeModelArgs = Omit<
  *
  * @returns The file path to the written model.
  */
-export async function writeCustomTypeModel(
+export const writeCustomTypeModel = async (
 	args: WriteCustomTypeModelArgs,
-): Promise<string> {
+): Promise<string> => {
 	return await writeCustomTypeFile({
 		...args,
 		customTypeID: args.model.id,
 		filename: CUSTOM_TYPE_MODEL_FILENAME,
 		contents: JSON.stringify(args.model, null, 2),
 	});
-}
+};

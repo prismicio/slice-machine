@@ -4,7 +4,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Text,
   Icon,
   Button,
 } from "@prismicio/editor-ui";
@@ -87,23 +86,24 @@ export const EditDropdown: FC<EditDropdownProps> = ({
               setIsRenameCustomTypeModalOpen(true);
             }}
           >
-            <Text>Rename</Text>
+            Rename
           </DropdownMenuItem>
           {format === "custom" && (
             <DropdownMenuItem
               startIcon={<Icon name="driveFileMove" />}
               onSelect={() => void convertCustomType()}
             >
-              <Text>Convert to page type</Text>
+              Convert to page type
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            startIcon={<Icon color="tomato11" name="delete" />}
+            color="tomato"
+            startIcon={<Icon name="delete" />}
             onSelect={() => {
               setIsDeleteCustomTypeModalOpen(true);
             }}
           >
-            <Text color="tomato11">Remove</Text>
+            Remove
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

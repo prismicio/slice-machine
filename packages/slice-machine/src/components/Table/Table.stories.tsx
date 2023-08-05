@@ -5,7 +5,6 @@ import {
   DropdownMenuTrigger,
   Icon,
   IconButton,
-  Text,
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -76,15 +75,16 @@ export const Default = {
                         console.log(`Rename clicked for ${label}`);
                       }}
                     >
-                      <Text>Rename</Text>
+                      Rename
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      startIcon={<Icon color="tomato11" name="delete" />}
+                      color="tomato"
+                      startIcon={<Icon name="delete" />}
                       onSelect={() => {
                         console.log(`Remove clicked for ${label}`);
                       }}
                     >
-                      <Text color="tomato11">Remove</Text>
+                      Remove
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
