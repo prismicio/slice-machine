@@ -77,11 +77,7 @@ type PageSnippetDialogProps = { model: CustomType };
 export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
   return (
     <div>
-      <ErrorBoundary
-        title="Request failed"
-        description="An error occurred while fetching page types snippets."
-        renderError={() => null}
-      >
+      <ErrorBoundary>
         <Suspense
           fallback={
             <Button variant="secondary" startIcon={<Icon name="code" />}>

@@ -16,8 +16,7 @@ export const FloatingBackButton: FC = () => {
   const { source } = useRouteChange();
   const sourceCustomTypeId = getSourceCustomTypeId(source);
   return sourceCustomTypeId !== undefined ? (
-    // TODO(DT-1461): we shouldn't have to pass an empty description and title to the ErrorBoundary.
-    <ErrorBoundary description="" renderError={() => null} title="">
+    <ErrorBoundary>
       <Suspense>
         <Box
           bottom={32}
