@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@slicemachine/manager": "workspace:^",
-    "react-hotkeys-hook": "4.4.1",
     "start-slicemachine": "workspace:^"
   },
   "devDependencies": {
@@ -104,6 +103,7 @@
     "react-beautiful-dnd": "13.1.1",
     "react-datepicker": "4.10.0",
     "react-dom": "18.2.0",
+    "react-hotkeys-hook": "4.4.1",
     "react-icons": "4.8.0",
     "react-markdown": "8.0.7",
     "react-modal": "3.16.1",
