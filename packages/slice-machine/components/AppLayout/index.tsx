@@ -1,45 +1,68 @@
+import { Box, Button, ButtonGroup, Icon } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import type { FC, ReactNode } from "react";
-import { Box } from "theme-ui";
+import type { FC, PropsWithChildren } from "react";
 
-const AsIs: { [x: string]: boolean } = {
-  "/[lib]/[sliceName]/[variation]/simulator": true,
-};
+import Navigation from "@components/Navigation";
+import { Breadcrumb, type BreadcrumbProps } from "@src/components/Breadcrumb";
+import {
+  PageLayout,
+  PageLayoutContent,
+  PageLayoutHeader,
+  PageLayoutPane,
+} from "@src/components/PageLayout";
 
-type Props = Readonly<{
-  children?: ReactNode;
-}>;
+export const AppLayout: FC<PropsWithChildren> = ({
+  children,
+  ...otherProps
+}) => (
+  <PageLayout {...otherProps}>
+    <PageLayoutPane>
+      <Navigation />
+    </PageLayoutPane>
+    {children}
+  </PageLayout>
+);
 
-const AppLayout: FC<Props> = ({ children }) => {
-  const router = useRouter();
-  if (AsIs[router.asPath] || AsIs[router.pathname]) {
-    return <main>{children}</main>;
-  }
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100vh",
-        flexDirection: ["column", "row", null],
-      }}
-    >
-      <Box
-        as="main"
-        sx={{
-          flex: 1,
-          px: [2, 4, null],
-          overflow: "auto",
-          display: "flex",
-          "& > :first-of-type": {
-            flex: 1,
-          },
-        }}
-      >
-        {children}
-      </Box>
+export const AppLayoutHeader: FC<PropsWithChildren> = ({
+  children,
+  ...otherProps
+}) => (
+  <PageLayoutHeader {...otherProps}>
+    <Box alignItems="center" gap={8}>
+      {children}
     </Box>
+  </PageLayoutHeader>
+);
+
+type AppLayoutBackButtonProps = { url: string };
+
+export const AppLayoutBackButton: FC<AppLayoutBackButtonProps> = ({
+  url,
+  ...otherProps
+}) => {
+  const router = useRouter();
+  return (
+    <Button
+      {...otherProps}
+      onClick={() => {
+        void router.push(url);
+      }}
+      startIcon={<Icon name="arrowBack" />}
+      variant="secondary"
+    />
   );
 };
 
-export default AppLayout;
+export const AppLayoutBreadcrumb: FC<BreadcrumbProps> = (props) => (
+  <Box flexGrow={1}>
+    <Breadcrumb {...props} />
+  </Box>
+);
+
+export const AppLayoutActions: FC<PropsWithChildren> = (props) => (
+  <ButtonGroup {...props} />
+);
+
+export const AppLayoutContent: FC<PropsWithChildren> = (props) => (
+  <PageLayoutContent {...props} />
+);

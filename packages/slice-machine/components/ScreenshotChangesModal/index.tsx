@@ -7,8 +7,6 @@ import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import SliceMachineModal from "@components/SliceMachineModal";
 
-import Views from "./Views";
-
 import { isModalOpen } from "@src/modules/modal";
 
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -16,7 +14,54 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
+import VariationDropZone from "./VariationDropZone";
+
+import { FigmaIcon } from "@src/icons/FigmaIcon";
+import { getOS, OS } from "@src/utils/os";
+import { Kbd } from "@src/components/Kbd";
+
 export type SliceVariationSelector = { sliceID: string; variationID: string };
+
+const FigmaTip = () => {
+  const os = getOS();
+
+  const keys = (() => {
+    if ([OS.Windows, OS.Linux].includes(os)) {
+      return (
+        <>
+          <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>c</Kbd>
+        </>
+      );
+    }
+    return (
+      <>
+        <Kbd>cmd</Kbd> + <Kbd>shift</Kbd> + <Kbd>c</Kbd>
+      </>
+    );
+  })();
+
+  return (
+    <Flex
+      sx={{
+        pl: "4px",
+        alignItems: "center",
+        color: "#000",
+        borderRadius: "6px",
+        fontSize: "12px",
+        lineHeight: "24px",
+        border: "1px solid #E4E2E4",
+        boxShadow: "0px 1px 0px 0px rgba(0, 0, 0, 0.04)",
+        width: "100%",
+        minHeight: "40px",
+      }}
+    >
+      <FigmaIcon />
+      <div>
+        Use&nbsp;{keys} to copy any frame as .png, then just paste it here
+      </div>
+    </Flex>
+  );
+};
 
 const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
   <Flex
@@ -143,7 +188,11 @@ const ScreenshotChangesModal = ({
   useEffect(() => {
     setVariationSelector(variationSetter(defaultVariationSelector, slices));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultVariationSelector, isOpen]);
+  }, [
+    defaultVariationSelector?.sliceID,
+    defaultVariationSelector?.variationID,
+    isOpen,
+  ]);
 
   if (slices.length === 0 || !variationSelector) return null;
 
@@ -186,7 +235,6 @@ const ScreenshotChangesModal = ({
           }}
         >
           <Box
-            as="aside"
             sx={{
               p: 3,
               bg: "grey07",
@@ -205,28 +253,31 @@ const ScreenshotChangesModal = ({
               />
             ))}
           </Box>
-          <Box
+          <Flex
             as="main"
             sx={{
               p: 3,
               flexGrow: 99999,
               flexBasis: 0,
+              flexDirection: "column",
               minWidth: 320,
               maxHeight: "90%",
+              gap: "8px",
             }}
           >
+            <FigmaTip />
             {(() => {
               const slice = slices.find(
                 (s) => s.model.id === variationSelector.sliceID
               );
               return slice ? (
-                <Views
+                <VariationDropZone
                   variationID={variationSelector.variationID}
                   slice={slice}
                 />
               ) : null;
             })()}
-          </Box>
+          </Flex>
         </Box>
       </Card>
     </SliceMachineModal>

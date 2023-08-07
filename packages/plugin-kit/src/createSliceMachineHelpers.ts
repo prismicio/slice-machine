@@ -6,7 +6,11 @@ import { stripIndent } from "common-tags";
 
 import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
 
-import { SliceMachineProject } from "./types";
+import { SliceMachineConfig, SliceMachineProject } from "./types";
+
+type UpdateSliceMachineConfigOptions = {
+	format?: boolean;
+};
 
 type FormatOptions = {
 	prettier?: prettier.Options;
@@ -72,6 +76,28 @@ export class SliceMachineHelpers {
 			...this._project,
 			config: sliceMachineConfig,
 		};
+	};
+
+	updateSliceMachineConfig = async (
+		sliceMachineConfig: SliceMachineConfig,
+		options?: UpdateSliceMachineConfigOptions,
+	): Promise<void> => {
+		const { value: decodedSliceMachineConfig, error } =
+			decodeSliceMachineConfig(sliceMachineConfig);
+
+		if (error) {
+			// TODO: Write a more friendly and useful message.
+			throw new Error(`Invalid config provided. ${error.errors.join(", ")}`);
+		}
+
+		const configFilePath = this.joinPathFromRoot("slicemachine.config.json");
+		let content = JSON.stringify(decodedSliceMachineConfig, null, 2);
+
+		if (options?.format) {
+			content = await this.format(content, configFilePath);
+		}
+
+		await fs.writeFile(configFilePath, content);
 	};
 
 	format = async (

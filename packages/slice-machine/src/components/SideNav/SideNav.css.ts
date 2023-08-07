@@ -34,15 +34,10 @@ export const root = style([
     backgroundColor: colors.grey2,
     display: "flex",
     flexDirection: "column",
-    height: "100%",
-    minHeight: "100vh",
-    paddingBottom: 32,
+    minWidth: 0,
     paddingInline: 32,
     paddingTop: 16,
   }),
-  {
-    width: 320,
-  },
 ]);
 
 export const logo = style([
@@ -63,6 +58,8 @@ export const repository = style([
   }),
 ]);
 
+export const repositoryInfo = style([sprinkles({ minWidth: 0 }), { flex: 1 }]);
+
 export const repositoryName = style([
   blockWithDisplayRevert,
   sprinkles({
@@ -75,7 +72,6 @@ export const repositoryName = style([
     fontWeight: 500,
     fontSize: "18px",
     lineHeight: "32px",
-    width: "192px",
   },
 ]);
 
@@ -90,7 +86,6 @@ export const repositoryDomain = style([
   {
     fontSize: "12px",
     lineHeight: "16px",
-    width: "192px",
   },
 ]);
 
@@ -130,9 +125,7 @@ export const repositoryLinkIcon = style([
 
 export const list = style([
   blockWithDisplayRevert,
-  {
-    listStyleType: "none",
-  },
+  { listStyleType: "none", ":last-child": { marginBottom: vars.space[32] } },
 ]);
 
 export const listBottom = style([
@@ -197,7 +190,6 @@ export const link = style([
   {
     fontSize: "14px",
     height: "48px",
-    width: "256px",
     lineHeight: "24px",
     ":focus": {
       boxShadow: vars.boxShadow.focus,
