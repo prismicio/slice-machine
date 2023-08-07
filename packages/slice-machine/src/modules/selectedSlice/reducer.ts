@@ -41,7 +41,6 @@ export const selectedSliceReducer: Reducer<
         .find((l) => l.name === prevState.from)
         ?.components.find((c) => c.model.id === prevState.model.id);
 
-      console.log({ updatedSlice });
       if (updatedSlice === undefined) {
         return prevState;
       }
