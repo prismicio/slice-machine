@@ -487,11 +487,8 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	await writeProjectFile({
-		filename: "slicemachine.config.json",
-		contents: JSON.stringify(project.config, null, 2),
+	await helpers.updateSliceMachineConfig(project.config, {
 		format: options.format,
-		helpers,
 	});
 };
 
