@@ -85,7 +85,10 @@ const DropZone: React.FC<DropZoneProps> = ({
   const { openToaster } = useSliceMachineActions();
   const [isDragActive, setIsDragActive] = useState(false);
   const [isHover, setIsHover] = useState(false);
-  useHotkeys(["meta+v", "ctrl+v"], () => void handlePaste(), []);
+  useHotkeys(["meta+v", "ctrl+v"], () => void handlePaste(), [
+    variationID,
+    slice,
+  ]);
 
   const { generateSliceCustomScreenshot } = useSliceMachineActions();
 
