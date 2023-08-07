@@ -4,6 +4,7 @@ import { style } from "@vanilla-extract/css";
 const reset = sprinkles({
   all: "unset",
   boxSizing: "border-box",
+  fontFamily: "body",
 });
 
 export const root = style([
@@ -23,6 +24,9 @@ export const header = style([
     gap: 10,
     backgroundColor: colors.grey1,
     color: colors.grey11,
+    borderBottomColor: colors.grey6,
+    borderBottomStyle: "dashed",
+    borderBottomWidth: 1,
   }),
   {
     padding: "8px 8px 8px 16px",
