@@ -12,6 +12,8 @@ import {
 import { generateTypes, GenerateTypesConfig } from "prismic-ts-codegen";
 import prettier from "prettier";
 
+import adapter from "../../src";
+
 const resolveModel = <TModel extends CustomType | SharedSlice>(
 	ctx: TestContext,
 	model: TModel | ((ctx: TestContext) => TModel),
@@ -124,6 +126,9 @@ export const testGlobalContentTypes = <TModel extends CustomType | SharedSlice>(
 			ctx.project.config.adapter.options.format = false;
 			const pluginRunner = createSliceMachinePluginRunner({
 				project: ctx.project,
+				nativePlugins: {
+					[ctx.project.config.adapter.resolve]: adapter,
+				},
 			});
 			await pluginRunner.init();
 

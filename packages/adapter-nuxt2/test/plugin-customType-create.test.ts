@@ -7,6 +7,8 @@ import * as path from "node:path";
 
 import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
+import adapter from "../src";
+
 /**
  * !!! DO NOT use this mock factory in tests !!!
  *
@@ -53,7 +55,12 @@ test("model.json is formatted by default", async (ctx) => {
 
 test("model.json is not formatted if formatting is disabled", async (ctx) => {
 	ctx.project.config.adapter.options.format = false;
-	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
 	await pluginRunner.init();
 
 	// Force unusual formatting to detect that formatting did not happen.
