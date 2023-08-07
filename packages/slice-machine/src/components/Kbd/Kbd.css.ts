@@ -5,10 +5,12 @@ export const root = style([
   sprinkles({
     paddingInline: 4,
     color: colors.grey11,
+    backgroundColor: colors.grey2,
+    borderColor: colors.grey6,
+    borderStyle: "solid",
+    borderWidth: 1,
   }),
   {
-    border: "1px solid #E4E2E4",
-    backgroundColor: "#F4F2F4",
     borderRadius: "3px",
   },
 ]);
