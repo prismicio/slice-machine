@@ -4,13 +4,15 @@ import { style } from "@vanilla-extract/css";
 export const root = sprinkles({
   all: "unset",
   boxSizing: "border-box",
+  display: "flex",
 });
 
 const row = style([
-  root,
   sprinkles({
+    all: "unset",
     display: "flex",
     flexDirection: "row",
+    boxSizing: "border-box",
   }),
   {
     height: "48px",
@@ -20,8 +22,6 @@ const row = style([
 export const header = style([
   row,
   sprinkles({
-    display: "flex",
-    flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 10,
