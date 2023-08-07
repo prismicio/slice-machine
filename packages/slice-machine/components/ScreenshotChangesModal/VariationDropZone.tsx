@@ -82,8 +82,6 @@ const DropZone: React.FC<DropZoneProps> = ({
 }) => {
   const maybeScreenshot = slice.screenshots[variationID];
 
-  console.log(maybeScreenshot?.hash, variationID);
-
   const { openToaster } = useSliceMachineActions();
   const [isDragActive, setIsDragActive] = useState(false);
   const [isHover, setIsHover] = useState(false);
@@ -112,6 +110,21 @@ const DropZone: React.FC<DropZoneProps> = ({
     },
   });
 
+  const handleFile = (file: File) => {
+    if (file.size > 128000000) {
+      return openToaster(
+        "File is too big. Max file size: 128Mb.",
+        ToasterType.ERROR
+      );
+    }
+    return generateSliceCustomScreenshot(
+      variationID,
+      slice,
+      file,
+      "dragAndDrop"
+    );
+  };
+
   const handlePaste = async () => {
     try {
       const clipboardItems = await navigator.clipboard.read();
@@ -122,18 +135,7 @@ const DropZone: React.FC<DropZoneProps> = ({
         if (maybeType !== undefined) {
           const blob = await clipboardItems[0].getType(maybeType);
           const file = new File([blob], "file");
-          if (file.size > 128000000) {
-            return openToaster(
-              "File is too big. Max file size: 128Mb.",
-              ToasterType.ERROR
-            );
-          }
-          return generateSliceCustomScreenshot(
-            variationID,
-            slice,
-            file,
-            "dragAndDrop"
-          );
+          handleFile(file);
         }
       }
     } catch (e) {
@@ -146,18 +148,7 @@ const DropZone: React.FC<DropZoneProps> = ({
     const maybeFile = event.dataTransfer.files?.[0];
     if (maybeFile !== undefined) {
       if (imageTypes.some((t) => `image/${t}` === maybeFile.type)) {
-        if (maybeFile.size > 128000000) {
-          return openToaster(
-            "File is too big. Max file size: 128Mb.",
-            ToasterType.ERROR
-          );
-        }
-        return generateSliceCustomScreenshot(
-          variationID,
-          slice,
-          maybeFile,
-          "dragAndDrop"
-        );
+        handleFile(maybeFile);
       }
       return openToaster(
         `Only files of type ${imageTypes.join(", ")} are accepted.`,
@@ -212,7 +203,7 @@ const DropZone: React.FC<DropZoneProps> = ({
           }}
         />
       ) : null}
-      {!isLoadingScreenshot && (maybeScreenshot === undefined || isHover) ? (
+      {!isLoadingScreenshot ? (
         <Flex
           sx={{
             p: 2,
@@ -223,11 +214,8 @@ const DropZone: React.FC<DropZoneProps> = ({
             background: "#F9F8F9B2",
             justifyContent: "center",
             alignItems: "center",
-            ...(isHover && maybeScreenshot !== undefined
-              ? {
-                  // boxShadow: "0px 2.767256498336792px 2.2138051986694336px 0px rgba(0, 0, 0, 0.02), 0px 6.650102138519287px 5.32008171081543px 0px rgba(0, 0, 0, 0.03), 0px 12.521552085876465px 10.017241477966309px 0px rgba(0, 0, 0, 0.04), 0px 22.3363094329834px 17.869047164916992px 0px rgba(0, 0, 0, 0.04), 0px 41.777610778808594px 33.422088623046875px 0px rgba(0, 0, 0, 0.05), 0px 100px 80px 0px rgba(0, 0, 0, 0.07)",
-                }
-              : {}),
+            visibility:
+              isHover || maybeScreenshot === undefined ? "visible" : "hidden",
           }}
         >
           <Flex

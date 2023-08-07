@@ -35,7 +35,7 @@ export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
       {hideMissingWarning ? null : (
         <>
           {src !== undefined ? (
-            <Image src={src} alt="Preview image" sx={{ maxHeight: "100%" }} />
+            <MemoedImage src={src} />
           ) : (
             <Text
               sx={{
