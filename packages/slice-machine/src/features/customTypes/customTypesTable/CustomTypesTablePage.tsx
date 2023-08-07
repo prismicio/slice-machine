@@ -5,6 +5,7 @@ import {
   ErrorBoundary,
   Box,
   ProgressCircle,
+  DefaultErrorMessage,
 } from "@prismicio/editor-ui";
 import Head from "next/head";
 import { useSelector } from "react-redux";
@@ -52,15 +53,16 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
         </title>
       </Head>
       <ErrorBoundary
-        title="Request failed"
-        description={`An error occurred while fetching your ${customTypesMessages.name(
-          { start: false, plural: true }
-        )}.`}
-        renderError={(error) => (
+        renderError={() => (
           <AppLayout>
             <AppLayoutContent>
               <Box alignItems="center" justifyContent="center">
-                {error}
+                <DefaultErrorMessage
+                  title="Request failed"
+                  description={`An error occurred while fetching your ${customTypesMessages.name(
+                    { start: false, plural: true }
+                  )}.`}
+                />
               </Box>
             </AppLayoutContent>
           </AppLayout>

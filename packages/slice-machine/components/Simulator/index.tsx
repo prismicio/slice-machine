@@ -1,5 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
+import { DefaultErrorMessage, ErrorBoundary } from "@prismicio/editor-ui";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
@@ -72,6 +80,8 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       unsplash: {
         url: endpoints.PrismicUnsplash,
       },
+      // TODO(DT-1543): Remove status property when optional
+      status: "published",
     };
   }, [endpoints.PrismicOembed, endpoints.PrismicUnsplash]);
 
@@ -301,21 +311,37 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   : { display: "none" }),
               }}
             >
-              <SharedSliceEditor
-                /**
-                 * Because of a re-render issue on the richtext /* we enforce
-                 * re-rendering the editor when the variation change. /* this
-                 * change should be removed once the editor is fixed.
-                 */
-                key={variation.id}
-                config={editorConfig}
-                content={editorContent}
-                onContentChange={(c) => {
-                  setEditorState(c);
-                  trackWidgetUsed(slice.model.id);
-                }}
-                sharedSlice={sharedSlice}
-              />
+              {/* 
+                The editor warn us it's recommended to wrap  SharedSliceEditor in a Suspense and an ErrorBoundary.
+                Warning: It is not recommended to use editor-support->Suspense without a editor-ui->ErrorBoundary above it 
+              */}
+              <ErrorBoundary
+                renderError={() => (
+                  <DefaultErrorMessage
+                    title="Editor error"
+                    description="An error occurred while rendering the editor."
+                  />
+                )}
+              >
+                <Suspense>
+                  <SharedSliceEditor
+                    /**
+                     * Because of a re-render issue on the richtext /* we
+                     * enforce re-rendering the editor when the variation
+                     * change. /* this change should be removed once the editor
+                     * is fixed.
+                     */
+                    key={variation.id}
+                    config={editorConfig}
+                    content={editorContent}
+                    onContentChange={(c) => {
+                      setEditorState(c);
+                      trackWidgetUsed(slice.model.id);
+                    }}
+                    sharedSlice={sharedSlice}
+                  />
+                </Suspense>
+              </ErrorBoundary>
             </Box>
           ) : null}
         </Flex>
