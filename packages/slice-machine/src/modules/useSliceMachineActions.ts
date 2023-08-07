@@ -452,7 +452,6 @@ const useSliceMachineActions = () => {
 
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {
-    console.log("useSM/refreshState");
     dispatch(
       refreshStateCreator({
         env: serverState.env,
