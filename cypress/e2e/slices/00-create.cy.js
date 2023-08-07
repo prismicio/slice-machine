@@ -40,8 +40,8 @@ describe("Create Slices", () => {
 
     cy.get("#variation-add").submit();
 
-    cy.contains("button", "Simulate Slice").should("have.attr", "disabled");
-    cy.contains("button", "Simulate Slice").realHover();
+    cy.contains("button", "Simulate").should("have.attr", "disabled");
+    cy.contains("button", "Simulate").realHover();
     cy.get("#simulator-button-tooltip").should("be.visible");
     cy.get("#simulator-button-tooltip").should(
       "contain",
@@ -68,7 +68,7 @@ describe("Create Slices", () => {
 
     cy.contains("Save").click();
 
-    cy.contains("button", "Simulate Slice").should("not.have.attr", "disabled");
+    cy.contains("button", "Simulate").should("not.have.attr", "disabled");
     cy.contains("button", "Update screenshot").should(
       "not.have.attr",
       "disabled"

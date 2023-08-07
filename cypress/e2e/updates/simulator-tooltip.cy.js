@@ -18,11 +18,11 @@ describe("simulator tooltip", () => {
     // There is a 5 s timeout for displaying the tooltip.
     cy.wait(6_000);
 
-    cy.get("[data-testid=simulator-tooltip]").should("exist");
+    cy.contains("Simulate your slices").should("exist");
 
-    cy.get("[data-testid=simulator-tooltip-close-button]").click();
+    cy.contains("Got It").click();
 
-    cy.get("[data-testid=simulator-tooltip]").should("not.exist");
+    cy.contains("Simulate your slices").should("not.exist");
 
     cy.getSliceMachineUserContext().should((data) => {
       expect(data.hasSeenSimulatorToolTip).equal(
@@ -42,7 +42,7 @@ describe("simulator tooltip", () => {
     // There is a 5 s timeout for displaying the tooltip.
     cy.wait(6_000);
 
-    cy.get("[data-testid=simulator-tooltip]").should("not.exist");
+    cy.contains("Simulate your slices").should("not.exist");
   });
 
   it("should close the tooltip when the user clicks the simulator button", () => {
@@ -55,7 +55,7 @@ describe("simulator tooltip", () => {
     // There is a 5 s timeout for displaying the tooltip.
     cy.wait(6_000);
 
-    cy.get("[data-testid=simulator-tooltip]").should("exist");
+    cy.contains("Simulate your slices").should("exist");
 
     // Don't open the Simulator's window.
     cy.window().then((win) => {
