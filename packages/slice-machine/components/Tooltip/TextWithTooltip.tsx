@@ -2,6 +2,8 @@ import ReactTooltip from "react-tooltip";
 import React, { ElementType, useEffect, useRef, useState } from "react";
 import { Text, ThemeUIStyleObject } from "theme-ui";
 
+import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
+
 interface TextWithTooltipProps {
   text: string;
   as: ElementType;
@@ -50,17 +52,19 @@ export const TextWithTooltip: React.FC<TextWithTooltipProps> = ({
       </Text>
       {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {showTooltip && (
-        <ReactTooltip
-          id={text}
-          type="dark"
-          multiline
-          border
-          borderColor="black"
-          place="bottom"
-          effect="solid"
-        >
-          {text}
-        </ReactTooltip>
+        <ReactTooltipPortal>
+          <ReactTooltip
+            id={text}
+            type="dark"
+            multiline
+            border
+            borderColor="black"
+            place="bottom"
+            effect="solid"
+          >
+            {text}
+          </ReactTooltip>
+        </ReactTooltipPortal>
       )}
     </>
   );

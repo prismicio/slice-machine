@@ -54,7 +54,10 @@ describe.each(formats)(
       expect(await screen.findByText(`Delete ${format} type`)).toBeVisible();
       await user.click(screen.getByRole("button", { name: "Delete" }));
 
-      /** We should test route or toast message but I was not able to do it properly */
+      /**
+       * We should test route or toast message but I was not able to do it
+       * properly
+       */
     });
     test(`should rename a ${format} type from the dropdown`, async (ctx) => {
       const ctIndex = format === "custom" ? 0 : 1;
@@ -182,9 +185,14 @@ async function renderCustomTypesBuilderPage({
         }),
         {}
       ),
+      environment: {
+        manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
+      },
+      slices: { libraries: [], remoteSlices: [] },
     },
   };
 
+  // @ts-expect-error TS2345: Argument of type '{ preloadedState: { availableCustomTypes: {}; environment: { manifest: { apiEndpoint: string; }; }; slices: { libraries: never[]; remoteSlices: never[]; }; }; }' is not assignable to parameter of type 'Partial<{ preloadedState: Partial<SliceMachineStoreType>; store: Store<SliceMachineStoreType, AnyAction>; } & RenderOptions<...>>'.
   const renderResults = render(<CustomTypesBuilderPage />, customTypeMockStore);
 
   const folder = customType.format === "page" ? "Page types" : "Custom types";

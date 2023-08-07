@@ -3,13 +3,13 @@ import { FC } from "react";
 
 import * as styles from "./Breadcrumb.css";
 
-type BreadcrumProps = {
+export type BreadcrumbProps = {
   folder: string;
   page?: string;
   separator?: string;
 };
 
-export const Breadcrumb: FC<BreadcrumProps> = ({
+export const Breadcrumb: FC<BreadcrumbProps> = ({
   folder,
   page,
   separator = "/",

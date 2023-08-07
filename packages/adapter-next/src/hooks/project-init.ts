@@ -492,18 +492,9 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	const filePath = helpers.joinPathFromRoot("slicemachine.config.json");
-
-	let contents = JSON.stringify(project.config);
-
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.writeFile(
-		helpers.joinPathFromRoot("slicemachine.config.json"),
-		contents,
-	);
+	await helpers.updateSliceMachineConfig(project.config, {
+		format: options.format,
+	});
 };
 
 const createRevalidateRoute = async ({

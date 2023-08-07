@@ -212,7 +212,6 @@ const ScreenshotChangesModal = ({
           }}
         >
           <Box
-            as="aside"
             sx={{
               p: 3,
               bg: "grey07",

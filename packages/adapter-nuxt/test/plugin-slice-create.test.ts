@@ -9,6 +9,8 @@ import * as tsm from "ts-morph";
 import { parseSourceFile } from "./__testutils__/parseSourceFile";
 import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
+import adapter from "../src";
+
 /**
  * !!! DO NOT use this mock factory in tests !!!
  *
@@ -49,7 +51,12 @@ test("upserts a library index.js file", async (ctx) => {
 
 test("upserts a library index.ts file when TypeScript is enabled", async (ctx) => {
 	ctx.project.config.adapter.options.typescript = true;
-	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
 	await pluginRunner.init();
 
 	await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
@@ -85,7 +92,12 @@ test("library index file includes created Slice", async (ctx) => {
 
 test("library index file includes created Slice without lazy-loading when disabled", async (ctx) => {
 	ctx.project.config.adapter.options.lazyLoadSlices = false;
-	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
 	await pluginRunner.init();
 
 	await pluginRunner.callHook("slice:create", {
@@ -149,7 +161,12 @@ test("model.json is formatted by default", async (ctx) => {
 
 test("model.json is not formatted if formatting is disabled", async (ctx) => {
 	ctx.project.config.adapter.options.format = false;
-	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
 	await pluginRunner.init();
 
 	// Force unusual formatting to detect that formatting did not happen.
@@ -190,7 +207,12 @@ test("component file is formatted by default", async (ctx) => {
 
 test("component file is not formatted if formatting is disabled", async (ctx) => {
 	ctx.project.config.adapter.options.format = false;
-	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
 	await pluginRunner.init();
 
 	// Force unusual formatting to detect that formatting did not happen.

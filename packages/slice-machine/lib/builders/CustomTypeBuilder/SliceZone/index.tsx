@@ -155,7 +155,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   };
 
   return (
-    <Box my={3}>
+    <Box mt={3}>
       <ZoneHeader
         Heading={
           <div style={{ display: "flex", alignItems: "center" }}>

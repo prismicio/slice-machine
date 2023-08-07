@@ -7,7 +7,14 @@ import SegmentClient from "analytics-node";
 import pkg from "../../package.json";
 import SlicesIndex from "../../pages/slices";
 
-import { render, fireEvent, act, screen, waitFor } from "../__testutils__";
+import {
+  render,
+  fireEvent,
+  act,
+  screen,
+  waitFor,
+  within,
+} from "../__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
 import { createSliceMachineManager } from "@slicemachine/manager";
@@ -54,11 +61,7 @@ describe("slices", () => {
     );
 
     const environment = {
-      changelog: {
-        sliceMachine: {
-          currentVersion: "0.0.1",
-        },
-      },
+      manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
     };
 
     const libraries = [
@@ -153,6 +156,7 @@ describe("slices", () => {
 
     render(<SlicesIndex />, {
       preloadedState: {
+        availableCustomTypes: {},
         // @ts-expect-error TS(2739) FIXME: Type '{ framework: string; changelog: { currentVer... Remove this comment to see the full error message
         environment,
         slices: {
@@ -177,7 +181,8 @@ describe("slices", () => {
       }
     });
 
-    const submitButton = screen.getByText("Create");
+    const createSliceModal = screen.getByLabelText("Create a new slice");
+    const submitButton = within(createSliceModal).getByText("Create");
     await act(async () => {
       fireEvent.click(submitButton);
     });
@@ -232,9 +237,7 @@ describe("slices", () => {
     );
 
     const environment = {
-      changelog: {
-        currentVersion: "0.0.1",
-      },
+      manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
     };
 
     const libraries = [
@@ -329,6 +332,7 @@ describe("slices", () => {
 
     render(<SlicesIndex />, {
       preloadedState: {
+        availableCustomTypes: {},
         // @ts-expect-error TS(2739) FIXME: Type '{ framework: string; changelog: { currentVer... Remove this comment to see the full error message
         environment,
         slices: {
@@ -351,7 +355,8 @@ describe("slices", () => {
       fireEvent.change(nameInput, { target: { value: "FooBar" } });
     });
 
-    const submitButton = screen.getByText("Create");
+    const createSliceModal = screen.getByLabelText("Create a new slice");
+    const submitButton = within(createSliceModal).getByText("Create");
     await act(async () => {
       fireEvent.click(submitButton);
     });

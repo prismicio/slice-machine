@@ -9,7 +9,6 @@ export const CustomTabList = ({ children, ...otherProps }) => (
       m: 0,
       px: (theme) => `calc(${theme.space[3]}px + 8px)`,
       borderBottom: `1px solid #DFE1E5`,
-      bg: "headSection",
       position: "relative",
     }}
     {...otherProps}
@@ -42,7 +41,7 @@ export const CustomTab = ({ children, ...otherProps }) => {
               color: theme.colors.text,
               fontWeight: "500",
               opacity: "1",
-              backgroundColor: theme.colors.headSection,
+              backgroundColor: "transparent",
             }
           : {
               borderBottom: "3px solid transparent",
