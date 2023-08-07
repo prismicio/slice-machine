@@ -1,21 +1,24 @@
 import { sprinkles, colors } from "@prismicio/editor-ui";
 import { style } from "@vanilla-extract/css";
 
-const reset = sprinkles({
+export const root = sprinkles({
   all: "unset",
   boxSizing: "border-box",
-  fontFamily: "body",
 });
 
-export const root = style([
-  reset,
+const row = style([
+  root,
   sprinkles({
-    width: "100%",
+    display: "flex",
+    flexDirection: "row",
   }),
+  {
+    height: "48px",
+  },
 ]);
 
 export const header = style([
-  reset,
+  row,
   sprinkles({
     display: "flex",
     flexDirection: "row",
@@ -23,23 +26,10 @@ export const header = style([
     justifyContent: "space-between",
     gap: 10,
     backgroundColor: colors.grey1,
-    color: colors.grey11,
     borderBottomColor: colors.grey6,
     borderBottomStyle: "dashed",
     borderBottomWidth: 1,
+    padding: 8,
+    paddingLeft: 16,
   }),
-  {
-    padding: "8px 8px 8px 16px",
-  },
-]);
-
-export const headerLeftItem = style([
-  reset,
-  {
-    padding: "8px 0px",
-    fontSize: "12px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "16px",
-  },
 ]);
