@@ -1,7 +1,7 @@
 import { Box } from "theme-ui";
 
 import TabZone from "./TabZone";
-import { Tabs } from "./Layout";
+import Tabs from "./Layout";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 type CustomTypeBuilderProps = {

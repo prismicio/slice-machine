@@ -3,16 +3,20 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { BaseStyles } from "theme-ui";
 
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
 import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 import {
-  MainContainer,
-  MainContainerHeader,
-  MainContainerContent,
-} from "@src/components/MainContainer";
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBackButton,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@components/AppLayout";
 import { readBuilderPageDynamicSegment } from "@src/features/customTypes/customTypesConfig";
 import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
 import { isLoading } from "@src/modules/loading";
@@ -28,7 +32,6 @@ import { PageSnippetDialog } from "./PageSnippetDialog";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
-import { Breadcrumb } from "@src/components/Breadcrumb";
 
 export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
@@ -58,7 +61,7 @@ export const CustomTypesBuilderPage: FC = () => {
   }, []);
 
   if (!selectedCustomType || !hasLocal(selectedCustomType)) {
-    return null;
+    return <AppLayout />;
   }
 
   return (
@@ -84,8 +87,6 @@ type CustomTypesBuilderPageWithProviderProps = {
 const CustomTypesBuilderPageWithProvider: React.FC<
   CustomTypesBuilderPageWithProviderProps
 > = ({ customType, remoteCustomType }) => {
-  const router = useRouter();
-
   const { initCustomTypeStore, saveCustomType } = useSliceMachineActions();
 
   useEffect(
@@ -106,53 +107,44 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     }));
 
   if (currentCustomType === null) {
-    return null;
+    return <AppLayout />;
   }
 
   const config = CUSTOM_TYPES_CONFIG[currentCustomType.format];
   const messages = CUSTOM_TYPES_MESSAGES[currentCustomType.format];
 
-  const actions = [
-    ...(currentCustomType.format === "page"
-      ? [
-          <PageSnippetDialog
-            key="trigger-snippet-view"
-            model={CustomTypes.fromSM(currentCustomType)}
-          />,
-        ]
-      : []),
-    <EditDropdown
-      isChangesLocal
-      key="edit-dropdown"
-      format={currentCustomType.format}
-      customType={CustomTypes.fromSM(currentCustomType)}
-    />,
-    <Button
-      key="save-to-fs"
-      onClick={saveCustomType}
-      loading={isSavingCustomType}
-      data-testid="builder-save-button"
-      disabled={!hasPendingModifications || isSavingCustomType}
-    >
-      Save
-    </Button>,
-  ];
-
   return (
-    <MainContainer>
-      <MainContainerHeader
-        backTo={() => void router.push(config.tablePagePathname)}
-        breadcrumb={
-          <Breadcrumb
-            folder={messages.name({ start: true, plural: true })}
-            page={currentCustomType.label ?? currentCustomType.id}
+    <AppLayout>
+      <AppLayoutHeader>
+        <AppLayoutBackButton url={config.tablePagePathname} />
+        <AppLayoutBreadcrumb
+          folder={messages.name({ start: true, plural: true })}
+          page={currentCustomType.label ?? currentCustomType.id}
+        />
+        <AppLayoutActions>
+          {currentCustomType.format === "page" ? (
+            <PageSnippetDialog model={CustomTypes.fromSM(currentCustomType)} />
+          ) : undefined}
+          <EditDropdown
+            isChangesLocal
+            format={currentCustomType.format}
+            customType={CustomTypes.fromSM(currentCustomType)}
           />
-        }
-        actions={actions}
-      />
-      <MainContainerContent>
-        <CustomTypeBuilder customType={currentCustomType} />
-      </MainContainerContent>
-    </MainContainer>
+          <Button
+            onClick={saveCustomType}
+            loading={isSavingCustomType}
+            data-testid="builder-save-button"
+            disabled={!hasPendingModifications || isSavingCustomType}
+          >
+            Save
+          </Button>
+        </AppLayoutActions>
+      </AppLayoutHeader>
+      <AppLayoutContent>
+        <BaseStyles>
+          <CustomTypeBuilder customType={currentCustomType} />
+        </BaseStyles>
+      </AppLayoutContent>
+    </AppLayout>
   );
 };

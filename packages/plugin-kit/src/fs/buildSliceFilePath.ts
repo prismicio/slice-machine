@@ -9,8 +9,8 @@ export type BuildSliceFilePathArgs = {
 	filename: string;
 } & BuildSliceDirectoryPathArgs;
 
-export async function buildSliceFilePath(
+export const buildSliceFilePath = async (
 	args: BuildSliceFilePathArgs,
-): Promise<string> {
+): Promise<string> => {
 	return path.join(await buildSliceDirectoryPath(args), args.filename);
-}
+};

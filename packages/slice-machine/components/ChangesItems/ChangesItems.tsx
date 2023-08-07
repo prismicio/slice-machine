@@ -33,8 +33,12 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
+  const screenshotChangesSlices = unSyncedSlices.filter(
+    (s) => modelsStatuses.slices[s.model.id] !== ModelStatus.Deleted
+  );
+
   return (
-    <Box sx={{ pb: 4 }}>
+    <>
       {unSyncedCustomTypes.length > 0 && (
         <>
           <ChangesSectionHeader>
@@ -139,11 +143,11 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             }}
           />
           <ScreenshotChangesModal
-            slices={sliceFilterFn(unSyncedSlices)}
+            slices={sliceFilterFn(screenshotChangesSlices)}
             defaultVariationSelector={defaultVariationSelector}
           />
         </>
       )}
-    </Box>
+    </>
   );
 };

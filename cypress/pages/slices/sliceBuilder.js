@@ -88,7 +88,7 @@ class SliceBuilder extends BaseBuilder {
           // win.open.wrappedMethod.call(win, url, "_self");
         });
     });
-    cy.contains("Simulate Slice")
+    cy.contains("Simulate")
       .click()
       .then(() => {
         cy.get("@windowOpen").should("be.called");

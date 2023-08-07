@@ -21,9 +21,9 @@ export type ReadSliceModelReturnType = {
 	model: SharedSlice;
 };
 
-export async function readSliceModel(
+export const readSliceModel = async (
 	args: ReadSliceModelArgs,
-): Promise<ReadSliceModelReturnType> {
+): Promise<ReadSliceModelReturnType> => {
 	const libraryDir = buildSliceLibraryDirectoryPath({
 		libraryID: args.libraryID,
 		absolute: true,
@@ -71,7 +71,7 @@ export async function readSliceModel(
 				model,
 			};
 		} else {
-			if (unreadableModelPaths.length) {
+			if (unreadableModelPaths.length > 0) {
 				throw new Error(
 					`Did not find a Slice model with ID "${args.sliceID}" in the "${
 						args.libraryID
@@ -86,4 +86,4 @@ export async function readSliceModel(
 	throw new Error(
 		`Did not find a Slice model with ID "${args.sliceID}" in the "${args.libraryID}" Slice Library.`,
 	);
-}
+};

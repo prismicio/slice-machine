@@ -6,9 +6,9 @@ import { deleteProjectFile } from "./deleteProjectFile";
 
 export type DeleteCustomTypeFileArgs = BuildCustomTypeFilePathArgs;
 
-export async function deleteCustomTypeFile(
+export const deleteCustomTypeFile = async (
 	args: DeleteCustomTypeFileArgs,
-): Promise<string> {
+): Promise<string> => {
 	const filePath = buildCustomTypeFilePath(args);
 	const relativeFilePath = buildCustomTypeFilePath({
 		...args,
@@ -21,4 +21,4 @@ export async function deleteCustomTypeFile(
 	});
 
 	return filePath;
-}
+};

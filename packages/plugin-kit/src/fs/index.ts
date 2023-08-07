@@ -63,8 +63,8 @@ export type { RenameSliceArgs } from "./renameSlice";
 export { deleteSliceFile } from "./deleteSliceFile";
 export type { DeleteSliceFileArgs } from "./deleteSliceFile";
 
-export { deleteAllSliceFiles } from "./deleteAllSliceFiles";
-export type { DeleteAllSliceFilesArgs } from "./deleteAllSliceFiles";
+export { deleteSliceDirectory } from "./deleteSliceDirectory";
+export type { DeleteSliceDirectoryArgs } from "./deleteSliceDirectory";
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -102,8 +102,11 @@ export type {
 	ReadCustomTypeModelReturnType,
 } from "./readCustomTypeModel";
 
+export { renameCustomType } from "./renameCustomType";
+export type { RenameCustomTypeArgs } from "./renameCustomType";
+
 export { deleteCustomTypeFile } from "./deleteCustomTypeFile";
 export type { DeleteCustomTypeFileArgs } from "./deleteCustomTypeFile";
 
-export { deleteAllCustomTypeFiles } from "./deleteAllCustomTypeFiles";
-export type { DeleteAllCustomTypeFilesArgs } from "./deleteAllCustomTypeFiles";
+export { deleteCustomTypeDirectory } from "./deleteCustomTypeDirectory";
+export type { DeleteCustomTypeDirectoryArgs } from "./deleteCustomTypeDirectory";

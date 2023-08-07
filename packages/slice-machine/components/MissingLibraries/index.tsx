@@ -2,7 +2,7 @@ import type React from "react";
 import { Box } from "theme-ui";
 
 export const MissingLibraries: React.FC = () => (
-  <Box sx={{ marginLeft: "20px" }}>
+  <Box>
     <p>
       We could not find any local library in your project.
       <br />

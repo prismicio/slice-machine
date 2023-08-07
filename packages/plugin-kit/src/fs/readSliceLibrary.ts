@@ -18,9 +18,9 @@ export type ReadSliceLibraryReturnType = {
 	sliceIDs: string[];
 };
 
-export async function readSliceLibrary(
+export const readSliceLibrary = async (
 	args: ReadSliceLibraryArgs,
-): Promise<ReadSliceLibraryReturnType> {
+): Promise<ReadSliceLibraryReturnType> => {
 	const libraryDir = buildSliceLibraryDirectoryPath({
 		libraryID: args.libraryID,
 		absolute: true,
@@ -35,6 +35,11 @@ export async function readSliceLibrary(
 	}
 
 	const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
+
+	/**
+	 * Paths to models that could not be read due to invalid JSON.
+	 */
+	const unreadableModelPaths: string[] = [];
 
 	const sliceIDs: string[] = [];
 	await Promise.all(
@@ -53,14 +58,22 @@ export async function readSliceLibrary(
 						sliceIDs.push(modelContents.id);
 					}
 				} catch {
-					// noop
+					unreadableModelPaths.push(modelPath);
 				}
 			}
 		}),
 	);
 
+	if (unreadableModelPaths.length > 0) {
+		const formattedPaths = unreadableModelPaths.join(", ");
+
+		throw new Error(
+			`The following Slice models could not be read: [${formattedPaths}]`,
+		);
+	}
+
 	return {
 		id: args.libraryID,
 		sliceIDs: sliceIDs.sort(),
 	};
-}
+};

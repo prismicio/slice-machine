@@ -1,5 +1,6 @@
 import ReactTooltip from "react-tooltip";
 import { Badge, Box, Flex, Text } from "theme-ui";
+import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
 
@@ -47,25 +48,27 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           {displayName}
         </Badge>
       </Text>
-      <ReactTooltip
-        id={`${modelId}-tooltip`}
-        type="dark"
-        multiline
-        border
-        borderColor="black"
-        place="bottom"
-        effect="solid"
-      >
-        <Flex
-          sx={{
-            maxWidth: "196px",
-            textAlign: "center",
-            margin: "0 -13px",
-          }}
+      <ReactTooltipPortal>
+        <ReactTooltip
+          id={`${modelId}-tooltip`}
+          type="dark"
+          multiline
+          border
+          borderColor="black"
+          place="bottom"
+          effect="solid"
         >
-          {tooltipText}
-        </Flex>
-      </ReactTooltip>
+          <Flex
+            sx={{
+              maxWidth: "196px",
+              textAlign: "center",
+              margin: "0 -13px",
+            }}
+          >
+            {tooltipText}
+          </Flex>
+        </ReactTooltip>
+      </ReactTooltipPortal>
     </Box>
   );
 };

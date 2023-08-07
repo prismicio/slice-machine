@@ -44,7 +44,6 @@ export const selectedSliceReducer: Reducer<
       if (updatedSlice === undefined) {
         return prevState;
       }
-
       return {
         ...prevState,
         screenshots: updatedSlice.screenshots,

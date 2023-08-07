@@ -1,4 +1,5 @@
-import { Flex } from "theme-ui";
+import { ProgressCircle } from "@prismicio/editor-ui";
+import { BaseStyles, Flex } from "theme-ui";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getChangelog, getPackageManager } from "@src/modules/environment";
@@ -8,7 +9,7 @@ import { Navigation } from "./navigation";
 import { VersionDetails, ReleaseWarning } from "./versionDetails";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import LoadingPage from "@components/LoadingPage";
+import { AppLayout, AppLayoutContent } from "@components/AppLayout";
 
 export default function Changelog() {
   const { changelog, packageManager, isChangelogLoading } = useSelector(
@@ -30,42 +31,38 @@ export default function Changelog() {
     setSelectedVersion(latestVersion);
   }, [latestVersion]);
 
-  return !isChangelogLoading ? (
-    <Flex
-      sx={{
-        maxWidth: "1224px",
-      }}
-    >
-      <Navigation
-        changelog={changelog}
-        selectedVersion={selectedVersion}
-        selectVersion={(version) => setSelectedVersion(version)}
-      />
+  const showReleaseWarning =
+    changelog.sliceMachine.versions.length === 0 || !selectedVersion;
 
-      {changelog.sliceMachine.versions.length === 0 || !selectedVersion ? (
-        <Flex
-          sx={{
-            width: "754px",
-            minWidth: "754px",
-            height: "100%",
-            borderRight: "1px solid",
-            borderColor: "grey01",
-            flexDirection: "column",
-            padding: "24px 32px",
-            gap: "24px",
-          }}
-        >
-          <ReleaseWarning />
-        </Flex>
-      ) : (
-        <VersionDetails
-          changelog={changelog}
-          selectedVersion={selectedVersion}
-          packageManager={packageManager}
-        />
-      )}
-    </Flex>
-  ) : (
-    <LoadingPage />
+  return (
+    <AppLayout>
+      <AppLayoutContent>
+        <BaseStyles sx={{ display: "flex", minWidth: 0 }}>
+          {!isChangelogLoading ? (
+            <>
+              <Navigation
+                changelog={changelog}
+                selectedVersion={selectedVersion}
+                selectVersion={(version) => setSelectedVersion(version)}
+              />
+
+              {showReleaseWarning ? (
+                <Flex sx={{ paddingLeft: "32px" }}>
+                  <ReleaseWarning />
+                </Flex>
+              ) : (
+                <VersionDetails
+                  changelog={changelog}
+                  selectedVersion={selectedVersion}
+                  packageManager={packageManager}
+                />
+              )}
+            </>
+          ) : (
+            <ProgressCircle />
+          )}
+        </BaseStyles>
+      </AppLayoutContent>
+    </AppLayout>
   );
 }

@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
+import prettier from "prettier";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
@@ -30,6 +31,13 @@ it("saves a custom type's model", async (ctx) => {
 });
 
 it("formats contents if `format` is true", async (ctx) => {
+	const prettierConfig = { useTabs: true };
+
+	await fs.writeFile(
+		path.join(ctx.project.root, ".prettierrc"),
+		JSON.stringify(prettierConfig),
+	);
+
 	await writeCustomTypeModel({
 		model,
 		format: true,
@@ -41,10 +49,47 @@ it("formats contents if `format` is true", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).not.toBe(JSON.stringify(model));
+	expect(contents).toBe(
+		prettier.format(JSON.stringify(model, null, 2), {
+			...prettierConfig,
+			parser: "json",
+		}),
+	);
+});
+
+it("accepts format options", async (ctx) => {
+	const prettierConfig = { useTabs: true };
+
+	await writeCustomTypeModel({
+		model,
+		format: true,
+		formatOptions: {
+			prettier: prettierConfig,
+		},
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const contents = await fs.readFile(
+		path.join(ctx.project.root, "customtypes", model.id, "index.json"),
+		"utf8",
+	);
+
+	expect(contents).toBe(
+		prettier.format(JSON.stringify(model, null, 2), {
+			...prettierConfig,
+			parser: "json",
+		}),
+	);
 });
 
 it("does not format contents by default", async (ctx) => {
+	const prettierConfig = { useTabs: true };
+
+	await fs.writeFile(
+		path.join(ctx.project.root, ".prettierrc"),
+		JSON.stringify(prettierConfig),
+	);
+
 	await writeCustomTypeModel({
 		model,
 		helpers: ctx.pluginRunner.rawHelpers,
@@ -55,7 +100,12 @@ it("does not format contents by default", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).toBe(JSON.stringify(model, null, 2));
+	expect(contents).not.toBe(
+		prettier.format(JSON.stringify(model, null, 2), {
+			...prettierConfig,
+			parser: "json",
+		}),
+	);
 });
 
 it("returns the path to the saved file", async (ctx) => {

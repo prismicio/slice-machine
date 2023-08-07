@@ -8,10 +8,10 @@ export type BuildSliceLibraryDirectoryPathArgs = {
 	helpers: SliceMachineHelpers;
 };
 
-export function buildSliceLibraryDirectoryPath(
+export const buildSliceLibraryDirectoryPath = (
 	args: BuildSliceLibraryDirectoryPathArgs,
-): string {
+): string => {
 	return args.absolute
 		? args.helpers.joinPathFromRoot(args.libraryID)
 		: path.join(args.libraryID);
-}
+};

@@ -1,0 +1,37 @@
+.sliceMenuButton:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-radius: 3px;
+}
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+.ReactModal__Content--after-open {
+  min-height: 60vh;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+/* Review modal animation   */
+.ReactModal__Overlay {
+  z-index: 1;
+}
+.ReviewModal .ReactModal__Overlay {
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 500ms ease-in-out;
+  bottom: 16px;
+  right: 16px;
+}
+
+.ReviewModal .ReactModal__Overlay--after-open {
+  opacity: 1;
+  transform: translateX(0px);
+}
+
+.ReviewModal .ReactModal__Overlay--before-close {
+  opacity: 0;
+  transform: translateX(100px);
+}

@@ -11,7 +11,7 @@ export const ChangesSectionHeader: FC<Props> = ({ children }) => {
       sx={{
         alignItems: "center",
         justifyContent: "space-between",
-        mt: "40px",
+        mt: "8px",
         bg: "grey02",
         borderRadius: 4,
         padding: "12px 16px",

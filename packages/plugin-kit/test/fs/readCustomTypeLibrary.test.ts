@@ -80,7 +80,7 @@ it("returns an empty list of Slices if the library does not exist", async (ctx) 
 	});
 });
 
-it("ignores custom types with invalid models", async (ctx) => {
+it("throws if an invalid model is found", async (ctx) => {
 	await ctx.pluginRunner.callHook("custom-type:create", {
 		model: model1,
 	});
@@ -102,11 +102,9 @@ it("ignores custom types with invalid models", async (ctx) => {
 	// Overwrite with invalid JSON
 	await fs.writeFile(model2Path, "invalid json");
 
-	const res = await readCustomTypeLibrary({
-		helpers: ctx.pluginRunner.rawHelpers,
-	});
-
-	expect(res).toStrictEqual({
-		ids: [model1.id],
-	});
+	await expect(async () => {
+		await readCustomTypeLibrary({
+			helpers: ctx.pluginRunner.rawHelpers,
+		});
+	}).rejects.toThrow(/could not be read/);
 });

@@ -1,4 +1,4 @@
-import * as fs from "node:fs/promises";
+import { checkPathExists } from "./lib/checkPathExists";
 
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
 
@@ -7,16 +7,10 @@ export type CheckHasProjectFileArgs = {
 	helpers: SliceMachineHelpers;
 };
 
-export async function checkHasProjectFile(
+export const checkHasProjectFile = async (
 	args: CheckHasProjectFileArgs,
-): Promise<boolean> {
+): Promise<boolean> => {
 	const filePath = args.helpers.joinPathFromRoot(args.filename);
 
-	try {
-		await fs.access(filePath);
-
-		return true;
-	} catch {
-		return false;
-	}
-}
+	return checkPathExists(filePath);
+};

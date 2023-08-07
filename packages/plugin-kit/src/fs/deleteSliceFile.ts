@@ -6,9 +6,9 @@ import { deleteProjectFile } from "./deleteProjectFile";
 
 export type DeleteSliceFileArgs = BuildSliceFilePathArgs;
 
-export async function deleteSliceFile(
+export const deleteSliceFile = async (
 	args: DeleteSliceFileArgs,
-): Promise<string> {
+): Promise<string> => {
 	const filePath = await buildSliceFilePath(args);
 	const relativeFilePath = await buildSliceFilePath({
 		...args,
@@ -21,4 +21,4 @@ export async function deleteSliceFile(
 	});
 
 	return filePath;
-}
+};

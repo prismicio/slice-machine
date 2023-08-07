@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@prismicio/editor-ui";
+import { ThemeProvider, TooltipProvider } from "@prismicio/editor-ui";
 import "@prismicio/editor-ui/style.css";
 import type { Preview } from "@storybook/react";
 
@@ -11,7 +11,9 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <ThemeProvider mode="light">
-        <Story />
+        <TooltipProvider>
+          <Story />
+        </TooltipProvider>
       </ThemeProvider>
     ),
   ],

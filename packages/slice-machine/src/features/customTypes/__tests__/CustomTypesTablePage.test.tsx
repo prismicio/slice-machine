@@ -319,11 +319,16 @@ async function renderCustomTypesTablePage({
           {}
         ),
       },
+      environment: {
+        manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
+      },
+      slices: { libraries: [], remoteSlices: [] },
     },
   };
 
   const renderResults = render(
     <CustomTypesTablePage format={format} />,
+    // @ts-expect-error TS2345: Argument of type '{ preloadedState: { availableCustomTypes: {}; environment: { manifest: { apiEndpoint: string; }; }; slices: { libraries: never[]; remoteSlices: never[]; }; }; }' is not assignable to parameter of type 'Partial<{ preloadedState: Partial<SliceMachineStoreType>; store: Store<SliceMachineStoreType, AnyAction>; } & RenderOptions<...>>'.
     customTypeMockStore
   );
 
