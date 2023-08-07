@@ -117,12 +117,7 @@ const DropZone: React.FC<DropZoneProps> = ({
         ToasterType.ERROR
       );
     }
-    return generateSliceCustomScreenshot(
-      variationID,
-      slice,
-      file,
-      "dragAndDrop"
-    );
+    generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
   };
 
   const handlePaste = async () => {
@@ -135,7 +130,7 @@ const DropZone: React.FC<DropZoneProps> = ({
         if (maybeType !== undefined) {
           const blob = await clipboardItems[0].getType(maybeType);
           const file = new File([blob], "file");
-          handleFile(file);
+          return handleFile(file);
         }
       }
     } catch (e) {
@@ -148,7 +143,7 @@ const DropZone: React.FC<DropZoneProps> = ({
     const maybeFile = event.dataTransfer.files?.[0];
     if (maybeFile !== undefined) {
       if (imageTypes.some((t) => `image/${t}` === maybeFile.type)) {
-        handleFile(maybeFile);
+        return handleFile(maybeFile);
       }
       return openToaster(
         `Only files of type ${imageTypes.join(", ")} are accepted.`,
