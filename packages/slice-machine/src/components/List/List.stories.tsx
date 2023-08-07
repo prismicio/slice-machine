@@ -17,20 +17,11 @@ export const Default = {
     children: (
       <>
         <ListHeader>Static Zone • 00</ListHeader>
-
-        {/* ... */}
-
         <ListHeader
-          actions={
-            <Button size="small" endIcon={<Icon name="add" />}>
-              Add
-            </Button>
-          }
+          actions={<Button endIcon={<Icon name="add" />}>Add</Button>}
         >
           Slices • 00
         </ListHeader>
-
-        {/* ... */}
       </>
     ),
   },
