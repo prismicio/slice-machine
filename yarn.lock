@@ -4724,9 +4724,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.4":
-  version: 0.4.4
-  resolution: "@prismicio/editor-fields@npm:0.4.4"
+"@prismicio/editor-fields@npm:0.4.5":
+  version: 0.4.5
+  resolution: "@prismicio/editor-fields@npm:0.4.5"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/editor-support": 0.4.1
@@ -4761,10 +4761,10 @@ __metadata:
     uuid: 9.0.0
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.4
+    "@prismicio/editor-ui": ^0.4.5
     react: 18
     react-dom: 18
-  checksum: b224f7818703e898f4ada8bb348e16f2a40b75424e59b716dc5f617b2e6d8e0c148646c75c51eee2afecd319087a04da51b65a07a082fce5583b425dd10ac22d
+  checksum: 6367ea22fe415a1179cf402fe4fc119cd980e29c54c816d913a4aa5e61057dd91424477f3e8d309380c676e27498e836ccbb3b7703db08d04643b31c10bb50cf
   languageName: node
   linkType: hard
 
@@ -4785,9 +4785,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.4":
-  version: 0.4.4
-  resolution: "@prismicio/editor-ui@npm:0.4.4"
+"@prismicio/editor-ui@npm:0.4.5":
+  version: 0.4.5
+  resolution: "@prismicio/editor-ui@npm:0.4.5"
   dependencies:
     "@internationalized/date": 3.1.0
     "@prismicio/editor-support": 0.4.1
@@ -4831,7 +4831,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 9b605f9a632d069681f6272e3c4fd4c2c0f21477cf4b659348f7f58b98e3a3f9daefae83cff036394239fcc9bde991fe67d1dde77b4e62902a226486ab50bd19
+  checksum: 6b6a8edc38efc36e6a3d7487ba13131f8ad1839a0653c6f63971fa30bc2e31028a904321d39813f382009a7328ad8b0ae1e91cbd570879e6d4408f95e47877ab
   languageName: node
   linkType: hard
 
@@ -29588,9 +29588,9 @@ __metadata:
   dependencies:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
-    "@prismicio/editor-fields": 0.4.4
+    "@prismicio/editor-fields": 0.4.5
     "@prismicio/editor-support": 0.4.1
-    "@prismicio/editor-ui": 0.4.4
+    "@prismicio/editor-ui": 0.4.5
     "@prismicio/mocks": 2.0.0-alpha.2
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 2.0.0
