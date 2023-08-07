@@ -17,28 +17,51 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import VariationDropZone from "./VariationDropZone";
 
 import { FigmaIcon } from "@src/icons/FigmaIcon";
+import { getOS, OS } from "@src/utils/os";
+import { Kbd } from "@src/components/Kbd";
 
 export type SliceVariationSelector = { sliceID: string; variationID: string };
 
-const FigmaTip = () => (
-  <Flex
-    sx={{
-      pl: "4px",
-      alignItems: "center",
-      color: "#000",
-      borderRadius: "6px",
-      fontSize: "12px",
-      lineHeight: "24px",
-      border: "1px solid #E4E2E4",
-      boxShadow: "0px 1px 0px 0px rgba(0, 0, 0, 0.04)",
-      width: "100%",
-      height: "40px",
-    }}
-  >
-    <FigmaIcon />
-    Use cmd+shift+c to copy any frame as .png, then just paste it here
-  </Flex>
-);
+const FigmaTip = () => {
+  const os = getOS();
+
+  const keys = (() => {
+    if ([OS.Windows, OS.Linux].includes(os)) {
+      return (
+        <>
+          <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>c</Kbd>
+        </>
+      );
+    }
+    return (
+      <>
+        <Kbd>cmd</Kbd> + <Kbd>shift</Kbd> + <Kbd>c</Kbd>
+      </>
+    );
+  })();
+
+  return (
+    <Flex
+      sx={{
+        pl: "4px",
+        alignItems: "center",
+        color: "#000",
+        borderRadius: "6px",
+        fontSize: "12px",
+        lineHeight: "24px",
+        border: "1px solid #E4E2E4",
+        boxShadow: "0px 1px 0px 0px rgba(0, 0, 0, 0.04)",
+        width: "100%",
+        minHeight: "40px",
+      }}
+    >
+      <FigmaIcon />
+      <div>
+        Use&nbsp;{keys} to copy any frame as .png, then just paste it here
+      </div>
+    </Flex>
+  );
+};
 
 const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
   <Flex
