@@ -5,6 +5,7 @@ export const root = sprinkles({
   all: "unset",
   boxSizing: "border-box",
   display: "flex",
+  flexDirection: "column",
 });
 
 const row = style([
