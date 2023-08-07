@@ -169,7 +169,7 @@ const SimulatorButton: React.FC<{
           }
           variant="secondary"
         >
-          Simulate Slice
+          Simulate
         </Button>
       </SimulatorOnboardingTooltip>
       {isSimulatorAvailableForFramework === false ? (
