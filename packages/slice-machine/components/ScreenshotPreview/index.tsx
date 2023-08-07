@@ -32,20 +32,23 @@ export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
         ...sx,
       }}
     >
-      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
-      {hideMissingWarning ? null : src ? (
-        <MemoedImage src={src} />
-      ) : (
-        <Text
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <MdInfoOutline />
-          You have no screenshot yet.
-        </Text>
+      {hideMissingWarning ? null : (
+        <>
+          {src !== undefined ? (
+            <MemoedImage src={src} />
+          ) : (
+            <Text
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <MdInfoOutline />
+              You have no screenshot yet.
+            </Text>
+          )}
+        </>
       )}
     </Flex>
   );
