@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useState, FC } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
 import { Button, Flex, Theme, ThemeUIStyleObject, useThemeUI } from "theme-ui";
@@ -121,46 +121,82 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ tabs, renderTab }) => {
         ))}
         <TabPanel key={"new-tab"} />
       </Tabs>
-      {state?.type === ModalType.CREATE ? (
-        <CreateModal
-          {...state}
-          isOpen
-          tabIds={tabs.map((e) => e.key.toLowerCase())}
-          close={() => setState(undefined)}
-          onSubmit={({ id }: { id: string }) => {
-            createCustomTypeTab(id);
-            // current.tabs is not updated yet
-            setTabIndex(tabs.length);
-          }}
-        />
-      ) : null}
-      {state?.type === ModalType.UPDATE ? (
-        <UpdateModal
-          {...state}
-          isOpen
-          tabIds={tabs
-            .filter((e) => e.key !== state.key)
-            .map((e) => e.key.toLowerCase())}
-          close={() => setState(undefined)}
-          onSubmit={({
-            id,
-            actionType,
-          }: {
-            id: string;
-            actionType: UpdateModalActionType;
-          }) => {
-            if (actionType === UpdateModalActionType.UPDATE) {
-              updateCustomTypeTab(state.key, id);
-            }
-            if (actionType === UpdateModalActionType.DELETE) {
-              deleteCustomTypeTab(state.key);
-              setTabIndex(0);
-            }
-          }}
-        />
-      ) : null}
+      <LayoutModals
+        modalState={state}
+        tabs={tabs}
+        onClose={() => setState(undefined)}
+        createCustomTypeTab={createCustomTypeTab}
+        updateCustomTypeTab={updateCustomTypeTab}
+        deleteCustomTypeTab={deleteCustomTypeTab}
+        setTabIndex={setTabIndex}
+      />
     </>
   );
+};
+
+export const LayoutModals: FC<{
+  modalState?: ModalState;
+  tabs: Array<TabSM>;
+  onClose: () => void;
+  createCustomTypeTab: (tabId: string) => void;
+  updateCustomTypeTab: (tabId: string, newTabId: string) => void;
+  deleteCustomTypeTab: (tabId: string) => void;
+  setTabIndex: (idx: number) => void;
+}> = ({
+  modalState,
+  tabs,
+  onClose,
+  createCustomTypeTab,
+  updateCustomTypeTab,
+  deleteCustomTypeTab,
+  setTabIndex,
+}) => {
+  if (modalState === undefined) return null;
+
+  if (modalState.type === ModalType.CREATE) {
+    return (
+      <CreateModal
+        {...modalState}
+        isOpen
+        tabIds={tabs.map((e) => e.key.toLowerCase())}
+        close={onClose}
+        onSubmit={({ id }: { id: string }) => {
+          createCustomTypeTab(id);
+          // current.tabs is not updated yet
+          setTabIndex(tabs.length);
+        }}
+      />
+    );
+  }
+  if (modalState.type === ModalType.UPDATE) {
+    return (
+      <UpdateModal
+        {...modalState}
+        isOpen
+        tabIds={tabs
+          .filter((e) => e.key !== modalState.key)
+          .map((e) => e.key.toLowerCase())}
+        close={onClose}
+        onSubmit={({
+          id,
+          actionType,
+        }: {
+          id: string;
+          actionType: UpdateModalActionType;
+        }) => {
+          if (actionType === UpdateModalActionType.UPDATE) {
+            updateCustomTypeTab(modalState.key, id);
+          }
+          if (actionType === UpdateModalActionType.DELETE) {
+            deleteCustomTypeTab(modalState.key);
+            setTabIndex(0);
+          }
+        }}
+      />
+    );
+  }
+
+  return null;
 };
 
 export default CustomTypeTabs;
