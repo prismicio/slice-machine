@@ -26,6 +26,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
 }) => {
   return (
     <ModalFormCard
+      buttonLabel="Apply"
       isOpen={isOpen}
       formId={formId}
       close={close}
