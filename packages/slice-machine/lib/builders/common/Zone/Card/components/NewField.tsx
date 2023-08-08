@@ -24,10 +24,10 @@ interface NewField {
   onCancelNewField: () => void;
 }
 
-interface FormFieldValues {
+export interface FormFieldValues {
   widgetTypeName: string;
-  id?: string;
-  label?: string;
+  id: string;
+  label: string;
 }
 
 const RefInput = ({
@@ -72,6 +72,8 @@ const NewField: React.FC<NewField> = ({
   };
 
   const initialValues: FormFieldValues = {
+    id: "",
+    label: "",
     ...createInitialValues(FormFields),
     ...(widgetTypeName === "UID" ? { id: "uid" } : {}),
     widgetTypeName,

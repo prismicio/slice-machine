@@ -13,7 +13,7 @@ import { StructuredTextWidget } from "./StructuredText";
 import { TextWidget } from "./Text";
 import { TimestampWidget } from "./Timestamp";
 
-export default [
+const sliceBuilderArray = [
   StructuredTextWidget,
   ImageWidget,
   LinkWidget,
@@ -29,3 +29,7 @@ export default [
   ColorWidget,
   TextWidget,
 ];
+
+export default sliceBuilderArray;
+
+export type SliceBuilderArrayTypes = typeof sliceBuilderArray;

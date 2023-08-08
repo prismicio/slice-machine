@@ -53,10 +53,9 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     }: {
       apiId: string;
       newKey: string;
+      value: NestableWidget;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      value: any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockValue: any;
+      mockValue?: any;
     }) => {
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (mockValue) {
@@ -71,7 +70,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       } else {
         deleteSliceWidgetMock(variation.id, widgetArea, newKey);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       replaceSliceWidget(variation.id, widgetArea, previousKey, newKey, value);
     };
 
@@ -124,7 +122,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         tabId={undefined}
         title="Non-Repeatable Zone"
         dataTip={dataTipText}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.primary}
         EditModal={EditModal}
         widgetsArray={sliceBuilderWidgetsArray}
@@ -132,14 +129,11 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         onSave={_onSave(WidgetsArea.Primary)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
         onDragEnd={_onDragEnd(WidgetsArea.Primary)}
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        poolOfFieldsToCheck={variation.primary || []}
+        poolOfFieldsToCheck={variation.primary ?? []}
         renderHintBase={({ item }) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
           `slice.primary${transformKeyAccessor(item.key)}`
         }
         renderFieldAccessor={(key) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.primary${transformKeyAccessor(key)}`
         }
         dataCy="slice-non-repeatable-zone"
@@ -153,19 +147,15 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         title="Repeatable Zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.items}
         EditModal={EditModal}
         onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
         onSave={_onSave(WidgetsArea.Items)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Items)}
         onDragEnd={_onDragEnd(WidgetsArea.Items)}
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        poolOfFieldsToCheck={variation.items || []}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+        poolOfFieldsToCheck={variation.items ?? []}
         renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
         renderFieldAccessor={(key) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.items[i]${transformKeyAccessor(key)}`
         }
         dataCy="slice-repeatable-zone"

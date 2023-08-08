@@ -1,6 +1,6 @@
 import * as Widgets from "./withGroup";
 
-export default [
+const ctBuilderArray = [
   Widgets.UID,
   Widgets.Group,
   Widgets.StructuredText,
@@ -18,3 +18,7 @@ export default [
   Widgets.Color,
   Widgets.Text,
 ];
+
+export default ctBuilderArray;
+
+export type CtBuilderArrayTypes = typeof ctBuilderArray;

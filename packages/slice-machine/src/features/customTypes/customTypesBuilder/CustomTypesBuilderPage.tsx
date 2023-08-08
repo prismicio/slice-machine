@@ -251,9 +251,9 @@ const CustomTypesBuilderPageWithProvider: React.FC<
           updateCustomTypeTab={updateCustomTypeTab}
           setTabKey={setCurrentTab}
         />
-        {/* <BaseStyles> 
-      <CustomTypeBuilder customType={currentCustomType} />
-    </BaseStyles> */}
+        {/* <BaseStyles>
+          <CustomTypeBuilder customType={currentCustomType} />
+        </BaseStyles> */}
       </AppLayoutContent>
     </AppLayout>
   );

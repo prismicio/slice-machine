@@ -1,14 +1,21 @@
+import { FC, ReactNode } from "react";
 import { Flex } from "theme-ui";
+// import { ListHeader } from "@src/components/List";
 
 interface ZoneHeaderProps {
-  Heading: JSX.Element;
-  Actions: JSX.Element;
+  Heading: ReactNode;
+  Actions: ReactNode;
 }
 
-const ZoneHeader: React.FunctionComponent<ZoneHeaderProps> = ({
-  Heading,
-  Actions,
-}) => (
+// const ZoneHeader: FC<ZoneHeaderProps> = ({
+//   Heading,
+//   Actions,
+// }) => (<ListHeader actions={Actions}>
+//   {Heading}
+// </ListHeader>)
+// TODO: maybe changing this will be enough, probally not but it lets us see what it looks like for now
+
+const ZoneHeader: FC<ZoneHeaderProps> = ({ Heading, Actions }) => (
   <Flex
     bg="grey02"
     sx={{

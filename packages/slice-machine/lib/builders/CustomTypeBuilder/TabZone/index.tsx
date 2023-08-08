@@ -144,14 +144,10 @@ const TabZone: React.FC<TabZoneProps> = ({
     <>
       <Zone
         zoneType="customType"
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         title="Static Zone"
         dataTip={""}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         fields={fields}
-        // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         poolOfFieldsToCheck={poolOfFields}
         showHints={true}
         EditModal={EditModal}
@@ -160,9 +156,7 @@ const TabZone: React.FC<TabZoneProps> = ({
         onSave={onSave}
         onSaveNewField={onSaveNewField}
         onDragEnd={onDragEnd}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         renderHintBase={({ item }) => `data${transformKeyAccessor(item.key)}`}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
         renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
         dataCy="ct-static-zone"
         isRepeatableCustomType={customType.repeatable}
@@ -170,9 +164,7 @@ const TabZone: React.FC<TabZoneProps> = ({
 
       <SliceZone
         customType={customType}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         sliceZone={sliceZone}
         onRemoveSharedSlice={onRemoveSharedSlice}
         onCreateSliceZone={onCreateSliceZone}
