@@ -74,7 +74,8 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
           }}
         >
           <CodeBlock
-            codeStyle={{ color: "white", minWidth: "480px", padding: "8px" }}
+            codeStyle={{ color: "white", flex: 1, padding: "8px" }}
+            sx={{ flex: 1 }}
           >
             {installCommand}
           </CodeBlock>

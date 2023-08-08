@@ -1,3 +1,4 @@
+import { tokens } from "@prismicio/editor-ui";
 import React from "react";
 import { Flex, Text } from "theme-ui";
 import type { PackageManager } from "@slicemachine/manager";
@@ -32,21 +33,12 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
   packageManager,
 }) => {
   return (
-    <Flex
-      sx={{
-        width: "754px",
-        minWidth: "754px",
-        height: "100%",
-        borderRight: "1px solid",
-        borderColor: "grey01",
-        flexDirection: "column",
-      }}
-    >
+    <Flex sx={{ flexDirection: "column" }}>
       <Flex
         sx={{
-          padding: "32px",
-          borderBottom: "1px solid",
-          borderColor: "grey01",
+          padding: "0px 0px 32px 32px",
+          borderBottom: "1px dashed",
+          borderColor: tokens.color.greyLight6,
           justifyContent: "space-between",
           alignItems: "center",
         }}
@@ -68,7 +60,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
       <Flex
         sx={{
           flexDirection: "column",
-          padding: "24px 32px",
+          padding: "24px 0px 0px 32px",
           gap: "24px",
         }}
       >

@@ -3,8 +3,6 @@ import { RiCloseLine } from "react-icons/ri";
 import { useState } from "react";
 
 import { Flex } from "theme-ui";
-import { Button } from "@components/Button";
-import { AiFillCamera } from "react-icons/ai";
 
 import {
   ScreensizeInput,
@@ -13,11 +11,6 @@ import {
 } from "./ScreensizeInput";
 
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { VariationSM } from "@lib/models/common/Slice";
 
@@ -30,8 +23,8 @@ type ToolbarProps = {
 };
 
 export const Toolbar: React.FC<ToolbarProps> = ({
-  slice,
-  variation,
+  slice: _slice,
+  variation: _variation,
   handleScreenSizeChange,
   screenDimensions,
   actionsDisabled,
@@ -64,28 +57,29 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     handleScreenSizeChange(newScreenDimensions);
   };
 
-  const { generateSliceScreenshot } = useSliceMachineActions();
-
-  const onTakingSliceScreenshot = () => {
-    generateSliceScreenshot(
-      variation.id,
-      slice,
-      {
-        width: screenDimensions.width,
-        height: screenDimensions.height,
-      },
-      "fromSimulator"
-    );
-  };
-
-  const { isSavingScreenshot } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isSavingScreenshot: isLoading(
-        store,
-        LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
-      ),
-    })
-  );
+  // TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
+  // const { generateSliceScreenshot } = useSliceMachineActions();
+  //
+  // const onTakingSliceScreenshot = () => {
+  //   generateSliceScreenshot(
+  //     variation.id,
+  //     slice,
+  //     {
+  //       width: screenDimensions.width,
+  //       height: screenDimensions.height,
+  //     },
+  //     "fromSimulator"
+  //   );
+  // };
+  //
+  // const { isSavingScreenshot } = useSelector(
+  //   (store: SliceMachineStoreType) => ({
+  //     isSavingScreenshot: isLoading(
+  //       store,
+  //       LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
+  //     ),
+  //   })
+  // );
 
   return (
     <Flex
@@ -135,6 +129,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           sx={{ ml: 2 }}
         />
       </Flex>
+      {/* 
+		  // TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
       <Button
         onClick={onTakingSliceScreenshot}
         label="Take a screenshot"
@@ -144,7 +140,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         iconFill="#6F6E77"
         variant="secondaryMedium"
         disabled={actionsDisabled}
-      />
+      /> */}
     </Flex>
   );
 };

@@ -4,18 +4,24 @@ import {
   Button,
   ErrorBoundary,
   Box,
-  vars,
   ProgressCircle,
+  DefaultErrorMessage,
 } from "@prismicio/editor-ui";
 import Head from "next/head";
 import { useSelector } from "react-redux";
 
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@components/AppLayout";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { isLoading } from "@src/modules/loading";
 import { type SliceMachineStoreType } from "@src/redux/type";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
-import { Breadcrumb } from "@src/components/Breadcrumb";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 import { CustomTypesTable } from "./CustomTypesTable";
@@ -46,89 +52,75 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
           Machine
         </title>
       </Head>
-      <div
-        style={{
-          display: "flex",
-          width: vars.size["100%"],
-          flexDirection: "column",
-          margin: `${vars.size[16]} 0`,
-        }}
-      >
-        <ErrorBoundary
-          title="Request failed"
-          description={`An error occurred while fetching your ${customTypesMessages.name(
-            { start: false, plural: true }
-          )}.`}
-          renderError={(error) => {
-            return (
-              <Box
-                height={"100%"}
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-              >
-                {error}
+      <ErrorBoundary
+        renderError={() => (
+          <AppLayout>
+            <AppLayoutContent>
+              <Box alignItems="center" justifyContent="center">
+                <DefaultErrorMessage
+                  title="Request failed"
+                  description={`An error occurred while fetching your ${customTypesMessages.name(
+                    { start: false, plural: true }
+                  )}.`}
+                />
               </Box>
-            );
-          }}
-        >
-          <Suspense
-            fallback={
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: vars.size[16],
-                    height: vars.size[32],
-                  }}
-                >
-                  <Breadcrumb
-                    folder={customTypesMessages.name({
-                      start: true,
-                      plural: true,
-                    })}
-                  />
-                  <Button endIcon={<Icon name="add" />} disabled>
+            </AppLayoutContent>
+          </AppLayout>
+        )}
+      >
+        <Suspense
+          fallback={
+            <AppLayout>
+              <AppLayoutHeader>
+                <AppLayoutBreadcrumb
+                  folder={customTypesMessages.name({
+                    start: true,
+                    plural: true,
+                  })}
+                />
+                <AppLayoutActions>
+                  <Button disabled startIcon={<Icon name="add" />}>
                     Create
                   </Button>
-                </div>
-
+                </AppLayoutActions>
+              </AppLayoutHeader>
+              <AppLayoutContent>
                 <ProgressCircle />
-              </div>
-            }
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: vars.size[16],
-                height: vars.size[32],
-              }}
-            >
-              <Breadcrumb
-                folder={customTypesMessages.name({ start: true, plural: true })}
+              </AppLayoutContent>
+            </AppLayout>
+          }
+        >
+          <AppLayout>
+            <AppLayoutHeader>
+              <AppLayoutBreadcrumb
+                folder={customTypesMessages.name({
+                  start: true,
+                  plural: true,
+                })}
               />
-              <Button
-                data-cy="create-ct"
-                endIcon={<Icon name="add" />}
-                loading={isCreatingCustomType}
-                onClick={openCreateCustomTypeModal}
-              >
-                Create
-              </Button>
-            </div>
-
-            <CustomTypesTable
-              format={format}
-              isCreatingCustomType={isCreatingCustomType}
-            />
-            <CreateCustomTypeModal format={format} />
-          </Suspense>
-        </ErrorBoundary>
-      </div>
+              <AppLayoutActions>
+                <Button
+                  data-cy="create-ct"
+                  loading={isCreatingCustomType}
+                  onClick={openCreateCustomTypeModal}
+                  startIcon={<Icon name="add" />}
+                >
+                  Create
+                </Button>
+              </AppLayoutActions>
+            </AppLayoutHeader>
+            <AppLayoutContent>
+              <Box flexDirection="column">
+                <CustomTypesTable
+                  format={format}
+                  isCreatingCustomType={isCreatingCustomType}
+                />
+                <CreateCustomTypeModal format={format} />
+              </Box>
+            </AppLayoutContent>
+          </AppLayout>
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 };

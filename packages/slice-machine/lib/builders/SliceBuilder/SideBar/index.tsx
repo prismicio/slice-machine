@@ -3,6 +3,7 @@ import React from "react";
 import { Box, Flex } from "theme-ui";
 
 import Card from "@components/Card";
+import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
 
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
 
@@ -21,15 +22,17 @@ type SideBarProps = {
 };
 
 const NeedToSaveTooltip: React.FC = () => (
-  <ReactTooltip
-    clickable
-    place="bottom"
-    effect="solid"
-    delayHide={500}
-    id="update-screenshot-button-tooltip"
-  >
-    Save your work in order to update the screenshot
-  </ReactTooltip>
+  <ReactTooltipPortal>
+    <ReactTooltip
+      clickable
+      place="bottom"
+      effect="solid"
+      delayHide={500}
+      id="update-screenshot-button-tooltip"
+    >
+      Save your work in order to update the screenshot
+    </ReactTooltip>
+  </ReactTooltipPortal>
 );
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
@@ -41,13 +44,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   const { openScreenshotsModal } = useScreenshotChangesModal();
 
   return (
-    <Box
-      sx={{
-        pl: 3,
-        flexGrow: 1,
-        flexBasis: "sidebar",
-      }}
-    >
+    <Box>
       <Card
         bg="headSection"
         bodySx={{ p: 0 }}

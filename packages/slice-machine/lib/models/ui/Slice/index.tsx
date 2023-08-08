@@ -9,6 +9,7 @@ import {
 import { ComponentUI } from "../../common/ComponentUI";
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
+import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
 import { TextWithTooltip } from "@components/Tooltip/TextWithTooltip";
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { StatusBadge } from "@components/StatusBadge";
@@ -22,7 +23,7 @@ import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
-  bg: "transparent",
+  bg: "white",
   position: "relative",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
   ...sx,
@@ -355,30 +356,32 @@ export const NonSharedSlice = {
           >
             Legacy Slice
           </Flex>
-          <ReactTooltip
-            id={`legacy-slice-tooltip-${slice.key}`}
-            type="dark"
-            border
-            borderColor="black"
-            place="bottom"
-            effect="solid"
-            clickable
-            delayHide={100}
-            className={style.legacySliceTooltipContainer}
-          >
-            <Text
-              sx={{
-                fontSize: "12px",
-                lineHeight: "16px",
-              }}
+          <ReactTooltipPortal>
+            <ReactTooltip
+              id={`legacy-slice-tooltip-${slice.key}`}
+              type="dark"
+              border
+              borderColor="black"
+              place="bottom"
+              effect="solid"
+              clickable
+              delayHide={100}
+              className={style.legacySliceTooltipContainer}
             >
-              This Slice was created with the Legacy Builder, and is
-              incompatible with Slice Machine. You cannot edit, push, or delete
-              it in Slice Machine. In order to proceed, manually remove the
-              Slice from your type model. Then create a new Slice with the same
-              fields using Slice Machine.
-            </Text>
-          </ReactTooltip>
+              <Text
+                sx={{
+                  fontSize: "12px",
+                  lineHeight: "16px",
+                }}
+              >
+                This Slice was created with the Legacy Builder, and is
+                incompatible with Slice Machine. You cannot edit, push, or
+                delete it in Slice Machine. In order to proceed, manually remove
+                the Slice from your type model. Then create a new Slice with the
+                same fields using Slice Machine.
+              </Text>
+            </ReactTooltip>
+          </ReactTooltipPortal>
           <ScreenshotPreview
             hideMissingWarning
             sx={{

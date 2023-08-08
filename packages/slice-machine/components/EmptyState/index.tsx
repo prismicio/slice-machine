@@ -57,6 +57,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
 
     <Box
       sx={(theme) => ({
+        bg: "white",
         display: "flex",
         flexDirection: "column",
         border: `1px solid ${theme.colors?.grey02 as string}`,

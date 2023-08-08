@@ -149,6 +149,10 @@ describe("Custom Type Builder", () => {
             },
           },
         },
+        // @ts-expect-error TS2739: Type '{ manifest: { apiEndpoint: string; }; }' is missing the following properties from type 'FrontEndEnvironment': repo, packageManager, supportsSliceSimulator, endpoints
+        environment: {
+          manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
+        },
         // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model: {
@@ -250,6 +254,10 @@ describe("Custom Type Builder", () => {
             },
           },
         },
+        // @ts-expect-error TS2739: Type '{ manifest: { apiEndpoint: string; }; }' is missing the following properties from type 'FrontEndEnvironment': repo, packageManager, supportsSliceSimulator, endpoints
+        environment: {
+          manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
+        },
         // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
           model: {
@@ -300,7 +308,7 @@ describe("Custom Type Builder", () => {
       });
     }
 
-    const saveButton = within(screen.getByRole("dialog")).getByText("Save");
+    const saveButton = within(screen.getByRole("dialog")).getByText("Apply");
 
     await act(async () => {
       fireEvent.click(saveButton);
@@ -510,6 +518,10 @@ describe("Custom Type Builder", () => {
               ],
             },
           },
+        },
+        // @ts-expect-error TS2739: Type '{ manifest: { apiEndpoint: string; }; }' is missing the following properties from type 'FrontEndEnvironment': repo, packageManager, supportsSliceSimulator, endpoints
+        environment: {
+          manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
         },
         // @ts-expect-error TS(2741) FIXME: Property 'remoteModel' is missing in type '{ model... Remove this comment to see the full error message
         selectedCustomType: {
