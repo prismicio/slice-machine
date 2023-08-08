@@ -10,7 +10,7 @@ import { createSliceMachinePluginRunner, SliceMachineConfig } from "../src";
 
 it("updates Slice Machine project config", async () => {
 	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
+	const project = await createSliceMachineProject({ adapter });
 	project.root = await fs.mkdtemp(
 		path.join(os.tmpdir(), "@slicemachine__plugin-kit___"),
 	);
@@ -54,7 +54,7 @@ it("updates Slice Machine project config", async () => {
 
 it("throws on invalid config provided", async () => {
 	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
+	const project = await createSliceMachineProject({ adapter });
 	project.root = await fs.mkdtemp(
 		path.join(os.tmpdir(), "@slicemachine__plugin-kit___"),
 	);

@@ -1,4 +1,11 @@
 import { expect, it } from "vitest";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import * as os from "node:os";
+
+import { createSliceMachinePluginRunner } from "../src";
+import { createSliceMachineProject } from "./__testutils__/createSliceMachineProject";
+import { createTestAdapter } from "./__testutils__/createTestAdapter";
 
 it("returns Slice Machine project metadata", async (ctx) => {
 	const res = await ctx.pluginRunner.rawHelpers.getProject();
@@ -8,7 +15,7 @@ it("returns Slice Machine project metadata", async (ctx) => {
 
 it("throws when a config cannot be found", async () => {
 	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
+	const project = await createSliceMachineProject({ adapter });
 	project.root = await fs.mkdtemp(
 		path.join(os.tmpdir(), "@slicemachine__plugin-kit___"),
 	);
@@ -27,7 +34,7 @@ it("throws when a config cannot be found", async () => {
 
 it("throws when a config is invalid", async () => {
 	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
+	const project = await createSliceMachineProject({ adapter });
 	project.root = await fs.mkdtemp(
 		path.join(os.tmpdir(), "@slicemachine__plugin-kit___"),
 	);
