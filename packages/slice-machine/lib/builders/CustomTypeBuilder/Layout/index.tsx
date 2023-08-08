@@ -15,13 +15,16 @@ import CreateModal from "../TabModal/create";
 import UpdateModal, {
   ActionType as UpdateModalActionType,
 } from "../TabModal/update";
+import DeleteModal from "../TabModal/delete";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { TabSM } from "@lib/models/common/CustomType";
 
-enum ModalType {
+export enum ModalType {
   CREATE = "create",
   UPDATE = "update",
+  RENAME = "rename",
+  DELETE = "delete",
 }
 
 interface EditState {
@@ -36,7 +39,13 @@ interface CreateState {
   type: ModalType.CREATE;
 }
 
-type ModalState = EditState | CreateState;
+interface DeleteState {
+  title: string;
+  type: ModalType.DELETE;
+  key: string;
+}
+
+export type ModalState = EditState | CreateState | DeleteState;
 
 const Icon = ({
   theme,
@@ -141,7 +150,8 @@ export const LayoutModals: FC<{
   createCustomTypeTab: (tabId: string) => void;
   updateCustomTypeTab: (tabId: string, newTabId: string) => void;
   deleteCustomTypeTab: (tabId: string) => void;
-  setTabIndex: (idx: number) => void;
+  setTabIndex?: (idx: number) => void;
+  setTabKey?: (tabKey: string | undefined) => void;
 }> = ({
   modalState,
   tabs,
@@ -150,8 +160,24 @@ export const LayoutModals: FC<{
   updateCustomTypeTab,
   deleteCustomTypeTab,
   setTabIndex,
+  setTabKey,
 }) => {
   if (modalState === undefined) return null;
+
+  if (modalState.type === ModalType.DELETE) {
+    return (
+      <DeleteModal
+        {...modalState}
+        isOpen
+        close={onClose}
+        onSubmit={() => {
+          deleteCustomTypeTab(modalState.key);
+          if (setTabIndex) setTabIndex(0);
+          if (setTabKey) setTabKey(undefined);
+        }}
+      />
+    );
+  }
 
   if (modalState.type === ModalType.CREATE) {
     return (
@@ -163,7 +189,8 @@ export const LayoutModals: FC<{
         onSubmit={({ id }: { id: string }) => {
           createCustomTypeTab(id);
           // current.tabs is not updated yet
-          setTabIndex(tabs.length);
+          if (setTabIndex) setTabIndex(tabs.length);
+          if (setTabKey) setTabKey(id);
         }}
       />
     );
@@ -186,10 +213,12 @@ export const LayoutModals: FC<{
         }) => {
           if (actionType === UpdateModalActionType.UPDATE) {
             updateCustomTypeTab(modalState.key, id);
+            if (setTabKey) setTabKey(id); // test this
           }
           if (actionType === UpdateModalActionType.DELETE) {
             deleteCustomTypeTab(modalState.key);
-            setTabIndex(0);
+            if (setTabIndex) setTabIndex(0);
+            if (setTabKey) setTabKey(id);
           }
         }}
       />
