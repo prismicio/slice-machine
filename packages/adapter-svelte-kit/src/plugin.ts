@@ -1,9 +1,9 @@
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
-	deleteAllCustomTypeFiles,
-	deleteAllSliceFiles,
+	deleteCustomTypeDirectory,
 	deleteCustomTypeFile,
+	deleteSliceDirectory,
 	deleteSliceFile,
 	readCustomTypeFile,
 	readCustomTypeLibrary,
@@ -20,8 +20,13 @@ import {
 	writeSliceModel,
 } from "@slicemachine/plugin-kit/fs";
 
+import { rejectIfNecessary } from "./lib/rejectIfNecessary";
+import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
+
 import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
+
+import { sliceCreate } from "./hooks/slice-create";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -75,26 +80,16 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				format: context.options.format,
 				helpers: context.helpers,
 			});
+
+			// Add generated TypeScript types file to {ts|js}config.json
+			// TODO
 		});
 
 		////////////////////////////////////////////////////////////////
 		// slice:*
 		////////////////////////////////////////////////////////////////
 
-		hook("slice:create", async (data, context) => {
-			await writeSliceModel({
-				libraryID: data.libraryID,
-				model: data.model,
-				format: context.options.format,
-				helpers: context.helpers,
-			});
-
-			await upsertGlobalTypeScriptTypes({
-				filename: context.options.generatedTypesFilePath,
-				format: context.options.format,
-				...context,
-			});
-		});
+		hook("slice:create", sliceCreate);
 		hook("slice:update", async (data, context) => {
 			await writeSliceModel({
 				libraryID: data.libraryID,
@@ -116,24 +111,40 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				...context,
 			});
 
-			await upsertGlobalTypeScriptTypes({
-				filename: context.options.generatedTypesFilePath,
-				format: context.options.format,
-				...context,
-			});
+			rejectIfNecessary(
+				await Promise.allSettled([
+					upsertSliceLibraryIndexFile({
+						libraryID: data.libraryID,
+						...context,
+					}),
+					upsertGlobalTypeScriptTypes({
+						filename: context.options.generatedTypesFilePath,
+						format: context.options.format,
+						...context,
+					}),
+				]),
+			);
 		});
 		hook("slice:delete", async (data, context) => {
-			await deleteAllSliceFiles({
+			await deleteSliceDirectory({
 				libraryID: data.libraryID,
 				model: data.model,
 				...context,
 			});
 
-			await upsertGlobalTypeScriptTypes({
-				filename: context.options.generatedTypesFilePath,
-				format: context.options.format,
-				...context,
-			});
+			rejectIfNecessary(
+				await Promise.allSettled([
+					upsertSliceLibraryIndexFile({
+						libraryID: data.libraryID,
+						...context,
+					}),
+					upsertGlobalTypeScriptTypes({
+						filename: context.options.generatedTypesFilePath,
+						format: context.options.format,
+						...context,
+					}),
+				]),
+			);
 		});
 		hook("slice:read", async (data, context) => {
 			return await readSliceModel({
@@ -227,7 +238,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			});
 		});
 		hook("custom-type:delete", async (data, context) => {
-			await deleteAllCustomTypeFiles({
+			await deleteCustomTypeDirectory({
 				customTypeID: data.model.id,
 				...context,
 			});
