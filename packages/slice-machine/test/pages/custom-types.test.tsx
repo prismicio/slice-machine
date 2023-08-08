@@ -308,7 +308,7 @@ describe("Custom Type Builder", () => {
       });
     }
 
-    const saveButton = within(screen.getByRole("dialog")).getByText("Save");
+    const saveButton = within(screen.getByRole("dialog")).getByText("Apply");
 
     await act(async () => {
       fireEvent.click(saveButton);
