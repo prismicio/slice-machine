@@ -1,42 +1,28 @@
 import { it, expect } from "vitest";
 
-import { createSliceMachineProject } from "./__testutils__/createSliceMachineProject";
-import { createTestAdapter } from "./__testutils__/createTestAdapter";
-
-import { createSliceMachinePluginRunner } from "../src";
+import { createMemoryAdapter } from "./__testutils__/createMemoryAdapter";
+import { replaceTestAdapter } from "./__testutils__/replaceTestAdapter";
 
 it("returns Custom Type model", async (ctx) => {
 	const model = ctx.mock.model.customType();
 
-	const adapter = createTestAdapter({
-		setup: ({ hook }) => {
-			hook("custom-type:read", async (args) => {
-				if (args.id === model.id) {
-					return { model };
-				}
+	const adapter = createMemoryAdapter({ customTypeModels: [model] });
 
-				throw new Error("not implemented");
-			});
-		},
-	});
-	const project = createSliceMachineProject(adapter);
+	await replaceTestAdapter(ctx, { adapter });
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
-
-	const res = await pluginRunner.rawActions.readCustomTypeModel({
+	const res = await ctx.pluginRunner.rawActions.readCustomTypeModel({
 		id: model.id,
 	});
+
 	expect(res).toStrictEqual({ model });
 });
 
-it("throws when no Custom Type model is returned", async () => {
-	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
+it("throws when no Custom Type model is returned", async (ctx) => {
+	const adapter = createMemoryAdapter({ customTypeModels: [] });
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
+	await replaceTestAdapter(ctx, { adapter });
 
-	const fn = () => pluginRunner.rawActions.readCustomTypeModel({ id: "foo" });
+	const fn = () =>
+		ctx.pluginRunner.rawActions.readCustomTypeModel({ id: "foo" });
 	await expect(fn).rejects.toThrowError("Custom type `foo` not found.");
 });
