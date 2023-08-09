@@ -1,14 +1,14 @@
 import { it, expect, vi } from "vitest";
 
-import * as adapter from "./__fixtures__/adapter";
+import { createMemoryAdapter } from "./__testutils__/createMemoryAdapter";
 import * as plugin from "./__fixtures__/plugin";
-import { createSliceMachineProject } from "./__testutils__/createSliceMachineProject";
 
 import { createSliceMachinePluginRunner } from "../src";
 
-it("inits adapter", async () => {
-	const project = createSliceMachineProject(adapter.valid);
-	const pluginRunner = createSliceMachinePluginRunner({ project });
+it("inits adapter", async (ctx) => {
+	ctx.project.config.adapter = createMemoryAdapter();
+
+	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
 
 	// @ts-expect-error - Calling private method
 	const loadPlugin = vi.spyOn(pluginRunner, "_loadPlugin");
@@ -26,12 +26,11 @@ it("inits adapter", async () => {
 	expect(validateAdapter).toHaveBeenCalledOnce();
 });
 
-it("inits plugins", async () => {
-	const project = createSliceMachineProject(adapter.valid, [
-		plugin.valid,
-		plugin.valid,
-	]);
-	const pluginRunner = createSliceMachinePluginRunner({ project });
+it("inits plugins", async (ctx) => {
+	ctx.project.config.adapter = createMemoryAdapter();
+	ctx.project.config.plugins = [plugin.valid, plugin.valid];
+
+	const pluginRunner = createSliceMachinePluginRunner({ project: ctx.project });
 
 	// @ts-expect-error - Calling private method
 	const loadPlugin = vi.spyOn(pluginRunner, "_loadPlugin");
@@ -54,7 +53,7 @@ it("inits plugins", async () => {
 	).toMatchInlineSnapshot(`
 		[
 		  [
-		    "adapter-valid",
+		    "slicemachine-adapter-memory",
 		    "adapter",
 		  ],
 		  [
