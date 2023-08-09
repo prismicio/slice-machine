@@ -12,7 +12,10 @@ import * as path from "node:path";
 const mock = createMockFactory({ seed: import.meta.url });
 
 // Slice model to be used in general tests.
-const model = mock.model.customType({ id: "foo_bar" });
+const model = mock.model.customType({
+	id: "foo_bar",
+	repeatable: true,
+});
 
 describe("PageSnippet", () => {
 	describe("App Router", () => {
