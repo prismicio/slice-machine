@@ -2,15 +2,13 @@ import React, { useState, Fragment, FC } from "react";
 
 import Card from "./Card";
 
-import { Heading, Button } from "theme-ui";
 import { FaPlus, FaCode } from "react-icons/fa";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import NewField from "./Card/components/NewField";
 
-import ZoneHeader from "./components/ZoneHeader";
 import EmptyState from "./components/EmptyState";
-// import { ListHeader } from "@src/components/List";
+import { ListHeader } from "@src/components/List";
 import { TabField, TabFields } from "@lib/models/common/CustomType";
 import type { PoolOfFields } from "@src/modules/selectedCustomType/types";
 import type { CtBuilderArrayTypes } from "@lib/models/common/widgets/ctBuilderArray";
@@ -18,6 +16,7 @@ import type { SliceBuilderArrayTypes } from "@lib/models/common/widgets/sliceBui
 import { DropResult } from "react-beautiful-dnd";
 import { FieldsSM } from "@lib/models/common/Fields";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+import { Button, ButtonGroup } from "@prismicio/editor-ui";
 
 type ModalData = {
   isOpen: boolean;
@@ -137,8 +136,43 @@ const Zone: FC<ZoneProps> = ({
 
   return (
     <Fragment>
-      {/* <ListHeader>{title}</ListHeader> */}
-      <ZoneHeader
+      <ListHeader
+        actions={
+          fields.length ? (
+            <ButtonGroup size="small">
+              <Button onClick={() => setShowHints(!showHints)}>
+                <FaCode
+                  style={{
+                    marginRight: "8px",
+                    position: "relative",
+                    top: "2px",
+                  }}
+                />{" "}
+                {showHints ? "Hide" : "Show"} code snippets
+              </Button>
+              <Button
+                variant="tertiary"
+                onClick={() => enterSelectMode()}
+                data-cy={`add-${
+                  isRepeatable === true ? "Repeatable" : "Static"
+                }-field`}
+              >
+                <FaPlus
+                  style={{
+                    marginRight: "8px",
+                    position: "relative",
+                    top: "2px",
+                  }}
+                />
+                Add a new Field
+              </Button>
+            </ButtonGroup>
+          ) : null
+        }
+      >
+        {title}
+      </ListHeader>
+      {/* <ZoneHeader
         Heading={<Heading as="h6">{title}</Heading>}
         Actions={
           fields.length ? (
@@ -176,8 +210,8 @@ const Zone: FC<ZoneProps> = ({
             </Fragment>
           ) : null
         }
-      />
-      {fields.length > 0 && !newFieldData && (
+      /> */}
+      {fields.length === 0 && !newFieldData && (
         <EmptyState
           onEnterSelectMode={() => enterSelectMode()}
           zoneName={isRepeatable === true ? "Repeatable" : "Static"}

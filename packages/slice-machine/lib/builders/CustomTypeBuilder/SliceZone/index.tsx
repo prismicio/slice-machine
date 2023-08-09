@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Text, Box, Flex, Heading } from "theme-ui";
+import { Box } from "theme-ui";
 import { useSelector } from "react-redux";
-import { Switch, vars, Button, Icon } from "@prismicio/editor-ui";
+import { Switch } from "@prismicio/editor-ui";
 
 import { SlicesSM } from "@lib/models/common/Slices";
 import {
@@ -21,9 +21,9 @@ import {
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { SliceZoneBlankState } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankState";
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
-import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 import { SlicesList } from "./List";
+import { ListHeader } from "@src/components/List";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -154,14 +154,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsCreateSliceModalOpen(true);
   };
 
+  const shouldShowSliceSwitch =
+    (customType.format === "page" && customType.tabs[0].key === tabId) ===
+    false;
+
   return (
     <Box mt={3}>
-      <ZoneHeader
-        Heading={
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Heading as="h6" style={{ marginRight: vars.size[8] }}>
-              Slice Zone
-            </Heading>
+      <ListHeader>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          Slice Zone
+          {shouldShowSliceSwitch && (
             <Switch
               checked={!!sliceZone}
               onCheckedChange={(checked) => {
@@ -172,37 +174,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                 }
               }}
             />
-          </div>
-        }
-        Actions={
-          <Flex sx={{ alignItems: "center" }}>
-            {sliceZone ? (
-              <Text pr={3} sx={{ fontSize: "14px" }}>
-                data.{sliceZone.key}
-              </Text>
-            ) : null}
-            <Flex sx={{ gap: "8px" }}>
-              <Button
-                variant="secondary"
-                startIcon={<Icon name="add" />}
-                onClick={onCreateNewSlice}
-              >
-                New slice
-              </Button>
-              {availableSlices.length > 0 && (
-                <Button
-                  variant="secondary"
-                  startIcon={<Icon name="edit" />}
-                  onClick={onAddNewSlice}
-                  data-cy="update-slices"
-                >
-                  Update Slices
-                </Button>
-              )}
-            </Flex>
-          </Flex>
-        }
-      />
+          )}
+        </div>
+      </ListHeader>
       {sliceZone && !slicesInSliceZone.length ? (
         <SliceZoneBlankState
           onAddNewSlice={onAddNewSlice}
