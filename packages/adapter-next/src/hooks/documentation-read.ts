@@ -40,8 +40,6 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					type Params = { uid: string };
 
-					export const dynamicParams = false;
-
 					export default async function Page({ params }: { params: Params }) {
 						const client = createClient();
 						const page = await client
@@ -57,7 +55,9 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						params: Params;
 					}): Promise<Metadata> {
 						const client = createClient();
-						const page = await client.getByUID("${model.id}", params.uid);
+						const page = await client
+							.getByUID("${model.id}", params.uid)
+							.catch(() => notFound());
 
 						return {
 							title: page.data.meta_title,
@@ -202,7 +202,6 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					import { createClient } from "@/prismicio";
 					import { components } from "@/slices";
 
-					export const dynamicParams = false;
 
 					export default async function Page({ params }) {
 						const client = createClient();
@@ -215,7 +214,9 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					export async function generateMetadata({ params }) {
 						const client = createClient();
-						const page = await client.getByUID("${model.id}", params.uid);
+						const page = await client
+							.getByUID("${model.id}", params.uid)
+							.catch(() => notFound());
 
 						return {
 							title: page.data.meta_title,
@@ -377,7 +378,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				`,
 			},
 			{
-				label: "Page Router",
+				label: "Pages Router",
 				content: source`
 					## Create your ${model.label}'s page component
 
