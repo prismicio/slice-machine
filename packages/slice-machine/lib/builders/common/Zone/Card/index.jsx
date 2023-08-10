@@ -27,6 +27,7 @@ const FieldZone = ({
   isRepeatable,
   dataCy,
   isRepeatableCustomType,
+  isSliceBuilder,
 }) => {
   return (
     <DragDropContext
@@ -43,7 +44,10 @@ const FieldZone = ({
             ref={provided.innerRef}
             {...provided.droppableProps}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            style={{ ...provided.droppableProps.style, padding: "4px 16px" }}
+            style={{
+              ...provided.droppableProps.style,
+              padding: isSliceBuilder === true ? "4px 0px" : "4px 16px",
+            }}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             data-cy={dataCy}
           >

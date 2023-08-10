@@ -17,6 +17,9 @@ import { DropResult } from "react-beautiful-dnd";
 import { FieldsSM } from "@lib/models/common/Fields";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import { Button, ButtonGroup } from "@prismicio/editor-ui";
+import ZoneHeader from "./components/ZoneHeader";
+
+import { Heading, Button as ThemeUIButton } from "theme-ui";
 
 type ModalData = {
   isOpen: boolean;
@@ -132,42 +135,84 @@ const Zone: FC<ZoneProps> = ({
 
   return (
     <Fragment>
-      <ListHeader
-        actions={
-          fields.length ? (
-            <ButtonGroup size="small">
-              <Button onClick={() => setShowHints(!showHints)}>
-                <FaCode
-                  style={{
-                    marginRight: "8px",
-                    position: "relative",
-                    top: "2px",
-                  }}
-                />{" "}
-                {showHints ? "Hide" : "Show"} code snippets
-              </Button>
-              <Button
-                variant="tertiary"
-                onClick={() => enterSelectMode()}
-                data-cy={`add-${
-                  isRepeatable === true ? "Repeatable" : "Static"
-                }-field`}
-              >
-                <FaPlus
-                  style={{
-                    marginRight: "8px",
-                    position: "relative",
-                    top: "2px",
-                  }}
-                />
-                Add a new Field
-              </Button>
-            </ButtonGroup>
-          ) : null
-        }
-      >
-        {title}
-      </ListHeader>
+      {zoneType !== "slice" ? (
+        <ListHeader
+          actions={
+            fields.length ? (
+              <ButtonGroup size="small">
+                <Button onClick={() => setShowHints(!showHints)}>
+                  <FaCode
+                    style={{
+                      marginRight: "8px",
+                      position: "relative",
+                      top: "2px",
+                    }}
+                  />{" "}
+                  {showHints ? "Hide" : "Show"} code snippets
+                </Button>
+                <Button
+                  variant="tertiary"
+                  onClick={() => enterSelectMode()}
+                  data-cy={`add-${
+                    isRepeatable === true ? "Repeatable" : "Static"
+                  }-field`}
+                >
+                  <FaPlus
+                    style={{
+                      marginRight: "8px",
+                      position: "relative",
+                      top: "2px",
+                    }}
+                  />
+                  Add a new Field
+                </Button>
+              </ButtonGroup>
+            ) : null
+          }
+        >
+          {title}
+        </ListHeader>
+      ) : (
+        <ZoneHeader
+          Heading={<Heading as="h6">{title}</Heading>}
+          Actions={
+            fields.length ? (
+              <Fragment>
+                <ThemeUIButton
+                  variant="buttons.lightSmall"
+                  onClick={() => setShowHints(!showHints)}
+                >
+                  <FaCode
+                    style={{
+                      marginRight: "8px",
+                      position: "relative",
+                      top: "2px",
+                    }}
+                  />{" "}
+                  {showHints ? "Hide" : "Show"} code snippets
+                </ThemeUIButton>
+                <ThemeUIButton
+                  ml={2}
+                  variant="buttons.darkSmall"
+                  onClick={() => enterSelectMode()}
+                  data-cy={`add-${
+                    isRepeatable === true ? "Repeatable" : "Static"
+                  }-field`}
+                >
+                  <FaPlus
+                    style={{
+                      marginRight: "8px",
+                      position: "relative",
+                      top: "2px",
+                    }}
+                  />
+                  Add a new Field
+                </ThemeUIButton>
+              </Fragment>
+            ) : null
+          }
+        />
+      )}
       {fields.length === 0 && !newFieldData && (
         <EmptyState
           onEnterSelectMode={() => enterSelectMode()}
@@ -175,6 +220,7 @@ const Zone: FC<ZoneProps> = ({
         />
       )}
       <Card
+        isSliceBuilder={zoneType === "slice"}
         tabId={tabId}
         isRepeatable={isRepeatable}
         fields={fields}
