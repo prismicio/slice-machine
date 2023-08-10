@@ -1,8 +1,16 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import * as styles from "./Window.css";
-import { FC, HTMLAttributes, PropsWithChildren, useRef } from "react";
-import { ScrollArea, IconButton } from "@prismicio/editor-ui";
+import {
+  FC,
+  HTMLAttributes,
+  PropsWithChildren,
+  useRef,
+  forwardRef,
+} from "react";
+import { ScrollArea, IconButton, Text } from "@prismicio/editor-ui";
 import { HorozontalThreeDotsIcon } from "@src/icons/HorozontalThreeDotsIcon";
+import { VerticalThreeDotsIcon } from "@src/icons/VerticalThreeDotsIcon";
+import { IconButton as IconButtonWithChildren } from "../IconButton";
 
 type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
 
@@ -47,20 +55,31 @@ export const WindowTabsTrigger: FC<
 > = ({ onClick, children, ...props }) => {
   return (
     <Tab {...props}>
-      {children}
+      <Text noWrap component="span" variant="emphasized" color="inherit">
+        {children}
+      </Text>
       <ThreeDotsButton onClick={onClick} />
     </Tab>
   );
 };
 
-export const ThreeDotsButton: FC<{ onClick?: () => void }> = (props) => (
-  <IconButton icon="moreVert" {...props} />
-);
+export const ThreeDotsButton = forwardRef<
+  HTMLButtonElement,
+  { onClick?: () => void }
+>((props, ref) => (
+  <IconButtonWithChildren {...props} ref={ref}>
+    <VerticalThreeDotsIcon />
+  </IconButtonWithChildren>
+));
 
 export const Tab: FC<Tabs.TabsTriggerProps> = ({ children, ...props }) => {
   const ref = useRef<HTMLButtonElement>(null);
   const handleClick = () => {
-    ref.current?.scrollIntoView({ behavior: "smooth", inline: "center" });
+    ref.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
   };
   return (
     <Tabs.Trigger
