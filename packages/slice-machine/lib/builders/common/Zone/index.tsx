@@ -172,45 +172,6 @@ const Zone: FC<ZoneProps> = ({
       >
         {title}
       </ListHeader>
-      {/* <ZoneHeader
-        Heading={<Heading as="h6">{title}</Heading>}
-        Actions={
-          fields.length ? (
-            <Fragment>
-              <Button
-                variant="buttons.lightSmall"
-                onClick={() => setShowHints(!showHints)}
-              >
-                <FaCode
-                  style={{
-                    marginRight: "8px",
-                    position: "relative",
-                    top: "2px",
-                  }}
-                />{" "}
-                {showHints ? "Hide" : "Show"} code snippets
-              </Button>
-              <Button
-                ml={2}
-                variant="buttons.darkSmall"
-                onClick={() => enterSelectMode()}
-                data-cy={`add-${
-                  isRepeatable === true ? "Repeatable" : "Static"
-                }-field`}
-              >
-                <FaPlus
-                  style={{
-                    marginRight: "8px",
-                    position: "relative",
-                    top: "2px",
-                  }}
-                />
-                Add a new Field
-              </Button>
-            </Fragment>
-          ) : null
-        }
-      /> */}
       {fields.length === 0 && !newFieldData && (
         <EmptyState
           onEnterSelectMode={() => enterSelectMode()}

@@ -11,7 +11,6 @@ import { type FC, useEffect, PropsWithChildren, useState } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
 
-// import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
 import TabZone from "@builders/CustomTypeBuilder/TabZone";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
@@ -251,9 +250,6 @@ const CustomTypesBuilderPageWithProvider: React.FC<
           updateCustomTypeTab={updateCustomTypeTab}
           setTabKey={setCurrentTab}
         />
-        {/* <BaseStyles>
-          <CustomTypeBuilder customType={currentCustomType} />
-        </BaseStyles> */}
       </AppLayoutContent>
     </AppLayout>
   );

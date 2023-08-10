@@ -153,7 +153,7 @@ export const trigger = style([
 
       [`&[data-state='active']`]: {
         boxShadow: vars.boxShadow[3],
-        zIndex: 1,
+        // zIndex: 1, // conflicts with page snippet
       },
     },
   },

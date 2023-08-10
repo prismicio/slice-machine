@@ -26,7 +26,7 @@ interface NewField {
 
 export interface FormFieldValues {
   widgetTypeName: string;
-  id: string;
+  id: string; // NOTE: changed this so it would compile
   label: string;
 }
 
