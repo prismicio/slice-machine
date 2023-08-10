@@ -4,11 +4,13 @@ import {
   FC,
   HTMLAttributes,
   PropsWithChildren,
-  forwardRef,
   useRef,
+  forwardRef,
 } from "react";
-import { ScrollArea, IconButton } from "@prismicio/editor-ui";
+import { ScrollArea, IconButton, Text } from "@prismicio/editor-ui";
 import { HorozontalThreeDotsIcon } from "@src/icons/HorozontalThreeDotsIcon";
+import { VerticalThreeDotsIcon } from "@src/icons/VerticalThreeDotsIcon";
+import { IconButton as IconButtonWithChildren } from "../IconButton";
 
 type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
 
@@ -53,7 +55,9 @@ export const WindowTabsTrigger: FC<
 > = ({ onClick, children, ...props }) => {
   return (
     <Tab {...props}>
-      {children}
+      <Text noWrap component="span" variant="emphasized" color="inherit">
+        {children}
+      </Text>
       <ThreeDotsButton onClick={onClick} />
     </Tab>
   );
@@ -62,7 +66,11 @@ export const WindowTabsTrigger: FC<
 export const ThreeDotsButton = forwardRef<
   HTMLButtonElement,
   { onClick?: () => void }
->((props, ref) => <IconButton icon="moreVert" {...props} ref={ref} />);
+>((props, ref) => (
+  <IconButtonWithChildren {...props} ref={ref}>
+    <VerticalThreeDotsIcon />
+  </IconButtonWithChildren>
+));
 
 export const Tab: FC<Tabs.TabsTriggerProps> = ({ children, ...props }) => {
   const ref = useRef<HTMLButtonElement>(null);

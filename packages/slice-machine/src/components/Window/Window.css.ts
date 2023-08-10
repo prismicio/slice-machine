@@ -127,8 +127,12 @@ export const trigger = style([
     borderColor: colors.transparent,
     backgroundColor: colors.transparent,
     whiteSpace: "nowrap",
+    flexGrow: 1,
+    justifyContent: "space-between",
   }),
   {
+    minWidth: "150px",
+    maxWidth: "300px",
     padding: "8px 8px 8px 16px",
     selectors: {
       // when two inactive tabs that are not being interacted with, there should be a psuedo boarder inbetween them.
@@ -145,7 +149,7 @@ export const trigger = style([
         },
 
       [`&:focus, &[data-state='active'], &:not([data-state='active']):hover`]: {
-        color: vars.color.greyLight12,
+        color: vars.color.greyLight11,
         borderRadius: "6px 6px 0px 0px",
         backgroundColor: vars.color.greyLight1,
         borderColor: vars.color.greyLight6,
