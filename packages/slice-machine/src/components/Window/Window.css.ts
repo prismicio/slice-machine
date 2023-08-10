@@ -20,8 +20,11 @@ export const root = style([
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: colors.grey6,
-    backgroundColor: colors.grey6,
+    backgroundColor: colors.grey2,
   }),
+  {
+    overflow: "auto",
+  },
 ]);
 
 export const frame = style([
@@ -29,7 +32,6 @@ export const frame = style([
   sprinkles({
     display: "flex",
     width: "100%",
-    backgroundColor: colors.grey2,
   }),
   {
     height: "53px",
@@ -66,7 +68,6 @@ export const listContainer = style([
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: colors.grey2,
   }),
   {
     selectors: {
@@ -155,6 +156,10 @@ export const trigger = style([
         boxShadow: vars.boxShadow[3],
         // zIndex: 1, // conflicts with page snippet
       },
+
+      ["&:first-child, &:not([data-state='active']):first-child:hover"]: {
+        borderLeftColor: "transparent",
+      },
     },
   },
 ]);
@@ -181,6 +186,5 @@ export const content = style([
   sprinkles({
     height: "100%",
     flexGrow: 1,
-    backgroundColor: colors.grey1,
   }),
 ]);
