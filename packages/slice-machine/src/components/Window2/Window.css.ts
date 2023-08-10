@@ -35,6 +35,8 @@ export const tabsTrigger = style([
     boxSizing: "border-box",
     flexGrow: 1,
     gap: 8,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     height: 48,
     paddingLeft: 16,
     paddingRight: 8,
@@ -52,8 +54,10 @@ export const tabsTrigger = style([
         backgroundColor: vars.color.greyLight7,
         content: "",
         height: vars.size[32],
-
-        left: calc.multiply(-1, 1 /* vars.space[1] */),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        left: calc.multiply(-1, vars.space[1]),
         position: "absolute",
         top: vars.space[8],
         width: vars.size[1],
