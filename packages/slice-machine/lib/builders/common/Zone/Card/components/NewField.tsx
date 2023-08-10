@@ -72,8 +72,7 @@ const NewField: React.FC<NewField> = ({
   };
 
   const initialValues: FormFieldValues = {
-    id: "",
-    label: "",
+    ...FormFields,
     ...createInitialValues(FormFields),
     ...(widgetTypeName === "UID" ? { id: "uid" } : {}),
     widgetTypeName,

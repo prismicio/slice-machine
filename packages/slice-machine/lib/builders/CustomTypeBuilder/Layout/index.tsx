@@ -196,6 +196,7 @@ export const LayoutModals: FC<{
     );
   }
   if (modalState.type === ModalType.UPDATE) {
+    // TODO: this maybe unreachable code
     return (
       <UpdateModal
         {...modalState}

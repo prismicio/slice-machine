@@ -5,7 +5,7 @@ import Card from "./Card";
 import { FaPlus, FaCode } from "react-icons/fa";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
-import NewField from "./Card/components/NewField";
+import NewField, { FormFieldValues } from "./Card/components/NewField";
 
 import EmptyState from "./components/EmptyState";
 import { ListHeader } from "@src/components/List";
@@ -52,11 +52,7 @@ type ZoneProps = {
   widgetsArray: CtBuilderArrayTypes | SliceBuilderArrayTypes;
   isRepeatable?: boolean | undefined;
   onDeleteItem: (fieldId: string) => void;
-  onSaveNewField: (values: {
-    widgetTypeName: string;
-    id: string;
-    label: string;
-  }) => void;
+  onSaveNewField: (values: FormFieldValues) => void;
   onDragEnd: (result: DropResult) => void;
   renderHintBase: (args: { item: { key: string } }) => string;
   renderFieldAccessor: (key: string) => string;

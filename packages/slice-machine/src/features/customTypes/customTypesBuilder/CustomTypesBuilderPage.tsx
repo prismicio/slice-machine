@@ -45,7 +45,6 @@ import {
   WindowTabsContent,
   WindowTabsList,
   WindowTabsListContainer,
-  // WindowTabsTrigger,
   Tab,
   ThreeDotsButton,
   AddButton,
@@ -138,7 +137,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
 
   const [modalState, setModalState] = useState<ModalState | undefined>();
   const [currentTab, setCurrentTab] = useState<string | undefined>(
-    currentCustomType?.tabs[0].key ?? undefined
+    currentCustomType?.tabs?.[0]?.key ?? undefined
   );
 
   if (currentCustomType === null) {
@@ -183,7 +182,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
             </WindowFrame>
           )}
           <WindowTabs
-            value={currentTab ?? currentCustomType.tabs[0].key}
+            value={currentTab ?? currentCustomType.tabs[0]?.key}
             onValueChange={setCurrentTab}
           >
             <WindowTabsListContainer>
@@ -255,7 +254,6 @@ const CustomTypesBuilderPageWithProvider: React.FC<
   );
 };
 
-// TODO: add proper icons
 const CustomTypeBuildTab: FC<
   PropsWithChildren<{
     value: string;
@@ -269,17 +267,16 @@ const CustomTypeBuildTab: FC<
         <ThreeDotsButton />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {/**TODO: change this to dedicated modals */}
         <DropdownMenuItem
           onSelect={() => onSelect(ModalType.RENAME)}
-          startIcon={<Icon name="folder" />}
+          startIcon={<Icon name="edit" />}
         >
           Rename
         </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => onSelect(ModalType.DELETE)}
           color="tomato"
-          startIcon={<Icon name="folder" />}
+          startIcon={<Icon name="delete" />}
         >
           Remove
         </DropdownMenuItem>
