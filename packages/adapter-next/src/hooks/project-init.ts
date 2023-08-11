@@ -323,7 +323,6 @@ const createPreviewRoute = async ({
 		if (isTypeScriptProject) {
 			contents = source`
 				import { NextRequest } from "next/server";
-				import { draftMode } from "next/headers";
 				import { redirectToPreviewURL } from "@prismicio/next";
 
 				import { createClient } from "../../../prismicio";
@@ -331,22 +330,17 @@ const createPreviewRoute = async ({
 				export async function GET(request: NextRequest) {
 					const client = createClient();
 
-					draftMode().enable();
-
 					await redirectToPreviewURL({ client, request });
 				}
 			`;
 		} else {
 			contents = source`
-				import { draftMode } from "next/headers";
 				import { redirectToPreviewURL } from "@prismicio/next";
 
 				import { createClient } from "../../../prismicio";
 
 				export async function GET(request) {
 					const client = createClient();
-
-					draftMode().enable();
 
 					await redirectToPreviewURL({ client, request });
 				}

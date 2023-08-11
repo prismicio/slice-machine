@@ -1183,7 +1183,7 @@ describe("Slice Simulator route", () => {
 });
 
 describe("/api/preview route", () => {
-	describe("App Route", () => {
+	describe("App Router", () => {
 		beforeEach(async (ctx) => {
 			await fs.mkdir(path.join(ctx.project.root, "app"), { recursive: true });
 		});
@@ -1203,15 +1203,12 @@ describe("/api/preview route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { draftMode } from \\"next/headers\\";
-				import { redirectToPreviewURL } from \\"@prismicio/next\\";
+				"import { redirectToPreviewURL } from \\"@prismicio/next\\";
 
 				import { createClient } from \\"../../../prismicio\\";
 
 				export async function GET(request) {
 				  const client = createClient();
-
-				  draftMode().enable();
 
 				  await redirectToPreviewURL({ client, request });
 				}
@@ -1238,15 +1235,12 @@ describe("/api/preview route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { draftMode } from \\"next/headers\\";
-				import { redirectToPreviewURL } from \\"@prismicio/next\\";
+				"import { redirectToPreviewURL } from \\"@prismicio/next\\";
 
 				import { createClient } from \\"../../../prismicio\\";
 
 				export async function GET(request) {
 				  const client = createClient();
-
-				  draftMode().enable();
 
 				  await redirectToPreviewURL({ client, request });
 				}
@@ -1275,15 +1269,12 @@ describe("/api/preview route", () => {
 
 			expect(contents).toMatchInlineSnapshot(`
 				"import { NextRequest } from \\"next/server\\";
-				import { draftMode } from \\"next/headers\\";
 				import { redirectToPreviewURL } from \\"@prismicio/next\\";
 
 				import { createClient } from \\"../../../prismicio\\";
 
 				export async function GET(request: NextRequest) {
 				  const client = createClient();
-
-				  draftMode().enable();
 
 				  await redirectToPreviewURL({ client, request });
 				}
@@ -1292,7 +1283,7 @@ describe("/api/preview route", () => {
 		});
 	});
 
-	describe("Pages Route", () => {
+	describe("Pages Router", () => {
 		test("creates a route handler", async (ctx) => {
 			const log = vi.fn();
 			const installDependencies = vi.fn();
@@ -1396,7 +1387,7 @@ describe("/api/preview route", () => {
 });
 
 describe("/api/exit-preview route", () => {
-	describe("App Route", () => {
+	describe("App Router", () => {
 		beforeEach(async (ctx) => {
 			await fs.mkdir(path.join(ctx.project.root, "app"), { recursive: true });
 		});
@@ -1490,7 +1481,7 @@ describe("/api/exit-preview route", () => {
 		});
 	});
 
-	describe("Pages Route", () => {
+	describe("Pages Router", () => {
 		test("creates a route handler", async (ctx) => {
 			const log = vi.fn();
 			const installDependencies = vi.fn();
@@ -1576,7 +1567,7 @@ describe("/api/exit-preview route", () => {
 });
 
 describe("/api/revalidate route", () => {
-	describe("App Route", () => {
+	describe("App Router", () => {
 		beforeEach(async (ctx) => {
 			await fs.mkdir(path.join(ctx.project.root, "app"), { recursive: true });
 		});
@@ -1679,7 +1670,7 @@ describe("/api/revalidate route", () => {
 		});
 	});
 
-	describe("Pages Route", () => {
+	describe("Pages Router", () => {
 		test("doesn't create a route handler", async (ctx) => {
 			const log = vi.fn();
 			const installDependencies = vi.fn();
