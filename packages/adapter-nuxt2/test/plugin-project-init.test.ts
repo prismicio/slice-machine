@@ -337,8 +337,13 @@ describe("modify slicemachine.config.json", () => {
 
 		await fs.mkdir(path.join(ctx.project.root, "src"), { recursive: true });
 
-		await fs.mkdir(path.join(ctx.project.root, "slices"), { recursive: true });
-		await fs.writeFile(path.join(ctx.project.root, "slices", "index.js"), "");
+		await fs.mkdir(path.join(ctx.project.root, "slices", "FooBar"), {
+			recursive: true,
+		});
+		await fs.writeFile(
+			path.join(ctx.project.root, "slices", "FooBar", "model.json"),
+			JSON.stringify(ctx.mock.model.sharedSlice()),
+		);
 
 		await ctx.pluginRunner.callHook("project:init", {
 			log,
