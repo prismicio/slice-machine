@@ -10482,6 +10482,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vanilla-extract/css-utils@npm:0.1.3":
+  version: 0.1.3
+  resolution: "@vanilla-extract/css-utils@npm:0.1.3"
+  checksum: fa6c28d3f6c4675a7668f64e7ae8ea7e7af173b49660b1e83b9a9c63dc1a2597db0debb315ebd51f3fc8162900d4f50569b1d65cfccf104b32ed25418db69afd
+  languageName: node
+  linkType: hard
+
 "@vanilla-extract/css@npm:1.11.1, @vanilla-extract/css@npm:^1.10.0":
   version: 1.11.1
   resolution: "@vanilla-extract/css@npm:1.11.1"
@@ -29504,6 +29511,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
     "@vanilla-extract/css": 1.11.1
+    "@vanilla-extract/css-utils": 0.1.3
     "@vanilla-extract/next-plugin": 2.1.2
     "@vanilla-extract/vite-plugin": 3.8.1
     "@vitejs/plugin-react": 3.1.0
