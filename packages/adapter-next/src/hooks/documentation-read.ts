@@ -2,9 +2,10 @@ import { stripIndent, source } from "common-tags";
 
 import type { DocumentationReadHook } from "@slicemachine/plugin-kit";
 
-import type { PluginOptions } from "../types";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
+
+import type { PluginOptions } from "../types";
 
 export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 	data,

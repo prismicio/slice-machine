@@ -1,13 +1,16 @@
 import { SliceMachineContext } from "@slicemachine/plugin-kit";
+import {
+	buildSliceDirectoryPath,
+	buildSliceLibraryDirectoryPath,
+	writeProjectFile,
+} from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { NON_EDITABLE_FILE_BANNER } from "../constants";
 
 import { PluginOptions } from "../types";
 
 import { pascalCase } from "./pascalCase";
-import { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
 import { getJSFileExtension } from "./getJSFileExtension";
 
 type UpsertSliceLibraryIndexFileArgs = {
@@ -17,18 +20,6 @@ type UpsertSliceLibraryIndexFileArgs = {
 export const upsertSliceLibraryIndexFile = async (
 	args: UpsertSliceLibraryIndexFileArgs,
 ): Promise<void> => {
-	const extension = await getJSFileExtension({
-		helpers: args.helpers,
-		options: args.options,
-	});
-	const filePath = path.join(
-		buildSliceLibraryDirectoryPath({
-			libraryID: args.libraryID,
-			helpers: args.helpers,
-		}),
-		`index.${extension}`,
-	);
-
 	const slices = await args.actions.readAllSliceModelsForLibrary({
 		libraryID: args.libraryID,
 	});
@@ -42,28 +33,44 @@ export const upsertSliceLibraryIndexFile = async (
 			import dynamic from 'next/dynamic'
 
 			export const components = {
-				${slices
-					.map((slice) => {
-						const id = slice.model.id;
-						const dirName = pascalCase(slice.model.name);
+				${(
+					await Promise.all(
+						slices.map(async (slice) => {
+							const id = slice.model.id;
+							const dirName = path.basename(
+								await buildSliceDirectoryPath({
+									model: slice.model,
+									helpers: args.helpers,
+									libraryID: args.libraryID,
+								}),
+							);
 
-						return `${id}: dynamic(() => import('./${dirName}'))`;
-					})
-					.join(",\n")}
+							return `${id}: dynamic(() => import('./${dirName}'))`;
+						}),
+					)
+				).join(",\n")}
 			}
 		`;
 	} else {
 		contents = stripIndent`
 			${NON_EDITABLE_FILE_BANNER}
 
-			${slices
-				.map((slice) => {
-					const componentName = pascalCase(slice.model.name);
-					const dirName = pascalCase(slice.model.name);
+			${(
+				await Promise.all(
+					slices.map(async (slice) => {
+						const dirName = path.basename(
+							await buildSliceDirectoryPath({
+								model: slice.model,
+								helpers: args.helpers,
+								libraryID: args.libraryID,
+							}),
+						);
+						const componentName = pascalCase(slice.model.name);
 
-					return `import ${componentName} from "./${dirName}";`;
-				})
-				.join("\n")}
+						return `import ${componentName} from "./${dirName}";`;
+					}),
+				)
+			).join("\n")}
 
 			export const components = {
 				${slices
@@ -78,9 +85,22 @@ export const upsertSliceLibraryIndexFile = async (
 		`;
 	}
 
-	if (args.options.format) {
-		contents = await args.helpers.format(contents, filePath);
-	}
+	const extension = await getJSFileExtension({
+		helpers: args.helpers,
+		options: args.options,
+	});
+	const filePath = path.join(
+		buildSliceLibraryDirectoryPath({
+			libraryID: args.libraryID,
+			helpers: args.helpers,
+		}),
+		`index.${extension}`,
+	);
 
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename: filePath,
+		contents,
+		format: args.options.format,
+		helpers: args.helpers,
+	});
 };

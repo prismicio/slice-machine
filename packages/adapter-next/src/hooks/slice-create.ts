@@ -3,31 +3,34 @@ import type {
 	SliceCreateHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
+import {
+	upsertGlobalTypeScriptTypes,
+	writeSliceFile,
+	writeSliceModel,
+} from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
 
-import { buildSliceDirectoryPath } from "../lib/buildSliceDirectoryPath";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { pascalCase } from "../lib/pascalCase";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-import { updateSliceModelFile } from "../lib/updateSliceModelFile";
-import { upsertGlobalContentTypes } from "../lib/upsertGlobalContentTypes";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
 
 type Args = {
-	dir: string;
 	data: SliceCreateHookData;
 } & SliceMachineContext<PluginOptions>;
 
-const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
+const createComponentFile = async ({
+	data,
+	helpers,
+	actions,
+	options,
+}: Args) => {
 	const extension = await getJSFileExtension({ helpers, options, jsx: true });
-	const filePath = path.join(dir, `index.${extension}`);
-	const model = data.model;
-	const pascalName = pascalCase(model.name);
+	const filename = `index.${extension}`;
+	const pascalName = pascalCase(data.model.name);
 
 	let contents: string;
 
@@ -47,7 +50,7 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 			export type ${pascalName}Props = SliceComponentProps<Content.${pascalName}Slice>;
 
 			/**
-			 * Component for "${model.name}" Slices.
+			 * Component for "${data.model.name}" Slices.
 			 */
 			const ${pascalName} = ({ slice }: ${pascalName}Props): JSX.Element => {
 				return (
@@ -55,7 +58,7 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 						data-slice-type={slice.slice_type}
 						data-slice-variation={slice.variation}
 					>
-						Placeholder component for ${model.id} (variation: {slice.variation}) Slices
+						Placeholder component for ${data.model.id} (variation: {slice.variation}) Slices
 					</section>
 				);
 			};
@@ -75,7 +78,7 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 						data-slice-type={slice.slice_type}
 						data-slice-variation={slice.variation}
 					>
-						Placeholder component for ${model.id} (variation: {slice.variation}) Slices
+						Placeholder component for ${data.model.id} (variation: {slice.variation}) Slices
 					</section>
 				);
 			};
@@ -84,40 +87,45 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 		`;
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.writeFile(filePath, contents);
+	await writeSliceFile({
+		libraryID: data.libraryID,
+		model: data.model,
+		filename,
+		contents,
+		format: options.format,
+		actions,
+		helpers,
+	});
 };
 
 export const sliceCreate: SliceCreateHook<PluginOptions> = async (
 	data,
 	context,
 ) => {
-	const dir = buildSliceDirectoryPath({
-		libraryID: data.libraryID,
-		model: data.model,
-		helpers: context.helpers,
-	});
-
-	await fs.mkdir(dir, { recursive: true });
-
 	rejectIfNecessary(
 		await Promise.allSettled([
-			updateSliceModelFile({
+			writeSliceModel({
 				libraryID: data.libraryID,
 				model: data.model,
-				...context,
+				format: context.options.format,
+				helpers: context.helpers,
 			}),
-			createComponentFile({ dir, data, ...context }),
+			createComponentFile({ data, ...context }),
 		]),
 	);
 
 	rejectIfNecessary(
 		await Promise.allSettled([
-			upsertGlobalContentTypes(context),
-			upsertSliceLibraryIndexFile({ libraryID: data.libraryID, ...context }),
+			upsertSliceLibraryIndexFile({
+				libraryID: data.libraryID,
+				...context,
+			}),
+			upsertGlobalTypeScriptTypes({
+				filename: context.options.generatedTypesFilePath,
+				format: context.options.format,
+				helpers: context.helpers,
+				actions: context.actions,
+			}),
 		]),
 	);
 };
