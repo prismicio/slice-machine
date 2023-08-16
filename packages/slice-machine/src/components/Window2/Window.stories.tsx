@@ -12,7 +12,7 @@ import {
 type Story = StoryObj<typeof meta>;
 
 const meta = {
-  title: "Window2",
+  title: "Window",
   component: Window,
   argTypes: { children: { control: { disable: true } } },
 } satisfies Meta<typeof Window>;
@@ -24,13 +24,80 @@ export const Default = {
     children: (
       <>
         <WindowFrame />
-        <WindowTabs>
+        <WindowTabs defaultValue="tab-0">
           <WindowTabsList>
-            <WindowTabsTrigger>Main</WindowTabsTrigger>
-            <WindowTabsTrigger>SEO</WindowTabsTrigger>
+            <WindowTabsTrigger value="tab-0">Tab 1</WindowTabsTrigger>
+            <WindowTabsTrigger value="tab-1">Tab 2</WindowTabsTrigger>
           </WindowTabsList>
-          <WindowTabsContent>Main</WindowTabsContent>
-          <WindowTabsContent>SEO</WindowTabsContent>
+          <WindowTabsContent value="tab-0">Tab 1</WindowTabsContent>
+          <WindowTabsContent value="tab-1">Tab 2</WindowTabsContent>
+        </WindowTabs>
+      </>
+    ),
+    style: { boxSizing: "border-box", height: "256px" },
+  },
+} satisfies Story;
+
+export const WithListOverflow = {
+  args: {
+    ...Default.args,
+    children: (
+      <>
+        <WindowFrame />
+        <WindowTabs defaultValue="tab-0">
+          <WindowTabsList>
+            {[...Array(100).keys()].map((index) => (
+              <WindowTabsTrigger key={index} value={`tab-${index}`}>
+                Tab {index + 1}
+              </WindowTabsTrigger>
+            ))}
+          </WindowTabsList>
+          {[...Array(100).keys()].map((index) => (
+            <WindowTabsContent key={index} value={`tab-${index}`}>
+              Tab {index + 1}
+            </WindowTabsContent>
+          ))}
+        </WindowTabs>
+      </>
+    ),
+  },
+} satisfies Story;
+
+export const WithTriggerOverflow = {
+  args: {
+    ...Default.args,
+    children: (
+      <>
+        <WindowFrame />
+        <WindowTabs defaultValue="tab-0">
+          <WindowTabsList>
+            <WindowTabsTrigger value="tab-0">Tab 1</WindowTabsTrigger>
+            <WindowTabsTrigger value="lorem-ipsum">
+              Lorem ipsum dolor sit amet, consectetur.
+            </WindowTabsTrigger>
+          </WindowTabsList>
+          <WindowTabsContent value="tab-0">Tab 1</WindowTabsContent>
+          <WindowTabsContent value="lorem-ipsum">
+            Lorem ipsum dolor sit amet, consectetur.
+          </WindowTabsContent>
+        </WindowTabs>
+      </>
+    ),
+  },
+} satisfies Story;
+
+export const WithoutFrame = {
+  args: {
+    ...Default.args,
+    children: (
+      <>
+        <WindowTabs defaultValue="tab-0">
+          <WindowTabsList>
+            <WindowTabsTrigger value="tab-0">Tab 1</WindowTabsTrigger>
+            <WindowTabsTrigger value="tab-1">Tab 2</WindowTabsTrigger>
+          </WindowTabsList>
+          <WindowTabsContent value="tab-0">Tab 1</WindowTabsContent>
+          <WindowTabsContent value="tab-1">Tab 2</WindowTabsContent>
         </WindowTabs>
       </>
     ),
