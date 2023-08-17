@@ -4,7 +4,7 @@ import sdk from "vite-plugin-sdk";
 export default defineConfig({
 	plugins: [
 		sdk({
-			internalDependencies: ["fp-ts", "node-fetch"],
+			internalDependencies: ["fp-ts", "node-fetch", "@prismicio/simulator"],
 		}),
 	],
 	build: {
