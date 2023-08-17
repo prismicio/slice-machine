@@ -1,9 +1,9 @@
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
-	deleteAllCustomTypeFiles,
-	deleteAllSliceFiles,
+	deleteCustomTypeDirectory,
 	deleteCustomTypeFile,
+	deleteSliceDirectory,
 	deleteSliceFile,
 	readCustomTypeFile,
 	readCustomTypeLibrary,
@@ -123,7 +123,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			});
 		});
 		hook("slice:delete", async (data, context) => {
-			await deleteAllSliceFiles({
+			await deleteSliceDirectory({
 				libraryID: data.libraryID,
 				model: data.model,
 				...context,
@@ -227,7 +227,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			});
 		});
 		hook("custom-type:delete", async (data, context) => {
-			await deleteAllCustomTypeFiles({
+			await deleteCustomTypeDirectory({
 				customTypeID: data.model.id,
 				...context,
 			});
