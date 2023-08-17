@@ -1,4 +1,6 @@
 import { expect, it } from "vitest";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
 it("returns Slice Machine project metadata", async (ctx) => {
 	const res = await ctx.pluginRunner.rawHelpers.getProject();
@@ -6,42 +8,21 @@ it("returns Slice Machine project metadata", async (ctx) => {
 	expect(res).toStrictEqual(ctx.project);
 });
 
-it("throws when a config cannot be found", async () => {
-	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
-	project.root = await fs.mkdtemp(
-		path.join(os.tmpdir(), "@slicemachine__plugin-kit___"),
-	);
+it("throws when a config cannot be found", async (ctx) => {
+	await fs.rm(path.join(ctx.project.root, "slicemachine.config.json"));
 
-	await fs.writeFile(path.join(project.root, "slicemachine.config.json"), "");
-
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
-
-	expect(() => pluginRunner.rawHelpers.getProject()).rejects.toThrowError(
-		/No config found/,
-	);
-
-	await fs.rm(project.root, { recursive: true });
+	await expect(
+		async () => await ctx.pluginRunner.rawHelpers.getProject(),
+	).rejects.toThrowError(/no config found/i);
 });
 
-it("throws when a config is invalid", async () => {
-	const adapter = createTestAdapter();
-	const project = createSliceMachineProject(adapter);
-	project.root = await fs.mkdtemp(
-		path.join(os.tmpdir(), "@slicemachine__plugin-kit___"),
-	);
-
+it("throws when a config is invalid", async (ctx) => {
 	await fs.writeFile(
-		path.join(project.root, "slicemachine.config.json"),
-		JSON.stringify({}),
+		path.join(ctx.project.root, "slicemachine.config.json"),
+		JSON.stringify({ repositoryName: null }),
 	);
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
-
-	expect(() => pluginRunner.rawHelpers.getProject()).rejects.toThrowError(
-		/Invalid config/,
-	);
-	await fs.rm(project.root, { recursive: true });
+	await expect(
+		async () => await ctx.pluginRunner.rawHelpers.getProject(),
+	).rejects.toThrowError(/invalid config/i);
 });

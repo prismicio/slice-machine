@@ -196,6 +196,8 @@ const ScreenshotChangesModal = ({
 
   if (slices.length === 0 || !variationSelector) return null;
 
+  const supportsClipboardRead = typeof navigator.clipboard.read === "function";
+
   return (
     <SliceMachineModal
       isOpen={isOpen}
@@ -204,8 +206,8 @@ const ScreenshotChangesModal = ({
     >
       <Card
         radius={"0px"}
-        bodySx={{ p: 0, bg: "#FFF", position: "relative", height: "404px" }}
-        sx={{ border: "none", height: "469px" }}
+        bodySx={{ p: 0, bg: "#FFF", position: "relative" }}
+        sx={{ border: "none" }}
         Header={({ radius }: { radius: string | number }) => (
           <Flex
             sx={{
@@ -261,11 +263,10 @@ const ScreenshotChangesModal = ({
               flexBasis: 0,
               flexDirection: "column",
               minWidth: 320,
-              maxHeight: "90%",
               gap: "8px",
             }}
           >
-            <FigmaTip />
+            {supportsClipboardRead ? <FigmaTip /> : undefined}
             {(() => {
               const slice = slices.find(
                 (s) => s.model.id === variationSelector.sliceID
