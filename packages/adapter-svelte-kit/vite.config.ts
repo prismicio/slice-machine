@@ -1,4 +1,4 @@
-import { defineConfig, Plugin } from "vite";
+import { defineConfig } from "vite";
 import sdk from "vite-plugin-sdk";
 
 export default defineConfig({
@@ -7,14 +7,6 @@ export default defineConfig({
 			internalDependencies: ["fp-ts", "node-fetch"],
 		}),
 	],
-	build: {
-		lib: {
-			entry: {
-				index: "./src/index.ts",
-				simulator: "./src/simulator/index.ts",
-			},
-		},
-	},
 	test: {
 		testTimeout: 15_000,
 		coverage: {

@@ -20,11 +20,6 @@
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.js"
 		},
-		"./simulator": {
-			"types": "./dist/simulator/index.d.ts",
-			"require": "./dist/simulator.cjs",
-			"import": "./dist/simulator.js"
-		},
 		"./package.json": "./package.json"
 	},
 	"main": "dist/index.cjs",
@@ -34,9 +29,6 @@
 		"*": {
 			"*": [
 				"dist/index.d.ts"
-			],
-			"simulator": [
-				"dist/simulator/index.d.ts"
 			]
 		}
 	},
@@ -59,7 +51,6 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@prismicio/simulator": "^0.1.4",
 		"@prismicio/types-internal": "^2.0.0",
 		"@slicemachine/plugin-kit": "workspace:^",
 		"common-tags": "^1.8.2",
