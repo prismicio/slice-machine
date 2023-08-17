@@ -19,7 +19,7 @@ import {
   getRemoteSlices,
 } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
-import { SliceZoneBlankState } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankState";
+import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
@@ -204,7 +204,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         }
       />
       {sliceZone && !slicesInSliceZone.length ? (
-        <SliceZoneBlankState
+        <SliceZoneBlankSlate
           onAddNewSlice={onAddNewSlice}
           onCreateNewSlice={onCreateNewSlice}
           projectHasAvailableSlices={availableSlices.length > 0}
