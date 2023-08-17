@@ -123,7 +123,10 @@ const DropZone: React.FC<DropZoneProps> = ({
     generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
   };
 
+  const supportsClipboardRead = typeof navigator.clipboard.read === "function";
+
   const handlePaste = async () => {
+    if (!supportsClipboardRead) return;
     try {
       const clipboardItems = await navigator.clipboard.read();
       if (clipboardItems[0] !== undefined) {
@@ -175,6 +178,7 @@ const DropZone: React.FC<DropZoneProps> = ({
         bg: "#F9F8F9",
         position: "relative",
         borderRadius: "6px",
+        height: "320px",
       }}
       onDragEnter={createDragActiveState(true)}
       onDragLeave={createDragActiveState(false)}
@@ -234,7 +238,9 @@ const DropZone: React.FC<DropZoneProps> = ({
               }}
             >
               <UploadIcon isActive={isDragActive} />
-              <Text sx={{ my: 2 }}>Paste, drop or ...</Text>
+              <Text sx={{ my: 2 }}>
+                {supportsClipboardRead ? "Paste, drop or ..." : "Drop or ..."}
+              </Text>
               <FileInputRenderer
                 {...fileInputProps}
                 isDragActive={isDragActive}

@@ -1,7 +1,7 @@
 import { SliceMachineContext } from "@slicemachine/plugin-kit";
+import { checkHasProjectFile } from "@slicemachine/plugin-kit/fs";
 
 import { PluginOptions } from "../types";
-import { checkPathExists } from "./checkPathExists";
 
 type CheckHasSrcDirectoryArgs = Pick<
 	SliceMachineContext<PluginOptions>,
@@ -11,5 +11,8 @@ type CheckHasSrcDirectoryArgs = Pick<
 export async function checkHasSrcDirectory(
 	args: CheckHasSrcDirectoryArgs,
 ): Promise<boolean> {
-	return await checkPathExists(args.helpers.joinPathFromRoot("src"));
+	return await checkHasProjectFile({
+		filename: "src",
+		helpers: args.helpers,
+	});
 }

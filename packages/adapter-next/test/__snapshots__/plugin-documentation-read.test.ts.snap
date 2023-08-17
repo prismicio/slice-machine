@@ -1,0 +1,236 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PageSnippet > App Router > return a snippet with JavaScript 1`] = `
+{
+  "content": "## Create your Foo Bar's page component
+
+Add a new route by creating an \`app/[uid]/page.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`app/marketing/[uid]/page.js\`.)
+
+Paste in this code:
+
+~~~js [app/[uid]/page.js]
+import { notFound } from \\"next/navigation\\";
+import { SliceZone } from \\"@prismicio/react\\";
+
+import { createClient } from \\"@/prismicio\\";
+import { components } from \\"@/slices\\";
+
+export default async function Page({ params }) {
+  const client = createClient();
+  const page = await client
+    .getByUID(\\"foo_bar\\", params.uid)
+    .catch(() => notFound());
+
+  return <SliceZone slices={page.data.slices} components={components} />;
+}
+
+export async function generateMetadata({ params }) {
+  const client = createClient();
+  const page = await client
+    .getByUID(\\"foo_bar\\", params.uid)
+    .catch(() => notFound());
+
+  return {
+    title: page.data.meta_title,
+    description: page.data.meta_description,
+  };
+}
+
+export async function generateStaticParams() {
+  const client = createClient();
+  const pages = await client.getAllByType(\\"foo_bar\\");
+
+  return pages.map((page) => {
+    return { uid: page.uid };
+  });
+}
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.",
+  "label": "App Router",
+}
+`;
+
+exports[`PageSnippet > App Router > return a snippet with TypeScript for TypeScript projects 1`] = `
+{
+  "content": "## Create your Foo Bar's page component
+
+Add a new route by creating an \`app/[uid]/page.tsx\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`app/marketing/[uid]/page.tsx\`.)
+
+Paste in this code:
+
+~~~tsx [app/[uid]/page.tsx]
+import { Metadata } from \\"next\\";
+import { notFound } from \\"next/navigation\\";
+import { SliceZone } from \\"@prismicio/react\\";
+
+import { createClient } from \\"@/prismicio\\";
+import { components } from \\"@/slices\\";
+
+type Params = { uid: string };
+
+export default async function Page({ params }: { params: Params }) {
+  const client = createClient();
+  const page = await client
+    .getByUID(\\"foo_bar\\", params.uid)
+    .catch(() => notFound());
+
+  return <SliceZone slices={page.data.slices} components={components} />;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const client = createClient();
+  const page = await client
+    .getByUID(\\"foo_bar\\", params.uid)
+    .catch(() => notFound());
+
+  return {
+    title: page.data.meta_title,
+    description: page.data.meta_description,
+  };
+}
+
+export async function generateStaticParams() {
+  const client = createClient();
+  const pages = await client.getAllByType(\\"foo_bar\\");
+
+  return pages.map((page) => {
+    return { uid: page.uid };
+  });
+}
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.",
+  "label": "App Router",
+}
+`;
+
+exports[`PageSnippet > Pages Router > return a snippet with JavaScript 1`] = `
+{
+  "content": "## Create your Foo Bar's page component
+
+Add a new route by creating a \`pages/[uid].js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`pages/marketing/[uid].js\`.)
+
+~~~js [pages/[uid].js]
+import Head from \\"next/head\\";
+import { isFilled, asLink } from \\"@prismicio/client\\";
+import { SliceZone } from \\"@prismicio/react\\";
+
+import { components } from \\"@/slices\\";
+import { createClient } from \\"@/prismicio\\";
+
+export default function Page({ page }) {
+  return (
+    <>
+      <Head>
+        <title>{page.data.meta_title}</title>
+        {isFilled.keyText(page.data.meta_description) ? (
+          <meta name=\\"description\\" content={page.data.meta_description} />
+        ) : null}
+      </Head>
+      <SliceZone slices={page.data.slices} components={components} />
+    </>
+  );
+}
+
+export async function getStaticProps({ params, previewData }) {
+  // The \`previewData\` parameter allows your app to preview
+  // drafts from the Page Builder.
+  const client = createClient({ previewData });
+
+  const page = await client.getByUID(\\"foo_bar\\", params.uid);
+
+  return {
+    props: { page },
+  };
+}
+
+export async function getStaticPaths() {
+  const client = createClient();
+
+  const pages = await client.getAllByType(\\"foo_bar\\");
+
+  return {
+    paths: pages.map((page) => {
+      return asLink(page);
+    }),
+    fallback: false,
+  };
+}
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.",
+  "label": "Pages Router",
+}
+`;
+
+exports[`PageSnippet > Pages Router > return a snippet with TypeScript for TypeScript projects 1`] = `
+{
+  "content": "## Create your Foo Bar's page component
+
+Add a new route by creating a \`pages/[uid].tsx\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`pages/marketing/[uid].tsx\`.)
+
+~~~tsx [pages/[uid].tsx]
+import { GetStaticPropsContext, InferGetStaticPropsType } from \\"next\\";
+import Head from \\"next/head\\";
+import { isFilled, asLink } from \\"@prismicio/client\\";
+import { SliceZone } from \\"@prismicio/react\\";
+
+import { components } from \\"@/slices\\";
+import { createClient } from \\"@/prismicio\\";
+
+type Params = { uid: string };
+
+export default function Page({
+  page,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return (
+    <>
+      <Head>
+        <title>{page.data.meta_title}</title>
+        {isFilled.keyText(page.data.meta_description) ? (
+          <meta name=\\"description\\" content={page.data.meta_description} />
+        ) : null}
+      </Head>
+      <SliceZone slices={page.data.slices} components={components} />
+    </>
+  );
+}
+
+export async function getStaticProps({
+  params,
+  previewData,
+}: GetStaticPropsContext<Params>) {
+  // The \`previewData\` parameter allows your app to preview
+  // drafts from the Page Builder.
+  const client = createClient({ previewData });
+
+  const page = await client.getByUID(\\"foo_bar\\", params!.uid);
+
+  return {
+    props: { page },
+  };
+}
+
+export async function getStaticPaths() {
+  const client = createClient();
+
+  const pages = await client.getAllByType(\\"foo_bar\\");
+
+  return {
+    paths: pages.map((page) => {
+      return asLink(page);
+    }),
+    fallback: false,
+  };
+}
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.",
+  "label": "Pages Router",
+}
+`;

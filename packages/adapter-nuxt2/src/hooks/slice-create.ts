@@ -3,34 +3,35 @@ import type {
 	SliceCreateHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
+import {
+	upsertGlobalTypeScriptTypes,
+	writeSliceFile,
+	writeSliceModel,
+} from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
 
-import { buildSliceDirectoryPath } from "../lib/buildSliceDirectoryPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-import { updateSliceModelFile } from "../lib/updateSliceModelFile";
-import { upsertGlobalContentTypes } from "../lib/upsertGlobalContentTypes";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
 
-type Args = {
-	dir: string;
+type CreateComponentFileArgs = {
 	data: SliceCreateHookData;
 } & SliceMachineContext<PluginOptions>;
 
-const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
-	const model = data.model;
-	const filePath = path.join(dir, "index.vue");
-
-	let contents = stripIndent`
+const createComponentFile = async ({
+	data,
+	helpers,
+	actions,
+	options,
+}: CreateComponentFileArgs) => {
+	const contents = stripIndent`
 		<template>
 			<section
 				:data-slice-type="slice.slice_type"
 				:data-slice-variation="slice.variation"
 			>
-				Placeholder component for ${model.id} (variation: {{ slice.variation }}) Slices
+				Placeholder component for ${data.model.id} (variation: {{ slice.variation }}) Slices
 			</section>
 		</template>
 
@@ -45,42 +46,45 @@ const createComponentFile = async ({ dir, data, helpers, options }: Args) => {
 		</script>
 	`;
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath, {
-			prettier: { parser: "vue" },
-		});
-	}
-
-	await fs.writeFile(filePath, contents);
+	await writeSliceFile({
+		libraryID: data.libraryID,
+		model: data.model,
+		filename: "index.vue",
+		contents,
+		format: options.format,
+		actions,
+		helpers,
+	});
 };
 
 export const sliceCreate: SliceCreateHook<PluginOptions> = async (
 	data,
 	context,
 ) => {
-	const dir = buildSliceDirectoryPath({
-		libraryID: data.libraryID,
-		model: data.model,
-		helpers: context.helpers,
-	});
-
-	await fs.mkdir(dir, { recursive: true });
-
 	rejectIfNecessary(
 		await Promise.allSettled([
-			updateSliceModelFile({
+			writeSliceModel({
 				libraryID: data.libraryID,
 				model: data.model,
-				...context,
+				format: context.options.format,
+				helpers: context.helpers,
 			}),
-			createComponentFile({ dir, data, ...context }),
+			createComponentFile({ data, ...context }),
 		]),
 	);
 
 	rejectIfNecessary(
 		await Promise.allSettled([
-			upsertGlobalContentTypes(context),
-			upsertSliceLibraryIndexFile({ libraryID: data.libraryID, ...context }),
+			upsertSliceLibraryIndexFile({
+				libraryID: data.libraryID,
+				...context,
+			}),
+			upsertGlobalTypeScriptTypes({
+				filename: context.options.generatedTypesFilePath,
+				format: context.options.format,
+				helpers: context.helpers,
+				actions: context.actions,
+			}),
 		]),
 	);
 };
