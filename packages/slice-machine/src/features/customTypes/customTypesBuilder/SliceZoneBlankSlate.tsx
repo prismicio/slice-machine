@@ -9,13 +9,13 @@ import {
   BlankSlateTitle,
 } from "@src/components/BlankSlate";
 
-export type SliceZoneBlankStateProps = {
+export type SliceZoneBlankSlateProps = {
   onAddNewSlice: () => void;
   onCreateNewSlice: () => void;
   projectHasAvailableSlices: boolean;
 };
 
-export const SliceZoneBlankState: FC<SliceZoneBlankStateProps> = ({
+export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   onCreateNewSlice,
   onAddNewSlice,
   projectHasAvailableSlices,

@@ -69,7 +69,7 @@ export const desc = style({
   lineHeight: "24px",
   selectors: {
     [`${withBackground} &`]: {
-      width: "464px",
+      maxWidth: "464px",
       alignSelf: "center",
     },
   },
