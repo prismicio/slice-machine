@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, Icon } from "@prismicio/editor-ui";
+import { Button } from "@prismicio/editor-ui";
 
 import { List, ListHeader } from "./List";
 
@@ -17,9 +17,7 @@ export const Default = {
     children: (
       <>
         <ListHeader>Static Zone • 00</ListHeader>
-        <ListHeader
-          actions={<Button endIcon={<Icon name="add" />}>Add</Button>}
-        >
+        <ListHeader actions={<Button endIcon="add">Add</Button>}>
           Slices • 00
         </ListHeader>
       </>

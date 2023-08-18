@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Text, Box, Flex, Heading } from "theme-ui";
 import { useSelector } from "react-redux";
-import { Switch, vars, Button, Icon } from "@prismicio/editor-ui";
+import { Switch, vars, Button } from "@prismicio/editor-ui";
 
 import { SlicesSM } from "@lib/models/common/Slices";
 import {
@@ -184,7 +184,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             <Flex sx={{ gap: "8px" }}>
               <Button
                 variant="secondary"
-                startIcon={<Icon name="add" />}
+                startIcon="add"
                 onClick={onCreateNewSlice}
               >
                 New slice
@@ -192,7 +192,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               {availableSlices.length > 0 && (
                 <Button
                   variant="secondary"
-                  startIcon={<Icon name="edit" />}
+                  startIcon="edit"
                   onClick={onAddNewSlice}
                   data-cy="update-slices"
                 >
