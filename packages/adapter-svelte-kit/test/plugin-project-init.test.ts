@@ -304,9 +304,7 @@ describe("prismicio.js file", () => {
 			"utf8",
 		);
 
-		expect(contents).toBe(
-			await prettier.format(contents, { parser: "typescript" }),
-		);
+		expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
 	});
 
 	it("prismicio file is not formatted if formatting is disabled", async (ctx) => {
@@ -362,13 +360,12 @@ describe("prismicio.js file", () => {
 			"import * as prismic from \\"@prismicio/client\\";
 			import config from \\"../../slicemachine.config.json\\";
 
-			/**
-			 * The project's Prismic repository name.
-			 */
+			/** The project's Prismic repository name. */
 			export const repositoryName = config.repositoryName;
 
 			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
+			 * A list of Route Resolver objects that define how a document's \`url\` field is
+			 * resolved.
 			 *
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 *
@@ -428,13 +425,12 @@ describe("prismicio.js file", () => {
 			"import * as prismic from \\"@prismicio/client\\";
 			import config from \\"../../slicemachine.config.json\\";
 
-			/**
-			 * The project's Prismic repository name.
-			 */
+			/** The project's Prismic repository name. */
 			export const repositoryName = config.repositoryName;
 
 			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
+			 * A list of Route Resolver objects that define how a document's \`url\` field is
+			 * resolved.
 			 *
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 */

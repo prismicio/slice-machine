@@ -278,8 +278,9 @@ export class SlicesManager extends BaseManager {
 			mocks: mockSlice({ model: args.model }),
 		};
 
-		const { errors: updateSliceHookErrors } =
-			await this.updateSliceMocks(updateSliceMocksArgs);
+		const { errors: updateSliceHookErrors } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
 
 		return {
 			errors: [...hookResult.errors, ...updateSliceHookErrors],
@@ -341,8 +342,9 @@ export class SlicesManager extends BaseManager {
 			mocks: updatedMocks,
 		};
 
-		const { errors: updateSliceMocksHookResult } =
-			await this.updateSliceMocks(updateSliceMocksArgs);
+		const { errors: updateSliceMocksHookResult } = await this.updateSliceMocks(
+			updateSliceMocksArgs,
+		);
 
 		return {
 			errors: [...hookResult.errors, ...updateSliceMocksHookResult],

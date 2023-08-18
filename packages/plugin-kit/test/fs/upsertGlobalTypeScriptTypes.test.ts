@@ -53,7 +53,7 @@ const expectGlobalTypeScriptTypes = async (
 
 	if (args.format) {
 		expect(contents).toBe(
-			await prettier.format(generatedTypes, { parser: "typescript" }),
+			prettier.format(generatedTypes, { parser: "typescript" }),
 		);
 	} else {
 		expect(contents).toBe(generatedTypes);

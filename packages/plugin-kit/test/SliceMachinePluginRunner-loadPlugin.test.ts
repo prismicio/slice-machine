@@ -4,11 +4,12 @@ import * as path from "node:path";
 import * as plugin from "./__fixtures__/plugin";
 
 const createRequireMock =
-	vi.fn<Parameters<(typeof import("node:module"))["createRequire"]>>();
+	vi.fn<Parameters<typeof import("node:module")["createRequire"]>>();
 
 vi.mock("module", async () => {
-	const actual: typeof import("node:module") =
-		await vi.importActual("node:module");
+	const actual: typeof import("node:module") = await vi.importActual(
+		"node:module",
+	);
 
 	return {
 		...actual,
