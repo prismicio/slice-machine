@@ -63,7 +63,7 @@
 		"node-fetch": "^3.3.1",
 		"pascal-case": "^3.1.2",
 		"prettier-plugin-svelte": "^3.0.3",
-		"prismic-ts-codegen": "^0.1.16"
+		"prismic-ts-codegen": "^0.1.17"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.2.0",
