@@ -27,7 +27,6 @@ const createComponentFile = async ({
 	actions,
 	options,
 }: Args) => {
-	const filename = `index.svelte`;
 	const pascalName = pascalCase(data.model.name);
 
 	let contents: string;
@@ -40,25 +39,24 @@ const createComponentFile = async ({
 	if (isTypeScriptProject) {
 		contents = source`
 			<script lang="ts">
-				import type { Content } from '@prismicio/client';
-				import type { SliceLike } from '@prismicio/svelte';
+				import type { Content, SliceZone } from '@prismicio/client';
 
 				export let slice: Content.${pascalName}Slice;
-				export let slices: SliceLike[];
+				export let slices: SliceZone;
 				export let index: number;
 				export let context: unknown;
 			</script>
 
 			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
-				Placeholder component for ${data.model.id} (variation: {slice.variation}) Slices
+				Placeholder component for {slice.slice_type} (variation: {slice.variation}) Slices
 			</section>
 		`;
 	} else {
 		contents = source`
 			<script>
-				/** @type {import("@prismicio/client").Content.TextSlice} */
+				/** @type {import("@prismicio/client").Content.${pascalName}Slice} */
 				export let slice;
-				/** @type {import("@prismicio/svelte").SliceLike[]} */
+				/** @type {import("@prismicio/client").SliceZone} */
 				export let slices;
 				/** @type {number} */
 				export let index;
@@ -67,7 +65,7 @@ const createComponentFile = async ({
 			</script>
 
 			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
-				Placeholder component for text (variation: {slice.variation}) Slices
+				Placeholder component for {slice.slice_type} (variation: {slice.variation}) Slices
 			</section>
 		`;
 	}
@@ -75,11 +73,17 @@ const createComponentFile = async ({
 	await writeSliceFile({
 		libraryID: data.libraryID,
 		model: data.model,
-		filename,
+		filename: "index.svelte",
 		contents,
 		format: options.format,
 		actions,
 		helpers,
+		formatOptions: {
+			prettier: {
+				plugins: ["prettier-plugin-svelte"],
+				parser: "svelte",
+			},
+		},
 	});
 };
 

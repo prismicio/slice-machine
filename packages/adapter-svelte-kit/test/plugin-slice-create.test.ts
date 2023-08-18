@@ -34,7 +34,7 @@ test("creates a Slice component, model, and global types file on Slice creation"
 
 	expect(
 		await fs.readdir(path.join(ctx.project.root, "slices", "QuxQuux")),
-	).toStrictEqual(["index.js", "model.json"]);
+	).toStrictEqual(["index.svelte", "model.json"]);
 	expect(await fs.readdir(ctx.project.root)).toContain("prismicio-types.d.ts");
 });
 
@@ -110,43 +110,7 @@ test("library index file includes created Slice", async (ctx) => {
 
 	expect(
 		file
-			.getImportDeclarationOrThrow("next/dynamic")
-			.getImportClauseOrThrow()
-			.getText(),
-	).toBe("dynamic");
-	expect(
-		file
-			.getVariableDeclarationOrThrow("components")
-			.getInitializerIfKindOrThrow(tsm.SyntaxKind.ObjectLiteralExpression)
-			.getPropertyOrThrow("bar_baz")
-			.getText(),
-	).toBe('bar_baz: dynamic(() => import("./QuxQuux"))');
-});
-
-test("library index file includes created Slice without lazy-loading when disabled", async (ctx) => {
-	ctx.project.config.adapter.options.lazyLoadSlices = false;
-	const pluginRunner = createSliceMachinePluginRunner({
-		project: ctx.project,
-		nativePlugins: {
-			[ctx.project.config.adapter.resolve]: adapter,
-		},
-	});
-	await pluginRunner.init();
-
-	await pluginRunner.callHook("slice:create", {
-		libraryID: "slices",
-		model,
-	});
-
-	const contents = await fs.readFile(
-		path.join(ctx.project.root, "slices", "index.js"),
-		"utf8",
-	);
-	const file = parseSourceFile(contents);
-
-	expect(
-		file
-			.getImportDeclarationOrThrow("./QuxQuux")
+			.getImportDeclarationOrThrow("./QuxQuux/index.svelte")
 			.getImportClauseOrThrow()
 			.getText(),
 	).toBe("QuxQuux");
@@ -186,7 +150,7 @@ test("model.json is formatted by default", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).toBe(prettier.format(contents, { parser: "json" }));
+	expect(contents).toBe(await prettier.format(contents, { parser: "json" }));
 });
 
 test("model.json is not formatted if formatting is disabled", async (ctx) => {
@@ -221,42 +185,39 @@ test("model.json is not formatted if formatting is disabled", async (ctx) => {
 	);
 });
 
-test("component file contains default export containing a component", async (ctx) => {
+test("component file has correct contents", async (ctx) => {
 	await ctx.pluginRunner.callHook("slice:create", {
 		libraryID: "slices",
 		model,
 	});
 
 	const contents = await fs.readFile(
-		path.join(ctx.project.root, "slices", "QuxQuux", "index.js"),
+		path.join(ctx.project.root, "slices", "QuxQuux", "index.svelte"),
 		"utf8",
 	);
 
-	expect(/^default export QuxQuux;?$/.test(contents));
-});
+	expect(contents).includes("<script>");
+	expect(contents).toMatchInlineSnapshot(`
+		"<script>
+		  /** @type {import(\\"@prismicio/client\\").Content.QuxQuuxSlice} */
+		  export let slice;
+		  /** @type {import(\\"@prismicio/client\\").SliceZone} */
+		  export let slices;
+		  /** @type {number} */
+		  export let index;
+		  /** @type {unknown} */
+		  export let context;
+		</script>
 
-test("component file is correctly typed with JSDoc when TypeScript is disabled", async (ctx) => {
-	await ctx.pluginRunner.callHook("slice:create", {
-		libraryID: "slices",
-		model,
-	});
-
-	const contents = await fs.readFile(
-		path.join(ctx.project.root, "slices", "QuxQuux", "index.js"),
-		"utf8",
-	);
-	const file = parseSourceFile(contents);
-	const jsDocTags = file
-		.getVariableStatementOrThrow("QuxQuux")
-		.getJsDocs()[0]
-		.getTags()
-		.map((tag) => tag.getText());
-
-	expect(jsDocTags).toStrictEqual([
-		'@typedef {import("@prismicio/client").Content.QuxQuuxSlice} QuxQuuxSlice',
-		'@typedef {import("@prismicio/react").SliceComponentProps<QuxQuuxSlice>} QuxQuuxProps',
-		"@param {QuxQuuxProps}\n ",
-	]);
+		<section
+		  data-slice-type={slice.slice_type}
+		  data-slice-variation={slice.variation}
+		>
+		  Placeholder component for {slice.slice_type} (variation: {slice.variation})
+		  Slices
+		</section>
+		"
+	`);
 });
 
 test("component file is correctly typed when TypeScript is enabled", async (ctx) => {
@@ -272,72 +233,30 @@ test("component file is correctly typed when TypeScript is enabled", async (ctx)
 	await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
 
 	const contents = await fs.readFile(
-		path.join(ctx.project.root, "slices", "QuxQuux", "index.tsx"),
+		path.join(ctx.project.root, "slices", "QuxQuux", "index.svelte"),
 		"utf8",
 	);
-	const file = parseSourceFile(contents);
-	const propsTypeAlias = file.getTypeAliasOrThrow("QuxQuuxProps");
 
-	expect(file.getImportDeclarationOrThrow("@prismicio/client").getText()).toBe(
-		'import { Content } from "@prismicio/client";',
-	);
-	expect(propsTypeAlias.getTypeNodeOrThrow().getText()).toBe(
-		"SliceComponentProps<Content.QuxQuuxSlice>",
-	);
-	expect(propsTypeAlias.isExported()).toBe(true);
-	expect(
-		file.getVariableDeclarationOrThrow("QuxQuux").getType().getText(),
-	).toBe(
-		"({ slice }: SliceComponentProps<Content.QuxQuuxSlice>) => JSX.Element",
-	);
-});
+	expect(contents).includes('<script lang="ts">');
+	expect(contents).toMatchInlineSnapshot(`
+		"<script lang=\\"ts\\">
+		  import type { Content, SliceZone } from \\"@prismicio/client\\";
 
-test("component file writes to .js file by default", async (ctx) => {
-	await ctx.pluginRunner.callHook("slice:create", {
-		libraryID: "slices",
-		model,
-	});
+		  export let slice: Content.QuxQuuxSlice;
+		  export let slices: SliceZone;
+		  export let index: number;
+		  export let context: unknown;
+		</script>
 
-	expect(await fs.readdir(path.join(ctx.project.root, "slices", "QuxQuux")))
-		.includes("index.js")
-		.not.includes("index.jsx")
-		.not.includes("index.tsx");
-});
-
-test("component file writes to .jsx file if JSX extension is enabled", async (ctx) => {
-	ctx.project.config.adapter.options.jsxExtension = true;
-	const pluginRunner = createSliceMachinePluginRunner({
-		project: ctx.project,
-		nativePlugins: {
-			[ctx.project.config.adapter.resolve]: adapter,
-		},
-	});
-	await pluginRunner.init();
-
-	await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
-
-	expect(await fs.readdir(path.join(ctx.project.root, "slices", "QuxQuux")))
-		.includes("index.jsx")
-		.not.includes("index.js")
-		.not.includes("index.tsx");
-});
-
-test("component file writes to .tsx file if TypeScript is enabled", async (ctx) => {
-	ctx.project.config.adapter.options.typescript = true;
-	const pluginRunner = createSliceMachinePluginRunner({
-		project: ctx.project,
-		nativePlugins: {
-			[ctx.project.config.adapter.resolve]: adapter,
-		},
-	});
-	await pluginRunner.init();
-
-	await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
-
-	expect(await fs.readdir(path.join(ctx.project.root, "slices", "QuxQuux")))
-		.includes("index.tsx")
-		.not.includes("index.js")
-		.not.includes("index.jsx");
+		<section
+		  data-slice-type={slice.slice_type}
+		  data-slice-variation={slice.variation}
+		>
+		  Placeholder component for {slice.slice_type} (variation: {slice.variation})
+		  Slices
+		</section>
+		"
+	`);
 });
 
 test("component file is formatted by default", async (ctx) => {
@@ -347,11 +266,16 @@ test("component file is formatted by default", async (ctx) => {
 	});
 
 	const contents = await fs.readFile(
-		path.join(ctx.project.root, "slices", "QuxQuux", "index.js"),
+		path.join(ctx.project.root, "slices", "QuxQuux", "index.svelte"),
 		"utf8",
 	);
 
-	expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+	expect(contents).toBe(
+		await prettier.format(contents, {
+			plugins: ["prettier-plugin-svelte"],
+			parser: "svelte",
+		}),
+	);
 });
 
 test("component file is not formatted if formatting is disabled", async (ctx) => {
@@ -374,14 +298,15 @@ test("component file is not formatted if formatting is disabled", async (ctx) =>
 	await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
 
 	const contents = await fs.readFile(
-		path.join(ctx.project.root, "slices", "QuxQuux", "index.js"),
+		path.join(ctx.project.root, "slices", "QuxQuux", "index.svelte"),
 		"utf8",
 	);
 
 	expect(contents).not.toBe(
 		prettier.format(contents, {
 			...prettierOptions,
-			parser: "typescript",
+			plugins: ["prettier-plugin-svelte"],
+			parser: "svelte",
 		}),
 	);
 });

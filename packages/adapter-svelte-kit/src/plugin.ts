@@ -1,6 +1,5 @@
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
-	checkHasProjectFile,
 	deleteCustomTypeDirectory,
 	deleteCustomTypeFile,
 	deleteSliceDirectory,
@@ -15,7 +14,6 @@ import {
 	upsertGlobalTypeScriptTypes,
 	writeCustomTypeFile,
 	writeCustomTypeModel,
-	writeProjectFile,
 	writeSliceFile,
 	writeSliceModel,
 } from "@slicemachine/plugin-kit/fs";
@@ -27,6 +25,7 @@ import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
 
 import { sliceCreate } from "./hooks/slice-create";
+import { projectInit } from "./hooks/project-init";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -40,50 +39,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		// project:*
 		////////////////////////////////////////////////////////////////
 
-		hook("project:init", async (data, context) => {
-			data.installDependencies({
-				dependencies: {
-					"@prismicio/client": "latest",
-					"@prismicio/svelte": "latest",
-				},
-			});
-
-			const project = await context.helpers.getProject();
-
-			// Add Slice Simulator URL.
-			project.config.localSliceSimulatorURL ||=
-				"http://localhost:5173/slice-simulator";
-
-			// Nest the default Slice library in `./src/lib` if `./slices` is empty.
-			if (
-				(await checkHasProjectFile({
-					filename: "./src/lib",
-					helpers: context.helpers,
-				})) &&
-				project.config.libraries &&
-				JSON.stringify(project.config.libraries) ===
-					JSON.stringify(["./slices"])
-			) {
-				const sliceLibrary = await readSliceLibrary({
-					libraryID: project.config.libraries[0],
-					helpers: context.helpers,
-				});
-
-				if (sliceLibrary.sliceIDs.length < 1) {
-					project.config.libraries = ["./src/lib/slices"];
-				}
-			}
-
-			await writeProjectFile({
-				filename: "slicemachine.config.json",
-				contents: JSON.stringify(project.config, null, 2),
-				format: context.options.format,
-				helpers: context.helpers,
-			});
-
-			// Add generated TypeScript types file to {ts|js}config.json
-			// TODO
-		});
+		hook("project:init", projectInit);
 
 		////////////////////////////////////////////////////////////////
 		// slice:*
@@ -297,6 +253,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("snippet:read", async (_data, _context) => {
+			// TODO
 			return [];
 		});
 
@@ -305,6 +262,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("documentation:read", async (_data, _context) => {
+			// TODO
 			return [];
 		});
 
@@ -313,22 +271,8 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("slice-simulator:setup:read", async (_data, _context) => {
-			return [
-				{
-					title: "Not supported",
-					body: "Slice Simulator is currently not supported with SvelteKit. Support is coming soon.",
-					description: "Support is coming soon.",
-					validate: () => {
-						return [
-							{
-								title: "Not supported",
-								message:
-									"Slice Simulator is currently not supported with SvelteKit. Support is coming soon.",
-							},
-						];
-					},
-				},
-			];
+			// TODO
+			return [];
 		});
 	},
 });

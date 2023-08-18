@@ -41,7 +41,7 @@ test("renames the Slice directory", async (ctx) => {
 
 	expect(
 		await fs.readdir(path.join(ctx.project.root, "slices", "NewModel")),
-	).toStrictEqual(["index.js", "model.json"]);
+	).toStrictEqual(["index.svelte", "model.json"]);
 });
 
 test("updates the Slice in the library index", async (ctx) => {
@@ -62,9 +62,8 @@ test("updates the Slice in the library index", async (ctx) => {
 			.getVariableDeclarationOrThrow("components")
 			.getInitializerIfKindOrThrow(tsm.SyntaxKind.ObjectLiteralExpression)
 			.getPropertyOrThrow("bar_baz")
-			.getLastChildOrThrow()
 			.getText(),
-	).toMatch('"./QuxQuux"');
+	).toBe("bar_baz: QuxQuux");
 
 	await ctx.pluginRunner.callHook("slice:rename", {
 		libraryID: "slices",
@@ -83,9 +82,8 @@ test("updates the Slice in the library index", async (ctx) => {
 			.getVariableDeclarationOrThrow("components")
 			.getInitializerIfKindOrThrow(tsm.SyntaxKind.ObjectLiteralExpression)
 			.getPropertyOrThrow("bar_baz")
-			.getLastChildOrThrow()
 			.getText(),
-	).toMatch('"./NewModel"');
+	).toBe("bar_baz: NewModel");
 });
 
 testGlobalContentTypes({
