@@ -1,5 +1,5 @@
 {
 	"repositoryName": "slicemachine-e2e-svelte-kit",
-	"libraries": ["./src/lib/slices"],
-	"adapter": "@slicemachine/adapter-svelte-kit"
+	"adapter": "@slicemachine/adapter-svelte-kit",
+	"libraries": ["./src/lib/slices"]
 }
