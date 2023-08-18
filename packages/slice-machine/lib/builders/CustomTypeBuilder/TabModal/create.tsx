@@ -1,45 +1,14 @@
-import { Field } from "formik";
-import { Box, Label, Input, Text } from "theme-ui";
-
 import ModalFormCard from "../../../../components/ModalFormCard";
-
-const InputBox = ({
-  name,
-  label,
-  placeholder,
-  error,
-}: {
-  name: string;
-  label: string;
-  placeholder: string;
-  error?: string;
-}) => (
-  <Box mb={3}>
-    <Label htmlFor={name} mb={2}>
-      {label}
-    </Label>
-    <Field
-      name={name}
-      type="text"
-      placeholder={placeholder}
-      as={Input}
-      autoComplete="off"
-    />
-    {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
-    {error ? <Text sx={{ color: "error", mt: 1 }}>{error}</Text> : null}
-  </Box>
-);
+import { InputBox } from "./InputBox";
 
 const formId = "create-tab";
 
-const CreateCustomtypeForm = ({
-  title,
+const CreateCustomTypeForm = ({
   isOpen,
   onSubmit,
   close,
   tabIds,
 }: {
-  title: string;
   isOpen: boolean;
   onSubmit: (values: { id: string }) => void;
   close: () => void;
@@ -71,21 +40,19 @@ const CreateCustomtypeForm = ({
         }
       }}
       content={{
-        title,
+        title: "Add Tab",
       }}
     >
       {({ errors }) => (
-        <Box>
-          <InputBox
-            name="id"
-            label="New Tab ID"
-            placeholder="A label for selecting the tab (i.e. not used in the API)"
-            error={errors.id}
-          />
-        </Box>
+        <InputBox
+          name="id"
+          label="New Tab ID"
+          placeholder="A label for selecting the tab (i.e. not used in the API)"
+          error={errors.id}
+        />
       )}
     </ModalFormCard>
   );
 };
 
-export default CreateCustomtypeForm;
+export default CreateCustomTypeForm;

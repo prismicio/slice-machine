@@ -1,5 +1,4 @@
-import React from "react";
-import { Box } from "theme-ui";
+import { Box, type ThemeUIStyleObject } from "theme-ui";
 
 interface GridProps<T> {
   elems: readonly (T | undefined)[];
@@ -7,6 +6,7 @@ interface GridProps<T> {
   defineElementKey: (elem: T) => string;
   gridTemplateMinPx?: string;
   gridGap?: string;
+  sx?: ThemeUIStyleObject;
 }
 
 function Grid<T>({
@@ -15,6 +15,7 @@ function Grid<T>({
   defineElementKey,
   gridTemplateMinPx = "320px",
   gridGap = "16px",
+  sx,
 }: GridProps<T>): JSX.Element {
   return (
     <Box
@@ -24,6 +25,7 @@ function Grid<T>({
         gridTemplateColumns: `repeat(auto-fill, minmax(${gridTemplateMinPx}, 1fr))`,
         gridGap: gridGap,
         pt: 2,
+        ...sx,
       }}
     >
       {elems.map((elem: T | undefined, i: number) =>
