@@ -70,6 +70,7 @@
   },
   "workspaces": [
     "e2e-projects/next",
+    "e2e-projects/svelte-kit",
     "packages/*"
   ]
 }
