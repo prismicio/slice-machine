@@ -16,6 +16,7 @@ import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
 import type { PluginOptions } from "../types";
+import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];
@@ -241,6 +242,20 @@ const addTypeScriptTypesToJSTSConfig = async ({
 	}
 };
 
+const upsertSliceLibraryIndexFiles = async (
+	context: SliceMachineContext<PluginOptions>,
+) => {
+	if (!context.project.config.libraries) {
+		return;
+	}
+
+	await Promise.all(
+		context.project.config.libraries?.map(async (libraryID) => {
+			await upsertSliceLibraryIndexFile({ libraryID, ...context });
+		}),
+	);
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
@@ -251,6 +266,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			modifySliceMachineConfig(context),
 			addTypeScriptTypesToJSTSConfig(context),
 			createPrismicIOFile(context),
+			upsertSliceLibraryIndexFiles(context),
 		]),
 	);
 };
