@@ -10,7 +10,8 @@ export type { APIEndpoints } from "./constants/API_ENDPOINTS";
  * @typeParam TSliceMachinePluginOptions - User-provided options for the plugin.
  */
 export type SliceMachineConfigPluginRegistration<
-	TSliceMachinePluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
+	TSliceMachinePluginOptions extends
+		SliceMachinePluginOptions = SliceMachinePluginOptions,
 > =
 	| string
 	| {

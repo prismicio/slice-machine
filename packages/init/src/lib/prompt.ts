@@ -11,9 +11,8 @@ type promptArgs<
 export const prompt = async <TReturn, TProperty extends string = string>(
 	question: promptArgs<TReturn, TProperty>,
 ): Promise<Record<TProperty, TReturn>> => {
-	const answers: Record<TProperty, TReturn> = await prompts<TProperty>(
-		question,
-	);
+	const answers: Record<TProperty, TReturn> =
+		await prompts<TProperty>(question);
 
 	if (!Object.keys(answers).length) {
 		process.exit(130);
