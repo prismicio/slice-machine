@@ -8130,6 +8130,7 @@ __metadata:
     "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
+    "@sveltejs/kit": 1.22.6
     "@sveltejs/package": 2.2.1
     "@types/common-tags": 1.8.1
     "@typescript-eslint/eslint-plugin": 5.55.0
@@ -9308,7 +9309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/kit@npm:^1.20.4, @sveltejs/kit@npm:^1.8.3":
+"@sveltejs/kit@npm:1.22.6, @sveltejs/kit@npm:^1.20.4, @sveltejs/kit@npm:^1.8.3":
   version: 1.22.6
   resolution: "@sveltejs/kit@npm:1.22.6"
   dependencies:

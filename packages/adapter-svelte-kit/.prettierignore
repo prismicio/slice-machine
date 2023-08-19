@@ -5,3 +5,4 @@ CHANGELOG.md
 # .gitignore copy
 
 /dist
+/svelte-kit

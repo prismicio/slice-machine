@@ -2,6 +2,7 @@
 
 # custom
 dist
+svelte-kit
 
 # os
 .DS_Store
