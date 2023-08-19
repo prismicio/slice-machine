@@ -271,8 +271,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("slice-simulator:setup:read", async (_data, _context) => {
-			// TODO
-			return [];
+			return [{ title: "Foo", body: "Bar" }];
 		});
 	},
 });

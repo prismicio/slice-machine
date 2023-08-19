@@ -1,5 +1,6 @@
 {
 	"repositoryName": "slicemachine-e2e-svelte-kit",
 	"adapter": "@slicemachine/adapter-svelte-kit",
-	"libraries": ["./src/lib/slices"]
+	"libraries": ["./src/lib/slices"],
+	"localSliceSimulatorURL": "http://localhost:5173/slice-simulator"
 }

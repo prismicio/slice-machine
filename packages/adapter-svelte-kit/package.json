@@ -20,6 +20,10 @@
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.js"
 		},
+		"./simulator": {
+			"types": "./dist/simulator/index.d.ts",
+			"svelte": "./dist/simulator/index.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"main": "dist/index.cjs",
@@ -29,6 +33,9 @@
 		"*": {
 			"*": [
 				"dist/index.d.ts"
+			],
+			"simulator": [
+				"dist/simulator/index.d.ts"
 			]
 		}
 	},
@@ -37,7 +44,7 @@
 		"src"
 	],
 	"scripts": {
-		"build": "vite build",
+		"build": "vite build && svelte-package --input src/simulator --output dist/simulator",
 		"dev": "vite build --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
@@ -51,11 +58,11 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
+		"@prismicio/simulator": "0.1.4",
 		"@prismicio/types-internal": "^2.0.0",
 		"@slicemachine/plugin-kit": "workspace:^",
 		"common-tags": "^1.8.2",
 		"fp-ts": "^2.13.1",
-		"fs-extra": "^11.1.0",
 		"io-ts": "^2.2.20",
 		"io-ts-types": "^0.5.19",
 		"monocle-ts": "^2.3.13",
@@ -68,8 +75,8 @@
 	"devDependencies": {
 		"@prismicio/mock": "0.2.0",
 		"@size-limit/preset-small-lib": "8.2.4",
+		"@sveltejs/package": "2.2.1",
 		"@types/common-tags": "1.8.1",
-		"@types/fs-extra": "11.0.1",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",
 		"@vitest/coverage-v8": "0.32.0",
@@ -88,7 +95,8 @@
 		"vitest": "0.32.0"
 	},
 	"peerDependencies": {
-		"@sveltejs/kit": "^1"
+		"@sveltejs/kit": "^1",
+		"svelte": "^3.54.0 || ^4.0.0-next.0"
 	},
 	"engines": {
 		"node": ">=14.15.0"
