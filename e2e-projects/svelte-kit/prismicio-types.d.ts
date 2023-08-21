@@ -19,7 +19,8 @@ interface PageDocumentData {
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/field#slices
 	 */
-	slices: prismic.SliceZone<PageDocumentDataSlicesSlice> /**
+	slices: prismic.SliceZone<PageDocumentDataSlicesSlice>
+	/**
 	 * Meta Description field in *Page*
 	 *
 	 * - **Field Type**: Text
@@ -127,6 +128,7 @@ declare module '@prismicio/client' {
 			PageDocumentDataSlicesSlice,
 			AllDocumentTypes,
 			TextSlice,
+			TextSliceDefaultPrimary,
 			TextSliceVariation,
 			TextSliceDefault
 		};

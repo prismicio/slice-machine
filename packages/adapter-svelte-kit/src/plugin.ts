@@ -24,8 +24,9 @@ import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
 import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
 
-import { sliceCreate } from "./hooks/slice-create";
 import { projectInit } from "./hooks/project-init";
+import { sliceCreate } from "./hooks/slice-create";
+import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -270,8 +271,6 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		// slice-simulator:*
 		////////////////////////////////////////////////////////////////
 
-		hook("slice-simulator:setup:read", async (_data, _context) => {
-			return [{ title: "Foo", body: "Bar" }];
-		});
+		hook("slice-simulator:setup:read", sliceSimulatorSetupRead);
 	},
 });
