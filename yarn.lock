@@ -8132,6 +8132,7 @@ __metadata:
     "@slicemachine/plugin-kit": "workspace:^"
     "@sveltejs/kit": 1.22.6
     "@sveltejs/package": 2.2.1
+    "@sveltejs/vite-plugin-svelte": 2.4.5
     "@types/common-tags": 1.8.1
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
@@ -9364,7 +9365,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/vite-plugin-svelte@npm:^2.4.1":
+"@sveltejs/vite-plugin-svelte@npm:2.4.5, @sveltejs/vite-plugin-svelte@npm:^2.4.1":
   version: 2.4.5
   resolution: "@sveltejs/vite-plugin-svelte@npm:2.4.5"
   dependencies:

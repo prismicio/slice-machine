@@ -27,6 +27,7 @@ import { PluginOptions } from "./types";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
+import { snippetRead } from "./hooks/snippet-read.ts";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -253,10 +254,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		// snippet:*
 		////////////////////////////////////////////////////////////////
 
-		hook("snippet:read", async (_data, _context) => {
-			// TODO
-			return [];
-		});
+		hook("snippet:read", snippetRead);
 
 		////////////////////////////////////////////////////////////////
 		// documentation:*

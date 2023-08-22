@@ -1,5 +1,7 @@
-import { it, expect } from "vitest";
+import { test, expect } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
+import { Snippet } from "@slicemachine/plugin-kit";
+import prettier from "prettier";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -34,15 +36,122 @@ const model = mock.model.customType({
 	},
 });
 
-it("returns no snippets", async (ctx) => {
-	for (const fieldName in model.json.Main) {
+const prettierConfig: prettier.Options = {
+	plugins: ["prettier-plugin-svelte"],
+	parser: "svelte",
+};
+
+const testSnippet = (
+	fieldName: keyof typeof model.json.Main,
+	expected: string | Snippet[],
+) => {
+	test(fieldName, async (ctx) => {
 		const {
 			data: [res],
 		} = await ctx.pluginRunner.callHook("snippet:read", {
 			fieldPath: [model.id, "data", fieldName],
-			model: model.json.Main[fieldName as keyof typeof model.json.Main],
+			model: model.json.Main[fieldName],
 		});
 
-		expect(res).toStrictEqual([]);
-	}
-});
+		if (Array.isArray(expected)) {
+			expect(res).toStrictEqual(
+				expected.map((descriptor) => ({
+					...descriptor,
+					code: prettier
+						.format(descriptor.code, prettierConfig)
+						.replace(/[\r\n]+$/, "")
+						.replace(/;$/, ""),
+				})),
+			);
+		} else {
+			expect(res).toStrictEqual({
+				label: "Svelte",
+				language: "svelte",
+				code: prettier
+					.format(expected, prettierConfig)
+					.replace(/[\r\n]+$/, "")
+					.replace(/;$/, ""),
+			});
+		}
+	});
+};
+
+testSnippet("boolean", `{${model.id}.data.boolean}`);
+
+testSnippet("color", `{${model.id}.data.color}`);
+
+testSnippet(
+	"contentRelationship",
+	`<PrismicLink field={${model.id}.data.contentRelationship}>Link</PrismicLink>`,
+);
+
+testSnippet("date", `{${model.id}.data.date}`);
+
+testSnippet("embed", `{@html ${model.id}.data.embed.html}`);
+
+testSnippet(
+	"geoPoint",
+	`{${model.id}.data.geoPoint.latitude}, {${model.id}.data.geoPoint.longitude}`,
+);
+
+testSnippet(
+	"group",
+	`{#each ${model.id}.data.group as item}
+	<!-- Render content for item -->
+{/each}`,
+);
+
+testSnippet("image", `<PrismicImage field={${model.id}.data.image} />`);
+
+testSnippet("integrationFields", `{${model.id}.data.integrationFields}`);
+
+testSnippet("keyText", `{${model.id}.data.keyText}`);
+
+testSnippet(
+	"link",
+	`<PrismicLink field={${model.id}.data.link}>Link</PrismicLink>`,
+);
+
+testSnippet(
+	"linkToMedia",
+	`<PrismicLink field={${model.id}.data.linkToMedia}>Link</PrismicLink>`,
+);
+
+testSnippet("number", `{${model.id}.data.number}`);
+
+testSnippet("richText", [
+	{
+		label: "Svelte (components)",
+		language: "svelte",
+		code: `<PrismicRichText field={${model.id}.data.richText} />`,
+	},
+	{
+		label: "Svelte (plain text)",
+		language: "svelte",
+		code: `<PrismicText field={${model.id}.data.richText} />`,
+	},
+]);
+
+testSnippet("select", `{${model.id}.data.select}`);
+
+testSnippet(
+	"sliceZone",
+	`<SliceZone slices={${model.id}.data.sliceZone} {components} />`,
+);
+
+testSnippet("timestamp", `{${model.id}.data.timestamp}`);
+
+testSnippet("title", [
+	{
+		label: "Svelte (components)",
+		language: "svelte",
+		code: `<PrismicRichText field={${model.id}.data.title} />`,
+	},
+	{
+		label: "Svelte (plain text)",
+		language: "svelte",
+		code: `<PrismicText field={${model.id}.data.title} />`,
+	},
+]);
+
+testSnippet("uid", `{${model.id}.data.uid}`);
