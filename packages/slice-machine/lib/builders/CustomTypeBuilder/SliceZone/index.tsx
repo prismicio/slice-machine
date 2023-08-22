@@ -176,7 +176,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             </>
           }
           toggle={
-            customType.format !== "page" || customType.tabs[0].key !== tabId ? (
+            customType.format !== "page" || tabId !== "Main" ? (
               <Switch
                 checked={!!sliceZone}
                 onCheckedChange={(checked) => {
