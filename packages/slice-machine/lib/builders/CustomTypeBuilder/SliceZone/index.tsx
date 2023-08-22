@@ -142,16 +142,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
   const onAddNewSlice = () => {
-    if (!sliceZone) {
-      onCreateSliceZone();
-    }
     setFormIsOpen(true);
   };
 
   const onCreateNewSlice = () => {
-    if (!sliceZone) {
-      onCreateSliceZone();
-    }
     setIsCreateSliceModalOpen(true);
   };
 
@@ -160,20 +154,22 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <List>
         <ListHeader
           actions={
-            <>
-              <Button onClick={onCreateNewSlice} startIcon="add">
-                New slice
-              </Button>
-              {availableSlices.length > 0 ? (
-                <Button
-                  data-cy="update-slices"
-                  onClick={onAddNewSlice}
-                  startIcon="edit"
-                >
-                  Update Slices
+            sliceZone ? (
+              <>
+                <Button onClick={onCreateNewSlice} startIcon="add">
+                  New slice
                 </Button>
-              ) : undefined}
-            </>
+                {availableSlices.length > 0 ? (
+                  <Button
+                    data-cy="update-slices"
+                    onClick={onAddNewSlice}
+                    startIcon="edit"
+                  >
+                    Update Slices
+                  </Button>
+                ) : undefined}
+              </>
+            ) : undefined
           }
           toggle={
             customType.format !== "page" || tabId !== "Main" ? (
