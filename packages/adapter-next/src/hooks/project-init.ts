@@ -1,16 +1,18 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
+import {
+	checkHasProjectFile,
+	writeProjectFile,
+} from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
 
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
-import { checkPathExists } from "../lib/checkPathExists";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
@@ -46,12 +48,13 @@ const createPrismicIOFile = async ({
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = `prismicio.${extension}`;
-	const filePath = hasSrcDirectory
-		? helpers.joinPathFromRoot("src", filename)
-		: helpers.joinPathFromRoot(filename);
+	const filename = path.join(
+		...[hasSrcDirectory ? "src" : undefined, `prismicio.${extension}`].filter(
+			(segment): segment is NonNullable<typeof segment> => Boolean(segment),
+		),
+	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
@@ -229,11 +232,12 @@ const createPrismicIOFile = async ({
 		`;
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
@@ -246,7 +250,7 @@ const createSliceSimulatorPage = async ({
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options, jsx: true });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			hasAppRouter
@@ -257,13 +261,11 @@ const createSliceSimulatorPage = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-
-	let contents = source`
+	const contents = source`
 		"use client"
 
 		import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
@@ -280,11 +282,12 @@ const createSliceSimulatorPage = async ({
 		}
 	`;
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 const createPreviewRoute = async ({
@@ -299,7 +302,7 @@ const createPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			hasAppRouter
@@ -310,7 +313,7 @@ const createPreviewRoute = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
@@ -320,7 +323,6 @@ const createPreviewRoute = async ({
 		if (isTypeScriptProject) {
 			contents = source`
 				import { NextRequest } from "next/server";
-				import { draftMode } from "next/headers";
 				import { redirectToPreviewURL } from "@prismicio/next";
 
 				import { createClient } from "../../../prismicio";
@@ -328,22 +330,17 @@ const createPreviewRoute = async ({
 				export async function GET(request: NextRequest) {
 					const client = createClient();
 
-					draftMode().enable();
-
 					await redirectToPreviewURL({ client, request });
 				}
 			`;
 		} else {
 			contents = source`
-				import { draftMode } from "next/headers";
 				import { redirectToPreviewURL } from "@prismicio/next";
 
 				import { createClient } from "../../../prismicio";
 
 				export async function GET(request) {
 					const client = createClient();
-
-					draftMode().enable();
 
 					await redirectToPreviewURL({ client, request });
 				}
@@ -382,12 +379,12 @@ const createPreviewRoute = async ({
 		}
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 const createExitPreviewRoute = async ({
@@ -402,7 +399,7 @@ const createExitPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			hasAppRouter
@@ -413,14 +410,14 @@ const createExitPreviewRoute = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
 	let contents: string;
 
 	if (hasAppRouter) {
-		contents = `
+		contents = source`
 			import { exitPreview } from "@prismicio/next";
 
 			export async function GET() {
@@ -448,17 +445,18 @@ const createExitPreviewRoute = async ({
 		}
 	}
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 const modifySliceMachineConfig = async ({
 	helpers,
 	options,
+	actions,
 }: SliceMachineContext<PluginOptions>) => {
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const project = await helpers.getProject();
@@ -471,24 +469,15 @@ const modifySliceMachineConfig = async ({
 	// is empty.
 	if (
 		hasSrcDirectory &&
+		project.config.libraries &&
 		JSON.stringify(project.config.libraries) === JSON.stringify(["./slices"])
 	) {
-		try {
-			const entries = await fs.readdir(helpers.joinPathFromRoot("slices"));
+		const sliceLibrary = await actions.readSliceLibrary({
+			libraryID: project.config.libraries[0],
+		});
 
-			if (!entries.map((entry) => path.parse(entry).name).includes("index")) {
-				project.config.libraries = ["./src/slices"];
-			}
-		} catch (error) {
-			if (
-				error instanceof Error &&
-				"code" in error &&
-				error.code === "ENOENT"
-			) {
-				// The directory does not exist, which means we
-				// can safely nest the library.
-				project.config.libraries = ["./src/slices"];
-			}
+		if (sliceLibrary.sliceIDs.length < 1) {
+			project.config.libraries = ["./src/slices"];
 		}
 	}
 
@@ -510,7 +499,7 @@ const createRevalidateRoute = async ({
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		...[
 			hasSrcDirectory ? "src" : undefined,
 			`app/api/revalidate/route.${extension}`,
@@ -519,11 +508,11 @@ const createRevalidateRoute = async ({
 		),
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
 
-	let contents = source`
+	const contents = source`
 		import { NextResponse } from "next/server";
 		import { revalidateTag } from "next/cache";
 
@@ -534,12 +523,12 @@ const createRevalidateRoute = async ({
 		}
 	`;
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath);
-	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 export const projectInit: ProjectInitHook<PluginOptions> = async (

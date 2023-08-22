@@ -1,4 +1,4 @@
-import { Button, Icon } from "@prismicio/editor-ui";
+import { Button } from "@prismicio/editor-ui";
 import React, { useState } from "react";
 import Head from "next/head";
 import { BaseStyles, Flex, Text, Link } from "theme-ui";
@@ -84,7 +84,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 onClick={() => {
                   setIsCreateSliceModalOpen(true);
                 }}
-                startIcon={<Icon name="add" />}
+                startIcon="add"
               >
                 Create
               </Button>

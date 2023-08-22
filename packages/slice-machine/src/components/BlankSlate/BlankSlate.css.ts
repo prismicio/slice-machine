@@ -1,4 +1,4 @@
-import { colors, sprinkles } from "@prismicio/editor-ui";
+import { colors, sprinkles, vars } from "@prismicio/editor-ui";
 import { style } from "@vanilla-extract/css";
 
 const column = sprinkles({
@@ -31,6 +31,8 @@ export const withBackground = style([
   }),
   {
     backgroundSize: "cover",
+    borderRadius: vars.borderRadius[0],
+    borderStyle: vars.borderStyle.none,
     height: "50vh",
     maxWidth: "100%",
   },
@@ -69,7 +71,7 @@ export const desc = style({
   lineHeight: "24px",
   selectors: {
     [`${withBackground} &`]: {
-      width: "464px",
+      maxWidth: "464px",
       alignSelf: "center",
     },
   },

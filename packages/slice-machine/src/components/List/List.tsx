@@ -1,22 +1,33 @@
+import { ButtonGroup, Text } from "@prismicio/editor-ui";
 import type { FC, PropsWithChildren, ReactNode } from "react";
 
 import * as styles from "./List.css";
-import { ButtonGroup, Text } from "@prismicio/editor-ui";
 
 export const List: FC<PropsWithChildren> = (props) => (
-  <article className={styles.root} {...props} />
+  <article {...props} className={styles.root} />
 );
 
-export const ListHeader: FC<PropsWithChildren<{ actions?: ReactNode }>> = ({
+type ListHeaderProps = PropsWithChildren<{
+  actions?: ReactNode;
+  toggle?: ReactNode;
+}>;
+
+export const ListHeader: FC<ListHeaderProps> = ({
   actions,
   children,
-  ...props
+  toggle,
+  ...otherProps
 }) => (
-  <header {...props} className={styles.header}>
-    <Text color="grey11" component="span" noWrap variant="small">
+  <header {...otherProps} className={styles.header}>
+    <Text color="grey11" component="span" variant="smallBold">
       {children}
     </Text>
-    <ButtonGroup size="medium" variant="secondary">
+    {toggle}
+    <ButtonGroup
+      className={styles.headerActions}
+      size="medium"
+      variant="secondary"
+    >
       {actions}
     </ButtonGroup>
   </header>

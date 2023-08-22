@@ -113,7 +113,11 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                 <TableCell>{id}</TableCell>
                 <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
                 <TableCell>
-                  <EditDropdown format={format} customType={customType} />
+                  <EditDropdown
+                    isChangesLocal={false}
+                    format={format}
+                    customType={customType}
+                  />
                 </TableCell>
               </TableRow>
             );

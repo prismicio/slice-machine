@@ -1,5 +1,5 @@
+import { Button, Switch } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, Icon } from "@prismicio/editor-ui";
 
 import { List, ListHeader } from "./List";
 
@@ -15,14 +15,12 @@ export default meta;
 export const Default = {
   args: {
     children: (
-      <>
-        <ListHeader>Static Zone • 00</ListHeader>
-        <ListHeader
-          actions={<Button endIcon={<Icon name="add" />}>Add</Button>}
-        >
-          Slices • 00
-        </ListHeader>
-      </>
+      <ListHeader
+        actions={<Button startIcon="add">Add</Button>}
+        toggle={<Switch />}
+      >
+        Zone
+      </ListHeader>
     ),
   },
 } satisfies Story;

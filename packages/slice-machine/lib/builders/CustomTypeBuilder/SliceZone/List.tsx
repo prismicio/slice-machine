@@ -69,6 +69,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
           },
         });
       }}
+      sx={{ padding: "16px" }}
     />
   );
 };

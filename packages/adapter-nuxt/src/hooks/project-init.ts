@@ -1,14 +1,16 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
 	SliceMachineContext,
 } from "@slicemachine/plugin-kit";
+import {
+	checkHasProjectFile,
+	writeProjectFile,
+} from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
 import { loadFile, writeFile, type ASTNode } from "magicast";
 
-import { checkPathExists } from "../lib/checkPathExists";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
@@ -49,16 +51,20 @@ const configurePrismicModule = async ({
 	helpers,
 	project,
 }: ConfigurePrismicModuleArgs) => {
-	let nuxtConfigPath = helpers.joinPathFromRoot("nuxt.config.js");
+	let nuxtConfigFilename = "nuxt.config.js";
 
-	if (!(await checkPathExists(nuxtConfigPath))) {
-		nuxtConfigPath = helpers.joinPathFromRoot("nuxt.config.ts");
+	if (!(await checkHasProjectFile({ filename: nuxtConfigFilename, helpers }))) {
+		nuxtConfigFilename = "nuxt.config.ts";
 
 		// nuxt.config.* not found
-		if (!(await checkPathExists(nuxtConfigPath))) {
+		if (
+			!(await checkHasProjectFile({ filename: nuxtConfigFilename, helpers }))
+		) {
 			return;
 		}
 	}
+
+	const nuxtConfigPath = helpers.joinPathFromRoot(nuxtConfigFilename);
 
 	const mod = await loadFile(nuxtConfigPath);
 	const config =
@@ -108,27 +114,26 @@ const createSliceSimulatorPage = async ({
 		options,
 	});
 
-	const srcPagesDirectoryExists = await checkPathExists(
-		helpers.joinPathFromRoot("src/pages"),
-	);
+	const srcPagesDirectoryExists = await checkHasProjectFile({
+		filename: "src/pages",
+		helpers,
+	});
 
-	const filePath = helpers.joinPathFromRoot(
+	const filename = path.join(
 		srcPagesDirectoryExists ? "src/pages" : "pages",
 		"slice-simulator.vue",
 	);
 
-	if (await checkPathExists(filePath)) {
+	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
 	}
-
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
 
 	const scriptAttributes = ["setup"];
 	if (isTypeScriptProject) {
 		scriptAttributes.push('lang="ts"');
 	}
 
-	let contents = stripIndent`
+	const contents = stripIndent`
 		<template>
 			<SliceSimulator #default="{ slices }">
 				<SliceZone :slices="slices" :components="components" />
@@ -141,18 +146,18 @@ const createSliceSimulatorPage = async ({
 		</script>
 	`;
 
-	if (options.format) {
-		contents = await helpers.format(contents, filePath, {
-			prettier: { parser: "vue" },
-		});
-	}
-
-	await fs.writeFile(filePath, contents);
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
 };
 
 const modifySliceMachineConfig = async ({
 	helpers,
 	options,
+	actions,
 }: SliceMachineContext<PluginOptions>) => {
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const project = await helpers.getProject();
@@ -165,24 +170,15 @@ const modifySliceMachineConfig = async ({
 	// is empty.
 	if (
 		hasSrcDirectory &&
+		project.config.libraries &&
 		JSON.stringify(project.config.libraries) === JSON.stringify(["./slices"])
 	) {
-		try {
-			const entries = await fs.readdir(helpers.joinPathFromRoot("slices"));
+		const sliceLibrary = await actions.readSliceLibrary({
+			libraryID: project.config.libraries[0],
+		});
 
-			if (!entries.map((entry) => path.parse(entry).name).includes("index")) {
-				project.config.libraries = ["./src/slices"];
-			}
-		} catch (error) {
-			if (
-				error instanceof Error &&
-				"code" in error &&
-				error.code === "ENOENT"
-			) {
-				// The directory does not exist, which means we
-				// can safely nest the library.
-				project.config.libraries = ["./src/slices"];
-			}
+		if (sliceLibrary.sliceIDs.length < 1) {
+			project.config.libraries = ["./src/slices"];
 		}
 	}
 

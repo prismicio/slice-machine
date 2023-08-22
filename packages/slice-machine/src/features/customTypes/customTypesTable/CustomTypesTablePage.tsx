@@ -1,6 +1,5 @@
 import { type FC, Suspense } from "react";
 import {
-  Icon,
   Button,
   ErrorBoundary,
   Box,
@@ -79,7 +78,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                   })}
                 />
                 <AppLayoutActions>
-                  <Button disabled startIcon={<Icon name="add" />}>
+                  <Button disabled startIcon="add">
                     Create
                   </Button>
                 </AppLayoutActions>
@@ -103,7 +102,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                   data-cy="create-ct"
                   loading={isCreatingCustomType}
                   onClick={openCreateCustomTypeModal}
-                  startIcon={<Icon name="add" />}
+                  startIcon="add"
                 >
                   Create
                 </Button>

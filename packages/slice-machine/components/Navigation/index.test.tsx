@@ -104,7 +104,7 @@ function renderSideNavigation({
 
 describe("Side Navigation", () => {
   beforeEach(() => {
-    cache.clear();
+    cache.clearAll();
     localStorage.clear();
   });
 

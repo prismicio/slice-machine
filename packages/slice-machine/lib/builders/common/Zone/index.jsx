@@ -1,16 +1,16 @@
-import React, { useState, Fragment } from "react";
-import { array, arrayOf, bool, shape, string, object, func } from "prop-types";
+import { Button } from "@prismicio/editor-ui";
+import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
+import { useState } from "react";
+import { FaCode, FaPlus } from "react-icons/fa";
+import { BaseStyles, Button as ThemeUIButton, Heading } from "theme-ui";
 
-import Card from "./Card";
-
-import { Heading, Button } from "theme-ui";
-import { FaPlus, FaCode } from "react-icons/fa";
+import { List, ListHeader } from "@src/components/List";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import NewField from "./Card/components/NewField";
-
-import ZoneHeader from "./components/ZoneHeader";
+import Card from "./Card";
 import EmptyState from "./components/EmptyState";
+import ZoneHeader from "./components/ZoneHeader";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
@@ -31,6 +31,8 @@ const Zone = ({
   dataCy,
   isRepeatableCustomType,
 }) => {
+  const isCustomType = zoneType === "customType";
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
@@ -72,99 +74,137 @@ const Zone = ({
   const onCancelNewField = () => setNewFieldData(null);
 
   return (
-    <Fragment>
-      <ZoneHeader
-        Heading={<Heading as="h6">{title}</Heading>}
-        Actions={
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-          fields.length ? (
-            <Fragment>
-              <Button
-                variant="buttons.lightSmall"
-                onClick={() => setShowHints(!showHints)}
-              >
-                <FaCode
-                  style={{
-                    marginRight: "8px",
-                    position: "relative",
-                    top: "2px",
-                  }}
-                />{" "}
-                {showHints ? "Hide" : "Show"} code snippets
-              </Button>
-              <Button
-                ml={2}
-                variant="buttons.darkSmall"
-                onClick={() => enterSelectMode()}
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                data-cy={`add-${isRepeatable ? "Repeatable" : "Static"}-field`}
-              >
-                <FaPlus
-                  style={{
-                    marginRight: "8px",
-                    position: "relative",
-                    top: "2px",
-                  }}
-                />
-                Add a new Field
-              </Button>
-            </Fragment>
-          ) : null
-        }
-      />
+    <List>
+      {isCustomType ? (
+        <ListHeader
+          actions={
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            fields.length > 0 ? (
+              <>
+                <Button onClick={() => setShowHints(!showHints)}>
+                  {showHints ? "Hide" : "Show"} code snippets
+                </Button>
+                <Button
+                  data-cy={`add-${
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                    isRepeatable ? "Repeatable" : "Static"
+                  }-field`}
+                  onClick={() => enterSelectMode()}
+                  variant="tertiary"
+                >
+                  Add a new Field
+                </Button>
+              </>
+            ) : undefined
+          }
+        >
+          {title}
+        </ListHeader>
+      ) : (
+        <BaseStyles>
+          <ZoneHeader
+            Heading={<Heading as="h6">{title}</Heading>}
+            Actions={
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              fields.length > 0 ? (
+                <>
+                  <ThemeUIButton
+                    variant="buttons.lightSmall"
+                    onClick={() => setShowHints(!showHints)}
+                  >
+                    <FaCode
+                      style={{
+                        marginRight: "8px",
+                        position: "relative",
+                        top: "2px",
+                      }}
+                    />{" "}
+                    {showHints ? "Hide" : "Show"} code snippets
+                  </ThemeUIButton>
+                  <ThemeUIButton
+                    ml={2}
+                    variant="buttons.darkSmall"
+                    onClick={() => enterSelectMode()}
+                    data-cy={`add-${
+                      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                      isRepeatable ? "Repeatable" : "Static"
+                    }-field`}
+                  >
+                    <FaPlus
+                      style={{
+                        marginRight: "8px",
+                        position: "relative",
+                        top: "2px",
+                      }}
+                    />
+                    Add a new Field
+                  </ThemeUIButton>
+                </>
+              ) : null
+            }
+          />
+        </BaseStyles>
+      )}
       {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-        !fields.length && !newFieldData && (
-          <EmptyState
-            onEnterSelectMode={() => enterSelectMode()}
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            zoneName={isRepeatable ? "Repeatable" : "Static"}
-          />
-        )
-      }
-      <Card
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-        tabId={tabId}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        isRepeatable={isRepeatable}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        fields={fields}
-        showHints={showHints}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        dataTip={dataTip}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-        title={title}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        renderFieldAccessor={renderFieldAccessor}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-        renderHintBase={renderHintBase}
-        enterEditMode={enterEditMode}
-        enterSelectMode={enterSelectMode}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        onDragEnd={onDragEnd}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        onDeleteItem={onDeleteItem}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        dataCy={dataCy}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        isRepeatableCustomType={isRepeatableCustomType}
-        newField={
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          newFieldData && (
-            <NewField
-              {...newFieldData}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
-              fields={poolOfFieldsToCheck || fields}
-              onSave={(...args) => {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                onSaveNewField(...args);
-                setNewFieldData(null);
-              }}
-              onCancelNewField={onCancelNewField}
+        fields.length === 0 && !newFieldData ? (
+          <BaseStyles>
+            <EmptyState
+              onEnterSelectMode={() => enterSelectMode()}
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+              zoneName={isRepeatable ? "Repeatable" : "Static"}
             />
-          )
-        }
-      />
+          </BaseStyles>
+        ) : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
+        fields.length > 0 || newFieldData ? (
+          <BaseStyles>
+            <Card
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+              tabId={tabId}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              isRepeatable={isRepeatable}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              fields={fields}
+              showHints={showHints}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              dataTip={dataTip}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+              title={title}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              renderFieldAccessor={renderFieldAccessor}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+              renderHintBase={renderHintBase}
+              enterEditMode={enterEditMode}
+              enterSelectMode={enterSelectMode}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              onDragEnd={onDragEnd}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              onDeleteItem={onDeleteItem}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              dataCy={dataCy}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              isRepeatableCustomType={isRepeatableCustomType}
+              newField={
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                newFieldData && (
+                  <NewField
+                    {...newFieldData}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
+                    fields={poolOfFieldsToCheck || fields}
+                    onSave={(...args) => {
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                      onSaveNewField(...args);
+                      setNewFieldData(null);
+                    }}
+                    onCancelNewField={onCancelNewField}
+                  />
+                )
+              }
+              sx={isCustomType ? { paddingInline: "16px !important" } : {}}
+            />
+          </BaseStyles>
+        ) : undefined
+      }
       <EditModal
         data={editModalData}
         close={closeEditModal}
@@ -182,7 +222,7 @@ const Zone = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         widgetsArray={widgetsArrayWithCondUid}
       />
-    </Fragment>
+    </List>
   );
 };
 

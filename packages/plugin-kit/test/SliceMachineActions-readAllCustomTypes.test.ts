@@ -1,9 +1,7 @@
 import { it, expect } from "vitest";
 
-import { createSliceMachineProject } from "./__testutils__/createSliceMachineProject";
-import { createTestAdapter } from "./__testutils__/createTestAdapter";
-
-import { createSliceMachinePluginRunner } from "../src";
+import { replaceTestAdapter } from "./__testutils__/replaceTestAdapter";
+import { createMemoryAdapter } from "./__testutils__/createMemoryAdapter";
 
 it("returns all Custom Type models", async (ctx) => {
 	const customTypeModels = [
@@ -11,30 +9,12 @@ it("returns all Custom Type models", async (ctx) => {
 		ctx.mock.model.customType(),
 	];
 
-	const adapter = createTestAdapter({
-		setup: ({ hook }) => {
-			hook("custom-type-library:read", async () => {
-				return { ids: customTypeModels.map((model) => model.id) };
-			});
-			hook("custom-type:read", async (args) => {
-				const model = customTypeModels.find(
-					(customTypeModel) => customTypeModel.id === args.id,
-				);
+	const adapter = createMemoryAdapter({ customTypeModels });
 
-				if (model) {
-					return { model };
-				}
+	await replaceTestAdapter(ctx, { adapter });
 
-				throw new Error("not implemented");
-			});
-		},
-	});
-	const project = createSliceMachineProject(adapter);
+	const res = await ctx.pluginRunner.rawActions.readAllCustomTypeModels();
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
-
-	const res = await pluginRunner.rawActions.readAllCustomTypeModels();
 	expect(res).toStrictEqual(
 		customTypeModels.map((model) => {
 			return { model };
@@ -42,19 +22,12 @@ it("returns all Custom Type models", async (ctx) => {
 	);
 });
 
-it("returns empty array when project has no Custom Types", async () => {
-	const adapter = createTestAdapter({
-		setup: ({ hook }) => {
-			hook("custom-type-library:read", async () => {
-				return { ids: [] };
-			});
-		},
-	});
-	const project = createSliceMachineProject(adapter);
+it("returns empty array when project has no Custom Types", async (ctx) => {
+	const adapter = createMemoryAdapter({ customTypeModels: [] });
 
-	const pluginRunner = createSliceMachinePluginRunner({ project });
-	await pluginRunner.init();
+	await replaceTestAdapter(ctx, { adapter });
 
-	const res = await pluginRunner.rawActions.readAllCustomTypeModels();
+	const res = await ctx.pluginRunner.rawActions.readAllCustomTypeModels();
+
 	expect(res).toStrictEqual([]);
 });

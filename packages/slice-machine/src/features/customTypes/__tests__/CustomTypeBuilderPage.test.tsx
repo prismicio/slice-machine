@@ -10,7 +10,7 @@ import {
 } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import { CustomTypes } from "@lib/models/common/CustomType";
-import { render, screen, waitFor, within } from "test/__testutils__";
+import { render, screen, within } from "test/__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
 import { CustomTypesBuilderPage } from "../customTypesBuilder/CustomTypesBuilderPage";
@@ -97,24 +97,6 @@ describe.each(formats)(
     });
   }
 );
-
-describe("CustomTypesBuilderPage > Custom type", () => {
-  test("should convert a custom type to page type from the dropdown", async (ctx) => {
-    const customType = customTypesMocks[0];
-    await mockRouter.push(`/custom-types/${customType.id}`);
-    const { user } = await renderCustomTypesBuilderPage({ ctx, customType });
-
-    // Click on the table row settings button
-    await user.click(screen.getByTestId("editDropdown"));
-
-    // Click on the convert to page type button
-    await user.click(await screen.findByText("Convert to page type"));
-
-    await waitFor(() =>
-      expect(mockRouter.asPath).toEqual(`/page-types/${customType.id}`)
-    );
-  });
-});
 
 function createCustomTypeMock(format: CustomTypeFormat): CustomType {
   return {

@@ -20,7 +20,7 @@ describe.skip("Custom Types specs", () => {
     cy.wait(500);
     // rename the tab with spaces
     cy.contains("Foo").find("button").click();
-    cy.getInputByLabel("Update Tab ID").type("Foo Bar ");
+    cy.getInputByLabel("Rename Tab ID").type("Foo Bar ");
     cy.get("#create-tab").contains("Save").click();
 
     // save

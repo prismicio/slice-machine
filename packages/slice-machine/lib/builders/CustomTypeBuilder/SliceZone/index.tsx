@@ -1,29 +1,30 @@
+import { Button, Box, Switch } from "@prismicio/editor-ui";
 import { useEffect, useMemo, useState } from "react";
-import { Text, Box, Flex, Heading } from "theme-ui";
 import { useSelector } from "react-redux";
-import { Switch, vars, Button, Icon } from "@prismicio/editor-ui";
+import { BaseStyles } from "theme-ui";
 
-import { SlicesSM } from "@lib/models/common/Slices";
-import {
+import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
+import type {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
-import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-import { SliceMachineStoreType } from "@src/redux/type";
+import type { CustomTypeSM } from "@lib/models/common/CustomType";
+import type { ComponentUI } from "@lib/models/common/ComponentUI";
+import type { LibraryUI } from "@lib/models/common/LibraryUI";
+import type { SlicesSM } from "@lib/models/common/Slices";
+import { List, ListHeader } from "@src/components/List";
+import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
+import { useModelStatus } from "@src/hooks/useModelStatus";
 import {
   getFrontendSlices,
   getLibraries,
   getRemoteSlices,
 } from "@src/modules/slices";
-import { useModelStatus } from "@src/hooks/useModelStatus";
-import { SliceZoneBlankState } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankState";
+import type { SliceMachineStoreType } from "@src/redux/type";
+
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
-import ZoneHeader from "../../common/Zone/components/ZoneHeader";
-import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 import { SlicesList } from "./List";
+import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -141,83 +142,72 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
   const onAddNewSlice = () => {
-    if (!sliceZone) {
-      onCreateSliceZone();
-    }
     setFormIsOpen(true);
   };
 
   const onCreateNewSlice = () => {
-    if (!sliceZone) {
-      onCreateSliceZone();
-    }
     setIsCreateSliceModalOpen(true);
   };
 
   return (
-    <Box mt={3}>
-      <ZoneHeader
-        Heading={
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Heading as="h6" style={{ marginRight: vars.size[8] }}>
-              Slice Zone
-            </Heading>
-            <Switch
-              checked={!!sliceZone}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  onCreateSliceZone();
-                } else {
-                  setIsDeleteSliceZoneModalOpen(true);
-                }
-              }}
-            />
-          </div>
-        }
-        Actions={
-          <Flex sx={{ alignItems: "center" }}>
-            {sliceZone ? (
-              <Text pr={3} sx={{ fontSize: "14px" }}>
-                data.{sliceZone.key}
-              </Text>
-            ) : null}
-            <Flex sx={{ gap: "8px" }}>
-              <Button
-                variant="secondary"
-                startIcon={<Icon name="add" />}
-                onClick={onCreateNewSlice}
-              >
-                New slice
-              </Button>
-              {availableSlices.length > 0 && (
-                <Button
-                  variant="secondary"
-                  startIcon={<Icon name="edit" />}
-                  onClick={onAddNewSlice}
-                  data-cy="update-slices"
-                >
-                  Update Slices
+    <Box flexDirection="column">
+      <List>
+        <ListHeader
+          actions={
+            sliceZone ? (
+              <>
+                <Button onClick={onCreateNewSlice} startIcon="add">
+                  New slice
                 </Button>
-              )}
-            </Flex>
-          </Flex>
-        }
-      />
-      {sliceZone && !slicesInSliceZone.length ? (
-        <SliceZoneBlankState
-          onAddNewSlice={onAddNewSlice}
-          onCreateNewSlice={onCreateNewSlice}
-          projectHasAvailableSlices={availableSlices.length > 0}
-        />
-      ) : (
-        <SlicesList
-          slices={slicesInSliceZone}
-          modelsStatuses={modelsStatuses}
-          authStatus={authStatus}
-          isOnline={isOnline}
-          format={customType.format}
-        />
-      )}
+                {availableSlices.length > 0 ? (
+                  <Button
+                    data-cy="update-slices"
+                    onClick={onAddNewSlice}
+                    startIcon="edit"
+                  >
+                    Update Slices
+                  </Button>
+                ) : undefined}
+              </>
+            ) : undefined
+          }
+          toggle={
+            customType.format !== "page" || tabId !== "Main" ? (
+              <Switch
+                checked={!!sliceZone}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    onCreateSliceZone();
+                  } else {
+                    setIsDeleteSliceZoneModalOpen(true);
+                  }
+                }}
+              />
+            ) : undefined
+          }
+        >
+          Slice Zone
+        </ListHeader>
+      </List>
+      {sliceZone ? (
+        slicesInSliceZone.length > 0 ? (
+          <BaseStyles>
+            <SlicesList
+              slices={slicesInSliceZone}
+              modelsStatuses={modelsStatuses}
+              authStatus={authStatus}
+              isOnline={isOnline}
+              format={customType.format}
+            />
+          </BaseStyles>
+        ) : (
+          <SliceZoneBlankSlate
+            onAddNewSlice={onAddNewSlice}
+            onCreateNewSlice={onCreateNewSlice}
+            projectHasAvailableSlices={availableSlices.length > 0}
+          />
+        )
+      ) : undefined}
       <UpdateSliceZoneModal
         isOpen={formIsOpen}
         formId={`tab-slicezone-form-${tabId}`}
