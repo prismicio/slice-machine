@@ -1,4 +1,4 @@
-# @slicemachine/adapter-next
+# @slicemachine/adapter-sveltekit
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -7,7 +7,7 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-[Slice Machine][slicemachine] adapter for [Next.js][nextjs].
+[Slice Machine][slicemachine] adapter for [SvelteKit][sveltekit].
 
 <!--
 
@@ -24,7 +24,7 @@ Non-breaking space: &nbsp; are here on purpose to fix emoji rendering on certain
 ## Install
 
 ```bash
-npm install --save-dev @slicemachine/adapter-next
+npm install --save-dev @slicemachine/adapter-sveltekit
 ```
 
 ## Documentation
@@ -67,7 +67,7 @@ limitations under the License.
 
 [prismic]: https://prismic.io
 [slicemachine]: https://www.slicemachine.dev/
-[nextjs]: https://nextjs.org/
+[sveltekit]: https://kit.svelte.dev/
 
 <!-- TODO: Replace link with a more useful one if available -->
 
@@ -78,21 +78,21 @@ limitations under the License.
 <!-- TODO: Replace link with a more useful one if available -->
 
 [forum-question]: https://community.prismic.io
-[repo-bug-report]: https://github.com/prismicio/slicemachine-adapter-next/issues/new?assignees=&labels=bug&template=bug_report.md&title=
-[repo-feature-request]: https://github.com/prismicio/slicemachine-adapter-next/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
-[repo-pull-requests]: https://github.com/prismicio/slicemachine-adapter-next/pulls
+[repo-bug-report]: https://github.com/prismicio/slice-machine/issues/new?assignees=&labels=bug&template=bug_report.md&title=
+[repo-feature-request]: https://github.com/prismicio/slice-machine/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
+[repo-pull-requests]: https://github.com/prismicio/slice-machine/pulls
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/@slicemachine/adapter-next/latest.svg
-[npm-version-href]: https://npmjs.com/package/@slicemachine/adapter-next
-[npm-downloads-src]: https://img.shields.io/npm/dm/@slicemachine/adapter-next.svg
-[npm-downloads-href]: https://npmjs.com/package/@slicemachine/adapter-next
-[github-actions-ci-src]: https://github.com/prismicio/slicemachine-adapter-next/workflows/ci/badge.svg
-[github-actions-ci-href]: https://github.com/prismicio/slicemachine-adapter-next/actions?query=workflow%3Aci
-[codecov-src]: https://img.shields.io/codecov/c/github/prismicio/slicemachine-adapter-next.svg
-[codecov-href]: https://codecov.io/gh/prismicio/slicemachine-adapter-next
+[npm-version-src]: https://img.shields.io/npm/v/@slicemachine/adapter-sveltekit/latest.svg
+[npm-version-href]: https://npmjs.com/package/@slicemachine/adapter-sveltekit
+[npm-downloads-src]: https://img.shields.io/npm/dm/@slicemachine/adapter-sveltekit.svg
+[npm-downloads-href]: https://npmjs.com/package/@slicemachine/adapter-sveltekit
+[github-actions-ci-src]: https://github.com/prismicio/slice-machine/workflows/ci/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio/slice-machine/actions?query=workflow%3Aci
+[codecov-src]: https://img.shields.io/codecov/c/github/prismicio/slice-machine.svg
+[codecov-href]: https://codecov.io/gh/prismicio/slice-machine
 [conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
 [conventional-commits-href]: https://conventionalcommits.org
-[license-src]: https://img.shields.io/npm/l/@slicemachine/adapter-next.svg
-[license-href]: https://npmjs.com/package/@slicemachine/adapter-next
+[license-src]: https://img.shields.io/npm/l/@slicemachine/adapter-sveltekit.svg
+[license-href]: https://npmjs.com/package/@slicemachine/adapter-sveltekit
