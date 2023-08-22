@@ -1,5 +1,5 @@
 {
-	"name": "svelte-kit",
+	"name": "sveltekit",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -14,7 +14,7 @@
 		"slicemachine:dev": "NODE_ENV=development SM_ENV=staging start-slicemachine"
 	},
 	"devDependencies": {
-		"@slicemachine/adapter-svelte-kit": "workspace:*",
+		"@slicemachine/adapter-sveltekit": "workspace:*",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",

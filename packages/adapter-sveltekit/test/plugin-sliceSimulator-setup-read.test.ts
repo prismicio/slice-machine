@@ -84,7 +84,7 @@ describe("step 2", () => {
 
 			~~~svelte
 			<script>
-			  import { SliceSimulator } from \\"@slicemachine/adapter-svelte-kit/simulator\\";
+			  import { SliceSimulator } from \\"@slicemachine/adapter-sveltekit/simulator\\";
 			  import { SliceZone } from \\"@prismicio/svelte\\";
 			  import { components } from \\"$lib/slices\\";
 			</script>
@@ -115,7 +115,7 @@ describe("step 3", () => {
 
 			~~~svelte
 			<script>
-			  import { SliceSimulator } from \\"@slicemachine/adapter-svelte-kit/simulator\\";
+			  import { SliceSimulator } from \\"@slicemachine/adapter-sveltekit/simulator\\";
 			  import { SliceZone } from \\"@prismicio/svelte\\";
 			  import { components } from \\"$lib/slices\\";
 			</script>

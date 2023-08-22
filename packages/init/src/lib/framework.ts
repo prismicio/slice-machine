@@ -19,7 +19,7 @@ export type Framework = {
 		| "next-11-13"
 		| "nuxt-2"
 		| "nuxt-3"
-		| "svelte-kit-1"
+		| "sveltekit-1"
 		| "universal";
 
 	/**
@@ -111,18 +111,18 @@ export const FRAMEWORKS: Record<string, Framework> = {
 			"@slicemachine/adapter-next": isPrerelease ? "alpha" : "latest",
 		},
 	},
-	"svelte-kit-1": {
+	"sveltekit-1": {
 		name: "SvelteKit",
-		sliceMachineTelemetryID: "svelte-kit-1",
-		wroomTelemetryID: "svelte-kit",
-		prismicDocumentation: "https://prismic.dev/init/svelte-kit-1",
-		adapterName: "@slicemachine/adapter-svelte-kit",
+		sliceMachineTelemetryID: "sveltekit-1",
+		wroomTelemetryID: "sveltekit",
+		prismicDocumentation: "https://prismic.dev/init/sveltekit-1",
+		adapterName: "@slicemachine/adapter-sveltekit",
 		compatibility: {
 			"@sveltejs/kit": "^11.0.0",
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-svelte-kit": isPrerelease ? "alpha" : "latest",
+			"@slicemachine/adapter-sveltekit": isPrerelease ? "alpha" : "latest",
 		},
 	},
 } as const;
