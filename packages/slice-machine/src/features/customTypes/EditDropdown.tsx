@@ -74,7 +74,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({
         <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
           <Button
             loading={isCustomTypeBeingConverted}
-            startIcon={<Icon name="moreVert" />}
+            startIcon="moreVert"
             variant="secondary"
             data-testid="editDropdown"
           />

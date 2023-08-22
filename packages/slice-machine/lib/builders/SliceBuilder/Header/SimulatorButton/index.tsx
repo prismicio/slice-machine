@@ -1,4 +1,4 @@
-import { Button } from "@prismicio/editor-ui";
+import { Button, tokens } from "@prismicio/editor-ui";
 import React, { PropsWithChildren, useEffect, useRef } from "react";
 import { Text } from "theme-ui";
 
@@ -159,14 +159,16 @@ const SimulatorButton: React.FC<{
             window.open(`${router.asPath}/simulator`, SIMULATOR_WINDOW_ID);
           }}
           disabled={disabled}
-          startIcon={
+          renderStartIcon={() => (
             <PlayCircleIcon
+              height={tokens.size[20]}
               style={{
                 // TODO(DT-1538): our icons should have a `viewBox` of 24px.
                 transform: "scale(calc(4 / 3))",
               }}
+              width={tokens.size[20]}
             />
-          }
+          )}
           variant="secondary"
         >
           Simulate
