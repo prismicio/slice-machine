@@ -160,6 +160,47 @@ const createPrismicIOFile = async ({
 	});
 };
 
+const createSliceSimulatorPage = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const filename = path.join(
+		"src",
+		"routes",
+		"slice-simulator",
+		"+page.svelte",
+	);
+
+	if (await checkHasProjectFile({ filename, helpers })) {
+		return;
+	}
+
+	const contents = source`
+		<script>
+			import { SliceSimulator } from '@slicemachine/adapter-sveltekit/simulator';
+			import { SliceZone } from '@prismicio/svelte';
+			import { components } from '$lib/slices';
+		</script>
+
+		<SliceSimulator let:slices>
+			<SliceZone {slices} {components} />
+		</SliceSimulator>
+	`;
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		formatOptions: {
+			prettier: {
+				plugins: ["prettier-plugin-svelte"],
+				parser: "svelte",
+			},
+		},
+		helpers,
+	});
+};
+
 const modifySliceMachineConfig = async ({
 	helpers,
 	options,
@@ -266,6 +307,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			modifySliceMachineConfig(context),
 			addTypeScriptTypesToJSTSConfig(context),
 			createPrismicIOFile(context),
+			createSliceSimulatorPage(context),
 			upsertSliceLibraryIndexFiles(context),
 		]),
 	);

@@ -30,7 +30,7 @@ declare module "vitest" {
 
 beforeEach(async (ctx) => {
 	const tmpRoot = await fs.mkdtemp(
-		path.join(os.tmpdir(), "@slicemachine__adapter-next___"),
+		path.join(os.tmpdir(), "@slicemachine__adapter-sveltekit___"),
 	);
 
 	const config = {
@@ -60,7 +60,7 @@ beforeEach(async (ctx) => {
 		},
 	});
 
-	ctx.mock = createMockFactory({ seed: ctx.meta.name });
+	ctx.mock = createMockFactory({ seed: ctx.task.name });
 
 	await ctx.pluginRunner.init();
 

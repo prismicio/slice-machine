@@ -464,3 +464,135 @@ describe("prismicio.js file", () => {
 		`);
 	});
 });
+
+describe("Slice Simulator route", () => {
+	it("creates a Slice Simulator page file", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(
+				ctx.project.root,
+				"src",
+				"routes",
+				"slice-simulator",
+				"+page.svelte",
+			),
+			"utf8",
+		);
+
+		expect(contents).toMatchInlineSnapshot(`
+			"<script>
+			  import { SliceSimulator } from \\"@slicemachine/adapter-sveltekit/simulator\\";
+			  import { SliceZone } from \\"@prismicio/svelte\\";
+			  import { components } from \\"$lib/slices\\";
+			</script>
+
+			<SliceSimulator let:slices>
+			  <SliceZone {slices} {components} />
+			</SliceSimulator>
+			"
+		`);
+	});
+
+	it("does not overwrite Slice Simulator page file if it already exists", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const filePath = path.join(
+			ctx.project.root,
+			"src",
+			"routes",
+			"slice-simulator",
+			"+page.svelte",
+		);
+		const contents = "foo";
+
+		await fs.mkdir(path.dirname(filePath), { recursive: true });
+		await fs.writeFile(filePath, contents);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postHookContents = await fs.readFile(filePath, "utf8");
+
+		expect(postHookContents).toBe(contents);
+	});
+
+	it("Slice Simulator page file is formatted by default", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(
+				ctx.project.root,
+				"src",
+				"routes",
+				"slice-simulator",
+				"+page.svelte",
+			),
+			"utf8",
+		);
+
+		expect(contents).toBe(
+			prettier.format(contents, {
+				plugins: ["prettier-plugin-svelte"],
+				parser: "svelte",
+			}),
+		);
+	});
+
+	it("Slice Simulator page file is not formatted if formatting is disabled", async (ctx) => {
+		ctx.project.config.adapter.options.format = false;
+		const pluginRunner = createSliceMachinePluginRunner({
+			project: ctx.project,
+			nativePlugins: {
+				[ctx.project.config.adapter.resolve]: adapter,
+			},
+		});
+		await pluginRunner.init();
+
+		// Force unusual formatting to detect that formatting did not happen.
+		const prettierOptions = { printWidth: 10 };
+		await fs.writeFile(
+			path.join(ctx.project.root, ".prettierrc"),
+			JSON.stringify(prettierOptions),
+		);
+
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await pluginRunner.callHook("project:init", { log, installDependencies });
+
+		const contents = await fs.readFile(
+			path.join(
+				ctx.project.root,
+				"src",
+				"routes",
+				"slice-simulator",
+				"+page.svelte",
+			),
+			"utf8",
+		);
+
+		expect(contents).not.toBe(
+			prettier.format(contents, {
+				...prettierOptions,
+				plugins: ["prettier-plugin-svelte"],
+				parser: "svelte",
+			}),
+		);
+	});
+});
