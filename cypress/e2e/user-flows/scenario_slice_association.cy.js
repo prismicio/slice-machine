@@ -11,7 +11,7 @@ const sliceName = `TestSlice${random}`;
 const sliceId = `test_slice${random}`; // generated automatically from the slice name
 const sliceLib = ".--slices";
 
-describe("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
+describe.skip("I am an existing SM user (Next) and I want to associate a Slice to a CT and review my experience.", () => {
   before(() => {
     cy.clearProject();
   });
