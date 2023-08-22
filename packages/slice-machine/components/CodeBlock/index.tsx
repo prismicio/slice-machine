@@ -2,7 +2,11 @@ import React from "react";
 import { type ThemeUIStyleObject, Flex, useThemeUI } from "theme-ui";
 import hljs from "highlight.js";
 
+import { svelte } from "@lib/hljs/svelte";
+
 const DEFAULT_LANGUAGES = ["javascript", "bash", "xml", "html", "json"];
+
+hljs.registerLanguage("svelte", svelte);
 
 const CodeBlock: React.FC<{
   children: string;
