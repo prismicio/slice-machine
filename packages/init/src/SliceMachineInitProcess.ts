@@ -8,6 +8,7 @@ import { execaCommand, type ExecaChildProcess } from "execa";
 import open from "open";
 import logSymbols from "log-symbols";
 import { globby } from "globby";
+import { downloadTemplate } from "giget";
 
 import {
 	createSliceMachineManager,
@@ -32,11 +33,18 @@ import {
 import { listr, listrRun } from "./lib/listr";
 import { prompt } from "./lib/prompt";
 import { assertExists } from "./lib/assertExists";
-import { START_SCRIPT_KEY, START_SCRIPT_VALUE } from "./constants";
+import {
+	GIGET_ORGANIZATION,
+	GIGET_PROVIDER,
+	START_SCRIPT_KEY,
+	START_SCRIPT_VALUE,
+} from "./constants";
 import { detectStarterId } from "./lib/starters";
 
 export type SliceMachineInitProcessOptions = {
 	repository?: string;
+	starter?: string;
+	directoryName?: string;
 	push?: boolean;
 	pushSlices?: boolean;
 	pushCustomTypes?: boolean;
@@ -97,27 +105,37 @@ export class SliceMachineInitProcess {
 			)} Init command started\n`,
 		);
 
-		if (await this.manager.telemetry.checkIsTelemetryEnabled()) {
-			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
-			// eslint-disable-next-line no-console
-			console.log(
-				`${
-					logSymbols.info
-				} We collect telemetry data to improve user experience.\n  Learn more: ${chalk.cyan(
-					"https://prismic.dev/slice-machine/telemetry",
-				)}\n`,
-			);
-		}
-		await this.manager.telemetry.initTelemetry({
-			appName: pkg.name,
-			appVersion: pkg.version,
-		});
-		await this.manager.telemetry.track({
-			event: "command:init:start",
-			repository: this.options.repository,
-		});
-
 		try {
+			if (this.options.starter) {
+				await this.copyStarter();
+			} else if (this.options.directoryName) {
+				// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+				// eslint-disable-next-line no-console
+				console.log(
+					`${logSymbols.warning} --directory-name has no effect because --starter is not specified\n`,
+				);
+			}
+
+			if (await this.manager.telemetry.checkIsTelemetryEnabled()) {
+				// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
+				// eslint-disable-next-line no-console
+				console.log(
+					`${
+						logSymbols.info
+					} We collect telemetry data to improve user experience.\n  Learn more: ${chalk.cyan(
+						"https://prismic.dev/slice-machine/telemetry",
+					)}\n`,
+				);
+			}
+			await this.manager.telemetry.initTelemetry({
+				appName: pkg.name,
+				appVersion: pkg.version,
+			});
+			await this.manager.telemetry.track({
+				event: "command:init:start",
+				repository: this.options.repository,
+			});
+
 			await this.detectEnvironment();
 
 			assertExists(
@@ -290,6 +308,72 @@ GETTING STARTED
 			error: safeError,
 		});
 	};
+
+	protected async copyStarter(): Promise<void> {
+		const dir = await this.getStarterDirectoryName();
+
+		return listrRun([
+			{
+				title: "Copying starter...\n",
+				task: async () => {
+					const starter = this.options.starter;
+
+					await downloadTemplate(
+						`${GIGET_PROVIDER}:${GIGET_ORGANIZATION}/${starter}#HEAD`,
+						{
+							dir,
+						},
+					);
+
+					process.chdir(dir);
+					this.manager.cwd = process.cwd();
+				},
+			},
+		]);
+	}
+
+	protected async getStarterDirectoryName(): Promise<string> {
+		let directoryName: string;
+		const folderNames = await fs.readdir(process.cwd());
+
+		if (
+			this.options.directoryName &&
+			!folderNames.includes(this.options.directoryName)
+		) {
+			// Use provided directory
+			directoryName = this.options.directoryName;
+		} else if (
+			this.options.repository &&
+			!folderNames.includes(this.options.repository)
+		) {
+			// Use repository name
+			directoryName = this.options.repository;
+		} else {
+			// Use random name
+			let suggestedName: string;
+			do {
+				suggestedName = getRandomRepositoryDomain();
+			} while (folderNames.includes(suggestedName));
+
+			const { selectedDirectory } = await prompt<string, "selectedDirectory">({
+				type: "text",
+				name: "selectedDirectory",
+				message: "Your starter directory name",
+				initial: suggestedName,
+				validate: async (rawDirectory: string) => {
+					if (folderNames.includes(rawDirectory)) {
+						return "Directory name already exists";
+					}
+
+					return true;
+				},
+			});
+
+			directoryName = selectedDirectory;
+		}
+
+		return directoryName;
+	}
 
 	protected detectEnvironment(): Promise<void> {
 		return listrRun([
@@ -654,26 +738,26 @@ GETTING STARTED
 			}
 		};
 
-		// 1. Try to suggest name after package name
-		try {
-			const pkgJSONPath = path.join(this.manager.cwd, "package.json");
-			const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
-
-			const maybeSuggestion = await trySuggestName(pkg.name);
-			if (maybeSuggestion) {
-				suggestedName = maybeSuggestion;
-			}
-		} catch {
-			// Noop
+		// 1. Try to suggest name after directory name
+		const maybeSuggestion = await trySuggestName(
+			path.basename(this.manager.cwd),
+		);
+		if (maybeSuggestion) {
+			suggestedName = maybeSuggestion;
 		}
 
-		// 2. Try to suggest name after directory name
+		// 2. Try to suggest name after package name
 		if (!suggestedName) {
-			const maybeSuggestion = await trySuggestName(
-				path.basename(this.manager.cwd),
-			);
-			if (maybeSuggestion) {
-				suggestedName = maybeSuggestion;
+			try {
+				const pkgJSONPath = path.join(this.manager.cwd, "package.json");
+				const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
+
+				const maybeSuggestion = await trySuggestName(pkg.name);
+				if (maybeSuggestion) {
+					suggestedName = maybeSuggestion;
+				}
+			} catch {
+				// Noop
 			}
 		}
 

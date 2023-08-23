@@ -5,7 +5,7 @@ import { createSliceMachineInitProcess } from "./SliceMachineInitProcess";
 
 const cli = meow(
 	`
-Prismic Slice Machine Init CLI
+Slice Machine init CLI help
 
 DOCUMENTATION
   https://prismic.io/docs
@@ -17,13 +17,15 @@ USAGE
   $ npx @slicemachine/init
 
 OPTIONS
-  --repository, -r        Specify a Prismic repository to use
+  --repository, -r         Specify a Prismic repository to use
+  --starter, -s            Specify a starter to use
+  --directory-name, -d     Name of a new directory for the starter
 
-  --no-push               For starters, prevent anything from being pushed
-  --no-push-slices        For starters, prevent slices from being pushed
-  --no-push-custom-types  For starters, prevent types from being pushed
-  --no-push-documents     For starters, prevent documents from being pushed
-  --no-start-slicemachine Prevents init from running SliceMachine
+  --no-push                Don't push anything to Prismic
+  --no-push-slices         Don't push slices to Prismic
+  --no-push-custom-types   Don't push types to Prismic
+  --no-push-documents      Don't push documents to Prismic
+  --no-start-slicemachine  Don't run Slice Machine
 
   --help, -h              Display CLI help
   --version, -v           Display CLI version
@@ -34,6 +36,14 @@ OPTIONS
 			repository: {
 				type: "string",
 				alias: "r",
+			},
+			starter: {
+				type: "string",
+				alias: "s",
+			},
+			directoryName: {
+				type: "string",
+				alias: "d",
 			},
 			push: {
 				type: "boolean",
