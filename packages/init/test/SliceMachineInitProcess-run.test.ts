@@ -262,7 +262,7 @@ it("outputs get started final message", async (ctx) => {
 	expect(stdout.pop()).toMatchInlineSnapshot(`
 		"
 		  YOUR REPOSITORY
-		    Dashboard            https://repo-admin.prismic.io
+		    Page Builder         https://repo-admin.prismic.io
 		    API                  https://repo-admin.cdn.prismic.io/api/v2
 
 		  RESOURCES

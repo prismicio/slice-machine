@@ -228,7 +228,7 @@ export class SliceMachineInitProcess {
 			// eslint-disable-next-line no-console
 			console.log(`
   YOUR REPOSITORY
-    Dashboard            ${chalk.cyan(dashboardURL)}
+    Page Builder         ${chalk.cyan(dashboardURL)}
     API                  ${chalk.cyan(apiURL)}
 
   RESOURCES
@@ -246,7 +246,7 @@ export class SliceMachineInitProcess {
 				const { openDashboard } = await prompt<boolean, "openDashboard">({
 					type: "confirm",
 					name: "openDashboard",
-					message: "Would you like to open your repository dashboard?",
+					message: "Would you like to open your repository?",
 					initial: true,
 				});
 
@@ -344,12 +344,13 @@ export class SliceMachineInitProcess {
 	};
 
 	protected async copyStarter(): Promise<void> {
+		const dir = await this.getStarterDirectoryName();
+
 		return listrRun([
 			{
 				title: "Copying starter...\n",
-				task: async () => {
+				task: async (_, task) => {
 					const starter = this.options.starter;
-					const dir = await this.getStarterDirectoryName();
 
 					await downloadTemplate(
 						`${GIGET_PROVIDER}:${GIGET_ORGANIZATION}/${starter}#HEAD`,
@@ -360,6 +361,8 @@ export class SliceMachineInitProcess {
 
 					process.chdir(dir);
 					this.manager.cwd = process.cwd();
+
+					task.title = "Starter copied\n";
 				},
 			},
 		]);
