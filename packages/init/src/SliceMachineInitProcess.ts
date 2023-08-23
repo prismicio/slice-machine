@@ -593,6 +593,7 @@ export class SliceMachineInitProcess {
 						await new Promise((resolve) => {
 							const initialRawMode = !!process.stdin.isRaw;
 							process.stdin.setRawMode?.(true);
+							process.stdin.resume();
 							process.stdin.once("data", (data: Buffer) => {
 								process.stdin.setRawMode?.(initialRawMode);
 								process.stdin.pause();
