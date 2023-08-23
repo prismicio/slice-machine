@@ -295,7 +295,7 @@ it("checks for new repository name to be available", async (ctx) => {
 	});
 });
 
-it("suggests new repository name based on package.json first", async (ctx) => {
+it("suggests new repository name based on directory name first", async (ctx) => {
 	await mockPrismicAPIs(ctx, initProcess, []);
 
 	await watchStd(async () => {
@@ -320,14 +320,14 @@ it("suggests new repository name based on package.json first", async (ctx) => {
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.repository).toMatchInlineSnapshot(`
 		{
-		  "domain": "package-base",
+		  "domain": "base",
 		  "exists": false,
 		}
 	`);
 });
 
-it("suggests new repository name based on directory name second", async (ctx) => {
-	await mockPrismicAPIs(ctx, initProcess, ["package-base"]);
+it("suggests new repository name based on package.json second", async (ctx) => {
+	await mockPrismicAPIs(ctx, initProcess, ["base"]);
 
 	await watchStd(async () => {
 		const stdin = mockStdin();
@@ -351,7 +351,7 @@ it("suggests new repository name based on directory name second", async (ctx) =>
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.repository).toMatchInlineSnapshot(`
 		{
-		  "domain": "base",
+		  "domain": "package-base",
 		  "exists": false,
 		}
 	`);
