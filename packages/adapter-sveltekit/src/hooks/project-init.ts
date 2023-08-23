@@ -6,7 +6,6 @@ import type {
 } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
-	readProjectFile,
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
@@ -236,53 +235,6 @@ const modifySliceMachineConfig = async ({
 	});
 };
 
-const addTypeScriptTypesToJSTSConfig = async ({
-	helpers,
-	options,
-}: SliceMachineContext<PluginOptions>) => {
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
-
-	const filename = isTypeScriptProject ? "tsconfig.json" : "jsconfig.json";
-
-	const generatedTypesFilePath =
-		options.generatedTypesFilePath || "./prismicio-types.d.ts";
-
-	if (await checkHasProjectFile({ filename, helpers })) {
-		const config = JSON.parse(
-			await readProjectFile({
-				filename,
-				helpers,
-				encoding: "utf8",
-			}),
-		);
-
-		if (!config.includes || !config.includes.includes(generatedTypesFilePath)) {
-			config.includes = [...(config.includes || []), generatedTypesFilePath];
-
-			await writeProjectFile({
-				filename,
-				contents: JSON.stringify(config, null, 2),
-				format: options.format,
-				helpers,
-			});
-		}
-	} else {
-		const config = {
-			includes: [generatedTypesFilePath],
-		};
-
-		await writeProjectFile({
-			filename,
-			contents: JSON.stringify(config, null, 2),
-			format: options.format,
-			helpers,
-		});
-	}
-};
-
 const upsertSliceLibraryIndexFiles = async (
 	context: SliceMachineContext<PluginOptions>,
 ) => {
@@ -305,7 +257,6 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 		await Promise.allSettled([
 			installDependencies({ installDependencies: _installDependencies }),
 			modifySliceMachineConfig(context),
-			addTypeScriptTypesToJSTSConfig(context),
 			createPrismicIOFile(context),
 			createSliceSimulatorPage(context),
 			upsertSliceLibraryIndexFiles(context),

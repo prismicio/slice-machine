@@ -45,7 +45,7 @@ export const expectGlobalContentTypes = async (
 	args: ExpectGlobalContentTypesArgs = {},
 ): Promise<void> => {
 	const contents = await fs.readFile(
-		path.join(ctx.project.root, "prismicio-types.d.ts"),
+		path.join(ctx.project.root, "src", "prismicio-types.d.ts"),
 		"utf8",
 	);
 

@@ -35,6 +35,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	},
 	defaultOptions: {
 		format: true,
+		generatedTypesFilePath: "./src/prismicio-types.d.ts",
 	},
 	setup({ hook }) {
 		////////////////////////////////////////////////////////////////
