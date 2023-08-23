@@ -18,7 +18,7 @@ const args = mri<Args>(process.argv.slice(2), {
 		version: "v",
 	},
 	default: {
-		open: true,
+		open: false,
 		help: false,
 		version: false,
 	},
@@ -31,7 +31,7 @@ Usage:
     start-slicemachine [options...]
 
 Options:
-    --no-open      Don't open Slice Machine automatically
+    --open         Open Slice Machine automatically
     --port, -p     Specify the port on which to run Slice Machine
     --help, -h     Show help text
     --version, -v  Show version
