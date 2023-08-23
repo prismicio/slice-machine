@@ -344,13 +344,12 @@ export class SliceMachineInitProcess {
 	};
 
 	protected async copyStarter(): Promise<void> {
-		const dir = await this.getStarterDirectoryName();
-
 		return listrRun([
 			{
 				title: "Copying starter...\n",
 				task: async () => {
 					const starter = this.options.starter;
+					const dir = await this.getStarterDirectoryName();
 
 					await downloadTemplate(
 						`${GIGET_PROVIDER}:${GIGET_ORGANIZATION}/${starter}#HEAD`,
