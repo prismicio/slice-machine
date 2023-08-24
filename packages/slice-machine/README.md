@@ -25,7 +25,7 @@
 We recommend installing Slice Machine into your project using `@slicemachine/init`:
 
 ```sh
-npx @slicemachine/init
+npx @slicemachine/init@latest
 ```
 
 If you want to install `slice-machine-ui` manually, you can do so like this:
