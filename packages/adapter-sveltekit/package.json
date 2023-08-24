@@ -44,8 +44,12 @@
 		"src"
 	],
 	"scripts": {
-		"build": "vite build && svelte-package --input src/simulator --output dist/simulator",
-		"dev": "vite build --watch",
+		"build": "concurrently --prefix-colors='magenta,blue' yarn:build:vite yarn:build:svelte",
+		"build:vite": "vite build",
+		"build:svelte": "svelte-package --input src/simulator --output dist/simulator",
+		"dev": "concurrently --prefix-colors='magenta,blue' yarn:dev:vite yarn:dev:svelte",
+		"dev:vite": "vite build --watch",
+		"dev:svelte": "svelte-package --input src/simulator --output dist/simulator --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
