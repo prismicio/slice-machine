@@ -4905,16 +4905,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:7.1.1":
-  version: 7.1.1
-  resolution: "@prismicio/client@npm:7.1.1"
-  dependencies:
-    "@prismicio/richtext": ^2.1.5
-    imgix-url-builder: ^0.0.4
-  checksum: c867c5fe35d8f6095c196d04cea56a9c24e0f24a1b2773d31fe31b3c0bcf3b318418957477aca4f36e9970a557e862e1a2ba9d0260ecbd85fe955497332e93d4
-  languageName: node
-  linkType: hard
-
 "@prismicio/client@npm:^6.7.3":
   version: 6.8.0
   resolution: "@prismicio/client@npm:6.8.0"
@@ -4932,6 +4922,16 @@ __metadata:
     "@prismicio/richtext": ^2.1.5
     imgix-url-builder: ^0.0.3
   checksum: ab27d401dbd79d9fbda26df939249f4e960c448795aaf8217937df15f5ffe9e2d3ae3e7f5948226cf26f8c082a37b3bc5028716f951f45f0a6fb8f29772826e0
+  languageName: node
+  linkType: hard
+
+"@prismicio/client@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@prismicio/client@npm:7.1.1"
+  dependencies:
+    "@prismicio/richtext": ^2.1.5
+    imgix-url-builder: ^0.0.4
+  checksum: c867c5fe35d8f6095c196d04cea56a9c24e0f24a1b2773d31fe31b3c0bcf3b318418957477aca4f36e9970a557e862e1a2ba9d0260ecbd85fe955497332e93d4
   languageName: node
   linkType: hard
 
@@ -5166,7 +5166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/svelte@npm:0.0.11":
+"@prismicio/svelte@npm:^0.0.11":
   version: 0.0.11
   resolution: "@prismicio/svelte@npm:0.0.11"
   dependencies:
@@ -31790,8 +31790,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sveltekit@workspace:e2e-projects/sveltekit"
   dependencies:
-    "@prismicio/client": 7.1.1
-    "@prismicio/svelte": 0.0.11
+    "@prismicio/client": ^7.1.1
+    "@prismicio/svelte": ^0.0.11
     "@slicemachine/adapter-sveltekit": "workspace:*"
     "@sveltejs/adapter-auto": ^2.0.0
     "@sveltejs/kit": ^1.20.4
