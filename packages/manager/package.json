@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.9.3-dev-adapter-svelte-kit.0",
+	"version": "0.9.3-dev-adapter-svelte-kit.1",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
