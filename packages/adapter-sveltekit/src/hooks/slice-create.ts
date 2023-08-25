@@ -39,12 +39,9 @@ const createComponentFile = async ({
 	if (isTypeScriptProject) {
 		contents = source`
 			<script lang="ts">
-				import type { Content, SliceZone } from '@prismicio/client';
+				import type { Content } from '@prismicio/client';
 
 				export let slice: Content.${pascalName}Slice;
-				export let slices: SliceZone;
-				export let index: number;
-				export let context: unknown;
 			</script>
 
 			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
@@ -56,12 +53,6 @@ const createComponentFile = async ({
 			<script>
 				/** @type {import("@prismicio/client").Content.${pascalName}Slice} */
 				export let slice;
-				/** @type {import("@prismicio/client").SliceZone} */
-				export let slices;
-				/** @type {number} */
-				export let index;
-				/** @type {unknown} */
-				export let context;
 			</script>
 
 			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
