@@ -1,4 +1,3 @@
-import { plugin } from "./plugin";
-export default plugin;
+export { plugin as default } from "./plugin";
 
 export type { PluginOptions } from "./types";
