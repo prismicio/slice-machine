@@ -19,7 +19,7 @@ interface PageDocumentData {
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/field#slices
 	 */
-	slices: prismic.SliceZone<PageDocumentDataSlicesSlice>
+	slices: prismic.SliceZone<PageDocumentDataSlicesSlice>;
 	/**
 	 * Meta Description field in *Page*
 	 *
@@ -28,7 +28,7 @@ interface PageDocumentData {
 	 * - **API ID Path**: page.meta_description
 	 * - **Tab**: SEO & Metadata
 	 * - **Documentation**: https://prismic.io/docs/field#key-text
-	 */;
+	 */
 	meta_description: prismic.KeyTextField;
 
 	/**

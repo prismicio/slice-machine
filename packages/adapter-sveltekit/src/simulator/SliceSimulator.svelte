@@ -11,15 +11,9 @@
 		simulatorRootClass,
 	} from "@prismicio/simulator/kit";
 
-	let defaultProps = getDefaultProps();
+	const defaultProps = getDefaultProps();
 
-	/**
-	 * @type {number | undefined}
-	 */
 	export let zIndex = defaultProps.zIndex;
-	/**
-	 * @type {string | undefined}
-	 */
 	export let background = defaultProps.background;
 
 	let slices = getDefaultSlices();
@@ -52,13 +46,18 @@
 	style="z-index: {zIndex}; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; overflow: auto; background: {background}"
 >
 	{#if message}
-		<article>{@html message}</article>
+		<article>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			{@html message}
+		</article>
 	{:else if slices.length}
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			id="root"
 			class={simulatorRootClass}
 			on:click={onClickHandler}
 			on:submit={disableEventHandler}
+			on:keypress={disableEventHandler}
 		>
 			<slot {slices} />
 		</div>

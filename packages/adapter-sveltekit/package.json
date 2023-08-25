@@ -44,7 +44,7 @@
 		"src"
 	],
 	"scripts": {
-		"build": "concurrently --prefix-colors='magenta,blue' yarn:build:vite yarn:build:svelte",
+		"build": "yarn build:vite && yarn build:svelte",
 		"build:vite": "vite build",
 		"build:svelte": "svelte-package --input src/simulator --output dist/simulator",
 		"dev": "concurrently --prefix-colors='magenta,blue' yarn:dev:vite yarn:dev:svelte",
@@ -91,6 +91,7 @@
 		"eslint": "8.37.0",
 		"eslint-config-prettier": "8.7.0",
 		"eslint-plugin-prettier": "4.2.1",
+		"eslint-plugin-svelte": "2.33.0",
 		"eslint-plugin-tsdoc": "0.2.17",
 		"prettier": "2.8.4",
 		"prettier-plugin-jsdoc": "0.4.2",
