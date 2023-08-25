@@ -8126,7 +8126,7 @@ __metadata:
   resolution: "@slicemachine/adapter-sveltekit@workspace:packages/adapter-sveltekit"
   dependencies:
     "@prismicio/mock": 0.2.0
-    "@prismicio/simulator": 0.1.4
+    "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": ^2.0.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"

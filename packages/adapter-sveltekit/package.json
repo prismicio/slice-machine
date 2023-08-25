@@ -62,7 +62,7 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@prismicio/simulator": "0.1.4",
+		"@prismicio/simulator": "^0.1.4",
 		"@prismicio/types-internal": "^2.0.0",
 		"@slicemachine/plugin-kit": "workspace:^",
 		"common-tags": "^1.8.2",
