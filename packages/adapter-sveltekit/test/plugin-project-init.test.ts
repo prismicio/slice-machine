@@ -66,6 +66,26 @@ it("doesn't throw if no Slice libraries are configured", async (ctx) => {
 });
 
 describe("modify slicemachine.config.json", () => {
+	it("adds a Slice Simulator URL", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const preProject = await ctx.pluginRunner.rawHelpers.getProject();
+
+		expect(preProject.config.localSliceSimulatorURL).toBe(undefined);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postProject = await ctx.pluginRunner.rawHelpers.getProject();
+
+		expect(postProject.config.localSliceSimulatorURL).toBe(
+			"http://localhost:5173/slice-simulator",
+		);
+	});
+
 	it("nests default Slice Library under src/lib directory if it exists", async (ctx) => {
 		const log = vi.fn();
 		const installDependencies = vi.fn();

@@ -209,7 +209,7 @@ const modifySliceMachineConfig = async ({
 
 	// Add Slice Simulator URL.
 	project.config.localSliceSimulatorURL ||=
-		"http://localhost:3000/slice-simulator";
+		"http://localhost:5173/slice-simulator";
 
 	// Nest the default Slice Library in the src directory if it exists and
 	// is empty.
