@@ -129,49 +129,49 @@ describe("step 3", () => {
 
 	it.todo(
 		"returns a validation error if a Slice Simulator URL is not configured",
-		async (ctx) => {
-			const { data } = await ctx.pluginRunner.callHook(
-				"slice-simulator:setup:read",
-				undefined,
-			);
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const validate = data[0][0].validate!;
-
-			const res =
-				(await validate()) as SliceSimulatorSetupStepValidationMessage;
-		},
+		// async (ctx) => {
+		// 	const { data } = await ctx.pluginRunner.callHook(
+		// 		"slice-simulator:setup:read",
+		// 		undefined,
+		// 	);
+		//
+		// 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// 	const validate = data[0][0].validate!;
+		//
+		// 	const res =
+		// 		(await validate()) as SliceSimulatorSetupStepValidationMessage;
+		// },
 	);
 
 	it.todo(
 		"returns a validation error if an invalid Slice Simulator URL is provided",
-		async (ctx) => {
-			const { data } = await ctx.pluginRunner.callHook(
-				"slice-simulator:setup:read",
-				undefined,
-			);
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const validate = data[0][0].validate!;
-
-			const res =
-				(await validate()) as SliceSimulatorSetupStepValidationMessage;
-		},
+		// async (ctx) => {
+		// 	const { data } = await ctx.pluginRunner.callHook(
+		// 		"slice-simulator:setup:read",
+		// 		undefined,
+		// 	);
+		//
+		// 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// 	const validate = data[0][0].validate!;
+		//
+		// 	const res =
+		// 		(await validate()) as SliceSimulatorSetupStepValidationMessage;
+		// },
 	);
 
 	it.todo(
 		"returns a validation error if the Slice Simulator URL cannot be accessed",
-		async (ctx) => {
-			const { data } = await ctx.pluginRunner.callHook(
-				"slice-simulator:setup:read",
-				undefined,
-			);
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const validate = data[0][0].validate!;
-
-			const res =
-				(await validate()) as SliceSimulatorSetupStepValidationMessage;
-		},
+		// async (ctx) => {
+		// 	const { data } = await ctx.pluginRunner.callHook(
+		// 		"slice-simulator:setup:read",
+		// 		undefined,
+		// 	);
+		//
+		// 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// 	const validate = data[0][0].validate!;
+		//
+		// 	const res =
+		// 		(await validate()) as SliceSimulatorSetupStepValidationMessage;
+		// },
 	);
 });
