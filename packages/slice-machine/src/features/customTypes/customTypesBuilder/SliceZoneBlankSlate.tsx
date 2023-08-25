@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Button, Icon } from "@prismicio/editor-ui";
+import { Box, Button } from "@prismicio/editor-ui";
 
 import {
   BlankSlate,
@@ -31,11 +31,11 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
             code.
           </BlankSlateDescription>
           <BlankSlateActions>
-            <Button startIcon={<Icon name="add" />} onClick={onCreateNewSlice}>
+            <Button startIcon="add" onClick={onCreateNewSlice}>
               New slice
             </Button>
             {projectHasAvailableSlices && (
-              <Button startIcon={<Icon name="edit" />} onClick={onAddNewSlice}>
+              <Button startIcon="edit" onClick={onAddNewSlice}>
                 Update Slices
               </Button>
             )}

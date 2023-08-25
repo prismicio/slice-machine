@@ -1,36 +1,30 @@
-import { sprinkles, colors } from "@prismicio/editor-ui";
+import { colors, sprinkles, vars } from "@prismicio/editor-ui";
 import { style } from "@vanilla-extract/css";
 
-export const root = sprinkles({
-  all: "unset",
-  boxSizing: "border-box",
-  display: "flex",
-  flexDirection: "column",
-});
+const flex = sprinkles({ all: "unset", display: "flex" });
 
-const row = style([
-  sprinkles({
-    all: "unset",
-    display: "flex",
-    flexDirection: "row",
-    boxSizing: "border-box",
-  }),
-  {
-    height: "48px",
-  },
-]);
+export const root = style([flex, sprinkles({ flexDirection: "column" })]);
 
 export const header = style([
-  row,
+  flex,
   sprinkles({
     alignItems: "center",
-    justifyContent: "space-between",
-    gap: 10,
     backgroundColor: colors.grey1,
     borderBottomColor: colors.grey6,
     borderBottomStyle: "dashed",
     borderBottomWidth: 1,
-    padding: 8,
+    boxSizing: "border-box",
+    flexDirection: "row",
+    gap: 8,
+    height: 48,
     paddingLeft: 16,
+    paddingRight: 8,
   }),
+  {
+    selectors: {
+      [`${root}:last-child > &`]: { borderBottomColor: vars.color.transparent },
+    },
+  },
 ]);
+
+export const headerActions = sprinkles({ flexGrow: 1, justifyContent: "end" });

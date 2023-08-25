@@ -5,7 +5,6 @@ import {
   DialogHeader,
   ErrorBoundary,
   ScrollArea,
-  Icon,
 } from "@prismicio/editor-ui";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
@@ -43,11 +42,7 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
     <Dialog
       size="small"
       trigger={
-        <Button
-          variant="secondary"
-          onClick={trackOpenSnippet}
-          startIcon={<Icon name="code" />}
-        >
+        <Button variant="secondary" onClick={trackOpenSnippet} startIcon="code">
           Page snippet
         </Button>
       }
@@ -80,7 +75,7 @@ export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
       <ErrorBoundary>
         <Suspense
           fallback={
-            <Button variant="secondary" startIcon={<Icon name="code" />}>
+            <Button variant="secondary" startIcon="code">
               Page snippet
             </Button>
           }

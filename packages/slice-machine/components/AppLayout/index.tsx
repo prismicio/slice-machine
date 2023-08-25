@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Icon } from "@prismicio/editor-ui";
+import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import type { FC, PropsWithChildren } from "react";
 
@@ -47,7 +47,7 @@ export const AppLayoutBackButton: FC<AppLayoutBackButtonProps> = ({
       onClick={() => {
         void router.push(url);
       }}
-      startIcon={<Icon name="arrowBack" />}
+      startIcon="arrowBack"
       variant="secondary"
     />
   );

@@ -71,19 +71,14 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
     endpoints: selectEndpoints(state),
   }));
 
-  const editorConfig: EditorConfig = useMemo(() => {
-    return {
-      embeds: {
-        url: endpoints.PrismicOembed,
-      },
+  const editorConfig: EditorConfig = useMemo(
+    () => ({
+      embedsUrl: endpoints.PrismicOembed,
       env: "prod",
-      unsplash: {
-        url: endpoints.PrismicUnsplash,
-      },
-      // TODO(DT-1543): Remove status property when optional
-      status: "published",
-    };
-  }, [endpoints.PrismicOembed, endpoints.PrismicUnsplash]);
+      unsplashUrl: endpoints.PrismicUnsplash,
+    }),
+    [endpoints.PrismicOembed, endpoints.PrismicUnsplash]
+  );
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -311,9 +306,9 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   : { display: "none" }),
               }}
             >
-              {/* 
+              {/*
                 The editor warn us it's recommended to wrap  SharedSliceEditor in a Suspense and an ErrorBoundary.
-                Warning: It is not recommended to use editor-support->Suspense without a editor-ui->ErrorBoundary above it 
+                Warning: It is not recommended to use editor-support->Suspense without a editor-ui->ErrorBoundary above it
               */}
               <ErrorBoundary
                 renderError={() => (

@@ -1,14 +1,9 @@
-import { Button } from "@prismicio/editor-ui";
+import { Button, Box } from "@prismicio/editor-ui";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { BaseStyles } from "theme-ui";
 
-import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
-import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 import {
   AppLayout,
   AppLayoutActions,
@@ -17,21 +12,24 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
+import { CustomTypeBuilder } from "@lib/builders/CustomTypeBuilder";
+import { type CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
+import { hasLocal, hasRemote } from "@lib/models/common/ModelData";
 import { readBuilderPageDynamicSegment } from "@src/features/customTypes/customTypesConfig";
 import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
-import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { isLoading } from "@src/modules/loading";
 import {
   isSelectedCustomTypeTouched,
   selectCurrentCustomType,
 } from "@src/modules/selectedCustomType";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-
-import { EditDropdown } from "../EditDropdown";
-import { PageSnippetDialog } from "./PageSnippetDialog";
+import type { SliceMachineStoreType } from "@src/redux/type";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
+import { EditDropdown } from "../EditDropdown";
+import { PageSnippetDialog } from "./PageSnippetDialog";
 
 export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
@@ -141,9 +139,9 @@ const CustomTypesBuilderPageWithProvider: React.FC<
         </AppLayoutActions>
       </AppLayoutHeader>
       <AppLayoutContent>
-        <BaseStyles>
+        <Box flexDirection="column">
           <CustomTypeBuilder customType={currentCustomType} />
-        </BaseStyles>
+        </Box>
       </AppLayoutContent>
     </AppLayout>
   );

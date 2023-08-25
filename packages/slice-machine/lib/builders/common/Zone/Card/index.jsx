@@ -1,16 +1,12 @@
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-
 import { Box, Text } from "theme-ui";
 
+import Li from "@components/Li";
 import ListItem from "@components/ListItem";
-
-import Hint from "./components/Hints";
-
-import { findWidgetByConfigOrType } from "../../../utils";
-
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 
-import Li from "@components/Li";
+import { findWidgetByConfigOrType } from "../../../utils";
+import Hint from "./components/Hints";
 
 const FieldZone = ({
   fields,
@@ -27,6 +23,7 @@ const FieldZone = ({
   isRepeatable,
   dataCy,
   isRepeatableCustomType,
+  sx,
 }) => {
   return (
     <DragDropContext
@@ -43,9 +40,9 @@ const FieldZone = ({
             ref={provided.innerRef}
             {...provided.droppableProps}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            style={{ ...provided.droppableProps.style, padding: "4px 0" }}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             data-cy={dataCy}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            sx={sx}
           >
             {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

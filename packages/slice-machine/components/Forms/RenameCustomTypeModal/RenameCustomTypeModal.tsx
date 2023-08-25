@@ -15,7 +15,7 @@ import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMess
 import { renameCustomType } from "@src/features/customTypes/actions/renameCustomType";
 
 interface RenameCustomTypeModalProps {
-  isChangesLocal?: boolean;
+  isChangesLocal: boolean;
   customType: CustomType;
   format: CustomTypeFormat;
   onClose: () => void;
@@ -36,7 +36,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
 
   const handleOnSubmit = async (values: { customTypeName: string }) => {
     setIsRenaming(true);
-    if (isChangesLocal === true) {
+    if (isChangesLocal) {
       renameSelectedCustomType(values.customTypeName);
     } else {
       await renameCustomType({

@@ -1,31 +1,28 @@
-import React from "react";
-import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
-import EditModal from "../../common/EditModal";
-
-import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
-
-import { transformKeyAccessor } from "@utils/str";
-
-import Zone from "../../common/Zone";
+import { Box } from "@prismicio/editor-ui";
+import type { FC } from "react";
+import type { DropResult } from "react-beautiful-dnd";
+import { useSelector } from "react-redux";
+import type { AnyObjectSchema } from "yup";
 
 import ctBuilderArray from "@lib/models/common/widgets/ctBuilderArray";
-
-import SliceZone from "../SliceZone";
-
-import { Widget } from "../../../models/common/widgets/Widget";
-import { AnyObjectSchema } from "yup";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { selectCurrentPoolOfFields } from "../../../../src/modules/selectedCustomType";
-import { SlicesSM } from "@lib/models/common/Slices";
-import {
+import type {
   CustomTypeSM,
   TabField,
   TabFields,
 } from "@lib/models/common/CustomType";
+import type { SlicesSM } from "@lib/models/common/Slices";
+import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import type { SliceMachineStoreType } from "@src/redux/type";
 import { telemetry } from "@src/apiClient";
-import { DropResult } from "react-beautiful-dnd";
+import { transformKeyAccessor } from "@utils/str";
+
+import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
+import { selectCurrentPoolOfFields } from "../../../../src/modules/selectedCustomType";
+import type { Widget } from "../../../models/common/widgets/Widget";
+import EditModal from "../../common/EditModal";
+import Zone from "../../common/Zone";
+import SliceZone from "../SliceZone";
 
 interface TabZoneProps {
   customType: CustomTypeSM;
@@ -34,7 +31,7 @@ interface TabZoneProps {
   fields: TabFields;
 }
 
-const TabZone: React.FC<TabZoneProps> = ({
+const TabZone: FC<TabZoneProps> = ({
   customType,
   tabId,
   fields,
@@ -141,7 +138,7 @@ const TabZone: React.FC<TabZoneProps> = ({
   };
 
   return (
-    <>
+    <Box backgroundColor="grey2" flexDirection="column" gap={8}>
       <Zone
         zoneType="customType"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -179,7 +176,7 @@ const TabZone: React.FC<TabZoneProps> = ({
         onDeleteSliceZone={onDeleteSliceZone}
         onSelectSharedSlices={onSelectSharedSlices}
       />
-    </>
+    </Box>
   );
 };
 

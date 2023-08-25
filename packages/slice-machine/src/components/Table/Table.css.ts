@@ -27,21 +27,19 @@ export const head = style([
 
 export const body = style([revert, {}]);
 
-export const row = style([revert, { height: "48px" }]);
+export const row = style([revert, sprinkles({ height: 48 })]);
 
-export const bodyRow = style([
-  sprinkles({
-    backgroundColor: {
-      ...colors.grey1,
-      ...selectors.focusVisible(colors.grey5),
-      ...selectors.hover(colors.grey4),
-    },
-    transitionDuration: 250,
-    transitionProperty: "background-color",
-    transitionTimingFunction: "easeInOut",
-  }),
-  { height: "64px" },
-]);
+export const bodyRow = sprinkles({
+  backgroundColor: {
+    ...colors.grey1,
+    ...selectors.focusVisible(colors.grey5),
+    ...selectors.hover(colors.grey4),
+  },
+  height: 64,
+  transitionDuration: 250,
+  transitionProperty: "background-color",
+  transitionTimingFunction: "easeInOut",
+});
 
 export const rowClickable = sprinkles({ cursor: "pointer" });
 
@@ -61,12 +59,12 @@ export const cell = style([
     ":last-child": {
       paddingLeft: vars.space[0],
       paddingRight: vars.space[16],
-      width: "48px",
+      width: vars.size[48],
     },
     selectors: {
       [`${head} &`]: { fontSize: 12, fontWeight: 500 },
       [`${body} &`]: {
-        borderTopStyle: vars.borderStyle["solid"],
+        borderTopStyle: vars.borderStyle.solid,
         fontSize: 14,
       },
       [`${body} &:nth-child(2)`]: {
@@ -82,7 +80,7 @@ export const cellContent = style([
   sprinkles({ all: "unset", display: "flex" }),
   {
     selectors: {
-      [`${head} ${cell}:first-child > &`]: { paddingLeft: "6px" },
+      [`${head} ${cell}:first-child > &`]: { paddingLeft: vars.space[6] },
       [`:is(${body}, ${head}) ${cell}:not(:first-child):not(:last-child) > &`]:
         {
           display: "revert",

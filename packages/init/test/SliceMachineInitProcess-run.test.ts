@@ -193,11 +193,11 @@ it("runs without launching Slicemachine", async (ctx) => {
 	});
 
 	// Starts
-	expect(stdout).toMatch(/Init command started/);
+	expect(stdout).toMatch(/Initializing/);
 	// Uses repository name
 	expect(stdout.join("")).toContain(repositoryName);
 	// Succeed
-	expect(stdout).toMatch(/Init command successful/);
+	expect(stdout).toMatch(/Initialization successful/);
 });
 
 it("runs and asks for slicemachine launch", async (ctx) => {
@@ -216,11 +216,11 @@ it("runs and asks for slicemachine launch", async (ctx) => {
 	});
 
 	// Starts
-	expect(stdout).toMatch(/Init command started/);
+	expect(stdout).toMatch(/Initializing/);
 	// Uses repository name
 	expect(stdout.join("")).toContain(repositoryName);
 	// Succeed
-	expect(stdout).toMatch(/Init command successful/);
+	expect(stdout).toMatch(/Initialization successful/);
 });
 
 it.skip("runs it all with new repo", async (ctx) => {
@@ -236,13 +236,13 @@ it.skip("runs it all with new repo", async (ctx) => {
 	});
 
 	// Starts
-	expect(stdout).toMatch(/Init command started/);
+	expect(stdout).toMatch(/Initializing/);
 	// Uses repository name
 	expect(stdout.join("")).toContain(repositoryName);
 	// Creates repository
 	expect(stdout).toMatch(/Created new repository/);
 	// Succeed
-	expect(stdout).toMatch(/Init command successful/);
+	expect(stdout).toMatch(/Initialization successful/);
 });
 
 it("outputs get started final message", async (ctx) => {
@@ -258,12 +258,20 @@ it("outputs get started final message", async (ctx) => {
 		return initProcess.run();
 	});
 
-	expect(stdout).toMatch(/Init command successful/);
+	expect(stdout).toMatch(/Initialization successful/);
 	expect(stdout.pop()).toMatchInlineSnapshot(`
 		"
-		GETTING STARTED
-		  Run Slice Machine    npm run slicemachine
-		  Run your project     npm run dev
+		  YOUR REPOSITORY
+		    Page Builder         https://repo-admin.prismic.io
+		    API                  https://repo-admin.cdn.prismic.io/api/v2
+
+		  RESOURCES
+		    Documentation        https://prismic.dev/init/universal
+		    Getting help         https://community.prismic.io
+
+		  GETTING STARTED
+		    Run Slice Machine    npm run slicemachine
+		    Run your project     npm run dev
 			
 		"
 	`);

@@ -1,3 +1,4 @@
+import { ErrorBoundary } from "@prismicio/editor-ui";
 import { Suspense, type FC } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -131,12 +132,14 @@ const Navigation: FC = () => {
       )}
 
       <SideNavList position="bottom">
-        <Suspense>
-          <VideoItem
-            hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
-            onClose={setSeenTutorialsToolTip}
-          />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense>
+            <VideoItem
+              hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
+              onClose={setSeenTutorialsToolTip}
+            />
+          </Suspense>
+        </ErrorBoundary>
 
         <SideNavListItem>
           <SideNavLink
