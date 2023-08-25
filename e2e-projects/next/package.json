@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.10.1-dev-adapter-svelte-kit.4",
+  "version": "1.10.1-dev-next-release.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
