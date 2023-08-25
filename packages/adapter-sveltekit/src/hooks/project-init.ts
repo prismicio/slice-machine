@@ -259,7 +259,10 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			modifySliceMachineConfig(context),
 			createPrismicIOFile(context),
 			createSliceSimulatorPage(context),
-			upsertSliceLibraryIndexFiles(context),
 		]),
 	);
+
+	// This must happen after `modifySliceMachineConfig()` since the
+	// location of the default Slice library may change.
+	await upsertSliceLibraryIndexFiles(context);
 };
