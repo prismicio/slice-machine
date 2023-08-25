@@ -27702,13 +27702,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prism-svelte@npm:0.5.0":
-  version: 0.5.0
-  resolution: "prism-svelte@npm:0.5.0"
-  checksum: f2c3c6eafcb04a77a08b0a280d327952d3da2eed326956db41729fcd487ebdf939c86f54955f59ea65002e1c8d4eb60018530276493c4ee33768483f8ca79f21
-  languageName: node
-  linkType: hard
-
 "prismic-ts-codegen@npm:^0.1.15":
   version: 0.1.15
   resolution: "prismic-ts-codegen@npm:0.1.15"
@@ -30644,7 +30637,6 @@ __metadata:
     next-router-mock: 0.8.0
     node-fetch: 3.3.1
     parse-multipart-data: 1.5.0
-    prism-svelte: 0.5.0
     rc-drawer: 4.4.3
     react: 18.2.0
     react-beautiful-dnd: 13.1.1
