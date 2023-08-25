@@ -203,12 +203,6 @@ test("component file has correct contents", async (ctx) => {
 		"<script>
 		  /** @type {import(\\"@prismicio/client\\").Content.QuxQuuxSlice} */
 		  export let slice;
-		  /** @type {import(\\"@prismicio/client\\").SliceZone} */
-		  export let slices;
-		  /** @type {number} */
-		  export let index;
-		  /** @type {unknown} */
-		  export let context;
 		</script>
 
 		<section
@@ -242,12 +236,9 @@ test("component file is correctly typed when TypeScript is enabled", async (ctx)
 	expect(contents).includes('<script lang="ts">');
 	expect(contents).toMatchInlineSnapshot(`
 		"<script lang=\\"ts\\">
-		  import type { Content, SliceZone } from \\"@prismicio/client\\";
+		  import type { Content } from \\"@prismicio/client\\";
 
 		  export let slice: Content.QuxQuuxSlice;
-		  export let slices: SliceZone;
-		  export let index: number;
-		  export let context: unknown;
 		</script>
 
 		<section
