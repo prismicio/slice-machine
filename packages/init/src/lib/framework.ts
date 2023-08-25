@@ -118,7 +118,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		prismicDocumentation: "https://prismic.dev/init/sveltekit-1",
 		adapterName: "@slicemachine/adapter-sveltekit",
 		compatibility: {
-			"@sveltejs/kit": "^11.0.0",
+			"@sveltejs/kit": "^1.0.0",
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
