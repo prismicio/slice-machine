@@ -27,7 +27,6 @@ type TelemetryManagerIdentifyArgs = {
 };
 
 type TelemetryManagerGroupArgs = {
-	repositoryName: string;
 	manualLibsCount: number;
 	downloadedLibsCount: number;
 	npmLibsCount: number;
@@ -81,8 +80,17 @@ export class TelemetryManager extends BaseManager {
 
 	// TODO: Should `userId` be automatically populated by the logged in
 	// user? We already have their info via UserRepository.
-	track(args: TelemetryManagerTrackArgs): Promise<void> {
+	async track(args: TelemetryManagerTrackArgs): Promise<void> {
 		const { event, repository, ...properties } = args;
+		let repositoryName = repository;
+
+		if (repositoryName === undefined) {
+			try {
+				repositoryName = await this.project.getRepositoryName();
+			} catch (error) {
+				// noop, happen only when the user is not in a project
+			}
+		}
 
 		const payload: {
 			event: HumanSegmentEventTypes;
@@ -98,7 +106,6 @@ export class TelemetryManager extends BaseManager {
 			event: HumanSegmentEventType[event],
 			properties: {
 				nodeVersion: process.versions.node,
-				repo: repository,
 				...properties,
 			},
 			context: { ...this._context },
@@ -110,10 +117,10 @@ export class TelemetryManager extends BaseManager {
 			payload.anonymousId = this._anonymousID;
 		}
 
-		if (args.repository) {
+		if (repositoryName) {
 			payload.context ||= {};
 			payload.context.groupId ||= {};
-			payload.context.groupId.Repository = repository;
+			payload.context.groupId.Repository = repositoryName;
 		}
 
 		return new Promise((resolve) => {
@@ -169,18 +176,27 @@ export class TelemetryManager extends BaseManager {
 		});
 	}
 
-	group(args: TelemetryManagerGroupArgs): Promise<void> {
-		const { repositoryName, ...traits } = args;
+	async group(args: TelemetryManagerGroupArgs): Promise<void> {
+		let repositoryName;
+
+		try {
+			repositoryName = await this.project.getRepositoryName();
+		} catch (error) {
+			// noop, happen only when the user is not in a project
+		}
 
 		const payload: {
-			groupId: string;
+			groupId?: string;
 			userId?: string;
 			anonymousId?: string;
 			traits?: Record<string, unknown>;
-			context?: Partial<TelemetryManagerContext>;
+			context?: Partial<TelemetryManagerContext> & {
+				groupId?: {
+					Repository?: string;
+				};
+			};
 		} = {
-			groupId: repositoryName,
-			traits,
+			traits: args,
 			context: { ...this._context },
 		};
 
@@ -188,6 +204,13 @@ export class TelemetryManager extends BaseManager {
 			payload.userId = this._userID;
 		} else {
 			payload.anonymousId = this._anonymousID;
+		}
+
+		if (repositoryName) {
+			payload.groupId = repositoryName;
+			payload.context ||= {};
+			payload.context.groupId ||= {};
+			payload.context.groupId.Repository = repositoryName;
 		}
 
 		return new Promise((resolve) => {

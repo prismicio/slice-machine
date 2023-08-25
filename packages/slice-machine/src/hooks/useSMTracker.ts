@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getRepoName } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useRouter } from "next/router";
@@ -11,17 +10,14 @@ import { useRouter } from "next/router";
 import { managerClient } from "../managerClient";
 
 const useSMTracker = () => {
-  const { libraries, repoName } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      repoName: getRepoName(state),
-      libraries: getLibraries(state),
-    })
-  );
+  const { libraries } = useSelector((state: SliceMachineStoreType) => ({
+    libraries: getLibraries(state),
+  }));
 
   const router = useRouter();
 
   useEffect(() => {
-    void group(libraries, repoName);
+    void group(libraries);
 
     // For initial loading
     void trackPageView();
@@ -50,14 +46,11 @@ const useSMTracker = () => {
 export default useSMTracker;
 
 function group(
-  libs: readonly LibraryUI[],
-  repositoryName: string | undefined
+  libs: readonly LibraryUI[]
 ): ReturnType<typeof telemetry.group> | void {
-  if (repositoryName === undefined) return;
   const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
 
   return telemetry.group({
-    repositoryName,
     manualLibsCount: libs.filter((l) => l.meta.isManual).length,
     downloadedLibsCount: downloadedLibs.length,
     npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
@@ -68,15 +61,10 @@ function group(
 }
 
 async function trackPageView(): ReturnType<typeof telemetry.track> {
-  const sliceMachineConfig =
-    await managerClient.project.getSliceMachineConfig();
-  const adapter =
-    typeof sliceMachineConfig.adapter === "string"
-      ? sliceMachineConfig.adapter
-      : sliceMachineConfig.adapter.resolve;
+  const adapter = await managerClient.project.getAdapterName();
+
   return telemetry.track({
     event: "page-view",
-    repository: sliceMachineConfig.repositoryName,
     url: window.location.href,
     path: window.location.pathname,
     search: window.location.search,
