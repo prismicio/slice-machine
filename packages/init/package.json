@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.5.1-dev-adapter-svelte-kit.3",
+	"version": "2.5.1-dev-adapter-svelte-kit.4",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",

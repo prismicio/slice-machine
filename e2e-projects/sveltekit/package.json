@@ -1,6 +1,6 @@
 {
 	"name": "sveltekit",
-	"version": "0.0.2-dev-adapter-svelte-kit.3",
+	"version": "0.0.2-dev-adapter-svelte-kit.4",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
