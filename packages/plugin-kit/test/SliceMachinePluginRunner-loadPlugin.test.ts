@@ -14,13 +14,17 @@ vi.mock("module", async () => {
 	return {
 		...actual,
 		createRequire: (...args: Parameters<(typeof actual)["createRequire"]>) => {
-			const res = createRequireMock(...args);
+			try {
+				const res = createRequireMock(...args);
 
-			if (res !== undefined) {
-				return res;
-			} else {
-				return actual.createRequire(...args);
+				if (res !== undefined) {
+					return res;
+				}
+			} catch {
+				// noop - we tried to mock at least.
 			}
+
+			return actual.createRequire(...args);
 		},
 	};
 });

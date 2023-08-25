@@ -11,6 +11,7 @@
     "dev:plugin-kit": "yarn workspace @slicemachine/plugin-kit dev",
     "dev:slice-machine-ui": "yarn workspace slice-machine-ui dev",
     "dev:adapter-next": "yarn workspace @slicemachine/adapter-next dev",
+    "dev:adapter-sveltekit": "yarn workspace @slicemachine/adapter-sveltekit dev",
     "dev:e2e-next": "cd ./e2e-projects/next && yarn dev --port 8000",
     "cypress-setup": "./cypress-setup.sh",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
@@ -70,6 +71,7 @@
   },
   "workspaces": [
     "e2e-projects/next",
+    "e2e-projects/sveltekit",
     "packages/*"
   ]
 }

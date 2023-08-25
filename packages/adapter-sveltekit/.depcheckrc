@@ -1,0 +1,14 @@
+ignores:
+  [
+    "@prismicio/simulator",
+    "@size-limit/preset-small-lib",
+    "@sveltejs/package",
+    "@vitest/coverage-v8",
+    "monocle-ts",
+    "newtype-ts",
+    "prettier-plugin-jsdoc",
+    "prettier-plugin-svelte",
+    "svelte",
+    "typescript"
+  ]
+skip - missing: true
