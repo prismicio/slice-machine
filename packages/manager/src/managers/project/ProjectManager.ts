@@ -193,6 +193,12 @@ export class ProjectManager extends BaseManager {
 		return path.dirname(sliceMachinePackageJSONPath);
 	}
 
+	async getRepositoryName(): Promise<string> {
+		const sliceMachineConfig = await this.getSliceMachineConfig();
+
+		return sliceMachineConfig.repositoryName;
+	}
+
 	async getAdapterName(): Promise<string> {
 		const sliceMachineConfig = await this.getSliceMachineConfig();
 		const adapterName =

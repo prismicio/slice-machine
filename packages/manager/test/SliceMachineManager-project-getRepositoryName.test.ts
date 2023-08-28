@@ -5,7 +5,7 @@ import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-it("returns the project's adapter name", async () => {
+it("returns the project's repository name", async () => {
 	const adapter = createTestPlugin();
 	const testSliceMachineConfig = {
 		repositoryName: "bar",
@@ -21,7 +21,7 @@ it("returns the project's adapter name", async () => {
 		cwd,
 	});
 
-	const adapterName = await manager.project.getAdapterName();
+	const repositoryName = await manager.project.getRepositoryName();
 
-	expect(adapterName).toEqual(adapter.meta.name);
+	expect(repositoryName).toEqual(testSliceMachineConfig.repositoryName);
 });

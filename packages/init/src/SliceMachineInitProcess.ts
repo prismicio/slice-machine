@@ -337,7 +337,7 @@ export class SliceMachineInitProcess {
 		return this.manager.telemetry.track({
 			event: "command:init:end",
 			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
-			repository: this.context.repository?.domain,
+			repository: this.context.repository?.domain || "",
 			success: false,
 			error: safeError,
 		});
