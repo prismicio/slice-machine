@@ -36,6 +36,7 @@ import { assertExists } from "./lib/assertExists";
 import {
 	GIGET_ORGANIZATION,
 	GIGET_PROVIDER,
+	SLICE_MACHINE_INIT_USER_AGENT,
 	START_SCRIPT_KEY,
 	START_SCRIPT_VALUE,
 } from "./constants";
@@ -1122,7 +1123,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								task.title = `Pushing slices... (0/${slices.length})`;
 								await Promise.all(
 									slices.map(async (slice) => {
-										await this.manager.slices.pushSlice(slice);
+										await this.manager.slices.pushSlice({
+											...slice,
+											userAgent: SLICE_MACHINE_INIT_USER_AGENT,
+										});
 										pushed++;
 										task.title = `Pushing slices... (${pushed}/${slices.length})`;
 									}),
@@ -1163,7 +1167,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								task.title = `Pushing types... (0/${ids.length})`;
 								await Promise.all(
 									ids.map(async (id) => {
-										await this.manager.customTypes.pushCustomType({ id });
+										await this.manager.customTypes.pushCustomType({
+											id,
+											userAgent: SLICE_MACHINE_INIT_USER_AGENT,
+										});
 										pushed++;
 										task.title = `Pushing types... (${pushed}/${ids.length})`;
 									}),
