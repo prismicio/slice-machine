@@ -21,14 +21,13 @@ it("installs dependencies", async (ctx) => {
 });
 
 it("creates all Slice library index files", async (ctx) => {
-	ctx.project.config.libraries = ["./foo", "./bar"];
-	const pluginRunner = createSliceMachinePluginRunner({
-		project: ctx.project,
-		nativePlugins: {
-			[ctx.project.config.adapter.resolve]: adapter,
-		},
-	});
-	await pluginRunner.init();
+	await fs.writeFile(
+		path.join(ctx.project.root, "slicemachine.config.json"),
+		JSON.stringify({
+			...ctx.project.config,
+			libraries: ["./foo", "./bar"],
+		}),
+	);
 
 	await ctx.pluginRunner.callHook("project:init", {
 		log: vi.fn(),

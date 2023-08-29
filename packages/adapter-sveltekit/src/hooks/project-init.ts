@@ -238,12 +238,20 @@ const modifySliceMachineConfig = async ({
 const upsertSliceLibraryIndexFiles = async (
 	context: SliceMachineContext<PluginOptions>,
 ) => {
-	if (!context.project.config.libraries) {
+	// We must use the `getProject()` helper to get the latest version of
+	// the project config. The config may have been modified in
+	// `modifySliceMachineConfig()` and will not be relfected in
+	// `context.project`.
+	// TODO: Automatically update the plugin runner's in-memory `project`
+	// object when `updateSliceMachineConfig()` is called.
+	const project = await context.helpers.getProject();
+
+	if (!project.config.libraries) {
 		return;
 	}
 
 	await Promise.all(
-		context.project.config.libraries?.map(async (libraryID) => {
+		project.config.libraries?.map(async (libraryID) => {
 			await upsertSliceLibraryIndexFile({ libraryID, ...context });
 		}),
 	);
