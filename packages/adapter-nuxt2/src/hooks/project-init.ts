@@ -80,9 +80,6 @@ const configurePrismicModule = async ({
 				prismic: {
 					endpoint: "${endpoint}",
 					modern: true
-				},
-				build: {
-					transpile: ["@prismicio/vue"]
 				}
 			}
 		`);
@@ -122,11 +119,6 @@ const configurePrismicModule = async ({
 			};
 		}
 	}
-
-	// Transpile `@prismicio/vue`
-	config.build ||= {};
-	config.build.transpile ||= [];
-	config.build.transpile.push("@prismicio/vue");
 
 	await writeFile(mod as unknown as ASTNode, nuxtConfigPath);
 };
