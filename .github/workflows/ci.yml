@@ -71,6 +71,7 @@ jobs:
           - "@slicemachine/adapter-next"
           - "@slicemachine/adapter-nuxt"
           - "@slicemachine/adapter-nuxt2"
+          - "@slicemachine/adapter-sveltekit"
 
     steps:
       - name: Checkout
@@ -122,6 +123,7 @@ jobs:
           - "@slicemachine/adapter-next"
           - "@slicemachine/adapter-nuxt"
           - "@slicemachine/adapter-nuxt2"
+          - "@slicemachine/adapter-sveltekit"
 
     steps:
       - name: Checkout

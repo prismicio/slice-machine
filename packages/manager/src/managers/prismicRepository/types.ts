@@ -139,7 +139,7 @@ export type TransactionalMergeReturnType = Limit | null;
  * Values from:
  * https://github.com/prismicio/wroom/blob/65d4f53fd46df7d366d80e7ba9c965339ac7369d/subprojects/common/app/models/Framework.scala#LL20C6-L20C6
  */
-export type FrameworkWroomTelemetryID = "next" | "nuxt" | "other";
+export type FrameworkWroomTelemetryID = "next" | "nuxt" | "sveltekit" | "other";
 
 /**
  * Starter id sent to Segment from wroom.Property used for the "starter"

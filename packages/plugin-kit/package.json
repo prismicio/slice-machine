@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/plugin-kit",
-	"version": "0.4.12",
+	"version": "0.4.13-dev-next-release.4",
 	"description": "A set of helpers to develop and run Slice Machine plugins",
 	"keywords": [
 		"typescript",
@@ -69,7 +69,7 @@
 		"io-ts": "^2.2.20",
 		"io-ts-reporters": "^2.0.1",
 		"prettier": "^2.8.4",
-		"prismic-ts-codegen": "0.1.16"
+		"prismic-ts-codegen": "^0.1.17"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.2.0",

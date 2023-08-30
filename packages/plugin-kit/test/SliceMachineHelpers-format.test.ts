@@ -9,11 +9,10 @@ it("formats input with Prettier", async (ctx) => {
 		.spyOn(console, "warn")
 		.mockImplementation(() => void 0);
 
-	const res = await ctx.pluginRunner.rawHelpers.format(input);
+	const res = await ctx.pluginRunner.rawHelpers.format(input, undefined, {
+		prettier: { parser: "typescript" },
+	});
 	expect(res).toBe('const foo = "bar";\n');
-	expect(consoleWarnSpy).toHaveBeenCalledWith(
-		expect.stringMatching(/no parser and no filepath given/i),
-	);
 
 	consoleWarnSpy.mockRestore();
 });

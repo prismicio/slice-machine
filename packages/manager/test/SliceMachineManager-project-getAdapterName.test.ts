@@ -5,7 +5,7 @@ import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-it("returns the project's adapter namer", async () => {
+it("returns the project's adapter name", async () => {
 	const adapter = createTestPlugin();
 	const testSliceMachineConfig = {
 		repositoryName: "bar",

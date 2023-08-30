@@ -47,7 +47,12 @@ it("sends a given event to Segment", async () => {
 				repo: undefined,
 				nodeVersion: process.versions.node,
 			},
-			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
+			context: {
+				app: { name: "slice-machine-ui", version: "0.0.1-test" },
+				groupId: {
+					Repository: await manager.project.getRepositoryName(),
+				},
+			},
 		},
 		expect.any(Function),
 	);
@@ -82,7 +87,6 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		expect.objectContaining({
 			event: "SliceMachine Init End",
 			properties: {
-				repo: commandInitEndProperties.repository,
 				framework: commandInitEndProperties.framework,
 				success: commandInitEndProperties.success,
 				nodeVersion: process.versions.node,
@@ -115,7 +119,10 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 				...customTypeCreatedProperties,
 				nodeVersion: process.versions.node,
 			},
-			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
+			context: {
+				app: { name: "slice-machine-ui", version: "0.0.1-test" },
+				groupId: { Repository: await manager.project.getRepositoryName() },
+			},
 		}),
 		expect.any(Function),
 	);

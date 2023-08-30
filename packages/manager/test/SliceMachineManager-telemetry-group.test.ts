@@ -36,7 +36,6 @@ it("sends a group payload to Segment", async () => {
 	});
 
 	await manager.telemetry.group({
-		repositoryName: "repositoryName",
 		downloadedLibs: [],
 		downloadedLibsCount: 0,
 		manualLibsCount: 0,
@@ -46,14 +45,19 @@ it("sends a group payload to Segment", async () => {
 	expect(SegmentClient.prototype.group).toHaveBeenCalledWith(
 		{
 			anonymousId: expect.any(String),
-			groupId: "repositoryName",
+			groupId: await manager.project.getRepositoryName(),
 			traits: {
 				downloadedLibs: [],
 				downloadedLibsCount: 0,
 				manualLibsCount: 0,
 				npmLibsCount: 0,
 			},
-			context: { app: { name: "slice-machine-ui", version: "0.0.1-test" } },
+			context: {
+				app: { name: "slice-machine-ui", version: "0.0.1-test" },
+				groupId: {
+					Repository: await manager.project.getRepositoryName(),
+				},
+			},
 		},
 		expect.any(Function),
 	);
@@ -87,7 +91,6 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		.mockImplementation(() => void 0);
 
 	await manager.telemetry.group({
-		repositoryName: "repositoryName",
 		downloadedLibs: [],
 		downloadedLibsCount: 0,
 		manualLibsCount: 0,
@@ -108,7 +111,6 @@ it("throws if telemetry was not initialized", async () => {
 
 	await expect(async () => {
 		await manager.telemetry.group({
-			repositoryName: "repositoryName",
 			downloadedLibs: [],
 			downloadedLibsCount: 0,
 			manualLibsCount: 0,

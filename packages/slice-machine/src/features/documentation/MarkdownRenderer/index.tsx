@@ -10,7 +10,6 @@ import { Text } from "@prismicio/editor-ui";
 import * as styles from "./MarkdownRenderer.css";
 import { useAdapterName } from "@src/hooks/useAdapterName";
 import { telemetry } from "@src/apiClient";
-import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
 
 type MarkdownRenderer = FC<{
   markdown: string;
@@ -18,7 +17,6 @@ type MarkdownRenderer = FC<{
 
 const MarkdownCodeBlock = (props: CodeProps) => {
   const adapter = useAdapterName();
-  const config = useSliceMachineConfig();
   if (props.inline === true) {
     return <code {...props} className={styles.inlineCode} />;
   }
@@ -35,11 +33,10 @@ const MarkdownCodeBlock = (props: CodeProps) => {
   })();
 
   const onCopy = () => {
-    if (adapter !== undefined && config !== undefined) {
+    if (adapter !== undefined) {
       void telemetry.track({
         event: "page-type:copy-snippet",
         framework: adapter,
-        repository: config.repositoryName,
       });
     }
   };
