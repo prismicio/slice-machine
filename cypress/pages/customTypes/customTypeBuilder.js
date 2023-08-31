@@ -6,7 +6,8 @@ class CustomTypeBuilder extends BaseBuilder {
   }
 
   get updateSliceZoneButton() {
-    return cy.get("[data-cy=update-slices]");
+    cy.contains("Add").click();
+    return cy.contains("Add from your library");
   }
 
   get headerCustomTypeName() {

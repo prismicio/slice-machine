@@ -86,7 +86,8 @@ describe.skip("I am an existing SM user (Next) and I want to associate a Slice t
   it.skip("Add the Slice to the Custom Type", () => {
     cy.visit(`/custom-types/${customTypeId}`);
 
-    cy.get("[data-cy=update-slices]").click();
+    cy.contains("Add").click();
+    cy.contains("Add from your library").click();
     // forcing this because the input itself is invisible and an svg is displayed
     cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
     cy.get("[data-cy=update-slices-modal]").submit();

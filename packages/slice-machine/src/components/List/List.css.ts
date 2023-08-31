@@ -26,5 +26,3 @@ export const header = style([
     },
   },
 ]);
-
-export const headerActions = sprinkles({ flexGrow: 1, justifyContent: "end" });

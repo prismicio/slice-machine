@@ -1,4 +1,13 @@
-import { Button, Box, Switch } from "@prismicio/editor-ui";
+import {
+  Button,
+  Box,
+  Switch,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  Icon,
+} from "@prismicio/editor-ui";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
@@ -100,6 +109,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
+  const isSlicesTemplatesSupported = true;
   const [formIsOpen, setFormIsOpen] = useState(false);
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const { remoteSlices, libraries, slices } = useSelector(
@@ -155,20 +165,40 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         <ListHeader
           actions={
             sliceZone ? (
-              <>
-                <Button onClick={onCreateNewSlice} startIcon="add">
-                  New slice
-                </Button>
-                {availableSlices.length > 0 ? (
-                  <Button
-                    data-cy="update-slices"
-                    onClick={onAddNewSlice}
-                    startIcon="edit"
-                  >
-                    Update Slices
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button variant="secondary" startIcon="add">
+                    Add
                   </Button>
-                ) : undefined}
-              </>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    startIcon={<Icon name="add" />}
+                    onSelect={onCreateNewSlice}
+                  >
+                    Create a new slice
+                  </DropdownMenuItem>
+
+                  {availableSlices.length > 0 ? (
+                    <DropdownMenuItem
+                      onSelect={onAddNewSlice}
+                      startIcon={<Icon name="folder" />}
+                    >
+                      Add from your library
+                    </DropdownMenuItem>
+                  ) : undefined}
+
+                  {isSlicesTemplatesSupported ? (
+                    <DropdownMenuItem
+                      onSelect={onAddNewSlice}
+                      startIcon={<Icon name="centerFocusWeak" />}
+                    >
+                      Add from template
+                    </DropdownMenuItem>
+                  ) : undefined}
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : undefined
           }
           toggle={
@@ -205,6 +235,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             onAddNewSlice={onAddNewSlice}
             onCreateNewSlice={onCreateNewSlice}
             projectHasAvailableSlices={availableSlices.length > 0}
+            isSlicesTemplatesSupported={isSlicesTemplatesSupported}
           />
         )
       ) : undefined}

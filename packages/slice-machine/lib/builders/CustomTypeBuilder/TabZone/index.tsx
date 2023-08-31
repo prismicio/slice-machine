@@ -1,5 +1,5 @@
 import { Box } from "@prismicio/editor-ui";
-import type { FC } from "react";
+import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import type { AnyObjectSchema } from "yup";
@@ -165,17 +165,19 @@ const TabZone: FC<TabZoneProps> = ({
         isRepeatableCustomType={customType.repeatable}
       />
 
-      <SliceZone
-        customType={customType}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        tabId={tabId}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sliceZone={sliceZone}
-        onRemoveSharedSlice={onRemoveSharedSlice}
-        onCreateSliceZone={onCreateSliceZone}
-        onDeleteSliceZone={onDeleteSliceZone}
-        onSelectSharedSlices={onSelectSharedSlices}
-      />
+      <Suspense>
+        <SliceZone
+          customType={customType}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          tabId={tabId}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          sliceZone={sliceZone}
+          onRemoveSharedSlice={onRemoveSharedSlice}
+          onCreateSliceZone={onCreateSliceZone}
+          onDeleteSliceZone={onDeleteSliceZone}
+          onSelectSharedSlices={onSelectSharedSlices}
+        />
+      </Suspense>
     </Box>
   );
 };

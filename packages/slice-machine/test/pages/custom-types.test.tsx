@@ -28,7 +28,7 @@ describe("Custom Type Builder", () => {
     vi.clearAllMocks();
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockRouter.setCurrentUrl("/");
   });
 
@@ -125,7 +125,7 @@ describe("Custom Type Builder", () => {
   test("should send a tracking event when the user adds a field", async () => {
     const customTypeId = "a-page";
 
-    Router.push({
+    void Router.push({
       pathname: "custom-types/[customTypeId]",
       query: { customTypeId },
     });
@@ -201,11 +201,14 @@ describe("Custom Type Builder", () => {
 
     const saveFieldButton = screen.getByText("Add");
 
-    await act(async () => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await act(() => {
       fireEvent.click(saveFieldButton);
     });
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Custom Type Field Added",
@@ -224,7 +227,7 @@ describe("Custom Type Builder", () => {
   test("should send a tracking event when the user adds a slice", async () => {
     const customTypeId = "a-page";
 
-    Router.push({
+    void Router.push({
       pathname: "custom-types/[customTypeId]",
       query: { customTypeId },
     });
@@ -295,26 +298,31 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getAllByText("Update Slices")[0];
-    await act(async () => {
+    const addButton = screen.getByText("Add from your library");
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await act(() => {
       fireEvent.click(addButton);
     });
 
     const slicesToSelect = screen.getAllByTestId("slicezone-modal-item");
 
     for (const elem of slicesToSelect) {
-      await act(async () => {
+      // eslint-disable-next-line @typescript-eslint/await-thenable
+      await act(() => {
         fireEvent.click(elem);
       });
     }
 
     const saveButton = within(screen.getByRole("dialog")).getByText("Apply");
 
-    await act(async () => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await act(() => {
       fireEvent.click(saveButton);
     });
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slicezone Updated",
@@ -352,7 +360,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    Router.push({
+    void Router.push({
       pathname: "custom-types/[customTypeId]",
       query: { customTypeId },
     });
@@ -424,11 +432,13 @@ describe("Custom Type Builder", () => {
 
     const saveFieldButton = screen.getByText("Add");
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(saveFieldButton);
     });
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Custom Type Field Added",
@@ -445,12 +455,14 @@ describe("Custom Type Builder", () => {
 
     const saveCustomType = screen.getByTestId("builder-save-button");
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(saveCustomType);
     });
 
-    await waitFor(async () => {
+    await waitFor(() => {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
         expect.objectContaining({
           event: "SliceMachine Custom Type Saved",
@@ -495,7 +507,7 @@ describe("Custom Type Builder", () => {
 
     const customTypeId = "a-page";
 
-    Router.push({
+    void Router.push({
       pathname: "custom-types/[customTypeId]",
       query: { customTypeId },
     });
@@ -561,27 +573,32 @@ describe("Custom Type Builder", () => {
     });
 
     const addButton = screen.getByText("Add a new field");
-    await act(async () => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await act(() => {
       fireEvent.click(addButton);
     });
 
     const richText = screen.getByText("Rich Text");
-    await act(async () => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await act(() => {
       fireEvent.click(richText);
     });
 
     const nameInput = screen.getByLabelText("label-input");
-    await act(async () => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await act(() => {
       fireEvent.change(nameInput, { target: { value: "New Field" } });
     });
 
     const saveFieldButton = screen.getByText("Add");
-
-    await act(async () => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await act(() => {
       fireEvent.click(saveFieldButton);
     });
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Custom Type Field Added",
@@ -598,12 +615,13 @@ describe("Custom Type Builder", () => {
 
     const saveCustomType = screen.getByTestId("builder-save-button");
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(saveCustomType);
     });
 
     await new Promise((r) => setTimeout(r, 500));
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
   });
 });

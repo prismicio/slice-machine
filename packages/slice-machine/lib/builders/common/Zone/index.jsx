@@ -1,4 +1,4 @@
-import { Button } from "@prismicio/editor-ui";
+import { Button, ButtonGroup } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
 import { FaCode, FaPlus } from "react-icons/fa";
@@ -80,7 +80,7 @@ const Zone = ({
           actions={
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             fields.length > 0 ? (
-              <>
+              <ButtonGroup size="medium" variant="secondary">
                 <Button onClick={() => setShowHints(!showHints)}>
                   {showHints ? "Hide" : "Show"} code snippets
                 </Button>
@@ -94,7 +94,7 @@ const Zone = ({
                 >
                   Add a new Field
                 </Button>
-              </>
+              </ButtonGroup>
             ) : undefined
           }
         >
@@ -107,7 +107,7 @@ const Zone = ({
             Actions={
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               fields.length > 0 ? (
-                <>
+                <ButtonGroup size="medium" variant="secondary">
                   <ThemeUIButton
                     variant="buttons.lightSmall"
                     onClick={() => setShowHints(!showHints)}
@@ -139,7 +139,7 @@ const Zone = ({
                     />
                     Add a new Field
                   </ThemeUIButton>
-                </>
+                </ButtonGroup>
               ) : null
             }
           />
