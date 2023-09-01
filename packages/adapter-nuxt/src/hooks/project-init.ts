@@ -6,6 +6,8 @@ import type {
 } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
+	deleteProjectFile,
+	readProjectFile,
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
@@ -154,6 +156,60 @@ const createSliceSimulatorPage = async ({
 	});
 };
 
+const moveOrDeleteAppVue = async ({
+	helpers,
+	options,
+}: CreateSliceSimulatorPageArgs) => {
+	const srcDirectoryExists = await checkHasProjectFile({
+		filename: "src",
+		helpers,
+	});
+
+	const filenameAppVue = path.join(srcDirectoryExists ? "src" : "", "app.vue");
+
+	// If there's not `app.vue`, there's nothing to do.
+	if (!(await checkHasProjectFile({ filename: filenameAppVue, helpers }))) {
+		return;
+	}
+
+	const filecontentAppVue = await readProjectFile({
+		filename: filenameAppVue,
+		helpers,
+		encoding: "utf-8",
+	});
+
+	// We check for app.vue to contain Nuxt default welcome component to determine if we need to consider it as the default one or not.
+	if (!filecontentAppVue.includes("<NuxtWelcome")) {
+		return;
+	}
+
+	const srcPagesDirectoryExists = await checkHasProjectFile({
+		filename: "src/pages",
+		helpers,
+	});
+
+	const filenameIndexVue = path.join(
+		srcPagesDirectoryExists ? "src/pages" : "pages",
+		"index.vue",
+	);
+
+	// If we don't have an `index.vue` we create one with the content of `app.vue`
+	if (!(await checkHasProjectFile({ filename: filenameIndexVue, helpers }))) {
+		await writeProjectFile({
+			filename: filenameIndexVue,
+			contents: filecontentAppVue,
+			format: options.format,
+			helpers,
+		});
+	}
+
+	// Delete `app.vue`
+	await deleteProjectFile({
+		filename: filenameAppVue,
+		helpers,
+	});
+};
+
 const modifySliceMachineConfig = async ({
 	helpers,
 	options,
@@ -196,6 +252,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			installDependencies({ installDependencies: _installDependencies }),
 			configurePrismicModule(context),
 			createSliceSimulatorPage(context),
+			moveOrDeleteAppVue(context),
 			modifySliceMachineConfig(context),
 		]),
 	);
