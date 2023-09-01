@@ -26,6 +26,9 @@ import { SliceUpdateHookBase } from "./hooks/slice-update";
 import { SnippetReadHookBase } from "./hooks/snippet-read";
 import { DocumentationReadHookBase } from "./hooks/documentation-read";
 
+import { SliceTemplateLibraryReadHookBase } from "./hooks/slice-template-library-read";
+import { SliceTemplateLibraryGetHookBase } from "./hooks/slice-template-library-get";
+
 /**
  * A value optionally wrapped in a `PromiseLike`.
  *
@@ -153,6 +156,8 @@ export const SliceMachineHookType = {
 	customType_asset_read: "custom-type:asset:read",
 	customTypeLibrary_read: "custom-type-library:read",
 	documentation_read: "documentation:read",
+	sliceTemplateLibrary_read: "slice-template-library:read",
+	sliceTemplateLibrary_get: "slice-template-library:get",
 
 	snippet_read: "snippet:read",
 
@@ -213,4 +218,8 @@ export type SliceMachineHooks = {
 
 	// Debug
 	[SliceMachineHookType.debug]: Hook<DebugHookBase>;
+
+	// Slice templates
+	[SliceMachineHookType.sliceTemplateLibrary_read]: Hook<SliceTemplateLibraryReadHookBase>;
+	[SliceMachineHookType.sliceTemplateLibrary_get]: Hook<SliceTemplateLibraryGetHookBase>;
 };
