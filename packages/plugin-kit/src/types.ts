@@ -27,7 +27,6 @@ import { SnippetReadHookBase } from "./hooks/snippet-read";
 import { DocumentationReadHookBase } from "./hooks/documentation-read";
 
 import { SliceTemplateLibraryReadHookBase } from "./hooks/slice-template-library-read";
-import { SliceTemplateLibraryGetHookBase } from "./hooks/slice-template-library-get";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
@@ -221,5 +220,4 @@ export type SliceMachineHooks = {
 
 	// Slice templates
 	[SliceMachineHookType.sliceTemplateLibrary_read]: Hook<SliceTemplateLibraryReadHookBase>;
-	[SliceMachineHookType.sliceTemplateLibrary_get]: Hook<SliceTemplateLibraryGetHookBase>;
 };
