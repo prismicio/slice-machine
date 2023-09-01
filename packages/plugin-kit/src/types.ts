@@ -156,7 +156,6 @@ export const SliceMachineHookType = {
 	customTypeLibrary_read: "custom-type-library:read",
 	documentation_read: "documentation:read",
 	sliceTemplateLibrary_read: "slice-template-library:read",
-	sliceTemplateLibrary_get: "slice-template-library:get",
 
 	snippet_read: "snippet:read",
 
