@@ -32,15 +32,17 @@ const createComponentFile = async ({
 	const filename = `index.${extension}`;
 	const pascalName = pascalCase(data.model.name);
 
-	let contents: string;
+	let componentContents: string;
 
 	const isTypeScriptProject = await checkIsTypeScriptProject({
 		helpers,
 		options,
 	});
 
-	if (isTypeScriptProject) {
-		contents = stripIndent`
+	if (data.componentContents) {
+		componentContents = data.componentContents;
+	} else if (isTypeScriptProject) {
+		componentContents = stripIndent`
 			import { Content } from "@prismicio/client";
 			import { SliceComponentProps } from "@prismicio/react";
 
@@ -66,7 +68,7 @@ const createComponentFile = async ({
 			export default ${pascalName}
 		`;
 	} else {
-		contents = stripIndent`
+		componentContents = stripIndent`
 			/**
 			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
 			 * @typedef {import("@prismicio/react").SliceComponentProps<${pascalName}Slice>} ${pascalName}Props
@@ -91,7 +93,7 @@ const createComponentFile = async ({
 		libraryID: data.libraryID,
 		model: data.model,
 		filename,
-		contents,
+		contents: componentContents,
 		format: options.format,
 		actions,
 		helpers,

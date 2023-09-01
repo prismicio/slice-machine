@@ -25,7 +25,9 @@ const createComponentFile = async ({
 	actions,
 	options,
 }: CreateComponentFileArgs) => {
-	const contents = stripIndent`
+	const contents =
+		data.componentContents ??
+		stripIndent`
 		<template>
 			<section
 				:data-slice-type="slice.slice_type"

@@ -12,6 +12,7 @@ import type {
 export type SliceCreateHookData = {
 	libraryID: string;
 	model: SharedSlice;
+	componentContents?: string;
 };
 
 /**
