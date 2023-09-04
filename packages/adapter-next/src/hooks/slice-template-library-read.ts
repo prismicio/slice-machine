@@ -6,20 +6,22 @@ import type {
 import type { PluginOptions } from "../types";
 
 import * as CallToAction from "../sliceTemplates/CallToAction";
-import { checkIsTypeScriptProject } from "@slicemachine/plugin-kit/fs";
 
 const initialTemplates = [CallToAction];
 
 export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 	PluginOptions
-> = async (args: SliceTemplateLibraryReadHookData, { helpers }) => {
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-	});
-
+> = async ({
+	templateIds,
+	isTypeScriptProject,
+}: SliceTemplateLibraryReadHookData) => {
+	console.log("THIS IS NOT CALLED");
+	return {
+		templates: [{ model: {}, mocks: "", componentContents: "hi!"}]
+	}
 	const templates =
-		args.templateIds && args.templateIds.length
-			? initialTemplates.filter((t) => args.templateIds?.includes(t.model.id))
+		templateIds && templateIds.length
+			? initialTemplates.filter((t) => templateIds?.includes(t.model.id))
 			: initialTemplates;
 
 	return {

@@ -30,9 +30,11 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		args: SliceTemplateLibraryReadHookData,
 	): Promise<SliceTemplateLibraryManagerReadReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const isTypeScriptProject = await this.project.checkIsTypeScript();
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"slice-template-library:read",
-			args,
+			{ ...args, isTypeScriptProject },
 		);
 
 		const { data, errors } = decodeHookResult(
@@ -49,10 +51,12 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			hookResult,
 		);
 
+		console.log({ data, errors, hookResult, t: true });
+
 		return {
-			templates: data
-				.flat()[0]
-				.templates.map((t) => ({ model: t.model, screenshots: t.screenshots })),
+			templates: [
+				{ mocks: "", model: {}, componentContents: "const a = true;" },
+			],
 			errors,
 		};
 	}
@@ -61,48 +65,49 @@ export class SliceTemplateLibraryManager extends BaseManager {
 	): Promise<SliceTemplateLibraryManagerGetReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const hookReadResult = await this.sliceMachinePluginRunner.callHook(
-			"slice-template-library:read",
-			args,
-		);
+		args;
+		// const hookReadResult = await this.sliceMachinePluginRunner.callHook(
+		// 	"slice-template-library:read",
+		// 	args,
+		// );
 
-		const { data, errors } = decodeHookResult(
-			t.array(
-				t.type({
-					model: SharedSlice,
-					screenshots: t.any,
-				}),
-			),
-			hookReadResult,
-		);
+		// const { data, errors } = decodeHookResult(
+		// 	t.array(
+		// 		t.type({
+		// 			model: SharedSlice,
+		// 			screenshots: t.any,
+		// 		}),
+		// 	),
+		// 	hookReadResult,
+		// );
 
-		if (errors) {
-			return {
-				errors,
-			};
-		}
+		// if (errors) {
+		// 	return {
+		// 		errors,
+		// 	};
+		// }
 
-		const { libraries } = await this.slices.readAllSliceLibraries();
-		let newId = data.flat()[0].model.id;
-		libraries.forEach((lib) => {
-			if (lib.sliceIDs?.includes(newId)) {
-				newId = newId + Math.random();
-			}
-		});
+		// const { libraries } = await this.slices.readAllSliceLibraries();
+		// let newId = data.flat()[0].model.id;
+		// libraries.forEach((lib) => {
+		// 	if (lib.sliceIDs?.includes(newId)) {
+		// 		newId = newId + Math.random();
+		// 	}
+		// });
 
-		const hookCreateResult = await this.sliceMachinePluginRunner.callHook(
-			"slice:create",
-			{
-				libraryID: libraries[0].libraryID,
-				model: { ...data.flat()[0].model, id: newId },
-			},
-		);
+		// const hookCreateResult = await this.sliceMachinePluginRunner.callHook(
+		// 	"slice:create",
+		// 	{
+		// 		libraryID: libraries[0].libraryID,
+		// 		model: { ...data.flat()[0].model, id: newId },
+		// 	},
+		// );
 
-		if (hookCreateResult.errors) {
-			return {
-				errors: hookCreateResult.errors,
-			};
-		}
+		// if (hookCreateResult.errors) {
+		// 	return {
+		// 		errors: hookCreateResult.errors,
+		// 	};
+		// }
 
 		return {
 			errors: [],
