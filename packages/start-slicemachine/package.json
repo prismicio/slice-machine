@@ -41,7 +41,7 @@
 	],
 	"scripts": {
 		"build": "vite build",
-		"dev": "vite build --watch --mode development",
+		"dev": "NODE_ENV=development vite build --watch --mode development",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
