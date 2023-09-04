@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.11.4-dev-next-release.0",
+	"version": "0.11.4-dev-next-release.2",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
@@ -41,7 +41,7 @@
 	],
 	"scripts": {
 		"build": "vite build",
-		"dev": "vite build --watch --mode development",
+		"dev": "NODE_ENV=development vite build --watch --mode development",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
