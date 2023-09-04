@@ -76,6 +76,7 @@ type SliceMachineManagerReadSliceReturnType = {
 type SliceMachineManagerPushSliceArgs = {
 	libraryID: string;
 	sliceID: string;
+	userAgent?: string;
 };
 
 export type SliceMachineManagerPushSliceReturnType = {
@@ -435,7 +436,7 @@ export class SlicesManager extends BaseManager {
 				endpoint: API_ENDPOINTS.PrismicModels,
 				repositoryName: sliceMachineConfig.repositoryName,
 				token: authenticationToken,
-				userAgent: SLICE_MACHINE_USER_AGENT,
+				userAgent: args.userAgent || SLICE_MACHINE_USER_AGENT,
 				fetch,
 			});
 

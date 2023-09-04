@@ -47,6 +47,7 @@ type SliceMachineManagerReadCustomTypeReturnType = {
 
 type SliceMachineManagerPushCustomTypeArgs = {
 	id: string;
+	userAgent?: string;
 };
 
 type SliceMachineManagerReadCustomTypeMocksConfigArgs = {
@@ -234,7 +235,7 @@ export class CustomTypesManager extends BaseManager {
 				endpoint: API_ENDPOINTS.PrismicModels,
 				repositoryName: sliceMachineConfig.repositoryName,
 				token: authenticationToken,
-				userAgent: SLICE_MACHINE_USER_AGENT,
+				userAgent: args.userAgent || SLICE_MACHINE_USER_AGENT,
 				fetch,
 			});
 
