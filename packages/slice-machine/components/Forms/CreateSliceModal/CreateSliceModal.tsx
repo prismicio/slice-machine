@@ -117,7 +117,8 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
       }}
       actionMessage={
         customType
-          ? CUSTOM_TYPES_MESSAGES[customType.format].sliceZoneModalActionMessage
+          ? CUSTOM_TYPES_MESSAGES[customType.format]
+              .createSliceFromTypeActionMessage
           : undefined
       }
     >
