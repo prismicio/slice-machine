@@ -28,7 +28,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
     <Box justifyContent="center">
       <BlankSlate backgroundImage="/blank-slate-slice-zone.png">
         <BlankSlateContent>
-          <BlankSlateTitle>Add your Slices</BlankSlateTitle>
+          <BlankSlateTitle>Add your slices</BlankSlateTitle>
           <BlankSlateDescription>
             Slices are website sections that you can reuse on different pages
             with different content. Each Slice has its own component in your
@@ -36,19 +36,19 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
           </BlankSlateDescription>
           <BlankSlateActions>
             <Button startIcon="add" onClick={onCreateNewSlice}>
-              Create a new slice
+              Create blank slice
             </Button>
+            {isSlicesTemplatesSupported && (
+              <Button
+                startIcon="contentCopy"
+                onClick={openSlicesTemplatesModal}
+              >
+                Create from template
+              </Button>
+            )}
             {projectHasAvailableSlices && (
               <Button startIcon="folder" onClick={onAddNewSlice}>
                 Add from your library
-              </Button>
-            )}
-            {isSlicesTemplatesSupported && (
-              <Button
-                startIcon="centerFocusWeak"
-                onClick={openSlicesTemplatesModal}
-              >
-                Add from template
               </Button>
             )}
           </BlankSlateActions>

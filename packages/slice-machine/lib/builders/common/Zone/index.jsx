@@ -1,8 +1,7 @@
 import { Button, ButtonGroup } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
-import { FaCode, FaPlus } from "react-icons/fa";
-import { BaseStyles, Button as ThemeUIButton, Heading } from "theme-ui";
+import { BaseStyles, Heading } from "theme-ui";
 
 import { List, ListHeader } from "@src/components/List";
 
@@ -81,18 +80,22 @@ const Zone = ({
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             fields.length > 0 ? (
               <ButtonGroup size="medium" variant="secondary">
-                <Button onClick={() => setShowHints(!showHints)}>
+                <Button
+                  variant="secondary"
+                  onClick={() => setShowHints(!showHints)}
+                >
                   {showHints ? "Hide" : "Show"} code snippets
                 </Button>
                 <Button
+                  variant="secondary"
+                  onClick={() => enterSelectMode()}
                   data-cy={`add-${
                     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     isRepeatable ? "Repeatable" : "Static"
                   }-field`}
-                  onClick={() => enterSelectMode()}
-                  variant="tertiary"
+                  startIcon="add"
                 >
-                  Add a new Field
+                  Add a new field
                 </Button>
               </ButtonGroup>
             ) : undefined
@@ -108,37 +111,23 @@ const Zone = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               fields.length > 0 ? (
                 <ButtonGroup size="medium" variant="secondary">
-                  <ThemeUIButton
-                    variant="buttons.lightSmall"
+                  <Button
+                    variant="secondary"
                     onClick={() => setShowHints(!showHints)}
                   >
-                    <FaCode
-                      style={{
-                        marginRight: "8px",
-                        position: "relative",
-                        top: "2px",
-                      }}
-                    />{" "}
                     {showHints ? "Hide" : "Show"} code snippets
-                  </ThemeUIButton>
-                  <ThemeUIButton
-                    ml={2}
-                    variant="buttons.darkSmall"
+                  </Button>
+                  <Button
+                    variant="secondary"
                     onClick={() => enterSelectMode()}
                     data-cy={`add-${
                       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                       isRepeatable ? "Repeatable" : "Static"
                     }-field`}
+                    startIcon="add"
                   >
-                    <FaPlus
-                      style={{
-                        marginRight: "8px",
-                        position: "relative",
-                        top: "2px",
-                      }}
-                    />
-                    Add a new Field
-                  </ThemeUIButton>
+                    Add a new field
+                  </Button>
                 </ButtonGroup>
               ) : null
             }

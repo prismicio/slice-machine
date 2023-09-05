@@ -1,5 +1,5 @@
-import { Box, Button, Text, Heading } from "theme-ui";
-import { FaPlus } from "react-icons/fa";
+import { Box, Text, Heading } from "theme-ui";
+import { Button } from "@prismicio/editor-ui";
 
 const ZoneEmptyState = ({
   onEnterSelectMode,
@@ -16,18 +16,17 @@ const ZoneEmptyState = ({
         Add a field to your {zoneName} Zone
       </Text>
     </Box>
-    <Button
-      mt={3}
-      variant="buttons.darkSmall"
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      onClick={() => onEnterSelectMode()}
-      data-cy={`add-${zoneName}-field`}
-    >
-      <FaPlus
-        style={{ marginRight: "8px", position: "relative", top: "2px" }}
-      />{" "}
-      Add a new field
-    </Button>
+    <Box sx={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+      <Button
+        variant="secondary"
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        onClick={() => onEnterSelectMode()}
+        data-cy={`add-${zoneName}-field`}
+        startIcon="add"
+      >
+        Add a new field
+      </Button>
+    </Box>
   </Box>
 );
 

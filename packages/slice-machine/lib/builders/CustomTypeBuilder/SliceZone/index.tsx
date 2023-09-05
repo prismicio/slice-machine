@@ -177,12 +177,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <List>
         <ListHeader
           actions={
-            sliceZone ? (
+            sliceZone && slicesInSliceZone.length > 0 ? (
               <Box gap={8}>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <Button variant="secondary" startIcon="add">
-                      Add
+                      Create
                     </Button>
                   </DropdownMenuTrigger>
 
@@ -191,17 +191,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                       startIcon={<Icon name="add" />}
                       onSelect={onCreateNewSlice}
                     >
-                      Create a new slice
+                      Blank slice
                     </DropdownMenuItem>
-
-                    {availableSlices.length > 0 ? (
-                      <DropdownMenuItem
-                        onSelect={onAddNewSlice}
-                        startIcon={<Icon name="folder" />}
-                      >
-                        Add from your library
-                      </DropdownMenuItem>
-                    ) : undefined}
 
                     {availableSlicesTemplates.length > 0 ? (
                       <DropdownMenuItem
@@ -210,13 +201,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         }}
                         startIcon={<Icon name="centerFocusWeak" />}
                       >
-                        Add from template
+                        Use a template
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {slicesInSliceZone.length > 0 ? (
+                {availableSlices.length > 0 ? (
                   <Button
                     data-cy="update-slices"
                     onClick={onAddNewSlice}

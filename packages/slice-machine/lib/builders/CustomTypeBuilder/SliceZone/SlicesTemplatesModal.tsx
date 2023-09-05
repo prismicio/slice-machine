@@ -6,6 +6,7 @@ import { Slices } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 import ModalFormCard from "../../../../components/ModalFormCard";
+import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 
 interface UpdateSliceModalProps {
   isOpen: boolean;
@@ -26,75 +27,6 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
   onSubmit,
   availableSlicesTemplates,
 }) => {
-  const slicesComingSoon: ComponentUI[] = [
-    {
-      extension: "",
-      fileName: "",
-      from: "",
-      href: "",
-      pathToSlice: "",
-      model: {
-        id: "alternate_grid",
-        name: "AlternateGrid",
-        type: "SharedSlice",
-        variations: [
-          {
-            description: "",
-            docURL: "",
-            id: "default",
-            name: "Default",
-            version: "sktwi1xtmkfgx8626",
-          },
-          {
-            description: "",
-            docURL: "",
-            id: "Other",
-            name: "Other",
-            version: "sktwi1xtmkfgx8626",
-          },
-        ],
-      },
-      screenshots: {
-        default: {
-          url: "/alternateGrid.png",
-        },
-      },
-    },
-    {
-      extension: "",
-      fileName: "",
-      from: "",
-      href: "",
-      pathToSlice: "",
-      model: {
-        id: "customer_logos",
-        name: "CustomerLogos",
-        type: "SharedSlice",
-        variations: [
-          {
-            description: "",
-            docURL: "",
-            id: "default",
-            name: "Default",
-            version: "sktwi1xtmkfgx8626",
-          },
-          {
-            description: "",
-            docURL: "",
-            id: "Other",
-            name: "Other",
-            version: "sktwi1xtmkfgx8626",
-          },
-        ],
-      },
-      screenshots: {
-        default: {
-          url: "/customerLogos.png",
-        },
-      },
-    },
-  ];
-
   return (
     <ModalFormCard
       buttonLabel="Create"
@@ -108,7 +40,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: "Create slices from examples",
+        title: "Create slices from template",
       }}
       validate={(values) => {
         if (values.sliceKeys.length === 0) {
@@ -126,7 +58,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
       {({ values }) => (
         <UpdateSliceZoneModalList
           values={values}
-          placeholderSlices={slicesComingSoon}
+          placeholderSlices={sliceTemplatesComingSoon}
           availableSlices={[
             ...availableSlicesTemplates.map(
               (slice): ComponentUI => ({
@@ -147,7 +79,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
                 ),
               })
             ),
-            ...slicesComingSoon,
+            ...sliceTemplatesComingSoon,
           ]}
         />
       )}

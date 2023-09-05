@@ -53,7 +53,7 @@ const UpdateSliceZoneModalList: React.FC<{
                           ...sx,
                         }
                       : {
-                          opacity: 0.65,
+                          opacity: 0.5,
                           ...sx,
                         }
                   }
