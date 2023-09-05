@@ -120,7 +120,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		const creationPromises = slicesToCreate.map((slice) => {
 			assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-			return this.sliceMachinePluginRunner.callHook("slice:create", {
+			return this.slices.createSlice({
 				libraryID: libraries[0].libraryID,
 				model: slice.model,
 				componentContents: slice.componentContents,
@@ -142,15 +142,35 @@ export class SliceTemplateLibraryManager extends BaseManager {
 
 		const mocksResults = await Promise.all(mocksPromises);
 
+		const sliceScreenshotsPromises = slicesToCreate.map((slice) => {
+			const screenshotPromises = Object.entries(slice.screenshots).map(
+				([variationID, data]) => {
+					return this.slices.updateSliceScreenshot({
+						libraryID: libraries[0].libraryID,
+						sliceID: slice.model.id,
+						variationID,
+						data,
+					});
+				},
+			);
+
+			return Promise.all(screenshotPromises);
+		});
+
+		const sliceScreenshotsResults = await Promise.all(sliceScreenshotsPromises);
+
 		// Check for any errors in the creation results
 		const creationErrors = creationResults.flatMap((result) => result.errors);
 		const mocksErrors = mocksResults.flatMap((result) => result.errors);
+		const screenshotErrors = sliceScreenshotsResults.flatMap((result) =>
+			result.flat().flatMap((r) => r.errors),
+		);
 
 		// Extract the slice IDs from the creation results (assuming each result has an ID)
 		const sliceIds = slicesToCreate.map((slice) => slice.model.id);
 
 		return {
-			errors: [...creationErrors, ...mocksErrors],
+			errors: [...creationErrors, ...mocksErrors, ...screenshotErrors],
 			data: {
 				sliceIds,
 			},
