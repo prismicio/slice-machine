@@ -21,13 +21,13 @@ export async function createSlicesTemplates(args: CreateSlicesTemplatesArgs) {
       throw errors;
     }
 
-    templateIds.forEach((templateId) => {
+    data.sliceIds.forEach((sliceId, index) => {
       void telemetry.track({
         event: "slice:created",
-        id: templateId,
-        name: templateId,
+        id: sliceId,
+        name: sliceId,
         library: localLibrariesNames[0],
-        sliceTemplate: templateId,
+        sliceTemplate: templateIds[index],
       });
     });
 
