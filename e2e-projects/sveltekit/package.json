@@ -1,6 +1,6 @@
 {
 	"name": "sveltekit",
-	"version": "1.11.1-dev-next-release.2",
+	"version": "1.11.1-dev-slices-templates-feature.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
