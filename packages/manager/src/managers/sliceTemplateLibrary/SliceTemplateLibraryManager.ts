@@ -1,13 +1,11 @@
 import * as t from "io-ts";
-import {
-	HookError,
-	SliceTemplateLibraryReadHookData,
-} from "@slicemachine/plugin-kit";
+import { HookError } from "@slicemachine/plugin-kit";
 import { BaseManager } from "../BaseManager";
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 type SliceTemplateLibraryManagerReadReturnType = {
 	templates: {
@@ -17,20 +15,33 @@ type SliceTemplateLibraryManagerReadReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceTemplateLibraryManagerGetReturnType = {
+type SliceTemplateLibraryManagerCreateReturnType = {
 	data?: {
 		sliceIds: string[];
 	};
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceTemplateLibraryManagerGetData = {
-	templateIds: string[];
+type SliceTemplateLibraryReadData = {
+	templateIds?: string[];
 };
+
+type SliceTemplateLibraryCreateData = SliceTemplateLibraryReadData;
+
+const readHookCodec = t.type({
+	templates: t.array(
+		t.type({
+			model: SharedSlice,
+			componentContents: t.string,
+			mocks: t.array(SharedSliceContent),
+			screenshots: t.record(t.string, t.any),
+		}),
+	),
+});
 
 export class SliceTemplateLibraryManager extends BaseManager {
 	async read(
-		args: SliceTemplateLibraryReadHookData,
+		args: SliceTemplateLibraryReadData,
 	): Promise<SliceTemplateLibraryManagerReadReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
@@ -40,19 +51,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			{ ...args, isTypeScriptProject },
 		);
 
-		const { data, errors } = decodeHookResult(
-			t.type({
-				templates: t.array(
-					t.type({
-						mocks: t.string,
-						componentContents: t.string,
-						model: SharedSlice,
-						screenshots: t.any,
-					}),
-				),
-			}),
-			hookResult,
-		);
+		const { data, errors } = decodeHookResult(readHookCodec, hookResult);
 
 		return {
 			templates: data.flat()[0].templates,
@@ -60,8 +59,8 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		};
 	}
 	async create(
-		args: SliceTemplateLibraryManagerGetData,
-	): Promise<SliceTemplateLibraryManagerGetReturnType> {
+		args: SliceTemplateLibraryCreateData,
+	): Promise<SliceTemplateLibraryManagerCreateReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		// Reading all available slice templates
@@ -71,16 +70,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			{ ...args, isTypeScriptProject },
 		);
 		const { data: readData, errors: readErrors } = decodeHookResult(
-			t.type({
-				templates: t.array(
-					t.type({
-						mocks: t.string,
-						componentContents: t.string,
-						model: SharedSlice,
-						screenshots: t.any,
-					}),
-				),
-			}),
+			readHookCodec,
 			hookReadResult,
 		);
 		if (readErrors.length > 0) {
@@ -140,23 +130,30 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		// Wait for all slices to be created
 		const creationResults = await Promise.all(creationPromises);
 
-		// Check for any errors in the creation results
-		const errors = creationResults.flatMap((result) => result.errors);
+		const mocksPromises = slicesToCreate.map((slice) => {
+			assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		if (errors.length > 0) {
-			return {
-				errors: errors,
-			};
-		}
+			return this.slices.updateSliceMocks({
+				libraryID: libraries[0].libraryID,
+				sliceID: slice.model.id,
+				mocks: slice.mocks,
+			});
+		});
+
+		const mocksResults = await Promise.all(mocksPromises);
+
+		// Check for any errors in the creation results
+		const creationErrors = creationResults.flatMap((result) => result.errors);
+		const mocksErrors = mocksResults.flatMap((result) => result.errors);
 
 		// Extract the slice IDs from the creation results (assuming each result has an ID)
 		const sliceIds = slicesToCreate.map((slice) => slice.model.id);
 
 		return {
+			errors: [...creationErrors, ...mocksErrors],
 			data: {
 				sliceIds,
 			},
-			errors: [],
 		};
 	}
 }

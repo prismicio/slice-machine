@@ -1,4 +1,5 @@
 import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 import type {
 	ExtendSliceMachineHook,
@@ -20,7 +21,7 @@ export type SliceTemplateLibraryReadHookData = {
 export type SliceTemplateLibraryReadHookReturnType = {
 	templates: {
 		model: SharedSlice;
-		mocks: string;
+		mocks: SharedSliceContent[];
 		componentContents: string;
 		screenshots: Record<string, Buffer>;
 	}[];

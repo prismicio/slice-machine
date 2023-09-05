@@ -136,7 +136,15 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
                 href: "",
                 pathToSlice: "",
                 model: Slices.toSM(slice.model),
-                screenshots: {},
+                screenshots: Object.entries(slice.screenshots).reduce(
+                  (acc, curr) => ({
+                    ...acc,
+                    [curr[0]]: {
+                      url: curr[1],
+                    },
+                  }),
+                  {}
+                ),
               })
             ),
             ...slicesComingSoon,
