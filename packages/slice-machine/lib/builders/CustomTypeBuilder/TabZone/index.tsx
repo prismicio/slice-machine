@@ -1,5 +1,5 @@
-import { Box } from "@prismicio/editor-ui";
-import type { FC } from "react";
+import { Box, Text } from "@prismicio/editor-ui";
+import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import type { AnyObjectSchema } from "yup";
@@ -139,43 +139,50 @@ const TabZone: FC<TabZoneProps> = ({
 
   return (
     <Box backgroundColor="grey2" flexDirection="column" gap={8}>
-      <Zone
-        zoneType="customType"
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        tabId={tabId}
-        title="Static Zone"
-        dataTip={""}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        fields={fields}
-        // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        poolOfFieldsToCheck={poolOfFields}
-        showHints={true}
-        EditModal={EditModal}
-        widgetsArray={ctBuilderArray}
-        onDeleteItem={onDeleteItem}
-        onSave={onSave}
-        onSaveNewField={onSaveNewField}
-        onDragEnd={onDragEnd}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        renderHintBase={({ item }) => `data${transformKeyAccessor(item.key)}`}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-        renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
-        dataCy="ct-static-zone"
-        isRepeatableCustomType={customType.repeatable}
-      />
-
-      <SliceZone
-        customType={customType}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        tabId={tabId}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sliceZone={sliceZone}
-        onRemoveSharedSlice={onRemoveSharedSlice}
-        onCreateSliceZone={onCreateSliceZone}
-        onDeleteSliceZone={onDeleteSliceZone}
-        onSelectSharedSlices={onSelectSharedSlices}
-      />
+      <Suspense
+        fallback={
+          <Box padding={32}>
+            <Text>Loading...</Text>
+          </Box>
+        }
+      >
+        <Zone
+          zoneType="customType"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          tabId={tabId}
+          title="Static Zone"
+          dataTip={""}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          fields={fields}
+          // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          poolOfFieldsToCheck={poolOfFields}
+          showHints={true}
+          EditModal={EditModal}
+          widgetsArray={ctBuilderArray}
+          onDeleteItem={onDeleteItem}
+          onSave={onSave}
+          onSaveNewField={onSaveNewField}
+          onDragEnd={onDragEnd}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+          renderHintBase={({ item }) => `data${transformKeyAccessor(item.key)}`}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+          renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
+          dataCy="ct-static-zone"
+          isRepeatableCustomType={customType.repeatable}
+        />
+        <SliceZone
+          customType={customType}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          tabId={tabId}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          sliceZone={sliceZone}
+          onRemoveSharedSlice={onRemoveSharedSlice}
+          onCreateSliceZone={onCreateSliceZone}
+          onDeleteSliceZone={onDeleteSliceZone}
+          onSelectSharedSlices={onSelectSharedSlices}
+        />
+      </Suspense>
     </Box>
   );
 };

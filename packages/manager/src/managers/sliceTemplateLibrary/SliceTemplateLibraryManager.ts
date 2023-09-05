@@ -18,6 +18,9 @@ type SliceTemplateLibraryManagerReadReturnType = {
 };
 
 type SliceTemplateLibraryManagerGetReturnType = {
+	data?: {
+		sliceIds: string[];
+	};
 	errors: (DecodeError | HookError)[];
 };
 
@@ -42,7 +45,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 				templates: t.array(
 					t.type({
 						mocks: t.string,
-						contents: t.string,
+						componentContents: t.string,
 						model: SharedSlice,
 						screenshots: t.any,
 					}),
@@ -51,12 +54,8 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			hookResult,
 		);
 
-		console.log({ data, errors, hookResult, t: true });
-
 		return {
-			templates: [
-				{ mocks: "", model: {}, componentContents: "const a = true;" },
-			],
+			templates: data.flat()[0].templates,
 			errors,
 		};
 	}
@@ -65,51 +64,98 @@ export class SliceTemplateLibraryManager extends BaseManager {
 	): Promise<SliceTemplateLibraryManagerGetReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		args;
-		// const hookReadResult = await this.sliceMachinePluginRunner.callHook(
-		// 	"slice-template-library:read",
-		// 	args,
-		// );
+		// Reading all available slice templates
+		const isTypeScriptProject = await this.project.checkIsTypeScript();
+		const hookReadResult = await this.sliceMachinePluginRunner.callHook(
+			"slice-template-library:read",
+			{ ...args, isTypeScriptProject },
+		);
+		const { data: readData, errors: readErrors } = decodeHookResult(
+			t.type({
+				templates: t.array(
+					t.type({
+						mocks: t.string,
+						componentContents: t.string,
+						model: SharedSlice,
+						screenshots: t.any,
+					}),
+				),
+			}),
+			hookReadResult,
+		);
+		if (readErrors.length > 0) {
+			return {
+				errors: readErrors,
+			};
+		}
 
-		// const { data, errors } = decodeHookResult(
-		// 	t.array(
-		// 		t.type({
-		// 			model: SharedSlice,
-		// 			screenshots: t.any,
-		// 		}),
-		// 	),
-		// 	hookReadResult,
-		// );
+		// Extract all existing slice IDs into an array
+		const { libraries } = await this.slices.readAllSliceLibraries();
+		const existingIds: string[] = [];
+		libraries.forEach((lib) => {
+			if (lib.sliceIDs) {
+				existingIds.push(...lib.sliceIDs);
+			}
+		});
 
-		// if (errors) {
-		// 	return {
-		// 		errors,
-		// 	};
-		// }
+		// Create a function to get the next available ID based on the baseId
+		const getNextAvailableSlice = (baseId: string) => {
+			let nextId = baseId;
+			let counter = 1;
+			while (existingIds.includes(nextId)) {
+				counter++;
+				nextId = `${baseId}_${counter}`;
+			}
+			existingIds.push(nextId);
 
-		// const { libraries } = await this.slices.readAllSliceLibraries();
-		// let newId = data.flat()[0].model.id;
-		// libraries.forEach((lib) => {
-		// 	if (lib.sliceIDs?.includes(newId)) {
-		// 		newId = newId + Math.random();
-		// 	}
-		// });
+			return { id: nextId, counter };
+		};
 
-		// const hookCreateResult = await this.sliceMachinePluginRunner.callHook(
-		// 	"slice:create",
-		// 	{
-		// 		libraryID: libraries[0].libraryID,
-		// 		model: { ...data.flat()[0].model, id: newId },
-		// 	},
-		// );
+		// Extract the slices to create from the template ids given in args
+		const slicesToCreate = readData.flat()[0].templates.map((template) => {
+			const { id, counter } = getNextAvailableSlice(template.model.id);
 
-		// if (hookCreateResult.errors) {
-		// 	return {
-		// 		errors: hookCreateResult.errors,
-		// 	};
-		// }
+			return {
+				...template,
+				model: {
+					...template.model,
+					id,
+					name:
+						counter > 1 ? template.model.name + counter : template.model.name,
+				},
+			};
+		});
+
+		// Initiate the slice creation process for all slices
+		const creationPromises = slicesToCreate.map((slice) => {
+			assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+			return this.sliceMachinePluginRunner.callHook("slice:create", {
+				libraryID: libraries[0].libraryID,
+				model: slice.model,
+				componentContents: slice.componentContents,
+			});
+		});
+
+		// Wait for all slices to be created
+		const creationResults = await Promise.all(creationPromises);
+
+		// Check for any errors in the creation results
+		const errors = creationResults.flatMap((result) => result.errors);
+
+		if (errors.length > 0) {
+			return {
+				errors: errors,
+			};
+		}
+
+		// Extract the slice IDs from the creation results (assuming each result has an ID)
+		const sliceIds = slicesToCreate.map((slice) => slice.model.id);
 
 		return {
+			data: {
+				sliceIds,
+			},
 			errors: [],
 		};
 	}

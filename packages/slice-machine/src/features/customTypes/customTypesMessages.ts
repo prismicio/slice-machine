@@ -12,8 +12,7 @@ export const CUSTOM_TYPES_MESSAGES = {
     inputPlaceholder: `ID to query the page type in the API (e.g. 'BlogPost')`,
     blankSlateDescription:
       "Page types are models that your editors will use to create website pages in the Page Builder.",
-    createSliceFromTypeActionMessage:
-      "This action will save your current Page Type",
+    sliceZoneModalActionMessage: "This action will save your current Page Type",
   },
   custom: {
     name: ({ start, plural }: CustomTypesMessagesNameArgs) =>
@@ -23,7 +22,7 @@ export const CUSTOM_TYPES_MESSAGES = {
     inputPlaceholder: `ID to query the custom type in the API (e.g. 'Author')`,
     blankSlateDescription:
       "Custom types are models that your editors can use to create menus or objects in the Page Builder.",
-    createSliceFromTypeActionMessage:
+    sliceZoneModalActionMessage:
       "This action will save your current Custom Type",
   },
 };

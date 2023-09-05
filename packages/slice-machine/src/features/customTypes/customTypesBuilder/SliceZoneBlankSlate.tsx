@@ -12,13 +12,17 @@ import {
 export type SliceZoneBlankSlateProps = {
   onAddNewSlice: () => void;
   onCreateNewSlice: () => void;
+  openSlicesTemplatesModal: () => void;
   projectHasAvailableSlices: boolean;
+  isSlicesTemplatesSupported: boolean;
 };
 
 export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   onCreateNewSlice,
   onAddNewSlice,
+  openSlicesTemplatesModal,
   projectHasAvailableSlices,
+  isSlicesTemplatesSupported,
 }) => {
   return (
     <Box justifyContent="center">
@@ -32,11 +36,19 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
           </BlankSlateDescription>
           <BlankSlateActions>
             <Button startIcon="add" onClick={onCreateNewSlice}>
-              New slice
+              Create a new slice
             </Button>
             {projectHasAvailableSlices && (
-              <Button startIcon="edit" onClick={onAddNewSlice}>
-                Update Slices
+              <Button startIcon="folder" onClick={onAddNewSlice}>
+                Add from your library
+              </Button>
+            )}
+            {isSlicesTemplatesSupported && (
+              <Button
+                startIcon="centerFocusWeak"
+                onClick={openSlicesTemplatesModal}
+              >
+                Add from template
               </Button>
             )}
           </BlankSlateActions>

@@ -164,7 +164,7 @@ type CustomTypeSavedSegmentEvent = SegmentEvent<
 
 type SliceCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.slice_created,
-	{ id: string; name: string; library: string }
+	{ id: string; name: string; library: string; sliceTemplate?: string }
 >;
 
 type ScreenshotTakenSegmentEvent = SegmentEvent<

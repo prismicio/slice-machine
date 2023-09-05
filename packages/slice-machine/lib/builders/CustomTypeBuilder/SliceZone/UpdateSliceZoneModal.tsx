@@ -1,7 +1,6 @@
-import ModalFormCard from "../../../../components/ModalFormCard";
-
-import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import ModalFormCard from "../../../../components/ModalFormCard";
+import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
 interface UpdateSliceModalProps {
   isOpen: boolean;

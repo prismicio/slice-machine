@@ -169,16 +169,12 @@ export class HookSystem<THooks extends Hooks = Hooks> {
 	): CallHookReturnType<THooks[TType]["fn"]> {
 		let hooks: RegisteredHook<THooks[TType]>[];
 
-		console.log({ typeOrTypeAndHookID })
 		if (typeof typeOrTypeAndHookID === "string") {
-			console.log({ "this._registeredHooks[typeOrTypeAndHookID]": this._registeredHooks[typeOrTypeAndHookID]})
 			hooks = this._registeredHooks[typeOrTypeAndHookID] ?? [];
 		} else {
 			const hookForID = this._registeredHooks[typeOrTypeAndHookID.type]?.find(
 				(hook) => hook.meta.id === typeOrTypeAndHookID.hookID,
 			);
-
-			console.log({ hookForID })
 
 			if (hookForID) {
 				hooks = [hookForID];

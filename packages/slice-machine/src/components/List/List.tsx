@@ -1,4 +1,4 @@
-import { ButtonGroup, Text } from "@prismicio/editor-ui";
+import { Box, Text } from "@prismicio/editor-ui";
 import type { FC, PropsWithChildren, ReactNode } from "react";
 
 import * as styles from "./List.css";
@@ -23,12 +23,8 @@ export const ListHeader: FC<ListHeaderProps> = ({
       {children}
     </Text>
     {toggle}
-    <ButtonGroup
-      className={styles.headerActions}
-      size="medium"
-      variant="secondary"
-    >
+    <Box flexGrow={1} justifyContent="end">
       {actions}
-    </ButtonGroup>
+    </Box>
   </header>
 );
