@@ -182,7 +182,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <Button variant="secondary" startIcon="add">
-                      Create
+                      Add
                     </Button>
                   </DropdownMenuTrigger>
 
@@ -199,9 +199,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         onSelect={() => {
                           openSlicesTemplatesModal();
                         }}
-                        startIcon={<Icon name="centerFocusWeak" />}
+                        startIcon={<Icon name="contentCopy" />}
                       >
-                        Use a template
+                        Preset slice
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>

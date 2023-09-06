@@ -82,7 +82,7 @@ const createComponentFile = async ({
 		libraryID: data.libraryID,
 		model: data.model,
 		filename: "index.vue",
-		contents: contents,
+		contents,
 		format: options.format,
 		actions,
 		helpers,
