@@ -247,7 +247,6 @@ export const createComponentContents = (
 						.es-call-to-action {
 							background-color: #fff;
 							color: #333;
-							padding: 8vw 2rem;
 						}
 						
 						.es-call-to-action__content {
@@ -387,7 +386,6 @@ export const createComponentContents = (
 						.es-call-to-action {
 							background-color: #fff;
 							color: #333;
-							padding: 8vw 2rem;
 						}
 						
 						.es-call-to-action__content {
