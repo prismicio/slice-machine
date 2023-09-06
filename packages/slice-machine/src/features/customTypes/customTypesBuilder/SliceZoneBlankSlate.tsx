@@ -43,12 +43,12 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                 startIcon="contentCopy"
                 onClick={openSlicesTemplatesModal}
               >
-                Add preset slices
+                Add from templates
               </Button>
             )}
             {projectHasAvailableSlices && (
               <Button startIcon="folder" onClick={onAddNewSlice}>
-                Add from a library
+                Add from libraries
               </Button>
             )}
           </BlankSlateActions>
