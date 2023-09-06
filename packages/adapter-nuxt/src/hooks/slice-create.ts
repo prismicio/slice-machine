@@ -29,7 +29,7 @@ const createComponentFile = async ({
 }: CreateComponentFileArgs) => {
 	const pascalName = pascalCase(data.model.name);
 
-	let componentContents: string;
+	let contents: string;
 
 	const isTypeScriptProject = await checkIsTypeScriptProject({
 		helpers,
@@ -37,9 +37,9 @@ const createComponentFile = async ({
 	});
 
 	if (data.componentContents) {
-		componentContents = data.componentContents;
+		contents = data.componentContents;
 	} else if (isTypeScriptProject) {
-		componentContents = stripIndent`
+		contents = stripIndent`
 			<script setup lang="ts">
 			import { Content } from "@prismicio/client";
 
@@ -60,7 +60,7 @@ const createComponentFile = async ({
 			</template>
 		`;
 	} else {
-		componentContents = stripIndent`
+		contents = stripIndent`
 			<script setup>
 			// The array passed to \`getSliceComponentProps\` is purely optional.
 			// Consider it as a visual hint for you when templating your slice.
@@ -82,7 +82,7 @@ const createComponentFile = async ({
 		libraryID: data.libraryID,
 		model: data.model,
 		filename: "index.vue",
-		contents: componentContents,
+		contents: contents,
 		format: options.format,
 		actions,
 		helpers,

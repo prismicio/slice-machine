@@ -13,9 +13,10 @@ export async function createSlicesTemplates(args: CreateSlicesTemplatesArgs) {
   try {
     const { templateIDs, localLibrariesNames, onSuccess } = args;
 
-    const { data, errors } = await managerClient.sliceTemplateLibrary.create({
-      templateIDs,
-    });
+    const { data, errors } =
+      await managerClient.sliceTemplateLibrary.createSlices({
+        templateIDs,
+      });
 
     if (errors.length > 0 || data === undefined) {
       throw errors;

@@ -25,13 +25,14 @@ export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 	const templatesPromises = templates.map(async (t) => {
 		const { mocks, model, createComponentContents, screenshotPaths } = t;
 
-		const screenshots = Object.entries(screenshotPaths).reduce(
-			(acc, curr) => ({
-				...acc,
-				[curr[0]]: fs.readFile(path.join(globalThis.__dirname, curr[1])),
-			}),
-			{},
-		);
+		const screenshotEntries = Object.entries(screenshotPaths);
+		const screenshotPromises = screenshotEntries.map(([key, filePath]) => {
+			return fs
+				.readFile(path.join(globalThis.__dirname, filePath))
+				.then((data) => [key, data]);
+		});
+		const readScreenshots = await Promise.all(screenshotPromises);
+		const screenshots = Object.fromEntries(readScreenshots);
 
 		return {
 			mocks,

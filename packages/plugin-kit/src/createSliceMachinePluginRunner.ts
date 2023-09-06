@@ -142,8 +142,9 @@ export class SliceMachinePluginRunner {
 				)(resolve);
 				plugin = raw.default || raw;
 			} catch (error) {
-				// uncomment if you need to debug adapter registration
-				// console.error(error);
+				if (import.meta.env.DEV) {
+					console.error(error);
+				}
 			}
 
 			if (!plugin) {

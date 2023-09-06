@@ -9,9 +9,8 @@ export type SliceTemplate = {
 
 async function getSlicesTemplates(): Promise<SliceTemplate[]> {
   try {
-    const { templates, errors } = await managerClient.sliceTemplateLibrary.read(
-      {}
-    );
+    const { templates, errors } =
+      await managerClient.sliceTemplateLibrary.readLibrary({});
 
     if (errors.length > 0) {
       throw errors;

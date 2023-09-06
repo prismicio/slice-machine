@@ -29,7 +29,7 @@ const createComponentFile = async ({
 }: Args) => {
 	const pascalName = pascalCase(data.model.name);
 
-	let componentContents: string;
+	let contents: string;
 
 	const isTypeScriptProject = await checkIsTypeScriptProject({
 		helpers,
@@ -37,9 +37,9 @@ const createComponentFile = async ({
 	});
 
 	if (data.componentContents) {
-		componentContents = data.componentContents;
+		contents = data.componentContents;
 	} else if (isTypeScriptProject) {
-		componentContents = source`
+		contents = source`
 			<script lang="ts">
 				import type { Content } from '@prismicio/client';
 
@@ -51,7 +51,7 @@ const createComponentFile = async ({
 			</section>
 		`;
 	} else {
-		componentContents = source`
+		contents = source`
 			<script>
 				/** @type {import("@prismicio/client").Content.${pascalName}Slice} */
 				export let slice;
@@ -67,7 +67,7 @@ const createComponentFile = async ({
 		libraryID: data.libraryID,
 		model: data.model,
 		filename: "index.svelte",
-		contents: componentContents,
+		contents: contents,
 		format: options.format,
 		actions,
 		helpers,

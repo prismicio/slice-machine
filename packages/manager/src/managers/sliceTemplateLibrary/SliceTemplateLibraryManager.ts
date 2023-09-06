@@ -7,26 +7,28 @@ import { decodeHookResult } from "../../lib/decodeHookResult";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
-type SliceTemplateLibraryManagerReadReturnType = {
+type SliceTemplateLibraryManagerReadLibraryReturnType = {
 	templates: {
 		model: SharedSlice;
+		componentContents: string;
+		mocks: SharedSliceContent[];
 		screenshots: Record<string, Buffer>;
 	}[];
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceTemplateLibraryManagerCreateReturnType = {
+type SliceTemplateLibraryManagerCreateSlicesReturnType = {
 	data?: {
 		sliceIDs: string[];
 	};
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceTemplateLibraryReadData = {
+type SliceTemplateLibraryReadLibraryData = {
 	templateIDs?: string[];
 };
 
-type SliceTemplateLibraryCreateData = SliceTemplateLibraryReadData;
+type SliceTemplateLibraryCreateSlicesData = SliceTemplateLibraryReadLibraryData;
 
 const readHookCodec = t.type({
 	templates: t.array(
@@ -40,9 +42,9 @@ const readHookCodec = t.type({
 });
 
 export class SliceTemplateLibraryManager extends BaseManager {
-	async read(
-		args: SliceTemplateLibraryReadData,
-	): Promise<SliceTemplateLibraryManagerReadReturnType> {
+	async readLibrary(
+		args: SliceTemplateLibraryReadLibraryData,
+	): Promise<SliceTemplateLibraryManagerReadLibraryReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
@@ -57,20 +59,13 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			errors,
 		};
 	}
-	async create(
-		args: SliceTemplateLibraryCreateData,
-	): Promise<SliceTemplateLibraryManagerCreateReturnType> {
+	async createSlices(
+		args: SliceTemplateLibraryCreateSlicesData,
+	): Promise<SliceTemplateLibraryManagerCreateSlicesReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		// Reading all available slice templates
-		const hookReadResult = await this.sliceMachinePluginRunner.callHook(
-			"slice-template-library:read",
-			args,
-		);
-		const { data: readData, errors: readErrors } = decodeHookResult(
-			readHookCodec,
-			hookReadResult,
-		);
+		const { templates, errors: readErrors } = await this.readLibrary(args);
 		if (readErrors.length > 0) {
 			return {
 				errors: readErrors,
@@ -78,13 +73,14 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		}
 
 		// Extract all existing slice IDs into an array
-		const { libraries } = await this.slices.readAllSliceLibraries();
-		const existingIds: string[] = [];
-		libraries.forEach((lib) => {
-			if (lib.sliceIDs) {
-				existingIds.push(...lib.sliceIDs);
-			}
-		});
+		const { models: allSlices, errors: readAllSlicesErrors } =
+			await this.slices.readAllSlices();
+		if (readAllSlicesErrors.length > 0) {
+			return {
+				errors: readAllSlicesErrors,
+			};
+		}
+		const existingIds: string[] = allSlices.map((slice) => slice.model.id);
 
 		// Create a function to get the next available ID based on the baseId
 		const getNextAvailableSlice = (baseId: string) => {
@@ -100,7 +96,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		};
 
 		// Extract the slices to create from the template ids given in args
-		const slicesToCreate = readData.flat()[0].templates.map((template) => {
+		const slicesToCreate = templates.map((template) => {
 			const { id, counter } = getNextAvailableSlice(template.model.id);
 
 			return {
@@ -113,6 +109,16 @@ export class SliceTemplateLibraryManager extends BaseManager {
 				},
 			};
 		});
+
+		// Get all libraries
+		// Note: We only support adding template to the firs library at the moment
+		const { libraries, errors: readAllSliceLibrariesErrors } =
+			await this.slices.readAllSliceLibraries();
+		if (readAllSliceLibrariesErrors.length > 0) {
+			return {
+				errors: readAllSliceLibrariesErrors,
+			};
+		}
 
 		// Initiate the slice creation process for all slices
 		const creationPromises = slicesToCreate.map((slice) => {
@@ -127,7 +133,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		const creationResults = await Promise.all(creationPromises);
 		// Check for any errors in the creation results
 		const creationErrors = creationResults.flatMap((result) => result.errors);
-		if (creationErrors.length) {
+		if (creationErrors.length > 0) {
 			return {
 				errors: creationErrors,
 			};
