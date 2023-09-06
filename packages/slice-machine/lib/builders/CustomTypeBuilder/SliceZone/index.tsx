@@ -276,7 +276,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         availableSlicesTemplates={availableSlicesTemplates}
         onSubmit={({ sliceKeys }) =>
           void createSlicesTemplates({
-            templateIds: sliceKeys,
+            templateIDs: sliceKeys,
             localLibrariesNames: localLibraries.map((library) => library.name),
             onSuccess: async (slicesIds: string[]) => {
               // TODO(DT-1453): Remove the need of the global getState

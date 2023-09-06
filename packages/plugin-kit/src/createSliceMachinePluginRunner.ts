@@ -141,9 +141,9 @@ export class SliceMachinePluginRunner {
 					path.resolve(this._project.root, "noop.js"),
 				)(resolve);
 				plugin = raw.default || raw;
-			} catch (e) {
+			} catch (error) {
 				// uncomment if you need to debug adapter registration
-				// console.error(e);
+				// console.error(error);
 			}
 
 			if (!plugin) {

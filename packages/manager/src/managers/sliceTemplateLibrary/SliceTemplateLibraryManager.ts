@@ -17,13 +17,13 @@ type SliceTemplateLibraryManagerReadReturnType = {
 
 type SliceTemplateLibraryManagerCreateReturnType = {
 	data?: {
-		sliceIds: string[];
+		sliceIDs: string[];
 	};
 	errors: (DecodeError | HookError)[];
 };
 
 type SliceTemplateLibraryReadData = {
-	templateIds?: string[];
+	templateIDs?: string[];
 };
 
 type SliceTemplateLibraryCreateData = SliceTemplateLibraryReadData;
@@ -45,10 +45,9 @@ export class SliceTemplateLibraryManager extends BaseManager {
 	): Promise<SliceTemplateLibraryManagerReadReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const isTypeScriptProject = await this.project.checkIsTypeScript();
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"slice-template-library:read",
-			{ ...args, isTypeScriptProject },
+			args,
 		);
 
 		const { data, errors } = decodeHookResult(readHookCodec, hookResult);
@@ -64,10 +63,9 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		// Reading all available slice templates
-		const isTypeScriptProject = await this.project.checkIsTypeScript();
 		const hookReadResult = await this.sliceMachinePluginRunner.callHook(
 			"slice-template-library:read",
-			{ ...args, isTypeScriptProject },
+			args,
 		);
 		const { data: readData, errors: readErrors } = decodeHookResult(
 			readHookCodec,
@@ -118,8 +116,6 @@ export class SliceTemplateLibraryManager extends BaseManager {
 
 		// Initiate the slice creation process for all slices
 		const creationPromises = slicesToCreate.map((slice) => {
-			assertPluginsInitialized(this.sliceMachinePluginRunner);
-
 			return this.slices.createSlice({
 				libraryID: libraries[0].libraryID,
 				model: slice.model,
@@ -129,10 +125,15 @@ export class SliceTemplateLibraryManager extends BaseManager {
 
 		// Wait for all slices to be created
 		const creationResults = await Promise.all(creationPromises);
+		// Check for any errors in the creation results
+		const creationErrors = creationResults.flatMap((result) => result.errors);
+		if (creationErrors.length) {
+			return {
+				errors: creationErrors,
+			};
+		}
 
 		const mocksPromises = slicesToCreate.map((slice) => {
-			assertPluginsInitialized(this.sliceMachinePluginRunner);
-
 			return this.slices.updateSliceMocks({
 				libraryID: libraries[0].libraryID,
 				sliceID: slice.model.id,
@@ -158,21 +159,18 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		});
 
 		const sliceScreenshotsResults = await Promise.all(sliceScreenshotsPromises);
-
-		// Check for any errors in the creation results
-		const creationErrors = creationResults.flatMap((result) => result.errors);
 		const mocksErrors = mocksResults.flatMap((result) => result.errors);
 		const screenshotErrors = sliceScreenshotsResults.flatMap((result) =>
 			result.flat().flatMap((r) => r.errors),
 		);
 
 		// Extract the slice IDs from the creation results (assuming each result has an ID)
-		const sliceIds = slicesToCreate.map((slice) => slice.model.id);
+		const sliceIDs = slicesToCreate.map((slice) => slice.model.id);
 
 		return {
-			errors: [...creationErrors, ...mocksErrors, ...screenshotErrors],
+			errors: [...mocksErrors, ...screenshotErrors],
 			data: {
-				sliceIds,
+				sliceIDs,
 			},
 		};
 	}

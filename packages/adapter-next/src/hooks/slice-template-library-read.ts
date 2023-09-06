@@ -1,26 +1,25 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type {
-	SliceTemplateLibraryReadHook,
-	SliceTemplateLibraryReadHookData,
-} from "@slicemachine/plugin-kit";
+import type { SliceTemplateLibraryReadHook } from "@slicemachine/plugin-kit";
 
 import type { PluginOptions } from "../types";
 
 import * as CallToAction from "../sliceTemplates/CallToAction";
+import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
 const initialTemplates = [CallToAction];
 
 export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 	PluginOptions
-> = async ({
-	templateIds,
-	isTypeScriptProject,
-}: SliceTemplateLibraryReadHookData) => {
+> = async ({ templateIDs }, { helpers, options }) => {
+	const isTypeScriptProject = await checkIsTypeScriptProject({
+		helpers,
+		options,
+	});
 	const templates =
-		templateIds && templateIds.length
-			? initialTemplates.filter((t) => templateIds?.includes(t.model.id))
+		templateIDs && templateIDs.length
+			? initialTemplates.filter((t) => templateIDs?.includes(t.model.id))
 			: initialTemplates;
 
 	return {

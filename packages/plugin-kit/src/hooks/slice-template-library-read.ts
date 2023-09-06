@@ -11,8 +11,7 @@ import type {
  * Data provided to `slice-template-library:read` hook handlers.
  */
 export type SliceTemplateLibraryReadHookData = {
-	isTypeScriptProject: boolean;
-	templateIds?: string[];
+	templateIDs?: string[];
 };
 
 /**
