@@ -186,8 +186,6 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{isFilled.image(slice.primary.image) && (
 								<PrismicNextImage
-									height={600}
-									width={800}
 									className="es-call-to-action__image"
 									field={slice.primary.image}
 								/>
@@ -297,8 +295,6 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{isFilled.image(slice.primary.image) && (
 								<PrismicNextImage
-									height={600}
-									width={800}
 									className="es-call-to-action__image"
 									field={slice.primary.image}
 								/>
