@@ -174,10 +174,10 @@ export const createComponentContents = (
 			 * Component for "${model.name}" Slices.
 			 */
 			const ${pascalName} = ({ slice }: ${pascalName}Props): JSX.Element => {
-				const alignement = slice.variation === "alignLeft" ? "left" : "center";
+				const alignment = slice.variation === "alignLeft" ? "left" : "center";
 			
 				return (
-				<section
+					<section
 						data-slice-type={slice.slice_type}
 						data-slice-variation={slice.variation}
 						className="es-bounded es-call-to-action"
@@ -185,8 +185,8 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{slice.primary.image?.url && (
 								<img
-						height={600}
-						width={800}
+									height={600}
+									width={800}
 									src={slice.primary.image.url}
 									alt={slice.primary.image.alt ?? undefined}
 									className="es-call-to-action__image"
@@ -211,62 +211,60 @@ export const createComponentContents = (
 								{slice.primary.buttonLabel || "Learn more…"}
 							</button>
 						</div>
-					<style>
-						{
-							\`
-							.es-call-to-action {
+						<style>
+							{\`
+						.es-call-to-action {
 							background-color: #fff;
 							color: #333;
 							padding: 8vw 2rem;
-							}
-							
-							.es-call-to-action__content {
+						}
+						
+						.es-call-to-action__content {
 							display: grid;
 							gap: 2rem;
-							}
-						
-							.es-call-to-action__image {
+						}
+					
+						.es-call-to-action__image {
 							max-width: 14rem;
-							justify-self: \${alignement};
-							}
-							
-							.es-call-to-action__content {
+							justify-self: \${alignment};
+						}
+						
+						.es-call-to-action__content {
 							display: grid;
 							gap: 1rem;
-							justify-items: \${alignement};
-							}
-							
-							.es-call-to-action__content__heading {
+							justify-items: \${alignment};
+						}
+						
+						.es-call-to-action__content__heading {
 							font-size: 2rem;
 							font-weight: 700;
-							text-align: \${alignement};
-							}
-							
-							.es-call-to-action__content__paragraph {
+							text-align: \${alignment};
+						}
+						
+						.es-call-to-action__content__paragraph {
 							font-size: 1.15rem;
 							max-width: 38rem;
-							text-align: \${alignement};
-							}
-							
-							.es-call-to-action__button {
-							justify-self: \${alignement};
+							text-align: \${alignment};
+						}
+						
+						.es-call-to-action__button {
+							justify-self: \${alignment};
 							border-radius: 0.25rem;
 							display: inline-block;
 							font-size: 0.875rem;
 							line-height: 1.3;
 							padding: 1rem 2.625rem;
-							text-align: \${alignement};
+							text-align: \${alignment};
 							transition: background-color 100ms linear;
 							background-color: #16745f;
 							color: #fff;
-							}
-			
-							.es-call-to-action__button:hover {
-							background-color: #0d5e4c;
-							}
-							\`
 						}
-					</style>
+	
+						.es-call-to-action__button:hover {
+							background-color: #0d5e4c;
+						}
+					\`}
+						</style>
 					</section>
 				);
 			};
@@ -276,21 +274,19 @@ export const createComponentContents = (
 	}
 
 	return stripIndent`
-			/**
-			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
-			 *
-			* @typedef {import("@prismicio/react").SliceComponentProps<${pascalName}Slice>} ${pascalName}Props
-			* @param {${pascalName}Props}
-			*/
-			
 			import { PrismicRichText } from "@prismicio/react";
 			import { isFilled, asText } from "@prismicio/client";
 			
+			/**
+			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
+			 * @typedef {import("@prismicio/react").SliceComponentProps<${pascalName}Slice>} ${pascalName}Props
+			 * @param {${pascalName}Props}
+			 */
 			const ${pascalName} = ({ slice }) => {
-			const alignement = slice.variation === "alignLeft" ? "left" : "center";
+				const alignment = slice.variation === "alignLeft" ? "left" : "center";
 			
-			return (
-				<section
+				return (
+					<section
 						data-slice-type={slice.slice_type}
 						data-slice-variation={slice.variation}
 						className="es-bounded es-call-to-action"
@@ -298,8 +294,8 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{slice.primary.image?.url && (
 								<img
-						height={600}
-						width={800}
+									height={600}
+									width={800}
 									src={slice.primary.image.url}
 									alt={slice.primary.image.alt ?? undefined}
 									className="es-call-to-action__image"
@@ -324,9 +320,8 @@ export const createComponentContents = (
 								{slice.primary.buttonLabel || "Learn more…"}
 							</button>
 						</div>
-				<style>
-						{
-						\`
+						<style>
+							{\`
 						.es-call-to-action {
 							background-color: #fff;
 							color: #333;
@@ -340,35 +335,35 @@ export const createComponentContents = (
 						
 						.es-call-to-action__image {
 							max-width: 14rem;
-							justify-self: \${alignement};
+							justify-self: \${alignment};
 						}
 						
 						.es-call-to-action__content {
 							display: grid;
 							gap: 1rem;
-							justify-items: \${alignement};
+							justify-items: \${alignment};
 						}
 						
 						.es-call-to-action__content__heading {
 							font-size: 2rem;
 							font-weight: 700;
-							text-align: \${alignement};
+							text-align: \${alignment};
 						}
 						
 						.es-call-to-action__content__paragraph {
 							font-size: 1.15rem;
 							max-width: 38rem;
-							text-align: \${alignement};
+							text-align: \${alignment};
 						}
 						
 						.es-call-to-action__button {
-							justify-self: \${alignement};
+							justify-self: \${alignment};
 							border-radius: 0.25rem;
 							display: inline-block;
 							font-size: 0.875rem;
 							line-height: 1.3;
 							padding: 1rem 2.625rem;
-							text-align: \${alignement};
+							text-align: \${alignment};
 							transition: background-color 100ms linear;
 							background-color: #16745f;
 							color: #fff;
@@ -377,11 +372,10 @@ export const createComponentContents = (
 						.es-call-to-action__button:hover {
 							background-color: #0d5e4c;
 						}
-						\`
-						}
-				</style>
+					\`}
+						</style>
 					</section>
-			);
+				);
 			};
 			
 			export default ${pascalName};
