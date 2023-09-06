@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.6.1-dev-next-release.2",
+	"version": "2.6.1-dev-slice-tenplate-feature-2.0",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",

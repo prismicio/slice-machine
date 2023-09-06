@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.11.1-dev-next-release.2",
+  "version": "1.11.1-dev-slice-tenplate-feature-2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
