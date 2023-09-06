@@ -298,7 +298,7 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByText("Add from your library");
+    const addButton = screen.getByText("Add from a library");
     // eslint-disable-next-line @typescript-eslint/await-thenable
     await act(() => {
       fireEvent.click(addButton);

@@ -29,7 +29,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
 }) => {
   return (
     <ModalFormCard
-      buttonLabel="Create"
+      buttonLabel="Add"
       isOpen={isOpen}
       formId={formId}
       close={close}
@@ -40,12 +40,12 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: "Create slices from template",
+        title: "Add preset slices",
       }}
       validate={(values) => {
         if (values.sliceKeys.length === 0) {
           return {
-            sliceKeys: "Please select at least one slice template",
+            sliceKeys: "Select at least one slice to add",
           };
         }
       }}
