@@ -36,7 +36,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 				],
 			},
-			buttonlink: {
+			buttonLink: {
 				__TYPE__: "LinkContent",
 				value: {
 					__TYPE__: "ExternalLink",
@@ -132,7 +132,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 				],
 			},
-			buttonlink: {
+			buttonLink: {
 				__TYPE__: "LinkContent",
 				value: {
 					__TYPE__: "ExternalLink",
@@ -162,8 +162,8 @@ export const createComponentContents = (
 
 	if (isTypeScriptProject) {
 		return stripIndent`
-			import Link from "next/link";
-			import { Content, isFilled, asLink, asText } from "@prismicio/client";
+			import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+			import { Content, isFilled, asText } from "@prismicio/client";
 			import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 			
 			/**
@@ -184,13 +184,12 @@ export const createComponentContents = (
 						className="es-bounded es-call-to-action"
 					>
 						<div className="es-bounded__content es-call-to-action__content">
-							{slice.primary.image?.url && (
-								<img
+							{isFilled.image(slice.primary.image) && (
+								<PrismicNextImage
 									height={600}
 									width={800}
-									src={slice.primary.image.url}
-									alt={slice.primary.image.alt ?? undefined}
 									className="es-call-to-action__image"
+									field={slice.primary.image}
 								/>
 							)}
 							<div className="es-call-to-action__content">
@@ -205,14 +204,14 @@ export const createComponentContents = (
 									</div>
 								)}
 							</div>
-							{isFilled.link(slice.primary.buttonLink) ? (
-								<Link
+							{isFilled.link(slice.primary.buttonLink) && (
+								<PrismicNextLink
 									className="es-call-to-action__button"
-									href={asLink(slice.primary.buttonLink)}
+									field={slice.primary.buttonLink}
 								>
 									{slice.primary.buttonLabel || "Learn more…"}
-								</Link>
-							) : null}
+								</PrismicNextLink>
+							)}
 						</div>
 						<style>
 							{\`
@@ -277,9 +276,9 @@ export const createComponentContents = (
 	}
 
 	return stripIndent`
-			import Link from "next/link";
+			import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 			import { PrismicRichText } from "@prismicio/react";
-			import { isFilled, asLink, asText } from "@prismicio/client";
+			import { isFilled, asText } from "@prismicio/client";
 			
 			/**
 			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
@@ -296,13 +295,12 @@ export const createComponentContents = (
 						className="es-bounded es-call-to-action"
 					>
 						<div className="es-bounded__content es-call-to-action__content">
-							{slice.primary.image?.url && (
-								<img
+							{isFilled.image(slice.primary.image) && (
+								<PrismicNextImage
 									height={600}
 									width={800}
-									src={slice.primary.image.url}
-									alt={slice.primary.image.alt ?? undefined}
 									className="es-call-to-action__image"
+									field={slice.primary.image}
 								/>
 							)}
 							<div className="es-call-to-action__content">
@@ -317,14 +315,14 @@ export const createComponentContents = (
 									</div>
 								)}
 							</div>
-							{isFilled.link(slice.primary.buttonLink) ? (
-								<Link
+							{isFilled.link(slice.primary.buttonLink) && (
+								<PrismicNextLink
 									className="es-call-to-action__button"
-									href={asLink(slice.primary.buttonLink)}
+									field={slice.primary.buttonLink}
 								>
 									{slice.primary.buttonLabel || "Learn more…"}
-								</Link>
-							) : null}
+								</PrismicNextLink>
+							)}
 						</div>
 						<style>
 							{\`
@@ -425,7 +423,7 @@ export const model: SharedSlice = {
 							"paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
 					},
 				},
-				buttonlink: {
+				buttonLink: {
 					type: "Link",
 					config: {
 						label: "buttonLink",
@@ -475,7 +473,7 @@ export const model: SharedSlice = {
 							"paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
 					},
 				},
-				buttonlink: {
+				buttonLink: {
 					type: "Link",
 					config: {
 						label: "buttonLink",

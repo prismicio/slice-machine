@@ -24,6 +24,7 @@ import type { SlicesSM } from "@lib/models/common/Slices";
 import { List, ListHeader } from "@src/components/List";
 import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useModelStatus } from "@src/hooks/useModelStatus";
+import { telemetry } from "@src/apiClient";
 import {
   getFrontendSlices,
   getLibraries,
@@ -170,6 +171,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const openSlicesTemplatesModal = () => {
     setIsSlicesTemplatesModalOpen(true);
+
+    void telemetry.track({
+      event: "custom-type:open-add-from-templates",
+      customTypeId: customType.id,
+      customTypeFormat: customType.format,
+    });
   };
 
   return (
@@ -201,7 +208,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         }}
                         startIcon={<Icon name="contentCopy" />}
                       >
-                        Preset slice
+                        Slice template
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>

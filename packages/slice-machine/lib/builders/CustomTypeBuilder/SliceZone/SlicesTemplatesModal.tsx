@@ -40,12 +40,12 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: "Add preset slices",
+        title: "Add from templates",
       }}
       validate={(values) => {
         if (values.sliceKeys.length === 0) {
           return {
-            sliceKeys: "Select at least one slice to add",
+            sliceKeys: "Select at least one template to add",
           };
         }
       }}
