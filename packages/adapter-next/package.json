@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-next",
-	"version": "0.3.14-dev-slices-templates-feature.0",
+	"version": "0.3.14-dev-slices-templates-feature.1",
 	"description": "Slice Machine adapter for Next.js.",
 	"keywords": [
 		"typescript",
