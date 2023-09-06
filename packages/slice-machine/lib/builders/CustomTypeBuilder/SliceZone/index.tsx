@@ -214,7 +214,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     startIcon="edit"
                     variant="secondary"
                   >
-                    Update Slices
+                    Update slices
                   </Button>
                 ) : undefined}
               </Box>

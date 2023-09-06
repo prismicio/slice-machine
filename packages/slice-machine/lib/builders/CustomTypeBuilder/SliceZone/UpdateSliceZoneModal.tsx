@@ -37,7 +37,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: slicesInSliceZone.map((slice) => slice.model.id),
       }}
       content={{
-        title: "Update Slices",
+        title: "Update slices",
       }}
       dataCy="update-slices-modal"
     >
