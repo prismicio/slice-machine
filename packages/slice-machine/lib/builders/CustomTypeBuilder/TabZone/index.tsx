@@ -1,4 +1,4 @@
-import { Box, ErrorBoundary, Text } from "@prismicio/editor-ui";
+import { Box, ErrorBoundary, ProgressCircle } from "@prismicio/editor-ui";
 import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
@@ -143,7 +143,7 @@ const TabZone: FC<TabZoneProps> = ({
         <Suspense
           fallback={
             <Box padding={32}>
-              <Text>Loading...</Text>
+              <ProgressCircle />
             </Box>
           }
         >

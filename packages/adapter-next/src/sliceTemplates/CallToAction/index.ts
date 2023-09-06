@@ -162,9 +162,13 @@ export const createComponentContents = (
 
 	if (isTypeScriptProject) {
 		return stripIndent`
+			import { Content, isFilled } from "@prismicio/client";	
 			import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-			import { Content, isFilled, asText } from "@prismicio/client";
-			import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
+			import {
+				PrismicRichText,
+				PrismicText,
+				SliceComponentProps
+			} from "@prismicio/react";
 			
 			/**
 			 * Props for \`${pascalName}\`.
@@ -193,7 +197,7 @@ export const createComponentContents = (
 							<div className="es-call-to-action__content">
 								{isFilled.richText(slice.primary.title) && (
 									<h2 className="es-call-to-action__content__heading">
-										{asText(slice.primary.title)}
+										<PrismicText field={slice.primary.title} />
 									</h2>
 								)}
 								{isFilled.richText(slice.primary.paragraph) && (
@@ -213,6 +217,33 @@ export const createComponentContents = (
 						</div>
 						<style>
 							{\`
+						.es-bounded {
+							padding: 8vw 2rem;
+						}
+						
+						.es-bounded__content {
+							margin-left: auto;
+							margin-right: auto;
+						}
+						
+						@media screen and (min-width: 640px) {
+							.es-bounded__content {
+								max-width: 90%;
+							}
+						}
+						
+						@media screen and (min-width: 896px) {
+							.es-bounded__content {
+								max-width: 80%;
+							}
+						}
+						
+						@media screen and (min-width: 1280px) {
+							.es-bounded__content {
+								max-width: 75%;
+							}
+						}
+						
 						.es-call-to-action {
 							background-color: #fff;
 							color: #333;
@@ -223,7 +254,7 @@ export const createComponentContents = (
 							display: grid;
 							gap: 2rem;
 						}
-					
+						
 						.es-call-to-action__image {
 							max-width: 14rem;
 							justify-self: \${alignment};
@@ -259,7 +290,7 @@ export const createComponentContents = (
 							background-color: #16745f;
 							color: #fff;
 						}
-	
+						
 						.es-call-to-action__button:hover {
 							background-color: #0d5e4c;
 						}
@@ -274,9 +305,13 @@ export const createComponentContents = (
 	}
 
 	return stripIndent`
+			import { isFilled } from "@prismicio/client";
 			import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-			import { PrismicRichText } from "@prismicio/react";
-			import { isFilled, asText } from "@prismicio/client";
+			import {
+				PrismicRichText,
+				PrismicText,
+				SliceComponentProps
+			} from "@prismicio/react";
 			
 			/**
 			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
@@ -302,7 +337,7 @@ export const createComponentContents = (
 							<div className="es-call-to-action__content">
 								{isFilled.richText(slice.primary.title) && (
 									<h2 className="es-call-to-action__content__heading">
-										{asText(slice.primary.title)}
+										<PrismicText field={slice.primary.title} />
 									</h2>
 								)}
 								{isFilled.richText(slice.primary.paragraph) && (
@@ -322,6 +357,33 @@ export const createComponentContents = (
 						</div>
 						<style>
 							{\`
+						.es-bounded {
+							padding: 8vw 2rem;
+						}
+						
+						.es-bounded__content {
+							margin-left: auto;
+							margin-right: auto;
+						}
+						
+						@media screen and (min-width: 640px) {
+							.es-bounded__content {
+								max-width: 90%;
+							}
+						}
+						
+						@media screen and (min-width: 896px) {
+							.es-bounded__content {
+								max-width: 80%;
+							}
+						}
+						
+						@media screen and (min-width: 1280px) {
+							.es-bounded__content {
+								max-width: 75%;
+							}
+						}
+						
 						.es-call-to-action {
 							background-color: #fff;
 							color: #333;
@@ -368,7 +430,7 @@ export const createComponentContents = (
 							background-color: #16745f;
 							color: #fff;
 						}
-			
+						
 						.es-call-to-action__button:hover {
 							background-color: #0d5e4c;
 						}
