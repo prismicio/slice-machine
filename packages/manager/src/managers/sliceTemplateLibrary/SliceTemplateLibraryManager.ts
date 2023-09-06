@@ -10,8 +10,6 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 type SliceTemplateLibraryManagerReadLibraryReturnType = {
 	templates: {
 		model: SharedSlice;
-		componentContents: string;
-		mocks: SharedSliceContent[];
 		screenshots: Record<string, Buffer>;
 	}[];
 	errors: (DecodeError | HookError)[];
@@ -34,7 +32,7 @@ const readHookCodec = t.type({
 	templates: t.array(
 		t.type({
 			model: SharedSlice,
-			componentContents: t.string,
+			createComponentContents: t.Function,
 			mocks: t.array(SharedSliceContent),
 			screenshots: t.record(t.string, t.any),
 		}),
@@ -55,7 +53,12 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		const { data, errors } = decodeHookResult(readHookCodec, hookResult);
 
 		return {
-			templates: data.flat().flatMap((item) => item.templates),
+			templates: data.flat().flatMap((item) =>
+				item.templates.map((t) => ({
+					model: t.model,
+					screenshots: t.screenshots,
+				})),
+			),
 			errors,
 		};
 	}
@@ -65,7 +68,15 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		// Reading all available slice templates
-		const { templates, errors: readErrors } = await this.readLibrary(args);
+		const hookReadResult = await this.sliceMachinePluginRunner.callHook(
+			"slice-template-library:read",
+			args,
+		);
+		const { data: readData, errors: readErrors } = decodeHookResult(
+			readHookCodec,
+			hookReadResult,
+		);
+		const templates = readData.flat().flatMap((item) => item.templates);
 		if (readErrors.length > 0) {
 			return {
 				errors: readErrors,
@@ -126,7 +137,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			return this.slices.createSlice({
 				libraryID: targetLibrary.libraryID,
 				model: slice.model,
-				componentContents: slice.componentContents,
+				componentContents: slice.createComponentContents(slice.model),
 			});
 		});
 

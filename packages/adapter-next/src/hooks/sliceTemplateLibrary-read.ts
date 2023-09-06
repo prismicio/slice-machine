@@ -2,12 +2,13 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import type { SliceTemplateLibraryReadHook } from "@slicemachine/plugin-kit";
 
-import type { PluginOptions } from "../types";
+import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
 import * as CallToAction from "../sliceTemplates/CallToAction";
-import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
+import type { PluginOptions } from "../types";
 
 const initialTemplates = [CallToAction];
 
@@ -40,7 +41,8 @@ export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 		return {
 			mocks,
 			model,
-			componentContents: createComponentContents(isTypeScriptProject),
+			createComponentContents: (model: SharedSlice) =>
+				createComponentContents(model, isTypeScriptProject),
 			screenshots,
 		};
 	});
