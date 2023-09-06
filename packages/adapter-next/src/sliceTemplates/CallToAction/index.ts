@@ -497,6 +497,6 @@ export const model: SharedSlice = {
 };
 
 export const screenshotPaths = {
-	default: ["CallToAction", "screenshot-default.png"].join("/"),
-	alignLeft: ["CallToAction", "screenshot-alignLeft.png"].join("/"),
+	default: "CallToAction/screenshot-default.png",
+	alignLeft: "CallToAction/screenshot-alignLeft.png",
 };
