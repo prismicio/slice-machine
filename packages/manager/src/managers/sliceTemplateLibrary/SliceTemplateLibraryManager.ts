@@ -55,7 +55,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 		const { data, errors } = decodeHookResult(readHookCodec, hookResult);
 
 		return {
-			templates: data.flat()[0].templates,
+			templates: data.flat().flatMap((item) => item.templates),
 			errors,
 		};
 	}
@@ -110,8 +110,8 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			};
 		});
 
-		// Get all libraries
-		// Note: We only support adding template to the firs library at the moment
+		// Get target library
+		// Note: We only support adding template to the first library at the moment
 		const { libraries, errors: readAllSliceLibrariesErrors } =
 			await this.slices.readAllSliceLibraries();
 		if (readAllSliceLibrariesErrors.length > 0) {
@@ -119,11 +119,12 @@ export class SliceTemplateLibraryManager extends BaseManager {
 				errors: readAllSliceLibrariesErrors,
 			};
 		}
+		const targetLibrary = libraries[0];
 
 		// Initiate the slice creation process for all slices
 		const creationPromises = slicesToCreate.map((slice) => {
 			return this.slices.createSlice({
-				libraryID: libraries[0].libraryID,
+				libraryID: targetLibrary.libraryID,
 				model: slice.model,
 				componentContents: slice.componentContents,
 			});
@@ -141,7 +142,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 
 		const mocksPromises = slicesToCreate.map((slice) => {
 			return this.slices.updateSliceMocks({
-				libraryID: libraries[0].libraryID,
+				libraryID: targetLibrary.libraryID,
 				sliceID: slice.model.id,
 				mocks: slice.mocks,
 			});
@@ -153,7 +154,7 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			const screenshotPromises = Object.entries(slice.screenshots).map(
 				([variationID, data]) => {
 					return this.slices.updateSliceScreenshot({
-						libraryID: libraries[0].libraryID,
+						libraryID: targetLibrary.libraryID,
 						sliceID: slice.model.id,
 						variationID,
 						data,
