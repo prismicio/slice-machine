@@ -190,8 +190,6 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{isFilled.image(slice.primary.image) && (
 								<PrismicNextImage
-									width="auto"
-									height="auto"
 									className="es-call-to-action__image"
 									field={slice.primary.image}
 								/>
@@ -258,6 +256,8 @@ export const createComponentContents = (
 						
 						.es-call-to-action__image {
 							max-width: 14rem;
+							height: auto;
+							width: auto;
 							justify-self: \${alignment};
 						}
 						
@@ -331,8 +331,6 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{isFilled.image(slice.primary.image) && (
 								<PrismicNextImage
-									width="auto"
-									height="auto"
 									className="es-call-to-action__image"
 									field={slice.primary.image}
 								/>
@@ -399,6 +397,8 @@ export const createComponentContents = (
 						
 						.es-call-to-action__image {
 							max-width: 14rem;
+							height: auto;
+							width: auto;
 							justify-self: \${alignment};
 						}
 						
