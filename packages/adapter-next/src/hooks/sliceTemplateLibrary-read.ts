@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import type { SliceTemplateLibraryReadHook } from "@slicemachine/plugin-kit";
@@ -22,24 +22,28 @@ export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 			? initialTemplates.filter((t) => templateIDs?.includes(t.model.id))
 			: initialTemplates;
 
-	return {
-		templates: templates.map((t) => {
-			const { mocks, model, createComponentContents, screenshotPaths } = t;
+	const templatesPromises = templates.map(async (t) => {
+		const { mocks, model, createComponentContents, screenshotPaths } = t;
 
-			return {
-				mocks,
-				model,
-				componentContents: createComponentContents(isTypeScriptProject),
-				screenshots: Object.entries(screenshotPaths).reduce(
-					(acc, curr) => ({
-						...acc,
-						[curr[0]]: fs.readFileSync(
-							path.join(globalThis.__dirname, curr[1]),
-						),
-					}),
-					{},
-				),
-			};
-		}),
+		const screenshots = Object.entries(screenshotPaths).reduce(
+			(acc, curr) => ({
+				...acc,
+				[curr[0]]: fs.readFile(path.join(globalThis.__dirname, curr[1])),
+			}),
+			{},
+		);
+
+		return {
+			mocks,
+			model,
+			componentContents: createComponentContents(isTypeScriptProject),
+			screenshots,
+		};
+	});
+
+	const resolvedTemplates = await Promise.all(templatesPromises);
+
+	return {
+		templates: resolvedTemplates,
 	};
 };

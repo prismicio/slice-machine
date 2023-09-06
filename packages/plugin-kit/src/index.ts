@@ -198,7 +198,7 @@ export type {
 	SliceTemplateLibraryReadHook,
 	SliceTemplateLibraryReadHookData,
 	SliceTemplateLibraryReadHookReturnType,
-} from "./hooks/slice-template-library-read";
+} from "./hooks/sliceTemplateLibrary-read";
 
 ///////////////////////////////////////////////////////////////////////////////
 //

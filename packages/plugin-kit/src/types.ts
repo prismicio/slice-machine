@@ -26,7 +26,7 @@ import { SliceUpdateHookBase } from "./hooks/slice-update";
 import { SnippetReadHookBase } from "./hooks/snippet-read";
 import { DocumentationReadHookBase } from "./hooks/documentation-read";
 
-import { SliceTemplateLibraryReadHookBase } from "./hooks/slice-template-library-read";
+import { SliceTemplateLibraryReadHookBase } from "./hooks/sliceTemplateLibrary-read";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
