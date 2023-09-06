@@ -162,7 +162,8 @@ export const createComponentContents = (
 
 	if (isTypeScriptProject) {
 		return stripIndent`
-			import { Content, isFilled, asText } from "@prismicio/client";
+			import Link from "next/link";
+			import { Content, isFilled, asLink, asText } from "@prismicio/client";
 			import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 			
 			/**
@@ -204,12 +205,14 @@ export const createComponentContents = (
 									</div>
 								)}
 							</div>
-							<button
-								field={slice.primary.buttonLink}
-								className="es-call-to-action__button"
-							>
-								{slice.primary.buttonLabel || "Learn more…"}
-							</button>
+							{isFilled.link(slice.primary.buttonLink) ? (
+								<Link
+									className="es-call-to-action__button"
+									href={asLink(slice.primary.buttonLink)}
+								>
+									{slice.primary.buttonLabel || "Learn more…"}
+								</Link>
+							) : null}
 						</div>
 						<style>
 							{\`
@@ -275,7 +278,7 @@ export const createComponentContents = (
 
 	return stripIndent`
 			import { PrismicRichText } from "@prismicio/react";
-			import { isFilled, asText } from "@prismicio/client";
+			import { isFilled, asLink, asText } from "@prismicio/client";
 			
 			/**
 			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
@@ -313,12 +316,12 @@ export const createComponentContents = (
 									</div>
 								)}
 							</div>
-							<button
-								field={slice.primary.buttonLink}
+							<a
+								href={asLink(slice.primary.buttonLink)}
 								className="es-call-to-action__button"
 							>
 								{slice.primary.buttonLabel || "Learn more…"}
-							</button>
+							</a>
 						</div>
 						<style>
 							{\`
