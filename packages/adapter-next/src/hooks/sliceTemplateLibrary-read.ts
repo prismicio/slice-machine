@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import type { SliceTemplateLibraryReadHook } from "@slicemachine/plugin-kit";
 
@@ -28,7 +29,9 @@ export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 		const screenshotEntries = Object.entries(screenshotPaths);
 		const screenshotPromises = screenshotEntries.map(([key, filePath]) => {
 			return fs
-				.readFile(path.join(globalThis.__dirname, filePath))
+				.readFile(
+					fileURLToPath(new URL(path.join("..", filePath), import.meta.url)),
+				)
 				.then((data) => [key, data]);
 		});
 		const readScreenshots = await Promise.all(screenshotPromises);
