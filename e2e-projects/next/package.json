@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.11.1-dev-slices-templates-feature.2",
+  "version": "1.11.1-dev-slices-templates-feature.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
