@@ -277,6 +277,7 @@ export const createComponentContents = (
 	}
 
 	return stripIndent`
+			import Link from "next/link";
 			import { PrismicRichText } from "@prismicio/react";
 			import { isFilled, asLink, asText } from "@prismicio/client";
 			
@@ -316,12 +317,14 @@ export const createComponentContents = (
 									</div>
 								)}
 							</div>
-							<a
-								href={asLink(slice.primary.buttonLink)}
-								className="es-call-to-action__button"
-							>
-								{slice.primary.buttonLabel || "Learn more…"}
-							</a>
+							{isFilled.link(slice.primary.buttonLink) ? (
+								<Link
+									className="es-call-to-action__button"
+									href={asLink(slice.primary.buttonLink)}
+								>
+									{slice.primary.buttonLabel || "Learn more…"}
+								</Link>
+							) : null}
 						</div>
 						<style>
 							{\`
