@@ -67,8 +67,8 @@ export const sliceTemplatesComingSoon: ComponentUI[] = [
     href: "",
     pathToSlice: "",
     model: {
-      id: "video_highlight",
-      name: "VideoHighlight",
+      id: "video_highlights",
+      name: "VideoHighlights",
       type: "SharedSlice",
       variations: [
         {
@@ -82,7 +82,7 @@ export const sliceTemplatesComingSoon: ComponentUI[] = [
     },
     screenshots: {
       default: {
-        url: "/videoHighlight.png",
+        url: "/videoHighlights.png",
       },
     },
   },

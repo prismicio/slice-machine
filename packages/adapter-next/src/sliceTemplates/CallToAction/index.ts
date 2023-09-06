@@ -67,7 +67,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 				},
 				credits: null,
-				alt: null,
+				alt: "Example Image",
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
@@ -102,7 +102,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 				},
 				credits: null,
-				alt: null,
+				alt: "Example Image",
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
@@ -190,6 +190,8 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{isFilled.image(slice.primary.image) && (
 								<PrismicNextImage
+									width="auto"
+									height="auto"
 									className="es-call-to-action__image"
 									field={slice.primary.image}
 								/>
@@ -329,6 +331,8 @@ export const createComponentContents = (
 						<div className="es-bounded__content es-call-to-action__content">
 							{isFilled.image(slice.primary.image) && (
 								<PrismicNextImage
+									width="auto"
+									height="auto"
 									className="es-call-to-action__image"
 									field={slice.primary.image}
 								/>
