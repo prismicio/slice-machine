@@ -141,8 +141,10 @@ export class SliceMachinePluginRunner {
 					path.resolve(this._project.root, "noop.js"),
 				)(resolve);
 				plugin = raw.default || raw;
-			} catch {
-				// noop
+			} catch (error) {
+				if (import.meta.env.DEV) {
+					console.error(error);
+				}
 			}
 
 			if (!plugin) {

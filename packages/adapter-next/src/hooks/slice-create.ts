@@ -39,7 +39,9 @@ const createComponentFile = async ({
 		options,
 	});
 
-	if (isTypeScriptProject) {
+	if (data.componentContents) {
+		contents = data.componentContents;
+	} else if (isTypeScriptProject) {
 		contents = stripIndent`
 			import { Content } from "@prismicio/client";
 			import { SliceComponentProps } from "@prismicio/react";

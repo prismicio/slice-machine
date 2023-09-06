@@ -14,6 +14,7 @@ export const SegmentEventType = {
 	customType_created: "custom-type:created",
 	customType_fieldAdded: "custom-type:field-added",
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
+	customType_openAddFromTemplates: "custom-type:open-add-from-templates",
 	customType_saved: "custom-type:saved",
 	slice_created: "slice:created",
 	screenshotTaken: "screenshot-taken",
@@ -42,6 +43,8 @@ export const HumanSegmentEventType = {
 		"SliceMachine Custom Type Field Added",
 	[SegmentEventType.customType_sliceZoneUpdated]:
 		"SliceMachine Slicezone Updated",
+	[SegmentEventType.customType_openAddFromTemplates]:
+		"SliceMachine Open Add from templates",
 	[SegmentEventType.customType_saved]: "SliceMachine Custom Type Saved",
 	[SegmentEventType.slice_created]: "SliceMachine Slice Created",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
@@ -152,6 +155,11 @@ type CustomTypeSliceZoneUpdatedSegmentEvent = SegmentEvent<
 	{ customTypeId: string }
 >;
 
+type CustomTypeOpenAddFromTemplatesEvent = SegmentEvent<
+	typeof SegmentEventType.customType_openAddFromTemplates,
+	{ customTypeId: string; customTypeFormat: CustomTypeFormat }
+>;
+
 type CustomTypeSavedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.customType_saved,
 	{
@@ -164,7 +172,7 @@ type CustomTypeSavedSegmentEvent = SegmentEvent<
 
 type SliceCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.slice_created,
-	{ id: string; name: string; library: string }
+	{ id: string; name: string; library: string; sliceTemplate?: string }
 >;
 
 type ScreenshotTakenSegmentEvent = SegmentEvent<
@@ -214,6 +222,7 @@ export type SegmentEvents =
 	| CustomTypeCreatedSegmentEvent
 	| CustomTypeFieldAddedSegmentEvent
 	| CustomTypeSliceZoneUpdatedSegmentEvent
+	| CustomTypeOpenAddFromTemplatesEvent
 	| CustomTypeSavedSegmentEvent
 	| SliceCreatedSegmentEvent
 	| ScreenshotTakenSegmentEvent

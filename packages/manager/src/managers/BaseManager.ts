@@ -18,6 +18,7 @@ import { SimulatorManager } from "./simulator/SimulatorManager";
 import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
 import { DocumentationManager } from "./documentation/DocumentationManager";
+import { SliceTemplateLibraryManager } from "./sliceTemplateLibrary/SliceTemplateLibraryManager";
 
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;
@@ -84,6 +85,9 @@ export abstract class BaseManager {
 	}
 	protected get documentation(): DocumentationManager {
 		return this._sliceMachineManager.documentation;
+	}
+	protected get sliceTemplateLibrary(): SliceTemplateLibraryManager {
+		return this._sliceMachineManager.sliceTemplateLibrary;
 	}
 
 	protected get versions(): VersionsManager {

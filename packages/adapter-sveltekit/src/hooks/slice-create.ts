@@ -36,7 +36,9 @@ const createComponentFile = async ({
 		options,
 	});
 
-	if (isTypeScriptProject) {
+	if (data.componentContents) {
+		contents = data.componentContents;
+	} else if (isTypeScriptProject) {
 		contents = source`
 			<script lang="ts">
 				import type { Content } from '@prismicio/client';

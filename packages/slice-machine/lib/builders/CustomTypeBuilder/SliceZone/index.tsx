@@ -1,4 +1,13 @@
-import { Button, Box, Switch } from "@prismicio/editor-ui";
+import {
+  Button,
+  Box,
+  Switch,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  Icon,
+} from "@prismicio/editor-ui";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
@@ -15,16 +24,22 @@ import type { SlicesSM } from "@lib/models/common/Slices";
 import { List, ListHeader } from "@src/components/List";
 import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useModelStatus } from "@src/hooks/useModelStatus";
+import { telemetry } from "@src/apiClient";
 import {
   getFrontendSlices,
   getLibraries,
   getRemoteSlices,
 } from "@src/modules/slices";
 import type { SliceMachineStoreType } from "@src/redux/type";
+import { useSlicesTemplates } from "@src/features/slicesTemplates/useSlicesTemplates";
+import { createSlicesTemplates } from "@src/features/slicesTemplates/actions/createSlicesTemplates";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
+import { SlicesTemplatesModal } from "./SlicesTemplatesModal";
+import { getState } from "@src/apiClient";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -100,7 +115,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
-  const [formIsOpen, setFormIsOpen] = useState(false);
+  const availableSlicesTemplates = useSlicesTemplates();
+  const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
+    useState(false);
+  const [isUpdateSliceZoneModalOpen, setIsUpdateSliceZoneModalOpen] =
+    useState(false);
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const { remoteSlices, libraries, slices } = useSelector(
     (store: SliceMachineStoreType) => ({
@@ -109,6 +128,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       slices: getFrontendSlices(store),
     })
   );
+  const { createSliceSuccess } = useSliceMachineActions();
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal
   );
@@ -142,11 +162,21 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
   const onAddNewSlice = () => {
-    setFormIsOpen(true);
+    setIsUpdateSliceZoneModalOpen(true);
   };
 
   const onCreateNewSlice = () => {
     setIsCreateSliceModalOpen(true);
+  };
+
+  const openSlicesTemplatesModal = () => {
+    setIsSlicesTemplatesModalOpen(true);
+
+    void telemetry.track({
+      event: "custom-type:open-add-from-templates",
+      customTypeId: customType.id,
+      customTypeFormat: customType.format,
+    });
   };
 
   return (
@@ -154,21 +184,47 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <List>
         <ListHeader
           actions={
-            sliceZone ? (
-              <>
-                <Button onClick={onCreateNewSlice} startIcon="add">
-                  New slice
-                </Button>
+            sliceZone && slicesInSliceZone.length > 0 ? (
+              <Box gap={8}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button variant="secondary" startIcon="add">
+                      Add
+                    </Button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      startIcon={<Icon name="add" />}
+                      onSelect={onCreateNewSlice}
+                    >
+                      Blank slice
+                    </DropdownMenuItem>
+
+                    {availableSlicesTemplates.length > 0 ? (
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          openSlicesTemplatesModal();
+                        }}
+                        startIcon={<Icon name="contentCopy" />}
+                      >
+                        Slice template
+                      </DropdownMenuItem>
+                    ) : undefined}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 {availableSlices.length > 0 ? (
                   <Button
                     data-cy="update-slices"
                     onClick={onAddNewSlice}
                     startIcon="edit"
+                    variant="secondary"
                   >
-                    Update Slices
+                    Update slices
                   </Button>
                 ) : undefined}
-              </>
+              </Box>
             ) : undefined
           }
           toggle={
@@ -204,12 +260,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           <SliceZoneBlankSlate
             onAddNewSlice={onAddNewSlice}
             onCreateNewSlice={onCreateNewSlice}
+            openSlicesTemplatesModal={openSlicesTemplatesModal}
             projectHasAvailableSlices={availableSlices.length > 0}
+            isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
           />
         )
       ) : undefined}
       <UpdateSliceZoneModal
-        isOpen={formIsOpen}
+        isOpen={isUpdateSliceZoneModalOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
         slicesInSliceZone={sharedSlicesInSliceZone}
@@ -217,7 +275,36 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }
-        close={() => setFormIsOpen(false)}
+        close={() => setIsUpdateSliceZoneModalOpen(false)}
+      />
+      <SlicesTemplatesModal
+        isOpen={isSlicesTemplatesModalOpen}
+        formId={`tab-slicezone-form-${tabId}`}
+        availableSlicesTemplates={availableSlicesTemplates}
+        onSubmit={({ sliceKeys }) =>
+          void createSlicesTemplates({
+            templateIDs: sliceKeys,
+            localLibrariesNames: localLibraries.map((library) => library.name),
+            onSuccess: async (slicesIds: string[]) => {
+              // TODO(DT-1453): Remove the need of the global getState
+              const serverState = await getState();
+
+              // Update Redux store
+              createSliceSuccess(serverState.libraries);
+
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+              onSelectSharedSlices(
+                slicesIds.concat(
+                  sharedSlicesInSliceZone.map((s) => s.model.id)
+                ),
+                nonSharedSlicesKeysInSliceZone
+              );
+
+              setIsSlicesTemplatesModalOpen(false);
+            },
+          })
+        }
+        close={() => setIsSlicesTemplatesModalOpen(false)}
       />
       <DeleteSliceZoneModal
         isDeleteSliceZoneModalOpen={isDeleteSliceZoneModalOpen}

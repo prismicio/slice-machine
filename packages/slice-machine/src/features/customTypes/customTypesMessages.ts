@@ -13,7 +13,7 @@ export const CUSTOM_TYPES_MESSAGES = {
     blankSlateDescription:
       "Page types are models that your editors will use to create website pages in the Page Builder.",
     createSliceFromTypeActionMessage:
-      "This action will save your current Page Type",
+      "This action will save your current page type",
   },
   custom: {
     name: ({ start, plural }: CustomTypesMessagesNameArgs) =>
@@ -24,6 +24,6 @@ export const CUSTOM_TYPES_MESSAGES = {
     blankSlateDescription:
       "Custom types are models that your editors can use to create menus or objects in the Page Builder.",
     createSliceFromTypeActionMessage:
-      "This action will save your current Custom Type",
+      "This action will save your current custom type",
   },
 };
