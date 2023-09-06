@@ -29,6 +29,7 @@ import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
+import { sliceTemplateLibraryRead } from "./hooks/sliceTemplateLibrary-read";
 import { snippetRead } from "./hooks/snippet-read";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
@@ -154,6 +155,12 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				...context,
 			});
 		});
+
+		////////////////////////////////////////////////////////////////
+		// slice-template-library:*
+		////////////////////////////////////////////////////////////////
+
+		hook("slice-template-library:read", sliceTemplateLibraryRead);
 
 		////////////////////////////////////////////////////////////////
 		// custom-type:*

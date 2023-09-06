@@ -81,7 +81,7 @@ export const createSliceMachineExpressApp = async (
 
 	app.use("/api/t", bodyParser.text({ type: "*/*" }), sentryFrontendTunnel);
 
-	if (process.env.NODE_ENV === "development") {
+	if (import.meta.env.DEV) {
 		app.use(
 			"/",
 			createProxyMiddleware({

@@ -1,7 +1,6 @@
-import ModalFormCard from "../../../../components/ModalFormCard";
-
-import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import ModalFormCard from "../../../../components/ModalFormCard";
+import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
 interface UpdateSliceModalProps {
   isOpen: boolean;
@@ -38,7 +37,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: slicesInSliceZone.map((slice) => slice.model.id),
       }}
       content={{
-        title: "Update Slices",
+        title: "Update slices",
       }}
       dataCy="update-slices-modal"
     >

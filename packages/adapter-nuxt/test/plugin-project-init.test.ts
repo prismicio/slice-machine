@@ -232,6 +232,87 @@ describe("Slice Simulator page", () => {
 	});
 });
 
+describe("app.vue", () => {
+	const NUXT_DEFAULT_APP_VUE = /* html */ `<template>
+  <div>
+    <NuxtWelcome />
+  </div>
+</template>
+`;
+
+	test("deletes default app.vue and creates a new index page if non-existent", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const filePathAppVue = path.join(ctx.project.root, "app.vue");
+
+		await fs.mkdir(path.dirname(filePathAppVue), { recursive: true });
+		await fs.writeFile(filePathAppVue, NUXT_DEFAULT_APP_VUE);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "pages", "index.vue"),
+			"utf8",
+		);
+
+		await expect(() => fs.access(filePathAppVue)).rejects.toThrowError(
+			/no such file or directory/,
+		);
+		expect(contents).toBe(NUXT_DEFAULT_APP_VUE);
+	});
+
+	test("deletes default app.vue and doesn't create a new index page if existent", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const filePathAppVue = path.join(ctx.project.root, "app.vue");
+
+		await fs.mkdir(path.dirname(filePathAppVue), { recursive: true });
+		await fs.writeFile(filePathAppVue, NUXT_DEFAULT_APP_VUE);
+
+		const filePathIndexVue = path.join(ctx.project.root, "pages", "index.vue");
+		const contents = "foo";
+
+		await fs.mkdir(path.dirname(filePathIndexVue), { recursive: true });
+		await fs.writeFile(filePathIndexVue, contents);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postHookContents = await fs.readFile(filePathIndexVue, "utf8");
+
+		await expect(() => fs.access(filePathAppVue)).rejects.toThrowError(
+			/no such file or directory/,
+		);
+		expect(postHookContents).toBe(contents);
+	});
+
+	test("doesn't delete app.vue is it's not the default one", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const filePathAppVue = path.join(ctx.project.root, "app.vue");
+		const contents = "foo";
+
+		await fs.mkdir(path.dirname(filePathAppVue), { recursive: true });
+		await fs.writeFile(filePathAppVue, contents);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postHookContents = await fs.readFile(filePathAppVue, "utf8");
+		expect(postHookContents).toBe(contents);
+	});
+});
+
 describe("modify slicemachine.config.json", () => {
 	test("adds default localSliceSimulatorURL", async (ctx) => {
 		const log = vi.fn();

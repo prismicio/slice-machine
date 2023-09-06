@@ -392,3 +392,26 @@ testGlobalContentTypes({
 		await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
 	},
 });
+
+test("component file contains given contents instead of default one", async (ctx) => {
+	await ctx.pluginRunner.callHook("slice:create", {
+		libraryID: "slices",
+		model,
+		componentContents: `
+			export default function TestSliceCreate() {
+				return (
+					<div>Custom contents</div>
+				);
+			}
+		`,
+	});
+
+	const componentContents = await fs.readFile(
+		path.join(ctx.project.root, "slices", "QuxQuux", "index.js"),
+		"utf8",
+	);
+
+	expect(componentContents).toContain(
+		"export default function TestSliceCreate()",
+	);
+});

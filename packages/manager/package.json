@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.10.0",
+	"version": "0.10.1-dev-next-release.7",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
@@ -13,14 +13,17 @@
 	"type": "module",
 	"exports": {
 		".": {
+			"types": "./dist/index.d.ts",
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.js"
 		},
 		"./client": {
+			"types": "./dist/client/index.d.js",
 			"require": "./dist/client.cjs",
 			"import": "./dist/client.js"
 		},
 		"./test": {
+			"types": "./dist/test/index.d.js",
 			"require": "./dist/test.cjs",
 			"import": "./dist/test.js"
 		},

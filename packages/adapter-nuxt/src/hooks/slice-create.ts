@@ -36,7 +36,9 @@ const createComponentFile = async ({
 		options,
 	});
 
-	if (isTypeScriptProject) {
+	if (data.componentContents) {
+		contents = data.componentContents;
+	} else if (isTypeScriptProject) {
 		contents = stripIndent`
 			<script setup lang="ts">
 			import { Content } from "@prismicio/client";

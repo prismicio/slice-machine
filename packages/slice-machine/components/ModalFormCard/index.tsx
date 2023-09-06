@@ -6,8 +6,9 @@ import {
   FormikErrors,
   FormikTouched,
   FormikValues,
+  FormikProps,
 } from "formik";
-import { ReactNode, SetStateAction } from "react";
+import { SetStateAction } from "react";
 import { Flex, Heading, Close, Button as ThemeButton } from "theme-ui";
 
 import { Button } from "@components/Button";
@@ -44,7 +45,9 @@ type ModalCardProps<T extends FormikValues> = {
   omitFooter?: boolean;
   isLoading?: boolean;
   dataCy?: string;
-  actionMessage?: ReactNode;
+  actionMessage?:
+    | ((props: FormikProps<T>) => React.ReactNode)
+    | React.ReactNode;
 };
 
 function ModalCard<Values extends FormikValues>({
@@ -88,102 +91,108 @@ function ModalCard<Values extends FormikValues>({
           onSubmit(values);
         }}
       >
-        {({
-          isValid,
-          isSubmitting,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-          setValues,
-        }) => (
-          <Form
-            id={formId}
-            {...(dataCy != null ? { "data-cy": dataCy } : null)}
-          >
-            <Card
-              borderFooter
-              footerSx={{
-                p: 3,
-                position: "sticky",
-                bottom: 0,
-                background: "gray",
-              }}
-              bodySx={{ px: 4, py: 4 }}
-              sx={{ border: "none" }}
-              {...cardProps}
-              Header={({ radius }: { radius: string | number }) => (
-                <Flex
-                  sx={{
-                    position: "sticky",
-                    top: 0,
-                    zIndex: 1,
-                    p: "16px",
-                    pl: 4,
-                    bg: "headSection",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    borderTopLeftRadius: radius,
-                    borderTopRightRadius: radius,
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    borderBottom: (t) => `1px solid ${t.colors?.borders}`,
-                  }}
-                >
-                  <Heading sx={{ fontSize: "20px" }}>{title}</Heading>
-                  <Close type="button" onClick={close} />
-                </Flex>
-              )}
-              Footer={
-                !omitFooter ? (
+        {(formikProps) => {
+          const {
+            isValid,
+            isSubmitting,
+            values,
+            errors,
+            touched,
+            setFieldValue,
+            setValues,
+          } = formikProps;
+
+          return (
+            <Form
+              id={formId}
+              {...(dataCy != null ? { "data-cy": dataCy } : null)}
+            >
+              <Card
+                borderFooter
+                footerSx={{
+                  p: 3,
+                  position: "sticky",
+                  bottom: 0,
+                  background: "gray",
+                }}
+                bodySx={{ px: 4, py: 4 }}
+                sx={{ border: "none" }}
+                {...cardProps}
+                Header={({ radius }: { radius: string | number }) => (
                   <Flex
                     sx={{
-                      alignItems: "space-between",
+                      position: "sticky",
+                      top: 0,
+                      zIndex: 1,
+                      p: "16px",
+                      pl: 4,
+                      bg: "headSection",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      borderTopLeftRadius: radius,
+                      borderTopRightRadius: radius,
+                      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                      borderBottom: (t) => `1px solid ${t.colors?.borders}`,
                     }}
                   >
-                    <Flex sx={{ fontSize: "14px", alignItems: "center" }}>
-                      {actionMessage}
-                    </Flex>
-                    <Flex sx={{ ml: "auto" }}>
-                      <ThemeButton
-                        mr={2}
-                        type="button"
-                        onClick={close}
-                        variant="secondary"
-                        disabled={isSubmitting || isLoading}
-                      >
-                        Cancel
-                      </ThemeButton>
-                      <Button
-                        label={buttonLabel}
-                        form={formId}
-                        type="submit"
-                        disabled={!isValid || isSubmitting || isLoading}
-                        isLoading={isSubmitting || isLoading}
-                        sx={{
-                          fontWeight: "400",
-                          paddingBlock: "8px",
-                          paddingInline: "16px",
-                          fontSize: "14px",
-                          borderRadius: "4px",
-                        }}
-                      />
-                    </Flex>
+                    <Heading sx={{ fontSize: "20px" }}>{title}</Heading>
+                    <Close type="button" onClick={close} />
                   </Flex>
-                ) : null
-              }
-            >
-              {children({
-                isValid,
-                isSubmitting,
-                values,
-                errors,
-                touched,
-                setFieldValue,
-                setValues,
-              })}
-            </Card>
-          </Form>
-        )}
+                )}
+                Footer={
+                  !omitFooter ? (
+                    <Flex
+                      sx={{
+                        alignItems: "space-between",
+                      }}
+                    >
+                      <Flex sx={{ fontSize: "14px", alignItems: "center" }}>
+                        {typeof actionMessage === "function"
+                          ? actionMessage(formikProps)
+                          : actionMessage}
+                      </Flex>
+                      <Flex sx={{ ml: "auto" }}>
+                        <ThemeButton
+                          mr={2}
+                          type="button"
+                          onClick={close}
+                          variant="secondary"
+                          disabled={isSubmitting || isLoading}
+                        >
+                          Cancel
+                        </ThemeButton>
+                        <Button
+                          label={buttonLabel}
+                          form={formId}
+                          type="submit"
+                          disabled={!isValid || isSubmitting || isLoading}
+                          isLoading={isSubmitting || isLoading}
+                          sx={{
+                            fontWeight: "400",
+                            paddingBlock: "8px",
+                            paddingInline: "16px",
+                            fontSize: "14px",
+                            borderRadius: "4px",
+                          }}
+                        />
+                      </Flex>
+                    </Flex>
+                  ) : null
+                }
+              >
+                {children({
+                  isValid,
+                  isSubmitting,
+                  values,
+                  errors,
+                  touched,
+                  setFieldValue,
+                  setValues,
+                })}
+              </Card>
+            </Form>
+          );
+        }}
       </Formik>
     </SliceMachineModal>
   );

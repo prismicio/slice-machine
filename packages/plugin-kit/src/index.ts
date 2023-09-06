@@ -193,6 +193,13 @@ export type {
 	DocumentationReadHookReturnType,
 } from "./hooks/documentation-read";
 
+// slice-template-library:read
+export type {
+	SliceTemplateLibraryReadHook,
+	SliceTemplateLibraryReadHookData,
+	SliceTemplateLibraryReadHookReturnType,
+} from "./hooks/sliceTemplateLibrary-read";
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Internal (for Slice Machine)
