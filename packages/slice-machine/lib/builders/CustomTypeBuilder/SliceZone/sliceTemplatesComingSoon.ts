@@ -8,39 +8,6 @@ export const sliceTemplatesComingSoon: ComponentUI[] = [
     href: "",
     pathToSlice: "",
     model: {
-      id: "alternate_grid",
-      name: "AlternateGrid",
-      type: "SharedSlice",
-      variations: [
-        {
-          description: "",
-          docURL: "",
-          id: "default",
-          name: "Default",
-          version: "sktwi1xtmkfgx8626",
-        },
-        {
-          description: "",
-          docURL: "",
-          id: "Other",
-          name: "Other",
-          version: "sktwi1xtmkfgx8626",
-        },
-      ],
-    },
-    screenshots: {
-      default: {
-        url: "/alternateGrid.png",
-      },
-    },
-  },
-  {
-    extension: "",
-    fileName: "",
-    from: "",
-    href: "",
-    pathToSlice: "",
-    model: {
       id: "customer_logos",
       name: "CustomerLogos",
       type: "SharedSlice",
