@@ -4,9 +4,10 @@ import { describe, test, afterEach, beforeEach, expect, vi } from "vitest";
 import Router from "next/router";
 import mockRouter from "next-router-mock";
 import SegmentClient from "analytics-node";
+import userEvent from "@testing-library/user-event";
+
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
-
 import pkg from "../../package.json";
 import {
   render,
@@ -298,11 +299,9 @@ describe("Custom Type Builder", () => {
       },
     });
 
-    const addButton = screen.getByText("Add from libraries");
-    // eslint-disable-next-line @typescript-eslint/await-thenable
-    await act(() => {
-      fireEvent.click(addButton);
-    });
+    const user = userEvent.setup();
+    await user.click(screen.getByTestId("add-slice-dropdown"));
+    await user.click(screen.getByText("Libraries slices"));
 
     const slicesToSelect = screen.getAllByTestId("slicezone-modal-item");
 

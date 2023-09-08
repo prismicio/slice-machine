@@ -236,7 +236,12 @@ describe("[Available Custom types module]", () => {
           createCustomTypeCreator.success({ newCustomType: customTypeCreated })
         );
       saga.next().put(modalCloseCreator());
-      saga.next().put(push("/custom-types/id"));
+      saga.next().put(
+        push({
+          pathname: "/custom-types/id",
+          query: undefined,
+        })
+      );
       saga
         .next()
         .inspect(

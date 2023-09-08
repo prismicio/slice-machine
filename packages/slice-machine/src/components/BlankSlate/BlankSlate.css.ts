@@ -33,7 +33,7 @@ export const withBackground = style([
     backgroundSize: "cover",
     borderRadius: vars.borderRadius[0],
     borderStyle: vars.borderStyle.none,
-    height: "50vh",
+    height: "100%",
     maxWidth: "100%",
   },
 ]);
