@@ -313,7 +313,7 @@ describe("Custom Type Builder", () => {
       });
     }
 
-    const saveButton = within(screen.getByRole("dialog")).getByText("Apply");
+    const saveButton = within(screen.getByRole("dialog")).getByText("Add");
 
     // eslint-disable-next-line @typescript-eslint/await-thenable
     await act(() => {
