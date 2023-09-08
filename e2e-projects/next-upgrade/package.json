@@ -1,0 +1,28 @@
+{
+  "name": "next-upgrade",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "slicemachine": "start-slicemachine"
+  },
+  "dependencies": {
+    "@prismicio/client": "^7.1.1",
+    "@prismicio/next": "^1.3.4",
+    "@prismicio/react": "^2.7.1",
+    "@types/node": "20.5.0",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
+    "next": "13.4.17",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "@slicemachine/adapter-next": "workspace:*",
+    "slice-machine-ui": "workspace:*"
+  }
+}
