@@ -469,11 +469,7 @@ export const createComponentContents = (
 						className={\`
 							es-bounded__content
 							es-alternate-grid__content
-							\${
-								isFilled.image(slice.primary.image)
-								? "es-alternate-grid__content--with-image"
-								: ""
-							}
+							\${isFilled.image(slice.primary.image) ? "es-alternate-grid__content--with-image" : ""}
 						\`}
 					>
 						{isFilled.image(slice.primary.image) && (
@@ -551,11 +547,6 @@ export const createComponentContents = (
 									display: grid;
 									gap: 1.5rem;
 									grid-auto-flow: dense;
-								}
-								
-								.es-alternate-grid__content--with-image {
-									grid-template-columns: 2fr 3fr;
-									gap: 4rem;
 								}
 								
 								@media (min-width: 640px) {
@@ -716,11 +707,7 @@ export const createComponentContents = (
 					className={\`
 						es-bounded__content
 						es-alternate-grid__content
-						\${
-							isFilled.image(slice.primary.image)
-							? "es-alternate-grid__content--with-image"
-							: ""
-						}
+						\${isFilled.image(slice.primary.image) ? "es-alternate-grid__content--with-image" : ""}
 					\`}
 				>
 					{isFilled.image(slice.primary.image) && (
@@ -778,52 +765,47 @@ export const createComponentContents = (
 					<style>
 						{\`
 							.es-bounded {
-							margin: 0px;
-							min-width: 0px;
-							position: relative;
-							padding: 8vw 1.25rem;
+								margin: 0px;
+								min-width: 0px;
+								position: relative;
+								padding: 8vw 1.25rem;
 							}
 							.es-bounded-content {
-							min-width: 0px;
-							max-width: 90%;
-							margin: 0px auto;
+								min-width: 0px;
+								max-width: 90%;
+								margin: 0px auto;
 							}
 							.es-alternate-grid {
-							font-family: system-ui, sans-serif;
-							background-color: #fff;
-							color: #333;
+								font-family: system-ui, sans-serif;
+								background-color: #fff;
+								color: #333;
 							}
 							
 							.es-alternate-grid__content {
-							display: grid;
-							gap: 1.5rem;
-							grid-auto-flow: dense;
-							}
-							
-							.es-alternate-grid__content--with-image {
-							grid-template-columns: 2fr 3fr;
-							gap: 4rem;
+								display: grid;
+								gap: 1.5rem;
+								grid-auto-flow: dense;
 							}
 							
 							@media (min-width: 640px) {
-							.es-alternate-grid__content--with-image {
-								grid-template-columns: repeat(2, 1fr);
-							}
+								.es-alternate-grid__content--with-image {
+									grid-template-columns: repeat(2, 1fr);
+								}
 							}
 							
 							@media (min-width: 1200px) {
-							.es-alternate-grid__content--with-image {
-								grid-template-columns: repeat(2, 1fr);
-							}
+								.es-alternate-grid__content--with-image {
+									grid-template-columns: repeat(2, 1fr);
+								}
 							}
 							
 							.es-alternate-grid__image {
-							max-width: 100%;
-							align-self: center;
+								max-width: 100%;
+								align-self: center;
 							}
 							
 							.es-alternate-grid__image--left {
-							grid-column: 1;
+								grid-column: 1;
 							}
 							
 							.es-alternate-grid__image--right {
@@ -831,100 +813,100 @@ export const createComponentContents = (
 							}
 							
 							.es-alternate-grid__primary-content {
-							display: grid;
-							gap: 2rem;
+								display: grid;
+								gap: 2rem;
 							}
 							
 							.es-alternate-grid__primary-content__intro {
-							display: grid;
-							gap: 0.5rem;
+								display: grid;
+								gap: 0.5rem;
 							}
 							
 							.es-alternate-grid__primary-content__intro__eyebrow {
-							color: #8592e0;
-							font-size: 1.15rem;
-							font-weight: 500;
-							margin: 0;
+								color: #8592e0;
+								font-size: 1.15rem;
+								font-weight: 500;
+								margin: 0;
 							}
 							
 							.es-alternate-grid__primary-content__intro__headline {
-							font-size: 1.625rem;
-							font-weight: 700;
+								font-size: 1.625rem;
+								font-weight: 700;
 							}
 				
 							.es-alternate-grid__primary-content__intro__headline > * {
-							margin: 0;
+								margin: 0;
 							}
 							
 							@media (min-width: 640px) {
-							.es-alternate-grid__primary-content__intro__headline {
-								font-size: 2rem;
-							}
+								.es-alternate-grid__primary-content__intro__headline {
+									font-size: 2rem;
+								}
 							}
 							
 							@media (min-width: 1024px) {
-							.es-alternate-grid__primary-content__intro__headline {
-								font-size: 2.5rem;
-							}
+								.es-alternate-grid__primary-content__intro__headline {
+									font-size: 2.5rem;
+								}
 							}
 							
 							@media (min-width: 1200px) {
-							.es-alternate-grid__primary-content__intro__headline {
-								font-size: 2.75rem;
-							}
+								.es-alternate-grid__primary-content__intro__headline {
+									font-size: 2.75rem;
+								}
 							}
 							
 							.es-alternate-grid__primary-content__intro__description {
-							font-size: 1.15rem;
-							max-width: 38rem;
+								font-size: 1.15rem;
+								max-width: 38rem;
 							}
 				
 							.es-alternate-grid__primary-content__intro__description > p {
-							margin: 0;
+								margin: 0;
 							}
 							
 							@media (min-width: 1200px) {
-							.es-alternate-grid__primary-content__intro__description {
-								font-size: 1.4rem;
-							}
+								.es-alternate-grid__primary-content__intro__description {
+									font-size: 1.4rem;
+								}
 							}
 							
 							.es-alternate-grid__primary-content__items {
-							display: grid;
-							gap: 2rem;
+								display: grid;
+								gap: 2rem;
 							}
 							
 							@media (min-width: 640px) {
-							.es-alternate-grid__primary-content__items {
-								grid-template-columns: repeat(2, 1fr);
-							}
+								.es-alternate-grid__primary-content__items {
+									grid-template-columns: repeat(2, 1fr);
+								}
 							}
 							
 							.es-alternate-grid__item {
-							display: grid;
-							align-content: start;
+								display: grid;
+								align-content: start;
 							}
 							
 							.es-alternate-grid__item__icon {
-							max-height: 3rem;
+								max-height: 3rem;
 							}
 							
 							.es-alternate-grid__item__heading {
-							font-weight: 700;
-							font-size: 1.17rem;
-							margin-top: 0;
-							margin-bottom: .5rem;
+								font-weight: 700;
+								font-size: 1.17rem;
+								margin-top: 0;
+								margin-bottom: .5rem;
 							}
 							.es-alternate-grid__item__heading > * {
-							margin: 0;
+								margin: 0;
 							}
 							
 							.es-alternate-grid__item__description {
-							font-size: 0.9rem;
+								font-size: 0.9rem;
 							}
 							
 							.es-alternate-grid__item__description > * {
-							margin: 0;
+								margin: 0;
 							}
 				
 						\`}
