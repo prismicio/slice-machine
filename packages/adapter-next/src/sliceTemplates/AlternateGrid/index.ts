@@ -64,7 +64,7 @@ export const mocks: SharedSliceContent[] = [
 					background: "transparent",
 				},
 				credits: null,
-				alt: null,
+				alt: "Image of computer",
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
@@ -243,7 +243,7 @@ export const mocks: SharedSliceContent[] = [
 					background: "transparent",
 				},
 				credits: null,
-				alt: null,
+				alt: "Image of computer",
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
@@ -571,6 +571,8 @@ export const createComponentContents = (
 								}
 								
 								.es-alternate-grid__image {
+									width: auto;
+									height: auto;
 									max-width: 100%;
 									align-self: center;
 								}
