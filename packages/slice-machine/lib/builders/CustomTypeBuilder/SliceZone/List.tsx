@@ -17,6 +17,11 @@ import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMess
 interface SlicesListProps extends ModelStatusInformation {
   format: CustomTypeFormat;
   slices: ReadonlyArray<SliceZoneSlice>;
+  path: {
+    customTypeID: string;
+    tabID: string;
+    sliceZoneID: string;
+  };
 }
 
 export const SlicesList: React.FC<SlicesListProps> = ({
@@ -25,6 +30,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   authStatus,
   isOnline,
   format,
+  path,
 }) => {
   const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
@@ -47,19 +53,20 @@ export const SlicesList: React.FC<SlicesListProps> = ({
     <Grid
       elems={slices}
       defineElementKey={(slice: SliceZoneSlice) => {
-        if (slice.type === "Slice") {
+        if (slice.type !== "SharedSlice") {
           // NonsharedSlice
           return (slice.payload as NonSharedSliceInSliceZone).key;
         }
         return (slice.payload as ComponentUI).model.name;
       }}
       renderElem={(slice: SliceZoneSlice) => {
-        if (slice.type === "Slice") {
-          return NonSharedSlice.render({
+        if (slice.type !== "SharedSlice") {
+          return NonSharedSlice.Render({
             slice: slice.payload as NonSharedSliceInSliceZone,
+            path,
           });
         }
-        return SharedSlice.render({
+        return SharedSlice.Render({
           slice: slice.payload as ComponentUI,
           StatusOrCustom: {
             status:

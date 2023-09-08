@@ -177,7 +177,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                             slice.model.name
                           }
                           renderElem={(slice: ComponentUI) => {
-                            return SharedSlice.render({
+                            return SharedSlice.Render({
                               slice,
                               StatusOrCustom: {
                                 status: modelsStatuses.slices[slice.model.id],

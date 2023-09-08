@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Text,
   Card as Themecard,
@@ -18,9 +18,12 @@ import { AuthStatus } from "@src/modules/userContext/types";
 import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { Button } from "@components/Button";
+import { Button as UIButton } from "@prismicio/editor-ui";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
+import { ConvertLegacySliceModal } from "@components/Forms/ConvertLegacySliceModal";
+import { NonSharedSliceInSliceZone } from "@lib/models/common/CustomType/sliceZone";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "white",
@@ -210,7 +213,7 @@ const isDeleted = (statusOrCustom: StatusOrCustom): boolean =>
   "status" in statusOrCustom && statusOrCustom.status === ModelStatus.Deleted;
 
 export const SharedSlice = {
-  render({
+  Render({
     showActions,
     slice,
     Wrapper,
@@ -311,15 +314,23 @@ export const SharedSlice = {
 };
 
 export const NonSharedSlice = {
-  render({
+  Render({
     slice,
     sx,
+    path,
   }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    slice: { key: string; value: any };
+    slice: NonSharedSliceInSliceZone;
     sx?: ThemeUIStyleObject;
+    path: {
+      customTypeID: string;
+      tabID: string;
+      sliceZoneID: string;
+    };
   }) {
     const Wrapper = WrapperByType[WrapperType.nonClickable];
+
+    const [isConverModalOpen, setIsConverModalOpen] = useState(false);
 
     return (
       <Wrapper
@@ -374,11 +385,8 @@ export const NonSharedSlice = {
                   lineHeight: "16px",
                 }}
               >
-                This Slice was created with the Legacy Builder, and is
-                incompatible with Slice Machine. You cannot edit, push, or
-                delete it in Slice Machine. In order to proceed, manually remove
-                the Slice from your type model. Then create a new Slice with the
-                same fields using Slice Machine.
+                This Slice was created with the Legacy Builder. It needs to be
+                converted first to be used within Slice Machine.
               </Text>
             </ReactTooltip>
           </ReactTooltipPortal>
@@ -392,30 +400,52 @@ export const NonSharedSlice = {
           />
           <Flex
             p={3}
-            sx={{
-              flexDirection: "column",
-            }}
+            sx={{ justifyContent: "space-between", alignItems: "center" }}
           >
-            <TextWithTooltip
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-              text={slice?.value?.fieldset || slice.key}
-              as="h6"
-              sx={{
-                fontWeight: "600 !important",
-                maxWidth: "80%",
-                lineHeight: "24px !important",
-                color: "grey10",
-              }}
-            />
             <Flex
               sx={{
-                height: "28px",
-                justifyContent: "center",
                 flexDirection: "column",
+                flex: "1 1 auto",
               }}
             >
-              <SliceVariations numberOfVariations={1} />
+              <TextWithTooltip
+                text={
+                  slice.value.type === "Slice"
+                    ? slice?.value?.fieldset ?? slice.key
+                    : slice.key
+                }
+                as="h6"
+                sx={{
+                  fontWeight: "600 !important",
+                  maxWidth: "80%",
+                  lineHeight: "24px !important",
+                  color: "grey10",
+                }}
+              />
+              <Flex
+                sx={{
+                  height: "28px",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <SliceVariations numberOfVariations={1} />
+              </Flex>
             </Flex>
+            <UIButton
+              data-cy="create-ct"
+              endIcon="arrowForward"
+              size="large"
+              onClick={() => setIsConverModalOpen(true)}
+            >
+              Convert to Shared Slice
+            </UIButton>
+            <ConvertLegacySliceModal
+              isOpen={isConverModalOpen}
+              close={() => setIsConverModalOpen(false)}
+              slice={slice}
+              path={path}
+            />
           </Flex>
         </Themecard>
       </Wrapper>

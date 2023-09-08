@@ -161,6 +161,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .filter((e) => e.type === "Slice")
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
+  const path = useMemo(() => {
+    return {
+      customTypeID: customType.id,
+      tabID: tabId,
+      sliceZoneID: sliceZone?.key as string,
+    };
+  }, [customType, tabId, sliceZone]);
+
   const onAddNewSlice = () => {
     setIsUpdateSliceZoneModalOpen(true);
   };
@@ -254,6 +262,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               authStatus={authStatus}
               isOnline={isOnline}
               format={customType.format}
+              path={path}
             />
           </BaseStyles>
         ) : (

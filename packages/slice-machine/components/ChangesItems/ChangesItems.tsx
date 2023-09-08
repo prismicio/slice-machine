@@ -118,7 +118,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             gridTemplateMinPx="290px"
             defineElementKey={(slice: ComponentUI) => slice.model.name}
             renderElem={(slice: ComponentUI) => {
-              return SharedSlice.render({
+              return SharedSlice.Render({
                 showActions: true,
                 slice: slice,
                 wrapperType:

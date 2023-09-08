@@ -24,7 +24,7 @@ const UpdateSliceZoneModalList: React.FC<{
             (s) => s.model.id === slice.model.id
           );
 
-          return SharedSlice.render({
+          return SharedSlice.Render({
             slice: slice,
             Wrapper: ({ slice, children, sx }) => {
               return (
