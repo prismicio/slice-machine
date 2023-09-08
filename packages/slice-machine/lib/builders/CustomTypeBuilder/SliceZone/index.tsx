@@ -159,6 +159,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .filter((e) => e.type === "Slice")
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
+  const availableSlicesToAdd = availableSlices.filter(
+    (slice) =>
+      !sharedSlicesInSliceZone.some(
+        (sharedSlice) => sharedSlice.model.id === slice.model.id
+      )
+  );
+
   const onAddNewSlice = () => {
     setIsUpdateSliceZoneModalOpen(true);
   };
@@ -182,7 +189,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <List>
         <ListHeader
           actions={
-            sliceZone && slicesInSliceZone.length > 0 ? (
+            sliceZone ? (
               <Box gap={8}>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
@@ -201,27 +208,23 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
                     {availableSlicesTemplates.length > 0 ? (
                       <DropdownMenuItem
-                        onSelect={() => {
-                          openSlicesTemplatesModal();
-                        }}
+                        onSelect={openSlicesTemplatesModal}
                         startIcon={<Icon name="contentCopy" />}
                       >
-                        Slice template
+                        Slices templates
+                      </DropdownMenuItem>
+                    ) : undefined}
+
+                    {availableSlicesToAdd.length > 0 ? (
+                      <DropdownMenuItem
+                        onSelect={onAddNewSlice}
+                        startIcon={<Icon name="folder" />}
+                      >
+                        Libraries slices
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>
                 </DropdownMenu>
-
-                {availableSlices.length > 0 ? (
-                  <Button
-                    data-cy="update-slices"
-                    onClick={onAddNewSlice}
-                    startIcon="edit"
-                    variant="secondary"
-                  >
-                    Update slices
-                  </Button>
-                ) : undefined}
               </Box>
             ) : undefined
           }
@@ -257,7 +260,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             onAddNewSlice={onAddNewSlice}
             onCreateNewSlice={onCreateNewSlice}
             openSlicesTemplatesModal={openSlicesTemplatesModal}
-            projectHasAvailableSlices={availableSlices.length > 0}
+            projectHasAvailableSlices={availableSlicesToAdd.length > 0}
             isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
           />
         )
@@ -265,11 +268,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <UpdateSliceZoneModal
         isOpen={isUpdateSliceZoneModalOpen}
         formId={`tab-slicezone-form-${tabId}`}
-        availableSlices={availableSlices}
-        slicesInSliceZone={sharedSlicesInSliceZone}
+        availableSlices={availableSlicesToAdd}
         onSubmit={({ sliceKeys }) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
+          onSelectSharedSlices(
+            sliceKeys.concat(sharedSlicesInSliceZone.map((s) => s.model.id)),
+            nonSharedSlicesKeysInSliceZone
+          )
         }
         close={() => setIsUpdateSliceZoneModalOpen(false)}
       />
