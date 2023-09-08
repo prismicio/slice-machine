@@ -8,9 +8,11 @@ import type { SliceTemplateLibraryReadHook } from "@slicemachine/plugin-kit";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
 import * as CallToAction from "../sliceTemplates/CallToAction";
+import * as AlternateGrid from "../sliceTemplates/AlternateGrid";
+
 import type { PluginOptions } from "../types";
 
-const initialTemplates = [CallToAction];
+const initialTemplates = [CallToAction, AlternateGrid];
 
 export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 	PluginOptions
