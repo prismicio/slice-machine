@@ -23,7 +23,6 @@ import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import type { SlicesSM } from "@lib/models/common/Slices";
 import { List, ListHeader } from "@src/components/List";
 import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
-import { useModelStatus } from "@src/hooks/useModelStatus";
 import { telemetry } from "@src/apiClient";
 import {
   getFrontendSlices,
@@ -121,7 +120,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const [isUpdateSliceZoneModalOpen, setIsUpdateSliceZoneModalOpen] =
     useState(false);
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
-  const { remoteSlices, libraries, slices } = useSelector(
+  const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
       libraries: getLibraries(store),
@@ -132,7 +131,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal
   );
-  const { modelsStatuses, authStatus, isOnline } = useModelStatus({ slices });
   const { availableSlices, slicesInSliceZone, notFound } = useMemo(
     () =>
       sliceZone
@@ -250,10 +248,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           <BaseStyles>
             <SlicesList
               slices={slicesInSliceZone}
-              modelsStatuses={modelsStatuses}
-              authStatus={authStatus}
-              isOnline={isOnline}
               format={customType.format}
+              onRemoveSharedSlice={onRemoveSharedSlice}
             />
           </BaseStyles>
         ) : (
