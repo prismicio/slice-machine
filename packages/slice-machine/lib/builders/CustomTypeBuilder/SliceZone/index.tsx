@@ -11,6 +11,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
+import { useRouter } from "next/router";
 
 import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
 import type {
@@ -114,6 +115,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
+  const { query, replace, pathname } = useRouter();
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
@@ -184,13 +186,23 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     });
   };
 
+  const redirectToEditMode = () => {
+    if (query.newPageType === "true") {
+      void replace(
+        { pathname, query: { pageTypeId: query.pageTypeId } },
+        undefined,
+        { shallow: true }
+      );
+    }
+  };
+
   return (
-    <Box flexDirection="column">
-      <List>
-        <ListHeader
-          actions={
-            sliceZone ? (
-              <Box gap={8}>
+    <Box flexDirection="column" height="100%">
+      {query.newPageType === undefined ? (
+        <List>
+          <ListHeader
+            actions={
+              sliceZone ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <Button variant="secondary" startIcon="add">
@@ -211,7 +223,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         onSelect={openSlicesTemplatesModal}
                         startIcon={<Icon name="contentCopy" />}
                       >
-                        Slices templates
+                        Slice templates
                       </DropdownMenuItem>
                     ) : undefined}
 
@@ -225,27 +237,27 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     ) : undefined}
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </Box>
-            ) : undefined
-          }
-          toggle={
-            customType.format !== "page" || tabId !== "Main" ? (
-              <Switch
-                checked={!!sliceZone}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    onCreateSliceZone();
-                  } else {
-                    setIsDeleteSliceZoneModalOpen(true);
-                  }
-                }}
-              />
-            ) : undefined
-          }
-        >
-          Slice Zone
-        </ListHeader>
-      </List>
+              ) : undefined
+            }
+            toggle={
+              customType.format !== "page" || tabId !== "Main" ? (
+                <Switch
+                  checked={!!sliceZone}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      onCreateSliceZone();
+                    } else {
+                      setIsDeleteSliceZoneModalOpen(true);
+                    }
+                  }}
+                />
+              ) : undefined
+            }
+          >
+            Slice Zone
+          </ListHeader>
+        </List>
+      ) : undefined}
       {sliceZone ? (
         slicesInSliceZone.length > 0 ? (
           <BaseStyles>
@@ -269,13 +281,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         isOpen={isUpdateSliceZoneModalOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlicesToAdd}
-        onSubmit={({ sliceKeys }) =>
+        onSubmit={({ sliceKeys }) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onSelectSharedSlices(
             sliceKeys.concat(sharedSlicesInSliceZone.map((s) => s.model.id)),
             nonSharedSlicesKeysInSliceZone
-          )
-        }
+          );
+          redirectToEditMode();
+        }}
         close={() => setIsUpdateSliceZoneModalOpen(false)}
       />
       <SlicesTemplatesModal
@@ -302,6 +315,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               );
 
               setIsSlicesTemplatesModalOpen(false);
+              redirectToEditMode();
             },
           })
         }
