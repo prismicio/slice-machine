@@ -770,11 +770,13 @@ export const createComponentContents = (
 								position: relative;
 								padding: 8vw 1.25rem;
 							}
+
 							.es-bounded-content {
 								min-width: 0px;
 								max-width: 90%;
 								margin: 0px auto;
 							}
+
 							.es-alternate-grid {
 								font-family: system-ui, sans-serif;
 								background-color: #fff;
@@ -809,7 +811,7 @@ export const createComponentContents = (
 							}
 							
 							.es-alternate-grid__image--right {
-							grid-column: 2;
+								grid-column: 2;
 							}
 							
 							.es-alternate-grid__primary-content {
@@ -908,7 +910,6 @@ export const createComponentContents = (
 							.es-alternate-grid__item__description > * {
 								margin: 0;
 							}
-				
 						\`}
 					</style>
 				</section>
