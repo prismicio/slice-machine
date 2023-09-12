@@ -249,7 +249,6 @@ export const createComponentContents = (
 							margin: 0px;
 							min-width: 0px;
 							position: relative;
-							height: 100vh;
 						}
 						
 						.es-bounded-content {
@@ -266,7 +265,7 @@ export const createComponentContents = (
 						
 						.es-fullpage-hero__image {
 							max-width: 100%;
-							max-height: 100vh;
+							height: auto;
 							align-self: center;
 						}
 							
@@ -503,7 +502,6 @@ export const createComponentContents = (
 						margin: 0px;
 						min-width: 0px;
 						position: relative;
-						height: 100vh;
 					}
 			
 					.es-bounded-content {
@@ -520,7 +518,7 @@ export const createComponentContents = (
 					
 					.es-fullpage-hero__image {
 						max-width: 100%;
-						max-height: 100vh;
+						height: auto;
 						align-self: center;
 					}
 						

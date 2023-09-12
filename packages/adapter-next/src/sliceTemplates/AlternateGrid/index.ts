@@ -575,11 +575,19 @@ export const createComponentContents = (
 						}
 						
 						.es-alternate-grid__image--left {
-							grid-column: 1;
+							order: 1;
+						}
+	
+						.es-alternate-grid__image--left + div {
+							order: 2;
 						}
 						
-						.es-alternate-grid__image--right {
-							grid-column: 2;
+						.es-alternate-grid__image--right{
+							order: 2;
+						}
+	
+						.es-alternate-grid__image--right + div {
+							order: 1;
 						}
 						
 						.es-alternate-grid__primary-content {
