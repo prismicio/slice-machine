@@ -11,6 +11,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
+import { useRouter } from "next/router";
 
 import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
 import type {
@@ -23,7 +24,6 @@ import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import type { SlicesSM } from "@lib/models/common/Slices";
 import { List, ListHeader } from "@src/components/List";
 import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
-import { useModelStatus } from "@src/hooks/useModelStatus";
 import { telemetry } from "@src/apiClient";
 import {
   getFrontendSlices,
@@ -115,13 +115,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
+  const { query, replace, pathname } = useRouter();
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
   const [isUpdateSliceZoneModalOpen, setIsUpdateSliceZoneModalOpen] =
     useState(false);
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
-  const { remoteSlices, libraries, slices } = useSelector(
+  const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
       libraries: getLibraries(store),
@@ -132,7 +133,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal
   );
-  const { modelsStatuses, authStatus, isOnline } = useModelStatus({ slices });
   const { availableSlices, slicesInSliceZone, notFound } = useMemo(
     () =>
       sliceZone
@@ -161,6 +161,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .filter((e) => e.type === "Slice")
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
+  const availableSlicesToAdd = availableSlices.filter(
+    (slice) =>
+      !sharedSlicesInSliceZone.some(
+        (sharedSlice) => sharedSlice.model.id === slice.model.id
+      )
+  );
+
   const onAddNewSlice = () => {
     setIsUpdateSliceZoneModalOpen(true);
   };
@@ -179,13 +186,23 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     });
   };
 
+  const redirectToEditMode = () => {
+    if (query.newPageType === "true") {
+      void replace(
+        { pathname, query: { pageTypeId: query.pageTypeId } },
+        undefined,
+        { shallow: true }
+      );
+    }
+  };
+
   return (
-    <Box flexDirection="column">
-      <List>
-        <ListHeader
-          actions={
-            sliceZone && slicesInSliceZone.length > 0 ? (
-              <Box gap={8}>
+    <Box flexDirection="column" height="100%">
+      {query.newPageType === undefined ? (
+        <List>
+          <ListHeader
+            actions={
+              sliceZone ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <Button variant="secondary" startIcon="add">
@@ -203,57 +220,51 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
                     {availableSlicesTemplates.length > 0 ? (
                       <DropdownMenuItem
-                        onSelect={() => {
-                          openSlicesTemplatesModal();
-                        }}
+                        onSelect={openSlicesTemplatesModal}
                         startIcon={<Icon name="contentCopy" />}
                       >
-                        Slice template
+                        From templates
+                      </DropdownMenuItem>
+                    ) : undefined}
+
+                    {availableSlicesToAdd.length > 0 ? (
+                      <DropdownMenuItem
+                        onSelect={onAddNewSlice}
+                        startIcon={<Icon name="folder" />}
+                      >
+                        From library
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>
                 </DropdownMenu>
-
-                {availableSlices.length > 0 ? (
-                  <Button
-                    data-cy="update-slices"
-                    onClick={onAddNewSlice}
-                    startIcon="edit"
-                    variant="secondary"
-                  >
-                    Update slices
-                  </Button>
-                ) : undefined}
-              </Box>
-            ) : undefined
-          }
-          toggle={
-            customType.format !== "page" || tabId !== "Main" ? (
-              <Switch
-                checked={!!sliceZone}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    onCreateSliceZone();
-                  } else {
-                    setIsDeleteSliceZoneModalOpen(true);
-                  }
-                }}
-              />
-            ) : undefined
-          }
-        >
-          Slice Zone
-        </ListHeader>
-      </List>
+              ) : undefined
+            }
+            toggle={
+              customType.format !== "page" || tabId !== "Main" ? (
+                <Switch
+                  checked={!!sliceZone}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      onCreateSliceZone();
+                    } else {
+                      setIsDeleteSliceZoneModalOpen(true);
+                    }
+                  }}
+                />
+              ) : undefined
+            }
+          >
+            Slice Zone
+          </ListHeader>
+        </List>
+      ) : undefined}
       {sliceZone ? (
         slicesInSliceZone.length > 0 ? (
           <BaseStyles>
             <SlicesList
               slices={slicesInSliceZone}
-              modelsStatuses={modelsStatuses}
-              authStatus={authStatus}
-              isOnline={isOnline}
               format={customType.format}
+              onRemoveSharedSlice={onRemoveSharedSlice}
             />
           </BaseStyles>
         ) : (
@@ -261,7 +272,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             onAddNewSlice={onAddNewSlice}
             onCreateNewSlice={onCreateNewSlice}
             openSlicesTemplatesModal={openSlicesTemplatesModal}
-            projectHasAvailableSlices={availableSlices.length > 0}
+            projectHasAvailableSlices={availableSlicesToAdd.length > 0}
             isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
           />
         )
@@ -269,12 +280,15 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <UpdateSliceZoneModal
         isOpen={isUpdateSliceZoneModalOpen}
         formId={`tab-slicezone-form-${tabId}`}
-        availableSlices={availableSlices}
-        slicesInSliceZone={sharedSlicesInSliceZone}
-        onSubmit={({ sliceKeys }) =>
+        availableSlices={availableSlicesToAdd}
+        onSubmit={({ sliceKeys }) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
-        }
+          onSelectSharedSlices(
+            sliceKeys.concat(sharedSlicesInSliceZone.map((s) => s.model.id)),
+            nonSharedSlicesKeysInSliceZone
+          );
+          redirectToEditMode();
+        }}
         close={() => setIsUpdateSliceZoneModalOpen(false)}
       />
       <SlicesTemplatesModal
@@ -301,6 +315,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               );
 
               setIsSlicesTemplatesModalOpen(false);
+              redirectToEditMode();
             },
           })
         }

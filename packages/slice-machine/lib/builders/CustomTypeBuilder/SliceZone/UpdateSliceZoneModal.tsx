@@ -1,3 +1,5 @@
+import { Text } from "theme-ui";
+
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import ModalFormCard from "../../../../components/ModalFormCard";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
@@ -8,7 +10,6 @@ interface UpdateSliceModalProps {
   close: () => void;
   onSubmit: (values: SliceZoneFormValues) => void;
   availableSlices: ReadonlyArray<ComponentUI>;
-  slicesInSliceZone: ReadonlyArray<ComponentUI>;
 }
 
 export type SliceZoneFormValues = {
@@ -21,11 +22,10 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
   close,
   onSubmit,
   availableSlices,
-  slicesInSliceZone,
 }) => {
   return (
     <ModalFormCard
-      buttonLabel="Apply"
+      buttonLabel="Add"
       isOpen={isOpen}
       formId={formId}
       close={close}
@@ -34,12 +34,24 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         close();
       }}
       initialValues={{
-        sliceKeys: slicesInSliceZone.map((slice) => slice.model.id),
+        sliceKeys: [],
       }}
       content={{
-        title: "Update slices",
+        title: "Add from library",
       }}
       dataCy="update-slices-modal"
+      validate={(values) => {
+        if (values.sliceKeys.length === 0) {
+          return {
+            sliceKeys: "Select at least one slice to add",
+          };
+        }
+      }}
+      actionMessage={({ errors }) =>
+        errors.sliceKeys !== undefined ? (
+          <Text sx={{ color: "error" }}>{errors.sliceKeys}</Text>
+        ) : undefined
+      }
     >
       {({ values }) => (
         <UpdateSliceZoneModalList

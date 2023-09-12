@@ -3,6 +3,7 @@ import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import type { AnyObjectSchema } from "yup";
+import { useRouter } from "next/router";
 
 import ctBuilderArray from "@lib/models/common/widgets/ctBuilderArray";
 import type {
@@ -47,6 +48,8 @@ const TabZone: FC<TabZoneProps> = ({
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
   } = useSliceMachineActions();
+
+  const { query } = useRouter();
 
   const { poolOfFields } = useSelector((store: SliceMachineStoreType) => ({
     poolOfFields: selectCurrentPoolOfFields(store),
@@ -138,7 +141,7 @@ const TabZone: FC<TabZoneProps> = ({
   };
 
   return (
-    <Box backgroundColor="grey2" flexDirection="column" gap={8}>
+    <Box backgroundColor="grey2" flexDirection="column" gap={8} height="100%">
       <ErrorBoundary>
         <Suspense
           fallback={
@@ -147,33 +150,36 @@ const TabZone: FC<TabZoneProps> = ({
             </Box>
           }
         >
-          <Zone
-            zoneType="customType"
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            tabId={tabId}
-            title="Static Zone"
-            dataTip={""}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            fields={fields}
-            // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-            poolOfFieldsToCheck={poolOfFields}
-            showHints={true}
-            EditModal={EditModal}
-            widgetsArray={ctBuilderArray}
-            onDeleteItem={onDeleteItem}
-            onSave={onSave}
-            onSaveNewField={onSaveNewField}
-            onDragEnd={onDragEnd}
-            renderHintBase={({ item }) =>
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-              `data${transformKeyAccessor(item.key)}`
-            }
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-            renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
-            dataCy="ct-static-zone"
-            isRepeatableCustomType={customType.repeatable}
-          />
+          {query.newPageType === undefined ? (
+            <Zone
+              zoneType="customType"
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              tabId={tabId}
+              title="Static Zone"
+              dataTip={""}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              fields={fields}
+              // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              poolOfFieldsToCheck={poolOfFields}
+              showHints={true}
+              EditModal={EditModal}
+              widgetsArray={ctBuilderArray}
+              onDeleteItem={onDeleteItem}
+              onSave={onSave}
+              onSaveNewField={onSaveNewField}
+              onDragEnd={onDragEnd}
+              renderHintBase={({ item }) =>
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                `data${transformKeyAccessor(item.key)}`
+              }
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+              renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
+              dataCy="ct-static-zone"
+              isRepeatableCustomType={customType.repeatable}
+            />
+          ) : undefined}
+
           <SliceZone
             customType={customType}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

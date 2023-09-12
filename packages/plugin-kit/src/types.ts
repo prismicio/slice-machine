@@ -79,7 +79,7 @@ export type SliceMachineProject = {
 	 */
 	root: string;
 	/**
-	 * Slice Machine `sm.json` content, validated.
+	 * Slice Machine `slicemachine.config.json` content, validated.
 	 */
 	config: SliceMachineConfig;
 };
