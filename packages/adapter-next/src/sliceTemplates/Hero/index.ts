@@ -634,8 +634,8 @@ export const createComponentContents = (
 export const model: SharedSlice = {
 	id: "page_hero",
 	type: "SharedSlice",
-	name: "PageHero",
-	description: "PageHero",
+	name: "Hero",
+	description: "Hero",
 	variations: [
 		{
 			id: "default",
@@ -748,6 +748,6 @@ export const model: SharedSlice = {
 };
 
 export const screenshotPaths = {
-	default: "PageHero/screenshot-default.png",
-	imageRight: "PageHero/screenshot-imageRight.png",
+	default: "Hero/screenshot-default.png",
+	imageRight: "Hero/screenshot-imageRight.png",
 };
