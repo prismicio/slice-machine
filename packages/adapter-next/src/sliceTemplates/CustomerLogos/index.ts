@@ -381,6 +381,7 @@ export const createComponentContents = (
 						
 						.es-customer-logos__button {
 							justify-self: center;
+							text-decoration: underline;
 						}
 					\`}
 						</style>
@@ -512,6 +513,7 @@ export const createComponentContents = (
 					
 					.es-customer-logos__button {
 						justify-self: center;
+						text-decoration: underline;
 					}
 				\`}
 					</style>
