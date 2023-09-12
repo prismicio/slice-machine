@@ -60,7 +60,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 				},
 				credits: null,
-				alt: null,
+				alt: "Image Content",
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
