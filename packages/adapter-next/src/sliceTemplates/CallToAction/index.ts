@@ -308,11 +308,7 @@ export const createComponentContents = (
 	return stripIndent`
 			import { isFilled } from "@prismicio/client";
 			import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-			import {
-				PrismicRichText,
-				PrismicText,
-				SliceComponentProps
-			} from "@prismicio/react";
+			import { PrismicRichText, PrismicText } from "@prismicio/react";
 			
 			/**
 			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
