@@ -71,7 +71,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                     onSelect={openSlicesTemplatesModal}
                     startIcon={<Icon name="contentCopy" />}
                   >
-                    Slice templates
+                    From templates
                   </DropdownMenuItem>
                 ) : undefined}
 
@@ -80,7 +80,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                     onSelect={onAddNewSlice}
                     startIcon={<Icon name="folder" />}
                   >
-                    Libraries slices
+                    From library
                   </DropdownMenuItem>
                 ) : undefined}
               </DropdownMenuContent>

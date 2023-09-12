@@ -223,7 +223,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         onSelect={openSlicesTemplatesModal}
                         startIcon={<Icon name="contentCopy" />}
                       >
-                        Slice templates
+                        From templates
                       </DropdownMenuItem>
                     ) : undefined}
 
@@ -232,7 +232,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         onSelect={onAddNewSlice}
                         startIcon={<Icon name="folder" />}
                       >
-                        Libraries slices
+                        From library
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>
