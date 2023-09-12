@@ -146,6 +146,19 @@ export const mocks: SharedSliceContent[] = [
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
+			callToActionLabel: {
+				__TYPE__: "FieldContent",
+				type: "Text",
+				value: "Call to Action",
+			},
+			callToActionLink: {
+				__TYPE__: "LinkContent",
+				value: {
+					__TYPE__: "ExternalLink",
+					url: "https://prismic.io",
+					target: "",
+				},
+			},
 		},
 		items: [
 			{
@@ -165,7 +178,7 @@ export const createComponentContents = (
 	if (isTypeScriptProject) {
 		return stripIndent`
 			import { Content, isFilled } from "@prismicio/client";
-			import { PrismicNextImage } from "@prismicio/next";
+			import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 			import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 			
 			/**
@@ -218,6 +231,14 @@ export const createComponentContents = (
 										<div className="es-fullpage-hero__content__intro__description">
 											<PrismicRichText field={slice.primary.description} />
 										</div>
+									)}
+									{isFilled.link(slice.primary.callToActionLink) && (
+										<PrismicNextLink
+											className="es-call-to-action__link"
+											field={slice.primary.callToActionLink}
+										>
+											{slice.primary.callToActionLabel || "Learn more…"}
+										</PrismicNextLink>
 									)}
 								</div>
 							</div>
@@ -295,13 +316,12 @@ export const createComponentContents = (
 						}
 						
 						.es-fullpage-hero__content__intro {
-							display: flex;
-							flex-direction: column;
+							display: grid;
 							gap: 1rem;
 						}
 						
 						.es-fullpage-hero__content__intro__eyebrow {
-							color: #8592e0;
+							color: #47C1AF;
 							font-size: 1.15rem;
 							font-weight: 500;
 							margin: 0;
@@ -387,6 +407,21 @@ export const createComponentContents = (
 						.es-fullpage-hero__item__description > * {
 							margin: 0;
 						}
+
+						.es-call-to-action__link {
+							justify-self: flex-start;
+							border-radius: 0.25rem;
+							font-size: 0.875rem;
+							line-height: 1.3;
+							padding: 1rem 2.625rem;
+							transition: background-color 100ms linear;
+							background-color: #16745f;
+							color: #fff;
+						}
+						
+						.es-call-to-action__link:hover {
+							background-color: #0d5e4c;
+						}
 					\`}
 						</style>
 					</section>
@@ -400,7 +435,7 @@ export const createComponentContents = (
 
 	return stripIndent`
 		import { isFilled } from "@prismicio/client";
-		import { PrismicNextImage } from "@prismicio/next";
+		import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 		import { PrismicRichText } from "@prismicio/react";
 		
 		/**
@@ -450,6 +485,14 @@ export const createComponentContents = (
 									<div className="es-fullpage-hero__content__intro__description">
 										<PrismicRichText field={slice.primary.description} />
 									</div>
+								)}
+								{isFilled.link(slice.primary.callToActionLink) && (
+									<PrismicNextLink
+										className="es-call-to-action__link"
+										field={slice.primary.callToActionLink}
+									>
+										{slice.primary.callToActionLabel || "Learn more…"}
+									</PrismicNextLink>
 								)}
 							</div>
 						</div>
@@ -527,13 +570,12 @@ export const createComponentContents = (
 					}
 			
 					.es-fullpage-hero__content__intro {
-						display: flex;
-						flex-direction: column;
+						display: grid;
 						gap: 1rem;
 					}
 						
 					.es-fullpage-hero__content__intro__eyebrow {
-						color: #8592e0;
+						color: #47C1AF;
 						font-size: 1.15rem;
 						font-weight: 500;
 						margin: 0;
@@ -618,6 +660,21 @@ export const createComponentContents = (
 						
 					.es-fullpage-hero__item__description > * {
 						margin: 0;
+					}
+
+					.es-call-to-action__link {
+						justify-self: flex-start;
+						border-radius: 0.25rem;
+						font-size: 0.875rem;
+						line-height: 1.3;
+						padding: 1rem 2.625rem;
+						transition: background-color 100ms linear;
+						background-color: #16745f;
+						color: #fff;
+					}
+					
+					.es-call-to-action__link:hover {
+						background-color: #0d5e4c;
 					}
 				\`}
 					</style>
@@ -738,6 +795,21 @@ export const model: SharedSlice = {
 						label: "image",
 						constraint: {},
 						thumbnails: [],
+					},
+				},
+				callToActionLabel: {
+					type: "Text",
+					config: {
+						label: "callToActionLabel",
+						placeholder: "",
+					},
+				},
+				callToActionLink: {
+					type: "Link",
+					config: {
+						label: "callToActionLink",
+						placeholder: "",
+						select: null,
 					},
 				},
 			},

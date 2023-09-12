@@ -912,6 +912,7 @@ export const createComponentContents = (
 						margin-top: 0;
 						margin-bottom: .5rem;
 					}
+					
 					.es-alternate-grid__item__heading > * {
 						margin: 0;
 					}
