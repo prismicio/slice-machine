@@ -31,8 +31,8 @@ export const ClientError = ({ errorType }) => (
       you should disappear instantly.
     </Text>
     <Text as="p" mt={4}>
-      If the problem persists, check that your `sm.json` file points to the
-      right API endpoint.
+      If the problem persists, check that your `slicemachine.config.json` file
+      points to the right API endpoint.
       <br />
       Full error: {errorType}
     </Text>

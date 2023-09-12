@@ -6,7 +6,8 @@ export const MissingLibraries: React.FC = () => (
     <p>
       We could not find any local library in your project.
       <br />
-      Please update your `sm.json` file with a path to slices, eg:
+      Please update your `slicemachine.config.json` file with a path to slices,
+      eg:
     </p>
     <p>
       <pre>{`{ "libraries": ["@/slices"] }`}</pre>
