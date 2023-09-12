@@ -1,6 +1,6 @@
 {
 	"name": "sveltekit",
-	"version": "1.12.1-dev-next-release.6",
+	"version": "1.12.1-dev-next-release.7",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
