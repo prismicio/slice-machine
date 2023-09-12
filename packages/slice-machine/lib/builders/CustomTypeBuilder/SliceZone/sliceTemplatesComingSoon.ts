@@ -27,37 +27,4 @@ export const sliceTemplatesComingSoon: ComponentUI[] = [
       },
     },
   },
-  {
-    extension: "",
-    fileName: "",
-    from: "",
-    href: "",
-    pathToSlice: "",
-    model: {
-      id: "hero",
-      name: "Hero",
-      type: "SharedSlice",
-      variations: [
-        {
-          description: "",
-          docURL: "",
-          id: "default",
-          name: "Default",
-          version: "sktwi1xtmkfgx8626",
-        },
-        {
-          description: "",
-          docURL: "",
-          id: "Other",
-          name: "Other",
-          version: "sktwi1xtmkfgx8626",
-        },
-      ],
-    },
-    screenshots: {
-      default: {
-        url: "/hero.png",
-      },
-    },
-  },
 ];
