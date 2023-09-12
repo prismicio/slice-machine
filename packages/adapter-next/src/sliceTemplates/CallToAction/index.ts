@@ -302,6 +302,7 @@ export const createComponentContents = (
 			};
 			
 			export default ${pascalName};
+
 		`;
 	}
 
@@ -439,6 +440,7 @@ export const createComponentContents = (
 			};
 			
 			export default ${pascalName};
+			
 		`;
 };
 
