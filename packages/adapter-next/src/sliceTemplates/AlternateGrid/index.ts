@@ -815,6 +815,8 @@ export const createComponentContents = (
 					}
 					
 					.es-alternate-grid__image {
+						width: auto;
+						height: auto;
 						max-width: 100%;
 						align-self: center;
 					}
