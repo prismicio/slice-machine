@@ -450,11 +450,8 @@ export const createComponentContents = (
 	if (isTypeScriptProject) {
 		return stripIndent`
 			import { Content, isFilled } from "@prismicio/client";
-			import {
-				SliceComponentProps,
-				PrismicRichText,
-				PrismicImage,
-			} from "@prismicio/react";
+			import { PrismicNextImage } from "@prismicio/next";
+			import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 			
 			/**
 			 * Props for \`${pascalName}\`.
@@ -473,22 +470,24 @@ export const createComponentContents = (
 					>
 						<div
 							className={\`
-						es-bounded__content
-						es-alternate-grid__content
-						\${isFilled.image(slice.primary.image) ? "es-alternate-grid__content--with-image" : ""}
-					\`}
-						>
-							{isFilled.image(slice.primary.image) && (
-								<PrismicImage
-									field={slice.primary.image}
-									className={\`
-								es-alternate-grid__image
-								\${
-									slice.variation === "imageRight"
-										? "es-alternate-grid__image--right"
-										: "es-alternate-grid__image--left"
+								es-bounded__content
+								es-alternate-grid__content
+								\${isFilled.image(slice.primary.image)
+									? "es-alternate-grid__content--with-image" 
+									: ""
 								}
 							\`}
+						>
+							{isFilled.image(slice.primary.image) && (
+								<PrismicNextImage
+									field={slice.primary.image}
+									className={\`
+										es-alternate-grid__image
+										\${slice.variation === "imageRight"
+											? "es-alternate-grid__image--right"
+											: "es-alternate-grid__image--left"
+										}
+									\`}
 								/>
 							)}
 							<div className="es-alternate-grid__primary-content">
@@ -693,7 +692,8 @@ export const createComponentContents = (
 
 	return stripIndent`
 		import { isFilled } from "@prismicio/client";
-		import { PrismicRichText, PrismicImage } from "@prismicio/react";
+		import { PrismicNextImage } from "@prismicio/next";
+		import { PrismicRichText } from "@prismicio/react";
 		
 		/**
 		 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
@@ -709,22 +709,24 @@ export const createComponentContents = (
 				>
 					<div
 						className={\`
-					es-bounded__content
-					es-alternate-grid__content
-					\${isFilled.image(slice.primary.image) ? "es-alternate-grid__content--with-image" : ""}
-				\`}
-					>
-						{isFilled.image(slice.primary.image) && (
-							<PrismicImage
-								field={slice.primary.image}
-								className={\`
-							es-alternate-grid__image
-							\${
-								slice.variation === "imageRight"
-									? "es-alternate-grid__image--right"
-									: "es-alternate-grid__image--left"
+							es-bounded__content
+							es-alternate-grid__content
+							\${isFilled.image(slice.primary.image)
+								? "es-alternate-grid__content--with-image" 
+								: ""
 							}
 						\`}
+					>
+						{isFilled.image(slice.primary.image) && (
+							<PrismicNextImage
+								field={slice.primary.image}
+								className={\`
+									es-alternate-grid__image
+									\${slice.variation === "imageRight"
+										? "es-alternate-grid__image--right"
+										: "es-alternate-grid__image--left"
+									}
+								\`}
 							/>
 						)}
 						<div className="es-alternate-grid__primary-content">

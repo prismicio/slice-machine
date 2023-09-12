@@ -142,6 +142,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 				},
 				credits: null,
+				alt: "Image Content",
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
@@ -164,11 +165,8 @@ export const createComponentContents = (
 	if (isTypeScriptProject) {
 		return stripIndent`
 			import { Content, isFilled } from "@prismicio/client";
-			import {
-				SliceComponentProps,
-				PrismicRichText,
-				PrismicImage,
-			} from "@prismicio/react";
+			import { PrismicNextImage } from "@prismicio/next";
+			import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 			
 			/**
 			 * Props for \`${pascalName}\`.
@@ -187,18 +185,17 @@ export const createComponentContents = (
 					>
 						<div
 							className={\`
-						es-bounded__content
-						es-fullpage-hero__content
-						\${
-							slice.variation === "imageRight"
-								? "es-fullpage-hero__image--right"
-								: "es-fullpage-hero__image--left"
-							}
-					\`}
+								es-bounded__content
+								es-fullpage-hero__content
+								\${slice.variation === "imageRight"
+									? "es-fullpage-hero__image--right"
+									: "es-fullpage-hero__image--left"
+								}
+							\`}
 						>
 							<div>
 								{isFilled.image(slice.primary.image) && (
-									<PrismicImage
+									<PrismicNextImage
 										field={slice.primary.image}
 										className="es-fullpage-hero__image"
 									/>
@@ -403,7 +400,8 @@ export const createComponentContents = (
 
 	return stripIndent`
 		import { isFilled } from "@prismicio/client";
-		import { PrismicRichText, PrismicImage } from "@prismicio/react";
+		import { PrismicNextImage } from "@prismicio/next";
+		import { PrismicRichText } from "@prismicio/react";
 		
 		/**
 		 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
@@ -419,18 +417,17 @@ export const createComponentContents = (
 				>
 					<div
 						className={\`
-					es-bounded__content
-					es-fullpage-hero__content
-					\${
-						slice.variation === "imageRight"
-							? "es-fullpage-hero__image--right"
-							: "es-fullpage-hero__image--left"
-						}
-				\`}
+							es-bounded__content
+							es-fullpage-hero__content
+							\${slice.variation === "imageRight"
+								? "es-fullpage-hero__image--right"
+								: "es-fullpage-hero__image--left"
+							}
+						\`}
 					>
 						<div>
 							{isFilled.image(slice.primary.image) && (
-								<PrismicImage
+								<PrismicNextImage
 									field={slice.primary.image}
 									className="es-fullpage-hero__image"
 								/>

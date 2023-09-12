@@ -260,11 +260,8 @@ export const createComponentContents = (
 	if (isTypeScriptProject) {
 		return stripIndent`
 			import { Content, isFilled, asText } from "@prismicio/client";
-			import {
-				SliceComponentProps,
-				PrismicLink,
-				PrismicImage,
-			} from "@prismicio/react";
+			import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+			import { SliceComponentProps } from "@prismicio/react";
 			
 			/**
 			 * Props for \`${pascalName}\`.
@@ -293,28 +290,28 @@ export const createComponentContents = (
 										(item) =>
 											isFilled.image(item.image) && (
 												<li key={item.image.url} className="es-customer-logos__logo">
-													<PrismicLink
+													<PrismicNextLink
 														field={item.link}
 														className="es-customer-logos__link"
 													>
-														<PrismicImage
+														<PrismicNextImage
 															field={item.image}
 															height={26}
 															width={160}
 															className="es-customer-logos__logo__link__image"
 														/>
-													</PrismicLink>
+													</PrismicNextLink>
 												</li>
 											)
 									)}
 								</ul>
 							)}
-							<PrismicLink
+							<PrismicNextLink
 								field={slice.primary.callToActionLink}
 								className="es-customer-logos__button"
 							>
 								{slice.primary.callToActionLabel || "Learn more..."}
-							</PrismicLink>
+							</PrismicNextLink>
 						</div>
 						<style>
 							{\`
@@ -398,7 +395,7 @@ export const createComponentContents = (
 
 	return stripIndent`
 		import { isFilled, asText } from "@prismicio/client";
-		import { PrismicLink, PrismicImage } from "@prismicio/react";
+		import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 		
 		/**
 		 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
@@ -424,28 +421,28 @@ export const createComponentContents = (
 									(item) =>
 										isFilled.image(item.image) && (
 											<li key={item.image.url} className="es-customer-logos__logo">
-												<PrismicLink
+												<PrismicNextLink
 													field={item.link}
 													className="es-customer-logos__link"
 												>
-												<PrismicImage
-													field={item.image}
-													height={26}
-													width={160}
-													className="es-customer-logos__logo__link__image"
-												/>
-												</PrismicLink>
+													<PrismicNextImage
+														field={item.image}
+														height={26}
+														width={160}
+														className="es-customer-logos__logo__link__image"
+													/>
+												</PrismicNextLink>
 											</li>
 										)
 								)}
 							</ul>
 						)}
-						<PrismicLink
+						<PrismicNextLink
 							field={slice.primary.callToActionLink}
 							className="es-customer-logos__button"
 						>
 							{slice.primary.callToActionLabel || "Learn more..."}
-						</PrismicLink>
+						</PrismicNextLink>
 					</div>
 					<style>
 						{\`
