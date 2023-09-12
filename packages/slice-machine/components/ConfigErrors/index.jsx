@@ -18,7 +18,9 @@ const ConfigErrors = ({ errors }) => (
           borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
-        <Heading as="h3">Your sm.json file contains errors</Heading>
+        <Heading as="h3">
+          Your slicemachine.config.json file contains errors
+        </Heading>
       </Flex>
     )}
   >
