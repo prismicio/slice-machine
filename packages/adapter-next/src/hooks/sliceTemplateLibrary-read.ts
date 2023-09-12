@@ -9,10 +9,11 @@ import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
 import * as CallToAction from "../sliceTemplates/CallToAction";
 import * as AlternateGrid from "../sliceTemplates/AlternateGrid";
+import * as CustomerLogos from "../sliceTemplates/CustomerLogos";
 
 import type { PluginOptions } from "../types";
 
-const initialTemplates = [CallToAction, AlternateGrid];
+const initialTemplates = [CallToAction, AlternateGrid, CustomerLogos];
 
 export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 	PluginOptions

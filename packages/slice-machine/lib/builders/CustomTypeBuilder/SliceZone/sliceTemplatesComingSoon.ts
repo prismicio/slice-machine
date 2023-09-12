@@ -8,32 +8,6 @@ export const sliceTemplatesComingSoon: ComponentUI[] = [
     href: "",
     pathToSlice: "",
     model: {
-      id: "customer_logos",
-      name: "CustomerLogos",
-      type: "SharedSlice",
-      variations: [
-        {
-          description: "",
-          docURL: "",
-          id: "default",
-          name: "Default",
-          version: "sktwi1xtmkfgx8626",
-        },
-      ],
-    },
-    screenshots: {
-      default: {
-        url: "/customerLogos.png",
-      },
-    },
-  },
-  {
-    extension: "",
-    fileName: "",
-    from: "",
-    href: "",
-    pathToSlice: "",
-    model: {
       id: "video_highlights",
       name: "VideoHighlights",
       type: "SharedSlice",
