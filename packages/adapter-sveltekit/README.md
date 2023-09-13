@@ -29,7 +29,7 @@ npm install --save-dev @slicemachine/adapter-sveltekit
 
 ## Documentation
 
-To discover what's new on this package check out [the changelog][changelog]. For full documentation, visit the [official Prismic documentation][prismic-docs].
+To discover what's new on this package check out [the changelog][changelog]. For full documentation, visit the [official Prismic documentation][adapter-docs].
 
 ## Contributing
 
@@ -68,10 +68,7 @@ limitations under the License.
 [prismic]: https://prismic.io
 [slicemachine]: https://www.slicemachine.dev/
 [sveltekit]: https://kit.svelte.dev/
-
-<!-- TODO: Replace link with a more useful one if available -->
-
-[prismic-docs]: https://prismic.io/docs
+[adapter-docs]: [https://prismic.io/docs](https://prismic.io/docs/technical-reference/slicemachine-adapter-sveltekit)
 [changelog]: ./CHANGELOG.md
 [contributing]: ./CONTRIBUTING.md
 
