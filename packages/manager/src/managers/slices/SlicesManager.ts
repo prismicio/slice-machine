@@ -2,7 +2,10 @@ import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import {
+	CompositeSlice,
+	SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
 	HookError,
@@ -144,6 +147,26 @@ type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
 type SliceMachineManagerDeleteSliceArgs = {
 	libraryID: string;
 	sliceID: string;
+};
+
+type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
+	model: CompositeSlice;
+	src: {
+		customTypeID: string;
+		tabID: string;
+		sliceZoneID: string;
+		sliceID: string;
+	};
+	dest: {
+		libraryID: string;
+		sliceID: string;
+		variationName: string;
+		variationID: string;
+	};
+};
+
+type SliceMachineManagerConvertLegacySliceToSharedSliceReturnType = {
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerDeleteSliceReturnType = {
@@ -402,6 +425,92 @@ export class SlicesManager extends BaseManager {
 				errors: readSliceErrors,
 			};
 		}
+	}
+
+	async convertLegacySliceToSharedSlice(
+		args: SliceMachineManagerConvertLegacySliceToSharedSliceArgs,
+	): Promise<SliceMachineManagerConvertLegacySliceToSharedSliceReturnType> {
+		const errors: (DecodeError | HookError)[] = [];
+
+		const { model: maybeExistingSlice } = await this.readSlice({
+			libraryID: args.dest.libraryID,
+			sliceID: args.dest.sliceID,
+		});
+
+		const legacySliceAsVariation = {
+			id: args.dest.variationID,
+			name: args.dest.variationName,
+			description: args.dest.variationName,
+			imageUrl: "",
+			docURL: "",
+			version: "initial",
+			primary: args.model["non-repeat"],
+			items: args.model.repeat,
+		};
+
+		// Convert to shared slice
+		if (maybeExistingSlice) {
+			const maybeVariation = maybeExistingSlice.variations.find(
+				(variation) => variation.id === args.dest.variationID,
+			);
+
+			// If we're not merging into an existing slice, then we need to insert the new variation
+			if (!maybeVariation) {
+				maybeExistingSlice.variations = [
+					...maybeExistingSlice.variations,
+					legacySliceAsVariation,
+				];
+			}
+
+			maybeExistingSlice.legacyPaths ||= {};
+			maybeExistingSlice.legacyPaths[
+				`${args.src.customTypeID}::${args.src.sliceZoneID}::${args.src.sliceID}`
+			] = args.dest.variationID;
+
+			await this.updateSlice({
+				libraryID: args.dest.libraryID,
+				model: maybeExistingSlice,
+			});
+		} else {
+			await this.createSlice({
+				libraryID: args.dest.libraryID,
+				model: {
+					id: args.dest.sliceID,
+					type: "SharedSlice",
+					name: args.model.fieldset ?? args.dest.sliceID,
+					legacyPaths: {
+						[`${args.src.customTypeID}::${args.src.sliceZoneID}::${args.src.sliceID}`]:
+							args.dest.variationID,
+					},
+					variations: [legacySliceAsVariation],
+				},
+			});
+		}
+
+		// Update source custom type
+		const { model: customType, errors: customTypeReadErrors } =
+			await this.customTypes.readCustomType({
+				id: args.src.customTypeID,
+			});
+		errors.push(...customTypeReadErrors);
+
+		if (customType) {
+			const field = customType.json[args.src.tabID][args.src.sliceZoneID];
+
+			// Convert legacy slice definition in slice zone to shared slice reference
+			if (field.type === "Slices" && field.config?.choices) {
+				delete field.config.choices[args.src.sliceID];
+				field.config.choices[args.dest.sliceID] = {
+					type: "SharedSlice",
+				};
+			}
+
+			const { errors: customTypeUpdateErrors } =
+				await this.customTypes.updateCustomType({ model: customType });
+			errors.push(...customTypeUpdateErrors);
+		}
+
+		return { errors };
 	}
 
 	/**
