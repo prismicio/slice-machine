@@ -2,6 +2,7 @@ import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { LibraryUI } from "@models/common/LibraryUI";
 import { ComponentUI } from "@models/common/ComponentUI";
+import { SliceZoneSlice } from "@models/common/CustomType/sliceZone";
 import ModalFormCard from "@components/ModalFormCard";
 
 export type FormValues = {
@@ -20,6 +21,7 @@ export type ConvertLegacySliceModalProps = {
   isOpen: boolean;
   close: () => void;
   slice: { key: string; value: CompositeSlice };
+  slices: readonly SliceZoneSlice[];
   path: {
     customTypeID: string;
     tabID: string;

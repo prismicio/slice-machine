@@ -61,6 +61,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
         if (slice.type !== "SharedSlice") {
           return NonSharedSlice.Render({
             slice: slice.payload as NonSharedSliceInSliceZone,
+            slices,
             path,
           });
         }

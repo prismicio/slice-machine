@@ -477,7 +477,7 @@ export class SlicesManager extends BaseManager {
 				model: {
 					id: args.dest.sliceID,
 					type: "SharedSlice",
-					name: args.model.fieldset ?? args.dest.sliceID,
+					name: args.dest.sliceID,
 					legacyPaths: {
 						[`${args.src.customTypeID}::${args.src.sliceZoneID}::${args.src.sliceID}`]:
 							args.dest.variationID,

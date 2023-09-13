@@ -73,8 +73,9 @@ const validateAsNewVariationValues = (
 
 export const ConvertLegacySliceModal: React.FC<
   ConvertLegacySliceModalProps
-> = ({ isOpen, close, slice, path }) => {
-  const { refreshState } = useSliceMachineActions();
+> = ({ isOpen, close, slice, slices, path }) => {
+  const { refreshState, replaceCustomTypeSharedSlice } =
+    useSliceMachineActions();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -100,8 +101,8 @@ export const ConvertLegacySliceModal: React.FC<
   const convertLegacySliceAndTrack = (formValues: FormValues) => {
     setIsLoading(true);
     void (async () => {
-      let libraryID;
-      let sliceID;
+      let libraryID: string;
+      let sliceID: string;
       let variationName = "Default";
       let variationID = "default";
 
@@ -155,8 +156,31 @@ export const ConvertLegacySliceModal: React.FC<
       // Update Redux store
       refreshState(serverState);
 
-      // TODO: Refresh store properly instead
-      window.location.reload();
+      replaceCustomTypeSharedSlice(
+        path.tabID,
+        [
+          ...slices
+            .map((slice) => {
+              if (
+                "model" in slice.payload &&
+                slice.payload.model.id !== sliceID
+              ) {
+                return slice.payload.model.id;
+              }
+              return "";
+            })
+            .filter(Boolean),
+          sliceID,
+        ],
+        slices
+          .map((_slice) => {
+            if ("key" in _slice.payload && _slice.payload.key !== slice.key) {
+              return _slice.payload.key;
+            }
+            return "";
+          })
+          .filter(Boolean)
+      );
 
       close();
       setIsLoading(false);

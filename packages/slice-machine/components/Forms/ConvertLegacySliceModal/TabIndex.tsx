@@ -132,6 +132,7 @@ export const TabIndex: React.FC<TabProps> = ({
           {identicalSlices.length ? (
             identicalSlices.map((identicalSlice) => (
               <div
+                key={identicalSlice.path}
                 className={clsx(styles.card, {
                   [styles.cardSelected]:
                     formik.values.mergeWithIdentical_path ===
