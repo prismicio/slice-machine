@@ -24,6 +24,7 @@ import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
 import { ConvertLegacySliceModal } from "@components/Forms/ConvertLegacySliceModal";
 import { NonSharedSliceInSliceZone } from "@lib/models/common/CustomType/sliceZone";
+import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "white",
@@ -385,8 +386,9 @@ export const NonSharedSlice = {
                   lineHeight: "16px",
                 }}
               >
-                This Slice was created with the Legacy Builder. It needs to be
-                converted first to be used within Slice Machine.
+                {slice.value.type === "Slice"
+                  ? "This Slice was created with the Legacy Builder. It needs to be converted first to be used within Slice Machine."
+                  : "This Slice was created with the Legacy Builder and cannot be yet converted to be used within Slice Machine."}
               </Text>
             </ReactTooltip>
           </ReactTooltipPortal>
@@ -432,20 +434,24 @@ export const NonSharedSlice = {
                 <SliceVariations numberOfVariations={1} />
               </Flex>
             </Flex>
-            <UIButton
-              data-cy="create-ct"
-              endIcon="arrowForward"
-              size="large"
-              onClick={() => setIsConverModalOpen(true)}
-            >
-              Convert to Shared Slice
-            </UIButton>
-            <ConvertLegacySliceModal
-              isOpen={isConverModalOpen}
-              close={() => setIsConverModalOpen(false)}
-              slice={slice}
-              path={path}
-            />
+            {slice.value.type === "Slice" ? (
+              <>
+                <UIButton
+                  data-cy="create-ct"
+                  endIcon="arrowForward"
+                  size="large"
+                  onClick={() => setIsConverModalOpen(true)}
+                >
+                  Convert to Shared Slice
+                </UIButton>
+                <ConvertLegacySliceModal
+                  isOpen={isConverModalOpen}
+                  close={() => setIsConverModalOpen(false)}
+                  slice={slice as { key: string; value: CompositeSlice }}
+                  path={path}
+                />
+              </>
+            ) : null}
           </Flex>
         </Themecard>
       </Wrapper>
