@@ -93,7 +93,13 @@ describe.each(formats)(
       expect(await screen.findByText(newCustomType)).toBeVisible();
 
       // Check that the redirection has been done
-      expect(mockRouter.asPath).toEqual(`/${format}-types/${newCustomType}`);
+      if (format === "page") {
+        expect(mockRouter.asPath).toEqual(
+          `/${format}-types/${newCustomType}?newPageType=true`
+        );
+      } else {
+        expect(mockRouter.asPath).toEqual(`/${format}-types/${newCustomType}`);
+      }
     });
 
     test(`should delete a ${format} type from the table`, async (ctx) => {

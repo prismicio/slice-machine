@@ -115,11 +115,13 @@ describe.skip("I am an existing SM user and I want to push local changes", () =>
     cy.clearProject();
   });
 
-  it("show removed slice references", () => {
+  it("show removed slice references", async () => {
     cy.createSlice(slice.library, slice.id, slice.name);
     cy.createCustomType(customType.id, customType.name);
 
-    customTypeBuilder.goTo(customType.id).addSliceToSliceZone(slice.id).save();
+    customTypeBuilder.goTo(customType.id);
+
+    await customTypeBuilder.addSliceToSliceZone(slice.id).save();
 
     cy.clearSlices();
 

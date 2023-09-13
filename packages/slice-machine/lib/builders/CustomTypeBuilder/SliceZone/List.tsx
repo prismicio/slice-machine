@@ -1,20 +1,19 @@
+import React, { useEffect } from "react";
+import { IconButton } from "@prismicio/editor-ui";
+
 import Grid from "@components/Grid";
-
 import { SharedSlice, NonSharedSlice } from "@lib/models/ui/Slice";
-
 import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
-import React, { useEffect } from "react";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
-interface SlicesListProps extends ModelStatusInformation {
+interface SlicesListProps {
   format: CustomTypeFormat;
   slices: ReadonlyArray<SliceZoneSlice>;
   path: {
@@ -22,15 +21,14 @@ interface SlicesListProps extends ModelStatusInformation {
     tabID: string;
     sliceZoneID: string;
   };
+  onRemoveSharedSlice: (sliceId: string) => void;
 }
 
 export const SlicesList: React.FC<SlicesListProps> = ({
   slices,
-  modelsStatuses,
-  authStatus,
-  isOnline,
   format,
   path,
+  onRemoveSharedSlice,
 }) => {
   const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
@@ -68,12 +66,22 @@ export const SlicesList: React.FC<SlicesListProps> = ({
         }
         return SharedSlice.Render({
           slice: slice.payload as ComponentUI,
-          StatusOrCustom: {
-            status:
-              modelsStatuses.slices[(slice.payload as ComponentUI).model.id],
-            authStatus,
-            isOnline,
-          },
+          StatusOrCustom: () => (
+            // Prevent the Grid to redirect to the slice builder page
+            // TODO(DT-1601): See with editor team if it's possible to have the event param in the IconButton onClick
+            <div
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <IconButton
+                icon="close"
+                onClick={() => {
+                  onRemoveSharedSlice((slice.payload as ComponentUI).model.id);
+                }}
+              />
+            </div>
+          ),
         });
       }}
       sx={{ padding: "16px" }}

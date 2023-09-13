@@ -1,5 +1,14 @@
 import { FC } from "react";
-import { Box, Button } from "@prismicio/editor-ui";
+import {
+  Box,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Icon,
+} from "@prismicio/editor-ui";
+import { useRouter } from "next/router";
 
 import {
   BlankSlate,
@@ -24,8 +33,10 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
+  const { query } = useRouter();
+
   return (
-    <Box justifyContent="center">
+    <Box justifyContent="center" height="100%">
       <BlankSlate backgroundImage="/blank-slate-slice-zone.png">
         <BlankSlateContent>
           <BlankSlateTitle>Add slices</BlankSlateTitle>
@@ -35,22 +46,45 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
             code.
           </BlankSlateDescription>
           <BlankSlateActions>
-            <Button startIcon="add" onClick={onCreateNewSlice}>
-              Create a blank slice
-            </Button>
-            {isSlicesTemplatesSupported && (
-              <Button
-                startIcon="contentCopy"
-                onClick={openSlicesTemplatesModal}
-              >
-                Add from templates
-              </Button>
-            )}
-            {projectHasAvailableSlices && (
-              <Button startIcon="folder" onClick={onAddNewSlice}>
-                Add from libraries
-              </Button>
-            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger data-testid="add-slice-dropdown">
+                <Button
+                  variant={
+                    query.newPageType === "true" ? "primary" : "secondary"
+                  }
+                  startIcon="add"
+                >
+                  Add
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem
+                  startIcon={<Icon name="add" />}
+                  onSelect={onCreateNewSlice}
+                >
+                  Blank slice
+                </DropdownMenuItem>
+
+                {isSlicesTemplatesSupported ? (
+                  <DropdownMenuItem
+                    onSelect={openSlicesTemplatesModal}
+                    startIcon={<Icon name="contentCopy" />}
+                  >
+                    From templates
+                  </DropdownMenuItem>
+                ) : undefined}
+
+                {projectHasAvailableSlices ? (
+                  <DropdownMenuItem
+                    onSelect={onAddNewSlice}
+                    startIcon={<Icon name="folder" />}
+                  >
+                    From library
+                  </DropdownMenuItem>
+                ) : undefined}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </BlankSlateActions>
         </BlankSlateContent>
       </BlankSlate>

@@ -6,7 +6,7 @@ class CustomTypeBuilder extends BaseBuilder {
   }
 
   get updateSliceZoneButton() {
-    return cy.get("[data-cy=update-slices]");
+    return cy.getByText("Add from libraries");
   }
 
   get headerCustomTypeName() {
@@ -28,7 +28,8 @@ class CustomTypeBuilder extends BaseBuilder {
     return this;
   }
 
-  addSliceToSliceZone(sliceId) {
+  async addSliceToSliceZone(sliceId) {
+    await cy.findAllByText(/Add/)[0].click();
     this.updateSliceZoneButton.click();
     cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
     cy.get("[data-cy=update-slices-modal]").submit();

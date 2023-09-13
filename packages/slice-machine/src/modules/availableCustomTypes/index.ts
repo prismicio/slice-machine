@@ -243,7 +243,17 @@ export function* createCustomTypeSaga({
     yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
     yield put(modalCloseCreator());
-    yield put(push(customTypesConfig.getBuilderPagePathname(payload.id)));
+    yield put(
+      push({
+        pathname: customTypesConfig.getBuilderPagePathname(payload.id),
+        query:
+          newCustomType.format === "page"
+            ? {
+                newPageType: true,
+              }
+            : undefined,
+      })
+    );
     yield put(
       openToasterCreator({
         content: ToastMessageWithPath({
