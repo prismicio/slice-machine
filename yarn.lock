@@ -5272,7 +5272,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:2.0.0, @prismicio/types-internal@npm:^2.0.0":
+"@prismicio/types-internal@npm:2.0.0":
   version: 2.0.0
   resolution: "@prismicio/types-internal@npm:2.0.0"
   dependencies:
@@ -5299,6 +5299,23 @@ __metadata:
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
   checksum: 77974bfb7611d3e2bd31068090b3695efb6b5e32ea70aa41138af6448508a785f34a0e917c5ae615a9b2a3bea97358fcdea0699dbec4b98cc931d724ea57968f
+  languageName: node
+  linkType: hard
+
+"@prismicio/types-internal@npm:2.2.0-traverse.alpha-2, @prismicio/types-internal@npm:^2.2.0-traverse.alpha-2":
+  version: 2.2.0-traverse.alpha-2
+  resolution: "@prismicio/types-internal@npm:2.2.0-traverse.alpha-2"
+  dependencies:
+    monocle-ts: ^2.3.11
+    newtype-ts: ^0.3.5
+    tslib: ^2.3.1
+  peerDependencies:
+    "@types/uuid": ^9.0.2
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    io-ts-types: ^0.5.16
+    uuid: ^9.0.0
+  checksum: 3cb7af32f536e9d4855b88c028f9242477909a38a7ed7928a761c2f7e58eae359bc567dd06fbcd5fdcf8ef3f30c65177373f63236da1d032ccb8f752ee3ae985
   languageName: node
   linkType: hard
 
@@ -7981,7 +7998,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": ^2.2.0-traverse.alpha-2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
@@ -8026,7 +8043,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": ^2.2.0-traverse.alpha-2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/prettier": 2.7.2
@@ -8069,7 +8086,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": ^2.2.0-traverse.alpha-2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/common-tags": 1.8.1
@@ -8113,7 +8130,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": ^2.2.0-traverse.alpha-2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@sveltejs/kit": 1.22.6
@@ -8209,7 +8226,7 @@ __metadata:
     "@prismicio/custom-types-client": ^1.2.0-alpha.0
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.0.0-alpha.2
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": ^2.2.0-traverse.alpha-2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
     "@types/analytics-node": 3.1.11
@@ -8274,7 +8291,7 @@ __metadata:
   resolution: "@slicemachine/plugin-kit@workspace:packages/plugin-kit"
   dependencies:
     "@prismicio/mock": 0.2.0
-    "@prismicio/types-internal": 2.0.0
+    "@prismicio/types-internal": 2.2.0-traverse.alpha-2
     "@size-limit/preset-small-lib": 8.2.4
     "@types/common-tags": 1.8.1
     "@types/fs-extra": 11.0.1
@@ -30667,7 +30684,7 @@ __metadata:
     "@prismicio/editor-ui": 0.4.9
     "@prismicio/mocks": 2.0.0-alpha.2
     "@prismicio/simulator": 0.1.4
-    "@prismicio/types-internal": 2.0.0
+    "@prismicio/types-internal": 2.2.0-traverse.alpha-2
     "@radix-ui/react-hover-card": 1.0.6
     "@radix-ui/react-tabs": 1.0.4
     "@reach/menu-button": 0.18.0
@@ -31186,7 +31203,7 @@ __metadata:
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
     "@prismicio/mocks": ^2.0.0-alpha.2
-    "@prismicio/types-internal": ^2.0.0
+    "@prismicio/types-internal": ^2.2.0-traverse.alpha-2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:^"
     "@types/body-parser": 1.19.2
