@@ -9,7 +9,7 @@ import { pascalize } from "@lib/utils/str";
 import { Variation } from "@models/common/Variation";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { managerClient } from "@src/managerClient";
-import { getState } from "@src/apiClient";
+import { getState, telemetry } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import { validateSliceModalValues as validateAsNewSliceValues } from "../formsValidator";
@@ -129,6 +129,17 @@ export const ConvertLegacySliceModal: React.FC<
           break;
       }
 
+      void telemetry.track({
+        event: "legacy-slice:converted",
+        id: sliceID,
+        variation: variationID,
+        library: libraryID,
+        conversionType:
+          formValues.tab === "index" || !formValues.tab
+            ? "merge_with_idential"
+            : formValues.tab,
+      });
+
       const { errors } =
         await managerClient.slices.convertLegacySliceToSharedSlice({
           model: slice.value,
@@ -156,6 +167,8 @@ export const ConvertLegacySliceModal: React.FC<
       // Update Redux store
       refreshState(serverState);
 
+      setIsLoading(false);
+      close();
       replaceCustomTypeSharedSlice(
         path.tabID,
         [
@@ -181,9 +194,6 @@ export const ConvertLegacySliceModal: React.FC<
           })
           .filter(Boolean)
       );
-
-      close();
-      setIsLoading(false);
     })();
   };
 
