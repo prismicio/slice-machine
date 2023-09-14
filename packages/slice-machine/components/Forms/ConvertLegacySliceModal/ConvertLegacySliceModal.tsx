@@ -136,7 +136,7 @@ export const ConvertLegacySliceModal: React.FC<
         library: libraryID,
         conversionType:
           formValues.tab === "index" || !formValues.tab
-            ? "merge_with_idential"
+            ? "merge_with_identical"
             : formValues.tab,
       });
 
