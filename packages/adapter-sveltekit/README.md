@@ -68,7 +68,7 @@ limitations under the License.
 [prismic]: https://prismic.io
 [slicemachine]: https://www.slicemachine.dev/
 [sveltekit]: https://kit.svelte.dev/
-[adapter-docs]: [https://prismic.io/docs](https://prismic.io/docs/technical-reference/slicemachine-adapter-sveltekit)
+[adapter-docs]: https://prismic.io/docs/technical-reference/slicemachine-adapter-sveltekit
 [changelog]: ./CHANGELOG.md
 [contributing]: ./CONTRIBUTING.md
 
