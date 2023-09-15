@@ -14,14 +14,13 @@ export const root = style([
     animationDuration: 300,
     animationName: "fadeIn",
     animationTimingFunction: "easeInOut",
-    backgroundColor: colors.grey1,
     borderColor: colors.grey6,
     borderRadius: 6,
     borderStyle: "solid",
     borderWidth: 1,
     overflow: "hidden",
   }),
-  { maxWidth: 498, minHeight: 400 },
+  { maxWidth: 498, minHeight: 400, backgroundColor: vars.color.greyLight1 },
 ]);
 
 export const withBackground = style([
@@ -31,6 +30,7 @@ export const withBackground = style([
   }),
   {
     backgroundSize: "cover",
+    backgroundColor: "transparent",
     borderRadius: vars.borderRadius[0],
     borderStyle: vars.borderStyle.none,
     height: "100%",
