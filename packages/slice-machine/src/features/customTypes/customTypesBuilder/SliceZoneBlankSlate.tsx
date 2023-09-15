@@ -1,14 +1,5 @@
 import { FC } from "react";
-import {
-  Box,
-  Button,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Icon,
-} from "@prismicio/editor-ui";
-import { useRouter } from "next/router";
+import { ActionList, ActionListItem, Box } from "@prismicio/editor-ui";
 
 import {
   BlankSlate,
@@ -17,6 +8,7 @@ import {
   BlankSlateDescription,
   BlankSlateTitle,
 } from "@src/components/BlankSlate";
+import { LightningIcon3D } from "@src/icons/LightningIcon3D";
 
 export type SliceZoneBlankSlateProps = {
   onAddNewSlice: () => void;
@@ -33,12 +25,13 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
-  const { query } = useRouter();
-
   return (
     <Box justifyContent="center" height="100%">
       <BlankSlate backgroundImage="/blank-slate-slice-zone.png">
         <BlankSlateContent>
+          <Box justifyContent="center" padding={{ bottom: 16 }}>
+            <LightningIcon3D />
+          </Box>
           <BlankSlateTitle>Add slices</BlankSlateTitle>
           <BlankSlateDescription>
             Slices are website sections that you can reuse on different pages
@@ -46,45 +39,33 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
             code.
           </BlankSlateDescription>
           <BlankSlateActions>
-            <DropdownMenu>
-              <DropdownMenuTrigger data-testid="add-slice-dropdown">
-                <Button
-                  variant={
-                    query.newPageType === "true" ? "primary" : "secondary"
-                  }
-                  startIcon="add"
+            <ActionList>
+              <ActionListItem
+                startIcon="add"
+                onClick={onCreateNewSlice}
+                description="Okay, you're not kidding"
+              >
+                Create a new one
+              </ActionListItem>
+              {isSlicesTemplatesSupported ? (
+                <ActionListItem
+                  startIcon="contentCopy"
+                  onClick={openSlicesTemplatesModal}
+                  description="Great, if you struggle"
                 >
-                  Add
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem
-                  startIcon={<Icon name="add" />}
-                  onSelect={onCreateNewSlice}
+                  Add from templates
+                </ActionListItem>
+              ) : undefined}
+              {projectHasAvailableSlices ? (
+                <ActionListItem
+                  startIcon="folder"
+                  onClick={onAddNewSlice}
+                  description="Why reinvent the wheel?"
                 >
-                  Blank slice
-                </DropdownMenuItem>
-
-                {isSlicesTemplatesSupported ? (
-                  <DropdownMenuItem
-                    onSelect={openSlicesTemplatesModal}
-                    startIcon={<Icon name="contentCopy" />}
-                  >
-                    From templates
-                  </DropdownMenuItem>
-                ) : undefined}
-
-                {projectHasAvailableSlices ? (
-                  <DropdownMenuItem
-                    onSelect={onAddNewSlice}
-                    startIcon={<Icon name="folder" />}
-                  >
-                    From library
-                  </DropdownMenuItem>
-                ) : undefined}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  Add from this project
+                </ActionListItem>
+              ) : undefined}
+            </ActionList>
           </BlankSlateActions>
         </BlankSlateContent>
       </BlankSlate>

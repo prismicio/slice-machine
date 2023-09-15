@@ -212,8 +212,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
-                      startIcon={<Icon name="add" />}
+                      startIcon={<Icon name="add" size="large" />}
                       onSelect={onCreateNewSlice}
+                      description="Okay, you're not kidding"
                     >
                       Blank slice
                     </DropdownMenuItem>
@@ -221,7 +222,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     {availableSlicesTemplates.length > 0 ? (
                       <DropdownMenuItem
                         onSelect={openSlicesTemplatesModal}
-                        startIcon={<Icon name="contentCopy" />}
+                        startIcon={<Icon name="contentCopy" size="large" />}
+                        description="Great, if you struggle"
                       >
                         From templates
                       </DropdownMenuItem>
@@ -230,9 +232,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     {availableSlicesToAdd.length > 0 ? (
                       <DropdownMenuItem
                         onSelect={onAddNewSlice}
-                        startIcon={<Icon name="folder" />}
+                        startIcon={<Icon name="folder" size="large" />}
+                        description="Why reinvent the wheel?"
                       >
-                        From library
+                        From project
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>
