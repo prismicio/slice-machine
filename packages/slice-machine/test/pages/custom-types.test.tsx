@@ -300,7 +300,7 @@ describe("Custom Type Builder", () => {
     });
 
     const user = userEvent.setup();
-    await user.click(screen.getByText("Add from this project"));
+    await user.click(screen.getByText("Select existing"));
 
     const slicesToSelect = screen.getAllByTestId("slicezone-modal-item");
 

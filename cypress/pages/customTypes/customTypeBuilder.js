@@ -6,7 +6,7 @@ class CustomTypeBuilder extends BaseBuilder {
   }
 
   get updateSliceZoneButton() {
-    return cy.getByText("Add from libraries");
+    return cy.getByText("Select existing");
   }
 
   get headerCustomTypeName() {

@@ -43,26 +43,26 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
               <ActionListItem
                 startIcon="add"
                 onClick={onCreateNewSlice}
-                description="Okay, you're not kidding"
+                description="Start from scratch."
               >
-                Create a new one
+                Create new
               </ActionListItem>
               {isSlicesTemplatesSupported ? (
                 <ActionListItem
                   startIcon="contentCopy"
                   onClick={openSlicesTemplatesModal}
-                  description="Great, if you struggle"
+                  description="Select from premade examples."
                 >
-                  Add from templates
+                  Use template
                 </ActionListItem>
               ) : undefined}
               {projectHasAvailableSlices ? (
                 <ActionListItem
                   startIcon="folder"
                   onClick={onAddNewSlice}
-                  description="Why reinvent the wheel?"
+                  description="Select from your own slices."
                 >
-                  Add from this project
+                  Select existing
                 </ActionListItem>
               ) : undefined}
             </ActionList>

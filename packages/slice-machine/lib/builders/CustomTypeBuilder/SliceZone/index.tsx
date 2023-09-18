@@ -214,18 +214,18 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     <DropdownMenuItem
                       startIcon={<Icon name="add" size="large" />}
                       onSelect={onCreateNewSlice}
-                      description="Okay, you're not kidding"
+                      description="Start from scratch."
                     >
-                      Blank slice
+                      Create new
                     </DropdownMenuItem>
 
                     {availableSlicesTemplates.length > 0 ? (
                       <DropdownMenuItem
                         onSelect={openSlicesTemplatesModal}
                         startIcon={<Icon name="contentCopy" size="large" />}
-                        description="Great, if you struggle"
+                        description="Select from premade examples."
                       >
-                        From templates
+                        Use template
                       </DropdownMenuItem>
                     ) : undefined}
 
@@ -233,9 +233,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                       <DropdownMenuItem
                         onSelect={onAddNewSlice}
                         startIcon={<Icon name="folder" size="large" />}
-                        description="Why reinvent the wheel?"
+                        description="Select from your own slices."
                       >
-                        From project
+                        Select existing
                       </DropdownMenuItem>
                     ) : undefined}
                   </DropdownMenuContent>
