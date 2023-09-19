@@ -1,87 +1,82 @@
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Icon,
+  Button,
+} from "@prismicio/editor-ui";
+import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
 
-import { AnimatedElement } from "@prismicio/editor-ui";
-import ModalFormCard from "@components/ModalFormCard";
-import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import { getLibraries } from "@src/modules/slices";
+import { VariationSM } from "@models/common/Slice";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { pascalize } from "@lib/utils/str";
-import { Variation } from "@models/common/Variation";
-import { LibraryUI } from "@models/common/LibraryUI";
 import { managerClient } from "@src/managerClient";
 import { getState, telemetry } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
-import { validateSliceModalValues as validateAsNewSliceValues } from "../formsValidator";
-
-import { TabIndex } from "./TabIndex";
-import { TabAsNewSlice } from "./TabAsNewSlice";
-import { TabAsNewVariation } from "./TabAsNewVariation";
+import { FormAsNewSlice } from "./FormAsNewSlice";
+import { FormAsNewVariation } from "./FormAsNewVariation";
+import { FormMergeWithIdentical } from "./FormMergeWithIdentical";
 import {
   ConvertLegacySliceModalProps,
-  TabProps,
-  FormValues,
-  Tab,
+  ConvertLegacySliceAndTrackArgs,
+  IdenticalSlice,
+  Type,
 } from "./types";
 
-const validateAsNewVariationValues = (
-  values: FormValues,
-  libraries: LibraryUI[]
-): Partial<Record<keyof FormValues, string>> => {
-  const errors: Partial<Record<keyof FormValues, string>> = {};
+const getFieldMappingFingerprint = (
+  slice: CompositeSlice | VariationSM
+): {
+  primary: string;
+  items: string;
+} => {
+  const primary: Record<string, string> = {};
+  const items: Record<string, string> = {};
 
-  if (!values.asNewVariation_libraryID) {
-    errors.asNewVariation_libraryID = "Cannot be empty.";
-  }
-  const library = libraries.find(
-    (library) => library.path === values.asNewVariation_libraryID
-  );
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!errors.asNewVariation_variationID && !library) {
-    errors.asNewVariation_variationID = "Does not exists.";
-  }
-
-  if (!values.asNewVariation_sliceID) {
-    errors.asNewVariation_libraryID = "Cannot be empty.";
-  }
-  const slice = library?.components.find(
-    (component) => component.model.id === values.asNewVariation_sliceID
-  );
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!errors.asNewVariation_sliceID && !slice) {
-    errors.asNewVariation_sliceID = "Does not exists.";
-  }
-
-  if (!values.asNewVariation_variationName) {
-    errors.asNewVariation_libraryID = "Cannot be empty.";
-  }
-
-  if (!values.asNewVariation_variationID) {
-    errors.asNewVariation_libraryID = "Cannot be empty.";
-  } else {
-    const variationIDs =
-      slice?.model.variations.map((variation) => variation.id) ?? [];
-
-    if (variationIDs.includes(values.asNewVariation_variationID)) {
-      errors.asNewVariation_variationID =
-        "Slice variation ID is already taken.";
+  if ("type" in slice && slice.type === "Slice") {
+    for (const key in slice["non-repeat"]) {
+      primary[key] = slice["non-repeat"][key].type;
+    }
+    for (const key in slice.repeat) {
+      items[key] = slice.repeat[key].type;
+    }
+  } else if ("id" in slice) {
+    for (const { key, value } of slice.primary ?? []) {
+      primary[key] = value.type;
+    }
+    for (const { key, value } of slice.items ?? []) {
+      items[key] = value.type;
     }
   }
 
-  return errors;
+  return {
+    primary: JSON.stringify(
+      Object.keys(primary)
+        .sort()
+        .map((key) => [key, primary[key]])
+    ),
+    items: JSON.stringify(
+      Object.keys(items)
+        .sort()
+        .map((key) => [key, items[key]])
+    ),
+  };
 };
 
 export const ConvertLegacySliceModal: React.FC<
   ConvertLegacySliceModalProps
-> = ({ isOpen, close, slice, slices, path }) => {
+> = ({ slice, slices, path }) => {
   const { refreshState, replaceCustomTypeSharedSlice } =
     useSliceMachineActions();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<false | Type>(false);
 
-  const { remoteSlices, libraries: allLibraries } = useSelector(
+  const { libraries: allLibraries } = useSelector(
     (store: SliceMachineStoreType) => ({
-      remoteSlices: getRemoteSlices(store),
       libraries: getLibraries(store),
     })
   );
@@ -97,48 +92,53 @@ export const ConvertLegacySliceModal: React.FC<
   const localSharedSlices = useMemo(() => {
     return libraries.map((library) => library.components).flat();
   }, [libraries]);
+  const identicalSlices = useMemo<IdenticalSlice[]>(() => {
+    const results: IdenticalSlice[] = [];
 
-  const convertLegacySliceAndTrack = (formValues: FormValues) => {
+    if (slice.value.type !== "Slice") {
+      return results;
+    }
+
+    const sliceFields = getFieldMappingFingerprint(slice.value);
+
+    for (const sharedSlice of localSharedSlices) {
+      for (const variation of sharedSlice.model.variations) {
+        const variationFields = getFieldMappingFingerprint(variation);
+
+        if (
+          sliceFields.primary === variationFields.primary &&
+          sliceFields.items === variationFields.items
+        ) {
+          results.push({
+            libraryID: sharedSlice.from,
+            sliceID: sharedSlice.model.id,
+            variationID: variation.id,
+            path: `${sharedSlice.from}::${sharedSlice.model.id}::${variation.id}`,
+          });
+        }
+      }
+    }
+
+    return results;
+  }, [slice, localSharedSlices]);
+
+  const convertLegacySliceAndTrack = (args: ConvertLegacySliceAndTrackArgs) => {
+    if (isModalOpen === false) {
+      console.log("no", isModalOpen, args);
+      return;
+    }
+
     setIsLoading(true);
     void (async () => {
-      let libraryID: string;
-      let sliceID: string;
-      let variationName = "Default";
-      let variationID = "default";
-
-      switch (formValues.tab) {
-        case "as_new_slice":
-          libraryID = formValues.from;
-          sliceID = formValues.sliceName;
-          break;
-
-        case "as_new_variation":
-          libraryID = formValues.asNewVariation_libraryID;
-          sliceID = formValues.asNewVariation_sliceID;
-          variationName = formValues.asNewVariation_variationName;
-          variationID = formValues.asNewVariation_variationID;
-          break;
-
-        case "index":
-        default:
-          const [_libraryID, _sliceID, _variationID] =
-            formValues.mergeWithIdentical_path.split("::");
-          libraryID = _libraryID;
-          sliceID = _sliceID;
-          variationID = _variationID;
-          break;
-      }
-
       void telemetry.track({
         event: "legacy-slice:converted",
-        id: sliceID,
-        variation: variationID,
-        library: libraryID,
-        conversionType:
-          formValues.tab === "index" || !formValues.tab
-            ? "merge_with_identical"
-            : formValues.tab,
+        id: args.sliceID,
+        variation: args.variationID ?? "default",
+        library: args.libraryID,
+        conversionType: isModalOpen,
       });
+
+      console.log(args);
 
       const { errors } =
         await managerClient.slices.convertLegacySliceToSharedSlice({
@@ -148,10 +148,10 @@ export const ConvertLegacySliceModal: React.FC<
             sliceID: slice.key,
           },
           dest: {
-            libraryID,
-            sliceID,
-            variationName,
-            variationID,
+            libraryID: args.libraryID,
+            sliceID: args.sliceID,
+            variationName: args.variationName ?? "Default",
+            variationID: args.variationID ?? "default",
           },
         });
 
@@ -176,14 +176,14 @@ export const ConvertLegacySliceModal: React.FC<
             .map((slice) => {
               if (
                 "model" in slice.payload &&
-                slice.payload.model.id !== sliceID
+                slice.payload.model.id !== args.sliceID
               ) {
                 return slice.payload.model.id;
               }
               return "";
             })
             .filter(Boolean),
-          sliceID,
+          args.sliceID,
         ],
         slices
           .map((_slice) => {
@@ -197,75 +197,67 @@ export const ConvertLegacySliceModal: React.FC<
     })();
   };
 
+  const formProps = {
+    path,
+    slice,
+    sliceName,
+    libraries,
+    localSharedSlices,
+    identicalSlices,
+    close: () => setIsModalOpen(false),
+    onSubmit: convertLegacySliceAndTrack,
+    isLoading,
+  };
+
   return (
-    <ModalFormCard
-      dataCy="convert-legacy-slice-modal"
-      isOpen={isOpen}
-      widthInPx="530px"
-      formId="convert-legacy-slice-modal"
-      buttonLabel={"Convert"}
-      close={close}
-      onSubmit={convertLegacySliceAndTrack}
-      isLoading={isLoading}
-      initialValues={{
-        sliceName: pascalize(slice.key),
-        from: libraries[0]?.name,
-        asNewVariation_libraryID: localSharedSlices[0]?.from,
-        asNewVariation_sliceID: localSharedSlices[0]?.model.id,
-        asNewVariation_variationID: Variation.generateId(slice.key),
-        asNewVariation_variationName: sliceName,
-        mergeWithIdentical_path: "",
-      }}
-      validate={(values) => {
-        switch (values.tab) {
-          case "as_new_slice":
-            return validateAsNewSliceValues(values, libraries, remoteSlices);
-
-          case "as_new_variation":
-            return validateAsNewVariationValues(values, libraries);
-
-          case "index":
-          default:
-            if (!values.mergeWithIdentical_path) {
-              return { mergeWithIdentical_path: "Cannot be empty." };
-            }
-            return;
-        }
-      }}
-      content={{
-        title: `Convert ${sliceName} to shared slice`,
-      }}
-    >
-      {(formik) => {
-        const tabProps: TabProps = {
-          path,
-          slice,
-          setActiveTab: (tab: Tab) => {
-            void formik.setFieldValue("tab", tab);
-          },
-          sliceName,
-          libraries,
-          localSharedSlices,
-          formik,
-        };
-
-        // This forces `validate` to trigger once so the UI make sense.
-        if (!formik.values.tab) {
-          void formik.setFieldValue("tab", "index");
-        }
-
-        return (
-          <AnimatedElement>
-            {formik.values.tab === "as_new_slice" ? (
-              <TabAsNewSlice key="as_new_slice" {...tabProps} />
-            ) : formik.values.tab === "as_new_variation" ? (
-              <TabAsNewVariation key="as_new_variation" {...tabProps} />
-            ) : (
-              <TabIndex key="index" {...tabProps} />
-            )}
-          </AnimatedElement>
-        );
-      }}
-    </ModalFormCard>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button
+            data-cy="convert-legacy-slice"
+            startIcon="refresh"
+            endIcon="arrowDropDown"
+            size="medium"
+            variant="secondary"
+          >
+            Turn into shared Slice
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem
+            startIcon={<Icon name="folder" size="large" />}
+            description="A brand new shared slice"
+            onSelect={() => setIsModalOpen("as_new_slice")}
+          >
+            Convert to new slice
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            startIcon={<Icon name="viewDay" size="large" />}
+            description="An existing slice's new variation"
+            onSelect={() => setIsModalOpen("as_new_variation")}
+            disabled={!localSharedSlices.length}
+          >
+            Create a new variation
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            startIcon={<Icon name="driveFileMove" size="large" />}
+            description="Identical slices can be merged"
+            onSelect={() => setIsModalOpen("merge_with_identical")}
+            disabled={!identicalSlices.length}
+          >
+            Merge with an existing slice
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <FormAsNewSlice {...formProps} isOpen={isModalOpen === "as_new_slice"} />
+      <FormAsNewVariation
+        {...formProps}
+        isOpen={isModalOpen === "as_new_variation"}
+      />
+      <FormMergeWithIdentical
+        {...formProps}
+        isOpen={isModalOpen === "merge_with_identical"}
+      />
+    </>
   );
 };

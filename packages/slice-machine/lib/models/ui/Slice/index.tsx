@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import {
   Text,
   Card as Themecard,
@@ -18,7 +18,6 @@ import { AuthStatus } from "@src/modules/userContext/types";
 import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 import { Button } from "@components/Button";
-import { Button as UIButton } from "@prismicio/editor-ui";
 import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
@@ -335,8 +334,6 @@ export const NonSharedSlice = {
   }) {
     const Wrapper = WrapperByType[WrapperType.nonClickable];
 
-    const [isConverModalOpen, setIsConverModalOpen] = useState(false);
-
     return (
       <Wrapper
         sx={{
@@ -439,23 +436,11 @@ export const NonSharedSlice = {
               </Flex>
             </Flex>
             {slice.value.type === "Slice" ? (
-              <>
-                <UIButton
-                  data-cy="create-ct"
-                  endIcon="arrowForward"
-                  size="large"
-                  onClick={() => setIsConverModalOpen(true)}
-                >
-                  Convert to Shared Slice
-                </UIButton>
-                <ConvertLegacySliceModal
-                  isOpen={isConverModalOpen}
-                  close={() => setIsConverModalOpen(false)}
-                  slice={slice as { key: string; value: CompositeSlice }}
-                  slices={slices}
-                  path={path}
-                />
-              </>
+              <ConvertLegacySliceModal
+                slice={slice as { key: string; value: CompositeSlice }}
+                slices={slices}
+                path={path}
+              />
             ) : null}
           </Flex>
         </Themecard>
