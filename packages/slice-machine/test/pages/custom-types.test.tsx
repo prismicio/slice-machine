@@ -300,8 +300,7 @@ describe("Custom Type Builder", () => {
     });
 
     const user = userEvent.setup();
-    await user.click(screen.getByTestId("add-slice-dropdown"));
-    await user.click(screen.getByText("From library"));
+    await user.click(screen.getByText("Select existing"));
 
     const slicesToSelect = screen.getAllByTestId("slicezone-modal-item");
 

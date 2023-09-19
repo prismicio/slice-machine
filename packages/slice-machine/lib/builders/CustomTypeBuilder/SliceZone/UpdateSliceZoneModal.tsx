@@ -37,7 +37,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: "Add from library",
+        title: "Select existing slices",
       }}
       dataCy="update-slices-modal"
       validate={(values) => {
