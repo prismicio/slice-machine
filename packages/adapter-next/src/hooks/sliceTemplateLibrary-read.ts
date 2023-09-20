@@ -2,7 +2,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import type { SliceTemplateLibraryReadHook } from "@slicemachine/plugin-kit";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
@@ -29,7 +28,7 @@ export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 			: initialTemplates;
 
 	const templatesPromises = templates.map(async (t) => {
-		const { mocks, model, createComponentContents, screenshotPaths } = t;
+		const { mocks, model, screenshotPaths } = t;
 
 		const screenshotEntries = Object.entries(screenshotPaths);
 		const screenshotPromises = screenshotEntries.map(([key, filePath]) => {
@@ -42,11 +41,20 @@ export const sliceTemplateLibraryRead: SliceTemplateLibraryReadHook<
 		const readScreenshots = await Promise.all(screenshotPromises);
 		const screenshots = Object.fromEntries(readScreenshots);
 
+		const fileName = isTypeScriptProject ? "typescript.tsx" : "javascript.jsx";
+
+		// import fileNames object from templates if ever needed
+		const componentContentsTemplate = await fs.readFile(
+			fileURLToPath(
+				new URL(path.join("..", model.name, fileName), import.meta.url),
+			),
+			"utf-8",
+		);
+
 		return {
 			mocks,
 			model,
-			createComponentContents: (model: SharedSlice) =>
-				createComponentContents(model, isTypeScriptProject),
+			componentContentsTemplate,
 			screenshots,
 		};
 	});

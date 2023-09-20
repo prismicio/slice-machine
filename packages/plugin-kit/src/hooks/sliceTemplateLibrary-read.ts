@@ -21,7 +21,7 @@ export type SliceTemplateLibraryReadHookReturnType = {
 	templates: {
 		model: SharedSlice;
 		mocks: SharedSliceContent[];
-		createComponentContents: (model: SharedSlice) => string;
+		componentContentsTemplate: string;
 		screenshots: Record<string, Buffer>;
 	}[];
 };

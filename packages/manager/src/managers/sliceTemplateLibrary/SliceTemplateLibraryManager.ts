@@ -32,12 +32,15 @@ const readHookCodec = t.type({
 	templates: t.array(
 		t.type({
 			model: SharedSlice,
-			createComponentContents: t.Function,
+			componentContentsTemplate: t.string,
 			mocks: t.array(SharedSliceContent),
 			screenshots: t.record(t.string, t.any),
 		}),
 	),
 });
+
+const replacePascalNameToReplace = (template: string, name: string) =>
+	template.replaceAll("PascalNameToReplace", name);
 
 export class SliceTemplateLibraryManager extends BaseManager {
 	async readLibrary(
@@ -137,7 +140,10 @@ export class SliceTemplateLibraryManager extends BaseManager {
 			return this.slices.createSlice({
 				libraryID: targetLibrary.libraryID,
 				model: slice.model,
-				componentContents: slice.createComponentContents(slice.model),
+				componentContents: replacePascalNameToReplace(
+					slice.componentContentsTemplate,
+					slice.model.name,
+				),
 			});
 		});
 
