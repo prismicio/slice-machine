@@ -1,6 +1,6 @@
 {
   "name": "next-upgrade",
-  "version": "1.14.0",
+  "version": "1.14.1-dev-upgrade-legacy.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
