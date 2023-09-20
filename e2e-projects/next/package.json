@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.14.0",
+  "version": "1.14.1-lh/convert-legacy-slices.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

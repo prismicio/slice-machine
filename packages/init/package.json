@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.6.3",
+	"version": "2.6.4-lh/convert-legacy-slices.0",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
