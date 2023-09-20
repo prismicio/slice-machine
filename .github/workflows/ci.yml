@@ -184,7 +184,7 @@ jobs:
 
   deployment:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/dev') # Job only runs on dev branches
+    if: startsWith(github.ref, 'refs/heads/lh') # Job only runs on dev branches
     environment: alpha
     steps:
       - name: Checkout
