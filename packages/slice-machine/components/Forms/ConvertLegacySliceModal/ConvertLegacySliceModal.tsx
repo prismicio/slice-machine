@@ -124,7 +124,6 @@ export const ConvertLegacySliceModal: React.FC<
 
   const convertLegacySliceAndTrack = (args: ConvertLegacySliceAndTrackArgs) => {
     if (isModalOpen === false) {
-      console.log("no", isModalOpen, args);
       return;
     }
 
@@ -137,8 +136,6 @@ export const ConvertLegacySliceModal: React.FC<
         library: args.libraryID,
         conversionType: isModalOpen,
       });
-
-      console.log(args);
 
       const { errors } =
         await managerClient.slices.convertLegacySliceToSharedSlice({
