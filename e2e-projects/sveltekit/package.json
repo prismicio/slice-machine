@@ -1,6 +1,5 @@
 {
 	"name": "sveltekit",
-	"version": "1.14.1-lh/convert-legacy-slices.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",

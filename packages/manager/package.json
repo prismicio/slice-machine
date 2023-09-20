@@ -1,6 +1,5 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.11.3-lh/convert-legacy-slices.0",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
