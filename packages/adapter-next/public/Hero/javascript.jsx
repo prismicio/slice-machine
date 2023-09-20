@@ -19,14 +19,14 @@ const PascalNameToReplace = ({ slice }) => {
 		>
 			<div
 				className={`
-                    es-bounded__content
-                    es-fullpage-hero__content
-                    ${
-											slice.variation === "imageRight"
-												? "es-fullpage-hero__image--right"
-												: "es-fullpage-hero__image--left"
-										}
-                `}
+          es-bounded__content
+          es-fullpage-hero__content
+          ${
+						slice.variation === "imageRight"
+							? "es-fullpage-hero__image--right"
+							: "es-fullpage-hero__image--left"
+					}
+        `}
 			>
 				<div>
 					{isFilled.image(slice.primary.image) && (
