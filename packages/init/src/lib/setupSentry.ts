@@ -38,12 +38,19 @@ export const setupSentry = async ({
 			? import.meta.env.MODE || "production"
 			: "alpha",
 	});
+
 	if (userProfile) {
 		Sentry.setUser({ id: userProfile.shortId });
 	}
-	Sentry.setTag("repository", repositoryName);
-	Sentry.setContext("Repository Data", {
-		name: repositoryName,
-	});
-	Sentry.setTag("framework", framework);
+
+	if (repositoryName) {
+		Sentry.setTag("repository", repositoryName);
+		Sentry.setContext("Repository Data", {
+			name: repositoryName,
+		});
+	}
+
+	if (framework) {
+		Sentry.setTag("framework", framework);
+	}
 };

@@ -332,26 +332,24 @@ export class SliceMachineInitProcess {
 	}
 
 	protected trackError = async (error: unknown): Promise<void> => {
-		if (await this.manager.telemetry.checkIsTelemetryEnabled()) {
-			const repositoryName = this.context.repository?.domain || "";
-			const framework =
-				this.context.framework?.sliceMachineTelemetryID ?? "unknown";
+		const repositoryName = this.context.repository?.domain || "";
+		const framework =
+			this.context.framework?.sliceMachineTelemetryID ?? "unknown";
 
-			await setupSentry({ manager: this.manager, repositoryName, framework });
-			trackSentryError(error);
+		await setupSentry({ manager: this.manager, repositoryName, framework });
+		trackSentryError(error);
 
-			// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
-			const safeError = (
-				error instanceof Error ? error.message : `${error}`
-			).slice(0, 512);
-			await this.manager.telemetry.track({
-				event: "command:init:end",
-				framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
-				repository: repositoryName,
-				success: false,
-				error: safeError,
-			});
-		}
+		// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
+		const safeError = (
+			error instanceof Error ? error.message : `${error}`
+		).slice(0, 512);
+		await this.manager.telemetry.track({
+			event: "command:init:end",
+			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
+			repository: repositoryName,
+			success: false,
+			error: safeError,
+		});
 	};
 
 	protected async copyStarter(): Promise<void> {
