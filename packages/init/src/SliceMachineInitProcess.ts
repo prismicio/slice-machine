@@ -304,7 +304,8 @@ export class SliceMachineInitProcess {
 				}
 			}
 		} catch (error) {
-			await this.trackError(error);
+			// Only track this error with Sentry, it's only the final convenience message
+			await this.trackSentryError(error);
 		}
 	}
 
@@ -334,28 +335,31 @@ export class SliceMachineInitProcess {
 	}
 
 	protected trackError = async (error: unknown): Promise<void> => {
-		const repositoryName = this.context.repository?.domain || "";
-		const framework =
-			this.context.framework?.sliceMachineTelemetryID ?? "unknown";
+		await this.trackSentryError(error);
+		await this.trackTelemetryError(error);
+	};
 
-		await updateSentryContext({
-			manager: this.manager,
-			repositoryName,
-			framework,
-		});
-		trackSentryError(error);
-
+	protected trackTelemetryError = async (error: unknown): Promise<void> => {
 		// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
 		const safeError = (
 			error instanceof Error ? error.message : `${error}`
 		).slice(0, 512);
 		await this.manager.telemetry.track({
 			event: "command:init:end",
-			framework: framework,
-			repository: repositoryName,
+			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
+			repository: this.context.repository?.domain || "",
 			success: false,
 			error: safeError,
 		});
+	};
+
+	protected trackSentryError = async (error: unknown): Promise<void> => {
+		await updateSentryContext({
+			manager: this.manager,
+			repositoryName: this.context.repository?.domain || "",
+			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
+		});
+		trackSentryError(error);
 	};
 
 	protected async copyStarter(): Promise<void> {
