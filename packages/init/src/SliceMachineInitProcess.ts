@@ -41,6 +41,8 @@ import {
 	START_SCRIPT_VALUE,
 } from "./constants";
 import { detectStarterId } from "./lib/starters";
+import { setupSentry } from "./lib/setupSentry";
+import { trackSentryError } from "./lib/sentryErrorHandlers";
 
 export type SliceMachineInitProcessOptions = {
 	repository?: string;
@@ -299,8 +301,8 @@ export class SliceMachineInitProcess {
 					}
 				}
 			}
-		} catch {
-			// Noop, it's only the final convenience messsage
+		} catch (error) {
+			await this.trackError(error);
 		}
 	}
 
@@ -329,19 +331,27 @@ export class SliceMachineInitProcess {
 		return false;
 	}
 
-	protected trackError = (error: unknown): Promise<void> => {
-		// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
-		const safeError = (
-			error instanceof Error ? error.message : `${error}`
-		).slice(0, 512);
+	protected trackError = async (error: unknown): Promise<void> => {
+		if (await this.manager.telemetry.checkIsTelemetryEnabled()) {
+			const repositoryName = this.context.repository?.domain || "";
+			const framework =
+				this.context.framework?.sliceMachineTelemetryID ?? "unknown";
 
-		return this.manager.telemetry.track({
-			event: "command:init:end",
-			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
-			repository: this.context.repository?.domain || "",
-			success: false,
-			error: safeError,
-		});
+			await setupSentry({ manager: this.manager, repositoryName, framework });
+			trackSentryError(error);
+
+			// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
+			const safeError = (
+				error instanceof Error ? error.message : `${error}`
+			).slice(0, 512);
+			await this.manager.telemetry.track({
+				event: "command:init:end",
+				framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
+				repository: repositoryName,
+				success: false,
+				error: safeError,
+			});
+		}
 	};
 
 	protected async copyStarter(): Promise<void> {
