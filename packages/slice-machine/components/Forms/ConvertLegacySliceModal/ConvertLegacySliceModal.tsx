@@ -217,32 +217,32 @@ export const ConvertLegacySliceModal: React.FC<
             size="medium"
             variant="secondary"
           >
-            Turn into shared Slice
+            Migrate legacy slice
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem
             startIcon={<Icon name="folder" size="large" />}
-            description="A brand new shared slice"
+            description="Use it with new types"
             onSelect={() => setIsModalOpen("as_new_slice")}
           >
-            Convert to new slice
+            Upgrade slice
           </DropdownMenuItem>
           <DropdownMenuItem
             startIcon={<Icon name="viewDay" size="large" />}
-            description="An existing slice's new variation"
+            description="Add it to another slice"
             onSelect={() => setIsModalOpen("as_new_variation")}
             disabled={!localSharedSlices.length}
           >
-            Create a new variation
+            Convert to slice variation
           </DropdownMenuItem>
           <DropdownMenuItem
             startIcon={<Icon name="driveFileMove" size="large" />}
-            description="Identical slices can be merged"
+            description="Combine identical slices"
             onSelect={() => setIsModalOpen("merge_with_identical")}
             disabled={!identicalSlices.length}
           >
-            Merge with an existing slice
+            Merge with another slice
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
