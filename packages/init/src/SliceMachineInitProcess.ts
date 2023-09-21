@@ -43,6 +43,7 @@ import {
 import { detectStarterId } from "./lib/starters";
 import { setupSentry } from "./lib/setupSentry";
 import { trackSentryError } from "./lib/sentryErrorHandlers";
+import { updateSentryContext } from "./lib/updateSentryContext";
 
 export type SliceMachineInitProcessOptions = {
 	repository?: string;
@@ -134,6 +135,7 @@ export class SliceMachineInitProcess {
 				appName: pkg.name,
 				appVersion: pkg.version,
 			});
+			await setupSentry();
 			await this.manager.telemetry.track({
 				event: "command:init:start",
 				repository: this.options.repository,
@@ -336,7 +338,11 @@ export class SliceMachineInitProcess {
 		const framework =
 			this.context.framework?.sliceMachineTelemetryID ?? "unknown";
 
-		await setupSentry({ manager: this.manager, repositoryName, framework });
+		await updateSentryContext({
+			manager: this.manager,
+			repositoryName,
+			framework,
+		});
 		trackSentryError(error);
 
 		// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
@@ -345,7 +351,7 @@ export class SliceMachineInitProcess {
 		).slice(0, 512);
 		await this.manager.telemetry.track({
 			event: "command:init:end",
-			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
+			framework: framework,
 			repository: repositoryName,
 			success: false,
 			error: safeError,
