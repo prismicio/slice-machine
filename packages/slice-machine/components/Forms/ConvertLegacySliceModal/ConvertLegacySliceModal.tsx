@@ -16,6 +16,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { managerClient } from "@src/managerClient";
 import { getState, telemetry } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { ToasterType } from "@src/modules/toaster";
 
 import { FormAsNewSlice } from "./FormAsNewSlice";
 import { FormAsNewVariation } from "./FormAsNewVariation";
@@ -69,7 +70,7 @@ const getFieldMappingFingerprint = (
 export const ConvertLegacySliceModal: React.FC<
   ConvertLegacySliceModalProps
 > = ({ slice, slices, path }) => {
-  const { refreshState, replaceCustomTypeSharedSlice } =
+  const { refreshState, replaceCustomTypeSharedSlice, openToaster } =
     useSliceMachineActions();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -80,6 +81,8 @@ export const ConvertLegacySliceModal: React.FC<
       libraries: getLibraries(store),
     })
   );
+
+  const {} = useSliceMachineActions();
 
   const sliceName = useMemo(() => {
     return slice.value.type === "Slice"
@@ -165,7 +168,31 @@ export const ConvertLegacySliceModal: React.FC<
       refreshState(serverState);
 
       setIsLoading(false);
-      close();
+      setIsModalOpen(false);
+      switch (isModalOpen) {
+        case "as_new_slice":
+          openToaster(
+            `${sliceName} has been upgraded to a new slice ${args.libraryID} > ${args.sliceID}`,
+            ToasterType.SUCCESS
+          );
+          break;
+
+        case "as_new_variation":
+          openToaster(
+            `${sliceName} has been converted as a variation of ${args.libraryID} > ${args.sliceID}`,
+            ToasterType.SUCCESS
+          );
+          break;
+
+        case "merge_with_identical":
+        default:
+          openToaster(
+            `${sliceName} has been merged with ${args.libraryID} > ${args.sliceID}`,
+            ToasterType.SUCCESS
+          );
+          break;
+      }
+
       replaceCustomTypeSharedSlice(
         path.tabID,
         [
