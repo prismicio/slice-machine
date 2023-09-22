@@ -330,7 +330,7 @@ const createPreviewRoute = async ({
 				export async function GET(request: NextRequest) {
 					const client = createClient();
 
-					await redirectToPreviewURL({ client, request });
+					return await redirectToPreviewURL({ client, request });
 				}
 			`;
 		} else {
@@ -342,7 +342,7 @@ const createPreviewRoute = async ({
 				export async function GET(request) {
 					const client = createClient();
 
-					await redirectToPreviewURL({ client, request });
+					return await redirectToPreviewURL({ client, request });
 				}
 			`;
 		}
@@ -359,7 +359,7 @@ const createPreviewRoute = async ({
 
 					await setPreviewData({ req, res });
 
-					await redirectToPreviewURL({ req, res, client });
+					return await redirectToPreviewURL({ req, res, client });
 				};
 			`;
 		} else {
@@ -373,7 +373,7 @@ const createPreviewRoute = async ({
 
 					await setPreviewData({ req, res });
 
-					await redirectToPreviewURL({ req, res, client });
+					return await redirectToPreviewURL({ req, res, client });
 				};
 			`;
 		}
@@ -420,8 +420,8 @@ const createExitPreviewRoute = async ({
 		contents = source`
 			import { exitPreview } from "@prismicio/next";
 
-			export async function GET() {
-				return await exitPreview();
+			export function GET() {
+				return exitPreview();
 			}
 		`;
 	} else {
@@ -430,16 +430,16 @@ const createExitPreviewRoute = async ({
 				import { NextApiRequest, NextApiResponse } from "next";
 				import { exitPreview } from "@prismicio/next";
 
-				export async function handler(req: NextApiRequest, res: NextApiResponse) {
-					return await exitPreview({ req, res });
+				export function handler(req: NextApiRequest, res: NextApiResponse) {
+					return exitPreview({ req, res });
 				}
 			`;
 		} else {
 			contents = source`
 				import { exitPreview } from "@prismicio/next";
 
-				export async function handler(req, res) {
-					return await exitPreview({ req, res });
+				export function handler(req, res) {
+					return exitPreview({ req, res });
 				}
 			`;
 		}
