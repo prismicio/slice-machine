@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  ErrorBoundary,
-  tokens,
-} from "@prismicio/editor-ui";
+import { Box, Button, ButtonGroup, ErrorBoundary } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type FC, Suspense, useState } from "react";
 
@@ -63,9 +57,7 @@ const BackButton: FC<BackButtonProps> = ({ sourceCustomTypeId }) => {
           onClick={() => {
             void router.push(url);
           }}
-          renderStartIcon={() => (
-            <UndoIcon height={tokens.size[20]} width={tokens.size[20]} />
-          )}
+          renderStartIcon={() => <UndoIcon />}
         >
           Return to {sourceCustomType.label}
         </Button>
@@ -73,9 +65,7 @@ const BackButton: FC<BackButtonProps> = ({ sourceCustomTypeId }) => {
           onClick={() => {
             setVisible(false);
           }}
-          renderStartIcon={() => (
-            <CloseIcon height={tokens.size[20]} width={tokens.size[20]} />
-          )}
+          renderStartIcon={() => <CloseIcon />}
         />
       </ButtonGroup>
     );
