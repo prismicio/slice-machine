@@ -1303,13 +1303,13 @@ describe("/api/preview route", () => {
 
 				import { createClient } from \\"../../prismicio\\";
 
-				export default async (req, res) => {
+				export default async function handler(req, res) {
 				  const client = createClient({ req });
 
 				  await setPreviewData({ req, res });
 
 				  return await redirectToPreviewURL({ req, res, client });
-				};
+				}
 				"
 			`);
 		});
@@ -1337,13 +1337,13 @@ describe("/api/preview route", () => {
 
 				import { createClient } from \\"../../prismicio\\";
 
-				export default async (req, res) => {
+				export default async function handler(req, res) {
 				  const client = createClient({ req });
 
 				  await setPreviewData({ req, res });
 
 				  return await redirectToPreviewURL({ req, res, client });
-				};
+				}
 				"
 			`);
 		});
@@ -1373,13 +1373,16 @@ describe("/api/preview route", () => {
 
 				import { createClient } from \\"../../prismicio\\";
 
-				export default async (req: NextApiRequest, res: NextApiResponse) => {
+				export default async function handler(
+				  req: NextApiRequest,
+				  res: NextApiResponse
+				) {
 				  const client = createClient({ req });
 
 				  await setPreviewData({ req, res });
 
 				  return await redirectToPreviewURL({ req, res, client });
-				};
+				}
 				"
 			`);
 		});
@@ -1499,7 +1502,7 @@ describe("/api/exit-preview route", () => {
 			expect(contents).toMatchInlineSnapshot(`
 				"import { exitPreview } from \\"@prismicio/next\\";
 
-				export function handler(req, res) {
+				export default function handler(req, res) {
 				  return exitPreview({ req, res });
 				}
 				"
@@ -1527,7 +1530,7 @@ describe("/api/exit-preview route", () => {
 			expect(contents).toMatchInlineSnapshot(`
 				"import { exitPreview } from \\"@prismicio/next\\";
 
-				export function handler(req, res) {
+				export default function handler(req, res) {
 				  return exitPreview({ req, res });
 				}
 				"
@@ -1557,7 +1560,7 @@ describe("/api/exit-preview route", () => {
 				"import { NextApiRequest, NextApiResponse } from \\"next\\";
 				import { exitPreview } from \\"@prismicio/next\\";
 
-				export function handler(req: NextApiRequest, res: NextApiResponse) {
+				export default function handler(req: NextApiRequest, res: NextApiResponse) {
 				  return exitPreview({ req, res });
 				}
 				"
