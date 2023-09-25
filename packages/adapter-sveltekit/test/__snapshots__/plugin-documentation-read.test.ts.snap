@@ -13,14 +13,24 @@ import { createClient } from \\"$lib/prismicio\\";
 
 export const prerender = true;
 
-export async function load({ params }) {
-  const client = createClient();
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
 
   const page = await client.getByUID(\\"repeatable\\", params.uid);
 
   return {
     page,
   };
+}
+
+export async function entries() {
+  const client = createClient();
+
+  const pages = await client.getAllByType(\\"repeatable\\");
+
+  return pages.map((page) => {
+    return { uid: page.uid };
+  });
 }
 ~~~
 
@@ -60,14 +70,24 @@ import { createClient } from \\"$lib/prismicio\\";
 
 export const prerender = true;
 
-export async function load({ params }) {
-  const client = createClient();
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
 
   const page = await client.getByUID(\\"repeatable\\", params.uid);
 
   return {
     page,
   };
+}
+
+export async function entries() {
+  const client = createClient();
+
+  const pages = await client.getAllByType(\\"repeatable\\");
+
+  return pages.map((page) => {
+    return { uid: page.uid };
+  });
 }
 ~~~
 
@@ -107,8 +127,8 @@ import { createClient } from \\"$lib/prismicio\\";
 
 export const prerender = true;
 
-export async function load({ params }) {
-  const client = createClient();
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
 
   const page = await client.getSingle(\\"single\\");
 
@@ -154,8 +174,8 @@ import { createClient } from \\"$lib/prismicio\\";
 
 export const prerender = true;
 
-export async function load({ params }) {
-  const client = createClient();
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
 
   const page = await client.getSingle(\\"single\\");
 

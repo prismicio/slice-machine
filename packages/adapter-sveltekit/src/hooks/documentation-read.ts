@@ -34,14 +34,24 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 				export const prerender = true;
 
-				export async function load({ params }) {
-					const client = createClient();
+				export async function load({ params, fetch }) {
+					const client = createClient({ fetch });
 
 					const page = await client.getByUID("${model.id}", params.uid);
 
 					return {
 						page,
 					};
+				}
+
+				export async function entries() {
+					const client = createClient();
+
+					const pages = await client.getAllByType("${model.id}");
+
+					return pages.map((page) => {
+						return { uid: page.uid };
+					});
 				}
 			`;
 		} else {
@@ -50,8 +60,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 				export const prerender = true;
 
-				export async function load({ params }) {
-					const client = createClient();
+				export async function load({ params, fetch }) {
+					const client = createClient({ fetch });
 
 					const page = await client.getSingle("${model.id}");
 
