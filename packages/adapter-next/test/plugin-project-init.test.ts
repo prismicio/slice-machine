@@ -265,14 +265,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
@@ -338,14 +339,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
@@ -409,14 +411,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes: prismic.ClientConfig[\\"routes\\"] = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
@@ -482,14 +485,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes: prismic.ClientConfig[\\"routes\\"] = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
@@ -554,14 +558,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
@@ -623,14 +628,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
@@ -694,14 +700,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes: prismic.ClientConfig[\\"routes\\"] = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
@@ -763,14 +770,15 @@ describe("prismicio.js file", () => {
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes: prismic.ClientConfig[\\"routes\\"] = [
-				  {
-				    type: \\"homepage\\",
-				    path: \\"/\\",
-				  },
-				  {
-				    type: \\"page\\",
-				    path: \\"/:uid\\",
-				  },
+				  // Examples:
+				  // {
+				  // 	type: \\"homepage\\",
+				  // 	path: \\"/\\",
+				  // },
+				  // {
+				  // 	type: \\"page\\",
+				  // 	path: \\"/:uid\\",
+				  // },
 				];
 
 				/**
