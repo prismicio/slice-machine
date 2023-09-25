@@ -127,12 +127,6 @@ const PascalNameToReplace = ({
               }
           }
           
-          .es-fullpage-hero__content-right__intro {
-              margin-top: -2rem;
-              display: grid;
-              gap: 0.5rem;
-          }
-          
           .es-fullpage-hero__content__intro {
               display: grid;
               gap: 1rem;
@@ -185,45 +179,6 @@ const PascalNameToReplace = ({
               .es-fullpage-hero__content__intro__description {
                   font-size: 1.4rem;
               }
-          }
-          
-          .es-fullpage-hero__content__items {
-              display: grid;
-              gap: 2rem;
-          }
-          
-          @media (min-width: 640px) {
-              .es-fullpage-hero__content__items {
-                  grid-template-columns: repeat(2, 1fr);
-              }
-          }
-          
-          .es-fullpage-hero__item {
-              display: grid;
-              align-content: start;
-          }
-          
-          .es-fullpage-hero__item__icon {
-              max-height: 3rem;
-          }
-          
-          .es-fullpage-hero__item__heading {
-              font-weight: 700;
-              font-size: 1.17rem;
-              margin-top: 0;
-              margin-bottom: .5rem;
-          }
-
-          .es-fullpage-hero__item__heading > * {
-              margin: 0;
-          }
-          
-          .es-fullpage-hero__item__description {
-              font-size: 0.9rem;
-          }
-          
-          .es-fullpage-hero__item__description > * {
-              margin: 0;
           }
 
           .es-call-to-action__link {

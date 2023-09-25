@@ -1,10 +1,12 @@
-import fs from "node:fs/promises";
 import path from "node:path";
+import fs from "node:fs/promises";
+
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 import { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+
 import { SliceTemplateLibraryReadHookReturnType } from "../hooks/sliceTemplateLibrary-read";
 
 export type ReadSliceTemplateLibraryArgs = {
@@ -55,7 +57,6 @@ export const readSliceTemplateLibrary = async (
 			? componentFileNames.ts
 			: componentFileNames.js;
 
-		// import fileNames object from templates if ever needed
 		const componentContentsTemplate = await fs.readFile(
 			path.join(dirName, model.name, fileName),
 			"utf-8",

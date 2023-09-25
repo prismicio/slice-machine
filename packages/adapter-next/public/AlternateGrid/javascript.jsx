@@ -3,12 +3,13 @@ import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText } from "@prismicio/react";
 
 /**
- * @typedef
+ * @typedef {import("@prismicio/client").Content.PascalNameToReplaceSlice} PascalNameToReplaceSlice
  *
- * @typedef
+ * @typedef {import("@prismicio/react").SliceComponentProps<PascalNameToReplaceSlice>} PascalNameToReplaceProps
  *
  * @param {PascalNameToReplaceProps}
  */
+
 const PascalNameToReplace = ({ slice }) => {
 	return (
 		<section

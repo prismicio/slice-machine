@@ -12,8 +12,6 @@ async function getSlicesTemplates(): Promise<SliceTemplate[]> {
     const { templates, errors } =
       await managerClient.sliceTemplateLibrary.readLibrary({});
 
-    console.log({ templates, errors });
-
     if (errors.length > 0) {
       throw errors;
     }
