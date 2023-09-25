@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.6.3",
+	"version": "2.6.4-dev-next-hotfix.3",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
@@ -53,6 +53,7 @@
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
 		"@lihbr/listr-update-renderer": "^0.5.3",
+		"@sentry/node": "^7.70.0",
 		"@slicemachine/manager": "workspace:^",
 		"chalk": "^4.1.2",
 		"giget": "^1.1.2",

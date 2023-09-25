@@ -7637,6 +7637,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry-internal/tracing@npm:7.70.0":
+  version: 7.70.0
+  resolution: "@sentry-internal/tracing@npm:7.70.0"
+  dependencies:
+    "@sentry/core": 7.70.0
+    "@sentry/types": 7.70.0
+    "@sentry/utils": 7.70.0
+    tslib: ^2.4.1 || ^1.9.3
+  checksum: 51fe662ae5b4e26a9698515dbd47427714966c4e3f5df6f19d3d26c21150e17260e4b8c53e814a7e9274e8ca7b7994a4fac2838a71233cadcd4a30f394f9227e
+  languageName: node
+  linkType: hard
+
 "@sentry/browser@npm:7.43.0":
   version: 7.43.0
   resolution: "@sentry/browser@npm:7.43.0"
@@ -7674,6 +7686,17 @@ __metadata:
     "@sentry/utils": 7.43.0
     tslib: ^1.9.3
   checksum: 54e6b8c0ae6830211ff94d99a6d5f31fa461a9de6c4baf1507945ba7225d61bac7d48b0c021e8a8cb109ce30c83165dcbef6aba9f6a205d69703eb99b95077d0
+  languageName: node
+  linkType: hard
+
+"@sentry/core@npm:7.70.0":
+  version: 7.70.0
+  resolution: "@sentry/core@npm:7.70.0"
+  dependencies:
+    "@sentry/types": 7.70.0
+    "@sentry/utils": 7.70.0
+    tslib: ^2.4.1 || ^1.9.3
+  checksum: 550ff55f8232fbbe8263b05deca997b6fe98ae19fe445f39d90915cc515bdcc8d6c2ec09df6976fcf750547adc39aefb5714ebfd5f039b32e94c5c5320f4cfab
   languageName: node
   linkType: hard
 
@@ -7732,6 +7755,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/node@npm:^7.70.0":
+  version: 7.70.0
+  resolution: "@sentry/node@npm:7.70.0"
+  dependencies:
+    "@sentry-internal/tracing": 7.70.0
+    "@sentry/core": 7.70.0
+    "@sentry/types": 7.70.0
+    "@sentry/utils": 7.70.0
+    cookie: ^0.5.0
+    https-proxy-agent: ^5.0.0
+    lru_map: ^0.3.3
+    tslib: ^2.4.1 || ^1.9.3
+  checksum: 4d60023f0ddfca92ee15e42b5a207d998d683570103655282ce6e1a07a3bccbb86675810778f5500229cf21daef34e1f0fd48e0dbe3665d3df19d7b97c2788e5
+  languageName: node
+  linkType: hard
+
 "@sentry/react@npm:7.43.0":
   version: 7.43.0
   resolution: "@sentry/react@npm:7.43.0"
@@ -7777,6 +7816,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/types@npm:7.70.0":
+  version: 7.70.0
+  resolution: "@sentry/types@npm:7.70.0"
+  checksum: 0a38f47ccf0d995d8d5ab0353c332bd2573f044d993d746ec9ecee5e185da773ffdc13db3f29d525b4377ed3ce9235eaa0dc728c039739eb23050d0411667222
+  languageName: node
+  linkType: hard
+
 "@sentry/utils@npm:7.43.0":
   version: 7.43.0
   resolution: "@sentry/utils@npm:7.43.0"
@@ -7784,6 +7830,16 @@ __metadata:
     "@sentry/types": 7.43.0
     tslib: ^1.9.3
   checksum: 1b99986c7120710c8fcece9debecff32d4daa48395b044bada57095913116f91fb7eda8b4dc7b52824cb9329e9aaf627a8c521b32df337f9f2ed5ae354c425d8
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.70.0":
+  version: 7.70.0
+  resolution: "@sentry/utils@npm:7.70.0"
+  dependencies:
+    "@sentry/types": 7.70.0
+    tslib: ^2.4.1 || ^1.9.3
+  checksum: a1590f5e752667910638262bb8e85f2e2c26e722df4087e79c39b11d1d81dbefaea8f426826a50b0832c079e77092ff7c2335d48e63a2d11c32b1c0b59b10eee
   languageName: node
   linkType: hard
 
@@ -8065,6 +8121,7 @@ __metadata:
   dependencies:
     "@antfu/ni": ^0.20.0
     "@lihbr/listr-update-renderer": ^0.5.3
+    "@sentry/node": ^7.70.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:^"
     "@slicemachine/plugin-kit": "workspace:*"
@@ -32495,6 +32552,13 @@ __metadata:
   version: 2.6.1
   resolution: "tslib@npm:2.6.1"
   checksum: b0d176d176487905b66ae4d5856647df50e37beea7571c53b8d10ba9222c074b81f1410fb91da13debaf2cbc970663609068bdebafa844ea9d69b146527c38fe
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.4.1 || ^1.9.3":
+  version: 2.6.2
+  resolution: "tslib@npm:2.6.2"
+  checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
   languageName: node
   linkType: hard
 

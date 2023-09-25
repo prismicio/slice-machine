@@ -41,6 +41,9 @@ import {
 	START_SCRIPT_VALUE,
 } from "./constants";
 import { detectStarterId } from "./lib/starters";
+import { setupSentry } from "./lib/setupSentry";
+import { trackSentryError } from "./lib/sentryErrorHandlers";
+import { updateSentryContext } from "./lib/updateSentryContext";
 
 export type SliceMachineInitProcessOptions = {
 	repository?: string;
@@ -132,6 +135,7 @@ export class SliceMachineInitProcess {
 				appName: pkg.name,
 				appVersion: pkg.version,
 			});
+			await setupSentry();
 			await this.manager.telemetry.track({
 				event: "command:init:start",
 				repository: this.options.repository,
@@ -299,8 +303,9 @@ export class SliceMachineInitProcess {
 					}
 				}
 			}
-		} catch {
-			// Noop, it's only the final convenience messsage
+		} catch (error) {
+			// Only track this error with Sentry, it's only the final convenience message
+			await this.trackSentryError(error);
 		}
 	}
 
@@ -329,19 +334,32 @@ export class SliceMachineInitProcess {
 		return false;
 	}
 
-	protected trackError = (error: unknown): Promise<void> => {
+	protected trackError = async (error: unknown): Promise<void> => {
+		await this.trackSentryError(error);
+		await this.trackTelemetryError(error);
+	};
+
+	protected trackTelemetryError = async (error: unknown): Promise<void> => {
 		// Transform error to string and prevent hitting Segment 500kb API limit or sending ridiculously long trace
 		const safeError = (
 			error instanceof Error ? error.message : `${error}`
 		).slice(0, 512);
-
-		return this.manager.telemetry.track({
+		await this.manager.telemetry.track({
 			event: "command:init:end",
 			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
 			repository: this.context.repository?.domain || "",
 			success: false,
 			error: safeError,
 		});
+	};
+
+	protected trackSentryError = async (error: unknown): Promise<void> => {
+		await updateSentryContext({
+			manager: this.manager,
+			repositoryName: this.context.repository?.domain || "",
+			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
+		});
+		trackSentryError(error);
 	};
 
 	protected async copyStarter(): Promise<void> {
