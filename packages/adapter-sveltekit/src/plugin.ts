@@ -24,6 +24,7 @@ import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
 import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
 
+import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
@@ -261,10 +262,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		// documentation:*
 		////////////////////////////////////////////////////////////////
 
-		hook("documentation:read", async (_data, _context) => {
-			// TODO
-			return [];
-		});
+		hook("documentation:read", documentationRead);
 
 		////////////////////////////////////////////////////////////////
 		// slice-simulator:*
