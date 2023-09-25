@@ -7,6 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   Icon,
+  Badge,
 } from "@prismicio/editor-ui";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -224,6 +225,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         onSelect={openSlicesTemplatesModal}
                         startIcon={<Icon name="contentCopy" size="large" />}
                         description="Select from premade examples."
+                        shortcut={<Badge color="purple" title="New" />}
                       >
                         Use template
                       </DropdownMenuItem>
