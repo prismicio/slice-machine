@@ -1,3 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
 	deleteCustomTypeDirectory,
@@ -10,6 +13,7 @@ import {
 	readSliceFile,
 	readSliceLibrary,
 	readSliceModel,
+	readSliceTemplateLibrary,
 	renameSlice,
 	upsertGlobalTypeScriptTypes,
 	writeCustomTypeFile,
@@ -28,6 +32,8 @@ import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { snippetRead } from "./hooks/snippet-read";
+
+import * as Hero from "./sliceTemplates/Hero";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -150,6 +156,23 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			return await readSliceLibrary({
 				libraryID: data.libraryID,
 				...context,
+			});
+		});
+
+		////////////////////////////////////////////////////////////////
+		// slice-template-library:*
+		////////////////////////////////////////////////////////////////
+
+		hook("slice-template-library:read", async (data, context) => {
+			return await readSliceTemplateLibrary({
+				...data,
+				...context,
+				dirName: path.dirname(fileURLToPath(new URL(import.meta.url))),
+				templates: [Hero],
+				componentFileNames: {
+					js: "javascript.svelte",
+					ts: "typescript.svelte",
+				},
 			});
 		});
 
