@@ -177,7 +177,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				templates: [Hero, CustomerLogos, AlternateGrid, CallToAction],
 				componentFileNames: {
 					js: "javascript.jsx",
-					ts: "javascript.tsx",
+					ts: "typescript.tsx",
 				},
 			});
 		});
