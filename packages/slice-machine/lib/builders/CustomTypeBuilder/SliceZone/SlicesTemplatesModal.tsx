@@ -1,19 +1,27 @@
 import { FC } from "react";
 import { Text } from "theme-ui";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { SliceTemplate } from "@src/features/slicesTemplates/useSlicesTemplates";
 import { Slices } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
+import { createSlicesTemplates } from "@src/features/slicesTemplates/actions/createSlicesTemplates";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { getState } from "@src/apiClient";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { managerClient } from "@src/managerClient";
+
 import ModalFormCard from "../../../../components/ModalFormCard";
+import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 
 interface UpdateSliceModalProps {
   isOpen: boolean;
   formId: string;
   close: () => void;
-  onSubmit: (values: SliceZoneFormValues) => void;
+  onSuccess: (slices: SharedSlice[]) => Promise<void>;
   availableSlicesTemplates: SliceTemplate[];
+  localLibraries: readonly LibraryUI[];
 }
 
 export type SliceZoneFormValues = {
@@ -24,9 +32,12 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
   isOpen,
   formId,
   close,
-  onSubmit,
+  onSuccess,
   availableSlicesTemplates,
+  localLibraries,
 }) => {
+  const { createSliceSuccess } = useSliceMachineActions();
+
   return (
     <ModalFormCard
       buttonLabel="Add"
@@ -34,7 +45,35 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
       formId={formId}
       close={close}
       onSubmit={(values: SliceZoneFormValues) => {
-        onSubmit(values);
+        const { sliceKeys } = values;
+
+        void createSlicesTemplates({
+          templateIDs: sliceKeys,
+          localLibrariesNames: localLibraries.map((library) => library.name),
+          onSuccess: async (slicesIds: string[]) => {
+            // TODO(DT-1453): Remove the need of the global getState
+            const serverState = await getState();
+
+            // Update Redux store
+            createSliceSuccess(serverState.libraries);
+
+            const slices: SharedSlice[] = await Promise.all(
+              slicesIds
+                .map(async (sliceId) => {
+                  const slice = await managerClient.slices.readSlice({
+                    libraryID: localLibraries[0].name,
+                    sliceID: sliceId,
+                  });
+                  return slice.model;
+                })
+                .filter(
+                  (slice) => slice !== undefined
+                ) as Promise<SharedSlice>[]
+            );
+
+            await onSuccess(slices);
+          },
+        });
       }}
       initialValues={{
         sliceKeys: [],

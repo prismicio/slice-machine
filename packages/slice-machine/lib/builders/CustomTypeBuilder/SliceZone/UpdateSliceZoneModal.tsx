@@ -1,6 +1,8 @@
 import { Text } from "theme-ui";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+
 import ModalFormCard from "../../../../components/ModalFormCard";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
@@ -8,7 +10,7 @@ interface UpdateSliceModalProps {
   isOpen: boolean;
   formId: string;
   close: () => void;
-  onSubmit: (values: SliceZoneFormValues) => void;
+  onSubmit: (slices: SharedSlice[]) => Promise<void>;
   availableSlices: ReadonlyArray<ComponentUI>;
 }
 
@@ -30,8 +32,14 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
       formId={formId}
       close={close}
       onSubmit={(values: SliceZoneFormValues) => {
-        onSubmit(values);
-        close();
+        const { sliceKeys } = values;
+        const slices = sliceKeys
+          .map(
+            (sliceKey) =>
+              availableSlices.find((s) => s.model.id === sliceKey)?.model
+          )
+          .filter((slice) => slice !== undefined) as SharedSlice[];
+        void onSubmit(slices);
       }}
       initialValues={{
         sliceKeys: [],

@@ -1,41 +1,37 @@
 import { Box, Label } from "theme-ui";
 import { FC, useState } from "react";
 import Select from "react-select";
-import { useRouter } from "next/router";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
-import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
 import { SliceSM } from "@lib/models/common/Slice";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import ModalFormCard from "@components/ModalFormCard";
 import { createSlice } from "@src/features/slices/actions/createSlice";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getState } from "@src/apiClient";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { managerClient } from "@src/managerClient";
+
 import { validateSliceModalValues } from "../formsValidator";
 import { InputBox } from "../components/InputBox";
-import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 
 type CreateSliceModalProps = {
   onClose: () => void;
+  onSuccess: (
+    newSlice: SharedSlice,
+    libraryName: string
+  ) => Promise<void> | void;
   localLibraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;
-  customType?: CustomTypeSM;
-  tabId?: string;
 };
 
 type FormValues = { sliceName: string; from: string };
 
 export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   onClose,
+  onSuccess,
   localLibraries,
   remoteSlices,
-  customType,
-  tabId,
 }) => {
-  const router = useRouter();
-  const { createSliceSuccess, saveCustomTypeSuccess } =
-    useSliceMachineActions();
+  const { createSliceSuccess } = useSliceMachineActions();
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
 
   const onSubmit = async (values: FormValues) => {
@@ -53,42 +49,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         // Update Redux store
         createSliceSuccess(serverState.libraries);
 
-        // When creating a slice from a custom type, we add it directly to the slice zone and save
-        if (customType) {
-          const newCustomType = {
-            ...customType,
-            tabs: customType.tabs.map((tab) =>
-              tab.key === tabId && tab.sliceZone
-                ? {
-                    ...tab,
-                    sliceZone: {
-                      key: tab.sliceZone.key,
-                      value: [
-                        ...tab.sliceZone.value,
-                        {
-                          key: newSlice.id,
-                          value: newSlice,
-                        },
-                      ],
-                    },
-                  }
-                : tab
-            ),
-          };
-          await managerClient.customTypes.updateCustomType({
-            model: CustomTypes.fromSM(newCustomType),
-          });
-          saveCustomTypeSuccess(CustomTypes.fromSM(newCustomType));
-        }
-
-        // Redirect to the slice page
-        const variationId = newSlice.variations[0].id;
-        const sliceLocation = SLICES_CONFIG.getBuilderPagePathname({
-          libraryName,
-          sliceName,
-          variationId,
-        });
-        void router.push(sliceLocation);
+        await onSuccess(newSlice, libraryName);
       },
     });
   };
@@ -115,12 +76,6 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
       content={{
         title: "Create a new slice",
       }}
-      actionMessage={
-        customType
-          ? CUSTOM_TYPES_MESSAGES[customType.format]
-              .createSliceFromTypeActionMessage
-          : undefined
-      }
     >
       {({ touched, values, setFieldValue, errors }) => (
         <Box>
