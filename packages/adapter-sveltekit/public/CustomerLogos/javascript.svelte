@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 	import { isFilled } from "@prismicio/client";
 	import { PrismicImage, PrismicText } from "@prismicio/svelte";
 
