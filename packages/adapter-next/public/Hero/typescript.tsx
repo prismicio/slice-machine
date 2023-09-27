@@ -70,7 +70,7 @@ const PascalNameToReplace = ({
               position: relative;
           }
           
-          .es-bounded-content {
+          .es-bounded__content {
               min-width: 0px;
               max-width: 90%;
               margin: 0px auto;

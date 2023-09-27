@@ -59,7 +59,7 @@ defineProps(
 	position: relative;
 }
 
-.es-bounded-content {
+.es-bounded__content {
 	min-width: 0px;
 	max-width: 90%;
 	margin: 0px auto;
@@ -114,12 +114,6 @@ defineProps(
 	.es-fullpage-hero__content > div {
 		width: 50%;
 	}
-}
-
-.es-fullpage-hero__content-right__intro {
-	margin-top: -2rem;
-	display: grid;
-	gap: 0.5rem;
 }
 
 .es-fullpage-hero__content__intro {
