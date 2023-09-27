@@ -15,7 +15,7 @@ const PascalNameToReplace = ({ slice }) => {
 			data-slice-variation={slice.variation}
 			className="es-bounded es-customer-logos"
 		>
-			<div className="es-bounded-content es-customer-logos__content">
+			<div className="es-bounded__content es-customer-logos__content">
 				{isFilled.richText(slice.primary.eyebrowHeadline) && (
 					<h2 className="es-customer-logos__heading">
 						{asText(slice.primary.eyebrowHeadline)}
@@ -59,7 +59,7 @@ const PascalNameToReplace = ({ slice }) => {
 						padding: 8vw 1.25rem;
 					}
 
-					.es-bounded-content {
+					.es-bounded__content {
 						min-width: 0px;
 						max-width: 90%;
 						margin: 0px auto;

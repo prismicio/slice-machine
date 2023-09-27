@@ -85,7 +85,7 @@ const PascalNameToReplace = ({
 							padding: 8vw 1.25rem;
 						}
 
-						.es-bounded-content {
+						.es-bounded__content {
 							min-width: 0px;
 							max-width: 90%;
 							margin: 0px auto;
