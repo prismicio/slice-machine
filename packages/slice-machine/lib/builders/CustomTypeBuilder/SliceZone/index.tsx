@@ -13,13 +13,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
+import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
 import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-import type {
-  NonSharedSliceInSliceZone,
-  SliceZoneSlice,
-} from "@lib/models/common/CustomType/sliceZone";
-import type { CustomTypeSM } from "@lib/models/common/CustomType";
+import type { SliceZoneSlice } from "@lib/models/common/CustomType/sliceZone";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import type { SlicesSM } from "@lib/models/common/Slices";
@@ -33,14 +32,14 @@ import {
 } from "@src/modules/slices";
 import type { SliceMachineStoreType } from "@src/redux/type";
 import { useSlicesTemplates } from "@src/features/slicesTemplates/useSlicesTemplates";
-import { createSlicesTemplates } from "@src/features/slicesTemplates/actions/createSlicesTemplates";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { addSlicesToSliceZone } from "@src/features/slices/actions/addSlicesToSliceZone";
+import { ToastMessageWithPath } from "@components/ToasterContainer";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
-import { SlicesList } from "./List";
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 import { SlicesTemplatesModal } from "./SlicesTemplatesModal";
-import { getState } from "@src/apiClient";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SlicesList } from "./List";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -101,8 +100,6 @@ interface SliceZoneProps {
   onCreateSliceZone: () => void;
   onDeleteSliceZone: () => void;
   onRemoveSharedSlice: (sliceId: string) => void;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onSelectSharedSlices: Function;
   sliceZone?: SlicesSM | null | undefined;
   tabId: string;
 }
@@ -112,7 +109,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   onCreateSliceZone,
   onDeleteSliceZone,
   onRemoveSharedSlice,
-  onSelectSharedSlices,
   sliceZone,
   tabId,
 }) => {
@@ -130,7 +126,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       slices: getFrontendSlices(store),
     })
   );
-  const { createSliceSuccess } = useSliceMachineActions();
+  const { initCustomTypeStore, saveCustomTypeSuccess } =
+    useSliceMachineActions();
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal
   );
@@ -157,11 +154,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .filter((e) => e.type === "SharedSlice")
     .map((e) => e.payload) as ReadonlyArray<ComponentUI>;
 
-  /* Preserve these keys in SliceZone */
-  const nonSharedSlicesKeysInSliceZone = slicesInSliceZone
-    .filter((e) => e.type === "Slice")
-    .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
-
   const availableSlicesToAdd = availableSlices.filter(
     (slice) =>
       !sharedSlicesInSliceZone.some(
@@ -169,11 +161,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )
   );
 
-  const onAddNewSlice = () => {
+  const openUpdateSliceZoneModal = () => {
     setIsUpdateSliceZoneModalOpen(true);
   };
 
-  const onCreateNewSlice = () => {
+  const openCreateSliceModal = () => {
     setIsCreateSliceModalOpen(true);
   };
 
@@ -197,6 +189,29 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     }
   };
 
+  const closeUpdateSliceZoneModal = () => {
+    setIsUpdateSliceZoneModalOpen(false);
+    redirectToEditMode();
+  };
+
+  const closeCreateSliceModal = () => {
+    setIsCreateSliceModalOpen(false);
+    redirectToEditMode();
+  };
+
+  const closeSlicesTemplatesModal = () => {
+    setIsSlicesTemplatesModalOpen(false);
+    redirectToEditMode();
+  };
+
+  const onAddSlicesToSliceZone = (newCustomType: CustomTypeSM) => {
+    // Reset selected custom type store to update slice zone and saving status
+    initCustomTypeStore(newCustomType, newCustomType);
+
+    // Update available custom type store with new custom type
+    saveCustomTypeSuccess(CustomTypes.fromSM(newCustomType));
+  };
+
   return (
     <Box flexDirection="column" height="100%">
       {query.newPageType === undefined ? (
@@ -214,7 +229,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       startIcon={<Icon name="add" size="large" />}
-                      onSelect={onCreateNewSlice}
+                      onSelect={openCreateSliceModal}
                       description="Start from scratch."
                     >
                       Create new
@@ -233,7 +248,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
                     {availableSlicesToAdd.length > 0 ? (
                       <DropdownMenuItem
-                        onSelect={onAddNewSlice}
+                        onSelect={openUpdateSliceZoneModal}
                         startIcon={<Icon name="folder" size="large" />}
                         description="Select from your own slices."
                       >
@@ -274,8 +289,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           </BaseStyles>
         ) : (
           <SliceZoneBlankSlate
-            onAddNewSlice={onAddNewSlice}
-            onCreateNewSlice={onCreateNewSlice}
+            openUpdateSliceZoneModal={openUpdateSliceZoneModal}
+            openCreateSliceModal={openCreateSliceModal}
             openSlicesTemplatesModal={openSlicesTemplatesModal}
             projectHasAvailableSlices={availableSlicesToAdd.length > 0}
             isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
@@ -286,45 +301,39 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         isOpen={isUpdateSliceZoneModalOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlicesToAdd}
-        onSubmit={({ sliceKeys }) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          onSelectSharedSlices(
-            sliceKeys.concat(sharedSlicesInSliceZone.map((s) => s.model.id)),
-            nonSharedSlicesKeysInSliceZone
-          );
-          redirectToEditMode();
+        onSubmit={async (slices: SharedSlice[]) => {
+          const newCustomType = await addSlicesToSliceZone({
+            customType,
+            tabId,
+            slices,
+          });
+          onAddSlicesToSliceZone(newCustomType);
+          closeUpdateSliceZoneModal();
+          toast.success("Slice(s) added to slice zone");
         }}
-        close={() => setIsUpdateSliceZoneModalOpen(false)}
+        close={closeUpdateSliceZoneModal}
       />
       <SlicesTemplatesModal
         isOpen={isSlicesTemplatesModalOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlicesTemplates={availableSlicesTemplates}
-        onSubmit={({ sliceKeys }) =>
-          void createSlicesTemplates({
-            templateIDs: sliceKeys,
-            localLibrariesNames: localLibraries.map((library) => library.name),
-            onSuccess: async (slicesIds: string[]) => {
-              // TODO(DT-1453): Remove the need of the global getState
-              const serverState = await getState();
-
-              // Update Redux store
-              createSliceSuccess(serverState.libraries);
-
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              onSelectSharedSlices(
-                slicesIds.concat(
-                  sharedSlicesInSliceZone.map((s) => s.model.id)
-                ),
-                nonSharedSlicesKeysInSliceZone
-              );
-
-              setIsSlicesTemplatesModalOpen(false);
-              redirectToEditMode();
-            },
-          })
-        }
-        close={() => setIsSlicesTemplatesModalOpen(false)}
+        localLibraries={localLibraries}
+        onSuccess={async (slices: SharedSlice[]) => {
+          const newCustomType = await addSlicesToSliceZone({
+            customType,
+            tabId,
+            slices,
+          });
+          onAddSlicesToSliceZone(newCustomType);
+          closeSlicesTemplatesModal();
+          toast.success(
+            <ToastMessageWithPath
+              message="Slice(s) added to slice zone and created at: "
+              path={`${localLibraries[0].name}/`}
+            />
+          );
+        }}
+        close={closeSlicesTemplatesModal}
       />
       <DeleteSliceZoneModal
         isDeleteSliceZoneModalOpen={isDeleteSliceZoneModalOpen}
@@ -338,13 +347,24 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       />
       {localLibraries?.length !== 0 && isCreateSliceModalOpen && (
         <CreateSliceModal
-          onClose={() => {
-            setIsCreateSliceModalOpen(false);
+          onSuccess={async (newSlice: SharedSlice) => {
+            const newCustomType = await addSlicesToSliceZone({
+              customType,
+              tabId,
+              slices: [newSlice],
+            });
+            onAddSlicesToSliceZone(newCustomType);
+            closeCreateSliceModal();
+            toast.success(
+              <ToastMessageWithPath
+                message="Slice added to slice zone and created at: "
+                path={`${localLibraries[0].name}/${newSlice.name}/model.json`}
+              />
+            );
           }}
           localLibraries={localLibraries}
           remoteSlices={remoteSlices}
-          customType={customType}
-          tabId={tabId}
+          onClose={closeCreateSliceModal}
         />
       )}
     </Box>

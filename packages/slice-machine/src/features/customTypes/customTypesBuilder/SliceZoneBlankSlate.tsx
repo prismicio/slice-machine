@@ -11,16 +11,16 @@ import {
 import { LightningIcon3D } from "@src/icons/LightningIcon3D";
 
 export type SliceZoneBlankSlateProps = {
-  onAddNewSlice: () => void;
-  onCreateNewSlice: () => void;
+  openUpdateSliceZoneModal: () => void;
+  openCreateSliceModal: () => void;
   openSlicesTemplatesModal: () => void;
   projectHasAvailableSlices: boolean;
   isSlicesTemplatesSupported: boolean;
 };
 
 export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
-  onCreateNewSlice,
-  onAddNewSlice,
+  openCreateSliceModal,
+  openUpdateSliceZoneModal,
   openSlicesTemplatesModal,
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
@@ -42,7 +42,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
             <ActionList>
               <ActionListItem
                 startIcon="add"
-                onClick={onCreateNewSlice}
+                onClick={openCreateSliceModal}
                 description="Start from scratch."
               >
                 Create new
@@ -60,7 +60,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
               {projectHasAvailableSlices ? (
                 <ActionListItem
                   startIcon="folder"
-                  onClick={onAddNewSlice}
+                  onClick={openUpdateSliceZoneModal}
                   description="Select from your own slices."
                 >
                   Select existing

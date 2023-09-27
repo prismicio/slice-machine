@@ -35,7 +35,6 @@ import {
   reorderFieldCreator,
   replaceFieldCreator,
   deleteSharedSliceCreator,
-  replaceSharedSliceCreator,
   createSliceZoneCreator,
   deleteSliceZoneCreator,
   saveCustomTypeCreator,
@@ -225,11 +224,6 @@ const useSliceMachineActions = () => {
     dispatch(deleteSliceZoneCreator({ tabId }));
   const deleteCustomTypeSharedSlice = (tabId: string, sliceId: string) =>
     dispatch(deleteSharedSliceCreator({ tabId, sliceId }));
-  const replaceCustomTypeSharedSlice = (
-    tabId: string,
-    sliceKeys: string[],
-    preserve: string[]
-  ) => dispatch(replaceSharedSliceCreator({ tabId, sliceKeys, preserve }));
   const addFieldIntoGroup = (
     tabId: string,
     groupId: string,
@@ -500,7 +494,6 @@ const useSliceMachineActions = () => {
     createSliceZone,
     deleteSliceZone,
     deleteCustomTypeSharedSlice,
-    replaceCustomTypeSharedSlice,
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,

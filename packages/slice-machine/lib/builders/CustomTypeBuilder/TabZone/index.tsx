@@ -46,7 +46,6 @@ const TabZone: FC<TabZoneProps> = ({
     createSliceZone,
     deleteSliceZone,
     deleteCustomTypeSharedSlice,
-    replaceCustomTypeSharedSlice,
   } = useSliceMachineActions();
 
   const { query } = useRouter();
@@ -128,14 +127,6 @@ const TabZone: FC<TabZoneProps> = ({
     deleteSliceZone(tabId);
   };
 
-  const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
-    void telemetry.track({
-      event: "custom-type:slice-zone-updated",
-      customTypeId: customType.id,
-    });
-    replaceCustomTypeSharedSlice(tabId, keys, preserve);
-  };
-
   const onRemoveSharedSlice = (sliceId: string) => {
     deleteCustomTypeSharedSlice(tabId, sliceId);
   };
@@ -189,7 +180,6 @@ const TabZone: FC<TabZoneProps> = ({
             onRemoveSharedSlice={onRemoveSharedSlice}
             onCreateSliceZone={onCreateSliceZone}
             onDeleteSliceZone={onDeleteSliceZone}
-            onSelectSharedSlices={onSelectSharedSlices}
           />
         </Suspense>
       </ErrorBoundary>

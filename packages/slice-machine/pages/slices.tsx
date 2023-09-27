@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import Head from "next/head";
 import { BaseStyles, Flex, Text, Link } from "theme-ui";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/customtypes";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
@@ -30,8 +33,11 @@ import {
 } from "@src/modules/slices";
 import { useModelStatus } from "@src/hooks/useModelStatus";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
+import { SliceToastMessage } from "@components/ToasterContainer";
 
 const SlicesIndex: React.FunctionComponent = () => {
+  const router = useRouter();
   const { openRenameSliceModal, openDeleteSliceModal } =
     useSliceMachineActions();
 
@@ -225,6 +231,21 @@ const SlicesIndex: React.FunctionComponent = () => {
             <CreateSliceModal
               localLibraries={localLibraries}
               remoteSlices={remoteSlices}
+              onSuccess={(newSlice: SharedSliceType, libraryName: string) => {
+                // Redirect to the slice page
+                const variationId = newSlice.variations[0].id;
+                const sliceLocation = SLICES_CONFIG.getBuilderPagePathname({
+                  libraryName,
+                  sliceName: newSlice.name,
+                  variationId,
+                });
+                void router.push(sliceLocation);
+                toast.success(
+                  SliceToastMessage({
+                    path: `${libraryName}/${newSlice.name}/model.json`,
+                  })
+                );
+              }}
               onClose={() => {
                 setIsCreateSliceModalOpen(false);
               }}
