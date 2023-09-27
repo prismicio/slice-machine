@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ActionList, ActionListItem, Box } from "@prismicio/editor-ui";
+import { ActionList, ActionListItem, Badge, Box } from "@prismicio/editor-ui";
 
 import {
   BlankSlate,
@@ -52,6 +52,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                   startIcon="contentCopy"
                   onClick={openSlicesTemplatesModal}
                   description="Select from premade examples."
+                  endAdornment={<Badge color="purple" title="New" />}
                 >
                   Use template
                 </ActionListItem>
