@@ -1,0 +1,209 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PageSnippet > repeatable model > return a snippet with JavaScript 1`] = `
+{
+  "content": "## Create your Repeatable's page data fetcher
+
+Add a new route by creating a \`src/routes/[uid]/+page.server.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.server.js\`.)
+
+Paste in this code:
+
+~~~js [src/routes/[uid]/+page.server.js]
+import { createClient } from \\"$lib/prismicio\\";
+
+export const prerender = true;
+
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
+
+  const page = await client.getByUID(\\"repeatable\\", params.uid);
+
+  return {
+    page,
+  };
+}
+
+export async function entries() {
+  const client = createClient();
+
+  const pages = await client.getAllByType(\\"repeatable\\");
+
+  return pages.map((page) => {
+    return { uid: page.uid };
+  });
+}
+~~~
+
+## Create your Repeatable's page component
+
+In the route's directory, create a \`src/routes/[uid]/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.svelte\`.)
+
+Paste in this code:
+
+~~~svelte [src/routes/[uid]/+page.svelte]
+<script>
+  import { SliceZone } from \\"@prismicio/svelte\\";
+
+  import { components } from \\"$lib/slices\\";
+
+  export let data;
+</script>
+
+<SliceZone slices={data.page.data.slices} {components} />
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/svelte-install) for more information.",
+  "label": "Default",
+}
+`;
+
+exports[`PageSnippet > repeatable model > return a snippet with TypeScript for TypeScript projects 1`] = `
+{
+  "content": "## Create your Repeatable's page data fetcher
+
+Add a new route by creating a \`src/routes/[uid]/+page.server.ts\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.server.ts\`.)
+
+Paste in this code:
+
+~~~ts [src/routes/[uid]/+page.server.ts]
+import { createClient } from \\"$lib/prismicio\\";
+
+export const prerender = true;
+
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
+
+  const page = await client.getByUID(\\"repeatable\\", params.uid);
+
+  return {
+    page,
+  };
+}
+
+export async function entries() {
+  const client = createClient();
+
+  const pages = await client.getAllByType(\\"repeatable\\");
+
+  return pages.map((page) => {
+    return { uid: page.uid };
+  });
+}
+~~~
+
+## Create your Repeatable's page component
+
+In the route's directory, create a \`src/routes/[uid]/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.svelte\`.)
+
+Paste in this code:
+
+~~~svelte [src/routes/[uid]/+page.svelte]
+<script>
+  import { SliceZone } from \\"@prismicio/svelte\\";
+
+  import { components } from \\"$lib/slices\\";
+
+  export let data;
+</script>
+
+<SliceZone slices={data.page.data.slices} {components} />
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/svelte-install) for more information.",
+  "label": "Default",
+}
+`;
+
+exports[`PageSnippet > single model > return a snippet with JavaScript 1`] = `
+{
+  "content": "## Create your Single's page data fetcher
+
+Add a new route by creating a \`src/routes/single/+page.server.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.server.js\`.)
+
+Paste in this code:
+
+~~~js [src/routes/single/+page.server.js]
+import { createClient } from \\"$lib/prismicio\\";
+
+export const prerender = true;
+
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
+
+  const page = await client.getSingle(\\"single\\");
+
+  return {
+    page,
+  };
+}
+~~~
+
+## Create your Single's page component
+
+In the route's directory, create a \`src/routes/single/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.svelte\`.)
+
+Paste in this code:
+
+~~~svelte [src/routes/single/+page.svelte]
+<script>
+  import { SliceZone } from \\"@prismicio/svelte\\";
+
+  import { components } from \\"$lib/slices\\";
+
+  export let data;
+</script>
+
+<SliceZone slices={data.page.data.slices} {components} />
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/svelte-install) for more information.",
+  "label": "Default",
+}
+`;
+
+exports[`PageSnippet > single model > return a snippet with TypeScript for TypeScript projects 1`] = `
+{
+  "content": "## Create your Single's page data fetcher
+
+Add a new route by creating a \`src/routes/single/+page.server.ts\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.server.ts\`.)
+
+Paste in this code:
+
+~~~ts [src/routes/single/+page.server.ts]
+import { createClient } from \\"$lib/prismicio\\";
+
+export const prerender = true;
+
+export async function load({ params, fetch }) {
+  const client = createClient({ fetch });
+
+  const page = await client.getSingle(\\"single\\");
+
+  return {
+    page,
+  };
+}
+~~~
+
+## Create your Single's page component
+
+In the route's directory, create a \`src/routes/single/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.svelte\`.)
+
+Paste in this code:
+
+~~~svelte [src/routes/single/+page.svelte]
+<script>
+  import { SliceZone } from \\"@prismicio/svelte\\";
+
+  import { components } from \\"$lib/slices\\";
+
+  export let data;
+</script>
+
+<SliceZone slices={data.page.data.slices} {components} />
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/svelte-install) for more information.",
+  "label": "Default",
+}
+`;
