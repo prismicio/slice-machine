@@ -1,4 +1,5 @@
-import { isFilled, asText } from "@prismicio/client";
+import { isFilled } from "@prismicio/client";
+import { PrismicText } from "@prismicio/react";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 
 /**
@@ -18,7 +19,7 @@ const PascalNameToReplace = ({ slice }) => {
 			<div className="es-bounded__content es-customer-logos__content">
 				{isFilled.richText(slice.primary.eyebrowHeadline) && (
 					<h2 className="es-customer-logos__heading">
-						{asText(slice.primary.eyebrowHeadline)}
+						<PrismicText field={slice.primary.eyebrowHeadline} />
 					</h2>
 				)}
 				{slice.items.length > 0 && (
