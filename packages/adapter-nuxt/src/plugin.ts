@@ -36,6 +36,9 @@ import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { snippetRead } from "./hooks/snippet-read";
 
 import * as Hero from "./sliceTemplates/Hero";
+import * as CallToAction from "./sliceTemplates/CallToAction";
+import * as AlternateGrid from "./sliceTemplates/AlternateGrid";
+import * as CustomerLogos from "./sliceTemplates/CustomerLogos";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -170,7 +173,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				...data,
 				...context,
 				dirName: path.dirname(fileURLToPath(new URL(import.meta.url))),
-				templates: [Hero],
+				templates: [Hero, CustomerLogos, AlternateGrid, CallToAction],
 				componentFileNames: {
 					js: "javascript.vue",
 					ts: "typescript.vue",
