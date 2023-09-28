@@ -27,11 +27,11 @@ export async function addSlicesToSliceZone({
               sliceZone: {
                 key: tab.sliceZone.key,
                 value: [
-                  ...tab.sliceZone.value,
                   {
                     key: slice.id,
                     value: slice,
                   },
+                  ...tab.sliceZone.value,
                 ],
               },
             }
