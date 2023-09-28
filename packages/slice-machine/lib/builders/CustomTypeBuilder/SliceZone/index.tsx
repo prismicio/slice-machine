@@ -358,7 +358,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             toast.success(
               <ToastMessageWithPath
                 message="New slice added to slice zone and created at: "
-                path={`${localLibraries[0].name}/${newSlice.name}/model.json`}
+                path={`${localLibraries[0].name}/`}
               />
             );
           }}
