@@ -50,7 +50,7 @@ defineProps(
 	</section>
 </template>
 
-<style scoped>
+<style>
 .es-bounded {
 	margin: 0px;
 	min-width: 0px;
