@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { PrismicImage, PrismicRichText } from "@prismicio/svelte";
-	import { isFilled } from "@prismicio/client";
-	import type { Content } from "@prismicio/client";
+	import {
+		PrismicImage,
+		PrismicRichText,
+		PrismicLink,
+	} from "@prismicio/svelte";
+	import { type Content, isFilled } from "@prismicio/client";
 
 	export let slice: Content.PascalNameToReplaceSlice;
 </script>
@@ -13,7 +16,6 @@
 >
 	<div
 		class={`
-        es-bounded__content
         es-fullpage-hero__content
         ${
 					slice.variation === "imageRight"
@@ -22,14 +24,14 @@
 				}
     `}
 	>
-		{#if isFilled.image(slice.primary.image)}
-			<div>
+		<div>
+			{#if isFilled.image(slice.primary.image)}
 				<PrismicImage
 					field={slice.primary.image}
 					class="es-fullpage-hero__image"
 				/>
-			</div>
-		{/if}
+			{/if}
+		</div>
 		<div class="es-fullpage-hero__content-right">
 			<div class="es-fullpage-hero__content__intro">
 				{#if isFilled.keyText(slice.primary.eyebrowHeadline)}
@@ -47,6 +49,14 @@
 						<PrismicRichText field={slice.primary.description} />
 					</div>
 				{/if}
+				{#if isFilled.link(slice.primary.callToActionLink)}
+					<PrismicLink
+						field={slice.primary.callToActionLink}
+						class="es-call-to-action__link"
+					>
+						{slice.primary.callToActionLabel || "Learn more…"}
+					</PrismicLink>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -56,12 +66,6 @@
 			margin: 0px;
 			min-width: 0px;
 			position: relative;
-		}
-
-		.es-bounded__content {
-			min-width: 0px;
-			max-width: 90%;
-			margin: 0px auto;
 		}
 
 		.es-fullpage-hero {
@@ -132,7 +136,7 @@
 			font-weight: 700;
 		}
 
-		.es-fullpage-hero__content__intro__headline > * {
+		.es-fullpage-hero__content__intro__headline * {
 			margin: 0;
 		}
 

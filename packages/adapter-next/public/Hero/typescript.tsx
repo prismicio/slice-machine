@@ -1,4 +1,4 @@
-import { Content, isFilled } from "@prismicio/client";
+import { type Content, isFilled } from "@prismicio/client";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 
@@ -16,7 +16,6 @@ const PascalNameToReplace = ({
 		>
 			<div
 				className={`
-            es-bounded__content
             es-fullpage-hero__content
             ${
 							slice.variation === "imageRight"
@@ -68,12 +67,6 @@ const PascalNameToReplace = ({
               margin: 0px;
               min-width: 0px;
               position: relative;
-          }
-          
-          .es-bounded__content {
-              min-width: 0px;
-              max-width: 90%;
-              margin: 0px auto;
           }
           
           .es-fullpage-hero {
@@ -144,7 +137,7 @@ const PascalNameToReplace = ({
               font-weight: 700;
           }
           
-          .es-fullpage-hero__content__intro__headline > * {
+          .es-fullpage-hero__content__intro__headline * {
               margin: 0;
           }
           

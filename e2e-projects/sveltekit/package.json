@@ -1,6 +1,6 @@
 {
 	"name": "sveltekit",
-	"version": "1.14.2-dev-next-release.9",
+	"version": "1.14.2-dev-slice-templates-svelte-nuxt.13",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",

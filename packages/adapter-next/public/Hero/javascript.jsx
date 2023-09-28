@@ -19,13 +19,12 @@ const PascalNameToReplace = ({ slice }) => {
 		>
 			<div
 				className={`
-          es-bounded__content
-          es-fullpage-hero__content
-          ${
-						slice.variation === "imageRight"
-							? "es-fullpage-hero__image--right"
-							: "es-fullpage-hero__image--left"
-					}
+                    es-fullpage-hero__content
+                    ${
+											slice.variation === "imageRight"
+												? "es-fullpage-hero__image--right"
+												: "es-fullpage-hero__image--left"
+										}
         `}
 			>
 				<div>
@@ -71,12 +70,6 @@ const PascalNameToReplace = ({ slice }) => {
               margin: 0px;
               min-width: 0px;
               position: relative;
-          }
-  
-          .es-bounded__content {
-              min-width: 0px;
-              max-width: 90%;
-              margin: 0px auto;
           }
   
           .es-fullpage-hero {
@@ -147,7 +140,7 @@ const PascalNameToReplace = ({ slice }) => {
               font-weight: 700;
           }
   
-          .es-fullpage-hero__content__intro__headline > * {
+          .es-fullpage-hero__content__intro__headline * {
               margin: 0;
           }
               
