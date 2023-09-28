@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { isFilled } from "@prismicio/client";
 
 defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
