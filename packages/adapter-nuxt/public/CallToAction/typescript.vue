@@ -81,6 +81,7 @@ const alignment = computed(() => {
 }
 
 .es-call-to-action {
+	font-family: system-ui, sans-serif;
 	background-color: #fff;
 	color: #333;
 }

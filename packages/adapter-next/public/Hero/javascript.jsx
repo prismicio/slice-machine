@@ -19,12 +19,12 @@ const PascalNameToReplace = ({ slice }) => {
 		>
 			<div
 				className={`
-          es-fullpage-hero__content
-          ${
-						slice.variation === "imageRight"
-							? "es-fullpage-hero__image--right"
-							: "es-fullpage-hero__image--left"
-					}
+                    es-fullpage-hero__content
+                    ${
+											slice.variation === "imageRight"
+												? "es-fullpage-hero__image--right"
+												: "es-fullpage-hero__image--left"
+										}
         `}
 			>
 				<div>

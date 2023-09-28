@@ -55,10 +55,10 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 	min-width: 0px;
 	max-width: 90%;
 	margin: 0px auto;
-	font-family: system-ui, sans-serif;
 }
 
 .es-customer-logos {
+	font-family: system-ui, sans-serif;
 	background-color: #f4f0ec;
 	color: #333;
 }
