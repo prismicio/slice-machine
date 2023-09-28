@@ -2,7 +2,6 @@
 	import {
 		PrismicImage,
 		PrismicRichText,
-		PrismicText,
 		PrismicLink,
 	} from "@prismicio/svelte";
 	import { isFilled } from "@prismicio/client";
@@ -38,7 +37,7 @@
 			<div class="es-fullpage-hero__content__intro">
 				{#if isFilled.keyText(slice.primary.eyebrowHeadline)}
 					<p class="es-fullpage-hero__content__intro__eyebrow">
-						<PrismicText field={slice.primary.eyebrowHeadline} />
+						{slice.primary.eyebrowHeadline}
 					</p>
 				{/if}
 				{#if isFilled.richText(slice.primary.title)}

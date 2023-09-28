@@ -31,7 +31,7 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 						v-if="isFilled.keyText(slice.primary.eyebrowHeadline)"
 						class="es-fullpage-hero__content__intro__eyebrow"
 					>
-						<PrismicText :field="slice.primary.eyebrowHeadline" />
+						{{ slice.primary.eyebrowHeadline }}
 					</p>
 					<div
 						v-if="isFilled.richText(slice.primary.title)"
