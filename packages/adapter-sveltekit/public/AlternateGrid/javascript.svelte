@@ -1,9 +1,5 @@
 <script>
-	import {
-		PrismicImage,
-		PrismicText,
-		PrismicRichText,
-	} from "@prismicio/svelte";
+	import { PrismicImage, PrismicRichText } from "@prismicio/svelte";
 	import { isFilled } from "@prismicio/client";
 
 	/**
@@ -19,14 +15,13 @@
 >
 	<div
 		class={`
-			es-bounded__content
 			es-alternate-grid__content
 			${
 				isFilled.image(slice.primary.image)
 					? "es-alternate-grid__content--with-image"
 					: ""
 			}
-		  `}
+    `}
 	>
 		{#if isFilled.image(slice.primary.image)}
 			<PrismicImage
@@ -45,7 +40,7 @@
 			<div class="es-alternate-grid__primary-content__intro">
 				{#if isFilled.keyText(slice.primary.eyebrowHeadline)}
 					<p class="es-alternate-grid__primary-content__intro__eyebrow">
-						<PrismicText field={slice.primary.eyebrowHeadline} />
+						{slice.primary.eyebrowHeadline}
 					</p>
 				{/if}
 				{#if isFilled.richText(slice.primary.title)}
@@ -79,18 +74,13 @@
 			{/if}
 		</div>
 	</div>
+
 	<style>
 		.es-bounded {
 			margin: 0px;
 			min-width: 0px;
 			position: relative;
 			padding: 8vw 1.25rem;
-		}
-
-		.es-bounded__content {
-			min-width: 0px;
-			max-width: 90%;
-			margin: 0px auto;
 		}
 
 		.es-alternate-grid {
@@ -213,10 +203,6 @@
 		.es-alternate-grid__item {
 			display: grid;
 			align-content: start;
-		}
-
-		.es-alternate-grid__item__icon {
-			max-height: 3rem;
 		}
 
 		.es-alternate-grid__item__heading {

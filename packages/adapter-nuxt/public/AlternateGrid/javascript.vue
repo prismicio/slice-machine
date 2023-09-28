@@ -12,7 +12,6 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 	>
 		<div
 			:class="[
-				'es-bounded__content',
 				'es-alternate-grid__content',
 				isFilled.image(slice.primary.image)
 					? 'es-alternate-grid__content--with-image'
@@ -22,25 +21,32 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 			<PrismicImage
 				v-if="isFilled.image(slice.primary.image)"
 				:field="slice.primary.image"
-				:class="imageClass"
+				class="es-alternate-grid__image"
+				:class="
+					slice.variation === 'imageRight'
+						? 'es-alternate-grid__image--right'
+						: 'es-alternate-grid__image--left'
+				"
 			/>
 			<div class="es-alternate-grid__primary-content">
-				<div
-					v-if="isFilled.keyText(slice.primary.eyebrowHeadline)"
-					class="es-alternate-grid__primary-content__intro__eyebrow"
-				>
-					{{ slice.primary.eyebrowHeadline }}
+				<div className="es-alternate-grid__primary-content__intro">
+					<div
+						v-if="isFilled.keyText(slice.primary.eyebrowHeadline)"
+						class="es-alternate-grid__primary-content__intro__eyebrow"
+					>
+						{{ slice.primary.eyebrowHeadline }}
+					</div>
+					<PrismicRichText
+						v-if="isFilled.richText(slice.primary.title)"
+						:field="slice.primary.title"
+						class="es-alternate-grid__primary-content__intro__headline"
+					/>
+					<PrismicRichText
+						v-if="isFilled.richText(slice.primary.description)"
+						:field="slice.primary.description"
+						class="es-alternate-grid__primary-content__intro__description"
+					/>
 				</div>
-				<PrismicRichText
-					v-if="isFilled.richText(slice.primary.title)"
-					:field="slice.primary.title"
-					class="es-alternate-grid__primary-content__intro__headline"
-				/>
-				<PrismicRichText
-					v-if="isFilled.richText(slice.primary.description)"
-					:field="slice.primary.description"
-					class="es-alternate-grid__primary-content__intro__description"
-				/>
 				<div
 					v-if="slice.items && slice.items.length"
 					class="es-alternate-grid__primary-content__items"
@@ -73,12 +79,6 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 	min-width: 0px;
 	position: relative;
 	padding: 8vw 1.25rem;
-}
-
-.es-bounded__content {
-	min-width: 0px;
-	max-width: 90%;
-	margin: 0px auto;
 }
 
 .es-alternate-grid {
@@ -201,10 +201,6 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 .es-alternate-grid__item {
 	display: grid;
 	align-content: start;
-}
-
-.es-alternate-grid__item__icon {
-	max-height: 3rem;
 }
 
 .es-alternate-grid__item__heading {
