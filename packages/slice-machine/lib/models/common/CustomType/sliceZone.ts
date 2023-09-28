@@ -30,24 +30,6 @@ export const SliceZone = {
       value,
     };
   },
-  replaceSharedSlice(
-    sz: SlicesSM,
-    keys: ReadonlyArray<string>,
-    preserve: ReadonlyArray<string> = []
-  ): SlicesSM {
-    const value = sz.value
-      .filter(({ key }) => preserve.includes(key))
-      .concat(
-        keys.map((key) => ({
-          key,
-          value: { type: "SharedSlice" },
-        }))
-      );
-    return {
-      ...sz,
-      value,
-    };
-  },
   removeSharedSlice(sz: SlicesSM, key: string): SlicesSM {
     const value = sz.value.filter(({ key: k }) => k !== key);
 

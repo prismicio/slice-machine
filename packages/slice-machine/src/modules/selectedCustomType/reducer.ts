@@ -16,7 +16,6 @@ import {
   deleteSharedSliceCreator,
   reorderFieldCreator,
   replaceFieldCreator,
-  replaceSharedSliceCreator,
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
@@ -203,18 +202,6 @@ export const selectedCustomTypeReducer: Reducer<
       )((tab) => {
         return Tab.deleteSliceZone(tab);
       });
-    }
-    case getType(replaceSharedSliceCreator): {
-      const { tabId, sliceKeys, preserve } = action.payload;
-      return StateHelpers.updateTab(
-        state,
-        tabId
-      )((tab) =>
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        Tab.updateSliceZone(tab)((sliceZone: SlicesSM) =>
-          SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)
-        )
-      );
     }
     case getType(deleteSharedSliceCreator): {
       const { tabId, sliceId } = action.payload;

@@ -33,25 +33,6 @@ describe("Slice Zone", () => {
     });
   });
 
-  describe("Replace shared slices", () => {
-    it("removes the correct slice", () => {
-      const keyToPreserve = "slice_in_zone_1";
-      const newKeys = "new_slice_in_zone";
-
-      const result = SliceZone.replaceSharedSlice(
-        mockSliceZone,
-        [newKeys],
-        [keyToPreserve]
-      );
-
-      expect(result.value.map((slice) => slice.key)).toEqual([
-        keyToPreserve,
-        newKeys,
-      ]);
-      expect(result.value.length).toEqual(2);
-    });
-  });
-
   describe("Add shared slices", () => {
     it("adds a new slice to the slice zone", () => {
       const newKey = "new_slice_in_zone";

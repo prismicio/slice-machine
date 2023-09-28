@@ -1,0 +1,126 @@
+{
+	"id": "hero",
+	"type": "SharedSlice",
+	"name": "Hero",
+	"description": "Hero",
+	"variations": [
+		{
+			"id": "default",
+			"name": "Default",
+			"docURL": "...",
+			"version": "initial",
+			"description": "Default",
+			"imageUrl": "",
+			"primary": {
+				"eyebrowHeadline": {
+					"type": "Text",
+					"config": {
+						"label": "eyebrowHeadline",
+						"placeholder": "Eyebrow"
+					}
+				},
+				"title": {
+					"type": "StructuredText",
+					"config": {
+						"label": "title",
+						"placeholder": "",
+						"allowTargetBlank": true,
+						"single": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em"
+					}
+				},
+				"description": {
+					"type": "StructuredText",
+					"config": {
+						"label": "description",
+						"placeholder": "",
+						"allowTargetBlank": true,
+						"multi": "paragraph,preformatted,hyperlink,embed,rtl,strong,em,list-item,o-list-item"
+					}
+				},
+				"image": {
+					"type": "Image",
+					"config": {
+						"label": "image",
+						"constraint": {},
+						"thumbnails": []
+					}
+				},
+				"callToActionLabel": {
+					"type": "Text",
+					"config": {
+						"label": "callToActionLabel",
+						"placeholder": ""
+					}
+				},
+				"callToActionLink": {
+					"type": "Link",
+					"config": {
+						"label": "callToActionLink",
+						"placeholder": "",
+						"select": null
+					}
+				}
+			},
+			"items": {}
+		},
+		{
+			"id": "imageRight",
+			"name": "Image Right",
+			"docURL": "...",
+			"version": "initial",
+			"description": "Default",
+			"imageUrl": "",
+			"primary": {
+				"eyebrowHeadline": {
+					"type": "Text",
+					"config": {
+						"label": "eyebrowHeadline",
+						"placeholder": "Eyebrow"
+					}
+				},
+				"title": {
+					"type": "StructuredText",
+					"config": {
+						"label": "title",
+						"placeholder": "",
+						"allowTargetBlank": true,
+						"single": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em"
+					}
+				},
+				"description": {
+					"type": "StructuredText",
+					"config": {
+						"label": "description",
+						"placeholder": "",
+						"allowTargetBlank": true,
+						"multi": "paragraph,preformatted,hyperlink,embed,rtl,strong,em,list-item,o-list-item"
+					}
+				},
+				"image": {
+					"type": "Image",
+					"config": {
+						"label": "image",
+						"constraint": {},
+						"thumbnails": []
+					}
+				},
+				"callToActionLabel": {
+					"type": "Text",
+					"config": {
+						"label": "callToActionLabel",
+						"placeholder": ""
+					}
+				},
+				"callToActionLink": {
+					"type": "Link",
+					"config": {
+						"label": "callToActionLink",
+						"placeholder": "",
+						"select": null
+					}
+				}
+			},
+			"items": {}
+		}
+	]
+}
