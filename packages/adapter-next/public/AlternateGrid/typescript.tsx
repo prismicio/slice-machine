@@ -1,5 +1,5 @@
 import { PrismicNextImage } from "@prismicio/next";
-import { Content, isFilled } from "@prismicio/client";
+import { type Content, isFilled } from "@prismicio/client";
 import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 
 export type PascalNameToReplaceProps =

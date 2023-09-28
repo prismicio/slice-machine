@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Content, isFilled } from "@prismicio/client";
+import { type Content, isFilled } from "@prismicio/client";
 
 const props = defineProps(
 	getSliceComponentProps<Content.PascalNameToReplaceSlice>([

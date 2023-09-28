@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { PrismicImage, PrismicRichText } from "@prismicio/svelte";
-	import { isFilled } from "@prismicio/client";
-	import type { Content } from "@prismicio/client";
+	import { type Content, isFilled } from "@prismicio/client";
 
 	export let slice: Content.PascalNameToReplaceSlice;
 </script>

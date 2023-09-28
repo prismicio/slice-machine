@@ -1,4 +1,4 @@
-import { Content, isFilled } from "@prismicio/client";
+import { type Content, isFilled } from "@prismicio/client";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
 

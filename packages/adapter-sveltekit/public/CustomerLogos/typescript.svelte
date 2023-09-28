@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { isFilled } from "@prismicio/client";
-	import type { Content } from "@prismicio/client";
+	import { type Content, isFilled } from "@prismicio/client";
 	import {
 		PrismicImage,
 		PrismicRichText,

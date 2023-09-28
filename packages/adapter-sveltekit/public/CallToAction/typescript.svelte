@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Content, isFilled } from "@prismicio/client";
+	import { type Content, isFilled } from "@prismicio/client";
 	import {
 		PrismicLink,
 		PrismicImage,
