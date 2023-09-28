@@ -2,7 +2,7 @@
 import { Content, isFilled } from "@prismicio/client";
 
 defineProps(
-	getSliceComponentProps<Content.RichTextSlice>([
+	getSliceComponentProps<Content.PascalNameToReplaceSlice>([
 		"slice",
 		"index",
 		"slices",

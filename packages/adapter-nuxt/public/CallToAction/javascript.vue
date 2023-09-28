@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from "vue";
 import { isFilled } from "@prismicio/client";
-import { PrismicLink, PrismicImage, PrismicRichText } from "@prismicio/svelte";
 
-defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
+const props = defineProps(
+	getSliceComponentProps(["slice", "index", "slices", "context"]),
+);
 
-const alignment = slice.variation === "alignLeft" ? ref("left") : ref("center");
+const alignment = computed(() => {
+	return props.slice.variation === "alignLeft" ? "left" : "center";
+});
 </script>
 
 <template>
@@ -76,11 +78,6 @@ const alignment = slice.variation === "alignLeft" ? ref("left") : ref("center");
 .es-call-to-action {
 	background-color: #fff;
 	color: #333;
-}
-
-.es-call-to-action__content {
-	display: grid;
-	gap: 2rem;
 }
 
 .es-call-to-action__image {

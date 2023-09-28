@@ -4,7 +4,6 @@
 		PrismicLink,
 		PrismicImage,
 		PrismicRichText,
-		PrismicText,
 	} from "@prismicio/svelte";
 
 	/**
@@ -19,7 +18,7 @@
 	data-slice-type={slice.slice_type}
 	data-slice-variation={slice.variation}
 	class="es-bounded es-call-to-action"
-	style="--alignment: var(--alignment);"
+	style="--alignment: {alignment}"
 >
 	<div class="es-bounded__content es-call-to-action__content">
 		{#if isFilled.image(slice.primary.image)}
@@ -31,7 +30,7 @@
 		<div class="es-call-to-action__content">
 			{#if isFilled.richText(slice.primary.title)}
 				<h2 class="es-call-to-action__content__heading">
-					<PrismicText field={slice.primary.title} />
+					<PrismicRichText field={slice.primary.title} />
 				</h2>
 			{/if}
 			{#if isFilled.richText(slice.primary.paragraph)}
@@ -80,11 +79,6 @@
 		.es-call-to-action {
 			background-color: #fff;
 			color: #333;
-		}
-
-		.es-call-to-action__content {
-			display: grid;
-			gap: 2rem;
 		}
 
 		.es-call-to-action__image {

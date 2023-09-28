@@ -1,6 +1,6 @@
 import { isFilled } from "@prismicio/client";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-import { PrismicRichText, PrismicText } from "@prismicio/react";
+import { PrismicRichText } from "@prismicio/react";
 
 /**
  * @typedef {import("@prismicio/client").Content.PascalNameToReplaceSlice} PascalNameToReplaceSlice
@@ -28,7 +28,7 @@ const PascalNameToReplace = ({ slice }) => {
 				<div className="es-call-to-action__content">
 					{isFilled.richText(slice.primary.title) && (
 						<h2 className="es-call-to-action__content__heading">
-							<PrismicText field={slice.primary.title} />
+							<PrismicRichText field={slice.primary.title} />
 						</h2>
 					)}
 					{isFilled.richText(slice.primary.paragraph) && (
@@ -46,87 +46,83 @@ const PascalNameToReplace = ({ slice }) => {
 					</PrismicNextLink>
 				)}
 			</div>
+
 			<style>
 				{`
-						.es-bounded {
-							padding: 8vw 2rem;
-						}
-						
+					.es-bounded {
+						padding: 8vw 2rem;
+					}
+					
+					.es-bounded__content {
+						margin-left: auto;
+						margin-right: auto;
+					}
+					
+					@media screen and (min-width: 640px) {
 						.es-bounded__content {
-							margin-left: auto;
-							margin-right: auto;
+							max-width: 90%;
 						}
-						
-						@media screen and (min-width: 640px) {
-							.es-bounded__content {
-								max-width: 90%;
-							}
+					}
+					
+					@media screen and (min-width: 896px) {
+						.es-bounded__content {
+							max-width: 80%;
 						}
-						
-						@media screen and (min-width: 896px) {
-							.es-bounded__content {
-								max-width: 80%;
-							}
+					}
+					
+					@media screen and (min-width: 1280px) {
+						.es-bounded__content {
+							max-width: 75%;
 						}
-						
-						@media screen and (min-width: 1280px) {
-							.es-bounded__content {
-								max-width: 75%;
-							}
-						}
-						
-						.es-call-to-action {
-							background-color: #fff;
-							color: #333;
-						}
-						
-						.es-call-to-action__content {
-							display: grid;
-							gap: 2rem;
-						}
-						
-						.es-call-to-action__image {
-							max-width: 14rem;
-							height: auto;
-							width: auto;
-							justify-self: ${alignment};
-						}
-						
-						.es-call-to-action__content {
-							display: grid;
-							gap: 1rem;
-							justify-items: ${alignment};
-						}
-						
-						.es-call-to-action__content__heading {
-							font-size: 2rem;
-							font-weight: 700;
-							text-align: ${alignment};
-						}
-						
-						.es-call-to-action__content__paragraph {
-							font-size: 1.15rem;
-							max-width: 38rem;
-							text-align: ${alignment};
-						}
-						
-						.es-call-to-action__button {
-							justify-self: ${alignment};
-							border-radius: 0.25rem;
-							display: inline-block;
-							font-size: 0.875rem;
-							line-height: 1.3;
-							padding: 1rem 2.625rem;
-							text-align: ${alignment};
-							transition: background-color 100ms linear;
-							background-color: #16745f;
-							color: #fff;
-						}
-						
-						.es-call-to-action__button:hover {
-							background-color: #0d5e4c;
-						}
-					`}
+					}
+					
+					.es-call-to-action {
+						background-color: #fff;
+						color: #333;
+					}
+					
+					.es-call-to-action__image {
+						max-width: 14rem;
+						height: auto;
+						width: auto;
+						justify-self: ${alignment};
+					}
+					
+					.es-call-to-action__content {
+						display: grid;
+						gap: 1rem;
+						justify-items: ${alignment};
+					}
+					
+					.es-call-to-action__content__heading {
+						font-size: 2rem;
+						font-weight: 700;
+						text-align: ${alignment};
+					}
+					
+					.es-call-to-action__content__paragraph {
+						font-size: 1.15rem;
+						max-width: 38rem;
+						text-align: ${alignment};
+					}
+					
+					.es-call-to-action__button {
+						justify-self: ${alignment};
+						border-radius: 0.25rem;
+						display: inline-block;
+						font-size: 0.875rem;
+						line-height: 1.3;
+						padding: 1rem 2.625rem;
+						text-align: ${alignment};
+						transition: background-color 100ms linear;
+						background-color: #16745f;
+						color: #fff;
+					}
+					
+					.es-call-to-action__button:hover {
+						background-color: #0d5e4c;
+					}
+				`}
 			</style>
 		</section>
 	);
