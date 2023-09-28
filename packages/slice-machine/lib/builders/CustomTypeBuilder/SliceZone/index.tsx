@@ -328,7 +328,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           closeSlicesTemplatesModal();
           toast.success(
             <ToastMessageWithPath
-              message="Slice(s) added to slice zone and created at: "
+              message="Slice template(s) added to slice zone and created at: "
               path={`${localLibraries[0].name}/`}
             />
           );
@@ -357,7 +357,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             closeCreateSliceModal();
             toast.success(
               <ToastMessageWithPath
-                message="Slice added to slice zone and created at: "
+                message="New slice added to slice zone and created at: "
                 path={`${localLibraries[0].name}/${newSlice.name}/model.json`}
               />
             );

@@ -331,7 +331,7 @@ describe("modify slicemachine.config.json", () => {
 		);
 
 		expect(contents.localSliceSimulatorURL).toBe(
-			"http://127.0.0.1:3000/slice-simulator",
+			"http://localhost:3000/slice-simulator",
 		);
 	});
 
