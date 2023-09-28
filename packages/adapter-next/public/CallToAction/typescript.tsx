@@ -99,7 +99,7 @@ const PascalNameToReplace = ({
             text-align: ${alignment};
           }
 
-          .es-call-to-action__content__heading > * {
+          .es-call-to-action__content__heading * {
             margin: 0;
           }
           

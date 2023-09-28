@@ -82,7 +82,7 @@
 			text-align: center;
 		}
 
-		.es-customer-logos__heading > * {
+		.es-customer-logos__heading * {
 			margin: 0;
 		}
 

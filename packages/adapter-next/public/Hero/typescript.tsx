@@ -137,7 +137,7 @@ const PascalNameToReplace = ({
               font-weight: 700;
           }
           
-          .es-fullpage-hero__content__intro__headline > * {
+          .es-fullpage-hero__content__intro__headline * {
               margin: 0;
           }
           

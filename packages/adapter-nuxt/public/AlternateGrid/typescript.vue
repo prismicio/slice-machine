@@ -157,7 +157,7 @@ defineProps(
 	font-weight: 700;
 }
 
-.es-alternate-grid__primary-content__intro__headline > * {
+.es-alternate-grid__primary-content__intro__headline * {
 	margin: 0;
 }
 
@@ -217,7 +217,7 @@ defineProps(
 	margin-bottom: 0.5rem;
 }
 
-.es-alternate-grid__item__heading > * {
+.es-alternate-grid__item__heading * {
 	margin: 0;
 }
 
@@ -225,7 +225,7 @@ defineProps(
 	font-size: 0.9rem;
 }
 
-.es-alternate-grid__item__description > * {
+.es-alternate-grid__item__description * {
 	margin: 0;
 }
 </style>
