@@ -8,39 +8,52 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 	<section
 		:data-slice-type="slice.slice_type"
 		:data-slice-variation="slice.variation"
-		class="es-bounded es-fullpage-hero es-bounded__content es-fullpage-hero__content"
-		:class="
-			slice.variation === 'imageRight'
-				? 'es-fullpage-hero__image--right'
-				: 'es-fullpage-hero__image--left'
-		"
+		class="es-bounded es-fullpage-hero"
 	>
-		<div>
-			<PrismicImage
-				v-if="isFilled.image(slice.primary.image)"
-				:field="slice.primary.image"
-				class="es-fullpage-hero__image"
-			/>
-		</div>
-		<div class="es-fullpage-hero__content-right">
-			<div class="es-fullpage-hero__content__intro">
-				<p
-					v-if="isFilled.keyText(slice.primary.eyebrowHeadline)"
-					class="es-fullpage-hero__content__intro__eyebrow"
-				>
-					{{ slice.primary.eyebrowHeadline }}
-				</p>
-				<PrismicRichText
-					v-if="isFilled.richText(slice.primary.title)"
-					class="es-fullpage-hero__content__intro__headline"
-					:field="slice.primary.title"
+		<div
+			class="es-fullpage-hero__content"
+			:class="
+				slice.variation === 'imageRight'
+					? 'es-fullpage-hero__image--right'
+					: 'es-fullpage-hero__image--left'
+			"
+		>
+			<div>
+				<PrismicImage
+					v-if="isFilled.image(slice.primary.image)"
+					:field="slice.primary.image"
+					class="es-fullpage-hero__image"
 				/>
 			</div>
-			<PrismicRichText
-				v-if="isFilled.richText(slice.primary.description)"
-				class="es-fullpage-hero__content__intro__description"
-				:field="slice.primary.description"
-			/>
+			<div class="es-fullpage-hero__content-right">
+				<div class="es-fullpage-hero__content__intro">
+					<p
+						v-if="isFilled.keyText(slice.primary.eyebrowHeadline)"
+						class="es-fullpage-hero__content__intro__eyebrow"
+					>
+						<PrismicText :field="slice.primary.eyebrowHeadline" />
+					</p>
+					<div
+						v-if="isFilled.richText(slice.primary.title)"
+						class="es-fullpage-hero__content__intro__headline"
+					>
+						<PrismicRichText :field="slice.primary.title" />
+					</div>
+					<div
+						v-if="isFilled.richText(slice.primary.description)"
+						class="es-fullpage-hero__content__intro__description"
+					>
+						<PrismicRichText :field="slice.primary.description" />
+					</div>
+					<PrismicLink
+						v-if="isFilled.link(slice.primary.callToActionLink)"
+						class="es-call-to-action__link"
+						:field="slice.primary.callToActionLink"
+					>
+						{{ slice.primary.callToActionLabel || "Learn more…" }}
+					</PrismicLink>
+				</div>
+			</div>
 		</div>
 	</section>
 </template>
@@ -50,12 +63,6 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 	margin: 0px;
 	min-width: 0px;
 	position: relative;
-}
-
-.es-bounded__content {
-	min-width: 0px;
-	max-width: 90%;
-	margin: 0px auto;
 }
 
 .es-fullpage-hero {
@@ -161,45 +168,6 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 	.es-fullpage-hero__content__intro__description {
 		font-size: 1.4rem;
 	}
-}
-
-.es-fullpage-hero__content__items {
-	display: grid;
-	gap: 2rem;
-}
-
-@media (min-width: 640px) {
-	.es-fullpage-hero__content__items {
-		grid-template-columns: repeat(2, 1fr);
-	}
-}
-
-.es-fullpage-hero__item {
-	display: grid;
-	align-content: start;
-}
-
-.es-fullpage-hero__item__icon {
-	max-height: 3rem;
-}
-
-.es-fullpage-hero__item__heading {
-	font-weight: 700;
-	font-size: 1.17rem;
-	margin-top: 0;
-	margin-bottom: 0.5rem;
-}
-
-.es-fullpage-hero__item__heading > * {
-	margin: 0;
-}
-
-.es-fullpage-hero__item__description {
-	font-size: 0.9rem;
-}
-
-.es-fullpage-hero__item__description > * {
-	margin: 0;
 }
 
 .es-call-to-action__link {

@@ -1,6 +1,6 @@
 import { isFilled } from "@prismicio/client";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-import { PrismicRichText } from "@prismicio/react";
+import { PrismicRichText, PrismicText } from "@prismicio/react";
 
 /**
  * @typedef {import("@prismicio/client").Content.PascalNameToReplaceSlice} PascalNameToReplaceSlice
@@ -19,7 +19,6 @@ const PascalNameToReplace = ({ slice }) => {
 		>
 			<div
 				className={`
-          es-bounded__content
           es-fullpage-hero__content
           ${
 						slice.variation === "imageRight"
@@ -41,7 +40,7 @@ const PascalNameToReplace = ({ slice }) => {
 					<div className="es-fullpage-hero__content__intro">
 						{isFilled.keyText(slice.primary.eyebrowHeadline) && (
 							<p className="es-fullpage-hero__content__intro__eyebrow">
-								{slice.primary.eyebrowHeadline}
+								<PrismicText field={slice.primary.eyebrowHeadline} />
 							</p>
 						)}
 						{isFilled.richText(slice.primary.title) && (
@@ -71,12 +70,6 @@ const PascalNameToReplace = ({ slice }) => {
               margin: 0px;
               min-width: 0px;
               position: relative;
-          }
-  
-          .es-bounded__content {
-              min-width: 0px;
-              max-width: 90%;
-              margin: 0px auto;
           }
   
           .es-fullpage-hero {
