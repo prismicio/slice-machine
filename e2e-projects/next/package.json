@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.14.2-dev-slice-templates-svelte-nuxt.9",
+  "version": "1.14.2-dev-slice-templates-svelte-nuxt.10",
   "private": true,
   "scripts": {
     "dev": "next dev",
