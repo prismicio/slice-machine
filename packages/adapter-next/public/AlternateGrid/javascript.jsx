@@ -19,13 +19,13 @@ const PascalNameToReplace = ({ slice }) => {
 		>
 			<div
 				className={`
-          es-alternate-grid__content
-          ${
+					es-alternate-grid__content
+					${
 						isFilled.image(slice.primary.image)
 							? "es-alternate-grid__content--with-image"
 							: ""
 					}
-      `}
+				`}
 			>
 				{isFilled.image(slice.primary.image) && (
 					<PrismicNextImage

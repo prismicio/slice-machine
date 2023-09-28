@@ -27,9 +27,9 @@ const PascalNameToReplace = ({ slice }) => {
 				)}
 				<div className="es-call-to-action__content">
 					{isFilled.richText(slice.primary.title) && (
-						<h2 className="es-call-to-action__content__heading">
+						<div className="es-call-to-action__content__heading">
 							<PrismicRichText field={slice.primary.title} />
-						</h2>
+						</div>
 					)}
 					{isFilled.richText(slice.primary.paragraph) && (
 						<div className="es-call-to-action__content__paragraph">
@@ -98,6 +98,10 @@ const PascalNameToReplace = ({ slice }) => {
 						font-size: 2rem;
 						font-weight: 700;
 						text-align: ${alignment};
+					}
+
+					.es-call-to-action__content__heading > * {
+						margin: 0;
 					}
 					
 					.es-call-to-action__content__paragraph {

@@ -16,8 +16,8 @@ const PascalNameToReplace = ({
 		>
 			<div
 				className={`
-          es-alternate-grid__content
-          ${
+					es-alternate-grid__content
+					${
 						isFilled.image(slice.primary.image)
 							? "es-alternate-grid__content--with-image"
 							: ""
@@ -28,13 +28,13 @@ const PascalNameToReplace = ({
 					<PrismicNextImage
 						field={slice.primary.image}
 						className={`
-              es-alternate-grid__image
-              ${
+              				es-alternate-grid__image
+							${
 								slice.variation === "imageRight"
 									? "es-alternate-grid__image--right"
 									: "es-alternate-grid__image--left"
 							}
-            `}
+            			`}
 					/>
 				)}
 				<div className="es-alternate-grid__primary-content">

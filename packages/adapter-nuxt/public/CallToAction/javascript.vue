@@ -23,12 +23,12 @@ const alignment = computed(() => {
 				class="es-call-to-action__image"
 			/>
 			<div class="es-call-to-action__content">
-				<h2
+				<div
 					v-if="isFilled.richText(slice.primary.title)"
 					class="es-call-to-action__content__heading"
 				>
 					<PrismicRichText :field="slice.primary.title" />
-				</h2>
+				</div>
 				<div
 					v-if="isFilled.richText(slice.primary.paragraph)"
 					class="es-call-to-action__content__paragraph"
@@ -97,6 +97,10 @@ const alignment = computed(() => {
 	font-size: 2rem;
 	font-weight: 700;
 	text-align: v-bind(alignment);
+}
+
+.es-call-to-action__content__heading > * {
+	margin: 0;
 }
 
 .es-call-to-action__content__paragraph {

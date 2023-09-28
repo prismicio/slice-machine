@@ -5,7 +5,7 @@
 	/**
 	 * @type {import("@prismicio/client").Content.${PascalNameToReplace}Slice}
 	 */
-	let slice;
+	export let slice;
 </script>
 
 <section

@@ -3,7 +3,7 @@
 	import { isFilled } from "@prismicio/client";
 	import type { Content } from "@prismicio/client";
 
-	let slice: Content.PascalNameToReplaceSlice;
+	export let slice: Content.PascalNameToReplaceSlice;
 </script>
 
 <section
@@ -19,19 +19,19 @@
 					? "es-alternate-grid__content--with-image"
 					: ""
 			}
-		  `}
+		`}
 	>
 		{#if isFilled.image(slice.primary.image)}
 			<PrismicImage
 				field={slice.primary.image}
 				class={`
-          es-alternate-grid__image
-          ${
+					es-alternate-grid__image
+					${
 						slice.variation === "imageRight"
 							? "es-alternate-grid__image--right"
 							: "es-alternate-grid__image--left"
 					}
-			  `}
+				`}
 			/>
 		{/if}
 		<div class="es-alternate-grid__primary-content">

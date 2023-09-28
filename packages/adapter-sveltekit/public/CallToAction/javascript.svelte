@@ -29,9 +29,9 @@
 		{/if}
 		<div class="es-call-to-action__content">
 			{#if isFilled.richText(slice.primary.title)}
-				<h2 class="es-call-to-action__content__heading">
+				<div class="es-call-to-action__content__heading">
 					<PrismicRichText field={slice.primary.title} />
-				</h2>
+				</div>
 			{/if}
 			{#if isFilled.richText(slice.primary.paragraph)}
 				<div class="es-call-to-action__content__paragraph">
@@ -98,6 +98,10 @@
 			font-size: 2rem;
 			font-weight: 700;
 			text-align: var(--alignment);
+		}
+
+		.es-call-to-action__content__heading > * {
+			margin: 0;
 		}
 
 		.es-call-to-action__content__paragraph {
