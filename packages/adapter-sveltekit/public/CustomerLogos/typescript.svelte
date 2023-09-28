@@ -16,9 +16,9 @@
 >
 	<div class="es-bounded__content es-customer-logos__content">
 		{#if isFilled.richText(slice.primary.eyebrowHeadline)}
-			<h2 class="es-customer-logos__heading">
+			<div class="es-customer-logos__heading">
 				<PrismicRichText field={slice.primary.eyebrowHeadline} />
-			</h2>
+			</div>
 		{/if}
 		{#if slice.items.length > 0}
 			<ul class="es-customer-logos__logos">
@@ -77,6 +77,10 @@
 			font-size: 1.5rem;
 			font-weight: 500;
 			text-align: center;
+		}
+
+		.es-customer-logos__heading > * {
+			margin: 0;
 		}
 
 		.es-customer-logos__logos {

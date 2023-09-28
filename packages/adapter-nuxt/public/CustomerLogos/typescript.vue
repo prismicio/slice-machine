@@ -18,12 +18,12 @@ defineProps(
 		class="es-bounded es-customer-logos"
 	>
 		<div class="es-bounded__content es-customer-logos__content">
-			<h2
+			<div
 				v-if="isFilled.richText(slice.primary.eyebrowHeadline)"
 				class="es-customer-logos__heading"
 			>
 				<PrismicRichText :field="slice.primary.eyebrowHeadline" />
-			</h2>
+			</div>
 			<ul v-if="slice.items.length > 0" class="es-customer-logos__logos">
 				<li
 					v-for="item in slice.items"
@@ -81,6 +81,10 @@ defineProps(
 	font-size: 1.5rem;
 	font-weight: 500;
 	text-align: center;
+}
+
+.es-customer-logos__heading > * {
+	margin: 0;
 }
 
 .es-customer-logos__logos {

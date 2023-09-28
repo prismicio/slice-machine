@@ -16,9 +16,9 @@ const PascalNameToReplace = ({
 		>
 			<div className="es-bounded__content es-customer-logos__content">
 				{isFilled.richText(slice.primary.eyebrowHeadline) && (
-					<h2 className="es-customer-logos__heading">
+					<div className="es-customer-logos__heading">
 						<PrismicRichText field={slice.primary.eyebrowHeadline} />
-					</h2>
+					</div>
 				)}
 				{slice.items.length > 0 && (
 					<ul className="es-customer-logos__logos">
@@ -80,6 +80,10 @@ const PascalNameToReplace = ({
             font-weight: 500;
             text-align: center;
           }
+
+          .es-customer-logos__heading > * {
+            margin: 0;
+          }      
           
           .es-customer-logos__logos {
             display: grid;
