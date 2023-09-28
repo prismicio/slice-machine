@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.7.1-dev-slice-templates-svelte-nuxt.1",
+	"version": "2.7.1-dev-slice-templates-svelte-nuxt.2",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
