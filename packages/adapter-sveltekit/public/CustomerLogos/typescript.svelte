@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { isFilled } from "@prismicio/client";
 	import type { Content } from "@prismicio/client";
-	import { PrismicImage, PrismicText } from "@prismicio/svelte";
+	import {
+		PrismicImage,
+		PrismicRichText,
+		PrismicLink,
+	} from "@prismicio/svelte";
 
 	export let slice: Content.PascalNameToReplaceSlice;
 </script>
@@ -14,7 +18,7 @@
 	<div class="es-bounded__content es-customer-logos__content">
 		{#if isFilled.richText(slice.primary.eyebrowHeadline)}
 			<h2 class="es-customer-logos__heading">
-				<PrismicText field={slice.primary.eyebrowHeadline} />
+				<PrismicRichText field={slice.primary.eyebrowHeadline} />
 			</h2>
 		{/if}
 		{#if slice.items.length > 0}
@@ -22,25 +26,25 @@
 				{#each slice.items as item}
 					{#if isFilled.image(item.image)}
 						<li class="es-customer-logos__logo">
-							<a href={item.link.url} class="es-customer-logos__link">
+							<PrismicLink field={item.link}>
 								<PrismicImage
 									field={item.image}
 									class="es-customer-logos__logo__link__image"
 									height="26"
 									width="160"
 								/>
-							</a>
+							</PrismicLink>
 						</li>
 					{/if}
 				{/each}
 			</ul>
 		{/if}
-		<a
-			href={slice.primary.callToActionLink.url}
+		<PrismicLink
+			field={slice.primary.callToActionLink}
 			class="es-customer-logos__button"
 		>
 			{slice.primary.callToActionLabel || "Learn more..."}
-		</a>
+		</PrismicLink>
 	</div>
 
 	<style>

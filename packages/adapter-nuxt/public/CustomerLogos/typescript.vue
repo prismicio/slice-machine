@@ -22,32 +22,30 @@ defineProps(
 				v-if="isFilled.richText(slice.primary.eyebrowHeadline)"
 				class="es-customer-logos__heading"
 			>
-				{{ slice.primary.eyebrowHeadline }}
+				<PrismicRichText :field="slice.primary.eyebrowHeadline" />
 			</h2>
 			<ul v-if="slice.items.length > 0" class="es-customer-logos__logos">
 				<li
 					v-for="item in slice.items"
 					:key="item.image.url"
-					v-if="isFilled.image(item.image)"
 					class="es-customer-logos__logo"
 				>
-					<NuxtLink :to="item.link" class="es-customer-logos__link">
-						<img
-							:src="item.image.url"
-							:alt="item.image.alt"
+					<PrismicLink :field="item.link">
+						<PrismicImage
+							:field="item.image"
 							:height="26"
 							:width="160"
 							class="es-customer-logos__logo__link__image"
 						/>
-					</NuxtLink>
+					</PrismicLink>
 				</li>
 			</ul>
-			<NuxtLink
-				:to="slice.primary.callToActionLink"
+			<PrismicLink
+				:field="slice.primary.callToActionLink"
 				class="es-customer-logos__button"
 			>
 				{{ slice.primary.callToActionLabel || "Learn more..." }}
-			</NuxtLink>
+			</PrismicLink>
 		</div>
 	</section>
 </template>
