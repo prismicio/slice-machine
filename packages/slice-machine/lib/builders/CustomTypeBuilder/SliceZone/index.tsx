@@ -76,7 +76,7 @@ const mapAvailableAndSharedSlices = (
         return { ...acc, notFound: [...acc.notFound, { key }] };
       }
       // Legacy Slice
-      else if (value.type === "Slice") {
+      else if (typeof value.type === "string") {
         return {
           ...acc,
           slicesInSliceZone: [

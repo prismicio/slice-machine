@@ -41,8 +41,8 @@ export const SlicesList: React.FC<SlicesListProps> = ({
         `This ${customTypesMessages.name({
           start: false,
           plural: false,
-        })} contains Slices that are incompatible.`,
-        ToasterType.WARNING
+        })} contains legacy slices that can be upgraded.`,
+        ToasterType.INFO
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLegacySlices]);

@@ -4,7 +4,9 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
 import {
 	CompositeSlice,
+	LegacySlice,
 	SharedSlice,
+	Variation,
 } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
@@ -150,7 +152,7 @@ type SliceMachineManagerDeleteSliceArgs = {
 };
 
 type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
-	model: CompositeSlice;
+	model: CompositeSlice | LegacySlice;
 	src: {
 		customTypeID: string;
 		tabID: string;
@@ -437,16 +439,31 @@ export class SlicesManager extends BaseManager {
 			sliceID: args.dest.sliceID,
 		});
 
-		const legacySliceAsVariation = {
+		const legacySliceAsVariation: Variation = {
 			id: args.dest.variationID,
 			name: args.dest.variationName,
 			description: args.dest.variationName,
 			imageUrl: "",
 			docURL: "",
 			version: "initial",
-			primary: args.model["non-repeat"],
-			items: args.model.repeat,
+			primary: {},
+			items: {},
 		};
+
+		switch (args.model.type) {
+			case "Slice":
+				legacySliceAsVariation.primary = args.model["non-repeat"];
+				legacySliceAsVariation.items = args.model.repeat;
+				break;
+
+			case "Group":
+				legacySliceAsVariation.items = args.model.config?.fields ?? {};
+				break;
+
+			default:
+				legacySliceAsVariation.primary = { [args.src.sliceID]: args.model };
+				break;
+		}
 
 		// Convert to shared slice
 		if (maybeExistingSlice) {

@@ -23,7 +23,6 @@ import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
 import { ConvertLegacySliceModal } from "@components/Forms/ConvertLegacySliceModal";
 import { NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
-import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "white",
@@ -430,12 +429,7 @@ export const NonSharedSlice = {
                 <SliceVariations numberOfVariations={1} />
               </Flex>
             </Flex>
-            {slice.value.type === "Slice" ? (
-              <ConvertLegacySliceModal
-                slice={slice as { key: string; value: CompositeSlice }}
-                path={path}
-              />
-            ) : null}
+            <ConvertLegacySliceModal slice={slice} path={path} />
           </Flex>
         </Themecard>
       </Wrapper>

@@ -3,6 +3,7 @@ import { TestContext, expect, it, vi } from "vitest";
 import {
 	CompositeSlice,
 	CustomType,
+	LegacySlice,
 	SharedSliceRef,
 } from "@prismicio/types-internal/lib/customtypes";
 
@@ -33,19 +34,180 @@ const mockCustomType = ({
 	extraSlices,
 }: {
 	ctx: TestContext;
-	model: CompositeSlice;
+	model: CompositeSlice | LegacySlice;
 	src: typeof baseSrc;
-	extraSlices?: Record<string, SharedSliceRef | CompositeSlice>;
+	extraSlices?: Record<string, SharedSliceRef | CompositeSlice | LegacySlice>;
 }): CustomType => {
 	return ctx.mockPrismic.model.customType({
 		id: src.customTypeID,
 		fields: {
 			[src.sliceZoneID]: ctx.mockPrismic.model.sliceZone({
-				choices: { [src.sliceID]: model, ...extraSlices },
+				choices: {
+					// @prismicio/mock doesn't know about legacy slices
+					[src.sliceID]: model as CompositeSlice,
+					...(extraSlices as Record<string, SharedSliceRef | CompositeSlice>),
+				},
 			}),
 		},
 	});
 };
+
+it("converts non-repetable legacy slice as a new shared slice", async (ctx) => {
+	const model = ctx.mockPrismic.model.keyText();
+	const src = { ...baseSrc };
+	const dest = { ...baseDest };
+	const customType = mockCustomType({ ctx, model, src });
+
+	const customTypeUpdateHookHandler = vi.fn();
+	const sliceCreateHookHandler = vi.fn();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook(
+				"custom-type:read",
+				vi.fn().mockResolvedValue({ model: customType }),
+			);
+			hook("custom-type:update", customTypeUpdateHookHandler);
+			hook("slice:read", vi.fn().mockResolvedValue({ error: [] }));
+			hook("slice:create", sliceCreateHookHandler);
+			hook("slice:asset:read", vi.fn());
+			hook("slice:asset:update", vi.fn());
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	const res = await manager.slices.convertLegacySliceToSharedSlice({
+		model,
+		src,
+		dest,
+	});
+
+	expectHookHandlerToHaveBeenCalledWithData(sliceCreateHookHandler, {
+		libraryID: dest.libraryID,
+		model: expect.objectContaining({
+			id: dest.sliceID,
+			type: "SharedSlice",
+			legacyPaths: {
+				[`${src.customTypeID}::${src.sliceZoneID}::${src.sliceID}`]:
+					dest.variationID,
+			},
+			variations: [
+				expect.objectContaining({
+					id: dest.variationID,
+					primary: { [src.sliceID]: model },
+					items: {},
+				}),
+			],
+		}),
+	});
+	expectHookHandlerToHaveBeenCalledWithData(customTypeUpdateHookHandler, {
+		model: expect.objectContaining({
+			id: src.customTypeID,
+			json: {
+				[src.tabID]: {
+					[src.sliceZoneID]: expect.objectContaining({
+						config: expect.objectContaining({
+							choices: {
+								[dest.sliceID]: {
+									type: "SharedSlice",
+								},
+							},
+						}),
+					}),
+				},
+			},
+		}),
+	});
+	expect(res).toStrictEqual({
+		errors: [],
+	});
+});
+
+it("converts repetable legacy slice as a new shared slice", async (ctx) => {
+	const model = ctx.mockPrismic.model.group({
+		fields: {
+			foo: ctx.mockPrismic.model.keyText(),
+			bar: ctx.mockPrismic.model.keyText(),
+		},
+	});
+	const src = { ...baseSrc };
+	const dest = { ...baseDest };
+	const customType = mockCustomType({ ctx, model, src });
+
+	const customTypeUpdateHookHandler = vi.fn();
+	const sliceCreateHookHandler = vi.fn();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook(
+				"custom-type:read",
+				vi.fn().mockResolvedValue({ model: customType }),
+			);
+			hook("custom-type:update", customTypeUpdateHookHandler);
+			hook("slice:read", vi.fn().mockResolvedValue({ error: [] }));
+			hook("slice:create", sliceCreateHookHandler);
+			hook("slice:asset:read", vi.fn());
+			hook("slice:asset:update", vi.fn());
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	const res = await manager.slices.convertLegacySliceToSharedSlice({
+		model,
+		src,
+		dest,
+	});
+
+	expectHookHandlerToHaveBeenCalledWithData(sliceCreateHookHandler, {
+		libraryID: dest.libraryID,
+		model: expect.objectContaining({
+			id: dest.sliceID,
+			type: "SharedSlice",
+			legacyPaths: {
+				[`${src.customTypeID}::${src.sliceZoneID}::${src.sliceID}`]:
+					dest.variationID,
+			},
+			variations: [
+				expect.objectContaining({
+					id: dest.variationID,
+					primary: {},
+					items: model.config?.fields,
+				}),
+			],
+		}),
+	});
+	expectHookHandlerToHaveBeenCalledWithData(customTypeUpdateHookHandler, {
+		model: expect.objectContaining({
+			id: src.customTypeID,
+			json: {
+				[src.tabID]: {
+					[src.sliceZoneID]: expect.objectContaining({
+						config: expect.objectContaining({
+							choices: {
+								[dest.sliceID]: {
+									type: "SharedSlice",
+								},
+							},
+						}),
+					}),
+				},
+			},
+		}),
+	});
+	expect(res).toStrictEqual({
+		errors: [],
+	});
+});
 
 it("converts composite slice as a new shared slice", async (ctx) => {
 	const model = ctx.mockPrismic.model.slice({

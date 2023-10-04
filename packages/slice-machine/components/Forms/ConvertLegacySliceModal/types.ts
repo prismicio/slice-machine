@@ -1,10 +1,13 @@
-import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
+import {
+  CompositeSlice,
+  LegacySlice,
+} from "@prismicio/types-internal/lib/customtypes";
 
 import { LibraryUI } from "@models/common/LibraryUI";
 import { ComponentUI } from "@models/common/ComponentUI";
 
 export type ConvertLegacySliceModalProps = {
-  slice: { key: string; value: CompositeSlice };
+  slice: { key: string; value: CompositeSlice | LegacySlice };
   path: {
     customTypeID: string;
     tabID: string;
