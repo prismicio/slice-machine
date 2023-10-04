@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt2",
-	"version": "0.3.17-dev-upgrade-legacy.2",
+	"version": "0.3.18",
 	"description": "Slice Machine adapter for Nuxt 2.",
 	"keywords": [
 		"typescript",
@@ -49,7 +49,7 @@
 		"dev": "vite build --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
-		"prepack": "$npm_execpath run build",
+		"prepack": "npm run build",
 		"size": "size-limit",
 		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",
 		"types": "tsc --noEmit",

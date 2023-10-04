@@ -1,3 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
 	deleteCustomTypeDirectory,
@@ -10,6 +13,7 @@ import {
 	readSliceFile,
 	readSliceLibrary,
 	readSliceModel,
+	readSliceTemplateLibrary,
 	renameSlice,
 	upsertGlobalTypeScriptTypes,
 	writeCustomTypeFile,
@@ -24,10 +28,16 @@ import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
 import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
 
+import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { snippetRead } from "./hooks/snippet-read";
+
+import * as Hero from "./sliceTemplates/Hero";
+import * as CallToAction from "./sliceTemplates/CallToAction";
+import * as AlternateGrid from "./sliceTemplates/AlternateGrid";
+import * as CustomerLogos from "./sliceTemplates/CustomerLogos";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -154,6 +164,23 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		});
 
 		////////////////////////////////////////////////////////////////
+		// slice-template-library:*
+		////////////////////////////////////////////////////////////////
+
+		hook("slice-template-library:read", async (data, context) => {
+			return await readSliceTemplateLibrary({
+				...data,
+				...context,
+				dirName: path.dirname(fileURLToPath(new URL(import.meta.url))),
+				templates: [Hero, CustomerLogos, AlternateGrid, CallToAction],
+				componentFileNames: {
+					js: "javascript.svelte",
+					ts: "typescript.svelte",
+				},
+			});
+		});
+
+		////////////////////////////////////////////////////////////////
 		// custom-type:*
 		////////////////////////////////////////////////////////////////
 
@@ -261,10 +288,7 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		// documentation:*
 		////////////////////////////////////////////////////////////////
 
-		hook("documentation:read", async (_data, _context) => {
-			// TODO
-			return [];
-		});
+		hook("documentation:read", documentationRead);
 
 		////////////////////////////////////////////////////////////////
 		// slice-simulator:*

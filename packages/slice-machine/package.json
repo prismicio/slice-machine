@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.14.1-dev-upgrade-legacy.2",
+  "version": "1.15.0",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -16,7 +16,7 @@
     "dev": "next dev",
     "dev-cypress": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\"",
     "lint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx .",
-    "prepack": "$npm_execpath run build",
+    "prepack": "npm run build",
     "storybook": "storybook dev --no-open --port 6006",
     "storybook-build": "storybook build",
     "test": "yarn lint && yarn types && yarn unit && yarn build",

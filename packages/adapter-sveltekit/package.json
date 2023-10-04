@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-sveltekit",
-	"version": "0.3.17-dev-upgrade-legacy.2",
+	"version": "0.3.18",
 	"description": "Slice Machine adapter for SvelteKit.",
 	"keywords": [
 		"typescript",
@@ -52,7 +52,7 @@
 		"dev:svelte": "svelte-package --input src/simulator --output dist/simulator --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
-		"prepack": "$npm_execpath run build",
+		"prepack": "npm run build",
 		"size": "size-limit",
 		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",
 		"types": "tsc --noEmit",

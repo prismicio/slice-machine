@@ -9,6 +9,7 @@ import { CodeIcon } from "@src/icons/CodeIcon";
 import { JavaScript } from "@src/icons/JavaScript";
 import { TypeScript } from "@src/icons/TypeScript";
 import { Vue } from "@src/icons/Vue";
+import { Svelte } from "@src/icons/Svelte";
 
 import * as styles from "./CodeBlock.css";
 
@@ -17,6 +18,9 @@ SyntaxHighlighter.registerLanguage("markup", markup);
 // @ts-expect-error - `react-syntax-highlighter` has wrong 3rd party types
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 SyntaxHighlighter.alias("markup", "vue");
+// @ts-expect-error - `react-syntax-highlighter` has wrong 3rd party types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+SyntaxHighlighter.alias("markup", "svelte");
 
 type CodeBlockProps = {
   className?: string;
@@ -29,7 +33,7 @@ type CodeBlockProps = {
 };
 
 const FileIcon = ({ fileName }: { fileName: string }) => {
-  const extension = fileName.split(".")?.[1];
+  const extension = (fileName.match(/\.([^\.]*)$/) ?? [])[1];
 
   const Extension = (() => {
     switch (extension) {
@@ -41,6 +45,8 @@ const FileIcon = ({ fileName }: { fileName: string }) => {
         return <JavaScript />;
       case "vue":
         return <Vue />;
+      case "svelte":
+        return <Svelte />;
       default:
         return <CodeIcon />;
     }

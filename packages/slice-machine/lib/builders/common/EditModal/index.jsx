@@ -272,7 +272,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                       borderRadius: "4px",
                     }}
                   >
-                    Save
+                    Done
                   </Button>
                 </Flex>
               }

@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.11.3-dev-upgrade-legacy.2",
+	"version": "0.12.0",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
@@ -54,7 +54,7 @@
 		"dev": "vite build --watch --mode development",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
-		"prepack": "$npm_execpath run build",
+		"prepack": "npm run build",
 		"size": "size-limit",
 		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",
 		"types": "tsc --noEmit",

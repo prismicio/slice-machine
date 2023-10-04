@@ -16,7 +16,6 @@ export type SelectedCustomTypeActions =
   | ActionType<typeof createSliceZoneCreator>
   | ActionType<typeof deleteSliceZoneCreator>
   | ActionType<typeof addFieldIntoGroupCreator>
-  | ActionType<typeof replaceSharedSliceCreator>
   | ActionType<typeof replaceFieldIntoGroupCreator>
   | ActionType<typeof reorderFieldIntoGroupCreator>
   | ActionType<typeof deleteFieldIntoGroupCreator>
@@ -96,10 +95,6 @@ export type ReplaceSharedSliceCreatorPayload = {
   sliceKeys: string[];
   preserve: string[];
 };
-
-export const replaceSharedSliceCreator = createAction(
-  "CUSTOM_TYPE/REPLACE_SHARED_SLICE"
-)<ReplaceSharedSliceCreatorPayload>();
 
 export const deleteSharedSliceCreator = createAction(
   "CUSTOM_TYPE/DELETE_SHARED_SLICE"

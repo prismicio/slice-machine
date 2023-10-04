@@ -1,3 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
 import {
 	deleteCustomTypeDirectory,
@@ -10,6 +13,7 @@ import {
 	readSliceFile,
 	readSliceLibrary,
 	readSliceModel,
+	readSliceTemplateLibrary,
 	renameCustomType,
 	renameSlice,
 	upsertGlobalTypeScriptTypes,
@@ -30,6 +34,11 @@ import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { snippetRead } from "./hooks/snippet-read";
+
+import * as Hero from "./sliceTemplates/Hero";
+import * as CallToAction from "./sliceTemplates/CallToAction";
+import * as AlternateGrid from "./sliceTemplates/AlternateGrid";
+import * as CustomerLogos from "./sliceTemplates/CustomerLogos";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -152,6 +161,23 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 			return await readSliceLibrary({
 				libraryID: data.libraryID,
 				...context,
+			});
+		});
+
+		////////////////////////////////////////////////////////////////
+		// slice-template-library:*
+		////////////////////////////////////////////////////////////////
+
+		hook("slice-template-library:read", async (data, context) => {
+			return await readSliceTemplateLibrary({
+				...data,
+				...context,
+				dirName: path.dirname(fileURLToPath(new URL(import.meta.url))),
+				templates: [Hero, CustomerLogos, AlternateGrid, CallToAction],
+				componentFileNames: {
+					js: "javascript.vue",
+					ts: "typescript.vue",
+				},
 			});
 		});
 

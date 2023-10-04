@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.6.4-dev-upgrade-legacy.2",
+	"version": "2.7.1",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
@@ -41,7 +41,7 @@
 		"dev": "vite build --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
-		"prepack": "$npm_execpath run build",
+		"prepack": "npm run build",
 		"size": "size-limit",
 		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",
 		"types": "tsc --noEmit",
@@ -53,6 +53,7 @@
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
 		"@lihbr/listr-update-renderer": "^0.5.3",
+		"@sentry/node": "^7.70.0",
 		"@slicemachine/manager": "workspace:^",
 		"chalk": "^4.1.2",
 		"giget": "^1.1.2",

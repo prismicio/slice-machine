@@ -11,7 +11,6 @@ import {
   initCustomTypeStoreCreator,
   reorderFieldCreator,
   replaceFieldCreator,
-  replaceSharedSliceCreator,
   updateTabCreator,
   cleanupCustomTypeStoreCreator,
 } from "@src/modules/selectedCustomType";
@@ -248,32 +247,6 @@ describe("[Selected Custom type module]", () => {
     expect(newTabState.sliceZone.value.length).toEqual(0);
     // @ts-expect-error TS(2532) FIXME: Object is possibly 'undefined'.
     expect(newTabState.sliceZone.key).toEqual("slices");
-  });
-  it("should place slices inside a slicezone given CUSTOM_TYPE/REPLACE_SHARED_SLICE action", () => {
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    const initialTab = dummyCustomTypesState.model.tabs[0];
-    const newState = selectedCustomTypeReducer(
-      dummyCustomTypesState,
-      createSliceZoneCreator({
-        tabId: initialTab.key,
-      })
-    );
-
-    const keys = ["Slice1", "Slice2", "Slice3", "Slice4"];
-
-    const newState2 = selectedCustomTypeReducer(
-      newState,
-      replaceSharedSliceCreator({
-        tabId: initialTab.key,
-        sliceKeys: keys,
-        preserve: [],
-      })
-    );
-
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    expect(newState2.model.tabs[0].sliceZone.value.map((e) => e.key)).toEqual(
-      keys
-    );
   });
   it("should update the field id into a custom type given CUSTOM_TYPE/REPLACE_FIELD action", () => {
     // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.

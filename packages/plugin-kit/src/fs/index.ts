@@ -110,3 +110,6 @@ export type { DeleteCustomTypeFileArgs } from "./deleteCustomTypeFile";
 
 export { deleteCustomTypeDirectory } from "./deleteCustomTypeDirectory";
 export type { DeleteCustomTypeDirectoryArgs } from "./deleteCustomTypeDirectory";
+
+export { readSliceTemplateLibrary } from "./readSliceTemplateLibrary";
+export type { ReadSliceTemplateLibraryArgs } from "./readSliceTemplateLibrary";
