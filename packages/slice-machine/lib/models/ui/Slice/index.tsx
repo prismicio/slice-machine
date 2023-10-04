@@ -22,10 +22,7 @@ import { KebabMenuDropdown } from "@components/KebabMenuDropdown";
 import ReactTooltip from "react-tooltip";
 import style from "./LegacySliceTooltip.module.css";
 import { ConvertLegacySliceModal } from "@components/Forms/ConvertLegacySliceModal";
-import {
-  NonSharedSliceInSliceZone,
-  SliceZoneSlice,
-} from "@lib/models/common/CustomType/sliceZone";
+import { NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
 import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
@@ -319,12 +316,10 @@ export const SharedSlice = {
 export const NonSharedSlice = {
   Render({
     slice,
-    slices,
     sx,
     path,
   }: {
     slice: NonSharedSliceInSliceZone;
-    slices: readonly SliceZoneSlice[];
     sx?: ThemeUIStyleObject;
     path: {
       customTypeID: string;
@@ -438,7 +433,6 @@ export const NonSharedSlice = {
             {slice.value.type === "Slice" ? (
               <ConvertLegacySliceModal
                 slice={slice as { key: string; value: CompositeSlice }}
-                slices={slices}
                 path={path}
               />
             ) : null}

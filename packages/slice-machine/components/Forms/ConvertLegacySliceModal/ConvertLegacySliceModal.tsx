@@ -10,8 +10,9 @@ import {
 } from "@prismicio/editor-ui";
 import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
 
-import { getLibraries } from "@src/modules/slices";
 import { VariationSM } from "@models/common/Slice";
+import { CustomTypes } from "@models/common/CustomType";
+import { getLibraries } from "@src/modules/slices";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { managerClient } from "@src/managerClient";
 import { getState, telemetry } from "@src/apiClient";
@@ -69,9 +70,13 @@ const getFieldMappingFingerprint = (
 
 export const ConvertLegacySliceModal: React.FC<
   ConvertLegacySliceModalProps
-> = ({ slice, slices, path }) => {
-  const { refreshState, replaceCustomTypeSharedSlice, openToaster } =
-    useSliceMachineActions();
+> = ({ slice, path }) => {
+  const {
+    refreshState,
+    openToaster,
+    initCustomTypeStore,
+    saveCustomTypeSuccess,
+  } = useSliceMachineActions();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<false | Type>(false);
@@ -162,6 +167,20 @@ export const ConvertLegacySliceModal: React.FC<
         );
       }
 
+      const { model: customType, errors: customTypeReadErrors } =
+        await managerClient.customTypes.readCustomType({
+          id: path.customTypeID,
+        });
+
+      if (customTypeReadErrors.length || !customType) {
+        console.error(
+          `Errors happened when converting slice \`${sliceName}\``,
+          customTypeReadErrors
+        );
+
+        throw customTypeReadErrors;
+      }
+
       // TODO(DT-1453): Remove the need of the global getState
       const serverState = await getState();
       // Update Redux store
@@ -193,31 +212,9 @@ export const ConvertLegacySliceModal: React.FC<
           break;
       }
 
-      replaceCustomTypeSharedSlice(
-        path.tabID,
-        [
-          ...slices
-            .map((slice) => {
-              if (
-                "model" in slice.payload &&
-                slice.payload.model.id !== args.sliceID
-              ) {
-                return slice.payload.model.id;
-              }
-              return "";
-            })
-            .filter(Boolean),
-          args.sliceID,
-        ],
-        slices
-          .map((_slice) => {
-            if ("key" in _slice.payload && _slice.payload.key !== slice.key) {
-              return _slice.payload.key;
-            }
-            return "";
-          })
-          .filter(Boolean)
-      );
+      const customTypeSM = CustomTypes.toSM(customType);
+      initCustomTypeStore(customTypeSM, customTypeSM);
+      saveCustomTypeSuccess(customType);
     })();
   };
 
