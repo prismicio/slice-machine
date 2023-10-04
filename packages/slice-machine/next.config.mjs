@@ -20,6 +20,7 @@ const isStableVersion =
 
 /** @type {import("next").NextConfig} */
 let nextConfig = {
+  experimental: { newNextLinkBehavior: true },
   swcMinify: true,
   publicRuntimeConfig: {
     sentryEnvironment: isStableVersion ? process.env.NODE_ENV : "alpha",
