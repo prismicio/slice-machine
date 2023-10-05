@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Box, Button, Text } from "@prismicio/editor-ui";
+import { cache } from "@prismicio/editor-support/Suspense";
 
 import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -8,6 +9,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { isLoading } from "@src/modules/loading";
 import { BlankPageIcon } from "@src/icons/BlankPageIcon";
+import { getIsEmptyProject } from "@src/hooks/useIsEmptyProject";
 
 export function PageTypeOnboarding() {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
@@ -25,6 +27,7 @@ export function PageTypeOnboarding() {
   useEffect(() => {
     if (isCreatingCustomType) {
       setIsButtonLoading(true);
+      cache.clear(getIsEmptyProject, []);
     }
   }, [isCreatingCustomType]);
 

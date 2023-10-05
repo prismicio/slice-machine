@@ -2,7 +2,7 @@ import { useRequest } from "@prismicio/editor-support/Suspense";
 
 import { managerClient } from "@src/managerClient";
 
-async function getIsEmptyProject() {
+export async function getIsEmptyProject() {
   const [
     { errors: customTypesErrors, models: customTypes },
     { errors: slicesErrors, models: slices },
