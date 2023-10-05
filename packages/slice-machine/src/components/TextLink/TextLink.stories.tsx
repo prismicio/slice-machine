@@ -8,13 +8,10 @@ type Story = StoryObj<typeof meta>;
 const meta = {
   component: TextLink,
   argTypes: {
-    color: {
-      control: { type: "select" },
-      options: ["primary", "secondary"],
-    },
+    color: { control: "select", options: ["primary", "secondary"] },
     endIcon: { control: { disable: true } },
     textVariant: {
-      control: { type: "select" },
+      control: "select",
       options: ["normal", "smallBold", "inherit"],
     },
   },
