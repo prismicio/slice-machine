@@ -8,8 +8,6 @@ import type { VariationSM } from "@lib/models/common/Slice";
 
 export type NonSharedSlice = CompositeSlice | LegacySlice;
 
-export const NON_SHARED_SLICE_LIBRARY_NAME = "Default";
-
 export function countMissingScreenshots(slice: ComponentUI): number {
   return slice.model.variations.length - Object.keys(slice.screenshots).length;
 }
@@ -31,8 +29,4 @@ export function getScreenshotUrl(
   variation: VariationSM
 ): string | undefined {
   return slice.screenshots[variation.id]?.url;
-}
-
-export function getSharedSliceLibraryName(slice: ComponentUI): string {
-  return slice.from.length > 0 ? slice.from : "Default";
 }

@@ -15,11 +15,7 @@ import type { FC } from "react";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Card, CardFooter, CardMedia, CardStatus } from "@src/components/Card";
-import {
-  countMissingScreenshots,
-  getScreenshotUrl,
-  getSharedSliceLibraryName,
-} from "@src/domain/slice";
+import { countMissingScreenshots, getScreenshotUrl } from "@src/domain/slice";
 import {
   StatusBadge,
   type StatusBadgeProps,
@@ -120,7 +116,9 @@ export const SharedSliceViewCard: FC<SharedSliceViewCardProps> = ({
             />
           )
         }
-        subtitle={getSharedSliceLibraryName(slice)}
+        subtitle={`${slice.model.variations.length} variation${
+          slice.model.variations.length > 1 ? "s" : ""
+        }`}
         title={slice.model.name}
       />
       {canUpdateScreenshot && countMissingScreenshots(slice) > 0 ? (

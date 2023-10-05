@@ -3,11 +3,10 @@ import type { FC } from "react";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Card, CardFooter, CardMedia } from "@src/components/Card";
-import { getScreenshotUrl, getSharedSliceLibraryName } from "@src/domain/slice";
+import { getScreenshotUrl } from "@src/domain/slice";
 
 type SharedSliceSelectionCardProps = {
   isComingSoon: boolean;
-  isSliceTemplate: boolean;
   onSelectedChange: (selected: boolean) => void;
   selected: boolean;
   slice: ComponentUI;
@@ -15,7 +14,6 @@ type SharedSliceSelectionCardProps = {
 
 export const SharedSliceSelectionCard: FC<SharedSliceSelectionCardProps> = ({
   isComingSoon,
-  isSliceTemplate,
   onSelectedChange,
   selected,
   slice,
@@ -60,11 +58,8 @@ export const SharedSliceSelectionCard: FC<SharedSliceSelectionCardProps> = ({
         }
         subtitle={
           <>
-            {isSliceTemplate
-              ? `${slice.model.variations.length} variation${
-                  slice.model.variations.length > 1 ? "s" : ""
-                }`
-              : getSharedSliceLibraryName(slice)}
+            {slice.model.variations.length} variation
+            {slice.model.variations.length > 1 ? "s" : ""}
             {isComingSoon ? (
               <Text color="purple11" component="span" variant="small">
                 {" "}

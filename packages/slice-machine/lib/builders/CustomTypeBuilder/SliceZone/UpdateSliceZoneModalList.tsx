@@ -8,9 +8,8 @@ import { SharedSliceSelectionCard } from "@src/features/slices/sliceCards/Shared
 const UpdateSliceZoneModalList: React.FC<{
   availableSlices: ReadonlyArray<ComponentUI>;
   values: SliceZoneFormValues;
-  isSliceTemplate: boolean;
   placeholderSlices?: ReadonlyArray<ComponentUI>;
-}> = ({ availableSlices, values, isSliceTemplate, placeholderSlices }) => (
+}> = ({ availableSlices, values, placeholderSlices }) => (
   <FieldArray
     name="sliceKeys"
     render={(arrayHelpers) => (
@@ -26,7 +25,6 @@ const UpdateSliceZoneModalList: React.FC<{
           return (
             <SharedSliceSelectionCard
               isComingSoon={isComingSoon}
-              isSliceTemplate={isSliceTemplate}
               onSelectedChange={(selected) => {
                 if (selected) {
                   arrayHelpers.push(slice.model.id);

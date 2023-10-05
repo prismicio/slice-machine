@@ -2,11 +2,7 @@ import { Badge, Box, Text, Tooltip } from "@prismicio/editor-ui";
 import type { FC } from "react";
 
 import { Card, CardActions, CardFooter, CardMedia } from "@src/components/Card";
-import {
-  getNonSharedSliceLabel,
-  NON_SHARED_SLICE_LIBRARY_NAME,
-  type NonSharedSlice,
-} from "@src/domain/slice";
+import { getNonSharedSliceLabel, type NonSharedSlice } from "@src/domain/slice";
 
 type NonSharedSliceViewCardProps = {
   slice: NonSharedSlice;
@@ -31,9 +27,6 @@ export const NonSharedSliceViewCard: FC<NonSharedSliceViewCardProps> = ({
         <Badge color="purple" title="Legacy Slice" />
       </Tooltip>
     </CardActions>
-    <CardFooter
-      subtitle={NON_SHARED_SLICE_LIBRARY_NAME}
-      title={getNonSharedSliceLabel(slice)}
-    />
+    <CardFooter subtitle="1 variation" title={getNonSharedSliceLabel(slice)} />
   </Card>
 );
