@@ -144,6 +144,7 @@ type CustomTypeCreatedSegmentEvent = SegmentEvent<
 		name: string;
 		format: CustomTypeFormat;
 		type: "repeatable" | "single";
+		origin: "onboarding" | "table";
 	}
 >;
 
