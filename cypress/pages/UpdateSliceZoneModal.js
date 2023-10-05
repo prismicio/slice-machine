@@ -4,8 +4,7 @@ class UpdateSliceZoneModal {
   }
 
   selectSlice(sliceId) {
-    // forcing this because the input itself is invisible and an svg is displayed
-    cy.get(`[data-cy=check-${sliceId}]`).click({ force: true });
+    cy.get(`[data-cy=shared-slice-selection-card-${sliceId}]`).click();
     return this;
   }
 

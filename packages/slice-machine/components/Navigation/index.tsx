@@ -3,8 +3,10 @@ import { Suspense, type FC } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
+import { telemetry } from "@src/apiClient";
 import VideoItem from "@components/Navigation/VideoItem";
 import { LightningIcon } from "@src/icons/Lightning";
+import { MathPlusIcon } from "@src/icons/MathPlusIcon";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import {
   SideNavSeparator,
@@ -132,6 +134,18 @@ const Navigation: FC = () => {
       )}
 
       <SideNavList position="bottom">
+        <SideNavLink
+          title="Invite team"
+          href={`${repoAddress}/settings/users`}
+          Icon={(props) => <MathPlusIcon {...props} />}
+          onClick={() => {
+            void telemetry.track({
+              event: "users-invite-button-clicked",
+            });
+            window.open(`${repoAddress}/settings/users`, "_blank");
+          }}
+        />
+
         <ErrorBoundary>
           <Suspense>
             <VideoItem

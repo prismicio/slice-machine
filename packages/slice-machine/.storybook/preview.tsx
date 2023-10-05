@@ -3,11 +3,6 @@ import "@prismicio/editor-ui/style.css";
 import type { Preview } from "@storybook/react";
 
 const preview: Preview = {
-  argTypes: {
-    children: { control: { disable: true } },
-    className: { control: { disable: true } },
-    style: { control: { disable: true } },
-  },
   decorators: [
     (Story) => (
       <ThemeProvider mode="light">
@@ -20,6 +15,7 @@ const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
+      exclude: ["className", "style"],
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/,

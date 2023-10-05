@@ -1,3 +1,4 @@
+import { findFocusableAncestor } from "@prismicio/editor-support/DOM";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,10 +65,13 @@ export const WindowTabsTrigger: FC<WindowTabsTriggerProps> = ({
     {...otherProps}
     asChild
     onMouseDown={(event) => {
-      let target = event.target as HTMLElement | null;
-      while (target !== null && target !== event.currentTarget) {
-        if (target.tabIndex >= 0) event.preventDefault();
-        target = target.parentElement;
+      const target = event.target as HTMLElement;
+      const focusableAncestor = findFocusableAncestor(target);
+      if (
+        focusableAncestor !== event.currentTarget &&
+        focusableAncestor !== event.currentTarget.parentElement
+      ) {
+        event.preventDefault();
       }
       if (target === event.currentTarget) {
         target.scrollIntoView({

@@ -14,18 +14,26 @@ import "@src/styles/starry-night.css";
 import "@src/styles/tabs.css";
 import "@src/styles/toaster.css";
 
-import { ThemeProvider, TooltipProvider } from "@prismicio/editor-ui";
+import {
+  Box,
+  DefaultErrorMessage,
+  ErrorBoundary,
+  ThemeProvider,
+  TooltipProvider,
+} from "@prismicio/editor-ui";
 import { ConnectedRouter } from "connected-next-router";
 import type { NextPage } from "next";
 import App, { type AppContext, type AppInitialProps } from "next/app";
 import Head from "next/head";
 import Router from "next/router";
-import { type FC, type ReactNode, useEffect, useState } from "react";
+import { type FC, type ReactNode, useEffect, useState, Suspense } from "react";
 import { Provider } from "react-redux";
 import type { Store } from "redux";
 import type { Persistor } from "redux-persist/es/types";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
+
+import { AppLayout, AppLayoutContent } from "@components/AppLayout";
 
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
@@ -122,9 +130,33 @@ function MyApp({
                   <ConnectedRouter Router={Router}>
                     <PersistGate loading={null} persistor={smStore.persistor}>
                       <RouteChangeProvider>
-                        <ComponentLayout>
-                          <Component {...pageProps} />
-                        </ComponentLayout>
+                        <ErrorBoundary
+                          renderError={(error) => {
+                            console.error(error);
+
+                            return (
+                              <AppLayout>
+                                <AppLayoutContent>
+                                  <Box
+                                    alignItems="center"
+                                    justifyContent="center"
+                                  >
+                                    <DefaultErrorMessage
+                                      title="Error"
+                                      description="An error occurred while rendering the app."
+                                    />
+                                  </Box>
+                                </AppLayoutContent>
+                              </AppLayout>
+                            );
+                          }}
+                        >
+                          <Suspense fallback={<LoadingPage />}>
+                            <ComponentLayout>
+                              <Component {...pageProps} />
+                            </ComponentLayout>
+                          </Suspense>
+                        </ErrorBoundary>
                       </RouteChangeProvider>
                     </PersistGate>
                   </ConnectedRouter>
