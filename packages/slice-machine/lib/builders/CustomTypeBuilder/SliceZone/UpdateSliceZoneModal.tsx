@@ -65,6 +65,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         <UpdateSliceZoneModalList
           values={values}
           availableSlices={availableSlices}
+          isSliceTemplate={false}
         />
       )}
     </ModalFormCard>

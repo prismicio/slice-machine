@@ -1,6 +1,6 @@
 import { ChangesPushSagaPayload } from ".";
 import { telemetry } from "@src/apiClient";
-import { countMissingScreenshots } from "@src/utils/screenshots/missing";
+import { countMissingScreenshots } from "@src/domain/slice";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 
 type trackingParameters = ChangesPushSagaPayload & { startTime: number };

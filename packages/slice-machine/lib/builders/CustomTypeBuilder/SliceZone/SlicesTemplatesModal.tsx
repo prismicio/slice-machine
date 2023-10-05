@@ -120,6 +120,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
             ),
             ...sliceTemplatesComingSoon,
           ]}
+          isSliceTemplate
         />
       )}
     </ModalFormCard>
