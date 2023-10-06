@@ -36,6 +36,9 @@ export const NonSharedSliceViewCard: FC<NonSharedSliceViewCardProps> = ({
       </Tooltip>
       <ConvertLegacySliceModal slice={slice} path={path} />
     </CardActions>
-    <CardFooter subtitle="1 variation" title={getNonSharedSliceLabel(slice.value)} />
+    <CardFooter
+      subtitle="1 variation"
+      title={getNonSharedSliceLabel(slice.value)}
+    />
   </Card>
 );

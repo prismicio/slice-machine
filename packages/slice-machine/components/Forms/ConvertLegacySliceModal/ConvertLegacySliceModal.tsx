@@ -52,7 +52,7 @@ const getFieldMappingFingerprint = (
       }
     } else if (slice.type === "Group") {
       for (const key in slice.config?.fields) {
-        items[key] = slice.config.fields[key].type;
+        items[key] = slice.config?.fields[key].type;
       }
     } else {
       primary[sliceName] = slice.type;

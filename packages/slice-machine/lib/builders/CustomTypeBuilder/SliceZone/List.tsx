@@ -57,7 +57,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
       }
       renderElem={(slice) => {
         if (slice.type !== "SharedSlice") {
-          const nonSharedSlice = (slice.payload as NonSharedSliceInSliceZone);
+          const nonSharedSlice = slice.payload as NonSharedSliceInSliceZone;
           return <NonSharedSliceViewCard slice={nonSharedSlice} path={path} />;
         } else {
           const sharedSlice = slice.payload as ComponentUI;
