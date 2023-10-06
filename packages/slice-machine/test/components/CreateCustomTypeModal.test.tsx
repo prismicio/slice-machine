@@ -64,6 +64,7 @@ describe("CreateCustomTypeModal", () => {
           format: "custom",
           type: "repeatable",
           nodeVersion: process.versions.node,
+          origin: "table",
         },
       }),
       expect.any(Function)

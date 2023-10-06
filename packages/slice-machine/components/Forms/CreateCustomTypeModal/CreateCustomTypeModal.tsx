@@ -30,10 +30,12 @@ interface FormValues {
 
 type CreateCustomTypeModalProps = {
   format: CustomTypeFormat;
+  origin?: "onboarding" | "table";
 };
 
 export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   format,
+  origin = "table",
 }) => {
   const { createCustomType, closeModals } = useSliceMachineActions();
 
@@ -63,6 +65,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
       name,
       format,
       type: repeatable ? "repeatable" : "single",
+      origin,
     });
     createCustomType(id, name, repeatable, format);
     closeModals();

@@ -9,7 +9,6 @@ import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/cu
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { SharedSlice } from "@lib/models/ui/Slice";
 import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
 import {
   AppLayout,
@@ -26,13 +25,9 @@ import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 import { DeleteSliceModal } from "@components/DeleteSliceModal";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {
-  getFrontendSlices,
-  getLibraries,
-  getRemoteSlices,
-} from "@src/modules/slices";
-import { useModelStatus } from "@src/hooks/useModelStatus";
+import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { SliceToastMessage } from "@components/ToasterContainer";
 
@@ -45,11 +40,10 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
-  const { remoteSlices, libraries, frontendSlices } = useSelector(
+  const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
       libraries: getLibraries(store),
-      frontendSlices: getFrontendSlices(store),
     })
   );
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
@@ -63,10 +57,6 @@ const SlicesIndex: React.FunctionComponent = () => {
       return slice1.model.name.localeCompare(slice2.model.name);
     });
     return library;
-  });
-
-  const { modelsStatuses, authStatus, isOnline } = useModelStatus({
-    slices: frontendSlices,
   });
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -179,39 +169,32 @@ const SlicesIndex: React.FunctionComponent = () => {
                         </Flex>
                         <Grid
                           elems={components}
-                          defineElementKey={(slice: ComponentUI) =>
-                            slice.model.name
-                          }
-                          renderElem={(slice: ComponentUI) => {
-                            return SharedSlice.Render({
-                              slice,
-                              StatusOrCustom: {
-                                status: modelsStatuses.slices[slice.model.id],
-                                authStatus,
-                                isOnline,
-                              },
-                              actions: {
-                                onUpdateScreenshot: (e: React.MouseEvent) => {
-                                  e.preventDefault();
-                                  onOpenModal({
-                                    sliceFilterFn: (s: ComponentUI[]) =>
-                                      s.filter(
-                                        (e) => e.model.id === slice.model.id
-                                      ),
-                                  });
-                                },
-                                openRenameModal: (slice: ComponentUI) => {
-                                  setSliceForEdit(slice);
-                                  openRenameSliceModal();
-                                },
-                                openDeleteModal: (slice: ComponentUI) => {
+                          defineElementKey={(slice) => slice.model.name}
+                          renderElem={(slice) => (
+                            <SharedSliceViewCard
+                              action={{
+                                type: "menu",
+                                onRemove: () => {
                                   setSliceForEdit(slice);
                                   openDeleteSliceModal();
                                 },
-                              },
-                              showActions: true,
-                            });
-                          }}
+                                onRename: () => {
+                                  setSliceForEdit(slice);
+                                  openRenameSliceModal();
+                                },
+                              }}
+                              isDeletedSlice={false}
+                              onUpdateScreenshot={() => {
+                                onOpenModal({
+                                  sliceFilterFn: (s) =>
+                                    s.filter(
+                                      (e) => e.model.id === slice.model.id
+                                    ),
+                                });
+                              }}
+                              slice={slice}
+                            />
+                          )}
                           gridGap="32px 16px"
                         />
                       </Flex>

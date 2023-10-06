@@ -1,3 +1,4 @@
+import { findFocusableAncestor } from "@prismicio/editor-support/DOM";
 import {
   type FC,
   type MouseEventHandler,
@@ -45,31 +46,20 @@ type TableRowProps = PropsWithChildren<{
   onClick?: MouseEventHandler<HTMLTableRowElement>;
 }>;
 
-const tableRowTag = "prismicTableRow";
-
 export const TableRow: FC<TableRowProps> = ({ children, onClick }) => {
   const section = useTableSection();
 
   return (
     <tr
-      data-tag={tableRowTag}
       className={clsx(styles.row, {
         [styles.rowClickable]: !!onClick,
         [styles.bodyRow]: section === "body",
       })}
       onClick={(event) => {
-        if (!onClick) {
-          return;
-        }
-
+        if (!onClick) return;
         const target = event.target as HTMLElement;
-        const isClickOnTableRow = !!target.closest(
-          `tr[data-tag=${tableRowTag}]`
-        );
-
-        // Prevent a click event propagation from outside of the table DOM structure
-        // E.g.: Dropdown menu item selection that will trigger this onClick function
-        if (isClickOnTableRow) {
+        const focusableAncestor = findFocusableAncestor(target);
+        if (focusableAncestor?.contains(event.currentTarget) ?? true) {
           onClick(event);
         }
       }}

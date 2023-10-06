@@ -1,4 +1,3 @@
-import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
@@ -9,6 +8,7 @@ import {
   LocalOrRemoteCustomType,
   hasLocal,
 } from "@lib/models/common/ModelData";
+import { StatusBadge } from "@src/features/changes/StatusBadge";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 
 interface CustomTypeTableProps extends ModelStatusInformation {
@@ -32,13 +32,10 @@ const CustomTypeChangeRow: React.FC<
       </Box>
       <Box as={"td"} style={{ width: thirdColumnWidth }}>
         <StatusBadge
-          modelType="Custom Type"
-          modelId={ct.id}
-          status={status}
           authStatus={authStatus}
           isOnline={isOnline}
-          data-for={`${ct.id}-tooltip`}
-          data-tip
+          modelStatus={status}
+          modelType="CustomType"
         />
       </Box>
     </>
@@ -75,6 +72,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
                 customType.local.format
               ].getBuilderPagePathname(customType.local.id)}
               key={customType.local.id}
+              legacyBehavior
             >
               <tr tabIndex={0}>
                 <CustomTypeChangeRow

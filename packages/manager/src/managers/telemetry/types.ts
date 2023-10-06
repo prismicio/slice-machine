@@ -10,6 +10,7 @@ export const SegmentEventType = {
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
 	pageView: "page-view",
+	users_invite_button_clicked: "users-invite-button-clicked",
 	openVideoTutorials: "open-video-tutorials",
 	customType_created: "custom-type:created",
 	customType_fieldAdded: "custom-type:field-added",
@@ -38,6 +39,8 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sliceSimulator_isNotRunning]:
 		"SliceMachine Slice Simulator is not running",
 	[SegmentEventType.pageView]: "SliceMachine Page View",
+	[SegmentEventType.users_invite_button_clicked]:
+		"Slice Machine Users Invite Button Clicked",
 	[SegmentEventType.openVideoTutorials]: "SliceMachine Open Video Tutorials",
 	[SegmentEventType.customType_created]: "SliceMachine Custom Type Created",
 	[SegmentEventType.customType_fieldAdded]:
@@ -128,6 +131,10 @@ type CopyPageSnippetSegmentEvent = SegmentEvent<
 	{ framework: string }
 >;
 
+type UsersInviteButtonClickedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.users_invite_button_clicked
+>;
+
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.openVideoTutorials,
 	{ video: string }
@@ -140,6 +147,7 @@ type CustomTypeCreatedSegmentEvent = SegmentEvent<
 		name: string;
 		format: CustomTypeFormat;
 		type: "repeatable" | "single";
+		origin: "onboarding" | "table";
 	}
 >;
 
@@ -247,4 +255,5 @@ export type SegmentEvents =
 	| ChangesLimitReachSegmentEvent
 	| EditorWidgetUsedSegmentEvent
 	| OpenPageSnippetSegmentEvent
-	| CopyPageSnippetSegmentEvent;
+	| CopyPageSnippetSegmentEvent
+	| UsersInviteButtonClickedSegmentEvent;

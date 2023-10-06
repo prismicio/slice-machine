@@ -10,6 +10,10 @@ import { Button } from "@prismicio/editor-ui";
 
 const meta = {
   component: HoverCard,
+  argTypes: {
+    children: { control: { disable: true } },
+    trigger: { control: { disable: true } },
+  },
   parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof HoverCard>;
 

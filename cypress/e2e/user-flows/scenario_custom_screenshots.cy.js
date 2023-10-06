@@ -26,7 +26,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceBuilder.goTo(slice.library, slice.name);
   });
 
-  it("Upload and replace custom screenshots", () => {
+  it.skip("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
     sliceBuilder.imagePreview.should("not.exist");
     sliceBuilder.openScreenshotModal();

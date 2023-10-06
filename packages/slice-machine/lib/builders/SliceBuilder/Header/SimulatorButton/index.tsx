@@ -161,12 +161,13 @@ const SimulatorButton: React.FC<{
           disabled={disabled}
           renderStartIcon={() => (
             <PlayCircleIcon
-              height={tokens.size[20]}
+              color={tokens.color.greyLight11}
+              height={tokens.size[24]}
               style={{
                 // TODO(DT-1538): our icons should have a `viewBox` of 24px.
                 transform: "scale(calc(4 / 3))",
               }}
-              width={tokens.size[20]}
+              width={tokens.size[24]}
             />
           )}
           variant="secondary"

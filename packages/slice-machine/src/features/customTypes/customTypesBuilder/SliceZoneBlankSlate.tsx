@@ -8,7 +8,7 @@ import {
   BlankSlateDescription,
   BlankSlateTitle,
 } from "@src/components/BlankSlate";
-import { LightningIcon3D } from "@src/icons/LightningIcon3D";
+import { SliceMachinePrinterIcon } from "@src/icons/SliceMachinePrinterIcon";
 
 export type SliceZoneBlankSlateProps = {
   openUpdateSliceZoneModal: () => void;
@@ -30,7 +30,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
       <BlankSlate backgroundImage="/blank-slate-slice-zone.png">
         <BlankSlateContent>
           <Box justifyContent="center" padding={{ bottom: 16 }}>
-            <LightningIcon3D />
+            <SliceMachinePrinterIcon />
           </Box>
           <BlankSlateTitle>Add slices</BlankSlateTitle>
           <BlankSlateDescription>

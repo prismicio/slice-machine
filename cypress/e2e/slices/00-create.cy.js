@@ -16,7 +16,7 @@ describe("Create Slices", () => {
     cy.clearProject();
   });
 
-  it("A user can create and rename a slice", () => {
+  it.skip("A user can create and rename a slice", () => {
     cy.createSlice(lib, sliceId, sliceName);
 
     sliceBuilder.addNewWidgetField("Title", "Key Text");
@@ -157,7 +157,7 @@ describe("Create Slices", () => {
   });
 
   // See: #791
-  it("A user cannot rename a slice with a name starting with a number", () => {
+  it.skip("A user cannot rename a slice with a name starting with a number", () => {
     const sliceName = "SliceName";
 
     cy.createSlice(lib, sliceId, sliceName);

@@ -8,6 +8,7 @@ type Story = StoryObj<typeof meta>;
 const meta = {
   component: BaseHoverCard,
   argTypes: {
+    children: { control: { disable: true } },
     trigger: { control: { disable: true } },
   },
 } satisfies Meta<typeof BaseHoverCard>;

@@ -7,15 +7,14 @@ import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
 
 import Grid from "@components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { WrapperType } from "@lib/models/ui/Slice/wrappers";
-import { SharedSlice } from "@lib/models/ui/Slice";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
-import { countMissingScreenshots } from "@src/utils/screenshots/missing";
+import { countMissingScreenshots } from "@src/domain/slice";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
+import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: LocalOrRemoteCustomType[];
@@ -115,31 +114,23 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
           <Grid
             gridGap="32px 16px"
             elems={unSyncedSlices}
-            gridTemplateMinPx="290px"
-            defineElementKey={(slice: ComponentUI) => slice.model.name}
-            renderElem={(slice: ComponentUI) => {
-              return SharedSlice.Render({
-                showActions: true,
-                slice: slice,
-                wrapperType:
-                  modelsStatuses.slices[slice.model.id] !== ModelStatus.Deleted
-                    ? WrapperType.clickable
-                    : WrapperType.nonClickable,
-                StatusOrCustom: {
-                  status: modelsStatuses.slices[slice.model.id],
-                  authStatus,
-                  isOnline,
-                },
-                actions: {
-                  onUpdateScreenshot: (e: React.MouseEvent) => {
-                    e.preventDefault();
+            gridTemplateMinPx="305px"
+            defineElementKey={(slice) => slice.model.name}
+            renderElem={(slice) => {
+              const modelStatus = modelsStatuses.slices[slice.model.id];
+              return (
+                <SharedSliceViewCard
+                  action={{ type: "status", authStatus, isOnline, modelStatus }}
+                  isDeletedSlice={modelStatus === ModelStatus.Deleted}
+                  onUpdateScreenshot={() => {
                     onOpenModal({
-                      sliceFilterFn: (s: ComponentUI[]) =>
+                      sliceFilterFn: (s) =>
                         s.filter((e) => e.model.id === slice.model.id),
                     });
-                  },
-                },
-              });
+                  }}
+                  slice={slice}
+                />
+              );
             }}
           />
           <ScreenshotChangesModal

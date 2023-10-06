@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import { IconButton } from "@prismicio/editor-ui";
 
 import Grid from "@components/Grid";
-import { SharedSlice, NonSharedSlice } from "@lib/models/ui/Slice";
 import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
@@ -12,6 +10,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { NonSharedSliceViewCard } from "@src/features/slices/sliceCards/NonSharedSliceViewCard";
+import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
 
 interface SlicesListProps {
   format: CustomTypeFormat;
@@ -50,39 +50,31 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   return (
     <Grid
       elems={slices}
-      defineElementKey={(slice: SliceZoneSlice) => {
+      defineElementKey={(slice) =>
+        slice.type !== "SharedSlice"
+          ? (slice.payload as NonSharedSliceInSliceZone).key
+          : (slice.payload as ComponentUI).model.name
+      }
+      renderElem={(slice) => {
         if (slice.type !== "SharedSlice") {
-          // NonsharedSlice
-          return (slice.payload as NonSharedSliceInSliceZone).key;
-        }
-        return (slice.payload as ComponentUI).model.name;
-      }}
-      renderElem={(slice: SliceZoneSlice) => {
-        if (slice.type !== "SharedSlice") {
-          return NonSharedSlice.Render({
-            slice: slice.payload as NonSharedSliceInSliceZone,
-            path,
-          });
-        }
-        return SharedSlice.Render({
-          slice: slice.payload as ComponentUI,
-          StatusOrCustom: () => (
-            // Prevent the Grid to redirect to the slice builder page
-            // TODO(DT-1601): See with editor team if it's possible to have the event param in the IconButton onClick
-            <div
-              onClick={(e) => {
-                e.preventDefault();
+          const nonSharedSlice = (slice.payload as NonSharedSliceInSliceZone);
+          return <NonSharedSliceViewCard slice={nonSharedSlice} path={path} />;
+        } else {
+          const sharedSlice = slice.payload as ComponentUI;
+          return (
+            <SharedSliceViewCard
+              action={{
+                type: "remove",
+                onRemove: () => {
+                  onRemoveSharedSlice(sharedSlice.model.id);
+                },
               }}
-            >
-              <IconButton
-                icon="close"
-                onClick={() => {
-                  onRemoveSharedSlice((slice.payload as ComponentUI).model.id);
-                }}
-              />
-            </div>
-          ),
-        });
+              isDeletedSlice={false}
+              onUpdateScreenshot={undefined}
+              slice={sharedSlice}
+            />
+          );
+        }
       }}
       sx={{ padding: "16px" }}
     />
