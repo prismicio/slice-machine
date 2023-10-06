@@ -10,6 +10,14 @@
         "config": {
           "labels": null,
           "choices": {
+            "legacy_cta": {
+              "type": "Link",
+              "config": {
+                "allowTargetBlank": true,
+                "label": "CTA Link",
+                "select": null
+              }
+            },
             "quiet_cta": {
               "type": "Slice",
               "fieldset": "Quiet CTA",

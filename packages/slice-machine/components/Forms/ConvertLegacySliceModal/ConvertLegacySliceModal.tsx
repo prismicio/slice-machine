@@ -8,7 +8,10 @@ import {
   Icon,
   Button,
 } from "@prismicio/editor-ui";
-import { CompositeSlice } from "@prismicio/types-internal/lib/customtypes";
+import {
+  LegacySlice,
+  CompositeSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 
 import { VariationSM } from "@models/common/Slice";
 import { CustomTypes } from "@models/common/CustomType";
@@ -30,7 +33,8 @@ import {
 } from "./types";
 
 const getFieldMappingFingerprint = (
-  slice: CompositeSlice | VariationSM
+  slice: LegacySlice | CompositeSlice | VariationSM,
+  sliceName: string
 ): {
   primary: string;
   items: string;
@@ -38,12 +42,20 @@ const getFieldMappingFingerprint = (
   const primary: Record<string, string> = {};
   const items: Record<string, string> = {};
 
-  if ("type" in slice && slice.type === "Slice") {
-    for (const key in slice["non-repeat"]) {
-      primary[key] = slice["non-repeat"][key].type;
-    }
-    for (const key in slice.repeat) {
-      items[key] = slice.repeat[key].type;
+  if ("type" in slice) {
+    if (slice.type === "Slice") {
+      for (const key in slice["non-repeat"]) {
+        primary[key] = slice["non-repeat"][key].type;
+      }
+      for (const key in slice.repeat) {
+        items[key] = slice.repeat[key].type;
+      }
+    } else if (slice.type === "Group") {
+      for (const key in slice.config?.fields) {
+        items[key] = slice.config.fields[key].type;
+      }
+    } else {
+      primary[sliceName] = slice.type;
     }
   } else if ("id" in slice) {
     for (const { key, value } of slice.primary ?? []) {
@@ -103,15 +115,14 @@ export const ConvertLegacySliceModal: React.FC<
   const identicalSlices = useMemo<IdenticalSlice[]>(() => {
     const results: IdenticalSlice[] = [];
 
-    if (slice.value.type !== "Slice") {
-      return results;
-    }
-
-    const sliceFields = getFieldMappingFingerprint(slice.value);
+    const sliceFields = getFieldMappingFingerprint(slice.value, sliceName);
 
     for (const sharedSlice of localSharedSlices) {
       for (const variation of sharedSlice.model.variations) {
-        const variationFields = getFieldMappingFingerprint(variation);
+        const variationFields = getFieldMappingFingerprint(
+          variation,
+          sharedSlice.model.name
+        );
 
         if (
           sliceFields.primary === variationFields.primary &&
@@ -128,7 +139,7 @@ export const ConvertLegacySliceModal: React.FC<
     }
 
     return results;
-  }, [slice, localSharedSlices]);
+  }, [slice, sliceName, localSharedSlices]);
 
   const convertLegacySliceAndTrack = (args: ConvertLegacySliceAndTrackArgs) => {
     if (isModalOpen === false) {
