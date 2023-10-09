@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.16.1-dev-upgrade-legacy-2.3",
+  "version": "1.16.1-dev-upgrade-legacy-2.4",
   "private": true,
   "scripts": {
     "dev": "next dev",
