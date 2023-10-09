@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import "./globals.css";
-
 const inter = Inter({ subsets: ["latin"] });
 
 // eslint-disable-next-line react-refresh/only-export-components

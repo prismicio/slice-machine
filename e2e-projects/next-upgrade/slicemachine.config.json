@@ -1,9 +1,8 @@
 {
-  "___repositoryName": "inspiring-briouat-syt67g",
-  "__repositoryName": "2306-meetup-figma",
   "repositoryName": "upgrade-optimize-full-legacy",
-  "_repositoryName": "upgrade-no-conflict-full-legacy",
   "adapter": "@slicemachine/adapter-next",
-  "libraries": ["./slices"],
+  "libraries": [
+    "./slices"
+  ],
   "localSliceSimulatorURL": "http://localhost:3000/slice-simulator"
 }
