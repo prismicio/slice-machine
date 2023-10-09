@@ -1307,7 +1307,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 
 								if (ids && ids.length > 0) {
-									task.skip("Types already exists");
+									task.skip("Types already exist");
 									parentTask.title = "Synced data with Prismic";
 
 									return;

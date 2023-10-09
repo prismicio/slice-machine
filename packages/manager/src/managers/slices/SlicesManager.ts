@@ -465,13 +465,13 @@ export class SlicesManager extends BaseManager {
 				break;
 		}
 
-		// Convert to shared slice
+		// Convert as a slice variation, or merge against an existing slice variation
 		if (maybeExistingSlice) {
 			const maybeVariation = maybeExistingSlice.variations.find(
 				(variation) => variation.id === args.dest.variationID,
 			);
 
-			// If we're not merging into an existing slice, then we need to insert the new variation
+			// If we're not merging against an existing slice variation, then we need to insert the new variation
 			if (!maybeVariation) {
 				maybeExistingSlice.variations = [
 					...maybeExistingSlice.variations,
@@ -489,6 +489,7 @@ export class SlicesManager extends BaseManager {
 				model: maybeExistingSlice,
 			});
 		} else {
+			// Convert to new shared slice
 			await this.createSlice({
 				libraryID: args.dest.libraryID,
 				model: {

@@ -260,7 +260,7 @@ it("pushes data to Prismic", async (ctx) => {
 	expect(stdout).toMatch(/Pushed all slices/);
 	expect(stdout).toMatch(/Pushed all types/);
 	expect(stdout).toMatch(/Pushed all documents/);
-	expect(stdout).toMatch(/Types already exists/);
+	expect(stdout).toMatch(/Types already exist/);
 	expect(stdout).toMatch(/Synced data with Prismic/);
 });
 
@@ -744,7 +744,7 @@ it("pulls types from Prismic", async (ctx) => {
 	expect(stdout).toMatch(/Pulled existing types/);
 });
 
-it("skips pulling types if types already exists locally", async (ctx) => {
+it("skips pulling types if types already exist locally", async (ctx) => {
 	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
 	await mockPrismicAPIs(ctx, {
 		initProcess,
@@ -770,5 +770,5 @@ it("skips pulling types if types already exists locally", async (ctx) => {
 		spiedManager.customTypes.fetchRemoteCustomTypes,
 	).not.toHaveBeenCalled();
 	expect(spiedManager.customTypes.pushCustomType).toHaveBeenCalled();
-	expect(stdout).toMatch(/Types already exists/);
+	expect(stdout).toMatch(/Types already exist/);
 });
