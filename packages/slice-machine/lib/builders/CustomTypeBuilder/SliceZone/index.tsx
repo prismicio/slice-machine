@@ -75,19 +75,15 @@ const mapAvailableAndSharedSlices = (
 
         return { ...acc, notFound: [...acc.notFound, { key }] };
       }
-      // Legacy Slice
-      else if (typeof value.type === "string") {
-        return {
-          ...acc,
-          slicesInSliceZone: [
-            ...acc.slicesInSliceZone,
-            { type: "Slice", payload: { key, value } },
-          ],
-        };
-      }
 
-      // Really old legacy Slice are ignored
-      return acc;
+      // Composite and legacy Slice
+      return {
+        ...acc,
+        slicesInSliceZone: [
+          ...acc.slicesInSliceZone,
+          { type: "Slice", payload: { key, value } },
+        ],
+      };
     },
     { slicesInSliceZone: [], notFound: [] }
   );

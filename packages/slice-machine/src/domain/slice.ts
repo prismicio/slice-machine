@@ -30,3 +30,51 @@ export function getScreenshotUrl(
 ): string | undefined {
   return slice.screenshots[variation.id]?.url;
 }
+
+export const getFieldMappingFingerprint = (
+  slice: LegacySlice | CompositeSlice | VariationSM,
+  sliceName: string
+): {
+  primary: string;
+  items: string;
+} => {
+  const primary: Record<string, string> = {};
+  const items: Record<string, string> = {};
+
+  if ("type" in slice) {
+    if (slice.type === "Slice") {
+      for (const key in slice["non-repeat"]) {
+        primary[key] = slice["non-repeat"][key].type;
+      }
+      for (const key in slice.repeat) {
+        items[key] = slice.repeat[key].type;
+      }
+    } else if (slice.type === "Group") {
+      for (const key in slice.config?.fields) {
+        items[key] = slice.config?.fields[key].type ?? "";
+      }
+    } else {
+      primary[sliceName] = slice.type;
+    }
+  } else if ("id" in slice) {
+    for (const { key, value } of slice.primary ?? []) {
+      primary[key] = value.type;
+    }
+    for (const { key, value } of slice.items ?? []) {
+      items[key] = value.type;
+    }
+  }
+
+  return {
+    primary: JSON.stringify(
+      Object.keys(primary)
+        .sort()
+        .map((key) => [key, primary[key]])
+    ),
+    items: JSON.stringify(
+      Object.keys(items)
+        .sort()
+        .map((key) => [key, items[key]])
+    ),
+  };
+};

@@ -1,19 +1,7 @@
-import {
-  CompositeSlice,
-  LegacySlice,
-} from "@prismicio/types-internal/lib/customtypes";
-
 import { LibraryUI } from "@models/common/LibraryUI";
 import { ComponentUI } from "@models/common/ComponentUI";
 
-export type ConvertLegacySliceModalProps = {
-  slice: { key: string; value: CompositeSlice | LegacySlice };
-  path: {
-    customTypeID: string;
-    tabID: string;
-    sliceZoneID: string;
-  };
-};
+import { NonSharedSliceViewCardProps } from "../sliceCards/NonSharedSliceViewCard";
 
 export type ConvertLegacySliceAndTrackArgs = {
   libraryID: string;
@@ -22,12 +10,13 @@ export type ConvertLegacySliceAndTrackArgs = {
   variationName?: string;
 };
 
-const types = [
+const legacySliceConversionTypes = [
   "as_new_slice",
   "as_new_variation",
   "merge_with_identical",
 ] as const;
-export type Type = (typeof types)[number];
+export type LegacySliceConversionType =
+  (typeof legacySliceConversionTypes)[number];
 
 export type IdenticalSlice = {
   libraryID: string;
@@ -45,4 +34,4 @@ export type FormProps = {
   libraries: readonly LibraryUI[];
   localSharedSlices: ComponentUI[];
   identicalSlices: IdenticalSlice[];
-} & Pick<ConvertLegacySliceModalProps, "path" | "slice">;
+} & Pick<NonSharedSliceViewCardProps, "path" | "slice">;

@@ -2,11 +2,12 @@ import { Badge, Box, Text, Tooltip } from "@prismicio/editor-ui";
 import type { FC } from "react";
 
 import { type NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
-import { ConvertLegacySliceModal } from "@components/Forms/ConvertLegacySliceModal";
 import { Card, CardActions, CardFooter, CardMedia } from "@src/components/Card";
 import { getNonSharedSliceLabel } from "@src/domain/slice";
 
-type NonSharedSliceViewCardProps = {
+import { ConvertLegacySliceButton } from "../convertLegacySlice/ConvertLegacySliceButton";
+
+export type NonSharedSliceViewCardProps = {
   slice: NonSharedSliceInSliceZone;
   path: {
     customTypeID: string;
@@ -34,7 +35,7 @@ export const NonSharedSliceViewCard: FC<NonSharedSliceViewCardProps> = ({
       >
         <Badge color="purple" title="Legacy Slice" />
       </Tooltip>
-      <ConvertLegacySliceModal slice={slice} path={path} />
+      <ConvertLegacySliceButton slice={slice} path={path} />
     </CardActions>
     <CardFooter
       subtitle="1 variation"
