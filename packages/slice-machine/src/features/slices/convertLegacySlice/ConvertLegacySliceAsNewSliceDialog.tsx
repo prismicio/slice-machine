@@ -19,9 +19,9 @@ import { pascalize } from "@lib/utils/str";
 import { validateSliceModalValues as validateAsNewSliceValues } from "@components/Forms/formsValidator";
 
 import * as styles from "./ConvertLegacySliceButton.css";
-import { FormProps } from "./types";
+import { DialogProps } from "./types";
 
-export const ConvertLegacySliceAsNewSliceDialog: React.FC<FormProps> = ({
+export const ConvertLegacySliceAsNewSliceDialog: React.FC<DialogProps> = ({
   isOpen,
   close,
   onSubmit,

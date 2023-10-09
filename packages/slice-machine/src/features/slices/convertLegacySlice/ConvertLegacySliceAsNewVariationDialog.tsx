@@ -17,7 +17,7 @@ import { Variation } from "@models/common/Variation";
 import { LibraryUI } from "@models/common/LibraryUI";
 
 import * as styles from "./ConvertLegacySliceButton.css";
-import { FormProps } from "./types";
+import { DialogProps } from "./types";
 
 type FormValues = {
   libraryID: string;
@@ -26,53 +26,7 @@ type FormValues = {
   variationName: string;
 };
 
-const validateAsNewVariationValues = (
-  values: FormValues,
-  libraries: readonly LibraryUI[]
-): Partial<Record<keyof FormValues, string>> => {
-  const errors: Partial<Record<keyof FormValues, string>> = {};
-
-  if (!values.libraryID) {
-    errors.libraryID = "Cannot be empty.";
-  }
-  const library = libraries.find(
-    (library) => library.path === values.libraryID
-  );
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!errors.libraryID && !library) {
-    errors.libraryID = "Does not exist.";
-  }
-
-  if (!values.sliceID) {
-    errors.sliceID = "Cannot be empty.";
-  }
-  const slice = library?.components.find(
-    (component) => component.model.id === values.sliceID
-  );
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!errors.sliceID && !slice) {
-    errors.sliceID = "Does not exist.";
-  }
-
-  if (!values.variationName) {
-    errors.variationName = "Cannot be empty.";
-  }
-
-  if (!values.variationID) {
-    errors.variationID = "Cannot be empty.";
-  } else {
-    const variationIDs =
-      slice?.model.variations.map((variation) => variation.id) ?? [];
-
-    if (variationIDs.includes(values.variationID)) {
-      errors.variationID = "Slice variation ID is already taken.";
-    }
-  }
-
-  return errors;
-};
-
-export const ConvertLegacySliceAsNewVariationDialog: React.FC<FormProps> = ({
+export const ConvertLegacySliceAsNewVariationDialog: React.FC<DialogProps> = ({
   isOpen,
   close,
   onSubmit,
@@ -230,4 +184,50 @@ export const ConvertLegacySliceAsNewVariationDialog: React.FC<FormProps> = ({
       </DialogContent>
     </Dialog>
   );
+};
+
+const validateAsNewVariationValues = (
+  values: FormValues,
+  libraries: readonly LibraryUI[]
+): Partial<Record<keyof FormValues, string>> => {
+  const errors: Partial<Record<keyof FormValues, string>> = {};
+
+  if (!values.libraryID) {
+    errors.libraryID = "Cannot be empty.";
+  }
+  const library = libraries.find(
+    (library) => library.path === values.libraryID
+  );
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!errors.libraryID && !library) {
+    errors.libraryID = "Does not exist.";
+  }
+
+  if (!values.sliceID) {
+    errors.sliceID = "Cannot be empty.";
+  }
+  const slice = library?.components.find(
+    (component) => component.model.id === values.sliceID
+  );
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!errors.sliceID && !slice) {
+    errors.sliceID = "Does not exist.";
+  }
+
+  if (!values.variationName) {
+    errors.variationName = "Cannot be empty.";
+  }
+
+  if (!values.variationID) {
+    errors.variationID = "Cannot be empty.";
+  } else {
+    const variationIDs =
+      slice?.model.variations.map((variation) => variation.id) ?? [];
+
+    if (variationIDs.includes(values.variationID)) {
+      errors.variationID = "Slice variation ID is already taken.";
+    }
+  }
+
+  return errors;
 };

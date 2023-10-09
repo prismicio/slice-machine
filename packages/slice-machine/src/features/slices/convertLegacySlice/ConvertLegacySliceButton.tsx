@@ -30,41 +30,6 @@ import {
   LegacySliceConversionType,
 } from "./types";
 
-const useIdenticalSlices = (
-  slice: NonSharedSliceInSliceZone,
-  sliceName: string,
-  localSharedSlices: ComponentUI[]
-) => {
-  return useMemo<IdenticalSlice[]>(() => {
-    const results: IdenticalSlice[] = [];
-
-    const sliceFields = getFieldMappingFingerprint(slice.value, sliceName);
-
-    for (const sharedSlice of localSharedSlices) {
-      for (const variation of sharedSlice.model.variations) {
-        const variationFields = getFieldMappingFingerprint(
-          variation,
-          sharedSlice.model.name
-        );
-
-        if (
-          sliceFields.primary === variationFields.primary &&
-          sliceFields.items === variationFields.items
-        ) {
-          results.push({
-            libraryID: sharedSlice.from,
-            sliceID: sharedSlice.model.id,
-            variationID: variation.id,
-            path: `${sharedSlice.from}::${sharedSlice.model.id}::${variation.id}`,
-          });
-        }
-      }
-    }
-
-    return results;
-  }, [slice, sliceName, localSharedSlices]);
-};
-
 type ConvertLegacySliceButtonProps = NonSharedSliceViewCardProps;
 
 export const ConvertLegacySliceButton: React.FC<
@@ -86,17 +51,14 @@ export const ConvertLegacySliceButton: React.FC<
     })
   );
 
-  const sliceName = useMemo(() => {
-    return slice.value.type === "Slice"
+  const sliceName =
+    slice.value.type === "Slice"
       ? slice.value.fieldset ?? slice.key
       : slice.key;
-  }, [slice]);
-  const libraries = useMemo(() => {
-    return allLibraries.filter((library) => library.isLocal);
-  }, [allLibraries]);
-  const localSharedSlices = useMemo(() => {
-    return libraries.map((library) => library.components).flat();
-  }, [libraries]);
+  const libraries = allLibraries.filter((library) => library.isLocal);
+  const localSharedSlices = libraries
+    .map((library) => library.components)
+    .flat();
   const identicalSlices = useIdenticalSlices(
     slice,
     sliceName,
@@ -267,4 +229,39 @@ export const ConvertLegacySliceButton: React.FC<
       />
     </>
   );
+};
+
+const useIdenticalSlices = (
+  slice: NonSharedSliceInSliceZone,
+  sliceName: string,
+  localSharedSlices: ComponentUI[]
+) => {
+  return useMemo<IdenticalSlice[]>(() => {
+    const results: IdenticalSlice[] = [];
+
+    const sliceFields = getFieldMappingFingerprint(slice.value, sliceName);
+
+    for (const sharedSlice of localSharedSlices) {
+      for (const variation of sharedSlice.model.variations) {
+        const variationFields = getFieldMappingFingerprint(
+          variation,
+          sharedSlice.model.name
+        );
+
+        if (
+          sliceFields.primary === variationFields.primary &&
+          sliceFields.items === variationFields.items
+        ) {
+          results.push({
+            libraryID: sharedSlice.from,
+            sliceID: sharedSlice.model.id,
+            variationID: variation.id,
+            path: `${sharedSlice.from}::${sharedSlice.model.id}::${variation.id}`,
+          });
+        }
+      }
+    }
+
+    return results;
+  }, [slice, sliceName, localSharedSlices]);
 };

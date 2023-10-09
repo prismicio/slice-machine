@@ -12,10 +12,10 @@ import {
 } from "@prismicio/editor-ui";
 
 import * as styles from "./ConvertLegacySliceButton.css";
-import { FormProps } from "./types";
+import { DialogProps } from "./types";
 
 export const ConvertLegacySliceMergeWithIdenticalDialog: React.FC<
-  FormProps
+  DialogProps
 > = ({ isOpen, close, onSubmit, isLoading, identicalSlices }) => {
   return (
     <Dialog

@@ -151,13 +151,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .map((e) => e.payload) as ReadonlyArray<ComponentUI>;
 
   /* Preserve these keys in SliceZone */
-  const path = useMemo(() => {
-    return {
-      customTypeID: customType.id,
-      tabID: tabId,
-      sliceZoneID: sliceZone?.key as string,
-    };
-  }, [customType, tabId, sliceZone]);
   const availableSlicesToAdd = availableSlices.filter(
     (slice) =>
       !sharedSlicesInSliceZone.some(
@@ -288,7 +281,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             <SlicesList
               slices={slicesInSliceZone}
               format={customType.format}
-              path={path}
+              path={{
+                customTypeID: customType.id,
+                tabID: tabId,
+                sliceZoneID: sliceZone?.key ?? "",
+              }}
               onRemoveSharedSlice={onRemoveSharedSlice}
             />
           </BaseStyles>

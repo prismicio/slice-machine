@@ -25,7 +25,7 @@ export type IdenticalSlice = {
   path: string;
 };
 
-export type FormProps = {
+export type DialogProps = {
   isOpen: boolean;
   close: () => void;
   onSubmit: (args: ConvertLegacySliceAndTrackArgs) => void;
