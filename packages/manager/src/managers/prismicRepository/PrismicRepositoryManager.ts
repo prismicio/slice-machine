@@ -174,10 +174,10 @@ export class PrismicRepositoryManager extends BaseManager {
 		const text = await res.text();
 
 		// Endpoint returns repository name on success, which must be more than 4 characters and less than 30
-		// if (!res.ok) {
-		if (!res.ok || text.length < 4 || text.length > 30) {
+		// Even when there is an error, we get a 200 success and so we have to check the name thanks to that
+		if (!res.ok || text.length < 4 || text.length > 63) {
 			throw new Error(`Failed to create repository \`${args.domain}\``, {
-				cause: res,
+				cause: text,
 			});
 		}
 	}
@@ -244,7 +244,7 @@ export class PrismicRepositoryManager extends BaseManager {
 				throw new Error(
 					`Failed to push documents to repository \`${args.domain}\`, repository is not empty`,
 					{
-						cause: res,
+						cause: reason,
 					},
 				);
 			}
@@ -252,7 +252,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			throw new Error(
 				`Failed to push documents to repository \`${args.domain}\`, ${res.status} ${res.statusText}`,
 				{
-					cause: res,
+					cause: reason,
 				},
 			);
 		}
