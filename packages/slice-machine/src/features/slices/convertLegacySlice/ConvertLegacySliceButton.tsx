@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type FC } from "react";
 import { useSelector } from "react-redux";
 import {
   DropdownMenu,
@@ -32,9 +32,10 @@ import {
 
 type ConvertLegacySliceButtonProps = NonSharedSliceViewCardProps;
 
-export const ConvertLegacySliceButton: React.FC<
-  ConvertLegacySliceButtonProps
-> = ({ slice, path }) => {
+export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
+  slice,
+  path,
+}) => {
   const {
     refreshState,
     openToaster,

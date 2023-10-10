@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { useSelector } from "react-redux";
 import { Formik } from "formik";
 import {
@@ -21,7 +22,7 @@ import { validateSliceModalValues as validateAsNewSliceValues } from "@component
 import * as styles from "./ConvertLegacySliceButton.css";
 import { DialogProps } from "./types";
 
-export const ConvertLegacySliceAsNewSliceDialog: React.FC<DialogProps> = ({
+export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
   isOpen,
   close,
   onSubmit,

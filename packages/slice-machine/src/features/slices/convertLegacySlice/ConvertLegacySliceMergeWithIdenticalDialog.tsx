@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { Formik } from "formik";
 import {
   Box,
@@ -14,9 +15,13 @@ import {
 import * as styles from "./ConvertLegacySliceButton.css";
 import { DialogProps } from "./types";
 
-export const ConvertLegacySliceMergeWithIdenticalDialog: React.FC<
-  DialogProps
-> = ({ isOpen, close, onSubmit, isLoading, identicalSlices }) => {
+export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
+  isOpen,
+  close,
+  onSubmit,
+  isLoading,
+  identicalSlices,
+}) => {
   return (
     <Dialog
       open={isOpen}

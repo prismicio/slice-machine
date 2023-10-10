@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { Formik } from "formik";
 import {
   Box,
@@ -26,7 +26,7 @@ type FormValues = {
   variationName: string;
 };
 
-export const ConvertLegacySliceAsNewVariationDialog: React.FC<DialogProps> = ({
+export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
   isOpen,
   close,
   onSubmit,

@@ -6,13 +6,13 @@ import type {
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
 
-export type NonSharedSlice = CompositeSlice | LegacySlice;
-
 export function countMissingScreenshots(slice: ComponentUI): number {
   return slice.model.variations.length - Object.keys(slice.screenshots).length;
 }
 
-export function getNonSharedSliceLabel(slice: NonSharedSlice): string {
+export function getNonSharedSliceLabel(
+  slice: CompositeSlice | LegacySlice
+): string {
   return (
     slice.config?.label ??
     (slice.type === "Group" ||
@@ -31,13 +31,13 @@ export function getScreenshotUrl(
   return slice.screenshots[variation.id]?.url;
 }
 
-export const getFieldMappingFingerprint = (
+export function getFieldMappingFingerprint(
   slice: LegacySlice | CompositeSlice | VariationSM,
   sliceName: string
 ): {
   primary: string;
   items: string;
-} => {
+} {
   const primary: Record<string, string> = {};
   const items: Record<string, string> = {};
 
@@ -77,4 +77,4 @@ export const getFieldMappingFingerprint = (
         .map((key) => [key, items[key]])
     ),
   };
-};
+}
