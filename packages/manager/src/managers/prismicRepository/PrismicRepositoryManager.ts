@@ -26,6 +26,7 @@ import {
 	TransactionalMergeReturnType,
 	FrameworkWroomTelemetryID,
 	StarterId,
+	Environment,
 } from "./types";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { UnauthenticatedError } from "../../errors";
@@ -377,14 +378,14 @@ export class PrismicRepositoryManager extends BaseManager {
 				changes: allChanges,
 			};
 
-			const sliceMachineConfig = await this.project.getSliceMachineConfig();
+			const repositoryName = await this.project.getRepositoryName();
 
 			// TODO: move to customtypes client
 			const response = await this._fetch({
 				url: new URL("./bulk", API_ENDPOINTS.PrismicModels),
 				method: "POST",
 				body: requestBody,
-				repository: sliceMachineConfig.repositoryName,
+				repository: repositoryName,
 			});
 
 			switch (response.status) {
@@ -415,6 +416,29 @@ export class PrismicRepositoryManager extends BaseManager {
 			console.error(err);
 
 			throw err;
+		}
+	}
+
+	async fetchEnvironments(): Promise<Environment[]> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL("./environments", API_ENDPOINTS.PrismicWroom);
+		const res = await this._fetch({ url, repository: repositoryName });
+
+		if (res.ok) {
+			const json = await res.json();
+
+			const { value: environments, error } = decode(t.array(Environment), json);
+
+			if (error) {
+				throw new Error(
+					`Failed to decode environments: ${error.errors.join(", ")}`,
+				);
+			}
+
+			return environments;
+		} else {
+			throw new Error(`Failed to fetch environments.`);
 		}
 	}
 
