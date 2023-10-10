@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.7.3-dev-upgrade-legacy-3.0",
+	"version": "2.7.3-dev-upgrade-legacy-3.1",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
