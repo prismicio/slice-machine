@@ -8,7 +8,7 @@ import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import SegmentClient from "analytics-node";
 
 import pkg from "../../package.json";
-import Simulator from "../../pages/[lib]/[sliceName]/[variation]/simulator";
+import Simulator from "../../pages/slices/[lib]/[sliceName]/[variation]/simulator";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
@@ -18,7 +18,7 @@ import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test"
 vi.mock("next/router", () => require("next-router-mock"));
 vi.mock("next/dist/client/router", () => require("next-router-mock"));
 mockRouter.useParser(
-  createDynamicRouteParser(["/[lib]/[sliceName]/[variation]/simulator"])
+  createDynamicRouteParser(["/slices/[lib]/[sliceName]/[variation]/simulator"])
 );
 // mock simulator client, it would be nice not to have to do this :/
 vi.mock("@prismicio/simulator", () => {

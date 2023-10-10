@@ -2,15 +2,16 @@ import {
   HTMLAttributes,
   type CSSProperties,
   type FC,
-  type HTMLProps,
   type LiHTMLAttributes,
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   type SVGProps,
+  createElement,
   forwardRef,
 } from "react";
 import clsx from "clsx";
+import type { UrlObject } from "node:url";
 
 import LogoIcon from "@src/icons/LogoIcon";
 import OpenIcon from "@src/icons/OpenIcon";
@@ -98,33 +99,33 @@ export type SideNavLinkProps = {
   Icon: FC<SVGProps<SVGSVGElement>>;
   target?: "_blank";
   RightElement?: ReactNode;
-} & HTMLProps<HTMLAnchorElement>;
+  component?: "a" | FC<LinkProps>;
+  onClick?: (event: MouseEvent) => void;
+};
+
+type LinkProps = {
+  href: string | UrlObject;
+};
 
 export const SideNavLink: FC<SideNavLinkProps> = ({
   title,
   RightElement,
   Icon,
   active,
-  ...props
-}) => {
-  return (
-    <a
-      {...props}
-      className={styles.link}
-      onClick={(event) => {
-        event.preventDefault();
-        props.disabled !== true && props.onClick && props.onClick(event);
-      }}
-      data-active={active}
-    >
+  component = "a",
+  ...otherProps
+}) =>
+  createElement(
+    component,
+    { ...otherProps, ...{ className: styles.link, "data-active": active } },
+    <>
       <Icon className={styles.linkIcon} />
       <div className={styles.linkContent}>
         <span className={styles.linkText}>{title}</span>
         {RightElement}
       </div>
-    </a>
+    </>
   );
-};
 
 type RightElementProps = PropsWithChildren<
   {
@@ -151,13 +152,16 @@ export const RightElement: FC<RightElementProps> = ({
 };
 
 type UpdateInfoProps = {
-  onClick: (
-    event: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>
-  ) => void;
+  onClick?: (event: MouseEvent) => void;
   href: string;
+  component?: "a" | FC<LinkProps>;
 };
 
-export const UpdateInfo: FC<UpdateInfoProps> = ({ href, onClick }) => (
+export const UpdateInfo: FC<UpdateInfoProps> = ({
+  href,
+  onClick,
+  component = "a",
+}) => (
   <div className={styles.updateInfo}>
     <h3 className={styles.updateInfoTitle}>Updates Available</h3>
 
@@ -165,15 +169,10 @@ export const UpdateInfo: FC<UpdateInfoProps> = ({ href, onClick }) => (
       Some updates of Slice Machine are available.
     </p>
 
-    <a
-      href={href}
-      className={styles.updateInfoLink}
-      onClick={(event) => {
-        event.preventDefault();
-        onClick(event);
-      }}
-    >
-      Learn more
-    </a>
+    {createElement(
+      component,
+      { ...{ className: styles.updateInfoLink, onClick }, href },
+      "Learn more"
+    )}
   </div>
 );
