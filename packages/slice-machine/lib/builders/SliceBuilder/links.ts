@@ -16,11 +16,11 @@ export function variation({
   options: object;
   all: [string, string, object];
 } {
-  const href = `/[lib]/[sliceName]/[variation]${
+  const href = `/slices/[lib]/[sliceName]/[variation]${
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     isSimulator ? "/simulator" : ""
   }`;
-  const as = `/${lib}/${sliceName}/${variationId}${
+  const as = `/slices/${lib}/${sliceName}/${variationId}${
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     isSimulator ? "/simulator" : ""
   }`;

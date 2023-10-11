@@ -119,6 +119,11 @@ vi.mock("analytics-node", () => {
   };
 });
 
+// We have to manually set this environment variable as there's no equivalent of
+// `next/jest` for Vitest. It means Vitest doesn't read Next.js's configuration
+// file and (in our case) the `experimental.newNextLinkBehavior` setting.
+vi.stubEnv("__NEXT_NEW_LINK_BEHAVIOR", "true");
+
 vi.stubGlobal("FormData", FormData);
 vi.stubGlobal("Blob", Blob);
 vi.stubGlobal("File", File);

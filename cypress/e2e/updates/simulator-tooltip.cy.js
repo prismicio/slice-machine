@@ -13,7 +13,7 @@ describe("simulator tooltip", () => {
 
     cy.createSlice(lib, sliceId, sliceName);
 
-    cy.visit(`/${lib}/${sliceName}/default`);
+    cy.visit(`/slices/${lib}/${sliceName}/default`);
 
     // There is a 5 s timeout for displaying the tooltip.
     cy.wait(6_000);
@@ -37,7 +37,7 @@ describe("simulator tooltip", () => {
 
     cy.createSlice(lib, sliceId, sliceName);
 
-    cy.visit(`/${lib}/${sliceName}/default`);
+    cy.visit(`/slices/${lib}/${sliceName}/default`);
 
     // There is a 5 s timeout for displaying the tooltip.
     cy.wait(6_000);
@@ -50,7 +50,7 @@ describe("simulator tooltip", () => {
 
     cy.createSlice(lib, sliceId, sliceName);
 
-    cy.visit(`/${lib}/${sliceName}/default`);
+    cy.visit(`/slices/${lib}/${sliceName}/default`);
 
     // There is a 5 s timeout for displaying the tooltip.
     cy.wait(6_000);
