@@ -43,8 +43,8 @@ export const LabsTable: FC = () => {
 
         openToaster(
           enabled
-            ? `Labs: Failed to enabled ${name}`
-            : `Labs: Failed to disabled ${name}`,
+            ? `Labs: failed to enable ${name}`
+            : `Labs: failed to disable ${name}`,
           ToasterType.ERROR
         );
 
@@ -52,7 +52,7 @@ export const LabsTable: FC = () => {
       }
 
       openToaster(
-        enabled ? `Labs: Enabled ${name}` : `Labs: Disabled ${name}`,
+        enabled ? `Labs: enabled ${name}` : `Labs: disabled ${name}`,
         ToasterType.SUCCESS
       );
     };
