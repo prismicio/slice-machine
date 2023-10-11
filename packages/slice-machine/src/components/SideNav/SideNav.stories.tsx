@@ -116,7 +116,7 @@ export const Default = {
           </SideNavListItem>
         </SideNavList>
 
-        <UpdateInfo href="/" onClick={() => void 0} />
+        <UpdateInfo href="/" />
 
         <SideNavList position="bottom">
           <SideNavListItem>
@@ -124,7 +124,6 @@ export const Default = {
               title="Changelog"
               href="/changelog"
               Icon={LightningIcon}
-              onClick={() => void 0}
               RightElement={<RightElement>v1.0.0</RightElement>}
             />
           </SideNavListItem>

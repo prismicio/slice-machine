@@ -5,10 +5,8 @@ type GetBuilderPagePathnameArgs = {
 };
 
 export const SLICES_CONFIG = {
-  getBuilderPagePathname: ({
-    libraryName,
-    sliceName,
-    variationId,
-  }: GetBuilderPagePathnameArgs) =>
-    `/${libraryName.replace(/\//g, "--")}/${sliceName}/${variationId}`,
+  getBuilderPagePathname: (args: GetBuilderPagePathnameArgs) =>
+    `/slices/${args.libraryName.replaceAll("/", "--")}/${args.sliceName}/${
+      args.variationId
+    }`,
 };

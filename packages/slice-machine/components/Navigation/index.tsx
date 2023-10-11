@@ -1,5 +1,6 @@
 import { ErrorBoundary } from "@prismicio/editor-ui";
 import { Suspense, type FC } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
@@ -40,32 +41,11 @@ const Navigation: FC = () => {
       hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
     }));
   const router = useRouter();
-  const currentPath = router.asPath;
   const repoDomain = new URL(apiEndpoint).hostname.replace(".cdn", "");
   const repoAddress = apiEndpoint.replace(".cdn.", ".").replace("/api/v2", "");
-  const latestVersion =
-    changelog.sliceMachine.versions.length > 0
-      ? changelog.sliceMachine.versions[0]
-      : null;
+
   const { setUpdatesViewed, setSeenTutorialsToolTip } =
     useSliceMachineActions();
-
-  const handleNavigation = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    const href = event.currentTarget.getAttribute("href");
-    if (href !== null && href) void router.push(href);
-  };
-
-  const handleChangeLogNavigationFromUpdateBox = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    setUpdatesViewed({
-      latest: latestVersion && latestVersion.versionNumber,
-      latestNonBreaking: changelog.sliceMachine.latestNonBreakingVersion,
-    });
-    handleNavigation(event);
-  };
 
   return (
     <SideNav>
@@ -86,9 +66,9 @@ const Navigation: FC = () => {
             })}
             href={CUSTOM_TYPES_CONFIG["page"].tablePagePathname}
             active={CUSTOM_TYPES_CONFIG["page"].matchesTablePagePathname(
-              currentPath
+              router.asPath
             )}
-            onClick={handleNavigation}
+            component={Link}
             Icon={CUSTOM_TYPES_CONFIG.page.Icon}
           />
         </SideNavListItem>
@@ -101,16 +81,16 @@ const Navigation: FC = () => {
             })}
             href={CUSTOM_TYPES_CONFIG["custom"].tablePagePathname}
             active={CUSTOM_TYPES_CONFIG["custom"].matchesTablePagePathname(
-              currentPath
+              router.asPath
             )}
-            onClick={handleNavigation}
+            component={Link}
             Icon={CUSTOM_TYPES_CONFIG.custom.Icon}
           />
         </SideNavListItem>
 
         <SideNavSeparator />
 
-        <ChangesListItem handleNavigation={handleNavigation} />
+        <ChangesListItem />
 
         <SideNavSeparator />
 
@@ -119,8 +99,8 @@ const Navigation: FC = () => {
             title="Slices"
             href="/slices"
             Icon={FolderIcon}
-            active={currentPath.startsWith("/slices")}
-            onClick={handleNavigation}
+            active={router.asPath.startsWith("/slices")}
+            component={Link}
           />
         </SideNavListItem>
       </SideNavList>
@@ -129,7 +109,18 @@ const Navigation: FC = () => {
         changelog.adapter.updateAvailable) && (
         <UpdateInfo
           href="/changelog"
-          onClick={handleChangeLogNavigationFromUpdateBox}
+          onClick={() => {
+            const latestVersion =
+              changelog.sliceMachine.versions.length > 0
+                ? changelog.sliceMachine.versions?.[0]
+                : null;
+            setUpdatesViewed({
+              latest: latestVersion && latestVersion.versionNumber,
+              latestNonBreaking:
+                changelog.sliceMachine.latestNonBreakingVersion,
+            });
+          }}
+          component={Link}
         />
       )}
 
@@ -142,8 +133,8 @@ const Navigation: FC = () => {
             void telemetry.track({
               event: "users-invite-button-clicked",
             });
-            window.open(`${repoAddress}/settings/users`, "_blank");
           }}
+          target="_blank"
         />
 
         <ErrorBoundary>
@@ -160,8 +151,8 @@ const Navigation: FC = () => {
             title="Changelog"
             href="/changelog"
             Icon={(props) => <LightningIcon {...props} />}
-            active={currentPath.startsWith("/changelog")}
-            onClick={handleNavigation}
+            active={router.asPath.startsWith("/changelog")}
+            component={Link}
             RightElement={
               <RightElement>
                 {changelog.sliceMachine.currentVersion &&
