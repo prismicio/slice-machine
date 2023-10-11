@@ -75,7 +75,6 @@ export const LabsTable: FC = () => {
           title="Legacy Slice Upgrader"
           enabled={config.labs?.legacySliceUpgrader ?? false}
           onToggle={setLab("legacySliceUpgrader", "Legacy Slice Upgrader")}
-          tags={["Unstable", "Content Modeling", "Slice", "Page Builder"]}
         >
           The Legacy Slice Upgrader allows you to convert old slices (legacy and
           composite slices) to slices managed by Slice Machine (shared slices).
