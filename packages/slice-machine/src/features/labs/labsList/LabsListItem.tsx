@@ -1,13 +1,13 @@
 import { type FC, type PropsWithChildren } from "react";
 import { Switch, Box, Card, Icon, Text } from "@prismicio/editor-ui";
 
-type LabsTableItemProps = PropsWithChildren<{
+type LabsListItemProps = PropsWithChildren<{
   title: string;
   enabled: boolean;
-  onToggle: (enabled: boolean) => Promise<void> | void;
+  onToggle: (enabled: boolean) => void;
 }>;
 
-export const LabsTableItem: FC<LabsTableItemProps> = ({
+export const LabsListItem: FC<LabsListItemProps> = ({
   title,
   enabled,
   onToggle,
@@ -27,7 +27,7 @@ export const LabsTableItem: FC<LabsTableItemProps> = ({
           <Switch
             size="medium"
             checked={enabled}
-            onCheckedChange={(checked) => void onToggle(checked)}
+            onCheckedChange={(checked) => onToggle(checked)}
           />
         </Box>
       </Box>

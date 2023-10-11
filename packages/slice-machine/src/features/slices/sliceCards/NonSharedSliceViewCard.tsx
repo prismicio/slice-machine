@@ -4,7 +4,7 @@ import type { FC } from "react";
 import { type NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
 import { Card, CardActions, CardFooter, CardMedia } from "@src/components/Card";
 import { getNonSharedSliceLabel } from "@src/domain/slice";
-import { useLab } from "@src/features/labs/labsTable/useLabs";
+import { useLab } from "@src/features/labs/labsList/useLab";
 
 import { ConvertLegacySliceButton } from "../convertLegacySlice/ConvertLegacySliceButton";
 

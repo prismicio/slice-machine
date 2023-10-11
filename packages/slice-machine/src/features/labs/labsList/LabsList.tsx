@@ -10,52 +10,46 @@ import {
   writeSliceMachineConfig,
 } from "@src/hooks/useSliceMachineConfig";
 
-import { LabsTableItem } from "./LabsTableItem";
+import { LabsListItem } from "./LabsListItem";
 
-export const LabsTable: FC = () => {
+export const LabsList: FC = () => {
   const config = useSliceMachineConfig();
   const { openToaster } = useSliceMachineActions();
 
-  const setLab = (
+  const setLab = async (
     key: keyof Required<SliceMachineConfig>["labs"],
-    name: string
+    name: string,
+    enabled: boolean
   ) => {
-    return async (enabled: boolean) => {
-      try {
-        const updatedConfig = {
-          ...config,
-          labs: { ...config.labs },
-        };
+    const updatedConfig = { ...config, labs: { ...config.labs } };
 
-        if (enabled) {
-          updatedConfig.labs[key] = enabled;
-        } else if (key in updatedConfig.labs) {
-          delete updatedConfig.labs[key];
-        }
+    if (enabled) {
+      updatedConfig.labs[key] = enabled;
+    } else if (key in updatedConfig.labs) {
+      delete updatedConfig.labs[key];
+    }
 
-        if (Object.keys(updatedConfig.labs).length === 0) {
-          delete (updatedConfig as SliceMachineConfig).labs;
-        }
+    if (Object.keys(updatedConfig.labs).length === 0) {
+      delete (updatedConfig as SliceMachineConfig).labs;
+    }
 
-        await writeSliceMachineConfig({ config: updatedConfig });
-      } catch (error) {
-        console.error(error);
-
-        openToaster(
-          enabled
-            ? `Labs: failed to enable ${name}`
-            : `Labs: failed to disable ${name}`,
-          ToasterType.ERROR
-        );
-
-        return;
-      }
+    try {
+      await writeSliceMachineConfig(updatedConfig);
 
       openToaster(
         enabled ? `Labs: enabled ${name}` : `Labs: disabled ${name}`,
         ToasterType.SUCCESS
       );
-    };
+    } catch (error) {
+      console.error(error);
+
+      openToaster(
+        enabled
+          ? `Labs: failed to enable ${name}`
+          : `Labs: failed to disable ${name}`,
+        ToasterType.ERROR
+      );
+    }
   };
 
   return (
@@ -71,17 +65,19 @@ export const LabsTable: FC = () => {
         </Text>
       </header>
       <Box flexDirection="column" gap={16}>
-        <LabsTableItem
+        <LabsListItem
           title="Legacy Slice Upgrader"
           enabled={config.labs?.legacySliceUpgrader ?? false}
-          onToggle={setLab("legacySliceUpgrader", "Legacy Slice Upgrader")}
+          onToggle={(enabled) =>
+            void setLab("legacySliceUpgrader", "Legacy Slice Upgrader", enabled)
+          }
         >
           The Legacy Slice Upgrader allows you to convert old slices (legacy and
           composite slices) to slices managed by Slice Machine (shared slices).
           This feature is experimental, we strongly encourage you testing it
-          through a Prismic environments first or you'll be at risk of losing
+          through a Prismic environment first or you'll be at risk of losing
           past content.
-        </LabsTableItem>
+        </LabsListItem>
       </Box>
     </Box>
   );

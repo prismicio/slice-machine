@@ -12,7 +12,7 @@ import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { NonSharedSliceViewCard } from "@src/features/slices/sliceCards/NonSharedSliceViewCard";
 import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
-import { useLab } from "@src/features/labs/labsTable/useLabs";
+import { useLab } from "@src/features/labs/labsList/useLab";
 
 interface SlicesListProps {
   format: CustomTypeFormat;
@@ -52,7 +52,7 @@ export const SlicesList: React.FC<SlicesListProps> = ({
             `This ${customTypesMessages.name({
               start: false,
               plural: false,
-            })} contains Slices that are incompatible.`,
+            })} contains slices that are incompatible.`,
             ToasterType.WARNING
           );
     // eslint-disable-next-line react-hooks/exhaustive-deps
