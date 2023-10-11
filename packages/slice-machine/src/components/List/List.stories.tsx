@@ -16,7 +16,11 @@ export const Default = {
   args: {
     children: (
       <ListHeader
-        actions={<Button startIcon="add">Add</Button>}
+        actions={
+          <Button startIcon="add" variant="secondary">
+            Add
+          </Button>
+        }
         toggle={<Switch />}
       >
         Zone

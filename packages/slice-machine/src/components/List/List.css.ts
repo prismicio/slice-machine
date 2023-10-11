@@ -9,9 +9,9 @@ export const header = style([
   flex,
   sprinkles({
     alignItems: "center",
-    backgroundColor: colors.grey1,
+    backgroundColor: colors.grey2,
     borderBottomColor: colors.grey6,
-    borderBottomStyle: "dashed",
+    borderBottomStyle: "solid",
     borderBottomWidth: 1,
     boxSizing: "border-box",
     flexDirection: "row",
