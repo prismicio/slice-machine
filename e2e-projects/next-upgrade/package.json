@@ -1,6 +1,6 @@
 {
   "name": "next-upgrade",
-  "version": "1.14.1-dev-labs.2",
+  "version": "1.14.1-dev-labs.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
