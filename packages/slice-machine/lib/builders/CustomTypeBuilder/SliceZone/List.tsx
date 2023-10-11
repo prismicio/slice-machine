@@ -16,12 +16,18 @@ import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSlice
 interface SlicesListProps {
   format: CustomTypeFormat;
   slices: ReadonlyArray<SliceZoneSlice>;
+  path: {
+    customTypeID: string;
+    tabID: string;
+    sliceZoneID: string;
+  };
   onRemoveSharedSlice: (sliceId: string) => void;
 }
 
 export const SlicesList: React.FC<SlicesListProps> = ({
   slices,
   format,
+  path,
   onRemoveSharedSlice,
 }) => {
   const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
@@ -35,8 +41,8 @@ export const SlicesList: React.FC<SlicesListProps> = ({
         `This ${customTypesMessages.name({
           start: false,
           plural: false,
-        })} contains Slices that are incompatible.`,
-        ToasterType.WARNING
+        })} contains legacy slices that can be upgraded.`,
+        ToasterType.INFO
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLegacySlices]);
@@ -45,15 +51,14 @@ export const SlicesList: React.FC<SlicesListProps> = ({
     <Grid
       elems={slices}
       defineElementKey={(slice) =>
-        slice.type === "Slice"
+        slice.type !== "SharedSlice"
           ? (slice.payload as NonSharedSliceInSliceZone).key
           : (slice.payload as ComponentUI).model.name
       }
       renderElem={(slice) => {
-        if (slice.type === "Slice") {
-          const nonSharedSlice = (slice.payload as NonSharedSliceInSliceZone)
-            .value;
-          return <NonSharedSliceViewCard slice={nonSharedSlice} />;
+        if (slice.type !== "SharedSlice") {
+          const nonSharedSlice = slice.payload as NonSharedSliceInSliceZone;
+          return <NonSharedSliceViewCard slice={nonSharedSlice} path={path} />;
         } else {
           const sharedSlice = slice.payload as ComponentUI;
           return (

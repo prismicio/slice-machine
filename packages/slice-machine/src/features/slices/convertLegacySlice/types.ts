@@ -1,0 +1,37 @@
+import { LibraryUI } from "@models/common/LibraryUI";
+import { ComponentUI } from "@models/common/ComponentUI";
+
+import { NonSharedSliceViewCardProps } from "../sliceCards/NonSharedSliceViewCard";
+
+export type ConvertLegacySliceAndTrackArgs = {
+  libraryID: string;
+  sliceID: string;
+  variationID?: string;
+  variationName?: string;
+};
+
+const legacySliceConversionTypes = [
+  "as_new_slice",
+  "as_new_variation",
+  "merge_with_identical",
+] as const;
+export type LegacySliceConversionType =
+  (typeof legacySliceConversionTypes)[number];
+
+export type IdenticalSlice = {
+  libraryID: string;
+  sliceID: string;
+  variationID: string;
+  path: string;
+};
+
+export type DialogProps = {
+  isOpen: boolean;
+  close: () => void;
+  onSubmit: (args: ConvertLegacySliceAndTrackArgs) => void;
+  isLoading: boolean;
+  sliceName: string;
+  libraries: readonly LibraryUI[];
+  localSharedSlices: ComponentUI[];
+  identicalSlices: IdenticalSlice[];
+} & Pick<NonSharedSliceViewCardProps, "path" | "slice">;
