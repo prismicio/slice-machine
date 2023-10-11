@@ -30,12 +30,17 @@ export const NonSharedSliceViewCard: FC<NonSharedSliceViewCardProps> = ({
     </CardMedia>
     <CardActions>
       <Tooltip
-        content="This Slice was created with the Legacy Builder. It needs to be converted first to be used within Slice Machine."
+        // TODO(DT-1675): use this commented `content` when the migration of Legacy Slices has been validated.
+        // content="This Slice was created with the Legacy Builder. It needs to be converted first to be used within Slice Machine."
+        content="This Slice was created with the Legacy Builder, and is incompatible with Slice Machine. You cannot edit, push, or delete it in Slice Machine. In order to proceed, manually remove the Slice from your type model. Then create a new Slice with the same fields using Slice Machine."
         side="bottom"
       >
         <Badge color="purple" title="Legacy Slice" />
       </Tooltip>
-      <ConvertLegacySliceButton slice={slice} path={path} />
+      {/* TODO(DT-1675): remove this `div` when the migration of Legacy Slices has been validated. */}
+      <div style={{ display: "none" }}>
+        <ConvertLegacySliceButton slice={slice} path={path} />
+      </div>
     </CardActions>
     <CardFooter
       subtitle="1 variation"
