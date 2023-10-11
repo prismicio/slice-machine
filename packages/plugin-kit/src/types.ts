@@ -68,6 +68,7 @@ export type SliceMachineConfig = {
 	libraries?: string[];
 	adapter: SliceMachineConfigPluginRegistration;
 	plugins?: SliceMachineConfigPluginRegistration[];
+	labs?: { legacySliceUpgrader?: boolean };
 };
 
 /**

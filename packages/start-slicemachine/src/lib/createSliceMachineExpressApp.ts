@@ -101,6 +101,10 @@ export const createSliceMachineExpressApp = async (
 			res.sendFile(path.join(sliceMachineOutDir, "changelog.html"));
 		});
 
+		app.get("/labs", (_req, res) => {
+			res.sendFile(path.join(sliceMachineOutDir, "labs.html"));
+		});
+
 		app.get("/slices", (_req, res) => {
 			res.sendFile(path.join(sliceMachineOutDir, "slices.html"));
 		});
