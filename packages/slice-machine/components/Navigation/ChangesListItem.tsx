@@ -1,4 +1,5 @@
-import { MouseEventHandler, forwardRef, useState } from "react";
+import { type FC, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
@@ -22,53 +23,46 @@ import {
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ChangesRightElement } from "./ChangesRightElement";
 
-type ChangesListItemProps = {
-  handleNavigation: MouseEventHandler<HTMLAnchorElement>;
+export const ChangesListItem: FC = () => {
+  const { setSeenChangesToolTip } = useSliceMachineActions();
+  const open = useOpenChangesHoverCard();
+  const router = useRouter();
+
+  const onClose = () => {
+    setSeenChangesToolTip();
+  };
+
+  return (
+    <HoverCard
+      open={open}
+      openDelay={3000}
+      onClose={onClose}
+      side="right"
+      sideOffset={24}
+      collisionPadding={280}
+      trigger={
+        <SideNavListItem>
+          <SideNavLink
+            title="Changes"
+            href="/changes"
+            active={router.asPath.startsWith("/changes")}
+            component={Link}
+            Icon={RadarIcon}
+            RightElement={<ChangesRightElement />}
+          />
+        </SideNavListItem>
+      }
+    >
+      <HoverCardTitle>Push your changes</HoverCardTitle>
+      <HoverCardMedia component="image" src="/push.png" />
+      <HoverCardDescription>
+        When you click Save, your changes are saved locally. Then, you can push
+        your models to Prismic from the Changes page.
+      </HoverCardDescription>
+      <HoverCardCloseButton>Got It</HoverCardCloseButton>
+    </HoverCard>
+  );
 };
-
-export const ChangesListItem = forwardRef<HTMLLIElement, ChangesListItemProps>(
-  ({ handleNavigation }, ref) => {
-    const { setSeenChangesToolTip } = useSliceMachineActions();
-    const open = useOpenChangesHoverCard();
-    const router = useRouter();
-    const currentPath = router.asPath;
-
-    const onClose = () => {
-      setSeenChangesToolTip();
-    };
-
-    return (
-      <HoverCard
-        open={open}
-        openDelay={3000}
-        onClose={onClose}
-        side="right"
-        sideOffset={24}
-        collisionPadding={280}
-        trigger={
-          <SideNavListItem ref={ref}>
-            <SideNavLink
-              title="Changes"
-              href="/changes"
-              active={currentPath.startsWith("/changes")}
-              onClick={handleNavigation}
-              Icon={RadarIcon}
-              RightElement={<ChangesRightElement />}
-            />
-          </SideNavListItem>
-        }
-      >
-        <HoverCardTitle>Push your changes</HoverCardTitle>
-        <HoverCardMedia component="image" src="/push.png" />
-        <HoverCardDescription>
-          When you click Save, your changes are saved locally. Then, you can
-          push your models to Prismic from the Changes page.
-        </HoverCardDescription>
-        <HoverCardCloseButton>Got It</HoverCardCloseButton>
-      </HoverCard>
-    );
-  }
-);
 
 const useOpenChangesHoverCard = () => {
   const {

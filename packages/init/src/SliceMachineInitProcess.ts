@@ -176,7 +176,7 @@ export class SliceMachineInitProcess {
 				await this.createNewRepository();
 			}
 
-			await this.pushDataToPrismic();
+			await this.syncDataWithPrismic();
 			await this.initializeProject();
 			await this.initializePlugins();
 		} catch (error) {
@@ -320,11 +320,18 @@ export class SliceMachineInitProcess {
 				this.manager.customTypes.readCustomTypeLibrary(),
 				this.readDocuments(),
 			]);
+
+			// If repository exists, and there's anything to push
 			if (
 				slices.length > 0 ||
 				ctLibrary.ids.length > 0 ||
 				(documentsGlob !== undefined && documentsGlob.documents.length > 0)
 			) {
+				return true;
+			}
+
+			// If repository exists, and there might be things to pull
+			if (ctLibrary.ids.length === 0) {
 				return true;
 			}
 		} catch (e) {
@@ -1110,10 +1117,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		return { signature, documents, directoryPath: documentsDirectoryPath };
 	}
 
-	protected pushDataToPrismic(): Promise<void> {
+	protected syncDataWithPrismic(): Promise<void> {
 		return listrRun([
 			{
-				title: "Pushing data to Prismic...",
+				title: "Syncing data with Prismic...",
 				task: (_, parentTask) =>
 					listr([
 						{
@@ -1209,7 +1216,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							task: async (_, task) => {
 								assertExists(
 									this.context.repository,
-									"Repository selection must be available through context to run `pushDataToPrismic`",
+									"Repository selection must be available through context to run `syncDataWithPrismic`",
 								);
 
 								try {
@@ -1219,7 +1226,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 										documentsRead === undefined ||
 										documentsRead.documents.length === 0
 									) {
-										parentTask.title = "Pushed data to Prismic";
 										task.skip("No document to push");
 
 										return;
@@ -1261,9 +1267,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 									});
 
 									task.title = "Pushed all documents";
-									parentTask.title = "Pushed data to Prismic";
 								} catch {
-									parentTask.title = "Pushed data to Prismic";
 									task.skip("No document to push");
 
 									return;
@@ -1285,7 +1289,41 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								}
 
 								task.title = "Cleaned up data push artifacts";
-								parentTask.title = "Pushed data to Prismic";
+							},
+						},
+						{
+							title: "Pulling existing types...",
+							task: async (_, task) => {
+								const { ids, errors } =
+									await this.manager.customTypes.readCustomTypeLibrary();
+
+								if (errors.length > 0) {
+									// TODO: Provide better error message.
+									throw new Error(
+										`Failed to read custom type libraries: ${errors.join(
+											", ",
+										)}`,
+									);
+								}
+
+								if (ids && ids.length > 0) {
+									task.skip("Types already exist");
+									parentTask.title = "Synced data with Prismic";
+
+									return;
+								}
+
+								const remoteTypes =
+									await this.manager.customTypes.fetchRemoteCustomTypes();
+
+								await Promise.all(
+									remoteTypes.map(async (model) => {
+										await this.manager.customTypes.createCustomType({ model });
+									}),
+								);
+
+								task.title = "Pulled existing types";
+								parentTask.title = "Synced data with Prismic";
 							},
 						},
 					]),

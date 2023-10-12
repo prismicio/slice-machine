@@ -57,13 +57,13 @@ describe("Create Slices", () => {
 
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
-      `/${lib}/${sliceName}/bar`
+      `/slices/${lib}/${sliceName}/bar`
     );
     cy.get("button").contains("foo").click();
     cy.contains("Default").click();
     cy.location("pathname", { timeout: 20000 }).should(
       "eq",
-      `/${lib}/${sliceName}/default`
+      `/slices/${lib}/${sliceName}/default`
     );
 
     cy.contains("Save").click();

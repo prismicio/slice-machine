@@ -2,7 +2,12 @@ import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import {
+	CompositeSlice,
+	LegacySlice,
+	SharedSlice,
+	Variation,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
 	HookError,
@@ -144,6 +149,26 @@ type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
 type SliceMachineManagerDeleteSliceArgs = {
 	libraryID: string;
 	sliceID: string;
+};
+
+type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
+	model: CompositeSlice | LegacySlice;
+	src: {
+		customTypeID: string;
+		tabID: string;
+		sliceZoneID: string;
+		sliceID: string;
+	};
+	dest: {
+		libraryID: string;
+		sliceID: string;
+		variationName: string;
+		variationID: string;
+	};
+};
+
+type SliceMachineManagerConvertLegacySliceToSharedSliceReturnType = {
+	errors: (DecodeError | HookError)[];
 };
 
 type SliceMachineManagerDeleteSliceReturnType = {
@@ -402,6 +427,108 @@ export class SlicesManager extends BaseManager {
 				errors: readSliceErrors,
 			};
 		}
+	}
+
+	async convertLegacySliceToSharedSlice(
+		args: SliceMachineManagerConvertLegacySliceToSharedSliceArgs,
+	): Promise<SliceMachineManagerConvertLegacySliceToSharedSliceReturnType> {
+		const errors: (DecodeError | HookError)[] = [];
+
+		const { model: maybeExistingSlice } = await this.readSlice({
+			libraryID: args.dest.libraryID,
+			sliceID: args.dest.sliceID,
+		});
+
+		const legacySliceAsVariation: Variation = {
+			id: args.dest.variationID,
+			name: args.dest.variationName,
+			description: args.dest.variationName,
+			imageUrl: "",
+			docURL: "",
+			version: "initial",
+			primary: {},
+			items: {},
+		};
+
+		switch (args.model.type) {
+			case "Slice":
+				legacySliceAsVariation.primary = args.model["non-repeat"];
+				legacySliceAsVariation.items = args.model.repeat;
+				break;
+
+			case "Group":
+				legacySliceAsVariation.items = args.model.config?.fields ?? {};
+				break;
+
+			default:
+				legacySliceAsVariation.primary = { [args.src.sliceID]: args.model };
+				break;
+		}
+
+		// Convert as a slice variation, or merge against an existing slice variation
+		if (maybeExistingSlice) {
+			const maybeVariation = maybeExistingSlice.variations.find(
+				(variation) => variation.id === args.dest.variationID,
+			);
+
+			// If we're not merging against an existing slice variation, then we need to insert the new variation
+			if (!maybeVariation) {
+				maybeExistingSlice.variations = [
+					...maybeExistingSlice.variations,
+					legacySliceAsVariation,
+				];
+			}
+
+			maybeExistingSlice.legacyPaths ||= {};
+			maybeExistingSlice.legacyPaths[
+				`${args.src.customTypeID}::${args.src.sliceZoneID}::${args.src.sliceID}`
+			] = args.dest.variationID;
+
+			await this.updateSlice({
+				libraryID: args.dest.libraryID,
+				model: maybeExistingSlice,
+			});
+		} else {
+			// Convert to new shared slice
+			await this.createSlice({
+				libraryID: args.dest.libraryID,
+				model: {
+					id: args.dest.sliceID,
+					type: "SharedSlice",
+					name: args.dest.sliceID,
+					legacyPaths: {
+						[`${args.src.customTypeID}::${args.src.sliceZoneID}::${args.src.sliceID}`]:
+							args.dest.variationID,
+					},
+					variations: [legacySliceAsVariation],
+				},
+			});
+		}
+
+		// Update source custom type
+		const { model: customType, errors: customTypeReadErrors } =
+			await this.customTypes.readCustomType({
+				id: args.src.customTypeID,
+			});
+		errors.push(...customTypeReadErrors);
+
+		if (customType) {
+			const field = customType.json[args.src.tabID][args.src.sliceZoneID];
+
+			// Convert legacy slice definition in slice zone to shared slice reference
+			if (field.type === "Slices" && field.config?.choices) {
+				delete field.config.choices[args.src.sliceID];
+				field.config.choices[args.dest.sliceID] = {
+					type: "SharedSlice",
+				};
+			}
+
+			const { errors: customTypeUpdateErrors } =
+				await this.customTypes.updateCustomType({ model: customType });
+			errors.push(...customTypeUpdateErrors);
+		}
+
+		return { errors };
 	}
 
 	/**

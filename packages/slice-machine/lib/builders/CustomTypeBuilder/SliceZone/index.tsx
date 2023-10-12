@@ -75,19 +75,15 @@ const mapAvailableAndSharedSlices = (
 
         return { ...acc, notFound: [...acc.notFound, { key }] };
       }
-      // Legacy Slice
-      else if (value.type === "Slice") {
-        return {
-          ...acc,
-          slicesInSliceZone: [
-            ...acc.slicesInSliceZone,
-            { type: "Slice", payload: { key, value } },
-          ],
-        };
-      }
 
-      // Really old legacy Slice are ignored
-      return acc;
+      // Composite and legacy Slice
+      return {
+        ...acc,
+        slicesInSliceZone: [
+          ...acc.slicesInSliceZone,
+          { type: "Slice", payload: { key, value } },
+        ],
+      };
     },
     { slicesInSliceZone: [], notFound: [] }
   );
@@ -154,6 +150,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     .filter((e) => e.type === "SharedSlice")
     .map((e) => e.payload) as ReadonlyArray<ComponentUI>;
 
+  /* Preserve these keys in SliceZone */
   const availableSlicesToAdd = availableSlices.filter(
     (slice) =>
       !sharedSlicesInSliceZone.some(
@@ -284,6 +281,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             <SlicesList
               slices={slicesInSliceZone}
               format={customType.format}
+              path={{
+                customTypeID: customType.id,
+                tabID: tabId,
+                sliceZoneID: sliceZone?.key ?? "",
+              }}
               onRemoveSharedSlice={onRemoveSharedSlice}
             />
           </BaseStyles>

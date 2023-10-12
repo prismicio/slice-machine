@@ -101,6 +101,10 @@ export const createSliceMachineExpressApp = async (
 			res.sendFile(path.join(sliceMachineOutDir, "changelog.html"));
 		});
 
+		app.get("/labs", (_req, res) => {
+			res.sendFile(path.join(sliceMachineOutDir, "labs.html"));
+		});
+
 		app.get("/slices", (_req, res) => {
 			res.sendFile(path.join(sliceMachineOutDir, "slices.html"));
 		});
@@ -125,26 +129,29 @@ export const createSliceMachineExpressApp = async (
 			);
 		});
 
-		app.get("/:lib/:sliceID/:variation", (_req, res) => {
-			res.sendFile(
-				path.join(sliceMachineOutDir, "[lib]/[sliceName]/[variation].html"),
-			);
-		});
-
-		app.get("/:lib/:sliceID/:variation/simulator", (_req, res) => {
+		app.get("/slices/:lib/:sliceID/:variation", (_req, res) => {
 			res.sendFile(
 				path.join(
 					sliceMachineOutDir,
-					"[lib]/[sliceName]/[variation]/simulator.html",
+					"slices/[lib]/[sliceName]/[variation].html",
 				),
 			);
 		});
 
-		app.get("/:lib/:sliceID/:variation/screenshot", (_req, res) => {
+		app.get("/slices/:lib/:sliceID/:variation/simulator", (_req, res) => {
 			res.sendFile(
 				path.join(
 					sliceMachineOutDir,
-					"[lib]/[sliceName]/[variation]/screenshot.html",
+					"slices/[lib]/[sliceName]/[variation]/simulator.html",
+				),
+			);
+		});
+
+		app.get("/slices/:lib/:sliceID/:variation/screenshot", (_req, res) => {
+			res.sendFile(
+				path.join(
+					sliceMachineOutDir,
+					"slices/[lib]/[sliceName]/[variation]/screenshot.html",
 				),
 			);
 		});

@@ -53,7 +53,6 @@ export const VideoItem = forwardRef<HTMLLIElement, VideoItemProps>(
                 event: "open-video-tutorials",
                 video: videoUrl,
               });
-              window.open(videoUrl, "_blank");
               onClose();
             }}
           />
