@@ -18,11 +18,9 @@ export const LabsList: FC = () => {
       <header>
         <Text variant="normal">
           Slice Machine Labs gives you early access to new features before
-          they're available to everyone.
-        </Text>
-        <Text variant="normal">
-          Experimental features are works-in-progress and unstable, so you may
-          find some bugs along the way.
+          they're widely released. Experimental features are works-in-progress
+          and potentially unstable, so you may find some bugs and breaking
+          changes along the way.
         </Text>
       </header>
       <Box flexDirection="column" gap={16}>
@@ -33,9 +31,12 @@ export const LabsList: FC = () => {
         >
           The Legacy Slice Upgrader allows you to convert old slices (legacy and
           composite slices) to slices managed by Slice Machine (shared slices).
-          This feature is experimental, we strongly encourage you testing it
-          through a Prismic environment first or you'll be at risk of losing
-          past content.
+          This feature is experimental, and we strongly recommend that you test
+          it with a{" "}
+          <a href="https://prismic.io/docs/environments" target="_blank">
+            Prismic environment
+          </a>{" "}
+          or you'll be at risk of losing past content.
         </LabsListItem>
       </Box>
     </Box>
