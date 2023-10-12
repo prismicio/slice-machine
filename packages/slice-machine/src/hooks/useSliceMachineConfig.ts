@@ -3,14 +3,20 @@ import type { SliceMachineConfig } from "@slicemachine/manager";
 
 import { managerClient } from "@src/managerClient";
 
-export function useSliceMachineConfig(): SliceMachineConfig {
-  return useRequest(readSliceMachineConfig, []);
-}
+type UseSliceMachineConfigReturnType = [
+  config: SliceMachineConfig,
+  setConfig: (config: SliceMachineConfig) => Promise<void>
+];
 
-export async function writeSliceMachineConfig(config: SliceMachineConfig) {
-  await managerClient.project.writeSliceMachineConfig({ config });
+export function useSliceMachineConfig(): UseSliceMachineConfigReturnType {
+  const config = useRequest(readSliceMachineConfig, []);
 
-  updateData(readSliceMachineConfig, [], config);
+  const setConfig = async (config: SliceMachineConfig) => {
+    await managerClient.project.writeSliceMachineConfig({ config });
+    updateData(readSliceMachineConfig, [], config);
+  };
+
+  return [config, setConfig];
 }
 
 async function readSliceMachineConfig(): Promise<SliceMachineConfig> {

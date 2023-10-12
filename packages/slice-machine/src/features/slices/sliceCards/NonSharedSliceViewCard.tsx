@@ -21,9 +21,9 @@ export const NonSharedSliceViewCard: FC<NonSharedSliceViewCardProps> = ({
   slice,
   path,
 }) => {
-  const legacySliceUpgrader = useLab("legacySliceUpgrader");
+  const [legacySliceUpgraderLab] = useLab("legacySliceUpgrader");
 
-  const tooltipContent = legacySliceUpgrader.enabled
+  const tooltipContent = legacySliceUpgraderLab.enabled
     ? "This Slice was created with the Legacy Builder. It needs to be converted first to be used within Slice Machine."
     : "This Slice was created with the Legacy Builder, and is incompatible with Slice Machine. You cannot edit, push, or delete it in Slice Machine. In order to proceed, manually remove the Slice from your type model. Then create a new Slice with the same fields using Slice Machine.";
 
@@ -40,7 +40,7 @@ export const NonSharedSliceViewCard: FC<NonSharedSliceViewCardProps> = ({
         <Tooltip content={tooltipContent} side="bottom">
           <Badge color="purple" title="Legacy Slice" />
         </Tooltip>
-        {legacySliceUpgrader.enabled ? (
+        {legacySliceUpgraderLab.enabled ? (
           <ConvertLegacySliceButton slice={slice} path={path} />
         ) : null}
       </CardActions>

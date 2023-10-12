@@ -34,13 +34,13 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
-  const legacySliceUpgrader = useLab("legacySliceUpgrader");
+  const [legacySliceUpgraderLab] = useLab("legacySliceUpgrader");
 
   const { openToaster } = useSliceMachineActions();
 
   useEffect(() => {
     if (hasLegacySlices)
-      legacySliceUpgrader.enabled
+      legacySliceUpgraderLab.enabled
         ? openToaster(
             `This ${customTypesMessages.name({
               start: false,
