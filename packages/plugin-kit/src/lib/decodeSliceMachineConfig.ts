@@ -26,6 +26,7 @@ const SliceMachineConfigCodec = t.intersection([
 		libraries: t.array(t.string),
 		localSliceSimulatorURL: t.string,
 		plugins: t.array(SliceMachineConfigPluginRegistrationCodec),
+		labs: t.partial({ legacySliceUpgrader: t.boolean }),
 	}),
 ]);
 

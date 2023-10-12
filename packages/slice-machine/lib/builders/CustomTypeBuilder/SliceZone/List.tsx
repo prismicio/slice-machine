@@ -12,6 +12,7 @@ import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { NonSharedSliceViewCard } from "@src/features/slices/sliceCards/NonSharedSliceViewCard";
 import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
+import { useLab } from "@src/features/labs/labsList/useLab";
 
 interface SlicesListProps {
   format: CustomTypeFormat;
@@ -33,17 +34,27 @@ export const SlicesList: React.FC<SlicesListProps> = ({
   const hasLegacySlices = slices.some((slice) => slice.type !== "SharedSlice");
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
 
+  const [legacySliceUpgraderLab] = useLab("legacySliceUpgrader");
+
   const { openToaster } = useSliceMachineActions();
 
   useEffect(() => {
     if (hasLegacySlices)
-      openToaster(
-        `This ${customTypesMessages.name({
-          start: false,
-          plural: false,
-        })} contains legacy slices that can be upgraded.`,
-        ToasterType.INFO
-      );
+      legacySliceUpgraderLab.enabled
+        ? openToaster(
+            `This ${customTypesMessages.name({
+              start: false,
+              plural: false,
+            })} contains legacy slices that can be upgraded.`,
+            ToasterType.INFO
+          )
+        : openToaster(
+            `This ${customTypesMessages.name({
+              start: false,
+              plural: false,
+            })} contains slices that are incompatible.`,
+            ToasterType.WARNING
+          );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLegacySlices]);
 
