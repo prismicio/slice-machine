@@ -1,6 +1,5 @@
-import Modal from "react-modal";
-import SliceMachineModal from "@components/SliceMachineModal";
-import { Field, FieldProps, Form, Formik } from "formik";
+import { FC } from "react";
+import { Field, Form, Formik } from "formik";
 import {
   Box,
   Button,
@@ -11,107 +10,50 @@ import {
   Text,
   Textarea,
 } from "theme-ui";
+import Modal from "react-modal";
 import { useSelector } from "react-redux";
+
+import SliceMachineModal from "@components/SliceMachineModal";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  getLastSyncChange,
-  userHasSendAReview,
-} from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { telemetry } from "@src/apiClient";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { getLibraries } from "@src/modules/slices";
-import { hasLocal } from "@lib/models/common/ModelData";
+import { UserReviewType } from "@src/modules/userContext/types";
+
+import { ReviewFormSelect } from "./ReviewFormSelect";
 
 Modal.setAppElement("#__next");
 
-const ratingSelectable = [1, 2, 3, 4, 5];
-
-const SelectReviewComponent = ({ field, form }: FieldProps) => {
-  return (
-    <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
-      {ratingSelectable.map((rating, index) => (
-        <Button
-          variant="secondary"
-          type="button"
-          key={index}
-          onClick={() => void form.setFieldValue("rating", rating)}
-          className={field.value === rating ? "selected" : ""}
-          sx={{
-            "&:not(:last-of-type)": {
-              mr: 1,
-            },
-            "&.selected": {
-              backgroundColor: "code.gray",
-              color: "white",
-            },
-          }}
-          data-cy={`review-form-score-${rating}`}
-        >
-          {rating}
-        </Button>
-      ))}
-    </Box>
-  );
+type ReviewFormProps = {
+  reviewType: UserReviewType;
 };
 
-const ReviewModal: React.FunctionComponent = () => {
-  const {
-    isReviewLoading,
-    isLoginModalOpen,
-    hasSendAReview,
-    customTypes,
-    libraries,
-    lastSyncChange,
-  } = useSelector((store: SliceMachineStoreType) => ({
-    isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
-    isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
-    hasSendAReview: userHasSendAReview(store),
-    customTypes: selectAllCustomTypes(store),
-    libraries: getLibraries(store),
-    lastSyncChange: getLastSyncChange(store),
-  }));
-
+export const ReviewForm: FC<ReviewFormProps> = (props) => {
+  const { reviewType } = props;
+  const { isReviewLoading, isLoginModalOpen } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
+      isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
+    })
+  );
   const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =
     useSliceMachineActions();
 
-  const sliceCount =
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    libraries && libraries.length
-      ? libraries.reduce((count, lib) => {
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          if (!lib) return count;
-          return count + lib.components.length;
-        }, 0)
-      : 0;
-
-  const hasSliceWithinCustomType = customTypes.some(
-    (customType) =>
-      hasLocal(customType) &&
-      customType.local.tabs.some(
-        (tab) => tab.sliceZone && tab.sliceZone?.value.length > 0
-      )
-  );
-
-  const hasPushedAnHourAgo = Boolean(
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    lastSyncChange && Date.now() - lastSyncChange >= 3600000
-  );
-
-  const userHasCreatedEnoughContent =
-    sliceCount >= 1 &&
-    customTypes.length >= 1 &&
-    hasSliceWithinCustomType &&
-    hasPushedAnHourAgo;
-
   const onSendAReview = (rating: number, comment: string): void => {
     startLoadingReview();
-    void telemetry.track({ event: "review", rating, comment });
-    sendAReview();
+    void telemetry.track({
+      event: "review",
+      rating,
+      comment,
+      type:
+        reviewType === "advancedRepository"
+          ? "advanced repository"
+          : "onboarding",
+    });
+    sendAReview(reviewType);
     stopLoadingReview();
   };
 
@@ -123,9 +65,9 @@ const ReviewModal: React.FunctionComponent = () => {
 
   return (
     <SliceMachineModal
-      isOpen={userHasCreatedEnoughContent && !hasSendAReview}
+      isOpen
       shouldCloseOnOverlayClick={false}
-      onRequestClose={() => skipReview()}
+      onRequestClose={() => skipReview(reviewType)}
       closeTimeoutMS={500}
       contentLabel={"Review Modal"}
       portalClassName={"ReviewModal"}
@@ -178,9 +120,9 @@ const ReviewModal: React.FunctionComponent = () => {
                 }}
               >
                 <Heading sx={{ fontSize: "20px", mr: 4 }}>
-                  Share Feedback
+                  Share feedback
                 </Heading>
-                <Close type="button" onClick={() => skipReview()} />
+                <Close type="button" onClick={() => skipReview(reviewType)} />
               </Flex>
               <Flex
                 sx={{
@@ -190,8 +132,8 @@ const ReviewModal: React.FunctionComponent = () => {
                 }}
               >
                 <Text variant={"xs"} as={"p"} sx={{ maxWidth: 302, mb: 3 }}>
-                  Overall, how satisfied are you with your Slice Machine
-                  experience?
+                  Overall, how satisfied or dissatisfied are you with your Slice
+                  Machine experience so far?
                 </Text>
                 <Box
                   mb={2}
@@ -208,11 +150,11 @@ const ReviewModal: React.FunctionComponent = () => {
                     Very satisfied
                   </Text>
                 </Box>
-                <Field name={"rating"} component={SelectReviewComponent} />
+                <Field name={"rating"} component={ReviewFormSelect} />
                 <Field
                   name={"comment"}
                   type="text"
-                  placeholder="Share your thoughts. What can we improve?"
+                  placeholder="Tell us more..."
                   as={Textarea}
                   autoComplete="off"
                   sx={{ height: 80, mb: 3 }}
@@ -233,5 +175,3 @@ const ReviewModal: React.FunctionComponent = () => {
     </SliceMachineModal>
   );
 };
-
-export default ReviewModal;

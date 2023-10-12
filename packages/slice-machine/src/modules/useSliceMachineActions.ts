@@ -23,7 +23,7 @@ import {
   renameAvailableCustomType,
 } from "./availableCustomTypes";
 import { createSlice, deleteSliceCreator, renameSliceCreator } from "./slices";
-import { UserContextStoreType } from "./userContext/types";
+import { UserContextStoreType, UserReviewType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
 import {
   initCustomTypeStoreCreator,
@@ -134,8 +134,18 @@ const useSliceMachineActions = () => {
     dispatch(stopLoadingActionCreator({ loadingKey: LoadingKeysEnum.LOGIN }));
 
   // UserContext module
-  const skipReview = () => dispatch(skipReviewCreator());
-  const sendAReview = () => dispatch(sendAReviewCreator());
+  const skipReview = (reviewType: UserReviewType) =>
+    dispatch(
+      skipReviewCreator({
+        reviewType,
+      })
+    );
+  const sendAReview = (reviewType: UserReviewType) =>
+    dispatch(
+      sendAReviewCreator({
+        reviewType,
+      })
+    );
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
   const setSeenSimulatorToolTip = () =>

@@ -20,41 +20,57 @@ describe("[UserContext module]", () => {
       expect(userContextReducer({}, { type: "NO.MATCH" })).toEqual({});
     });
 
-    it("should update hasSendAReview to true when given USER_CONTEXT/SEND_REVIEW action", () => {
+    it("should update user review onboarding to true when given USER_CONTEXT/SEND_REVIEW action", () => {
       // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false;... Remove this comment to see the full error message
       const initialState: UserContextStoreType = {
-        hasSendAReview: false,
+        userReview: {
+          onboarding: false,
+          advancedRepository: false,
+        },
         updatesViewed: {
           latest: null,
           latestNonBreaking: null,
         },
       };
 
-      const action = sendAReviewCreator();
+      const action = sendAReviewCreator({
+        reviewType: "onboarding",
+      });
 
-      const expectedState = {
+      const expectedState: UserContextStoreType = {
         ...initialState,
-        hasSendAReview: true,
+        userReview: {
+          onboarding: true,
+          advancedRepository: false,
+        },
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);
     });
 
-    it("should update hasSendAReview to true when given USER_CONTEXT/SKIP_REVIEW action", () => {
+    it("should update user review onboarding to true when given USER_CONTEXT/SKIP_REVIEW action", () => {
       // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false;... Remove this comment to see the full error message
       const initialState: UserContextStoreType = {
-        hasSendAReview: false,
+        userReview: {
+          onboarding: false,
+          advancedRepository: false,
+        },
         updatesViewed: {
           latest: null,
           latestNonBreaking: null,
         },
       };
 
-      const action = skipReviewCreator();
+      const action = skipReviewCreator({
+        reviewType: "onboarding",
+      });
 
-      const expectedState = {
+      const expectedState: UserContextStoreType = {
         ...initialState,
-        hasSendAReview: true,
+        userReview: {
+          onboarding: true,
+          advancedRepository: false,
+        },
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);
