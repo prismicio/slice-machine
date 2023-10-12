@@ -11,6 +11,7 @@ import {
 } from "@src/hooks/useSliceMachineConfig";
 
 import { LabsListItem } from "./LabsListItem";
+import { useLab } from "./useLab";
 
 export const LabsList: FC = () => {
   const config = useSliceMachineConfig();
@@ -67,7 +68,7 @@ export const LabsList: FC = () => {
       <Box flexDirection="column" gap={16}>
         <LabsListItem
           title="Legacy Slice Upgrader"
-          enabled={config.labs?.legacySliceUpgrader ?? false}
+          enabled={useLab("legacySliceUpgrader").enabled}
           onToggle={(enabled) =>
             void setLab("legacySliceUpgrader", "Legacy Slice Upgrader", enabled)
           }
