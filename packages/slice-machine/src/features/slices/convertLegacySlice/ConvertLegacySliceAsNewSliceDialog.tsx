@@ -61,7 +61,10 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
             return (
               <form id="convert-legacy-slice-as-new-slice-dialog">
                 <Box display="flex" flexDirection="column">
-                  <ScrollArea className={styles.scrollArea}>
+                  <ScrollArea
+                    className={styles.scrollArea}
+                    style={{ width: 448 }}
+                  >
                     <Text variant="normal" color="grey11">
                       This will create a new slice with the same fields. The new
                       slice will replace the legacy slice in all of your types,

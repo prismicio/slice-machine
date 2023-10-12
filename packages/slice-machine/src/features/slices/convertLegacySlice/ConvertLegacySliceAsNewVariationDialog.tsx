@@ -65,7 +65,10 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
             return (
               <form id="convert-legacy-slice-as-new-variation-dialog">
                 <Box display="flex" flexDirection="column">
-                  <ScrollArea className={styles.scrollArea}>
+                  <ScrollArea
+                    className={styles.scrollArea}
+                    style={{ width: 448 }}
+                  >
                     <Text variant="normal" color="grey11">
                       If you have multiple slices that are similar, you can
                       combine them as variations of the same slice.
