@@ -6,7 +6,7 @@ export enum AuthStatus {
 }
 
 export type UserContextStoreType = {
-  hasSendAReview: boolean;
+  userReview: UserReviewState;
   updatesViewed: {
     latest: string | null;
     latestNonBreaking: string | null;
@@ -16,4 +16,17 @@ export type UserContextStoreType = {
   hasSeenChangesToolTip: boolean;
   authStatus: AuthStatus;
   lastSyncChange: number | null;
+} & LegacyUserContextStoreType;
+
+export type UserReviewState = {
+  onboarding: boolean;
+  advancedRepository: boolean;
+};
+
+export type UserReviewType = keyof UserReviewState;
+
+// Allow to handle old property that users can have
+// in their local storage
+type LegacyUserContextStoreType = {
+  hasSendAReview?: boolean;
 };
