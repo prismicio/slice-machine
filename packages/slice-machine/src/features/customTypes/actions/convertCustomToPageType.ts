@@ -1,8 +1,10 @@
 import { toast } from "react-toastify";
-
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+
 import { CustomTypeFormat } from "@slicemachine/manager";
+import { convertToPageType } from "@src/domain/customType";
 import { managerClient } from "@src/managerClient";
+
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
 export async function convertCustomToPageType(
@@ -13,10 +15,7 @@ export async function convertCustomToPageType(
     CUSTOM_TYPES_MESSAGES[customType.format as CustomTypeFormat];
 
   try {
-    const newCustomType: CustomType = {
-      ...customType,
-      format: "page",
-    };
+    const newCustomType = convertToPageType(customType);
     await managerClient.customTypes.updateCustomType({
       model: newCustomType,
     });

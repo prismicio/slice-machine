@@ -94,7 +94,11 @@ type CommandInitEndSegmentEvent = SegmentEvent<
 
 type ReviewSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.review,
-	{ rating: number; comment: string }
+	{
+		rating: number;
+		comment: string;
+		type: "onboarding" | "advanced repository";
+	}
 >;
 
 type SliceSimulatorSetupSegmentEvent = SegmentEvent<

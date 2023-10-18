@@ -19,5 +19,8 @@ export function setupSentry(): void {
 		environment: isStableVersion
 			? import.meta.env.MODE || "production"
 			: "alpha",
+		// Increase the default truncation length of 250 to 2500 (x10)
+		// to have enough details in Sentry
+		maxValueLength: 2_500,
 	});
 }

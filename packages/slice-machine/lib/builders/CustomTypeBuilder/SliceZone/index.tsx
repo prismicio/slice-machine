@@ -188,17 +188,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const closeUpdateSliceZoneModal = () => {
     setIsUpdateSliceZoneModalOpen(false);
-    redirectToEditMode();
   };
 
   const closeCreateSliceModal = () => {
     setIsCreateSliceModalOpen(false);
-    redirectToEditMode();
   };
 
   const closeSlicesTemplatesModal = () => {
     setIsSlicesTemplatesModalOpen(false);
-    redirectToEditMode();
   };
 
   const onAddSlicesToSliceZone = (newCustomType: CustomTypeSM) => {
@@ -311,6 +308,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           });
           onAddSlicesToSliceZone(newCustomType);
           closeUpdateSliceZoneModal();
+          redirectToEditMode();
           toast.success("Slice(s) added to slice zone");
         }}
         close={closeUpdateSliceZoneModal}
@@ -328,6 +326,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           });
           onAddSlicesToSliceZone(newCustomType);
           closeSlicesTemplatesModal();
+          redirectToEditMode();
           toast.success(
             <ToastMessageWithPath
               message="Slice template(s) added to slice zone and created at: "
@@ -357,6 +356,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             });
             onAddSlicesToSliceZone(newCustomType);
             closeCreateSliceModal();
+            redirectToEditMode();
             toast.success(
               <ToastMessageWithPath
                 message="New slice added to slice zone and created at: "

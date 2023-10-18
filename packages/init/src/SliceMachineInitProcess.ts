@@ -535,7 +535,7 @@ export class SliceMachineInitProcess {
 							tryAgainCommand = `${tryAgainCommand} --repository=${this.context.repository.domain}`;
 						}
 
-						await this.trackError(error.shortMessage);
+						await this.trackError(error);
 						console.error(
 							`\n\n${error.shortMessage}\n${error.stderr}\n\n${
 								logSymbols.error
