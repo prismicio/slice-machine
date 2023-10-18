@@ -49,49 +49,12 @@ const createPrismicIOFile = async ({
 		return;
 	}
 
-	let createClientContents: string;
-
-	if (isTypeScriptProject) {
-		createClientContents = source`
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param config - Configuration for the Prismic client.
-			 */
-			export const createClient = (config: prismic.ClientConfig = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				return client;
-			};
-		`;
-	} else {
-		createClientContents = source`
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param {prismic.ClientConfig} config - Configuration for the Prismic client.
-			 */
-			export const createClient = (config = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				return client;
-			};
-		`;
-	}
-
 	let contents: string;
 
 	if (isTypeScriptProject) {
 		contents = source`
 			import * as prismic from "@prismicio/client";
+			import { CreateClientConfig, enableAutoPreviews } from '@prismicio/svelte/kit';
 			import config from "../../slicemachine.config.json";
 
 			/**
@@ -106,21 +69,38 @@ const createPrismicIOFile = async ({
 			 */
 			// TODO: Update the routes array to match your project's route structure.
 			const routes: prismic.ClientConfig["routes"] = [
-				{
-					type: "homepage",
-					path: "/",
-				},
-				{
-					type: "page",
-					path: "/:uid",
-				},
+				// Examples:
+				// {
+				// 	type: "homepage",
+				// 	path: "/",
+				// },
+				// {
+				// 	type: "page",
+				// 	path: "/:uid",
+				// },
 			];
 
-			${createClientContents}
+			/**
+			 * Creates a Prismic client for the project's repository. The client is used to
+			 * query content from the Prismic API.
+			 *
+			 * @param config - Configuration for the Prismic client.
+			 */
+			export const createClient = (config: CreateClientConfig = {}) => {
+				const client = prismic.createClient(repositoryName, {
+					routes,
+					...config,
+				});
+
+				enableAutoPreviews({ client, cookies });
+
+				return client;
+			};
 		`;
 	} else {
 		contents = source`
 			import * as prismic from "@prismicio/client";
+			import { enableAutoPreviews } from '@prismicio/svelte/kit';
 			import config from "../../slicemachine.config.json";
 
 			/**
@@ -137,17 +117,33 @@ const createPrismicIOFile = async ({
 			 */
 			// TODO: Update the routes array to match your project's route structure.
 			const routes = [
-				{
-					type: "homepage",
-					path: "/",
-				},
-				{
-					type: "page",
-					path: "/:uid",
-				},
+				// Examples:
+				// {
+				// 	type: "homepage",
+				// 	path: "/",
+				// },
+				// {
+				// 	type: "page",
+				// 	path: "/:uid",
+				// },
 			];
 
-			${createClientContents}
+			/**
+			 * Creates a Prismic client for the project's repository. The client is used to
+			 * query content from the Prismic API.
+			 *
+			 * @param {import('@prismicio/svelte/kit').CreateClientConfig} config - Configuration for the Prismic client.
+			 */
+			export const createClient = (config = {}) => {
+				const client = prismic.createClient(repositoryName, {
+					routes,
+					...config,
+				});
+
+				enableAutoPreviews({ client, cookies });
+
+				return client;
+			};
 		`;
 	}
 
@@ -196,6 +192,86 @@ const createSliceSimulatorPage = async ({
 				parser: "svelte",
 			},
 		},
+		helpers,
+	});
+};
+
+const createPreviewRouteMatcherFile = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const extension = await getJSFileExtension({ helpers, options });
+	const filename = path.join(`src/params/preview.${extension}`);
+
+	if (await checkHasProjectFile({ filename, helpers })) {
+		return;
+	}
+
+	const contents = source`
+		export function match(param) {
+			return param === 'preview';
+		}
+	`;
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
+};
+
+const createPreviewRouteDirectory = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const filename = path.join(
+		"src",
+		"routes",
+		"[[preview=preview]]",
+		"README.md",
+	);
+
+	if (await checkHasProjectFile({ filename, helpers })) {
+		return;
+	}
+
+	const contents = source`
+		This directory adds support for optional \`/preview\` routes. Do not remove this directory.
+
+		All routes within this directory will be served using the following URLs:
+
+		- \`/example-route\` (prerendered)
+		- \`/preview/example-route\` (server-rendered)
+	`;
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
+};
+
+const createRootLayoutServerFile = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const extension = await getJSFileExtension({ helpers, options });
+	const filename = path.join(`src/routes/+layout.server.${extension}`);
+
+	if (await checkHasProjectFile({ filename, helpers })) {
+		return;
+	}
+
+	const contents = source`
+		export const prerender = "auto";
+	`;
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
 		helpers,
 	});
 };
@@ -251,7 +327,7 @@ const upsertSliceLibraryIndexFiles = async (
 	}
 
 	await Promise.all(
-		project.config.libraries?.map(async (libraryID) => {
+		project.config.libraries.map(async (libraryID) => {
 			await upsertSliceLibraryIndexFile({ libraryID, ...context });
 		}),
 	);
@@ -267,6 +343,9 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			modifySliceMachineConfig(context),
 			createPrismicIOFile(context),
 			createSliceSimulatorPage(context),
+			createPreviewRouteDirectory(context),
+			createPreviewRouteMatcherFile(context),
+			createRootLayoutServerFile(context),
 		]),
 	);
 
