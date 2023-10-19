@@ -6,19 +6,17 @@ import Card from "@components/Card";
 import SliceMachineModal from "@components/SliceMachineModal";
 
 type DeleteSliceZoneModalProps = {
-  isDeleteSliceZoneModalOpen: boolean;
   deleteSliceZone: () => void;
   closeDeleteSliceZoneModal: () => void;
 };
 
 export const DeleteSliceZoneModal: FC<DeleteSliceZoneModalProps> = ({
-  isDeleteSliceZoneModalOpen,
   deleteSliceZone,
   closeDeleteSliceZoneModal,
 }) => {
   return (
     <SliceMachineModal
-      isOpen={isDeleteSliceZoneModalOpen}
+      isOpen
       shouldCloseOnOverlayClick={true}
       style={{
         content: {
