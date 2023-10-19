@@ -7,7 +7,6 @@ import ModalFormCard from "../../../../components/ModalFormCard";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
 interface UpdateSliceModalProps {
-  isOpen: boolean;
   formId: string;
   close: () => void;
   onSubmit: (slices: SharedSlice[]) => Promise<void>;
@@ -19,7 +18,6 @@ export type SliceZoneFormValues = {
 };
 
 const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
-  isOpen,
   formId,
   close,
   onSubmit,
@@ -27,8 +25,8 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
 }) => {
   return (
     <ModalFormCard
+      isOpen
       buttonLabel="Add"
-      isOpen={isOpen}
       formId={formId}
       close={close}
       onSubmit={(values: SliceZoneFormValues) => {

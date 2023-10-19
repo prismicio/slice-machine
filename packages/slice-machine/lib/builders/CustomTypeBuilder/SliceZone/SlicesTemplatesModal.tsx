@@ -16,7 +16,6 @@ import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 
 interface UpdateSliceModalProps {
-  isOpen: boolean;
   formId: string;
   close: () => void;
   onSuccess: (slices: SharedSlice[]) => Promise<void>;
@@ -29,7 +28,6 @@ export type SliceZoneFormValues = {
 };
 
 export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
-  isOpen,
   formId,
   close,
   onSuccess,
@@ -40,8 +38,8 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
 
   return (
     <ModalFormCard
+      isOpen
       buttonLabel="Add"
-      isOpen={isOpen}
       formId={formId}
       close={close}
       onSubmit={(values: SliceZoneFormValues) => {
