@@ -18,6 +18,9 @@ export const root = style([
     borderWidth: 1,
     overflowX: "hidden",
   }),
+  // The following `{}` is necessary for the `root` class to work in selectors.
+  // It helps us remove the `List` component's borders when used in a `Window`.
+  {},
 ]);
 
 export const frame = style([
@@ -151,8 +154,12 @@ export const newTabButton = style([
   },
 ]);
 
-export const tabsContent = sprinkles({
-  backgroundColor: colors.grey2,
-  flexGrow: 1,
-  outline: "none",
-});
+export const tabsContent = style([
+  sprinkles({
+    all: "unset",
+    backgroundColor: colors.grey2,
+    display: "grid",
+    flexGrow: 1,
+  }),
+  { selectors: { '&[data-state="inactive"]': { display: "none" } } },
+]);
