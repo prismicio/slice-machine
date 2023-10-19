@@ -142,8 +142,11 @@ export class SliceMachinePluginRunner {
 				)(resolve);
 				plugin = raw.default || raw;
 			} catch (error) {
-				// Only log in development and when plugin is unavailable through native plugins library (to prevent noise)
-				if (import.meta.env.DEV && !(resolve in this._nativePlugins)) {
+				// Only log in development, but not during tests when a native plugin matches.
+				if (
+					import.meta.env.DEV &&
+					!(import.meta.env.TEST && resolve in this._nativePlugins)
+				) {
 					console.error(error);
 				}
 			}
