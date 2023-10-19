@@ -164,7 +164,7 @@ it("throws if repository name is too long", async () => {
 			return initProcess.useRepositoryFlag();
 		}),
 	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Repository name lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-officiis-incidunt-ex-harum must be 30 characters long or less"',
+		'"Repository name lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-officiis-incidunt-ex-harum must be 63 characters long or less"',
 	);
 });
 
