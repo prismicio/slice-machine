@@ -243,6 +243,8 @@ const createPreviewRouteDirectory = async ({
 
 		- \`/example-route\` (prerendered)
 		- \`/preview/example-route\` (server-rendered)
+
+		See <https://prismic.io/docs/svelte-preview> for more information.
 	`;
 
 	await writeProjectFile({
