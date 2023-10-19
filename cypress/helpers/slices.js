@@ -121,7 +121,6 @@ function addFieldToSlice(elements, fieldType, fieldName, fieldId) {
  * @param {string} variationName Name of the variation.
  */
 export function addVariationToSlice(variationName) {
-  sliceBuilder.variationsDropdown.click({ force: true });
   sliceBuilder.addVariationButton.click();
 
   addVariationModal.root.within(() => {

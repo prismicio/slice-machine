@@ -71,11 +71,13 @@ describe("I am an existing SM user and I want to upload screenshots on variation
   });
 
   it("Error displayed when non-image files are uploaded", () => {
+    const variationName = "Error handling";
+
     sliceBuilder.goTo(slice.library, slice.name);
-    sliceBuilder.addVariation("Error handling");
+    sliceBuilder.addVariation(variationName);
     sliceBuilder.save();
 
-    sliceBuilder.openScreenshotModal();
+    new SliceCard(slice.name, variationName).openScreenshotModal();
     cy.contains("Select file").selectFile(
       {
         contents: Cypress.Buffer.from("this is not an image"),

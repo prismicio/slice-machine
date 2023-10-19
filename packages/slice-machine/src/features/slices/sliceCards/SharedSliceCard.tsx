@@ -107,6 +107,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
 
   return (
     <Card
+      aria-label={`${slice.model.name} ${variation.name} slice card`}
       checked={selected}
       data-cy={`shared-slice-card-${slice.model.id}`}
       data-testid="shared-slice-card"
@@ -202,7 +203,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
         subtitle={
           <>
             {hasVariationId
-              ? slice.model.name
+              ? variation.id
               : `${slice.model.variations.length} variation${
                   slice.model.variations.length > 1 ? "s" : ""
                 }`}

@@ -64,6 +64,7 @@ export const headerActions = style([
     flexGrow: 1,
     gap: 8,
     justifyContent: "end",
+    minWidth: 0,
   }),
 ]);
 
