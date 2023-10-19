@@ -45,20 +45,33 @@ export const readSliceLibrary = async (
 	await Promise.all(
 		childDirs.map(async (childDir) => {
 			if (childDir.isDirectory()) {
-				const modelPath = path.join(
-					libraryDir,
-					childDir.name,
-					SHARED_SLICE_MODEL_FILENAME,
+				const childDirContents = await fs.readdir(
+					path.join(libraryDir, childDir.name),
+					{
+						withFileTypes: true,
+					},
 				);
+				const isSliceDir = childDirContents.some((entry) => {
+					return entry.isFile() && entry.name === SHARED_SLICE_MODEL_FILENAME;
+				});
 
-				try {
-					const modelContents = await readJSONFile(modelPath);
+				if (isSliceDir) {
+					const modelPath = path.join(
+						libraryDir,
+						childDir.name,
+						SHARED_SLICE_MODEL_FILENAME,
+					);
 
-					if (isSharedSliceModel(modelContents)) {
-						sliceIDs.push(modelContents.id);
+					try {
+						const modelContents = await readJSONFile(modelPath);
+
+						if (isSharedSliceModel(modelContents)) {
+							sliceIDs.push(modelContents.id);
+						}
+					} catch {
+						// JSON could not be read or parsed
+						unreadableModelPaths.push(modelPath);
 					}
-				} catch {
-					unreadableModelPaths.push(modelPath);
 				}
 			}
 		}),
