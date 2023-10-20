@@ -64,56 +64,57 @@ const PascalNameToReplace = ({ slice }) => {
 					</div>
 				</div>
 			</div>
-			<style>
-				{`
-          .es-bounded {
+			<style
+				dangerouslySetInnerHTML={{
+					__html: `
+            .es-bounded {
               margin: 0px;
               min-width: 0px;
               position: relative;
-          }
-  
-          .es-fullpage-hero {
+            }
+
+            .es-fullpage-hero {
               font-family: system-ui, sans-serif;
               background-color: #fff;
               color: #333;
-          }
-          
-          .es-fullpage-hero__image {
+            }
+
+            .es-fullpage-hero__image {
               max-width: 100%;
               height: auto;
               align-self: center;
-          }
-              
-          .es-fullpage-hero__image--left > div:first-child {
-              order: 1;
-          }
+            }
 
-          .es-fullpage-hero__image--left > div:nth-child(2) {
-              order: 2;
-          }
-          
-          .es-fullpage-hero__image--right > div:first-child {
-              order: 2;
-          }
-
-          .es-fullpage-hero__image--right > div:nth-child(2) {
+            .es-fullpage-hero__image--left > div:first-child {
               order: 1;
-          }
-          
-          .es-fullpage-hero__content {
+            }
+
+            .es-fullpage-hero__image--left > div:nth-child(2) {
+              order: 2;
+            }
+
+            .es-fullpage-hero__image--right > div:first-child {
+              order: 2;
+            }
+
+            .es-fullpage-hero__image--right > div:nth-child(2) {
+              order: 1;
+            }
+
+            .es-fullpage-hero__content {
               display: flex;
               flex-direction: column;
               gap: 2rem;
-          }
-          
-          .es-fullpage-hero__content-right {
+            }
+
+            .es-fullpage-hero__content-right {
               display: flex;
               flex-direction: column;
               justify-content: space-around;
               padding: 1.5rem;
-          }
-  
-          @media (min-width: 1080px) {
+            }
+
+            @media (min-width: 1080px) {
               .es-fullpage-hero__content {
                   flex-direction: row;
               }
@@ -121,63 +122,63 @@ const PascalNameToReplace = ({ slice }) => {
               .es-fullpage-hero__content > div {
                   width: 50%;
               }
-          }
-  
-          .es-fullpage-hero__content__intro {
+            }
+
+            .es-fullpage-hero__content__intro {
               display: grid;
               gap: 1rem;
-          }
-              
-          .es-fullpage-hero__content__intro__eyebrow {
+            }
+
+            .es-fullpage-hero__content__intro__eyebrow {
               color: #47C1AF;
               font-size: 1.15rem;
               font-weight: 500;
               margin: 0;
-          }
-              
-          .es-fullpage-hero__content__intro__headline {
+            }
+
+            .es-fullpage-hero__content__intro__headline {
               font-size: 1.625rem;
               font-weight: 700;
-          }
-  
-          .es-fullpage-hero__content__intro__headline * {
+            }
+
+            .es-fullpage-hero__content__intro__headline * {
               margin: 0;
-          }
-              
-          @media (min-width: 640px) {
+            }
+
+            @media (min-width: 640px) {
               .es-fullpage-hero__content__intro__headline {
                   font-size: 2rem;
               }
-          }
-              
-          @media (min-width: 1024px) {
+            }
+
+            @media (min-width: 1024px) {
               .es-fullpage-hero__content__intro__headline {
                   font-size: 2.5rem;
               }
-          }
-              
-          @media (min-width: 1200px) {
+            }
+
+            @media (min-width: 1200px) {
               .es-fullpage-hero__content__intro__headline {
                   font-size: 2.75rem;
               }
-          }
-              
-          .es-fullpage-hero__content__intro__description {
+            }
+
+            .es-fullpage-hero__content__intro__description {
               font-size: 1.15rem;
               max-width: 38rem;
-          }
-  
-          .es-fullpage-hero__content__intro__description > p {
+            }
+
+            .es-fullpage-hero__content__intro__description > p {
               margin: 0;
-          }
-              
-          @media (min-width: 1200px) {
+            }
+
+            @media (min-width: 1200px) {
               .es-fullpage-hero__content__intro__description {
                   font-size: 1.4rem;
               }
-          }
+            }
 
-          .es-call-to-action__link {
+            .es-call-to-action__link {
               justify-self: flex-start;
               border-radius: 0.25rem;
               font-size: 0.875rem;
@@ -186,13 +187,14 @@ const PascalNameToReplace = ({ slice }) => {
               transition: background-color 100ms linear;
               background-color: #16745f;
               color: #fff;
-          }
-          
-          .es-call-to-action__link:hover {
+            }
+
+            .es-call-to-action__link:hover {
               background-color: #0d5e4c;
-          }
-        `}
-			</style>
+            }
+          `,
+				}}
+			/>
 		</section>
 	);
 };

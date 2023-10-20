@@ -44,7 +44,7 @@ class SliceBuilder extends BaseBuilder {
   }
 
   goTo(sliceLibrary, sliceName, variation = "default") {
-    cy.visit(`/${sliceLibrary}/${sliceName}/${variation}`);
+    cy.visit(`/slices/${sliceLibrary}/${sliceName}/${variation}`);
     this.saveButton.should("be.visible");
     cy.contains(sliceName).should("be.visible");
     return this;

@@ -1,9 +1,9 @@
-import { Button, ButtonGroup } from "@prismicio/editor-ui";
+import { Button, ButtonGroup, Switch, Text } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
 import { BaseStyles, Heading } from "theme-ui";
 
-import { List, ListHeader } from "@src/components/List";
+import { ListHeader } from "@src/components/List";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import NewField from "./Card/components/NewField";
@@ -73,31 +73,33 @@ const Zone = ({
   const onCancelNewField = () => setNewFieldData(null);
 
   return (
-    <List>
+    <>
       {isCustomType ? (
         <ListHeader
           actions={
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             fields.length > 0 ? (
-              <ButtonGroup size="medium" variant="secondary">
+              <>
+                <Text color="grey11" component="span">
+                  Show code snippets?
+                </Text>
+                <Switch
+                  checked={showHints}
+                  onCheckedChange={setShowHints}
+                  size="small"
+                />
                 <Button
-                  variant="secondary"
-                  onClick={() => setShowHints(!showHints)}
-                >
-                  {showHints ? "Hide" : "Show"} code snippets
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => enterSelectMode()}
                   data-cy={`add-${
                     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     isRepeatable ? "Repeatable" : "Static"
                   }-field`}
+                  onClick={enterSelectMode}
                   startIcon="add"
+                  variant="secondary"
                 >
                   Add a new field
                 </Button>
-              </ButtonGroup>
+              </>
             ) : undefined
           }
         >
@@ -211,7 +213,7 @@ const Zone = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         widgetsArray={widgetsArrayWithCondUid}
       />
-    </List>
+    </>
   );
 };
 

@@ -74,6 +74,7 @@ const mockAdapter = async (
 		sliceReadHookHandler: Mock;
 		customTypeLibraryReadHookHandler: Mock;
 		customTypeReadHookHandler: Mock;
+		customTypeCreateHookHandler: Mock;
 	};
 }> => {
 	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice({
@@ -109,12 +110,14 @@ const mockAdapter = async (
 	const customTypeReadHookHandler = vi.fn(() => {
 		return { model: customTypeModel };
 	});
+	const customTypeCreateHookHandler = vi.fn();
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("slice-library:read", sliceLibraryReadHookHandler);
 			hook("slice:read", sliceReadHookHandler);
 			hook("custom-type-library:read", customTypeLibraryReadHookHandler);
 			hook("custom-type:read", customTypeReadHookHandler);
+			hook("custom-type:create", customTypeCreateHookHandler);
 		},
 	});
 	injectTestAdapter({ initProcess, adapter });
@@ -135,6 +138,7 @@ const mockAdapter = async (
 			sliceReadHookHandler,
 			customTypeLibraryReadHookHandler,
 			customTypeReadHookHandler,
+			customTypeCreateHookHandler,
 		},
 	};
 };
@@ -146,6 +150,10 @@ type MockPrismicAPIsArgs = {
 		sharedSliceModel: any;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		customTypeModel: any;
+	};
+	remoteModels?: {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		customTypeModel: any[];
 	};
 	documents?: Record<string, unknown>;
 };
@@ -180,6 +188,9 @@ const mockPrismicAPIs = async (
 		},
 		async onCustomTypeGet(_req, res, ctx) {
 			return res(ctx.status(404));
+		},
+		async onCustomTypeGetAll(_req, res, ctx) {
+			return res(ctx.json(args.remoteModels?.customTypeModel ?? []));
 		},
 		async onCustomTypeInsert(req, res, ctx) {
 			const want = args.models.customTypeModel;
@@ -243,13 +254,39 @@ it("pushes data to Prismic", async (ctx) => {
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(stdout).toMatch(/Pushed all slices/);
 	expect(stdout).toMatch(/Pushed all types/);
 	expect(stdout).toMatch(/Pushed all documents/);
-	expect(stdout).toMatch(/Pushed data to Prismic/);
+	expect(stdout).toMatch(/Types already exist/);
+	expect(stdout).toMatch(/Synced data with Prismic/);
+});
+
+it("pulls data from Prismic", async (ctx) => {
+	const { models } = await mockAdapter(ctx, initProcess, {
+		empty: ["slice-library:read", "custom-type-library:read"],
+	});
+	await mockPrismicAPIs(ctx, {
+		initProcess,
+		models,
+		documents: {},
+		remoteModels: {
+			customTypeModel: [models.customTypeModel],
+		},
+	});
+
+	const { stdout } = await watchStd(() => {
+		// @ts-expect-error - Accessing protected method
+		return initProcess.syncDataWithPrismic();
+	});
+
+	expect(stdout).toMatch(/No slice to push/);
+	expect(stdout).toMatch(/No custom type to push/);
+	expect(stdout).toMatch(/No document to push/);
+	expect(stdout).toMatch(/Pulled existing types/);
+	expect(stdout).toMatch(/Synced data with Prismic/);
 });
 
 it("skips pushing anything to Prismic when no-push flag is set", async (ctx) => {
@@ -268,7 +305,7 @@ it("skips pushing anything to Prismic when no-push flag is set", async (ctx) => 
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedManager.slices.pushSlice).not.toHaveBeenCalled();
@@ -285,7 +322,7 @@ it("pushes slices to Prismic", async (ctx) => {
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedHookHandlers.sliceLibraryReadHookHandler).toHaveBeenCalledOnce();
@@ -309,7 +346,7 @@ it("skips pushing slices to Prismic when no-push-slices flag is set", async (ctx
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedHookHandlers.sliceLibraryReadHookHandler).not.toHaveBeenCalled();
@@ -333,7 +370,7 @@ it("skips pushing slices to Prismic when no-push flag is set", async (ctx) => {
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedHookHandlers.sliceLibraryReadHookHandler).not.toHaveBeenCalled();
@@ -350,7 +387,7 @@ it("skips pushing slices to Prismic when no slices are available", async (ctx) =
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedHookHandlers.sliceLibraryReadHookHandler).toHaveBeenCalledOnce();
@@ -368,7 +405,7 @@ it("throws when it fails to read slice libraries", async (ctx) => {
 	await expect(
 		watchStd(() => {
 			// @ts-expect-error - Accessing protected method
-			return initProcess.pushDataToPrismic();
+			return initProcess.syncDataWithPrismic();
 		}),
 	).rejects.toMatch(/Failed to read slice libraries/);
 });
@@ -382,12 +419,13 @@ it("pushes types to Prismic", async (ctx) => {
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
+	// One for push, one for pull
 	expect(
 		spiedHookHandlers.customTypeLibraryReadHookHandler,
-	).toHaveBeenCalledOnce();
+	).toHaveBeenCalledTimes(2);
 	expect(spiedHookHandlers.customTypeReadHookHandler).toHaveBeenCalledOnce();
 	expect(spiedManager.customTypes.pushCustomType).toHaveBeenCalledOnce();
 	expect(stdout).toMatch(/Pushed all types/);
@@ -409,12 +447,13 @@ it("skips pushing types to Prismic when no-push-custom-types flag is set", async
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
+	// One for pull
 	expect(
 		spiedHookHandlers.customTypeLibraryReadHookHandler,
-	).not.toHaveBeenCalled();
+	).toHaveBeenCalledOnce();
 	expect(spiedHookHandlers.customTypeReadHookHandler).not.toHaveBeenCalled();
 	expect(spiedManager.customTypes.pushCustomType).not.toHaveBeenCalled();
 });
@@ -435,12 +474,13 @@ it("skips pushing types to Prismic when no-push flag is set", async (ctx) => {
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
+	// One for pull
 	expect(
 		spiedHookHandlers.customTypeLibraryReadHookHandler,
-	).not.toHaveBeenCalled();
+	).toHaveBeenCalledOnce();
 	expect(spiedHookHandlers.customTypeReadHookHandler).not.toHaveBeenCalled();
 	expect(spiedManager.customTypes.pushCustomType).not.toHaveBeenCalled();
 });
@@ -454,18 +494,19 @@ it("skips pushing types to Prismic when no types are available", async (ctx) => 
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
+	// One for push, one for pull
 	expect(
 		spiedHookHandlers.customTypeLibraryReadHookHandler,
-	).toHaveBeenCalledOnce();
+	).toHaveBeenCalledTimes(2);
 	expect(spiedHookHandlers.customTypeReadHookHandler).not.toHaveBeenCalled();
 	expect(spiedManager.customTypes.pushCustomType).not.toHaveBeenCalled();
 	expect(stdout).toMatch(/No custom type to push/);
 });
 
-it("throws when it fails to read slice libraries", async (ctx) => {
+it("throws when it fails to read custom type libraries", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess, {
 		throwsOn: ["custom-type-library:read"],
 	});
@@ -474,7 +515,7 @@ it("throws when it fails to read slice libraries", async (ctx) => {
 	await expect(
 		watchStd(() => {
 			// @ts-expect-error - Accessing protected method
-			return initProcess.pushDataToPrismic();
+			return initProcess.syncDataWithPrismic();
 		}),
 	).rejects.toMatch(/Failed to read custom type libraries/);
 });
@@ -488,7 +529,7 @@ it("pushes documents to Prismic", async (ctx) => {
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedManager.prismicRepository.pushDocuments).toHaveBeenCalledOnce();
@@ -519,7 +560,7 @@ it("skips documents that cannot be parsed", async (ctx) => {
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedManager.prismicRepository.pushDocuments).toHaveBeenCalledOnce();
@@ -543,7 +584,7 @@ it("skips pushing documents to Prismic when no-push-documents flag is set", asyn
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedManager.prismicRepository.pushDocuments).not.toHaveBeenCalled();
@@ -565,7 +606,7 @@ it("skips pushing documents to Prismic when no-push flag is set", async (ctx) =>
 
 	await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedManager.prismicRepository.pushDocuments).not.toHaveBeenCalled();
@@ -582,7 +623,7 @@ it("skips pushing documents to Prismic when no documents directory is available"
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedManager.prismicRepository.pushDocuments).not.toHaveBeenCalled();
@@ -606,7 +647,7 @@ it("skips pushing documents to Prismic when no documents are available", async (
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(spiedManager.prismicRepository.pushDocuments).not.toHaveBeenCalled();
@@ -615,28 +656,13 @@ it("skips pushing documents to Prismic when no documents are available", async (
 
 // Cleanup
 
-it("pushes data to Prismic", async (ctx) => {
-	const { models } = await mockAdapter(ctx, initProcess);
-	await mockPrismicAPIs(ctx, { initProcess, models });
-
-	const { stdout } = await watchStd(() => {
-		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
-	});
-
-	expect(stdout).toMatch(/Pushed all slices/);
-	expect(stdout).toMatch(/Pushed all types/);
-	// expect(stdout).toMatch(/Pushed all documents/);
-	expect(stdout).toMatch(/Pushed data to Prismic/);
-});
-
 it("cleans up documents directory", async (ctx) => {
 	const { models } = await mockAdapter(ctx, initProcess);
 	await mockPrismicAPIs(ctx, { initProcess, models });
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(
@@ -659,7 +685,7 @@ it("does not throw if process cannot clean up documents directory", async (ctx) 
 
 	const { stdout } = await watchStd(() => {
 		// @ts-expect-error - Accessing protected method
-		return initProcess.pushDataToPrismic();
+		return initProcess.syncDataWithPrismic();
 	});
 
 	expect(stdout).toMatch(/Cleaned up data push artifacts/);
@@ -675,9 +701,74 @@ it("throws if context is missing repository", async (ctx) => {
 	await expect(
 		watchStd(() => {
 			// @ts-expect-error - Accessing protected method
-			return initProcess.pushDataToPrismic();
+			return initProcess.syncDataWithPrismic();
 		}),
 	).rejects.toThrowErrorMatchingInlineSnapshot(
-		'"Repository selection must be available through context to run `pushDataToPrismic`"',
+		'"Repository selection must be available through context to run `syncDataWithPrismic`"',
 	);
+});
+
+// Pull
+
+it("pulls types from Prismic", async (ctx) => {
+	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess, {
+		empty: ["slice-library:read", "custom-type-library:read"],
+	});
+	await mockPrismicAPIs(ctx, {
+		initProcess,
+		models,
+		documents: {},
+		remoteModels: {
+			customTypeModel: [models.customTypeModel],
+		},
+	});
+	const spiedManager = spyManager(initProcess);
+
+	const { stdout } = await watchStd(() => {
+		// @ts-expect-error - Accessing protected method
+		return initProcess.syncDataWithPrismic();
+	});
+
+	// One for push, one for pull
+	expect(
+		spiedHookHandlers.customTypeLibraryReadHookHandler,
+	).toHaveBeenCalledTimes(2);
+	expect(
+		spiedHookHandlers.customTypeCreateHookHandler,
+	).toHaveBeenLastCalledWith(
+		{ model: models.customTypeModel },
+		expect.any(Object),
+	);
+	expect(spiedManager.customTypes.fetchRemoteCustomTypes).toHaveBeenCalled();
+	expect(spiedManager.customTypes.pushCustomType).not.toHaveBeenCalled();
+	expect(stdout).toMatch(/Pulled existing types/);
+});
+
+it("skips pulling types if types already exist locally", async (ctx) => {
+	const { models, spiedHookHandlers } = await mockAdapter(ctx, initProcess);
+	await mockPrismicAPIs(ctx, {
+		initProcess,
+		models,
+		documents: {},
+		remoteModels: {
+			customTypeModel: [models.customTypeModel],
+		},
+	});
+	const spiedManager = spyManager(initProcess);
+
+	const { stdout } = await watchStd(() => {
+		// @ts-expect-error - Accessing protected method
+		return initProcess.syncDataWithPrismic();
+	});
+
+	// One for push, one for pull
+	expect(
+		spiedHookHandlers.customTypeLibraryReadHookHandler,
+	).toHaveBeenCalledTimes(2);
+	expect(spiedHookHandlers.customTypeCreateHookHandler).not.toHaveBeenCalled();
+	expect(
+		spiedManager.customTypes.fetchRemoteCustomTypes,
+	).not.toHaveBeenCalled();
+	expect(spiedManager.customTypes.pushCustomType).toHaveBeenCalled();
+	expect(stdout).toMatch(/Types already exist/);
 });

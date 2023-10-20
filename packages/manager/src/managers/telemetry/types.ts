@@ -18,6 +18,7 @@ export const SegmentEventType = {
 	customType_openAddFromTemplates: "custom-type:open-add-from-templates",
 	customType_saved: "custom-type:saved",
 	slice_created: "slice:created",
+	legacySlice_converted: "legacy-slice:converted",
 	screenshotTaken: "screenshot-taken",
 	changes_pushed: "changes:pushed",
 	changes_limitReach: "changes:limit-reach",
@@ -50,6 +51,8 @@ export const HumanSegmentEventType = {
 		"SliceMachine Open Add from templates",
 	[SegmentEventType.customType_saved]: "SliceMachine Custom Type Saved",
 	[SegmentEventType.slice_created]: "SliceMachine Slice Created",
+	[SegmentEventType.legacySlice_converted]:
+		"SliceMachine Legacy Slice Converted",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
 	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
@@ -91,7 +94,11 @@ type CommandInitEndSegmentEvent = SegmentEvent<
 
 type ReviewSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.review,
-	{ rating: number; comment: string }
+	{
+		rating: number;
+		comment: string;
+		type: "onboarding" | "advanced repository";
+	}
 >;
 
 type SliceSimulatorSetupSegmentEvent = SegmentEvent<
@@ -183,6 +190,19 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 	{ id: string; name: string; library: string; sliceTemplate?: string }
 >;
 
+type LegacySliceConvertedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.legacySlice_converted,
+	{
+		id: string;
+		variation: string;
+		library: string;
+		conversionType:
+			| "as_new_slice"
+			| "as_new_variation"
+			| "merge_with_identical";
+	}
+>;
+
 type ScreenshotTakenSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.screenshotTaken,
 	{
@@ -233,6 +253,7 @@ export type SegmentEvents =
 	| CustomTypeOpenAddFromTemplatesEvent
 	| CustomTypeSavedSegmentEvent
 	| SliceCreatedSegmentEvent
+	| LegacySliceConvertedSegmentEvent
 	| ScreenshotTakenSegmentEvent
 	| ChangesPushedSegmentEvent
 	| ChangesLimitReachSegmentEvent

@@ -4,7 +4,7 @@ import { BaseStyles } from "theme-ui";
 
 import { AppLayout, AppLayoutContent } from "@components/AppLayout";
 import LoginModal from "@components/LoginModal";
-import ReviewModal from "@components/ReviewModal";
+import { ReviewModal } from "@components/ReviewModal";
 import { MissingLibraries } from "@components/MissingLibraries";
 import useServerState from "@src/hooks/useServerState";
 import { SliceMachineStoreType } from "@src/redux/type";

@@ -11,13 +11,16 @@ const row = style([flex, sprinkles({ flexDirection: "row" })]);
 export const root = style([
   column,
   sprinkles({
-    backgroundColor: colors.grey2,
+    backgroundColor: colors.grey3,
     borderColor: colors.grey6,
     borderRadius: 6,
     borderStyle: "solid",
     borderWidth: 1,
     overflowX: "hidden",
   }),
+  // The following `{}` is necessary for the `root` class to work in selectors.
+  // It helps us remove the `List` component's borders when used in a `Window`.
+  {},
 ]);
 
 export const frame = style([
@@ -92,7 +95,7 @@ export const tabsTrigger = style([
         color: vars.color.greyLight12,
       },
       '&:is(:focus, :hover, [data-state="active"])::before': {
-        backgroundColor: vars.color.greyLight1,
+        backgroundColor: vars.color.greyLight2,
         borderBottomStyle: vars.borderStyle.none,
         borderColor: vars.color.greyLight6,
         borderLeftStyle: vars.borderStyle.solid,
@@ -137,7 +140,7 @@ export const tabsTriggerMenu = style([
 export const newTabButton = style([
   tabsListChild,
   sprinkles({
-    backgroundColor: colors.grey2,
+    backgroundColor: colors.grey3,
     paddingInline: 8,
     position: "sticky",
     right: 0,
@@ -146,13 +149,17 @@ export const newTabButton = style([
     boxShadow: `inset 0 ${calc.multiply(-1, vars.borderWidth[1])} 0 0 ${
       vars.color.greyLight6
     }, 0 ${calc.multiply(-1, vars.borderWidth[1])} 0 0 ${
-      vars.color.greyLight2
+      vars.color.greyLight3
     }`,
   },
 ]);
 
-export const tabsContent = sprinkles({
-  backgroundColor: colors.grey1,
-  flexGrow: 1,
-  outline: "none",
-});
+export const tabsContent = style([
+  sprinkles({
+    all: "unset",
+    backgroundColor: colors.grey2,
+    display: "grid",
+    flexGrow: 1,
+  }),
+  { selectors: { '&[data-state="inactive"]': { display: "none" } } },
+]);

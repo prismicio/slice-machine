@@ -4,6 +4,8 @@ import { ActionType, createAction, getType } from "typesafe-actions";
 import {
   AuthStatus,
   UserContextStoreType,
+  UserReviewState,
+  UserReviewType,
 } from "@src/modules/userContext/types";
 import { refreshStateCreator } from "../environment";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
@@ -12,7 +14,10 @@ import { changesPushCreator } from "../pushChangesSaga";
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
 const initialState: UserContextStoreType = {
-  hasSendAReview: false,
+  userReview: {
+    onboarding: false,
+    advancedRepository: false,
+  },
   updatesViewed: {
     latest: null,
     latestNonBreaking: null,
@@ -25,9 +30,13 @@ const initialState: UserContextStoreType = {
 };
 
 // Actions Creators
-export const sendAReviewCreator = createAction("USER_CONTEXT/SEND_REVIEW")();
+export const sendAReviewCreator = createAction("USER_CONTEXT/SEND_REVIEW")<{
+  reviewType: UserReviewType;
+}>();
 
-export const skipReviewCreator = createAction("USER_CONTEXT/SKIP_REVIEW")();
+export const skipReviewCreator = createAction("USER_CONTEXT/SKIP_REVIEW")<{
+  reviewType: UserReviewType;
+}>();
 
 export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
   UserContextStoreType["updatesViewed"]
@@ -57,8 +66,11 @@ type userContextActions = ActionType<
 >;
 
 // Selectors
-export const userHasSendAReview = (state: SliceMachineStoreType): boolean =>
-  state.userContext.hasSendAReview;
+export const getUserReview = (state: SliceMachineStoreType): UserReviewState =>
+  state.userContext.userReview ?? {
+    onboarding: state.userContext.hasSendAReview ?? false,
+    advancedRepository: false,
+  };
 
 export const getUpdatesViewed = (
   state: SliceMachineStoreType
@@ -90,7 +102,10 @@ export const userContextReducer: Reducer<
     case getType(skipReviewCreator):
       return {
         ...state,
-        hasSendAReview: true,
+        userReview: {
+          ...state.userReview,
+          [action.payload.reviewType]: true,
+        },
       };
     case getType(updatesViewedCreator): {
       return {

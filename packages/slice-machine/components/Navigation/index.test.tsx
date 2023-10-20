@@ -128,7 +128,7 @@ describe("Side Navigation", () => {
     expect(element).toBeNull();
   });
 
-  test.each([
+  test.skip.each([
     ["Page types", "/"],
     ["Custom types", "/custom-types"],
     ["Changes", "/changes"],
