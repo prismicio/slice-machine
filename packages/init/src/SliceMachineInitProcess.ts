@@ -17,6 +17,7 @@ import {
 	SliceMachineManager,
 	PackageManager,
 	StarterId,
+	REPOSITORY_NAME_VALIDATION,
 } from "@slicemachine/manager";
 
 import pkg from "../package.json";
@@ -683,7 +684,7 @@ export class SliceMachineInitProcess {
 							this.manager.prismicRepository.checkExists({ domain }),
 					});
 
-					if (validation.LessThan4 || validation.MoreThan30) {
+					if (validation.LessThanMin || validation.MoreThanMax) {
 						const errorMessage = getErrorMessageForRepositoryDomainValidation({
 							validation: {
 								...validation,
@@ -846,17 +847,25 @@ export class SliceMachineInitProcess {
 				const domain = formatRepositoryDomain(rawDomain);
 				const validation = validateRepositoryDomain({ domain });
 
-				const minRule = validation.LessThan4
+				const minRule = validation.LessThanMin
 					? chalk.red(
-							`1. Name must be ${chalk.bold("4 characters long or more")}`,
+							`1. Name must be ${chalk.bold(
+								REPOSITORY_NAME_VALIDATION.Min + " characters long or more",
+							)}`,
 					  )
-					: `1. Name must be ${chalk.cyan("4 characters long or more")}`;
+					: `1. Name must be ${chalk.cyan(
+							REPOSITORY_NAME_VALIDATION.Min + " characters long or more",
+					  )}`;
 
-				const maxRule = validation.MoreThan30
+				const maxRule = validation.MoreThanMax
 					? chalk.red(
-							`1. Name must be ${chalk.bold("30 characters long or less")}`,
+							`1. Name must be ${chalk.bold(
+								REPOSITORY_NAME_VALIDATION.Max + " characters long or less",
+							)}`,
 					  )
-					: `1. Name must be ${chalk.cyan("30 characters long or less")}`;
+					: `1. Name must be ${chalk.cyan(
+							REPOSITORY_NAME_VALIDATION.Max + " characters long or less",
+					  )}`;
 
 				this.msg = chalk.reset(
 					`
