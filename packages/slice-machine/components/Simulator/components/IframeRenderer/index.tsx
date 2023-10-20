@@ -9,7 +9,7 @@ import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
-  RefCallback<HTMLIFrameElement>
+  RefCallback<HTMLIFrameElement>,
 ] {
   const [client, setClient] = useState<SimulatorClient | undefined>();
   const clientRef = useRef<SimulatorClient>();

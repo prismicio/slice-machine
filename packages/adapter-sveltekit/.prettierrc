@@ -2,7 +2,7 @@
 	"plugins": ["prettier-plugin-jsdoc"],
 	"jsdocSeparateReturnsFromParam": true,
 	"jsdocSeparateTagGroups": true,
-	"jsdocSingleLineComment": false,
+	"jsdocCommentLineStrategy": "keep",
 	"tsdoc": true,
 	"printWidth": 80,
 	"useTabs": true,

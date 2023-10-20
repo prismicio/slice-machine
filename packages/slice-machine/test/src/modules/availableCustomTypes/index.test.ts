@@ -31,8 +31,10 @@ describe("[Available Custom types module]", () => {
 
     it("should return the initial state if no matching action", () => {
       expect(
-        // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"CUST... Remove this comment to see the full error message
-        availableCustomTypesReducer(dummyCustomTypesState, { type: "NO.MATCH" })
+        availableCustomTypesReducer(dummyCustomTypesState, {
+          // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"CUST... Remove this comment to see the full error message
+          type: "NO.MATCH",
+        })
       ).toEqual(dummyCustomTypesState);
     });
 

@@ -1,6 +1,6 @@
 export async function startPolling<
   Result,
-  ValidatedResult extends Result = Result
+  ValidatedResult extends Result = Result,
 >(
   fn: () => Promise<Result>,
   validate: (result: Result) => result is ValidatedResult,

@@ -36,14 +36,17 @@ function computeStatuses(
   models: LocalOrRemoteModel[],
   userHasAccessToModels: boolean
 ) {
-  return models.reduce<{ [id: string]: ModelStatus }>((acc, model) => {
-    const { status } = computeModelStatus(model, userHasAccessToModels);
+  return models.reduce<{ [id: string]: ModelStatus }>(
+    (acc, model) => {
+      const { status } = computeModelStatus(model, userHasAccessToModels);
 
-    return {
-      ...acc,
-      [hasLocal(model) ? model.local.id : model.remote.id]: status,
-    };
-  }, {} as { [sliceId: string]: ModelStatus });
+      return {
+        ...acc,
+        [hasLocal(model) ? model.local.id : model.remote.id]: status,
+      };
+    },
+    {} as { [sliceId: string]: ModelStatus }
+  );
 }
 
 export const useModelStatus = ({

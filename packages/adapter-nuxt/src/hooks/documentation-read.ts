@@ -35,8 +35,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					model.id
 				}-uid-\${route.params.uid}]\`, () =>
 					prismic.client.getByUID("${model.id}", route.params.uid${
-				isTypeScriptProject ? " as string" : ""
-			})
+						isTypeScriptProject ? " as string" : ""
+					})
 				);
 
 				useHead({
