@@ -1,8 +1,13 @@
 import { expect, it } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
-import { readSliceLibrary, writeSliceModel } from "../../src/fs";
+import {
+	buildSliceLibraryDirectoryPath,
+	readSliceLibrary,
+	writeSliceModel,
+} from "../../src/fs";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -93,6 +98,40 @@ it("returns an empty list of Slices if the library does not exist", async (ctx) 
 	expect(res).toStrictEqual({
 		id: libraryID,
 		sliceIDs: [],
+	});
+});
+
+it("ignores non-slice folders in the library", async (ctx) => {
+	await ctx.pluginRunner.callHook("slice:create", {
+		libraryID: ctx.project.config.libraries[0],
+		model: model1,
+	});
+
+	await writeSliceModel({
+		libraryID: ctx.project.config.libraries[0],
+		model: model1,
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const sliceLibraryDirectoryPath = await buildSliceLibraryDirectoryPath({
+		libraryID: ctx.project.config.libraries[0],
+		helpers: ctx.pluginRunner.rawHelpers,
+		absolute: true,
+	});
+	await fs.mkdir(path.join(sliceLibraryDirectoryPath, model2.name), {
+		recursive: true,
+	});
+
+	const childDirs = await fs.readdir(sliceLibraryDirectoryPath);
+	const res = await readSliceLibrary({
+		libraryID: ctx.project.config.libraries[0],
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	expect(childDirs.sort()).toStrictEqual([model1.name, model2.name].sort());
+	expect(res).toStrictEqual({
+		id: ctx.project.config.libraries[0],
+		sliceIDs: [model1.id].sort(),
 	});
 });
 
