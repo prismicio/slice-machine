@@ -5,7 +5,7 @@ import { createTestProject } from "./__testutils__/createTestProject";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 it("returns parsed cookies from the auth state file", async (ctx) => {
 	const adapter = createTestPlugin();
@@ -43,5 +43,5 @@ it("throws if the user is not logged in", async () => {
 
 	expect(async () => {
 		await manager.user.getAuthenticationCookies();
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });

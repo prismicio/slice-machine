@@ -7,7 +7,7 @@ import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicRepositoryAPI } from "./__testutils__/mockPrismicRepositoryAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 // TODO: This test times out. It seems like a bug in MSW or node-fetch.
 // `create()` times out when it tries to read the network response's text via
@@ -104,5 +104,5 @@ it("throws if not logged in", async () => {
 			domain: "foo",
 			framework: "other",
 		});
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });
