@@ -10,8 +10,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { NonSharedSliceViewCard } from "@src/features/slices/sliceCards/NonSharedSliceViewCard";
-import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
+import { NonSharedSliceCard } from "@src/features/slices/sliceCards/NonSharedSliceCard";
+import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { useLab } from "@src/features/labs/labsList/useLab";
 
 interface SlicesListProps {
@@ -69,20 +69,20 @@ export const SlicesList: React.FC<SlicesListProps> = ({
       renderElem={(slice) => {
         if (slice.type !== "SharedSlice") {
           const nonSharedSlice = slice.payload as NonSharedSliceInSliceZone;
-          return <NonSharedSliceViewCard slice={nonSharedSlice} path={path} />;
+          return <NonSharedSliceCard slice={nonSharedSlice} path={path} />;
         } else {
           const sharedSlice = slice.payload as ComponentUI;
           return (
-            <SharedSliceViewCard
+            <SharedSliceCard
               action={{
                 type: "remove",
                 onRemove: () => {
                   onRemoveSharedSlice(sharedSlice.model.id);
                 },
               }}
-              isDeletedSlice={false}
-              onUpdateScreenshot={undefined}
+              mode="navigation"
               slice={sharedSlice}
+              variant="solid"
             />
           );
         }

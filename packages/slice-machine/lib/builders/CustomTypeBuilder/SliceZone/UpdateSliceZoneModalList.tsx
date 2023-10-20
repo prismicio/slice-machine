@@ -3,7 +3,7 @@ import { FieldArray } from "formik";
 import Grid from "@components/Grid";
 import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { SharedSliceSelectionCard } from "@src/features/slices/sliceCards/SharedSliceSelectionCard";
+import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 
 const UpdateSliceZoneModalList: React.FC<{
   availableSlices: ReadonlyArray<ComponentUI>;
@@ -23,8 +23,10 @@ const UpdateSliceZoneModalList: React.FC<{
             false;
           const isInSliceZone = values.sliceKeys.includes(slice.model.id);
           return (
-            <SharedSliceSelectionCard
+            <SharedSliceCard
+              action={{ type: "checkbox" }}
               isComingSoon={isComingSoon}
+              mode="selection"
               onSelectedChange={(selected) => {
                 if (selected) {
                   arrayHelpers.push(slice.model.id);
@@ -34,6 +36,7 @@ const UpdateSliceZoneModalList: React.FC<{
               }}
               selected={isInSliceZone}
               slice={slice}
+              variant="outlined"
             />
           );
         }}

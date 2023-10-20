@@ -302,7 +302,7 @@ describe("Custom Type Builder", () => {
     const user = userEvent.setup();
     await user.click(screen.getByText("Select existing"));
 
-    const slicesToSelect = screen.getAllByTestId("shared-slice-selection-card");
+    const slicesToSelect = screen.getAllByTestId("shared-slice-card");
 
     for (const elem of slicesToSelect) {
       // eslint-disable-next-line @typescript-eslint/await-thenable
