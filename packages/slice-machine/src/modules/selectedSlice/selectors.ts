@@ -5,7 +5,7 @@ import { getLibraries } from "../slices";
 export const selectSliceById = (
   store: SliceMachineStoreType,
   libraryName: string,
-  sliceId: string
+  sliceId: string,
 ) => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const libraries = getLibraries(store) || [];
@@ -19,7 +19,7 @@ export const selectSliceById = (
 export const selectCurrentSlice = (
   store: SliceMachineStoreType,
   lib: string,
-  sliceName: string
+  sliceName: string,
 ) => {
   const openedModel = store.selectedSlice;
   if (openedModel?.model.name === sliceName) {
@@ -27,7 +27,7 @@ export const selectCurrentSlice = (
   }
 
   const library = getLibraries(store)?.find(
-    (l) => l.name.replace(/\//g, "--") === lib
+    (l) => l.name.replace(/\//g, "--") === lib,
   );
   const slice = library?.components.find((c) => c.model.name === sliceName);
 
@@ -38,7 +38,7 @@ export const selectCurrentSlice = (
 export const isSelectedSliceTouched = (
   store: SliceMachineStoreType,
   lib: string,
-  sliceId: string
+  sliceId: string,
 ): boolean => {
   const selectedSlice = store.selectedSlice;
   const library = getLibraries(store)?.find((l) => l.name === lib);
@@ -48,7 +48,7 @@ export const isSelectedSliceTouched = (
 
   const sameVariations = equal(
     librarySlice.model.variations,
-    selectedSlice.model.variations
+    selectedSlice.model.variations,
   );
 
   return !sameVariations;

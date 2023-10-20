@@ -43,7 +43,7 @@ export const closeToasterCreator = createAction("TOASTER/CLOSE")<{
 
 // Sagas
 export function* openToasterSaga(
-  action: ReturnType<typeof openToasterCreator>
+  action: ReturnType<typeof openToasterCreator>,
 ) {
   switch (action.payload.type) {
     case ToasterType.SUCCESS:
@@ -68,13 +68,13 @@ export function* openToasterSaga(
 }
 
 export function* updateToasterSaga(
-  action: ReturnType<typeof updateToasterCreator>
+  action: ReturnType<typeof updateToasterCreator>,
 ) {
   toast.update(action.payload.toasterId, action.payload.options);
 }
 
 export function* closeToasterSaga(
-  action: ReturnType<typeof updateToasterCreator>
+  action: ReturnType<typeof updateToasterCreator>,
 ) {
   toast.dismiss(action.payload.toasterId);
 }

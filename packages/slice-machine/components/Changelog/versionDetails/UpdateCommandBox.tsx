@@ -94,7 +94,7 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
 
 function getInstallCommand(
   packageManager: PackageManager,
-  packagesSpecs: string[]
+  packagesSpecs: string[],
 ): string {
   const packagesSpecsStr = packagesSpecs.join(" ");
 

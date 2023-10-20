@@ -4,7 +4,7 @@ import { GroupSM } from "../Group";
 export const Group = {
   addWidget(
     group: GroupSM,
-    newField: { key: string; value: NestableWidget }
+    newField: { key: string; value: NestableWidget },
   ): GroupSM {
     return {
       ...group,
@@ -58,7 +58,7 @@ export const Group = {
     group: GroupSM,
     previousKey: string,
     newKey: string,
-    value: NestableWidget
+    value: NestableWidget,
   ): GroupSM {
     return {
       ...group,

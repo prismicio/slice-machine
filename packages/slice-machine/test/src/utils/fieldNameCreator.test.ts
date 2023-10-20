@@ -49,5 +49,5 @@ describe.each(dataProvider)(
       expect(fieldName).toBe(expectedResult);
       expect(createFriendlyFieldNameWithId(fieldName)).toBe(fieldName);
     });
-  }
+  },
 );

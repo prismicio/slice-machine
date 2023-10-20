@@ -3,7 +3,7 @@ import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 export const getRefreshStateCreatorPayloadData = (
   libraryName: string,
-  modelId: string
+  modelId: string,
 ) => {
   const MOCK_UPDATED_LIBRARY: LibraryUI[] = [
     {

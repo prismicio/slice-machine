@@ -24,12 +24,12 @@ type ModalCardProps<T extends FormikValues> = {
       field: string,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value: any,
-      shouldValidate?: boolean | undefined
+      shouldValidate?: boolean | undefined,
     ) => Promise<void | FormikErrors<FormikValues>>;
     values: T;
     setValues: (
       values: SetStateAction<T>,
-      shouldValidate?: boolean | undefined
+      shouldValidate?: boolean | undefined,
     ) => void;
   }) => JSX.Element;
   close: () => void;

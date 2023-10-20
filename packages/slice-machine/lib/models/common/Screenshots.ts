@@ -31,7 +31,7 @@ export type ScreenshotResponse =
   | ScreenshotSuccessResponse;
 
 export const isError = (
-  response: ScreenshotResponse
+  response: ScreenshotResponse,
 ): response is ScreenshotErrorResponse => "err" in response;
 
 export type TmpFile = File & { path: string };

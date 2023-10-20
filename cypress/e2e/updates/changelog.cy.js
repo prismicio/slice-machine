@@ -29,7 +29,7 @@ describe.skip("changelog.warningBreakingChanges", () => {
 
   it("shows warning if the selected release note has a breaking changes title.", () => {
     mockChangelogCall(
-      "### Breaking Changes\n -this changes is breaking your slice machine"
+      "### Breaking Changes\n -this changes is breaking your slice machine",
     );
     cy.visit("/changelog");
     cy.waitUntil(() => cy.contains("All versions"));

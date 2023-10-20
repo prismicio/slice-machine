@@ -37,7 +37,7 @@ export const ReviewForm: FC<ReviewFormProps> = (props) => {
     (store: SliceMachineStoreType) => ({
       isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
       isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
-    })
+    }),
   );
   const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =
     useSliceMachineActions();

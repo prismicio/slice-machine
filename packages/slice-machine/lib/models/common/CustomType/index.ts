@@ -26,14 +26,14 @@ export const CustomTypeSM = t.exact(
     t.partial({
       hash: t.string,
     }),
-  ])
+  ]),
 );
 export type CustomTypeSM = t.TypeOf<typeof CustomTypeSM>;
 
 export const CustomTypes = {
   toSM(ct: CustomTypeInternal): CustomTypeSM {
     const tabs: Array<TabSM> = Object.entries(ct.json).map(
-      ([tabKey, tabValue]) => Tabs.toSM(tabKey, tabValue)
+      ([tabKey, tabValue]) => Tabs.toSM(tabKey, tabValue),
     );
     return getOrElseW(() => {
       throw new Error("Error while parsing a prismic custom type.");
@@ -41,7 +41,7 @@ export const CustomTypes = {
       CustomTypeSM.decode({
         ...ct,
         tabs,
-      })
+      }),
     );
   },
   fromSM(ct: CustomTypeSM): CustomTypeInternal {
@@ -56,7 +56,7 @@ export const CustomTypes = {
             [tab.key]: Tabs.fromSM(tab),
           };
         }, {}),
-      })
+      }),
     );
   },
 };

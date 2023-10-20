@@ -49,25 +49,25 @@ describe.skip("I am an existing SM user (Next) and I want to associate a Slice t
     cy.addStaticFieldToSlice(
       "Key Text",
       "Static Key Text Field",
-      "static_key_text_id"
+      "static_key_text_id",
     );
 
     cy.addStaticFieldToSlice(
       "Rich Text",
       "Static Rich Text Field",
-      "static_rich_text_id"
+      "static_rich_text_id",
     );
 
     cy.addRepeatableFieldToSlice(
       "Rich Text",
       "Repeatable Rich Text Field",
-      "repeatable_rich_text_id"
+      "repeatable_rich_text_id",
     );
 
     cy.addRepeatableFieldToSlice(
       "Key Text",
       "Repeatable Key Text Field",
-      "repeatable_key_text_id"
+      "repeatable_key_text_id",
     );
 
     sliceBuilder.save();
@@ -115,7 +115,7 @@ describe.skip("I am an existing SM user (Next) and I want to associate a Slice t
     cy.get("#review-form");
     cy.get("[data-cy=review-form-score-3]").click();
     cy.get("[data-cy=review-form-comment]").type(
-      "Cypress test - testing the comment of the survey"
+      "Cypress test - testing the comment of the survey",
     );
     cy.get("#review-form").submit();
 

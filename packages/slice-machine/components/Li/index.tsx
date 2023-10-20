@@ -10,7 +10,7 @@ interface LiProps {
 const Li = forwardRef(
   (
     { children, Component = Flex, sx = {}, ...rest }: LiProps,
-    ref: React.ForwardedRef<HTMLDivElement>
+    ref: React.ForwardedRef<HTMLDivElement>,
   ) => (
     <Component
       as="li"
@@ -26,7 +26,7 @@ const Li = forwardRef(
     >
       {children}
     </Component>
-  )
+  ),
 );
 
 export default Li;

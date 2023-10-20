@@ -19,7 +19,7 @@ describe.skip("Duplicate custom types", () => {
     cy.get("[type=submit]").should("be.disabled");
 
     cy.get("[data-cy=ct-name-input-error]").contains(
-      "Custom type name is already taken."
+      "Custom type name is already taken.",
     );
   });
 
@@ -34,7 +34,7 @@ describe.skip("Duplicate custom types", () => {
     cy.get("[type=submit]").should("be.disabled");
 
     cy.get("[data-cy=ct-id-input-error]").contains(
-      `ID "${customTypeId}" exists already.`
+      `ID "${customTypeId}" exists already.`,
     );
   });
 });

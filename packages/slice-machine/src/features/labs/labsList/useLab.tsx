@@ -6,7 +6,7 @@ export type UseLabArgs = keyof Required<SliceMachineConfig>["labs"];
 
 export type UseLabReturnType = [
   lab: { enabled: boolean },
-  setLab: (enabled: boolean) => Promise<void>
+  setLab: (enabled: boolean) => Promise<void>,
 ];
 
 export function useLab(key: UseLabArgs): UseLabReturnType {

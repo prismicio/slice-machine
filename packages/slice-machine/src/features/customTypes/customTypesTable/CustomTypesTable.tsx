@@ -46,7 +46,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   const sortedCustomTypes = customTypes.sort(
     (customType1: CustomType, customType2: CustomType) => {
       return customType1.id.localeCompare(customType2.id);
-    }
+    },
   );
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
@@ -102,7 +102,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                 key={id}
                 onClick={() => {
                   void router.push(
-                    CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id)
+                    CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id),
                   );
                 }}
               >

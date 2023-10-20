@@ -5,17 +5,17 @@ import { ModelStatus } from ".";
 import { LocalAndRemoteSlice } from "../ModelData";
 
 export function compareSliceLocalToRemote(
-  model: LocalAndRemoteSlice
+  model: LocalAndRemoteSlice,
 ): ModelStatus.Modified | ModelStatus.Synced {
   const areScreenshotsEqual = compareScreenshots(
     model.remote,
-    model.localScreenshots
+    model.localScreenshots,
   );
   if (!areScreenshotsEqual) return ModelStatus.Modified;
 
   const areModelsEquals = equal(
     stripImageUrl(model.local),
-    stripImageUrl(model.remote)
+    stripImageUrl(model.remote),
   );
   if (!areModelsEquals) return ModelStatus.Modified;
 
@@ -29,7 +29,7 @@ const stripImageUrl = (slice: SliceSM) => ({
 
 export function compareScreenshots(
   remoteModel: SliceSM,
-  localScreenshots: Partial<Record<string, Screenshot>>
+  localScreenshots: Partial<Record<string, Screenshot>>,
 ) {
   return remoteModel.variations.every((variation) => {
     const localScreenshotHash = localScreenshots[variation.id]?.hash;

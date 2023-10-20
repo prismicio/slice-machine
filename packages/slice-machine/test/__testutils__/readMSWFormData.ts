@@ -6,15 +6,15 @@ type FormDataField =
   | { data: string };
 
 export const readMSWFormData = async (
-  req: RestRequest
+  req: RestRequest,
 ): Promise<Record<string, FormDataField>> => {
   const boundary = parseMultipartFormData.getBoundary(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    req.headers.get("Content-Type")!
+    req.headers.get("Content-Type")!,
   );
   const parsedData = parseMultipartFormData.parse(
     Buffer.from(await req.text()),
-    boundary
+    boundary,
   );
 
   const res: Record<string, FormDataField> = {};

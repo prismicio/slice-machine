@@ -39,7 +39,7 @@ export function* generateSliceScreenshotSaga({
       openToasterCreator({
         url: response.url,
         type: ToasterType.SCREENSHOT_CAPTURED,
-      })
+      }),
     );
 
     void telemetry.track({
@@ -55,14 +55,14 @@ export function* generateSliceScreenshotSaga({
           url: response.url,
         },
         component,
-      })
+      }),
     );
   } catch (e) {
     yield put(
       openToasterCreator({
         content: "Internal Error: Screenshot not saved",
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
 }
@@ -97,14 +97,14 @@ export function* generateSliceCustomScreenshotSaga({
           url: response.url,
         },
         component,
-      })
+      }),
     );
   } catch (e) {
     yield put(
       openToasterCreator({
         content: "Internal Error: Custom screenshot not saved",
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
 }
@@ -114,8 +114,8 @@ function* watchGenerateSliceScreenshot() {
     getType(generateSliceScreenshotCreator.request),
     withLoader(
       generateSliceScreenshotSaga,
-      LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
-    )
+      LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT,
+    ),
   );
 }
 function* watchGenerateSliceCustomScreenshot() {
@@ -123,8 +123,8 @@ function* watchGenerateSliceCustomScreenshot() {
     getType(generateSliceCustomScreenshotCreator.request),
     withLoader(
       generateSliceCustomScreenshotSaga,
-      LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
-    )
+      LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT,
+    ),
   );
 }
 

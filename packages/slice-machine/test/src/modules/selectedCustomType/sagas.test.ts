@@ -63,9 +63,9 @@ describe("[Selected Custom type sagas]", () => {
           }) => {
             expect(action.payload.action.type).toBe("TOASTER/OPEN");
             expect(action.payload.action.payload.type).toBe(
-              ToasterType.SUCCESS
+              ToasterType.SUCCESS,
             );
-          }
+          },
         );
 
       saga.next().isDone();
@@ -81,7 +81,7 @@ describe("[Selected Custom type sagas]", () => {
         openToasterCreator({
           content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
-        })
+        }),
       );
       saga.next().isDone();
     });

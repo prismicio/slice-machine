@@ -17,9 +17,9 @@ export function PageTypeOnboarding() {
     (store: SliceMachineStoreType) => ({
       isCreatingCustomType: isLoading(
         store,
-        LoadingKeysEnum.CREATE_CUSTOM_TYPE
+        LoadingKeysEnum.CREATE_CUSTOM_TYPE,
       ),
-    })
+    }),
   );
   // State to ensure button loader is still visible while redirecting
   const [isButtonLoading, setIsButtonLoading] = useState(false);

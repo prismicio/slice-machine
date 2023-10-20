@@ -3,7 +3,7 @@ import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export const normalizeFrontendCustomType = (
   localCustomType: CustomTypeSM,
-  remoteCustomType?: CustomTypeSM
+  remoteCustomType?: CustomTypeSM,
 ) => {
   return remoteCustomType
     ? {
@@ -21,13 +21,13 @@ export const normalizeFrontendCustomType = (
 
 export const normalizeFrontendCustomTypes = (
   localCustomTypes: ReadonlyArray<CustomTypeSM>,
-  remoteCustomTypes: ReadonlyArray<CustomTypeSM>
+  remoteCustomTypes: ReadonlyArray<CustomTypeSM>,
 ): Record<string, LocalOrRemoteCustomType> => {
   const customTypes: Record<string, LocalOrRemoteCustomType> = {};
 
   localCustomTypes.forEach((t) => (customTypes[t.id] = { local: t }));
   remoteCustomTypes.forEach(
-    (t) => (customTypes[t.id] = { ...customTypes[t.id], remote: t })
+    (t) => (customTypes[t.id] = { ...customTypes[t.id], remote: t }),
   );
 
   return customTypes;

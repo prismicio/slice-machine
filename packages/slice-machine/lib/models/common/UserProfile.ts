@@ -8,7 +8,7 @@ export const UserProfile = t.exact(
     email: t.string,
     firstName: t.string,
     lastName: t.string,
-  })
+  }),
 );
 
 export type UserProfile = t.TypeOf<typeof UserProfile>;

@@ -62,7 +62,7 @@ it("formats contents if `format` is true", async (ctx) => {
 	);
 
 	expect(contents).toBe(
-		prettier.format(JSON.stringify(model, null, 2), {
+		await prettier.format(JSON.stringify(model, null, 2), {
 			...prettierConfig,
 			parser: "json",
 		}),
@@ -93,7 +93,7 @@ it("accepts format options", async (ctx) => {
 	);
 
 	expect(contents).toBe(
-		prettier.format(JSON.stringify(model, null, 2), {
+		await prettier.format(JSON.stringify(model, null, 2), {
 			...prettierConfig,
 			parser: "json",
 		}),
@@ -125,7 +125,7 @@ it("does not format contents by default", async (ctx) => {
 	);
 
 	expect(contents).not.toBe(
-		prettier.format(JSON.stringify(model, null, 2), {
+		await prettier.format(JSON.stringify(model, null, 2), {
 			...prettierConfig,
 			parser: "json",
 		}),

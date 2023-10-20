@@ -83,7 +83,7 @@ describe("Slice IO", () => {
     const sliceIdToDelete = "slice_1";
     const result = filterSliceFromCustomType(
       baseCustomTypeModel,
-      sliceIdToDelete
+      sliceIdToDelete,
     );
     expect(result).toStrictEqual(customTypeModel);
   });

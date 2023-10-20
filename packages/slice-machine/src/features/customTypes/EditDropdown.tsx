@@ -49,7 +49,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({
       CUSTOM_TYPES_CONFIG.custom.getBuilderPagePathname(customType.id);
     if (router.asPath === customPagePathname) {
       const pagePagePathname = CUSTOM_TYPES_CONFIG.page.getBuilderPagePathname(
-        customType.id
+        customType.id,
       );
       void router.replace(pagePagePathname);
       setCustomTypeBeingConverted(false);

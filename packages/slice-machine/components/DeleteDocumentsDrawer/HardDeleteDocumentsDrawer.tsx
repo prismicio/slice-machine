@@ -21,7 +21,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
     useSelector((store: SliceMachineStoreType) => ({
       isDeleteDocumentsDrawerOpen: isModalOpen(
         store,
-        ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER
+        ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
       ),
       remoteOnlyCustomTypes: selectAllCustomTypes(store).filter(isRemoteOnly),
       modalData: store.pushChanges,
@@ -39,7 +39,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
   const associatedDocumentsCards = modalData.details.customTypes.map(
     (customTypeDetail) => {
       const customType = remoteOnlyCustomTypes.find(
-        (customType) => getModelId(customType) === customTypeDetail.id
+        (customType) => getModelId(customType) === customTypeDetail.id,
       );
       if (customType === undefined) return null;
 
@@ -52,7 +52,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
           numberOfDocuments={customTypeDetail.numberOfDocuments}
         />
       );
-    }
+    },
   );
 
   return (

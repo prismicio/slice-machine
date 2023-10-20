@@ -124,7 +124,7 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
         <span className={styles.linkText}>{title}</span>
         {RightElement}
       </div>
-    </>
+    </>,
   );
 
 type RightElementProps = PropsWithChildren<
@@ -172,7 +172,7 @@ export const UpdateInfo: FC<UpdateInfoProps> = ({
     {createElement(
       component,
       { ...{ className: styles.updateInfoLink, onClick }, href },
-      "Learn more"
+      "Learn more",
     )}
   </div>
 );

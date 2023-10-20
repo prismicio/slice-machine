@@ -44,7 +44,7 @@ export const TextLink: FC<TextLinkProps> = (props) => {
             className: clsx(
               endIcon.props.className,
               styles.endIcon,
-              styles.iconVariant[textVariant]
+              styles.iconVariant[textVariant],
             ),
           })
         : null}

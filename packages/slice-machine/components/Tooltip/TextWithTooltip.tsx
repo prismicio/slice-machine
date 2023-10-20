@@ -21,7 +21,7 @@ export const TextWithTooltip: React.FC<TextWithTooltipProps> = ({
   const updateTooltipVisibility = () => {
     setShowTooltip(
       headingRef.current &&
-        headingRef.current.offsetWidth < headingRef.current.scrollWidth
+        headingRef.current.offsetWidth < headingRef.current.scrollWidth,
     );
   };
 

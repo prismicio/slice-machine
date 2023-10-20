@@ -1,16 +1,16 @@
 export async function startPolling<
   Result,
-  ValidatedResult extends Result = Result
+  ValidatedResult extends Result = Result,
 >(
   fn: () => Promise<Result>,
   validate: (result: Result) => result is ValidatedResult,
   interval: number,
-  maxAttempts: number
+  maxAttempts: number,
 ): Promise<ValidatedResult> {
   let attempts = 0;
   const checkCondition = (
     resolve: (value: ValidatedResult | PromiseLike<ValidatedResult>) => void,
-    reject: (reason?: Error) => void
+    reject: (reason?: Error) => void,
   ): void => {
     Promise.resolve(fn())
       .then((result) => {

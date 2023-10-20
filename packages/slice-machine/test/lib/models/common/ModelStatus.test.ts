@@ -17,7 +17,7 @@ describe("Model Status", () => {
   test("computeModelStatus returns the status Modified", () => {
     const result = computeModelStatus(
       { local: model, remote: { ...model, name: "modified" } },
-      true
+      true,
     );
     expect(result.status).toBe(ModelStatus.Modified);
   });

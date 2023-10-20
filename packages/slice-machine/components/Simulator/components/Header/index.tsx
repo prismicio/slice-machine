@@ -16,7 +16,7 @@ import { VariationSM } from "@lib/models/common/Slice";
 const redirect = (
   model: ComponentUI,
   variation: { id: string } | undefined,
-  isSimulator?: boolean
+  isSimulator?: boolean,
 ): void => {
   if (!variation) {
     void router.push(`/${model.href}/${model.model.name}`);

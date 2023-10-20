@@ -38,7 +38,7 @@ export const updateManifestCreator = createAction("STATE/UPDATE_MANIFEST")<{
 export const getChangelogCreator = createAsyncAction(
   "CHANGELOG.REQUEST",
   "CHANGELOG.RESPONSE",
-  "CHANGELOG.FAILURE"
+  "CHANGELOG.FAILURE",
 )<
   undefined,
   {
@@ -55,11 +55,11 @@ type EnvironmentActions = ActionType<
 
 // Selectors
 export const getEnvironment = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): FrontEndEnvironment => store.environment;
 
 export const selectSimulatorUrl = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): string | undefined => {
   return store.environment.manifest.localSliceSimulatorURL;
 };
@@ -74,7 +74,7 @@ export const selectEndpoints = (store: SliceMachineStoreType): APIEndpoints =>
   store.environment.endpoints;
 
 export const selectIsSimulatorAvailableForFramework = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): boolean => {
   return store.environment.supportsSliceSimulator;
 };
@@ -98,7 +98,7 @@ export const getChangelog = (store: SliceMachineStoreType) => {
 };
 
 export const getPackageManager = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): PackageManager => {
   return store.environment.packageManager;
 };
@@ -152,7 +152,7 @@ export function* getChangelogSaga(): Generator<
 function* watchChangelog() {
   yield takeLatest(
     getType(getChangelogCreator.request),
-    withLoader(getChangelogSaga, LoadingKeysEnum.CHANGELOG)
+    withLoader(getChangelogSaga, LoadingKeysEnum.CHANGELOG),
   );
 }
 

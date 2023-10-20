@@ -993,6 +993,6 @@ const AppTheme = (): Theme =>
         bg: "muted",
       },
     },
-  } as Theme);
+  }) as Theme;
 
 export default AppTheme;

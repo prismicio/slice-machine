@@ -14,7 +14,7 @@ type SliceModalValuesValidity =
 export function validateSliceModalValues(
   { sliceName }: SliceModalValues,
   localLibs: ReadonlyArray<LibraryUI>,
-  remoteLibs: ReadonlyArray<SliceSM>
+  remoteLibs: ReadonlyArray<SliceSM>,
 ): SliceModalValuesValidity {
   if (!sliceName) {
     return { sliceName: "Cannot be empty" };
@@ -37,7 +37,7 @@ export function validateSliceModalValues(
   }
 
   const localNames = localLibs.flatMap((lib) =>
-    lib.components.map((slice) => slice.model.name)
+    lib.components.map((slice) => slice.model.name),
   );
   const remoteNames = remoteLibs.map((slice) => slice.name);
   const usedNames = [...localNames, ...remoteNames];

@@ -9,7 +9,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 /** @type {{ version: string }} */
 const pkg = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "package.json"), "utf8")
+  fs.readFileSync(path.resolve(__dirname, "package.json"), "utf8"),
 );
 
 /** @type string */
@@ -31,7 +31,7 @@ if (process.env.NODE_ENV !== "development") {
   if (!process.env.SENTRY_AUTH_TOKEN) {
     console.warn("⚠️ Creating a production build with no Sentry config");
     console.warn(
-      "⚠️ A release won't be created and the sourcemap won't be uploaded"
+      "⚠️ A release won't be created and the sourcemap won't be uploaded",
     );
     console.warn("⚠️ To fix this add SENTRY_AUTH_TOKEN to your environment");
   } else {
@@ -78,7 +78,7 @@ if (process.env.NODE_ENV !== "development") {
           widenClientFileUpload: true,
         },
       },
-      sentryWebpackPluginOptions
+      sentryWebpackPluginOptions,
     );
   }
 }

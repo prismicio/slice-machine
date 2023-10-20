@@ -55,20 +55,20 @@ const testSnippet = (
 
 		if (Array.isArray(expected)) {
 			expect(res).toStrictEqual(
-				expected.map((descriptor) => ({
-					...descriptor,
-					code: prettier
-						.format(descriptor.code, prettierConfig)
-						.replace(/[\r\n]+$/, "")
-						.replace(/;$/, ""),
-				})),
+				await Promise.all(
+					expected.map(async (descriptor) => ({
+						...descriptor,
+						code: (await prettier.format(descriptor.code, prettierConfig))
+							.replace(/[\r\n]+$/, "")
+							.replace(/;$/, ""),
+					})),
+				),
 			);
 		} else {
 			expect(res).toStrictEqual({
 				label: "Svelte",
 				language: "svelte",
-				code: prettier
-					.format(expected, prettierConfig)
+				code: (await prettier.format(expected, prettierConfig))
 					.replace(/[\r\n]+$/, "")
 					.replace(/;$/, ""),
 			});

@@ -40,7 +40,7 @@ type MockAWSACLAPIReturnType = {
 
 export const mockAWSACLAPI = (
   ctx: TestContext,
-  config?: MockAWSACLAPIConfig
+  config?: MockAWSACLAPIConfig,
 ): MockAWSACLAPIReturnType => {
   const endpoint =
     config?.endpoint ??
@@ -74,16 +74,16 @@ export const mockAWSACLAPI = (
                 fields: s3ACL.requiredFormDataFields,
               },
               imgixEndpoint: s3ACL.imgixEndpoint,
-            })
+            }),
           );
         } else {
           return res(
             ctx.json({
               message: "[MOCK ERROR MESSAGE]: Failed to generate ACL",
-            })
+            }),
           );
         }
-      })
+      }),
     );
   }
 
@@ -110,7 +110,7 @@ export const mockAWSACLAPI = (
               Buffer.isBuffer(formData.file.data) &&
               formData.file.data.equals(expectedUpload.file)
             );
-          }
+          },
         );
 
         if (!expectedFileMetadata) {
@@ -130,7 +130,7 @@ export const mockAWSACLAPI = (
                 formData[key].data ===
                 uploadEndpointConfig.requiredFormDataFields[key]
               );
-            }
+            },
           ) &&
           Buffer.isBuffer(formData.file.data) &&
           formData.file.data.equals(expectedFileMetadata.file)
@@ -139,7 +139,7 @@ export const mockAWSACLAPI = (
         } else {
           return res(ctx.status(401));
         }
-      })
+      }),
     );
   }
 
@@ -156,8 +156,8 @@ export const mockAWSACLAPI = (
           } else {
             return res(ctx.status(401));
           }
-        }
-      )
+        },
+      ),
     );
   }
 
