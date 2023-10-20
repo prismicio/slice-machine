@@ -90,11 +90,9 @@ vi.mock("fs/promises", async () => {
 // bypass jsdom restricted browser environment by mocking `node:url`
 // to itself.
 vi.mock("url", async () => {
-	const actual: typeof import("node:url") = (await vi.importActual(
-		"node:url",
-	));
+  const actual: typeof import("node:url") = await vi.importActual("node:url");
 
-	return actual;
+  return actual;
 });
 
 vi.mock("analytics-node", () => {
