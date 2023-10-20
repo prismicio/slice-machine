@@ -25,6 +25,17 @@ export type {
 	PrismicAuthCheckStatusResponse,
 } from "./auth/createPrismicAuthManagerMiddleware";
 
+export {
+	SliceMachineError,
+	UnauthorizedError,
+	UnauthenticatedError,
+	NotFoundError,
+	UnexpectedDataError,
+	InternalError,
+	PluginError,
+	PluginHookResultError,
+} from "./errors";
+
 export { DecodeError } from "./lib/DecodeError";
 
 export type { SliceMachineConfig, PackageManager } from "./types";

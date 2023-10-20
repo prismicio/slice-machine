@@ -7,7 +7,7 @@ import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicRepositoryAPI } from "./__testutils__/mockPrismicRepositoryAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 // TODO: The endpoint is called more than once. Why?
 it.skip("pushes a given set of documents to a given repository", async (ctx) => {
@@ -153,5 +153,5 @@ it("throws if not logged in", async () => {
 			domain: "foo",
 			framework: "other",
 		});
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });

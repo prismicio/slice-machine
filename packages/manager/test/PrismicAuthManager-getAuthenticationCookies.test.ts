@@ -3,7 +3,7 @@ import { expect, it } from "vitest";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createPrismicAuthManager } from "../src";
+import { createPrismicAuthManager, UnauthenticatedError } from "../src";
 
 it("returns parsed cookies from the auth state file", async (ctx) => {
 	const prismicAuthManager = createPrismicAuthManager();
@@ -32,5 +32,5 @@ it("throws if the user is not logged in", async () => {
 
 	expect(async () => {
 		await prismicAuthManager.getAuthenticationCookies();
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });
