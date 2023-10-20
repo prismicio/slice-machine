@@ -86,7 +86,7 @@ const createPrismicIOFile = async ({
 			 *
 			 * @param config - Configuration for the Prismic client.
 			 */
-			export const createClient = (config: CreateClientConfig = {}) => {
+			export const createClient = ({ cookies, ...config }: CreateClientConfig = {}) => {
 				const client = prismic.createClient(repositoryName, {
 					routes,
 					...config,
@@ -134,7 +134,7 @@ const createPrismicIOFile = async ({
 			 *
 			 * @param {import('@prismicio/svelte/kit').CreateClientConfig} config - Configuration for the Prismic client.
 			 */
-			export const createClient = (config = {}) => {
+			export const createClient = ({ cookies, ...config } = {}) => {
 				const client = prismic.createClient(repositoryName, {
 					routes,
 					...config,

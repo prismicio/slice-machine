@@ -290,7 +290,7 @@ describe("prismicio.js file", () => {
 			 * @param {import(\\"@prismicio/svelte/kit\\").CreateClientConfig} config -
 			 *   Configuration for the Prismic client.
 			 */
-			export const createClient = (config = {}) => {
+			export const createClient = ({ cookies, ...config } = {}) => {
 			  const client = prismic.createClient(repositoryName, {
 			    routes,
 			    ...config,
@@ -357,7 +357,10 @@ describe("prismicio.js file", () => {
 			 *
 			 * @param config - Configuration for the Prismic client.
 			 */
-			export const createClient = (config: CreateClientConfig = {}) => {
+			export const createClient = ({
+			  cookies,
+			  ...config
+			}: CreateClientConfig = {}) => {
 			  const client = prismic.createClient(repositoryName, {
 			    routes,
 			    ...config,
