@@ -111,7 +111,7 @@ export class SliceMachineHelpers {
 			filePath || this._project.root,
 		);
 
-		formatted = prettier.format(formatted, {
+		formatted = await prettier.format(formatted, {
 			...prettierOptions,
 			filepath: filePath,
 			...(options?.prettier ?? {}),

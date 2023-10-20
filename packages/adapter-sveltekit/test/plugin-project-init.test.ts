@@ -202,7 +202,9 @@ describe("prismicio.js file", () => {
 			"utf8",
 		);
 
-		expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+		expect(contents).toBe(
+			await prettier.format(contents, { parser: "typescript" }),
+		);
 	});
 
 	it("prismicio file is not formatted if formatting is disabled", async (ctx) => {
@@ -233,7 +235,7 @@ describe("prismicio.js file", () => {
 		);
 
 		expect(contents).not.toBe(
-			prettier.format(contents, {
+			await prettier.format(contents, {
 				...prettierOptions,
 				parser: "typescript",
 			}),
@@ -445,7 +447,7 @@ describe("Slice Simulator route", () => {
 		);
 
 		expect(contents).toBe(
-			prettier.format(contents, {
+			await prettier.format(contents, {
 				plugins: ["prettier-plugin-svelte"],
 				parser: "svelte",
 			}),
@@ -486,7 +488,7 @@ describe("Slice Simulator route", () => {
 		);
 
 		expect(contents).not.toBe(
-			prettier.format(contents, {
+			await prettier.format(contents, {
 				...prettierOptions,
 				plugins: ["prettier-plugin-svelte"],
 				parser: "svelte",

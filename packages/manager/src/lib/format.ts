@@ -20,7 +20,7 @@ export const format = async (
 
 	const prettierOptions = await prettier.resolveConfig(filePath);
 
-	formatted = prettier.format(formatted, {
+	formatted = await prettier.format(formatted, {
 		...prettierOptions,
 		filepath: filePath,
 		...(options?.prettier ?? {}),
