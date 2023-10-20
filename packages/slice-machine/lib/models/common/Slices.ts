@@ -13,7 +13,7 @@ export const SlicesSM = t.type({
     t.type({
       key: t.string,
       value: t.union([LegacySlice, CompositeSlice, SharedSliceRef]),
-    })
+    }),
   ),
 });
 export type SlicesSM = t.TypeOf<typeof SlicesSM>;
@@ -29,10 +29,10 @@ export const SliceZone = {
         config: {
           choices: slices.value.reduce(
             (acc, { key, value }) => ({ ...acc, [key]: value }),
-            {}
+            {},
           ),
         },
-      })
+      }),
     );
   },
 
@@ -44,9 +44,9 @@ export const SliceZone = {
         key,
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         value: Object.entries(slices.config?.choices || []).map(
-          ([key, value]) => ({ key, value })
+          ([key, value]) => ({ key, value }),
         ),
-      })
+      }),
     );
   },
 };

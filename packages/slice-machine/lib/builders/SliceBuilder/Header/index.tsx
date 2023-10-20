@@ -33,7 +33,7 @@ const Header: React.FC<{
                 lib: component.href,
                 sliceName: component.model.name,
                 variationId: v.id,
-              }).all
+              }).all,
             )
           }
         />
@@ -52,7 +52,7 @@ const Header: React.FC<{
               lib: component.href,
               sliceName: component.model.name,
               variationId: id,
-            }).all
+            }).all,
           );
         }}
         initialVariation={variation}

@@ -20,7 +20,7 @@ describe("[Loading module]", () => {
     it("should return the initial state if no matching action", () => {
       // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"LOAD... Remove this comment to see the full error message
       expect(loadingReducer(dummyLoadingState, { type: "NO.MATCH" })).toEqual(
-        dummyLoadingState
+        dummyLoadingState,
       );
     });
 

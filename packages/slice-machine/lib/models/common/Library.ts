@@ -7,7 +7,7 @@ export const LibraryMeta = {
     t.partial({
       name: t.string,
       version: t.string,
-    })
+    }),
   ),
 };
 

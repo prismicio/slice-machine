@@ -13,7 +13,7 @@ export function isSameImageAs(subject, fixtureImage) {
         isCorrectDimensions(
           subject,
           fixtureImage.naturalWidth,
-          fixtureImage.naturalHeight
+          fixtureImage.naturalHeight,
         );
         resolve();
       };

@@ -23,7 +23,7 @@ export const handleRemoteResponse =
             return ToasterType.WARNING;
           }
           return ToasterType.SUCCESS;
-        })()
+        })(),
       );
     }
   };

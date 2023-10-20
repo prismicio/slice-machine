@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 function useThrottle<T>(
   cb: () => T,
   limit: number,
-  args: ReadonlyArray<unknown>
+  args: ReadonlyArray<unknown>,
 ): T {
   const [throttledValue, setThrottledValue] = useState(cb());
   const lastRan = useRef(Date.now());
@@ -16,7 +16,7 @@ function useThrottle<T>(
           lastRan.current = Date.now();
         }
       },
-      limit - (Date.now() - lastRan.current)
+      limit - (Date.now() - lastRan.current),
     );
 
     return () => {

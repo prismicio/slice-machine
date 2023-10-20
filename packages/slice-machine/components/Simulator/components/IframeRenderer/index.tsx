@@ -149,7 +149,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
 
 export function getScaling(
   { height: iframeHeight, width: iframeWidth }: ScreenDimensions,
-  { height: viewportHeight, width: viewportWidth }: ScreenDimensions
+  { height: viewportHeight, width: viewportWidth }: ScreenDimensions,
 ): number {
   if (iframeWidth > viewportWidth || iframeHeight > viewportHeight) {
     return iframeWidth - viewportWidth > iframeHeight - viewportHeight

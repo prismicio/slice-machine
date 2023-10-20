@@ -153,7 +153,7 @@ describe("Side Navigation", () => {
       await user.click(link);
 
       expect(mockRouter.asPath).toBe(path);
-    }
+    },
   );
 
   test("should display the number of changes on the 'Changes' item", async () => {
@@ -177,7 +177,7 @@ describe("Side Navigation", () => {
 
     expect(within(changesItem).queryByText("1")).not.toBeInTheDocument();
     expect(
-      within(changesItem).queryByText("Logged out")
+      within(changesItem).queryByText("Logged out"),
     ).not.toBeInTheDocument();
   });
 
@@ -241,7 +241,7 @@ describe("Side Navigation", () => {
       .closest("a") as HTMLAnchorElement;
 
     expect(
-      within(changesItem).queryByText("Logged out")
+      within(changesItem).queryByText("Logged out"),
     ).not.toBeInTheDocument();
   });
 
@@ -265,7 +265,7 @@ describe("Side Navigation", () => {
       createSliceMachineManagerMSWHandler({
         url: "http://localhost:3000/_manager",
         sliceMachineManager: manager,
-      })
+      }),
     );
 
     renderSideNavigation({ canUpdate: true });
@@ -276,8 +276,8 @@ describe("Side Navigation", () => {
     await waitFor(() =>
       expect(link).toHaveAttribute(
         "href",
-        "https://prismic.io/academy/prismic-and-nextjs"
-      )
+        "https://prismic.io/academy/prismic-and-nextjs",
+      ),
     );
 
     expect(link).toHaveAttribute("target", "_blank");
@@ -290,7 +290,7 @@ describe("Side Navigation", () => {
       ?.parentElement as HTMLElement;
     expect(link).toHaveAttribute(
       "href",
-      "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH"
+      "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH",
     );
     expect(link).toHaveAttribute("target", "_blank");
 
@@ -299,7 +299,7 @@ describe("Side Navigation", () => {
     const tooltip = await screen.findByRole("tooltip");
     expect(tooltip).toBeVisible();
     const closeButton = await within(tooltip).findByTestId(
-      "video-tooltip-close-button"
+      "video-tooltip-close-button",
     );
     await user.click(closeButton);
 

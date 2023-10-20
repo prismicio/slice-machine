@@ -27,7 +27,7 @@ describe("simulator tooltip", () => {
     cy.getSliceMachineUserContext().should((data) => {
       expect(data.hasSeenSimulatorToolTip).equal(
         true,
-        "userContext.hasSeenSimulatorToolTip should set in local storage"
+        "userContext.hasSeenSimulatorToolTip should set in local storage",
       );
     });
   });
@@ -67,7 +67,7 @@ describe("simulator tooltip", () => {
     cy.getSliceMachineUserContext().should((data) => {
       expect(data.hasSeenSimulatorToolTip).equal(
         true,
-        "userContext.hasSeenSimulatorToolTip should set in local storage"
+        "userContext.hasSeenSimulatorToolTip should set in local storage",
       );
     });
   });

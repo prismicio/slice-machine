@@ -96,7 +96,7 @@ describe.skip("I am an existing SM user and I want to push local changes", () =>
     changesPage.mockPushError(500).pushChanges();
 
     cy.contains(
-      "Something went wrong when pushing your changes. Check your terminal logs."
+      "Something went wrong when pushing your changes. Check your terminal logs.",
     );
 
     cy.clearProject();

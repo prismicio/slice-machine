@@ -35,7 +35,7 @@ export async function addSlicesToSliceZone({
                 ],
               },
             }
-          : tab
+          : tab,
       ),
     };
   });

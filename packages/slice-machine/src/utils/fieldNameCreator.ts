@@ -3,7 +3,7 @@ export const createFriendlyFieldNameWithId = (fieldId: string): string => {
     /[\s\-_]+(\w)/g,
     function (_match: string, p1: string) {
       return p1.toUpperCase();
-    }
+    },
   );
 
   return fieldIdWithoutSpecialCharacter
@@ -15,7 +15,7 @@ export const createFriendlyFieldNameWithId = (fieldId: string): string => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (p1) return p1.toUpperCase();
         return match;
-      }
+      },
     )
     .trim();
 };

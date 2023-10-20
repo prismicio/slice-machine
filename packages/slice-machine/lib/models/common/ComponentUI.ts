@@ -10,7 +10,7 @@ export const buildScreenshotUrls = (
     | {
         [variationId: string]: Screenshot;
       }
-    | undefined
+    | undefined,
 ): { [v: string]: ScreenshotUI } => {
   if (!screenshots) {
     return {};
@@ -28,7 +28,7 @@ export const buildScreenshotUrls = (
           }
         : acc;
     },
-    {}
+    {},
   );
 };
 
@@ -49,7 +49,7 @@ export const ComponentUI = {
   },
   variation(
     component: ComponentUI,
-    variationId?: string
+    variationId?: string,
   ): VariationSM | undefined {
     if (component.model.variations.length) {
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

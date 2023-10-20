@@ -26,15 +26,15 @@ export interface ModelStatusInformation {
 
 function computeStatuses(
   models: LocalOrRemoteCustomType[],
-  userHasAccessToModels: boolean
+  userHasAccessToModels: boolean,
 ): { [sliceId: string]: ModelStatus };
 function computeStatuses(
   models: LocalOrRemoteSlice[],
-  userHasAccessToModels: boolean
+  userHasAccessToModels: boolean,
 ): { [sliceId: string]: ModelStatus };
 function computeStatuses(
   models: LocalOrRemoteModel[],
-  userHasAccessToModels: boolean
+  userHasAccessToModels: boolean,
 ) {
   return models.reduce<{ [id: string]: ModelStatus }>(
     (acc, model) => {
@@ -45,7 +45,7 @@ function computeStatuses(
         [hasLocal(model) ? model.local.id : model.remote.id]: status,
       };
     },
-    {} as { [sliceId: string]: ModelStatus }
+    {} as { [sliceId: string]: ModelStatus },
   );
 }
 

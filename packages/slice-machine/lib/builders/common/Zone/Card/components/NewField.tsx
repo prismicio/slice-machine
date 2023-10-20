@@ -58,7 +58,7 @@ const NewField: React.FC<NewField> = ({
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!widget) {
     console.error(
-      `Widget of type "${widgetTypeName}" not found. This is a problem on our side!`
+      `Widget of type "${widgetTypeName}" not found. This is a problem on our side!`,
     );
     return <div>Unexpected error. Contact us for more info.</div>;
   }
@@ -84,8 +84,8 @@ const NewField: React.FC<NewField> = ({
     values: FormFieldValues,
     setValues: (
       values: SetStateAction<FormFieldValues>,
-      shouldValidate?: boolean
-    ) => void
+      shouldValidate?: boolean,
+    ) => void,
   ) => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (isIdFieldPristine && !FormFields.id.disabled) {
@@ -104,8 +104,8 @@ const NewField: React.FC<NewField> = ({
     setFieldValue: (
       field: keyof typeof FormFields,
       value: string,
-      shouldValidate?: boolean
-    ) => Promise<unknown>
+      shouldValidate?: boolean,
+    ) => Promise<unknown>,
   ) => {
     void setFieldValue("id", e.target.value);
     setIsIdFieldPristine(false);
@@ -180,7 +180,7 @@ const NewField: React.FC<NewField> = ({
                       : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                       errors.label
                       ? InputFieldStyles.ERROR
-                      : undefined
+                      : undefined,
                   )}
                   aria-label="label-input"
                   data-cy="new-field-name-input"
@@ -215,7 +215,7 @@ const NewField: React.FC<NewField> = ({
                       : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                       errors.id
                       ? InputFieldStyles.ERROR
-                      : undefined
+                      : undefined,
                   )}
                   data-cy="new-field-id-input"
                 />

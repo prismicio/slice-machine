@@ -5,21 +5,21 @@ import { CustomTypeSM, TabSM } from "@lib/models/common/CustomType";
 
 // Selectors
 export const selectCurrentCustomType = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): CustomTypeSM | null => {
   if (!store.selectedCustomType) return null;
   return store.selectedCustomType.model;
 };
 
 export const selectCurrentPoolOfFields = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): PoolOfFields => {
   if (!store.selectedCustomType) return [];
   return store.selectedCustomType.model.tabs.reduce<PoolOfFields>(
     (acc: PoolOfFields, curr: TabSM) => {
       return [...acc, ...curr.value];
     },
-    []
+    [],
   );
 };
 
@@ -28,6 +28,6 @@ export const isSelectedCustomTypeTouched = (store: SliceMachineStoreType) => {
 
   return !equal(
     store.selectedCustomType.initialModel,
-    store.selectedCustomType.model
+    store.selectedCustomType.model,
   );
 };

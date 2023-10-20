@@ -22,9 +22,9 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
     (store: SliceMachineStoreType) => ({
       isScreenshotModalOpen: isModalOpen(
         store,
-        ModalKeysEnum.SCREENSHOT_PREVIEW
+        ModalKeysEnum.SCREENSHOT_PREVIEW,
       ),
-    })
+    }),
   );
 
   const { closeModals } = useSliceMachineActions();

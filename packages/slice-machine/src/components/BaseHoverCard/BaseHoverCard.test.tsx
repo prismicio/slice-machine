@@ -11,7 +11,7 @@ describe("BaseHoverCard", () => {
     const { user } = render(
       <BaseHoverCard trigger={<button>Hello</button>}>
         <div>hover content</div>
-      </BaseHoverCard>
+      </BaseHoverCard>,
     );
 
     expect(screen.queryByText("hover content")).not.toBeInTheDocument();

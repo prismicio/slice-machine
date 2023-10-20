@@ -18,7 +18,7 @@ type MockPrismicUserAPIReturnType = {
 
 export const mockPrismicAuthAPI = (
   ctx: TestContext,
-  config?: MockPrismicAuthAPIConfig
+  config?: MockPrismicAuthAPIConfig,
 ): MockPrismicUserAPIReturnType => {
   const endpoint = config?.endpoint ?? "https://auth.prismic.io/";
 
@@ -49,8 +49,8 @@ export const mockPrismicAuthAPI = (
         } else {
           return res(ctx.status(401));
         }
-      }
-    )
+      },
+    ),
   );
 
   return {

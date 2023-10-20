@@ -29,7 +29,7 @@ describe("[Selected Slice sagas]", () => {
         updateSliceCreator.request({
           component: dummySliceState,
           setData: mockSetData,
-        })
+        }),
       );
 
       saga.next().call(updateSliceApiClient, dummySliceState);
@@ -42,7 +42,7 @@ describe("[Selected Slice sagas]", () => {
       saga.next({ errors: [], mocks: [] }).put(
         updateSliceCreator.success({
           component: { ...dummySliceState, mocks: [] },
-        })
+        }),
       );
 
       saga.next().isDone();
@@ -52,10 +52,10 @@ describe("[Selected Slice sagas]", () => {
       expect(mockSetDataCalls?.done).toBe(true);
       expect(mockSetDataCalls?.loading).toBe(false);
       expect(mockSetDataCalls?.message.props.message).toBe(
-        "Slice saved successfully at "
+        "Slice saved successfully at ",
       );
       expect(mockSetDataCalls?.message.props.path).toBe(
-        "slices/libName/DummySlice/model.json"
+        "slices/libName/DummySlice/model.json",
       );
     });
     it("should open a error toaster on internal error", () => {
@@ -65,14 +65,14 @@ describe("[Selected Slice sagas]", () => {
         updateSliceCreator.request({
           component: dummySliceState,
           setData: mockSetData,
-        })
+        }),
       ).next();
 
       saga.throw(new Error()).put(
         openToasterCreator({
           content: "Internal Error: Models & mocks not generated",
           type: ToasterType.ERROR,
-        })
+        }),
       );
       saga.next().isDone();
     });

@@ -76,8 +76,8 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
       ...initialValues,
       customtypes: initialValues.customtypes.filter((ct) =>
         customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === ct
-        )
+          (frontendCustomType) => frontendCustomType.local.id === ct,
+        ),
       ),
     };
   },

@@ -38,9 +38,9 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
     (store: SliceMachineStoreType) => ({
       isCreatingCustomType: isLoading(
         store,
-        LoadingKeysEnum.CREATE_CUSTOM_TYPE
+        LoadingKeysEnum.CREATE_CUSTOM_TYPE,
       ),
-    })
+    }),
   );
 
   return (
@@ -59,7 +59,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                 <DefaultErrorMessage
                   title="Request failed"
                   description={`An error occurred while fetching your ${customTypesMessages.name(
-                    { start: false, plural: true }
+                    { start: false, plural: true },
                   )}.`}
                 />
               </Box>

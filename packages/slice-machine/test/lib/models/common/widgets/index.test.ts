@@ -20,10 +20,10 @@ describe("Widgets", () => {
             type: field?.type,
             config: field?.config,
           },
-          { stripUnknown: true }
-        )
+          { stripUnknown: true },
+        ),
       ).toBeTruthy();
-    }
+    },
   );
 
   test.each(widgetEntries)(
@@ -59,7 +59,7 @@ describe("Widgets", () => {
       // compare the two fields to ensure that what slicemachine creates is what is written in the file system.
       expect(field).toBeDefined();
       expect(field).toEqual(fieldExpected);
-    }
+    },
   );
 
   // Issue: https://github.com/prismicio/slice-machine/issues/672
@@ -78,8 +78,8 @@ describe("Widgets", () => {
             },
           },
         },
-        { stripUnknown: true }
-      )
+        { stripUnknown: true },
+      ),
     ).toBeTruthy();
   });
 });

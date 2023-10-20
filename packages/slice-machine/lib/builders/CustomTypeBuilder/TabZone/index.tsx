@@ -99,7 +99,7 @@ const TabZone: FC<TabZoneProps> = ({
       tabId,
       result.source.index,
       // @ts-expect-error We have to change the typeGuard above to cast properly the "result" property
-      result.destination.index
+      result.destination.index,
     );
   };
 

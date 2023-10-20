@@ -12,7 +12,7 @@ export type SelectedSliceActions =
 export const generateSliceScreenshotCreator = createAsyncAction(
   "SLICE/TAKE_SCREENSHOT.REQUEST",
   "SLICE/TAKE_SCREENSHOT.RESPONSE",
-  "SLICE/TAKE_SCREENSHOT.FAILURE"
+  "SLICE/TAKE_SCREENSHOT.FAILURE",
 )<
   {
     variationId: string;
@@ -30,7 +30,7 @@ export const generateSliceScreenshotCreator = createAsyncAction(
 export const generateSliceCustomScreenshotCreator = createAsyncAction(
   "SLICE/GENERATE_CUSTOM_SCREENSHOT.REQUEST",
   "SLICE/GENERATE_CUSTOM_SCREENSHOT.RESPONSE",
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT.FAILURE"
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT.FAILURE",
 )<
   {
     variationId: string;

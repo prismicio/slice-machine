@@ -17,7 +17,7 @@ export default function Changelog() {
       changelog: getChangelog(store),
       packageManager: getPackageManager(store),
       isChangelogLoading: isLoading(store, LoadingKeysEnum.CHANGELOG),
-    })
+    }),
   );
 
   const latestVersion = changelog.sliceMachine.versions[0];

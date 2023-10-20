@@ -41,7 +41,7 @@ export const createSlice = createAction("SLICES/CREATE_SLICE")<{
 export const renameSliceCreator = createAsyncAction(
   "SLICES/RENAME.REQUEST",
   "SLICES/RENAME.RESPONSE",
-  "SLICES/RENAME.FAILURE"
+  "SLICES/RENAME.FAILURE",
 )<
   {
     libName: string;
@@ -57,7 +57,7 @@ export const renameSliceCreator = createAsyncAction(
 export const deleteSliceCreator = createAsyncAction(
   "SLICES/DELETE.REQUEST",
   "SLICES/DELETE.RESPONSE",
-  "SLICES/DELETE.FAILURE"
+  "SLICES/DELETE.FAILURE",
 )<
   {
     sliceId: string;
@@ -85,29 +85,29 @@ type SlicesActions =
 
 // Selectors
 export const getLibraries = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): ReadonlyArray<LibraryUI> => store.slices.libraries;
 
 export const getRemoteSlice = (
   store: SliceMachineStoreType,
-  componentId: string
+  componentId: string,
 ): SliceSM | undefined => {
   return store.slices.remoteSlices.find((rs) => rs.id === componentId);
 };
 
 export const getRemoteSlices = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
 
 export const getFrontendSlices = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): LocalOrRemoteSlice[] =>
   normalizeFrontendSlices(store.slices.libraries, getRemoteSlices(store));
 
 // Reducer
 export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
   state,
-  action
+  action,
 ) => {
   if (!state) return null;
 
@@ -178,7 +178,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
                     [variationId]: screenshot,
                   },
                 }
-              : c
+              : c,
           ),
         };
       });
@@ -192,7 +192,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         return {
           ...library,
           components: library.components.filter(
-            (component) => component.model.id !== sliceId
+            (component) => component.model.id !== sliceId,
           ),
         };
       });
@@ -239,11 +239,11 @@ export function* renameSliceSaga({
   const { libName, sliceId, newSliceName } = payload;
   try {
     const slice = (yield select((store: SliceMachineStoreType) =>
-      selectSliceById(store, libName, sliceId)
+      selectSliceById(store, libName, sliceId),
     )) as ReturnType<typeof selectSliceById>;
     if (!slice) {
       throw new Error(
-        `Slice "${payload.sliceId} in the "${payload.libName}" library not found.`
+        `Slice "${payload.sliceId} in the "${payload.libName}" library not found.`,
       );
     }
 
@@ -260,14 +260,14 @@ export function* renameSliceSaga({
       openToasterCreator({
         content: "Slice name updated",
         type: ToasterType.SUCCESS,
-      })
+      }),
     );
   } catch (e) {
     yield put(
       openToasterCreator({
         content: "Internal Error: Slice name not saved",
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
 }
@@ -275,7 +275,7 @@ export function* renameSliceSaga({
 function* watchRenameSlice() {
   yield takeLatest(
     getType(renameSliceCreator.request),
-    withLoader(renameSliceSaga, LoadingKeysEnum.RENAME_SLICE)
+    withLoader(renameSliceSaga, LoadingKeysEnum.RENAME_SLICE),
   );
 }
 
@@ -287,7 +287,7 @@ export function* deleteSliceSaga({
     const result = (yield call(
       deleteSlice,
       sliceId,
-      libName
+      libName,
     )) as SagaReturnType<typeof deleteSlice>;
     if (result.errors.length > 0) {
       throw result.errors;
@@ -297,14 +297,14 @@ export function* deleteSliceSaga({
       openToasterCreator({
         content: `Successfully deleted Slice “${sliceName}”`,
         type: ToasterType.SUCCESS,
-      })
+      }),
     );
   } catch (e) {
     yield put(
       openToasterCreator({
         content: "An unexpected error happened while deleting your slice.",
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
   yield put(modalCloseCreator());
@@ -313,7 +313,7 @@ export function* deleteSliceSaga({
 function* watchDeleteSlice() {
   yield takeLatest(
     getType(deleteSliceCreator.request),
-    withLoader(deleteSliceSaga, LoadingKeysEnum.DELETE_SLICE)
+    withLoader(deleteSliceSaga, LoadingKeysEnum.DELETE_SLICE),
   );
 }
 

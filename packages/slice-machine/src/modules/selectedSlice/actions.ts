@@ -28,7 +28,7 @@ export type SelectedSliceActions =
   | ActionType<typeof updateSelectedSliceMocks>;
 
 export const updateSelectedSliceMocks = createAction(
-  "SELECTED_SLICE/UPDATE_MOCKS"
+  "SELECTED_SLICE/UPDATE_MOCKS",
 )<{
   mocks: SharedSliceContent[];
 }>();
@@ -65,7 +65,7 @@ export const removeSliceWidgetCreator = createAction("SLICE/REMOVE_WIDGET")<{
 }>();
 
 export const updateSliceWidgetMockCreator = createAction(
-  "SLICE/UPDATE_WIDGET_MOCK"
+  "SLICE/UPDATE_WIDGET_MOCK",
 )<{
   variationId: string;
   widgetArea: WidgetsArea;
@@ -76,7 +76,7 @@ export const updateSliceWidgetMockCreator = createAction(
 }>();
 
 export const deleteSliceWidgetMockCreator = createAction(
-  "SLICE/DELETE_WIDGET_MOCK"
+  "SLICE/DELETE_WIDGET_MOCK",
 )<{
   variationId: string;
   widgetArea: WidgetsArea;
@@ -86,7 +86,7 @@ export const deleteSliceWidgetMockCreator = createAction(
 export const updateSliceCreator = createAsyncAction(
   "SLICE/UPDATE.REQUEST",
   "SLICE/UPDATE.RESPONSE",
-  "SLICE/UPDATE.FAILURE"
+  "SLICE/UPDATE.FAILURE",
 )<
   {
     component: ComponentUI;

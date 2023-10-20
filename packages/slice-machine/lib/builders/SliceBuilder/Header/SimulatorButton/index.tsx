@@ -101,7 +101,7 @@ const SimulatorButton: React.FC<{
     (store: SliceMachineStoreType) => ({
       hasSeenSimulatorTooltip: userHasSeenSimulatorToolTip(store),
       hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
-    })
+    }),
   );
 
   useEffect(() => {

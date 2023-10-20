@@ -36,14 +36,14 @@ export type ChangedCustomType = {
 };
 
 const isSliceModel = (
-  model: LocalAndRemoteSlice | LocalAndRemoteCustomType
+  model: LocalAndRemoteSlice | LocalAndRemoteCustomType,
 ): model is LocalAndRemoteSlice => {
   return "variations" in model.local && "variations" in model.remote;
 };
 
 export function computeModelStatus(
   model: LocalOrRemoteSlice,
-  userHasAccessToPrismic: boolean
+  userHasAccessToPrismic: boolean,
 ):
   | { status: ModelStatus.Unknown; model: LocalOrRemoteSlice }
   | { status: ModelStatus.Deleted; model: RemoteOnlySlice }
@@ -53,7 +53,7 @@ export function computeModelStatus(
 
 export function computeModelStatus(
   model: LocalOrRemoteCustomType,
-  userHasAccessToPrismic: boolean
+  userHasAccessToPrismic: boolean,
 ):
   | { status: ModelStatus.Unknown; model: LocalOrRemoteCustomType }
   | { status: ModelStatus.Deleted; model: RemoteOnlyCustomType }
@@ -63,7 +63,7 @@ export function computeModelStatus(
 
 export function computeModelStatus(
   model: LocalOrRemoteModel,
-  userHasAccessToPrismic: boolean
+  userHasAccessToPrismic: boolean,
 ):
   | {
       status: ModelStatus.Unknown;
@@ -85,7 +85,7 @@ export function computeModelStatus(
 
 export function computeModelStatus(
   model: LocalOrRemoteModel,
-  userHasAccessToPrismic: boolean
+  userHasAccessToPrismic: boolean,
 ):
   | {
       status: ModelStatus.Unknown;

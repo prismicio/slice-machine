@@ -114,13 +114,13 @@ const useSliceMachineActions = () => {
     dispatch(
       modalOpenCreator({
         modalKey: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
-      })
+      }),
     );
   const openDeleteDocumentsDrawerOverLimit = () =>
     dispatch(
       modalOpenCreator({
         modalKey: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
-      })
+      }),
     );
   const openSimulatorSetupModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
@@ -140,13 +140,13 @@ const useSliceMachineActions = () => {
     dispatch(
       skipReviewCreator({
         reviewType,
-      })
+      }),
     );
   const sendAReview = (reviewType: UserReviewType) =>
     dispatch(
       sendAReviewCreator({
         reviewType,
-      })
+      }),
     );
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
@@ -161,16 +161,16 @@ const useSliceMachineActions = () => {
     id: string,
     label: string,
     repeatable: boolean,
-    format: CustomTypeFormat
+    format: CustomTypeFormat,
   ) =>
     dispatch(
-      createCustomTypeCreator.request({ id, label, repeatable, format })
+      createCustomTypeCreator.request({ id, label, repeatable, format }),
     );
 
   // Custom type module
   const initCustomTypeStore = (
     model: CustomTypeSM,
-    remoteModel: CustomTypeSM | undefined
+    remoteModel: CustomTypeSM | undefined,
   ) => dispatch(initCustomTypeStoreCreator({ model, remoteModel }));
   const cleanupCustomTypeStore = () =>
     dispatch(cleanupCustomTypeStoreCreator());
@@ -185,21 +185,21 @@ const useSliceMachineActions = () => {
     dispatch(
       saveCustomTypeCreator.success({
         customType: CustomTypes.toSM(customType),
-      })
+      }),
     );
 
   const deleteCustomTypeSuccess = (id: string) =>
     dispatch(
       deleteCustomTypeCreator.success({
         customTypeId: id,
-      })
+      }),
     );
 
   const renameAvailableCustomTypeSuccess = (customType: CustomType) =>
     dispatch(
       renameAvailableCustomType({
         renamedCustomType: CustomTypes.toSM(customType),
-      })
+      }),
     );
 
   /** End of sucess actions */
@@ -213,7 +213,7 @@ const useSliceMachineActions = () => {
   const addCustomTypeField = (
     tabId: string,
     fieldId: string,
-    field: TabField
+    field: TabField,
   ) => dispatch(addFieldCreator({ tabId, fieldId, field }));
   const deleteCustomTypeField = (tabId: string, fieldId: string) =>
     dispatch(deleteFieldCreator({ tabId, fieldId }));
@@ -225,10 +225,10 @@ const useSliceMachineActions = () => {
     tabId: string,
     previousFieldId: string,
     newFieldId: string,
-    value: TabField
+    value: TabField,
   ) =>
     dispatch(
-      replaceFieldCreator({ tabId, previousFieldId, newFieldId, value })
+      replaceFieldCreator({ tabId, previousFieldId, newFieldId, value }),
     );
   const createSliceZone = (tabId: string) =>
     dispatch(createSliceZoneCreator({ tabId }));
@@ -240,25 +240,25 @@ const useSliceMachineActions = () => {
     tabId: string,
     groupId: string,
     fieldId: string,
-    field: NestableWidget
+    field: NestableWidget,
   ) => dispatch(addFieldIntoGroupCreator({ tabId, groupId, fieldId, field }));
   const deleteFieldIntoGroup = (
     tabId: string,
     groupId: string,
-    fieldId: string
+    fieldId: string,
   ) => dispatch(deleteFieldIntoGroupCreator({ tabId, groupId, fieldId }));
   const reorderFieldIntoGroup = (
     tabId: string,
     groupId: string,
     start: number,
-    end: number
+    end: number,
   ) => dispatch(reorderFieldIntoGroupCreator({ tabId, groupId, start, end }));
   const replaceFieldIntoGroup = (
     tabId: string,
     groupId: string,
     previousFieldId: string,
     newFieldId: string,
-    value: NestableWidget
+    value: NestableWidget,
   ) =>
     dispatch(
       replaceFieldIntoGroupCreator({
@@ -267,7 +267,7 @@ const useSliceMachineActions = () => {
         previousFieldId,
         newFieldId,
         value,
-      })
+      }),
     );
 
   // Slice module
@@ -278,7 +278,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     widgetsArea: WidgetsArea,
     key: string,
-    value: NestableWidget
+    value: NestableWidget,
   ) => {
     dispatch(addSliceWidgetCreator({ variationId, widgetsArea, key, value }));
   };
@@ -288,7 +288,7 @@ const useSliceMachineActions = () => {
     widgetsArea: WidgetsArea,
     previousKey: string,
     newKey: string,
-    value: NestableWidget
+    value: NestableWidget,
   ) => {
     dispatch(
       replaceSliceWidgetCreator({
@@ -297,7 +297,7 @@ const useSliceMachineActions = () => {
         previousKey,
         newKey,
         value,
-      })
+      }),
     );
   };
 
@@ -305,7 +305,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     widgetsArea: WidgetsArea,
     start: number,
-    end: number | undefined
+    end: number | undefined,
   ) => {
     dispatch(
       reorderSliceWidgetCreator({
@@ -313,35 +313,35 @@ const useSliceMachineActions = () => {
         widgetsArea,
         start,
         end,
-      })
+      }),
     );
   };
 
   const removeSliceWidget = (
     variationId: string,
     widgetsArea: WidgetsArea,
-    key: string
+    key: string,
   ) => {
     dispatch(
       removeSliceWidgetCreator({
         variationId,
         widgetsArea,
         key,
-      })
+      }),
     );
   };
 
   const deleteSliceWidgetMock = (
     variationId: string,
     widgetArea: WidgetsArea,
-    newKey: string
+    newKey: string,
   ) => {
     dispatch(
       deleteSliceWidgetMockCreator({
         variationId,
         widgetArea,
         newKey,
-      })
+      }),
     );
   };
 
@@ -351,7 +351,7 @@ const useSliceMachineActions = () => {
     previousKey: string,
     newKey: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mockValue: any
+    mockValue: any,
   ) => {
     dispatch(
       updateSliceWidgetMockCreator({
@@ -361,7 +361,7 @@ const useSliceMachineActions = () => {
         newKey,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         mockValue,
-      })
+      }),
     );
   };
 
@@ -369,7 +369,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     component: ComponentUI,
     screenDimensions: ScreenDimensions,
-    method: ScreenshotGenerationMethod
+    method: ScreenshotGenerationMethod,
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
@@ -377,7 +377,7 @@ const useSliceMachineActions = () => {
         component,
         screenDimensions,
         method,
-      })
+      }),
     );
   };
 
@@ -385,7 +385,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     component: ComponentUI,
     file: Blob,
-    method: ScreenshotGenerationMethod
+    method: ScreenshotGenerationMethod,
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator.request({
@@ -393,27 +393,27 @@ const useSliceMachineActions = () => {
         component,
         file,
         method,
-      })
+      }),
     );
   };
 
   const updateSlice = (
     component: ComponentUI,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setData: (data: any) => void
+    setData: (data: any) => void,
   ) => {
     dispatch(
       updateSliceCreator.request({
         component,
         setData,
-      })
+      }),
     );
   };
 
   const copyVariationSlice = (
     key: string,
     name: string,
-    copied: VariationSM
+    copied: VariationSM,
   ) => {
     dispatch(copyVariationSliceCreator({ key, name, copied }));
   };
@@ -424,14 +424,14 @@ const useSliceMachineActions = () => {
   const renameSlice = (
     libName: string,
     sliceId: string,
-    newSliceName: string
+    newSliceName: string,
   ) =>
     dispatch(
       renameSliceCreator.request({
         sliceId,
         newSliceName,
         libName,
-      })
+      }),
     );
 
   const deleteSlice = (sliceId: string, sliceName: string, libName: string) =>
@@ -440,7 +440,7 @@ const useSliceMachineActions = () => {
         sliceId,
         sliceName,
         libName,
-      })
+      }),
     );
 
   const pushChanges = (payload: ChangesPushSagaPayload) =>
@@ -449,7 +449,7 @@ const useSliceMachineActions = () => {
   // Toaster store
   const openToaster = (
     content: string | React.ReactNode,
-    type: GenericToastTypes
+    type: GenericToastTypes,
   ) => dispatch(openToasterCreator({ content, type }));
 
   // Simulator
@@ -466,7 +466,7 @@ const useSliceMachineActions = () => {
         libraries: serverState.libraries,
         remoteSlices: serverState.remoteSlices,
         clientError: serverState.clientError,
-      })
+      }),
     );
   };
 

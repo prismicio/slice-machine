@@ -26,7 +26,7 @@ class CustomTypeRenameModal extends RenameModal {
   constructor() {
     super(
       "[data-cy=rename-custom-type-modal]",
-      '[data-cy="custom-type-name-input"]'
+      '[data-cy="custom-type-name-input"]',
     );
   }
 }

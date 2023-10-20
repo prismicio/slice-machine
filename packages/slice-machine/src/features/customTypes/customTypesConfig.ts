@@ -28,15 +28,15 @@ export const CUSTOM_TYPES_CONFIG = {
 
 export function matchesBuilderPagePathname(
   pathname: string,
-  customTypeId: string
+  customTypeId: string,
 ): boolean {
   return Object.values(CUSTOM_TYPES_CONFIG).some(({ getBuilderPagePathname }) =>
-    pathname.startsWith(getBuilderPagePathname(customTypeId))
+    pathname.startsWith(getBuilderPagePathname(customTypeId)),
   );
 }
 
 export function readBuilderPageDynamicSegment(
-  query: NextRouter["query"]
+  query: NextRouter["query"],
 ): string | undefined {
   const customTypesConfigValues = Object.values(CUSTOM_TYPES_CONFIG);
   for (const { builderPageDynamicSegment } of customTypesConfigValues) {

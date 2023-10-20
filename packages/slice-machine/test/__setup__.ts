@@ -46,7 +46,7 @@ beforeEach(async (ctx) => {
     createSliceMachineManagerMSWHandler({
       url: "http://localhost:3000/_manager",
       sliceMachineManager: manager,
-    })
+    }),
   );
 
   await fs.mkdir(os.homedir(), { recursive: true });
@@ -104,7 +104,7 @@ vi.mock("analytics-node", () => {
       if (callback) {
         callback();
       }
-    }
+    },
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -113,7 +113,7 @@ vi.mock("analytics-node", () => {
       if (callback) {
         callback();
       }
-    }
+    },
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -122,7 +122,7 @@ vi.mock("analytics-node", () => {
       if (callback) {
         callback();
       }
-    }
+    },
   );
 
   return {
@@ -159,7 +159,7 @@ vi.stubGlobal(
       }
     } else {
       throw new Error(
-        "`fetch` with RequestInfo is not supported in this test environment."
+        "`fetch` with RequestInfo is not supported in this test environment.",
       );
     }
 
@@ -185,7 +185,7 @@ vi.stubGlobal(
     } else {
       return res;
     }
-  })
+  }),
 );
 
 vi.stubGlobal(
@@ -196,5 +196,5 @@ vi.stubGlobal(
       observe: vi.fn(),
       unobserve: vi.fn(),
     };
-  })
+  }),
 );

@@ -23,7 +23,7 @@ describe("[Toaster utils]", () => {
 
       expect(addToastFakeFunction).toHaveBeenCalledWith(
         "message",
-        ToasterType.SUCCESS
+        ToasterType.SUCCESS,
       );
     });
 
@@ -56,7 +56,7 @@ describe("[Toaster utils]", () => {
 
       expect(addToastFakeFunction).toHaveBeenCalledWith(
         "message",
-        ToasterType.WARNING
+        ToasterType.WARNING,
       );
     });
 
@@ -74,7 +74,7 @@ describe("[Toaster utils]", () => {
 
       expect(addToastFakeFunction).toHaveBeenCalledWith(
         "message",
-        ToasterType.ERROR
+        ToasterType.ERROR,
       );
     });
   });

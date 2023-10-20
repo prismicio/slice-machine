@@ -66,7 +66,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           previousKey,
           newKey,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          mockValue
+          mockValue,
         );
       } else {
         deleteSliceWidgetMock(variation.id, widgetArea, newKey);
@@ -93,7 +93,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!widget) {
         console.log(
-          `Could not find widget with type name "${widgetTypeName}". Please contact us!`
+          `Could not find widget with type name "${widgetTypeName}". Please contact us!`,
         );
       }
 
@@ -102,7 +102,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         widgetArea,
         id,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        widget.create(label) as NestableWidget
+        widget.create(label) as NestableWidget,
       );
     };
 
@@ -113,7 +113,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       variation.id,
       widgetArea,
       result.source.index,
-      result.destination?.index ?? undefined
+      result.destination?.index ?? undefined,
     );
   };
 

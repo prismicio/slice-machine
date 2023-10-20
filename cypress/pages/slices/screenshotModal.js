@@ -16,7 +16,7 @@ class ScreenshotModal {
   uploadImage(imageFixturePath) {
     cy.get(`${this.root} input[type="file"]`).selectFile(
       `${fixturePath}${imageFixturePath}`,
-      { force: true }
+      { force: true },
     );
     return this;
   }

@@ -137,7 +137,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
 
                           if (inferIDFromName) {
                             values.variationID = Variation.generateId(
-                              values.variationName
+                              values.variationName,
                             );
                           }
 
@@ -163,7 +163,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
                           setInferIDFromName(false);
                           void formik.setFieldValue(
                             "variationID",
-                            Variation.generateId(value.slice(0, 30))
+                            Variation.generateId(value.slice(0, 30)),
                           );
                         }}
                         data-cy="variation-id-input"
@@ -191,7 +191,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
 
 const validateAsNewVariationValues = (
   values: FormValues,
-  libraries: readonly LibraryUI[]
+  libraries: readonly LibraryUI[],
 ): Partial<Record<keyof FormValues, string>> => {
   const errors: Partial<Record<keyof FormValues, string>> = {};
 
@@ -199,7 +199,7 @@ const validateAsNewVariationValues = (
     errors.libraryID = "Cannot be empty.";
   }
   const library = libraries.find(
-    (library) => library.path === values.libraryID
+    (library) => library.path === values.libraryID,
   );
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!errors.libraryID && !library) {
@@ -210,7 +210,7 @@ const validateAsNewVariationValues = (
     errors.sliceID = "Cannot be empty.";
   }
   const slice = library?.components.find(
-    (component) => component.model.id === values.sliceID
+    (component) => component.model.id === values.sliceID,
   );
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!errors.sliceID && !slice) {

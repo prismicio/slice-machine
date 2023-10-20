@@ -44,7 +44,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     initialModelValues.config,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    initialModelValues.type
+    initialModelValues.type,
   );
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -83,7 +83,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             config: initialConfig,
           },
-          { stripUnknown: true }
+          { stripUnknown: true },
         ),
       };
     } catch (e) {
@@ -96,7 +96,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   if (err) {
     console.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-      `[EditModal] Failed to validate field of type ${initialModelValues.type}.\n Please update model.json accordingly.`
+      `[EditModal] Failed to validate field of type ${initialModelValues.type}.\n Please update model.json accordingly.`,
     );
     console.error(err);
   }

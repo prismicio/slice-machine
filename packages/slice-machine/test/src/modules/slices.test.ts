@@ -32,7 +32,7 @@ describe("[Slices module]", () => {
     it("should return the initial state if no matching action", () => {
       // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"STAT... Remove this comment to see the full error message
       expect(slicesReducer(dummySlicesState, { type: "NO.MATCH" })).toEqual(
-        dummySlicesState
+        dummySlicesState,
       );
     });
 
@@ -122,7 +122,7 @@ describe("[Slices module]", () => {
       };
       const saga = testSaga(
         deleteSliceSaga,
-        deleteSliceCreator.request(actionPayload)
+        deleteSliceCreator.request(actionPayload),
       );
 
       saga
@@ -133,7 +133,7 @@ describe("[Slices module]", () => {
         openToasterCreator({
           content: `Successfully deleted Slice “${actionPayload.sliceName}”`,
           type: ToasterType.SUCCESS,
-        })
+        }),
       );
 
       saga.next().put(modalCloseCreator());
@@ -147,7 +147,7 @@ describe("[Slices module]", () => {
       };
       const saga = testSaga(
         deleteSliceSaga,
-        deleteSliceCreator.request(actionPayload)
+        deleteSliceCreator.request(actionPayload),
       );
 
       saga
@@ -157,7 +157,7 @@ describe("[Slices module]", () => {
         openToasterCreator({
           content: "An unexpected error happened while deleting your slice.",
           type: ToasterType.ERROR,
-        })
+        }),
       );
 
       saga.next().put(modalCloseCreator());

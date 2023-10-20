@@ -27,7 +27,7 @@ const CheckboxControl = ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const [isChecked, setCheck] = useState(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-    defaultValue || field.defaultValue || false
+    defaultValue || field.defaultValue || false,
   );
 
   useEffect(() => {

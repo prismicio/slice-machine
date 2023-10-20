@@ -20,7 +20,7 @@ export const ReferencesErrorDrawer: React.FunctionComponent<{
       isOpen: isModalOpen(store, ModalKeysEnum.REFERENCES_MISSING_DRAWER),
       localCustomTypes: selectAllCustomTypes(store).filter(hasLocal),
       modalData: store.pushChanges,
-    })
+    }),
   );
   const { closeModals, openToaster } = useSliceMachineActions();
 
@@ -36,7 +36,7 @@ export const ReferencesErrorDrawer: React.FunctionComponent<{
   const associatedDocumentsCards = modalData.details.customTypes.map(
     (customTypeDetail) => {
       const customType = localCustomTypes.find(
-        (customType) => getModelId(customType) === customTypeDetail.id
+        (customType) => getModelId(customType) === customTypeDetail.id,
       );
       if (customType === undefined) return null;
 
@@ -47,7 +47,7 @@ export const ReferencesErrorDrawer: React.FunctionComponent<{
           name={customType.local.label ?? customType.local.id}
         />
       );
-    }
+    },
   );
 
   return (

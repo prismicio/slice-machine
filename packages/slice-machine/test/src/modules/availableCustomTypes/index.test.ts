@@ -25,7 +25,7 @@ describe("[Available Custom types module]", () => {
     it("should return the initial state if no action", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
       expect(availableCustomTypesReducer(dummyCustomTypesState, {})).toEqual(
-        dummyCustomTypesState
+        dummyCustomTypesState,
       );
     });
 
@@ -34,7 +34,7 @@ describe("[Available Custom types module]", () => {
         availableCustomTypesReducer(dummyCustomTypesState, {
           // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"CUST... Remove this comment to see the full error message
           type: "NO.MATCH",
-        })
+        }),
       ).toEqual(dummyCustomTypesState);
     });
 
@@ -49,7 +49,7 @@ describe("[Available Custom types module]", () => {
       });
 
       expect(
-        availableCustomTypesReducer(dummyCustomTypesState, action)
+        availableCustomTypesReducer(dummyCustomTypesState, action),
       ).toEqual({
         ...dummyCustomTypesState,
         about: {
@@ -77,7 +77,7 @@ describe("[Available Custom types module]", () => {
       });
 
       expect(
-        availableCustomTypesReducer(dummyCustomTypesState, action)
+        availableCustomTypesReducer(dummyCustomTypesState, action),
       ).toEqual({
         ...dummyCustomTypesState,
         [createdCustomType.id]: {
@@ -169,13 +169,13 @@ describe("[Available Custom types module]", () => {
 
       const result = availableCustomTypesReducer(
         originalState,
-        action
+        action,
       ) as AvailableCustomTypesStoreType;
 
       expect(
         Object.values(result).flatMap((localAndRemote) => {
           return Object.values(localAndRemote);
-        })
+        }),
       ).not.toContain(undefined);
 
       expect(result).toEqual({
@@ -223,26 +223,26 @@ describe("[Available Custom types module]", () => {
           actionPayload.id,
           actionPayload.label,
           actionPayload.repeatable,
-          actionPayload.format
-        )
+          actionPayload.format,
+        ),
       );
       const saga = testSaga(
         createCustomTypeSaga,
-        createCustomTypeCreator.request(actionPayload)
+        createCustomTypeCreator.request(actionPayload),
       );
 
       saga.next().call(saveCustomType, customTypeCreated);
       saga
         .next()
         .put(
-          createCustomTypeCreator.success({ newCustomType: customTypeCreated })
+          createCustomTypeCreator.success({ newCustomType: customTypeCreated }),
         );
       saga.next().put(modalCloseCreator());
       saga.next().put(
         push({
           pathname: "/custom-types/id",
           query: undefined,
-        })
+        }),
       );
       saga
         .next()
@@ -252,9 +252,9 @@ describe("[Available Custom types module]", () => {
           }) => {
             expect(action.payload.action.type).toBe("TOASTER/OPEN");
             expect(action.payload.action.payload.type).toBe(
-              ToasterType.SUCCESS
+              ToasterType.SUCCESS,
             );
-          }
+          },
         );
       saga.next().isDone();
     });
@@ -271,12 +271,12 @@ describe("[Available Custom types module]", () => {
           actionPayload.id,
           actionPayload.label,
           actionPayload.repeatable,
-          actionPayload.format
-        )
+          actionPayload.format,
+        ),
       );
       const saga = testSaga(
         createCustomTypeSaga,
-        createCustomTypeCreator.request(actionPayload)
+        createCustomTypeCreator.request(actionPayload),
       );
 
       saga.next().call(saveCustomType, customTypeCreated);
@@ -284,7 +284,7 @@ describe("[Available Custom types module]", () => {
         openToasterCreator({
           content: "Internal Error: Custom type not saved",
           type: ToasterType.ERROR,
-        })
+        }),
       );
       saga.next().isDone();
     });

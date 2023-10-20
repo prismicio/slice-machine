@@ -31,7 +31,7 @@ export function setSliceMachineUserContext({
         lastSyncChange,
         hasSeenSimulatorToolTip,
       }),
-    })
+    }),
   );
 }
 

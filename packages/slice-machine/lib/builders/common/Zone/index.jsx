@@ -37,7 +37,7 @@ const Zone = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     const hasUid = !!Object.entries(poolOfFieldsToCheck).find(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      ([, { value }]) => value.type === "UID"
+      ([, { value }]) => value.type === "UID",
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return hasUid
@@ -237,7 +237,7 @@ Zone.propTypes = {
         fields: array,
         type: string.isRequired,
       }),
-    })
+    }),
   ),
 };
 
