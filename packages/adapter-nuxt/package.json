@@ -77,7 +77,6 @@
 		"@prismicio/mock": "0.2.0",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
-		"@types/prettier": "3.0.0",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",
 		"@vitest/coverage-v8": "0.32.0",

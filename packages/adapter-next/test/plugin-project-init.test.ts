@@ -254,12 +254,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -282,8 +283,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -328,12 +328,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"../slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -356,8 +357,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -402,12 +402,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -476,12 +477,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -547,12 +549,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -575,8 +578,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -617,12 +619,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"../slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -645,8 +648,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -691,12 +693,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -761,12 +764,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -1385,7 +1389,7 @@ describe("/api/preview route", () => {
 
 				export default async function handler(
 				  req: NextApiRequest,
-				  res: NextApiResponse
+				  res: NextApiResponse,
 				) {
 				  const client = createClient({ req });
 

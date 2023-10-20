@@ -110,6 +110,10 @@ vi.mock("module", async () => {
 		createRequire: (...args) => {
 			const actualCreateRequire = actual.createRequire(...args);
 
+			if (args[0].toString().includes("prettier")) {
+				return actualCreateRequire;
+			}
+
 			return {
 				...actualCreateRequire,
 				resolve: (id: string) => {
@@ -119,7 +123,7 @@ vi.mock("module", async () => {
 						return `${MOCK_BASE_DIRECTORY}/${id}`;
 					}
 
-					return actualCreateRequire(id);
+					return actualCreateRequire.resolve(id);
 				},
 			};
 		},
