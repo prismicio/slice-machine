@@ -48,6 +48,9 @@ export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:asset:read",
 	"custom-type:asset:delete",
 	"custom-type-library:read",
+	"project:init",
+	"project:environment:read",
+	"project:environment:update",
 ];
 /**
  * @internal
@@ -60,6 +63,7 @@ export const ADAPTER_ONLY_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:asset:read",
 	"custom-type-library:read",
 	"slice-simulator:setup:read",
+	"project:environment:read",
 ];
 
 type SliceMachinePluginRunnerConstructorArgs = {

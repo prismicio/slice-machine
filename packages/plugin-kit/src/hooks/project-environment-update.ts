@@ -36,8 +36,6 @@ export type ProjectEnvironmentUpdateHookBase = SliceMachineHook<
  *
  * This hook is **required** to be implemented by adapters.
  *
- * This hook will only be called in adapters.
- *
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
 export type ProjectEnvironmentUpdateHook<

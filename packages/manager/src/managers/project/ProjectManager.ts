@@ -4,14 +4,26 @@ import * as path from "node:path";
 import { createRequire } from "node:module";
 import { detect as niDetect } from "@antfu/ni";
 import { ExecaChildProcess } from "execa";
+import {
+	HookError,
+	CallHookReturnType,
+	ProjectEnvironmentUpdateHook,
+} from "@slicemachine/plugin-kit";
+import * as t from "io-ts";
 
+import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { decodeHookResult } from "../../lib/decodeHookResult";
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
 
-import { PackageManager, SliceMachineConfig } from "../../types";
+import {
+	PackageManager,
+	SliceMachineConfig,
+	OnlyHookErrors,
+} from "../../types";
 
 import { SliceMachineError, InternalError } from "../../errors";
 
@@ -55,6 +67,15 @@ type ProjectManagerInstallDependenciesArgs = {
 
 type ProjectManagerInstallDependenciesReturnType = {
 	execaProcess: ExecaChildProcess;
+};
+
+type ProjectManagerReadEnvironmentReturnType = {
+	environment: undefined | string;
+	errors: (DecodeError | HookError)[];
+};
+
+type ProjectManagerUpdateEnvironmentArgs = {
+	environment: undefined | string;
 };
 
 export class ProjectManager extends BaseManager {
@@ -309,5 +330,40 @@ export class ProjectManager extends BaseManager {
 
 			throw error;
 		}
+	}
+
+	async readEnvironment(): Promise<ProjectManagerReadEnvironmentReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"project:environment:read",
+			undefined,
+		);
+		const { data, errors } = decodeHookResult(
+			t.type({
+				environment: t.union([t.undefined, t.string]),
+			}),
+			hookResult,
+		);
+
+		return {
+			environment: data[0]?.environment,
+			errors,
+		};
+	}
+
+	async updateEnvironment(
+		args: ProjectManagerUpdateEnvironmentArgs,
+	): Promise<OnlyHookErrors<CallHookReturnType<ProjectEnvironmentUpdateHook>>> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"project:environment:update",
+			args,
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
 	}
 }
