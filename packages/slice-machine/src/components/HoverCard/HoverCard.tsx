@@ -60,7 +60,7 @@ export const HoverCard: FC<HoverCardProps> = ({
 
   const handleDefaultOpening = useCallback(
     () => setOpen((wasOpen) => wasOpen === false),
-    [setOpen]
+    [setOpen],
   );
 
   useDelayedAction({

@@ -33,7 +33,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
   const screenshotChangesSlices = unSyncedSlices.filter(
-    (s) => modelsStatuses.slices[s.model.id] !== ModelStatus.Deleted
+    (s) => modelsStatuses.slices[s.model.id] !== ModelStatus.Deleted,
   );
 
   return (
@@ -71,7 +71,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   (slice) =>
                     countMissingScreenshots(slice) > 0 &&
                     modelsStatuses.slices[slice.model.id] !==
-                      ModelStatus.Deleted
+                      ModelStatus.Deleted,
                 ) && (
                   <Text
                     sx={{

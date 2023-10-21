@@ -50,20 +50,22 @@ const testSnippet = (
 
 		if (Array.isArray(expected)) {
 			expect(res).toStrictEqual(
-				expected.map((descriptor) => ({
-					...descriptor,
-					code: prettier
-						.format(descriptor.code, { parser: "typescript" })
-						.replace(/[\r\n]+$/, "")
-						.replace(/;$/, ""),
-				})),
+				await Promise.all(
+					expected.map(async (descriptor) => ({
+						...descriptor,
+						code: (
+							await prettier.format(descriptor.code, { parser: "typescript" })
+						)
+							.replace(/[\r\n]+$/, "")
+							.replace(/;$/, ""),
+					})),
+				),
 			);
 		} else {
 			expect(res).toStrictEqual({
 				label: "React",
 				language: "tsx",
-				code: prettier
-					.format(expected, { parser: "typescript" })
+				code: (await prettier.format(expected, { parser: "typescript" }))
 					.replace(/[\r\n]+$/, "")
 					.replace(/;$/, ""),
 			});

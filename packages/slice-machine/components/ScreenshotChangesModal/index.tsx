@@ -157,7 +157,7 @@ const VariationsList = ({
 
 const variationSetter = (
   defaultVariationSelector: SliceVariationSelector | undefined,
-  slices: ComponentUI[]
+  slices: ComponentUI[],
 ) =>
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   defaultVariationSelector ||
@@ -182,7 +182,7 @@ const ScreenshotChangesModal = ({
   }));
 
   const [variationSelector, setVariationSelector] = useState(
-    variationSetter(defaultVariationSelector, slices)
+    variationSetter(defaultVariationSelector, slices),
   );
 
   useEffect(() => {
@@ -269,7 +269,7 @@ const ScreenshotChangesModal = ({
             {supportsClipboardRead ? <FigmaTip /> : undefined}
             {(() => {
               const slice = slices.find(
-                (s) => s.model.id === variationSelector.sliceID
+                (s) => s.model.id === variationSelector.sliceID,
               );
               return slice ? (
                 <VariationDropZone

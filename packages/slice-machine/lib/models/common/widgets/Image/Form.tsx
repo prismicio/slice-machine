@@ -23,7 +23,7 @@ const nullableNumberSchema = () => {
     .nullable()
     .transform((value: string | number, originalValue: string | number) =>
       // When the user empties the field, it should convert it to null so that "auto" dimensions are set
-      originalValue === "" ? null : value
+      originalValue === "" ? null : value,
     );
 };
 
@@ -56,7 +56,7 @@ const FormFields = {
               const hasWidthOrHeight = hasWidth || hasHeight;
               return value.name && hasWidthOrHeight;
             },
-          })
+          }),
         ),
   },
 };
@@ -80,7 +80,7 @@ const thumbText = (
     width?: number | string;
     height?: number | string;
   } = {},
-  allowAuto = false
+  allowAuto = false,
 ) => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (allowAuto && !width && !height) {

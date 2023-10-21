@@ -59,7 +59,7 @@ export const VideoItem = forwardRef<HTMLLIElement, VideoItemProps>(
         </SideNavListItem>
       </MaybeVideoTooltipWrapper>
     );
-  }
+  },
 );
 
 type MaybeVideoTooltipWrapperProps = VideoItemProps & {
@@ -131,7 +131,7 @@ const OldVideoItem: FC<OldVideoItemProps> = ({
       }
       ref.current = node;
     },
-    [hasSeenTutorialsToolTip]
+    [hasSeenTutorialsToolTip],
   );
 
   return (

@@ -73,7 +73,7 @@ const Navigation: FC = () => {
             })}
             href={CUSTOM_TYPES_CONFIG["page"].tablePagePathname}
             active={CUSTOM_TYPES_CONFIG["page"].matchesTablePagePathname(
-              router.asPath
+              router.asPath,
             )}
             component={Link}
             Icon={CUSTOM_TYPES_CONFIG.page.Icon}
@@ -88,7 +88,7 @@ const Navigation: FC = () => {
             })}
             href={CUSTOM_TYPES_CONFIG["custom"].tablePagePathname}
             active={CUSTOM_TYPES_CONFIG["custom"].matchesTablePagePathname(
-              router.asPath
+              router.asPath,
             )}
             component={Link}
             Icon={CUSTOM_TYPES_CONFIG.custom.Icon}

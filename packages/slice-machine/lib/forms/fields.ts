@@ -5,7 +5,7 @@ import { createValidationArgs } from ".";
 export const CheckBox = (
   label: string,
   required = true,
-  defaultValue = true
+  defaultValue = true,
 ) => ({
   type: FormTypes.CHECKBOX,
   validate: {
@@ -24,7 +24,7 @@ export const Select = (
   options: any,
   required = true,
   multi = true,
-  defaultValue = true
+  defaultValue = true,
 ) => ({
   type: FormTypes.SELECT,
   required,
@@ -73,7 +73,7 @@ export const Input = (
   },
   fieldLevelValidation: FieldLevelValidationFn | undefined | null,
   defaultValue: string | undefined,
-  placeholder: string
+  placeholder: string,
 ): InputType => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const { min, max, required, matches } = conditions || {};

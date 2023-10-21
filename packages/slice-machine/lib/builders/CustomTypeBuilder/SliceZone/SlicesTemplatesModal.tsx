@@ -65,8 +65,8 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
                   return slice.model;
                 })
                 .filter(
-                  (slice) => slice !== undefined
-                ) as Promise<SharedSlice>[]
+                  (slice) => slice !== undefined,
+                ) as Promise<SharedSlice>[],
             );
 
             await onSuccess(slices);
@@ -112,9 +112,9 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
                       url: curr[1],
                     },
                   }),
-                  {}
+                  {},
                 ),
-              })
+              }),
             ),
             ...sliceTemplatesComingSoon,
           ]}

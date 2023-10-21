@@ -43,7 +43,7 @@ const WidgetForm = ({
   const selectValues = formValues.config.customtypes
     ? formValues.config.customtypes.map((id) => {
         const ct = customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === id
+          (frontendCustomType) => frontendCustomType.local.id === id,
         );
         return { value: ct?.local.id, label: ct?.local.label };
       })
@@ -82,7 +82,7 @@ const WidgetForm = ({
               if (v) {
                 void setFieldValue(
                   "config.customtypes",
-                  v.map(({ value }) => value)
+                  v.map(({ value }) => value),
                 );
               }
             }}

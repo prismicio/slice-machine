@@ -20,17 +20,17 @@ describe("[Selected Slice module]", () => {
     it("should return the initial state if no matching action", () => {
       expect(
         // @ts-expect-error the NO.MATCH is not a valid action type
-        selectedSliceReducer(dummySliceState, { type: "NO.MATCH" })
+        selectedSliceReducer(dummySliceState, { type: "NO.MATCH" }),
       ).toEqual(dummySliceState);
       expect(
         // @ts-expect-error the NO.MATCH is not a valid action type
-        selectedSliceReducer(null, { type: "NO.MATCH" })
+        selectedSliceReducer(null, { type: "NO.MATCH" }),
       ).toEqual(null);
     });
 
     it("should update the selected slice state given SELECTED_SLICE/INIT action", () => {
       expect(
-        selectedSliceReducer(null, initSliceStoreCreator(dummySliceState))
+        selectedSliceReducer(null, initSliceStoreCreator(dummySliceState)),
       ).toEqual(dummySliceState);
     });
     it("should update the selected slice state given SLICE/ADD_WIDGET action", () => {
@@ -55,7 +55,7 @@ describe("[Selected Slice module]", () => {
           widgetsArea: WidgetsArea.Primary,
           key: newWidget.key,
           value: newWidget.value,
-        })
+        }),
       );
       const primaryWidgets = newState?.model.variations[0].primary;
       expect(primaryWidgets?.length).toEqual(primaryWidgetsInit.length + 1);
@@ -87,13 +87,13 @@ describe("[Selected Slice module]", () => {
           previousKey: widgetToReplace.key,
           newKey: updatedWidget.key,
           value: updatedWidget.value,
-        })
+        }),
       );
 
       const primaryWidgets = newState?.model.variations[0].primary;
       expect(primaryWidgets?.length).toEqual(primaryWidgetsInit.length);
       const replacedWidget = primaryWidgets?.find(
-        (w) => w.key === updatedWidget.key
+        (w) => w.key === updatedWidget.key,
       );
       expect(replacedWidget).toBeTruthy();
       expect(replacedWidget?.value).toBe(updatedWidget.value);
@@ -110,7 +110,7 @@ describe("[Selected Slice module]", () => {
           variationId: dummyModelVariationID,
           widgetsArea: WidgetsArea.Primary,
           key: widgetToDelete.key,
-        })
+        }),
       );
 
       const primaryWidgets = newState?.model.variations[0].primary;
@@ -125,7 +125,7 @@ describe("[Selected Slice module]", () => {
           key: "new-variation",
           name: "New Variation",
           copied: dummySliceState.model.variations[0],
-        })
+        }),
       );
 
       const variations = newState?.model.variations;
@@ -139,8 +139,8 @@ describe("[Selected Slice module]", () => {
       const action = refreshStateCreator(
         getRefreshStateCreatorPayloadData(
           dummySliceState.from,
-          dummySliceState.model.id
-        )
+          dummySliceState.model.id,
+        ),
       );
 
       const newState = selectedSliceReducer(dummySliceState, action);
@@ -157,8 +157,8 @@ describe("[Selected Slice module]", () => {
       const action = refreshStateCreator(
         getRefreshStateCreatorPayloadData(
           "unknown-livrary",
-          dummySliceState.model.id
-        )
+          dummySliceState.model.id,
+        ),
       );
 
       const newState = selectedSliceReducer(dummySliceState, action);

@@ -49,7 +49,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
   const { libraries: allLibraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       libraries: getLibraries(store),
-    })
+    }),
   );
 
   const sliceName =
@@ -63,11 +63,11 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
   const identicalSlices = useIdenticalSlices(
     slice,
     sliceName,
-    localSharedSlices
+    localSharedSlices,
   );
 
   const convertLegacySliceAndTrack = async (
-    args: ConvertLegacySliceAndTrackArgs
+    args: ConvertLegacySliceAndTrackArgs,
   ) => {
     if (!dialog) {
       return;
@@ -103,7 +103,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
 
       openToaster(
         `Could not convert slice \`${sliceName}\``,
-        ToasterType.ERROR
+        ToasterType.ERROR,
       );
 
       throw errors;
@@ -117,12 +117,12 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
     if (customTypeReadErrors.length || !customType) {
       console.error(
         `Could not refresh custom type view \`${path.customTypeID}\``,
-        customTypeReadErrors
+        customTypeReadErrors,
       );
 
       openToaster(
         `Could not refresh custom type view \`${path.customTypeID}\``,
-        ToasterType.ERROR
+        ToasterType.ERROR,
       );
 
       return;
@@ -139,14 +139,14 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
       case "as_new_slice":
         openToaster(
           `${sliceName} has been upgraded to a new slice ${args.libraryID} > ${args.sliceID}`,
-          ToasterType.SUCCESS
+          ToasterType.SUCCESS,
         );
         break;
 
       case "as_new_variation":
         openToaster(
           `${sliceName} has been converted as a variation of ${args.libraryID} > ${args.sliceID}`,
-          ToasterType.SUCCESS
+          ToasterType.SUCCESS,
         );
         break;
 
@@ -154,7 +154,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
       default:
         openToaster(
           `${sliceName} has been merged with ${args.libraryID} > ${args.sliceID}`,
-          ToasterType.SUCCESS
+          ToasterType.SUCCESS,
         );
         break;
     }
@@ -235,7 +235,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
 const useIdenticalSlices = (
   slice: NonSharedSliceInSliceZone,
   sliceName: string,
-  localSharedSlices: ComponentUI[]
+  localSharedSlices: ComponentUI[],
 ) => {
   return useMemo<IdenticalSlice[]>(() => {
     const results: IdenticalSlice[] = [];
@@ -246,7 +246,7 @@ const useIdenticalSlices = (
       for (const variation of sharedSlice.model.variations) {
         const variationFields = getFieldMappingFingerprint(
           variation,
-          sharedSlice.model.name
+          sharedSlice.model.name,
         );
 
         if (

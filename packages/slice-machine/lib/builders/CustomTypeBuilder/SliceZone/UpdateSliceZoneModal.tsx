@@ -34,7 +34,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         const slices = sliceKeys
           .map(
             (sliceKey) =>
-              availableSlices.find((s) => s.model.id === sliceKey)?.model
+              availableSlices.find((s) => s.model.id === sliceKey)?.model,
           )
           .filter((slice) => slice !== undefined) as SharedSlice[];
         void onSubmit(slices);

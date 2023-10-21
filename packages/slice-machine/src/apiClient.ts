@@ -43,8 +43,8 @@ export const getState = async (): Promise<ServerState> => {
                       url: URL.createObjectURL(screenshot.data),
                     },
                   ];
-                }
-              )
+                },
+              ),
             ),
           };
         }),
@@ -56,7 +56,7 @@ export const getState = async (): Promise<ServerState> => {
     remoteCustomTypes: rawState.remoteCustomTypes.map(
       (remoteCustomTypeModel) => {
         return CustomTypes.toSM(remoteCustomTypeModel);
-      }
+      },
     ),
     remoteSlices: rawState.remoteSlices.map((remoteSliceModel) => {
       return Slices.toSM(remoteSliceModel);
@@ -69,7 +69,7 @@ export const getState = async (): Promise<ServerState> => {
 /** Custom Type Routes * */
 
 export const saveCustomType = async (
-  customType: CustomTypeSM
+  customType: CustomTypeSM,
 ): ReturnType<SliceMachineManagerClient["customTypes"]["updateCustomType"]> => {
   return await managerClient.customTypes.updateCustomType({
     model: CustomTypes.fromSM(customType),
@@ -79,7 +79,7 @@ export const saveCustomType = async (
 /** Slice Routes * */
 export const renameSlice = async (
   slice: SliceSM,
-  libName: string
+  libName: string,
 ): ReturnType<SliceMachineManagerClient["slices"]["renameSlice"]> => {
   return await managerClient.slices.renameSlice({
     libraryID: libName,
@@ -94,7 +94,7 @@ export const deleteSlice = async (sliceId: string, libName: string) =>
   });
 
 export const generateSliceScreenshotApiClient = async (
-  params: ScreenshotRequest
+  params: ScreenshotRequest,
 ): Promise<
   | {
       url: string;
@@ -130,7 +130,7 @@ export const generateSliceScreenshotApiClient = async (
 };
 
 export const generateSliceCustomScreenshotApiClient = async (
-  params: CustomScreenshotRequest
+  params: CustomScreenshotRequest,
 ): Promise<{
   url: string;
   errors: Awaited<
@@ -151,7 +151,7 @@ export const generateSliceCustomScreenshotApiClient = async (
 };
 
 export const updateSliceApiClient = async (
-  component: ComponentUI
+  component: ComponentUI,
 ): Promise<
   Awaited<ReturnType<(typeof managerClient)["slices"]["updateSlice"]>>
 > => {
@@ -222,7 +222,7 @@ export type ReadSliceMockRequest = {
 };
 
 export const readSliceMocks = async (
-  payload: ReadSliceMockRequest
+  payload: ReadSliceMockRequest,
 ): ReturnType<SliceMachineManagerClient["slices"]["readSliceMocks"]> => {
   return await managerClient.slices.readSliceMocks({
     libraryID: payload.libraryID,
@@ -231,7 +231,7 @@ export const readSliceMocks = async (
 };
 
 export const saveSliceMock = async (
-  payload: SaveSliceMockRequest
+  payload: SaveSliceMockRequest,
 ): ReturnType<SliceMachineManagerClient["slices"]["updateSliceMocks"]> => {
   return await managerClient.slices.updateSliceMocks({
     libraryID: payload.libraryID,
@@ -271,7 +271,7 @@ export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
         releaseNote: releaseNotes ?? null,
         kind: versionWithKind.kind,
       };
-    })
+    }),
   );
 
   return {

@@ -8,7 +8,7 @@ import * as imageHelpers from "../helpers/images";
 Object.keys(localStorageHelpers).forEach((localStorageHelper) => {
   Cypress.Commands.add(
     localStorageHelper,
-    localStorageHelpers[localStorageHelper]
+    localStorageHelpers[localStorageHelper],
   );
 });
 
@@ -21,7 +21,7 @@ Object.keys(filesystemHelpers).forEach((filesystemHelper) => {
 Object.keys(customTypesHelpers).forEach((customTypesHelper) => {
   Cypress.Commands.add(
     customTypesHelper,
-    customTypesHelpers[customTypesHelper]
+    customTypesHelpers[customTypesHelper],
   );
 });
 
@@ -35,7 +35,7 @@ Object.keys(imageHelpers).forEach((imageHelper) => {
   Cypress.Commands.add(
     imageHelper,
     { prevSubject: true },
-    imageHelpers[imageHelper]
+    imageHelpers[imageHelper],
   );
 });
 

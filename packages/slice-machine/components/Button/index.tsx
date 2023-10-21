@@ -48,7 +48,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
       variant = "primary",
       ...rest
     },
-    ref
+    ref,
   ) => (
     <ThemeUIButton
       ref={ref}
@@ -89,5 +89,5 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
         </>
       )}
     </ThemeUIButton>
-  )
+  ),
 );

@@ -14,7 +14,7 @@ describe.skip("video tooltip", () => {
     cy.getSliceMachineUserContext().then((data) => {
       expect(data.hasSeenTutorialsToolTip).equal(
         true,
-        "userContext.hasSeenTutorialsToolTip should set in local storage"
+        "userContext.hasSeenTutorialsToolTip should set in local storage",
       );
     });
   });
@@ -37,14 +37,14 @@ describe.skip("video tooltip", () => {
       .should(
         "have.attr",
         "href",
-        "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH"
+        "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH",
       )
       .click();
 
     cy.getSliceMachineUserContext().should((data) => {
       expect(data.hasSeenTutorialsToolTip).equal(
         true,
-        "userContext.hasSeenTutorialsToolTip should set in local storage"
+        "userContext.hasSeenTutorialsToolTip should set in local storage",
       );
     });
   });
@@ -68,7 +68,7 @@ describe.skip("video tooltip", () => {
     cy.getSliceMachineUserContext().should((data) => {
       expect(data.hasSeenTutorialsToolTip).equal(
         true,
-        "userContext.hasSeenTutorialsToolTip should set in local storage"
+        "userContext.hasSeenTutorialsToolTip should set in local storage",
       );
     });
   });

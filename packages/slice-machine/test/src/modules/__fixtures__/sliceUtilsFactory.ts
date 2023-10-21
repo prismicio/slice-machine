@@ -41,7 +41,7 @@ export const generateSliceSM = (overrides: Partial<SliceSM>): SliceSM => {
 };
 
 export const generateComponentUI = (
-  overrides?: Partial<ComponentUI>
+  overrides?: Partial<ComponentUI>,
 ): ComponentUI => {
   return {
     ...DEFAULT_COMPONENT_UI,
@@ -50,7 +50,7 @@ export const generateComponentUI = (
 };
 
 export const generateLibraryUI = (
-  overrides?: Partial<LibraryUI>
+  overrides?: Partial<LibraryUI>,
 ): LibraryUI => {
   return {
     ...DEFAULT_LIBRARY_UI,

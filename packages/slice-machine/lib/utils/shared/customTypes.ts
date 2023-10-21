@@ -2,7 +2,7 @@ import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export const filterSliceFromCustomType = <T extends CustomTypeSM | undefined>(
   ct: T,
-  sliceId: string
+  sliceId: string,
 ): T => {
   if (ct === undefined) {
     return ct;

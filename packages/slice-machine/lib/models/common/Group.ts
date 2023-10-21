@@ -9,7 +9,7 @@ export const GroupConfig = t.exact(
     label: StringOrNull,
     repeat: t.boolean,
     fields: FieldsSM,
-  })
+  }),
 );
 export type GroupConfig = t.TypeOf<typeof GroupConfig>;
 
@@ -24,7 +24,7 @@ export const GroupSM = t.exact(
       description: t.string,
       config: GroupConfig,
     }),
-  ])
+  ]),
 );
 export type GroupSM = t.TypeOf<typeof GroupSM>;
 
@@ -35,7 +35,7 @@ export const Groups = {
 
       return group.config.fields.reduce(
         (acc, { key, value }) => ({ ...acc, [key]: value }),
-        {}
+        {},
       );
     })();
 
@@ -48,7 +48,7 @@ export const Groups = {
           ...group.config,
           ...(fields ? { fields } : {}),
         },
-      })
+      }),
     );
   },
 
@@ -72,7 +72,7 @@ export const Groups = {
           ...group.config,
           ...(fields ? { fields } : {}),
         },
-      })
+      }),
     );
   },
 };

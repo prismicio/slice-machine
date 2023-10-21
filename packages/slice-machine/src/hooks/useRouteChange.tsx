@@ -36,7 +36,7 @@ export function useRouteChange(): RouteChange {
   const routeChange = useContext(RouteChangeContext);
   if (routeChange === undefined)
     throw new Error(
-      "useRouteChange must be used within a RouteChangeProvider."
+      "useRouteChange must be used within a RouteChangeProvider.",
     );
   return routeChange;
 }

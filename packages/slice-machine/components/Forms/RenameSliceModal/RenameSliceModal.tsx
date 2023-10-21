@@ -27,7 +27,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
       isRenameSliceModalOpen: isModalOpen(store, ModalKeysEnum.RENAME_SLICE),
       localLibs: getLibraries(store),
       remoteLibs: getRemoteSlices(store),
-    })
+    }),
   );
 
   const handleOnSubmit = (values: SliceModalValues) => {

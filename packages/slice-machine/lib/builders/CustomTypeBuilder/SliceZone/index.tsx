@@ -42,14 +42,14 @@ import { SlicesList } from "./List";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
-  libraries: ReadonlyArray<LibraryUI> | null
+  libraries: ReadonlyArray<LibraryUI> | null,
 ) => {
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const availableSlices = (libraries || []).reduce<ReadonlyArray<ComponentUI>>(
     (acc, curr: LibraryUI) => {
       return [...acc, ...curr.components];
     },
-    []
+    [],
   );
   const { slicesInSliceZone, notFound } = sliceZone.value.reduce<{
     slicesInSliceZone: ReadonlyArray<SliceZoneSlice>;
@@ -59,7 +59,7 @@ const mapAvailableAndSharedSlices = (
       // Shared Slice
       if (value.type === "SharedSlice") {
         const maybeSliceState: ComponentUI | undefined = availableSlices.find(
-          (slice) => slice.model.id === key
+          (slice) => slice.model.id === key,
         );
 
         if (maybeSliceState) {
@@ -84,7 +84,7 @@ const mapAvailableAndSharedSlices = (
         ],
       };
     },
-    { slicesInSliceZone: [], notFound: [] }
+    { slicesInSliceZone: [], notFound: [] },
   );
 
   return { availableSlices, slicesInSliceZone, notFound };
@@ -119,19 +119,19 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       remoteSlices: getRemoteSlices(store),
       libraries: getLibraries(store),
       slices: getFrontendSlices(store),
-    })
+    }),
   );
   const { initCustomTypeStore, saveCustomTypeSuccess } =
     useSliceMachineActions();
   const localLibraries: readonly LibraryUI[] = libraries.filter(
-    (library) => library.isLocal
+    (library) => library.isLocal,
   );
   const { availableSlices, slicesInSliceZone, notFound } = useMemo(
     () =>
       sliceZone
         ? mapAvailableAndSharedSlices(sliceZone, libraries)
         : { availableSlices: [], slicesInSliceZone: [], notFound: [] },
-    [sliceZone, libraries]
+    [sliceZone, libraries],
   );
   const [isDeleteSliceZoneModalOpen, setIsDeleteSliceZoneModalOpen] =
     useState(false);
@@ -153,8 +153,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const availableSlicesToAdd = availableSlices.filter(
     (slice) =>
       !sharedSlicesInSliceZone.some(
-        (sharedSlice) => sharedSlice.model.id === slice.model.id
-      )
+        (sharedSlice) => sharedSlice.model.id === slice.model.id,
+      ),
   );
 
   const openUpdateSliceZoneModal = () => {
@@ -180,7 +180,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       void replace(
         { pathname, query: { pageTypeId: query.pageTypeId } },
         undefined,
-        { shallow: true }
+        { shallow: true },
       );
     }
   };
@@ -330,7 +330,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               <ToastMessageWithPath
                 message="Slice template(s) added to slice zone and created at: "
                 path={`${localLibraries[0].name}/`}
-              />
+              />,
             );
           }}
           close={closeSlicesTemplatesModal}
@@ -362,7 +362,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               <ToastMessageWithPath
                 message="New slice added to slice zone and created at: "
                 path={`${localLibraries[0].name}/`}
-              />
+              />,
             );
           }}
           localLibraries={localLibraries}

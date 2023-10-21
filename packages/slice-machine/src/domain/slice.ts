@@ -11,7 +11,7 @@ export function countMissingScreenshots(slice: ComponentUI): number {
 }
 
 export function getNonSharedSliceLabel(
-  slice: CompositeSlice | LegacySlice
+  slice: CompositeSlice | LegacySlice,
 ): string {
   return (
     slice.config?.label ??
@@ -26,14 +26,14 @@ export function getNonSharedSliceLabel(
 
 export function getScreenshotUrl(
   slice: ComponentUI,
-  variation: VariationSM
+  variation: VariationSM,
 ): string | undefined {
   return slice.screenshots[variation.id]?.url;
 }
 
 export function getFieldMappingFingerprint(
   slice: LegacySlice | CompositeSlice | VariationSM,
-  sliceName: string
+  sliceName: string,
 ): {
   primary: string;
   items: string;
@@ -69,12 +69,12 @@ export function getFieldMappingFingerprint(
     primary: JSON.stringify(
       Object.keys(primary)
         .sort()
-        .map((key) => [key, primary[key]])
+        .map((key) => [key, primary[key]]),
     ),
     items: JSON.stringify(
       Object.keys(items)
         .sort()
-        .map((key) => [key, items[key]])
+        .map((key) => [key, items[key]]),
     ),
   };
 }

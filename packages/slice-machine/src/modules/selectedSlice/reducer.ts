@@ -63,14 +63,14 @@ export const selectedSliceReducer: Reducer<
 
           return ComponentUI.updateVariation(
             prevState,
-            variationId
+            variationId,
           )((v) => Variation.addWidget(v, widgetsArea, key, value));
         }
         return prevState;
       } catch (err) {
         console.error(
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `[store/addWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`
+          `[store/addWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`,
         );
         return prevState;
       }
@@ -91,16 +91,16 @@ export const selectedSliceReducer: Reducer<
 
           return ComponentUI.updateVariation(
             prevState,
-            variationId
+            variationId,
           )((v) =>
-            Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value)
+            Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value),
           );
         }
         return prevState;
       } catch (err) {
         console.error(
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`
+          `[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`,
         );
         return prevState;
       }
@@ -124,7 +124,7 @@ export const selectedSliceReducer: Reducer<
 
       return ComponentUI.updateVariation(
         prevState,
-        variationId
+        variationId,
       )((v) => Variation.reorderWidget(v, widgetsArea, start, end));
     }
     case getType(removeSliceWidgetCreator): {
@@ -133,7 +133,7 @@ export const selectedSliceReducer: Reducer<
 
       return ComponentUI.updateVariation(
         prevState,
-        variationId
+        variationId,
       )((v) => Variation.deleteWidget(v, widgetsArea, key));
     }
     case getType(copyVariationSliceCreator): {

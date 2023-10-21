@@ -26,7 +26,7 @@ export const ensureDnDDestination = (result: DropResult): boolean => {
 export const ensureWidgetTypeExistence = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   Widgets: { [x: string]: Widget<any, any> },
-  type: string
+  type: string,
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   const widget: Widget<any, any> = Widgets[type];

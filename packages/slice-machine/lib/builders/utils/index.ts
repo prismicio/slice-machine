@@ -8,7 +8,7 @@ export const findWidgetByConfigOrType = (
   widgets: Widgets,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config: any,
-  type: string
+  type: string,
 ) => {
   if (type === "Link") {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

@@ -82,10 +82,10 @@ describe("I am an existing SM user and I want to upload screenshots on variation
         fileName: "file.txt",
         mimeType: "text/plain",
       },
-      { action: "drag-drop" }
+      { action: "drag-drop" },
     );
     cy.contains("Only files of type png, jpg, jpeg are accepted.").should(
-      "be.visible"
+      "be.visible",
     );
 
     screenshotModal.verifyImageIsEmpty().close();

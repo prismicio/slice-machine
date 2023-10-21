@@ -22,7 +22,7 @@ const updateTab =
 
 const deleteTab = (
   state: SelectedCustomTypeStoreType,
-  tabId: string
+  tabId: string,
 ): SelectedCustomTypeStoreType => {
   if (!state) return state;
   const tabs = state.model.tabs.filter((v) => v.key !== tabId);

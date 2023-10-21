@@ -83,7 +83,7 @@ class SliceBuilder extends BaseBuilder {
         .callsFake((url) => {
           simUrl = url;
           console.log(
-            `window.open() won't be called as it currently generates a timeout in cypress. Calling cy.visit('${url}') instead.`
+            `window.open() won't be called as it currently generates a timeout in cypress. Calling cy.visit('${url}') instead.`,
           );
           // win.open.wrappedMethod.call(win, url, "_self");
         });

@@ -120,12 +120,12 @@ export const selectedCustomTypeReducer: Reducer<
         CurrentWidget.schema.validateSync(field, { stripUnknown: false });
         return StateHelpers.updateTab(
           state,
-          tabId
+          tabId,
         )((tab) => Tab.addWidget(tab, fieldId, field));
       } catch (err) {
         console.error(
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `[store/addWidget] Model is invalid for widget "${field.type}".\nFull error: ${err}`
+          `[store/addWidget] Model is invalid for widget "${field.type}".\nFull error: ${err}`,
         );
         return state;
       }
@@ -134,7 +134,7 @@ export const selectedCustomTypeReducer: Reducer<
       const { tabId, fieldId } = action.payload;
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) => Tab.removeWidget(tab, fieldId));
     }
     case getType(replaceFieldCreator): {
@@ -152,7 +152,7 @@ export const selectedCustomTypeReducer: Reducer<
         CurrentWidget.schema.validateSync(value, { stripUnknown: false });
         return StateHelpers.updateTab(
           state,
-          tabId
+          tabId,
         )((tab) => Tab.replaceWidget(tab, previousFieldId, newFieldId, value));
       } catch (err) {
         return state;
@@ -162,7 +162,7 @@ export const selectedCustomTypeReducer: Reducer<
       const { tabId, start, end } = action.payload;
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) => Tab.reorderWidget(tab, start, end));
     }
     case getType(createSliceZoneCreator): {
@@ -176,11 +176,11 @@ export const selectedCustomTypeReducer: Reducer<
       }
 
       const existingSliceZones = CustomType.getSliceZones(state.model).filter(
-        (e) => e
+        (e) => e,
       );
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) => {
         const i = findAvailableKey(tabIndex, existingSliceZones);
         return Tab.createSliceZone(tab, `slices${i !== 0 ? i.toString() : ""}`);
@@ -198,7 +198,7 @@ export const selectedCustomTypeReducer: Reducer<
 
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) => {
         return Tab.deleteSliceZone(tab);
       });
@@ -207,26 +207,26 @@ export const selectedCustomTypeReducer: Reducer<
       const { tabId, sliceId } = action.payload;
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) =>
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         Tab.updateSliceZone(tab)((sliceZone: SlicesSM) =>
-          SliceZone.removeSharedSlice(sliceZone, sliceId)
-        )
+          SliceZone.removeSharedSlice(sliceZone, sliceId),
+        ),
       );
     }
     case getType(addFieldIntoGroupCreator): {
       const { tabId, groupId, fieldId, field } = action.payload;
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) =>
         Tab.updateGroup(
           tab,
-          groupId
+          groupId,
         )((group: GroupSM) =>
-          Group.addWidget(group, { key: fieldId, value: field })
-        )
+          Group.addWidget(group, { key: fieldId, value: field }),
+        ),
       );
     }
     case getType(replaceFieldIntoGroupCreator): {
@@ -234,38 +234,38 @@ export const selectedCustomTypeReducer: Reducer<
         action.payload;
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) =>
         Tab.updateGroup(
           tab,
-          groupId
+          groupId,
         )((group: GroupSM) =>
-          Group.replaceWidget(group, previousFieldId, newFieldId, value)
-        )
+          Group.replaceWidget(group, previousFieldId, newFieldId, value),
+        ),
       );
     }
     case getType(deleteFieldIntoGroupCreator): {
       const { tabId, groupId, fieldId } = action.payload;
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) =>
         Tab.updateGroup(
           tab,
-          groupId
-        )((group: GroupSM) => Group.deleteWidget(group, fieldId))
+          groupId,
+        )((group: GroupSM) => Group.deleteWidget(group, fieldId)),
       );
     }
     case getType(reorderFieldIntoGroupCreator): {
       const { tabId, groupId, start, end } = action.payload;
       return StateHelpers.updateTab(
         state,
-        tabId
+        tabId,
       )((tab) =>
         Tab.updateGroup(
           tab,
-          groupId
-        )((group: GroupSM) => Group.reorderWidget(group, start, end))
+          groupId,
+        )((group: GroupSM) => Group.reorderWidget(group, start, end)),
       );
     }
     default:
@@ -275,7 +275,7 @@ export const selectedCustomTypeReducer: Reducer<
 
 const findAvailableKey = (
   startI: number,
-  existingSliceZones: (SlicesSM | null)[]
+  existingSliceZones: (SlicesSM | null)[],
 ) => {
   for (let i = startI; i < Infinity; i++) {
     const key = `slices${i.toString()}`;

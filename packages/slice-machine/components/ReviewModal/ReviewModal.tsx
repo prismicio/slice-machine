@@ -16,7 +16,7 @@ export const ReviewModal: FC = () => {
       customTypes: selectAllCustomTypes(store),
       libraries: getLibraries(store),
       lastSyncChange: getLastSyncChange(store),
-    })
+    }),
   );
 
   const sliceCount =
@@ -33,13 +33,13 @@ export const ReviewModal: FC = () => {
     (customType) =>
       hasLocal(customType) &&
       customType.local.tabs.some(
-        (tab) => tab.sliceZone && tab.sliceZone?.value.length > 0
-      )
+        (tab) => tab.sliceZone && tab.sliceZone?.value.length > 0,
+      ),
   );
 
   const hasPushedAnHourAgo = Boolean(
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    lastSyncChange && Date.now() - lastSyncChange >= 3600000
+    lastSyncChange && Date.now() - lastSyncChange >= 3600000,
   );
 
   const isAdvancedRepository =

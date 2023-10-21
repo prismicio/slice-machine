@@ -62,7 +62,7 @@ describe("CustomTypeModel test suite", () => {
       CustomTypeModel.getSectionEntries({
         ...mockCustomType,
         json: {},
-      })
+      }),
     ).toEqual([]);
   });
 
@@ -78,13 +78,13 @@ describe("CustomTypeModel test suite", () => {
       CustomTypeModel.getMainSectionEntry({
         ...mockCustomType,
         json: {},
-      })
+      }),
     ).toEqual(undefined);
   });
 
   it("getSection should return the section matching the key", () => {
     expect(
-      CustomTypeModel.getSection(mockCustomType, "anotherSection")
+      CustomTypeModel.getSection(mockCustomType, "anotherSection"),
     ).toEqual(anotherSection);
   });
 
@@ -95,14 +95,14 @@ describe("CustomTypeModel test suite", () => {
           ...mockCustomType,
           json: {},
         },
-        "mainSection"
-      )
+        "mainSection",
+      ),
     ).toEqual(undefined);
   });
 
   it("getSectionSliceZoneConfig should return the config of the given section", () => {
     expect(
-      CustomTypeModel.getSectionSliceZoneConfig(mockCustomType, "mainSection")
+      CustomTypeModel.getSectionSliceZoneConfig(mockCustomType, "mainSection"),
     ).toEqual({
       choices: {
         hero_banner: {
@@ -122,8 +122,8 @@ describe("CustomTypeModel test suite", () => {
           ...mockCustomType,
           json: {},
         },
-        "mainSection"
-      )
+        "mainSection",
+      ),
     ).toEqual(undefined);
   });
 
@@ -136,8 +136,8 @@ describe("CustomTypeModel test suite", () => {
             anotherSection: {},
           },
         },
-        "anotherSection"
-      )
+        "anotherSection",
+      ),
     ).toEqual("slices");
   });
 
@@ -145,8 +145,8 @@ describe("CustomTypeModel test suite", () => {
     expect(
       CustomTypeModel.findNextSectionSliceZoneKey(
         mockCustomType,
-        "anotherSection"
-      )
+        "anotherSection",
+      ),
     ).toEqual("slices1");
   });
 
@@ -165,8 +165,8 @@ describe("CustomTypeModel test suite", () => {
             anotherSection,
           },
         },
-        "anotherSection"
-      )
+        "anotherSection",
+      ),
     ).toEqual("slices2");
   });
 
@@ -185,14 +185,14 @@ describe("CustomTypeModel test suite", () => {
             anotherSection,
           },
         },
-        "anotherSection"
-      )
+        "anotherSection",
+      ),
     ).toEqual("slices3");
   });
 
   it("createSectionSliceZone should return the given custom type with a slice zone for given section", () => {
     expect(
-      CustomTypeModel.createSectionSliceZone(mockCustomType, "anotherSection")
+      CustomTypeModel.createSectionSliceZone(mockCustomType, "anotherSection"),
     ).toEqual({
       ...mockCustomType,
       json: {
@@ -210,7 +210,7 @@ describe("CustomTypeModel test suite", () => {
 
   it("createSectionSliceZone should return the same custom type if slice zone already exist for given section", () => {
     expect(
-      CustomTypeModel.createSectionSliceZone(mockCustomType, "mainSection")
+      CustomTypeModel.createSectionSliceZone(mockCustomType, "mainSection"),
     ).toEqual(mockCustomType);
   });
 
@@ -229,7 +229,7 @@ describe("CustomTypeModel test suite", () => {
           mainSection: {},
           anotherSection,
         },
-      })
+      }),
     ).toEqual({
       ...mockCustomType,
       json: {

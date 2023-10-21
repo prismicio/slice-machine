@@ -22,7 +22,7 @@ async function getSlicesTemplates(): Promise<SliceTemplate[]> {
         Object.entries(template.screenshots).map(([key, blob]) => [
           key,
           URL.createObjectURL(blob),
-        ])
+        ]),
       ),
     }));
   } catch (e) {

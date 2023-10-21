@@ -95,7 +95,7 @@ const CustomListItem = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       result.source.index,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      result.destination.index
+      result.destination.index,
     );
   };
 
@@ -151,7 +151,7 @@ const CustomListItem = ({
                           Widgets,
                           config,
                           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                          type
+                          type,
                         );
                         if (!widget) {
                           return null;
@@ -185,7 +185,7 @@ const CustomListItem = ({
                             renderHintBase={({ item }) =>
                               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
                               `data.${groupItem.key}${transformKeyAccessor(
-                                item.key
+                                item.key,
                               )}`
                             }
                             Widgets={Widgets}

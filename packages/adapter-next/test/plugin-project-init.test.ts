@@ -190,7 +190,9 @@ describe("prismicio.js file", () => {
 			"utf8",
 		);
 
-		expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+		expect(contents).toBe(
+			await prettier.format(contents, { parser: "typescript" }),
+		);
 	});
 
 	test("prismicio file is not formatted if formatting is disabled", async (ctx) => {
@@ -221,7 +223,7 @@ describe("prismicio.js file", () => {
 		);
 
 		expect(contents).not.toBe(
-			prettier.format(contents, {
+			await prettier.format(contents, {
 				...prettierOptions,
 				parser: "typescript",
 			}),
@@ -252,12 +254,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -280,8 +283,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -326,12 +328,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"../slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -354,8 +357,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -400,12 +402,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -474,12 +477,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -545,12 +549,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -573,8 +578,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -615,12 +619,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"../slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
@@ -643,8 +648,7 @@ describe("prismicio.js file", () => {
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the
-				 *   Prismic client.
+				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
 				  const client = prismic.createClient(repositoryName, {
@@ -689,12 +693,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -759,12 +764,13 @@ describe("prismicio.js file", () => {
 				import * as prismicNext from \\"@prismicio/next\\";
 				import config from \\"./slicemachine.config.json\\";
 
-				/** The project's Prismic repository name. */
+				/**
+				 * The project's Prismic repository name.
+				 */
 				export const repositoryName = config.repositoryName;
 
 				/**
-				 * A list of Route Resolver objects that define how a document's \`url\` field is
-				 * resolved.
+				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
@@ -923,7 +929,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toBe(
-				prettier.format(contents, { parser: "typescript" }),
+				await prettier.format(contents, { parser: "typescript" }),
 			);
 		});
 
@@ -955,7 +961,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).not.toBe(
-				prettier.format(contents, {
+				await prettier.format(contents, {
 					...prettierOptions,
 					parser: "typescript",
 				}),
@@ -1110,7 +1116,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toBe(
-				prettier.format(contents, { parser: "typescript" }),
+				await prettier.format(contents, { parser: "typescript" }),
 			);
 		});
 
@@ -1142,7 +1148,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).not.toBe(
-				prettier.format(contents, {
+				await prettier.format(contents, {
 					...prettierOptions,
 					parser: "typescript",
 				}),
@@ -1383,7 +1389,7 @@ describe("/api/preview route", () => {
 
 				export default async function handler(
 				  req: NextApiRequest,
-				  res: NextApiResponse
+				  res: NextApiResponse,
 				) {
 				  const client = createClient({ req });
 

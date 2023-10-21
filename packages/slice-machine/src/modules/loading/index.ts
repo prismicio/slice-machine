@@ -29,13 +29,13 @@ type LoadingActions = ActionType<
 // Selectors
 export const isLoading = (
   store: SliceMachineStoreType,
-  key: LoadingKeysEnum
+  key: LoadingKeysEnum,
 ): boolean => store.loading[key];
 
 // Reducer
 export const loadingReducer: Reducer<LoadingStoreType, LoadingActions> = (
   state = initialState,
-  action
+  action,
 ) => {
   switch (action.type) {
     case getType(startLoadingActionCreator):
@@ -68,7 +68,7 @@ export const withLoader = (saga: any, loadingKey: LoadingKeysEnum): Saga<any> =>
         args[3],
         args[4],
         args[5],
-        args[6]
+        args[6],
       );
     } finally {
       yield put(stopLoadingActionCreator({ loadingKey }));

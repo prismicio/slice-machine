@@ -55,7 +55,7 @@ describe.skip("Scenario 008", () => {
       .invoke("attr", "aria-checked")
       .then((currentValue) => {
         cy.wrap(currentValue == "true" ? "false" : "true").as(
-          "newBooleanValue"
+          "newBooleanValue",
         );
       });
 
@@ -82,7 +82,7 @@ describe.skip("Scenario 008", () => {
 
     cy.getInputByLabel("SimpleTextField").should(
       "contain",
-      "SimpleTextContent"
+      "SimpleTextContent",
     );
     cy.getInputByLabel("RichTextField").should("contain", "RichTextContent");
     cy.getInputByLabel("NumberField").should("have.value", "42");

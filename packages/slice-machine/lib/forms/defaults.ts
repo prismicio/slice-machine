@@ -28,7 +28,7 @@ export const DefaultFields: Record<string, InputType> = {
     },
     undefined,
     undefined,
-    "Label for content creators (defaults to field type)"
+    "Label for content creators (defaults to field type)",
   ),
   id: Input(
     "API ID*",
@@ -40,7 +40,7 @@ export const DefaultFields: Record<string, InputType> = {
     },
     validateId,
     undefined,
-    "A unique identifier for the field (e.g. buttonLink)"
+    "A unique identifier for the field (e.g. buttonLink)",
   ),
   placeholder: Input(
     "Placeholder",
@@ -50,6 +50,6 @@ export const DefaultFields: Record<string, InputType> = {
     },
     undefined,
     undefined,
-    "Placeholder text for content creators"
+    "Placeholder text for content creators",
   ),
 };

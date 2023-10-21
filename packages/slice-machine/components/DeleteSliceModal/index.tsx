@@ -24,7 +24,7 @@ export const DeleteSliceModal: React.FunctionComponent<
     (store: SliceMachineStoreType) => ({
       isSliceModalOpen: isModalOpen(store, ModalKeysEnum.DELETE_SLICE),
       isDeletingSlice: isLoading(store, LoadingKeysEnum.DELETE_SLICE),
-    })
+    }),
   );
 
   const { closeModals, deleteSlice } = useSliceMachineActions();

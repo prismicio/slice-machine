@@ -5,7 +5,7 @@ import { managerClient } from "@src/managerClient";
 
 type UseSliceMachineConfigReturnType = [
   config: SliceMachineConfig,
-  setConfig: (config: SliceMachineConfig) => Promise<void>
+  setConfig: (config: SliceMachineConfig) => Promise<void>,
 ];
 
 export function useSliceMachineConfig(): UseSliceMachineConfigReturnType {

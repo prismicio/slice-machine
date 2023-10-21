@@ -58,7 +58,7 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
     (store: SliceMachineStoreType) => ({
       isTouched: isSelectedSliceTouched(store, slice.from, slice.model.id),
       remoteSlice: getRemoteSlice(store, slice.model.id),
-    })
+    }),
   );
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
@@ -115,7 +115,7 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
     (state: SliceMachineStoreType) => ({
       isSimulatorAvailableForFramework:
         selectIsSimulatorAvailableForFramework(state),
-    })
+    }),
   );
 
   const sliceModel: LocalAndRemoteSlice | LocalOnlySlice = {

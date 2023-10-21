@@ -39,7 +39,7 @@ type CreateTestPluginArgs<TPluginOptions extends SliceMachinePluginOptions> =
   };
 
 export const createTestPlugin = <
-  TPluginOptions extends SliceMachinePluginOptions
+  TPluginOptions extends SliceMachinePluginOptions,
 >({
   setup,
   __autofillRequiredAdapterHooks = true,

@@ -13,7 +13,7 @@ const apiEndpoint = new t.Type<string>(
       return t.failure(
         input,
         context,
-        "could not parse apiEndpoint: invalid url."
+        "could not parse apiEndpoint: invalid url.",
       );
     }
 
@@ -23,13 +23,13 @@ const apiEndpoint = new t.Type<string>(
       return t.failure(
         input,
         context,
-        'apiEndpoint should end with "/api/v2".'
+        'apiEndpoint should end with "/api/v2".',
       );
     }
 
     const regx = new RegExp(
       "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9](.cdn)?.(prismic.io|wroom.io|wroom.test|wroom-qa.com)/api/v2/?$",
-      "gi"
+      "gi",
     );
     const result = regx.test(input);
 
@@ -37,7 +37,7 @@ const apiEndpoint = new t.Type<string>(
       ? t.success(input)
       : t.failure(input, context, `apiEndpoint should match ${regx.source}`);
   },
-  t.identity
+  t.identity,
 );
 
 export const Manifest = t.intersection([

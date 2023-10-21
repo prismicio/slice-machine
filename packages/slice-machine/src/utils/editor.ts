@@ -1,7 +1,7 @@
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 export const defaultSharedSliceContent = (
-  variationId: string
+  variationId: string,
 ): SharedSliceContent => ({
   __TYPE__: "SharedSliceContent",
   variation: variationId,

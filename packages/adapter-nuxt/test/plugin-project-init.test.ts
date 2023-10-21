@@ -193,7 +193,7 @@ describe("Slice Simulator page", () => {
 			"utf8",
 		);
 
-		expect(contents).toBe(prettier.format(contents, { parser: "vue" }));
+		expect(contents).toBe(await prettier.format(contents, { parser: "vue" }));
 	});
 
 	test("Slice Simulator page file is not formatted if formatting is disabled", async (ctx) => {
@@ -224,7 +224,7 @@ describe("Slice Simulator page", () => {
 		);
 
 		expect(contents).not.toBe(
-			prettier.format(contents, {
+			await prettier.format(contents, {
 				...prettierOptions,
 				parser: "vue",
 			}),

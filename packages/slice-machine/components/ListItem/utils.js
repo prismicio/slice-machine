@@ -35,7 +35,7 @@ export const getDraggedDomPosition = (event) => {
     clientWidth,
     clientY,
     clientX: parseFloat(
-      window.getComputedStyle(draggedDOM.parentNode).paddingLeft
+      window.getComputedStyle(draggedDOM.parentNode).paddingLeft,
     ),
   };
 };

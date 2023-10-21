@@ -36,7 +36,7 @@ const renderTable = () => {
             <TableCell>Cell 2 - B</TableCell>
           </TableRow>
         </TableBody>
-      </Table>
+      </Table>,
     ),
     onClickFirstRow,
   };

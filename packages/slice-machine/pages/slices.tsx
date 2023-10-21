@@ -44,12 +44,12 @@ const SlicesIndex: React.FunctionComponent = () => {
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
       libraries: getLibraries(store),
-    })
+    }),
   );
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
-    (library) => library.isLocal
+    (library) => library.isLocal,
   );
   const sortedLibraries: LibraryUI[] = libraries.map((library) => {
     // Sort slices
@@ -188,7 +188,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                                 onOpenModal({
                                   sliceFilterFn: (s) =>
                                     s.filter(
-                                      (e) => e.model.id === slice.model.id
+                                      (e) => e.model.id === slice.model.id,
                                     ),
                                 });
                               }}
@@ -226,7 +226,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 toast.success(
                   SliceToastMessage({
                     path: `${libraryName}/${newSlice.name}/model.json`,
-                  })
+                  }),
                 );
               }}
               onClose={() => {
