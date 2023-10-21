@@ -31,6 +31,8 @@ import { PluginOptions } from "./types";
 
 import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
+import { projectEnvironmentRead } from "./hooks/project-environment-read";
+import { projectEnvironmentUpdate } from "./hooks/project-environment-update";
 import { sliceCreate } from "./hooks/slice-create";
 import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { snippetRead } from "./hooks/snippet-read";
@@ -55,6 +57,8 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("project:init", projectInit);
+		hook("project:environment:read", projectEnvironmentRead);
+		hook("project:environment:update", projectEnvironmentUpdate);
 
 		////////////////////////////////////////////////////////////////
 		// slice:*

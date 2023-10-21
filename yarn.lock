@@ -8105,6 +8105,7 @@ __metadata:
     "@vitest/coverage-v8": 0.32.0
     common-tags: ^1.8.2
     depcheck: 1.4.3
+    dotenv: 16.3.1
     eslint: 8.37.0
     eslint-config-prettier: 8.7.0
     eslint-plugin-prettier: 4.2.1
@@ -16697,6 +16698,13 @@ __metadata:
   version: 10.0.0
   resolution: "dotenv-expand@npm:10.0.0"
   checksum: 2a38b470efe0abcb1ac8490421a55e1d764dc9440fd220942bce40965074f3fb00b585f4346020cb0f0f219966ee6b4ee5023458b3e2953fe5b3214de1b314ee
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:16.3.1":
+  version: 16.3.1
+  resolution: "dotenv@npm:16.3.1"
+  checksum: 15d75e7279018f4bafd0ee9706593dd14455ddb71b3bcba9c52574460b7ccaf67d5cf8b2c08a5af1a9da6db36c956a04a1192b101ee102a3e0cf8817bbcf3dfd
   languageName: node
   linkType: hard
 
