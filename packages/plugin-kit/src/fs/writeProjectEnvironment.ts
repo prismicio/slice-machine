@@ -10,7 +10,7 @@ export type WriteProjectEnvironmentArgs = {
 	environment: string | undefined;
 } & Omit<CheckHasProjectFileArgs, "filename"> &
 	Omit<ReadProjectFileArgs, "filename"> &
-	Omit<WriteProjectFileArgs, "contents">;
+	Omit<WriteProjectFileArgs, "contents" | "format" | "formatOptions">;
 
 export const writeProjectEnvironment = async (
 	args: WriteProjectEnvironmentArgs,
@@ -54,8 +54,7 @@ export const writeProjectEnvironment = async (
 	await writeProjectFile({
 		filename: args.filename,
 		contents,
-		format: args.format,
-		formatOptions: args.formatOptions,
+		format: false,
 		helpers: args.helpers,
 	});
 

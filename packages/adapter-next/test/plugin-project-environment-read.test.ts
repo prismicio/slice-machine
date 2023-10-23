@@ -19,6 +19,32 @@ test("returns the active environment", async (ctx) => {
 	expect(res.data[0].environment).toBe("foo");
 });
 
+test("follows Next.js' env file priority", async (ctx) => {
+	await fs.writeFile(
+		path.join(ctx.project.root, ".env"),
+		"NEXT_PUBLIC_PRISMIC_ENVIRONMENT=root",
+	);
+	await fs.writeFile(
+		path.join(ctx.project.root, ".env.development"),
+		"NEXT_PUBLIC_PRISMIC_ENVIRONMENT=development",
+	);
+	await fs.writeFile(
+		path.join(ctx.project.root, ".env.local"),
+		"NEXT_PUBLIC_PRISMIC_ENVIRONMENT=local",
+	);
+	await fs.writeFile(
+		path.join(ctx.project.root, ".env.development.local"),
+		"NEXT_PUBLIC_PRISMIC_ENVIRONMENT=development.local",
+	);
+
+	const res = await ctx.pluginRunner.callHook(
+		"project:environment:read",
+		undefined,
+	);
+
+	expect(res.data[0].environment).toBe("development.local");
+});
+
 test("reads from the configured file path", async (ctx) => {
 	ctx.project.config.adapter.options.environmentVariableFilePath = ".bar";
 	const pluginRunner = createSliceMachinePluginRunner({

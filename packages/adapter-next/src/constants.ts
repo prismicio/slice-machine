@@ -10,6 +10,17 @@ export const NON_EDITABLE_FILE_BANNER =
 export const DEFAULT_ENVIRONMENT_VARIABLE_FILE_PATH = ".env.local";
 
 /**
+ * The file paths at which environment variables will be read in order from
+ * highest priority to lowest priority.
+ */
+export const ENVIRONMENT_VARIABLE_PATHS = [
+	".env",
+	".env.development",
+	".env.local",
+	".env.development.local",
+];
+
+/**
  * The name of the environment variable that stores the active Prismic
  * environment.
  */
