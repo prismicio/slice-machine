@@ -18,10 +18,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SliceSM } from "@lib/models/common/Slice";
 import { renameSliceCreator } from "../slices";
 import { refreshStateCreator } from "../environment";
-import {
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
-} from "../screenshots/actions";
+import { generateSliceCustomScreenshotCreator } from "../screenshots/actions";
 
 // Reducer
 export const selectedSliceReducer: Reducer<
@@ -105,7 +102,6 @@ export const selectedSliceReducer: Reducer<
         return prevState;
       }
     }
-    case getType(generateSliceScreenshotCreator.success):
     case getType(generateSliceCustomScreenshotCreator.success): {
       if (!prevState) return prevState;
       const { component, screenshot, variationId } = action.payload;

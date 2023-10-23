@@ -5,30 +5,6 @@ class SimulatorPage {
     return cy.contains("Save mock content");
   }
 
-  get takeScreenshotButton() {
-    return cy.contains("Take a screenshot");
-  }
-
-  get screenshotToast() {
-    return cy.contains("Tap to view screenshot");
-  }
-
-  get simulatorIframe() {
-    return cy.get("#__iframe-renderer");
-  }
-
-  get widthInput() {
-    return cy.get('input[name="W-screensize-input"]');
-  }
-
-  get heightInput() {
-    return cy.get('input[name="H-screensize-input"]');
-  }
-
-  getScreenSizeDropdown(currentValue) {
-    return cy.get("button").contains(currentValue);
-  }
-
   /**
    * Setup the slice simulator in the example project, and stub the window open
    * event to open in the same page.
@@ -41,65 +17,6 @@ class SimulatorPage {
       };
       return cy.writeFile(MANIFEST_FILE, JSON.stringify(data, null, 2));
     });
-
-    return this;
-  }
-
-  /**
-   * Use the screen size dropdown menu to change the simulator screen size.
-   *
-   * @param {string} startValue The expected start value of the dropdown button.
-   * @param {string} newValue The new value to set the screen size to.
-   */
-  resizeScreenWithDropdown(startValue, newValue) {
-    this.getScreenSizeDropdown(startValue).click();
-    cy.contains(newValue).click();
-
-    return this;
-  }
-
-  /**
-   * Use the screen size input fields to change the simulator screen size.
-   *
-   * @param {number} newWidth The new value to the the width to.
-   * @param {number} newHeight The new value to the the height to.
-   */
-  resizeScreenWithInput(newWidth, newHeight) {
-    this.widthInput.clear().type(`{rightArrow}${newWidth}`);
-    this.heightInput.clear().type(`{rightArrow}${newHeight}`);
-
-    return this;
-  }
-
-  /**
-   * Check that the dimensions of the simulator are equal to the provided ones.
-   *
-   * @param {number} expectedWidth The value which the width should equal.
-   * @param {number} expectedHeight The value which the height should equal.
-   */
-  validateSimulatorSize(expectedWidth, expectedHeight) {
-    this.simulatorIframe
-      .should("have.css", "maxWidth")
-      .and("eq", `${expectedWidth}px`);
-    this.simulatorIframe
-      .should("have.css", "minWidth")
-      .and("eq", `${expectedWidth}px`);
-    this.simulatorIframe
-      .should("have.css", "maxHeight")
-      .and("eq", `${expectedHeight}px`);
-    this.simulatorIframe
-      .should("have.css", "minHeight")
-      .and("eq", `${expectedHeight}px`);
-
-    return this;
-  }
-
-  takeAScreenshotAndOpenModal() {
-    this.takeScreenshotButton.click();
-
-    cy.contains("Screenshot taken", { timeout: 30000 }).should("be.visible");
-
-    this.screenshotToast.click();
 
     return this;
   }

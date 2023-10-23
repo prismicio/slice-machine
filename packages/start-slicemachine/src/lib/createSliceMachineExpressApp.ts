@@ -146,15 +146,6 @@ export const createSliceMachineExpressApp = async (
 				),
 			);
 		});
-
-		app.get("/slices/:lib/:sliceID/:variation/screenshot", (_req, res) => {
-			res.sendFile(
-				path.join(
-					sliceMachineOutDir,
-					"slices/[lib]/[sliceName]/[variation]/screenshot.html",
-				),
-			);
-		});
 	}
 
 	if (isTelemetryEnabled) {

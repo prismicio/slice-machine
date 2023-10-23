@@ -3,7 +3,6 @@ import { fileTypeFromBuffer } from "file-type";
 import pLimit from "p-limit";
 import fetch, { FormData, Blob, Response } from "../../lib/fetch";
 
-import { checkIsURLAccessible } from "../../lib/checkIsURLAccessible";
 import { createContentDigest } from "../../lib/createContentDigest";
 import { decode } from "../../lib/decode";
 
@@ -12,21 +11,6 @@ import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGE
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 
 import { BaseManager } from "../BaseManager";
-
-const SLICE_SIMULATOR_WAIT_FOR_SELECTOR = "#__iframe-ready";
-const SLICE_SIMULATOR_WAIT_FOR_SELECTOR_TIMEOUT = 10_000; // ms
-const SLICE_SIMULATOR_SCREENSHOT_SELECTOR = "#__iframe-renderer";
-
-// TODO(DT-1534): Use Puppeteer types if we want reactive Puppeteer screenshots
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Viewport = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type BrowserContext = any;
-
-const DEFAULT_SCREENSHOT_VIEWPORT: Viewport = {
-	width: 1200,
-	height: 800,
-};
 
 function assertS3ACLInitialized(
 	s3ACL: S3ACL | undefined,
@@ -38,47 +22,7 @@ function assertS3ACLInitialized(
 	}
 }
 
-function assertBrowserContextInitialized(
-	browserContext: BrowserContext | undefined,
-): asserts browserContext is NonNullable<typeof browserContext> {
-	if (browserContext == undefined) {
-		throw new Error(
-			"A browser context has not been initialized. Run `SliceMachineManager.screenshots.prototype.initBrowserContext()` before re-calling this method.",
-		);
-	}
-}
-
 const uploadScreenshotLimit = pLimit(10);
-
-/**
- * Encodes a part of a Slice Simulator URL to ensure it can be added to a URL
- * safely.
- *
- * The encoding logic must match Slice Machine UI's URL encoding practices.
- * Today, that requires the following:
- *
- * - Replace "/" with "--" (e.g. a Slice Library ID of "./slices" should turn into
- *   ".--slices")
- *
- * @param urlPart - A part of the URL.
- *
- * @returns `urlPart` encoded for use in a URL.
- */
-const encodeSliceSimulatorURLPart = (urlPart: string): string => {
-	return urlPart.replace(/\//g, "--");
-};
-
-type ScreenshotsManagerCaptureSliceSimulatorScreenshotArgs = {
-	sliceMachineUIOrigin: string;
-	libraryID: string;
-	sliceID: string;
-	variationID: string;
-	viewport?: Viewport;
-};
-
-type ScreenshotsManagerCaptureSliceSimulatorScreenshotReturnType = {
-	data: Buffer;
-};
 
 type ScreenshotsManagerUploadScreenshotArgs = {
 	data: Buffer;
@@ -94,34 +38,7 @@ type ScreenshotsManagerDeleteScreenshotFolderArgs = {
 };
 
 export class ScreenshotsManager extends BaseManager {
-	private _browserContext: BrowserContext | undefined;
 	private _s3ACL: S3ACL | undefined;
-
-	async initBrowserContext(): Promise<void> {
-		// TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
-		//
-		// if (this._browserContext) {
-		// 	return;
-		// }
-		//
-		// let puppeteer: typeof import("puppeteer");
-		// try {
-		// 	// Lazy-load Puppeteer only once it is needed.
-		// 	puppeteer = await import("puppeteer");
-		// } catch {
-		// 	throw new InternalError(
-		// 		"Screenshots require Puppeteer but Puppeteer was not found. Check that the `puppeteer` package is installed before trying again.",
-		// 	);
-		// }
-		// try {
-		// 	const browser = await puppeteer.launch({ headless: "new" });
-		// 	this._browserContext = await browser.createIncognitoBrowserContext();
-		// } catch (error) {
-		// 	throw new InternalError(
-		// 		"Error launching browser. If you're using an Apple Silicon Mac, check if Rosetta is installed.",
-		// 	);
-		// }
-	}
 
 	async initS3ACL(): Promise<void> {
 		// TODO: we need to find a way to create a new AWS ACL only when necessary (e.g., when it has expired).
@@ -174,86 +91,6 @@ export class ScreenshotsManager extends BaseManager {
 			uploadEndpoint: awsACL.values.url,
 			requiredFormDataFields: awsACL.values.fields,
 			imgixEndpoint: awsACL.imgixEndpoint,
-		};
-	}
-
-	// TODO: Abstract to a generic `captureScreenshot()` method that is
-	// used within a Slice-specific method in SliceManager.
-	async captureSliceSimulatorScreenshot(
-		args: ScreenshotsManagerCaptureSliceSimulatorScreenshotArgs,
-	): Promise<ScreenshotsManagerCaptureSliceSimulatorScreenshotReturnType> {
-		assertBrowserContextInitialized(this._browserContext);
-
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
-
-		if (!sliceMachineConfig.localSliceSimulatorURL) {
-			// TODO: Provide a more helpful error message.
-			throw new Error(
-				"A local Slice Simulator URL must be configured in your Slice Machine configuration file.",
-			);
-		}
-
-		const { model } = await this.slices.readSlice({
-			libraryID: args.libraryID,
-			sliceID: args.sliceID,
-		});
-		if (!model) {
-			throw new Error(
-				`Did not find a Slice in library "${args.libraryID}" with ID "${args.sliceID}".`,
-			);
-		}
-
-		const viewport = args.viewport || DEFAULT_SCREENSHOT_VIEWPORT;
-
-		// TODO: Change `model.name` to `args.sliceID`?
-		// Making that change would require changing the screenshot
-		// page path in Slice Machine UI.
-		const url = new URL(
-			`./${encodeSliceSimulatorURLPart(args.libraryID)}/${model.name}/${
-				args.variationID
-			}/screenshot`,
-			args.sliceMachineUIOrigin,
-		);
-		url.searchParams.set("screenWidth", viewport.width.toString());
-		url.searchParams.set("screenHeight", viewport.height.toString());
-
-		const isURLAccessible = await checkIsURLAccessible(url.toString());
-
-		if (!isURLAccessible) {
-			throw new Error(
-				`Slice Simulator screenshot URL is not accessible: ${url}`,
-			);
-		}
-
-		const page = await this._browserContext.newPage();
-		page.setViewport(viewport);
-
-		await page.goto(url.toString(), { waitUntil: ["load", "networkidle0"] });
-		await page.waitForSelector(SLICE_SIMULATOR_WAIT_FOR_SELECTOR, {
-			timeout: SLICE_SIMULATOR_WAIT_FOR_SELECTOR_TIMEOUT,
-		});
-
-		const element = await page.$(SLICE_SIMULATOR_SCREENSHOT_SELECTOR);
-		if (!element) {
-			const baseURL = new URL(url.pathname, url.origin);
-
-			throw new Error(
-				`Slice Simulator did not find ${SLICE_SIMULATOR_WAIT_FOR_SELECTOR} on the page. Verify the URL is correct: ${baseURL}`,
-			);
-		}
-
-		const data = (await element.screenshot({
-			encoding: "binary",
-			clip: {
-				width: viewport.width,
-				height: viewport.height,
-				x: 0,
-				y: 0,
-			},
-		})) as Buffer;
-
-		return {
-			data,
 		};
 	}
 
