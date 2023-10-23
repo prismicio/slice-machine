@@ -48,7 +48,6 @@ export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:asset:read",
 	"custom-type:asset:delete",
 	"custom-type-library:read",
-	"project:init",
 	"project:environment:read",
 	"project:environment:update",
 ];

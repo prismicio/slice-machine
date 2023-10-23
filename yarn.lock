@@ -8465,6 +8465,7 @@ __metadata:
     common-tags: ^1.8.2
     defu: ^6.1.2
     depcheck: 1.4.3
+    dotenv: 16.3.1
     eslint: 8.37.0
     eslint-config-prettier: 9.0.0
     eslint-plugin-prettier: 5.0.1
