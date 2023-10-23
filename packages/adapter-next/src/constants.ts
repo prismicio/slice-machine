@@ -11,7 +11,7 @@ export const DEFAULT_ENVIRONMENT_VARIABLE_FILE_PATH = ".env.local";
 
 /**
  * The file paths at which environment variables will be read in order from
- * highest priority to lowest priority.
+ * lowest priority to highest priority.
  */
 export const ENVIRONMENT_VARIABLE_PATHS = [
 	".env",
