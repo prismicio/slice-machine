@@ -10,6 +10,7 @@ import {
 	readCustomTypeFile,
 	readCustomTypeLibrary,
 	readCustomTypeModel,
+	readProjectEnvironment,
 	readSliceFile,
 	readSliceLibrary,
 	readSliceModel,
@@ -18,6 +19,7 @@ import {
 	upsertGlobalTypeScriptTypes,
 	writeCustomTypeFile,
 	writeCustomTypeModel,
+	writeProjectEnvironment,
 	writeSliceFile,
 	writeSliceModel,
 } from "@slicemachine/plugin-kit/fs";
@@ -27,6 +29,11 @@ import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
 
 import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
+import {
+	DEFAULT_ENVIRONMENT_VARIABLE_FILE_PATH,
+	ENVIRONMENT_VARIABLE_PATHS,
+	PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME,
+} from "./constants";
 
 import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
@@ -53,6 +60,32 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("project:init", projectInit);
+		hook("project:environment:update", async (data, context) => {
+			await writeProjectEnvironment({
+				variableName: PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME,
+				environment: data.environment,
+				filename:
+					context.options.environmentVariableFilePath ||
+					DEFAULT_ENVIRONMENT_VARIABLE_FILE_PATH,
+				helpers: context.helpers,
+			});
+		});
+		hook("project:environment:read", async (_data, context) => {
+			const projectEnvironment = await readProjectEnvironment({
+				variableName: PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME,
+				filenames: [
+					...ENVIRONMENT_VARIABLE_PATHS,
+					context.options.environmentVariableFilePath,
+				].filter((filename): filename is NonNullable<typeof filename> =>
+					Boolean(filename),
+				),
+				helpers: context.helpers,
+			});
+
+			return {
+				environment: projectEnvironment.environment,
+			};
+		});
 
 		////////////////////////////////////////////////////////////////
 		// slice:*
