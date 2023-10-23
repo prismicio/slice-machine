@@ -20,7 +20,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
 import { getFieldMappingFingerprint } from "@src/domain/slice";
 
-import { NonSharedSliceViewCardProps } from "../sliceCards/NonSharedSliceViewCard";
+import { NonSharedSliceCardProps } from "../sliceCards/NonSharedSliceCard";
 import { ConvertLegacySliceAsNewSliceDialog } from "./ConvertLegacySliceAsNewSliceDialog";
 import { ConvertLegacySliceAsNewVariationDialog } from "./ConvertLegacySliceAsNewVariationDialog";
 import { ConvertLegacySliceMergeWithIdenticalDialog } from "./ConvertLegacySliceMergeWithIdenticalDialog";
@@ -30,7 +30,7 @@ import {
   LegacySliceConversionType,
 } from "./types";
 
-type ConvertLegacySliceButtonProps = NonSharedSliceViewCardProps;
+type ConvertLegacySliceButtonProps = NonSharedSliceCardProps;
 
 export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
   slice,

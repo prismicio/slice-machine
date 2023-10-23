@@ -20,12 +20,12 @@ type Story = StoryObj<typeof meta>;
 const meta = {
   component: Card,
   argTypes: {
-    checked: { if: { arg: "interactive" } },
     children: { control: { disable: true } },
     component: { control: { disable: true }, if: { arg: "interactive" } },
     disabled: { if: { arg: "interactive" } },
     href: { if: { arg: "interactive" } },
     onClick: { if: { arg: "interactive" } },
+    replace: { if: { arg: "interactive" } },
     size: { control: "select", options: ["small", "medium"] },
     variant: { control: "select", options: ["solid", "outlined"] },
   },
@@ -35,6 +35,7 @@ export default meta;
 
 export const Default = {
   args: {
+    checked: false,
     children: (
       <>
         <CardMedia overlay={<></>} />
