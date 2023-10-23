@@ -259,49 +259,7 @@ it("outputs get started final message", async (ctx) => {
 	});
 
 	expect(stdout).toMatch(/Initialization successful/);
-	expect(stdout.pop()).toMatchInlineSnapshot(`
-		"
-		  YOUR REPOSITORY
-		    Page Builder         https://repo-admin.prismic.io
-		    API                  https://repo-admin.cdn.prismic.io/api/v2
-
-		  RESOURCES
-		    Documentation        https://prismic.dev/init/universal
-		    Getting help         https://community.prismic.io
-
-		  GETTING STARTED
-		    Run Slice Machine    npm run slicemachine
-		    Run your project     npm run dev
-			
-		"
-	`);
-});
-
-it("adapts get started final message depending on context", async (ctx) => {
-	const repositoryName = "repo-admin";
-	const initProcess = createSliceMachineInitProcess({
-		repository: repositoryName,
-		cwd: "/",
-		startSlicemachine: false,
-	});
-	await prepareEnvironment(ctx, initProcess, repositoryName);
-	await vol.promises.writeFile(
-		"/package.json",
-		JSON.stringify({
-			name: "package-base",
-			version: "0.0.0",
-			scripts: {
-				slicemachine: "another script",
-			},
-		}),
-	);
-
-	const { stdout } = await watchStd(() => {
-		return initProcess.run();
-	});
-
-	// Pretty final message
-	expect(stdout.pop()).toMatch(/npx start-slicemachine/);
+	expect(stdout).toMatch(/Continue with next steps in Slice Machine./);
 });
 
 it("tracks thrown errors", async (ctx) => {
