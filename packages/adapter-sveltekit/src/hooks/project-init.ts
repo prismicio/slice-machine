@@ -13,9 +13,10 @@ import { source } from "common-tags";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
+import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
-import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
+import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];
@@ -97,7 +98,9 @@ const createPrismicIOFile = async ({
 			/**
 			 * The project's Prismic repository name.
 			 */
-			export const repositoryName = config.repositoryName;
+			export const repositoryName =
+				import.meta.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} ||
+				config.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
