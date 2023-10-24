@@ -46,7 +46,6 @@ const useServerState = () => {
     if (serverState && !canceled) {
       // If slice builder is untouched, update from server state.
       if (selectedSlice && !sliceIsTouched) {
-        console.log({ sliceIsTouched });
         const serverSlice = serverState.libraries
           .find((l) => l.name === selectedSlice?.from)
           ?.components.find((c) => c.model.id === selectedSlice?.model.id);
