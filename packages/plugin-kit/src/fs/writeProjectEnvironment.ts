@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+
 import {
 	checkHasProjectFile,
 	CheckHasProjectFileArgs,
@@ -32,11 +34,9 @@ export const writeProjectEnvironment = async (
 		  })
 		: "";
 
-	const hasExistingVariable = new RegExp(`^${args.variableName}=.*$`, "m").test(
-		contents,
-	);
-
 	const variableLine = `${args.variableName}=${args.environment}`;
+
+	const hasExistingVariable = args.variableName in dotenv.parse(contents);
 
 	if (hasExistingVariable) {
 		contents = contents.replace(
