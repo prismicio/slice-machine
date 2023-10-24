@@ -25,7 +25,7 @@ import {
 	OnlyHookErrors,
 } from "../../types";
 
-import { SliceMachineError, InternalError } from "../../errors";
+import { SliceMachineError, InternalError, PluginError } from "../../errors";
 
 import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
 import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
@@ -332,8 +332,21 @@ export class ProjectManager extends BaseManager {
 		}
 	}
 
+	checkSupportsEnvironments(): boolean {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		return (
+			this.sliceMachinePluginRunner.hooksForType("project:environment:read")
+				.length > 0 &&
+			this.sliceMachinePluginRunner.hooksForType("project:environment:update")
+				.length > 0
+		);
+	}
+
 	async readEnvironment(): Promise<ProjectManagerReadEnvironmentReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		await this._assertAdapterSupportsEnvironments();
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"project:environment:read",
@@ -357,6 +370,8 @@ export class ProjectManager extends BaseManager {
 	): Promise<OnlyHookErrors<CallHookReturnType<ProjectEnvironmentUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		await this._assertAdapterSupportsEnvironments();
+
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"project:environment:update",
 			args,
@@ -365,5 +380,19 @@ export class ProjectManager extends BaseManager {
 		return {
 			errors: hookResult.errors,
 		};
+	}
+
+	private async _assertAdapterSupportsEnvironments(): Promise<void> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const supportsEnvironments = this.checkSupportsEnvironments();
+
+		if (!supportsEnvironments) {
+			const adapterName = await this.project.getAdapterName();
+
+			throw new PluginError(
+				`${adapterName} does not support environments. Use an adapter that implements the \`project:environment:read\` and \`project:environment:update\` hooks to use environments.`,
+			);
+		}
 	}
 }

@@ -13,6 +13,7 @@ it("returns the adapter's `project:environment:read` return value", async () => 
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("project:environment:read", hookHandler);
+			hook("project:environment:update", () => void 0);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -39,6 +40,7 @@ it("supports undefined returned values", async () => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("project:environment:read", hookHandler);
+			hook("project:environment:update", () => void 0);
 		},
 	});
 	const cwd = await createTestProject({ adapter });
@@ -56,4 +58,21 @@ it("supports undefined returned values", async () => {
 		errors: [],
 	});
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, undefined);
+});
+
+it("throws if the adapter does not support environments", async () => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	expect(
+		manager.project.updateEnvironment({
+			environment: undefined,
+		}),
+	).rejects.toThrow(/does not support environments/i);
 });
