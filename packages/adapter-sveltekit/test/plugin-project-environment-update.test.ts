@@ -5,7 +5,7 @@ import * as path from "node:path";
 
 import adapter from "../src";
 
-test("writes the environment to default the env file", async (ctx) => {
+test("writes the environment to the default env file", async (ctx) => {
 	await ctx.pluginRunner.callHook("project:environment:update", {
 		environment: "foo",
 	});
