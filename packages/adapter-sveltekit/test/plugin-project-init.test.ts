@@ -258,6 +258,7 @@ describe("prismicio.js file", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"import * as prismic from \\"@prismicio/client\\";
+			import { enableAutoPreviews } from \\"@prismicio/svelte/kit\\";
 			import config from \\"../../slicemachine.config.json\\";
 
 			/**
@@ -274,27 +275,31 @@ describe("prismicio.js file", () => {
 			 */
 			// TODO: Update the routes array to match your project's route structure.
 			const routes = [
-			  {
-			    type: \\"homepage\\",
-			    path: \\"/\\",
-			  },
-			  {
-			    type: \\"page\\",
-			    path: \\"/:uid\\",
-			  },
+			  // Examples:
+			  // {
+			  // 	type: \\"homepage\\",
+			  // 	path: \\"/\\",
+			  // },
+			  // {
+			  // 	type: \\"page\\",
+			  // 	path: \\"/:uid\\",
+			  // },
 			];
 
 			/**
 			 * Creates a Prismic client for the project's repository. The client is used to
 			 * query content from the Prismic API.
 			 *
-			 * @param {prismic.ClientConfig} config - Configuration for the Prismic client.
+			 * @param {import(\\"@prismicio/svelte/kit\\").CreateClientConfig} config -
+			 *   Configuration for the Prismic client.
 			 */
-			export const createClient = (config = {}) => {
+			export const createClient = ({ cookies, ...config } = {}) => {
 			  const client = prismic.createClient(repositoryName, {
 			    routes,
 			    ...config,
 			  });
+
+			  enableAutoPreviews({ client, cookies });
 
 			  return client;
 			};
@@ -324,6 +329,7 @@ describe("prismicio.js file", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"import * as prismic from \\"@prismicio/client\\";
+			import { CreateClientConfig, enableAutoPreviews } from \\"@prismicio/svelte/kit\\";
 			import config from \\"../../slicemachine.config.json\\";
 
 			/**
@@ -338,14 +344,15 @@ describe("prismicio.js file", () => {
 			 */
 			// TODO: Update the routes array to match your project's route structure.
 			const routes: prismic.ClientConfig[\\"routes\\"] = [
-			  {
-			    type: \\"homepage\\",
-			    path: \\"/\\",
-			  },
-			  {
-			    type: \\"page\\",
-			    path: \\"/:uid\\",
-			  },
+			  // Examples:
+			  // {
+			  // 	type: \\"homepage\\",
+			  // 	path: \\"/\\",
+			  // },
+			  // {
+			  // 	type: \\"page\\",
+			  // 	path: \\"/:uid\\",
+			  // },
 			];
 
 			/**
@@ -354,16 +361,219 @@ describe("prismicio.js file", () => {
 			 *
 			 * @param config - Configuration for the Prismic client.
 			 */
-			export const createClient = (config: prismic.ClientConfig = {}) => {
+			export const createClient = ({
+			  cookies,
+			  ...config
+			}: CreateClientConfig = {}) => {
 			  const client = prismic.createClient(repositoryName, {
 			    routes,
 			    ...config,
 			  });
 
+			  enableAutoPreviews({ client, cookies });
+
 			  return client;
 			};
 			"
 		`);
+	});
+});
+
+describe("preview route directory", () => {
+	it("creates a preview route directory", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		await expect(
+			fs.access(
+				path.join(ctx.project.root, "src", "routes", "[[preview=preview]]"),
+			),
+		).resolves.not.toThrow();
+	});
+
+	it("includes a README.md file", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(
+				ctx.project.root,
+				"src",
+				"routes",
+				"[[preview=preview]]",
+				"README.md",
+			),
+			"utf8",
+		);
+
+		// Ensure the file describes the purpose of the directory.
+		expect(contents).toMatch(/\/preview/i);
+	});
+
+	it("does not overwrite README file if it already exists", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const filePath = path.join(
+			ctx.project.root,
+			"src",
+			"routes",
+			"[[preview=preview]]",
+			"README.md",
+		);
+		const contents = "foo";
+
+		await fs.mkdir(path.dirname(filePath), { recursive: true });
+		await fs.writeFile(filePath, contents);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postHookContents = await fs.readFile(filePath, "utf8");
+
+		expect(postHookContents).toBe(contents);
+	});
+});
+
+describe("preview route matcher", () => {
+	it("creates a preview.js file", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "params", "preview.js"),
+			"utf8",
+		);
+
+		expect(contents).toMatchInlineSnapshot(`
+			"export function match(param) {
+			  return param === \\"preview\\";
+			}
+			"
+		`);
+	});
+
+	it("does not overwrite preview.js file if it already exists", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const filePath = path.join(ctx.project.root, "src", "params", "preview.js");
+		const contents = "foo";
+
+		await fs.mkdir(path.dirname(filePath), { recursive: true });
+		await fs.writeFile(filePath, contents);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postHookContents = await fs.readFile(filePath, "utf8");
+
+		expect(postHookContents).toBe(contents);
+	});
+
+	it("creates a preview.ts file when TypeScript is enabled", async (ctx) => {
+		ctx.project.config.adapter.options.typescript = true;
+		const pluginRunner = createSliceMachinePluginRunner({
+			project: ctx.project,
+			nativePlugins: {
+				[ctx.project.config.adapter.resolve]: adapter,
+			},
+		});
+		await pluginRunner.init();
+
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "params", "preview.ts"),
+			"utf8",
+		);
+
+		expect(contents).toMatchInlineSnapshot(`
+			"export function match(param) {
+			  return param === \\"preview\\";
+			}
+			"
+		`);
+	});
+
+	it("formats the file by default", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "params", "preview.js"),
+			"utf8",
+		);
+
+		expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+	});
+
+	it("does not format the file if formatting is disabled", async (ctx) => {
+		ctx.project.config.adapter.options.format = false;
+		const pluginRunner = createSliceMachinePluginRunner({
+			project: ctx.project,
+			nativePlugins: {
+				[ctx.project.config.adapter.resolve]: adapter,
+			},
+		});
+		await pluginRunner.init();
+
+		// Force unusual formatting to detect that formatting did not happen.
+		const prettierOptions = { printWidth: 10 };
+		await fs.writeFile(
+			path.join(ctx.project.root, ".prettierrc"),
+			JSON.stringify(prettierOptions),
+		);
+
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "params", "preview.js"),
+			"utf8",
+		);
+
+		expect(contents).not.toBe(
+			prettier.format(contents, {
+				...prettierOptions,
+				parser: "typescript",
+			}),
+		);
 	});
 });
 
@@ -494,6 +704,137 @@ describe("Slice Simulator route", () => {
 				...prettierOptions,
 				plugins: ["prettier-plugin-svelte"],
 				parser: "svelte",
+			}),
+		);
+	});
+});
+
+describe("root layout server file", () => {
+	it("creates a root layout server file", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "routes", "+layout.server.js"),
+			"utf8",
+		);
+
+		expect(contents).toMatchInlineSnapshot(`
+			"export const prerender = \\"auto\\";
+			"
+		`);
+	});
+
+	it("does not overwrite root layout server file if it already exists", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const filePath = path.join(
+			ctx.project.root,
+			"src",
+			"routes",
+			"+layout.server.js",
+		);
+		const contents = "foo";
+
+		await fs.mkdir(path.dirname(filePath), { recursive: true });
+		await fs.writeFile(filePath, contents);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postHookContents = await fs.readFile(filePath, "utf8");
+
+		expect(postHookContents).toBe(contents);
+	});
+
+	it("creates a preview.ts file when TypeScript is enabled", async (ctx) => {
+		ctx.project.config.adapter.options.typescript = true;
+		const pluginRunner = createSliceMachinePluginRunner({
+			project: ctx.project,
+			nativePlugins: {
+				[ctx.project.config.adapter.resolve]: adapter,
+			},
+		});
+		await pluginRunner.init();
+
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "routes", "+layout.server.ts"),
+			"utf8",
+		);
+
+		expect(contents).toMatchInlineSnapshot(`
+			"export const prerender = \\"auto\\";
+			"
+		`);
+	});
+
+	it("formats the file by default", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "routes", "+layout.server.js"),
+			"utf8",
+		);
+
+		expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+	});
+
+	it("does not format the file if formatting is disabled", async (ctx) => {
+		ctx.project.config.adapter.options.format = false;
+		const pluginRunner = createSliceMachinePluginRunner({
+			project: ctx.project,
+			nativePlugins: {
+				[ctx.project.config.adapter.resolve]: adapter,
+			},
+		});
+		await pluginRunner.init();
+
+		// Force unusual formatting to detect that formatting did not happen.
+		const prettierOptions = { printWidth: 10 };
+		await fs.writeFile(
+			path.join(ctx.project.root, ".prettierrc"),
+			JSON.stringify(prettierOptions),
+		);
+
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "src", "routes", "+layout.server.js"),
+			"utf8",
+		);
+
+		expect(contents).not.toBe(
+			prettier.format(contents, {
+				...prettierOptions,
+				parser: "typescript",
 			}),
 		);
 	});
