@@ -8,6 +8,7 @@ import { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
 
 import { SliceTemplateLibraryReadHookReturnType } from "../hooks/sliceTemplateLibrary-read";
+import { fsLimit } from "./lib/fsLimit";
 
 export type ReadSliceTemplateLibraryArgs = {
 	helpers: SliceMachineHelpers;
@@ -46,9 +47,9 @@ export const readSliceTemplateLibrary = async (
 
 		const screenshotEntries = Object.entries(screenshotPaths);
 		const screenshotPromises = screenshotEntries.map(([key, filePath]) => {
-			return fs
-				.readFile(path.join(dirName, filePath))
-				.then((data) => [key, data]);
+			return fsLimit(() =>
+				fs.readFile(path.join(dirName, filePath)).then((data) => [key, data]),
+			);
 		});
 		const readScreenshots = await Promise.all(screenshotPromises);
 		const screenshots = Object.fromEntries(readScreenshots);
@@ -57,9 +58,8 @@ export const readSliceTemplateLibrary = async (
 			? componentFileNames.ts
 			: componentFileNames.js;
 
-		const componentContentsTemplate = await fs.readFile(
-			path.join(dirName, model.name, fileName),
-			"utf-8",
+		const componentContentsTemplate = await fsLimit(() =>
+			fs.readFile(path.join(dirName, model.name, fileName), "utf-8"),
 		);
 
 		return {

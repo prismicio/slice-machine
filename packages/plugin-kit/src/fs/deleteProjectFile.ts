@@ -1,6 +1,7 @@
 import * as fs from "node:fs/promises";
 
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { fsLimit } from "./lib/fsLimit";
 
 export type DeleteProjectFileArgs = {
 	filename: string;
@@ -12,7 +13,7 @@ export const deleteProjectFile = async (
 ): Promise<string> => {
 	const filePath = args.helpers.joinPathFromRoot(args.filename);
 
-	await fs.rm(filePath, { recursive: true });
+	await fsLimit(() => fs.rm(filePath, { recursive: true }));
 
 	return filePath;
 };

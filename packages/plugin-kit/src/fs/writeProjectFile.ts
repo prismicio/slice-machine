@@ -2,6 +2,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { fsLimit } from "./lib/fsLimit";
 
 export type WriteProjectFileArgs = {
 	filename: string;
@@ -31,8 +32,8 @@ export const writeProjectFile = async (
 		);
 	}
 
-	await fs.mkdir(path.dirname(filePath), { recursive: true });
-	await fs.writeFile(filePath, contents);
+	await fsLimit(() => fs.mkdir(path.dirname(filePath), { recursive: true }));
+	await fsLimit(() => fs.writeFile(filePath, contents));
 
 	return filePath;
 };

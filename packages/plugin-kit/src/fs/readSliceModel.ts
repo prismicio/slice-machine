@@ -10,6 +10,7 @@ import { SliceMachineHelpers } from "../createSliceMachineHelpers";
 
 import { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
 import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
+import { fsLimit } from "./lib/fsLimit";
 
 export type ReadSliceModelArgs = {
 	libraryID: string;
@@ -31,7 +32,9 @@ export const readSliceModel = async (
 	});
 
 	if (await checkPathExists(libraryDir)) {
-		const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
+		const childDirs = await fsLimit(() =>
+			fs.readdir(libraryDir, { withFileTypes: true }),
+		);
 
 		/**
 		 * Paths to models that could not be read due to invalid JSON.
