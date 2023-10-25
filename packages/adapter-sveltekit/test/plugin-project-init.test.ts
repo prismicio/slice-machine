@@ -290,8 +290,7 @@ describe("prismicio.js file", () => {
 			 * Creates a Prismic client for the project's repository. The client is used to
 			 * query content from the Prismic API.
 			 *
-			 * @param {import(\\"@prismicio/svelte/kit\\").CreateClientConfig} config -
-			 *   Configuration for the Prismic client.
+			 * @param {import('@prismicio/svelte/kit').CreateClientConfig} config - Configuration for the Prismic client.
 			 */
 			export const createClient = ({ cookies, ...config } = {}) => {
 			  const client = prismic.createClient(repositoryName, {
@@ -535,7 +534,9 @@ describe("preview route matcher", () => {
 			"utf8",
 		);
 
-		expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+		expect(contents).toBe(
+			await prettier.format(contents, { parser: "typescript" }),
+		);
 	});
 
 	it("does not format the file if formatting is disabled", async (ctx) => {
@@ -569,7 +570,7 @@ describe("preview route matcher", () => {
 		);
 
 		expect(contents).not.toBe(
-			prettier.format(contents, {
+			await prettier.format(contents, {
 				...prettierOptions,
 				parser: "typescript",
 			}),
@@ -798,7 +799,9 @@ describe("root layout server file", () => {
 			"utf8",
 		);
 
-		expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+		expect(contents).toBe(
+			await prettier.format(contents, { parser: "typescript" }),
+		);
 	});
 
 	it("does not format the file if formatting is disabled", async (ctx) => {
@@ -832,7 +835,7 @@ describe("root layout server file", () => {
 		);
 
 		expect(contents).not.toBe(
-			prettier.format(contents, {
+			await prettier.format(contents, {
 				...prettierOptions,
 				parser: "typescript",
 			}),
