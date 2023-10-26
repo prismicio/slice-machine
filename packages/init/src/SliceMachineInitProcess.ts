@@ -267,7 +267,7 @@ Continue with next steps in Slice Machine.
 			if (ctLibrary.ids.length === 0) {
 				return true;
 			}
-		} catch (e) {
+		} catch (error) {
 			return true;
 		}
 
@@ -549,25 +549,9 @@ Continue with next steps in Slice Machine.
 
 					if (!isLoggedIn) {
 						parentTask.output = "Press any key to open the browser to login...";
-						await new Promise((resolve) => {
-							const initialRawMode = !!process.stdin.isRaw;
-							process.stdin.setRawMode?.(true);
-							process.stdin.resume();
-							process.stdin.once("data", (data: Buffer) => {
-								process.stdin.setRawMode?.(initialRawMode);
-								process.stdin.pause();
-								resolve(data.toString("utf-8"));
-							});
-						});
-
+						await this.pressKeyToLogin();
 						parentTask.output = "Browser opened, waiting for you to login...";
-						const { port, url } = await this.manager.user.getLoginSessionInfo();
-						await this.manager.user.nodeLoginSession({
-							port,
-							onListenCallback() {
-								open(url);
-							},
-						});
+						await this.waitingForLogin();
 					}
 
 					parentTask.output = "";
@@ -598,6 +582,29 @@ Continue with next steps in Slice Machine.
 				},
 			},
 		]);
+	}
+
+	protected async pressKeyToLogin(): Promise<void> {
+		await new Promise((resolve) => {
+			const initialRawMode = !!process.stdin.isRaw;
+			process.stdin.setRawMode?.(true);
+			process.stdin.resume();
+			process.stdin.once("data", (data: Buffer) => {
+				process.stdin.setRawMode?.(initialRawMode);
+				process.stdin.pause();
+				resolve(data.toString("utf-8"));
+			});
+		});
+	}
+
+	protected async waitingForLogin(): Promise<void> {
+		const { port, url } = await this.manager.user.getLoginSessionInfo();
+		await this.manager.user.nodeLoginSession({
+			port,
+			onListenCallback() {
+				open(url);
+			},
+		});
 	}
 
 	protected useRepositoryFlag(): Promise<void> {
@@ -871,13 +878,35 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						"Project framework must be available through context to run `createNewRepository`",
 					);
 
-					await this.manager.prismicRepository.create({
-						domain: this.context.repository.domain,
-						framework: this.context.framework.wroomTelemetryID,
-						starterId: this.context.starterId,
-					});
+					try {
+						await this.manager.prismicRepository.create({
+							domain: this.context.repository.domain,
+							framework: this.context.framework.wroomTelemetryID,
+							starterId: this.context.starterId,
+						});
+					} catch (error) {
+						// When we have an error here, it's most probably because the user has a stale SESSION cookie
+
+						// Ensure to logout user to remove SESSION and prismic-auth cookies
+						await this.manager.user.logout();
+
+						// Force a new login to get a brand new cookies value
+						task.output =
+							"It seems there is an authentication problem, press any key to open the browser to login again...";
+						await this.pressKeyToLogin();
+						task.output = "Browser opened, waiting for you to login...";
+						await this.waitingForLogin();
+
+						// Try to create repository again with the new cookies value
+						await this.manager.prismicRepository.create({
+							domain: this.context.repository.domain,
+							framework: this.context.framework.wroomTelemetryID,
+							starterId: this.context.starterId,
+						});
+					}
 
 					this.context.repository.exists = true;
+					task.output = "";
 					task.title = `Created new repository ${chalk.cyan(
 						this.context.repository.domain,
 					)}`;
