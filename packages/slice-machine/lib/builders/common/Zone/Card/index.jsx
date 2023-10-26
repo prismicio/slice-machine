@@ -23,7 +23,6 @@ const FieldZone = ({
   isRepeatable,
   dataCy,
   isRepeatableCustomType,
-  sx,
 }) => {
   return (
     <DragDropContext
@@ -41,8 +40,7 @@ const FieldZone = ({
             {...provided.droppableProps}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             data-cy={dataCy}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            sx={sx}
+            sx={{ paddingInline: "16px !important" }}
           >
             {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

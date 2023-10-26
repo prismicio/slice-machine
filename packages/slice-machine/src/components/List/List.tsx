@@ -23,7 +23,7 @@ export const ListHeader: FC<ListHeaderProps> = ({
   ...otherProps
 }) => (
   <div {...otherProps} className={styles.header}>
-    <Text color="grey11" component="span" variant="bold">
+    <Text color="grey11" component="span" noWrap variant="bold">
       {children}
     </Text>
     {toggle}

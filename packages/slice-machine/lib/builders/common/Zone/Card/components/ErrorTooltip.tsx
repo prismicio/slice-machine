@@ -18,12 +18,8 @@ export const ErrorTooltip: React.FC<ErrorTooltip> = ({ error }) => {
         <FaRegQuestionCircle
           color={"tomato"}
           data-tip={error}
-          style={{
-            position: "relative",
-            right: "24px",
-            height: "24px",
-          }}
-          size={56}
+          style={{ position: "absolute", right: "8px" }}
+          size={16}
         />
       </>
     );

@@ -35,29 +35,14 @@ class SliceBuilder extends BaseBuilder {
     return cy.get("[data-cy=add-Repeatable-field]");
   }
 
-  get variationsDropdown() {
-    return cy.get("[aria-label='Expand variations']");
-  }
-
   get addVariationButton() {
-    return cy.contains("button", "Add new variation");
+    return cy.contains("button", "Add a new variation");
   }
 
   goTo(sliceLibrary, sliceName, variation = "default") {
     cy.visit(`/slices/${sliceLibrary}/${sliceName}/${variation}`);
     this.saveButton.should("be.visible");
     cy.contains(sliceName).should("be.visible");
-    return this;
-  }
-
-  openScreenshotModal() {
-    cy.contains("Update screenshot").click();
-    return this;
-  }
-
-  openVariationModal() {
-    cy.get("[aria-label='Expand variations']").parent().click();
-    cy.contains("Add new variation").click();
     return this;
   }
 
@@ -103,8 +88,7 @@ class SliceBuilder extends BaseBuilder {
    * @param {string} variationName Name of the variation.
    */
   addVariation(variationName) {
-    cy.get("[aria-label='Expand variations']").click({ force: true });
-    cy.contains("button", "Add new variation").click();
+    cy.contains("button", "Add a new variation").click();
 
     cy.get("[aria-modal]").within(() => {
       cy.getInputByLabel("Variation name*").type(variationName);

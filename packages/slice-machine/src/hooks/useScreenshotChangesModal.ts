@@ -11,7 +11,6 @@ type ModalPayload = {
 type Payload = {
   modalPayload: ModalPayload;
   onOpenModal: (p: ModalPayload) => void;
-  openScreenshotsModal: () => void;
 };
 
 export const useScreenshotChangesModal = (): Payload => {
@@ -29,6 +28,5 @@ export const useScreenshotChangesModal = (): Payload => {
   return {
     modalPayload,
     onOpenModal,
-    openScreenshotsModal,
   };
 };
