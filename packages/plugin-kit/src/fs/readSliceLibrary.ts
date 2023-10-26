@@ -1,16 +1,15 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { checkPathExists } from "./lib/checkPathExists";
 import { isSharedSliceModel } from "./lib/isSharedSliceModel";
 import { readJSONFile } from "./lib/readJSONFile";
+import * as fs from "./lib/fsLimit";
 
 import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
 import {
 	buildSliceLibraryDirectoryPath,
 	BuildSliceLibraryDirectoryPathArgs,
 } from "./buildSliceLibraryDirectoryPath";
-import { fsLimit } from "./lib/fsLimit";
 
 export type ReadSliceLibraryArgs = BuildSliceLibraryDirectoryPathArgs;
 
@@ -35,9 +34,7 @@ export const readSliceLibrary = async (
 		};
 	}
 
-	const childDirs = await fsLimit(() =>
-		fs.readdir(libraryDir, { withFileTypes: true }),
-	);
+	const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
 
 	/**
 	 * Paths to models that could not be read due to invalid JSON.
@@ -48,10 +45,11 @@ export const readSliceLibrary = async (
 	await Promise.all(
 		childDirs.map(async (childDir) => {
 			if (childDir.isDirectory()) {
-				const childDirContents = await fsLimit(() =>
-					fs.readdir(path.join(libraryDir, childDir.name), {
+				const childDirContents = await fs.readdir(
+					path.join(libraryDir, childDir.name),
+					{
 						withFileTypes: true,
-					}),
+					},
 				);
 				const isSliceDir = childDirContents.some((entry) => {
 					return entry.isFile() && entry.name === SHARED_SLICE_MODEL_FILENAME;

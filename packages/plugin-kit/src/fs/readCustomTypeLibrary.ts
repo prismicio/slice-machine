@@ -1,16 +1,15 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { checkPathExists } from "./lib/checkPathExists";
 import { isCustomTypeModel } from "./lib/isCustomTypeModel";
 import { readJSONFile } from "./lib/readJSONFile";
+import * as fs from "./lib/fsLimit";
 
 import { CUSTOM_TYPE_MODEL_FILENAME } from "./constants";
 import {
 	buildCustomTypeLibraryDirectoryPath,
 	BuildCustomTypeLibraryDirectoryPathArgs,
 } from "./buildCustomTypeLibraryDirectoryPath";
-import { fsLimit } from "./lib/fsLimit";
 
 export type ReadCustomTypeLibraryArgs = BuildCustomTypeLibraryDirectoryPathArgs;
 
@@ -32,9 +31,7 @@ export const readCustomTypeLibrary = async (
 		};
 	}
 
-	const childDirs = await fsLimit(() =>
-		fs.readdir(libraryDir, { withFileTypes: true }),
-	);
+	const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
 
 	/**
 	 * Paths to models that could not be read due to invalid JSON.
@@ -45,10 +42,11 @@ export const readCustomTypeLibrary = async (
 	await Promise.all(
 		childDirs.map(async (childDir) => {
 			if (childDir.isDirectory()) {
-				const childDirContents = await fsLimit(() =>
-					fs.readdir(path.join(libraryDir, childDir.name), {
+				const childDirContents = await fs.readdir(
+					path.join(libraryDir, childDir.name),
+					{
 						withFileTypes: true,
-					}),
+					},
 				);
 				const isCustomTypeDir = childDirContents.some((entry) => {
 					return entry.isFile() && entry.name === CUSTOM_TYPE_MODEL_FILENAME;

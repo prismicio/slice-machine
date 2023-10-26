@@ -7,7 +7,6 @@ import {
 	BuildSliceDirectoryPathArgs,
 } from "./buildSliceDirectoryPath";
 import { writeSliceModel, WriteSliceModelArgs } from "./writeSliceModel";
-import { fsLimit } from "./lib/fsLimit";
 
 export type RenameSliceArgs = {
 	actions: SliceMachineActions;
@@ -20,18 +19,16 @@ export const renameSlice = async (args: RenameSliceArgs): Promise<void> => {
 		sliceID: args.model.id,
 	});
 
-	await fsLimit(async () =>
-		fse.move(
-			await buildSliceDirectoryPath({
-				...args,
-				model: existingModel,
-				absolute: true,
-			}),
-			await buildSliceDirectoryPath({
-				...args,
-				absolute: true,
-			}),
-		),
+	await fse.move(
+		await buildSliceDirectoryPath({
+			...args,
+			model: existingModel,
+			absolute: true,
+		}),
+		await buildSliceDirectoryPath({
+			...args,
+			absolute: true,
+		}),
 	);
 
 	await writeSliceModel(args);

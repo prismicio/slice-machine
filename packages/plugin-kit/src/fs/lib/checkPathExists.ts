@@ -1,10 +1,10 @@
-import * as fs from "node:fs/promises";
 import { PathLike } from "node:fs";
-import { fsLimit } from "./fsLimit";
+
+import * as fs from "./fsLimit";
 
 export async function checkPathExists(path: PathLike): Promise<boolean> {
 	try {
-		await fsLimit(() => fs.access(path));
+		await fs.access(path);
 
 		return true;
 	} catch {

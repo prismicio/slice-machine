@@ -1,16 +1,15 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
+
+import { SliceMachineHelpers } from "../createSliceMachineHelpers";
 
 import { checkPathExists } from "./lib/checkPathExists";
 import { isSharedSliceModel } from "./lib/isSharedSliceModel";
 import { readJSONFile } from "./lib/readJSONFile";
-
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import * as fs from "./lib/fsLimit";
 
 import { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
 import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
-import { fsLimit } from "./lib/fsLimit";
 
 export type ReadSliceModelArgs = {
 	libraryID: string;
@@ -32,9 +31,7 @@ export const readSliceModel = async (
 	});
 
 	if (await checkPathExists(libraryDir)) {
-		const childDirs = await fsLimit(() =>
-			fs.readdir(libraryDir, { withFileTypes: true }),
-		);
+		const childDirs = await fs.readdir(libraryDir, { withFileTypes: true });
 
 		/**
 		 * Paths to models that could not be read due to invalid JSON.
