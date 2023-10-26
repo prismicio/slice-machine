@@ -1,7 +1,7 @@
 import { LibraryUI } from "@models/common/LibraryUI";
 import { ComponentUI } from "@models/common/ComponentUI";
 
-import { NonSharedSliceViewCardProps } from "../sliceCards/NonSharedSliceViewCard";
+import { NonSharedSliceCardProps } from "../sliceCards/NonSharedSliceCard";
 
 export type ConvertLegacySliceAndTrackArgs = {
   libraryID: string;
@@ -34,4 +34,4 @@ export type DialogProps = {
   libraries: readonly LibraryUI[];
   localSharedSlices: ComponentUI[];
   identicalSlices: IdenticalSlice[];
-} & Pick<NonSharedSliceViewCardProps, "path" | "slice">;
+} & Pick<NonSharedSliceCardProps, "path" | "slice">;

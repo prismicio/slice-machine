@@ -146,7 +146,7 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
             deleteCustomTypeTab(dialog.tabKey);
             if (tabValue === dialog.tabKey) {
               const otherTabValue = customType.tabs.find(
-                (tab) => tab.key !== dialog.tabKey
+                (tab) => tab.key !== dialog.tabKey,
               )?.key;
               if (otherTabValue !== undefined) setTabValue(otherTabValue);
             }

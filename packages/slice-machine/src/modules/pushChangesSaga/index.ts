@@ -47,7 +47,7 @@ type Limit = NonNullable<
 export const changesPushCreator = createAsyncAction(
   "PUSH_CHANGES.REQUEST",
   "PUSH_CHANGES.RESPONSE",
-  "PUSH_CHANGES.FAILURE"
+  "PUSH_CHANGES.FAILURE",
 )<ChangesPushSagaPayload, undefined, Limit | InvalidCustomTypeResponse>();
 
 export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
@@ -55,7 +55,7 @@ export const sortDocumentLimits = (limit: Readonly<Limit>) => ({
   details: {
     ...limit.details,
     customTypes: [...limit.details.customTypes].sort(
-      (doc1, doc2) => doc2.numberOfDocuments - doc1.numberOfDocuments
+      (doc1, doc2) => doc2.numberOfDocuments - doc1.numberOfDocuments,
     ),
   },
 });
@@ -107,7 +107,7 @@ export function* changesPushSaga({
       yield put(
         modalOpenCreator({
           modalKey: MODAL_KEY_MAP[response.type],
-        })
+        }),
       );
       return;
     }
@@ -123,7 +123,7 @@ export function* changesPushSaga({
         libraries: serverState.libraries,
         remoteSlices: serverState.remoteSlices,
         clientError: serverState.clientError,
-      })
+      }),
     );
 
     // Tracking the success of the push
@@ -137,7 +137,7 @@ export function* changesPushSaga({
       openToasterCreator({
         content: "All slices and types have been pushed",
         type: ToasterType.SUCCESS,
-      })
+      }),
     );
   } catch (error) {
     if (isUnauthenticatedError(error) || isUnauthorizedError(error)) {
@@ -150,7 +150,7 @@ export function* changesPushSaga({
         content:
           "Something went wrong when pushing your changes. Check your terminal logs.",
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
 }
@@ -158,7 +158,7 @@ export function* changesPushSaga({
 function* watchChangesPush() {
   yield takeLatest(
     getType(changesPushCreator.request),
-    withLoader(changesPushSaga, LoadingKeysEnum.CHANGES_PUSH)
+    withLoader(changesPushSaga, LoadingKeysEnum.CHANGES_PUSH),
   );
 }
 

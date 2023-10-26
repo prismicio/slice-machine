@@ -13,31 +13,31 @@ type LocalOnly<L = unknown> = { local: L };
 type RemoteOnly<R = unknown> = { remote: R };
 
 export function hasLocalAndRemote<T extends LocalOrRemote>(
-  obj: T
+  obj: T,
 ): obj is T extends LocalAndRemote ? T : never {
   return "local" in obj && "remote" in obj;
 }
 
 export function hasLocal<T extends LocalOrRemote>(
-  obj: T
+  obj: T,
 ): obj is T extends LocalAndRemote | LocalOnly ? T : never {
   return "local" in obj;
 }
 
 export function hasRemote<T extends LocalOrRemote>(
-  obj: T
+  obj: T,
 ): obj is T extends LocalAndRemote | RemoteOnly ? T : never {
   return "remote" in obj;
 }
 
 export function isRemoteOnly<T extends LocalOrRemote>(
-  obj: T
+  obj: T,
 ): obj is T extends RemoteOnly ? T : never {
   return hasRemote(obj) && !hasLocal(obj);
 }
 
 export function isLocalOnly<T extends LocalOrRemote>(
-  obj: T
+  obj: T,
 ): obj is T extends LocalOnly ? T : never {
   return !hasRemote(obj) && hasLocal(obj);
 }
@@ -70,7 +70,7 @@ export type RemoteOnlySlice = RemoteOnly<SliceSM> & {
 export type LocalOrRemoteModel = LocalOrRemoteCustomType | LocalOrRemoteSlice;
 
 export function getModelId<M extends CustomTypeSM | SliceSM>(
-  model: LocalOrRemote<M>
+  model: LocalOrRemote<M>,
 ): M["id"] {
   return hasLocal(model) ? model.local.id : model.remote.id;
 }

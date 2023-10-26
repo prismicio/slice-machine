@@ -27,7 +27,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
+import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { SliceToastMessage } from "@components/ToasterContainer";
 
@@ -44,12 +44,12 @@ const SlicesIndex: React.FunctionComponent = () => {
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
       libraries: getLibraries(store),
-    })
+    }),
   );
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
-    (library) => library.isLocal
+    (library) => library.isLocal,
   );
   const sortedLibraries: LibraryUI[] = libraries.map((library) => {
     // Sort slices
@@ -171,7 +171,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                           elems={components}
                           defineElementKey={(slice) => slice.model.name}
                           renderElem={(slice) => (
-                            <SharedSliceViewCard
+                            <SharedSliceCard
                               action={{
                                 type: "menu",
                                 onRemove: () => {
@@ -183,16 +183,17 @@ const SlicesIndex: React.FunctionComponent = () => {
                                   openRenameSliceModal();
                                 },
                               }}
-                              isDeletedSlice={false}
+                              mode="navigation"
                               onUpdateScreenshot={() => {
                                 onOpenModal({
                                   sliceFilterFn: (s) =>
                                     s.filter(
-                                      (e) => e.model.id === slice.model.id
+                                      (e) => e.model.id === slice.model.id,
                                     ),
                                 });
                               }}
                               slice={slice}
+                              variant="solid"
                             />
                           )}
                           gridGap="32px 16px"
@@ -226,7 +227,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 toast.success(
                   SliceToastMessage({
                     path: `${libraryName}/${newSlice.name}/model.json`,
-                  })
+                  }),
                 );
               }}
               onClose={() => {

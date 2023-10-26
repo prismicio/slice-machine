@@ -40,7 +40,7 @@ const LoginModal: React.FunctionComponent = () => {
       isOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
       isLoginLoading: isLoading(store, LoadingKeysEnum.LOGIN),
       env: getEnvironment(store),
-    })
+    }),
   );
 
   const { closeModals, startLoadingLogin, stopLoadingLogin, openToaster } =
@@ -66,7 +66,7 @@ const LoginModal: React.FunctionComponent = () => {
           Boolean(status.shortId) &&
           Boolean(status.intercomHash),
         3000,
-        60
+        60,
       );
 
       openToaster("Logged in", ToasterType.SUCCESS);

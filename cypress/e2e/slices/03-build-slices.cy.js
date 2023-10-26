@@ -52,7 +52,7 @@ describe.skip("I am a new SM user (with Next) who wants to build a slice with di
     sliceBuilder.addNewWidgetField("SelectField", "Select");
     sliceBuilder.addNewWidgetField(
       "ContentRelationshipField",
-      "Content Relationship"
+      "Content Relationship",
     );
 
     sliceBuilder.openEditWidgetModal("SimpleTextField");

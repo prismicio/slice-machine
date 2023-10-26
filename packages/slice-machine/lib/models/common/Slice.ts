@@ -56,13 +56,13 @@ export const Variations = {
         ...variation,
         primary: variation.primary?.reduce(
           (acc, { key, value }) => ({ ...acc, [key]: value }),
-          {}
+          {},
         ),
         items: variation.items?.reduce(
           (acc, { key, value }) => ({ ...acc, [key]: value }),
-          {}
+          {},
         ),
-      })
+      }),
     );
   },
 
@@ -81,14 +81,14 @@ export const Variations = {
           ([key, value]) => ({
             key,
             value,
-          })
+          }),
         ),
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         items: Object.entries(variation.items || {}).map(([key, value]) => ({
           key,
           value,
         })),
-      })
+      }),
     );
   },
 };
@@ -101,7 +101,7 @@ export const Slices = {
         ...slice,
         // eslint-disable-next-line @typescript-eslint/unbound-method
         variations: slice.variations.map(Variations.fromSM),
-      })
+      }),
     );
   },
 
@@ -113,7 +113,7 @@ export const Slices = {
         ...slice,
         // eslint-disable-next-line @typescript-eslint/unbound-method
         variations: slice.variations.map(Variations.toSM),
-      })
+      }),
     );
   },
 };

@@ -7,6 +7,7 @@ import { serializeCookies } from "../../lib/serializeCookies";
 
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
 
 import { BaseManager } from "../BaseManager";
 
@@ -174,9 +175,13 @@ export class PrismicRepositoryManager extends BaseManager {
 		});
 		const text = await res.text();
 
-		// Endpoint returns repository name on success, which must be more than 4 characters and less than 30
+		// Endpoint returns repository name on success, that should be within the validation range
 		// Even when there is an error, we get a 200 success and so we have to check the name thanks to that
-		if (!res.ok || text.length < 4 || text.length > 63) {
+		if (
+			!res.ok ||
+			text.length < REPOSITORY_NAME_VALIDATION.Min ||
+			text.length > REPOSITORY_NAME_VALIDATION.Max
+		) {
 			throw new Error(`Failed to create repository \`${args.domain}\``, {
 				cause: text,
 			});

@@ -5,13 +5,13 @@ import {
 } from "@prismicio/types-internal/lib/customtypes";
 
 export function getSectionEntries(
-  customType: CustomType
+  customType: CustomType,
 ): [string, DynamicSection][] {
   return Object.entries(customType.json);
 }
 
 export function getMainSectionEntry(
-  customType: CustomType
+  customType: CustomType,
 ): [string, DynamicSection] | undefined {
   // Currently we cannot rely on the name of the main section
   // since it's possible to rename it
@@ -21,14 +21,14 @@ export function getMainSectionEntry(
 
 export function getSection(
   customType: CustomType,
-  sectionId: string
+  sectionId: string,
 ): DynamicSection | undefined {
   return customType.json[sectionId];
 }
 
 export function getSectionSliceZoneConfig(
   customType: CustomType,
-  sectionId: string
+  sectionId: string,
 ): DynamicSlicesConfig | undefined {
   const section = getSection(customType, sectionId);
 
@@ -39,7 +39,7 @@ export function getSectionSliceZoneConfig(
   // In Slice Machine we currently only support one slice zone per section
   // so we retrieve the first one
   const maybeSliceZone = Object.values(section).find(
-    (value) => value.type === "Slices"
+    (value) => value.type === "Slices",
   );
 
   return maybeSliceZone?.config ?? undefined;
@@ -51,13 +51,13 @@ export function getSectionSliceZoneConfig(
 // it's used as an API id
 export function findNextSectionSliceZoneKey(
   customType: CustomType,
-  sectionId: string
+  sectionId: string,
 ): string {
   const sectionsEntries = getSectionEntries(customType);
   const sectionIndex = sectionsEntries.findIndex(([key]) => key === sectionId);
 
   const existingKeys = sectionsEntries.flatMap(([_, section]) =>
-    Object.keys(section).filter((key) => section[key].type === "Slices")
+    Object.keys(section).filter((key) => section[key].type === "Slices"),
   );
 
   let i = sectionIndex;
@@ -72,11 +72,11 @@ export function findNextSectionSliceZoneKey(
 
 export function createSectionSliceZone(
   customType: CustomType,
-  sectionId: string
+  sectionId: string,
 ): CustomType {
   const maybeSectionSliceZoneConfig = getSectionSliceZoneConfig(
     customType,
-    sectionId
+    sectionId,
   );
 
   // If the section already has a slice zone, return the custom type as is
@@ -87,7 +87,7 @@ export function createSectionSliceZone(
   // Get the next available section key for the slice zone
   const availableSectionSlicesKey = findNextSectionSliceZoneKey(
     customType,
-    sectionId
+    sectionId,
   );
 
   return {

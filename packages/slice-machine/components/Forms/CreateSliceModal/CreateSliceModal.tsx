@@ -17,7 +17,7 @@ type CreateSliceModalProps = {
   onClose: () => void;
   onSuccess: (
     newSlice: SharedSlice,
-    libraryName: string
+    libraryName: string,
   ) => Promise<void> | void;
   localLibraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;

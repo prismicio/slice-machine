@@ -15,7 +15,7 @@ type MockCustomTypesAPIConfig = {
 
 export const mockCustomTypesAPI = (
   ctx: TestContext,
-  config?: MockCustomTypesAPIConfig
+  config?: MockCustomTypesAPIConfig,
 ): void => {
   const endpoint = config?.endpoint ?? "https://customtypes.prismic.io";
 
@@ -23,8 +23,8 @@ export const mockCustomTypesAPI = (
     ctx.msw.use(
       rest.get(
         new URL("./customtypes", endpoint).toString(),
-        config.onCustomTypeGetAll
-      )
+        config.onCustomTypeGetAll,
+      ),
     );
   }
 
@@ -40,8 +40,8 @@ export const mockCustomTypesAPI = (
           } else {
             return res(ctx.status(404));
           }
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -49,8 +49,8 @@ export const mockCustomTypesAPI = (
     ctx.msw.use(
       rest.post(
         new URL("./customtypes/insert", endpoint).toString(),
-        config.onCustomTypeInsert
-      )
+        config.onCustomTypeInsert,
+      ),
     );
   }
 
@@ -58,14 +58,14 @@ export const mockCustomTypesAPI = (
     ctx.msw.use(
       rest.post(
         new URL("./customtypes/update", endpoint).toString(),
-        config.onCustomTypeUpdate
-      )
+        config.onCustomTypeUpdate,
+      ),
     );
   }
 
   if (config?.onSliceGetAll) {
     ctx.msw.use(
-      rest.get(new URL("./slices", endpoint).toString(), config.onSliceGetAll)
+      rest.get(new URL("./slices", endpoint).toString(), config.onSliceGetAll),
     );
   }
 
@@ -81,8 +81,8 @@ export const mockCustomTypesAPI = (
           } else {
             return res(ctx.status(404));
           }
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -90,8 +90,8 @@ export const mockCustomTypesAPI = (
     ctx.msw.use(
       rest.post(
         new URL("./slices/insert", endpoint).toString(),
-        config.onSliceInsert
-      )
+        config.onSliceInsert,
+      ),
     );
   }
 
@@ -99,8 +99,8 @@ export const mockCustomTypesAPI = (
     ctx.msw.use(
       rest.post(
         new URL("./slices/update", endpoint).toString(),
-        config.onSliceUpdate
-      )
+        config.onSliceUpdate,
+      ),
     );
   }
 };

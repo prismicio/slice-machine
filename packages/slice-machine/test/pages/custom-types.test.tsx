@@ -221,7 +221,7 @@ describe("Custom Type Builder", () => {
           nodeVersion: process.versions.node,
         },
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -302,7 +302,7 @@ describe("Custom Type Builder", () => {
     const user = userEvent.setup();
     await user.click(screen.getByText("Select existing"));
 
-    const slicesToSelect = screen.getAllByTestId("shared-slice-selection-card");
+    const slicesToSelect = screen.getAllByTestId("shared-slice-card");
 
     for (const elem of slicesToSelect) {
       // eslint-disable-next-line @typescript-eslint/await-thenable
@@ -326,7 +326,7 @@ describe("Custom Type Builder", () => {
         event: "SliceMachine Slicezone Updated",
         properties: { customTypeId, nodeVersion: process.versions.node },
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -353,7 +353,7 @@ describe("Custom Type Builder", () => {
       createSliceMachineManagerMSWHandler({
         url: "http://localhost:3000/_manager",
         sliceMachineManager: manager,
-      })
+      }),
     );
 
     const customTypeId = "a-page";
@@ -448,7 +448,7 @@ describe("Custom Type Builder", () => {
           nodeVersion: process.versions.node,
         },
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
 
     const saveCustomType = screen.getByTestId("builder-save-button");
@@ -471,7 +471,7 @@ describe("Custom Type Builder", () => {
             nodeVersion: process.versions.node,
           },
         }),
-        expect.any(Function)
+        expect.any(Function),
       );
     });
   });
@@ -500,7 +500,7 @@ describe("Custom Type Builder", () => {
       createSliceMachineManagerMSWHandler({
         url: "http://localhost:3000/_manager",
         sliceMachineManager: manager,
-      })
+      }),
     );
 
     const customTypeId = "a-page";
@@ -608,7 +608,7 @@ describe("Custom Type Builder", () => {
           nodeVersion: process.versions.node,
         },
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
 
     const saveCustomType = screen.getByTestId("builder-save-button");

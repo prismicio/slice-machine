@@ -19,7 +19,7 @@ describe("Slice Zone", () => {
       const result = SliceZone.removeSharedSlice(mockSliceZone, keyToRemove);
 
       expect(result.value.map((slice) => slice.key).includes(keyToRemove)).toBe(
-        false
+        false,
       );
       expect(result.value.length).toEqual(2);
     });
@@ -41,7 +41,7 @@ describe("Slice Zone", () => {
 
       expect(result.value.map((slice) => slice.key)).toEqual(
         // @ts-expect-error TS(7006) FIXME: Parameter 'slice' implicitly has an 'any' type.
-        mockSliceZone.value.map((slice) => slice.key).concat([newKey])
+        mockSliceZone.value.map((slice) => slice.key).concat([newKey]),
       );
       expect(result.value.length).toEqual(4);
     });

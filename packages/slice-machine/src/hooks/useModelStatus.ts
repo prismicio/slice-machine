@@ -26,24 +26,27 @@ export interface ModelStatusInformation {
 
 function computeStatuses(
   models: LocalOrRemoteCustomType[],
-  userHasAccessToModels: boolean
+  userHasAccessToModels: boolean,
 ): { [sliceId: string]: ModelStatus };
 function computeStatuses(
   models: LocalOrRemoteSlice[],
-  userHasAccessToModels: boolean
+  userHasAccessToModels: boolean,
 ): { [sliceId: string]: ModelStatus };
 function computeStatuses(
   models: LocalOrRemoteModel[],
-  userHasAccessToModels: boolean
+  userHasAccessToModels: boolean,
 ) {
-  return models.reduce<{ [id: string]: ModelStatus }>((acc, model) => {
-    const { status } = computeModelStatus(model, userHasAccessToModels);
+  return models.reduce<{ [id: string]: ModelStatus }>(
+    (acc, model) => {
+      const { status } = computeModelStatus(model, userHasAccessToModels);
 
-    return {
-      ...acc,
-      [hasLocal(model) ? model.local.id : model.remote.id]: status,
-    };
-  }, {} as { [sliceId: string]: ModelStatus });
+      return {
+        ...acc,
+        [hasLocal(model) ? model.local.id : model.remote.id]: status,
+      };
+    },
+    {} as { [sliceId: string]: ModelStatus },
+  );
 }
 
 export const useModelStatus = ({

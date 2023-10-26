@@ -83,7 +83,7 @@ const SetupModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       isSimulatorAvailableForFramework:
         selectIsSimulatorAvailableForFramework(state),
       setupSteps: selectSetupSteps(state),
-    })
+    }),
   );
 
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

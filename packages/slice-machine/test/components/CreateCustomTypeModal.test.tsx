@@ -67,7 +67,7 @@ describe("CreateCustomTypeModal", () => {
           origin: "table",
         },
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 });

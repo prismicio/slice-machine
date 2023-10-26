@@ -4,12 +4,12 @@ import { Library, Component } from "@lib/models/common/Library";
 
 export const normalizeFrontendSlices = (
   localLibraries: ReadonlyArray<Library<Component>>,
-  remoteSlices: ReadonlyArray<SliceSM>
+  remoteSlices: ReadonlyArray<SliceSM>,
 ): LocalOrRemoteSlice[] => {
   const slices: Record<string, LocalOrRemoteSlice> = {};
 
   const localComponents = localLibraries.flatMap(
-    (library) => library.components
+    (library) => library.components,
   );
 
   localComponents.forEach((component) => {

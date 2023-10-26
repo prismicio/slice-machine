@@ -22,13 +22,13 @@ type ModalActions = ActionType<
 // Selectors
 export const isModalOpen = (
   state: SliceMachineStoreType,
-  dialog: ModalKeysEnum
+  dialog: ModalKeysEnum,
 ): boolean => state.modal[dialog];
 
 // Reducer
 export const modalReducer: Reducer<ModalStoreType, ModalActions> = (
   state = initialState,
-  action
+  action,
 ) => {
   switch (action.type) {
     case getType(modalCloseCreator):

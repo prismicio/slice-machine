@@ -34,7 +34,7 @@ function Grid<T>({
           <span key={`${defineElementKey(elem)}-${i + 1}`}>
             {renderElem(elem, i)}
           </span>
-        ) : null
+        ) : null,
       )}
     </Box>
   );

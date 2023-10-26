@@ -18,7 +18,7 @@ const useCurrentSlice = (): UseCurrentSliceRet => {
     slice: selectCurrentSlice(
       store,
       router.query.lib as string,
-      router.query.sliceName as string
+      router.query.sliceName as string,
     ),
   }));
 
@@ -35,7 +35,7 @@ const useCurrentSlice = (): UseCurrentSliceRet => {
   }
 
   const variation = slice.model.variations.find(
-    (variation) => variation.id === router.query.variation
+    (variation) => variation.id === router.query.variation,
   );
 
   if (!variation) {

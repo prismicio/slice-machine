@@ -42,7 +42,7 @@ describe("LoginModal", () => {
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
       "href",
       // Since we're not using the `start-slicemachine` server proxy, port defaults to Next/React Testing Library's default port
-      "https://prismic.io/dashboard/cli/login?source=slice-machine&port=3000&path=/api/auth"
+      "https://prismic.io/dashboard/cli/login?source=slice-machine&port=3000&path=/api/auth",
     );
   });
 
@@ -61,7 +61,7 @@ describe("LoginModal", () => {
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
       "href",
       // Since we're not using the `start-slicemachine` server proxy, port defaults to Next/React Testing Library's default port
-      "https://wroom.io/dashboard/cli/login?source=slice-machine&port=3000&path=/api/auth"
+      "https://wroom.io/dashboard/cli/login?source=slice-machine&port=3000&path=/api/auth",
     );
   });
 });

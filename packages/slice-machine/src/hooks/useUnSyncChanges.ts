@@ -43,7 +43,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
       customTypes: selectAllCustomTypes(store),
       slices: getFrontendSlices(store),
       libraries: getLibraries(store),
-    })
+    }),
   );
 
   const { modelsStatuses, authStatus, isOnline } = useModelStatus({
@@ -52,7 +52,7 @@ export const useUnSyncChanges = (): UnSyncChanges => {
   });
 
   const localComponents: ComponentUI[] = libraries.flatMap(
-    (lib) => lib.components
+    (lib) => lib.components,
   );
 
   const deletedComponents: ComponentUI[] = slices
@@ -67,15 +67,15 @@ export const useUnSyncChanges = (): UnSyncChanges => {
     (component) =>
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       modelsStatuses.slices[component.model.id] &&
-      unSyncStatuses.includes(modelsStatuses.slices[component.model.id])
+      unSyncStatuses.includes(modelsStatuses.slices[component.model.id]),
   );
   const unSyncedCustomTypes = customTypes.filter(
     (customType) =>
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       modelsStatuses.customTypes[getModelId(customType)] &&
       unSyncStatuses.includes(
-        modelsStatuses.customTypes[getModelId(customType)]
-      )
+        modelsStatuses.customTypes[getModelId(customType)],
+      ),
   );
 
   return {

@@ -39,14 +39,14 @@ describe("[Simulator module]", () => {
     it("should return the initial state if no action", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
       expect(simulatorReducer(dummySimulatorState, {})).toEqual(
-        dummySimulatorState
+        dummySimulatorState,
       );
     });
 
     it("should return the initial state if no matching action", () => {
       expect(
         // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"SIMU... Remove this comment to see the full error message
-        simulatorReducer(dummySimulatorState, { type: "NO.MATCH" })
+        simulatorReducer(dummySimulatorState, { type: "NO.MATCH" }),
       ).toEqual(dummySimulatorState);
     });
 
@@ -136,7 +136,7 @@ describe("[Simulator module]", () => {
         checkSimulatorSetupCreator.success({
           setupStatus: response,
           setupSteps: response2.steps,
-        })
+        }),
       );
       saga.next().put(updateManifestCreator({ value: undefined }));
       saga.next().isDone();
@@ -189,7 +189,7 @@ describe("[Simulator module]", () => {
         checkSimulatorSetupCreator.failure({
           setupSteps: payload.setupSteps,
           error: new Error(),
-        })
+        }),
       );
       saga
         .next()
@@ -217,12 +217,12 @@ describe("[Simulator module]", () => {
           checkSimulatorSetupCreator.failure({
             setupSteps: payload.setupSteps,
             error: new Error(),
-          })
+          }),
         )
         .put(
           modalOpenCreator({
             modalKey: ModalKeysEnum.SIMULATOR_SETUP,
-          })
+          }),
         )
         .run();
     });
@@ -265,7 +265,7 @@ describe("[Simulator module]", () => {
         createSliceMachineManagerMSWHandler({
           url: "http://localhost:3000/_manager",
           sliceMachineManager: manager,
-        })
+        }),
       );
 
       const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
@@ -281,7 +281,7 @@ describe("[Simulator module]", () => {
           openToasterCreator({
             type: ToasterType.SUCCESS,
             content: "Saved",
-          })
+          }),
         )
         .put(updateSliceMock(payload.payload))
         .put(updateSelectedSliceMocks({ mocks: payload.payload.mocks }))
@@ -317,7 +317,7 @@ describe("[Simulator module]", () => {
         createSliceMachineManagerMSWHandler({
           url: "http://localhost:3000/_manager",
           sliceMachineManager: manager,
-        })
+        }),
       );
 
       const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
@@ -335,7 +335,7 @@ describe("[Simulator module]", () => {
           openToasterCreator({
             type: ToasterType.ERROR,
             content: errorMessage,
-          })
+          }),
         )
         .put(saveSliceMockCreator.failure())
         .run();

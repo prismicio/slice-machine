@@ -25,7 +25,7 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   enterEditMode: (
     itemInfo: [string, F],
     modelFieldName: string | undefined,
-    index: number
+    index: number,
   ) => void;
   modelFieldName?: string;
   renderFieldAccessor?: (key: string) => string;
@@ -123,7 +123,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                             enterEditMode(
                               [key, item.value],
                               modelFieldName,
-                              index
+                              index,
                             )
                           }
                         />

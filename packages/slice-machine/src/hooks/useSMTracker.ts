@@ -46,7 +46,7 @@ const useSMTracker = () => {
 export default useSMTracker;
 
 function group(
-  libs: readonly LibraryUI[]
+  libs: readonly LibraryUI[],
 ): ReturnType<typeof telemetry.group> | void {
   const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
 
@@ -55,7 +55,7 @@ function group(
     downloadedLibsCount: downloadedLibs.length,
     npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
     downloadedLibs: downloadedLibs.map((l) =>
-      l.meta.name != null ? l.meta.name : "Unknown"
+      l.meta.name != null ? l.meta.name : "Unknown",
     ),
   });
 }

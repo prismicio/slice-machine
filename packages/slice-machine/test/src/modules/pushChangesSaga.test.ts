@@ -90,7 +90,7 @@ describe("[pushChanges module]", () => {
     beforeEach(() => {
       saga = testSaga(
         changesPushSaga,
-        changesPushCreator.request(changesPayload)
+        changesPushCreator.request(changesPayload),
       );
     });
     test("Pushes changes when API response is OK display success toaster", async () => {
@@ -106,7 +106,7 @@ describe("[pushChanges module]", () => {
           libraries: dummyServerState.libraries,
           remoteSlices: [],
           clientError: undefined,
-        })
+        }),
       );
 
       saga.next().put(changesPushCreator.success());
@@ -115,7 +115,7 @@ describe("[pushChanges module]", () => {
         openToasterCreator({
           content: "All slices and types have been pushed",
           type: ToasterType.SUCCESS,
-        })
+        }),
       );
 
       saga.next().isDone();
@@ -169,13 +169,13 @@ describe("[pushChanges module]", () => {
                   },
                 ],
               },
-            })
+            }),
           );
 
         saga.next().put(
           modalOpenCreator({
             modalKey: expectedModalKey,
-          })
+          }),
         );
 
         saga.next().isDone();
@@ -183,7 +183,7 @@ describe("[pushChanges module]", () => {
         // Wait for network request to be performed
         await new Promise((resolve) => setTimeout(resolve, 100));
         expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
-      }
+      },
     );
 
     test("Displays an error toaster when there is an API error on push", () => {
@@ -194,7 +194,7 @@ describe("[pushChanges module]", () => {
           content:
             "Something went wrong when pushing your changes. Check your terminal logs.",
           type: ToasterType.ERROR,
-        })
+        }),
       );
 
       saga.next().isDone();
@@ -213,7 +213,7 @@ describe("[pushChanges module]", () => {
           .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
 
         saga.next().isDone();
-      }
+      },
     );
 
     // TODO: unskip when invalid references are handled
@@ -246,13 +246,13 @@ describe("[pushChanges module]", () => {
             details: {
               customTypes: [{ id: "CT1" }, { id: "CT2" }],
             },
-          })
+          }),
         );
 
       saga.next().put(
         modalOpenCreator({
           modalKey: ModalKeysEnum.REFERENCES_MISSING_DRAWER,
-        })
+        }),
       );
 
       saga.next().isDone();

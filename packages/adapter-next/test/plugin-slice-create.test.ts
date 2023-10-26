@@ -186,7 +186,7 @@ test("model.json is formatted by default", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).toBe(prettier.format(contents, { parser: "json" }));
+	expect(contents).toBe(await prettier.format(contents, { parser: "json" }));
 });
 
 test("model.json is not formatted if formatting is disabled", async (ctx) => {
@@ -214,7 +214,7 @@ test("model.json is not formatted if formatting is disabled", async (ctx) => {
 	);
 
 	expect(contents).not.toBe(
-		prettier.format(contents, {
+		await prettier.format(contents, {
 			...prettierOptions,
 			parser: "json",
 		}),
@@ -351,7 +351,9 @@ test("component file is formatted by default", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).toBe(prettier.format(contents, { parser: "typescript" }));
+	expect(contents).toBe(
+		await prettier.format(contents, { parser: "typescript" }),
+	);
 });
 
 test("component file is not formatted if formatting is disabled", async (ctx) => {
@@ -379,7 +381,7 @@ test("component file is not formatted if formatting is disabled", async (ctx) =>
 	);
 
 	expect(contents).not.toBe(
-		prettier.format(contents, {
+		await prettier.format(contents, {
 			...prettierOptions,
 			parser: "typescript",
 		}),

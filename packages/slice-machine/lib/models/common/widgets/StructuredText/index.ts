@@ -39,8 +39,8 @@ const schema = yup.object().shape({
   config: createValidationSchema(
     removeProp(
       { ...(FormFields as Record<string, unknown>), ...ManualFields },
-      "id"
-    )
+      "id",
+    ),
   ),
 });
 

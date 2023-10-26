@@ -40,7 +40,7 @@ export function trackPushChangesSuccess(params: trackingParameters) {
       customTypesCreated: 0,
       customTypesModified: 0,
       customTypesDeleted: 0,
-    }
+    },
   );
 
   const slicesStats = changedSlices.reduce<{
@@ -70,13 +70,13 @@ export function trackPushChangesSuccess(params: trackingParameters) {
       slicesCreated: 0,
       slicesModified: 0,
       slicesDeleted: 0,
-    }
+    },
   );
 
   const total = changedSlices.length + changedCustomTypes.length;
   const missingScreenshots: number = changedSlices.reduce(
     (sum, sliceChange) => sum + countMissingScreenshots(sliceChange.slice),
-    0
+    0,
   );
   const duration = Date.now() - startTime;
 

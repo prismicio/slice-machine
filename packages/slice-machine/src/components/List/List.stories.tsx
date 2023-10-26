@@ -19,7 +19,7 @@ export const Default = {
         <ListHeader
           actions={
             <>
-              <Text color="grey11" component="span">
+              <Text color="grey11" component="span" noWrap>
                 Show code snippets?
               </Text>
               <Switch size="small" />

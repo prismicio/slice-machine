@@ -41,7 +41,7 @@ import { ToastMessageWithPath } from "@components/ToasterContainer";
 export const createCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPES/CREATE.REQUEST",
   "CUSTOM_TYPES/CREATE.RESPONSE",
-  "CUSTOM_TYPES/CREATE.FAILURE"
+  "CUSTOM_TYPES/CREATE.FAILURE",
 )<
   {
     id: string;
@@ -55,7 +55,7 @@ export const createCustomTypeCreator = createAsyncAction(
 >();
 
 export const renameAvailableCustomType = createAction(
-  "CUSTOM_TYPES/RENAME_CUSTOM_TYPE"
+  "CUSTOM_TYPES/RENAME_CUSTOM_TYPE",
 )<{
   renamedCustomType: CustomTypeSM;
 }>();
@@ -63,7 +63,7 @@ export const renameAvailableCustomType = createAction(
 export const deleteCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPES/DELETE.REQUEST",
   "CUSTOM_TYPES/DELETE.RESPONSE",
-  "CUSTOM_TYPES/DELETE.FAILURE"
+  "CUSTOM_TYPES/DELETE.FAILURE",
 )<
   {
     customTypeId: string;
@@ -85,15 +85,15 @@ type CustomTypesActions =
 
 // Selectors
 export const selectAllCustomTypes = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): LocalOrRemoteCustomType[] => Object.values(store.availableCustomTypes);
 
 export const selectAllCustomTypeIds = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): string[] => Object.keys(store.availableCustomTypes);
 
 export const selectAllCustomTypeLabels = (
-  store: SliceMachineStoreType
+  store: SliceMachineStoreType,
 ): string[] => {
   return Object.values(store.availableCustomTypes)
     .flatMap((localOrRemote) => {
@@ -108,7 +108,7 @@ export const selectAllCustomTypeLabels = (
 
 export const selectCustomTypeById = (
   store: SliceMachineStoreType,
-  id: string
+  id: string,
 ): LocalOrRemoteCustomType | null => store.availableCustomTypes[id];
 
 // Reducer
@@ -122,7 +122,7 @@ export const availableCustomTypesReducer: Reducer<
     case getType(refreshStateCreator): {
       const normalizedNewCustomType = normalizeFrontendCustomTypes(
         action.payload.localCustomTypes,
-        action.payload.remoteCustomTypes
+        action.payload.remoteCustomTypes,
       );
 
       return {
@@ -131,7 +131,7 @@ export const availableCustomTypesReducer: Reducer<
     }
     case getType(createCustomTypeCreator.success): {
       const normalizedNewCustomType = normalizeFrontendCustomType(
-        action.payload.newCustomType
+        action.payload.newCustomType,
       );
 
       return {
@@ -173,7 +173,7 @@ export const availableCustomTypesReducer: Reducer<
       if (hasLocalAndRemote(customType)) {
         const remoteOnlyCustomType: RemoteOnlyCustomType = omit(
           customType,
-          "local"
+          "local",
         );
         return {
           ...state,
@@ -190,7 +190,7 @@ export const availableCustomTypesReducer: Reducer<
       const sliceId = action.payload.sliceId;
 
       const customTypesUpdated: AvailableCustomTypesStoreType = Object.entries(
-        state
+        state,
       )
         .map<[string, LocalOrRemoteCustomType]>(
           ([customTypeId, customType]) => {
@@ -205,7 +205,7 @@ export const availableCustomTypesReducer: Reducer<
             }
 
             return [customTypeId, customType];
-          }
+          },
         )
         .reduce<AvailableCustomTypesStoreType>(
           (acc, [customTypeId, customType]) => {
@@ -214,7 +214,7 @@ export const availableCustomTypesReducer: Reducer<
               [customTypeId]: customType,
             };
           },
-          {}
+          {},
         );
 
       return customTypesUpdated;
@@ -237,8 +237,8 @@ export function* createCustomTypeSaga({
         payload.id,
         payload.label,
         payload.repeatable,
-        payload.format
-      )
+        payload.format,
+      ),
     );
     yield call(saveCustomType, newCustomType);
     yield put(createCustomTypeCreator.success({ newCustomType }));
@@ -252,7 +252,7 @@ export function* createCustomTypeSaga({
                 newPageType: true,
               }
             : undefined,
-      })
+      }),
     );
     yield put(
       openToasterCreator({
@@ -264,7 +264,7 @@ export function* createCustomTypeSaga({
           path: `./customtypes/${newCustomType.id}/index.json`,
         }),
         type: ToasterType.SUCCESS,
-      })
+      }),
     );
   } catch (e) {
     yield put(
@@ -274,7 +274,7 @@ export function* createCustomTypeSaga({
           plural: false,
         })} not saved`,
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
 }
@@ -283,7 +283,7 @@ export function* createCustomTypeSaga({
 function* handleCustomTypeRequests() {
   yield takeLatest(
     getType(createCustomTypeCreator.request),
-    withLoader(createCustomTypeSaga, LoadingKeysEnum.CREATE_CUSTOM_TYPE)
+    withLoader(createCustomTypeSaga, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   );
 }
 

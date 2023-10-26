@@ -27,7 +27,7 @@ export const createFieldNameFromKey = (key: string) =>
 
 export const createValidationArgs = (
   args: (string | number)[] | boolean | string | undefined,
-  defaultArgs: (string | number)[]
+  defaultArgs: (string | number)[],
 ) => {
   if (Array.isArray(args)) {
     return args;
@@ -92,7 +92,7 @@ export const createValidationSchema = (FormFields: {
               if (args && validator[func]) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 validator = validator[func](
-                  ...(Array.isArray(args) ? args : [args])
+                  ...(Array.isArray(args) ? args : [args]),
                 );
                 return;
               }
@@ -103,7 +103,7 @@ export const createValidationSchema = (FormFields: {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             [key]: validator,
           };
-        }, {})
+        }, {}),
     )
     .required()
     .default(undefined)

@@ -49,7 +49,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
     customTypeLabels: selectAllCustomTypeLabels(store),
     isCreateCustomTypeModalOpen: isModalOpen(
       store,
-      ModalKeysEnum.CREATE_CUSTOM_TYPE
+      ModalKeysEnum.CREATE_CUSTOM_TYPE,
     ),
     isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   }));
@@ -77,8 +77,8 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
     values: FormValues,
     setValues: (
       values: SetStateAction<FormValues>,
-      shouldValidate?: boolean
-    ) => void
+      shouldValidate?: boolean,
+    ) => void,
   ) => {
     if (isIdFieldPristine) {
       setValues({
@@ -96,8 +96,8 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
     setFieldValue: (
       field: string,
       value: string,
-      shouldValidate?: boolean
-    ) => Promise<unknown>
+      shouldValidate?: boolean,
+    ) => Promise<unknown>,
   ) => {
     void setFieldValue("id", e.target.value);
     setIsIdFieldPristine(false);

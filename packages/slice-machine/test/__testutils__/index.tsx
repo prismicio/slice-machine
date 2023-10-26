@@ -26,7 +26,7 @@ function render(
     preloadedState,
     store = configureStore(preloadedState).store,
     ...renderOptions
-  }: RenderArgs = {}
+  }: RenderArgs = {},
 ): RenderReturnType {
   if (!document.getElementById("__next")) {
     const div = document.createElement("div");

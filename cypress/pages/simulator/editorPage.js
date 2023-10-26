@@ -49,7 +49,7 @@ class EditorPage {
       .then((currentValue) => {
         if (currentValue === value) {
           throw new Error(
-            `Cannot toggle "${inputLabel}" to same value (${value})`
+            `Cannot toggle "${inputLabel}" to same value (${value})`,
           );
         }
       });

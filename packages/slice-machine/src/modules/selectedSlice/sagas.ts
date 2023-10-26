@@ -29,7 +29,7 @@ export function* updateSliceSaga({
     });
     const { errors } = (yield call(
       updateSliceApiClient,
-      component
+      component,
     )) as SagaReturnType<typeof updateSliceApiClient>;
     if (errors.length > 0) {
       return setData({
@@ -55,14 +55,14 @@ export function* updateSliceSaga({
     })) as SagaReturnType<typeof readSliceMocks>;
 
     yield put(
-      updateSliceCreator.success({ component: { ...component, mocks } })
+      updateSliceCreator.success({ component: { ...component, mocks } }),
     );
   } catch (e) {
     yield put(
       openToasterCreator({
         content: "Internal Error: Models & mocks not generated",
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
 }
@@ -70,7 +70,7 @@ export function* updateSliceSaga({
 function* watchSaveSlice() {
   yield takeLatest(
     getType(updateSliceCreator.request),
-    withLoader(updateSliceSaga, LoadingKeysEnum.SAVE_SLICE)
+    withLoader(updateSliceSaga, LoadingKeysEnum.SAVE_SLICE),
   );
 }
 

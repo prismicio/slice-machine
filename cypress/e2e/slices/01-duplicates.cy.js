@@ -19,7 +19,7 @@ describe("Duplicate Slices", () => {
     cy.get("input[data-cy=slice-name-input]").type(sliceName).blur();
     cy.get("[type=submit]").should("be.disabled");
     cy.get("[data-cy=slice-name-input-error]").contains(
-      "Slice name is already taken."
+      "Slice name is already taken.",
     );
   });
 });

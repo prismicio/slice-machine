@@ -10,7 +10,7 @@ import { type UseLabArgs, type UseLabReturnType, useLab } from "./useLab";
 export const LabsList: FC = () => {
   const [legacySliceUpgraderLab, setLegacySliceUpgraderLab] = useLabWithToast(
     "legacySliceUpgrader",
-    "Legacy Slice Upgrader"
+    "Legacy Slice Upgrader",
   );
 
   return (
@@ -53,7 +53,7 @@ function useLabWithToast(key: UseLabArgs, name: string): UseLabReturnType {
 
       openToaster(
         enabled ? `Labs: enabled ${name}` : `Labs: disabled ${name}`,
-        ToasterType.SUCCESS
+        ToasterType.SUCCESS,
       );
     } catch (error) {
       console.error(error);
@@ -62,7 +62,7 @@ function useLabWithToast(key: UseLabArgs, name: string): UseLabReturnType {
         enabled
           ? `Labs: failed to enable ${name}`
           : `Labs: failed to disable ${name}`,
-        ToasterType.ERROR
+        ToasterType.ERROR,
       );
     }
   };

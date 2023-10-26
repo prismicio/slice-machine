@@ -56,8 +56,8 @@ export const TableRow: FC<TableRowProps> = ({ children, onClick }) => {
         [styles.bodyRow]: section === "body",
       })}
       onClick={(event) => {
-        if (!onClick) return;
         const target = event.target as HTMLElement;
+        if (!onClick || !event.currentTarget.contains(target)) return;
         const focusableAncestor = findFocusableAncestor(target);
         if (focusableAncestor?.contains(event.currentTarget) ?? true) {
           onClick(event);

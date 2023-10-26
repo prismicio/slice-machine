@@ -16,11 +16,11 @@ type UseCustomTypesReturnType = {
 };
 
 export function useCustomTypes(
-  format: CustomTypeFormat
+  format: CustomTypeFormat,
 ): UseCustomTypesReturnType {
   const updateCustomTypes = useCallback(
     (data: CustomType[]) => updateData(getCustomTypes, [format], data),
-    [format]
+    [format],
   );
 
   return {
@@ -31,7 +31,7 @@ export function useCustomTypes(
 
 async function getCustomTypes(format: CustomTypeFormat): Promise<CustomType[]> {
   const { errors, models } = await managerClient.customTypes.readAllCustomTypes(
-    { format }
+    { format },
   );
 
   if (errors.length > 0) {
@@ -48,7 +48,7 @@ async function getCustomTypes(format: CustomTypeFormat): Promise<CustomType[]> {
 export function useCustomTypesAutoRevalidation(
   customTypes: CustomType[],
   format: CustomTypeFormat,
-  updateCustomTypes: (data: CustomType[]) => void
+  updateCustomTypes: (data: CustomType[]) => void,
 ): void {
   const { storeCustomTypes } = useSelector((store: SliceMachineStoreType) => ({
     storeCustomTypes: selectAllCustomTypes(store).filter(hasLocal),
@@ -56,7 +56,7 @@ export function useCustomTypesAutoRevalidation(
 
   useEffect(() => {
     const storeCustomTypesFiltered = storeCustomTypes.filter(
-      ({ local }) => local.format === format
+      ({ local }) => local.format === format,
     );
 
     if (
@@ -66,7 +66,7 @@ export function useCustomTypesAutoRevalidation(
         // the one from suspense because it could not be the same after some
         // modifications (rename, add/remove field, new tab, etc.)
         const currentCustomType = customTypes.find(
-          (ct2: CustomType) => ct2.id === ct.local.id
+          (ct2: CustomType) => ct2.id === ct.local.id,
         );
 
         return (
@@ -77,7 +77,7 @@ export function useCustomTypesAutoRevalidation(
       })
     ) {
       const newCustomTypes: CustomType[] = storeCustomTypesFiltered.map(
-        ({ local }) => CustomTypes.fromSM(local)
+        ({ local }) => CustomTypes.fromSM(local),
       );
 
       updateCustomTypes(newCustomTypes);

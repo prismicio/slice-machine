@@ -1,6 +1,9 @@
 export class SliceCard {
-  constructor(sliceName) {
-    this.root = `[aria-label="${sliceName} slice card"]`;
+  constructor(sliceName, variationName) {
+    this.root =
+      variationName !== undefined
+        ? `[aria-label="${sliceName} ${variationName} slice card"]`
+        : `[aria-label^="${sliceName}"][aria-label$="slice card"]`;
   }
 
   get content() {
@@ -12,7 +15,8 @@ export class SliceCard {
   }
 
   openScreenshotModal() {
-    cy.get(this.root).contains("Update screenshot").click();
+    cy.get(this.root).find('[aria-haspopup="menu"]').click();
+    cy.contains("Update screenshot").click();
     return this;
   }
 }
