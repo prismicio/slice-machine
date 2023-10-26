@@ -87,7 +87,7 @@ describe.skip("I am an existing SM user (Next) and I want to associate a Slice t
     cy.visit(`/custom-types/${customTypeId}`);
 
     cy.get("[data-cy=update-slices]").click();
-    cy.get(`[data-cy=shared-slice-selection-card-${sliceId}]`).click();
+    cy.get(`[data-cy=shared-slice-card-${sliceId}]`).click();
     cy.get("[data-cy=update-slices-modal]").submit();
 
     customTypeBuilder.save();

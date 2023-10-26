@@ -1,9 +1,14 @@
-import { beforeEach, expect, it, TestContext } from "vitest";
+import http from "node:http";
+import { beforeEach, expect, it, TestContext, vi } from "vitest";
+import { stdin as mockStdin } from "mock-stdin";
 
 import { createSliceMachineInitProcess, SliceMachineInitProcess } from "../src";
 import { UNIVERSAL } from "../src/lib/framework";
 
-import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
+import {
+	createPrismicAuthLoginResponse,
+	PrismicAuthLoginResponse,
+} from "./__testutils__/createPrismicAuthLoginResponse";
 import { mockPrismicRepositoryAPI } from "./__testutils__/mockPrismicRepositoryAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
@@ -15,6 +20,12 @@ import { watchStd } from "./__testutils__/watchStd";
 
 const initProcess = createSliceMachineInitProcess();
 const spiedManager = spyManager(initProcess);
+
+vi.mock("open", () => {
+	return {
+		default: vi.fn(),
+	};
+});
 
 beforeEach(() => {
 	setContext(initProcess, {
@@ -30,7 +41,9 @@ const mockPrismicAPIs = async (
 	ctx: TestContext,
 	initProcess: SliceMachineInitProcess,
 	domain?: string,
-): Promise<void> => {
+): Promise<{
+	prismicAuthLoginResponse: PrismicAuthLoginResponse;
+}> => {
 	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
@@ -44,9 +57,42 @@ const mockPrismicAPIs = async (
 			domain: domain ?? initProcess.context.repository?.domain,
 		},
 	});
+
+	return { prismicAuthLoginResponse };
 };
 
-it.skip("creates repository from context", async (ctx) => {
+const loginWithStdin = async (
+	prismicAuthLoginResponse: PrismicAuthLoginResponse,
+) => {
+	const stdin = mockStdin();
+
+	await new Promise((res) => setTimeout(res, 50));
+	expect(spiedManager.prismicRepository.create).toHaveBeenCalledOnce();
+
+	stdin.send("o").restore();
+	await new Promise((res) => setTimeout(res, 50));
+
+	const port: number =
+		spiedManager.user.getLoginSessionInfo.mock.results[0].value.port;
+	const body = JSON.stringify(prismicAuthLoginResponse);
+
+	// We use low-level `http` because node-fetch has some issue with 127.0.0.1 on CIs
+	const request = http.request({
+		host: "127.0.0.1",
+		port: `${port}`,
+		path: "/",
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Content-Length": Buffer.byteLength(body),
+		},
+	});
+	request.write(body);
+	request.end();
+	await new Promise((res) => setTimeout(res, 50));
+};
+
+it("create repository from context", async (ctx) => {
 	await mockPrismicAPIs(ctx, initProcess);
 
 	await watchStd(async () => {
@@ -57,10 +103,51 @@ it.skip("creates repository from context", async (ctx) => {
 	expect(spiedManager.prismicRepository.create).toHaveBeenCalledOnce();
 	expect(spiedManager.prismicRepository.create).toHaveBeenNthCalledWith(1, {
 		domain: "new-repo",
-		framework: UNIVERSAL.sliceMachineTelemetryID,
+		framework: UNIVERSAL.wroomTelemetryID,
+		starterId: undefined,
 	});
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.repository?.exists).toBe(true);
+});
+
+it("creates repository with a retry after a first fail", async (ctx) => {
+	const { prismicAuthLoginResponse } = await mockPrismicAPIs(ctx, initProcess);
+
+	// Mock only the first create call to reject first one and resole the second one
+	spiedManager.prismicRepository.create.mockImplementationOnce(() => {
+		return Promise.reject(new Error("Failed to create repository"));
+	});
+
+	await watchStd(async () => {
+		// @ts-expect-error - Accessing protected method
+		initProcess.createNewRepository();
+		await loginWithStdin(prismicAuthLoginResponse);
+	});
+
+	expect(spiedManager.prismicRepository.create).toHaveBeenCalledTimes(2);
+	// @ts-expect-error - Accessing protected property
+	expect(initProcess.context.repository?.exists).toBe(true);
+});
+
+it("fail to create repository after a second fail", async (ctx) => {
+	const { prismicAuthLoginResponse } = await mockPrismicAPIs(ctx, initProcess);
+
+	// Mock create call to reject first and second calls
+	spiedManager.prismicRepository.create.mockImplementation(() => {
+		return Promise.reject(new Error("Failed to create repository"));
+	});
+
+	await watchStd(async () => {
+		// @ts-expect-error - Accessing protected method
+		expect(initProcess.createNewRepository()).rejects.toThrow(
+			"Failed to create repository",
+		);
+		await loginWithStdin(prismicAuthLoginResponse);
+	});
+
+	expect(spiedManager.prismicRepository.create).toHaveBeenCalledTimes(2);
+	// @ts-expect-error - Accessing protected property
+	expect(initProcess.context.repository?.exists).toBe(false);
 });
 
 it("throws if context is missing framework", async () => {

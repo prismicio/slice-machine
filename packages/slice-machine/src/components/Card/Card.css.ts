@@ -25,8 +25,18 @@ export const size = styleVariants({
 });
 
 export const variant = styleVariants({
-  solid: [sprinkles({ backgroundColor: colors.grey3 })],
-  outlined: [sprinkles({ backgroundColor: colors.grey2 })],
+  solid: [
+    sprinkles({
+      backgroundColor: colors.grey3,
+      borderColor: selectors.checked(colors.purple10),
+    }),
+  ],
+  outlined: [
+    sprinkles({
+      backgroundColor: colors.grey2,
+      borderColor: selectors.checked(colors.purple8),
+    }),
+  ],
 });
 
 export const interactive = style({
@@ -40,10 +50,7 @@ export const interactive = style({
 export const interactiveVariant = {
   solid: sprinkles({
     backgroundColor: selectors.focusVisible(colors.grey5),
-    borderColor: {
-      ...selectors.checked(colors.purple10),
-      ...selectors.focusVisible(colors.purple10),
-    },
+    borderColor: selectors.focusVisible(colors.purple10),
   }),
   outlined: sprinkles({
     backgroundColor: {
@@ -53,7 +60,6 @@ export const interactiveVariant = {
     },
     borderColor: {
       ...selectors.active(colors.purple9),
-      ...selectors.checked(colors.purple8),
       ...selectors.focusVisible(colors.purple8),
     },
   }),

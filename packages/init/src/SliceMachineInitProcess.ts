@@ -198,106 +198,38 @@ export class SliceMachineInitProcess {
 		console.log(
 			`\n${chalk.bgGreen(` ${chalk.bold.white("Slice Machine")} `)} ${chalk.dim(
 				"→",
-			)} Initialization successful!`,
+			)} Initialization successful!
+			
+Continue with next steps in Slice Machine.
+`,
 		);
 
 		try {
-			const runSmCommand = this.context.projectInitialization?.patchedScript
-				? await getRunScriptCommand({
-						agent: this.context.packageManager || "npm",
-						script: "slicemachine",
-				  })
-				: await getExecuteCommand({
-						agent: this.context.packageManager || "npm",
-						script: "start-slicemachine",
-				  });
+			if (this.options.startSlicemachine) {
+				const runSmCommand = this.context.projectInitialization?.patchedScript
+					? await getRunScriptCommand({
+							agent: this.context.packageManager || "npm",
+							script: "slicemachine",
+					  })
+					: await getExecuteCommand({
+							agent: this.context.packageManager || "npm",
+							script: "start-slicemachine",
+					  });
 
-			const runProjectCommand = await getRunScriptCommand({
-				agent: this.context.packageManager || "npm",
-				script: "dev",
-			});
-
-			const apiEndpoints = this.manager.getAPIEndpoints();
-			const wroomHost = new URL(apiEndpoints.PrismicWroom).host;
-
-			const dashboardURL = new URL(
-				`https://${this.context.repository.domain}.${wroomHost}`,
-			)
-				.toString()
-				.replace(/\/$/, "");
-			const apiURL = new URL(
-				"./api/v2",
-				`https://${this.context.repository.domain}.cdn.${wroomHost}`,
-			).toString();
-
-			// We prefer to manually allow console logs despite the app being a CLI to catch wild/unwanted console logs better
-			// eslint-disable-next-line no-console
-			console.log(`
-  YOUR REPOSITORY
-    Page Builder         ${chalk.cyan(dashboardURL)}
-    API                  ${chalk.cyan(apiURL)}
-
-  RESOURCES
-    Documentation        ${chalk.cyan(
-			this.context.framework.prismicDocumentation,
-		)}
-    Getting help         ${chalk.cyan("https://community.prismic.io")}
-
-  GETTING STARTED
-    Run Slice Machine    ${chalk.cyan(runSmCommand)}
-    Run your project     ${chalk.cyan(runProjectCommand)}
-	`);
-
-			if (this.options.starter && this.options.repository) {
-				const { openDashboard } = await prompt<boolean, "openDashboard">({
-					type: "confirm",
-					name: "openDashboard",
-					message: "Would you like to open your repository?",
-					initial: true,
-				});
-
-				if (openDashboard) {
-					open(dashboardURL);
-				}
-			} else if (this.options.startSlicemachine) {
-				const pkgJSONPath = path.join(this.manager.cwd, "package.json");
-				const pkg = JSON.parse(await fs.readFile(pkgJSONPath, "utf-8"));
-				const scripts = pkg.scripts || {};
-
-				const finalSmCommand = (() => {
-					if (
-						scripts["dev"] &&
-						typeof scripts["dev"] === "string" &&
-						scripts["dev"].includes(":slicemachine")
-					) {
-						return {
-							command: runProjectCommand,
-							message: `Would you like to run your project and Slice Machine concurrently (${runProjectCommand})?`,
-						};
-					}
-
-					return {
-						command: runSmCommand,
-						message: `Would you like to run Slice Machine (${runSmCommand})?`,
-					};
-				})();
 				const { startSlicemachine } = await prompt<
 					boolean,
 					"startSlicemachine"
 				>({
 					type: "confirm",
 					name: "startSlicemachine",
-					message: finalSmCommand.message,
+					message: `Run Slice Machine (${chalk.cyan(runSmCommand)})?`,
 					initial: true,
 				});
 
 				if (startSlicemachine) {
-					const commandReturnValue = await execaCommand(
-						finalSmCommand.command,
-						{
-							env: { FORCE_COLOR: "true" },
-						},
-					).pipeStdout?.(process.stdout);
+					const commandReturnValue = await execaCommand(runSmCommand, {
+						env: { FORCE_COLOR: "true" },
+					}).pipeStdout?.(process.stdout);
 					if (commandReturnValue !== undefined) {
 						// eslint-disable-next-line no-console
 						console.log(commandReturnValue.stdout);
@@ -335,7 +267,7 @@ export class SliceMachineInitProcess {
 			if (ctLibrary.ids.length === 0) {
 				return true;
 			}
-		} catch (e) {
+		} catch (error) {
 			return true;
 		}
 
@@ -617,25 +549,9 @@ export class SliceMachineInitProcess {
 
 					if (!isLoggedIn) {
 						parentTask.output = "Press any key to open the browser to login...";
-						await new Promise((resolve) => {
-							const initialRawMode = !!process.stdin.isRaw;
-							process.stdin.setRawMode?.(true);
-							process.stdin.resume();
-							process.stdin.once("data", (data: Buffer) => {
-								process.stdin.setRawMode?.(initialRawMode);
-								process.stdin.pause();
-								resolve(data.toString("utf-8"));
-							});
-						});
-
+						await this.pressKeyToLogin();
 						parentTask.output = "Browser opened, waiting for you to login...";
-						const { port, url } = await this.manager.user.getLoginSessionInfo();
-						await this.manager.user.nodeLoginSession({
-							port,
-							onListenCallback() {
-								open(url);
-							},
-						});
+						await this.waitingForLogin();
 					}
 
 					parentTask.output = "";
@@ -666,6 +582,29 @@ export class SliceMachineInitProcess {
 				},
 			},
 		]);
+	}
+
+	protected async pressKeyToLogin(): Promise<void> {
+		await new Promise((resolve) => {
+			const initialRawMode = !!process.stdin.isRaw;
+			process.stdin.setRawMode?.(true);
+			process.stdin.resume();
+			process.stdin.once("data", (data: Buffer) => {
+				process.stdin.setRawMode?.(initialRawMode);
+				process.stdin.pause();
+				resolve(data.toString("utf-8"));
+			});
+		});
+	}
+
+	protected async waitingForLogin(): Promise<void> {
+		const { port, url } = await this.manager.user.getLoginSessionInfo();
+		await this.manager.user.nodeLoginSession({
+			port,
+			onListenCallback() {
+				open(url);
+			},
+		});
 	}
 
 	protected useRepositoryFlag(): Promise<void> {
@@ -939,13 +878,35 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						"Project framework must be available through context to run `createNewRepository`",
 					);
 
-					await this.manager.prismicRepository.create({
-						domain: this.context.repository.domain,
-						framework: this.context.framework.wroomTelemetryID,
-						starterId: this.context.starterId,
-					});
+					try {
+						await this.manager.prismicRepository.create({
+							domain: this.context.repository.domain,
+							framework: this.context.framework.wroomTelemetryID,
+							starterId: this.context.starterId,
+						});
+					} catch (error) {
+						// When we have an error here, it's most probably because the user has a stale SESSION cookie
+
+						// Ensure to logout user to remove SESSION and prismic-auth cookies
+						await this.manager.user.logout();
+
+						// Force a new login to get a brand new cookies value
+						task.output =
+							"It seems there is an authentication problem, press any key to open the browser to login again...";
+						await this.pressKeyToLogin();
+						task.output = "Browser opened, waiting for you to login...";
+						await this.waitingForLogin();
+
+						// Try to create repository again with the new cookies value
+						await this.manager.prismicRepository.create({
+							domain: this.context.repository.domain,
+							framework: this.context.framework.wroomTelemetryID,
+							starterId: this.context.starterId,
+						});
+					}
 
 					this.context.repository.exists = true;
+					task.output = "";
 					task.title = `Created new repository ${chalk.cyan(
 						this.context.repository.domain,
 					)}`;

@@ -31,7 +31,7 @@ class CustomTypeBuilder extends BaseBuilder {
   async addSliceToSliceZone(sliceId) {
     await cy.findAllByText(/Add slices/)[0].click();
     this.updateSliceZoneButton.click();
-    cy.get(`[data-cy=shared-slice-selection-card-${sliceId}]`).click();
+    cy.get(`[data-cy=shared-slice-card-${sliceId}]`).click();
     cy.get("[data-cy=update-slices-modal]").submit();
     return this;
   }

@@ -1,5 +1,3 @@
-import { Box } from "theme-ui";
-
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
 
@@ -10,6 +8,7 @@ import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 
 import { DropResult } from "react-beautiful-dnd";
+import { List } from "@src/components/List";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 
@@ -118,7 +117,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   };
 
   return (
-    <>
+    <List>
       <Zone
         zoneType="slice"
         tabId={undefined}
@@ -145,7 +144,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         dataCy="slice-non-repeatable-zone"
         isRepeatableCustomType={undefined}
       />
-      <Box mt={4} />
       <Zone
         zoneType="slice"
         tabId={undefined}
@@ -171,7 +169,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         dataCy="slice-repeatable-zone"
         isRepeatableCustomType={undefined}
       />
-    </>
+    </List>
   );
 };
 

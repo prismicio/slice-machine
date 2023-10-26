@@ -27,7 +27,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
+import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { SliceToastMessage } from "@components/ToasterContainer";
 
@@ -171,7 +171,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                           elems={components}
                           defineElementKey={(slice) => slice.model.name}
                           renderElem={(slice) => (
-                            <SharedSliceViewCard
+                            <SharedSliceCard
                               action={{
                                 type: "menu",
                                 onRemove: () => {
@@ -183,7 +183,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                                   openRenameSliceModal();
                                 },
                               }}
-                              isDeletedSlice={false}
+                              mode="navigation"
                               onUpdateScreenshot={() => {
                                 onOpenModal({
                                   sliceFilterFn: (s) =>
@@ -193,6 +193,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                                 });
                               }}
                               slice={slice}
+                              variant="solid"
                             />
                           )}
                           gridGap="32px 16px"

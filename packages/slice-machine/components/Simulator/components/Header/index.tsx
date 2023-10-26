@@ -1,16 +1,15 @@
 import router from "next/router";
 import { Text, Flex, Switch, Label } from "theme-ui";
 
-import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-
 import { Button } from "@components/Button";
+import VariationsPopover from "@components/Simulator/components/Header/VariationsPopover";
+import * as Links from "@components/Simulator/components/Header/links";
 import SliceMachineLogo from "@src/icons/SliceMachineLogo";
 import { useSelector } from "react-redux";
 import { selectSavingMock } from "@src/modules/simulator";
 
-import * as Links from "@lib/builders/SliceBuilder/links";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { VariationSM } from "@lib/models/common/Slice";
 
 const redirect = (
@@ -80,7 +79,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
         >
           {slice.model.name}
         </Text>
-        <VarationsPopover
+        <VariationsPopover
           defaultValue={variation}
           variations={slice.model.variations}
           onChange={(v) => redirect(slice, v, true)}
