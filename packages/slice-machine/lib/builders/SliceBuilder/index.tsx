@@ -67,7 +67,9 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
   else
     return (
       <SliceBuilderForVariation
-        updateSlice={updateSlice.bind(null, slice, setData)}
+        updateSlice={(slice) => {
+          updateSlice(slice, setData);
+        }}
         slice={slice}
         variation={variation}
         isTouched={isTouched}
@@ -77,7 +79,7 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
 };
 
 type SliceBuilderForVariationProps = {
-  updateSlice: () => void;
+  updateSlice: (slice: ComponentUI) => void;
   slice: ComponentUI;
   variation: VariationSM;
   isTouched: boolean;
@@ -107,7 +109,9 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
           <Button
             loading={data.loading}
             disabled={!isTouched || data.loading}
-            onClick={updateSlice}
+            onClick={() => {
+              updateSlice(slice);
+            }}
             data-cy="builder-save-button"
           >
             Save
@@ -121,7 +125,11 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
           gap={16}
           gridTemplateColumns="320px 1fr"
         >
-          <Sidebar slice={slice} variation={variation} />
+          <Sidebar
+            slice={slice}
+            variation={variation}
+            updateSlice={updateSlice}
+          />
           <FieldZones variation={variation} />
         </Box>
         <FloatingBackButton />

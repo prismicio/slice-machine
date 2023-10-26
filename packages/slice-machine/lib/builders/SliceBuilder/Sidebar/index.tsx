@@ -6,6 +6,7 @@ import VariationModal from "@builders/SliceBuilder/Sidebar/VariationModal";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
+import { Variation } from "@lib/models/common/Variation";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
@@ -14,9 +15,12 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 type SidebarProps = {
   slice: ComponentUI;
   variation: VariationSM;
+  updateSlice: (slice: ComponentUI) => void;
 };
 
-export const Sidebar: FC<SidebarProps> = ({ slice, variation }) => {
+export const Sidebar: FC<SidebarProps> = (props) => {
+  const { slice, variation, updateSlice } = props;
+
   const router = useRouter();
 
   const screenshotChangesModal = useScreenshotChangesModal();
@@ -73,10 +77,23 @@ export const Sidebar: FC<SidebarProps> = ({ slice, variation }) => {
         }}
         onSubmit={(id, name, copiedVariation) => {
           copyVariationSlice(id, name, copiedVariation);
+
+          // We have to immediately save the new variation to prevent an
+          // infinite loop related to screenshots handling.
+          const newVariation = Variation.copyValue(copiedVariation, id, name);
+          const newSlice = {
+            ...slice,
+            model: {
+              ...slice.model,
+              variations: [...slice.model.variations, newVariation],
+            },
+          };
+          updateSlice(newSlice);
+
           const url = SLICES_CONFIG.getBuilderPagePathname({
-            libraryName: slice.href,
-            sliceName: slice.model.name,
-            variationId: id,
+            libraryName: newSlice.href,
+            sliceName: newSlice.model.name,
+            variationId: newVariation.id,
           });
           void router.replace(url);
         }}
