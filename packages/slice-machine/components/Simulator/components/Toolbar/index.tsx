@@ -30,7 +30,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   actionsDisabled,
 }) => {
   const [selectedDropdown, setSelectedDropdown] = useState<string>(
-    ScreenSizeOptions.DESKTOP
+    ScreenSizeOptions.DESKTOP,
   );
 
   const dropDownChangeHandler = (selected: string) => {
@@ -45,7 +45,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const screenSizeChangeHandler = (newScreenDimensions: ScreenDimensions) => {
     const matchingIndex = Object.values(ScreenSizes).findIndex(
       (dimension) =>
-        JSON.stringify(dimension) === JSON.stringify(newScreenDimensions)
+        JSON.stringify(dimension) === JSON.stringify(newScreenDimensions),
     );
 
     const newDropDownState =

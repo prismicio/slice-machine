@@ -5,7 +5,7 @@ export function createCustomType(
   id: string,
   label: string,
   repeatable: boolean,
-  format: CustomTypeFormat
+  format: CustomTypeFormat,
 ): CustomType {
   const mainTab = makeMainTab(repeatable, format);
 
@@ -21,7 +21,7 @@ export function createCustomType(
 
 function makeMainTab(
   repeatable: boolean,
-  format: CustomTypeFormat
+  format: CustomTypeFormat,
 ): CustomType["json"] {
   if (repeatable === false && format === "page") {
     return { ...DEFAULT_MAIN_WITH_SLICE_ZONE, ...DEFAULT_SEO_TAB };

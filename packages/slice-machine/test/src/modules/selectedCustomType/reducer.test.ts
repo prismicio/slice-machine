@@ -32,14 +32,14 @@ describe("[Selected Custom type module]", () => {
     it("should return the initial state if no action", () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
       expect(selectedCustomTypeReducer(dummyCustomTypesState, {})).toEqual(
-        dummyCustomTypesState
+        dummyCustomTypesState,
       );
     });
 
     it("should return the initial state if no matching action", () => {
       expect(
         // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"CUST... Remove this comment to see the full error message
-        selectedCustomTypeReducer(dummyCustomTypesState, { type: "NO.MATCH" })
+        selectedCustomTypeReducer(dummyCustomTypesState, { type: "NO.MATCH" }),
       ).toEqual(dummyCustomTypesState);
     });
 
@@ -47,8 +47,8 @@ describe("[Selected Custom type module]", () => {
       expect(
         selectedCustomTypeReducer(
           dummyCustomTypesState,
-          cleanupCustomTypeStoreCreator()
-        )
+          cleanupCustomTypeStoreCreator(),
+        ),
       ).toEqual(null);
     });
 
@@ -59,8 +59,8 @@ describe("[Selected Custom type module]", () => {
           initCustomTypeStoreCreator({
             model: customTypeAsArray,
             remoteModel: undefined,
-          })
-        )
+          }),
+        ),
       ).toEqual({
         model: customTypeAsArray,
         initialModel: customTypeAsArray,
@@ -74,7 +74,7 @@ describe("[Selected Custom type module]", () => {
         dummyCustomTypesState,
         createTabCreator({
           tabId: newTabId,
-        })
+        }),
       );
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       const tabs = newState.model.tabs;
@@ -86,7 +86,7 @@ describe("[Selected Custom type module]", () => {
         dummyCustomTypesState,
         createTabCreator({
           tabId: newTabId,
-        })
+        }),
       );
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       const tabs2 = newState2.model.tabs;
@@ -101,7 +101,7 @@ describe("[Selected Custom type module]", () => {
         updateTabCreator({
           newTabId,
           tabId: initialTab.key,
-        })
+        }),
       );
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       const tabs = newState.model.tabs[0];
@@ -117,7 +117,7 @@ describe("[Selected Custom type module]", () => {
         updateTabCreator({
           newTabId,
           tabId: unknownTabId,
-        })
+        }),
       );
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -126,7 +126,7 @@ describe("[Selected Custom type module]", () => {
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       expect(!!newState.model.tabs.find((e) => e.key === unknownTabId)).toBe(
-        false
+        false,
       );
     });
     it("should add a field into a custom type given CUSTOM_TYPE/ADD_FIELD action", () => {
@@ -139,7 +139,7 @@ describe("[Selected Custom type module]", () => {
           tabId: initialTab.key,
           fieldId,
           field: widgets.Boolean.create(fieldId),
-        })
+        }),
       );
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -155,12 +155,12 @@ describe("[Selected Custom type module]", () => {
         deleteFieldCreator({
           tabId: initialTab.key,
           fieldId: initialTab.value[0].key,
-        })
+        }),
       );
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       expect(newState.model.tabs[0].value.length).toEqual(
-        initialTab.value.length - 1
+        initialTab.value.length - 1,
       );
     });
     it("should reorder fields into a custom type given CUSTOM_TYPE/REORDER_FIELD action", () => {
@@ -175,7 +175,7 @@ describe("[Selected Custom type module]", () => {
           tabId: initialTab.key,
           start: 0,
           end: 1,
-        })
+        }),
       );
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -189,7 +189,7 @@ describe("[Selected Custom type module]", () => {
           tabId: initialTab.key,
           start: 0,
           end: 1,
-        })
+        }),
       );
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -203,7 +203,7 @@ describe("[Selected Custom type module]", () => {
           tabId: initialTab.key,
           start: 0,
           end: 2,
-        })
+        }),
       );
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -219,7 +219,7 @@ describe("[Selected Custom type module]", () => {
           tabId: initialTab.key,
           start: 2,
           end: 0,
-        })
+        }),
       );
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -237,7 +237,7 @@ describe("[Selected Custom type module]", () => {
       dummyCustomTypesState,
       createSliceZoneCreator({
         tabId: initialTab.key,
-      })
+      }),
     );
 
     // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -260,16 +260,16 @@ describe("[Selected Custom type module]", () => {
         previousFieldId: field.key,
         newFieldId: "newKey",
         value: field.value,
-      })
+      }),
     );
 
     // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     expect(equal(newState.model.tabs[0].value, initialTab.value)).toEqual(
-      false
+      false,
     );
     // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     expect(equal(newState.model.tabs[0].value[0].value, field.value)).toEqual(
-      true
+      true,
     );
   });
   it("should not update the field into a custom type given CUSTOM_TYPE/REPLACE_FIELD action if the field is the same", () => {
@@ -284,7 +284,7 @@ describe("[Selected Custom type module]", () => {
         previousFieldId: field.key,
         newFieldId: field.key,
         value: field.value,
-      })
+      }),
     );
 
     // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -311,12 +311,12 @@ describe("[Selected Custom type module]", () => {
             placeholder: newPlaceholder,
           },
         },
-      })
+      }),
     );
 
     // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     expect(newState.model.tabs[0].value[0].value.config.placeholder).toEqual(
-      newPlaceholder
+      newPlaceholder,
     );
   });
 });

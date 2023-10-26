@@ -96,7 +96,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
                 key={customType.remote.id}
               />
             </tr>
-          )
+          ),
         )}
       </tbody>
     </Box>

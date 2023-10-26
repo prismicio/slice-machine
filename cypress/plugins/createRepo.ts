@@ -9,7 +9,7 @@ const [, , DOMAIN_NAME, PASSWORD, PRISMIC_URL] = process.argv;
 
 const main = async () => {
   const prismicAuthState = JSON.parse(
-    await fs.readFile(path.join(os.homedir(), ".prismic"), "utf8")
+    await fs.readFile(path.join(os.homedir(), ".prismic"), "utf8"),
   );
   const prismicAuthStateCookies = cookie.parse(prismicAuthState.cookies);
 

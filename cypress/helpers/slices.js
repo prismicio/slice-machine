@@ -24,7 +24,7 @@ export function createSlice(lib, id, name) {
 
   cy.location("pathname", { timeout: 20000 }).should(
     "eq",
-    `/slices/${lib}/${name}/default`
+    `/slices/${lib}/${name}/default`,
   );
   cy.readFile(TYPES_FILE).should("contains", name);
 }
@@ -121,7 +121,6 @@ function addFieldToSlice(elements, fieldType, fieldName, fieldId) {
  * @param {string} variationName Name of the variation.
  */
 export function addVariationToSlice(variationName) {
-  sliceBuilder.variationsDropdown.click({ force: true });
   sliceBuilder.addVariationButton.click();
 
   addVariationModal.root.within(() => {

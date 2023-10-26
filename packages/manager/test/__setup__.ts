@@ -74,9 +74,8 @@ vi.mock("fs/promises", async () => {
 	};
 
 	const memfs: typeof import("memfs") = await vi.importActual("memfs");
-	const _fs: typeof import("node:fs/promises") = await vi.importActual(
-		"node:fs/promises",
-	);
+	const _fs: typeof import("node:fs/promises") =
+		await vi.importActual("node:fs/promises");
 
 	const readFile = escapeOnigurumaMethod(
 		_fs.readFile,
@@ -111,6 +110,10 @@ vi.mock("module", async () => {
 		createRequire: (...args) => {
 			const actualCreateRequire = actual.createRequire(...args);
 
+			if (args[0].toString().includes("prettier")) {
+				return actualCreateRequire;
+			}
+
 			return {
 				...actualCreateRequire,
 				resolve: (id: string) => {
@@ -120,7 +123,7 @@ vi.mock("module", async () => {
 						return `${MOCK_BASE_DIRECTORY}/${id}`;
 					}
 
-					return actualCreateRequire(id);
+					return actualCreateRequire.resolve(id);
 				},
 			};
 		},

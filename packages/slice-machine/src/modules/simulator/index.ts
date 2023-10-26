@@ -47,7 +47,7 @@ export const initialState: SimulatorStoreType = {
 export const checkSimulatorSetupCreator = createAsyncAction(
   "SIMULATOR/CHECK_SETUP.REQUEST",
   "SIMULATOR/CHECK_SETUP.SUCCESS",
-  "SIMULATOR/CHECK_SETUP.FAILURE"
+  "SIMULATOR/CHECK_SETUP.FAILURE",
 )<
   {
     callback?: () => void;
@@ -65,13 +65,13 @@ export const checkSimulatorSetupCreator = createAsyncAction(
 export const connectToSimulatorIframeCreator = createAsyncAction(
   "SIMULATOR/CONNECT_TO_SIMULATOR_IFRAME.REQUEST",
   "SIMULATOR/CONNECT_TO_SIMULATOR_IFRAME.SUCCESS",
-  "SIMULATOR/CONNECT_TO_SIMULATOR_IFRAME.FAILURE"
+  "SIMULATOR/CONNECT_TO_SIMULATOR_IFRAME.FAILURE",
 )<undefined, undefined, undefined>();
 
 export const saveSliceMockCreator = createAsyncAction(
   "SIMULATOR/SAVE_MOCK.REQUEST",
   "SIMULATOR/SAVE_MOCK.SUCCESS",
-  "SIMULATOR/SAVE_MOCK.FAILURE"
+  "SIMULATOR/SAVE_MOCK.FAILURE",
 )<SaveSliceMockRequest, undefined, undefined>();
 
 type SimulatorActions = ActionType<
@@ -88,19 +88,19 @@ type SimulatorActions = ActionType<
 // Selectors
 
 export const selectSetupStatus = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): SimulatorStoreType["setupStatus"] => state.simulator.setupStatus;
 
 export const selectIsWaitingForIFrameCheck = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): boolean => state.simulator.isWaitingForIframeCheck;
 
 export const selectIframeStatus = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): string | null => state.simulator.iframeStatus;
 
 export const selectSetupSteps = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): SimulatorStoreType["setupSteps"] => state.simulator.setupSteps;
 
 export const selectSavingMock = (state: SliceMachineStoreType): boolean =>
@@ -109,7 +109,7 @@ export const selectSavingMock = (state: SliceMachineStoreType): boolean =>
 // Reducer
 export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
   state = initialState,
-  action
+  action,
 ) => {
   switch (action.type) {
     case getType(connectToSimulatorIframeCreator.request):
@@ -176,7 +176,7 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
 
 // Sagas
 export function* checkSetupSaga(
-  action: ReturnType<typeof checkSimulatorSetupCreator.request>
+  action: ReturnType<typeof checkSimulatorSetupCreator.request>,
 ) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -191,7 +191,7 @@ export function* checkSetupSaga(
         checkSimulatorSetupCreator.success({
           setupSteps: setupSteps.steps,
           setupStatus,
-        })
+        }),
       );
       yield put(updateManifestCreator({ value: setupStatus.value }));
       if (action.payload.callback) {
@@ -232,7 +232,7 @@ export function* failCheckSetupSaga({
   setupSteps,
 }: { setupSteps?: NonNullable<SimulatorStoreType["setupSteps"]> } = {}) {
   const isPreviewAvailableForFramework = (yield select(
-    selectIsSimulatorAvailableForFramework
+    selectIsSimulatorAvailableForFramework,
   )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
 
   if (!isPreviewAvailableForFramework) {
@@ -243,7 +243,7 @@ export function* failCheckSetupSaga({
     checkSimulatorSetupCreator.failure({
       setupSteps,
       error: new Error(),
-    })
+    }),
   );
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 }
@@ -262,7 +262,7 @@ export function* saveSliceMockSaga({
       openToasterCreator({
         type: ToasterType.SUCCESS,
         content: "Saved",
-      })
+      }),
     );
     yield put(updateSliceMock(payload));
 
@@ -273,7 +273,7 @@ export function* saveSliceMockSaga({
       openToasterCreator({
         type: ToasterType.ERROR,
         content: "Error saving content",
-      })
+      }),
     );
     yield put(saveSliceMockCreator.failure());
   }
@@ -283,21 +283,24 @@ export function* saveSliceMockSaga({
 function* watchCheckSetup() {
   yield takeLeading(
     getType(checkSimulatorSetupCreator.request),
-    withLoader(checkSetupSaga, LoadingKeysEnum.CHECK_SIMULATOR)
+    withLoader(checkSetupSaga, LoadingKeysEnum.CHECK_SIMULATOR),
   );
 }
 
 function* watchIframeCheck() {
   yield takeLeading(
     getType(connectToSimulatorIframeCreator.request),
-    withLoader(connectToSimulatorIframe, LoadingKeysEnum.CHECK_SIMULATOR_IFRAME)
+    withLoader(
+      connectToSimulatorIframe,
+      LoadingKeysEnum.CHECK_SIMULATOR_IFRAME,
+    ),
   );
 }
 
 function* watchSaveSliceMock() {
   yield takeLatest(
     getType(saveSliceMockCreator.request),
-    withLoader(saveSliceMockSaga, LoadingKeysEnum.SIMULATOR_SAVE_MOCK)
+    withLoader(saveSliceMockSaga, LoadingKeysEnum.SIMULATOR_SAVE_MOCK),
   );
 }
 

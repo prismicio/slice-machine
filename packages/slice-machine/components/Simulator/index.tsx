@@ -77,7 +77,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       env: "prod",
       unsplashUrl: endpoints.PrismicUnsplash,
     }),
-    [endpoints.PrismicOembed, endpoints.PrismicUnsplash]
+    [endpoints.PrismicOembed, endpoints.PrismicUnsplash],
   );
 
   const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
@@ -156,14 +156,14 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
   };
 
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
-    ScreenSizes[ScreenSizeOptions.DESKTOP]
+    ScreenSizes[ScreenSizeOptions.DESKTOP],
   );
 
   const sharedSlice = useMemo(() => Slices.fromSM(slice.model), [slice.model]);
 
   // state used only to store updates coming from the editor
   const [editorState, setEditorState] = useState<SharedSliceContent | null>(
-    null
+    null,
   );
 
   // computed state that takes the editorState if any change
@@ -190,7 +190,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
         }
       ).id,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   // When the content change, we re-render the content but overwrite the newly
@@ -202,7 +202,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
       id: renderedSliceId,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [sharedSlice, editorContent]
+    [sharedSlice, editorContent],
   );
 
   const apiContent = useThrottle(renderSliceMockCb, 800, [

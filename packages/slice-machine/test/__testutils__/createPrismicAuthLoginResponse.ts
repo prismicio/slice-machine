@@ -4,7 +4,7 @@ type PrismicAuthLoginResponse = {
 };
 
 export const createPrismicAuthLoginResponse = (
-  loginResponse?: Partial<PrismicAuthLoginResponse>
+  loginResponse?: Partial<PrismicAuthLoginResponse>,
 ): PrismicAuthLoginResponse => {
   return {
     email: `name@example.com`,

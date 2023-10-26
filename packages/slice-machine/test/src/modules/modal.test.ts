@@ -18,7 +18,7 @@ describe("[Modal module]", () => {
     it("should return the initial state if no matching action", () => {
       // @ts-expect-error TS(2322) FIXME: Type '"NO.MATCH"' is not assignable to type '"MODA... Remove this comment to see the full error message
       expect(modalReducer(undefined, { type: "NO.MATCH" })).toEqual(
-        modalInitialState
+        modalInitialState,
       );
     });
 

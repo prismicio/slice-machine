@@ -32,7 +32,7 @@ type StatusBadgeContent = {
 };
 
 function getStatusBadgeContent(
-  args: GetStatusBadgeContentArgs
+  args: GetStatusBadgeContentArgs,
 ): StatusBadgeContent {
   const modelTypeLabel = modelTypeLabels[args.modelType];
   switch (args.modelStatus) {

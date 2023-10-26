@@ -14,7 +14,7 @@ import { countMissingScreenshots } from "@src/domain/slice";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
-import { SharedSliceViewCard } from "@src/features/slices/sliceCards/SharedSliceViewCard";
+import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: LocalOrRemoteCustomType[];
@@ -33,7 +33,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
   const screenshotChangesSlices = unSyncedSlices.filter(
-    (s) => modelsStatuses.slices[s.model.id] !== ModelStatus.Deleted
+    (s) => modelsStatuses.slices[s.model.id] !== ModelStatus.Deleted,
   );
 
   return (
@@ -71,7 +71,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   (slice) =>
                     countMissingScreenshots(slice) > 0 &&
                     modelsStatuses.slices[slice.model.id] !==
-                      ModelStatus.Deleted
+                      ModelStatus.Deleted,
                 ) && (
                   <Text
                     sx={{
@@ -119,9 +119,10 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             renderElem={(slice) => {
               const modelStatus = modelsStatuses.slices[slice.model.id];
               return (
-                <SharedSliceViewCard
+                <SharedSliceCard
                   action={{ type: "status", authStatus, isOnline, modelStatus }}
-                  isDeletedSlice={modelStatus === ModelStatus.Deleted}
+                  isDeleted={modelStatus === ModelStatus.Deleted}
+                  mode="navigation"
                   onUpdateScreenshot={() => {
                     onOpenModal({
                       sliceFilterFn: (s) =>
@@ -129,6 +130,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                     });
                   }}
                   slice={slice}
+                  variant="solid"
                 />
               );
             }}

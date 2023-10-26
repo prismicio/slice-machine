@@ -7,7 +7,7 @@ import {
 
 export function useElementSize<E extends Element>(
   callback: (size: ResizeObserverSize, element: E) => void,
-  deps: DependencyList
+  deps: DependencyList,
 ): RefCallback<E> {
   const resizeObserverRef = useRef<ResizeObserver>();
   return useCallback((element: E | null) => {

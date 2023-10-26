@@ -21,7 +21,7 @@ describe("[Selected Slice sagas]", () => {
           component: dummySliceState,
           screenDimensions,
           method: "fromSimulator",
-        })
+        }),
       );
 
       saga.next().call(generateSliceScreenshotApiClient, {
@@ -39,7 +39,7 @@ describe("[Selected Slice sagas]", () => {
         openToasterCreator({
           url: "testScreenshotUrl",
           type: ToasterType.SCREENSHOT_CAPTURED,
-        })
+        }),
       );
 
       saga.next().put(
@@ -49,7 +49,7 @@ describe("[Selected Slice sagas]", () => {
           },
           component: dummySliceState,
           variationId: dummyModelVariationID,
-        })
+        }),
       );
 
       saga.next().isDone();
@@ -67,14 +67,14 @@ describe("[Selected Slice sagas]", () => {
           component: dummySliceState,
           screenDimensions,
           method: "fromSimulator",
-        })
+        }),
       ).next();
 
       saga.throw(new Error()).put(
         openToasterCreator({
           content: "Internal Error: Screenshot not saved",
           type: ToasterType.ERROR,
-        })
+        }),
       );
       saga.next().isDone();
     });

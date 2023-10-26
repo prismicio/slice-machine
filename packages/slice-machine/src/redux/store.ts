@@ -23,7 +23,7 @@ declare const window: {
 };
 
 export default function configureStore(
-  preloadedState: Partial<SliceMachineStoreType> = {}
+  preloadedState: Partial<SliceMachineStoreType> = {},
 ): { store: Store<SliceMachineStoreType>; persistor: Persistor } {
   const middlewares = [sagaMiddleware, routerMiddleware];
   const enhancers = [applyMiddleware(...middlewares)];
@@ -48,7 +48,7 @@ export default function configureStore(
     persistedReducer,
     preloadedState,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
-    composeEnhancers(...enhancers)
+    composeEnhancers(...enhancers),
   );
   const persistor = persistStore(store);
   sagaMiddleware.run(rootSaga);

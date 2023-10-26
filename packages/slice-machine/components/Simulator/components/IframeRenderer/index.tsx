@@ -9,7 +9,7 @@ import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,
-  RefCallback<HTMLIFrameElement>
+  RefCallback<HTMLIFrameElement>,
 ] {
   const [client, setClient] = useState<SimulatorClient | undefined>();
   const clientRef = useRef<SimulatorClient>();
@@ -149,7 +149,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
 
 export function getScaling(
   { height: iframeHeight, width: iframeWidth }: ScreenDimensions,
-  { height: viewportHeight, width: viewportWidth }: ScreenDimensions
+  { height: viewportHeight, width: viewportWidth }: ScreenDimensions,
 ): number {
   if (iframeWidth > viewportWidth || iframeHeight > viewportHeight) {
     return iframeWidth - viewportWidth > iframeHeight - viewportHeight

@@ -96,9 +96,9 @@ const DropZone: React.FC<DropZoneProps> = ({
     (state: SliceMachineStoreType) => ({
       isLoadingScreenshot: isLoading(
         state,
-        LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT
+        LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT,
       ),
-    })
+    }),
   );
 
   const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
@@ -107,7 +107,7 @@ const DropZone: React.FC<DropZoneProps> = ({
         variationID,
         slice,
         file,
-        isDragActive ? "dragAndDrop" : "upload"
+        isDragActive ? "dragAndDrop" : "upload",
       );
       setIsHover(false);
     },
@@ -117,7 +117,7 @@ const DropZone: React.FC<DropZoneProps> = ({
     if (file.size > 128000000) {
       return openToaster(
         "File is too big. Max file size: 128Mb.",
-        ToasterType.ERROR
+        ToasterType.ERROR,
       );
     }
     generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
@@ -131,7 +131,7 @@ const DropZone: React.FC<DropZoneProps> = ({
       const clipboardItems = await navigator.clipboard.read();
       if (clipboardItems[0] !== undefined) {
         const maybeType = clipboardItems[0].types.find((type) =>
-          imageTypes.map((t) => `image/${t}`).includes(type)
+          imageTypes.map((t) => `image/${t}`).includes(type),
         );
         if (maybeType !== undefined) {
           const blob = await clipboardItems[0].getType(maybeType);
@@ -153,7 +153,7 @@ const DropZone: React.FC<DropZoneProps> = ({
       }
       return openToaster(
         `Only files of type ${imageTypes.join(", ")} are accepted.`,
-        ToasterType.ERROR
+        ToasterType.ERROR,
       );
     }
   };

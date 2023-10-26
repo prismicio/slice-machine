@@ -57,7 +57,7 @@ describe("slices", () => {
       createSliceMachineManagerMSWHandler({
         url: "http://localhost:3000/_manager",
         sliceMachineManager: manager,
-      })
+      }),
     );
 
     const environment = {
@@ -188,7 +188,7 @@ describe("slices", () => {
     });
 
     await waitFor(() =>
-      expect(SegmentClient.prototype.track).toHaveBeenCalled()
+      expect(SegmentClient.prototype.track).toHaveBeenCalled(),
     );
 
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
@@ -202,7 +202,7 @@ describe("slices", () => {
           nodeVersion: process.versions.node,
         },
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -233,7 +233,7 @@ describe("slices", () => {
       createSliceMachineManagerMSWHandler({
         url: "http://localhost:3000/_manager",
         sliceMachineManager: manager,
-      })
+      }),
     );
 
     const environment = {

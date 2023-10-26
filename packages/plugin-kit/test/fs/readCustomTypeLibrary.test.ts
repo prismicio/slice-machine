@@ -1,8 +1,13 @@
 import { expect, it } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
-import { readCustomTypeLibrary, writeCustomTypeModel } from "../../src/fs";
+import {
+	buildCustomTypeLibraryDirectoryPath,
+	readCustomTypeLibrary,
+	writeCustomTypeModel,
+} from "../../src/fs";
 
 /**
  * !!! DO NOT use this mock factory in tests !!!
@@ -43,7 +48,7 @@ it("returns a list of custom types in the library", async (ctx) => {
 	});
 });
 
-it("sorts the list of Slice models", async (ctx) => {
+it("sorts the list of custom types in the library", async (ctx) => {
 	await ctx.pluginRunner.callHook("custom-type:create", {
 		model: model2,
 	});
@@ -70,13 +75,42 @@ it("sorts the list of Slice models", async (ctx) => {
 	});
 });
 
-it("returns an empty list of Slices if the library does not exist", async (ctx) => {
+it("returns an empty list of custom types if the library does not exist", async (ctx) => {
 	const res = await readCustomTypeLibrary({
 		helpers: ctx.pluginRunner.rawHelpers,
 	});
 
 	expect(res).toStrictEqual({
 		ids: [],
+	});
+});
+
+it("ignores non-custom type folders in the library", async (ctx) => {
+	await ctx.pluginRunner.callHook("custom-type:create", {
+		model: model1,
+	});
+
+	await writeCustomTypeModel({
+		model: model1,
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const customTypeLibraryDiractoryPath = buildCustomTypeLibraryDirectoryPath({
+		helpers: ctx.pluginRunner.rawHelpers,
+		absolute: true,
+	});
+	await fs.mkdir(path.join(customTypeLibraryDiractoryPath, model2.id), {
+		recursive: true,
+	});
+
+	const childDirs = await fs.readdir(customTypeLibraryDiractoryPath);
+	const res = await readCustomTypeLibrary({
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	expect(childDirs.sort()).toStrictEqual([model1.id, model2.id].sort());
+	expect(res).toStrictEqual({
+		ids: [model1.id].sort(),
 	});
 });
 

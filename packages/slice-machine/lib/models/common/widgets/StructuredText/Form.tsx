@@ -29,7 +29,7 @@ const _createInitialOptions = (str: string) => {
 
 function getValueFromYupContext(
   ctx: yup.TestContext<AnyObject>,
-  key: string
+  key: string,
 ): string | null {
   if (
     has("parent", ctx) &&
@@ -193,7 +193,7 @@ const WidgetForm: React.FC<{
               // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               if (acceptOptions.find((e) => e === opt.value)) {
                 return setAcceptOptions(
-                  acceptOptions.filter((e) => e !== opt.value)
+                  acceptOptions.filter((e) => e !== opt.value),
                 );
               }
               setAcceptOptions([...acceptOptions, opt.value]);

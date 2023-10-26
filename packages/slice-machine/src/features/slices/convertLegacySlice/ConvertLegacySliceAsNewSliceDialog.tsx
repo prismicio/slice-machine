@@ -86,14 +86,14 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
                       </label>
                       <FormInput
                         placeholder={`Pascalised Slice API ID (e.g. ${pascalize(
-                          slice.key
+                          slice.key,
                         )})`}
                         error={typeof formik.errors.sliceName === "string"}
                         value={formik.values.sliceName}
                         onValueChange={(value) =>
                           void formik.setFieldValue(
                             "sliceName",
-                            value.slice(0, 30)
+                            value.slice(0, 30),
                           )
                         }
                         data-cy="slice-name-input"

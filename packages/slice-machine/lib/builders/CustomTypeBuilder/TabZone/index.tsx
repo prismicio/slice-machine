@@ -13,6 +13,7 @@ import type {
 } from "@lib/models/common/CustomType";
 import type { SlicesSM } from "@lib/models/common/Slices";
 import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
+import { List } from "@src/components/List";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import type { SliceMachineStoreType } from "@src/redux/type";
 import { telemetry } from "@src/apiClient";
@@ -98,7 +99,7 @@ const TabZone: FC<TabZoneProps> = ({
       tabId,
       result.source.index,
       // @ts-expect-error We have to change the typeGuard above to cast properly the "result" property
-      result.destination.index
+      result.destination.index,
     );
   };
 
@@ -132,15 +133,15 @@ const TabZone: FC<TabZoneProps> = ({
   };
 
   return (
-    <Box backgroundColor="grey2" flexDirection="column" gap={8} height="100%">
-      <ErrorBoundary>
-        <Suspense
-          fallback={
-            <Box padding={32}>
-              <ProgressCircle />
-            </Box>
-          }
-        >
+    <ErrorBoundary>
+      <Suspense
+        fallback={
+          <Box padding={32}>
+            <ProgressCircle />
+          </Box>
+        }
+      >
+        <List style={{ flexGrow: 1 }}>
           {query.newPageType === undefined ? (
             <Zone
               zoneType="customType"
@@ -164,8 +165,10 @@ const TabZone: FC<TabZoneProps> = ({
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
                 `data${transformKeyAccessor(item.key)}`
               }
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-              renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
+              renderFieldAccessor={(key) =>
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+                `data${transformKeyAccessor(key)}`
+              }
               dataCy="ct-static-zone"
               isRepeatableCustomType={customType.repeatable}
             />
@@ -181,9 +184,9 @@ const TabZone: FC<TabZoneProps> = ({
             onCreateSliceZone={onCreateSliceZone}
             onDeleteSliceZone={onDeleteSliceZone}
           />
-        </Suspense>
-      </ErrorBoundary>
-    </Box>
+        </List>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

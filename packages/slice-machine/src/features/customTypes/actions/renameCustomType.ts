@@ -33,7 +33,7 @@ export async function renameCustomType({
       `${customTypesMessages.name({
         start: true,
         plural: false,
-      })} renamed`
+      })} renamed`,
     );
   } catch (e) {
     const errorMessage = `Internal Error: ${customTypesMessages.name({

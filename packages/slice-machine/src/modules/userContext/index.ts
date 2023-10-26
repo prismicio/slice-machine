@@ -43,15 +43,15 @@ export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
 >();
 
 export const hasSeenTutorialsToolTipCreator = createAction(
-  "USER_CONTEXT/VIEW_TUTORIALS_TOOL_TIP"
+  "USER_CONTEXT/VIEW_TUTORIALS_TOOL_TIP",
 )();
 
 export const hasSeenSimulatorToolTipCreator = createAction(
-  "USER_CONTEXT/VIEW_SIMULATOR_TOOL_TIP"
+  "USER_CONTEXT/VIEW_SIMULATOR_TOOL_TIP",
 )();
 
 export const hasSeenChangesToolTipCreator = createAction(
-  "USER_CONTEXT/VIEW_CHANGES_TOOL_TIP"
+  "USER_CONTEXT/VIEW_CHANGES_TOOL_TIP",
 )();
 
 type userContextActions = ActionType<
@@ -73,23 +73,23 @@ export const getUserReview = (state: SliceMachineStoreType): UserReviewState =>
   };
 
 export const getUpdatesViewed = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): UserContextStoreType["updatesViewed"] => state.userContext.updatesViewed;
 
 export const userHasSeenTutorialsToolTip = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): boolean => state.userContext.hasSeenTutorialsToolTip || false;
 
 export const userHasSeenSimulatorToolTip = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): boolean => state.userContext.hasSeenSimulatorToolTip || false;
 
 export const userHasSeenChangesToolTip = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): boolean => state.userContext.hasSeenChangesToolTip || false;
 
 export const getLastSyncChange = (
-  state: SliceMachineStoreType
+  state: SliceMachineStoreType,
 ): number | null => state.userContext.lastSyncChange;
 
 // Reducer
@@ -150,7 +150,7 @@ export const userContextReducer: Reducer<
 };
 
 const getAuthStatus = (
-  clientError: ErrorWithStatus | undefined
+  clientError: ErrorWithStatus | undefined,
 ): AuthStatus => {
   switch (clientError?.status) {
     case undefined: {

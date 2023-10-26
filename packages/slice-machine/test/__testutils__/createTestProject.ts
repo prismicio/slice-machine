@@ -17,7 +17,7 @@ export const createTestProject = async (
   > & {
     adapter?: string | SliceMachinePlugin;
     plugins?: (string | SliceMachinePlugin)[];
-  } = {}
+  } = {},
 ): Promise<string> => {
   const state = expect.getState();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -26,7 +26,7 @@ export const createTestProject = async (
   await fs.mkdir(os.tmpdir(), { recursive: true });
 
   const root = await fs.mkdtemp(
-    path.join(os.tmpdir(), `project-${testNameDigest}-`)
+    path.join(os.tmpdir(), `project-${testNameDigest}-`),
   );
 
   await fs.writeFile(path.join(root, "package.json"), JSON.stringify({}));
@@ -47,7 +47,7 @@ export const createTestProject = async (
       ...sliceMachineConfig,
       adapter: adapterName,
       plugins,
-    })
+    }),
   );
 
   return root;

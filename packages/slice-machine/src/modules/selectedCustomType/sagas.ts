@@ -12,7 +12,7 @@ import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMess
 export function* saveCustomTypeSaga() {
   try {
     const currentCustomType = (yield select(
-      selectCurrentCustomType
+      selectCurrentCustomType,
     )) as ReturnType<typeof selectCurrentCustomType>;
 
     if (!currentCustomType) {
@@ -21,7 +21,7 @@ export function* saveCustomTypeSaga() {
 
     const { errors } = (yield call(
       saveCustomType,
-      currentCustomType
+      currentCustomType,
     )) as Awaited<ReturnType<typeof saveCustomType>>;
     if (errors.length) {
       throw errors;
@@ -45,7 +45,7 @@ export function* saveCustomTypeSaga() {
           path: `./customtypes/${currentCustomType.id}/index.json`,
         }),
         type: ToasterType.SUCCESS,
-      })
+      }),
     );
   } catch (e) {
     // Unknown errors
@@ -53,7 +53,7 @@ export function* saveCustomTypeSaga() {
       openToasterCreator({
         content: "Internal Error: Custom type not saved",
         type: ToasterType.ERROR,
-      })
+      }),
     );
   }
 }
@@ -62,7 +62,7 @@ export function* saveCustomTypeSaga() {
 function* watchSaveCustomType() {
   yield takeLatest(
     getType(saveCustomTypeCreator.request),
-    withLoader(saveCustomTypeSaga, LoadingKeysEnum.SAVE_CUSTOM_TYPE)
+    withLoader(saveCustomTypeSaga, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
   );
 }
 

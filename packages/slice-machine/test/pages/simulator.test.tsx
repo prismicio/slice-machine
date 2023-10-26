@@ -18,7 +18,7 @@ import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test"
 vi.mock("next/router", () => require("next-router-mock"));
 vi.mock("next/dist/client/router", () => require("next-router-mock"));
 mockRouter.useParser(
-  createDynamicRouteParser(["/slices/[lib]/[sliceName]/[variation]/simulator"])
+  createDynamicRouteParser(["/slices/[lib]/[sliceName]/[variation]/simulator"]),
 );
 // mock simulator client, it would be nice not to have to do this :/
 vi.mock("@prismicio/simulator", () => {
@@ -98,7 +98,7 @@ describe.skip("simulator", () => {
       createSliceMachineManagerMSWHandler({
         url: "http://localhost:3000/_manager",
         sliceMachineManager: manager,
-      })
+      }),
     );
 
     vi.useFakeTimers();
@@ -282,7 +282,7 @@ describe.skip("simulator", () => {
     });
 
     await waitFor(() =>
-      expect(SegmentClient.prototype.track).toHaveBeenCalled()
+      expect(SegmentClient.prototype.track).toHaveBeenCalled(),
     );
 
     expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
@@ -293,7 +293,7 @@ describe.skip("simulator", () => {
           version: state.environment.changelog.sliceMachine.currentVersion,
         },
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
 
     const button = App.container.querySelector('[data-cy="save-mock"]');
@@ -328,7 +328,7 @@ describe.skip("simulator", () => {
         libraryName: "slices",
         mocks: expectedMock,
       }),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 });

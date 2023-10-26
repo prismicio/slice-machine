@@ -25,7 +25,7 @@ export async function deleteCustomType({
       `${customTypesMessages.name({
         start: true,
         plural: false,
-      })} deleted`
+      })} deleted`,
     );
   } catch (e) {
     const errorMessage = `Internal Error: ${customTypesMessages.name({

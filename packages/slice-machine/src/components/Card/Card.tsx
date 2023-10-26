@@ -17,21 +17,44 @@ import * as styles from "./Card.css";
 
 type CardProps = PropsWithChildren<
   {
+    checked?: boolean;
     size?: keyof typeof styles.size;
     style?: CSSProperties;
     variant?: keyof typeof styles.variant;
   } & (
-    | { interactive?: false }
-    | ({ interactive: true; href: string } & {
-        component?: "a" | FC<LinkProps>;
-      })
-    | ({ interactive: true; href?: undefined } & {
-        checked?: boolean;
+    | // Props for rendering a non-interactive `div` element.
+    NarrowedCardProps<{ interactive?: false }>
+    // Props for rendering an interactive `div` element.
+    | NarrowedCardProps<{
+        interactive: true;
         disabled?: boolean;
         onClick?: (event: MouseEvent) => void;
-      })
+      }>
+    // Props for rendering an `a` element.
+    | NarrowedCardProps<{ interactive: true; href: string; component?: "a" }>
+    // Props for rendering any link `component`.
+    | NarrowedCardProps<{
+        interactive: true;
+        href: string;
+        component: FC<LinkProps>;
+        replace?: boolean;
+      }>
   )
 >;
+
+// This type is used to spread the `Card`'s `otherProps` before they can be
+// narrowed down.
+type NarrowedCardProps<T> = NarrowedProps<
+  T,
+  "component" | "disabled" | "href" | "interactive" | "onClick" | "replace"
+>;
+
+/**
+ * Construct a type with the properties of T and a set of optional properties K
+ * (excluding those already in type T).
+ */
+type NarrowedProps<T, K extends PropertyKey> = T &
+  Omit<Partial<Record<K, never>>, keyof T>;
 
 type LinkProps = {
   href: string | UrlObject;
@@ -39,66 +62,56 @@ type LinkProps = {
 };
 
 export const Card: FC<CardProps> = (props) => {
-  const { size = "medium", variant = "solid" } = props;
+  const {
+    checked = false,
+    size = "medium",
+    variant = "solid",
+    interactive: _interactive,
+    disabled: _disabled,
+    onClick: _onClick,
+    href: _href,
+    component = "a",
+    replace: _replace,
+    ...otherProps
+  } = props;
   const elementProps = {
+    ...otherProps,
     className: clsx(styles.root, styles.size[size], styles.variant[variant], {
       [styles.interactive]: props.interactive,
       [styles.interactiveVariant[variant]]: props.interactive,
     }),
+    "data-state": checked === true ? "checked" : undefined,
   };
   if (props.interactive === true && props.href === undefined) {
-    const {
-      size: _size,
-      variant: _variant,
-      interactive: _interactive,
-      checked,
-      disabled,
-      onClick,
-      ...otherProps
-    } = props;
     return (
       <div
-        {...otherProps}
         {...elementProps}
         // TODO: add missing ARIA attributes and keyboard event handlers.
-        data-disabled={disabled === true ? "" : undefined}
-        data-state={checked === true ? "checked" : undefined}
+        data-disabled={props.disabled === true ? "" : undefined}
         onClick={(event) => {
-          if (disabled === true || onClick === undefined) return;
+          if (props.disabled === true || props.onClick === undefined) return;
           const target = event.target as HTMLElement;
           if (findFocusableAncestor(target) === event.currentTarget) {
-            onClick(event);
+            props.onClick(event);
           }
         }}
-        tabIndex={disabled === true ? undefined : 0}
+        tabIndex={props.disabled === true ? undefined : 0}
       />
     );
   } else if (props.interactive === true) {
-    const {
-      size: _size,
-      variant: _variant,
-      interactive: _interactive,
-      component = "a",
-      ...otherProps
-    } = props;
     return createElement(component, {
-      ...otherProps,
       ...elementProps,
+      href: props.href,
       onClick: (event) => {
         const target = event.target as HTMLElement;
         if (findFocusableAncestor(target) !== event.currentTarget) {
           event.preventDefault();
         }
       },
+      ...(component === "a" ? {} : { replace: props.replace }),
     });
   } else {
-    const {
-      size: _size,
-      variant: _variant,
-      interactive: _interactive,
-      ...otherProps
-    } = props;
-    return <div {...otherProps} {...elementProps} />;
+    return <div {...elementProps} />;
   }
 };
 

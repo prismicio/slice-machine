@@ -12,9 +12,8 @@ import { ModelStatus } from "@lib/models/common/ModelStatus";
 
 const mockSelector = vi.fn();
 vi.mock("react-redux", async () => {
-  const actual: typeof import("react-redux") = await vi.importActual(
-    "react-redux"
-  );
+  const actual: typeof import("react-redux") =
+    await vi.importActual("react-redux");
 
   return {
     ...actual,

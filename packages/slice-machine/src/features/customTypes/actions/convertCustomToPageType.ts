@@ -9,7 +9,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
 export async function convertCustomToPageType(
   customType: CustomType,
-  saveCustomType: (customType: CustomType) => void
+  saveCustomType: (customType: CustomType) => void,
 ) {
   const customTypesMessages =
     CUSTOM_TYPES_MESSAGES[customType.format as CustomTypeFormat];
@@ -27,14 +27,14 @@ export async function convertCustomToPageType(
       `${customTypesMessages.name({
         start: true,
         plural: false,
-      })} converted to page type`
+      })} converted to page type`,
     );
   } catch (e) {
     toast.error(
       `Internal Error: ${customTypesMessages.name({
         start: true,
         plural: false,
-      })} not converted to page type`
+      })} not converted to page type`,
     );
   }
 }

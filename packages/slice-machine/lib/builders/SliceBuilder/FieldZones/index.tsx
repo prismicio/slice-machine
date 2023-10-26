@@ -1,5 +1,3 @@
-import { Box } from "theme-ui";
-
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
 
@@ -10,6 +8,7 @@ import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 
 import { DropResult } from "react-beautiful-dnd";
+import { List } from "@src/components/List";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 
@@ -66,7 +65,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           previousKey,
           newKey,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          mockValue
+          mockValue,
         );
       } else {
         deleteSliceWidgetMock(variation.id, widgetArea, newKey);
@@ -93,7 +92,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!widget) {
         console.log(
-          `Could not find widget with type name "${widgetTypeName}". Please contact us!`
+          `Could not find widget with type name "${widgetTypeName}". Please contact us!`,
         );
       }
 
@@ -102,7 +101,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         widgetArea,
         id,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        widget.create(label) as NestableWidget
+        widget.create(label) as NestableWidget,
       );
     };
 
@@ -113,12 +112,12 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       variation.id,
       widgetArea,
       result.source.index,
-      result.destination?.index ?? undefined
+      result.destination?.index ?? undefined,
     );
   };
 
   return (
-    <>
+    <List>
       <Zone
         zoneType="slice"
         tabId={undefined}
@@ -145,7 +144,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         dataCy="slice-non-repeatable-zone"
         isRepeatableCustomType={undefined}
       />
-      <Box mt={4} />
       <Zone
         zoneType="slice"
         tabId={undefined}
@@ -171,7 +169,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         dataCy="slice-repeatable-zone"
         isRepeatableCustomType={undefined}
       />
-    </>
+    </List>
   );
 };
 

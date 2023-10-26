@@ -1,10 +1,14 @@
-import { Box, Text } from "@prismicio/editor-ui";
-import type { FC, PropsWithChildren, ReactNode } from "react";
+import { Text } from "@prismicio/editor-ui";
+import type { CSSProperties, FC, PropsWithChildren, ReactNode } from "react";
 
 import * as styles from "./List.css";
 
-export const List: FC<PropsWithChildren> = (props) => (
-  <article {...props} className={styles.root} />
+type ListProps = PropsWithChildren<{
+  style?: CSSProperties;
+}>;
+
+export const List: FC<ListProps> = (props) => (
+  <div {...props} className={styles.root} />
 );
 
 type ListHeaderProps = PropsWithChildren<{
@@ -18,13 +22,17 @@ export const ListHeader: FC<ListHeaderProps> = ({
   toggle,
   ...otherProps
 }) => (
-  <header {...otherProps} className={styles.header}>
-    <Text color="grey11" component="span" variant="smallBold">
+  <div {...otherProps} className={styles.header}>
+    <Text color="grey11" component="span" noWrap variant="bold">
       {children}
     </Text>
     {toggle}
-    <Box flexGrow={1} justifyContent="end">
-      {actions}
-    </Box>
-  </header>
+    {Boolean(actions) ? (
+      <div className={styles.headerActions}>{actions}</div>
+    ) : null}
+  </div>
+);
+
+export const ListItem: FC = (props) => (
+  <div {...props} className={styles.item} />
 );

@@ -28,14 +28,14 @@ export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
 }>();
 
 export const cleanupCustomTypeStoreCreator = createAction(
-  "CUSTOM_TYPE/CLEANUP"
+  "CUSTOM_TYPE/CLEANUP",
 )();
 
 // Async actions
 export const saveCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPE/SAVE.REQUEST",
   "CUSTOM_TYPE/SAVE.RESPONSE",
-  "CUSTOM_TYPE/SAVE.FAILURE"
+  "CUSTOM_TYPE/SAVE.FAILURE",
 )<undefined, { customType: CustomTypeSM }>();
 
 // Tab actions
@@ -79,13 +79,13 @@ export const reorderFieldCreator = createAction("CUSTOM_TYPE/REORDER_FIELD")<{
 
 // Slice zone actions
 export const createSliceZoneCreator = createAction(
-  "CUSTOM_TYPE/CREATE_SLICE_ZONE"
+  "CUSTOM_TYPE/CREATE_SLICE_ZONE",
 )<{
   tabId: string;
 }>();
 
 export const deleteSliceZoneCreator = createAction(
-  "CUSTOM_TYPE/DELETE_SLICE_ZONE"
+  "CUSTOM_TYPE/DELETE_SLICE_ZONE",
 )<{
   tabId: string;
 }>();
@@ -97,21 +97,21 @@ export type ReplaceSharedSliceCreatorPayload = {
 };
 
 export const deleteSharedSliceCreator = createAction(
-  "CUSTOM_TYPE/DELETE_SHARED_SLICE"
+  "CUSTOM_TYPE/DELETE_SHARED_SLICE",
 )<{
   tabId: string;
   sliceId: string;
 }>();
 
 export const renameSelectedCustomTypeLabel = createAction(
-  "CUSTOM_TYPE/RENAME_CUSTOM_TYPE"
+  "CUSTOM_TYPE/RENAME_CUSTOM_TYPE",
 )<{
   newLabel: string;
 }>();
 
 // Group actions (can be grouped into the field actions probably)
 export const addFieldIntoGroupCreator = createAction(
-  "CUSTOM_TYPE/GROUP/ADD_FIELD"
+  "CUSTOM_TYPE/GROUP/ADD_FIELD",
 )<{
   tabId: string;
   groupId: string;
@@ -120,7 +120,7 @@ export const addFieldIntoGroupCreator = createAction(
 }>();
 
 export const replaceFieldIntoGroupCreator = createAction(
-  "CUSTOM_TYPE/GROUP/REPLACE_FIELD"
+  "CUSTOM_TYPE/GROUP/REPLACE_FIELD",
 )<{
   tabId: string;
   groupId: string;
@@ -130,7 +130,7 @@ export const replaceFieldIntoGroupCreator = createAction(
 }>();
 
 export const reorderFieldIntoGroupCreator = createAction(
-  "CUSTOM_TYPE/GROUP/REORDER_FIELD"
+  "CUSTOM_TYPE/GROUP/REORDER_FIELD",
 )<{
   tabId: string;
   groupId: string;
@@ -139,7 +139,7 @@ export const reorderFieldIntoGroupCreator = createAction(
 }>();
 
 export const deleteFieldIntoGroupCreator = createAction(
-  "CUSTOM_TYPE/GROUP/DELETE_FIELD"
+  "CUSTOM_TYPE/GROUP/DELETE_FIELD",
 )<{
   tabId: string;
   groupId: string;

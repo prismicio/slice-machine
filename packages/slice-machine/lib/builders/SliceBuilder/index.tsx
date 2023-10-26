@@ -1,18 +1,16 @@
-import { Button } from "@prismicio/editor-ui";
+import { Box, Button } from "@prismicio/editor-ui";
 import React, { useState, useEffect } from "react";
 
 import { handleRemoteResponse } from "@src/modules/toaster/utils";
 
-import { BaseStyles, Box, Grid } from "theme-ui";
-
 import FieldZones from "./FieldZones";
-import SideBar from "./SideBar";
-import Header from "./Header";
+import { Sidebar } from "./Sidebar";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 
+import SimulatorButton from "@builders/SliceBuilder/SimulatorButton";
 import {
   AppLayout,
   AppLayoutActions,
@@ -21,44 +19,28 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
-import SimulatorButton from "@lib/builders/SliceBuilder/Header/SimulatorButton";
-import { SliceSM, VariationSM } from "@lib/models/common/Slice";
+import { VariationSM } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
 import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import { isSelectedSliceTouched } from "@src/modules/selectedSlice/selectors";
-import { getRemoteSlice } from "@src/modules/slices";
-import { useModelStatus } from "@src/hooks/useModelStatus";
 import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
-import {
-  LocalAndRemoteSlice,
-  LocalOnlySlice,
-} from "@lib/models/common/ModelData";
 
 export type SliceBuilderState = {
-  imageLoading: boolean;
   loading: boolean;
   done: boolean;
-  error: null | string;
-  status: number | null;
 };
 
 export const initialState: SliceBuilderState = {
-  imageLoading: false,
   loading: false,
   done: false,
-  error: null,
-  status: null,
 };
 
 const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
   const { openToaster, updateSlice } = useSliceMachineActions();
-  const { isTouched, remoteSlice } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isTouched: isSelectedSliceTouched(store, slice.from, slice.model.id),
-      remoteSlice: getRemoteSlice(store, slice.model.id),
-    })
+  const isTouched = useSelector((store: SliceMachineStoreType) =>
+    isSelectedSliceTouched(store, slice.from, slice.model.id),
   );
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
@@ -85,10 +67,11 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
   else
     return (
       <SliceBuilderForVariation
-        updateSlice={updateSlice.bind(null, slice, setData)}
+        updateSlice={(slice) => {
+          updateSlice(slice, setData);
+        }}
         slice={slice}
         variation={variation}
-        remoteSlice={remoteSlice}
         isTouched={isTouched}
         data={data}
       />
@@ -96,10 +79,9 @@ const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
 };
 
 type SliceBuilderForVariationProps = {
-  updateSlice: () => void;
+  updateSlice: (slice: ComponentUI) => void;
   slice: ComponentUI;
   variation: VariationSM;
-  remoteSlice: SliceSM | undefined;
   isTouched: boolean;
   data: SliceBuilderState;
 };
@@ -107,23 +89,12 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
   updateSlice,
   slice,
   variation,
-  remoteSlice,
   isTouched,
   data,
 }) => {
-  const { isSimulatorAvailableForFramework } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      isSimulatorAvailableForFramework:
-        selectIsSimulatorAvailableForFramework(state),
-    })
+  const isSimulatorAvailableForFramework = useSelector(
+    selectIsSimulatorAvailableForFramework,
   );
-
-  const sliceModel: LocalAndRemoteSlice | LocalOnlySlice = {
-    local: slice.model,
-    localScreenshots: slice.screenshots,
-    ...(remoteSlice ? { remote: remoteSlice } : {}),
-  };
-  const { modelsStatuses } = useModelStatus({ slices: [sliceModel] });
 
   return (
     <AppLayout>
@@ -138,7 +109,9 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
           <Button
             loading={data.loading}
             disabled={!isTouched || data.loading}
-            onClick={updateSlice}
+            onClick={() => {
+              updateSlice(slice);
+            }}
             data-cy="builder-save-button"
           >
             Save
@@ -146,24 +119,19 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
         </AppLayoutActions>
       </AppLayoutHeader>
       <AppLayoutContent>
-        <BaseStyles>
-          <Header
-            component={slice}
-            status={modelsStatuses.slices[slice.model.id]}
+        <Box
+          alignItems="flex-start"
+          display="grid"
+          gap={16}
+          gridTemplateColumns="320px 1fr"
+        >
+          <Sidebar
+            slice={slice}
             variation={variation}
-            imageLoading={data.imageLoading}
+            updateSlice={updateSlice}
           />
-          <Grid columns="1fr 320px" gap="16px" sx={{ pt: 4 }}>
-            <Box>
-              <FieldZones variation={variation} />
-            </Box>
-            <SideBar
-              component={slice}
-              variation={variation}
-              isTouched={isTouched}
-            />
-          </Grid>
-        </BaseStyles>
+          <FieldZones variation={variation} />
+        </Box>
         <FloatingBackButton />
       </AppLayoutContent>
     </AppLayout>

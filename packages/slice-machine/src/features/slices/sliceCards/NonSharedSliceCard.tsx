@@ -8,7 +8,7 @@ import { useLab } from "@src/features/labs/labsList/useLab";
 
 import { ConvertLegacySliceButton } from "../convertLegacySlice/ConvertLegacySliceButton";
 
-export type NonSharedSliceViewCardProps = {
+export type NonSharedSliceCardProps = {
   slice: NonSharedSliceInSliceZone;
   path: {
     customTypeID: string;
@@ -17,7 +17,7 @@ export type NonSharedSliceViewCardProps = {
   };
 };
 
-export const NonSharedSliceViewCard: FC<NonSharedSliceViewCardProps> = ({
+export const NonSharedSliceCard: FC<NonSharedSliceCardProps> = ({
   slice,
   path,
 }) => {

@@ -37,9 +37,9 @@ export const CustomTypesBuilderPage: FC = () => {
     (store: SliceMachineStoreType) => ({
       selectedCustomType: selectCustomTypeById(
         store,
-        readBuilderPageDynamicSegment(router.query) as string
+        readBuilderPageDynamicSegment(router.query) as string,
       ),
-    })
+    }),
   );
 
   const { cleanupCustomTypeStore } = useSliceMachineActions();
@@ -94,7 +94,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       /* leave this empty to prevent local updates to disappear */
-    ]
+    ],
   );
 
   const { currentCustomType, hasPendingModifications, isSavingCustomType } =
@@ -139,7 +139,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
         </AppLayoutActions>
       </AppLayoutHeader>
       <AppLayoutContent>
-        <Box flexDirection="column" height="100%">
+        <Box flexDirection="column">
           <CustomTypeBuilder customType={currentCustomType} />
         </Box>
       </AppLayoutContent>

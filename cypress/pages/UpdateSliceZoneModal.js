@@ -4,7 +4,7 @@ class UpdateSliceZoneModal {
   }
 
   selectSlice(sliceId) {
-    cy.get(`[data-cy=shared-slice-selection-card-${sliceId}]`).click();
+    cy.get(`[data-cy=shared-slice-card-${sliceId}]`).click();
     return this;
   }
 

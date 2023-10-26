@@ -1,3 +1,5 @@
+import { REPOSITORY_NAME_VALIDATION } from "@slicemachine/manager";
+
 const abc123 = `abcdefghijklmnopqrstuvwxyz0123456789`;
 
 // 11 characters long or less adjectives
@@ -114,8 +116,8 @@ const assertFormattedRepositoryDomain = (
 };
 
 export const ValidationErrors = {
-	LessThan4: "LessThan4",
-	MoreThan30: "MoreThan30",
+	LessThanMin: "LessThanMin",
+	MoreThanMax: "MoreThanMax",
 	AlreadyExists: "AlreadyExists",
 } as const;
 type ValidationErrors =
@@ -137,8 +139,10 @@ export const validateRepositoryDomain = (
 		 *
 		 * @see https://regex101.com/r/OBZ6UH/1
 		 */
-		[ValidationErrors.LessThan4]: args.domain.length < 4,
-		[ValidationErrors.MoreThan30]: args.domain.length > 30,
+		[ValidationErrors.LessThanMin]:
+			args.domain.length < REPOSITORY_NAME_VALIDATION.Min,
+		[ValidationErrors.MoreThanMax]:
+			args.domain.length > REPOSITORY_NAME_VALIDATION.Max,
 	};
 
 	return {
@@ -191,11 +195,15 @@ export const getErrorMessageForRepositoryDomainValidation = (
 	if (args.validation.hasErrors) {
 		const formattedErrors: string[] = [];
 
-		if (args.validation.LessThan4) {
-			formattedErrors.push("must be 4 characters long or more");
+		if (args.validation.LessThanMin) {
+			formattedErrors.push(
+				`must be ${REPOSITORY_NAME_VALIDATION.Min} characters long or more`,
+			);
 		}
-		if (args.validation.MoreThan30) {
-			formattedErrors.push("must be 30 characters long or less");
+		if (args.validation.MoreThanMax) {
+			formattedErrors.push(
+				`must be ${REPOSITORY_NAME_VALIDATION.Max} characters long or less`,
+			);
 		}
 		if (
 			ValidationErrors.AlreadyExists in args.validation &&

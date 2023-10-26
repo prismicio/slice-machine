@@ -18,12 +18,12 @@ const main = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   if (!res.headers.has("Set-Cookie")) {
     throw new Error(
-      "Could not authenticate to prismic. Please check the credentials."
+      "Could not authenticate to prismic. Please check the credentials.",
     );
   }
 
@@ -32,7 +32,7 @@ const main = async () => {
     JSON.stringify({
       base: new URL(PRISMIC_URL).toString(),
       cookies: res.headers.get("Set-Cookie")?.split(", ").join("; ") || "",
-    })
+    }),
   );
 };
 

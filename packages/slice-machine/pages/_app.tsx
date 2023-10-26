@@ -94,7 +94,7 @@ function MyApp({
 
     const normalizedCustomTypes = normalizeFrontendCustomTypes(
       serverState.customTypes,
-      serverState.remoteCustomTypes
+      serverState.remoteCustomTypes,
     );
 
     const { store, persistor } = configureStore({

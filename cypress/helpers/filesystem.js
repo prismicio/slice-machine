@@ -44,6 +44,6 @@ export function removeTypes() {
  */
 export function modifyFile(filePath, updateContent) {
   cy.readFile(filePath).then((content) =>
-    cy.writeFile(filePath, updateContent(content))
+    cy.writeFile(filePath, updateContent(content)),
   );
 }

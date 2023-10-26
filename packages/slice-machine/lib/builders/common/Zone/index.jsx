@@ -1,15 +1,14 @@
-import { Button, ButtonGroup } from "@prismicio/editor-ui";
+import { Button, Switch, Text } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
-import { BaseStyles, Heading } from "theme-ui";
+import { BaseStyles } from "theme-ui";
 
-import { List, ListHeader } from "@src/components/List";
+import { ListHeader } from "@src/components/List";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import NewField from "./Card/components/NewField";
 import Card from "./Card";
 import EmptyState from "./components/EmptyState";
-import ZoneHeader from "./components/ZoneHeader";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
@@ -30,14 +29,12 @@ const Zone = ({
   dataCy,
   isRepeatableCustomType,
 }) => {
-  const isCustomType = zoneType === "customType";
-
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     const hasUid = !!Object.entries(poolOfFieldsToCheck).find(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      ([, { value }]) => value.type === "UID"
+      ([, { value }]) => value.type === "UID",
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return hasUid
@@ -73,67 +70,39 @@ const Zone = ({
   const onCancelNewField = () => setNewFieldData(null);
 
   return (
-    <List>
-      {isCustomType ? (
-        <ListHeader
-          actions={
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            fields.length > 0 ? (
-              <ButtonGroup size="medium" variant="secondary">
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowHints(!showHints)}
-                >
-                  {showHints ? "Hide" : "Show"} code snippets
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => enterSelectMode()}
-                  data-cy={`add-${
-                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                    isRepeatable ? "Repeatable" : "Static"
-                  }-field`}
-                  startIcon="add"
-                >
-                  Add a new field
-                </Button>
-              </ButtonGroup>
-            ) : undefined
-          }
-        >
-          {title}
-        </ListHeader>
-      ) : (
-        <BaseStyles>
-          <ZoneHeader
-            Heading={<Heading as="h6">{title}</Heading>}
-            Actions={
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              fields.length > 0 ? (
-                <ButtonGroup size="medium" variant="secondary">
-                  <Button
-                    variant="secondary"
-                    onClick={() => setShowHints(!showHints)}
-                  >
-                    {showHints ? "Hide" : "Show"} code snippets
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => enterSelectMode()}
-                    data-cy={`add-${
-                      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                      isRepeatable ? "Repeatable" : "Static"
-                    }-field`}
-                    startIcon="add"
-                  >
-                    Add a new field
-                  </Button>
-                </ButtonGroup>
-              ) : null
-            }
-          />
-        </BaseStyles>
-      )}
+    <>
+      <ListHeader
+        actions={
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          fields.length > 0 ? (
+            <>
+              <Text color="grey11" component="span" noWrap>
+                Show code snippets?
+              </Text>
+              <Switch
+                checked={showHints}
+                onCheckedChange={setShowHints}
+                size="small"
+                // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
+                style={{ flexShrink: 0 }}
+              />
+              <Button
+                data-cy={`add-${
+                  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                  isRepeatable ? "Repeatable" : "Static"
+                }-field`}
+                onClick={enterSelectMode}
+                startIcon="add"
+                variant="secondary"
+              >
+                Add a new field
+              </Button>
+            </>
+          ) : undefined
+        }
+      >
+        {title}
+      </ListHeader>
       {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         fields.length === 0 && !newFieldData ? (
@@ -189,7 +158,6 @@ const Zone = ({
                   />
                 )
               }
-              sx={isCustomType ? { paddingInline: "16px !important" } : {}}
             />
           </BaseStyles>
         ) : undefined
@@ -211,7 +179,7 @@ const Zone = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         widgetsArray={widgetsArrayWithCondUid}
       />
-    </List>
+    </>
   );
 };
 
@@ -235,7 +203,7 @@ Zone.propTypes = {
         fields: array,
         type: string.isRequired,
       }),
-    })
+    }),
   ),
 };
 

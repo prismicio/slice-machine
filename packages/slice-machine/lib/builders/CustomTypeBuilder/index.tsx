@@ -42,11 +42,7 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
 
   return (
     <>
-      <Window
-        style={{
-          height: sliceZoneEmpty ? "100%" : undefined,
-        }}
-      >
+      <Window style={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
         {customType.format === "page" ? <WindowFrame /> : undefined}
         {query.newPageType === "true" ? (
           <TabZone
@@ -150,7 +146,7 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
             deleteCustomTypeTab(dialog.tabKey);
             if (tabValue === dialog.tabKey) {
               const otherTabValue = customType.tabs.find(
-                (tab) => tab.key !== dialog.tabKey
+                (tab) => tab.key !== dialog.tabKey,
               )?.key;
               if (otherTabValue !== undefined) setTabValue(otherTabValue);
             }

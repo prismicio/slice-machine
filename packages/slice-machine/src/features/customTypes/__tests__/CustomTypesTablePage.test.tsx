@@ -42,18 +42,18 @@ describe.each(formats)(
           .closest("tr") as HTMLElement;
         expect(within(row).getByText(customTypeMock.id)).toBeVisible();
         expect(
-          within(row).getByText(customTypeMock.label as string)
+          within(row).getByText(customTypeMock.label as string),
         ).toBeVisible();
         expect(
           within(row).getByText(
-            customTypeMock.repeatable ? "Reusable" : "Single"
-          )
+            customTypeMock.repeatable ? "Reusable" : "Single",
+          ),
         ).toBeVisible();
       }
 
       // Check that there is the correct number of custom types displayed
       expect(screen.getAllByText(/MyID/)).toHaveLength(
-        customTypesMockByFormat[format].length
+        customTypesMockByFormat[format].length,
       );
     });
 
@@ -65,7 +65,7 @@ describe.each(formats)(
 
       // Ensure the modal is visible
       expect(
-        await screen.findByText(`Create a new ${format} type`)
+        await screen.findByText(`Create a new ${format} type`),
       ).toBeVisible();
 
       // Scope the test to the modal
@@ -75,10 +75,10 @@ describe.each(formats)(
 
       // Get form inputs
       const idInput = within(form).getByPlaceholderText(
-        CUSTOM_TYPES_MESSAGES[format].inputPlaceholder
+        CUSTOM_TYPES_MESSAGES[format].inputPlaceholder,
       );
       const nameInput = within(form).getByPlaceholderText(
-        `A display name for the ${format} type`
+        `A display name for the ${format} type`,
       );
 
       // Fill the form
@@ -95,7 +95,7 @@ describe.each(formats)(
       // Check that the redirection has been done
       if (format === "page") {
         expect(mockRouter.asPath).toEqual(
-          `/${format}-types/${newCustomType}?newPageType=true`
+          `/${format}-types/${newCustomType}?newPageType=true`,
         );
       } else {
         expect(mockRouter.asPath).toEqual(`/${format}-types/${newCustomType}`);
@@ -125,7 +125,7 @@ describe.each(formats)(
       // Check that the custom type is not visible
       await waitFor(() => {
         expect(
-          screen.queryByText(customTypesMockByFormat[format][0].id)
+          screen.queryByText(customTypesMockByFormat[format][0].id),
         ).not.toBeInTheDocument();
       });
     });
@@ -155,7 +155,7 @@ describe.each(formats)(
       // Get form input
       const renamedCustomType = `My renamed ${format} type`;
       const nameInput = within(form).getByPlaceholderText(
-        `A display name for the ${format} type`
+        `A display name for the ${format} type`,
       );
 
       // Clear the name and type a new one
@@ -168,7 +168,9 @@ describe.each(formats)(
       // Check that the old custom type label is not visible anymore
       await waitFor(() => {
         expect(
-          screen.queryByText(customTypesMockByFormat[format][0].label as string)
+          screen.queryByText(
+            customTypesMockByFormat[format][0].label as string,
+          ),
         ).not.toBeInTheDocument();
       });
 
@@ -184,10 +186,10 @@ describe.each(formats)(
 
       // Check that the redirection has been done
       expect(mockRouter.asPath).toEqual(
-        `/${format}-types/${customTypesMockByFormat[format][0].id}`
+        `/${format}-types/${customTypesMockByFormat[format][0].id}`,
       );
     });
-  }
+  },
 );
 
 describe("CustomTypesTablePage > Custom type", () => {
@@ -212,21 +214,21 @@ describe("CustomTypesTablePage > Custom type", () => {
     // Check that the custom type is not visible anymore
     await waitFor(() => {
       expect(
-        screen.queryByText(customTypesMockByFormat[format][0].label as string)
+        screen.queryByText(customTypesMockByFormat[format][0].label as string),
       ).not.toBeInTheDocument();
     });
 
     // Check that the converted custom type is visible on the page type table now
     rerender(<CustomTypesTablePage format="page" />);
     expect(
-      screen.getByText(customTypesMockByFormat[format][0].id)
+      screen.getByText(customTypesMockByFormat[format][0].id),
     ).toBeVisible();
   });
 });
 
 function createCustomTypesMock(
   format: CustomTypeFormat,
-  count: number
+  count: number,
 ): CustomType[] {
   return Array.from(Array(count), (_, index) => ({
     id: `MyID${format}${index}`,
@@ -275,7 +277,7 @@ async function renderCustomTypesTablePage({
       });
       hook("custom-type:read", (args: CustomTypeReadHookData) => {
         const model = customTypesMock.find(
-          (customTypeMock) => customTypeMock.id === args.id
+          (customTypeMock) => customTypeMock.id === args.id,
         );
 
         if (model) {
@@ -304,7 +306,7 @@ async function renderCustomTypesTablePage({
     createSliceMachineManagerMSWHandler({
       url: "http://localhost:3000/_manager",
       sliceMachineManager: manager,
-    })
+    }),
   );
 
   const customTypeMockStore = {
@@ -315,14 +317,14 @@ async function renderCustomTypesTablePage({
             ...obj,
             [item.id]: { local: CustomTypes.toSM(item) },
           }),
-          {}
+          {},
         ),
         ...customTypesMockByFormat.page.reduce(
           (obj, item) => ({
             ...obj,
             [item.id]: { local: CustomTypes.toSM(item) },
           }),
-          {}
+          {},
         ),
       },
       environment: {
@@ -335,12 +337,12 @@ async function renderCustomTypesTablePage({
   const renderResults = render(
     <CustomTypesTablePage format={format} />,
     // @ts-expect-error TS2345: Argument of type '{ preloadedState: { availableCustomTypes: {}; environment: { manifest: { apiEndpoint: string; }; }; slices: { libraries: never[]; remoteSlices: never[]; }; }; }' is not assignable to parameter of type 'Partial<{ preloadedState: Partial<SliceMachineStoreType>; store: Store<SliceMachineStoreType, AnyAction>; } & RenderOptions<...>>'.
-    customTypeMockStore
+    customTypeMockStore,
   );
 
   // Ensure table finished loading
   expect(
-    await screen.findByText(customTypesMockByFormat[format][0].id)
+    await screen.findByText(customTypesMockByFormat[format][0].id),
   ).toBeVisible();
 
   return renderResults;

@@ -1,5 +1,6 @@
 import * as t from "io-ts";
 import { fileTypeFromBuffer } from "file-type";
+import pLimit from "p-limit";
 import fetch, { FormData, Blob, Response } from "../../lib/fetch";
 
 import { checkIsURLAccessible } from "../../lib/checkIsURLAccessible";
@@ -46,6 +47,8 @@ function assertBrowserContextInitialized(
 		);
 	}
 }
+
+const uploadScreenshotLimit = pLimit(10);
 
 /**
  * Encodes a part of a Slice Simulator URL to ensure it can be added to a URL
@@ -283,10 +286,13 @@ export class ScreenshotsManager extends BaseManager {
 
 		formData.set("file", new Blob([args.data], { type: fileType?.mime }));
 
-		const res = await fetch(this._s3ACL.uploadEndpoint, {
-			method: "POST",
-			body: formData,
-		});
+		const s3ACLEndpoint = this._s3ACL.uploadEndpoint;
+		const res = await uploadScreenshotLimit(() =>
+			fetch(s3ACLEndpoint, {
+				method: "POST",
+				body: formData,
+			}),
+		);
 
 		if (res.ok) {
 			const url = new URL(key, this._s3ACL.imgixEndpoint);

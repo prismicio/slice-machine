@@ -22,7 +22,7 @@ mockRouter.useParser(
   createDynamicRouteParser([
     "/page-types/[pageTypeId]",
     "/custom-types/[customTypeId]",
-  ])
+  ]),
 );
 
 const formats = [
@@ -79,7 +79,7 @@ describe.each(formats)(
       // Get form input
       const renamedCustomType = `My renamed ${format} type`;
       const nameInput = within(form).getByPlaceholderText(
-        `A display name for the ${format} type`
+        `A display name for the ${format} type`,
       );
 
       // Clear the name and type a new one
@@ -92,10 +92,10 @@ describe.each(formats)(
       const folder =
         customType.format === "page" ? "Page types" : "Custom types";
       expect(
-        screen.getByTestId(`breadcrumb-${folder}-${renamedCustomType}`)
+        screen.getByTestId(`breadcrumb-${folder}-${renamedCustomType}`),
       ).toBeVisible();
     });
-  }
+  },
 );
 
 function createCustomTypeMock(format: CustomTypeFormat): CustomType {
@@ -155,7 +155,7 @@ async function renderCustomTypesBuilderPage({
     createSliceMachineManagerMSWHandler({
       url: "http://localhost:3000/_manager",
       sliceMachineManager: manager,
-    })
+    }),
   );
 
   const customTypeMockStore = {
@@ -165,7 +165,7 @@ async function renderCustomTypesBuilderPage({
           ...obj,
           [item.id]: { local: CustomTypes.toSM(item) },
         }),
-        {}
+        {},
       ),
       environment: {
         manifest: { apiEndpoint: "https://foo.cdn.prismic.io/api/v2" },
@@ -179,7 +179,7 @@ async function renderCustomTypesBuilderPage({
 
   const folder = customType.format === "page" ? "Page types" : "Custom types";
   expect(
-    screen.getByTestId(`breadcrumb-${folder}-${customType.label as string}`)
+    screen.getByTestId(`breadcrumb-${folder}-${customType.label as string}`),
   ).toBeVisible();
 
   return renderResults;

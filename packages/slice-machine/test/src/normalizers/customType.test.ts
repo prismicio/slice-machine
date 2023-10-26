@@ -62,7 +62,7 @@ describe("Normalizer - CustomType", () => {
       ];
 
       expect(
-        normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes)
+        normalizeFrontendCustomTypes(localCustomTypes, remoteCustomTypes),
       ).toEqual({
         id1: {
           local: {
@@ -137,12 +137,12 @@ describe("Normalizer - CustomType", () => {
 
       const normalizedCustomTypes = normalizeFrontendCustomTypes(
         localCustomTypes,
-        []
+        [],
       );
 
       expect(Object.values(normalizedCustomTypes["id1"]).length).toEqual(1);
       expect(Object.values(normalizedCustomTypes["id1"])).not.toEqual(
-        expect.arrayContaining([undefined])
+        expect.arrayContaining([undefined]),
       );
     });
   });
@@ -176,7 +176,7 @@ describe("Normalizer - CustomType", () => {
       };
 
       expect(
-        normalizeFrontendCustomType(localCustomType, remoteCustomType)
+        normalizeFrontendCustomType(localCustomType, remoteCustomType),
       ).toEqual({
         id1: {
           local: {
@@ -225,7 +225,7 @@ describe("Normalizer - CustomType", () => {
 
       expect(Object.values(normalizedCustomType["id1"]).length).toEqual(1);
       expect(Object.values(normalizedCustomType["id1"])).not.toEqual(
-        expect.arrayContaining([undefined])
+        expect.arrayContaining([undefined]),
       );
     });
   });

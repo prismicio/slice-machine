@@ -1,6 +1,6 @@
 {
 	"name": "sveltekit",
-	"version": "1.18.0",
+	"version": "1.18.1-dev-next-release.17",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -20,10 +20,10 @@
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
-		"eslint-config-prettier": "8.7.0",
+		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-svelte": "^2.30.0",
-		"prettier": "2.8.4",
-		"prettier-plugin-svelte": "^2.10.1",
+		"prettier": "^3.0.3",
+		"prettier-plugin-svelte": "^3.0.3",
 		"slice-machine-ui": "workspace:*",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
