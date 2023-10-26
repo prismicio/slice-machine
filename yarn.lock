@@ -8329,7 +8329,12 @@ __metadata:
     vitest: 0.32.0
   peerDependencies:
     "@sveltejs/kit": ^1
+    prettier: ">=3"
+    prettier-plugin-svelte: ">=3"
     svelte: ^3.54.0 || ^4.0.0-next.0
+  peerDependenciesMeta:
+    prettier-plugin-svelte:
+      optional: true
   languageName: unknown
   linkType: soft
 
