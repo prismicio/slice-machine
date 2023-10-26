@@ -8333,6 +8333,8 @@ __metadata:
     prettier-plugin-svelte: ">=3"
     svelte: ^3.54.0 || ^4.0.0-next.0
   peerDependenciesMeta:
+    prettier:
+      optional: true
     prettier-plugin-svelte:
       optional: true
   languageName: unknown
