@@ -5,7 +5,6 @@ import { LightningIcon } from "@src/icons/Lightning";
 
 import {
   SideNav,
-  SideNavLogo,
   SideNavList,
   SideNavListItem,
   SideNavLink,
@@ -15,6 +14,7 @@ import {
   SideNavRepository,
   RightElement,
 } from "./SideNav";
+import { SideNavEnvironmentSelector } from "./SideNavEnvironmentSelector";
 
 type Story = StoryObj<typeof meta>;
 
@@ -33,7 +33,15 @@ export const Default = {
   args: {
     children: (
       <>
-        <SideNavLogo />
+        <SideNavEnvironmentSelector
+          environments={[
+            {
+              name: "Production",
+              domain: "example-prismic-repo",
+              type: "prod",
+            },
+          ]}
+        />
 
         <SideNavRepository
           repositoryName="really long repository name"
