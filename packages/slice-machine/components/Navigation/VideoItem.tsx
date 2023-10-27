@@ -5,7 +5,9 @@ import {
   RefCallback,
   ReactNode,
   forwardRef,
+  PropsWithChildren,
 } from "react";
+import { useSelector } from "react-redux";
 import ReactTooltip from "react-tooltip";
 import { Close, Flex, Paragraph } from "theme-ui";
 import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
@@ -21,6 +23,8 @@ import {
   HoverCardTitle,
 } from "@src/components/HoverCard";
 import { useAdapterName } from "@src/hooks/useAdapterName";
+import { getUserReview } from "@src/modules/userContext";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 import style from "./VideoItem.module.css";
 
@@ -44,7 +48,7 @@ export const VideoItem = forwardRef<HTMLLIElement, VideoItemProps>(
       >
         <SideNavListItem ref={ref}>
           <SideNavLink
-            title="Tutorial"
+            title={isNext ? "Academy" : "Tutorial"}
             href={videoUrl}
             target="_blank"
             Icon={(props) => <PlayCircleIcon {...props} />}
@@ -73,10 +77,17 @@ const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
   onClose,
   hasSeenTutorialsToolTip,
 }) => {
+  const { userReview } = useSelector((store: SliceMachineStoreType) => ({
+    userReview: getUserReview(store),
+  }));
+  const open =
+    !hasSeenTutorialsToolTip &&
+    (userReview.onboarding || userReview.advancedRepository);
+
   if (isNext) {
     return (
       <HoverCard
-        open={!hasSeenTutorialsToolTip}
+        open={open}
         side="right"
         onClose={onClose}
         trigger={children}
@@ -89,7 +100,7 @@ const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
           component="video"
           cloudName="dmtf1daqp"
           publicId="Tooltips/pa-course-overview_eaopsn"
-          poster="/phil.png"
+          poster="/prismic-academy-101.png"
           controls
         />
         <HoverCardDescription>
@@ -102,22 +113,18 @@ const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
   }
 
   return (
-    <OldVideoItem
-      onClose={onClose}
-      hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
-    >
+    <OldVideoItem onClose={onClose} open={open}>
       {children}
     </OldVideoItem>
   );
 };
 
-type OldVideoItemProps = VideoItemProps & { children: ReactNode };
+type OldVideoItemProps = PropsWithChildren<{
+  open: boolean;
+  onClose: () => void;
+}>;
 
-const OldVideoItem: FC<OldVideoItemProps> = ({
-  hasSeenTutorialsToolTip,
-  onClose,
-  children,
-}) => {
+const OldVideoItem: FC<OldVideoItemProps> = ({ open, onClose, children }) => {
   const id = "video-tool-tip";
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -126,12 +133,12 @@ const OldVideoItem: FC<OldVideoItemProps> = ({
       if (ref.current) {
         return;
       }
-      if (node && !hasSeenTutorialsToolTip) {
+      if (node && open) {
         setTimeout(() => ReactTooltip.show(node), 5000);
+        ref.current = node;
       }
-      ref.current = node;
     },
-    [hasSeenTutorialsToolTip],
+    [open],
   );
 
   return (
@@ -144,7 +151,7 @@ const OldVideoItem: FC<OldVideoItemProps> = ({
     >
       {children}
 
-      {!hasSeenTutorialsToolTip && <ToolTip id={id} onClose={onClose} />}
+      {open && <ToolTip id={id} onClose={onClose} />}
     </div>
   );
 };
