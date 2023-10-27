@@ -56,12 +56,6 @@ const EnvironmentDropdownMenuItem: FC<EnvironmentDropdownMenuItemProps> = (
   );
 };
 
-type Environment = {
-  name: string;
-  type: "prod" | "stage" | "dev";
-  domain: string;
-};
-
 type EnvironmentDropdownMenuProps = {
   environments: SideNavEnvironmentSelectorProps["environments"];
 };
@@ -122,6 +116,12 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
       </DropdownMenuGroupContent>
     </DropdownMenu>
   );
+};
+
+type Environment = {
+  name: string;
+  type: "prod" | "stage" | "dev";
+  domain: string;
 };
 
 type SideNavEnvironmentSelectorProps = {
