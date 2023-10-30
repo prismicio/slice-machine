@@ -1,16 +1,6 @@
 import { BaseBuilder } from "../BaseBuilder";
 
 class SliceBuilder extends BaseBuilder {
-  get imagePreview() {
-    return cy.get("[alt='Preview image']");
-  }
-
-  get imagePreviewSrc() {
-    this.imagePreview.then(($img) => {
-      return $img.attr("src");
-    });
-  }
-
   get renameButton() {
     return cy.get('[data-cy="edit-slice-name"]');
   }
