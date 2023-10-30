@@ -1,12 +1,12 @@
 
-name: Setup Node 16
-description: Setup Node 16
+name: Setup Node LTS
+description: Setup Node LTS
 runs:
   using: composite
   steps:
-    - name: Use Node.js 16
+    - name: Use Node.js LTS
       uses: actions/setup-node@v3
       with:
         cache: yarn
-        node-version: 16
+        node-version: lts/*
         registry-url: https://registry.npmjs.org
