@@ -35,15 +35,15 @@ it("detects framework, starter and package manager", async () => {
 		  "framework": {
 		    "adapterName": "@slicemachine/adapter-next",
 		    "compatibility": {
-		      "next": "^11.0.0 || ^12.0.0 || ^13.0.0",
+		      "next": ">=11.0.0",
 		    },
 		    "devDependencies": {
 		      "@slicemachine/adapter-next": "latest",
 		      "slice-machine-ui": "latest",
 		    },
-		    "name": "Next.js 11-13",
-		    "prismicDocumentation": "https://prismic.dev/init/next-11-13",
-		    "sliceMachineTelemetryID": "next-11-13",
+		    "name": "Next.js",
+		    "prismicDocumentation": "https://prismic.dev/init/next",
+		    "sliceMachineTelemetryID": "next",
 		    "wroomTelemetryID": "next",
 		  },
 		  "packageManager": "npm",
@@ -82,15 +82,15 @@ it("assumes unconventional tags match semver range when detecting framework", as
 		  "framework": {
 		    "adapterName": "@slicemachine/adapter-next",
 		    "compatibility": {
-		      "next": "^11.0.0 || ^12.0.0 || ^13.0.0",
+		      "next": ">=11.0.0",
 		    },
 		    "devDependencies": {
 		      "@slicemachine/adapter-next": "latest",
 		      "slice-machine-ui": "latest",
 		    },
-		    "name": "Next.js 11-13",
-		    "prismicDocumentation": "https://prismic.dev/init/next-11-13",
-		    "sliceMachineTelemetryID": "next-11-13",
+		    "name": "Next.js",
+		    "prismicDocumentation": "https://prismic.dev/init/next",
+		    "sliceMachineTelemetryID": "next",
 		    "wroomTelemetryID": "next",
 		  },
 		  "packageManager": "npm",
