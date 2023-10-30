@@ -8196,7 +8196,7 @@ __metadata:
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
-    next: ^11 || ^12 || ^13
+    next: ">=11.0.0"
     react: ^17 || ^18
   languageName: unknown
   linkType: soft

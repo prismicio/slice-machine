@@ -58,22 +58,22 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 	},
 	previousNext: {
-		name: "Next.js 11-13 (legacy)",
+		name: "Next.js (legacy)",
 		adapterName: "@slicemachine/adapter-next",
 		adapterVersion: "latest",
 		runProjectInitHook: true,
 		compatibility: {
-			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
+			next: ">=11.0.0",
 			"prismic-reactjs": "*",
 		},
 	},
 	next: {
-		name: "Next.js 11-13",
+		name: "Next.js",
 		adapterName: "@slicemachine/adapter-next",
 		adapterVersion: "latest",
 		runProjectInitHook: false,
 		compatibility: {
-			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
+			next: ">=11.0.0",
 		},
 	},
 } as const;

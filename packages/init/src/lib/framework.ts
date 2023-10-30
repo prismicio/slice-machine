@@ -16,7 +16,7 @@ export type Framework = {
 	 * Framework 's id sent to Segment from Slice Machine
 	 */
 	sliceMachineTelemetryID:
-		| "next-11-13"
+		| "next"
 		| "nuxt-2"
 		| "nuxt-3"
 		| "sveltekit-1"
@@ -97,14 +97,14 @@ export const FRAMEWORKS: Record<string, Framework> = {
 			"@slicemachine/adapter-nuxt": isPrerelease ? "alpha" : "latest",
 		},
 	},
-	"next-11-13": {
-		name: "Next.js 11-13",
-		sliceMachineTelemetryID: "next-11-13",
+	next: {
+		name: "Next.js",
+		sliceMachineTelemetryID: "next",
 		wroomTelemetryID: "next",
-		prismicDocumentation: "https://prismic.dev/init/next-11-13",
+		prismicDocumentation: "https://prismic.dev/init/next",
 		adapterName: "@slicemachine/adapter-next",
 		compatibility: {
-			next: "^11.0.0 || ^12.0.0 || ^13.0.0",
+			next: ">=11.0.0",
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
