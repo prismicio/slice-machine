@@ -295,7 +295,9 @@ export class PrismicAuthManager {
 
 				await this._writePersistedAuthState(authState);
 			} else {
-				throw new InternalError("Failed to refresh authentication token.");
+				throw new InternalError("Failed to refresh authentication token.", {
+					cause: text,
+				});
 			}
 		} else {
 			throw new UnauthenticatedError();
@@ -320,9 +322,9 @@ export class PrismicAuthManager {
 				"User-Agent": SLICE_MACHINE_USER_AGENT,
 			},
 		});
-		const json = await res.json();
 
 		if (res.ok) {
+			const json = await res.json();
 			const { value: profile, error } = decode(PrismicUserProfile, json);
 
 			if (error) {
@@ -333,8 +335,12 @@ export class PrismicAuthManager {
 
 			return profile;
 		} else {
+			const text = await res.text();
 			throw new InternalError(
 				"Failed to retrieve profile from the Prismic user service.",
+				{
+					cause: text,
+				},
 			);
 		}
 	}

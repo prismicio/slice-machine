@@ -45,6 +45,12 @@ export const installDependencies = async (
 	if (!command) {
 		throw new Error(
 			"Failed to begin dependency installation (could not parse command)",
+			{
+				cause: {
+					packageManager: args.packageManager,
+					dependencies: args.dependencies,
+				},
+			},
 		);
 	}
 

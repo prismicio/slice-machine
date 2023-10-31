@@ -140,6 +140,9 @@ export class ScreenshotsManager extends BaseManager {
 			// Response is not JSON
 			throw new Error(
 				`Invalid AWS ACL response from ${awsACLURL}: ${awsACLText}`,
+				{
+					cause: error,
+				},
 			);
 		}
 
@@ -162,12 +165,16 @@ export class ScreenshotsManager extends BaseManager {
 		);
 
 		if (error) {
-			throw new Error(`Invalid AWS ACL response from ${awsACLURL}`);
+			throw new Error(`Invalid AWS ACL response from ${awsACLURL}`, {
+				cause: error,
+			});
 		}
 
 		const errorMessage = awsACL.error || awsACL.message || awsACL.Message;
 		if (errorMessage) {
-			throw new Error(`Failed to create an AWS ACL: ${errorMessage}`);
+			throw new Error(`Failed to create an AWS ACL: ${errorMessage}`, {
+				cause: error,
+			});
 		}
 
 		this._s3ACL = {
@@ -302,8 +309,12 @@ export class ScreenshotsManager extends BaseManager {
 				url: url.toString(),
 			};
 		} else {
+			const text = await res.text();
 			throw new Error(
 				`Unable to upload screenshot with status code: ${res.status}`,
+				{
+					cause: text,
+				},
 			);
 		}
 	}
@@ -319,8 +330,12 @@ export class ScreenshotsManager extends BaseManager {
 			url: new URL("delete-folder", API_ENDPOINTS.AwsAclProvider),
 		});
 		if (!res.ok) {
+			const text = await res.text();
 			throw new Error(
 				`Unable to delete screenshot folder with status code: ${res.status}`,
+				{
+					cause: text,
+				},
 			);
 		}
 	}
