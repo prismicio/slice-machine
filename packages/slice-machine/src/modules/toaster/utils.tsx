@@ -1,16 +1,13 @@
+import type { ReactNode } from "react";
+
 import { ToasterType } from "../toaster";
 
-export interface ToastPayload {
-  loading: boolean;
-  done: boolean;
-  warning: boolean;
-  message: string;
-  status: number;
-  error: Error | null;
-}
+export type ToastPayload =
+  | { done: true; message: ReactNode; error: boolean }
+  | { done: false };
 
 export const handleRemoteResponse =
-  (addToast: (message: string, type: ToasterType) => void) =>
+  (addToast: (message: ReactNode, type: ToasterType) => void) =>
   (payload: ToastPayload) => {
     if (payload.done) {
       addToast(
@@ -18,9 +15,6 @@ export const handleRemoteResponse =
         (() => {
           if (payload.error) {
             return ToasterType.ERROR;
-          }
-          if (payload.warning) {
-            return ToasterType.WARNING;
           }
           return ToasterType.SUCCESS;
         })(),

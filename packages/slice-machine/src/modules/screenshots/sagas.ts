@@ -9,10 +9,7 @@ import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { generateSliceCustomScreenshotCreator } from "./actions";
-import {
-  generateSliceCustomScreenshotApiClient,
-  telemetry,
-} from "@src/apiClient";
+import { generateSliceCustomScreenshot, telemetry } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 export function* generateSliceCustomScreenshotSaga({
@@ -25,12 +22,12 @@ export function* generateSliceCustomScreenshotSaga({
     form.append("libraryName", component.from);
     form.append("sliceName", component.model.name);
     form.append("variationId", variationId);
-    const response = (yield call(generateSliceCustomScreenshotApiClient, {
+    const response = (yield call(generateSliceCustomScreenshot, {
       libraryName: component.from,
       sliceId: component.model.id,
       variationId,
       file,
-    })) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
+    })) as SagaReturnType<typeof generateSliceCustomScreenshot>;
 
     if (!response?.url) {
       throw Error("No screenshot saved");

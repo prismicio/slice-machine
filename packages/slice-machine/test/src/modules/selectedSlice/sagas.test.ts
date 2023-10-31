@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { testSaga } from "redux-saga-test-plan";
 import { updateSliceSaga } from "@src/modules/selectedSlice/sagas";
 import { updateSliceCreator } from "@src/modules/selectedSlice/actions";
-import { readSliceMocks, updateSliceApiClient } from "@src/apiClient";
+import { readSliceMocks, updateSlice } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { getSelectedSliceDummyData } from "./__testutils__/getSelectedSliceDummyData";
 
@@ -11,7 +11,7 @@ const { dummySliceState } = getSelectedSliceDummyData();
 describe("[Selected Slice sagas]", () => {
   describe("[updateSliceSaga]", () => {
     it("should call the api and dispatch the success action", () => {
-      const mockSetData = vi.fn<
+      const mockSetSliceBuilderState = vi.fn<
         {
           error: boolean;
           done: boolean;
@@ -28,11 +28,12 @@ describe("[Selected Slice sagas]", () => {
         updateSliceSaga,
         updateSliceCreator.request({
           component: dummySliceState,
-          setData: mockSetData,
+          // @ts-expect-error - Issue with `message` type
+          setSliceBuilderState: mockSetSliceBuilderState,
         }),
       );
 
-      saga.next().call(updateSliceApiClient, dummySliceState);
+      saga.next().call(updateSlice, dummySliceState);
 
       saga.next({ errors: [] }).call(readSliceMocks, {
         libraryID: dummySliceState.from,
@@ -47,24 +48,25 @@ describe("[Selected Slice sagas]", () => {
 
       saga.next().isDone();
 
-      const mockSetDataCalls = mockSetData.mock.lastCall?.[0];
-      expect(mockSetDataCalls?.error).toBe(null);
-      expect(mockSetDataCalls?.done).toBe(true);
-      expect(mockSetDataCalls?.loading).toBe(false);
-      expect(mockSetDataCalls?.message.props.message).toBe(
+      const mockSetSliceBuilderStateCalls =
+        mockSetSliceBuilderState.mock.lastCall?.[0];
+      expect(mockSetSliceBuilderStateCalls?.error).toBe(false);
+      expect(mockSetSliceBuilderStateCalls?.done).toBe(true);
+      expect(mockSetSliceBuilderStateCalls?.loading).toBe(false);
+      expect(mockSetSliceBuilderStateCalls?.message.props.message).toBe(
         "Slice saved successfully at ",
       );
-      expect(mockSetDataCalls?.message.props.path).toBe(
+      expect(mockSetSliceBuilderStateCalls?.message.props.path).toBe(
         "slices/libName/DummySlice/model.json",
       );
     });
     it("should open a error toaster on internal error", () => {
-      const mockSetData = vi.fn();
+      const mockSetSliceBuilderState = vi.fn();
       const saga = testSaga(
         updateSliceSaga,
         updateSliceCreator.request({
           component: dummySliceState,
-          setData: mockSetData,
+          setSliceBuilderState: mockSetSliceBuilderState,
         }),
       ).next();
 
