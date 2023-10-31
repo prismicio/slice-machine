@@ -7,6 +7,7 @@ import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
 import { createSliceMachineManager } from "../src";
+import { InternalError } from "../src/errors";
 
 it("refreshes the auth token in the auth state file", async (ctx) => {
 	const adapter = createTestPlugin();
@@ -51,7 +52,9 @@ it("throws if the authentication API cannot refresh the token", async (ctx) => {
 
 	await expect(async () => {
 		await manager.user.refreshAuthenticationToken();
-	}).rejects.toThrow(/failed to refresh/i);
+	}).rejects.toThrow(
+		new InternalError("Failed to refresh authentication token."),
+	);
 });
 
 it("throws if the user is not logged in", async () => {

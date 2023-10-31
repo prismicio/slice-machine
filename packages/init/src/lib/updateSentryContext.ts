@@ -39,4 +39,9 @@ export async function updateSentryContext({
 	if (framework) {
 		Sentry.setTag("framework", framework);
 	}
+
+	Sentry.setContext("Process", {
+		"Command used": process.argv.join(" "),
+		cwd: process.cwd(),
+	});
 }

@@ -173,7 +173,9 @@ export class ProjectManager extends BaseManager {
 
 		if (error) {
 			// TODO: Write a more friendly and useful message.
-			throw new Error(`Invalid config. ${error.errors.join(", ")}`);
+			throw new Error(`Invalid config. ${error.errors.join(", ")}`, {
+				cause: { rawConfig },
+			});
 		}
 
 		// Allow cached config reading using `SliceMachineManager.prototype.getProjectConfig()`.
