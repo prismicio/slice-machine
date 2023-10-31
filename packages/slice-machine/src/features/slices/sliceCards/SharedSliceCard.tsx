@@ -52,7 +52,7 @@ type SharedSliceCardProps = {
 );
 
 type Action =
-  | { type: "menu"; onRemove?: () => void; onRename?: () => void }
+  | { type: "menu"; onRemove: () => void; onRename: () => void }
   | { type: "remove"; onRemove: () => void }
   | ({ type: "status" } & Omit<StatusBadgeProps, "modelType">);
 
@@ -163,14 +163,6 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
                 align="end"
                 data-cy="slice-action-icon-dropdown"
               >
-                {action.onRename ? (
-                  <DropdownMenuItem
-                    onSelect={action.onRename}
-                    startIcon={<Icon name="edit" />}
-                  >
-                    Rename
-                  </DropdownMenuItem>
-                ) : undefined}
                 {canUpdateScreenshot && disableOverlay ? (
                   <DropdownMenuItem
                     onSelect={onUpdateScreenshot}
@@ -179,15 +171,19 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
                     Update screenshot
                   </DropdownMenuItem>
                 ) : undefined}
-                {action.onRemove ? (
-                  <DropdownMenuItem
-                    color="tomato"
-                    onSelect={action.onRemove}
-                    startIcon={<Icon name="delete" />}
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                ) : undefined}
+                <DropdownMenuItem
+                  onSelect={action.onRename}
+                  startIcon={<Icon name="edit" />}
+                >
+                  Rename
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  color="tomato"
+                  onSelect={action.onRemove}
+                  startIcon={<Icon name="delete" />}
+                >
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : action.type === "remove" ? (

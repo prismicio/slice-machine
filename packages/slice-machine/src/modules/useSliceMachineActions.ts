@@ -98,12 +98,16 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const openRenameSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+  const openRenameVariationModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_VARIATION }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
   const openDeleteSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
+  const openDeleteVariationModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_VARIATION }));
   const openDeleteDocumentsDrawer = () =>
     dispatch(
       modalOpenCreator({
@@ -510,8 +514,10 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openScreenshotPreviewModal,
     openDeleteSliceModal,
+    openDeleteVariationModal,
     openSimulatorSetupModal,
     openRenameSliceModal,
+    openRenameVariationModal,
     closeModals,
     openToaster,
     pushChanges,

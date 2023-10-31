@@ -15,7 +15,7 @@ const Error = ({ msg }: { msg?: string }) => (
     {msg || "Error!"}
   </Text>
 );
-const VariationModal: React.FunctionComponent<{
+const AddVariationModal: React.FunctionComponent<{
   isOpen: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClose: () => any;
@@ -236,4 +236,4 @@ const VariationModal: React.FunctionComponent<{
   );
 };
 
-export default VariationModal;
+export default AddVariationModal;

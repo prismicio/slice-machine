@@ -2,7 +2,9 @@ import { Box, Button } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type FC, useState } from "react";
 
-import VariationModal from "@builders/SliceBuilder/Sidebar/VariationModal";
+import AddVariationModal from "@builders/SliceBuilder/Sidebar/AddVariationModal";
+import { DeleteVariationModal } from "@components/DeleteVariationModal";
+import { RenameVariationModal } from "@components/Forms/RenameVariationModal";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
@@ -21,21 +23,37 @@ type SidebarProps = {
 export const Sidebar: FC<SidebarProps> = (props) => {
   const { slice, variation, updateSlice } = props;
 
-  const router = useRouter();
+  const {
+    copyVariationSlice,
+    openDeleteVariationModal,
+    openRenameVariationModal,
+  } = useSliceMachineActions();
+
+  const [variationToEdit, setVariationToEdit] = useState<VariationSM>();
 
   const screenshotChangesModal = useScreenshotChangesModal();
   const { sliceFilterFn, defaultVariationSelector } =
     screenshotChangesModal.modalPayload;
 
-  const [showVariationModal, setShowVariationModal] = useState(false);
-  const { copyVariationSlice } = useSliceMachineActions();
+  const [showAddVariationModal, setShowAddVariationModal] = useState(false);
+  const router = useRouter();
 
   return (
     <>
       <Box flexDirection="column" gap={16}>
         {slice.model.variations.map((v) => (
           <SharedSliceCard
-            action={{ type: "menu" }}
+            action={{
+              type: "menu",
+              onRemove: () => {
+                setVariationToEdit(v);
+                openDeleteVariationModal();
+              },
+              onRename: () => {
+                setVariationToEdit(v);
+                openRenameVariationModal();
+              },
+            }}
             key={v.id}
             mode="navigation"
             onUpdateScreenshot={() => {
@@ -56,7 +74,7 @@ export const Sidebar: FC<SidebarProps> = (props) => {
         ))}
         <Button
           onClick={() => {
-            setShowVariationModal(true);
+            setShowAddVariationModal(true);
           }}
           startIcon="add"
           sx={{ bottom: 72, marginInline: 24, position: "sticky" }}
@@ -65,15 +83,20 @@ export const Sidebar: FC<SidebarProps> = (props) => {
           Add a new variation
         </Button>
       </Box>
+      <RenameVariationModal
+        variationID={variationToEdit?.id ?? ""}
+        variationName={variationToEdit?.name ?? ""}
+      />
       <ScreenshotChangesModal
         slices={sliceFilterFn([slice])}
         defaultVariationSelector={defaultVariationSelector}
       />
-      <VariationModal
+      <DeleteVariationModal variationID={variationToEdit?.id ?? ""} />
+      <AddVariationModal
         initialVariation={variation}
-        isOpen={showVariationModal}
+        isOpen={showAddVariationModal}
         onClose={() => {
-          setShowVariationModal(false);
+          setShowAddVariationModal(false);
         }}
         onSubmit={(id, name, copiedVariation) => {
           copyVariationSlice(id, name, copiedVariation);

@@ -63,7 +63,7 @@ const SlicesIndex: React.FunctionComponent = () => {
   const slices = (libraries || []).map((l) => l.components).flat();
   const sliceCount = slices.length;
 
-  const [sliceForEdit, setSliceForEdit] = useState<ComponentUI>();
+  const [sliceToEdit, setSliceToEdit] = useState<ComponentUI>();
 
   return (
     <>
@@ -175,11 +175,11 @@ const SlicesIndex: React.FunctionComponent = () => {
                               action={{
                                 type: "menu",
                                 onRemove: () => {
-                                  setSliceForEdit(slice);
+                                  setSliceToEdit(slice);
                                   openDeleteSliceModal();
                                 },
                                 onRename: () => {
-                                  setSliceForEdit(slice);
+                                  setSliceToEdit(slice);
                                   openRenameSliceModal();
                                 },
                               }}
@@ -236,15 +236,15 @@ const SlicesIndex: React.FunctionComponent = () => {
             />
           )}
           <RenameSliceModal
-            sliceId={sliceForEdit?.model.id ?? ""}
-            sliceName={sliceForEdit?.model.name ?? ""}
-            libName={sliceForEdit?.from ?? ""}
+            sliceId={sliceToEdit?.model.id ?? ""}
+            sliceName={sliceToEdit?.model.name ?? ""}
+            libName={sliceToEdit?.from ?? ""}
             data-cy="rename-slice-modal"
           />
           <DeleteSliceModal
-            sliceId={sliceForEdit?.model.id ?? ""}
-            sliceName={sliceForEdit?.model.name ?? ""}
-            libName={sliceForEdit?.from ?? ""}
+            sliceId={sliceToEdit?.model.id ?? ""}
+            sliceName={sliceToEdit?.model.name ?? ""}
+            libName={sliceToEdit?.from ?? ""}
           />
         </AppLayoutContent>
       </AppLayout>
