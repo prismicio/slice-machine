@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 import ReactTooltip from "react-tooltip";
 import { Close, Flex, Paragraph } from "theme-ui";
 import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
-import { VIDEO_YOUTUBE_PLAYLIST_LINK, PRISMIC_ACADEMY_URL } from "@lib/consts";
 import { telemetry } from "@src/apiClient";
 import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
 import { PlayCircleIcon } from "@src/icons/PlayCircleIcon";
@@ -22,9 +21,9 @@ import {
   HoverCardMedia,
   HoverCardTitle,
 } from "@src/components/HoverCard";
-import { useAdapterName } from "@src/hooks/useAdapterName";
 import { getUserReview } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { useMarketingContent } from "@src/hooks/useMarketingContent";
 
 import style from "./VideoItem.module.css";
 
@@ -35,27 +34,23 @@ type VideoItemProps = {
 
 export const VideoItem = forwardRef<HTMLLIElement, VideoItemProps>(
   ({ onClose, hasSeenTutorialsToolTip }, ref) => {
-    const adapterName = useAdapterName();
-
-    const isNext = adapterName === "@slicemachine/adapter-next";
-    const videoUrl = isNext ? PRISMIC_ACADEMY_URL : VIDEO_YOUTUBE_PLAYLIST_LINK;
+    const { tutorial } = useMarketingContent();
 
     return (
       <MaybeVideoTooltipWrapper
         onClose={onClose}
-        isNext={isNext}
         hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
       >
         <SideNavListItem ref={ref}>
           <SideNavLink
-            title={isNext ? "Academy" : "Tutorial"}
-            href={videoUrl}
+            title={tutorial.link.title}
+            href={tutorial.link.url}
             target="_blank"
             Icon={(props) => <PlayCircleIcon {...props} />}
             onClick={() => {
               void telemetry.track({
                 event: "open-video-tutorials",
-                video: videoUrl,
+                video: tutorial.link.url,
               });
               onClose();
             }}
@@ -67,16 +62,15 @@ export const VideoItem = forwardRef<HTMLLIElement, VideoItemProps>(
 );
 
 type MaybeVideoTooltipWrapperProps = VideoItemProps & {
-  isNext: boolean;
   children: ReactNode;
 };
 
 const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
-  isNext,
   children,
   onClose,
   hasSeenTutorialsToolTip,
 }) => {
+  const { tutorial } = useMarketingContent();
   const { userReview } = useSelector((store: SliceMachineStoreType) => ({
     userReview: getUserReview(store),
   }));
@@ -84,7 +78,7 @@ const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
     !hasSeenTutorialsToolTip &&
     (userReview.onboarding || userReview.advancedRepository);
 
-  if (isNext) {
+  if (tutorial.tooltip.video !== undefined) {
     return (
       <HoverCard
         open={open}
@@ -95,19 +89,20 @@ const MaybeVideoTooltipWrapper: FC<MaybeVideoTooltipWrapperProps> = ({
         align="end"
         alignOffset={8}
       >
-        <HoverCardTitle>Need help?</HoverCardTitle>
+        <HoverCardTitle>{tutorial.tooltip.title}</HoverCardTitle>
         <HoverCardMedia
           component="video"
-          cloudName="dmtf1daqp"
-          publicId="Tooltips/pa-course-overview_eaopsn"
-          poster="/prismic-academy-101.png"
+          cloudName={tutorial.tooltip.video.cloudName}
+          publicId={tutorial.tooltip.video.publicId}
+          poster={tutorial.tooltip.video.poster}
           controls
         />
         <HoverCardDescription>
-          Learn how to turn a Next.js website into a page builder powered by
-          Prismic.
+          {tutorial.tooltip.description}
         </HoverCardDescription>
-        <HoverCardCloseButton>Got It</HoverCardCloseButton>
+        <HoverCardCloseButton>
+          {tutorial.tooltip.closeButton}
+        </HoverCardCloseButton>
       </HoverCard>
     );
   }
@@ -161,53 +156,57 @@ type ToolTipProps = {
   onClose: VideoItemProps["onClose"];
 };
 
-const ToolTip: FC<ToolTipProps> = ({ id, onClose }) => (
-  <ReactTooltipPortal>
-    <ReactTooltip
-      id={id}
-      effect="solid"
-      place="right"
-      backgroundColor="#5741c3"
-      clickable
-      className={style.videoTutorialsContainer}
-      afterHide={onClose}
-      offset={{
-        left: 80,
-      }}
-      role="tooltip"
-      getContent={() => (
-        <Flex
-          sx={{
-            maxWidth: "268px",
-            flexDirection: "column",
-          }}
-        >
+const ToolTip: FC<ToolTipProps> = ({ id, onClose }) => {
+  const { tutorial } = useMarketingContent();
+
+  return (
+    <ReactTooltipPortal>
+      <ReactTooltip
+        id={id}
+        effect="solid"
+        place="right"
+        backgroundColor="#5741c3"
+        clickable
+        className={style.videoTutorialsContainer}
+        afterHide={onClose}
+        offset={{
+          left: 80,
+        }}
+        role="tooltip"
+        getContent={() => (
           <Flex
             sx={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              mb: 1,
+              maxWidth: "268px",
+              flexDirection: "column",
             }}
           >
-            <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
-              Need Help?
-            </Paragraph>
-            <Close
-              data-testid="video-tooltip-close-button"
-              onClick={onClose}
+            <Flex
               sx={{
-                width: "26px",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 1,
               }}
-            />
+            >
+              <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
+                {tutorial.tooltip.title}
+              </Paragraph>
+              <Close
+                data-testid="video-tooltip-close-button"
+                onClick={onClose}
+                sx={{
+                  width: "26px",
+                }}
+              />
+            </Flex>
+            <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
+              {tutorial.tooltip.description}
+            </Paragraph>
           </Flex>
-          <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
-            Follow our Quick Start guide to learn the basics of Slice Machine
-          </Paragraph>
-        </Flex>
-      )}
-    />
-  </ReactTooltipPortal>
-);
+        )}
+      />
+    </ReactTooltipPortal>
+  );
+};
 
 export default VideoItem;
