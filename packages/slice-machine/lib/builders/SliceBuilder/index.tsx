@@ -1,7 +1,16 @@
 import { Box, Button } from "@prismicio/editor-ui";
-import React, { useState, useEffect } from "react";
+import {
+  type Dispatch,
+  type FC,
+  type SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
-import { handleRemoteResponse } from "@src/modules/toaster/utils";
+import {
+  type ToastPayload,
+  handleRemoteResponse,
+} from "@src/modules/toaster/utils";
 
 import FieldZones from "./FieldZones";
 import { Sidebar } from "./Sidebar";
@@ -27,10 +36,7 @@ import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment
 import { isSelectedSliceTouched } from "@src/modules/selectedSlice/selectors";
 import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
 
-export type SliceBuilderState = {
-  loading: boolean;
-  done: boolean;
-};
+export type SliceBuilderState = ToastPayload & { loading: boolean };
 
 export const initialState: SliceBuilderState = {
   loading: false,
@@ -38,63 +44,60 @@ export const initialState: SliceBuilderState = {
 };
 
 const SliceBuilder: ComponentWithSliceProps = ({ slice, variation }) => {
-  const { openToaster, updateSlice } = useSliceMachineActions();
+  const { openToaster } = useSliceMachineActions();
   const isTouched = useSelector((store: SliceMachineStoreType) =>
     isSelectedSliceTouched(store, slice.from, slice.model.id),
   );
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
-  const [data, setData] = useState<SliceBuilderState>(initialState);
+  const [state, setState] = useState<SliceBuilderState>(initialState);
 
   useEffect(() => {
     if (isTouched) {
-      setData(initialState);
+      setState(initialState);
     }
   }, [isTouched]);
 
   // activate/deactivate Success message
   useEffect(() => {
-    if (data.done) {
-      // @ts-expect-error TS(2345) FIXME: Argument of type '(content: string | React.ReactNo... Remove this comment to see the full error message
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      handleRemoteResponse(openToaster)(data);
+    if (state.done) {
+      handleRemoteResponse(openToaster)(state);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [state]);
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!variation) return <AppLayout />;
   else
     return (
       <SliceBuilderForVariation
-        updateSlice={(slice) => {
-          updateSlice(slice, setData);
-        }}
+        setState={setState}
         slice={slice}
         variation={variation}
         isTouched={isTouched}
-        data={data}
+        state={state}
       />
     );
 };
 
 type SliceBuilderForVariationProps = {
-  updateSlice: (slice: ComponentUI) => void;
+  setState: Dispatch<SetStateAction<SliceBuilderState>>;
   slice: ComponentUI;
   variation: VariationSM;
   isTouched: boolean;
-  data: SliceBuilderState;
+  state: SliceBuilderState;
 };
-const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
-  updateSlice,
+const SliceBuilderForVariation: FC<SliceBuilderForVariationProps> = ({
+  setState,
   slice,
   variation,
   isTouched,
-  data,
+  state,
 }) => {
   const isSimulatorAvailableForFramework = useSelector(
     selectIsSimulatorAvailableForFramework,
   );
+  const { updateSlice } = useSliceMachineActions();
 
   return (
     <AppLayout>
@@ -107,10 +110,10 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
             isTouched={!!isTouched}
           />
           <Button
-            loading={data.loading}
-            disabled={!isTouched || data.loading}
+            loading={state.loading}
+            disabled={!isTouched || state.loading}
             onClick={() => {
-              updateSlice(slice);
+              updateSlice(slice, setState);
             }}
             data-cy="builder-save-button"
           >
@@ -128,7 +131,8 @@ const SliceBuilderForVariation: React.FC<SliceBuilderForVariationProps> = ({
           <Sidebar
             slice={slice}
             variation={variation}
-            updateSlice={updateSlice}
+            sliceBuilderState={state}
+            setSliceBuilderState={setState}
           />
           <FieldZones variation={variation} />
         </Box>

@@ -9,6 +9,7 @@ import {
   Icon,
   IconButton,
   Text,
+  Tooltip,
   tokens,
 } from "@prismicio/editor-ui";
 import Link from "next/link";
@@ -52,7 +53,12 @@ type SharedSliceCardProps = {
 );
 
 type Action =
-  | { type: "menu"; onRemove?: () => void; onRename?: () => void }
+  | {
+      type: "menu";
+      onRemove: () => void;
+      onRename: () => void;
+      removeDisabled?: boolean;
+    }
   | { type: "remove"; onRemove: () => void }
   | ({ type: "status" } & Omit<StatusBadgeProps, "modelType">);
 
@@ -163,14 +169,6 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
                 align="end"
                 data-cy="slice-action-icon-dropdown"
               >
-                {action.onRename ? (
-                  <DropdownMenuItem
-                    onSelect={action.onRename}
-                    startIcon={<Icon name="edit" />}
-                  >
-                    Rename
-                  </DropdownMenuItem>
-                ) : undefined}
                 {canUpdateScreenshot && disableOverlay ? (
                   <DropdownMenuItem
                     onSelect={onUpdateScreenshot}
@@ -179,15 +177,22 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
                     Update screenshot
                   </DropdownMenuItem>
                 ) : undefined}
-                {action.onRemove ? (
+                <DropdownMenuItem
+                  onSelect={action.onRename}
+                  startIcon={<Icon name="edit" />}
+                >
+                  Rename
+                </DropdownMenuItem>
+                <Tooltip content="The slice needs to have at least one variation.">
                   <DropdownMenuItem
                     color="tomato"
+                    disabled={action.removeDisabled}
                     onSelect={action.onRemove}
                     startIcon={<Icon name="delete" />}
                   >
                     Delete
                   </DropdownMenuItem>
-                ) : undefined}
+                </Tooltip>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : action.type === "remove" ? (

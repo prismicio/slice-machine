@@ -15,7 +15,7 @@ import { SliceSM } from "@lib/models/common/Slice";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import { AuthStatus } from "../userContext/types";
-import { getChangelogApiClient } from "@src/apiClient";
+import * as apiClient from "@src/apiClient";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
@@ -142,7 +142,7 @@ export function* getChangelogSaga(): Generator<
   PackageChangelog
 > {
   try {
-    const changelog = yield call(getChangelogApiClient);
+    const changelog = yield call(apiClient.getChangelog);
     yield put(getChangelogCreator.success({ changelog }));
   } catch {
     yield put(getChangelogCreator.failure());
