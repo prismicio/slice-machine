@@ -39,16 +39,19 @@ export const Default = {
               name: "Production",
               domain: "example-prismic-repo",
               kind: "prod",
+              users: [{ id: "id" }],
             },
             {
               name: "Staging",
               domain: "example-prismic-repo-staging",
               kind: "stage",
+              users: [{ id: "id" }],
             },
             {
               name: "Development",
               domain: "example-prismic-repo-development",
               kind: "dev",
+              users: [{ id: "id" }],
             },
           ]}
           activeEnvironmentDomain="example-prismic-repo"

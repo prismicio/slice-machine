@@ -9,14 +9,11 @@ import {
   Icon,
   Text,
 } from "@prismicio/editor-ui";
+import { Environment } from "@slicemachine/manager/client";
 import type { FC } from "react";
 import clsx from "clsx";
 
-import {
-  Environment,
-  getEnvironment,
-  sortEnvironments,
-} from "@src/domain/environment";
+import { getEnvironment, sortEnvironments } from "@src/domain/environment";
 import LogoIcon from "@src/icons/LogoIcon";
 
 import * as styles from "./SideNavEnvironmentSelector.css";
@@ -24,12 +21,13 @@ import * as styles from "./SideNavEnvironmentSelector.css";
 type SideNavEnvironmentSelectorProps = {
   environments: Environment[];
   activeEnvironmentDomain: string;
+  onSelect?: (environment: Environment) => void;
 };
 
 export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
   props,
 ) => {
-  const { environments, activeEnvironmentDomain } = props;
+  const { environments, activeEnvironmentDomain, onSelect } = props;
 
   const activeEnvironment = getEnvironment(
     environments,
@@ -56,18 +54,19 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
       <EnvironmentDropdownMenu
         environments={environments}
         activeEnvironmentDomain={activeEnvironmentDomain}
+        onSelect={onSelect}
       />
     </Box>
   );
 };
 
-type EnvironmentDropdownMenuProps = {
-  environments: SideNavEnvironmentSelectorProps["environments"];
-  activeEnvironmentDomain: Environment["domain"];
-};
+type EnvironmentDropdownMenuProps = Pick<
+  SideNavEnvironmentSelectorProps,
+  "environments" | "activeEnvironmentDomain" | "onSelect"
+>;
 
 const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
-  const { environments, activeEnvironmentDomain } = props;
+  const { environments, activeEnvironmentDomain, onSelect } = props;
 
   const sortedEnvironments = sortEnvironments(environments);
 
@@ -81,16 +80,18 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
         {sortedEnvironments.map((environment) =>
           environment.kind !== "dev" ? (
             <EnvironmentDropdownMenuItem
-              {...environment}
               key={environment.domain}
+              environment={environment}
+              onSelect={onSelect}
               isActive={environment.domain === activeEnvironmentDomain}
             />
           ) : (
             <>
               <DropdownMenuLabel>Personal Environment</DropdownMenuLabel>
               <EnvironmentDropdownMenuItem
-                {...environment}
                 key={environment.domain}
+                environment={environment}
+                onSelect={onSelect}
                 isActive={environment.domain === activeEnvironmentDomain}
               />
             </>
@@ -102,34 +103,33 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
 };
 
 type EnvironmentDropdownMenuItemProps = {
-  name: Environment["name"];
-  kind: Environment["kind"];
-  domain: Environment["domain"];
+  environment: Environment;
   isActive?: boolean;
-};
+} & Pick<SideNavEnvironmentSelectorProps, "onSelect">;
 
 const EnvironmentDropdownMenuItem: FC<EnvironmentDropdownMenuItemProps> = (
   props,
 ) => {
-  const { name, kind, domain, isActive } = props;
+  const { environment, onSelect, isActive } = props;
 
   return (
     <DropdownMenuItem
       startIcon={
-        <EnvironmentDot kind={kind} className={styles.menuItemEnvironmentDot} />
+        <EnvironmentDot
+          kind={environment.kind}
+          className={styles.menuItemEnvironmentDot}
+        />
       }
       endIcon={Boolean(isActive) ? <Icon name="check" /> : undefined}
-      onSelect={() => {
-        console.log(`Clicked ${name} (${domain})`);
-      }}
+      onSelect={() => onSelect?.(environment)}
     >
-      {name}
+      {environment.name}
     </DropdownMenuItem>
   );
 };
 
 type EnvironmentDotProps = {
-  kind: EnvironmentDropdownMenuItemProps["kind"];
+  kind: Environment["kind"];
   className?: string;
 };
 

@@ -1,8 +1,4 @@
-export type Environment = {
-  name: string;
-  domain: string;
-  kind: "prod" | "stage" | "dev";
-};
+import { Environment } from "@slicemachine/manager/client";
 
 /**
  * Returns an environment selected by name from a list of environments.
