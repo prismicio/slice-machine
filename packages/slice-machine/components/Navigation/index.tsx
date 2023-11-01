@@ -13,13 +13,13 @@ import {
   SideNavSeparator,
   SideNavLink,
   SideNavListItem,
-  SideNavLogo,
   SideNavList,
   UpdateInfo,
   RightElement,
   SideNav,
   SideNavRepository,
 } from "@src/components/SideNav/SideNav";
+import { Divider } from "@src/components/Divider";
 import { FolderIcon } from "@src/icons/FolderIcon";
 import { userHasSeenTutorialsToolTip } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -31,7 +31,9 @@ import {
 } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { ChangesListItem } from "./ChangesListItem";
-import { Environments } from "./Environments";
+import { Environment } from "./Environment";
+
+import * as styles from "./index.css";
 
 const Navigation: FC = () => {
   const { changelog, repoName, apiEndpoint, hasSeenTutorialsToolTip } =
@@ -50,19 +52,19 @@ const Navigation: FC = () => {
 
   return (
     <SideNav>
-      <SideNavLogo />
+      <ErrorBoundary>
+        <Suspense>
+          <Environment />
+        </Suspense>
+      </ErrorBoundary>
+
+      <Divider className={styles.environmentDivider} />
 
       <SideNavRepository
         repositoryName={repoName}
         repositoryDomain={repoDomain}
         href={repoAddress}
       />
-
-      <ErrorBoundary>
-        <Suspense>
-          <Environments />
-        </Suspense>
-      </ErrorBoundary>
 
       <SideNavList>
         <SideNavListItem>

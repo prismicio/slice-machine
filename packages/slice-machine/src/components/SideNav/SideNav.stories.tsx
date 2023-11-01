@@ -38,9 +38,20 @@ export const Default = {
             {
               name: "Production",
               domain: "example-prismic-repo",
-              type: "prod",
+              kind: "prod",
+            },
+            {
+              name: "Staging",
+              domain: "example-prismic-repo-staging",
+              kind: "stage",
+            },
+            {
+              name: "Development",
+              domain: "example-prismic-repo-development",
+              kind: "dev",
             },
           ]}
+          activeEnvironmentDomain="example-prismic-repo"
         />
 
         <SideNavRepository

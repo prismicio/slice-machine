@@ -20,35 +20,50 @@ const blockWithDisplayRevert = style([
 export const logo = style([
   blockWithDisplayRevert,
   sprinkles({
-    height: 32,
-    marginBottom: 32,
-    width: 32,
+    height: 40,
+    width: 40,
   }),
 ]);
 
-const dotBase = sprinkles({
-  width: 16,
-  height: 16,
-  flexShrink: 0,
+const environmentDotBase = style([
+  sprinkles({
+    flexShrink: 0,
+    borderRadius: "50%",
+    backgroundColor: colors.currentColor,
+  }),
+  {
+    width: 10,
+    height: 10,
+  },
+]);
+
+export const environmentDot = styleVariants({
+  prod: [environmentDotBase, sprinkles({ color: colors.purple8 })],
+  stage: [environmentDotBase, sprinkles({ color: colors.indigo10 })],
+  dev: [environmentDotBase, sprinkles({ color: colors.amber10 })],
 });
 
-export const dot = styleVariants({
-  prod: [
-    dotBase,
-    sprinkles({
-      color: colors.purple8,
-    }),
-  ],
-  stage: [
-    dotBase,
-    sprinkles({
-      color: colors.indigo10,
-    }),
-  ],
-  dev: [
-    dotBase,
-    sprinkles({
-      color: colors.amber10,
-    }),
-  ],
+export const menuItemEnvironmentDot = sprinkles({
+  marginRight: 2,
+  marginLeft: 2,
 });
+
+export const activeEnvironmentDot = style([
+  sprinkles({
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    outlineWidth: 3,
+    outlineColor: colors.grey2,
+    outlineStyle: "solid",
+  }),
+  {
+    transform: "translate(50%, 50%)",
+  },
+]);
+
+export const activeEnvironmentName = style([
+  {
+    fontWeight: 500,
+  },
+]);

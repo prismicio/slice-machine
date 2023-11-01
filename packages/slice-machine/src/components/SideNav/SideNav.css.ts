@@ -101,7 +101,6 @@ export const repositoryLinkIcon = style([
     borderWidth: 1,
     cursor: "pointer",
     height: 32,
-    marginRight: 8,
     width: 32,
     color: colors.grey12,
     backgroundColor: {
