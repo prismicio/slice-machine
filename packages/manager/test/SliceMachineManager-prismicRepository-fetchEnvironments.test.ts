@@ -33,41 +33,13 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 			kind: "prod",
 			domain: repositoryName,
 			name: repositoryName,
-			avatarColor: "#FF00FF",
-			uploadedAvatar: null,
-			createdAt: 1664309250645,
-			lastUpdated: 1696903383052,
-			importId: "importId",
-			pendingUsers: [
-				{
-					email: "email",
-					inviterEmail: "inviterEmail",
-					status: "pending_user",
-					profileId: "Manager",
-				},
-			],
-			authorizedUser: true,
-			authorizedAdmin: true,
+			users: [{ id: "id" }],
 		},
 		{
 			kind: "stage",
 			domain: `${repositoryName}-foo`,
 			name: "foo",
-			avatarColor: "#FF00FF",
-			uploadedAvatar: null,
-			createdAt: 1664309250645,
-			lastUpdated: 1696903383052,
-			importId: "importId",
-			pendingUsers: [
-				{
-					email: "email",
-					inviterEmail: "inviterEmail",
-					status: "pending_user",
-					profileId: "Manager",
-				},
-			],
-			authorizedUser: true,
-			authorizedAdmin: true,
+			users: [{ id: "id" }],
 		},
 	];
 
