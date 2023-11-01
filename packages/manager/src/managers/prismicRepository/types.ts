@@ -157,23 +157,13 @@ export type StarterId =
 	| "nuxt_multi_lang";
 
 export const Environment = t.type({
-	kind: t.union([t.literal("prod"), t.literal("stage")]),
-	domain: t.string,
+	kind: t.union([t.literal("prod"), t.literal("stage"), t.literal("dev")]),
 	name: t.string,
-	avatarColor: t.string,
-	uploadedAvatar: t.union([t.string, t.null]),
-	createdAt: t.number,
-	lastUpdated: t.number,
-	importId: t.union([t.string, t.null]),
-	pendingUsers: t.array(
+	domain: t.string,
+	users: t.array(
 		t.type({
-			email: t.string,
-			inviterEmail: t.string,
-			status: t.string, // TODO: Add a more correct union.
-			profileId: t.string, // TODO: Add a more correct union.
+			id: t.string,
 		}),
 	),
-	authorizedUser: t.boolean,
-	authorizedAdmin: t.boolean,
 });
 export type Environment = t.TypeOf<typeof Environment>;

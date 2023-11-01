@@ -12,6 +12,8 @@ export type {
 	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
 } from "../managers/simulator/SimulatorManager";
 
+export type { Environment } from "../managers/prismicRepository/types";
+
 export type { SliceMachineManagerPushSliceReturnType } from "../managers/slices/SlicesManager";
 
 export {
