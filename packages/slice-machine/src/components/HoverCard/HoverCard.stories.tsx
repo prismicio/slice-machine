@@ -56,7 +56,7 @@ export const Video = {
           component="video"
           cloudName="dmtf1daqp"
           publicId="Tooltips/pa-course-overview_eaopsn"
-          poster="phil.png"
+          poster="prismic-academy-101.png"
         />
         <HoverCardDescription>
           Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
