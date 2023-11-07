@@ -162,15 +162,9 @@ export const listTitle = style([
   },
 ]);
 
-export const dashedLine = style([
-  blockWithDisplayRevert,
-  sprinkles({
-    borderColor: colors.grey6,
-    borderTopStyle: "dashed",
-    borderWidth: 1,
-    marginTop: 8,
-  }),
-]);
+export const separator = sprinkles({
+  marginTop: 8,
+});
 
 export const link = style([
   block,

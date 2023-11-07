@@ -58,7 +58,11 @@ const Navigation: FC = () => {
         </Suspense>
       </ErrorBoundary>
 
-      <Divider className={styles.environmentDivider} />
+      <Divider
+        variant="edgeFaded"
+        color="grey6"
+        className={styles.environmentDivider}
+      />
 
       <SideNavRepository
         repositoryName={repoName}

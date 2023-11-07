@@ -13,9 +13,19 @@ export const variants = styleVariants({
   dashed: [
     base,
     sprinkles({
-      borderColor: colors.grey6,
+      borderColor: colors.currentColor,
       borderTopStyle: "dashed",
       borderWidth: 1,
     }),
+  ],
+  edgeFaded: [
+    base,
+    sprinkles({
+      height: 1,
+    }),
+    {
+      backgroundImage:
+        "linear-gradient(to right, color-mix(in srgb, currentColor 0%, transparent), currentColor, color-mix(in srgb, currentColor 0%, transparent))",
+    },
   ],
 });
