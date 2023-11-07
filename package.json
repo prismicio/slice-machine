@@ -6,7 +6,6 @@
   "packageManager": "yarn@3.6.0",
   "scripts": {
     "dev": "concurrently --prefix-colors auto \"yarn:dev:*\"",
-    "dev:init": "yarn workspace @slicemachine/init dev",
     "dev:manager": "yarn workspace @slicemachine/manager dev",
     "dev:start-slicemachine": "yarn workspace start-slicemachine dev",
     "dev:plugin-kit": "yarn workspace @slicemachine/plugin-kit dev",
