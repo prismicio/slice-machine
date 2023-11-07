@@ -1,15 +1,19 @@
 import { expect, it } from "vitest";
+import { rest } from "msw";
 
 import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
-import { mockPrismicRepositoryAPI } from "./__testutils__/mockPrismicRepositoryAPI";
+import { mockSliceMachineAPI } from "./__testutils__/mockSliceMachineAPI";
 
-import { createSliceMachineManager } from "../src";
-import { Environment } from "../src/managers/prismicRepository/types";
-import { UnauthenticatedError } from "../src/errors";
+import {
+	createSliceMachineManager,
+	Environment,
+	UnauthenticatedError,
+	UnauthorizedError,
+} from "../src";
 
 it("returns a list of environments for the Prismic repository", async (ctx) => {
 	const adapter = createTestPlugin();
@@ -43,8 +47,8 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 		},
 	];
 
-	mockPrismicRepositoryAPI(ctx, {
-		environmentsEndpoint: {
+	mockSliceMachineAPI(ctx, {
+		environmentsV1Endpoint: {
 			expectedAuthenticationToken: authenticationToken,
 			expectedCookies: prismicAuthLoginResponse.cookies,
 			environments,
@@ -72,8 +76,8 @@ it("throws if the repository API call was unsuccessful", async (ctx) => {
 
 	const authenticationToken = await manager.user.getAuthenticationToken();
 
-	mockPrismicRepositoryAPI(ctx, {
-		environmentsEndpoint: {
+	mockSliceMachineAPI(ctx, {
+		environmentsV1Endpoint: {
 			isSuccessful: false,
 			expectedAuthenticationToken: authenticationToken,
 			expectedCookies: prismicAuthLoginResponse.cookies,
@@ -102,8 +106,8 @@ it("throws if the API response was invalid", async (ctx) => {
 
 	const authenticationToken = await manager.user.getAuthenticationToken();
 
-	mockPrismicRepositoryAPI(ctx, {
-		environmentsEndpoint: {
+	mockSliceMachineAPI(ctx, {
+		environmentsV1Endpoint: {
 			isSuccessful: false,
 			expectedAuthenticationToken: authenticationToken,
 			expectedCookies: prismicAuthLoginResponse.cookies,
@@ -119,6 +123,68 @@ it("throws if the API response was invalid", async (ctx) => {
 	await expect(async () => {
 		await manager.prismicRepository.fetchEnvironments();
 	}).rejects.toThrow(/failed to fetch environments/i);
+});
+
+it("throws UnauthenticatedError if the API returns 401", async (ctx) => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+
+	ctx.msw.use(
+		rest.get(
+			new URL(
+				"./environments",
+				"https://slice-machine-api.example/",
+			).toString(),
+			(_req, res, ctx) => {
+				return res(ctx.status(401));
+			},
+		),
+	);
+
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthenticatedError);
+});
+
+it("throws UnauthorizedError if the API returns 403", async (ctx) => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+
+	ctx.msw.use(
+		rest.get(
+			new URL(
+				"./environments",
+				"https://slice-machine-api.example/",
+			).toString(),
+			(_req, res, ctx) => {
+				return res(ctx.status(403));
+			},
+		),
+	);
+
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthorizedError);
 });
 
 it("throws if not logged in", async () => {

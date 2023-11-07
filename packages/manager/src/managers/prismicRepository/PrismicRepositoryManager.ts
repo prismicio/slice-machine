@@ -2,12 +2,15 @@ import * as t from "io-ts";
 import fetch, { Response } from "../../lib/fetch";
 import { fold } from "fp-ts/Either";
 
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decode } from "../../lib/decode";
 import { serializeCookies } from "../../lib/serializeCookies";
 
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
+
+import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -29,8 +32,6 @@ import {
 	StarterId,
 	Environment,
 } from "./types";
-import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
-import { UnauthenticatedError } from "../../errors";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -427,7 +428,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	async fetchEnvironments(): Promise<Environment[]> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL("./environments", API_ENDPOINTS.PrismicWroom);
+		const url = new URL("./environments", API_ENDPOINTS.SliceMachine);
 		const res = await this._fetch({ url, repository: repositoryName });
 
 		if (res.ok) {
@@ -442,8 +443,15 @@ export class PrismicRepositoryManager extends BaseManager {
 			}
 
 			return environments;
-		} else {
-			throw new Error(`Failed to fetch environments.`);
+		}
+
+		switch (res.status) {
+			case 401:
+				throw new UnauthenticatedError();
+			case 403:
+				throw new UnauthorizedError();
+			default:
+				throw new Error("Failed to fetch environments.");
 		}
 	}
 
