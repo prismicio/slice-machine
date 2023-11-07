@@ -68,3 +68,16 @@ export function sortEnvironments(environments: Environment[]): Environment[] {
     }
   });
 }
+
+// TODO: Is this function used anywhere? Remove it if it isn't.
+/**
+ * Builds an `Environment` object representing the production environment. The object is to be used when an environment is not
+ */
+export function buildProductionEnvironmentFallback(domain: string) {
+  return {
+    name: "Production",
+    domain,
+    kind: "prod",
+    users: [],
+  };
+}

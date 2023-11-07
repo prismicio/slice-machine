@@ -1,6 +1,6 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 // import { isUnauthenticatedError } from "@slicemachine/manager/client";
-//
+
 import { managerClient } from "@src/managerClient";
 
 async function getEnvironments(): Promise<
@@ -32,7 +32,16 @@ async function getEnvironments(): Promise<
   //   return await managerClient.prismicRepository.fetchEnvironments();
   // } catch (error) {
   //   if (isUnauthenticatedError(error)) {
-  //     return [];
+  //     const repositoryName = await managerClient.project.getRepositoryName();
+  //
+  //     return [
+  //       {
+  //         name: "Production",
+  //         domain: repositoryName,
+  //         kind: "prod",
+  //         users: [],
+  //       },
+  //     ];
   //   }
   //
   //   throw error;
