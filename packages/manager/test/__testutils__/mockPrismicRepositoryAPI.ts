@@ -1,8 +1,6 @@
 import { TestContext } from "vitest";
 import { rest } from "msw";
 
-import { Environment } from "../../src/managers/prismicRepository/types";
-
 type MockPrismicRepositoryAPIConfig = {
 	endpoint?: string;
 	existsEndpoint?: {
@@ -34,12 +32,6 @@ type MockPrismicRepositoryAPIConfig = {
 		domain: string;
 		signature: string;
 		documents: Record<string, unknown>;
-	};
-	environmentsEndpoint?: {
-		isSuccessful?: boolean;
-		expectedAuthenticationToken: string;
-		expectedCookies: string[];
-		environments: Environment[];
 	};
 };
 
@@ -199,33 +191,6 @@ export const mockPrismicRepositoryAPI = (
 							ctx.text(config.starterDocumentsEndpoint?.failureReason || ""),
 							ctx.status(500),
 						);
-					}
-				},
-			),
-		);
-	}
-
-	if (config.environmentsEndpoint) {
-		ctx.msw.use(
-			rest.get(
-				new URL(`./environments`, endpoint).toString(),
-				(req, res, ctx) => {
-					if (config.environmentsEndpoint?.isSuccessful ?? true) {
-						if (
-							req.headers.get("Authorization") ===
-								`Bearer ${config.environmentsEndpoint?.expectedAuthenticationToken}` &&
-							req.headers.get("Cookie") ===
-								config.environmentsEndpoint?.expectedCookies.join("; ")
-						) {
-							return res(
-								ctx.json(config.environmentsEndpoint?.environments),
-								ctx.status(200),
-							);
-						} else {
-							return res(ctx.status(401));
-						}
-					} else {
-						return res(ctx.status(401));
 					}
 				},
 			),

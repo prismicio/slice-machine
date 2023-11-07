@@ -9,6 +9,7 @@ export type APIEndpoints = {
 	AwsAclProvider: string;
 	PrismicOembed: string;
 	PrismicUnsplash: string;
+	SliceMachine: string;
 };
 
 export const API_ENDPOINTS: APIEndpoints = (() => {
@@ -28,6 +29,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				PrismicUnsplash: removeTrailingSlash(
 					process.env.unsplash_endpoint ?? "https://unsplash.wroom.io",
 				),
+				SliceMachine: addTrailingSlash(process.env.slice_machine_endpoint),
 			};
 
 			const missingAPIEndpoints = Object.keys(apiEndpoints).filter((key) => {
@@ -57,6 +59,8 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
 				PrismicOembed: "https://oembed.wroom.io",
 				PrismicUnsplash: "https://unsplash.wroom.io",
+				// TODO: Update to the correct deployed URL.
+				SliceMachine: "https://slice-machine-api-staging.example",
 			};
 		}
 
@@ -71,6 +75,8 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
 				PrismicOembed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io",
+				// TODO: Update to the correct deployed URL.
+				SliceMachine: "https://slice-machine-api.example",
 			};
 		}
 	}
