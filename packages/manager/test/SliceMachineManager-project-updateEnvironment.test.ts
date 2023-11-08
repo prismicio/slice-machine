@@ -60,6 +60,36 @@ it("supports undefined environment", async () => {
 	});
 });
 
+it("calls the adapter's `project:environment:update` with `undefined` if the provided environment is the production environment", async () => {
+	const hookHandler = vi.fn();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("project:environment:read", () => ({ environment: "foo" }));
+			hook("project:environment:update", hookHandler);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	const repositoryName = await manager.project.getRepositoryName();
+
+	const res = await manager.project.updateEnvironment({
+		environment: repositoryName,
+	});
+
+	expect(res).toStrictEqual({
+		errors: [],
+	});
+	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
+		environment: undefined,
+	});
+});
+
 it("throws if the adapter does not support environments", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });

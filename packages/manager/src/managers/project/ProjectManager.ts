@@ -359,8 +359,14 @@ export class ProjectManager extends BaseManager {
 			hookResult,
 		);
 
+		const repositoryName = await this.project.getRepositoryName();
+		const environment =
+			data[0]?.environment === repositoryName
+				? undefined
+				: data[0]?.environment;
+
 		return {
-			environment: data[0]?.environment,
+			environment,
 			errors,
 		};
 	}
@@ -372,9 +378,14 @@ export class ProjectManager extends BaseManager {
 
 		await this._assertAdapterSupportsEnvironments();
 
+		const repositoryName = await this.project.getRepositoryName();
+
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"project:environment:update",
-			args,
+			{
+				environment:
+					args.environment === repositoryName ? undefined : args.environment,
+			},
 		);
 
 		return {
