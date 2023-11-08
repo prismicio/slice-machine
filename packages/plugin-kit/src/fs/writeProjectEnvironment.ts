@@ -34,13 +34,14 @@ export const writeProjectEnvironment = async (
 		  })
 		: "";
 
-	const variableLine = `${args.variableName}=${args.environment}`;
+	const variableLine = `${args.variableName}=${args.environment}\n`;
 
 	const hasExistingVariable = args.variableName in dotenv.parse(contents);
 
 	if (hasExistingVariable) {
+		// TODO: This regexp/replace is not working.
 		contents = contents.replace(
-			new RegExp(`^${args.variableName}=.*$\n?`),
+			new RegExp(`^${args.variableName}=.*\n?$`, "m"),
 			args.environment === undefined ? "" : variableLine,
 		);
 	} else {
@@ -48,7 +49,7 @@ export const writeProjectEnvironment = async (
 			contents += "\n";
 		}
 
-		contents += variableLine + "\n";
+		contents += variableLine;
 	}
 
 	await writeProjectFile({

@@ -94,7 +94,43 @@ it("updates the variable value if the variable exists", async (ctx) => {
 		"utf8",
 	);
 
-	expect(contents).toMatch(/^FOO=baz$/m);
+	expect(contents).toMatch(/^FOO=baz\n$/m);
+});
+
+it("updates the variable value if the variable exists and the line starts with \n", async (ctx) => {
+	await fs.writeFile(path.join(ctx.project.root, ".env"), "\nFOO=bar");
+
+	await writeProjectEnvironment({
+		variableName: "FOO",
+		environment: "baz",
+		filename: ".env",
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const contents = await fs.readFile(
+		path.join(ctx.project.root, ".env"),
+		"utf8",
+	);
+
+	expect(contents).toMatch(/^FOO=baz\n$/m);
+});
+
+it("updates the variable value if the variable exists and the line ends with \n", async (ctx) => {
+	await fs.writeFile(path.join(ctx.project.root, ".env"), "FOO=bar\n");
+
+	await writeProjectEnvironment({
+		variableName: "FOO",
+		environment: "baz",
+		filename: ".env",
+		helpers: ctx.pluginRunner.rawHelpers,
+	});
+
+	const contents = await fs.readFile(
+		path.join(ctx.project.root, ".env"),
+		"utf8",
+	);
+
+	expect(contents).toMatch(/^FOO=baz\n$/m);
 });
 
 it("appends the variable if other variables exist", async (ctx) => {
