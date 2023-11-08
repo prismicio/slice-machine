@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-next",
-	"version": "0.3.23-dev-next-release.0",
+	"version": "0.3.24-dev-next-release.4",
 	"description": "Slice Machine adapter for Next.js.",
 	"keywords": [
 		"typescript",
@@ -97,7 +97,7 @@
 		"vitest": "0.32.0"
 	},
 	"peerDependencies": {
-		"next": "^11 || ^12 || ^13",
+		"next": ">=11.0.0",
 		"react": "^17 || ^18"
 	},
 	"engines": {

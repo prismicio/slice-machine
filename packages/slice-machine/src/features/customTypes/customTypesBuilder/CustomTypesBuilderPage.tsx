@@ -139,7 +139,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
         </AppLayoutActions>
       </AppLayoutHeader>
       <AppLayoutContent>
-        <Box flexDirection="column">
+        <Box flexDirection="column" minWidth={0}>
           <CustomTypeBuilder customType={currentCustomType} />
         </Box>
       </AppLayoutContent>

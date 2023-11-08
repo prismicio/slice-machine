@@ -45,7 +45,10 @@ const fetchAllGitHubReleases = async (
 
 		return value;
 	} else {
-		throw new Error(`Invalid GitHub Release response.`);
+		const text = await res.text();
+		throw new Error(`Invalid GitHub Release response.`, {
+			cause: text,
+		});
 	}
 };
 

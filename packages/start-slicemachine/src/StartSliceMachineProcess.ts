@@ -120,19 +120,6 @@ export class StartSliceMachineProcess {
 			});
 		}
 
-		// TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
-		// // Prepare the manager for Slice Machine actions.
-		// try {
-		// 	// TODO: This try...catch statement is a temporary fix
-		// 	// to let internal reviewers try Slice Machine without
-		// 	// crashing early. We need to figure out how to
-		// 	// properly install and load Puppeteer without this
-		// 	// workaround.
-		// 	await this._sliceMachineManager.screenshots.initBrowserContext();
-		// } catch {
-		// 	// noop - We'll try again before taking a screenshot.
-		// }
-
 		if (profile) {
 			await Promise.allSettled([
 				// noop - We'll try again when needed.
