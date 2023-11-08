@@ -18,7 +18,6 @@ import {
 import {
   userHasSeenChangesToolTip,
   userHasSeenSimulatorToolTip,
-  userHasSeenTutorialsToolTip,
 } from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ChangesRightElement } from "./ChangesRightElement";
@@ -68,13 +67,11 @@ const useOpenChangesHoverCard = () => {
   const {
     hasSeenChangesToolTip,
     hasSeenSimulatorToolTip,
-    hasSeenTutorialsToolTip,
     isSavingCustomType,
     isSavingSlice,
   } = useSelector((store: SliceMachineStoreType) => ({
     hasSeenChangesToolTip: userHasSeenChangesToolTip(store),
     hasSeenSimulatorToolTip: userHasSeenSimulatorToolTip(store),
-    hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
     isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
     isSavingSlice: isLoading(store, LoadingKeysEnum.SAVE_SLICE),
   }));
@@ -88,7 +85,6 @@ const useOpenChangesHoverCard = () => {
 
   return (
     !hasSeenChangesToolTip &&
-    hasSeenTutorialsToolTip &&
     hasSeenSimulatorToolTip &&
     !isSaving &&
     prevIsSaving

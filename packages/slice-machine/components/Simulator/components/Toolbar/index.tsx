@@ -11,20 +11,14 @@ import {
 } from "./ScreensizeInput";
 
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@lib/models/common/Slice";
 
 type ToolbarProps = {
-  slice: ComponentUI;
-  variation: VariationSM;
   handleScreenSizeChange: (screenDimensions: ScreenDimensions) => void;
   screenDimensions: ScreenDimensions;
   actionsDisabled: boolean;
 };
 
 export const Toolbar: React.FC<ToolbarProps> = ({
-  slice: _slice,
-  variation: _variation,
   handleScreenSizeChange,
   screenDimensions,
   actionsDisabled,
@@ -56,30 +50,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     setSelectedDropdown(newDropDownState);
     handleScreenSizeChange(newScreenDimensions);
   };
-
-  // TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
-  // const { generateSliceScreenshot } = useSliceMachineActions();
-  //
-  // const onTakingSliceScreenshot = () => {
-  //   generateSliceScreenshot(
-  //     variation.id,
-  //     slice,
-  //     {
-  //       width: screenDimensions.width,
-  //       height: screenDimensions.height,
-  //     },
-  //     "fromSimulator"
-  //   );
-  // };
-  //
-  // const { isSavingScreenshot } = useSelector(
-  //   (store: SliceMachineStoreType) => ({
-  //     isSavingScreenshot: isLoading(
-  //       store,
-  //       LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
-  //     ),
-  //   })
-  // );
 
   return (
     <Flex
@@ -129,18 +99,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           sx={{ ml: 2 }}
         />
       </Flex>
-      {/* 
-		  // TODO(DT-1534): Uncomment to enable Puppeteer screenshots or delete if we decide to remove Puppeteer
-      <Button
-        onClick={onTakingSliceScreenshot}
-        label="Take a screenshot"
-        isLoading={isSavingScreenshot}
-        Icon={AiFillCamera}
-        iconSize={20}
-        iconFill="#6F6E77"
-        variant="secondaryMedium"
-        disabled={actionsDisabled}
-      /> */}
     </Flex>
   );
 };

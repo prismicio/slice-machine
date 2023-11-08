@@ -31,7 +31,7 @@ describe("slices", () => {
     mockRouter.setCurrentUrl("/slices");
   });
 
-  test.skip("When user creates a slice it should send a tracking event", async (ctx) => {
+  test("When user creates a slice it should send a tracking event", async (ctx) => {
     const adapter = createTestPlugin({
       setup: ({ hook }) => {
         hook("slice:create", () => void 0);
@@ -206,7 +206,7 @@ describe("slices", () => {
     );
   });
 
-  test.skip("if creation fails it sohuld not send the tracking event", async (ctx) => {
+  test("if creation fails it sohuld not send the tracking event", async (ctx) => {
     const adapter = createTestPlugin({
       setup: ({ hook }) => {
         hook("slice:create", () => {

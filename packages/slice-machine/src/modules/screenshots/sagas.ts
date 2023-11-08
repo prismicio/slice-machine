@@ -8,64 +8,12 @@ import {
 import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
+import { generateSliceCustomScreenshotCreator } from "./actions";
 import {
-  generateSliceScreenshotCreator,
-  generateSliceCustomScreenshotCreator,
-} from "./actions";
-import {
-  generateSliceScreenshotApiClient,
   generateSliceCustomScreenshotApiClient,
   telemetry,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-
-export function* generateSliceScreenshotSaga({
-  payload,
-}: ReturnType<typeof generateSliceScreenshotCreator.request>) {
-  const { component, variationId, screenDimensions, method } = payload;
-  try {
-    const response = (yield call(generateSliceScreenshotApiClient, {
-      libraryName: component.from,
-      sliceId: component.model.id,
-      variationId,
-      screenDimensions,
-    })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
-
-    if (!response) {
-      throw Error("No screenshot saved");
-    }
-
-    yield put(
-      openToasterCreator({
-        url: response.url,
-        type: ToasterType.SCREENSHOT_CAPTURED,
-      }),
-    );
-
-    void telemetry.track({
-      event: "screenshot-taken",
-      type: "automatic",
-      method,
-    });
-
-    yield put(
-      generateSliceScreenshotCreator.success({
-        variationId,
-        screenshot: {
-          url: response.url,
-        },
-        component,
-      }),
-    );
-  } catch (e) {
-    yield put(
-      openToasterCreator({
-        content: "Internal Error: Screenshot not saved",
-        type: ToasterType.ERROR,
-      }),
-    );
-  }
-}
 
 export function* generateSliceCustomScreenshotSaga({
   payload,
@@ -109,15 +57,6 @@ export function* generateSliceCustomScreenshotSaga({
   }
 }
 
-function* watchGenerateSliceScreenshot() {
-  yield takeLatest(
-    getType(generateSliceScreenshotCreator.request),
-    withLoader(
-      generateSliceScreenshotSaga,
-      LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT,
-    ),
-  );
-}
 function* watchGenerateSliceCustomScreenshot() {
   yield takeLatest(
     getType(generateSliceCustomScreenshotCreator.request),
@@ -130,6 +69,5 @@ function* watchGenerateSliceCustomScreenshot() {
 
 // Saga Exports
 export function* screenshotsSagas() {
-  yield fork(watchGenerateSliceScreenshot);
   yield fork(watchGenerateSliceCustomScreenshot);
 }

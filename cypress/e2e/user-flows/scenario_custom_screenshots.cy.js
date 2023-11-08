@@ -26,10 +26,11 @@ describe("I am an existing SM user and I want to upload screenshots on variation
     sliceBuilder.goTo(slice.library, slice.name);
   });
 
-  it.skip("Upload and replace custom screenshots", () => {
+  it("Upload and replace custom screenshots", () => {
     // Upload custom screenshot on default variation
-    sliceBuilder.imagePreview.should("not.exist");
-    sliceBuilder.openScreenshotModal();
+    let sliceCard = new SliceCard(slice.name);
+    sliceCard.imagePreview.should("not.exist");
+    sliceCard.openScreenshotModal();
 
     screenshotModal
       .verifyImageIsEmpty()
@@ -38,22 +39,23 @@ describe("I am an existing SM user and I want to upload screenshots on variation
       .dragAndDropImage(defaultScreenshot)
       .verifyImageIs(defaultScreenshot)
       .close();
-    sliceBuilder.imagePreview.isSameImageAs(defaultScreenshot);
+    sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     // Upload screenshot on variation from the Changes Page
     const missingScreenshotVariation = "Missing screenshot";
     sliceBuilder.addVariation(missingScreenshotVariation);
 
-    sliceBuilder.imagePreview.should("not.exist");
+    sliceCard = new SliceCard(slice.name, missingScreenshotVariation);
+    sliceCard.imagePreview.should("not.exist");
     sliceBuilder.save();
 
     menu.navigateTo("Slices");
-    const sliceCard = new SliceCard(slice.name);
+    sliceCard = new SliceCard(slice.name);
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     menu.navigateTo("Changes");
     changesPage.screenshotsButton.should("be.visible");
-    sliceCard.content.should("include.text", "1/2 screenshots missing");
+    sliceCard.content.should("include.text", "Missing screenshot");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     sliceCard.openScreenshotModal();
@@ -64,7 +66,7 @@ describe("I am an existing SM user and I want to upload screenshots on variation
       .dragAndDropImage(variationScreenshot)
       .verifyImageIs(variationScreenshot)
       .close();
-    sliceCard.content.should("not.include.text", "screenshots missing");
+    sliceCard.content.should("not.include.text", "Missing screenshot");
     sliceCard.imagePreview.isSameImageAs(defaultScreenshot);
 
     changesPage.pushChanges().isUpToDate();

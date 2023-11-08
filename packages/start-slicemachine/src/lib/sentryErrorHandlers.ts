@@ -9,7 +9,9 @@ export const node = (name: string, error: unknown): void => {
 	if (checkIsSentryEnabled()) {
 		Sentry.withScope(function (scope) {
 			scope.setTransactionName(name);
-			Sentry.captureException(error);
+			Sentry.captureException(error, {
+				...(error instanceof Error ? { extra: { cause: error.cause } } : {}),
+			});
 		});
 	}
 };

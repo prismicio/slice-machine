@@ -4,10 +4,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
 import { refreshStateCreator } from "../environment";
-import {
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
-} from "../screenshots/actions";
+import { generateSliceCustomScreenshotCreator } from "../screenshots/actions";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
@@ -23,7 +20,6 @@ export type SelectedSliceActions =
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof refreshStateCreator>
-  | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSelectedSliceMocks>;
 

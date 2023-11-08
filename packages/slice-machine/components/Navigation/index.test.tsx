@@ -270,7 +270,7 @@ describe("Side Navigation", () => {
 
     renderSideNavigation({ canUpdate: true });
 
-    const link = (await screen.findByText("Tutorial")).parentElement
+    const link = (await screen.findByText("Academy")).parentElement
       ?.parentElement as HTMLElement;
 
     await waitFor(() =>
@@ -284,7 +284,7 @@ describe("Side Navigation", () => {
   });
 
   test("Video Item not next", async () => {
-    const { user } = renderSideNavigation({ canUpdate: true });
+    renderSideNavigation({ canUpdate: true });
 
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;
@@ -293,16 +293,5 @@ describe("Side Navigation", () => {
       "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH",
     );
     expect(link).toHaveAttribute("target", "_blank");
-
-    await user.hover(link);
-
-    const tooltip = await screen.findByRole("tooltip");
-    expect(tooltip).toBeVisible();
-    const closeButton = await within(tooltip).findByTestId(
-      "video-tooltip-close-button",
-    );
-    await user.click(closeButton);
-
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
 });

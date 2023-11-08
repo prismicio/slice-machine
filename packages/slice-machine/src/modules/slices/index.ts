@@ -26,10 +26,7 @@ import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { updateSliceCreator } from "../selectedSlice/actions";
-import {
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
-} from "../screenshots/actions";
+import { generateSliceCustomScreenshotCreator } from "../screenshots/actions";
 import { selectSliceById } from "../selectedSlice/selectors";
 import { SlicesStoreType } from "./types";
 
@@ -79,7 +76,6 @@ type SlicesActions =
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
   | ActionType<typeof updateSliceCreator>
-  | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSliceMock>;
 
@@ -161,7 +157,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(generateSliceScreenshotCreator.success):
     case getType(generateSliceCustomScreenshotCreator.success): {
       const { component, screenshot, variationId } = action.payload;
 
