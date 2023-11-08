@@ -2,6 +2,8 @@ import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import type { FC, PropsWithChildren } from "react";
 
+import { useEnvironments } from "@src/features/environments/useEnvironments";
+
 import Navigation from "@components/Navigation";
 import { Breadcrumb, type BreadcrumbProps } from "@src/components/Breadcrumb";
 import {
@@ -14,14 +16,18 @@ import {
 export const AppLayout: FC<PropsWithChildren> = ({
   children,
   ...otherProps
-}) => (
-  <PageLayout {...otherProps}>
-    <PageLayoutPane>
-      <Navigation />
-    </PageLayoutPane>
-    {children}
-  </PageLayout>
-);
+}) => {
+  const { activeEnvironment } = useEnvironments();
+
+  return (
+    <PageLayout activeEnvironmentKind={activeEnvironment.kind} {...otherProps}>
+      <PageLayoutPane>
+        <Navigation />
+      </PageLayoutPane>
+      {children}
+    </PageLayout>
+  );
+};
 
 export const AppLayoutHeader: FC<PropsWithChildren> = ({
   children,

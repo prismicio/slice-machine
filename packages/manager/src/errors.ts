@@ -79,3 +79,7 @@ export const isUnexpectedDataError = (
 export const isInternalError = (error: unknown): error is InternalError => {
 	return isSliceMachineError(error) && error.name === InternalError.name;
 };
+
+export const isPluginError = (error: unknown): error is PluginError => {
+	return isSliceMachineError(error) && error.name === PluginError.name;
+};

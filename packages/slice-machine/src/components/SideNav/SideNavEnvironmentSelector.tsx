@@ -13,25 +13,33 @@ import { Environment } from "@slicemachine/manager/client";
 import type { FC } from "react";
 import clsx from "clsx";
 
-import { getEnvironment, sortEnvironments } from "@src/domain/environment";
+import {
+  buildProductionEnvironmentFallback,
+  sortEnvironments,
+} from "@src/domain/environment";
 import LogoIcon from "@src/icons/LogoIcon";
 
 import * as styles from "./SideNavEnvironmentSelector.css";
 
 type SideNavEnvironmentSelectorProps = {
-  environments: Environment[];
-  activeEnvironmentDomain: string;
-  onSelect?: (environment: Environment) => void;
+  environments: Environment[] | undefined;
+  activeEnvironmentDomain: string | undefined;
+  productionEnvironmentDomain: Environment["domain"];
+  onSelect?: (environment: Environment) => void | Promise<void>;
 };
 
 export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
   props,
 ) => {
-  const { environments, activeEnvironmentDomain, onSelect } = props;
-
-  const activeEnvironment = getEnvironment(
+  const {
     environments,
     activeEnvironmentDomain,
+    productionEnvironmentDomain,
+    onSelect,
+  } = props;
+
+  const activeEnvironment = environments?.find(
+    (environment) => environment.domain === activeEnvironmentDomain,
   );
 
   return (
@@ -39,7 +47,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
       <Box position="relative">
         <LogoIcon className={styles.logo} />
         <EnvironmentDot
-          kind={activeEnvironment.kind}
+          kind={activeEnvironment?.kind ?? "prod"}
           className={styles.activeEnvironmentDot}
         />
       </Box>
@@ -48,12 +56,13 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           Environment
         </Text>
         <Text component="span" className={styles.activeEnvironmentName}>
-          {activeEnvironment.name}
+          {activeEnvironment?.name ?? "Production"}
         </Text>
       </Box>
       <EnvironmentDropdownMenu
         environments={environments}
         activeEnvironmentDomain={activeEnvironmentDomain}
+        productionEnvironmentDomain={productionEnvironmentDomain}
         onSelect={onSelect}
       />
     </Box>
@@ -62,11 +71,21 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
 
 type EnvironmentDropdownMenuProps = Pick<
   SideNavEnvironmentSelectorProps,
-  "environments" | "activeEnvironmentDomain" | "onSelect"
+  | "environments"
+  | "activeEnvironmentDomain"
+  | "productionEnvironmentDomain"
+  | "onSelect"
 >;
 
 const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
-  const { environments, activeEnvironmentDomain, onSelect } = props;
+  const {
+    productionEnvironmentDomain,
+    environments = [
+      buildProductionEnvironmentFallback(productionEnvironmentDomain),
+    ],
+    activeEnvironmentDomain,
+    onSelect,
+  } = props;
 
   const sortedEnvironments = sortEnvironments(environments);
 
@@ -83,7 +102,11 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
               key={environment.domain}
               environment={environment}
               onSelect={onSelect}
-              isActive={environment.domain === activeEnvironmentDomain}
+              isActive={
+                activeEnvironmentDomain === undefined
+                  ? environment.kind === "prod"
+                  : environment.domain === activeEnvironmentDomain
+              }
             />
           ) : (
             <>
@@ -121,7 +144,7 @@ const EnvironmentDropdownMenuItem: FC<EnvironmentDropdownMenuItemProps> = (
         />
       }
       endIcon={Boolean(isActive) ? <Icon name="check" /> : undefined}
-      onSelect={() => onSelect?.(environment)}
+      onSelect={() => void onSelect?.(environment)}
     >
       {environment.name}
     </DropdownMenuItem>

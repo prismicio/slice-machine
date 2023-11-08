@@ -1,28 +1,19 @@
 import { Environment } from "@slicemachine/manager/client";
 
 /**
- * Returns an environment selected by name from a list of environments.
+ * A partial `Environment` representing the an environment without using data
+ * from the Slice Machine API.
  *
- * @param domain - The domain of the environment to select.
- * @param environments - The list of environments from which to select.
- *
- * @throws Will throw if an environment with the given domain is not found.
- * @returns The selected environment.
+ * This type should only be used when an environment cannot be fetched from the
+ * Slice Machine API.
  */
-export function getEnvironment(
-  environments: Environment[],
-  domain: string,
-): Environment {
-  const environment = environments.find(
-    (environment) => environment.domain === domain,
-  );
-
-  if (!environment) {
-    throw new Error(`Did not find an environment with domain \`${domain}\`.`);
-  }
-
-  return environment;
-}
+type EnvironmentFallback =
+  | Environment
+  | (Pick<Environment, "domain" | "name"> & {
+      [P in keyof Omit<Environment, "domain" | "name">]:
+        | Environment[P]
+        | undefined;
+    });
 
 /**
  * Sorts a list of environments using the following criteria:
@@ -39,7 +30,9 @@ export function getEnvironment(
  *
  * @returns The sorted environments.
  */
-export function sortEnvironments(environments: Environment[]): Environment[] {
+export function sortEnvironments<
+  TEnvironment extends Pick<EnvironmentFallback, "kind" | "name">,
+>(environments: TEnvironment[]): TEnvironment[] {
   return [...environments].sort((a, b) => {
     switch (a.kind) {
       case "prod": {
@@ -56,7 +49,8 @@ export function sortEnvironments(environments: Environment[]): Environment[] {
             return a.name.localeCompare(b.name);
           }
 
-          case "dev": {
+          case "dev":
+          default: {
             return -1;
           }
         }
@@ -65,19 +59,64 @@ export function sortEnvironments(environments: Environment[]): Environment[] {
       case "dev": {
         return 1;
       }
+
+      default: {
+        if (b.kind === undefined) {
+          return a.name.localeCompare(b.name);
+        }
+
+        return 1;
+      }
     }
   });
 }
 
-// TODO: Is this function used anywhere? Remove it if it isn't.
 /**
- * Builds an `Environment` object representing the production environment. The object is to be used when an environment is not
+ * Builds an `Environment` object representing the production environment
+ * without using data from the Slice Machine API.
+ *
+ * This builder should only be used when a list of environments cannot be
+ * fetched from the Slice Machine API.
  */
-export function buildProductionEnvironmentFallback(domain: string) {
+export function buildProductionEnvironmentFallback(
+  domain: string,
+): Environment {
   return {
     name: "Production",
     domain,
     kind: "prod",
     users: [],
+  };
+}
+
+type BuildActiveEnvironmentFallbackArgs = {
+  activeEnvironmentDomain: string | undefined;
+  productionEnvironmentDomain: string;
+};
+
+/**
+ * Builds a partial `Environment` object representing the active environment
+ * without using data from the Slice Machine API.
+ *
+ * This builder should only be used when a list of environments cannot be
+ * fetched from the Slice Machine API.
+ */
+export function buildActiveEnvironmentFallback(
+  args: BuildActiveEnvironmentFallbackArgs,
+): EnvironmentFallback {
+  if (args.activeEnvironmentDomain !== undefined) {
+    return {
+      name: args.activeEnvironmentDomain,
+      domain: args.activeEnvironmentDomain,
+      kind: undefined,
+      users: undefined,
+    };
+  }
+
+  return {
+    name: "Production",
+    domain: args.productionEnvironmentDomain,
+    kind: "prod",
+    users: undefined,
   };
 }

@@ -16,7 +16,7 @@ const meta = {
     children: {
       control: { disable: true },
     },
-    variant: {
+    activeEnvironmentKind: {
       control: { type: "select" },
       options: Object.keys(borderTop),
     },

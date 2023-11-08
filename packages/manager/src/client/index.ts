@@ -25,6 +25,7 @@ export {
 	UnexpectedDataError,
 	isInternalError,
 	isNotFoundError,
+	isPluginError,
 	isSliceMachineError,
 	isUnauthenticatedError,
 	isUnauthorizedError,

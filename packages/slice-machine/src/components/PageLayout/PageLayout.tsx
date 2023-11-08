@@ -3,17 +3,17 @@ import type { FC, PropsWithChildren } from "react";
 import * as styles from "./PageLayout.css";
 
 type PageLayoutProps = PropsWithChildren<{
-  variant?: "prod" | "stage" | "dev";
+  activeEnvironmentKind?: "prod" | "stage" | "dev";
 }>;
 
 export const PageLayout: FC<PageLayoutProps> = ({
-  variant = "prod",
+  activeEnvironmentKind = "prod",
   children,
   ...otherProps
 }) => (
   <div {...otherProps} className={styles.root}>
     {children}
-    <div className={styles.borderTop[variant]} />
+    <div className={styles.borderTop[activeEnvironmentKind]} />
   </div>
 );
 
