@@ -14,19 +14,19 @@ async function getEnvironments(): Promise<Environment[] | undefined> {
   return await Promise.resolve([
     {
       name: "Production",
-      domain: "example-prismic-repo",
+      domain: "cimsirp",
       kind: "prod",
       users: [],
     },
     {
       name: "Staging",
-      domain: "example-prismic-repo-staging",
+      domain: "cimsirp-staging",
       kind: "stage",
       users: [],
     },
     {
       name: "Development",
-      domain: "example-prismic-repo-development",
+      domain: "cimsirp-development",
       kind: "dev",
       users: [],
     },
