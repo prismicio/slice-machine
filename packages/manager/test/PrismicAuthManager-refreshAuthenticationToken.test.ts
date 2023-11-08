@@ -4,7 +4,11 @@ import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAut
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createPrismicAuthManager, UnauthenticatedError } from "../src";
+import {
+	createPrismicAuthManager,
+	UnauthenticatedError,
+	InternalError,
+} from "../src";
 
 it("refreshes the auth token in the auth state file", async (ctx) => {
 	const prismicAuthManager = createPrismicAuthManager();
@@ -39,7 +43,9 @@ it("throws if the authentication API cannot refresh the token", async (ctx) => {
 
 	await expect(async () => {
 		await prismicAuthManager.refreshAuthenticationToken();
-	}).rejects.toThrow(/failed to refresh/i);
+	}).rejects.toThrow(
+		new InternalError("Failed to refresh authentication token."),
+	);
 });
 
 it("throws if the user is not logged in", async () => {

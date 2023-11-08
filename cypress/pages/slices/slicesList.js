@@ -10,7 +10,7 @@ class SlicesList {
   }
 
   getSliceCard(sliceName) {
-    return cy.get(`[aria-label="${sliceName} slice card"]`);
+    return cy.get(`[aria-label^="${sliceName}"][aria-label$="slice card"]`);
   }
 
   get optionDopDownMenu() {

@@ -4,12 +4,6 @@ export interface ScreenDimensions {
   width: number;
   height: number;
 }
-export interface ScreenshotRequest {
-  libraryName: string;
-  sliceId: string;
-  variationId: string;
-  screenDimensions: ScreenDimensions;
-}
 export interface CustomScreenshotRequest {
   libraryName: string;
   sliceId: string;
@@ -41,7 +35,4 @@ export interface CustomScreenshotRequest {
   variationId: string;
 }
 
-export type ScreenshotGenerationMethod =
-  | "fromSimulator"
-  | "upload"
-  | "dragAndDrop";
+export type ScreenshotGenerationMethod = "upload" | "dragAndDrop";

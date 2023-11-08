@@ -7,10 +7,7 @@ import { useRouter } from "next/router";
 import ReactTooltip from "react-tooltip";
 
 import { PlayCircleIcon } from "@src/icons/PlayCircleIcon";
-import {
-  userHasSeenSimulatorToolTip,
-  userHasSeenTutorialsToolTip,
-} from "@src/modules/userContext";
+import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -97,28 +94,18 @@ const SimulatorButton: React.FC<{
 
   const { setSeenSimulatorToolTip } = useSliceMachineActions();
 
-  const { hasSeenSimulatorTooltip, hasSeenTutorialsToolTip } = useSelector(
+  const { hasSeenSimulatorTooltip } = useSelector(
     (store: SliceMachineStoreType) => ({
       hasSeenSimulatorTooltip: userHasSeenSimulatorToolTip(store),
-      hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
     }),
   );
 
   useEffect(() => {
     const node = ref.current;
-    if (
-      node &&
-      isSimulatorAvailableForFramework &&
-      !hasSeenSimulatorTooltip &&
-      hasSeenTutorialsToolTip
-    ) {
+    if (node && isSimulatorAvailableForFramework && !hasSeenSimulatorTooltip) {
       setTimeout(() => ReactTooltip.show(node), 5000);
     }
-  }, [
-    isSimulatorAvailableForFramework,
-    hasSeenSimulatorTooltip,
-    hasSeenTutorialsToolTip,
-  ]);
+  }, [isSimulatorAvailableForFramework, hasSeenSimulatorTooltip]);
 
   const onCloseToolTip = () => {
     setSeenSimulatorToolTip();
@@ -131,9 +118,7 @@ const SimulatorButton: React.FC<{
   const disabled = !isSimulatorAvailableForFramework || isTouched;
 
   const shouldShowSimulatorTooltip =
-    isSimulatorAvailableForFramework &&
-    !hasSeenSimulatorTooltip &&
-    hasSeenTutorialsToolTip;
+    isSimulatorAvailableForFramework && !hasSeenSimulatorTooltip;
 
   const shouldShowNeedToSaveTooltip =
     isSimulatorAvailableForFramework &&

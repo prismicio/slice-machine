@@ -262,8 +262,6 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
             }}
           >
             <Toolbar
-              slice={slice}
-              variation={variation}
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
               actionsDisabled={currentState !== UiState.SUCCESS}

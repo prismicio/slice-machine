@@ -116,6 +116,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
     >
       {src !== undefined ? (
         <CardMedia
+          alt="Preview image"
           overlay={
             canUpdateScreenshot && !disableOverlay ? (
               <Box alignItems="center" justifyContent="center">
@@ -156,9 +157,12 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
           ) : action.type === "menu" ? (
             <DropdownMenu modal>
               <DropdownMenuTrigger disabled={disabled}>
-                <IconButton icon="moreVert" />
+                <IconButton data-cy="slice-action-icon" icon="moreVert" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent
+                align="end"
+                data-cy="slice-action-icon-dropdown"
+              >
                 {action.onRename ? (
                   <DropdownMenuItem
                     onSelect={action.onRename}
