@@ -183,13 +183,13 @@ export class ScreenshotsManager extends BaseManager {
 		body?: unknown;
 	}): Promise<Response> {
 		const authenticationToken = await this.user.getAuthenticationToken();
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const repositoryName = await this.project.getResolvedRepositoryName();
 
 		return await fetch(args.url, {
 			body: args.body ? JSON.stringify(args.body) : undefined,
 			headers: {
 				Authorization: `Bearer ${authenticationToken}`,
-				Repository: sliceMachineConfig.repositoryName,
+				Repository: repositoryName,
 				"User-Agent": SLICE_MACHINE_USER_AGENT,
 				...(args.body ? { "Content-Type": "application/json" } : {}),
 			},

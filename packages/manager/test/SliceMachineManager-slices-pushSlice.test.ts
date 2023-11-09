@@ -37,18 +37,95 @@ it("pushes a Slice using the Custom Types API", async (ctx) => {
 	await manager.user.login(createPrismicAuthLoginResponse());
 
 	const authenticationToken = await manager.user.getAuthenticationToken();
+	const repositoryName = await manager.project.getRepositoryName();
+
+	let sentModel;
+
+	mockCustomTypesAPI(ctx, {
+		async onSliceGet(req, res, ctx) {
+			if (req.headers.get("repository") === repositoryName) {
+				return res(ctx.status(404));
+			}
+		},
+		async onSliceInsert(req, res, ctx) {
+			if (req.headers.get("repository") === repositoryName) {
+				sentModel = await req.json();
+
+				return res(ctx.status(201));
+			}
+		},
+	});
+	mockAWSACLAPI(ctx, {
+		createEndpoint: {
+			expectedPrismicRepository: repositoryName,
+			expectedAuthenticationToken: authenticationToken,
+		},
+	});
+
+	await manager.slices.pushSlice({
+		libraryID: "foo",
+		sliceID: model.id,
+	});
+
+	expectHookHandlerToHaveBeenCalledWithData(sliceReadHookHandler, {
+		libraryID: "foo",
+		sliceID: model.id,
+	});
+	expect(sentModel).toStrictEqual({
+		...model,
+		variations: model.variations.map((variation) => {
+			return {
+				...variation,
+				imageUrl: expect.any(String),
+			};
+		}),
+	});
+});
+
+it("pushes a Slice using the Custom Types API using the currently set environment", async (ctx) => {
+	const model = ctx.mockPrismic.model.sharedSlice({
+		variations: [ctx.mockPrismic.model.sharedSliceVariation()],
+	});
+	const sliceReadHookHandler = vi.fn(() => {
+		return { model };
+	});
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", sliceReadHookHandler);
+			hook("project:environment:read", () => ({ environment: "foo" }));
+			hook("project:environment:update", () => void 0);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+
+	await manager.user.login(createPrismicAuthLoginResponse());
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
 	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
 
 	let sentModel;
 
 	mockCustomTypesAPI(ctx, {
-		async onSliceGet(_req, res, ctx) {
-			return res(ctx.status(404));
+		async onSliceGet(req, res, ctx) {
+			if (req.headers.get("repository") === "foo") {
+				return res(ctx.status(404));
+			}
 		},
 		async onSliceInsert(req, res, ctx) {
-			sentModel = await req.json();
+			if (req.headers.get("repository") === "foo") {
+				sentModel = await req.json();
 
-			return res(ctx.status(201));
+				return res(ctx.status(201));
+			}
 		},
 	});
 	mockAWSACLAPI(ctx, {

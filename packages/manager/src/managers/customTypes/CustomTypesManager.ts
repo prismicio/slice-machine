@@ -224,7 +224,7 @@ export class CustomTypesManager extends BaseManager {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		const authenticationToken = await this.user.getAuthenticationToken();
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const repositoryName = await this.project.getResolvedRepositoryName();
 
 		// TODO: Handle errors
 		const { model } = await this.readCustomType({ id: args.id });
@@ -233,7 +233,7 @@ export class CustomTypesManager extends BaseManager {
 			// TODO: Create a single shared client.
 			const client = prismicCustomTypesClient.createClient({
 				endpoint: API_ENDPOINTS.PrismicModels,
-				repositoryName: sliceMachineConfig.repositoryName,
+				repositoryName,
 				token: authenticationToken,
 				userAgent: args.userAgent || SLICE_MACHINE_USER_AGENT,
 				fetch,
@@ -317,11 +317,11 @@ export class CustomTypesManager extends BaseManager {
 
 	async fetchRemoteCustomTypes(): Promise<CustomType[]> {
 		const authenticationToken = await this.user.getAuthenticationToken();
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const repositoryName = await this.project.getResolvedRepositoryName();
 
 		const client = prismicCustomTypesClient.createClient({
 			endpoint: API_ENDPOINTS.PrismicModels,
-			repositoryName: sliceMachineConfig.repositoryName,
+			repositoryName,
 			token: authenticationToken,
 			userAgent: SLICE_MACHINE_USER_AGENT,
 			fetch,

@@ -385,7 +385,7 @@ export class PrismicRepositoryManager extends BaseManager {
 				changes: allChanges,
 			};
 
-			const repositoryName = await this.project.getRepositoryName();
+			const repositoryName = await this.project.getResolvedRepositoryName();
 
 			// TODO: move to customtypes client
 			const response = await this._fetch({
