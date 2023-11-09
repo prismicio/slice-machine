@@ -3,45 +3,23 @@ import { revalidateData, useRequest } from "@prismicio/editor-support/Suspense";
 import {
   Environment,
   isPluginError,
-  // isUnauthenticatedError,
-  // isUnauthorizedError,
+  isUnauthenticatedError,
+  isUnauthorizedError,
 } from "@slicemachine/manager/client";
 
 import { managerClient } from "@src/managerClient";
 import { buildActiveEnvironmentFallback } from "@src/domain/environment";
 
 async function getEnvironments(): Promise<Environment[] | undefined> {
-  return await Promise.resolve([
-    {
-      name: "Production",
-      domain: "cimsirp",
-      kind: "prod",
-      users: [],
-    },
-    {
-      name: "Staging",
-      domain: "cimsirp-staging",
-      kind: "stage",
-      users: [],
-    },
-    {
-      name: "Development",
-      domain: "cimsirp-development",
-      kind: "dev",
-      users: [],
-    },
-  ]);
+  try {
+    return await managerClient.prismicRepository.fetchEnvironments();
+  } catch (error) {
+    if (isUnauthenticatedError(error) || isUnauthorizedError(error)) {
+      return undefined;
+    }
 
-  // TODO: Uncomment once the environments endpoint is deployed.
-  // try {
-  //   return await managerClient.prismicRepository.fetchEnvironments();
-  // } catch (error) {
-  //   if (isUnauthenticatedError(error) || isUnauthorizedError(error)) {
-  //     return undefined;
-  //   }
-  //
-  //   throw error;
-  // }
+    throw error;
+  }
 }
 
 async function getActiveEnvironmentDomain(): Promise<string | undefined> {

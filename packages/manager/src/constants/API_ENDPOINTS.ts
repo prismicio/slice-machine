@@ -59,8 +59,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
 				PrismicOembed: "https://oembed.wroom.io",
 				PrismicUnsplash: "https://unsplash.wroom.io",
-				// TODO: Update to the correct deployed URL.
-				SliceMachine: "https://slice-machine-api-staging.example",
+				SliceMachine: "https://mc5qopc07a.execute-api.us-east-1.amazonaws.com",
 			};
 		}
 
@@ -75,8 +74,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
 				PrismicOembed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io",
-				// TODO: Update to the correct deployed URL.
-				SliceMachine: "https://slice-machine-api.example",
+				SliceMachine: "https://21vvgrh0s6.execute-api.us-east-1.amazonaws.com",
 			};
 		}
 	}

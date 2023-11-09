@@ -431,13 +431,21 @@ export class PrismicRepositoryManager extends BaseManager {
 	async fetchEnvironments(): Promise<Environment[]> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL("./environments", API_ENDPOINTS.SliceMachine);
-		const res = await this._fetch({ url, repository: repositoryName });
+		const url = new URL(
+			`./v1/environments?repository=${repositoryName}`,
+			API_ENDPOINTS.SliceMachine,
+		);
+		const res = await this._fetch({ url });
 
 		if (res.ok) {
 			const json = await res.json();
 
-			const { value: environments, error } = decode(t.array(Environment), json);
+			const { value, error } = decode(
+				t.type({
+					results: t.array(Environment),
+				}),
+				json,
+			);
 
 			if (error) {
 				throw new Error(
@@ -445,7 +453,7 @@ export class PrismicRepositoryManager extends BaseManager {
 				);
 			}
 
-			return environments;
+			return value.results;
 		}
 
 		switch (res.status) {
@@ -516,9 +524,9 @@ export class PrismicRepositoryManager extends BaseManager {
 
 				...(cookies !== undefined
 					? {
-							Authorization: `Bearer ${cookies["prismic-auth"]}`,
-							Cookie: serializeCookies(cookies),
-					  }
+						Authorization: `Bearer ${cookies["prismic-auth"]}`,
+						Cookie: serializeCookies(cookies),
+					}
 					: {}),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,
