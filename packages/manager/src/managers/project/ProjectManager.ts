@@ -70,12 +70,12 @@ type ProjectManagerInstallDependenciesReturnType = {
 };
 
 type ProjectManagerReadEnvironmentReturnType = {
-	environment: undefined | string;
+	environment: string | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
 type ProjectManagerUpdateEnvironmentArgs = {
-	environment: undefined | string;
+	environment: string | undefined;
 };
 
 export class ProjectManager extends BaseManager {
@@ -216,10 +216,41 @@ export class ProjectManager extends BaseManager {
 		return path.dirname(sliceMachinePackageJSONPath);
 	}
 
+	/**
+	 * Returns the project's repository name (i.e. the production environment). It
+	 * ignores the currently selected environment.
+	 *
+	 * Use this method to retrieve the production environment domain.
+	 *
+	 * @returns The project's repository name.
+	 */
 	async getRepositoryName(): Promise<string> {
 		const sliceMachineConfig = await this.getSliceMachineConfig();
 
 		return sliceMachineConfig.repositoryName;
+	}
+
+	/**
+	 * Returns the currently selected environment domain if set. If an environment
+	 * is not set, it returns the project's repository name (the production
+	 * environment).
+	 *
+	 * Use this method to retrieve the repository name to be sent with Prismic API
+	 * requests.
+	 *
+	 * @returns The resolved repository name.
+	 */
+	async getResolvedRepositoryName(): Promise<string> {
+		const repositoryName = await this.getRepositoryName();
+
+		const supportsEnvironments = this.project.checkSupportsEnvironments();
+		if (!supportsEnvironments) {
+			return repositoryName;
+		}
+
+		const { environment } = await this.project.readEnvironment();
+
+		return environment ?? repositoryName;
 	}
 
 	async getAdapterName(): Promise<string> {
@@ -362,13 +393,15 @@ export class ProjectManager extends BaseManager {
 		);
 
 		const repositoryName = await this.project.getRepositoryName();
-		const environment =
+
+		// An undefined value is equivalent to the production environment.
+		const environmentDomain =
 			data[0]?.environment === repositoryName
 				? undefined
 				: data[0]?.environment;
 
 		return {
-			environment,
+			environment: environmentDomain,
 			errors,
 		};
 	}
@@ -381,13 +414,12 @@ export class ProjectManager extends BaseManager {
 		await this._assertAdapterSupportsEnvironments();
 
 		const repositoryName = await this.project.getRepositoryName();
+		const environment =
+			args.environment === repositoryName ? undefined : args.environment;
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"project:environment:update",
-			{
-				environment:
-					args.environment === repositoryName ? undefined : args.environment,
-			},
+			{ environment },
 		);
 
 		return {
