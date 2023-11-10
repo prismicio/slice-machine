@@ -66,7 +66,7 @@
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
 		"@prismicio/custom-types-client": "1.2.0-alpha.0",
-		"@prismicio/mocks": "2.0.0-alpha.2",
+		"@prismicio/mocks": "2.0.0",
 		"@prismicio/types-internal": "^2.2.0",
 		"@slicemachine/plugin-kit": "workspace:^",
 		"@wooorm/starry-night": "^1.6.0",
