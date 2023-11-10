@@ -8,6 +8,7 @@ import {
   Separator,
   Text,
   Video,
+  vars,
 } from "@prismicio/editor-ui";
 
 import { Counter } from "@src/components/Counter";
@@ -37,7 +38,8 @@ export const InAppGuideDialog: FC = () => {
             justifyContent: "center",
             cursor: "pointer",
             borderRadius: "50%",
-            backgroundColor: "black",
+            backgroundColor: vars.color.greyDark1,
+            border: `1px solid ${vars.color.greyDark6}`,
             height: 32,
             width: 32,
           }}
