@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.12.4-dev-in-app-guide.1",
+	"version": "0.12.4-dev-in-app-guide.2",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
