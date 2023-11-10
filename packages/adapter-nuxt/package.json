@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt",
-	"version": "0.3.24-dev-in-app-guide.0",
+	"version": "0.3.24-dev-in-app-guide.1",
 	"description": "Slice Machine adapter for Nuxt 3.",
 	"keywords": [
 		"typescript",
