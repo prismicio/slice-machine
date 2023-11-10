@@ -30,7 +30,6 @@ import {
   getRepoName,
 } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { InAppGuideTrigger } from "@src/features/inAppGuide/InAppGuideTrigger";
 
 import { ChangesListItem } from "./ChangesListItem";
 
@@ -106,8 +105,6 @@ const Navigation: FC = () => {
           />
         </SideNavListItem>
       </SideNavList>
-
-      <InAppGuideTrigger />
 
       {(changelog.sliceMachine.updateAvailable ||
         changelog.adapter.updateAvailable) && (

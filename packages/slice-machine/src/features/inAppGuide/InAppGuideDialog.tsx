@@ -12,41 +12,63 @@ import {
 
 import { Counter } from "@src/components/Counter";
 import { FlowerBackgroundIcon } from "@src/icons/FlowerBackgroundIcon";
+import { HelpIcon } from "@src/icons/HelpIcon";
+import { usePersistedState } from "@src/hooks/usePersistedState";
+import { useIsEmptyProject } from "@src/hooks/useIsEmptyProject";
 
 import { IN_APP_GUIDE_CONTENT } from "./inAppGuideContent";
-import { useInAppGuide } from "./InAppGuideContext";
 
 export const InAppGuideDialog: FC = () => {
-  const { isInAppGuideOpen, setIsInAppGuideOpen } = useInAppGuide();
+  const isEmptyProject = useIsEmptyProject();
+  const [isInAppGuideOpen, setIsInAppGuideOpen] = usePersistedState(
+    true,
+    "isInAppGuideOpen",
+  );
+
+  // TODO: Use IconButton from @prismicio/editor-ui
+  const trigger =
+    isInAppGuideOpen === false && isEmptyProject === false ? (
+      <Box position="fixed" right={16} bottom={16}>
+        <button
+          style={{
+            all: "unset",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            borderRadius: "50%",
+            backgroundColor: "black",
+            height: 32,
+            width: 32,
+          }}
+          onClick={() => {
+            setIsInAppGuideOpen(!isInAppGuideOpen);
+          }}
+        >
+          <HelpIcon />
+        </button>
+      </Box>
+    ) : undefined;
 
   return (
     <Dialog
+      trigger={trigger}
       modal={false}
-      open={isInAppGuideOpen}
+      open={isInAppGuideOpen && isEmptyProject === false}
       onOpenChange={(open) => {
         setIsInAppGuideOpen(open);
       }}
       position="bottomRight"
       size={{
         width: 360,
-        height: 368,
+        height: 440,
       }}
     >
-      <DialogHeader title="Learn Prismic" />
+      <DialogHeader title={IN_APP_GUIDE_CONTENT.title} />
       <DialogContent>
         <ScrollArea>
-          <Box flexDirection="column" padding={16} gap={4}>
-            <Text variant="bold">Build your first page in 5 minutes</Text>
-            <Text color="grey11">
-              Embark on your web development journey with our easy-to-follow
-              steps from design to live preview.
-            </Text>
-          </Box>
-
-          {IN_APP_GUIDE_CONTENT.map((content, index) => (
+          {IN_APP_GUIDE_CONTENT.steps.map((content, index) => (
             <Box key={index} flexDirection="column">
-              <Separator />
-
               <Box flexDirection="column" padding={16} gap={8}>
                 <Box alignItems="center" gap={8}>
                   <Counter backgroundIcon={<FlowerBackgroundIcon />}>
@@ -65,8 +87,19 @@ export const InAppGuideDialog: FC = () => {
                 />
                 <Text>{content.description}</Text>
               </Box>
+
+              <Separator />
             </Box>
           ))}
+
+          <Box flexDirection="column" padding={16} gap={4}>
+            <Text variant="bold">{IN_APP_GUIDE_CONTENT.successTitle}</Text>
+            <Box flexDirection="column">
+              {IN_APP_GUIDE_CONTENT.successSteps.map((content, index) => (
+                <Text key={index}>• {content}</Text>
+              ))}
+            </Box>
+          </Box>
         </ScrollArea>
       </DialogContent>
     </Dialog>

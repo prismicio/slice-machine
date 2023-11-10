@@ -34,7 +34,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { AppLayout, AppLayoutContent } from "@components/AppLayout";
-import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
+import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
 
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
@@ -123,50 +123,48 @@ function MyApp({
       <ThemeUIThemeProvider theme={theme}>
         <RemoveDarkMode>
           <ThemeProvider mode="light">
-            <TooltipProvider>
-              {!smStore || !serverState ? (
-                <LoadingPage />
-              ) : (
-                <Provider store={smStore.store}>
-                  <ConnectedRouter Router={Router}>
-                    <PersistGate loading={null} persistor={smStore.persistor}>
-                      <InAppGuideProvider>
-                        <RouteChangeProvider>
-                          <ErrorBoundary
-                            renderError={(error) => {
-                              console.error(error);
+            <ErrorBoundary
+              renderError={(error) => {
+                console.error(error);
 
-                              return (
-                                <AppLayout>
-                                  <AppLayoutContent>
-                                    <Box
-                                      alignItems="center"
-                                      justifyContent="center"
-                                    >
-                                      <DefaultErrorMessage
-                                        title="Error"
-                                        description="An error occurred while rendering the app."
-                                      />
-                                    </Box>
-                                  </AppLayoutContent>
-                                </AppLayout>
-                              );
-                            }}
-                          >
-                            <Suspense fallback={<LoadingPage />}>
-                              <ComponentLayout>
-                                <Component {...pageProps} />
-                              </ComponentLayout>
-                            </Suspense>
-                          </ErrorBoundary>
+                return (
+                  <AppLayout>
+                    <AppLayoutContent>
+                      <Box alignItems="center" justifyContent="center">
+                        <DefaultErrorMessage
+                          title="Error"
+                          description="An error occurred while rendering the app."
+                        />
+                      </Box>
+                    </AppLayoutContent>
+                  </AppLayout>
+                );
+              }}
+            >
+              <TooltipProvider>
+                {!smStore || !serverState ? (
+                  <LoadingPage />
+                ) : (
+                  <Provider store={smStore.store}>
+                    <ConnectedRouter Router={Router}>
+                      <PersistGate loading={null} persistor={smStore.persistor}>
+                        <RouteChangeProvider>
+                          <Suspense fallback={<LoadingPage />}>
+                            <ComponentLayout>
+                              <Component {...pageProps} />
+                            </ComponentLayout>
+                          </Suspense>
                         </RouteChangeProvider>
-                      </InAppGuideProvider>
-                    </PersistGate>
-                  </ConnectedRouter>
-                  <ToastContainer />
-                </Provider>
-              )}
-            </TooltipProvider>
+                        <Suspense>
+                          <InAppGuideDialog />
+                        </Suspense>
+                      </PersistGate>
+                    </ConnectedRouter>
+                    <ToastContainer />
+                  </Provider>
+                )}
+              </TooltipProvider>
+            </ErrorBoundary>
           </ThemeProvider>
         </RemoveDarkMode>
       </ThemeUIThemeProvider>
