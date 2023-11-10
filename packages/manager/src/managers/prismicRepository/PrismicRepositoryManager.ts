@@ -65,9 +65,9 @@ export class PrismicRepositoryManager extends BaseManager {
 	async readAll(): Promise<PrismicRepository[]> {
 		const url = new URL("./repositories", API_ENDPOINTS.PrismicUser);
 		const res = await this._fetch({ url });
-		const json = await res.json();
 
 		if (res.ok) {
+			const json = await res.json();
 			const { value: repositories, error } = decode(
 				t.array(PrismicRepository),
 				json,
@@ -81,7 +81,8 @@ export class PrismicRepositoryManager extends BaseManager {
 
 			return repositories;
 		} else {
-			throw new Error(`Failed to read repositories`, { cause: json });
+			const text = await res.text();
+			throw new Error(`Failed to read repositories`, { cause: text });
 		}
 	}
 
@@ -413,7 +414,9 @@ export class PrismicRepositoryManager extends BaseManager {
 					const text = await response.text();
 					throw new Error(text);
 				default:
-					throw new Error(`Unexpected status code ${response.status}`);
+					throw new Error(`Unexpected status code ${response.status}`, {
+						cause: await response.text(),
+					});
 			}
 		} catch (err) {
 			console.error("An error happened while pushing your changes");

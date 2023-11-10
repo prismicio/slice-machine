@@ -16,28 +16,23 @@ describe("Create Slices", () => {
     cy.clearProject();
   });
 
-  it.skip("A user can create and rename a slice", () => {
+  it("A user can create and rename a slice", () => {
     cy.createSlice(lib, sliceId, sliceName);
 
     sliceBuilder.addNewWidgetField("Title", "Key Text");
     sliceBuilder.addNewWidgetField("Description", "Rich Text");
 
-    cy.contains("Save").click();
+    // add a variation
+    cy.contains("button", "Add a new variation").click();
+    cy.getInputByLabel("Variation name*").type("foo");
+    cy.getInputByLabel("Variation ID*").clear();
+    cy.getInputByLabel("Variation ID*").type("bar");
+    cy.get("#variation-add").submit();
 
     // remove widget
     cy.get('[data-cy="slice-menu-button"]').first().click();
     cy.contains("Delete field").click();
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
-
-    // add a variation
-
-    cy.contains("button", "Add a new variation").click();
-
-    cy.getInputByLabel("Variation name*").type("foo");
-    cy.getInputByLabel("Variation ID*").clear();
-    cy.getInputByLabel("Variation ID*").type("bar");
-
-    cy.get("#variation-add").submit();
 
     cy.contains("button", "Simulate").should("have.attr", "disabled");
     cy.contains("button", "Simulate").realHover();
@@ -144,7 +139,7 @@ describe("Create Slices", () => {
   });
 
   // See: #791
-  it.skip("A user cannot rename a slice with a name starting with a number", () => {
+  it("A user cannot rename a slice with a name starting with a number", () => {
     const sliceName = "SliceName";
 
     cy.createSlice(lib, sliceId, sliceName);

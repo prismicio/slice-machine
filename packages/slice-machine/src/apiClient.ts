@@ -5,10 +5,7 @@ import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import ServerState from "@models/server/ServerState";
-import {
-  CustomScreenshotRequest,
-  ScreenshotRequest,
-} from "@lib/models/common/Screenshots";
+import { CustomScreenshotRequest } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 
@@ -92,42 +89,6 @@ export const deleteSlice = async (sliceId: string, libName: string) =>
     libraryID: libName,
     sliceID: sliceId,
   });
-
-export const generateSliceScreenshotApiClient = async (
-  params: ScreenshotRequest,
-): Promise<
-  | {
-      url: string;
-      errors: Awaited<
-        ReturnType<SliceMachineManagerClient["slices"]["updateSliceScreenshot"]>
-      >["errors"];
-    }
-  | undefined
-> => {
-  const screenshot =
-    await managerClient.screenshots.captureSliceSimulatorScreenshot({
-      sliceMachineUIOrigin: window.location.origin,
-      libraryID: params.libraryName,
-      sliceID: params.sliceId,
-      variationID: params.variationId,
-      viewport: {
-        width: params.screenDimensions.width,
-        height: params.screenDimensions.height,
-      },
-    });
-
-  const { errors } = await managerClient.slices.updateSliceScreenshot({
-    libraryID: params.libraryName,
-    sliceID: params.sliceId,
-    variationID: params.variationId,
-    data: screenshot.data,
-  });
-
-  return {
-    url: URL.createObjectURL(screenshot.data),
-    errors,
-  };
-};
 
 export const generateSliceCustomScreenshotApiClient = async (
   params: CustomScreenshotRequest,

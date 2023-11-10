@@ -252,6 +252,9 @@ export class CustomTypesManager extends BaseManager {
 				} else if (error instanceof prismicCustomTypesClient.ForbiddenError) {
 					throw new UnauthorizedError(
 						"You do not have access to push types to this Prismic repository.",
+						{
+							cause: error,
+						},
 					);
 				} else {
 					throw error;

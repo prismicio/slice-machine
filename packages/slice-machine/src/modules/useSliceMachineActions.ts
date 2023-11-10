@@ -65,16 +65,10 @@ import {
   updateSliceCreator,
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
-import {
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
-} from "./screenshots/actions";
+import { generateSliceCustomScreenshotCreator } from "./screenshots/actions";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
-import type {
-  ScreenDimensions,
-  ScreenshotGenerationMethod,
-} from "@lib/models/common/Screenshots";
+import type { ScreenshotGenerationMethod } from "@lib/models/common/Screenshots";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
@@ -365,22 +359,6 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const generateSliceScreenshot = (
-    variationId: string,
-    component: ComponentUI,
-    screenDimensions: ScreenDimensions,
-    method: ScreenshotGenerationMethod,
-  ) => {
-    dispatch(
-      generateSliceScreenshotCreator.request({
-        variationId,
-        component,
-        screenDimensions,
-        method,
-      }),
-    );
-  };
-
   const generateSliceCustomScreenshot = (
     variationId: string,
     component: ComponentUI,
@@ -517,7 +495,6 @@ const useSliceMachineActions = () => {
     removeSliceWidget,
     updateSliceWidgetMock,
     deleteSliceWidgetMock,
-    generateSliceScreenshot,
     generateSliceCustomScreenshot,
     updateSlice,
     copyVariationSlice,

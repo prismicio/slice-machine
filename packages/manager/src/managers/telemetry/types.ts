@@ -206,8 +206,8 @@ type LegacySliceConvertedSegmentEvent = SegmentEvent<
 type ScreenshotTakenSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.screenshotTaken,
 	{
-		type: "custom" | "automatic";
-		method: "fromSimulator" | "upload" | "dragAndDrop";
+		type: "custom";
+		method: "upload" | "dragAndDrop";
 	}
 >;
 

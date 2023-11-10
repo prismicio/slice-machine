@@ -5078,21 +5078,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/custom-types-client@npm:1.2.0-alpha.0":
+  version: 1.2.0-alpha.0
+  resolution: "@prismicio/custom-types-client@npm:1.2.0-alpha.0"
+  dependencies:
+    "@prismicio/types": ^0.2.4
+  checksum: fa58201a97d211c3d5a691b7fe667e84382a6abb4b6e9ffc4bc27d33112ce4b776351b822155a707b97c07d63f93d994f3c55a93d0c9726972f74b3b4c103b09
+  languageName: node
+  linkType: hard
+
 "@prismicio/custom-types-client@npm:^1.1.0":
   version: 1.1.0
   resolution: "@prismicio/custom-types-client@npm:1.1.0"
   dependencies:
     "@prismicio/types": ^0.2.4
   checksum: e5befbfa85cbd6ab9811c2cae9eba35c138d30f5d87ad59087e5f109f7088e34ab38e6993651edee7359aca88997da2ed92996803fe40b56a37d5f2311d2e11c
-  languageName: node
-  linkType: hard
-
-"@prismicio/custom-types-client@npm:^1.2.0-alpha.0":
-  version: 1.2.0-alpha.0
-  resolution: "@prismicio/custom-types-client@npm:1.2.0-alpha.0"
-  dependencies:
-    "@prismicio/types": ^0.2.4
-  checksum: fa58201a97d211c3d5a691b7fe667e84382a6abb4b6e9ffc4bc27d33112ce4b776351b822155a707b97c07d63f93d994f3c55a93d0c9726972f74b3b4c103b09
   languageName: node
   linkType: hard
 
@@ -5236,6 +5236,24 @@ __metadata:
     "@prismicio/types": ^0.2.4
     change-case: ^4.1.2
   checksum: 2da6f9e99495ba2c8cb6380e1244c1d4a709b6a7714b71896ec6ec55c5a4d73c608f01642d71155321c10e6001eed40b7ba90012f306ae50e1e7ab5d1fd93e80
+  languageName: node
+  linkType: hard
+
+"@prismicio/mocks@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@prismicio/mocks@npm:2.0.0"
+  dependencies:
+    "@prismicio/api-renderer": 1.0.0
+    "@prismicio/types-internal": 2.0.0-alpha.8
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    io-ts-types: ^0.5.16
+    lorem-ipsum: ^2.0.4
+    monocle-ts: ^2.3.11
+    newtype-ts: ^0.3.5
+    tslib: ^2.3.1
+    uuid: ^8.3.2
+  checksum: 9f1468b3365a125f4a39482a739d4b600132a6e281a61ddfede51e9414a5f52f9a3d103d1527749be84fa829897f168724cbf1773190c03ef6645d6901d94b29
   languageName: node
   linkType: hard
 
@@ -8393,9 +8411,9 @@ __metadata:
   resolution: "@slicemachine/manager@workspace:packages/manager"
   dependencies:
     "@antfu/ni": ^0.20.0
-    "@prismicio/custom-types-client": ^1.2.0-alpha.0
+    "@prismicio/custom-types-client": 1.2.0-alpha.0
     "@prismicio/mock": 0.2.0
-    "@prismicio/mocks": ^2.0.0-alpha.2
+    "@prismicio/mocks": 2.0.0
     "@prismicio/types-internal": ^2.2.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:^"
