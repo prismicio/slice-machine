@@ -1,98 +1,104 @@
 import {
   Box,
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
   Icon,
+  IconButton,
   Text,
 } from "@prismicio/editor-ui";
 import { Environment } from "@slicemachine/manager/client";
 import type { FC } from "react";
 import clsx from "clsx";
 
-import {
-  buildProductionEnvironmentFallback,
-  sortEnvironments,
-} from "@src/domain/environment";
+import { sortEnvironments } from "@src/domain/environment";
 import LogoIcon from "@src/icons/LogoIcon";
 
 import * as styles from "./SideNavEnvironmentSelector.css";
 
 type SideNavEnvironmentSelectorProps = {
-  environments: Environment[] | undefined;
-  activeEnvironmentDomain: string | undefined;
-  productionEnvironmentDomain: Environment["domain"];
+  variant?: "default" | "unauthorized";
+  environments?: Environment[];
+  activeEnvironment?: Environment;
   onSelect?: (environment: Environment) => void | Promise<void>;
+  onLogInClick?: () => void;
 };
 
 export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
   props,
 ) => {
   const {
-    environments,
-    activeEnvironmentDomain,
-    productionEnvironmentDomain,
+    variant = "default",
+    environments = [],
+    activeEnvironment,
     onSelect,
+    onLogInClick,
   } = props;
 
-  const activeEnvironment = environments?.find(
-    (environment) => environment.domain === activeEnvironmentDomain,
-  );
+  const isProductionEnvironmentActive = activeEnvironment?.kind === "prod";
 
   return (
     <Box alignItems="center" gap={16}>
       <Box position="relative">
         <LogoIcon className={styles.logo} />
-        <EnvironmentDot
-          kind={activeEnvironment?.kind ?? "prod"}
-          className={styles.activeEnvironmentDot}
-        />
+        {activeEnvironment !== undefined && (
+          <EnvironmentDot
+            kind={activeEnvironment.kind}
+            className={styles.activeEnvironmentDot}
+          />
+        )}
       </Box>
-      <Box flexGrow={1} flexDirection="column">
+      <Box flexGrow={1} flexDirection="column" overflow="hidden">
         <Text component="span" variant="small" color="grey11">
           Environment
         </Text>
-        <Text component="span" className={styles.activeEnvironmentName}>
-          {activeEnvironment?.name ?? "Production"}
-        </Text>
+        {variant === "unauthorized" ? (
+          <Text component="span" className={styles.actionRequiredLabel}>
+            Login required
+          </Text>
+        ) : activeEnvironment === undefined ? (
+          <Text component="span" className={styles.actionRequiredLabel}>
+            Select environment
+          </Text>
+        ) : (
+          <Text component="span" className={styles.activeEnvironmentName}>
+            {isProductionEnvironmentActive
+              ? "Production"
+              : activeEnvironment?.name}
+          </Text>
+        )}
       </Box>
-      <EnvironmentDropdownMenu
-        environments={environments}
-        activeEnvironmentDomain={activeEnvironmentDomain}
-        productionEnvironmentDomain={productionEnvironmentDomain}
-        onSelect={onSelect}
-      />
+      <Box flexShrink={0}>
+        {variant === "unauthorized" ? (
+          <IconButton icon="arrowForward" onClick={onLogInClick} />
+        ) : (
+          <EnvironmentDropdownMenu
+            environments={environments}
+            activeEnvironment={activeEnvironment}
+            onSelect={onSelect}
+          />
+        )}
+      </Box>
     </Box>
   );
 };
 
 type EnvironmentDropdownMenuProps = Pick<
   SideNavEnvironmentSelectorProps,
-  | "environments"
-  | "activeEnvironmentDomain"
-  | "productionEnvironmentDomain"
-  | "onSelect"
+  "environments" | "activeEnvironment" | "onSelect"
 >;
 
 const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
-  const {
-    productionEnvironmentDomain,
-    environments = [
-      buildProductionEnvironmentFallback(productionEnvironmentDomain),
-    ],
-    activeEnvironmentDomain,
-    onSelect,
-  } = props;
+  const { environments = [], activeEnvironment, onSelect } = props;
 
   const sortedEnvironments = sortEnvironments(environments);
 
   return (
     <DropdownMenu modal>
       <DropdownMenuTrigger>
-        <Button startIcon="unfoldMore" variant="secondary" />
+        <IconButton icon="unfoldMore" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Regular Environments</DropdownMenuLabel>
@@ -102,11 +108,7 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
               key={environment.domain}
               environment={environment}
               onSelect={onSelect}
-              isActive={
-                activeEnvironmentDomain === undefined
-                  ? environment.kind === "prod"
-                  : environment.domain === activeEnvironmentDomain
-              }
+              isActive={environment.domain === activeEnvironment?.domain}
             />
           ) : (
             <>
@@ -115,7 +117,7 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
                 key={environment.domain}
                 environment={environment}
                 onSelect={onSelect}
-                isActive={environment.domain === activeEnvironmentDomain}
+                isActive={environment.domain === activeEnvironment?.domain}
               />
             </>
           ),
@@ -134,6 +136,7 @@ const EnvironmentDropdownMenuItem: FC<EnvironmentDropdownMenuItemProps> = (
   props,
 ) => {
   const { environment, onSelect, isActive } = props;
+  const isProductionEnvironment = environment.kind === "prod";
 
   return (
     <DropdownMenuItem
@@ -146,7 +149,7 @@ const EnvironmentDropdownMenuItem: FC<EnvironmentDropdownMenuItemProps> = (
       endIcon={Boolean(isActive) ? <Icon name="check" /> : undefined}
       onSelect={() => void onSelect?.(environment)}
     >
-      {environment.name}
+      {isProductionEnvironment ? "Production" : environment.name}
     </DropdownMenuItem>
   );
 };

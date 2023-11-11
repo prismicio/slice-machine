@@ -1,80 +1,34 @@
-import { useMemo } from "react";
-import { revalidateData, useRequest } from "@prismicio/editor-support/Suspense";
-import {
-  Environment,
-  isPluginError,
-  isUnauthenticatedError,
-  isUnauthorizedError,
-} from "@slicemachine/manager/client";
+import { useRequest } from "@prismicio/editor-support/Suspense";
+import { Environment } from "@slicemachine/manager/client";
+
+import { sortEnvironments } from "@src/domain/environment";
 
 import { managerClient } from "@src/managerClient";
-import { buildActiveEnvironmentFallback } from "@src/domain/environment";
 
-async function getEnvironments(): Promise<Environment[] | undefined> {
-  try {
-    return await managerClient.prismicRepository.fetchEnvironments();
-  } catch (error) {
-    if (isUnauthenticatedError(error) || isUnauthorizedError(error)) {
-      return undefined;
-    }
-
-    throw error;
-  }
-}
-
-async function getActiveEnvironmentDomain(): Promise<string | undefined> {
-  try {
-    const { environment } = await managerClient.project.readEnvironment();
-
-    return environment;
-  } catch (error) {
-    if (isPluginError(error)) {
-      return undefined;
-    }
-
-    throw error;
-  }
-}
-
-async function getRepositoryName(): ReturnType<
-  typeof managerClient.project.getRepositoryName
+async function getEnvironments(): Promise<
+  | { environments: Environment[]; error: undefined }
+  | { environments: undefined; error: unknown }
 > {
-  return await managerClient.project.getRepositoryName();
-}
+  try {
+    const environments =
+      await managerClient.prismicRepository.fetchEnvironments();
 
-async function setEnvironment(
-  environment: Pick<Environment, "domain">,
-): Promise<void> {
-  await managerClient.project.updateEnvironment({
-    environment: environment.domain,
-  });
-  revalidateData(getActiveEnvironmentDomain, []);
+    const sortedEnvironments = sortEnvironments(environments);
+
+    return {
+      environments: sortedEnvironments,
+      error: undefined,
+    };
+  } catch (error) {
+    return {
+      environments: undefined,
+      error,
+    };
+  }
 }
 
 export function useEnvironments() {
   const environments = useRequest(getEnvironments, []);
-  const activeEnvironmentDomain = useRequest(getActiveEnvironmentDomain, []);
-  const repositoryName = useRequest(getRepositoryName, []);
 
-  const activeEnvironment = useMemo(
-    () =>
-      environments?.find(
-        (environment) => environment.domain === activeEnvironmentDomain,
-      ) ??
-      buildActiveEnvironmentFallback({
-        activeEnvironmentDomain,
-        productionEnvironmentDomain: repositoryName,
-      }),
-    [environments, activeEnvironmentDomain, repositoryName],
-  );
-
-  return useMemo(
-    () => ({
-      environments,
-      activeEnvironment,
-      activeEnvironmentDomain,
-      setEnvironment,
-    }),
-    [environments, activeEnvironment, activeEnvironmentDomain],
-  );
+  return environments;
 }

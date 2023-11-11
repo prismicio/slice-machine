@@ -10,7 +10,11 @@ import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGE
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
 
-import { UnauthenticatedError, UnauthorizedError } from "../../errors";
+import {
+	UnauthenticatedError,
+	SliceMachineError,
+	UnauthorizedError,
+} from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -431,39 +435,44 @@ export class PrismicRepositoryManager extends BaseManager {
 	async fetchEnvironments(): Promise<Environment[]> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL(
-			`./v1/environments?repository=${repositoryName}`,
-			API_ENDPOINTS.SliceMachine,
-		);
+		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
+		url.searchParams.set("repository", repositoryName);
 		const res = await this._fetch({ url });
+		const json = await res.json();
 
-		if (res.ok) {
-			const json = await res.json();
-
-			const { value, error } = decode(
+		const { value, error } = decode(
+			t.union([
 				t.type({
 					results: t.array(Environment),
 				}),
-				json,
+				t.type({
+					error: t.literal("invalid_token"),
+				}),
+			]),
+			json,
+		);
+
+		if (error) {
+			throw new Error(
+				`Failed to decode environments: ${error.errors.join(", ")}`,
 			);
+		}
 
-			if (error) {
-				throw new Error(
-					`Failed to decode environments: ${error.errors.join(", ")}`,
-				);
+		if ("error" in value) {
+			switch (value.error) {
+				case "invalid_token": {
+					throw new UnauthorizedError();
+				}
+
+				default: {
+					throw new SliceMachineError(
+						`Failed to fetch environments: ${value.error}`,
+					);
+				}
 			}
-
-			return value.results;
 		}
 
-		switch (res.status) {
-			case 401:
-				throw new UnauthenticatedError();
-			case 403:
-				throw new UnauthorizedError();
-			default:
-				throw new Error("Failed to fetch environments.");
-		}
+		return value.results;
 	}
 
 	private _decodeLimitOrThrow(
@@ -524,9 +533,9 @@ export class PrismicRepositoryManager extends BaseManager {
 
 				...(cookies !== undefined
 					? {
-						Authorization: `Bearer ${cookies["prismic-auth"]}`,
-						Cookie: serializeCookies(cookies),
-					}
+							Authorization: `Bearer ${cookies["prismic-auth"]}`,
+							Cookie: serializeCookies(cookies),
+					  }
 					: {}),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,

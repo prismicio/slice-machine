@@ -1,35 +1,20 @@
 import { colors, sprinkles } from "@prismicio/editor-ui";
 import { style, styleVariants } from "@vanilla-extract/css";
 
-// TODO: watch this PR https://github.com/vanilla-extract-css/vanilla-extract/pull/1105
-const block = style([
-  sprinkles({
-    boxSizing: "border-box",
-    fontFamily: "body",
-    all: "unset",
-  }),
-]);
-
-const blockWithDisplayRevert = style([
-  block,
-  sprinkles({
-    display: "revert",
-  }),
-]);
-
 export const logo = style([
-  blockWithDisplayRevert,
   sprinkles({
     height: 40,
     width: 40,
   }),
+  {
+    display: "block",
+  },
 ]);
 
 const environmentDotBase = style([
   sprinkles({
     flexShrink: 0,
     borderRadius: "50%",
-    backgroundColor: colors.currentColor,
   }),
   {
     width: 10,
@@ -38,9 +23,9 @@ const environmentDotBase = style([
 ]);
 
 export const environmentDot = styleVariants({
-  prod: [environmentDotBase, sprinkles({ color: colors.purple8 })],
-  stage: [environmentDotBase, sprinkles({ color: colors.indigo10 })],
-  dev: [environmentDotBase, sprinkles({ color: colors.amber10 })],
+  prod: [environmentDotBase, sprinkles({ backgroundColor: colors.purple8 })],
+  stage: [environmentDotBase, sprinkles({ backgroundColor: colors.indigo10 })],
+  dev: [environmentDotBase, sprinkles({ backgroundColor: colors.amber10 })],
 });
 
 export const menuItemEnvironmentDot = sprinkles({
@@ -63,6 +48,21 @@ export const activeEnvironmentDot = style([
 ]);
 
 export const activeEnvironmentName = style([
+  sprinkles({
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  }),
+  {
+    fontWeight: 500,
+    lineHeight: "1.25rem",
+  },
+]);
+
+export const actionRequiredLabel = style([
+  sprinkles({
+    color: colors.purple8,
+  }),
   {
     fontWeight: 500,
   },

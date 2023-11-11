@@ -1,21 +1,6 @@
 import { Environment } from "@slicemachine/manager/client";
 
 /**
- * A partial `Environment` representing the an environment without using data
- * from the Slice Machine API.
- *
- * This type should only be used when an environment cannot be fetched from the
- * Slice Machine API.
- */
-type EnvironmentFallback =
-  | Environment
-  | (Pick<Environment, "domain" | "name"> & {
-      [P in keyof Omit<Environment, "domain" | "name">]:
-        | Environment[P]
-        | undefined;
-    });
-
-/**
  * Sorts a list of environments using the following criteria:
  *
  * - The production environment is always first.
@@ -30,9 +15,7 @@ type EnvironmentFallback =
  *
  * @returns The sorted environments.
  */
-export function sortEnvironments<
-  TEnvironment extends Pick<EnvironmentFallback, "kind" | "name">,
->(environments: TEnvironment[]): TEnvironment[] {
+export function sortEnvironments(environments: Environment[]): Environment[] {
   return [...environments].sort((a, b) => {
     switch (a.kind) {
       case "prod": {
@@ -69,54 +52,4 @@ export function sortEnvironments<
       }
     }
   });
-}
-
-/**
- * Builds an `Environment` object representing the production environment
- * without using data from the Slice Machine API.
- *
- * This builder should only be used when a list of environments cannot be
- * fetched from the Slice Machine API.
- */
-export function buildProductionEnvironmentFallback(
-  domain: string,
-): Environment {
-  return {
-    name: "Production",
-    domain,
-    kind: "prod",
-    users: [],
-  };
-}
-
-type BuildActiveEnvironmentFallbackArgs = {
-  activeEnvironmentDomain: string | undefined;
-  productionEnvironmentDomain: string;
-};
-
-/**
- * Builds a partial `Environment` object representing the active environment
- * without using data from the Slice Machine API.
- *
- * This builder should only be used when a list of environments cannot be
- * fetched from the Slice Machine API.
- */
-export function buildActiveEnvironmentFallback(
-  args: BuildActiveEnvironmentFallbackArgs,
-): EnvironmentFallback {
-  if (args.activeEnvironmentDomain !== undefined) {
-    return {
-      name: args.activeEnvironmentDomain,
-      domain: args.activeEnvironmentDomain,
-      kind: undefined,
-      users: undefined,
-    };
-  }
-
-  return {
-    name: "Production",
-    domain: args.productionEnvironmentDomain,
-    kind: "prod",
-    users: undefined,
-  };
 }
