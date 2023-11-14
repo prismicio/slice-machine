@@ -54,7 +54,12 @@ export const Default = {
               users: [{ id: "id" }],
             },
           ]}
-          activeEnvironmentDomain="example-prismic-repo"
+          activeEnvironment={{
+            name: "Production",
+            domain: "example-prismic-repo",
+            kind: "prod",
+            users: [{ id: "id" }],
+          }}
         />
 
         <SideNavRepository
