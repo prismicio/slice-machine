@@ -12,8 +12,8 @@ import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALI
 
 import {
 	UnauthenticatedError,
-	SliceMachineError,
 	UnauthorizedError,
+	UnexpectedDataError,
 } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
@@ -439,41 +439,42 @@ export class PrismicRepositoryManager extends BaseManager {
 		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
 		url.searchParams.set("repository", repositoryName);
 		const res = await this._fetch({ url });
-		const json = await res.json();
 
-		const { value, error } = decode(
-			t.union([
-				t.type({
-					results: t.array(Environment),
-				}),
-				t.type({
-					error: t.literal("invalid_token"),
-				}),
-			]),
-			json,
-		);
+		if (res.ok) {
+			const json = await res.json();
 
-		if (error) {
-			throw new Error(
-				`Failed to decode environments: ${error.errors.join(", ")}`,
+			const { value, error } = decode(
+				t.union([
+					t.type({
+						results: t.array(Environment),
+					}),
+					t.type({
+						error: t.literal("invalid_token"),
+					}),
+				]),
+				json,
 			);
-		}
 
-		if ("error" in value) {
-			switch (value.error) {
-				case "invalid_token": {
-					throw new UnauthorizedError();
-				}
+			if (error) {
+				throw new UnexpectedDataError(
+					`Failed to decode environments: ${error.errors.join(", ")}`,
+				);
+			}
 
-				default: {
-					throw new SliceMachineError(
-						`Failed to fetch environments: ${value.error}`,
-					);
-				}
+			if ("results" in value) {
+				return sortEnvironments(value.results);
 			}
 		}
 
-		return sortEnvironments(value.results);
+		switch (res.status) {
+			case 400:
+			case 401:
+				throw new UnauthenticatedError();
+			case 403:
+				throw new UnauthorizedError();
+			default:
+				throw new Error("Failed to fetch environments.");
+		}
 	}
 
 	private _decodeLimitOrThrow(
