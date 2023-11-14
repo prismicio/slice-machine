@@ -1,47 +1,19 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
-import { Environment } from "@slicemachine/manager/client";
 
-import { managerClient } from "@src/managerClient";
-
+import { getActiveEnvironmentDomain } from "./actions/getActiveEnvironmentDomain";
 import { useEnvironments } from "./useEnvironments";
 
-export async function getActiveEnvironment() {
-  try {
-    const { environment } = await managerClient.project.readEnvironment();
-
-    return { activeEnvironment: environment, error: undefined };
-  } catch (error) {
-    return { activeEnvironment: undefined, error };
-  }
-}
-
-export function useActiveEnvironment():
-  | {
-      activeEnvironment: Environment;
-      error: undefined;
-    }
-  | {
-      activeEnvironment: undefined;
-      error: unknown;
-    } {
+export function useActiveEnvironment() {
   const { environments, error: useEnvironmentsError } = useEnvironments();
-  const {
-    activeEnvironment: activeEnvironmentDomain,
-    error: useActiveEnvironmentDomainError,
-  } = useRequest(getActiveEnvironment, []);
+  const { activeEnvironmentDomain, error: getActiveEnvironmentError } =
+    useRequest(getActiveEnvironmentDomain, []);
 
   if (useEnvironmentsError !== undefined) {
-    return {
-      activeEnvironment: undefined,
-      error: useEnvironmentsError,
-    };
+    return { error: useEnvironmentsError };
   }
 
-  if (useActiveEnvironmentDomainError !== undefined) {
-    return {
-      activeEnvironment: undefined,
-      error: useActiveEnvironmentDomainError,
-    };
+  if (getActiveEnvironmentError !== undefined) {
+    return { error: getActiveEnvironmentError };
   }
 
   const activeEnvironment = environments?.find((environment) => {
@@ -54,7 +26,6 @@ export function useActiveEnvironment():
 
   if (!activeEnvironment) {
     return {
-      activeEnvironment: undefined,
       error: new Error(
         `The active environment (${
           activeEnvironmentDomain ?? "Production"
@@ -63,8 +34,5 @@ export function useActiveEnvironment():
     };
   }
 
-  return {
-    activeEnvironment,
-    error: undefined,
-  };
+  return { activeEnvironment };
 }

@@ -13,7 +13,6 @@ import { Environment } from "@slicemachine/manager/client";
 import type { FC } from "react";
 import clsx from "clsx";
 
-import { sortEnvironments } from "@src/domain/environment";
 import LogoIcon from "@src/icons/LogoIcon";
 
 import * as styles from "./SideNavEnvironmentSelector.css";
@@ -93,8 +92,6 @@ type EnvironmentDropdownMenuProps = Pick<
 const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
   const { environments = [], activeEnvironment, onSelect } = props;
 
-  const sortedEnvironments = sortEnvironments(environments);
-
   return (
     <DropdownMenu modal>
       <DropdownMenuTrigger>
@@ -102,7 +99,7 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Regular Environments</DropdownMenuLabel>
-        {sortedEnvironments.map((environment) =>
+        {environments.map((environment) =>
           environment.kind !== "dev" ? (
             <EnvironmentDropdownMenuItem
               key={environment.domain}

@@ -36,6 +36,7 @@ import {
 	StarterId,
 	Environment,
 } from "./types";
+import { sortEnvironments } from "./sortEnvironments";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -472,7 +473,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			}
 		}
 
-		return value.results;
+		return sortEnvironments(value.results);
 	}
 
 	private _decodeLimitOrThrow(
