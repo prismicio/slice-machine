@@ -17016,15 +17016,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"environments-275b89@workspace:e2e-projects/environments":
-  version: 0.0.0-use.local
-  resolution: "environments-275b89@workspace:e2e-projects/environments"
-  dependencies:
-    "@slicemachine/adapter-next": "workspace:*"
-    slice-machine-ui: "workspace:*"
-  languageName: unknown
-  linkType: soft
-
 "err-code@npm:^2.0.2":
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
