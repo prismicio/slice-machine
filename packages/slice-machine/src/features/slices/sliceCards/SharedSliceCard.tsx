@@ -183,16 +183,23 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
                 >
                   Rename
                 </DropdownMenuItem>
-                <Tooltip content="The slice needs to have at least one variation.">
-                  <DropdownMenuItem
-                    color="tomato"
-                    disabled={action.removeDisabled}
-                    onSelect={action.onRemove}
-                    startIcon={<Icon name="delete" />}
+                {(action.removeDisabled ?? false) && hasVariationId ? (
+                  <Tooltip
+                    content="The slice needs to have at least one variation."
+                    side="bottom"
+                    stableMount
                   >
-                    Delete
-                  </DropdownMenuItem>
-                </Tooltip>
+                    <RemoveDropdownMenuItem
+                      disabled
+                      onSelect={action.onRemove}
+                    />
+                  </Tooltip>
+                ) : (
+                  <RemoveDropdownMenuItem
+                    disabled={action.removeDisabled ?? false}
+                    onSelect={action.onRemove}
+                  />
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : action.type === "remove" ? (
@@ -247,4 +254,19 @@ const UpdateScreenshotButton: FC<UpdateScreenshotButtonProps> = (props) => (
   >
     Update screenshot
   </Button>
+);
+
+type RemoveDropdownMenuItemProps = {
+  disabled: boolean;
+  onSelect: () => void;
+};
+
+const RemoveDropdownMenuItem: FC<RemoveDropdownMenuItemProps> = (props) => (
+  <DropdownMenuItem
+    {...props}
+    color="tomato"
+    startIcon={<Icon name="delete" />}
+  >
+    Delete
+  </DropdownMenuItem>
 );
