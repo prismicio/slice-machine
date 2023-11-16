@@ -23,7 +23,8 @@ import {
 } from "@prismicio/editor-ui";
 import { ConnectedRouter } from "connected-next-router";
 import type { NextPage } from "next";
-import App, { type AppContext, type AppInitialProps } from "next/app";
+import type { AppContext, AppInitialProps } from "next/app";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import Router from "next/router";
 import { type FC, type ReactNode, useEffect, useState, Suspense } from "react";
@@ -69,7 +70,7 @@ const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-function MyApp({
+function App({
   Component,
   pageProps,
 }: AppContextWithComponentLayout & AppInitialProps) {
@@ -171,8 +172,4 @@ function MyApp({
   );
 }
 
-MyApp.getInitialProps = async (appContext: AppContext) => {
-  return await App.getInitialProps(appContext);
-};
-
-export default MyApp;
+export default dynamic(() => Promise.resolve(App), { ssr: false });
