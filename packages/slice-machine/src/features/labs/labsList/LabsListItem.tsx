@@ -14,7 +14,7 @@ export const LabsListItem: FC<LabsListItemProps> = ({
   children,
 }) => {
   return (
-    <Card variant="outlined" style={{ padding: 0 }}>
+    <Card variant="outlined">
       <Box gap={8} padding={16}>
         <Box padding={{ top: 6 }}>
           <Icon name="viewDay" size="medium" color="grey11" />
