@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-sveltekit",
-	"version": "0.3.24",
+	"version": "0.3.25-dev-rename-and-delete-variations.0",
 	"description": "Slice Machine adapter for SvelteKit.",
 	"keywords": [
 		"typescript",
