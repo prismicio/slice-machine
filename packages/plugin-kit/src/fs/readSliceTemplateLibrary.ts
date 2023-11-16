@@ -1,13 +1,14 @@
 import path from "node:path";
-import fs from "node:fs/promises";
 
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
-import { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
-
 import { SliceTemplateLibraryReadHookReturnType } from "../hooks/sliceTemplateLibrary-read";
+
+import { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
+
+import * as fs from "./lib/fsLimit";
 
 export type ReadSliceTemplateLibraryArgs = {
 	helpers: SliceMachineHelpers;

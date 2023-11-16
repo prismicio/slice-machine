@@ -1,7 +1,8 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+
+import * as fs from "./lib/fsLimit";
 
 export type WriteProjectFileArgs = {
 	filename: string;

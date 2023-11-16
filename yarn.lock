@@ -8632,6 +8632,7 @@ __metadata:
     io-ts-types: 0.5.19
     monocle-ts: 2.3.13
     newtype-ts: 0.3.5
+    p-limit: ^4.0.0
     prettier: ^3.0.3
     prettier-plugin-jsdoc: 1.1.1
     prismic-ts-codegen: ^0.1.19
