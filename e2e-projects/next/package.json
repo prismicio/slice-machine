@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.19.3-dev-rename-and-delete-variations.2",
+  "version": "1.19.3-dev-rename-and-delete-variations.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
