@@ -14,21 +14,20 @@ import {
 import { Counter } from "@src/components/Counter";
 import { FlowerBackgroundIcon } from "@src/icons/FlowerBackgroundIcon";
 import { HelpIcon } from "@src/icons/HelpIcon";
-import { usePersistedState } from "@src/hooks/usePersistedState";
 import { useIsEmptyProject } from "@src/hooks/useIsEmptyProject";
+import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
 import { IN_APP_GUIDE_CONTENT } from "./inAppGuideContent";
+import { useInAppGuide } from "./InAppGuideContext";
 
 export const InAppGuideDialog: FC = () => {
   const isEmptyProject = useIsEmptyProject();
-  const [isInAppGuideOpen, setIsInAppGuideOpen] = usePersistedState(
-    true,
-    "isInAppGuideOpen",
-  );
+  const { isInAppGuideOpen, setIsInAppGuideOpen } = useInAppGuide();
+  const { repositoryUrl } = useRepositoryInformation();
 
-  // TODO: Use IconButton from @prismicio/editor-ui
+  // TODO: Use new IconButton component from editor-ui
   const trigger =
-    isInAppGuideOpen === false && isEmptyProject === false ? (
+    isEmptyProject === false ? (
       <Box position="fixed" right={16} bottom={16}>
         <button
           style={{
@@ -87,7 +86,11 @@ export const InAppGuideDialog: FC = () => {
                   controls
                   loop
                 />
-                <Text>{content.description}</Text>
+                <Text>
+                  {typeof content.description === "function"
+                    ? content.description(repositoryUrl)
+                    : content.description}
+                </Text>
               </Box>
 
               <Separator />

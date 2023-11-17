@@ -24,38 +24,33 @@ import { FolderIcon } from "@src/icons/FolderIcon";
 import { userHasSeenTutorialsToolTip } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {
-  getApiEndpoint,
-  getChangelog,
-  getRepoName,
-} from "@src/modules/environment";
+import { getChangelog } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
 import { ChangesListItem } from "./ChangesListItem";
 
 const Navigation: FC = () => {
-  const { changelog, repoName, apiEndpoint, hasSeenTutorialsToolTip } =
-    useSelector((store: SliceMachineStoreType) => ({
+  const { changelog, hasSeenTutorialsToolTip } = useSelector(
+    (store: SliceMachineStoreType) => ({
       changelog: getChangelog(store),
-      repoName: getRepoName(store),
-      apiEndpoint: getApiEndpoint(store),
       hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
-    }));
+    }),
+  );
   const router = useRouter();
-  const repoDomain = new URL(apiEndpoint).hostname.replace(".cdn", "");
-  const repoAddress = apiEndpoint.replace(".cdn.", ".").replace("/api/v2", "");
-
   const { setUpdatesViewed, setSeenTutorialsToolTip } =
     useSliceMachineActions();
+  const { repositoryName, repositoryDomain, repositoryUrl } =
+    useRepositoryInformation();
 
   return (
     <SideNav>
       <SideNavLogo />
 
       <SideNavRepository
-        repositoryName={repoName}
-        repositoryDomain={repoDomain}
-        href={repoAddress}
+        repositoryName={repositoryName}
+        repositoryDomain={repositoryDomain}
+        href={repositoryUrl}
       />
 
       <SideNavList>
@@ -128,7 +123,7 @@ const Navigation: FC = () => {
       <SideNavList position="bottom">
         <SideNavLink
           title="Invite team"
-          href={`${repoAddress}/settings/users`}
+          href={`${repositoryUrl}/settings/users`}
           Icon={(props) => <MathPlusIcon {...props} />}
           onClick={() => {
             void telemetry.track({
