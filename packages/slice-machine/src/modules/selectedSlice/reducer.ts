@@ -6,6 +6,7 @@ import {
   copyVariationSliceCreator,
   initSliceStoreCreator,
   removeSliceWidgetCreator,
+  updateAndSaveSliceCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
   SelectedSliceActions,
@@ -155,7 +156,11 @@ export const selectedSliceReducer: Reducer<
         model: renamedSlice,
       };
     }
-
+    case getType(updateAndSaveSliceCreator): {
+      return prevState
+        ? { ...prevState, ...action.payload.component }
+        : prevState;
+    }
     case getType(updateSelectedSliceMocks): {
       if (!prevState) return prevState;
       const { mocks } = action.payload;

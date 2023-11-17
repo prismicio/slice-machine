@@ -12,12 +12,9 @@ describe("[Toaster utils]", () => {
     it("should call addToast function on an success", () => {
       const addToastFakeFunction = vi.fn();
       const toastPayload: ToastPayload = {
-        loading: false,
         done: true,
-        warning: false,
         message: "message",
-        status: 200,
-        error: null,
+        error: false,
       };
       handleRemoteResponse(addToastFakeFunction)(toastPayload);
 
@@ -29,46 +26,18 @@ describe("[Toaster utils]", () => {
 
     it("shouldn't call addToast function on an unfinished request", () => {
       const addToastFakeFunction = vi.fn();
-      const toastPayload: ToastPayload = {
-        loading: false,
-        done: false,
-        warning: false,
-        message: "message",
-        status: 200,
-        error: null,
-      };
+      const toastPayload: ToastPayload = { done: false };
       handleRemoteResponse(addToastFakeFunction)(toastPayload);
 
       expect(addToastFakeFunction).toHaveBeenCalledTimes(0);
     });
 
-    it("shouldn't call addToast function on request with warnings", () => {
-      const addToastFakeFunction = vi.fn();
-      const toastPayload: ToastPayload = {
-        loading: false,
-        done: true,
-        warning: true,
-        message: "message",
-        status: 200,
-        error: null,
-      };
-      handleRemoteResponse(addToastFakeFunction)(toastPayload);
-
-      expect(addToastFakeFunction).toHaveBeenCalledWith(
-        "message",
-        ToasterType.WARNING,
-      );
-    });
-
     it("shouldn't call addToast function on a request with errors", () => {
       const addToastFakeFunction = vi.fn();
       const toastPayload: ToastPayload = {
-        loading: false,
         done: true,
-        warning: true,
         message: "message",
-        status: 200,
-        error: new Error(),
+        error: true,
       };
       handleRemoteResponse(addToastFakeFunction)(toastPayload);
 
