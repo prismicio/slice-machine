@@ -14,6 +14,7 @@ import {
   screen,
   waitFor,
   within,
+  findByDataCy,
 } from "../__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
@@ -167,18 +168,14 @@ describe("slices", () => {
       },
     });
 
-    const createOneButton = document.querySelector('[data-cy="create-slice"]');
+    const createOneButton = await screen.findByTestId("create-slice");
     await act(async () => {
-      if (createOneButton) {
-        fireEvent.click(createOneButton);
-      }
+      fireEvent.click(createOneButton);
     });
 
-    const nameInput = document.querySelector('[data-cy="slice-name-input"]');
+    const nameInput = await screen.findByPlaceholderText(/slice api id/i);
     await act(async () => {
-      if (nameInput) {
-        fireEvent.change(nameInput, { target: { value: "FooBar" } });
-      }
+      fireEvent.change(nameInput, { target: { value: "FooBar" } });
     });
 
     const createSliceModal = screen.getByLabelText("Create a new slice");

@@ -178,9 +178,10 @@ async function renderCustomTypesBuilderPage({
   const renderResults = render(<CustomTypesBuilderPage />, customTypeMockStore);
 
   const folder = customType.format === "page" ? "Page types" : "Custom types";
-  expect(
-    screen.getByTestId(`breadcrumb-${folder}-${customType.label as string}`),
-  ).toBeVisible();
+  const breadcrumb = await screen.findByTestId(
+    `breadcrumb-${folder}-${customType.label as string}`,
+  );
+  expect(breadcrumb).toBeVisible();
 
   return renderResults;
 }

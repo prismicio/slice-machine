@@ -1,6 +1,6 @@
-import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
+import { Box, Button, ButtonGroup, ErrorBoundary } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import type { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, Suspense } from "react";
 
 import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
 
@@ -17,6 +17,21 @@ export const AppLayout: FC<PropsWithChildren> = ({
   children,
   ...otherProps
 }) => {
+  return (
+    <ErrorBoundary>
+      <Suspense>
+        <X {...otherProps}>
+          <PageLayoutPane>
+            <Navigation />
+          </PageLayoutPane>
+          {children}
+        </X>
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
+
+const X: FC<PropsWithChildren> = ({ children, ...otherProps }) => {
   const { activeEnvironment } = useActiveEnvironment();
 
   return (
@@ -24,9 +39,6 @@ export const AppLayout: FC<PropsWithChildren> = ({
       activeEnvironmentKind={activeEnvironment?.kind ?? "prod"}
       {...otherProps}
     >
-      <PageLayoutPane>
-        <Navigation />
-      </PageLayoutPane>
       {children}
     </PageLayout>
   );
