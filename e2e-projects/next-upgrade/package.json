@@ -1,6 +1,6 @@
 {
   "name": "next-upgrade",
-  "version": "1.19.3-dev-next-release.2",
+  "version": "1.19.3-dev-rename-and-delete-variations.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
