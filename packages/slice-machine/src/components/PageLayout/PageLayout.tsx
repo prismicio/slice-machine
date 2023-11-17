@@ -2,13 +2,18 @@ import type { FC, PropsWithChildren } from "react";
 
 import * as styles from "./PageLayout.css";
 
-export const PageLayout: FC<PropsWithChildren> = ({
+type PageLayoutProps = PropsWithChildren<{
+  activeEnvironmentKind?: "prod" | "stage" | "dev";
+}>;
+
+export const PageLayout: FC<PageLayoutProps> = ({
+  activeEnvironmentKind = "prod",
   children,
   ...otherProps
 }) => (
   <div {...otherProps} className={styles.root}>
     {children}
-    <div className={styles.borderTop} />
+    <div className={styles.borderTop[activeEnvironmentKind]} />
   </div>
 );
 

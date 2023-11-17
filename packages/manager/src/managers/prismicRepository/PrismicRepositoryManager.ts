@@ -10,7 +10,11 @@ import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGE
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
 
-import { UnauthenticatedError, UnauthorizedError } from "../../errors";
+import {
+	UnauthenticatedError,
+	UnauthorizedError,
+	UnexpectedDataError,
+} from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -32,6 +36,7 @@ import {
 	StarterId,
 	Environment,
 } from "./types";
+import { sortEnvironments } from "./sortEnvironments";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -431,24 +436,38 @@ export class PrismicRepositoryManager extends BaseManager {
 	async fetchEnvironments(): Promise<Environment[]> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL("./environments", API_ENDPOINTS.SliceMachine);
-		const res = await this._fetch({ url, repository: repositoryName });
+		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
+		url.searchParams.set("repository", repositoryName);
+		const res = await this._fetch({ url });
 
 		if (res.ok) {
 			const json = await res.json();
 
-			const { value: environments, error } = decode(t.array(Environment), json);
+			const { value, error } = decode(
+				t.union([
+					t.type({
+						results: t.array(Environment),
+					}),
+					t.type({
+						error: t.literal("invalid_token"),
+					}),
+				]),
+				json,
+			);
 
 			if (error) {
-				throw new Error(
+				throw new UnexpectedDataError(
 					`Failed to decode environments: ${error.errors.join(", ")}`,
 				);
 			}
 
-			return environments;
+			if ("results" in value) {
+				return sortEnvironments(value.results);
+			}
 		}
 
 		switch (res.status) {
+			case 400:
 			case 401:
 				throw new UnauthenticatedError();
 			case 403:

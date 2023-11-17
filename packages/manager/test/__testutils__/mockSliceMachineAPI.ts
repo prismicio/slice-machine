@@ -18,7 +18,9 @@ export const mockSliceMachineAPI = (
 	config: MockSliceMachineAPIConfig,
 ): void => {
 	// TODO: Update the default endpoint to the correct deployed URL.
-	const endpoint = config.endpoint ?? "https://slice-machine-api.example/";
+	const endpoint =
+		config.endpoint ??
+		"https://21vvgrh0s6.execute-api.us-east-1.amazonaws.com/v1/";
 
 	if (config.environmentsV1Endpoint) {
 		ctx.msw.use(
@@ -33,14 +35,16 @@ export const mockSliceMachineAPI = (
 								config.environmentsV1Endpoint?.expectedCookies.join("; ")
 						) {
 							return res(
-								ctx.json(config.environmentsV1Endpoint?.environments),
+								ctx.json({
+									results: config.environmentsV1Endpoint?.environments,
+								}),
 								ctx.status(200),
 							);
 						} else {
-							return res(ctx.status(400));
+							return res(ctx.status(418));
 						}
 					} else {
-						return res(ctx.status(400));
+						return res(ctx.status(418));
 					}
 				},
 			),

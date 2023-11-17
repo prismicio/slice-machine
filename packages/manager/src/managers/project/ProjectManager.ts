@@ -392,9 +392,9 @@ export class ProjectManager extends BaseManager {
 			hookResult,
 		);
 
-		const repositoryName = await this.project.getRepositoryName();
-
 		// An undefined value is equivalent to the production environment.
+		// We cast to undefined.
+		const repositoryName = await this.project.getRepositoryName();
 		const environmentDomain =
 			data[0]?.environment === repositoryName
 				? undefined

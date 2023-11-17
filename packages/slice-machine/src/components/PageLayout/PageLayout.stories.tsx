@@ -6,12 +6,21 @@ import {
   PageLayoutHeader,
   PageLayoutPane,
 } from "./PageLayout";
+import { borderTop } from "./PageLayout.css";
 
 type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: PageLayout,
-  argTypes: { children: { control: { disable: true } } },
+  argTypes: {
+    children: {
+      control: { disable: true },
+    },
+    activeEnvironmentKind: {
+      control: { type: "select" },
+      options: Object.keys(borderTop),
+    },
+  },
   parameters: {
     docs: { story: { height: 256, inline: false } },
     layout: "fullscreen",
