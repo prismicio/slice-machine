@@ -97,7 +97,7 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
       <DropdownMenuTrigger>
         <IconButton icon="unfoldMore" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" minWidth={256}>
         <DropdownMenuLabel>Regular Environments</DropdownMenuLabel>
         {environments.map((environment) =>
           environment.kind !== "dev" ? (
