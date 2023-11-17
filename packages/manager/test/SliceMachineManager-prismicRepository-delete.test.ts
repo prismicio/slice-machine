@@ -7,7 +7,7 @@ import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicRepositoryAPI } from "./__testutils__/mockPrismicRepositoryAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 // TODO: This test is unfinished. Is this method necessary? It doesn't seem to
 // be used anywhere.
@@ -102,5 +102,5 @@ it("throws if not logged in", async () => {
 			domain: "foo",
 			password: "bar",
 		});
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });

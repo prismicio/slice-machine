@@ -31,6 +31,7 @@ import {
 } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { ChangesListItem } from "./ChangesListItem";
+import { Environments } from "./Environments";
 
 const Navigation: FC = () => {
   const { changelog, repoName, apiEndpoint, hasSeenTutorialsToolTip } =
@@ -56,6 +57,12 @@ const Navigation: FC = () => {
         repositoryDomain={repoDomain}
         href={repoAddress}
       />
+
+      <ErrorBoundary>
+        <Suspense>
+          <Environments />
+        </Suspense>
+      </ErrorBoundary>
 
       <SideNavList>
         <SideNavListItem>

@@ -6,8 +6,11 @@ import { createTestProject } from "./__testutils__/createTestProject";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
-import { InternalError } from "../src/errors";
+import {
+	createSliceMachineManager,
+	UnauthenticatedError,
+	InternalError,
+} from "../src";
 
 it("refreshes the auth token in the auth state file", async (ctx) => {
 	const adapter = createTestPlugin();
@@ -69,5 +72,5 @@ it("throws if the user is not logged in", async () => {
 
 	expect(async () => {
 		await manager.user.getAuthenticationToken();
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });

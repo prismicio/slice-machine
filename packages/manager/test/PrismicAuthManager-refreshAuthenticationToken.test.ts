@@ -4,8 +4,11 @@ import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAut
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createPrismicAuthManager } from "../src";
-import { InternalError } from "../src/errors";
+import {
+	createPrismicAuthManager,
+	UnauthenticatedError,
+	InternalError,
+} from "../src";
 
 it("refreshes the auth token in the auth state file", async (ctx) => {
 	const prismicAuthManager = createPrismicAuthManager();
@@ -52,5 +55,5 @@ it("throws if the user is not logged in", async () => {
 
 	expect(async () => {
 		await prismicAuthManager.getAuthenticationToken();
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });

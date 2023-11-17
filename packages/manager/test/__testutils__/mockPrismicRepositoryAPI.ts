@@ -1,7 +1,7 @@
 import { TestContext } from "vitest";
 import { rest } from "msw";
 
-type MockPrismicAuthAPIConfig = {
+type MockPrismicRepositoryAPIConfig = {
 	endpoint?: string;
 	existsEndpoint?: {
 		isSuccessful?: boolean;
@@ -37,7 +37,7 @@ type MockPrismicAuthAPIConfig = {
 
 export const mockPrismicRepositoryAPI = (
 	ctx: TestContext,
-	config: MockPrismicAuthAPIConfig,
+	config: MockPrismicRepositoryAPIConfig,
 ): void => {
 	const endpoint = config.endpoint ?? "https://prismic.io/";
 

@@ -2,12 +2,15 @@ import * as t from "io-ts";
 import fetch, { Response } from "../../lib/fetch";
 import { fold } from "fp-ts/Either";
 
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decode } from "../../lib/decode";
 import { serializeCookies } from "../../lib/serializeCookies";
 
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
+
+import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -27,9 +30,8 @@ import {
 	TransactionalMergeReturnType,
 	FrameworkWroomTelemetryID,
 	StarterId,
+	Environment,
 } from "./types";
-import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
-import { UnauthenticatedError } from "../../errors";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -383,14 +385,14 @@ export class PrismicRepositoryManager extends BaseManager {
 				changes: allChanges,
 			};
 
-			const sliceMachineConfig = await this.project.getSliceMachineConfig();
+			const repositoryName = await this.project.getRepositoryName();
 
 			// TODO: move to customtypes client
 			const response = await this._fetch({
 				url: new URL("./bulk", API_ENDPOINTS.PrismicModels),
 				method: "POST",
 				body: requestBody,
-				repository: sliceMachineConfig.repositoryName,
+				repository: repositoryName,
 			});
 
 			switch (response.status) {
@@ -423,6 +425,36 @@ export class PrismicRepositoryManager extends BaseManager {
 			console.error(err);
 
 			throw err;
+		}
+	}
+
+	async fetchEnvironments(): Promise<Environment[]> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL("./environments", API_ENDPOINTS.SliceMachine);
+		const res = await this._fetch({ url, repository: repositoryName });
+
+		if (res.ok) {
+			const json = await res.json();
+
+			const { value: environments, error } = decode(t.array(Environment), json);
+
+			if (error) {
+				throw new Error(
+					`Failed to decode environments: ${error.errors.join(", ")}`,
+				);
+			}
+
+			return environments;
+		}
+
+		switch (res.status) {
+			case 401:
+				throw new UnauthenticatedError();
+			case 403:
+				throw new UnauthorizedError();
+			default:
+				throw new Error("Failed to fetch environments.");
 		}
 	}
 

@@ -7,7 +7,7 @@ import { mockCustomTypesAPI } from "./__testutils__/mockCustomTypesAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 it("pushes a Custom Type using the Custom Types API", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
@@ -110,5 +110,5 @@ it("throws if not logged in", async () => {
 
 	await expect(async () => {
 		await manager.customTypes.pushCustomType({ id: "id" });
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });

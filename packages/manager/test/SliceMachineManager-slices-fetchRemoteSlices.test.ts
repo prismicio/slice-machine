@@ -6,7 +6,7 @@ import { mockCustomTypesAPI } from "./__testutils__/mockCustomTypesAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 it("fetches Slices from the Custom Types API", async (ctx) => {
 	const adapter = createTestPlugin();
@@ -56,5 +56,5 @@ it("throws if the user is not logged in", async () => {
 
 	await expect(async () => {
 		await manager.slices.fetchRemoteSlices();
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });
