@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.9.3",
+	"version": "2.9.4-dev-next-release.0",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
