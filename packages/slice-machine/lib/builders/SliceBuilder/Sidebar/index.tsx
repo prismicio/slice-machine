@@ -23,7 +23,7 @@ type SidebarProps = {
 };
 
 type DialogState =
-  | { type: "ADD_VARIATION" }
+  | { type: "ADD_VARIATION"; variation?: undefined }
   | { type: "RENAME_VARIATION"; variation: VariationSM }
   | { type: "DELETE_VARIATION"; variation: VariationSM }
   | undefined;
@@ -88,62 +88,56 @@ export const Sidebar: FC<SidebarProps> = (props) => {
         slices={sliceFilterFn([slice])}
         defaultVariationSelector={defaultVariationSelector}
       />
-      {dialog?.type === "RENAME_VARIATION" ? (
-        <RenameVariationModal
-          isOpen
-          onClose={() => {
-            setDialog(undefined);
-          }}
-          slice={slice}
-          variation={dialog.variation}
-          sliceBuilderState={sliceBuilderState}
-          setSliceBuilderState={setSliceBuilderState}
-        />
-      ) : undefined}
-      {dialog?.type === "DELETE_VARIATION" ? (
-        <DeleteVariationModal
-          isOpen
-          onClose={() => {
-            setDialog(undefined);
-          }}
-          slice={slice}
-          variation={dialog.variation}
-          sliceBuilderState={sliceBuilderState}
-          setSliceBuilderState={setSliceBuilderState}
-        />
-      ) : undefined}
-      {dialog?.type === "ADD_VARIATION" ? (
-        <AddVariationModal
-          initialVariation={variation}
-          isOpen
-          onClose={() => {
-            setDialog(undefined);
-          }}
-          onSubmit={(id, name, copiedVariation) => {
-            copyVariationSlice(id, name, copiedVariation);
+      <RenameVariationModal
+        isOpen={dialog?.type === "RENAME_VARIATION"}
+        onClose={() => {
+          setDialog(undefined);
+        }}
+        slice={slice}
+        variation={dialog?.variation}
+        sliceBuilderState={sliceBuilderState}
+        setSliceBuilderState={setSliceBuilderState}
+      />
+      <DeleteVariationModal
+        isOpen={dialog?.type === "DELETE_VARIATION"}
+        onClose={() => {
+          setDialog(undefined);
+        }}
+        slice={slice}
+        variation={dialog?.variation}
+        sliceBuilderState={sliceBuilderState}
+        setSliceBuilderState={setSliceBuilderState}
+      />
+      <AddVariationModal
+        initialVariation={variation}
+        isOpen={dialog?.type === "ADD_VARIATION"}
+        onClose={() => {
+          setDialog(undefined);
+        }}
+        onSubmit={(id, name, copiedVariation) => {
+          copyVariationSlice(id, name, copiedVariation);
 
-            // We have to immediately save the new variation to prevent an
-            // infinite loop related to screenshots handling.
-            const newVariation = Variation.copyValue(copiedVariation, id, name);
-            const newSlice = {
-              ...slice,
-              model: {
-                ...slice.model,
-                variations: [...slice.model.variations, newVariation],
-              },
-            };
-            updateSlice(newSlice, setSliceBuilderState);
+          // We have to immediately save the new variation to prevent an
+          // infinite loop related to screenshots handling.
+          const newVariation = Variation.copyValue(copiedVariation, id, name);
+          const newSlice = {
+            ...slice,
+            model: {
+              ...slice.model,
+              variations: [...slice.model.variations, newVariation],
+            },
+          };
+          updateSlice(newSlice, setSliceBuilderState);
 
-            const url = SLICES_CONFIG.getBuilderPagePathname({
-              libraryName: newSlice.href,
-              sliceName: newSlice.model.name,
-              variationId: newVariation.id,
-            });
-            void router.replace(url);
-          }}
-          variations={slice.model.variations}
-        />
-      ) : undefined}
+          const url = SLICES_CONFIG.getBuilderPagePathname({
+            libraryName: newSlice.href,
+            sliceName: newSlice.model.name,
+            variationId: newVariation.id,
+          });
+          void router.replace(url);
+        }}
+        variations={slice.model.variations}
+      />
     </>
   );
 };

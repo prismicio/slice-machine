@@ -19,7 +19,7 @@ type DeleteVariationModalProps = {
   isOpen: boolean;
   onClose: () => void;
   slice: ComponentUI;
-  variation: VariationSM;
+  variation: VariationSM | undefined;
   sliceBuilderState: SliceBuilderState;
   setSliceBuilderState: Dispatch<SetStateAction<SliceBuilderState>>;
 };
@@ -43,19 +43,18 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
       <DialogHeader icon="delete" title="Delete variation" />
       <DialogContent>
         <Box flexDirection="column">
-          <Box flexDirection="column" gap={8} padding={16}>
-            <Text color="grey11">
-              This action will remove the variation from the slice model and
-              delete associated files. When you push your changes, the variation
-              will disappear from your repository. This update will{" "}
-              <Bold>not</Bold> affect your documents until you <Bold>edit</Bold>{" "}
-              them manually.
-            </Text>
-          </Box>
+          <Text color="grey11" sx={{ marginBlock: 16, marginInline: 16 }}>
+            This action will remove the variation from the slice model and
+            delete associated files. When you push your changes, the variation
+            will disappear from your repository. This update will{" "}
+            <Bold>not</Bold> affect your documents until you <Bold>edit</Bold>{" "}
+            them manually.
+          </Text>
           <DialogActions
             ok={{
               text: "Delete",
               onClick: () => {
+                if (!variation) return;
                 void (async () => {
                   try {
                     await deleteVariation({
