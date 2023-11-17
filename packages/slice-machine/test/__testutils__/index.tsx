@@ -1,11 +1,4 @@
-import {
-  render as rtlRender,
-  RenderOptions,
-  queryHelpers,
-  buildQueries,
-  Matcher,
-  MatcherOptions,
-} from "@testing-library/react";
+import { render as rtlRender, RenderOptions } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Store, AnyAction } from "redux";
 
@@ -61,38 +54,6 @@ function render(
     ...rtlRender(ui, { wrapper: Wrapper, ...renderOptions }),
   };
 }
-
-// The queryAllByAttribute is a shortcut for attribute-based matchers
-// You can also use document.querySelector or a combination of existing
-// testing library utilities to find matching nodes for your query
-const queryAllByDataCy = (
-  container: HTMLElement,
-  id: Matcher,
-  options?: MatcherOptions | undefined,
-) => queryHelpers.queryAllByAttribute("data-cy", container, id, options);
-
-const [
-  queryByDataCy,
-  getAllByDataCy,
-  getByDataCy,
-  findAllByDataCy,
-  findByDataCy,
-] = buildQueries(
-  queryAllByDataCy,
-  (_c, dataCyValue) =>
-    `Found multiple elements with the data-cy attribute of: ${dataCyValue}`,
-  (_c, dataCyValue) =>
-    `Unable to find an element with the data-cy attribute of: ${dataCyValue}`,
-);
-
-export {
-  queryByDataCy,
-  queryAllByDataCy,
-  getByDataCy,
-  getAllByDataCy,
-  findAllByDataCy,
-  findByDataCy,
-};
 
 // re-export everything
 export * from "@testing-library/react";

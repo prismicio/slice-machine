@@ -14,7 +14,6 @@ import {
   screen,
   waitFor,
   within,
-  findByDataCy,
 } from "../__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
