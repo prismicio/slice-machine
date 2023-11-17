@@ -1,6 +1,6 @@
 {
   "name": "next-upgrade",
-  "version": "1.19.3-dev-environments.1",
+  "version": "1.19.3-dev-environments.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
