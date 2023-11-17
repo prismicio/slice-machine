@@ -9,6 +9,7 @@ import open from "open";
 import logSymbols from "log-symbols";
 import { globby } from "globby";
 import { downloadTemplate } from "giget";
+import pLimit from "p-limit";
 
 import {
 	createSliceMachineManager,
@@ -199,7 +200,7 @@ export class SliceMachineInitProcess {
 			`\n${chalk.bgGreen(` ${chalk.bold.white("Slice Machine")} `)} ${chalk.dim(
 				"→",
 			)} Initialization successful!
-			
+
 Continue with next steps in Slice Machine.
 `,
 		);
@@ -1286,9 +1287,17 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								const remoteTypes =
 									await this.manager.customTypes.fetchRemoteCustomTypes();
 
+								const createCustomTypeLimit = pLimit(8);
+
+								let pulled = 0;
+								task.title = `Pulling existing types... (0/${remoteTypes.length})`;
 								await Promise.all(
 									remoteTypes.map(async (model) => {
-										await this.manager.customTypes.createCustomType({ model });
+										await createCustomTypeLimit(() =>
+											this.manager.customTypes.createCustomType({ model }),
+										);
+										pulled++;
+										task.title = `Pulling existing types... (${pulled}/${remoteTypes.length})`;
 									}),
 								);
 
