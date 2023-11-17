@@ -1,9 +1,9 @@
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { checkPathExists } from "./lib/checkPathExists";
 import { isCustomTypeModel } from "./lib/isCustomTypeModel";
 import { readJSONFile } from "./lib/readJSONFile";
+import * as fs from "./lib/fsLimit";
 
 import { CUSTOM_TYPE_MODEL_FILENAME } from "./constants";
 import {

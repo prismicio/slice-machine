@@ -1,6 +1,11 @@
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
-import { SliceSM, Slices } from "@lib/models/common/Slice";
+import {
+  type SliceSM,
+  Slices,
+  type VariationSM,
+  Variations,
+} from "@lib/models/common/Slice";
 import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 
 import { CheckAuthStatusResponse } from "@models/common/Auth";
@@ -74,6 +79,15 @@ export const saveCustomType = async (
 };
 
 /** Slice Routes * */
+
+export const readSlice = async (libraryID: string, sliceID: string) => {
+  const { model, errors } = await managerClient.slices.readSlice({
+    libraryID,
+    sliceID,
+  });
+  return { slice: model ? Slices.toSM(model) : undefined, errors };
+};
+
 export const renameSlice = async (
   slice: SliceSM,
   libName: string,
@@ -90,7 +104,21 @@ export const deleteSlice = async (sliceId: string, libName: string) =>
     sliceID: sliceId,
   });
 
-export const generateSliceCustomScreenshotApiClient = async (
+export const renameSliceVariation = async (
+  slice: ComponentUI,
+  variation: VariationSM,
+) => {
+  return await managerClient.slices.renameSliceVariation({
+    libraryID: slice.from,
+    sliceID: slice.model.id,
+    variationID: variation.id,
+    model: Variations.fromSM(variation),
+  });
+};
+
+export const deleteSliceVariation = managerClient.slices.deleteSliceVariation;
+
+export const generateSliceCustomScreenshot = async (
   params: CustomScreenshotRequest,
 ): Promise<{
   url: string;
@@ -111,7 +139,7 @@ export const generateSliceCustomScreenshotApiClient = async (
   };
 };
 
-export const updateSliceApiClient = async (
+export const updateSlice = async (
   component: ComponentUI,
 ): Promise<
   Awaited<ReturnType<(typeof managerClient)["slices"]["updateSlice"]>>
@@ -201,7 +229,7 @@ export const saveSliceMock = async (
   });
 };
 
-export const getChangelogApiClient = async (): Promise<PackageChangelog> => {
+export const getChangelog = async (): Promise<PackageChangelog> => {
   const [
     currentVersion,
     latestNonBreakingVersion,

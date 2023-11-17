@@ -1,12 +1,12 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import * as fs from "node:fs/promises";
 import * as path from "node:path";
+
+import { SliceMachineHelpers } from "../createSliceMachineHelpers";
 
 import { checkPathExists } from "./lib/checkPathExists";
 import { isSharedSliceModel } from "./lib/isSharedSliceModel";
 import { readJSONFile } from "./lib/readJSONFile";
-
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import * as fs from "./lib/fsLimit";
 
 import { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
 import { SHARED_SLICE_MODEL_FILENAME } from "./constants";

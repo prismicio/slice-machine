@@ -70,7 +70,7 @@ it("validates the adapter's return value", async () => {
 	});
 });
 
-it("ignores plugins that implement `custom-type:read:asset`", async () => {
+it("ignores plugins that implement `slice:asset:read`", async () => {
 	const imageData = Buffer.from("image-data");
 	const ignoredImageData = Buffer.from("ignored-image-data");
 	const adapter = createTestPlugin({

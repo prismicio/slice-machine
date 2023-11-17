@@ -1,6 +1,6 @@
-import * as fs from "node:fs/promises";
-
 import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+
+import * as fs from "./lib/fsLimit";
 
 export type DeleteProjectFileArgs = {
 	filename: string;

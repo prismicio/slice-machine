@@ -25,7 +25,10 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { updateSliceCreator } from "../selectedSlice/actions";
+import {
+  updateAndSaveSliceCreator,
+  updateSliceCreator,
+} from "../selectedSlice/actions";
 import { generateSliceCustomScreenshotCreator } from "../screenshots/actions";
 import { selectSliceById } from "../selectedSlice/selectors";
 import { SlicesStoreType } from "./types";
@@ -76,6 +79,7 @@ type SlicesActions =
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
   | ActionType<typeof updateSliceCreator>
+  | ActionType<typeof updateAndSaveSliceCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSliceMock>;
 
@@ -156,6 +160,24 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       });
 
       return { ...state, libraries: newLibraries };
+    }
+    case getType(updateAndSaveSliceCreator): {
+      const { component: newComponent } = action.payload;
+      return {
+        ...state,
+        libraries: state.libraries.map((library) =>
+          library.name === newComponent.from
+            ? {
+                ...library,
+                components: library.components.map((component) =>
+                  component.model.id === newComponent.model.id
+                    ? newComponent
+                    : component,
+                ),
+              }
+            : library,
+        ),
+      };
     }
     case getType(generateSliceCustomScreenshotCreator.success): {
       const { component, screenshot, variationId } = action.payload;

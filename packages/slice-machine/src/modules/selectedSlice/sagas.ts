@@ -10,40 +10,32 @@ import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { updateSliceCreator } from "./actions";
-import { readSliceMocks, updateSliceApiClient } from "@src/apiClient";
+import { readSliceMocks, updateSlice } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { SliceToastMessage } from "@components/ToasterContainer";
 
 export function* updateSliceSaga({
   payload,
 }: ReturnType<typeof updateSliceCreator.request>) {
-  const { component, setData } = payload;
+  const { component, setSliceBuilderState } = payload;
 
   try {
-    setData({
-      loading: true,
-      done: false,
-      error: null,
-      status: null,
-      message: null,
-    });
-    const { errors } = (yield call(
-      updateSliceApiClient,
-      component,
-    )) as SagaReturnType<typeof updateSliceApiClient>;
+    setSliceBuilderState({ loading: true, done: false });
+    const { errors } = (yield call(updateSlice, component)) as SagaReturnType<
+      typeof updateSlice
+    >;
     if (errors.length > 0) {
-      return setData({
+      return setSliceBuilderState({
         loading: false,
         done: true,
-        error: errors,
+        error: true,
         message: errors[0].message,
-        status: 500,
       });
     }
-    setData({
+    setSliceBuilderState({
       loading: false,
       done: true,
-      error: null,
+      error: false,
       message: SliceToastMessage({
         path: `${component.from}/${component.model.name}/model.json`,
       }),
