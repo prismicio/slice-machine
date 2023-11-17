@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.9.3-dev-rename-and-delete-variations.2",
+	"version": "2.9.3-dev-next-release.2",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
@@ -62,6 +62,7 @@
 		"log-symbols": "^4.1.0",
 		"meow": "^11.0.0",
 		"open": "^8.4.2",
+		"p-limit": "^4.0.0",
 		"prompts": "^2.4.2",
 		"semver": "^7.3.8"
 	},

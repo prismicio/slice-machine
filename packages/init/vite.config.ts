@@ -12,7 +12,7 @@ export default defineConfig({
 	},
 	plugins: [
 		sdk({
-			internalDependencies: ["meow", "globby"],
+			internalDependencies: ["meow", "globby", "p-limit"],
 		}),
 	],
 	test: {
