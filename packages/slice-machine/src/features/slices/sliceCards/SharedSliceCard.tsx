@@ -183,7 +183,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
                 >
                   Rename
                 </DropdownMenuItem>
-                {(action.removeDisabled ?? false) && hasVariationId ? (
+                {action.removeDisabled === true && hasVariationId ? (
                   <Tooltip
                     content="The slice needs to have at least one variation."
                     side="bottom"
@@ -196,7 +196,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
                   </Tooltip>
                 ) : (
                   <RemoveDropdownMenuItem
-                    disabled={action.removeDisabled ?? false}
+                    disabled={action.removeDisabled === true}
                     onSelect={action.onRemove}
                   />
                 )}
