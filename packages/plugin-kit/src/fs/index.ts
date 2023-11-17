@@ -21,6 +21,15 @@ export type { ReadProjectFileArgs } from "./readProjectFile";
 export { deleteProjectFile } from "./deleteProjectFile";
 export type { DeleteProjectFileArgs } from "./deleteProjectFile";
 
+export { readProjectEnvironment } from "./readProjectEnvironment";
+export type {
+	ReadProjectEnvironmentArgs,
+	ReadEnvironmentReturnType,
+} from "./readProjectEnvironment";
+
+export { writeProjectEnvironment } from "./writeProjectEnvironment";
+export type { WriteProjectEnvironmentArgs } from "./writeProjectEnvironment";
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Slice helpers

@@ -27,6 +27,8 @@ import { SnippetReadHookBase } from "./hooks/snippet-read";
 import { DocumentationReadHookBase } from "./hooks/documentation-read";
 
 import { SliceTemplateLibraryReadHookBase } from "./hooks/sliceTemplateLibrary-read";
+import { ProjectEnvironmentReadHookBase } from "./hooks/project-environment-read";
+import { ProjectEnvironmentUpdateHookBase } from "./hooks/project-environment-update";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
@@ -163,6 +165,8 @@ export const SliceMachineHookType = {
 	sliceSimulator_setup_read: "slice-simulator:setup:read",
 
 	project_init: "project:init",
+	project_environment_read: "project:environment:read",
+	project_environment_update: "project:environment:update",
 
 	debug: "debug",
 } as const;
@@ -214,6 +218,8 @@ export type SliceMachineHooks = {
 
 	// Project
 	[SliceMachineHookType.project_init]: Hook<ProjectInitHookBase>;
+	[SliceMachineHookType.project_environment_read]: Hook<ProjectEnvironmentReadHookBase>;
+	[SliceMachineHookType.project_environment_update]: Hook<ProjectEnvironmentUpdateHookBase>;
 
 	// Debug
 	[SliceMachineHookType.debug]: Hook<DebugHookBase>;

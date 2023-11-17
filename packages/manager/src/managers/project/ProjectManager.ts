@@ -4,16 +4,28 @@ import * as path from "node:path";
 import { createRequire } from "node:module";
 import { detect as niDetect } from "@antfu/ni";
 import { ExecaChildProcess } from "execa";
+import {
+	HookError,
+	CallHookReturnType,
+	ProjectEnvironmentUpdateHook,
+} from "@slicemachine/plugin-kit";
+import * as t from "io-ts";
 
+import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
+import { decodeHookResult } from "../../lib/decodeHookResult";
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
 
-import { PackageManager, SliceMachineConfig } from "../../types";
+import {
+	PackageManager,
+	SliceMachineConfig,
+	OnlyHookErrors,
+} from "../../types";
 
-import { SliceMachineError, InternalError } from "../../errors";
+import { SliceMachineError, InternalError, PluginError } from "../../errors";
 
 import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
 import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
@@ -55,6 +67,15 @@ type ProjectManagerInstallDependenciesArgs = {
 
 type ProjectManagerInstallDependenciesReturnType = {
 	execaProcess: ExecaChildProcess;
+};
+
+type ProjectManagerReadEnvironmentReturnType = {
+	environment: string | undefined;
+	errors: (DecodeError | HookError)[];
+};
+
+type ProjectManagerUpdateEnvironmentArgs = {
+	environment: string | undefined;
 };
 
 export class ProjectManager extends BaseManager {
@@ -195,10 +216,41 @@ export class ProjectManager extends BaseManager {
 		return path.dirname(sliceMachinePackageJSONPath);
 	}
 
+	/**
+	 * Returns the project's repository name (i.e. the production environment). It
+	 * ignores the currently selected environment.
+	 *
+	 * Use this method to retrieve the production environment domain.
+	 *
+	 * @returns The project's repository name.
+	 */
 	async getRepositoryName(): Promise<string> {
 		const sliceMachineConfig = await this.getSliceMachineConfig();
 
 		return sliceMachineConfig.repositoryName;
+	}
+
+	/**
+	 * Returns the currently selected environment domain if set. If an environment
+	 * is not set, it returns the project's repository name (the production
+	 * environment).
+	 *
+	 * Use this method to retrieve the repository name to be sent with Prismic API
+	 * requests.
+	 *
+	 * @returns The resolved repository name.
+	 */
+	async getResolvedRepositoryName(): Promise<string> {
+		const repositoryName = await this.getRepositoryName();
+
+		const supportsEnvironments = this.project.checkSupportsEnvironments();
+		if (!supportsEnvironments) {
+			return repositoryName;
+		}
+
+		const { environment } = await this.project.readEnvironment();
+
+		return environment ?? repositoryName;
 	}
 
 	async getAdapterName(): Promise<string> {
@@ -310,6 +362,82 @@ export class ProjectManager extends BaseManager {
 			}
 
 			throw error;
+		}
+	}
+
+	checkSupportsEnvironments(): boolean {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		return (
+			this.sliceMachinePluginRunner.hooksForType("project:environment:read")
+				.length > 0 &&
+			this.sliceMachinePluginRunner.hooksForType("project:environment:update")
+				.length > 0
+		);
+	}
+
+	async readEnvironment(): Promise<ProjectManagerReadEnvironmentReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		await this._assertAdapterSupportsEnvironments();
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"project:environment:read",
+			undefined,
+		);
+		const { data, errors } = decodeHookResult(
+			t.type({
+				environment: t.union([t.undefined, t.string]),
+			}),
+			hookResult,
+		);
+
+		const repositoryName = await this.project.getRepositoryName();
+
+		// An undefined value is equivalent to the production environment.
+		const environmentDomain =
+			data[0]?.environment === repositoryName
+				? undefined
+				: data[0]?.environment;
+
+		return {
+			environment: environmentDomain,
+			errors,
+		};
+	}
+
+	async updateEnvironment(
+		args: ProjectManagerUpdateEnvironmentArgs,
+	): Promise<OnlyHookErrors<CallHookReturnType<ProjectEnvironmentUpdateHook>>> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		await this._assertAdapterSupportsEnvironments();
+
+		const repositoryName = await this.project.getRepositoryName();
+		const environment =
+			args.environment === repositoryName ? undefined : args.environment;
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"project:environment:update",
+			{ environment },
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
+	}
+
+	private async _assertAdapterSupportsEnvironments(): Promise<void> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const supportsEnvironments = this.checkSupportsEnvironments();
+
+		if (!supportsEnvironments) {
+			const adapterName = await this.project.getAdapterName();
+
+			throw new PluginError(
+				`${adapterName} does not support environments. Use an adapter that implements the \`project:environment:read\` and \`project:environment:update\` hooks to use environments.`,
+			);
 		}
 	}
 }

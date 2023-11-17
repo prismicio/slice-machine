@@ -405,7 +405,8 @@ describe("prismicio.js file", () => {
 				/**
 				 * The project's Prismic repository name.
 				 */
-				export const repositoryName = config.repositoryName;
+				export const repositoryName =
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -480,7 +481,8 @@ describe("prismicio.js file", () => {
 				/**
 				 * The project's Prismic repository name.
 				 */
-				export const repositoryName = config.repositoryName;
+				export const repositoryName =
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -696,7 +698,8 @@ describe("prismicio.js file", () => {
 				/**
 				 * The project's Prismic repository name.
 				 */
-				export const repositoryName = config.repositoryName;
+				export const repositoryName =
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -767,7 +770,8 @@ describe("prismicio.js file", () => {
 				/**
 				 * The project's Prismic repository name.
 				 */
-				export const repositoryName = config.repositoryName;
+				export const repositoryName =
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.

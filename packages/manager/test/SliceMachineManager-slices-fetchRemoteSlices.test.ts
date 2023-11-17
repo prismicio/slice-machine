@@ -16,6 +16,8 @@ it("fetches Slices from the Custom Types API", async (ctx) => {
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+
 	mockPrismicAuthAPI(ctx);
 	mockPrismicUserAPI(ctx);
 
@@ -36,6 +38,52 @@ it("fetches Slices from the Custom Types API", async (ctx) => {
 		onSliceGetAll: (req, res, ctx) => {
 			if (
 				req.headers.get("repository") === sliceMachineConfig.repositoryName &&
+				req.headers.get("Authorization") === `Bearer ${authenticationToken}`
+			) {
+				return res(ctx.json(models));
+			}
+		},
+	});
+
+	const res = await manager.slices.fetchRemoteSlices();
+
+	expect(res).toStrictEqual(models);
+});
+
+it("fetches Slices from the Custom Types API using the currently set environment", async (ctx) => {
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("project:environment:read", () => ({ environment: "foo" }));
+			hook("project:environment:update", () => void 0);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	mockPrismicAuthAPI(ctx);
+	mockPrismicUserAPI(ctx);
+
+	await manager.user.login({
+		email: "name@example.com",
+		cookies: ["prismic-auth=token", "SESSION=session"],
+	});
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+
+	const models = [
+		ctx.mockPrismic.model.sharedSlice(),
+		ctx.mockPrismic.model.sharedSlice(),
+	];
+
+	mockCustomTypesAPI(ctx, {
+		onSliceGetAll: (req, res, ctx) => {
+			if (
+				req.headers.get("repository") === "foo" &&
 				req.headers.get("Authorization") === `Bearer ${authenticationToken}`
 			) {
 				return res(ctx.json(models));
