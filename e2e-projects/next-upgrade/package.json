@@ -1,6 +1,6 @@
 {
   "name": "next-upgrade",
-  "version": "1.19.2-dev-in-app-guide.2",
+  "version": "1.19.2-dev-in-app-guide.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
