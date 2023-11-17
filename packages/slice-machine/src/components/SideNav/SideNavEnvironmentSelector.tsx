@@ -72,13 +72,13 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
       <Box flexShrink={0}>
         {variant === "unauthorized" ? (
           <IconButton icon="arrowForward" onClick={onLogInClick} />
-        ) : (
+        ) : !activeEnvironment || environments.length > 1 ? (
           <EnvironmentDropdownMenu
             environments={environments}
             activeEnvironment={activeEnvironment}
             onSelect={onSelect}
           />
-        )}
+        ) : null}
       </Box>
     </Box>
   );

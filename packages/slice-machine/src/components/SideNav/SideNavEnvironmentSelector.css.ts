@@ -23,7 +23,7 @@ const environmentDotBase = style([
 ]);
 
 export const environmentDot = styleVariants({
-  prod: [environmentDotBase, sprinkles({ backgroundColor: colors.purple8 })],
+  prod: [environmentDotBase, sprinkles({ backgroundColor: colors.purple10 })],
   stage: [environmentDotBase, sprinkles({ backgroundColor: colors.indigo10 })],
   dev: [environmentDotBase, sprinkles({ backgroundColor: colors.amber10 })],
 });
@@ -61,7 +61,7 @@ export const activeEnvironmentName = style([
 
 export const actionRequiredLabel = style([
   sprinkles({
-    color: colors.purple8,
+    color: colors.purple10,
   }),
   {
     fontWeight: 500,
