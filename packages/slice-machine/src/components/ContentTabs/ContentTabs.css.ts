@@ -30,7 +30,7 @@ export const trigger = style([
       "&:not(:last-child)": { marginRight: vars.space[16] },
       '&[data-state="active"]': {
         boxShadow: "inset 0 -1px 0 0 currentColor, 0 1px 0 0 currentColor",
-        color: vars.color.purple9,
+        color: vars.color.purpleLight9,
       },
     },
   },

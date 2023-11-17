@@ -291,17 +291,15 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
               </>
             )}
           </BaseStyles>
-          {currentState === UiState.SUCCESS ? (
-            <Box
+          {currentState === UiState.SUCCESS && isDisplayEditor ? (
+            <Flex
               className="editor"
               sx={{
+                flexDirection: "column",
                 marginLeft: "16px",
                 maxWidth: "440px",
                 minWidth: "440px",
                 overflowY: "auto",
-                ...(isDisplayEditor
-                  ? { display: "flex", flexDirection: "column" }
-                  : { display: "none" }),
               }}
             >
               {/*
@@ -335,7 +333,7 @@ const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
                   />
                 </Suspense>
               </ErrorBoundary>
-            </Box>
+            </Flex>
           ) : null}
         </Flex>
       </Box>

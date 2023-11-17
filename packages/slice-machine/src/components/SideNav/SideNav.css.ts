@@ -116,7 +116,7 @@ export const repositoryLinkIcon = style([
   }),
   {
     ":focus": {
-      borderColor: vars.color.purple8,
+      borderColor: vars.color.purpleLight10,
       boxShadow: vars.boxShadow.focus,
     },
   },
@@ -201,13 +201,13 @@ export const link = style([
       },
       // Not Active & Focus
       "&:not([data-active=true]):focus": {
-        borderColor: vars.color.purple8,
+        borderColor: vars.color.purpleLight10,
       },
       // Active & Default
       "&[data-active=true]": {
-        backgroundColor: vars.color.purple12,
-        borderColor: vars.color.purple8,
-        color: vars.color.purple8,
+        backgroundColor: vars.color.purpleLight3,
+        borderColor: vars.color.purpleLight10,
+        color: vars.color.purpleLight10,
       },
       // Active & Hover
       "&[data-active=true]:hover": {
@@ -215,7 +215,7 @@ export const link = style([
       },
       // Parent list item is open
       '[data-state="open"] > &, [data-state="open"] > &:hover': {
-        borderColor: vars.color.purple8,
+        borderColor: vars.color.purpleLight10,
         boxShadow: vars.boxShadow.focus,
       },
     },
@@ -232,7 +232,7 @@ export const linkIcon = style([
       },
       // Active
       [`${link}[data-active=true] &`]: {
-        fill: vars.color.purple8,
+        fill: vars.color.purpleLight10,
       },
     },
   },
@@ -276,9 +276,9 @@ export const rightElementPill = style([
     selectors: {
       // Not Active
       [`${link}:not([data-active=true]) &`]: {
-        backgroundColor: vars.color.purple9,
-        borderColor: vars.color.purple8,
-        color: vars.color.purple12,
+        backgroundColor: vars.color.purpleLight9,
+        borderColor: vars.color.purpleLight10,
+        color: vars.color.purpleLight3,
       },
       // Active
       [`${link}[data-active=true] &`]: {
@@ -366,7 +366,7 @@ export const updateInfoLink = style([
     fontWeight: 600,
     lineHeight: "24px",
     ":focus": {
-      borderColor: vars.color.purple8,
+      borderColor: vars.color.purpleLight10,
       boxShadow: vars.boxShadow.focus,
     },
     selectors: {

@@ -70,6 +70,12 @@ const Navigation: FC = () => {
         href={repoAddress}
       />
 
+      <ErrorBoundary>
+        <Suspense>
+          <Environment />
+        </Suspense>
+      </ErrorBoundary>
+
       <SideNavList>
         <SideNavListItem>
           <SideNavLink
