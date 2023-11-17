@@ -52,11 +52,11 @@ const Navigation: FC = () => {
 
   return (
     <SideNav>
-      <Suspense>
-        <ErrorBoundary>
+      <ErrorBoundary>
+        <Suspense>
           <Environment />
-        </ErrorBoundary>
-      </Suspense>
+        </Suspense>
+      </ErrorBoundary>
 
       <Divider
         variant="edgeFaded"
