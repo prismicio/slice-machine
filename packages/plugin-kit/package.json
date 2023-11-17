@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/plugin-kit",
-	"version": "0.4.24-dev-next-release.4",
+	"version": "0.4.25-dev-next-release.1",
 	"description": "A set of helpers to develop and run Slice Machine plugins",
 	"keywords": [
 		"typescript",
@@ -69,6 +69,7 @@
 		"fs-extra": "11.1.1",
 		"io-ts": "^2.2.20",
 		"io-ts-reporters": "^2.0.1",
+		"p-limit": "^4.0.0",
 		"prettier": "^3.0.3",
 		"prismic-ts-codegen": "^0.1.19"
 	},

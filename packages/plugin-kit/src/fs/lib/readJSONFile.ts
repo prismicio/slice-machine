@@ -1,4 +1,4 @@
-import * as fs from "node:fs/promises";
+import * as fs from "./fsLimit";
 
 export async function readJSONFile<T = unknown>(path: string): Promise<T> {
 	const contents = await fs.readFile(path, "utf8");
