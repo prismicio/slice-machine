@@ -20,18 +20,21 @@ export const AppLayout: FC<PropsWithChildren> = ({
   return (
     <ErrorBoundary>
       <Suspense>
-        <X {...otherProps}>
+        <PageLayoutWithActiveEnvironment {...otherProps}>
           <PageLayoutPane>
             <Navigation />
           </PageLayoutPane>
           {children}
-        </X>
+        </PageLayoutWithActiveEnvironment>
       </Suspense>
     </ErrorBoundary>
   );
 };
 
-const X: FC<PropsWithChildren> = ({ children, ...otherProps }) => {
+const PageLayoutWithActiveEnvironment: FC<PropsWithChildren> = ({
+  children,
+  ...otherProps
+}) => {
   const { activeEnvironment } = useActiveEnvironment();
 
   return (
