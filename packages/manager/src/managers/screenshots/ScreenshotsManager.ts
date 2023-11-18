@@ -183,7 +183,7 @@ export class ScreenshotsManager extends BaseManager {
 		body?: unknown;
 	}): Promise<Response> {
 		const authenticationToken = await this.user.getAuthenticationToken();
-		const repositoryName = await this.project.getResolvedRepositoryName();
+		const repositoryName = await this.project.getRepositoryName();
 
 		return await fetch(args.url, {
 			body: args.body ? JSON.stringify(args.body) : undefined,
