@@ -100,7 +100,7 @@ it("pushes changes using the bulk delete API", async (ctx) => {
 	expect(sentModel).toStrictEqual(expectedAPIPayload);
 });
 
-it("pushes changes using the bulk delete API using the currently set environment", async (ctx) => {
+it("pushes changes using the bulk delete API to the production repository when an environment is set", async (ctx) => {
 	const customTypeModel = ctx.mockPrismic.model.customType();
 	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
@@ -140,10 +140,11 @@ it("pushes changes using the bulk delete API using the currently set environment
 	await manager.user.login(createPrismicAuthLoginResponse());
 
 	const authenticationToken = await manager.user.getAuthenticationToken();
+	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
 
 	mockAWSACLAPI(ctx, {
 		createEndpoint: {
-			expectedPrismicRepository: "foo",
+			expectedPrismicRepository: sliceMachineConfig.repositoryName,
 			expectedAuthenticationToken: authenticationToken,
 		},
 	});
