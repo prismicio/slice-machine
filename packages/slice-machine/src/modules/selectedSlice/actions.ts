@@ -1,5 +1,6 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+import type { SliceBuilderState } from "@builders/SliceBuilder";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
@@ -17,6 +18,7 @@ export type SelectedSliceActions =
   | ActionType<typeof updateSliceWidgetMockCreator>
   | ActionType<typeof deleteSliceWidgetMockCreator>
   | ActionType<typeof updateSliceCreator>
+  | ActionType<typeof updateAndSaveSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof refreshStateCreator>
@@ -86,13 +88,16 @@ export const updateSliceCreator = createAsyncAction(
 )<
   {
     component: ComponentUI;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setData: (data: any) => void;
+    setSliceBuilderState: (sliceBuilderState: SliceBuilderState) => void;
   },
   {
     component: ComponentUI;
   }
 >();
+
+export const updateAndSaveSliceCreator = createAction("SLICE/UPDATE_AND_SAVE")<{
+  component: ComponentUI;
+}>();
 
 export const copyVariationSliceCreator = createAction("SLICE/COPY_VARIATION")<{
   key: string;

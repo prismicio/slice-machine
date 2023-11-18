@@ -45,6 +45,7 @@ import {
   cleanupCustomTypeStoreCreator,
   renameSelectedCustomTypeLabel,
 } from "./selectedCustomType";
+import type { SliceBuilderState } from "@builders/SliceBuilder";
 import {
   CustomTypeSM,
   CustomTypes,
@@ -62,6 +63,7 @@ import {
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
+  updateAndSaveSliceCreator,
   updateSliceCreator,
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
@@ -377,15 +379,18 @@ const useSliceMachineActions = () => {
 
   const updateSlice = (
     component: ComponentUI,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setData: (data: any) => void,
+    setSliceBuilderState: (sliceBuilderState: SliceBuilderState) => void,
   ) => {
     dispatch(
       updateSliceCreator.request({
         component,
-        setData,
+        setSliceBuilderState,
       }),
     );
+  };
+
+  const updateAndSaveSlice = (component: ComponentUI) => {
+    dispatch(updateAndSaveSliceCreator({ component }));
   };
 
   const copyVariationSlice = (
@@ -497,6 +502,7 @@ const useSliceMachineActions = () => {
     deleteSliceWidgetMock,
     generateSliceCustomScreenshot,
     updateSlice,
+    updateAndSaveSlice,
     copyVariationSlice,
     createSliceSuccess,
     renameSlice,

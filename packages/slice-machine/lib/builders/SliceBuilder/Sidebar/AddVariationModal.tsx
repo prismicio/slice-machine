@@ -15,7 +15,7 @@ const Error = ({ msg }: { msg?: string }) => (
     {msg || "Error!"}
   </Text>
 );
-const VariationModal: React.FunctionComponent<{
+const AddVariationModal: React.FunctionComponent<{
   isOpen: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClose: () => any;
@@ -51,7 +51,7 @@ const VariationModal: React.FunctionComponent<{
     const originError = !(
       origin.value.length && variations.find((v) => v.id === origin.value)
     )
-      ? { id: "Yuu must select an existing variation!" }
+      ? { id: "You must select an existing variation!" }
       : null;
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const invalidIdError = id &&
@@ -236,4 +236,4 @@ const VariationModal: React.FunctionComponent<{
   );
 };
 
-export default VariationModal;
+export default AddVariationModal;

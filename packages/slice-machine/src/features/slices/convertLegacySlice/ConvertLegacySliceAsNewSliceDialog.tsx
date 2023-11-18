@@ -46,7 +46,6 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
           validateOnChange
           validateOnMount
           initialValues={{
-            _init: false,
             from: libraries[0]?.name,
             sliceName: pascalize(slice.key),
           }}
@@ -60,7 +59,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
           {(formik) => {
             return (
               <form id="convert-legacy-slice-as-new-slice-dialog">
-                <Box display="flex" flexDirection="column">
+                <Box flexDirection="column">
                   <ScrollArea
                     className={styles.scrollArea}
                     style={{ width: 448 }}
@@ -75,7 +74,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
                       This will not migrate your component. You will need to do
                       that manually.
                     </Text>
-                    <Box display="flex" flexDirection="column" gap={4}>
+                    <Box flexDirection="column" gap={4}>
                       <label className={styles.label}>
                         <Text variant="bold">Display name*</Text>
                         {typeof formik.errors.sliceName === "string" ? (
@@ -102,7 +101,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
                         A display name for the slice
                       </Text>
                     </Box>
-                    <Box display="flex" flexDirection="column" gap={4}>
+                    <Box flexDirection="column" gap={4}>
                       <label className={styles.label}>
                         <Text variant="bold">Slice library*</Text>
                         {typeof formik.errors.from === "string" ? (

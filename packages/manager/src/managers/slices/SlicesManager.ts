@@ -110,6 +110,12 @@ type SliceMachineManagerUpdateSliceScreenshotArgs = {
 	data: Buffer;
 };
 
+type SliceMachineManagerDeleteSliceScreenshotArgs = {
+	libraryID: string;
+	sliceID: string;
+	variationID: string;
+};
+
 type SliceMachineManagerReadSliceMocksArgs = {
 	libraryID: string;
 	sliceID: string;
@@ -151,6 +157,36 @@ type SliceMachineManagerDeleteSliceArgs = {
 	sliceID: string;
 };
 
+type SliceMachineManagerDeleteSliceReturnType = {
+	errors: (DecodeError | HookError)[];
+};
+
+type SliceMachineManagerRenameSliceVariationArgs = {
+	libraryID: string;
+	sliceID: string;
+	/**
+	 * Current ID of the variation to rename.
+	 */
+	variationID: string;
+	model: Variation;
+};
+
+type SliceMachineManagerRenameSliceVariationReturnType = {
+	errors: (DecodeError | HookError)[];
+	assetsErrors: (DecodeError | HookError)[];
+};
+
+type SliceMachineManagerDeleteSliceVariationArgs = {
+	libraryID: string;
+	sliceID: string;
+	variationID: string;
+};
+
+type SliceMachineManagerDeleteSliceVariationReturnType = {
+	errors: (DecodeError | HookError)[];
+	assetsErrors: (DecodeError | HookError)[];
+};
+
 type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
 	model: CompositeSlice | LegacySlice;
 	src: {
@@ -168,10 +204,6 @@ type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
 };
 
 type SliceMachineManagerConvertLegacySliceToSharedSliceReturnType = {
-	errors: (DecodeError | HookError)[];
-};
-
-type SliceMachineManagerDeleteSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
@@ -427,6 +459,184 @@ export class SlicesManager extends BaseManager {
 		}
 	}
 
+	async renameSliceVariation(
+		args: SliceMachineManagerRenameSliceVariationArgs,
+	): Promise<SliceMachineManagerRenameSliceVariationReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		// TODO: Remove when we support renaming variation ID, see: DT-1708
+		if (args.variationID !== args.model.id) {
+			throw new Error(
+				"Renaming variation ID is not supported yet by the backend, only rename its name! For more information, see: https://linear.app/prismic/issue/DT-1708",
+			);
+		}
+
+		const { model, errors: readSliceErrors } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.sliceID,
+		});
+
+		if (model) {
+			// Find and rename the variation
+			const updatedModel = {
+				...model,
+				variations: model.variations.map((variation) => {
+					if (variation.id === args.variationID) {
+						// Matches the slice we want to rename
+						return args.model;
+					} else if (variation.id === args.model.id) {
+						// Matches any other slice that has the ID of the renamed variation and throw.
+						// This should be validated on the frontend first for better UX, this is only backend validation.
+						throw new Error(
+							`Cannot rename variation \`${args.variationID}\` to \`${args.model.id}\`. A variation already exists with that ID in slice \`${args.sliceID}\` from library \`${args.libraryID}\`, try deleting it first or choose another variation ID to rename that slice.`,
+						);
+					}
+
+					return variation;
+				}),
+			};
+			const updateSliceHookResult =
+				await this.sliceMachinePluginRunner.callHook("slice:update", {
+					libraryID: args.libraryID,
+					model: updatedModel,
+				});
+
+			// If variation ID has changed, we need to rename assets accordingly
+			const assetsErrors: (DecodeError<unknown> | HookError<unknown>)[] = [];
+			if (args.variationID !== args.model.id) {
+				// Renaming screenshot
+				const { data: screenshot, errors: readSliceScreenshotErrors } =
+					await this.readSliceScreenshot({
+						libraryID: args.libraryID,
+						sliceID: args.sliceID,
+						variationID: args.variationID,
+					});
+				assetsErrors.push(...readSliceScreenshotErrors);
+
+				if (screenshot) {
+					// Delete old ID screenshot
+					const { errors: deleteSliceScreenshotErrors } =
+						await this.deleteSliceScreenshot({
+							libraryID: args.libraryID,
+							sliceID: args.sliceID,
+							variationID: args.variationID,
+						});
+					assetsErrors.push(...deleteSliceScreenshotErrors);
+
+					// Create new ID screenshot
+					const { errors: updateSliceScreenshotErrors } =
+						await this.updateSliceScreenshot({
+							libraryID: args.libraryID,
+							sliceID: args.sliceID,
+							variationID: args.model.id,
+							data: screenshot,
+						});
+					assetsErrors.push(...updateSliceScreenshotErrors);
+				}
+
+				// Renaming mocks
+				const { mocks, errors: readSliceMocksErrors } =
+					await this.readSliceMocks({
+						libraryID: args.libraryID,
+						sliceID: args.sliceID,
+					});
+				assetsErrors.push(...readSliceMocksErrors);
+
+				if (mocks?.length) {
+					const { errors: updateSliceMocksErrors } =
+						await this.updateSliceMocks({
+							libraryID: args.libraryID,
+							sliceID: args.sliceID,
+							mocks: mocks.map((mock) => {
+								if (mock.variation === args.variationID) {
+									return {
+										...mock,
+										variation: args.model.id,
+									};
+								}
+
+								return mock;
+							}),
+						});
+					assetsErrors.push(...updateSliceMocksErrors);
+				}
+			}
+
+			return {
+				errors: updateSliceHookResult.errors,
+				assetsErrors,
+			};
+		} else {
+			return {
+				errors: readSliceErrors,
+				assetsErrors: [],
+			};
+		}
+	}
+
+	async deleteSliceVariation(
+		args: SliceMachineManagerDeleteSliceVariationArgs,
+	): Promise<SliceMachineManagerDeleteSliceVariationReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const { model, errors: readSliceErrors } = await this.readSlice({
+			libraryID: args.libraryID,
+			sliceID: args.sliceID,
+		});
+
+		if (model) {
+			// Remove variation from model and update it
+			const updatedModel = {
+				...model,
+				variations: model.variations.filter(
+					(variation) => variation.id !== args.variationID,
+				),
+			};
+			const updateSliceHookResult =
+				await this.sliceMachinePluginRunner.callHook("slice:update", {
+					libraryID: args.libraryID,
+					model: updatedModel,
+				});
+
+			// Cleanup deleted variation screenshot
+			const { errors: deleteSliceScreenshotErrors } =
+				await this.deleteSliceScreenshot(args);
+
+			// Cleanup deleted variation mocks
+			const { mocks, errors: readSliceMocksErrors } = await this.readSliceMocks(
+				{
+					libraryID: args.libraryID,
+					sliceID: args.sliceID,
+				},
+			);
+			let updateSliceMocksErrors: SliceMachineManagerUpdateSliceMocksArgsReturnType["errors"] =
+				[];
+			if (mocks?.length) {
+				updateSliceMocksErrors = (
+					await this.updateSliceMocks({
+						libraryID: args.libraryID,
+						sliceID: args.sliceID,
+						mocks: mocks.filter((mock) => mock.variation !== args.variationID),
+					})
+				).errors;
+			}
+
+			return {
+				errors: updateSliceHookResult.errors,
+				assetsErrors: [
+					...deleteSliceScreenshotErrors,
+					...readSliceMocksErrors,
+					...updateSliceMocksErrors,
+				],
+			};
+		} else {
+			return {
+				errors: readSliceErrors,
+				assetsErrors: [],
+			};
+		}
+	}
+
 	async convertLegacySliceToSharedSlice(
 		args: SliceMachineManagerConvertLegacySliceToSharedSliceArgs,
 	): Promise<SliceMachineManagerConvertLegacySliceToSharedSliceReturnType> {
@@ -642,6 +852,25 @@ export class SlicesManager extends BaseManager {
 					id: `screenshot-${args.variationID}.png`,
 					data: args.data,
 				},
+			},
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
+	}
+
+	async deleteSliceScreenshot(
+		args: SliceMachineManagerDeleteSliceScreenshotArgs,
+	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"slice:asset:delete",
+			{
+				libraryID: args.libraryID,
+				sliceID: args.sliceID,
+				assetID: `screenshot-${args.variationID}.png`,
 			},
 		);
 
