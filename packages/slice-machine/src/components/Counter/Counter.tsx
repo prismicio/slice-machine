@@ -4,8 +4,6 @@ import { FlowerBackgroundIcon } from "@src/icons/FlowerBackgroundIcon";
 
 import * as styles from "./Counter.css";
 
-export type CounterProps = PropsWithChildren;
-
 export const Counter: FC<PropsWithChildren> = (props) => {
   const { children } = props;
 

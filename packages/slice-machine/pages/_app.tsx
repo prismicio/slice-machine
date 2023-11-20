@@ -159,10 +159,10 @@ function MyApp({
                                 <Component {...pageProps} />
                               </ComponentLayout>
                             </Suspense>
-                            <Suspense>
-                              <InAppGuideDialog />
-                            </Suspense>
                           </RouteChangeProvider>
+                          <Suspense>
+                            <InAppGuideDialog />
+                          </Suspense>
                         </InAppGuideProvider>
                       </ErrorBoundary>
                     </PersistGate>
