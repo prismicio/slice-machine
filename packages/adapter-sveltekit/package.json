@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-sveltekit",
-	"version": "0.3.24-dev-in-app-guide.3",
+	"version": "0.3.24-dev-in-app-guide.4",
 	"description": "Slice Machine adapter for SvelteKit.",
 	"keywords": [
 		"typescript",
