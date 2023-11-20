@@ -15,17 +15,27 @@ import { Counter } from "@src/components/Counter";
 import { FlowerBackgroundIcon } from "@src/icons/FlowerBackgroundIcon";
 import { HelpIcon } from "@src/icons/HelpIcon";
 import { useIsEmptyProject } from "@src/hooks/useIsEmptyProject";
-import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
-import { IN_APP_GUIDE_CONTENT } from "./inAppGuideContent";
+import { useInAppGuideContent } from "./inAppGuideContent";
 import { useInAppGuide } from "./InAppGuideContext";
 
 export const InAppGuideDialog: FC = () => {
   const isEmptyProject = useIsEmptyProject();
   const { isInAppGuideOpen, setIsInAppGuideOpen } = useInAppGuide();
-  const { repositoryUrl } = useRepositoryInformation();
+  const inAppGuideContent = useInAppGuideContent();
 
   // TODO: Use new IconButton component from editor-ui
+  //
+  // It should be used like that:
+  // <IconButton
+  //    color="purple"
+  //    radius="full"
+  //    renderIcon={() => <HelpIcon />}
+  //    onClick={() => {
+  //      setIsInAppGuideOpen(!isInAppGuideOpen);
+  //    }}
+  // />
+
   const trigger =
     isEmptyProject === false ? (
       <Box position="fixed" right={16} bottom={16}>
@@ -62,13 +72,25 @@ export const InAppGuideDialog: FC = () => {
       position="bottomRight"
       size={{
         width: 360,
-        height: 440,
+        height: 456,
       }}
     >
-      <DialogHeader title={IN_APP_GUIDE_CONTENT.title} />
+      <DialogHeader title={inAppGuideContent.title} />
       <DialogContent>
         <ScrollArea>
-          {IN_APP_GUIDE_CONTENT.steps.map((content, index) => (
+          <Box
+            flexDirection="column"
+            padding={{ inline: 16, block: 8 }}
+            gap={8}
+          >
+            <Text>{inAppGuideContent.description}</Text>
+          </Box>
+
+          <Box>
+            <Separator />
+          </Box>
+
+          {inAppGuideContent.steps.map((content, index) => (
             <Box key={index} flexDirection="column">
               <Box flexDirection="column" padding={16} gap={8}>
                 <Box alignItems="center" gap={8}>
@@ -86,11 +108,7 @@ export const InAppGuideDialog: FC = () => {
                   controls
                   loop
                 />
-                <Text>
-                  {typeof content.description === "function"
-                    ? content.description(repositoryUrl)
-                    : content.description}
-                </Text>
+                <Text>{content.description}</Text>
               </Box>
 
               <Separator />
@@ -98,12 +116,8 @@ export const InAppGuideDialog: FC = () => {
           ))}
 
           <Box flexDirection="column" padding={16} gap={4}>
-            <Text variant="bold">{IN_APP_GUIDE_CONTENT.successTitle}</Text>
-            <Box flexDirection="column">
-              {IN_APP_GUIDE_CONTENT.successSteps.map((content, index) => (
-                <Text key={index}>• {content}</Text>
-              ))}
-            </Box>
+            <Text variant="bold">{inAppGuideContent.successTitle}</Text>
+            <Text>{inAppGuideContent.successDescription}</Text>
           </Box>
         </ScrollArea>
       </DialogContent>
