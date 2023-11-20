@@ -11,14 +11,15 @@ export const root = sprinkles({
 export const count = style([
   sprinkles({
     all: "unset",
+    display: "revert",
     color: colors.grey1,
+    fontFamily: "body",
     position: "absolute",
   }),
   {
     fontSize: "9px",
     fontWeight: 500,
     left: "50%",
-    lineHeight: "32px",
     top: "50%",
     transform: "translate(-50%, -50%)",
   },

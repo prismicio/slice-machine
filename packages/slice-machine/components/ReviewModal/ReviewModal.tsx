@@ -21,7 +21,7 @@ export const ReviewModal: FC = () => {
     }),
   );
 
-  // Opt ou directly if the in-app guide is open
+  // Opt out directly if the in-app guide is open
   if (isInAppGuideOpen) {
     return null;
   }

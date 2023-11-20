@@ -5,11 +5,10 @@ import {
   SetStateAction,
   createContext,
   useContext,
+  useMemo,
 } from "react";
 
 import { usePersistedState } from "@src/hooks/usePersistedState";
-
-import { InAppGuideDialog } from "./InAppGuideDialog";
 
 type InAppGuideContextValue = {
   isInAppGuideOpen: boolean;
@@ -23,19 +22,18 @@ export const InAppGuideContext = createContext<
 export const InAppGuideProvider: FC<PropsWithChildren> = (props) => {
   const { children } = props;
   const [isInAppGuideOpen, setIsInAppGuideOpen] = usePersistedState(
-    true,
     "isInAppGuideOpen",
+    true,
+  );
+
+  const memoizedValue = useMemo(
+    () => ({ isInAppGuideOpen, setIsInAppGuideOpen }),
+    [isInAppGuideOpen, setIsInAppGuideOpen],
   );
 
   return (
-    <InAppGuideContext.Provider
-      value={{
-        isInAppGuideOpen,
-        setIsInAppGuideOpen,
-      }}
-    >
+    <InAppGuideContext.Provider value={memoizedValue}>
       {children}
-      <InAppGuideDialog />
     </InAppGuideContext.Provider>
   );
 };
@@ -43,7 +41,7 @@ export const InAppGuideProvider: FC<PropsWithChildren> = (props) => {
 export const useInAppGuide = () => {
   const context = useContext(InAppGuideContext);
   if (context === undefined) {
-    throw new Error("useInAppGuide must be used within a InAppGuideProvider");
+    throw new Error("useInAppGuide must be used within an InAppGuideProvider");
   }
   return context;
 };

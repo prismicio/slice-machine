@@ -35,6 +35,7 @@ import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { AppLayout, AppLayoutContent } from "@components/AppLayout";
 import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
+import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
 
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
@@ -151,17 +152,18 @@ function MyApp({
                           );
                         }}
                       >
-                        <Suspense>
-                          <InAppGuideProvider>
-                            <RouteChangeProvider>
-                              <Suspense fallback={<LoadingPage />}>
-                                <ComponentLayout>
-                                  <Component {...pageProps} />
-                                </ComponentLayout>
-                              </Suspense>
-                            </RouteChangeProvider>
-                          </InAppGuideProvider>
-                        </Suspense>
+                        <InAppGuideProvider>
+                          <RouteChangeProvider>
+                            <Suspense fallback={<LoadingPage />}>
+                              <ComponentLayout>
+                                <Component {...pageProps} />
+                              </ComponentLayout>
+                            </Suspense>
+                            <Suspense>
+                              <InAppGuideDialog />
+                            </Suspense>
+                          </RouteChangeProvider>
+                        </InAppGuideProvider>
                       </ErrorBoundary>
                     </PersistGate>
                   </ConnectedRouter>

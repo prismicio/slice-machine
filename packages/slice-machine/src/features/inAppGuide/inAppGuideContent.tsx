@@ -52,7 +52,7 @@ export function useInAppGuideContent() {
           <>
             To render the page, run your project in your terminal and open
             localhost to the page UID.{" "}
-            <Text variant="italic" component="span" sx={{}}>
+            <Text variant="italic" component="span">
               Example:
             </Text>{" "}
             localhost:3000/my_page_uid

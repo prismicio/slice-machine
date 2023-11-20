@@ -1,17 +1,17 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
+import { FC, PropsWithChildren } from "react";
+
+import { FlowerBackgroundIcon } from "@src/icons/FlowerBackgroundIcon";
 
 import * as styles from "./Counter.css";
 
-export type CounterProps = PropsWithChildren<{
-  backgroundIcon: ReactNode;
-}>;
+export type CounterProps = PropsWithChildren;
 
-export const Counter: FC<CounterProps> = (props) => {
-  const { backgroundIcon, children } = props;
+export const Counter: FC<PropsWithChildren> = (props) => {
+  const { children } = props;
 
   return (
     <div className={styles.root}>
-      {backgroundIcon}
+      <FlowerBackgroundIcon />
       <span className={styles.count}>{children}</span>
     </div>
   );
