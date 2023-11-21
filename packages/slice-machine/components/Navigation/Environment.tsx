@@ -33,6 +33,7 @@ export function Environment() {
 
   if (
     typeof useEnvironmentsError === "object" &&
+    useEnvironmentsError !== null &&
     "name" in useEnvironmentsError &&
     (useEnvironmentsError.name === "UnauthenticatedError" ||
       useEnvironmentsError.name === "UnauthorizedError")
