@@ -4,11 +4,11 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  IconButton,
   ScrollArea,
   Separator,
   Text,
   Video,
-  vars,
 } from "@prismicio/editor-ui";
 
 import { Counter } from "@src/components/Counter";
@@ -23,40 +23,18 @@ export const InAppGuideDialog: FC = () => {
   const { isInAppGuideOpen, setIsInAppGuideOpen } = useInAppGuide();
   const inAppGuideContent = useInAppGuideContent();
 
-  // TODO: Use new IconButton component from editor-ui
-  //
-  // It should be used like that:
-  // <IconButton
-  //    color="purple"
-  //    radius="full"
-  //    renderIcon={() => <HelpIcon />}
-  //    onClick={() => {
-  //      setIsInAppGuideOpen(!isInAppGuideOpen);
-  //    }}
-  // />
-
   const trigger =
     isEmptyProject === false ? (
       <Box position="fixed" right={16} bottom={16}>
-        <button
-          style={{
-            all: "unset",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            borderRadius: "50%",
-            backgroundColor: vars.color.greyDark1,
-            border: `1px solid ${vars.color.greyDark6}`,
-            height: 32,
-            width: 32,
-          }}
+        <IconButton
+          color="purple"
+          icon={<HelpIcon />}
           onClick={() => {
             setIsInAppGuideOpen(!isInAppGuideOpen);
           }}
-        >
-          <HelpIcon />
-        </button>
+          radius="full"
+          variant="solid"
+        />
       </Box>
     ) : undefined;
 

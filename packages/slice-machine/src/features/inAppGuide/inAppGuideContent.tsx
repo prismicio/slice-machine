@@ -40,7 +40,8 @@ export function useInAppGuideContent() {
             <TextLink href={repositoryUrl} underline>
               Page Builder
             </TextLink>
-            , create a page, add slices, save and publish. Then, come back here.
+            , create a page, add slices, save, and publish. Then, come back
+            here.
           </>
         ),
       },
@@ -50,12 +51,9 @@ export function useInAppGuideContent() {
           "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/PREVIEW.mp4",
         description: (
           <>
-            To render the page, run your project in your terminal and open
-            localhost to the page UID.{" "}
-            <Text variant="italic" component="span">
-              Example:
-            </Text>{" "}
-            localhost:3000/my_page_uid
+            To render the page, run your project in your terminal and visit the
+            page on localhost (e.g.{" "}
+            <Text component="code">localhost:3000/example-page</Text>).
           </>
         ),
       },
