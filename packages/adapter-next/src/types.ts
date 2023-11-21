@@ -19,6 +19,14 @@ export type PluginOptions = {
 	 * @defaultValue `prismicio-types.d.ts`
 	 */
 	generatedTypesFilePath?: string;
+
+	/**
+	 * The filepath at which the active Prismic environment is stored as an
+	 * environment variable.
+	 *
+	 * @defaultValue `.env.local`
+	 */
+	environmentVariableFilePath?: string;
 } & (
 	| {
 			/**

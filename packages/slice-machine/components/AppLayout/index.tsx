@@ -1,6 +1,8 @@
-import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
+import { Box, Button, ButtonGroup, ErrorBoundary } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import type { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, Suspense } from "react";
+
+import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
 
 import Navigation from "@components/Navigation";
 import { Breadcrumb, type BreadcrumbProps } from "@src/components/Breadcrumb";
@@ -14,14 +16,36 @@ import {
 export const AppLayout: FC<PropsWithChildren> = ({
   children,
   ...otherProps
-}) => (
-  <PageLayout {...otherProps}>
-    <PageLayoutPane>
-      <Navigation />
-    </PageLayoutPane>
-    {children}
-  </PageLayout>
-);
+}) => {
+  return (
+    <ErrorBoundary>
+      <Suspense>
+        <PageLayoutWithActiveEnvironment {...otherProps}>
+          <PageLayoutPane>
+            <Navigation />
+          </PageLayoutPane>
+          {children}
+        </PageLayoutWithActiveEnvironment>
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
+
+const PageLayoutWithActiveEnvironment: FC<PropsWithChildren> = ({
+  children,
+  ...otherProps
+}) => {
+  const { activeEnvironment } = useActiveEnvironment();
+
+  return (
+    <PageLayout
+      activeEnvironmentKind={activeEnvironment?.kind ?? "prod"}
+      {...otherProps}
+    >
+      {children}
+    </PageLayout>
+  );
+};
 
 export const AppLayoutHeader: FC<PropsWithChildren> = ({
   children,

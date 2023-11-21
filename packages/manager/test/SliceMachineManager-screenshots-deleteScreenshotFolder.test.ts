@@ -17,6 +17,8 @@ it("deletes a screenshot folder from S3", async (ctx) => {
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
 
@@ -40,6 +42,8 @@ it("throws if the folder deletion was unsuccessful", async (ctx) => {
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
+
+	await manager.plugins.initPlugins();
 
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);

@@ -76,6 +76,7 @@ const SlicesIndex: React.FunctionComponent = () => {
           {localLibraries?.length !== 0 && sliceCount !== 0 ? (
             <AppLayoutActions>
               <Button
+                data-testid="create-slice"
                 data-cy="create-slice"
                 onClick={() => {
                   setIsCreateSliceModalOpen(true);

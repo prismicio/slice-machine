@@ -2,7 +2,8 @@ import * as prismic from '@prismicio/client'
 import { enableAutoPreviews } from '@prismicio/next'
 import slicemachineConfig from './slicemachine.config.json'
 
-export const repositoryName = slicemachineConfig.repositoryName
+export const repositoryName =
+  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || slicemachineConfig.repositoryName;
 
 //Update the Link Resolver to match your project's route structure
 export function linkResolver(doc) {

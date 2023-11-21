@@ -101,7 +101,6 @@ export const repositoryLinkIcon = style([
     borderWidth: 1,
     cursor: "pointer",
     height: 32,
-    marginRight: 8,
     width: 32,
     color: colors.grey12,
     backgroundColor: {
@@ -163,15 +162,9 @@ export const listTitle = style([
   },
 ]);
 
-export const dashedLine = style([
-  blockWithDisplayRevert,
-  sprinkles({
-    borderColor: colors.grey6,
-    borderTopStyle: "dashed",
-    borderWidth: 1,
-    marginTop: 8,
-  }),
-]);
+export const separator = sprinkles({
+  marginTop: 8,
+});
 
 export const link = style([
   block,

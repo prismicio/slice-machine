@@ -4,7 +4,7 @@ import { expect, Mock } from "vitest";
 // (e.g. `expect(hookHandler).toHaveBeenCalledWithHookData({ ... })`).
 export const expectHookHandlerToHaveBeenCalledWithData = (
 	hookHandler: Mock,
-	data: Record<string, unknown>,
+	data: undefined | Record<string, unknown>,
 ): void => {
 	expect(hookHandler).toHaveBeenCalledWith(
 		data,
