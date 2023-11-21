@@ -14,6 +14,7 @@ import {
 	UnauthenticatedError,
 	UnauthorizedError,
 	UnexpectedDataError,
+	isUnauthenticatedError,
 } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
@@ -63,6 +64,11 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 	domain: string;
 	signature: string;
 	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
+};
+
+type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
+	environments?: Environment[];
+	error?: unknown;
 };
 
 export class PrismicRepositoryManager extends BaseManager {
@@ -433,12 +439,26 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
-	async fetchEnvironments(): Promise<Environment[]> {
+	async fetchEnvironments(): Promise<PrismicRepositoryManagerFetchEnvironmentsReturnType> {
 		const repositoryName = await this.project.getRepositoryName();
 
 		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
 		url.searchParams.set("repository", repositoryName);
-		const res = await this._fetch({ url });
+
+		let res;
+		try {
+			res = await this._fetch({ url });
+		} catch (error) {
+			if (isUnauthenticatedError(error)) {
+				return { error: new UnauthenticatedError() };
+			}
+
+			return {
+				error: new UnexpectedDataError(
+					"Unexpected Error while fetching Environments"
+				),
+			};
+		}
 
 		if (res.ok) {
 			const json = await res.json();
@@ -456,24 +476,26 @@ export class PrismicRepositoryManager extends BaseManager {
 			);
 
 			if (error) {
-				throw new UnexpectedDataError(
-					`Failed to decode environments: ${error.errors.join(", ")}`,
-				);
+				return {
+					error: new UnexpectedDataError(
+						`Failed to decode environments: ${error.errors.join(", ")}`,
+					),
+				};
 			}
 
 			if ("results" in value) {
-				return sortEnvironments(value.results);
+				return { environments: sortEnvironments(value.results) };
 			}
 		}
 
 		switch (res.status) {
 			case 400:
 			case 401:
-				throw new UnauthenticatedError();
+				return { error: new UnauthenticatedError() };
 			case 403:
-				throw new UnauthorizedError();
+				return { error: new UnauthorizedError() };
 			default:
-				throw new Error("Failed to fetch environments.");
+				return { error: new Error("Failed to fetch environments.") };
 		}
 	}
 
@@ -535,9 +557,9 @@ export class PrismicRepositoryManager extends BaseManager {
 
 				...(cookies !== undefined
 					? {
-							Authorization: `Bearer ${cookies["prismic-auth"]}`,
-							Cookie: serializeCookies(cookies),
-					  }
+						Authorization: `Bearer ${cookies["prismic-auth"]}`,
+						Cookie: serializeCookies(cookies),
+					}
 					: {}),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,

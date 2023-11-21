@@ -57,13 +57,9 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           <Text component="span" className={styles.actionRequiredLabel}>
             Login required
           </Text>
-        ) : activeEnvironment === undefined ? (
-          <Text component="span" className={styles.actionRequiredLabel}>
-            Select environment
-          </Text>
         ) : (
           <Text component="span" className={styles.activeEnvironmentName}>
-            {isProductionEnvironmentActive
+            {isProductionEnvironmentActive || activeEnvironment === undefined
               ? "Production"
               : activeEnvironment?.name}
           </Text>
@@ -72,7 +68,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
       <Box flexShrink={0}>
         {variant === "unauthorized" ? (
           <IconButton icon="arrowForward" onClick={onLogInClick} />
-        ) : !activeEnvironment || environments.length > 1 ? (
+        ) : environments.length > 1 ? (
           <EnvironmentDropdownMenu
             environments={environments}
             activeEnvironment={activeEnvironment}

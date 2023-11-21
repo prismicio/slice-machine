@@ -48,7 +48,7 @@ const Navigation: FC = () => {
 
   return (
     <SideNav>
-      <ErrorBoundary>
+      <ErrorBoundary onError={console.error}>
         <Suspense>
           <Environment />
         </Suspense>
