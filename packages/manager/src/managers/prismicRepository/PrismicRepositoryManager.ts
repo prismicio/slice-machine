@@ -455,7 +455,7 @@ export class PrismicRepositoryManager extends BaseManager {
 
 			return {
 				error: new UnexpectedDataError(
-					"Unexpected Error while fetching Environments"
+					"Unexpected Error while fetching Environments",
 				),
 			};
 		}
@@ -557,9 +557,9 @@ export class PrismicRepositoryManager extends BaseManager {
 
 				...(cookies !== undefined
 					? {
-						Authorization: `Bearer ${cookies["prismic-auth"]}`,
-						Cookie: serializeCookies(cookies),
-					}
+							Authorization: `Bearer ${cookies["prismic-auth"]}`,
+							Cookie: serializeCookies(cookies),
+					  }
 					: {}),
 				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
 				...extraHeaders,

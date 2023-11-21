@@ -29,7 +29,10 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				PrismicUnsplash: removeTrailingSlash(
 					process.env.unsplash_endpoint ?? "https://unsplash.wroom.io",
 				),
-				SliceMachineV1: addTrailingSlash(process.env.slice_machine_v1_endpoint),
+				SliceMachineV1: addTrailingSlash(
+					process.env.slice_machine_v1_endpoint ??
+						"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
+				),
 			};
 
 			const missingAPIEndpoints = Object.keys(apiEndpoints).filter((key) => {
