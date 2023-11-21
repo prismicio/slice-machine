@@ -1,8 +1,4 @@
-import {
-  Environment as EnvironmentType,
-  isUnauthenticatedError,
-  isUnauthorizedError,
-} from "@slicemachine/manager/client";
+import { Environment as EnvironmentType } from "@slicemachine/manager/client";
 
 import { useEnvironments } from "@src/features/environments/useEnvironments";
 import { setEnvironment } from "@src/features/environments/actions/setEnvironment";
@@ -25,9 +21,21 @@ export function Environment() {
     refreshState(legacySliceMachineState);
   }
 
+  if (useEnvironmentsError === undefined) {
+    return (
+      <SideNavEnvironmentSelector
+        environments={environments}
+        activeEnvironment={activeEnvironment}
+        onSelect={onSelect}
+      />
+    );
+  }
+
   if (
-    isUnauthenticatedError(useEnvironmentsError) ||
-    isUnauthorizedError(useEnvironmentsError)
+    typeof useEnvironmentsError === "object" &&
+    "name" in useEnvironmentsError &&
+    (useEnvironmentsError.name === "UnauthenticatedError" ||
+      useEnvironmentsError.name === "UnauthorizedError")
   ) {
     return (
       <SideNavEnvironmentSelector
@@ -37,11 +45,5 @@ export function Environment() {
     );
   }
 
-  return (
-    <SideNavEnvironmentSelector
-      environments={environments}
-      activeEnvironment={activeEnvironment}
-      onSelect={onSelect}
-    />
-  );
+  throw useEnvironmentsError;
 }
