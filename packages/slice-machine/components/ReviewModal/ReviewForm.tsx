@@ -83,8 +83,8 @@ export const ReviewForm: FC<ReviewFormProps> = (props) => {
         overlay: {
           top: "initial",
           left: "initial",
-          right: 32,
-          bottom: 32,
+          right: 16,
+          bottom: 16,
           position: "absolute",
           height: "fit-content",
           width: "fit-content",

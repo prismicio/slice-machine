@@ -35,6 +35,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { AppLayout, AppLayoutContent } from "@components/AppLayout";
+import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
+import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
 
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
@@ -130,35 +132,40 @@ function App({
                 <Provider store={smStore.store}>
                   <ConnectedRouter Router={Router}>
                     <PersistGate loading={null} persistor={smStore.persistor}>
-                      <RouteChangeProvider>
-                        <ErrorBoundary
-                          renderError={(error) => {
-                            console.error(error);
+                      <ErrorBoundary
+                        renderError={(error) => {
+                          console.error(error);
 
-                            return (
-                              <AppLayout>
-                                <AppLayoutContent>
-                                  <Box
-                                    alignItems="center"
-                                    justifyContent="center"
-                                  >
-                                    <DefaultErrorMessage
-                                      title="Error"
-                                      description="An error occurred while rendering the app."
-                                    />
-                                  </Box>
-                                </AppLayoutContent>
-                              </AppLayout>
-                            );
-                          }}
-                        >
-                          <Suspense fallback={<LoadingPage />}>
-                            <ComponentLayout>
-                              <Component {...pageProps} />
-                            </ComponentLayout>
+                          return (
+                            <AppLayout>
+                              <AppLayoutContent>
+                                <Box
+                                  alignItems="center"
+                                  justifyContent="center"
+                                >
+                                  <DefaultErrorMessage
+                                    title="Error"
+                                    description="An error occurred while rendering the app."
+                                  />
+                                </Box>
+                              </AppLayoutContent>
+                            </AppLayout>
+                          );
+                        }}
+                      >
+                        <InAppGuideProvider>
+                          <RouteChangeProvider>
+                            <Suspense fallback={<LoadingPage />}>
+                              <ComponentLayout>
+                                <Component {...pageProps} />
+                              </ComponentLayout>
+                            </Suspense>
+                          </RouteChangeProvider>
+                          <Suspense>
+                            <InAppGuideDialog />
                           </Suspense>
-                        </ErrorBoundary>
-                      </RouteChangeProvider>
+                        </InAppGuideProvider>
+                      </ErrorBoundary>
                     </PersistGate>
                   </ConnectedRouter>
                   <ToastContainer />
