@@ -94,7 +94,7 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
 
   return (
     <DropdownMenu modal>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger disabled={environments.length < 2}>
         <IconButton icon="unfoldMore" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" minWidth={256}>
