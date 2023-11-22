@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/plugin-kit",
-	"version": "0.4.25",
+	"version": "0.4.26-dev-next-release.8",
 	"description": "A set of helpers to develop and run Slice Machine plugins",
 	"keywords": [
 		"typescript",
@@ -64,6 +64,7 @@
 	"dependencies": {
 		"common-tags": "^1.8.2",
 		"defu": "^6.1.2",
+		"dotenv": "16.3.1",
 		"fp-ts": "^2.13.1",
 		"fs-extra": "11.1.1",
 		"io-ts": "^2.2.20",

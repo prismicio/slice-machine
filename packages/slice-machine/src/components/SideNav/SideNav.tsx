@@ -16,6 +16,8 @@ import type { UrlObject } from "node:url";
 import LogoIcon from "@src/icons/LogoIcon";
 import OpenIcon from "@src/icons/OpenIcon";
 
+import { Divider } from "../Divider";
+
 import * as styles from "./SideNav.css";
 
 type SideNavProps = PropsWithChildren<{ style?: CSSProperties }>;
@@ -90,7 +92,9 @@ export const SideNavListTitle: FC<PropsWithChildren> = (props) => (
   <h3 {...props} className={styles.listTitle} />
 );
 
-export const SideNavSeparator = () => <hr className={styles.dashedLine} />;
+export const SideNavSeparator = () => (
+  <Divider color="grey6" className={styles.separator} />
+);
 
 export type SideNavLinkProps = {
   title: string;

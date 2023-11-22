@@ -18,6 +18,8 @@ it("uploads a screenshot to S3", async (ctx) => {
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+
 	const screenshotData = Buffer.from("screenshot-data");
 
 	mockPrismicUserAPI(ctx);
@@ -59,6 +61,8 @@ it("supports custom asset key prefixes", async (ctx) => {
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
+
+	await manager.plugins.initPlugins();
 
 	const screenshotData = Buffer.from("screenshot-data");
 
@@ -102,6 +106,8 @@ it("automatically sends the screenshot's content type", async (ctx) => {
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
+
+	await manager.plugins.initPlugins();
 
 	// A very small GIF.
 	const screenshotData = Buffer.from("R0lGODlhAQABAAAAACw=", "base64");
@@ -150,6 +156,8 @@ it("throws if the upload was unsuccessful", async (ctx) => {
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
+
+	await manager.plugins.initPlugins();
 
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);

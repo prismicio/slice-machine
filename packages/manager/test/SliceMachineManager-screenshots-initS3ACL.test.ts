@@ -17,6 +17,8 @@ it("creates a reusable S3 ACL", async (ctx) => {
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
 

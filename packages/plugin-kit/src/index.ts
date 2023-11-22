@@ -178,6 +178,20 @@ export type {
 	SliceSimulatorSetupStepValidationMessage,
 } from "./hooks/sliceSimulator-setup-read";
 
+// project:environment:read
+export type {
+	ProjectEnvironmentReadHook,
+	ProjectEnvironmentReadHookData,
+	ProjectEnvironmentReadHookReturnType,
+} from "./hooks/project-environment-read";
+
+// project:environment:update
+export type {
+	ProjectEnvironmentUpdateHook,
+	ProjectEnvironmentUpdateHookData,
+	ProjectEnvironmentUpdateHookReturnType,
+} from "./hooks/project-environment-update";
+
 // project:init
 export type {
 	ProjectInitHook,

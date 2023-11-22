@@ -14,6 +14,8 @@ type CreateMemoryAdapterArgs = {
 export function createMemoryAdapter(
 	args: CreateMemoryAdapterArgs = {},
 ): SliceMachinePlugin {
+	let environment: string | undefined = undefined;
+
 	const customTypeModels: Map<
 		string, // Custom type ID
 		{
@@ -63,6 +65,17 @@ export function createMemoryAdapter(
 			name: "slicemachine-adapter-memory",
 		},
 		setup: ({ hook }) => {
+			///////////////////////////////////////////////////////
+			// project:*
+			///////////////////////////////////////////////////////
+			hook("project:environment:read", () => {
+				return { environment };
+			});
+
+			hook("project:environment:update", (data) => {
+				environment = data.environment;
+			});
+
 			///////////////////////////////////////////////////////
 			// custom-type-library:*
 			///////////////////////////////////////////////////////

@@ -20,4 +20,12 @@ export type PluginOptions = {
 	 * @defaultValue `true` if the project contains a `tsconfig.json`, `false` otherwise.
 	 */
 	typescript?: boolean;
+
+	/**
+	 * The filepath at which the active Prismic environment is stored as an
+	 * environment variable.
+	 *
+	 * @defaultValue `.env.local`
+	 */
+	environmentVariableFilePath?: string;
 };

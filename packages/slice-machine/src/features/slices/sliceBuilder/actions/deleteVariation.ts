@@ -46,8 +46,11 @@ export async function deleteVariation(
       args.component.from,
       args.component.model.id,
     );
-    if (!slice || readSliceErrors.length > 0) {
+    if (readSliceErrors.length > 0) {
       throw readSliceErrors;
+    }
+    if (!slice) {
+      throw new Error(`Could not read variation \`${args.variation.name}\``);
     }
     const { mocks } = await readSliceMocks({
       libraryID: args.component.from,

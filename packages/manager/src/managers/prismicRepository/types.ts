@@ -155,3 +155,15 @@ export type StarterId =
 	| "nuxt_multi_page"
 	| "nuxt_blog"
 	| "nuxt_multi_lang";
+
+export const Environment = t.type({
+	kind: t.union([t.literal("prod"), t.literal("stage"), t.literal("dev")]),
+	name: t.string,
+	domain: t.string,
+	users: t.array(
+		t.type({
+			id: t.string,
+		}),
+	),
+});
+export type Environment = t.TypeOf<typeof Environment>;

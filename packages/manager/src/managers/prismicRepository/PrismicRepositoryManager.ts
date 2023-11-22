@@ -2,12 +2,20 @@ import * as t from "io-ts";
 import fetch, { Response } from "../../lib/fetch";
 import { fold } from "fp-ts/Either";
 
+import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decode } from "../../lib/decode";
 import { serializeCookies } from "../../lib/serializeCookies";
 
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
+
+import {
+	UnauthenticatedError,
+	UnauthorizedError,
+	UnexpectedDataError,
+	isUnauthenticatedError,
+} from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -27,9 +35,9 @@ import {
 	TransactionalMergeReturnType,
 	FrameworkWroomTelemetryID,
 	StarterId,
+	Environment,
 } from "./types";
-import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
-import { UnauthenticatedError } from "../../errors";
+import { sortEnvironments } from "./sortEnvironments";
 
 const DEFAULT_REPOSITORY_SETTINGS = {
 	plan: "personal",
@@ -56,6 +64,11 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 	domain: string;
 	signature: string;
 	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
+};
+
+type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
+	environments?: Environment[];
+	error?: unknown;
 };
 
 export class PrismicRepositoryManager extends BaseManager {
@@ -383,14 +396,14 @@ export class PrismicRepositoryManager extends BaseManager {
 				changes: allChanges,
 			};
 
-			const sliceMachineConfig = await this.project.getSliceMachineConfig();
+			const repositoryName = await this.project.getResolvedRepositoryName();
 
 			// TODO: move to customtypes client
 			const response = await this._fetch({
 				url: new URL("./bulk", API_ENDPOINTS.PrismicModels),
 				method: "POST",
 				body: requestBody,
-				repository: sliceMachineConfig.repositoryName,
+				repository: repositoryName,
 			});
 
 			switch (response.status) {
@@ -423,6 +436,66 @@ export class PrismicRepositoryManager extends BaseManager {
 			console.error(err);
 
 			throw err;
+		}
+	}
+
+	async fetchEnvironments(): Promise<PrismicRepositoryManagerFetchEnvironmentsReturnType> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
+		url.searchParams.set("repository", repositoryName);
+
+		let res;
+		try {
+			res = await this._fetch({ url });
+		} catch (error) {
+			if (isUnauthenticatedError(error)) {
+				return { error: new UnauthenticatedError() };
+			}
+
+			return {
+				error: new UnexpectedDataError(
+					"Unexpected Error while fetching Environments",
+				),
+			};
+		}
+
+		if (res.ok) {
+			const json = await res.json();
+
+			const { value, error } = decode(
+				t.union([
+					t.type({
+						results: t.array(Environment),
+					}),
+					t.type({
+						error: t.literal("invalid_token"),
+					}),
+				]),
+				json,
+			);
+
+			if (error) {
+				return {
+					error: new UnexpectedDataError(
+						`Failed to decode environments: ${error.errors.join(", ")}`,
+					),
+				};
+			}
+
+			if ("results" in value) {
+				return { environments: sortEnvironments(value.results) };
+			}
+		}
+
+		switch (res.status) {
+			case 400:
+			case 401:
+				return { error: new UnauthenticatedError() };
+			case 403:
+				return { error: new UnauthorizedError() };
+			default:
+				return { error: new Error("Failed to fetch environments.") };
 		}
 	}
 

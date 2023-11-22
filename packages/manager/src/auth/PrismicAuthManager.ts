@@ -264,7 +264,7 @@ export class PrismicAuthManager {
 			}
 		}
 
-		throw new Error("Not logged in.");
+		throw new UnauthenticatedError();
 	}
 
 	async getAuthenticationToken(): Promise<string> {

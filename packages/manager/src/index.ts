@@ -13,6 +13,8 @@ export { createSliceMachineManager } from "./managers/createSliceMachineManager"
 export { createSliceMachineManagerMiddleware } from "./managers/createSliceMachineManagerMiddleware";
 export type { CreateSliceMachineManagerMiddlewareArgs } from "./managers/createSliceMachineManagerMiddleware";
 
+export type { Environment } from "./managers/prismicRepository/types";
+
 export type {
 	PrismicAuthManager,
 	PrismicUserProfile,
@@ -24,6 +26,17 @@ export type {
 	CreatePrismicAuthManagerMiddlewareArgs,
 	PrismicAuthCheckStatusResponse,
 } from "./auth/createPrismicAuthManagerMiddleware";
+
+export {
+	SliceMachineError,
+	UnauthorizedError,
+	UnauthenticatedError,
+	NotFoundError,
+	UnexpectedDataError,
+	InternalError,
+	PluginError,
+	PluginHookResultError,
+} from "./errors";
 
 export { DecodeError } from "./lib/DecodeError";
 

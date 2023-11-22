@@ -7,7 +7,7 @@ import { mockCustomTypesAPI } from "./__testutils__/mockCustomTypesAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 it("pushes a Custom Type using the Custom Types API", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
@@ -26,18 +26,68 @@ it("pushes a Custom Type using the Custom Types API", async (ctx) => {
 
 	await manager.plugins.initPlugins();
 
+	const repositoryName = await manager.project.getRepositoryName();
+
 	let sentModel;
 
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
 	mockCustomTypesAPI(ctx, {
-		async onCustomTypeGet(_req, res, ctx) {
-			return res(ctx.status(404));
+		async onCustomTypeGet(req, res, ctx) {
+			if (req.headers.get("repository") === repositoryName) {
+				return res(ctx.status(404));
+			}
 		},
 		async onCustomTypeInsert(req, res, ctx) {
-			sentModel = await req.json();
+			if (req.headers.get("repository") === repositoryName) {
+				sentModel = await req.json();
 
-			return res(ctx.status(201));
+				return res(ctx.status(201));
+			}
+		},
+	});
+
+	await manager.user.login(createPrismicAuthLoginResponse());
+	await manager.customTypes.pushCustomType({ id: model.id });
+	// TODO: update prismicio/mock library
+	expect(sentModel).toStrictEqual({ ...model, format: "custom" });
+});
+
+it("pushes a Custom Type using the Custom Types API using the currently set environment", async (ctx) => {
+	const model = ctx.mockPrismic.model.customType();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("custom-type:read", () => {
+				return { model };
+			});
+			hook("project:environment:read", () => ({ environment: "foo" }));
+			hook("project:environment:update", () => void 0);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	let sentModel;
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+	mockCustomTypesAPI(ctx, {
+		async onCustomTypeGet(req, res, ctx) {
+			if (req.headers.get("repository") === "foo") {
+				return res(ctx.status(404));
+			}
+		},
+		async onCustomTypeInsert(req, res, ctx) {
+			if (req.headers.get("repository") === "foo") {
+				sentModel = await req.json();
+
+				return res(ctx.status(201));
+			}
 		},
 	});
 
@@ -110,5 +160,5 @@ it("throws if not logged in", async () => {
 
 	await expect(async () => {
 		await manager.customTypes.pushCustomType({ id: "id" });
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });

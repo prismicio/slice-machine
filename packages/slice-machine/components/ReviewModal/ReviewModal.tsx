@@ -6,10 +6,12 @@ import { getLastSyncChange, getUserReview } from "@src/modules/userContext";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getLibraries } from "@src/modules/slices";
 import { hasLocal } from "@lib/models/common/ModelData";
+import { useInAppGuide } from "@src/features/inAppGuide/InAppGuideContext";
 
 import { ReviewForm } from "./ReviewForm";
 
 export const ReviewModal: FC = () => {
+  const { isInAppGuideOpen } = useInAppGuide();
   const { userReview, customTypes, libraries, lastSyncChange } = useSelector(
     (store: SliceMachineStoreType) => ({
       userReview: getUserReview(store),
@@ -18,6 +20,11 @@ export const ReviewModal: FC = () => {
       lastSyncChange: getLastSyncChange(store),
     }),
   );
+
+  // Opt out directly if the in-app guide is open
+  if (isInAppGuideOpen) {
+    return null;
+  }
 
   const sliceCount =
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

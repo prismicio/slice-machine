@@ -6,7 +6,7 @@ import { createTestProject } from "./__testutils__/createTestProject";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, UnauthenticatedError } from "../src";
 
 it("returns all repositories for the logged in user", async (ctx) => {
 	const adapter = createTestPlugin();
@@ -88,5 +88,5 @@ it("throws if not logged in", async () => {
 
 	await expect(async () => {
 		await manager.prismicRepository.readAll();
-	}).rejects.toThrow(/not logged in/i);
+	}).rejects.toThrow(UnauthenticatedError);
 });
