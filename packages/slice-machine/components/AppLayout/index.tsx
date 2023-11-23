@@ -38,10 +38,7 @@ const PageLayoutWithActiveEnvironment: FC<PropsWithChildren> = ({
   const { activeEnvironment } = useActiveEnvironment();
 
   return (
-    <PageLayout
-      activeEnvironmentKind={activeEnvironment?.kind ?? "prod"}
-      {...otherProps}
-    >
+    <PageLayout environmentKind={activeEnvironment?.kind} {...otherProps}>
       {children}
     </PageLayout>
   );

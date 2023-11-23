@@ -25,6 +25,7 @@ export const SegmentEventType = {
 	editor_widgetUsed: "editor:widget-used",
 	open_page_snippet: "page-type:open-snippet",
 	copy_page_snippet: "page-type:copy-snippet",
+	switch_environment: "environment:switch",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -61,6 +62,7 @@ export const HumanSegmentEventType = {
 		"SliceMachine Opens Page Type Snippet Dialog",
 	[SegmentEventType.copy_page_snippet]:
 		"Slice Machine page code snippet copied",
+	[SegmentEventType.switch_environment]: "SliceMachine environment switch",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -133,6 +135,11 @@ type OpenPageSnippetSegmentEvent = SegmentEvent<
 type CopyPageSnippetSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.copy_page_snippet,
 	{ framework: string }
+>;
+
+type SwitchEnvironmentSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.switch_environment,
+	{ domain: string }
 >;
 
 type UsersInviteButtonClickedSegmentEvent = SegmentEvent<
@@ -260,4 +267,5 @@ export type SegmentEvents =
 	| EditorWidgetUsedSegmentEvent
 	| OpenPageSnippetSegmentEvent
 	| CopyPageSnippetSegmentEvent
-	| UsersInviteButtonClickedSegmentEvent;
+	| UsersInviteButtonClickedSegmentEvent
+	| SwitchEnvironmentSegmentEvent;
