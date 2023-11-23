@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.9.4",
+	"version": "2.9.5-dev-fix-vuln-sentry.0",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",

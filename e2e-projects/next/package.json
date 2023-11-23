@@ -1,6 +1,6 @@
 {
   "name": "cimsirp",
-  "version": "1.21.0",
+  "version": "1.21.1-dev-fix-vuln-sentry.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
