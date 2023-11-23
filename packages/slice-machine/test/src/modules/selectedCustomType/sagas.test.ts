@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 import { testSaga } from "redux-saga-test-plan";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 
 import { saveCustomType } from "@src/apiClient";
 import { saveCustomTypeSaga } from "@src/modules/selectedCustomType/sagas";
@@ -72,7 +72,7 @@ describe("[Selected Custom type sagas]", () => {
 
       // Wait for network request to be performed
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+      expect(Analytics.prototype.track).toHaveBeenCalledOnce();
     });
     it("should open a error toaster on internal error", () => {
       const saga = testSaga(saveCustomTypeSaga).next();

@@ -5,7 +5,7 @@ import { render, fireEvent, act, waitFor } from "../__testutils__";
 import mockRouter from "next-router-mock";
 import router from "next/router";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 
 import pkg from "../../package.json";
 import Simulator from "../../pages/slices/[lib]/[sliceName]/[variation]/simulator";
@@ -281,12 +281,10 @@ describe.skip("simulator", () => {
       preloadedState: state as unknown as Partial<SliceMachineStoreType>,
     });
 
-    await waitFor(() =>
-      expect(SegmentClient.prototype.track).toHaveBeenCalled(),
-    );
+    await waitFor(() => expect(Analytics.prototype.track).toHaveBeenCalled());
 
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slice Simulator Open",
         properties: {
@@ -321,8 +319,8 @@ describe.skip("simulator", () => {
     // @ts-expect-error - Ignoring wrong type
     expectedMock[0].primary.title.value[0].direction = "ltr";
 
-    expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledTimes(2);
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         sliceName: "MySlice",
         libraryName: "slices",

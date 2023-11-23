@@ -1,5 +1,5 @@
 import { beforeAll, expect, it } from "vitest";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
@@ -37,7 +37,10 @@ it("creates a reusable Segment client", async () => {
 	});
 
 	// @ts-expect-error - Accessing an internal private property
-	expect(manager.telemetry._segmentClient).toBeInstanceOf(SegmentClient);
+	expect(manager.telemetry._segmentClient()).toBeInstanceOf(Analytics);
+
+	// @ts-expect-error - Accessing an internal private property
+	expect(manager.telemetry._segmentClient()._publisher._disable).toBe(false);
 });
 
 it("disables the Segment client if .prismicrc is configured to disable telemery", async () => {
@@ -56,5 +59,5 @@ it("disables the Segment client if .prismicrc is configured to disable telemery"
 	});
 
 	// @ts-expect-error - Accessing an internal private property
-	expect(manager.telemetry._segmentClient.enable).toBe(false);
+	expect(manager.telemetry._segmentClient()._publisher._disable).toBe(true);
 });

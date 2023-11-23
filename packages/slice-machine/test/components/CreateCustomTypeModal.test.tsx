@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { describe, test, afterEach, expect, vi } from "vitest";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 
 import { render, fireEvent, act } from "../__testutils__";
 import { CreateCustomTypeModal } from "../../components/Forms/CreateCustomTypeModal";
@@ -54,8 +54,8 @@ describe("CreateCustomTypeModal", () => {
       }
     });
 
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Custom Type Created",
         properties: {

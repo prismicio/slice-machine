@@ -2,7 +2,7 @@
 
 import { describe, test, afterEach, beforeEach, expect, vi } from "vitest";
 import mockRouter from "next-router-mock";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 
 import pkg from "../../package.json";
 import SlicesIndex from "../../pages/slices";
@@ -183,12 +183,10 @@ describe("slices", () => {
       fireEvent.click(submitButton);
     });
 
-    await waitFor(() =>
-      expect(SegmentClient.prototype.track).toHaveBeenCalled(),
-    );
+    await waitFor(() => expect(Analytics.prototype.track).toHaveBeenCalled());
 
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slice Created",
         properties: {
@@ -359,6 +357,6 @@ describe("slices", () => {
 
     await new Promise((r) => setTimeout(r, 500));
 
-    expect(SegmentClient.prototype.track).not.toBeCalled();
+    expect(Analytics.prototype.track).not.toBeCalled();
   });
 });

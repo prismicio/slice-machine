@@ -95,12 +95,12 @@ vi.mock("url", async () => {
   return actual;
 });
 
-vi.mock("analytics-node", () => {
+vi.mock("@segment/analytics-node", () => {
   const MockSegmentClient = vi.fn();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   MockSegmentClient.prototype.group = vi.fn(
-    (_message: unknown, callback?: (error?: Error) => void) => {
+    (_message: unknown, callback?: (error?: unknown) => void) => {
       if (callback) {
         callback();
       }
@@ -109,7 +109,7 @@ vi.mock("analytics-node", () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   MockSegmentClient.prototype.identify = vi.fn(
-    (_message: unknown, callback?: (error?: Error) => void) => {
+    (_message: unknown, callback?: (error?: unknown) => void) => {
       if (callback) {
         callback();
       }
@@ -118,15 +118,18 @@ vi.mock("analytics-node", () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   MockSegmentClient.prototype.track = vi.fn(
-    (_message: unknown, callback?: (error?: Error) => void) => {
+    (_message: unknown, callback?: (error?: unknown) => void) => {
       if (callback) {
         callback();
       }
     },
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  MockSegmentClient.prototype.on = vi.fn();
+
   return {
-    default: MockSegmentClient,
+    Analytics: MockSegmentClient,
   };
 });
 

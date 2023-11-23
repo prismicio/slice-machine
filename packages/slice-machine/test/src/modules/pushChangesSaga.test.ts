@@ -1,5 +1,5 @@
 import { describe, test } from "vitest";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 import "@testing-library/jest-dom";
 import { TestApi, testSaga } from "redux-saga-test-plan";
 import {
@@ -122,7 +122,7 @@ describe("[pushChanges module]", () => {
 
       // Wait for network request to be performed
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+      expect(Analytics.prototype.track).toHaveBeenCalledOnce();
     });
 
     test.each([
@@ -182,7 +182,7 @@ describe("[pushChanges module]", () => {
 
         // Wait for network request to be performed
         await new Promise((resolve) => setTimeout(resolve, 100));
-        expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+        expect(Analytics.prototype.track).toHaveBeenCalledOnce();
       },
     );
 
