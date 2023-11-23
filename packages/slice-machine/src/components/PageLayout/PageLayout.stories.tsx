@@ -18,7 +18,7 @@ const meta = {
     },
     environmentKind: {
       control: { type: "select" },
-      options: [Object.keys(borderTop), undefined],
+      options: [...Object.keys(borderTop), undefined],
     },
   },
   parameters: {
