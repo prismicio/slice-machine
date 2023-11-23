@@ -65,7 +65,7 @@ export class TelemetryManager extends BaseManager {
 				// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
 				maxEventsInBatch: 1,
 				// TODO: Verify that this actually does not send data to Segment when false.
-				disable: isTelemetryEnabled === false,
+				disable: !isTelemetryEnabled,
 			});
 
 			analytics.on("error", (error) => {
@@ -73,10 +73,7 @@ export class TelemetryManager extends BaseManager {
 				// failed. Some users or networks intentionally
 				// block Segment, so we can't block the app if
 				// a tracking event is unsuccessful.
-				console.error(
-					`An error occurred during telemetry initialization`,
-					error,
-				);
+				console.error(`An error occurred with Segment`, error);
 			});
 
 			return analytics;
