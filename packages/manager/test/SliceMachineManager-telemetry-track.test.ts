@@ -1,24 +1,26 @@
 import { expect, it, vi } from "vitest";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-vi.mock("analytics-node", () => {
+vi.mock("@segment/analytics-node", () => {
 	const MockSegmentClient = vi.fn();
 
 	MockSegmentClient.prototype.track = vi.fn(
-		(_message: unknown, callback?: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: unknown) => void) => {
 			if (callback) {
 				callback();
 			}
 		},
 	);
 
+	MockSegmentClient.prototype.on = vi.fn();
+
 	return {
-		default: MockSegmentClient,
+		Analytics: MockSegmentClient,
 	};
 });
 
@@ -39,7 +41,7 @@ it("sends a given event to Segment", async () => {
 		event: "command:init:start",
 	});
 
-	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+	expect(Analytics.prototype.track).toHaveBeenCalledWith(
 		{
 			anonymousId: expect.any(String),
 			event: "SliceMachine Init Start",
@@ -82,8 +84,8 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		...commandInitEndProperties,
 	});
 
-	expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
-	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+	expect(Analytics.prototype.track).toHaveBeenCalledOnce();
+	expect(Analytics.prototype.track).toHaveBeenCalledWith(
 		expect.objectContaining({
 			event: "SliceMachine Init End",
 			properties: {
@@ -112,8 +114,8 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		...customTypeCreatedProperties,
 	});
 
-	expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);
-	expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+	expect(Analytics.prototype.track).toHaveBeenCalledTimes(2);
+	expect(Analytics.prototype.track).toHaveBeenCalledWith(
 		expect.objectContaining({
 			event: "SliceMachine Custom Type Created",
 			properties: {
@@ -142,13 +144,13 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		appVersion: "0.0.1-test",
 	});
 
-	vi.mocked(SegmentClient.prototype.track).mockImplementationOnce(
+	vi.mocked(Analytics.prototype.track).mockImplementationOnce(
 		(_message, callback) => {
 			if (callback) {
 				callback(new Error());
 			}
 
-			return this as unknown as SegmentClient;
+			return this as unknown as Analytics;
 		},
 	);
 

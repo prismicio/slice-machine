@@ -3,7 +3,7 @@
 import { describe, test, afterEach, beforeEach, expect, vi } from "vitest";
 import Router from "next/router";
 import mockRouter from "next-router-mock";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 import userEvent from "@testing-library/user-event";
 
 import { createSliceMachineManager } from "@slicemachine/manager";
@@ -208,9 +208,9 @@ describe("Custom Type Builder", () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Custom Type Field Added",
         properties: {
@@ -319,9 +319,9 @@ describe("Custom Type Builder", () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Slicezone Updated",
         properties: { customTypeId, nodeVersion: process.versions.node },
@@ -435,9 +435,9 @@ describe("Custom Type Builder", () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Custom Type Field Added",
         properties: {
@@ -459,9 +459,9 @@ describe("Custom Type Builder", () => {
 
     await waitFor(() => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(SegmentClient.prototype.track).toHaveBeenCalledTimes(2);
+      expect(Analytics.prototype.track).toHaveBeenCalledTimes(2);
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+      expect(Analytics.prototype.track).toHaveBeenCalledWith(
         expect.objectContaining({
           event: "SliceMachine Custom Type Saved",
           properties: {
@@ -595,9 +595,9 @@ describe("Custom Type Builder", () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledWith(
+    expect(Analytics.prototype.track).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "SliceMachine Custom Type Field Added",
         properties: {
@@ -620,6 +620,6 @@ describe("Custom Type Builder", () => {
     await new Promise((r) => setTimeout(r, 500));
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(SegmentClient.prototype.track).toHaveBeenCalledOnce();
+    expect(Analytics.prototype.track).toHaveBeenCalledOnce();
   });
 });
