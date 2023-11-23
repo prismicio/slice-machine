@@ -42,7 +42,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
     <Box alignItems="center" gap={16}>
       <Box position="relative">
         <LogoIcon className={styles.logo} />
-        {activeEnvironment !== undefined && (
+        {activeEnvironment !== undefined && environments.length > 1 && (
           <EnvironmentDot
             kind={activeEnvironment.kind}
             className={styles.activeEnvironmentDot}
@@ -94,7 +94,10 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
         <IconButton icon="unfoldMore" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" minWidth={256}>
-        <DropdownMenuLabel>Regular Environments</DropdownMenuLabel>
+        {/*
+          TODO: Add this line when Dev envs are supported
+          <DropdownMenuLabel>Regular Environments</DropdownMenuLabel>
+        */}
         {environments.map((environment) =>
           environment.kind !== "dev" ? (
             <EnvironmentDropdownMenuItem

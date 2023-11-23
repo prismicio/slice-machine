@@ -55,11 +55,11 @@ vi.mock("fs/promises", async () => {
 	};
 });
 
-vi.mock("analytics-node", () => {
+vi.mock("@segment/analytics-node", () => {
 	const MockSegmentClient = vi.fn();
 
 	MockSegmentClient.prototype.identify = vi.fn(
-		(_message: unknown, callback?: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: unknown) => void) => {
 			if (callback) {
 				callback();
 			}
@@ -67,15 +67,17 @@ vi.mock("analytics-node", () => {
 	);
 
 	MockSegmentClient.prototype.track = vi.fn(
-		(_message: unknown, callback?: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: unknown) => void) => {
 			if (callback) {
 				callback();
 			}
 		},
 	);
 
+	MockSegmentClient.prototype.on = vi.fn();
+
 	return {
-		default: MockSegmentClient,
+		Analytics: MockSegmentClient,
 	};
 });
 

@@ -179,8 +179,7 @@ const createPrismicIOFile = async ({
 			 * The project's Prismic repository name.
 			 */
 			export const repositoryName =
-				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} ||
-				config.repositoryName;
+				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || config.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -211,7 +210,8 @@ const createPrismicIOFile = async ({
 			/**
 			 * The project's Prismic repository name.
 			 */
-			export const repositoryName = config.repositoryName;
+			export const repositoryName =
+				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || config.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.

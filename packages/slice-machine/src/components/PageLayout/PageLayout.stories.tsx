@@ -6,7 +6,7 @@ import {
   PageLayoutHeader,
   PageLayoutPane,
 } from "./PageLayout";
-import { borderTop } from "./PageLayout.css";
+import { borderTopColor } from "./PageLayout.css";
 
 type Story = StoryObj<typeof meta>;
 
@@ -16,9 +16,9 @@ const meta = {
     children: {
       control: { disable: true },
     },
-    activeEnvironmentKind: {
+    borderTopColor: {
       control: { type: "select" },
-      options: Object.keys(borderTop),
+      options: [...Object.keys(borderTopColor), undefined],
     },
   },
   parameters: {

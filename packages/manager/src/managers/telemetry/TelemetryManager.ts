@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 
-import SegmentClient from "analytics-node";
+import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 
 import { readPrismicrc } from "../../lib/prismicrc";
 
@@ -41,9 +41,9 @@ type TelemetryManagerContext = {
 };
 
 function assertTelemetryInitialized(
-	segmentClient: SegmentClient | undefined,
+	segmentClient: (() => Analytics) | undefined,
 ): asserts segmentClient is NonNullable<typeof segmentClient> {
-	if (segmentClient == undefined) {
+	if (segmentClient === undefined) {
 		throw new Error(
 			"Telemetry has not been initialized. Run `SliceMachineManager.telemetry.prototype.initTelemetry()` before re-calling this method.",
 		);
@@ -51,29 +51,34 @@ function assertTelemetryInitialized(
 }
 
 export class TelemetryManager extends BaseManager {
-	private _segmentClient: SegmentClient | undefined = undefined;
+	private _segmentClient: (() => Analytics) | undefined = undefined;
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
 	private _context: TelemetryManagerContext | undefined = undefined;
 
 	async initTelemetry(args: TelemetryManagerInitTelemetryArgs): Promise<void> {
-		if (this._segmentClient) {
-			// Prevent subsequent initializations.
-			return;
-		}
+		const isTelemetryEnabled = await this.checkIsTelemetryEnabled();
 
-		this._segmentClient = new SegmentClient(API_TOKENS.SegmentKey, {
-			// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
-			flushAt: 1,
-			// TODO: Verify that this actually does not send data to Segment when false.
-			enable: await this.checkIsTelemetryEnabled(),
-			errorHandler: () => {
+		this._segmentClient = () => {
+			const analytics = new Analytics({
+				writeKey: API_TOKENS.SegmentKey,
+				// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
+				maxEventsInBatch: 1,
+				// TODO: Verify that this actually does not send data to Segment when false.
+				disable: !isTelemetryEnabled,
+			});
+
+			analytics.on("error", (error) => {
 				// noop - We don't care if the tracking event
 				// failed. Some users or networks intentionally
 				// block Segment, so we can't block the app if
 				// a tracking event is unsuccessful.
-			},
-		});
+				console.error(`An error occurred with Segment`, error);
+			});
+
+			return analytics;
+		};
+
 		this._anonymousID = randomUUID();
 		this._context = { app: { name: args.appName, version: args.appVersion } };
 	}
@@ -127,9 +132,9 @@ export class TelemetryManager extends BaseManager {
 			assertTelemetryInitialized(this._segmentClient);
 
 			// TODO: Make sure client fails gracefully when no internet connection
-			this._segmentClient.track(
-				payload as Parameters<typeof this._segmentClient.track>[0],
-				(maybeError?: Error) => {
+			this._segmentClient().track(
+				payload as TrackParams,
+				(maybeError?: unknown) => {
 					if (maybeError && import.meta.env.DEV) {
 						// TODO: Not sure how we want to deal with that
 						console.warn(
@@ -165,7 +170,7 @@ export class TelemetryManager extends BaseManager {
 			assertTelemetryInitialized(this._segmentClient);
 
 			// TODO: Make sure client fails gracefully when no internet connection
-			this._segmentClient.identify(payload, (maybeError?: Error) => {
+			this._segmentClient().identify(payload, (maybeError?: unknown) => {
 				if (maybeError && import.meta.env.DEV) {
 					// TODO: Not sure how we want to deal with that
 					console.warn(`An error occurred during Segment identify`, maybeError);
@@ -216,9 +221,9 @@ export class TelemetryManager extends BaseManager {
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
 
-			this._segmentClient.group(
-				payload as Parameters<typeof this._segmentClient.group>[0],
-				(maybeError?: Error) => {
+			this._segmentClient().group(
+				payload as GroupParams,
+				(maybeError?: unknown) => {
 					if (maybeError && import.meta.env.DEV) {
 						// TODO: Not sure how we want to deal with that
 						console.warn(`An error occurred during Segment group`, maybeError);

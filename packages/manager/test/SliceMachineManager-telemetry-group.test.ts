@@ -1,24 +1,26 @@
 import { expect, it, vi } from "vitest";
-import SegmentClient from "analytics-node";
+import { Analytics } from "@segment/analytics-node";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-vi.mock("analytics-node", () => {
+vi.mock("@segment/analytics-node", () => {
 	const MockSegmentClient = vi.fn();
 
 	MockSegmentClient.prototype.group = vi.fn(
-		(_message: unknown, callback?: (error?: Error) => void) => {
+		(_message: unknown, callback?: (error?: unknown) => void) => {
 			if (callback) {
 				callback();
 			}
 		},
 	);
 
+	MockSegmentClient.prototype.on = vi.fn();
+
 	return {
-		default: MockSegmentClient,
+		Analytics: MockSegmentClient,
 	};
 });
 
@@ -42,7 +44,7 @@ it("sends a group payload to Segment", async () => {
 		npmLibsCount: 0,
 	});
 
-	expect(SegmentClient.prototype.group).toHaveBeenCalledWith(
+	expect(Analytics.prototype.group).toHaveBeenCalledWith(
 		{
 			anonymousId: expect.any(String),
 			groupId: await manager.project.getRepositoryName(),
@@ -76,13 +78,13 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		appVersion: "0.0.1-test",
 	});
 
-	vi.mocked(SegmentClient.prototype.group).mockImplementationOnce(
+	vi.mocked(Analytics.prototype.group).mockImplementationOnce(
 		(_message, callback) => {
 			if (callback) {
 				callback(new Error());
 			}
 
-			return this as unknown as SegmentClient;
+			return this as unknown as Analytics;
 		},
 	);
 

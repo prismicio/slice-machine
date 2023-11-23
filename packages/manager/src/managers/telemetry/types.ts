@@ -25,6 +25,7 @@ export const SegmentEventType = {
 	editor_widgetUsed: "editor:widget-used",
 	open_page_snippet: "page-type:open-snippet",
 	copy_page_snippet: "page-type:copy-snippet",
+	switch_environment: "environment:switch",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -61,6 +62,7 @@ export const HumanSegmentEventType = {
 		"SliceMachine Opens Page Type Snippet Dialog",
 	[SegmentEventType.copy_page_snippet]:
 		"Slice Machine page code snippet copied",
+	[SegmentEventType.switch_environment]: "SliceMachine environment switch",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -122,6 +124,18 @@ type PageViewSegmentEvent = SegmentEvent<
 		title: string;
 		referrer: string;
 		adapter: string;
+		/*
+		 * We are tracking outer sizes instead of inner sizes as with the latter, we
+		 * can't differentiate between users with a high-density screen and those
+		 * zooming in/out with ⌘ + / ⌘ -. Indeed, when users zoom in/out, some
+		 * browsers (like Google Chrome) will update `window.devicePixelRatio` while
+		 * others (like Safari) will keep it unchanged so that it always reflects
+		 * the ratio of physical pixels to CSS pixels.
+		 */
+		outerWidth: number;
+		outerHeight: number;
+		screenWidth: number;
+		screenHeight: number;
 	}
 >;
 
@@ -133,6 +147,11 @@ type OpenPageSnippetSegmentEvent = SegmentEvent<
 type CopyPageSnippetSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.copy_page_snippet,
 	{ framework: string }
+>;
+
+type SwitchEnvironmentSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.switch_environment,
+	{ domain: string }
 >;
 
 type UsersInviteButtonClickedSegmentEvent = SegmentEvent<
@@ -260,4 +279,5 @@ export type SegmentEvents =
 	| EditorWidgetUsedSegmentEvent
 	| OpenPageSnippetSegmentEvent
 	| CopyPageSnippetSegmentEvent
-	| UsersInviteButtonClickedSegmentEvent;
+	| UsersInviteButtonClickedSegmentEvent
+	| SwitchEnvironmentSegmentEvent;
