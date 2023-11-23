@@ -1,5 +1,7 @@
 import { Environment as EnvironmentType } from "@slicemachine/manager/client";
 
+import { telemetry } from "@src/apiClient";
+
 import { useEnvironments } from "@src/features/environments/useEnvironments";
 import { setEnvironment } from "@src/features/environments/actions/setEnvironment";
 import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
@@ -14,6 +16,11 @@ export function Environment() {
   const { refreshState, openLoginModal } = useSliceMachineActions();
 
   async function onSelect(environment: EnvironmentType) {
+    void telemetry.track({
+      event: "environment:switch",
+      domain: environment.domain,
+    });
+
     await setEnvironment(environment);
 
     const legacySliceMachineState = await getLegacySliceMachineState();

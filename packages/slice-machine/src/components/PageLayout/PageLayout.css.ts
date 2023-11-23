@@ -34,10 +34,10 @@ const borderTopBase = style([
   { width: "inherit" },
 ]);
 
-export const borderTop = styleVariants({
-  prod: [borderTopBase, sprinkles({ backgroundColor: colors.purple9 })],
-  stage: [borderTopBase, sprinkles({ backgroundColor: colors.indigo10 })],
-  dev: [borderTopBase, sprinkles({ backgroundColor: colors.amber10 })],
+export const borderTopColor = styleVariants({
+  purple: [borderTopBase, sprinkles({ backgroundColor: colors.purple9 })],
+  indigo: [borderTopBase, sprinkles({ backgroundColor: colors.indigo10 })],
+  amber: [borderTopBase, sprinkles({ backgroundColor: colors.amber10 })],
 });
 
 export const pane = style([

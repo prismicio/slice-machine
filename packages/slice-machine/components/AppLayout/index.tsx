@@ -31,17 +31,24 @@ export const AppLayout: FC<PropsWithChildren> = ({
   );
 };
 
+const environmentTopBorderColorMap = {
+  prod: "purple",
+  stage: "indigo",
+  dev: "amber",
+} as const;
+
 const PageLayoutWithActiveEnvironment: FC<PropsWithChildren> = ({
   children,
   ...otherProps
 }) => {
   const { activeEnvironment } = useActiveEnvironment();
 
+  const maybeBorderColor = activeEnvironment
+    ? environmentTopBorderColorMap[activeEnvironment.kind]
+    : undefined;
+
   return (
-    <PageLayout
-      activeEnvironmentKind={activeEnvironment?.kind ?? "prod"}
-      {...otherProps}
-    >
+    <PageLayout borderTopColor={maybeBorderColor} {...otherProps}>
       {children}
     </PageLayout>
   );
