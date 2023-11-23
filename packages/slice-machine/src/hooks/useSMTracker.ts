@@ -71,5 +71,9 @@ async function trackPageView(): ReturnType<typeof telemetry.track> {
     title: document.title,
     referrer: document.referrer,
     adapter,
+    outerWidth: window.outerWidth,
+    outerHeight: window.outerHeight,
+    screenWidth: window.screen.width,
+    screenHeight: window.screen.height,
   });
 }
