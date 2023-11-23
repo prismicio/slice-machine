@@ -332,7 +332,7 @@ describe("prismicio.js file", () => {
 				/**
 				 * The project's Prismic repository name.
 				 */
-				export const repositoryexport const repositoryName =
+				export const repositoryName =
 				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
 
 				/**
@@ -556,7 +556,7 @@ describe("prismicio.js file", () => {
 				/**
 				 * The project's Prismic repository name.
 				 */
-				export const repositoryexport const repositoryName =
+				export const repositoryName =
 				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
 
 				/**
@@ -627,7 +627,7 @@ describe("prismicio.js file", () => {
 				/**
 				 * The project's Prismic repository name.
 				 */
-				export const repositoryexport const repositoryName =
+				export const repositoryName =
 				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
 
 				/**
