@@ -3,11 +3,11 @@ import type { FC, PropsWithChildren } from "react";
 import * as styles from "./PageLayout.css";
 
 type PageLayoutProps = PropsWithChildren<{
-  environmentKind?: "prod" | "stage" | "dev";
+  borderTopColor?: keyof typeof styles.borderTopColor;
 }>;
 
 export const PageLayout: FC<PageLayoutProps> = ({
-  environmentKind,
+  borderTopColor,
   children,
   ...otherProps
 }) => (
@@ -15,7 +15,7 @@ export const PageLayout: FC<PageLayoutProps> = ({
     {children}
     <div
       className={
-        environmentKind ? styles.borderTop[environmentKind] : undefined
+        borderTopColor ? styles.borderTopColor[borderTopColor] : undefined
       }
     />
   </div>
