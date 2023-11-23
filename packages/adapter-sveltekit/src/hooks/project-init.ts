@@ -62,7 +62,7 @@ const createPrismicIOFile = async ({
 			 * The project's Prismic repository name.
 			 */
 			export const repositoryName =
-				import.meta.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} ||
+				import${"."}meta${"."}env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} ||
 				config.repositoryName;
 
 			/**
