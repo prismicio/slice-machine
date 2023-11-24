@@ -1,0 +1,15 @@
+{
+  "name": "@slicemachine/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "E2E tests for Slice Machine",
+  "author": "Prismic <contact@prismic.io> (https://prismic.io)",
+  "scripts": {
+    "test:e2e:install": "playwright install --with-deps chromium",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.39.0"
+  }
+}
