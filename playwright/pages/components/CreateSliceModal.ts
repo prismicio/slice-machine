@@ -16,7 +16,7 @@ export class CreateSliceModal extends Modal {
     /**
      * Static locators
      */
-    this.nameInput = page.getByTestId("slice-name-input");
+    this.nameInput = this.modal.getByTestId("slice-name-input");
   }
 
   /**

@@ -6,7 +6,6 @@ import { CustomTypesTablePage } from "../pages/CustomTypesTablePage";
 import { CustomTypesBuilderPage } from "../pages/CustomTypesBuilderPage";
 import { SlicesTablePage } from "../pages/SlicesTablePage";
 import { SliceBuilderPage } from "../pages/SliceBuilderPage";
-import { SliceSimulatorPage } from "../pages/SliceSimulator";
 import { ChangesPage } from "../pages/ChangesPage";
 import { ChangelogPage } from "../pages/ChangelogPage";
 import { Menu } from "../pages/components/Menu";
@@ -23,7 +22,6 @@ export type MyFixtures = {
   customTypesBuilderPage: CustomTypesBuilderPage;
   sliceTablePage: SlicesTablePage;
   sliceBuilderPage: SliceBuilderPage;
-  sliceSimulatorPage: SliceSimulatorPage;
   changesPage: ChangesPage;
   changelogPage: ChangelogPage;
 
@@ -65,9 +63,6 @@ export const test = base.extend<MyFixtures>({
   sliceBuilderPage: async ({ page }, use) => {
     await use(new SliceBuilderPage(page));
   },
-  sliceSimulatorPage: async ({ page }, use) => {
-    await use(new SliceSimulatorPage(page));
-  },
   changesPage: async ({ page }, use) => {
     await use(new ChangesPage(page));
   },
@@ -78,28 +73,38 @@ export const test = base.extend<MyFixtures>({
   /**
    * Data
    */
-  pageType: async () => {
-    // TODO: Create page type data here
+  pageType: async ({ pageTypesTablePage, pageTypesBuilderPage }, use) => {
+    // Open create modal
+    await pageTypesTablePage.goto();
+    await pageTypesTablePage.openCreateModal();
+
+    const pageTypeName = "Page Type " + generateRandomId();
+    await pageTypesTablePage.createTypeModal.createType(pageTypeName);
+    await pageTypesBuilderPage.checkSavedMessage();
+
+    await use({ name: pageTypeName });
   },
-  customType: async () => {
-    // TODO: Create custom type data here
+  customType: async ({ customTypesTablePage, customTypesBuilderPage }, use) => {
+    // Open create modal
+    await customTypesTablePage.goto();
+    await customTypesTablePage.openCreateModal();
+
+    const customTypeName = "Custom Type " + generateRandomId();
+    await customTypesTablePage.createTypeModal.createType(customTypeName);
+    await customTypesBuilderPage.checkSavedMessage();
+
+    await use({ name: customTypeName });
   },
   slice: async ({ sliceTablePage, sliceBuilderPage }, use) => {
     // Open create modal
     await sliceTablePage.goto();
-    await expect(sliceTablePage.title).toBeVisible();
+    await expect(sliceTablePage.breadcrumbLabel).toBeVisible();
     await sliceTablePage.openCreateModal();
 
     // Create slice
     const sliceName = "Slice" + generateRandomId();
     await sliceTablePage.createSliceModal.createSlice(sliceName);
-
-    // Check slice builder
-    await expect(sliceBuilderPage.breadcrumb).toBeVisible();
-    await expect(sliceBuilderPage.breadcrumb).toContainText(sliceName);
-    await expect(sliceBuilderPage.staticZonePlaceholder).toBeVisible();
-    await expect(sliceBuilderPage.repeatableZonePlaceholder).toBeVisible();
-    await expect(sliceBuilderPage.saveButton).toBeDisabled();
+    await sliceBuilderPage.checkSavedMessage();
 
     await use({ name: sliceName });
   },

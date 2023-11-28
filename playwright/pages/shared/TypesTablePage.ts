@@ -2,31 +2,27 @@ import { Locator, Page } from "@playwright/test";
 
 import { CreateTypeModal } from "../components/CreateTypeModal";
 import { RenameTypeModal } from "../components/RenameTypeModal";
-import { Menu } from "../components/Menu";
+import { BasePage } from "../components/BasePage";
 
-export class TypesTablePage {
-  readonly page: Page;
-  readonly menu: Menu;
+export class TypesTablePage extends BasePage {
   readonly createTypeModal: CreateTypeModal;
   readonly renameTypeModal: RenameTypeModal;
-
   readonly path: string;
-  readonly body: Locator;
-  readonly title: Locator;
+  readonly breadcrumbLabel: Locator;
   readonly createButton: Locator;
   readonly actionIcon: Locator;
 
   protected constructor(
     page: Page,
     format: "page" | "custom",
-    title: string,
+    breadcrumbLabel: string,
     path: string,
   ) {
+    super(page);
+
     /**
      * Components
      */
-    this.page = page;
-    this.menu = new Menu(page);
     this.createTypeModal = new CreateTypeModal(page, format);
     this.renameTypeModal = new RenameTypeModal(page, format);
 
@@ -34,16 +30,15 @@ export class TypesTablePage {
      * Static locators
      */
     this.path = path;
-    this.body = page.getByRole("main");
-    this.title = page.getByLabel("Breadcrumb").getByText(title);
+    this.breadcrumbLabel = this.breadcrumb.getByText(breadcrumbLabel);
     this.createButton = page
       .getByTestId("create-ct")
       .or(
-        this.body
+        page
           .getByRole("article")
           .getByRole("button", { name: "Create", exact: true }),
       );
-    this.actionIcon = this.body.getByTestId("ct-action-icon");
+    this.actionIcon = page.getByTestId("ct-action-icon");
   }
 
   /**
@@ -60,7 +55,7 @@ export class TypesTablePage {
    */
   async goto() {
     await this.page.goto(this.path);
-    await this.title.isVisible();
+    await this.breadcrumbLabel.isVisible();
   }
 
   async clickRow(name: string) {

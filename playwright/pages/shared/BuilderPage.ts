@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 import { AddFieldModal } from "../components/AddFieldModal";
-import { Menu } from "../components/Menu";
+import { BasePage } from "../components/BasePage";
 
 export type FieldType =
   | "Rich Text"
@@ -19,12 +19,8 @@ export type FieldType =
   | "Color"
   | "Key Text";
 
-export class BuilderPage {
-  readonly page: Page;
-  readonly menu: Menu;
+export class BuilderPage extends BasePage {
   readonly addFieldModal: AddFieldModal;
-
-  readonly breadcrumb: Locator;
   readonly saveButton: Locator;
   readonly showCodeSnippetsButton: Locator;
   readonly hideCodeSnippetsButton: Locator;
@@ -34,18 +30,16 @@ export class BuilderPage {
   readonly newFieldAddButton: Locator;
 
   constructor(page: Page) {
+    super(page);
+
     /**
      * Components
      */
-    this.page = page;
-    this.menu = new Menu(page);
     this.addFieldModal = new AddFieldModal(page);
 
     /**
      * Static locators
      */
-    // global
-    this.breadcrumb = page.getByLabel("Breadcrumb");
     // header
     this.saveButton = page.getByRole("button", { name: "Save", exact: true });
     this.showCodeSnippetsButton = page.getByRole("button", {
@@ -57,10 +51,7 @@ export class BuilderPage {
       exact: true,
     });
     // Static zone
-    this.addFieldButton = page.getByRole("button", {
-      name: "Add a new field",
-      exact: true,
-    });
+    this.addFieldButton = page.getByTestId("add-Static-field");
     // New field
     this.newFieldNameInput = page.getByPlaceholder("Field Name");
     this.newFieldIdInput = page.getByPlaceholder("e.g. buttonLink");
@@ -85,6 +76,7 @@ export class BuilderPage {
     await this.newFieldNameInput.fill(name);
     await expect(this.newFieldIdInput).toHaveValue(expectedId);
     await this.newFieldAddButton.click();
+    await expect(this.addFieldModal.title).not.toBeVisible();
   }
 
   /**

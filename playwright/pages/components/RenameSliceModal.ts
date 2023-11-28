@@ -4,6 +4,7 @@ import { Modal } from "./Modal";
 
 export class RenameSliceModal extends Modal {
   readonly nameInput: Locator;
+  readonly renamedMessage: Locator;
 
   constructor(page: Page) {
     super(page, "Rename a slice", "Rename");
@@ -16,7 +17,8 @@ export class RenameSliceModal extends Modal {
     /**
      * Static locators
      */
-    this.nameInput = page.getByTestId("slice-name-input");
+    this.nameInput = this.modal.getByTestId("slice-name-input");
+    this.renamedMessage = page.getByText("Slice name updated");
   }
 
   /**
@@ -37,5 +39,8 @@ export class RenameSliceModal extends Modal {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkRenamedMessage() {
+    await expect(this.renamedMessage).toBeVisible();
+    await expect(this.renamedMessage).not.toBeVisible();
+  }
 }

@@ -1,24 +1,22 @@
 import { Locator, Page } from "@playwright/test";
 
-import { Menu } from "./components/Menu";
+import { BasePage } from "./components/BasePage";
 
-export class ChangelogPage {
-  readonly page: Page;
-  readonly menu: Menu;
-
-  readonly title: Locator;
+export class ChangelogPage extends BasePage {
+  readonly breadcrumbLabel: Locator;
 
   constructor(page: Page) {
+    super(page);
+
     /**
      * Components
      */
-    this.page = page;
-    this.menu = new Menu(page);
+    // Handle components here
 
     /**
      * Static locators
      */
-    this.title = page.getByRole("main").getByText("Changelog");
+    this.breadcrumbLabel = this.body.getByText("Changelog");
   }
 
   /**

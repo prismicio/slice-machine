@@ -25,10 +25,7 @@ export class LoginModal extends Modal {
   /**
    * Actions
    */
-  async login() {
-    await this.title.isVisible();
-    await this.submitButton.click();
-  }
+  // Handle actions here
 
   /**
    * Assertions

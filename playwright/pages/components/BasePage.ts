@@ -1,10 +1,12 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
-import { Menu } from "./components/Menu";
+import { Menu } from "./Menu";
 
-export class SliceSimulatorPage {
+export class BasePage {
   readonly page: Page;
   readonly menu: Menu;
+  readonly body: Locator;
+  readonly breadcrumb: Locator;
 
   constructor(page: Page) {
     /**
@@ -16,7 +18,8 @@ export class SliceSimulatorPage {
     /**
      * Static locators
      */
-    // Handle static locators here
+    this.body = page.getByRole("main");
+    this.breadcrumb = page.getByLabel("Breadcrumb");
   }
 
   /**

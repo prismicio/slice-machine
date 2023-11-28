@@ -3,27 +3,23 @@ import { Locator, Page } from "@playwright/test";
 import { CreateSliceModal } from "./components/CreateSliceModal";
 import { RenameSliceModal } from "./components/RenameSliceModal";
 import { DeleteSliceModal } from "./components/DeleteSliceModal";
-import { Menu } from "./components/Menu";
+import { BasePage } from "./components/BasePage";
 
-export class SlicesTablePage {
-  readonly page: Page;
-  readonly menu: Menu;
+export class SlicesTablePage extends BasePage {
   readonly createSliceModal: CreateSliceModal;
   readonly renameSliceModal: RenameSliceModal;
   readonly deleteSliceModal: DeleteSliceModal;
-
   readonly path: string;
-  readonly body: Locator;
   readonly header: Locator;
-  readonly title: Locator;
+  readonly breadcrumbLabel: Locator;
   readonly createButton: Locator;
 
   constructor(page: Page) {
+    super(page);
+
     /**
      * Components
      */
-    this.page = page;
-    this.menu = new Menu(page);
     this.createSliceModal = new CreateSliceModal(page);
     this.renameSliceModal = new RenameSliceModal(page);
     this.deleteSliceModal = new DeleteSliceModal(page);
@@ -32,9 +28,8 @@ export class SlicesTablePage {
      * Static locators
      */
     this.path = "/slices";
-    this.body = page.getByRole("main").first();
     this.header = page.getByRole("banner");
-    this.title = this.header.getByLabel("Breadcrumb").getByText("Slices");
+    this.breadcrumbLabel = this.breadcrumb.getByText("Slices");
     this.createButton = this.header
       .getByRole("button", { name: "Create one", exact: true })
       .or(page.getByRole("button", { name: "Create", exact: true }));
@@ -44,7 +39,7 @@ export class SlicesTablePage {
    * Dynamic locators
    */
   getCard(name: string, variation = "Default"): Locator {
-    return this.body.getByRole("link", {
+    return this.page.getByRole("link", {
       name: `${name} ${variation} slice card`,
       exact: true,
     });
@@ -55,7 +50,7 @@ export class SlicesTablePage {
    */
   async goto() {
     await this.page.goto(this.path);
-    await this.title.isVisible();
+    await this.breadcrumbLabel.isVisible();
   }
 
   async clickCard(name: string) {

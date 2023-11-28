@@ -1,44 +1,17 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-export class CreateTypeModal {
-  readonly page: Page;
+import { Modal } from "./Modal";
 
-  readonly root: Locator;
-  readonly title: Locator;
+export class CreateTypeModal extends Modal {
   readonly nameInput: Locator;
-  readonly closeButton: Locator;
-  readonly cancelButton: Locator;
-  readonly submitButton: Locator;
-  readonly savedMessage: Locator;
 
   constructor(page: Page, format: "page" | "custom") {
-    /**
-     * Components
-     */
-    this.page = page;
+    super(page, `Create a new ${format} type`, "Create");
 
     /**
      * Static locators
      */
-    this.root = page.getByTestId("create-ct-modal");
-    this.title = this.root.getByRole("heading", {
-      name: `Create a new ${format} type`,
-      exact: true,
-    });
-    this.nameInput = this.root.getByTestId("ct-name-input");
-    this.closeButton = this.root.getByRole("button", {
-      name: "Close",
-      exact: true,
-    });
-    this.cancelButton = this.root.getByRole("button", {
-      name: "Cancel",
-      exact: true,
-    });
-    this.submitButton = this.root.getByRole("button", {
-      name: "Create",
-      exact: true,
-    });
-    this.savedMessage = this.page.getByText("Custom type saved successfully");
+    this.nameInput = this.modal.getByTestId("ct-name-input");
   }
 
   /**
@@ -54,8 +27,6 @@ export class CreateTypeModal {
     await this.nameInput.fill(name);
     await this.submitButton.click();
     await expect(this.title).not.toBeVisible();
-    await expect(this.savedMessage).toBeVisible();
-    await expect(this.savedMessage).not.toBeVisible();
   }
 
   /**

@@ -2,7 +2,7 @@
 
 ## Setup
 
-- Run install setup script
+- Run install script
   _Install browsers and OS dependencies for Playwright._
   ```bash
   yarn test:e2e:install

@@ -1,15 +1,14 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { BuilderPage } from "./BuilderPage";
 import { CreateTypeModal } from "../components/CreateTypeModal";
 import { RenameTypeModal } from "../components/RenameTypeModal";
 import { CustomTypesTablePage } from "../CustomTypesTablePage";
+import { BuilderPage } from "./BuilderPage";
 
 export class TypeBuilderPage extends BuilderPage {
   readonly createTypeModal: CreateTypeModal;
   readonly renameTypeModal: RenameTypeModal;
   readonly customTypeTablePage: CustomTypesTablePage;
-
   readonly savedMessage: Locator;
   readonly staticZone: Locator;
   readonly staticZonePlaceholder: Locator;
@@ -30,7 +29,9 @@ export class TypeBuilderPage extends BuilderPage {
      */
     // Global
     this.savedMessage = page.getByText(
-      `${format.toLocaleUpperCase()} saved successfully`,
+      `${format.charAt(0).toUpperCase()}${format.slice(
+        1,
+      )} type saved successfully`,
     );
     // Static zone
     this.staticZone = page.getByTestId("ct-static-zone");

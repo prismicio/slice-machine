@@ -1,27 +1,25 @@
 import { Locator, Page, expect } from "@playwright/test";
 
 import { LoginModal } from "./components/LoginModal";
-import { Menu } from "./components/Menu";
+import { BasePage } from "./components/BasePage";
 
-export class ChangesPage {
-  readonly page: Page;
-  readonly menu: Menu;
+export class ChangesPage extends BasePage {
   readonly loginModal: LoginModal;
 
-  readonly title: Locator;
+  readonly breadcrumbLabel: Locator;
 
   constructor(page: Page) {
+    super(page);
+
     /**
      * Components
      */
-    this.page = page;
-    this.menu = new Menu(page);
     this.loginModal = new LoginModal(page);
 
     /**
      * Static locators
      */
-    this.title = page.getByLabel("Breadcrumb").getByText("Changes");
+    this.breadcrumbLabel = this.breadcrumb.getByText("Changes");
   }
 
   /**
@@ -34,7 +32,7 @@ export class ChangesPage {
    */
   async goto() {
     await this.page.goto("/changes");
-    await expect(this.title).toBeVisible();
+    await expect(this.breadcrumb).toBeVisible();
   }
 
   /**

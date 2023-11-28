@@ -4,6 +4,7 @@ import { Modal } from "./Modal";
 
 export class RenameTypeModal extends Modal {
   readonly nameInput: Locator;
+  readonly renamedMessage: Locator;
 
   constructor(page: Page, format: "page" | "custom") {
     super(page, `Rename a ${format} type`, "Rename");
@@ -16,7 +17,10 @@ export class RenameTypeModal extends Modal {
     /**
      * Static locators
      */
-    this.nameInput = this.root.getByTestId("custom-type-name-input");
+    this.nameInput = this.modal.getByTestId("custom-type-name-input");
+    this.renamedMessage = page.getByText(
+      `${format.charAt(0).toUpperCase()}${format.slice(1)} type renamed`,
+    );
   }
 
   /**
@@ -37,5 +41,8 @@ export class RenameTypeModal extends Modal {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkRenamedMessage() {
+    await expect(this.renamedMessage).toBeVisible();
+    await expect(this.renamedMessage).not.toBeVisible();
+  }
 }

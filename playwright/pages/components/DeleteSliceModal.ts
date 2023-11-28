@@ -1,8 +1,10 @@
-import { expect, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 import { Modal } from "./Modal";
 
 export class DeleteSliceModal extends Modal {
+  readonly deletedMessage: Locator;
+
   constructor(page: Page) {
     super(page, "Delete Slice", "Delete");
 
@@ -14,7 +16,7 @@ export class DeleteSliceModal extends Modal {
     /**
      * Static locators
      */
-    // Handle static locators here
+    this.deletedMessage = page.getByText("Successfully deleted slice");
   }
 
   /**
@@ -34,5 +36,8 @@ export class DeleteSliceModal extends Modal {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkDeletedMessage() {
+    await expect(this.deletedMessage).toBeVisible();
+    await expect(this.deletedMessage).not.toBeVisible();
+  }
 }

@@ -10,9 +10,11 @@ test.describe("Slices", () => {
 
     const sliceName = "Slice" + generateRandomId();
     await sliceTablePage.createSliceModal.createSlice(sliceName);
+    await sliceBuilderPage.checkSavedMessage();
 
-    await expect(sliceBuilderPage.breadcrumb).toBeVisible();
-    await expect(sliceBuilderPage.breadcrumb).toContainText(sliceName);
+    await expect(
+      sliceBuilderPage.breadcrumb.getByText(sliceName),
+    ).toBeVisible();
 
     await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
     await expect(sliceBuilderPage.repeatableZoneListItem).toHaveCount(0);
@@ -52,6 +54,7 @@ test.describe("Slices", () => {
 
     const newSliceName = `${slice.name}Renamed`;
     await sliceTablePage.renameSliceModal.renameSlice(newSliceName);
+    await sliceTablePage.renameSliceModal.checkRenamedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a rename, old slice name is still visible in the list
     await sliceTablePage.page.reload();
@@ -60,7 +63,9 @@ test.describe("Slices", () => {
     await expect(sliceTablePage.getCard(newSliceName)).toBeVisible();
     await sliceTablePage.clickCard(newSliceName);
 
-    await expect(sliceBuilderPage.breadcrumb).toContainText(newSliceName);
+    await expect(
+      sliceBuilderPage.breadcrumb.getByText(newSliceName),
+    ).toBeVisible();
   });
 
   test("I can delete a slice", async ({ slice, sliceTablePage }) => {
@@ -68,9 +73,10 @@ test.describe("Slices", () => {
     await sliceTablePage.openActionModal(slice.name, "Delete");
 
     await expect(
-      sliceTablePage.deleteSliceModal.root.getByText(`/${slice.name}/`),
+      sliceTablePage.deleteSliceModal.modal.getByText(`/${slice.name}/`),
     ).toBeVisible();
     await sliceTablePage.deleteSliceModal.deleteSlice();
+    await sliceTablePage.deleteSliceModal.checkDeletedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a delete, slice is still visible in the list
     await sliceTablePage.page.reload();

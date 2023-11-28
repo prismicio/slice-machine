@@ -1,32 +1,28 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 import { FieldType } from "../shared/BuilderPage";
+import { Modal } from "./Modal";
 
-export class AddFieldModal {
-  readonly page: Page;
-
-  readonly title: Locator;
-
+export class AddFieldModal extends Modal {
   constructor(page: Page) {
+    super(page, "Add a new field");
+
     /**
      * Components
      */
-    this.page = page;
+    // Handle components here
 
     /**
      * Static locators
      */
-    this.title = page.getByRole("heading", {
-      name: "Add a new field",
-      exact: true,
-    });
+    // Handle static locators here
   }
 
   /**
    * Dynamic locators
    */
   getField(fieldType: FieldType): Locator {
-    return this.page.getByRole("heading", {
+    return this.modal.getByRole("heading", {
       name: fieldType,
       exact: true,
     });

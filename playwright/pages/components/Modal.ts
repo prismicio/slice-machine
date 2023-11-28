@@ -2,14 +2,13 @@ import { Locator, Page } from "@playwright/test";
 
 export class Modal {
   readonly page: Page;
-
-  readonly root: Locator;
+  readonly modal: Locator;
   readonly title: Locator;
   readonly closeButton: Locator;
   readonly cancelButton: Locator;
   readonly submitButton: Locator;
 
-  constructor(page: Page, title: string | RegExp, submitName: string) {
+  constructor(page: Page, title: string | RegExp, submitName?: string) {
     /**
      * Components
      */
@@ -18,17 +17,17 @@ export class Modal {
     /**
      * Static locators
      */
-    this.root = page.getByRole("dialog");
-    this.title = this.root.getByRole("heading", { name: title, exact: true });
-    this.closeButton = this.root.getByRole("button", {
+    this.modal = page.getByRole("dialog");
+    this.title = this.modal.getByRole("heading", { name: title, exact: true });
+    this.closeButton = this.modal.getByRole("button", {
       name: "Close",
       exact: true,
     });
-    this.cancelButton = this.root.getByRole("button", {
+    this.cancelButton = this.modal.getByRole("button", {
       name: "Cancel",
       exact: true,
     });
-    this.submitButton = this.root.getByRole("button", {
+    this.submitButton = this.modal.getByRole("button", {
       name: submitName,
       exact: true,
     });
