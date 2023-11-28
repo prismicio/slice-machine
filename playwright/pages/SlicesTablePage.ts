@@ -77,10 +77,12 @@ export class SlicesTablePage {
   }
 
   async openScreenshotModal(name: string) {
-    await this.getCard(name).getByRole("button", {
-      name: "Update Screenshot",
-      exact: true,
-    });
+    await this.getCard(name)
+      .getByRole("button", {
+        name: "Update Screenshot",
+        exact: true,
+      })
+      .click();
   }
 
   /**

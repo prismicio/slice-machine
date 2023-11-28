@@ -8544,6 +8544,12 @@ __metadata:
   resolution: "@slicemachine/e2e@workspace:playwright"
   dependencies:
     "@playwright/test": 1.39.0
+    "@typescript-eslint/eslint-plugin": 5.55.0
+    "@typescript-eslint/parser": 5.55.0
+    depcheck: 1.4.3
+    eslint: 8.37.0
+    eslint-config-prettier: 9.0.0
+    typescript: 4.9.5
   languageName: unknown
   linkType: soft
 

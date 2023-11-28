@@ -78,10 +78,10 @@ export const test = base.extend<MyFixtures>({
   /**
    * Data
    */
-  pageType: async ({}, use) => {
+  pageType: async () => {
     // TODO: Create page type data here
   },
-  customType: async ({}, use) => {
+  customType: async () => {
     // TODO: Create custom type data here
   },
   slice: async ({ sliceTablePage, sliceBuilderPage }, use) => {

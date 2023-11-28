@@ -1,0 +1,4 @@
+# .gitignore copy
+
+/test-results/
+/playwright-report/

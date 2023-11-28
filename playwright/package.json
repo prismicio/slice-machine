@@ -5,11 +5,22 @@
   "description": "E2E tests for Slice Machine",
   "author": "Prismic <contact@prismic.io> (https://prismic.io)",
   "scripts": {
+    "lint": "eslint --max-warnings 0 --ext .js,.ts .",
     "test:e2e:install": "playwright install --with-deps chromium",
     "test:e2e:report": "playwright show-report",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "types": "tsc --noEmit",
+    "unit": "echo \"No unit tests for playwright\" && true",
+    "depcheck": "depcheck --config=.depcheckrc",
+    "audit": "yarn npm audit --environment production --severity high"
   },
   "devDependencies": {
-    "@playwright/test": "1.39.0"
+    "@playwright/test": "1.39.0",
+    "@typescript-eslint/eslint-plugin": "5.55.0",
+    "@typescript-eslint/parser": "5.55.0",
+    "depcheck": "1.4.3",
+    "eslint": "8.37.0",
+    "eslint-config-prettier": "9.0.0",
+    "typescript": "4.9.5"
   }
 }

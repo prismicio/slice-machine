@@ -56,6 +56,11 @@ export class BuilderPage {
       name: "Hide code snippets",
       exact: true,
     });
+    // Static zone
+    this.addFieldButton = page.getByRole("button", {
+      name: "Add a new field",
+      exact: true,
+    });
     // New field
     this.newFieldNameInput = page.getByPlaceholder("Field Name");
     this.newFieldIdInput = page.getByPlaceholder("e.g. buttonLink");
