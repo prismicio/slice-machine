@@ -23,5 +23,9 @@ export const variants = styleVariants({
     sprinkles({
       height: 1,
     }),
+    {
+      backgroundImage:
+        "linear-gradient(to right, color-mix(in srgb, currentColor, transparent 100%), currentColor, color-mix(in srgb, currentColor, transparent 100%))",
+    },
   ],
 });

@@ -20,19 +20,6 @@ export const Divider: FC<DividerProps> = (props) => {
         sprinkles({ color: colors[color] }),
         className,
       )}
-      style={
-        // Vanilla Extract does not compile the necessary `linear-gradient`
-        // correctly in production; the `0%` used in the style is "minified" to
-        // 0, which is invalid.
-        // TODO: Move these styles out of the `style` prop when Vanilla Extract
-        // is replaced.
-        variant === "edgeFaded"
-          ? {
-              backgroundImage:
-                "linear-gradient(to right, color-mix(in srgb, currentColor 0%, transparent), currentColor, color-mix(in srgb, currentColor 0%, transparent))",
-            }
-          : undefined
-      }
     />
   );
 };
