@@ -7,13 +7,13 @@ type PageLayoutProps = PropsWithChildren<{
 }>;
 
 export const PageLayout: FC<PageLayoutProps> = ({
-  borderTopColor,
+  borderTopColor = "purple",
   children,
   ...otherProps
 }) => (
   <div {...otherProps} className={styles.root}>
     {children}
-    <div className={styles.borderTopColor[borderTopColor ?? "purple"]} />
+    <div className={styles.borderTopColor[borderTopColor]} />
   </div>
 );
 
