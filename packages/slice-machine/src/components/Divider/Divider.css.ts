@@ -1,5 +1,5 @@
 import { colors, sprinkles } from "@prismicio/editor-ui";
-import { style } from "@vanilla-extract/css";
+import { style, styleVariants } from "@vanilla-extract/css";
 
 const base = style([
   sprinkles({
@@ -9,7 +9,7 @@ const base = style([
   }),
 ]);
 
-export const variants = {
+export const variants = styleVariants({
   dashed: [
     base,
     sprinkles({
@@ -28,4 +28,4 @@ export const variants = {
         "linear-gradient(to right, color-mix(in srgb, currentColor, transparent 100%), currentColor, color-mix(in srgb, currentColor, transparent 100%))",
     },
   ],
-};
+});
