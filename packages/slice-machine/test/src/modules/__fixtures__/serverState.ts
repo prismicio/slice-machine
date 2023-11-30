@@ -31,7 +31,7 @@ export const dummyServerState: Pick<
       PrismicWroom: "https://prismic.io/",
       PrismicAuthentication: "https://auth.prismic.io/",
       PrismicModels: "https://customtypes.prismic.io/",
-      PrismicUser: "https://user.internal-prismic.io/",
+      PrismicUser: "https://user-service.prismic.io/",
       AwsAclProvider:
         "https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
       PrismicOembed: "https://oembed.prismic.io",

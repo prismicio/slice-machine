@@ -21,7 +21,7 @@ it("returns global Slice Machine state", async () => {
 		PrismicOembed: "https://oembed.prismic.io",
 		PrismicAuthentication: "https://auth.prismic.io/",
 		PrismicModels: "https://customtypes.prismic.io/",
-		PrismicUser: "https://user.internal-prismic.io/",
+		PrismicUser: "https://user-service.prismic.io/",
 		PrismicWroom: "https://prismic.io/",
 		PrismicUnsplash: "https://unsplash.prismic.io",
 		SliceMachineV1:
