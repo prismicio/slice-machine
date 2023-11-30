@@ -38,6 +38,7 @@ export class RenameTypeDialog extends Dialog {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(newName);
     await this.submitButton.click();
+    await this.checkRenamedMessage();
     await expect(this.title).not.toBeVisible();
   }
 

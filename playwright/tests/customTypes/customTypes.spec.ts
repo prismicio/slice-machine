@@ -13,7 +13,6 @@ test.describe("Custom Types", () => {
 
     const name = "Custom Type " + generateRandomId();
     await customTypesTablePage.createTypeDialog.createType(name);
-    await customTypesBuilderPage.checkSavedMessage();
 
     // TODO(DT-1801): Production BUG - When creating a custom type, don't redirect
     // to the builder page until the custom  type is created
@@ -35,7 +34,6 @@ test.describe("Custom Types", () => {
 
     const newCustomTypeName = `${customType.name}Renamed`;
     await customTypesTablePage.renameTypeDialog.renameType(newCustomTypeName);
-    await customTypesTablePage.renameTypeDialog.checkRenamedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a rename, old custom type name is still visible in the list
     await customTypesTablePage.page.reload();

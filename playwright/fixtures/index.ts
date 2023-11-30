@@ -67,34 +67,31 @@ export const test = baseTest.extend<Fixtures>({
   /**
    * Data
    */
-  pageType: async ({ pageTypesTablePage, pageTypesBuilderPage }, use) => {
+  pageType: async ({ pageTypesTablePage }, use) => {
     await pageTypesTablePage.goto();
     await pageTypesTablePage.openCreateDialog();
 
     const pageTypeName = "Page Type " + generateRandomId();
     await pageTypesTablePage.createTypeDialog.createType(pageTypeName);
-    await pageTypesBuilderPage.checkSavedMessage();
 
     await use({ name: pageTypeName });
   },
-  customType: async ({ customTypesTablePage, customTypesBuilderPage }, use) => {
+  customType: async ({ customTypesTablePage }, use) => {
     await customTypesTablePage.goto();
     await customTypesTablePage.openCreateDialog();
 
     const customTypeName = "Custom Type " + generateRandomId();
     await customTypesTablePage.createTypeDialog.createType(customTypeName);
-    await customTypesBuilderPage.checkSavedMessage();
 
     await use({ name: customTypeName });
   },
-  slice: async ({ slicesListPage, sliceBuilderPage }, use) => {
+  slice: async ({ slicesListPage }, use) => {
     await slicesListPage.goto();
     await expect(slicesListPage.breadcrumbLabel).toBeVisible();
     await slicesListPage.openCreateDialog();
 
     const sliceName = "Slice" + generateRandomId();
     await slicesListPage.createSliceDialog.createSlice(sliceName);
-    await sliceBuilderPage.checkSavedMessage();
 
     await use({ name: sliceName });
   },

@@ -33,6 +33,7 @@ export class DeleteSliceDialog extends Dialog {
   async deleteSlice() {
     await expect(this.title).toBeVisible();
     await this.submitButton.click();
+    await this.checkDeletedMessage();
     await expect(this.title).not.toBeVisible();
   }
 

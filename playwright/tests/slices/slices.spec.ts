@@ -10,7 +10,6 @@ test.describe("Slices", () => {
 
     const sliceName = "Slice" + generateRandomId();
     await slicesListPage.createSliceDialog.createSlice(sliceName);
-    await sliceBuilderPage.checkSavedMessage();
 
     await expect(
       sliceBuilderPage.breadcrumb.getByText(sliceName),
@@ -54,7 +53,6 @@ test.describe("Slices", () => {
 
     const newSliceName = `${slice.name}Renamed`;
     await slicesListPage.renameSliceDialog.renameSlice(newSliceName);
-    await slicesListPage.renameSliceDialog.checkRenamedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a rename, old slice name is still visible in the list
     await slicesListPage.page.reload();
@@ -76,7 +74,6 @@ test.describe("Slices", () => {
       slicesListPage.deleteSliceDialog.dialog.getByText(`/${slice.name}/`),
     ).toBeVisible();
     await slicesListPage.deleteSliceDialog.deleteSlice();
-    await slicesListPage.deleteSliceDialog.checkDeletedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a delete, slice is still visible in the list
     await slicesListPage.page.reload();

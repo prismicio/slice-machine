@@ -3,6 +3,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import { Dialog } from "./Dialog";
 
 export class CreateTypeDialog extends Dialog {
+  readonly createdMessage: Locator;
   readonly nameInput: Locator;
 
   constructor(page: Page, format: "page" | "custom") {
@@ -14,6 +15,11 @@ export class CreateTypeDialog extends Dialog {
     /**
      * Static locators
      */
+    this.createdMessage = page.getByText(
+      `${format.charAt(0).toUpperCase()}${format.slice(
+        1,
+      )} type saved successfully`,
+    );
     this.nameInput = this.dialog.getByTestId("ct-name-input");
   }
 
@@ -29,11 +35,15 @@ export class CreateTypeDialog extends Dialog {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(name);
     await this.submitButton.click();
+    await this.checkCreatedMessage();
     await expect(this.title).not.toBeVisible();
   }
 
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkCreatedMessage() {
+    await expect(this.createdMessage).toBeVisible();
+    await expect(this.createdMessage).not.toBeVisible();
+  }
 }

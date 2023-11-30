@@ -34,7 +34,8 @@ test.describe("Navigation", () => {
     expect(await page.title()).toContain("Changelog - Slice Machine");
   });
 
-  test("I access the changelog from Slice Machine version", async ({
+  // Unskip when we fix the Changelog fetching problem - DT-1794
+  test.skip("I access the changelog from Slice Machine version", async ({
     pageTypesTablePage,
     changelogPage,
   }) => {

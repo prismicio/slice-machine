@@ -80,7 +80,7 @@ This approach has several benefits:
  
 2. Always try to do an exact matching with locators
 
-In order to be sure of what you are targeting, always use `exact` option when possible.
+In order to be sure of what you are targeting, always use the `exact` option when possible.
 
 Example:
 
@@ -107,9 +107,9 @@ Instead, for example you can use `getByTestId`:
 this.appVersion = this.menu.getByTestId("slicemachine-version");
 ```
 
-4. Ensure tests don't depends on a specific state of Slice Machine  
+4. Ensure tests don't depend on a specific state of Slice Machine  
 
-Our e2e tests should not break whatever the current state of Slice Machine. Having existing data or not, staging or production, ect.
+Our e2e tests should not break whatever the current state of Slice Machine is. Having existing data or not, staging or production, etc.
 
 5. Write your own best practice for the team here...
 

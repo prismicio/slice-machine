@@ -3,6 +3,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import { Dialog } from "./Dialog";
 
 export class CreateSliceDialog extends Dialog {
+  readonly createdMessage: Locator;
   readonly nameInput: Locator;
 
   constructor(page: Page) {
@@ -19,6 +20,7 @@ export class CreateSliceDialog extends Dialog {
     /**
      * Static locators
      */
+    this.createdMessage = page.getByText("Slice saved successfully");
     this.nameInput = this.dialog.getByTestId("slice-name-input");
   }
 
@@ -34,11 +36,15 @@ export class CreateSliceDialog extends Dialog {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(name);
     await this.submitButton.click();
+    await this.checkCreatedMessage();
     await expect(this.title).not.toBeVisible();
   }
 
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkCreatedMessage() {
+    await expect(this.createdMessage).toBeVisible();
+    await expect(this.createdMessage).not.toBeVisible();
+  }
 }
