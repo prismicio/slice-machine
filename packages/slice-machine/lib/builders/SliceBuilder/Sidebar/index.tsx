@@ -1,4 +1,4 @@
-import { Box, Button } from "@prismicio/editor-ui";
+import { Box, Button, Gradient } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type Dispatch, type FC, type SetStateAction, useState } from "react";
 
@@ -73,16 +73,26 @@ export const Sidebar: FC<SidebarProps> = (props) => {
             variationId={v.id}
           />
         ))}
-        <Button
-          onClick={() => {
-            setDialog({ type: "ADD_VARIATION" });
-          }}
-          startIcon="add"
-          sx={{ bottom: 72, marginInline: 24, position: "sticky" }}
-          variant="secondary"
+        <Box
+          backgroundColor="grey2"
+          bottom={0}
+          flexDirection="column"
+          padding={{ inline: 24 }}
+          position="sticky"
+          // @ts-expect-error - TODO: add missing props to the Editor's `Box` component.
+          style={{ marginBottom: "-16px", paddingBottom: "40px" }}
         >
-          Add a new variation
-        </Button>
+          <Gradient sx={{ left: 0, position: "absolute", right: 0 }} />
+          <Button
+            onClick={() => {
+              setDialog({ type: "ADD_VARIATION" });
+            }}
+            startIcon="add"
+            variant="secondary"
+          >
+            Add a new variation
+          </Button>
+        </Box>
       </Box>
       <ScreenshotChangesModal
         slices={sliceFilterFn([slice])}
