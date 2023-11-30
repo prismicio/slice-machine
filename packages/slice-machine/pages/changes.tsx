@@ -90,7 +90,7 @@ const Changes: React.FunctionComponent = () => {
       authStatus === AuthStatus.UNAUTHORIZED ||
       authStatus === AuthStatus.FORBIDDEN
     ) {
-      return <AuthErrorPage />;
+      return <AuthErrorPage authStatus={authStatus} />;
     }
     if (numberOfChanges === 0) {
       return <NoChangesBlankSlate />;

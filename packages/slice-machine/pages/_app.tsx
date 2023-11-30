@@ -133,25 +133,24 @@ function App({
                   <ConnectedRouter Router={Router}>
                     <PersistGate loading={null} persistor={smStore.persistor}>
                       <ErrorBoundary
-                        renderError={(error) => {
-                          console.error(error);
-
-                          return (
-                            <AppLayout>
-                              <AppLayoutContent>
-                                <Box
-                                  alignItems="center"
-                                  justifyContent="center"
-                                >
-                                  <DefaultErrorMessage
-                                    title="Error"
-                                    description="An error occurred while rendering the app."
-                                  />
-                                </Box>
-                              </AppLayoutContent>
-                            </AppLayout>
+                        onError={(error) => {
+                          console.error(
+                            "An error occurred while rendering the app",
+                            error,
                           );
                         }}
+                        renderError={() => (
+                          <AppLayout>
+                            <AppLayoutContent>
+                              <Box alignItems="center" justifyContent="center">
+                                <DefaultErrorMessage
+                                  title="Error"
+                                  description="An error occurred while rendering the app."
+                                />
+                              </Box>
+                            </AppLayoutContent>
+                          </AppLayout>
+                        )}
                       >
                         <InAppGuideProvider>
                           <RouteChangeProvider>
@@ -161,9 +160,18 @@ function App({
                               </ComponentLayout>
                             </Suspense>
                           </RouteChangeProvider>
-                          <Suspense>
-                            <InAppGuideDialog />
-                          </Suspense>
+                          <ErrorBoundary
+                            onError={(error) => {
+                              console.error(
+                                `An error occurred while rendering the in-app guide`,
+                                error,
+                              );
+                            }}
+                          >
+                            <Suspense>
+                              <InAppGuideDialog />
+                            </Suspense>
+                          </ErrorBoundary>
                         </InAppGuideProvider>
                       </ErrorBoundary>
                     </PersistGate>
