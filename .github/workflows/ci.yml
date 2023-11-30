@@ -72,6 +72,7 @@ jobs:
           - "@slicemachine/adapter-nuxt"
           - "@slicemachine/adapter-nuxt2"
           - "@slicemachine/adapter-sveltekit"
+          - "@slicemachine/e2e"
 
     steps:
       - name: Checkout
@@ -124,6 +125,7 @@ jobs:
           - "@slicemachine/adapter-nuxt"
           - "@slicemachine/adapter-nuxt2"
           - "@slicemachine/adapter-sveltekit"
+          - "@slicemachine/e2e"
 
     steps:
       - name: Checkout
@@ -160,11 +162,37 @@ jobs:
       - name: Set up Node
         uses: ./.github/actions/setup-node
 
+      - name: Set up Playwright browsers
+        run: yarn test:e2e:install
+
+      - name: Running E2E tests
+        run: yarn test:e2e
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Playwright HTML report
+          path: playwright/playwright-report/
+          retention-days: 30
+
+  e2e-cypress:
+    needs: prepare
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Restore cache
+        uses: ./.github/actions/restore-cache
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
       - name: Build Slice Machine UI, next-adapter, init and start scripts
         run: yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/init,slice-machine-ui,start-slicemachine}' --topological --verbose run build
 
       - name: Running End to End tests
-        run: yarn test:e2e
+        run: yarn cypress
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
@@ -179,7 +207,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: e2e-tests-screenshots
+          name: e2e-tests-screenshots-cypress
           path: cypress/screenshots/
 
   deployment:

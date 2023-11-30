@@ -163,7 +163,7 @@ const Navigation: FC = () => {
             active={router.asPath.startsWith("/changelog")}
             component={Link}
             RightElement={
-              <RightElement>
+              <RightElement data-cy="slicemachine-version">
                 {changelog.sliceMachine.currentVersion &&
                   `v${changelog.sliceMachine.currentVersion}`}
               </RightElement>

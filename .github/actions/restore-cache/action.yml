@@ -11,6 +11,7 @@ runs:
           node_modules
           */*/node_modules
           ~/.cache/Cypress
+          ~/.cache/ms-playwright
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-dependencies
     - name: Cache artifacts
       id: cache-artifacts
