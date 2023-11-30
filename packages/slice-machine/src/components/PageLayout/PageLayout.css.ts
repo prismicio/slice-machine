@@ -23,21 +23,17 @@ export const root = style([
   },
 ]);
 
-const borderTopBase = style([
-  sprinkles({
-    all: "unset",
-    display: "revert",
-    height: 2,
-    position: "fixed",
-    top: 0,
-  }),
-  { width: "inherit" },
-]);
+export const borderTop = sprinkles({
+  height: 2,
+  position: "fixed",
+  top: 0,
+  width: "100%",
+});
 
 export const borderTopColor = styleVariants({
-  purple: [borderTopBase, sprinkles({ backgroundColor: colors.purple9 })],
-  indigo: [borderTopBase, sprinkles({ backgroundColor: colors.indigo10 })],
-  amber: [borderTopBase, sprinkles({ backgroundColor: colors.amber10 })],
+  purple: [sprinkles({ backgroundColor: colors.purple9 })],
+  indigo: [sprinkles({ backgroundColor: colors.indigo10 })],
+  amber: [sprinkles({ backgroundColor: colors.amber10 })],
 });
 
 export const pane = style([

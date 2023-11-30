@@ -1,4 +1,5 @@
 import type { FC, PropsWithChildren } from "react";
+import clsx from "clsx";
 
 import * as styles from "./PageLayout.css";
 
@@ -13,7 +14,9 @@ export const PageLayout: FC<PageLayoutProps> = ({
 }) => (
   <div {...otherProps} className={styles.root}>
     {children}
-    <div className={styles.borderTopColor[borderTopColor]} />
+    <div
+      className={clsx(styles.borderTop, styles.borderTopColor[borderTopColor])}
+    />
   </div>
 );
 
