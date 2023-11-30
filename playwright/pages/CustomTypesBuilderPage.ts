@@ -4,7 +4,9 @@ import { TypeBuilderPage } from "./shared/TypeBuilderPage";
 
 export class CustomTypesBuilderPage extends TypeBuilderPage {
   constructor(page: Page) {
-    super(page, "custom");
+    super(page, {
+      format: "custom",
+    });
 
     /**
      * Components

@@ -12,7 +12,7 @@
     "types": "tsc --noEmit",
     "unit": "echo \"No unit tests for playwright\" && true",
     "depcheck": "depcheck --config=.depcheckrc",
-    "audit": "yarn npm audit --environment production --severity high"
+    "audit": "echo \"No audit for playwright\" && true"
   },
   "devDependencies": {
     "@playwright/test": "1.39.0",

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
     "forceConsistentCasingInFileNames": true,
     "module": "ES2022",
     "moduleResolution": "Node",
@@ -23,6 +22,5 @@
     "utils",
     ".eslintrc.js",
     "playwright.config.ts"
-  ],
-  "exclude": ["node_modules", "playwright-report", "test-results"]
+  ]
 }

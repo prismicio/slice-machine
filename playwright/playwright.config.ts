@@ -1,7 +1,7 @@
 import { type PlaywrightTestConfig, devices } from "@playwright/test";
 
 // See https://playwright.dev/docs/api/class-testconfig
-const config: PlaywrightTestConfig = {
+const config = {
   // Configuration for the expect assertion library
   expect: {
     // Maximum time expect() should wait for the condition to be met. For
@@ -89,6 +89,6 @@ const config: PlaywrightTestConfig = {
   // Don't run tests in parallel due to the nature of
   // Slice Machine modifying file in the file system.
   workers: 1,
-};
+} satisfies PlaywrightTestConfig;
 
 export default config;

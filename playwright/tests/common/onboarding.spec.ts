@@ -1,16 +1,16 @@
-import { MyFixtures, test as base } from "../../fixtures";
+import { Fixtures, test as baseTest } from "../../fixtures";
 
 import config from "../../playwright.config";
 
 // Extend the base test to ensure user is not onboarded
-const test = base.extend<MyFixtures>({
+const test = baseTest.extend<Fixtures>({
   page: async ({ browser }, use) => {
     const context = await browser.newContext({
       storageState: {
         cookies: [],
         origins: [
           {
-            origin: config.use?.baseURL as string,
+            origin: config.use.baseURL,
             localStorage: [],
           },
         ],
@@ -24,7 +24,6 @@ const test = base.extend<MyFixtures>({
     // Gracefully close up everything
     await page.close();
     await context.close();
-    await browser.close();
   },
 });
 

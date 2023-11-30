@@ -1,18 +1,17 @@
-import { test as base, expect } from "@playwright/test";
+import { test as baseTest, expect } from "@playwright/test";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
 import { PageTypeBuilderPage } from "../pages/PageTypesBuilderPage";
 import { CustomTypesTablePage } from "../pages/CustomTypesTablePage";
 import { CustomTypesBuilderPage } from "../pages/CustomTypesBuilderPage";
-import { SlicesTablePage } from "../pages/SlicesTablePage";
+import { SlicesListPage } from "../pages/SlicesListPage";
 import { SliceBuilderPage } from "../pages/SliceBuilderPage";
 import { ChangesPage } from "../pages/ChangesPage";
 import { ChangelogPage } from "../pages/ChangelogPage";
-import { Menu } from "../pages/components/Menu";
 import config from "../playwright.config";
 import { generateRandomId } from "../utils/generateRandomId";
 
-export type MyFixtures = {
+export type Fixtures = {
   /**
    * Pages
    */
@@ -20,28 +19,23 @@ export type MyFixtures = {
   pageTypesBuilderPage: PageTypeBuilderPage;
   customTypesTablePage: CustomTypesTablePage;
   customTypesBuilderPage: CustomTypesBuilderPage;
-  sliceTablePage: SlicesTablePage;
+  slicesListPage: SlicesListPage;
   sliceBuilderPage: SliceBuilderPage;
   changesPage: ChangesPage;
   changelogPage: ChangelogPage;
 
   /**
-   * Global
-   */
-  menu: Menu;
-
-  /**
    * Data
    */
-  pageType: Record<"name", string>;
-  customType: Record<"name", string>;
-  slice: Record<"name", string>;
+  pageType: { name: string };
+  customType: { name: string };
+  slice: { name: string };
 };
 
 /**
  * Default test fixture
  */
-export const test = base.extend<MyFixtures>({
+export const test = baseTest.extend<Fixtures>({
   /**
    * Pages
    */
@@ -57,8 +51,8 @@ export const test = base.extend<MyFixtures>({
   customTypesBuilderPage: async ({ page }, use) => {
     await use(new CustomTypesBuilderPage(page));
   },
-  sliceTablePage: async ({ page }, use) => {
-    await use(new SlicesTablePage(page));
+  slicesListPage: async ({ page }, use) => {
+    await use(new SlicesListPage(page));
   },
   sliceBuilderPage: async ({ page }, use) => {
     await use(new SliceBuilderPage(page));
@@ -74,36 +68,32 @@ export const test = base.extend<MyFixtures>({
    * Data
    */
   pageType: async ({ pageTypesTablePage, pageTypesBuilderPage }, use) => {
-    // Open create modal
     await pageTypesTablePage.goto();
-    await pageTypesTablePage.openCreateModal();
+    await pageTypesTablePage.openCreateDialog();
 
     const pageTypeName = "Page Type " + generateRandomId();
-    await pageTypesTablePage.createTypeModal.createType(pageTypeName);
+    await pageTypesTablePage.createTypeDialog.createType(pageTypeName);
     await pageTypesBuilderPage.checkSavedMessage();
 
     await use({ name: pageTypeName });
   },
   customType: async ({ customTypesTablePage, customTypesBuilderPage }, use) => {
-    // Open create modal
     await customTypesTablePage.goto();
-    await customTypesTablePage.openCreateModal();
+    await customTypesTablePage.openCreateDialog();
 
     const customTypeName = "Custom Type " + generateRandomId();
-    await customTypesTablePage.createTypeModal.createType(customTypeName);
+    await customTypesTablePage.createTypeDialog.createType(customTypeName);
     await customTypesBuilderPage.checkSavedMessage();
 
     await use({ name: customTypeName });
   },
-  slice: async ({ sliceTablePage, sliceBuilderPage }, use) => {
-    // Open create modal
-    await sliceTablePage.goto();
-    await expect(sliceTablePage.breadcrumbLabel).toBeVisible();
-    await sliceTablePage.openCreateModal();
+  slice: async ({ slicesListPage, sliceBuilderPage }, use) => {
+    await slicesListPage.goto();
+    await expect(slicesListPage.breadcrumbLabel).toBeVisible();
+    await slicesListPage.openCreateDialog();
 
-    // Create slice
     const sliceName = "Slice" + generateRandomId();
-    await sliceTablePage.createSliceModal.createSlice(sliceName);
+    await slicesListPage.createSliceDialog.createSlice(sliceName);
     await sliceBuilderPage.checkSavedMessage();
 
     await use({ name: sliceName });
@@ -119,7 +109,7 @@ export const test = base.extend<MyFixtures>({
         cookies: [],
         origins: [
           {
-            origin: config.use?.baseURL as string,
+            origin: config.use.baseURL,
             localStorage: [
               {
                 name: "persist:root",

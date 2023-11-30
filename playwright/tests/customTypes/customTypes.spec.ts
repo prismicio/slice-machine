@@ -9,10 +9,10 @@ test.describe("Custom Types", () => {
     customTypesBuilderPage,
   }) => {
     await customTypesTablePage.goto();
-    await customTypesTablePage.openCreateModal();
+    await customTypesTablePage.openCreateDialog();
 
     const name = "Custom Type " + generateRandomId();
-    await customTypesTablePage.createTypeModal.createType(name);
+    await customTypesTablePage.createTypeDialog.createType(name);
     await customTypesBuilderPage.checkSavedMessage();
 
     // TODO(DT-1801): Production BUG - When creating a custom type, don't redirect
@@ -31,11 +31,11 @@ test.describe("Custom Types", () => {
     customTypesTablePage,
   }) => {
     await customTypesTablePage.goto();
-    await customTypesTablePage.openActionModal(customType.name, "Rename");
+    await customTypesTablePage.openActionDialog(customType.name, "Rename");
 
     const newCustomTypeName = `${customType.name}Renamed`;
-    await customTypesTablePage.renameTypeModal.renameType(newCustomTypeName);
-    await customTypesTablePage.renameTypeModal.checkRenamedMessage();
+    await customTypesTablePage.renameTypeDialog.renameType(newCustomTypeName);
+    await customTypesTablePage.renameTypeDialog.checkRenamedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a rename, old custom type name is still visible in the list
     await customTypesTablePage.page.reload();

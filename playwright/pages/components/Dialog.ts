@@ -1,14 +1,22 @@
 import { Locator, Page } from "@playwright/test";
 
-export class Modal {
+export class Dialog {
   readonly page: Page;
-  readonly modal: Locator;
+  readonly dialog: Locator;
   readonly title: Locator;
   readonly closeButton: Locator;
   readonly cancelButton: Locator;
   readonly submitButton: Locator;
 
-  constructor(page: Page, title: string | RegExp, submitName?: string) {
+  constructor(
+    page: Page,
+    options: {
+      title: string | RegExp;
+      submitName?: string;
+    },
+  ) {
+    const { title, submitName = "Submit" } = options;
+
     /**
      * Components
      */
@@ -17,17 +25,17 @@ export class Modal {
     /**
      * Static locators
      */
-    this.modal = page.getByRole("dialog");
-    this.title = this.modal.getByRole("heading", { name: title, exact: true });
-    this.closeButton = this.modal.getByRole("button", {
+    this.dialog = page.getByRole("dialog");
+    this.title = this.dialog.getByRole("heading", { name: title, exact: true });
+    this.closeButton = this.dialog.getByRole("button", {
       name: "Close",
       exact: true,
     });
-    this.cancelButton = this.modal.getByRole("button", {
+    this.cancelButton = this.dialog.getByRole("button", {
       name: "Cancel",
       exact: true,
     });
-    this.submitButton = this.modal.getByRole("button", {
+    this.submitButton = this.dialog.getByRole("button", {
       name: submitName,
       exact: true,
     });

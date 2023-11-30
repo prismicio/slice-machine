@@ -1,11 +1,13 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 import { FieldType } from "../shared/BuilderPage";
-import { Modal } from "./Modal";
+import { Dialog } from "./Dialog";
 
-export class AddFieldModal extends Modal {
+export class AddFieldDialog extends Dialog {
   constructor(page: Page) {
-    super(page, "Add a new field");
+    super(page, {
+      title: "Add a new field",
+    });
 
     /**
      * Components
@@ -22,7 +24,7 @@ export class AddFieldModal extends Modal {
    * Dynamic locators
    */
   getField(fieldType: FieldType): Locator {
-    return this.modal.getByRole("heading", {
+    return this.dialog.getByRole("heading", {
       name: fieldType,
       exact: true,
     });
@@ -31,7 +33,7 @@ export class AddFieldModal extends Modal {
   /**
    * Actions
    */
-  async pickField(fieldType: FieldType) {
+  async selectField(fieldType: FieldType) {
     await this.getField(fieldType).click();
     await expect(this.title).not.toBeVisible();
   }

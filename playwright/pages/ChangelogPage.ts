@@ -1,8 +1,8 @@
 import { Locator, Page } from "@playwright/test";
 
-import { BasePage } from "./components/BasePage";
+import { SliceMachinePage } from "./components/SliceMachinePage";
 
-export class ChangelogPage extends BasePage {
+export class ChangelogPage extends SliceMachinePage {
   readonly breadcrumbLabel: Locator;
 
   constructor(page: Page) {

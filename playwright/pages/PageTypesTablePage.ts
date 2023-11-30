@@ -4,7 +4,11 @@ import { TypesTablePage } from "./shared/TypesTablePage";
 
 export class PageTypesTablePage extends TypesTablePage {
   constructor(page: Page) {
-    super(page, "page", "Page types", "/");
+    super(page, {
+      format: "page",
+      breadcrumbLabel: "Page types",
+      path: "/",
+    });
 
     /**
      * Components

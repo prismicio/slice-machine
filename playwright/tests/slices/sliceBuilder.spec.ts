@@ -6,10 +6,8 @@ test.describe("Slice Builder", () => {
   test("I can add a static field to the builder", async ({
     slice,
     sliceBuilderPage,
-    sliceTablePage,
   }) => {
-    await sliceTablePage.goto();
-    await sliceTablePage.page.getByText(slice.name).click();
+    await sliceBuilderPage.goto(slice.name);
 
     await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
 

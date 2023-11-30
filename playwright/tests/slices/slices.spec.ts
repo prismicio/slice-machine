@@ -4,12 +4,12 @@ import { test } from "../../fixtures";
 import { generateRandomId } from "../../utils/generateRandomId";
 
 test.describe("Slices", () => {
-  test("I can create a slice", async ({ sliceBuilderPage, sliceTablePage }) => {
-    await sliceTablePage.goto();
-    await sliceTablePage.openCreateModal();
+  test("I can create a slice", async ({ sliceBuilderPage, slicesListPage }) => {
+    await slicesListPage.goto();
+    await slicesListPage.openCreateDialog();
 
     const sliceName = "Slice" + generateRandomId();
-    await sliceTablePage.createSliceModal.createSlice(sliceName);
+    await slicesListPage.createSliceDialog.createSlice(sliceName);
     await sliceBuilderPage.checkSavedMessage();
 
     await expect(
@@ -21,12 +21,12 @@ test.describe("Slices", () => {
   });
 
   test("I can only use Pascal case for the slice name", async ({
-    sliceTablePage,
+    slicesListPage,
   }) => {
-    await sliceTablePage.goto();
-    await sliceTablePage.openCreateModal();
+    await slicesListPage.goto();
+    await slicesListPage.openCreateDialog();
 
-    const { nameInput, submitButton } = sliceTablePage.createSliceModal;
+    const { nameInput, submitButton } = slicesListPage.createSliceDialog;
 
     await nameInput.fill("Invalid Slice Name");
     await expect(submitButton).toBeDisabled();
@@ -44,45 +44,45 @@ test.describe("Slices", () => {
     await expect(submitButton).toBeEnabled();
   });
 
-  test("I can rename a slice", async ({
+  test("I can rename a slice and open the slice after", async ({
     slice,
     sliceBuilderPage,
-    sliceTablePage,
+    slicesListPage,
   }) => {
-    await sliceTablePage.goto();
-    await sliceTablePage.openActionModal(slice.name, "Rename");
+    await slicesListPage.goto();
+    await slicesListPage.openActionDialog(slice.name, "Rename");
 
     const newSliceName = `${slice.name}Renamed`;
-    await sliceTablePage.renameSliceModal.renameSlice(newSliceName);
-    await sliceTablePage.renameSliceModal.checkRenamedMessage();
+    await slicesListPage.renameSliceDialog.renameSlice(newSliceName);
+    await slicesListPage.renameSliceDialog.checkRenamedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a rename, old slice name is still visible in the list
-    await sliceTablePage.page.reload();
+    await slicesListPage.page.reload();
 
-    await expect(sliceTablePage.getCard(slice.name)).not.toBeVisible();
-    await expect(sliceTablePage.getCard(newSliceName)).toBeVisible();
-    await sliceTablePage.clickCard(newSliceName);
+    await expect(slicesListPage.getCard(slice.name)).not.toBeVisible();
+    await expect(slicesListPage.getCard(newSliceName)).toBeVisible();
+    await slicesListPage.clickCard(newSliceName);
 
     await expect(
       sliceBuilderPage.breadcrumb.getByText(newSliceName),
     ).toBeVisible();
   });
 
-  test("I can delete a slice", async ({ slice, sliceTablePage }) => {
-    await sliceTablePage.goto();
-    await sliceTablePage.openActionModal(slice.name, "Delete");
+  test("I can delete a slice", async ({ slice, slicesListPage }) => {
+    await slicesListPage.goto();
+    await slicesListPage.openActionDialog(slice.name, "Delete");
 
     await expect(
-      sliceTablePage.deleteSliceModal.modal.getByText(`/${slice.name}/`),
+      slicesListPage.deleteSliceDialog.dialog.getByText(`/${slice.name}/`),
     ).toBeVisible();
-    await sliceTablePage.deleteSliceModal.deleteSlice();
-    await sliceTablePage.deleteSliceModal.checkDeletedMessage();
+    await slicesListPage.deleteSliceDialog.deleteSlice();
+    await slicesListPage.deleteSliceDialog.checkDeletedMessage();
 
     // TODO(DT-1802): Production BUG - Sometimes after a delete, slice is still visible in the list
-    await sliceTablePage.page.reload();
+    await slicesListPage.page.reload();
 
-    await expect(sliceTablePage.getCard(slice.name)).not.toBeVisible();
-    await sliceTablePage.page.reload();
-    await expect(sliceTablePage.getCard(slice.name)).not.toBeVisible();
+    await expect(slicesListPage.getCard(slice.name)).not.toBeVisible();
+    await slicesListPage.page.reload();
+    await expect(slicesListPage.getCard(slice.name)).not.toBeVisible();
   });
 });

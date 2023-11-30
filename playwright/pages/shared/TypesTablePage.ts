@@ -1,12 +1,12 @@
 import { Locator, Page } from "@playwright/test";
 
-import { CreateTypeModal } from "../components/CreateTypeModal";
-import { RenameTypeModal } from "../components/RenameTypeModal";
-import { BasePage } from "../components/BasePage";
+import { CreateTypeDialog } from "../components/CreateTypeDialog";
+import { RenameTypeDialog } from "../components/RenameTypeDialog";
+import { SliceMachinePage } from "../components/SliceMachinePage";
 
-export class TypesTablePage extends BasePage {
-  readonly createTypeModal: CreateTypeModal;
-  readonly renameTypeModal: RenameTypeModal;
+export class TypesTablePage extends SliceMachinePage {
+  readonly createTypeDialog: CreateTypeDialog;
+  readonly renameTypeDialog: RenameTypeDialog;
   readonly path: string;
   readonly breadcrumbLabel: Locator;
   readonly createButton: Locator;
@@ -14,17 +14,20 @@ export class TypesTablePage extends BasePage {
 
   protected constructor(
     page: Page,
-    format: "page" | "custom",
-    breadcrumbLabel: string,
-    path: string,
+    options: {
+      format: "page" | "custom";
+      breadcrumbLabel: string;
+      path: string;
+    },
   ) {
     super(page);
+    const { format, breadcrumbLabel, path } = options;
 
     /**
      * Components
      */
-    this.createTypeModal = new CreateTypeModal(page, format);
-    this.renameTypeModal = new RenameTypeModal(page, format);
+    this.createTypeDialog = new CreateTypeDialog(page, format);
+    this.renameTypeDialog = new RenameTypeDialog(page, format);
 
     /**
      * Static locators
@@ -62,11 +65,11 @@ export class TypesTablePage extends BasePage {
     await this.getRow(name).getByRole("button", { name, exact: true }).click();
   }
 
-  async openCreateModal() {
+  async openCreateDialog() {
     await this.createButton.first().click();
   }
 
-  async openActionModal(name: string, action: "Rename" | "Delete") {
+  async openActionDialog(name: string, action: "Rename" | "Delete") {
     await this.getRow(name).locator('[data-testid="editDropdown"]').click();
     await this.page
       .getByRole("menuitem", { name: action, exact: true })

@@ -1,12 +1,16 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { Modal } from "./Modal";
+import { Dialog } from "./Dialog";
 
-export class CreateSliceModal extends Modal {
+export class RenameSliceDialog extends Dialog {
   readonly nameInput: Locator;
+  readonly renamedMessage: Locator;
 
   constructor(page: Page) {
-    super(page, "Create a new slice", "Create");
+    super(page, {
+      title: "Rename a slice",
+      submitName: "Rename",
+    });
 
     /**
      * Components
@@ -16,7 +20,8 @@ export class CreateSliceModal extends Modal {
     /**
      * Static locators
      */
-    this.nameInput = this.modal.getByTestId("slice-name-input");
+    this.nameInput = this.dialog.getByTestId("slice-name-input");
+    this.renamedMessage = page.getByText("Slice name updated");
   }
 
   /**
@@ -27,7 +32,7 @@ export class CreateSliceModal extends Modal {
   /**
    * Actions
    */
-  async createSlice(name: string) {
+  async renameSlice(name: string) {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(name);
     await this.submitButton.click();
@@ -37,5 +42,8 @@ export class CreateSliceModal extends Modal {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkRenamedMessage() {
+    await expect(this.renamedMessage).toBeVisible();
+    await expect(this.renamedMessage).not.toBeVisible();
+  }
 }

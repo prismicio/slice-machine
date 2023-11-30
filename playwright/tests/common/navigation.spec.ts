@@ -7,7 +7,7 @@ test.describe("Navigation", () => {
     page,
     pageTypesTablePage,
     customTypesTablePage,
-    sliceTablePage,
+    slicesListPage,
     changesPage,
     changelogPage,
   }) => {
@@ -21,8 +21,8 @@ test.describe("Navigation", () => {
     await expect(customTypesTablePage.breadcrumbLabel).toBeVisible();
     expect(await page.title()).toContain("Custom types - Slice Machine");
 
-    await sliceTablePage.menu.slicesLink.click();
-    await expect(sliceTablePage.breadcrumbLabel).toBeVisible();
+    await slicesListPage.menu.slicesLink.click();
+    await expect(slicesListPage.breadcrumbLabel).toBeVisible();
     expect(await page.title()).toContain("Slices - Slice Machine");
 
     await changesPage.menu.changesLink.click();
@@ -32,5 +32,16 @@ test.describe("Navigation", () => {
     await changelogPage.menu.changelogLink.click();
     await expect(changelogPage.breadcrumbLabel).toBeVisible();
     expect(await page.title()).toContain("Changelog - Slice Machine");
+  });
+
+  test("I access the changelog from Slice Machine version", async ({
+    pageTypesTablePage,
+    changelogPage,
+  }) => {
+    await pageTypesTablePage.goto();
+    await expect(pageTypesTablePage.menu.appVersion).toBeVisible();
+    await pageTypesTablePage.menu.appVersion.click();
+
+    await expect(changelogPage.breadcrumbLabel).toBeVisible();
   });
 });

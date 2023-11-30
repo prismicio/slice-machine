@@ -1,17 +1,20 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { Modal } from "./Modal";
+import { Dialog } from "./Dialog";
 
-export class CreateTypeModal extends Modal {
+export class CreateTypeDialog extends Dialog {
   readonly nameInput: Locator;
 
   constructor(page: Page, format: "page" | "custom") {
-    super(page, `Create a new ${format} type`, "Create");
+    super(page, {
+      title: `Create a new ${format} type`,
+      submitName: "Create",
+    });
 
     /**
      * Static locators
      */
-    this.nameInput = this.modal.getByTestId("ct-name-input");
+    this.nameInput = this.dialog.getByTestId("ct-name-input");
   }
 
   /**

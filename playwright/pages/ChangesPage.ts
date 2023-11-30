@@ -1,10 +1,10 @@
 import { Locator, Page, expect } from "@playwright/test";
 
-import { LoginModal } from "./components/LoginModal";
-import { BasePage } from "./components/BasePage";
+import { LoginDialog } from "./components/LoginDialog";
+import { SliceMachinePage } from "./components/SliceMachinePage";
 
-export class ChangesPage extends BasePage {
-  readonly loginModal: LoginModal;
+export class ChangesPage extends SliceMachinePage {
+  readonly loginDialog: LoginDialog;
 
   readonly breadcrumbLabel: Locator;
 
@@ -14,7 +14,7 @@ export class ChangesPage extends BasePage {
     /**
      * Components
      */
-    this.loginModal = new LoginModal(page);
+    this.loginDialog = new LoginDialog(page);
 
     /**
      * Static locators

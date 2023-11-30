@@ -4,7 +4,11 @@ import { TypesTablePage } from "./shared/TypesTablePage";
 
 export class CustomTypesTablePage extends TypesTablePage {
   constructor(page: Page) {
-    super(page, "custom", "Custom types", "/custom-types");
+    super(page, {
+      format: "custom",
+      breadcrumbLabel: "Custom types",
+      path: "/custom-types",
+    });
 
     /**
      * Components

@@ -1,14 +1,14 @@
 import { Locator, Page } from "@playwright/test";
 
-import { CreateSliceModal } from "./components/CreateSliceModal";
-import { RenameSliceModal } from "./components/RenameSliceModal";
-import { DeleteSliceModal } from "./components/DeleteSliceModal";
-import { BasePage } from "./components/BasePage";
+import { CreateSliceDialog } from "./components/CreateSliceDialog";
+import { RenameSliceDialog } from "./components/RenameSliceDialog";
+import { DeleteSliceDialog } from "./components/DeleteSliceDialog";
+import { SliceMachinePage } from "./components/SliceMachinePage";
 
-export class SlicesTablePage extends BasePage {
-  readonly createSliceModal: CreateSliceModal;
-  readonly renameSliceModal: RenameSliceModal;
-  readonly deleteSliceModal: DeleteSliceModal;
+export class SlicesListPage extends SliceMachinePage {
+  readonly createSliceDialog: CreateSliceDialog;
+  readonly renameSliceDialog: RenameSliceDialog;
+  readonly deleteSliceDialog: DeleteSliceDialog;
   readonly path: string;
   readonly header: Locator;
   readonly breadcrumbLabel: Locator;
@@ -20,9 +20,9 @@ export class SlicesTablePage extends BasePage {
     /**
      * Components
      */
-    this.createSliceModal = new CreateSliceModal(page);
-    this.renameSliceModal = new RenameSliceModal(page);
-    this.deleteSliceModal = new DeleteSliceModal(page);
+    this.createSliceDialog = new CreateSliceDialog(page);
+    this.renameSliceDialog = new RenameSliceDialog(page);
+    this.deleteSliceDialog = new DeleteSliceDialog(page);
 
     /**
      * Static locators
@@ -59,24 +59,15 @@ export class SlicesTablePage extends BasePage {
     await this.getCard(name).getByText(name).click();
   }
 
-  async openCreateModal() {
+  async openCreateDialog() {
     await this.createButton.first().click();
   }
 
-  async openActionModal(name: string, action: "Rename" | "Delete") {
+  async openActionDialog(name: string, action: "Rename" | "Delete") {
     await this.getCard(name).getByTestId("slice-action-icon").click();
     await this.page
       .getByTestId("slice-action-icon-dropdown")
       .getByText(action)
-      .click();
-  }
-
-  async openScreenshotModal(name: string) {
-    await this.getCard(name)
-      .getByRole("button", {
-        name: "Update Screenshot",
-        exact: true,
-      })
       .click();
   }
 

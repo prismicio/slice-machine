@@ -1,27 +1,33 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { CreateTypeModal } from "../components/CreateTypeModal";
-import { RenameTypeModal } from "../components/RenameTypeModal";
+import { CreateTypeDialog } from "../components/CreateTypeDialog";
+import { RenameTypeDialog } from "../components/RenameTypeDialog";
 import { CustomTypesTablePage } from "../CustomTypesTablePage";
 import { BuilderPage } from "./BuilderPage";
 
 export class TypeBuilderPage extends BuilderPage {
-  readonly createTypeModal: CreateTypeModal;
-  readonly renameTypeModal: RenameTypeModal;
+  readonly createTypeDialog: CreateTypeDialog;
+  readonly renameTypeDialog: RenameTypeDialog;
   readonly customTypeTablePage: CustomTypesTablePage;
   readonly savedMessage: Locator;
   readonly staticZone: Locator;
   readonly staticZonePlaceholder: Locator;
   readonly staticZoneListItem: Locator;
 
-  constructor(page: Page, format: "page" | "custom") {
+  constructor(
+    page: Page,
+    options: {
+      format: "page" | "custom";
+    },
+  ) {
     super(page);
+    const { format } = options;
 
     /**
      * Components
      */
-    this.createTypeModal = new CreateTypeModal(page, format);
-    this.renameTypeModal = new RenameTypeModal(page, format);
+    this.createTypeDialog = new CreateTypeDialog(page, format);
+    this.renameTypeDialog = new RenameTypeDialog(page, format);
     this.customTypeTablePage = new CustomTypesTablePage(page);
 
     /**

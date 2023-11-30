@@ -3,7 +3,6 @@ import { Locator, Page } from "@playwright/test";
 export class Menu {
   readonly page: Page;
   readonly menu: Locator;
-  readonly appHeader: Locator;
   readonly pageTypesLink: Locator;
   readonly customTypesLink: Locator;
   readonly slicesLink: Locator;
@@ -22,7 +21,6 @@ export class Menu {
      * Static locators
      */
     this.menu = page.getByRole("navigation");
-    this.appHeader = this.menu.locator("h5", { hasText: "Slice Machine" });
     this.pageTypesLink = this.menu.getByRole("link", {
       name: "Page types",
       exact: true,
@@ -41,9 +39,7 @@ export class Menu {
       exact: true,
     });
     this.changelogLink = this.menu.getByRole("link", { name: "Changelog" });
-    this.appVersion = this.menu.locator(
-      'a[href="/changelog"] > div:nth-child(2)',
-    );
+    this.appVersion = this.menu.getByTestId("slicemachine-version");
   }
 
   /**

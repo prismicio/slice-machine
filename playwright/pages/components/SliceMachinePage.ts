@@ -2,7 +2,7 @@ import { Locator, Page } from "@playwright/test";
 
 import { Menu } from "./Menu";
 
-export class BasePage {
+export class SliceMachinePage {
   readonly page: Page;
   readonly menu: Menu;
   readonly body: Locator;

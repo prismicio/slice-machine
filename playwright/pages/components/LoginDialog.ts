@@ -1,10 +1,13 @@
 import { Page } from "@playwright/test";
 
-import { Modal } from "./Modal";
+import { Dialog } from "./Dialog";
 
-export class LoginModal extends Modal {
+export class LoginDialog extends Dialog {
   constructor(page: Page) {
-    super(page, "You're not connected", "Log in to Prismic");
+    super(page, {
+      title: "You're not connected",
+      submitName: "Log in to Prismic",
+    });
 
     /**
      * Components

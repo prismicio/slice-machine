@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { AddFieldModal } from "../components/AddFieldModal";
-import { BasePage } from "../components/BasePage";
+import { AddFieldDialog } from "../components/AddFieldDialog";
+import { SliceMachinePage } from "../components/SliceMachinePage";
 
 export type FieldType =
   | "Rich Text"
@@ -19,8 +19,8 @@ export type FieldType =
   | "Color"
   | "Key Text";
 
-export class BuilderPage extends BasePage {
-  readonly addFieldModal: AddFieldModal;
+export class BuilderPage extends SliceMachinePage {
+  readonly addFieldDialog: AddFieldDialog;
   readonly saveButton: Locator;
   readonly showCodeSnippetsButton: Locator;
   readonly hideCodeSnippetsButton: Locator;
@@ -35,7 +35,7 @@ export class BuilderPage extends BasePage {
     /**
      * Components
      */
-    this.addFieldModal = new AddFieldModal(page);
+    this.addFieldDialog = new AddFieldDialog(page);
 
     /**
      * Static locators
@@ -71,12 +71,12 @@ export class BuilderPage extends BasePage {
    */
   async addStaticField(type: FieldType, name: string, expectedId: string) {
     await this.addFieldButton.click();
-    await expect(this.addFieldModal.title).toBeVisible();
-    await this.addFieldModal.pickField(type);
+    await expect(this.addFieldDialog.title).toBeVisible();
+    await this.addFieldDialog.selectField(type);
     await this.newFieldNameInput.fill(name);
     await expect(this.newFieldIdInput).toHaveValue(expectedId);
     await this.newFieldAddButton.click();
-    await expect(this.addFieldModal.title).not.toBeVisible();
+    await expect(this.addFieldDialog.title).not.toBeVisible();
   }
 
   /**

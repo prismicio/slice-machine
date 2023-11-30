@@ -1,8 +1,10 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 import { BuilderPage } from "./shared/BuilderPage";
+import { SlicesListPage } from "./SlicesListPage";
 
 export class SliceBuilderPage extends BuilderPage {
+  readonly slicesListPage: SlicesListPage;
   readonly savedMessage: Locator;
   readonly staticZone: Locator;
   readonly staticZonePlaceholder: Locator;
@@ -17,7 +19,7 @@ export class SliceBuilderPage extends BuilderPage {
     /**
      * Components
      */
-    // Handle components here
+    this.slicesListPage = new SlicesListPage(page);
 
     /**
      * Static locators
@@ -41,12 +43,18 @@ export class SliceBuilderPage extends BuilderPage {
   /**
    * Dynamic locators
    */
-  // Handle dynamic locators here
+  getBreadcrumbLabel(sliceName: string) {
+    return this.breadcrumb.getByText(`Slices / ${sliceName}`);
+  }
 
   /**
    * Actions
    */
-  // Handle actions here
+  async goto(sliceName: string) {
+    await this.slicesListPage.goto();
+    await this.slicesListPage.page.getByText(sliceName).click();
+    await expect(this.getBreadcrumbLabel(sliceName)).toBeVisible();
+  }
 
   /**
    * Assertions

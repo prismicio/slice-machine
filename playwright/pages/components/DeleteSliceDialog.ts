@@ -1,12 +1,15 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { Modal } from "./Modal";
+import { Dialog } from "./Dialog";
 
-export class DeleteSliceModal extends Modal {
+export class DeleteSliceDialog extends Dialog {
   readonly deletedMessage: Locator;
 
   constructor(page: Page) {
-    super(page, "Delete Slice", "Delete");
+    super(page, {
+      title: "Delete Slice",
+      submitName: "Delete",
+    });
 
     /**
      * Components

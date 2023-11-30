@@ -4,7 +4,9 @@ import { TypeBuilderPage } from "./shared/TypeBuilderPage";
 
 export class PageTypeBuilderPage extends TypeBuilderPage {
   constructor(page: Page) {
-    super(page, "page");
+    super(page, {
+      format: "page",
+    });
 
     /**
      * Components
