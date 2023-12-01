@@ -58,12 +58,3 @@ export const activeEnvironmentName = style([
     lineHeight: "1.25rem",
   },
 ]);
-
-export const actionRequiredLabel = style([
-  sprinkles({
-    color: colors.purple10,
-  }),
-  {
-    fontWeight: 500,
-  },
-]);
