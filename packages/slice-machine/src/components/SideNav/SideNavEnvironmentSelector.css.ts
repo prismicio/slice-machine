@@ -67,3 +67,12 @@ export const actionRequiredLabel = style([
     fontWeight: 500,
   },
 ]);
+
+export const logInIcon = style([
+  sprinkles({
+    position: "relative",
+    width: 24,
+    height: 24,
+  }),
+  { left: "-1px" },
+]);

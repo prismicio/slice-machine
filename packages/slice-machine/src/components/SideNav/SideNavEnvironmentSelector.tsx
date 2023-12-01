@@ -16,6 +16,7 @@ import clsx from "clsx";
 import LogoIcon from "@src/icons/LogoIcon";
 
 import * as styles from "./SideNavEnvironmentSelector.css";
+import { LogInIcon } from "@src/icons/LogInIcon";
 
 type SideNavEnvironmentSelectorProps = {
   variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
@@ -72,7 +73,10 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
       </Box>
       <Box flexShrink={0}>
         {variant === "unauthenticated" ? (
-          <IconButton icon="arrowForward" onClick={onLogInClick} />
+          <IconButton
+            icon={<LogInIcon className={styles.logInIcon} />}
+            onClick={onLogInClick}
+          />
         ) : undefined}
 
         {environments.length > 1 ? (
