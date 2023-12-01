@@ -24,6 +24,8 @@ export const root = style([
 ]);
 
 export const borderTop = sprinkles({
+  all: "unset",
+  display: "revert",
   height: 2,
   position: "fixed",
   top: 0,
