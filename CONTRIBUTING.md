@@ -42,6 +42,12 @@ yarn slicemachine:dev
 Now you can go to your browser and open `localhost:9999` to see the Slice Machine app up and running with some demo slices and types.
 You're now ready to start working on your changes and see them updated in the app.
 
+## E2E tests
+
+In order to contribute to Slice Machine you will need to maintain and write new e2e tests:
+
+- [Slice Machine e2e tests documentation](./playwright/README.md)
+
 <!-- Links -->
 
 [forum-question]: https://community.prismic.io

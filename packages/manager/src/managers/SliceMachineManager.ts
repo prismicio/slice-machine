@@ -202,16 +202,19 @@ export class SliceMachineManager {
 							authError,
 						};
 					} catch (error) {
-						// Non-Prismic error
-						if (
-							error instanceof UnauthorizedError ||
-							error instanceof ForbiddenError
-						) {
+						if (error instanceof ForbiddenError) {
 							authError = {
 								name: "__stub__",
 								message: "__stub__",
 								reason: "__stub__",
 								status: 401,
+							};
+						} else if (error instanceof UnauthorizedError) {
+							authError = {
+								name: "__stub__",
+								message: "__stub__",
+								reason: "__stub__",
+								status: 403,
 							};
 						} else {
 							throw error;

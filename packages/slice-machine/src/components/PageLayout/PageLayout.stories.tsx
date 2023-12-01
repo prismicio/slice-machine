@@ -31,6 +31,7 @@ export default meta;
 
 export const Default = {
   args: {
+    borderTopColor: "purple",
     children: (
       <>
         <PageLayoutPane />

@@ -39,7 +39,7 @@ export const mockPrismicUserAPI = (
   ctx: TestContext,
   config?: MockPrismicUserAPIConfig,
 ): MockPrismicUserAPIReturnType => {
-  const endpoint = config?.endpoint ?? "https://user.internal-prismic.io/";
+  const endpoint = config?.endpoint ?? "https://user-service.prismic.io/";
 
   const profile: PrismicUserProfile = {
     userId: "userId",

@@ -23,5 +23,8 @@ const meta = {
 export default meta;
 
 export const Default = {
-  args: {},
+  args: {
+    variant: "dashed",
+    color: "currentColor",
+  },
 } satisfies Story;

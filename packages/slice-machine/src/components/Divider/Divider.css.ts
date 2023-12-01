@@ -25,7 +25,7 @@ export const variants = styleVariants({
     }),
     {
       backgroundImage:
-        "linear-gradient(to right, color-mix(in srgb, currentColor 0%, transparent), currentColor, color-mix(in srgb, currentColor 0%, transparent))",
+        "linear-gradient(to right, color-mix(in srgb, currentColor, transparent 100%), currentColor, color-mix(in srgb, currentColor, transparent 100%))",
     },
   ],
 });

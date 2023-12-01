@@ -45,6 +45,7 @@ export const CustomTypesBuilderPage: FC = () => {
   const { cleanupCustomTypeStore } = useSliceMachineActions();
 
   useEffect(() => {
+    // TODO(DT-1801): When creating a custom type, don't redirect to the builder page until the custom type is created
     if (!selectedCustomType || !hasLocal(selectedCustomType)) {
       void router.replace("/");
     }
