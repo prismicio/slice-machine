@@ -1,5 +1,5 @@
 import { colors, sprinkles, vars } from "@prismicio/editor-ui";
-import { style, styleVariants } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 
 const grid = sprinkles({ all: "unset", display: "grid" });
 
@@ -23,22 +23,20 @@ export const root = style([
   },
 ]);
 
-const borderTopBase = style([
-  sprinkles({
-    all: "unset",
-    display: "revert",
-    height: 2,
-    position: "fixed",
-    top: 0,
-  }),
-  { width: "inherit" },
-]);
-
-export const borderTopColor = styleVariants({
-  purple: [borderTopBase, sprinkles({ backgroundColor: colors.purple9 })],
-  indigo: [borderTopBase, sprinkles({ backgroundColor: colors.indigo10 })],
-  amber: [borderTopBase, sprinkles({ backgroundColor: colors.amber10 })],
+export const borderTop = sprinkles({
+  all: "unset",
+  display: "revert",
+  height: 2,
+  position: "fixed",
+  top: 0,
+  width: "100%",
 });
+
+export const borderTopColor = {
+  purple: sprinkles({ backgroundColor: colors.purple9 }),
+  indigo: sprinkles({ backgroundColor: colors.indigo10 }),
+  amber: sprinkles({ backgroundColor: colors.amber10 }),
+};
 
 export const pane = style([
   grid,
