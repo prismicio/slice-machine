@@ -48,7 +48,14 @@ const Navigation: FC = () => {
 
   return (
     <SideNav>
-      <ErrorBoundary onError={console.error}>
+      <ErrorBoundary
+        onError={(error) => {
+          console.error(
+            `An error occurred while rendering the environments switch`,
+            error,
+          );
+        }}
+      >
         <Suspense>
           <Environment />
         </Suspense>

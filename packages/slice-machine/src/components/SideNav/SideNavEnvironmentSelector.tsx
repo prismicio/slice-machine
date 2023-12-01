@@ -18,7 +18,7 @@ import LogoIcon from "@src/icons/LogoIcon";
 import * as styles from "./SideNavEnvironmentSelector.css";
 
 type SideNavEnvironmentSelectorProps = {
-  variant?: "default" | "unauthorized";
+  variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
   environments?: Environment[];
   activeEnvironment?: Environment;
   onSelect?: (environment: Environment) => void | Promise<void>;
@@ -50,31 +50,38 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
         )}
       </Box>
       <Box flexGrow={1} flexDirection="column" overflow="hidden">
-        <Text component="span" variant="small" color="grey11">
-          Environment
-        </Text>
-        {variant === "unauthorized" ? (
+        {variant === "default" || variant === "unauthenticated" ? (
+          <Text component="span" variant="small" color="grey11">
+            Environment
+          </Text>
+        ) : undefined}
+
+        {variant === "unauthenticated" ? (
           <Text component="span" className={styles.actionRequiredLabel}>
             Login required
           </Text>
-        ) : (
+        ) : undefined}
+
+        {variant === "default" ? (
           <Text component="span" className={styles.activeEnvironmentName}>
             {isProductionEnvironmentActive || activeEnvironment === undefined
               ? "Production"
               : activeEnvironment?.name}
           </Text>
-        )}
+        ) : undefined}
       </Box>
       <Box flexShrink={0}>
-        {variant === "unauthorized" ? (
+        {variant === "unauthenticated" ? (
           <IconButton icon="arrowForward" onClick={onLogInClick} />
-        ) : environments.length > 1 ? (
+        ) : undefined}
+
+        {environments.length > 1 ? (
           <EnvironmentDropdownMenu
             environments={environments}
             activeEnvironment={activeEnvironment}
             onSelect={onSelect}
           />
-        ) : null}
+        ) : undefined}
       </Box>
     </Box>
   );
