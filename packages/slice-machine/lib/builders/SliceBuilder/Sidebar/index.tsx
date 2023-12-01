@@ -77,10 +77,13 @@ export const Sidebar: FC<SidebarProps> = (props) => {
           backgroundColor="grey2"
           bottom={0}
           flexDirection="column"
-          padding={{ inline: 24 }}
+          padding={{ bottom: 40, inline: 24 }}
           position="sticky"
-          // @ts-expect-error - TODO: add missing props to the Editor's `Box` component.
-          style={{ marginBottom: "-16px", paddingBottom: "40px" }}
+          // As `PageLayoutContent` has a `16px` bottom padding, we need to
+          // apply an equal negative margin to the `Box` if we want it to sit
+          // flush with the bottom of the page.
+          // @ts-expect-error TODO(PBD-1080): write the new `ScrollAreaEndGradient` component instead of using a `Box`.
+          style={{ marginBottom: "-16px" }}
         >
           <Gradient sx={{ left: 0, position: "absolute", right: 0 }} />
           <Button
@@ -88,6 +91,9 @@ export const Sidebar: FC<SidebarProps> = (props) => {
               setDialog({ type: "ADD_VARIATION" });
             }}
             startIcon="add"
+            // Set `position` to `relative` to position `Button` on top of
+            // `Gradient`.
+            sx={{ position: "relative" }}
             variant="secondary"
           >
             Add a new variation
