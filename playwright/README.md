@@ -10,6 +10,17 @@ _Install browsers and OS dependencies for Playwright._
 yarn test:e2e:install
 ```
 
+- Create a `.env.local` file
+
+Copy-paste `playwright/.env.local.example` in `playwright/.env.local` and update `EMAIL` and `PASSWORD` values.
+
+Having both Wroom and Prismic values will help you run Slice Machine in dev or prod mode without having to take care of the correct email or password.
+Wroom or Prismic values will be used depending on the Prismic URL.
+
+- Install the VS Code extension (optional)
+
+Playwright Test extension was created specifically to accommodate the needs of e2e testing. [Install Playwright Test for VSCode by reading this page](https://playwright.dev/docs/getting-started-vscode). It will help you to debug a problem in tests if needed.
+
 ## How to run tests
 
 - Run all tests
@@ -63,6 +74,59 @@ To open a downloaded CI test report from anywhere in your computer:
 npx playwright show-report name-of-my-extracted-playwright-report
 ```
 
+## Creating tests
+
+### `test.run()`
+
+Use `test.run()` to create a test. `run` function take an optional object parameter `options` that let you configure how you want to run the test.
+You can configure if you want a logged in test and also an onboarded test.
+Default is not logged in and onboarded.
+
+Example for a logged in user not onboarded:
+
+```ts
+test.run({ loggedIn: true, onboarded: false })("I can ...", 
+  async ({ sliceBuilderPage, slicesListPage }) => {
+    // Test content
+  });
+```
+
+Warning: Only use `loggedIn: true` when it's necessary for your test, it increases local test time (not in CI) by some seconds (≃ 3 secs).
+
+### Mocking with `mockManagerProcedures`
+
+Use `mockManagerProcedures` function when you need to mock a manager procedure response.
+With the way playwright intercept requests you need to give an array of procedures to mock. 
+You will have the possibility to return fake data on top of the existing one.
+If you don't need to return data and / or let the manager execute the procedure at all, you can disable it with `execute` property, it will return an empty object to the UI.
+
+Example:
+```ts
+await mockManagerProcedures({
+  page: changesPage.page,
+  procedures: [
+    {
+      path: "getState",
+      data: (data) => ({
+        ...data,
+        libraries: emptyLibraries,
+        customTypes: [],
+        remoteCustomTypes: [],
+        remoteSlices: [],
+      }),
+    },
+    {
+      path: "prismicRepository.pushChanges",
+      execute: false,
+    },
+  ],
+});
+```
+
+Warning: Only mock when it's necessary because the state of Slice Machine or the remote repository can change. 
+We want to ensure test can be launched on any state of Slice Machine and any state of repository. Mocking will help you do that.
+In theory, we want to avoid mocking while doing e2e tests. Smoke tests don't have any mocking but standalone tests can when it's necessary. It improves the DX and reduce the necessary setup that we can have for Smoke tests.
+
 ## Best practices
 
 1. Always use the "Page Object Model" for Locators
@@ -111,7 +175,20 @@ this.appVersion = this.menu.getByTestId("slicemachine-version");
 
 Our e2e tests should not break whatever the current state of Slice Machine is. Having existing data or not, staging or production, etc.
 
-5. Write your own best practice for the team here...
+5. Always create tests from the user perspective
+
+When creating tests it's important to test what users can see and do.
+Start the test name with "I" so you prevent yourself testing implementation details.
+
+Example:
+
+```ts
+test.run()("I can create a slice", async () => {
+  // Test content
+});
+```
+
+6. Write your own best practice for the team here...
 
 ## Useful links
 

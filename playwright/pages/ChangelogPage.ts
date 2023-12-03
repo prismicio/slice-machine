@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 
-import { SliceMachinePage } from "./components/SliceMachinePage";
+import { SliceMachinePage } from "./SliceMachinePage";
 
 export class ChangelogPage extends SliceMachinePage {
   readonly breadcrumbLabel: Locator;
