@@ -1,6 +1,6 @@
 import type { FC, SVGProps } from "react";
 
-export const LogInIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+export const LoginIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
     <g fill="none" fillRule="evenodd">
       <path d="M0 0h24v24H0z" />
