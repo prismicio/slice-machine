@@ -1,4 +1,4 @@
-import { Box, Button } from "@prismicio/editor-ui";
+import { Box, Button, Gradient } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type Dispatch, type FC, type SetStateAction, useState } from "react";
 
@@ -73,16 +73,32 @@ export const Sidebar: FC<SidebarProps> = (props) => {
             variationId={v.id}
           />
         ))}
-        <Button
-          onClick={() => {
-            setDialog({ type: "ADD_VARIATION" });
-          }}
-          startIcon="add"
-          sx={{ bottom: 72, marginInline: 24, position: "sticky" }}
-          variant="secondary"
+        <Box
+          backgroundColor="grey2"
+          bottom={0}
+          flexDirection="column"
+          padding={{ bottom: 40, inline: 24 }}
+          position="sticky"
+          // As `PageLayoutContent` has a `16px` bottom padding, we need to
+          // apply an equal negative margin to the `Box` if we want it to sit
+          // flush with the bottom of the page.
+          // @ts-expect-error TODO(PBD-1080): write the new `ScrollAreaEndGradient` component instead of using a `Box`.
+          style={{ marginBottom: "-16px" }}
         >
-          Add a new variation
-        </Button>
+          <Gradient sx={{ left: 0, position: "absolute", right: 0 }} />
+          <Button
+            onClick={() => {
+              setDialog({ type: "ADD_VARIATION" });
+            }}
+            startIcon="add"
+            // Set `position` to `relative` to position `Button` on top of
+            // `Gradient`.
+            sx={{ position: "relative" }}
+            variant="secondary"
+          >
+            Add a new variation
+          </Button>
+        </Box>
       </Box>
       <ScreenshotChangesModal
         slices={sliceFilterFn([slice])}
