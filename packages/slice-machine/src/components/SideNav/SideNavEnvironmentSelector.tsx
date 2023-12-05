@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
   Icon,
   IconButton,
+  InvisibleButton,
   Text,
 } from "@prismicio/editor-ui";
 import { Environment } from "@slicemachine/manager/client";
@@ -50,7 +51,12 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           />
         )}
       </Box>
-      <Box flexGrow={1} flexDirection="column" overflow="hidden">
+      <Box
+        flexGrow={1}
+        flexDirection="column"
+        overflow="hidden"
+        alignItems="flex-start"
+      >
         {variant === "default" || variant === "unauthenticated" ? (
           <Text component="span" variant="small" color="grey11">
             Environment
@@ -58,9 +64,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
         ) : undefined}
 
         {variant === "unauthenticated" ? (
-          <Text component="span" className={styles.actionRequiredLabel}>
-            Login required
-          </Text>
+          <InvisibleButton buttonText="Login required" onClick={onLogInClick} />
         ) : undefined}
 
         {variant === "default" ? (
