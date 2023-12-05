@@ -3,10 +3,7 @@ import {
 	CustomType,
 } from "@prismicio/types-internal/lib/customtypes";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import {
-	ForbiddenError,
-	UnauthorizedError,
-} from "@prismicio/custom-types-client";
+import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import {
 	SliceMachinePlugin,
 	SliceMachinePluginRunner,
@@ -202,14 +199,16 @@ export class SliceMachineManager {
 							authError,
 						};
 					} catch (error) {
-						if (error instanceof ForbiddenError) {
+						if (error instanceof prismicCustomTypesClient.ForbiddenError) {
 							authError = {
 								name: "__stub__",
 								message: "__stub__",
 								reason: "__stub__",
 								status: 401,
 							};
-						} else if (error instanceof UnauthorizedError) {
+						} else if (
+							error instanceof prismicCustomTypesClient.UnauthorizedError
+						) {
 							authError = {
 								name: "__stub__",
 								message: "__stub__",
