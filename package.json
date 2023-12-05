@@ -25,12 +25,7 @@
     "test": "yarn workspaces foreach --parallel --topological-dev --verbose run test",
     "cypress-setup": "./cypress-setup.sh",
     "cypress": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
-    "cypress:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
-    "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact",
-    "bump:alpha": "lerna version prerelease --preid $npm_config_preid --no-changelog --exact --yes",
-    "bump:production": "lerna version --conventional-graduate --exact",
-    "publish:alpha": "lerna publish from-package --dist-tag alpha --yes",
-    "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package"
+    "cypress:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'"
   },
   "dependenciesMeta": {
     "@sentry/cli": {
@@ -53,7 +48,6 @@
     "cypress-real-events": "1.7.6",
     "cypress-wait-until": "1.7.2",
     "husky": "8.0.3",
-    "lerna": "7.4.1",
     "lint-staged": "13.2.0",
     "prettier": "3.0.3",
     "start-server-and-test": "1.15.5"
