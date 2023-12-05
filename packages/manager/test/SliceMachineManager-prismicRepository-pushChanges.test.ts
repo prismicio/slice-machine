@@ -31,7 +31,7 @@ const pushChangesPayload = (
 	],
 });
 
-it("pushes changes using the bulk delete API", async (ctx) => {
+it("pushes changes using the bulk API", async (ctx) => {
 	const customTypeModel = ctx.mockPrismic.model.customType();
 	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
@@ -58,9 +58,11 @@ it("pushes changes using the bulk delete API", async (ctx) => {
 	mockPrismicAuthAPI(ctx);
 	mockCustomTypesAPI(ctx, {
 		async onBulk(req, res, ctx) {
-			sentModel = await req.json();
+			if (req.headers.get("user-agent") === "slice-machine") {
+				sentModel = await req.json();
 
-			return res(ctx.status(204));
+				return res(ctx.status(204));
+			}
 		},
 	});
 
@@ -100,7 +102,7 @@ it("pushes changes using the bulk delete API", async (ctx) => {
 	expect(sentModel).toStrictEqual(expectedAPIPayload);
 });
 
-it("pushes changes using the bulk delete API to the production repository when an environment is set", async (ctx) => {
+it("pushes changes using the bulk API to the selected environment when an environment is set", async (ctx) => {
 	const customTypeModel = ctx.mockPrismic.model.customType();
 	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
@@ -129,7 +131,10 @@ it("pushes changes using the bulk delete API to the production repository when a
 	mockPrismicAuthAPI(ctx);
 	mockCustomTypesAPI(ctx, {
 		async onBulk(req, res, ctx) {
-			if (req.headers.get("repository") === "foo") {
+			if (
+				req.headers.get("user-agent") === "slice-machine" ||
+				req.headers.get("repository") === "foo"
+			) {
 				sentModel = await req.json();
 
 				return res(ctx.status(204));

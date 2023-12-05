@@ -472,6 +472,84 @@ it("returns a record of variation IDs mapped to uploaded screenshot URLs", async
 	});
 });
 
+it("sends the provided user agent", async (ctx) => {
+	const model = ctx.mockPrismic.model.sharedSlice({
+		variations: [ctx.mockPrismic.model.sharedSliceVariation()],
+	});
+	const sliceReadHookHandler = vi.fn(() => {
+		return { model };
+	});
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("slice:read", sliceReadHookHandler);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+
+	await manager.user.login(createPrismicAuthLoginResponse());
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+	const repositoryName = await manager.project.getRepositoryName();
+
+	let sentModel;
+
+	mockCustomTypesAPI(ctx, {
+		async onSliceGet(req, res, ctx) {
+			if (
+				req.headers.get("user-agent") === "foo" &&
+				req.headers.get("repository") === repositoryName
+			) {
+				return res(ctx.status(404));
+			}
+		},
+		async onSliceInsert(req, res, ctx) {
+			if (
+				req.headers.get("user-agent") === "foo" &&
+				req.headers.get("repository") === repositoryName
+			) {
+				sentModel = await req.json();
+
+				return res(ctx.status(201));
+			}
+		},
+	});
+	mockAWSACLAPI(ctx, {
+		createEndpoint: {
+			expectedPrismicRepository: repositoryName,
+			expectedAuthenticationToken: authenticationToken,
+		},
+	});
+
+	await manager.slices.pushSlice({
+		libraryID: "foo",
+		sliceID: model.id,
+		userAgent: "foo",
+	});
+
+	expectHookHandlerToHaveBeenCalledWithData(sliceReadHookHandler, {
+		libraryID: "foo",
+		sliceID: model.id,
+	});
+	expect(sentModel).toStrictEqual({
+		...model,
+		variations: model.variations.map((variation) => {
+			return {
+				...variation,
+				imageUrl: expect.any(String),
+			};
+		}),
+	});
+});
+
 it("throws if plugins have not been initialized", async () => {
 	const cwd = await createTestProject();
 	const manager = createSliceMachineManager({ cwd });
