@@ -132,7 +132,7 @@ it("pushes changes using the bulk API to the selected environment when an enviro
 	mockCustomTypesAPI(ctx, {
 		async onBulk(req, res, ctx) {
 			if (
-				req.headers.get("user-agent") === "slice-machine" ||
+				req.headers.get("user-agent") === "slice-machine" &&
 				req.headers.get("repository") === "foo"
 			) {
 				sentModel = await req.json();
