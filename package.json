@@ -25,7 +25,8 @@
     "test": "yarn workspaces foreach --parallel --topological-dev --verbose run test",
     "cypress-setup": "./cypress-setup.sh",
     "cypress": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
-    "cypress:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'"
+    "cypress:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
+    "publish": "tsx scripts/publish.ts"
   },
   "dependenciesMeta": {
     "@sentry/cli": {
@@ -42,15 +43,21 @@
     }
   },
   "devDependencies": {
+    "@types/semver": "7.3.13",
+    "chalk": "4.1.2",
     "concurrently": "7.6.0",
     "cypress": "12.8.0",
     "cypress-localstorage-commands": "2.2.2",
     "cypress-real-events": "1.7.6",
     "cypress-wait-until": "1.7.2",
+    "execa": "7.1.1",
     "husky": "8.0.3",
     "lint-staged": "13.2.0",
+    "mri": "1.2.0",
     "prettier": "3.0.3",
-    "start-server-and-test": "1.15.5"
+    "semver": "7.3.8",
+    "start-server-and-test": "1.15.5",
+    "tsx": "4.6.2"
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
