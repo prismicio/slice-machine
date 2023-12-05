@@ -71,6 +71,7 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
               loading: sliceBuilderState.loading,
             }}
             cancel={{ text: "Cancel" }}
+            size="medium"
           />
         </Box>
       </DialogContent>

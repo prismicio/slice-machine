@@ -58,3 +58,8 @@ export const activeEnvironmentName = style([
     lineHeight: "1.25rem",
   },
 ]);
+
+export const loginIcon = sprinkles({
+  width: 24,
+  height: 24,
+});
