@@ -15,6 +15,7 @@ import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
+import { findEnvironment } from "../../lib/findEnvironment";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
@@ -445,12 +446,9 @@ export class ProjectManager extends BaseManager {
 		// We can assume an environment cannot change its kind. If the
 		// environment exists in the cached list, we are confident it
 		// will not change.
-		const cachedActiveEnvironment = this._cachedEnvironments?.find(
-			(environment) => {
-				return activeEnvironmentDomain === undefined
-					? environment.kind === "prod"
-					: environment.domain === activeEnvironmentDomain;
-			},
+		const cachedActiveEnvironment = findEnvironment(
+			activeEnvironmentDomain,
+			this._cachedEnvironments || [],
 		);
 		if (cachedActiveEnvironment) {
 			return { activeEnvironment: cachedActiveEnvironment };
@@ -468,13 +466,10 @@ export class ProjectManager extends BaseManager {
 			this._cachedEnvironments = environments;
 		}
 
-		const activeEnvironment = this._cachedEnvironments?.find((environment) => {
-			if (activeEnvironmentDomain === undefined) {
-				return environment.kind === "prod";
-			}
-
-			return environment.domain === activeEnvironmentDomain;
-		});
+		const activeEnvironment = findEnvironment(
+			activeEnvironmentDomain,
+			this._cachedEnvironments || [],
+		);
 
 		if (!activeEnvironment) {
 			throw new UnexpectedDataError(
