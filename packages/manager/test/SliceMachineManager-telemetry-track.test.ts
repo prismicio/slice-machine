@@ -36,8 +36,6 @@ it("sends a given event to Segment", async () => {
 		cwd,
 	});
 
-	await manager.plugins.initPlugins();
-
 	await manager.telemetry.initTelemetry({
 		appName: "slice-machine-ui",
 		appVersion: "0.0.1-test",
@@ -74,8 +72,6 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
-
-	await manager.plugins.initPlugins();
 
 	await manager.telemetry.initTelemetry({
 		appName: "slice-machine-ui",
@@ -148,8 +144,6 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		cwd,
 	});
 
-	await manager.plugins.initPlugins();
-
 	await manager.telemetry.initTelemetry({
 		appName: "slice-machine-ui",
 		appVersion: "0.0.1-test",
@@ -181,7 +175,7 @@ it("logs a warning to the console if Segment returns an error", async () => {
 	consoleWarnSpy.mockRestore();
 });
 
-it("sends the environment kind when authenticated", async (ctx) => {
+it("sends the environment kind when configured and authenticated", async (ctx) => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
 			hook("project:environment:read", () => ({ environment: "foo" }));
@@ -234,12 +228,103 @@ it("sends the environment kind when authenticated", async (ctx) => {
 
 	await manager.telemetry.track({
 		event: "command:init:start",
+		_includeEnvironmentKind: true,
 	});
 
 	expect(Analytics.prototype.track).toHaveBeenCalledWith(
 		expect.objectContaining({
 			properties: expect.objectContaining({
 				environmentKind: "stage",
+			}),
+		}),
+		expect.any(Function),
+	);
+});
+
+it("sends an unknown environment kind when configured and the environment cannot be determined", async (ctx) => {
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("project:environment:read", () => ({ environment: "non-existent" }));
+			hook("project:environment:update", () => void 0);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+
+	const environments: Environment[] = [
+		{
+			kind: "prod",
+			domain: "example",
+			name: "example-name",
+			users: [{ id: "id" }],
+		},
+	];
+
+	mockSliceMachineAPI(ctx, {
+		environmentsV1Endpoint: {
+			expectedAuthenticationToken: authenticationToken,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			environments,
+		},
+	});
+
+	await manager.telemetry.track({
+		event: "command:init:start",
+		_includeEnvironmentKind: true,
+	});
+
+	expect(Analytics.prototype.track).toHaveBeenCalledWith(
+		expect.objectContaining({
+			properties: expect.objectContaining({
+				environmentKind: "_unknown",
+			}),
+		}),
+		expect.any(Function),
+	);
+});
+
+it("sends the production environment kind when configured and the adapter does not support environments", async () => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
+
+	await manager.telemetry.track({
+		event: "command:init:start",
+		_includeEnvironmentKind: true,
+	});
+
+	expect(Analytics.prototype.track).toHaveBeenCalledWith(
+		expect.objectContaining({
+			properties: expect.objectContaining({
+				environmentKind: "prod",
 			}),
 		}),
 		expect.any(Function),
@@ -253,8 +338,6 @@ it("throws if telemetry was not initialized", async () => {
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
-
-	await manager.plugins.initPlugins();
 
 	await expect(async () => {
 		await manager.telemetry.track({

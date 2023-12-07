@@ -20,7 +20,9 @@ type TelemetryManagerInitTelemetryArgs = {
 	appVersion: string;
 };
 
-type TelemetryManagerTrackArgs = SegmentEvents;
+type TelemetryManagerTrackArgs = SegmentEvents & {
+	_includeEnvironmentKind?: boolean;
+};
 
 type TelemetryManagerIdentifyArgs = {
 	userID: string;
@@ -98,16 +100,22 @@ export class TelemetryManager extends BaseManager {
 			}
 		}
 
-		let environmentKind: Environment["kind"] | undefined = undefined;
-		if (this.project.checkSupportsEnvironments()) {
-			try {
-				const { activeEnvironment } =
-					await this.project.fetchActiveEnvironment();
-				environmentKind = activeEnvironment.kind;
-			} catch {
-				// noop - If we can't get the active environment, don't
-				// report any environment. This will happen when not
-				// authenticated.
+		let environmentKind: Environment["kind"] | "_unknown" | undefined =
+			undefined;
+		if (args._includeEnvironmentKind) {
+			if (this.project.checkSupportsEnvironments()) {
+				try {
+					const { activeEnvironment } =
+						await this.project.fetchActiveEnvironment();
+					environmentKind = activeEnvironment.kind;
+				} catch {
+					environmentKind = "_unknown";
+				}
+			} else {
+				// Assume only the production environment can be
+				// used if the project's adapter does not
+				// support environments.
+				environmentKind = "prod";
 			}
 		}
 
