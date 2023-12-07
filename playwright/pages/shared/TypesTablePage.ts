@@ -2,7 +2,7 @@ import { Locator, Page } from "@playwright/test";
 
 import { CreateTypeDialog } from "../components/CreateTypeDialog";
 import { RenameTypeDialog } from "../components/RenameTypeDialog";
-import { SliceMachinePage } from "../components/SliceMachinePage";
+import { SliceMachinePage } from "../SliceMachinePage";
 
 export class TypesTablePage extends SliceMachinePage {
   readonly createTypeDialog: CreateTypeDialog;

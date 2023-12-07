@@ -167,9 +167,14 @@ jobs:
 
       - name: Running E2E tests
         run: yarn test:e2e
+        env:
+          PRISMIC_URL: https://wroom.io
+          WROOM_EMAIL: ${{ secrets.EMAIL }}
+          WROOM_PASSWORD: ${{ secrets.PASSWORD }}
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v3
+        if: failure()
         with:
           name: Playwright HTML report
           path: playwright/playwright-report/

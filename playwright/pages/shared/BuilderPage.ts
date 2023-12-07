@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 import { AddFieldDialog } from "../components/AddFieldDialog";
-import { SliceMachinePage } from "../components/SliceMachinePage";
+import { SliceMachinePage } from "../SliceMachinePage";
 
 export type FieldType =
   | "Rich Text"

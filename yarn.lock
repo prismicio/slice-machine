@@ -3751,7 +3751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@msgpack/msgpack@npm:^2.8.0":
+"@msgpack/msgpack@npm:2.8.0, @msgpack/msgpack@npm:^2.8.0":
   version: 2.8.0
   resolution: "@msgpack/msgpack@npm:2.8.0"
   checksum: bead9393f57239007a2fe455df5277cbc03b125f14f310162a652b81471dcf3ab6780eaa24b36e20aa742998910a6840147d08b7267063b8e2de5d40c624360e
@@ -8535,10 +8535,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/e2e@workspace:playwright"
   dependencies:
+    "@msgpack/msgpack": 2.8.0
     "@playwright/test": 1.39.0
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
     depcheck: 1.4.3
+    dotenv: 16.3.1
     eslint: 8.37.0
     eslint-config-prettier: 9.0.0
     typescript: 4.9.5
