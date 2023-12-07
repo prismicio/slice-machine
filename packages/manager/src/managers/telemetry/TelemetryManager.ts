@@ -13,6 +13,7 @@ import {
 	HumanSegmentEventTypes,
 	SegmentEvents,
 } from "./types";
+import { Environment } from "../prismicRepository/types";
 
 type TelemetryManagerInitTelemetryArgs = {
 	appName: string;
@@ -97,6 +98,19 @@ export class TelemetryManager extends BaseManager {
 			}
 		}
 
+		let environmentKind: Environment["kind"] | undefined = undefined;
+		if (this.project.checkSupportsEnvironments()) {
+			try {
+				const { activeEnvironment } =
+					await this.project.fetchActiveEnvironment();
+				environmentKind = activeEnvironment.kind;
+			} catch {
+				// noop - If we can't get the active environment, don't
+				// report any environment. This will happen when not
+				// authenticated.
+			}
+		}
+
 		const payload: {
 			event: HumanSegmentEventTypes;
 			userId?: string;
@@ -111,6 +125,7 @@ export class TelemetryManager extends BaseManager {
 			event: HumanSegmentEventType[event],
 			properties: {
 				nodeVersion: process.versions.node,
+				environmentKind,
 				...properties,
 			},
 			context: { ...this._context },

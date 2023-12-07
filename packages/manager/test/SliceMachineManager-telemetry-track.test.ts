@@ -1,10 +1,14 @@
 import { expect, it, vi } from "vitest";
 import { Analytics } from "@segment/analytics-node";
 
+import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAuthLoginResponse";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
+import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
+import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
+import { mockSliceMachineAPI } from "./__testutils__/mockSliceMachineAPI";
 
-import { createSliceMachineManager } from "../src";
+import { createSliceMachineManager, Environment } from "../src";
 
 vi.mock("@segment/analytics-node", () => {
 	const MockSegmentClient = vi.fn();
@@ -32,6 +36,8 @@ it("sends a given event to Segment", async () => {
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+
 	await manager.telemetry.initTelemetry({
 		appName: "slice-machine-ui",
 		appVersion: "0.0.1-test",
@@ -47,6 +53,7 @@ it("sends a given event to Segment", async () => {
 			event: "SliceMachine Init Start",
 			properties: {
 				repo: undefined,
+				environmentKind: undefined,
 				nodeVersion: process.versions.node,
 			},
 			context: {
@@ -67,6 +74,8 @@ it("maps event payloads correctly to expected Segment tracking payloads", async 
 		nativePlugins: { [adapter.meta.name]: adapter },
 		cwd,
 	});
+
+	await manager.plugins.initPlugins();
 
 	await manager.telemetry.initTelemetry({
 		appName: "slice-machine-ui",
@@ -139,6 +148,8 @@ it("logs a warning to the console if Segment returns an error", async () => {
 		cwd,
 	});
 
+	await manager.plugins.initPlugins();
+
 	await manager.telemetry.initTelemetry({
 		appName: "slice-machine-ui",
 		appVersion: "0.0.1-test",
@@ -170,9 +181,80 @@ it("logs a warning to the console if Segment returns an error", async () => {
 	consoleWarnSpy.mockRestore();
 });
 
+it("sends the environment kind when authenticated", async (ctx) => {
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("project:environment:read", () => ({ environment: "foo" }));
+			hook("project:environment:update", () => void 0);
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+
+	const environments: Environment[] = [
+		{
+			kind: "prod",
+			domain: "example",
+			name: "example-name",
+			users: [{ id: "id" }],
+		},
+		{
+			kind: "stage",
+			domain: "foo",
+			name: "foo-name",
+			users: [{ id: "id" }],
+		},
+	];
+
+	mockSliceMachineAPI(ctx, {
+		environmentsV1Endpoint: {
+			expectedAuthenticationToken: authenticationToken,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			environments,
+		},
+	});
+
+	await manager.telemetry.track({
+		event: "command:init:start",
+	});
+
+	expect(Analytics.prototype.track).toHaveBeenCalledWith(
+		expect.objectContaining({
+			properties: expect.objectContaining({
+				environmentKind: "stage",
+			}),
+		}),
+		expect.any(Function),
+	);
+});
+
 it("throws if telemetry was not initialized", async () => {
-	const cwd = await createTestProject();
-	const manager = createSliceMachineManager({ cwd });
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
 
 	await expect(async () => {
 		await manager.telemetry.track({
