@@ -16,6 +16,7 @@ export const PageLayout: FC<PageLayoutProps> = ({
     {children}
     <div
       className={clsx(styles.borderTop, styles.borderTopColor[borderTopColor])}
+      data-cy="top-border"
     />
   </div>
 );

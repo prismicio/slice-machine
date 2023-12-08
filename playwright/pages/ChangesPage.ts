@@ -1,10 +1,8 @@
 import { Locator, Page, expect } from "@playwright/test";
 
-import { LoginDialog } from "./components/LoginDialog";
 import { SliceMachinePage } from "./SliceMachinePage";
 
 export class ChangesPage extends SliceMachinePage {
-  readonly loginDialog: LoginDialog;
   readonly breadcrumbLabel: Locator;
   readonly loginButton: Locator;
   readonly pushChangesButton: Locator;
@@ -19,7 +17,6 @@ export class ChangesPage extends SliceMachinePage {
     /**
      * Components
      */
-    this.loginDialog = new LoginDialog(page);
 
     /**
      * Static locators

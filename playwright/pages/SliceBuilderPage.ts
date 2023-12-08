@@ -5,6 +5,7 @@ import { SlicesListPage } from "./SlicesListPage";
 
 export class SliceBuilderPage extends BuilderPage {
   readonly slicesListPage: SlicesListPage;
+  readonly topBorder: Locator;
   readonly savedMessage: Locator;
   readonly staticZone: Locator;
   readonly staticZonePlaceholder: Locator;
@@ -25,6 +26,7 @@ export class SliceBuilderPage extends BuilderPage {
      * Static locators
      */
     // Global
+    this.topBorder = page.getByTestId("top-border");
     this.savedMessage = page.getByText("Slice saved successfully");
     // Static zone
     this.staticZone = page.getByTestId("slice-non-repeatable-zone");

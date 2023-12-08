@@ -31,6 +31,7 @@
     "start-slicemachine": "./bin/start-slicemachine.cjs"
   },
   "dependencies": {
+    "@radix-ui/react-visually-hidden": "1.0.3",
     "@slicemachine/manager": "workspace:^",
     "start-slicemachine": "workspace:^"
   },
