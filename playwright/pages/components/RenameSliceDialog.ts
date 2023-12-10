@@ -21,7 +21,7 @@ export class RenameSliceDialog extends Dialog {
      * Static locators
      */
     this.nameInput = this.dialog.getByTestId("slice-name-input");
-    this.renamedMessage = page.getByText("Slice name updated");
+    this.renamedMessage = page.getByText("Slice name updated", { exact: true });
   }
 
   /**

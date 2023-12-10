@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { generateRandomId } from "../../utils/generateRandomId";
 
-test.describe("Slices", () => {
+test.describe("Slices list", () => {
   test.run()(
     "I can create a slice",
     async ({ sliceBuilderPage, slicesListPage }) => {
@@ -14,7 +14,7 @@ test.describe("Slices", () => {
       await slicesListPage.createSliceDialog.createSlice(sliceName);
 
       await expect(
-        sliceBuilderPage.breadcrumb.getByText(sliceName),
+        sliceBuilderPage.getBreadcrumbLabel(sliceName),
       ).toBeVisible();
 
       await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
@@ -22,8 +22,9 @@ test.describe("Slices", () => {
     },
   );
 
+  // See: See: https://github.com/prismicio/slice-machine/issues/599
   test.run()(
-    "I can only use Pascal case for the slice name",
+    "I can only create a slice by using Pascal case for the slice name",
     async ({ slicesListPage }) => {
       await slicesListPage.goto();
       await slicesListPage.openCreateDialog();
@@ -48,7 +49,7 @@ test.describe("Slices", () => {
   );
 
   test.run()(
-    "I can rename a slice and open the slice after",
+    "I can rename a slice",
     async ({ slice, sliceBuilderPage, slicesListPage }) => {
       await slicesListPage.goto();
       await slicesListPage.openActionDialog(slice.name, "Rename");
@@ -64,8 +65,35 @@ test.describe("Slices", () => {
       await slicesListPage.clickCard(newSliceName);
 
       await expect(
-        sliceBuilderPage.breadcrumb.getByText(newSliceName),
+        sliceBuilderPage.getBreadcrumbLabel(newSliceName),
       ).toBeVisible();
+    },
+  );
+
+  // See: https://github.com/prismicio/slice-machine/issues/791
+  test.run()(
+    "I can only rename a slice by using Pascal case for the slice name",
+    async ({ slicesListPage, slice }) => {
+      await slicesListPage.goto();
+      await slicesListPage.openActionDialog(slice.name, "Rename");
+
+      const { nameInput, submitButton } = slicesListPage.renameSliceDialog;
+
+      await nameInput.clear();
+      await nameInput.fill("Invalid Slice Name");
+      await expect(submitButton).toBeDisabled();
+
+      await nameInput.clear();
+      await nameInput.fill("Invalid_slice_name");
+      await expect(submitButton).toBeDisabled();
+
+      await nameInput.clear();
+      await nameInput.fill("123SliceName");
+      await expect(submitButton).toBeDisabled();
+
+      await nameInput.clear();
+      await nameInput.fill("ValidSliceName");
+      await expect(submitButton).toBeEnabled();
     },
   );
 
@@ -73,10 +101,7 @@ test.describe("Slices", () => {
     await slicesListPage.goto();
     await slicesListPage.openActionDialog(slice.name, "Delete");
 
-    await expect(
-      slicesListPage.deleteSliceDialog.dialog.getByText(`/${slice.name}/`),
-    ).toBeVisible();
-    await slicesListPage.deleteSliceDialog.deleteSlice();
+    await slicesListPage.deleteSliceDialog.deleteSlice(slice.name);
 
     // TODO(DT-1802): Production BUG - Sometimes after a delete, slice is still visible in the list
     await slicesListPage.page.reload();

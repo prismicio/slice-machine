@@ -140,18 +140,42 @@ This approach has several benefits:
 - Readability: Tests become more readable and easier to understand.
 - Reusability: You can reuse code across different test cases.
 
-**Warning**: Never use a locator directly in a test file. Always use the Page Object Model design pattern for that.
+**Warning**: Never use a locator directly in a test file (getBy...). Always use the Page Object Model design pattern for that.
  
 2. Always try to do an exact matching with locators
 
 In order to be sure of what you are targeting, always use the `exact` option when possible.
+Use `true` when you want an exact matching. 
 
-Example:
+Examples:
 
 ```ts
 this.customTypesLink = this.menu.getByRole("link", {
   name: "Custom types",
   exact: true,
+});
+```
+
+```ts
+this.customTypesLink = this.menu.getByText("Custom types", {
+  exact: true,
+});
+```
+
+Use `false` when you deliberately don't want an exact matching.
+
+Examples:
+
+```ts
+this.customTypesLink = this.menu.getByRole("link", {
+  name: "Custom types",
+  exact: false,
+});
+```
+
+```ts
+this.customTypesLink = this.menu.getByText("Custom types", {
+  exact: false,
 });
 ```
 

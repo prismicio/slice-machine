@@ -19,7 +19,9 @@ export class DeleteSliceDialog extends Dialog {
     /**
      * Static locators
      */
-    this.deletedMessage = page.getByText("Successfully deleted slice");
+    this.deletedMessage = page.getByText("Successfully deleted slice", {
+      exact: false,
+    });
   }
 
   /**
@@ -30,8 +32,13 @@ export class DeleteSliceDialog extends Dialog {
   /**
    * Actions
    */
-  async deleteSlice() {
+  async deleteSlice(name: string) {
     await expect(this.title).toBeVisible();
+    await expect(
+      this.dialog.getByText(name, {
+        exact: false,
+      }),
+    ).toBeVisible();
     await this.submitButton.click();
     await this.checkDeletedMessage();
     await expect(this.title).not.toBeVisible();

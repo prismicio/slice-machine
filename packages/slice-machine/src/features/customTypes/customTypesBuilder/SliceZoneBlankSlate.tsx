@@ -26,7 +26,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   isSlicesTemplatesSupported,
 }) => {
   return (
-    <Box flexGrow={1} justifyContent="center">
+    <Box flexGrow={1} justifyContent="center" data-cy="slice-zone-blank-slate">
       <BlankSlate backgroundImage="/blank-slate-slice-zone.png">
         <BlankSlateContent>
           <Box justifyContent="center" padding={{ bottom: 16 }}>

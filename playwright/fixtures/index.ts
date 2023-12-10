@@ -36,8 +36,10 @@ export type DefaultFixtures = {
   /**
    * Data
    */
-  pageType: { name: string };
-  customType: { name: string };
+  reusablePageType: { name: string };
+  singlePageType: { name: string };
+  reusableCustomType: { name: string };
+  singleCustomType: { name: string };
   slice: { name: string };
 };
 
@@ -84,21 +86,51 @@ export const defaultTest = (
     /**
      * Data
      */
-    pageType: async ({ pageTypesTablePage }, use) => {
+    reusablePageType: async ({ pageTypesTablePage }, use) => {
       await pageTypesTablePage.goto();
       await pageTypesTablePage.openCreateDialog();
 
       const pageTypeName = "Page Type " + generateRandomId();
-      await pageTypesTablePage.createTypeDialog.createType(pageTypeName);
+      await pageTypesTablePage.createTypeDialog.createType(
+        pageTypeName,
+        "reusable",
+      );
 
       await use({ name: pageTypeName });
     },
-    customType: async ({ customTypesTablePage }, use) => {
+    singlePageType: async ({ pageTypesTablePage }, use) => {
+      await pageTypesTablePage.goto();
+      await pageTypesTablePage.openCreateDialog();
+
+      const pageTypeName = "Page Type " + generateRandomId();
+      await pageTypesTablePage.createTypeDialog.createType(
+        pageTypeName,
+        "single",
+      );
+
+      await use({ name: pageTypeName });
+    },
+    reusableCustomType: async ({ customTypesTablePage }, use) => {
       await customTypesTablePage.goto();
       await customTypesTablePage.openCreateDialog();
 
       const customTypeName = "Custom Type " + generateRandomId();
-      await customTypesTablePage.createTypeDialog.createType(customTypeName);
+      await customTypesTablePage.createTypeDialog.createType(
+        customTypeName,
+        "reusable",
+      );
+
+      await use({ name: customTypeName });
+    },
+    singleCustomType: async ({ customTypesTablePage }, use) => {
+      await customTypesTablePage.goto();
+      await customTypesTablePage.openCreateDialog();
+
+      const customTypeName = "Custom Type " + generateRandomId();
+      await customTypesTablePage.createTypeDialog.createType(
+        customTypeName,
+        "single",
+      );
 
       await use({ name: customTypeName });
     },

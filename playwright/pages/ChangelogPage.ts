@@ -16,7 +16,7 @@ export class ChangelogPage extends SliceMachinePage {
     /**
      * Static locators
      */
-    this.breadcrumbLabel = this.body.getByText("Changelog");
+    this.breadcrumbLabel = this.body.getByText("Changelog", { exact: true });
   }
 
   /**

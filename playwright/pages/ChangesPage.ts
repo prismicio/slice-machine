@@ -24,17 +24,27 @@ export class ChangesPage extends SliceMachinePage {
     /**
      * Static locators
      */
-    this.breadcrumbLabel = this.breadcrumb.getByText("Changes");
-    this.loginButton = this.body.getByText("Log in to Prismic");
-    this.pushChangesButton = page.getByText("Push Changes");
+    this.breadcrumbLabel = this.breadcrumb.getByText("Changes", {
+      exact: true,
+    });
+    this.loginButton = this.body.getByText("Log in to Prismic", {
+      exact: true,
+    });
+    this.pushChangesButton = page.getByText("Push Changes", { exact: true });
     this.pushedMessaged = page.getByText(
       "All slices and types have been pushed",
+      { exact: true },
     );
-    this.notLoggedInTitle = page.getByText("It seems like you are logged out");
+    this.notLoggedInTitle = page.getByText("It seems like you are logged out", {
+      exact: true,
+    });
     this.notAuthorizedTitle = page.getByText(
       "It seems like you don't have access to this repository",
+      { exact: true },
     );
-    this.blankSlateTitle = page.getByText("Everything up-to-date");
+    this.blankSlateTitle = page.getByText("Everything up-to-date", {
+      exact: true,
+    });
   }
 
   /**
