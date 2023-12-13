@@ -52,7 +52,7 @@ test.describe("Slices list", () => {
     "I can rename a slice",
     async ({ slice, sliceBuilderPage, slicesListPage }) => {
       await slicesListPage.goto();
-      await slicesListPage.openActionDialog(slice.name, "Rename");
+      await slicesListPage.openActionMenu(slice.name, "Rename");
 
       const newSliceName = `${slice.name}Renamed`;
       await slicesListPage.renameSliceDialog.renameSlice(newSliceName);
@@ -75,7 +75,7 @@ test.describe("Slices list", () => {
     "I can only rename a slice by using Pascal case for the slice name",
     async ({ slicesListPage, slice }) => {
       await slicesListPage.goto();
-      await slicesListPage.openActionDialog(slice.name, "Rename");
+      await slicesListPage.openActionMenu(slice.name, "Rename");
 
       const { nameInput, submitButton } = slicesListPage.renameSliceDialog;
 
@@ -99,7 +99,7 @@ test.describe("Slices list", () => {
 
   test.run()("I can delete a slice", async ({ slice, slicesListPage }) => {
     await slicesListPage.goto();
-    await slicesListPage.openActionDialog(slice.name, "Delete");
+    await slicesListPage.openActionMenu(slice.name, "Delete");
 
     await slicesListPage.deleteSliceDialog.deleteSlice(slice.name);
 

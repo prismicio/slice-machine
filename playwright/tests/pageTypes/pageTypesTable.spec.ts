@@ -112,10 +112,7 @@ test.describe("Page types table", () => {
     "I can rename a page type",
     async ({ pageTypesTablePage, reusablePageType }) => {
       await pageTypesTablePage.goto();
-      await pageTypesTablePage.openActionDialog(
-        reusablePageType.name,
-        "Rename",
-      );
+      await pageTypesTablePage.openActionMenu(reusablePageType.name, "Rename");
 
       const newPageTypeName = `${reusablePageType.name}Renamed`;
       await pageTypesTablePage.renameTypeDialog.renameType(newPageTypeName);

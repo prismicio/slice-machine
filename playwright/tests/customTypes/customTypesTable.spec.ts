@@ -82,7 +82,7 @@ test.describe("Custom types table", () => {
     "I can rename a custom type",
     async ({ reusableCustomType, customTypesTablePage }) => {
       await customTypesTablePage.goto();
-      await customTypesTablePage.openActionDialog(
+      await customTypesTablePage.openActionMenu(
         reusableCustomType.name,
         "Rename",
       );
