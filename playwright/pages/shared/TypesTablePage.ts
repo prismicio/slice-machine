@@ -72,7 +72,7 @@ export class TypesTablePage extends SliceMachinePage {
     await this.createButton.first().click();
   }
 
-  async openActionDialog(name: string, action: "Rename" | "Delete") {
+  async openActionMenu(name: string, action: "Rename" | "Delete") {
     await this.getRow(name).locator('[data-testid="editDropdown"]').click();
     await this.page
       .getByRole("menuitem", { name: action, exact: true })

@@ -63,7 +63,7 @@ export class SlicesListPage extends SliceMachinePage {
     await this.createButton.first().click();
   }
 
-  async openActionDialog(name: string, action: "Rename" | "Delete") {
+  async openActionMenu(name: string, action: "Rename" | "Delete") {
     await this.getCard(name).getByTestId("slice-action-icon").click();
     await this.page
       .getByTestId("slice-action-icon-dropdown")
