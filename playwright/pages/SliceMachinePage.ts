@@ -28,7 +28,9 @@ export class SliceMachinePage {
   /**
    * Dynamic locators
    */
-  // Handle dynamic locators here
+  getBreadcrumbLabel(name: string) {
+    return this.breadcrumb.getByText(name, { exact: true });
+  }
 
   /**
    * Actions

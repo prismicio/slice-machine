@@ -33,7 +33,9 @@ export class TypesTablePage extends SliceMachinePage {
      * Static locators
      */
     this.path = path;
-    this.breadcrumbLabel = this.breadcrumb.getByText(breadcrumbLabel);
+    this.breadcrumbLabel = this.breadcrumb.getByText(breadcrumbLabel, {
+      exact: true,
+    });
     this.createButton = page
       .getByTestId("create-ct")
       .or(
@@ -50,6 +52,7 @@ export class TypesTablePage extends SliceMachinePage {
   getRow(name: string): Locator {
     return this.page.getByRole("row", {
       name,
+      exact: false,
     });
   }
 

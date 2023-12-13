@@ -38,7 +38,10 @@ export class Menu {
       name: "Tutorials",
       exact: true,
     });
-    this.changelogLink = this.menu.getByRole("link", { name: "Changelog" });
+    this.changelogLink = this.menu.getByRole("link", {
+      name: "Changelog",
+      exact: false,
+    });
     this.appVersion = this.menu.getByTestId("slicemachine-version");
   }
 

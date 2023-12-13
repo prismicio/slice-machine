@@ -25,17 +25,21 @@ export class SliceBuilderPage extends BuilderPage {
      * Static locators
      */
     // Global
-    this.savedMessage = page.getByText("Slice saved successfully");
+    this.savedMessage = page.getByText("Slice saved successfully", {
+      exact: false,
+    });
     // Static zone
     this.staticZone = page.getByTestId("slice-non-repeatable-zone");
     this.staticZonePlaceholder = page.getByText(
       "Add a field to your Static Zone",
+      { exact: true },
     );
     this.staticZoneListItem = this.staticZone.getByRole("listitem");
     // Repeatable zone
     this.repeatableZone = page.getByTestId("slice-repeatable-zone");
     this.repeatableZonePlaceholder = page.getByText(
       "Add a field to your Repeatable Zone",
+      { exact: true },
     );
     this.repeatableZoneListItem = this.repeatableZone.getByRole("listitem");
   }
@@ -43,8 +47,8 @@ export class SliceBuilderPage extends BuilderPage {
   /**
    * Dynamic locators
    */
-  getBreadcrumbLabel(sliceName: string) {
-    return this.breadcrumb.getByText(`Slices / ${sliceName}`);
+  override getBreadcrumbLabel(sliceName: string) {
+    return this.breadcrumb.getByText(`Slices / ${sliceName}`, { exact: true });
   }
 
   /**
@@ -52,7 +56,9 @@ export class SliceBuilderPage extends BuilderPage {
    */
   async goto(sliceName: string) {
     await this.slicesListPage.goto();
-    await this.slicesListPage.page.getByText(sliceName).click();
+    await this.slicesListPage.page
+      .getByText(sliceName, { exact: true })
+      .click();
     await expect(this.getBreadcrumbLabel(sliceName)).toBeVisible();
   }
 

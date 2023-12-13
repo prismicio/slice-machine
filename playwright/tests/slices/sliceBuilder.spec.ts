@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
 
-test.describe("Slice Builder", () => {
+test.describe("Slice builder", () => {
   test.run()(
     "I can add a static field to the builder",
     async ({ slice, sliceBuilderPage }) => {

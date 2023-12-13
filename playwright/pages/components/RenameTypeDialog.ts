@@ -23,6 +23,7 @@ export class RenameTypeDialog extends Dialog {
     this.nameInput = this.dialog.getByTestId("custom-type-name-input");
     this.renamedMessage = page.getByText(
       `${format.charAt(0).toUpperCase()}${format.slice(1)} type renamed`,
+      { exact: true },
     );
   }
 
