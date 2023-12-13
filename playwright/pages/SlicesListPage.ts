@@ -3,7 +3,7 @@ import { Locator, Page } from "@playwright/test";
 import { CreateSliceDialog } from "./components/CreateSliceDialog";
 import { RenameSliceDialog } from "./components/RenameSliceDialog";
 import { DeleteSliceDialog } from "./components/DeleteSliceDialog";
-import { SliceMachinePage } from "./components/SliceMachinePage";
+import { SliceMachinePage } from "./SliceMachinePage";
 
 export class SlicesListPage extends SliceMachinePage {
   readonly createSliceDialog: CreateSliceDialog;

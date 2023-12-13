@@ -106,6 +106,7 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
                     disabled: !formik.isValid,
                   }}
                   cancel={{ text: "Cancel" }}
+                  size="medium"
                 />
               </form>
             )}

@@ -17,6 +17,7 @@
   },
   "include": [
     "fixtures",
+    "mocks",
     "pages",
     "tests",
     "utils",

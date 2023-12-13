@@ -771,8 +771,12 @@ export class SlicesManager extends BaseManager {
 				endpoint: API_ENDPOINTS.PrismicModels,
 				repositoryName,
 				token: authenticationToken,
-				userAgent: args.userAgent || SLICE_MACHINE_USER_AGENT,
 				fetch,
+				fetchOptions: {
+					headers: {
+						"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
+					},
+				},
 			});
 
 			try {
@@ -987,8 +991,12 @@ export class SlicesManager extends BaseManager {
 			endpoint: API_ENDPOINTS.PrismicModels,
 			repositoryName,
 			token: authenticationToken,
-			userAgent: SLICE_MACHINE_USER_AGENT,
 			fetch,
+			fetchOptions: {
+				headers: {
+					"User-Agent": SLICE_MACHINE_USER_AGENT,
+				},
+			},
 		});
 
 		return await client.getAllSharedSlices();

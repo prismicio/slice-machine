@@ -141,6 +141,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
                       disabled: !formik.isValid,
                     }}
                     cancel={{ text: "Cancel" }}
+                    size="medium"
                   />
                 </Box>
               </form>

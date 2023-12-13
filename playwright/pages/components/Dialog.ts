@@ -26,7 +26,7 @@ export class Dialog {
      * Static locators
      */
     this.dialog = page.getByRole("dialog");
-    this.title = this.dialog.getByRole("heading", { name: title, exact: true });
+    this.title = this.dialog.getByText(title, { exact: true });
     this.closeButton = this.dialog.getByRole("button", {
       name: "Close",
       exact: true,

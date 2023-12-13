@@ -1,25 +1,24 @@
 import { Locator, Page } from "@playwright/test";
 
-import { Menu } from "./Menu";
+import { Dialog } from "./Dialog";
 
-export class SliceMachinePage {
-  readonly page: Page;
-  readonly menu: Menu;
-  readonly body: Locator;
-  readonly breadcrumb: Locator;
+export class InAppGuideDialog extends Dialog {
+  override readonly closeButton: Locator;
 
   constructor(page: Page) {
+    super(page, {
+      title: "Build a page in 5 minutes",
+    });
+
     /**
      * Components
      */
-    this.page = page;
-    this.menu = new Menu(page);
+    // Handle components here
 
     /**
      * Static locators
      */
-    this.body = page.getByRole("main");
-    this.breadcrumb = page.getByLabel("Breadcrumb");
+    this.closeButton = this.dialog.getByRole("button");
   }
 
   /**

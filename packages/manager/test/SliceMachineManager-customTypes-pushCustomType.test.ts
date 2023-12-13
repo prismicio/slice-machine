@@ -137,6 +137,56 @@ it("uses the update endpoint if the Custom Type already exists", async (ctx) => 
 	expect(sentModel).toStrictEqual({ ...model, format: "custom" });
 });
 
+it("sends the provided user agent", async (ctx) => {
+	const model = ctx.mockPrismic.model.customType();
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("custom-type:read", () => {
+				return { model };
+			});
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	const repositoryName = await manager.project.getRepositoryName();
+
+	let sentModel;
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+	mockCustomTypesAPI(ctx, {
+		async onCustomTypeGet(req, res, ctx) {
+			if (
+				req.headers.get("user-agent") === "foo" &&
+				req.headers.get("repository") === repositoryName
+			) {
+				return res(ctx.status(404));
+			}
+		},
+		async onCustomTypeInsert(req, res, ctx) {
+			if (
+				req.headers.get("user-agent") === "foo" &&
+				req.headers.get("repository") === repositoryName
+			) {
+				sentModel = await req.json();
+
+				return res(ctx.status(201));
+			}
+		},
+	});
+
+	await manager.user.login(createPrismicAuthLoginResponse());
+	await manager.customTypes.pushCustomType({ id: model.id, userAgent: "foo" });
+	// TODO: update prismicio/mock library
+	expect(sentModel).toStrictEqual({ ...model, format: "custom" });
+});
+
 it("throws if plugins have not been initialized", async () => {
 	const cwd = await createTestProject();
 	const manager = createSliceMachineManager({ cwd });

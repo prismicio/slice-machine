@@ -97,6 +97,7 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
                       disabled: !formik.isValid,
                     }}
                     cancel={{ text: "Cancel" }}
+                    size="medium"
                   />
                 </Box>
               </form>

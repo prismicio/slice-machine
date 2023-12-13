@@ -38,7 +38,8 @@ it("fetches Slices from the Custom Types API", async (ctx) => {
 		onSliceGetAll: (req, res, ctx) => {
 			if (
 				req.headers.get("repository") === sliceMachineConfig.repositoryName &&
-				req.headers.get("Authorization") === `Bearer ${authenticationToken}`
+				req.headers.get("Authorization") === `Bearer ${authenticationToken}` &&
+				req.headers.get("user-agent") === "slice-machine"
 			) {
 				return res(ctx.json(models));
 			}
@@ -84,7 +85,8 @@ it("fetches Slices from the Custom Types API using the currently set environment
 		onSliceGetAll: (req, res, ctx) => {
 			if (
 				req.headers.get("repository") === "foo" &&
-				req.headers.get("Authorization") === `Bearer ${authenticationToken}`
+				req.headers.get("Authorization") === `Bearer ${authenticationToken}` &&
+				req.headers.get("user-agent") === "slice-machine"
 			) {
 				return res(ctx.json(models));
 			}

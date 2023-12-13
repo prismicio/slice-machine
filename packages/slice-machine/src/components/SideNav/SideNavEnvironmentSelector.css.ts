@@ -59,11 +59,7 @@ export const activeEnvironmentName = style([
   },
 ]);
 
-export const actionRequiredLabel = style([
-  sprinkles({
-    color: colors.purple10,
-  }),
-  {
-    fontWeight: 500,
-  },
-]);
+export const loginIcon = sprinkles({
+  width: 24,
+  height: 24,
+});

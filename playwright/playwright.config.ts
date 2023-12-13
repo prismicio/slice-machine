@@ -18,15 +18,10 @@ const config = {
   // Configure projects for major browsers.
   projects: [
     {
-      name: "onboarding",
-      testMatch: "onboarding.spec.ts",
-    },
-    {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
       },
-      dependencies: ["onboarding"],
     },
   ],
 
