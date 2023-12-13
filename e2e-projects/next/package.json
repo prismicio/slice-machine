@@ -1,6 +1,5 @@
 {
   "name": "cimsirp",
-  "version": "1.21.3-dev-next-release.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
