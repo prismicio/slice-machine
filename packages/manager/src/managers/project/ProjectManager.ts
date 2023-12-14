@@ -15,6 +15,7 @@ import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
+import { findEnvironment } from "../../lib/findEnvironment";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
@@ -25,13 +26,19 @@ import {
 	OnlyHookErrors,
 } from "../../types";
 
-import { SliceMachineError, InternalError, PluginError } from "../../errors";
+import {
+	SliceMachineError,
+	InternalError,
+	PluginError,
+	UnexpectedDataError,
+} from "../../errors";
 
 import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
 import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
 
 import { BaseManager } from "../BaseManager";
+import { Environment } from "../prismicRepository/types";
 
 type ProjectManagerGetSliceMachineConfigPathArgs = {
 	ignoreCache?: boolean;
@@ -78,10 +85,15 @@ type ProjectManagerUpdateEnvironmentArgs = {
 	environment: string | undefined;
 };
 
+type ProjectManagerFetchActiveEnvironmentReturnType = {
+	activeEnvironment: Environment;
+};
+
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;
 	private _cachedSliceMachineConfigPath: string | undefined;
 	private _cachedSliceMachineConfig: SliceMachineConfig | undefined;
+	private _cachedEnvironments: Environment[] | undefined;
 
 	async getSliceMachineConfigPath(
 		args?: ProjectManagerGetSliceMachineConfigPathArgs,
@@ -425,6 +437,49 @@ export class ProjectManager extends BaseManager {
 		return {
 			errors: hookResult.errors,
 		};
+	}
+
+	async fetchActiveEnvironment(): Promise<ProjectManagerFetchActiveEnvironmentReturnType> {
+		const { environment: activeEnvironmentDomain } =
+			await this.readEnvironment();
+
+		// We can assume an environment cannot change its kind. If the
+		// environment exists in the cached list, we are confident it
+		// will not change.
+		const cachedActiveEnvironment = findEnvironment(
+			activeEnvironmentDomain,
+			this._cachedEnvironments || [],
+		);
+		if (cachedActiveEnvironment) {
+			return { activeEnvironment: cachedActiveEnvironment };
+		}
+
+		// If the environment is not in the cached environments list, we
+		// must fetch a fresh list and set the cache.
+		const { environments } = await this.prismicRepository.fetchEnvironments();
+		// TODO: Remove the wrapping if statement when
+		// `this.prismicRepository.fetchEnvironments()` is able to throw
+		// normally. The method returns an object with an `error`
+		// property at the time of this writing, which means we need to
+		// check if the `environments` property exists.
+		if (environments) {
+			this._cachedEnvironments = environments;
+		}
+
+		const activeEnvironment = findEnvironment(
+			activeEnvironmentDomain,
+			this._cachedEnvironments || [],
+		);
+
+		if (!activeEnvironment) {
+			throw new UnexpectedDataError(
+				`The active environment (${
+					activeEnvironmentDomain ?? "Production"
+				}) does not match one of the repository's environments.`,
+			);
+		}
+
+		return { activeEnvironment };
 	}
 
 	private async _assertAdapterSupportsEnvironments(): Promise<void> {
