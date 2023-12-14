@@ -329,7 +329,10 @@ describe("prismicio.js file", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"import * as prismic from \\"@prismicio/client\\";
-			import { CreateClientConfig, enableAutoPreviews } from \\"@prismicio/svelte/kit\\";
+			import {
+			  type CreateClientConfig,
+			  enableAutoPreviews,
+			} from \\"@prismicio/svelte/kit\\";
 			import config from \\"../../slicemachine.config.json\\";
 
 			/**
@@ -404,7 +407,7 @@ describe("/api/preview route", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
-			import { createClient } from \\"$lib/prismicio.js\\";
+			import { createClient } from \\"$lib/prismicio\\";
 
 			export async function GET({ fetch, request, cookies }) {
 			  const client = createClient({ fetch });
@@ -443,7 +446,7 @@ describe("/api/preview route", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
-			import { createClient } from \\"$lib/prismicio.js\\";
+			import { createClient } from \\"$lib/prismicio\\";
 
 			export async function GET({ fetch, request, cookies }) {
 			  const client = createClient({ fetch });
