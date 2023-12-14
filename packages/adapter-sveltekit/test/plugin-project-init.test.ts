@@ -380,6 +380,81 @@ describe("prismicio.js file", () => {
 	});
 });
 
+describe("/api/preview route", () => {
+	it("creates an endpoint", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(
+				ctx.project.root,
+				"src",
+				"routes",
+				"api",
+				"preview",
+				"+server.js",
+			),
+			"utf8",
+		);
+
+		expect(contents).toMatchInlineSnapshot(`
+			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
+			import { createClient } from \\"$lib/prismicio.js\\";
+
+			export async function GET({ fetch, request, cookies }) {
+			  const client = createClient({ fetch });
+
+			  return await redirectToPreviewURL({ client, request, cookies });
+			}
+			"
+		`);
+	});
+
+	it("creates a TypeScript file when TypeScript is enabled", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		await fs.writeFile(
+			path.join(ctx.project.root, "tsconfig.json"),
+			JSON.stringify({}),
+		);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const contents = await fs.readFile(
+			path.join(
+				ctx.project.root,
+				"src",
+				"routes",
+				"api",
+				"preview",
+				"+server.ts",
+			),
+			"utf8",
+		);
+
+		expect(contents).toMatchInlineSnapshot(`
+			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
+			import { createClient } from \\"$lib/prismicio.js\\";
+
+			export async function GET({ fetch, request, cookies }) {
+			  const client = createClient({ fetch });
+
+			  return await redirectToPreviewURL({ client, request, cookies });
+			}
+			"
+		`);
+	});
+});
+
 describe("preview route directory", () => {
 	it("creates a preview route directory", async (ctx) => {
 		const log = vi.fn();

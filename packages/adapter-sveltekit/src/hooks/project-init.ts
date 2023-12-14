@@ -55,7 +55,7 @@ const createPrismicIOFile = async ({
 	if (isTypeScriptProject) {
 		contents = source`
 			import * as prismic from "@prismicio/client";
-			import { CreateClientConfig, enableAutoPreviews } from '@prismicio/svelte/kit';
+			import { type CreateClientConfig, enableAutoPreviews } from '@prismicio/svelte/kit';
 			import config from "../../slicemachine.config.json";
 
 			/**
@@ -224,6 +224,42 @@ const createPreviewRouteMatcherFile = async ({
 	});
 };
 
+const createPreviewAPIRoute = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const extension = await getJSFileExtension({ helpers, options });
+	const filename = path.join(
+		"src",
+		"routes",
+		"api",
+		"preview",
+		`+server.${extension}`,
+	);
+
+	if (await checkHasProjectFile({ filename, helpers })) {
+		return;
+	}
+
+	const contents = source`
+		import { redirectToPreviewURL } from '@prismicio/svelte/kit';
+		import { createClient } from '$lib/prismicio';
+
+		export async function GET({ fetch, request, cookies }) {
+			const client = createClient({ fetch });
+
+			return await redirectToPreviewURL({ client, request, cookies });
+		}
+	`;
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
+};
+
 const createPreviewRouteDirectory = async ({
 	helpers,
 	options,
@@ -348,6 +384,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			modifySliceMachineConfig(context),
 			createPrismicIOFile(context),
 			createSliceSimulatorPage(context),
+			createPreviewAPIRoute(context),
 			createPreviewRouteDirectory(context),
 			createPreviewRouteMatcherFile(context),
 			createRootLayoutServerFile(context),
