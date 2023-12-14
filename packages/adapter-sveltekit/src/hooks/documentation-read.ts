@@ -32,8 +32,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			dataFileContent = source`
 				import { createClient } from "$lib/prismicio";
 
-				export async function load({ params, fetch }) {
-					const client = createClient({ fetch });
+				export async function load({ params, fetch, cookies }) {
+					const client = createClient({ fetch, cookies });
 
 					const page = await client.getByUID("${model.id}", params.uid);
 
@@ -56,8 +56,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			dataFileContent = source`
 				import { createClient } from "$lib/prismicio";
 
-				export async function load({ params, fetch }) {
-					const client = createClient({ fetch });
+				export async function load({ params, fetch, cookies }) {
+					const client = createClient({ fetch, cookies });
 
 					const page = await client.getSingle("${model.id}");
 

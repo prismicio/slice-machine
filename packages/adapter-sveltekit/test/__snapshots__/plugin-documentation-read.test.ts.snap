@@ -11,8 +11,8 @@ Paste in this code:
 ~~~js [src/routes/[uid]/+page.server.js]
 import { createClient } from \\"$lib/prismicio\\";
 
-export async function load({ params, fetch }) {
-  const client = createClient({ fetch });
+export async function load({ params, fetch, cookies }) {
+  const client = createClient({ fetch, cookies });
 
   const page = await client.getByUID(\\"repeatable\\", params.uid);
 
@@ -66,8 +66,8 @@ Paste in this code:
 ~~~ts [src/routes/[uid]/+page.server.ts]
 import { createClient } from \\"$lib/prismicio\\";
 
-export async function load({ params, fetch }) {
-  const client = createClient({ fetch });
+export async function load({ params, fetch, cookies }) {
+  const client = createClient({ fetch, cookies });
 
   const page = await client.getByUID(\\"repeatable\\", params.uid);
 
@@ -121,8 +121,8 @@ Paste in this code:
 ~~~js [src/routes/single/+page.server.js]
 import { createClient } from \\"$lib/prismicio\\";
 
-export async function load({ params, fetch }) {
-  const client = createClient({ fetch });
+export async function load({ params, fetch, cookies }) {
+  const client = createClient({ fetch, cookies });
 
   const page = await client.getSingle(\\"single\\");
 
@@ -170,8 +170,8 @@ Paste in this code:
 ~~~ts [src/routes/single/+page.server.ts]
 import { createClient } from \\"$lib/prismicio\\";
 
-export async function load({ params, fetch }) {
-  const client = createClient({ fetch });
+export async function load({ params, fetch, cookies }) {
+  const client = createClient({ fetch, cookies });
 
   const page = await client.getSingle(\\"single\\");
 
