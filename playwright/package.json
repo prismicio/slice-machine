@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/e2e",
-  "version": "0.0.2",
+  "version": "0.0.3-dev-next-release.4",
   "private": true,
   "description": "E2E tests for Slice Machine",
   "author": "Prismic <contact@prismic.io> (https://prismic.io)",

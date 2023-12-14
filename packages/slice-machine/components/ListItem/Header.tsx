@@ -32,6 +32,7 @@ const ItemHeader: React.FC<ItemHeaderProps> = ({
       text={text}
       as="p"
       sx={{ py: 0, px: 1, fontWeight: "label", fontSize: "15px" }}
+      data-cy="field-name"
     />
     <Text
       as="p"
@@ -41,6 +42,7 @@ const ItemHeader: React.FC<ItemHeaderProps> = ({
         ml: 1,
         color: "textClear",
       }}
+      data-cy="field-id"
     >
       {sliceFieldName}
     </Text>

@@ -88,5 +88,6 @@ export function trackPushChangesSuccess(params: trackingParameters) {
     missingScreenshots,
     duration: duration,
     hasDeletedDocuments: confirmDeleteDocuments,
+    _includeEnvironmentKind: true,
   });
 }
