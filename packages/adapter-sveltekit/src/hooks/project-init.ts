@@ -317,6 +317,40 @@ const createRootLayoutServerFile = async ({
 	});
 };
 
+const createRootLayoutFile = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	const filename = path.join("src", "routes", "+layout.svelte");
+
+	if (await checkHasProjectFile({ filename, helpers })) {
+		return;
+	}
+
+	const contents = source`
+		<script>
+			import { PrismicPreview } from '@prismicio/svelte/kit';
+			import { repositoryName } from '$lib/prismicio';
+		</script>
+
+		<slot />
+		<PrismicPreview {repositoryName} />
+	`;
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		formatOptions: {
+			prettier: {
+				plugins: ["prettier-plugin-svelte"],
+				parser: "svelte",
+			},
+		},
+		helpers,
+	});
+};
+
 const modifySliceMachineConfig = async ({
 	helpers,
 	options,
@@ -388,6 +422,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			createPreviewRouteDirectory(context),
 			createPreviewRouteMatcherFile(context),
 			createRootLayoutServerFile(context),
+			createRootLayoutFile(context),
 		]),
 	);
 
