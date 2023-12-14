@@ -66,6 +66,10 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
 };
 
+type PrismicRepositoryManagerFetchEnvironmentsArgs = {
+	includeAllPersonalEnvironments?: boolean;
+};
+
 type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
 	environments?: Environment[];
 	error?: unknown;
@@ -439,7 +443,9 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
-	async fetchEnvironments(): Promise<PrismicRepositoryManagerFetchEnvironmentsReturnType> {
+	async fetchEnvironments(
+		args?: PrismicRepositoryManagerFetchEnvironmentsArgs,
+	): Promise<PrismicRepositoryManagerFetchEnvironmentsReturnType> {
 		const repositoryName = await this.project.getRepositoryName();
 
 		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
@@ -450,7 +456,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			res = await this._fetch({ url });
 		} catch (error) {
 			if (isUnauthenticatedError(error)) {
-				return { error: new UnauthenticatedError() };
+				return { error };
 			}
 
 			return {
@@ -484,7 +490,39 @@ export class PrismicRepositoryManager extends BaseManager {
 			}
 
 			if ("results" in value) {
-				return { environments: sortEnvironments(value.results) };
+				let environments = value.results;
+
+				// Only include the user's personal environment
+				// by default. We must filter in the manager
+				// because the API returns all personal
+				// environments.
+				if (!args?.includeAllPersonalEnvironments) {
+					try {
+						const profile = await this.user.getProfile();
+
+						environments = environments.filter((environment) => {
+							if (environment.kind === "dev") {
+								return environment.users.some(
+									(user) => user.id === profile.userId,
+								);
+							}
+
+							return true;
+						});
+					} catch (e) {
+						if (isUnauthenticatedError(error)) {
+							return { error };
+						}
+
+						return {
+							error: new UnexpectedDataError(
+								"Unexpected Error while fetching Environments",
+							),
+						};
+					}
+				}
+
+				return { environments: sortEnvironments(environments) };
 			}
 		}
 

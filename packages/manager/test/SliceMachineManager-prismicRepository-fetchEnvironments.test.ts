@@ -23,7 +23,15 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 		cwd,
 	});
 
-	mockPrismicUserAPI(ctx);
+	const userId = "user-foo";
+
+	mockPrismicUserAPI(ctx, {
+		profileEndpoint: {
+			profile: {
+				userId,
+			},
+		},
+	});
 	mockPrismicAuthAPI(ctx);
 
 	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
@@ -45,6 +53,18 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 			name: "foo",
 			users: [{ id: "id" }],
 		},
+		{
+			kind: "dev",
+			domain: `${repositoryName}-bar`,
+			name: "bar",
+			users: [{ id: userId }],
+		},
+		{
+			kind: "dev",
+			domain: `${repositoryName}-baz`,
+			name: "baz",
+			users: [{ id: "user-baz" }],
+		},
 	];
 
 	mockSliceMachineAPI(ctx, {
@@ -56,6 +76,122 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 	});
 
 	const res = await manager.prismicRepository.fetchEnvironments();
+
+	expect(res).toStrictEqual({
+		environments: environments.filter((environment) => {
+			if (environment.kind === "dev") {
+				return environment.users.some((user) => user.id === userId);
+			}
+
+			return true;
+		}),
+	});
+});
+
+it("exludes personal environments that are not the user's by default", async (ctx) => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	const userId = "user-foo";
+
+	mockPrismicUserAPI(ctx, {
+		profileEndpoint: {
+			profile: {
+				userId,
+			},
+		},
+	});
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+	const repositoryName = await manager.project.getRepositoryName();
+
+	const thisUsersEnvironment: Environment = {
+		kind: "dev",
+		domain: `${repositoryName}-bar`,
+		name: "bar",
+		users: [{ id: userId }],
+	};
+	const someoneElsesEnvironment: Environment = {
+		kind: "dev",
+		domain: `${repositoryName}-baz`,
+		name: "baz",
+		users: [{ id: "user-baz" }],
+	};
+	const environments = [thisUsersEnvironment, someoneElsesEnvironment];
+
+	mockSliceMachineAPI(ctx, {
+		environmentsV1Endpoint: {
+			expectedAuthenticationToken: authenticationToken,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			environments,
+		},
+	});
+
+	const res = await manager.prismicRepository.fetchEnvironments();
+
+	expect(res).toStrictEqual({
+		environments: [thisUsersEnvironment],
+	});
+});
+
+it("includes all personal environments if configured", async (ctx) => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	const userId = "user-foo";
+
+	mockPrismicUserAPI(ctx, {
+		profileEndpoint: {
+			profile: {
+				userId,
+			},
+		},
+	});
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+	const repositoryName = await manager.project.getRepositoryName();
+
+	const thisUsersEnvironment: Environment = {
+		kind: "dev",
+		domain: `${repositoryName}-bar`,
+		name: "bar",
+		users: [{ id: userId }],
+	};
+	const someoneElsesEnvironment: Environment = {
+		kind: "dev",
+		domain: `${repositoryName}-baz`,
+		name: "baz",
+		users: [{ id: "user-baz" }],
+	};
+	const environments = [thisUsersEnvironment, someoneElsesEnvironment];
+
+	mockSliceMachineAPI(ctx, {
+		environmentsV1Endpoint: {
+			expectedAuthenticationToken: authenticationToken,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+			environments,
+		},
+	});
+
+	const res = await manager.prismicRepository.fetchEnvironments({
+		includeAllPersonalEnvironments: true,
+	});
 
 	expect(res).toStrictEqual({ environments });
 });

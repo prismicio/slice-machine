@@ -8642,7 +8642,7 @@ __metadata:
     parse-multipart-data: 1.5.0
     prettier: ^3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    r19: ^0.1.7
+    r19: ^0.1.8
     rc9: ^2.0.1
     rehype-stringify: ^9.0.3
     remark-gfm: ^3.0.1
@@ -29122,12 +29122,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"r19@npm:^0.1.7":
-  version: 0.1.7
-  resolution: "r19@npm:0.1.7"
+"r19@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "r19@npm:0.1.8"
   dependencies:
     "@msgpack/msgpack": ^2.8.0
-  checksum: 29ce2cbe846d0692c36abbc0896a896337ae1f6e4e8ca53e061e5e2989a600db50be1e4eeda5f74538fa2cfe1547575b1496012906c99b4a95d60a68794bc192
+  checksum: c3c3290bea63dd415b4c4bb414ae4ac7f4835e9bc1d8b82b09545a1f78456736d04cca48e54b1c4c8c97f49f9aa21539cd77d1f60a5504c7342eec2b505a9f2d
   languageName: node
   linkType: hard
 
