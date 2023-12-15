@@ -5,6 +5,7 @@
   },
   "packageManager": "yarn@3.6.0",
   "scripts": {
+    "clean": "rimraf --glob '{e2e-projects/*/{.next,.svelte-kit},packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz,storybook-static},playwright/{playwright-report,test-results}}'",
     "dev": "concurrently --prefix-colors auto \"yarn:dev:*\"",
     "dev:manager": "yarn workspace @slicemachine/manager dev",
     "dev:start-slicemachine": "yarn workspace start-slicemachine dev",
@@ -50,6 +51,7 @@
     "husky": "8.0.3",
     "lint-staged": "13.2.0",
     "prettier": "3.0.3",
+    "rimraf": "5.0.5",
     "start-server-and-test": "1.15.5"
   },
   "lint-staged": {
