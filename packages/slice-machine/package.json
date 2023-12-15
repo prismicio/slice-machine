@@ -31,8 +31,8 @@
     "start-slicemachine": "./bin/start-slicemachine.cjs"
   },
   "dependencies": {
-    "@slicemachine/manager": "workspace:^",
-    "start-slicemachine": "workspace:^"
+    "@slicemachine/manager": "workspace:*",
+    "start-slicemachine": "workspace:*"
   },
   "devDependencies": {
     "@emotion/react": "11.11.1",
