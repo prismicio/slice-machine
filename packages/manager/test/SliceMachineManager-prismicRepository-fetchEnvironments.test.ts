@@ -23,12 +23,12 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 		cwd,
 	});
 
-	const userId = "user-foo";
+	const shortId = "user-foo";
 
 	mockPrismicUserAPI(ctx, {
 		profileEndpoint: {
 			profile: {
-				userId,
+				shortId,
 			},
 		},
 	});
@@ -57,7 +57,7 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 			kind: "dev",
 			domain: `${repositoryName}-bar`,
 			name: "bar",
-			users: [{ id: userId }],
+			users: [{ id: shortId }],
 		},
 		{
 			kind: "dev",
@@ -80,7 +80,7 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 	expect(res).toStrictEqual({
 		environments: environments.filter((environment) => {
 			if (environment.kind === "dev") {
-				return environment.users.some((user) => user.id === userId);
+				return environment.users.some((user) => user.id === shortId);
 			}
 
 			return true;
@@ -88,7 +88,7 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 	});
 });
 
-it("exludes personal environments that are not the user's by default", async (ctx) => {
+it("excludes personal environments that are not the user's by default", async (ctx) => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -96,12 +96,12 @@ it("exludes personal environments that are not the user's by default", async (ct
 		cwd,
 	});
 
-	const userId = "user-foo";
+	const shortId = "user-foo";
 
 	mockPrismicUserAPI(ctx, {
 		profileEndpoint: {
 			profile: {
-				userId,
+				shortId,
 			},
 		},
 	});
@@ -117,7 +117,7 @@ it("exludes personal environments that are not the user's by default", async (ct
 		kind: "dev",
 		domain: `${repositoryName}-bar`,
 		name: "bar",
-		users: [{ id: userId }],
+		users: [{ id: shortId }],
 	};
 	const someoneElsesEnvironment: Environment = {
 		kind: "dev",
@@ -150,12 +150,12 @@ it("includes all personal environments if configured", async (ctx) => {
 		cwd,
 	});
 
-	const userId = "user-foo";
+	const shortId = "user-foo";
 
 	mockPrismicUserAPI(ctx, {
 		profileEndpoint: {
 			profile: {
-				userId,
+				shortId,
 			},
 		},
 	});
@@ -171,7 +171,7 @@ it("includes all personal environments if configured", async (ctx) => {
 		kind: "dev",
 		domain: `${repositoryName}-bar`,
 		name: "bar",
-		users: [{ id: userId }],
+		users: [{ id: shortId }],
 	};
 	const someoneElsesEnvironment: Environment = {
 		kind: "dev",
