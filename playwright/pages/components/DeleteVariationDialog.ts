@@ -1,15 +1,12 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { type Locator, type Page, expect } from "@playwright/test";
 
 import { Dialog } from "./Dialog";
 
-export class DeleteSliceDialog extends Dialog {
+export class DeleteVariationDialog extends Dialog {
   readonly deletedMessage: Locator;
 
   constructor(page: Page) {
-    super(page, {
-      title: "Delete Slice",
-      submitName: "Delete",
-    });
+    super(page, { title: "Delete variation", submitName: "Delete" });
 
     /**
      * Components
@@ -19,9 +16,7 @@ export class DeleteSliceDialog extends Dialog {
     /**
      * Static locators
      */
-    this.deletedMessage = page.getByText("Successfully deleted slice", {
-      exact: false,
-    });
+    this.deletedMessage = page.getByText("Slice saved successfully");
   }
 
   /**
@@ -32,13 +27,8 @@ export class DeleteSliceDialog extends Dialog {
   /**
    * Actions
    */
-  async deleteSlice(name: string) {
+  async deleteVariation() {
     await expect(this.title).toBeVisible();
-    await expect(
-      this.dialog.getByText(name, {
-        exact: false,
-      }),
-    ).toBeVisible();
     await this.submitButton.click();
     await this.checkDeletedMessage();
     await expect(this.title).not.toBeVisible();

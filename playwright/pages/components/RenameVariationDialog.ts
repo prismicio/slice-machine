@@ -1,16 +1,13 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { type Locator, type Page, expect } from "@playwright/test";
 
 import { Dialog } from "./Dialog";
 
-export class RenameTypeDialog extends Dialog {
+export class RenameVariationDialog extends Dialog {
   readonly nameInput: Locator;
   readonly renamedMessage: Locator;
 
-  constructor(page: Page, format: "page" | "custom") {
-    super(page, {
-      title: `Rename a ${format} type`,
-      submitName: "Rename",
-    });
+  constructor(page: Page) {
+    super(page, { title: "Rename variation", submitName: "Rename" });
 
     /**
      * Components
@@ -20,11 +17,8 @@ export class RenameTypeDialog extends Dialog {
     /**
      * Static locators
      */
-    this.nameInput = this.dialog.getByTestId("custom-type-name-input");
-    this.renamedMessage = page.getByText(
-      `${format.charAt(0).toUpperCase()}${format.slice(1)} type renamed`,
-      { exact: true },
-    );
+    this.nameInput = this.dialog.getByPlaceholder("Variation name");
+    this.renamedMessage = page.getByText("Slice saved successfully");
   }
 
   /**
@@ -35,9 +29,9 @@ export class RenameTypeDialog extends Dialog {
   /**
    * Actions
    */
-  async renameType(newName: string) {
+  async renameVariation(name: string) {
     await expect(this.title).toBeVisible();
-    await this.nameInput.fill(newName);
+    await this.nameInput.fill(name);
     await this.submitButton.click();
     await this.checkRenamedMessage();
     await expect(this.title).not.toBeVisible();

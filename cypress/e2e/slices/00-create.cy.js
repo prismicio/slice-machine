@@ -128,27 +128,4 @@ describe("Create Slices", () => {
       .eq(0)
       .contains("Description");
   });
-
-  // See: #599
-  it("A user cannot create a slice with a name starting with a number", () => {
-    slicesList.goTo();
-    slicesList.emptyStateButton.click();
-
-    createSliceModal.nameInput.type("42Test");
-    createSliceModal.submitButton.should("be.disabled");
-  });
-
-  // See: #791
-  it("A user cannot rename a slice with a name starting with a number", () => {
-    const sliceName = "SliceName";
-
-    cy.createSlice(lib, sliceId, sliceName);
-    slicesList.goTo();
-
-    slicesList.getOptionDopDownButton(sliceName).click();
-    slicesList.renameButton.click();
-
-    sliceRenameModal.input.clear().type("42Test");
-    sliceRenameModal.submitButton.should("be.disabled");
-  });
 });

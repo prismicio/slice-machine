@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.21.3-dev-next-release.3",
+  "version": "1.22.1",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -32,8 +32,8 @@
   },
   "dependencies": {
     "@radix-ui/react-visually-hidden": "1.0.3",
-    "@slicemachine/manager": "workspace:^",
-    "start-slicemachine": "workspace:^"
+    "@slicemachine/manager": "workspace:*",
+    "start-slicemachine": "workspace:*"
   },
   "devDependencies": {
     "@emotion/react": "11.11.1",

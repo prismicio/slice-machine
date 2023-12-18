@@ -33,7 +33,9 @@ export class TypesTablePage extends SliceMachinePage {
      * Static locators
      */
     this.path = path;
-    this.breadcrumbLabel = this.breadcrumb.getByText(breadcrumbLabel);
+    this.breadcrumbLabel = this.breadcrumb.getByText(breadcrumbLabel, {
+      exact: true,
+    });
     this.createButton = page
       .getByTestId("create-ct")
       .or(
@@ -50,6 +52,7 @@ export class TypesTablePage extends SliceMachinePage {
   getRow(name: string): Locator {
     return this.page.getByRole("row", {
       name,
+      exact: false,
     });
   }
 
@@ -69,7 +72,7 @@ export class TypesTablePage extends SliceMachinePage {
     await this.createButton.first().click();
   }
 
-  async openActionDialog(name: string, action: "Rename" | "Delete") {
+  async openActionMenu(name: string, action: "Rename" | "Delete") {
     await this.getRow(name).locator('[data-testid="editDropdown"]').click();
     await this.page
       .getByRole("menuitem", { name: action, exact: true })

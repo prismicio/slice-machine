@@ -20,7 +20,9 @@ export class CreateSliceDialog extends Dialog {
     /**
      * Static locators
      */
-    this.createdMessage = page.getByText("Slice saved successfully");
+    this.createdMessage = page.getByText("Slice saved successfully", {
+      exact: false,
+    });
     this.nameInput = this.dialog.getByTestId("slice-name-input");
   }
 

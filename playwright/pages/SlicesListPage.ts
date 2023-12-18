@@ -29,7 +29,7 @@ export class SlicesListPage extends SliceMachinePage {
      */
     this.path = "/slices";
     this.header = page.getByRole("banner");
-    this.breadcrumbLabel = this.breadcrumb.getByText("Slices");
+    this.breadcrumbLabel = this.breadcrumb.getByText("Slices", { exact: true });
     this.createButton = this.header
       .getByRole("button", { name: "Create one", exact: true })
       .or(page.getByRole("button", { name: "Create", exact: true }));
@@ -56,18 +56,18 @@ export class SlicesListPage extends SliceMachinePage {
   async clickCard(name: string) {
     // Click on slice name to make sure not to accidentally click
     // on a button that would trigger another action
-    await this.getCard(name).getByText(name).click();
+    await this.getCard(name).getByText(name, { exact: true }).click();
   }
 
   async openCreateDialog() {
     await this.createButton.first().click();
   }
 
-  async openActionDialog(name: string, action: "Rename" | "Delete") {
+  async openActionMenu(name: string, action: "Rename" | "Delete") {
     await this.getCard(name).getByTestId("slice-action-icon").click();
     await this.page
       .getByTestId("slice-action-icon-dropdown")
-      .getByText(action)
+      .getByText(action, { exact: true })
       .click();
   }
 

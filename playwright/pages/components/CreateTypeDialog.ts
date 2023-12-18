@@ -4,6 +4,9 @@ import { Dialog } from "./Dialog";
 
 export class CreateTypeDialog extends Dialog {
   readonly createdMessage: Locator;
+  readonly reusableTypeRadio: Locator;
+  readonly singleTypeRadio: Locator;
+  readonly singleTypeButton: Locator;
   readonly nameInput: Locator;
 
   constructor(page: Page, format: "page" | "custom") {
@@ -19,7 +22,16 @@ export class CreateTypeDialog extends Dialog {
       `${format.charAt(0).toUpperCase()}${format.slice(
         1,
       )} type saved successfully`,
+      { exact: false },
     );
+
+    this.reusableTypeRadio = this.dialog.getByTestId(
+      "repeatable-type-radio-btn",
+    );
+    this.singleTypeRadio = this.dialog.getByTestId("single-type-radio-btn");
+    this.singleTypeButton = this.dialog.getByText("Single type", {
+      exact: false,
+    });
     this.nameInput = this.dialog.getByTestId("ct-name-input");
   }
 
@@ -31,8 +43,13 @@ export class CreateTypeDialog extends Dialog {
   /**
    * Actions
    */
-  async createType(name: string) {
+  async createType(name: string, type: "single" | "reusable") {
     await expect(this.title).toBeVisible();
+    await expect(this.reusableTypeRadio).toBeChecked();
+    if (type === "single") {
+      await this.singleTypeButton.click();
+      await expect(this.singleTypeRadio).toBeChecked();
+    }
     await this.nameInput.fill(name);
     await this.submitButton.click();
     await this.checkCreatedMessage();

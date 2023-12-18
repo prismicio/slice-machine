@@ -14,6 +14,7 @@ export const TextWithTooltip: React.FC<TextWithTooltipProps> = ({
   text,
   as,
   sx = {},
+  ...props
 }) => {
   const headingRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean | null>(null);
@@ -47,6 +48,7 @@ export const TextWithTooltip: React.FC<TextWithTooltipProps> = ({
         }}
         as={as}
         ref={headingRef}
+        {...props}
       >
         {text}
       </Text>

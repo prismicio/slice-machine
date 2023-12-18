@@ -263,6 +263,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   }
                 }}
                 size="small"
+                data-cy="slice-zone-switch"
               />
             ) : undefined
           }

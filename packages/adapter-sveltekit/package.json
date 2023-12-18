@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-sveltekit",
-	"version": "0.3.29-dev-next-release.3",
+	"version": "0.3.31",
 	"description": "Slice Machine adapter for SvelteKit.",
 	"keywords": [
 		"typescript",
@@ -64,7 +64,7 @@
 	"dependencies": {
 		"@prismicio/simulator": "^0.1.4",
 		"@prismicio/types-internal": "^2.2.0",
-		"@slicemachine/plugin-kit": "workspace:^",
+		"@slicemachine/plugin-kit": "workspace:*",
 		"common-tags": "^1.8.2",
 		"fp-ts": "^2.13.1",
 		"io-ts": "^2.2.20",
@@ -79,9 +79,9 @@
 	"devDependencies": {
 		"@prismicio/mock": "0.2.0",
 		"@size-limit/preset-small-lib": "8.2.4",
-		"@sveltejs/kit": "1.22.6",
+		"@sveltejs/kit": "2.0.0",
 		"@sveltejs/package": "2.2.1",
-		"@sveltejs/vite-plugin-svelte": "2.4.5",
+		"@sveltejs/vite-plugin-svelte": "3.0.1",
 		"@types/common-tags": "1.8.1",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",
@@ -103,7 +103,7 @@
 		"vitest": "0.32.0"
 	},
 	"peerDependencies": {
-		"@sveltejs/kit": "^1",
+		"@sveltejs/kit": "^1 || ^2",
 		"prettier": ">=3",
 		"prettier-plugin-svelte": ">=3",
 		"svelte": "^3.54.0 || ^4.0.0-next.0"
