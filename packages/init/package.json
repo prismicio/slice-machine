@@ -93,5 +93,8 @@
 		"vite": "4.3.9",
 		"vite-plugin-sdk": "0.1.1",
 		"vitest": "0.32.0"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
