@@ -111,6 +111,13 @@ async function publish(options?: Options): Promise<void> {
       "This command must be executed on a clean repository.",
     );
   }
+
+  // Set Git user configuration to the current commit's author
+  const authorName = await getCurrentCommitAuthorName();
+  const authorEmail = await getCurrentCommitAuthorEmail();
+  await exec("git", ["config", "user.name", authorName]);
+  await exec("git", ["config", "user.email", authorEmail]);
+
   const currentBranchName = await readCurrentBranchName();
   if (currentBranchName === undefined) {
     throw new CommandError(
@@ -404,4 +411,22 @@ function incrementVersionByPrerelease(
     const incrementedPrereleaseNumber = ++prereleaseNumber;
     return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch}-${prereleaseIdentifier}.${incrementedPrereleaseNumber}`;
   }
+}
+
+async function getCurrentCommitAuthorName() {
+  const { stdout: authorName } = await exec("git", [
+    "log",
+    "-1",
+    "--pretty=format:%an",
+  ]);
+  return authorName;
+}
+
+async function getCurrentCommitAuthorEmail() {
+  const { stdout: authorEmail } = await exec("git", [
+    "log",
+    "-1",
+    "--pretty=format:%ae",
+  ]);
+  return authorEmail;
 }
