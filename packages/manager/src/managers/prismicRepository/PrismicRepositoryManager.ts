@@ -503,7 +503,7 @@ export class PrismicRepositoryManager extends BaseManager {
 						environments = environments.filter((environment) => {
 							if (environment.kind === "dev") {
 								return environment.users.some(
-									(user) => user.id === profile.userId,
+									(user) => user.id === profile.shortId,
 								);
 							}
 
