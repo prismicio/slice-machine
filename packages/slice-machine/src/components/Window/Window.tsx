@@ -36,17 +36,21 @@ export const WindowTabs: FC<WindowTabsProps> = (props) => (
   <Tabs.Root {...props} activationMode="manual" className={styles.tabs} />
 );
 
-type WindowTabsListProps = PropsWithChildren<{ onAddNewTab?: () => void }>;
+type WindowTabsListProps = PropsWithChildren<{
+  onAddNewTab?: () => void;
+  iconButtonTestId?: { [name: string]: string };
+}>;
 
 export const WindowTabsList: FC<WindowTabsListProps> = ({
   children,
   onAddNewTab,
+  iconButtonTestId,
   ...otherProps
 }) => (
   <Tabs.List {...otherProps} className={styles.tabsList}>
     {children}
     <div className={styles.newTabButton}>
-      <IconButton icon="add" onClick={onAddNewTab} />
+      <IconButton icon="add" onClick={onAddNewTab} {...iconButtonTestId} />
     </div>
   </Tabs.List>
 );

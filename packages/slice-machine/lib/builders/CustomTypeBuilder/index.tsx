@@ -57,6 +57,7 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
               onAddNewTab={() => {
                 setDialog({ type: "CREATE_CUSTOM_TYPE" });
               }}
+              iconButtonTestId={{ "data-cy": "add-tab-button" }}
             >
               {customType.tabs.map((tab) => (
                 <WindowTabsTrigger

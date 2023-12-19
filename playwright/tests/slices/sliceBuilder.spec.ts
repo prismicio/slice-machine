@@ -85,4 +85,23 @@ test.describe("Slice builder", () => {
       await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(1);
     },
   );
+
+  test.run({ onboarded: false })(
+    "I can close the simulator tooltip and it stays close",
+    async ({ slice, sliceBuilderPage }) => {
+      await sliceBuilderPage.goto(slice.name);
+
+      // Simulator tooltip should open automatically
+      await expect(sliceBuilderPage.simulateTooltipTitle).toBeVisible();
+      await sliceBuilderPage.simulateTooltipCloseButton.click();
+      await expect(sliceBuilderPage.simulateTooltipTitle).not.toBeVisible();
+
+      await sliceBuilderPage.page.reload();
+      await expect(
+        sliceBuilderPage.getBreadcrumbLabel(slice.name),
+      ).toBeVisible();
+
+      await expect(sliceBuilderPage.simulateTooltipTitle).not.toBeVisible();
+    },
+  );
 });
