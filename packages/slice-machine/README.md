@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://prismic.io/slice-machine">
-    <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
+    <img src="https://raw.githubusercontent.com/prismicio/slice-machine/main/.github/logo.svg" alt="Slice Machine logo" width="220" />
   </a>
 </p>
 
