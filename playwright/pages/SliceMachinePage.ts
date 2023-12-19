@@ -2,7 +2,6 @@ import { Locator, Page } from "@playwright/test";
 
 import { Menu } from "./components/Menu";
 import { InAppGuideDialog } from "./components/InAppGuideDialog";
-import { EnvironmentSelector } from "./components/EnvironmentSelector";
 import { LoginDialog } from "./components/LoginDialog";
 
 export class SliceMachinePage {
@@ -10,7 +9,6 @@ export class SliceMachinePage {
   readonly topBorder: Locator;
   readonly menu: Menu;
   readonly inAppGuideDialog: InAppGuideDialog;
-  readonly environmentSelector: EnvironmentSelector;
   readonly loginDialog: LoginDialog;
   readonly body: Locator;
   readonly breadcrumb: Locator;
@@ -22,7 +20,6 @@ export class SliceMachinePage {
     this.page = page;
     this.menu = new Menu(page);
     this.inAppGuideDialog = new InAppGuideDialog(page);
-    this.environmentSelector = new EnvironmentSelector(page);
     this.loginDialog = new LoginDialog(page);
 
     /**

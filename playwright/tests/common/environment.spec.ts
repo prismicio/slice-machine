@@ -9,7 +9,7 @@ test.describe("Environment", () => {
     "I can click on the text to log in",
     async ({ sliceMachinePage }) => {
       await sliceMachinePage.gotoDefaultPage();
-      await sliceMachinePage.environmentSelector.loginTextButton.click();
+      await sliceMachinePage.menu.environmentSelector.loginTextButton.click();
       await expect(sliceMachinePage.loginDialog.submitButton).toBeVisible();
     },
   );
@@ -18,7 +18,7 @@ test.describe("Environment", () => {
     "I can click on the icon to log in",
     async ({ sliceMachinePage }) => {
       await sliceMachinePage.gotoDefaultPage();
-      await sliceMachinePage.environmentSelector.loginIconButton.click();
+      await sliceMachinePage.menu.environmentSelector.loginIconButton.click();
       await expect(sliceMachinePage.loginDialog.submitButton).toBeVisible();
     },
   );
@@ -41,7 +41,7 @@ test.describe("Environment", () => {
 
       await sliceMachinePage.gotoDefaultPage();
       await expect(
-        sliceMachinePage.environmentSelector.environmentName,
+        sliceMachinePage.menu.environmentSelector.environmentName,
       ).toHaveText("Production");
     },
   );
@@ -67,7 +67,7 @@ test.describe("Environment", () => {
 
       await sliceMachinePage.gotoDefaultPage();
       await expect(
-        sliceMachinePage.environmentSelector.environmentName,
+        sliceMachinePage.menu.environmentSelector.environmentName,
       ).toHaveText(environments[1].name);
     },
   );
@@ -87,7 +87,7 @@ test.describe("Environment", () => {
       });
 
       await sliceMachinePage.gotoDefaultPage();
-      await sliceMachinePage.environmentSelector.selectEnvironment(
+      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
     },
@@ -111,13 +111,13 @@ test.describe("Environment", () => {
 
       await sliceMachinePage.gotoDefaultPage();
       await expect(
-        sliceMachinePage.environmentSelector.loginTextButton,
+        sliceMachinePage.menu.environmentSelector.loginTextButton,
       ).not.toBeVisible();
       await expect(
-        sliceMachinePage.environmentSelector.loginIconButton,
+        sliceMachinePage.menu.environmentSelector.loginIconButton,
       ).not.toBeVisible();
       await expect(
-        sliceMachinePage.environmentSelector.dropdownTrigger,
+        sliceMachinePage.menu.environmentSelector.dropdownTrigger,
       ).not.toBeVisible();
     },
   );
@@ -138,24 +138,24 @@ test.describe("Environment", () => {
 
       await sliceMachinePage.gotoDefaultPage();
 
-      await sliceMachinePage.environmentSelector.selectEnvironment(
+      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
-      await sliceMachinePage.environmentSelector.checkSelectedEnvironmentKind(
+      await sliceMachinePage.menu.environmentSelector.checkSelectedEnvironmentKind(
         environments[0].kind,
       );
 
-      await sliceMachinePage.environmentSelector.selectEnvironment(
+      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
-      await sliceMachinePage.environmentSelector.checkSelectedEnvironmentKind(
+      await sliceMachinePage.menu.environmentSelector.checkSelectedEnvironmentKind(
         environments[1].kind,
       );
 
-      await sliceMachinePage.environmentSelector.selectEnvironment(
+      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
-      await sliceMachinePage.environmentSelector.checkSelectedEnvironmentKind(
+      await sliceMachinePage.menu.environmentSelector.checkSelectedEnvironmentKind(
         environments[2].kind,
       );
     },
@@ -177,7 +177,7 @@ test.describe("Environment", () => {
 
       await sliceMachinePage.gotoDefaultPage();
 
-      await sliceMachinePage.environmentSelector.selectEnvironment(
+      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
       await expect(sliceMachinePage.topBorder).toHaveCSS(
@@ -185,7 +185,7 @@ test.describe("Environment", () => {
         "rgb(109, 84, 207)",
       );
 
-      await sliceMachinePage.environmentSelector.selectEnvironment(
+      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
       await expect(sliceMachinePage.topBorder).toHaveCSS(
@@ -193,7 +193,7 @@ test.describe("Environment", () => {
         "rgb(56, 91, 204)",
       );
 
-      await sliceMachinePage.environmentSelector.selectEnvironment(
+      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
       await expect(sliceMachinePage.topBorder).toHaveCSS(
