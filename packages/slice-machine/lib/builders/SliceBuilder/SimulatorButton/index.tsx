@@ -65,7 +65,7 @@ const SimulatorOnboardingTooltip: React.FC<
         Minimize context-switching by previewing your Slice components in the
         simulator.
       </HoverCardDescription>
-      <HoverCardCloseButton>Got It</HoverCardCloseButton>
+      <HoverCardCloseButton>Got it</HoverCardCloseButton>
     </HoverCard>
   );
 };
