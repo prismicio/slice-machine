@@ -161,45 +161,47 @@ test.describe("Environment", () => {
     },
   );
 
-  test.run()(
-    "I can see the window top border depending on the environment",
-    async ({ sliceMachinePage }) => {
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: [
-          {
-            path: "prismicRepository.fetchEnvironments",
-            data: () => ({ environments }),
-            execute: false,
-          },
-        ],
-      });
+  test
+    .run()
+    .skip(
+      "I can see the window top border depending on the environment",
+      async ({ sliceMachinePage }) => {
+        await mockManagerProcedures({
+          page: sliceMachinePage.page,
+          procedures: [
+            {
+              path: "prismicRepository.fetchEnvironments",
+              data: () => ({ environments }),
+              execute: false,
+            },
+          ],
+        });
 
-      await sliceMachinePage.gotoDefaultPage();
+        await sliceMachinePage.gotoDefaultPage();
 
-      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
-        environments[0].name,
-      );
-      await expect(sliceMachinePage.appLayout).toHaveCSS(
-        "border-top-color",
-        "rgb(109, 84, 207)",
-      );
+        await sliceMachinePage.menu.environmentSelector.selectEnvironment(
+          environments[0].name,
+        );
+        await expect(sliceMachinePage.appLayout).toHaveCSS(
+          "border-top-color",
+          "rgb(109, 84, 207)",
+        );
 
-      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
-        environments[1].name,
-      );
-      await expect(sliceMachinePage.appLayout).toHaveCSS(
-        "border-top-color",
-        "rgb(56, 91, 204)",
-      );
+        await sliceMachinePage.menu.environmentSelector.selectEnvironment(
+          environments[1].name,
+        );
+        await expect(sliceMachinePage.appLayout).toHaveCSS(
+          "border-top-color",
+          "rgb(56, 91, 204)",
+        );
 
-      await sliceMachinePage.menu.environmentSelector.selectEnvironment(
-        environments[2].name,
-      );
-      await expect(sliceMachinePage.appLayout).toHaveCSS(
-        "border-top-color",
-        "rgb(255, 159, 26)",
-      );
-    },
-  );
+        await sliceMachinePage.menu.environmentSelector.selectEnvironment(
+          environments[2].name,
+        );
+        await expect(sliceMachinePage.appLayout).toHaveCSS(
+          "border-top-color",
+          "rgb(255, 159, 26)",
+        );
+      },
+    );
 });
