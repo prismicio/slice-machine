@@ -20,10 +20,10 @@ export class EnvironmentSelector {
       name: "Login required",
       exact: true,
     });
-    // TODO: Replace with `getByRole` once `<IconButton>` supports labels.
+    // TODO(DT-1874): Replace with `getByRole` once `<IconButton>` supports labels.
     this.loginIconButton = page.getByTestId("environment-login-icon-button");
     this.environmentName = page.getByTestId("active-environment-name");
-    // TODO: Replace with `getByRole` once `<IconButton>` supports labels.
+    // TODO(DT-1874): Replace with `getByRole` once `<IconButton>` supports labels.
     this.dropdownTrigger = page.getByTestId("environment-dropdown-button");
   }
 
@@ -46,7 +46,7 @@ export class EnvironmentSelector {
   /**
    * Assertions
    */
-  // TODO: Type `kind` with `@slicemachine/manager`'s `Environment["kind"]`.
+  // TODO(DT-1854): Type `kind` with `@slicemachine/manager`'s `Environment["kind"]`.
   async checkSelectedEnvironmentKind(kind: "prod" | "stage" | "dev") {
     const humanReadableKindMap = {
       prod: "Production",
