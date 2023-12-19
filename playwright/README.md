@@ -85,10 +85,12 @@ Default is not logged in and onboarded.
 Example for a logged in user not onboarded:
 
 ```ts
-test.run({ loggedIn: true, onboarded: false })("I can ...", 
+test.run({ loggedIn: true, onboarded: false })(
+  "I can ...",
   async ({ sliceBuilderPage, slicesListPage }) => {
     // Test content
-  });
+  },
+);
 ```
 
 Warning: Only use `loggedIn: true` when it's necessary for your test, it increases local test time (not in CI) by some seconds (≃ 3 secs).
@@ -96,11 +98,12 @@ Warning: Only use `loggedIn: true` when it's necessary for your test, it increas
 ### Mocking with `mockManagerProcedures`
 
 Use `mockManagerProcedures` function when you need to mock a manager procedure response.
-With the way playwright intercept requests you need to give an array of procedures to mock. 
+With the way playwright intercept requests you need to give an array of procedures to mock.
 You will have the possibility to return fake data on top of the existing one.
 If you don't need to return data and / or let the manager execute the procedure at all, you can disable it with `execute` property, it will return an empty object to the UI.
 
 Example:
+
 ```ts
 await mockManagerProcedures({
   page: changesPage.page,
@@ -123,13 +126,13 @@ await mockManagerProcedures({
 });
 ```
 
-Warning: Only mock when it's necessary because the state of Slice Machine or the remote repository can change. 
+Warning: Only mock when it's necessary because the state of Slice Machine or the remote repository can change.
 We want to ensure test can be launched on any state of Slice Machine and any state of repository. Mocking will help you do that.
 In theory, we want to avoid mocking while doing e2e tests. Smoke tests don't have any mocking but standalone tests can when it's necessary. It improves the DX and reduce the necessary setup that we can have for Smoke tests.
 
 ## Best practices
 
-1. Always use the "Page Object Model" for Locators
+### Always use the "Page Object Model" for Locators
 
 In the context of web development and testing, the Page Object Model (POM) is a design pattern that encourages abstraction of web pages and components. This means that each web page or component should be represented as a class, and the various elements on the page or component should be defined as methods within this class.
 These classes should be written in the "pages" folder.
@@ -141,11 +144,11 @@ This approach has several benefits:
 - Reusability: You can reuse code across different test cases.
 
 **Warning**: Never use a locator directly in a test file (getBy...). Always use the Page Object Model design pattern for that.
- 
-2. Always try to do an exact matching with locators
+
+### Always try to do an exact matching with locators
 
 In order to be sure of what you are targeting, always use the `exact` option when possible.
-Use `true` when you want an exact matching. 
+Use `true` when you want an exact matching.
 
 Examples:
 
@@ -179,14 +182,21 @@ this.customTypesLink = this.menu.getByText("Custom types", {
 });
 ```
 
-3. Don't use `.locator()`
+### Prefer using `.toBeVisible()` when testing the presense of visble elements
+
+`.toBeVisible()` ensures the element is present and visible to users. Explicitly checking for visibility prevents a false-positive test where the element is in the DOM, but cannot be seen or interacted by the user.
+
+> [!NOTE]
+> This preference can be ignored if the targeted element is hidden.
+
+If the element is purposely hidden, use
+
+### Don't use `.locator()`
 
 Out goal is to prevent testing implementation details such as:
 
 ```ts
-this.appVersion = this.menu.locator(
-  'a[href="/changelog"] > div:nth-child(2)',
-);
+this.appVersion = this.menu.locator('a[href="/changelog"] > div:nth-child(2)');
 ```
 
 Instead, for example you can use `getByTestId`:
@@ -195,11 +205,11 @@ Instead, for example you can use `getByTestId`:
 this.appVersion = this.menu.getByTestId("slicemachine-version");
 ```
 
-4. Ensure tests don't depend on a specific state of Slice Machine  
+### Ensure tests don't depend on a specific state of Slice Machine
 
 Our e2e tests should not break whatever the current state of Slice Machine is. Having existing data or not, staging or production, etc.
 
-5. Always create tests from the user perspective
+### Always create tests from the user perspective
 
 When creating tests it's important to test what users can see and do.
 Start the test name with "I" so you prevent yourself testing implementation details.
@@ -212,7 +222,7 @@ test.run()("I can create a slice", async () => {
 });
 ```
 
-6. Write your own best practice for the team here...
+### Write your own best practice for the team here...
 
 ## Useful links
 

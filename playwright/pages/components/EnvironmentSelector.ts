@@ -40,7 +40,9 @@ export class EnvironmentSelector {
   async selectEnvironment(name: string) {
     await this.dropdownTrigger.click();
     await this.getEnvironmentMenuItem(name).click();
-    await expect(this.environmentName).toHaveText(name);
+    await expect(
+      this.environmentName.getByText(name, { exact: true }),
+    ).toBeVisible();
   }
 
   /**
