@@ -165,12 +165,16 @@ jobs:
       - name: Set up Playwright browsers
         run: yarn test:e2e:install
 
+      - name: Set up Slice Machine project
+        run: |
+          yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/manager,@slicemachine/plugin-kit,start-slicemachine}' --parallel --topological-dev run build
+          yarn workspace slice-machine-ui pack --out ../../e2e-projects/next/sm.tgz
+          yarn workspace cimsirp add -D ./sm.tgz
+
       - name: Running E2E tests
         run: yarn test:e2e
         env:
-          PRISMIC_URL: https://wroom.io
-          WROOM_EMAIL: ${{ secrets.EMAIL }}
-          WROOM_PASSWORD: ${{ secrets.PASSWORD }}
+          DEBUG: pw:test
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v3

@@ -37,7 +37,7 @@ export const Image = {
           Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
           vitae etiam
         </HoverCardDescription>
-        <HoverCardCloseButton>Got It</HoverCardCloseButton>
+        <HoverCardCloseButton>Got it</HoverCardCloseButton>
       </>
     ),
   },
@@ -62,7 +62,7 @@ export const Video = {
           Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
           vitae etiam
         </HoverCardDescription>
-        <HoverCardCloseButton>Got It</HoverCardCloseButton>
+        <HoverCardCloseButton>Got it</HoverCardCloseButton>
       </>
     ),
   },
