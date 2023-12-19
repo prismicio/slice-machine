@@ -1,8 +1,6 @@
-import * as dotenv from "dotenv";
 import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
-import { decode } from "@msgpack/msgpack";
 import { test as baseTest, expect } from "@playwright/test";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
@@ -16,8 +14,6 @@ import { ChangelogPage } from "../pages/ChangelogPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
 import config from "../playwright.config";
-
-dotenv.config({ path: `.env.local` });
 
 export type DefaultFixtures = {
   /**
@@ -47,11 +43,15 @@ export type DefaultFixtures = {
  * Default test fixture
  */
 export const defaultTest = (
-  options: { loggedIn?: boolean; onboarded?: boolean } = {},
+  options: {
+    onboarded?: boolean;
+    reduxStorage?: Record<string, unknown>;
+    storage?: Record<string, unknown>;
+  } = {},
 ) => {
-  const { loggedIn = false, onboarded = true } = options;
+  const { onboarded = true, reduxStorage = {}, storage = {} } = options;
 
-  return baseTest.extend<DefaultFixtures>({
+  const test = baseTest.extend<DefaultFixtures>({
     /**
      * Pages
      */
@@ -149,61 +149,84 @@ export const defaultTest = (
      * Page
      */
     page: async ({ browser }, use) => {
-      // Onboard user in Local Storage by default
-      let context = await browser.newContext({
-        storageState: {
-          cookies: [],
-          origins: [
-            {
-              origin: config.use.baseURL,
-              localStorage: [
-                {
-                  name: "persist:root",
-                  value: JSON.stringify({
-                    userContext: {
-                      userReview: {
-                        onboarding: true,
-                        advancedRepository: true,
-                      },
-                      updatesViewed: {
-                        latest: null,
-                        latestNonBreaking: null,
-                      },
-                      hasSeenChangesToolTip: true,
-                      hasSeenSimulatorToolTip: true,
-                      hasSeenTutorialsToolTip: true,
-                      authStatus: "unknown",
-                      lastSyncChange: null,
-                    },
-                  }),
-                },
-                {
-                  name: "slice-machine_isInAppGuideOpen",
-                  value: "false",
-                },
-              ],
+      // Create redux storage state
+      const userContext = onboarded
+        ? {
+            userReview: {
+              onboarding: false,
+              advancedRepository: true,
             },
-          ],
-        },
-      });
+            updatesViewed: {
+              latest: null,
+              latestNonBreaking: null,
+            },
+            hasSeenChangesToolTip: true,
+            hasSeenSimulatorToolTip: true,
+            hasSeenTutorialsToolTip: true,
+            authStatus: "unknown",
+            lastSyncChange: null,
+            ...reduxStorage,
+          }
+        : {
+            userReview: {
+              onboarding: onboarded,
+              advancedRepository: false,
+            },
+            updatesViewed: {
+              latest: null,
+              latestNonBreaking: null,
+            },
+            hasSeenChangesToolTip: false,
+            hasSeenSimulatorToolTip: false,
+            hasSeenTutorialsToolTip: false,
+            authStatus: "unknown",
+            lastSyncChange: null,
+            ...reduxStorage,
+          };
 
-      // Prevent user to be onboarded if needed
-      if (!onboarded) {
-        context = await browser.newContext({
-          storageState: {
-            cookies: [],
-            origins: [
+      // Create new storage state
+      const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
+      const storageFormatted = Object.entries(storage).map(([key, value]) => ({
+        name: `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`,
+        value: JSON.stringify(value),
+      }));
+      const newStorage = onboarded
+        ? [
+            {
+              name: `${SLICE_MACHINE_STORAGE_PREFIX}_isInAppGuideOpen`,
+              value: "false",
+            },
+          ]
+            .filter(
+              (item) =>
+                storageFormatted.findIndex(
+                  (formattedItem) => formattedItem.name === item.name,
+                ) === -1,
+            )
+            .concat(storageFormatted)
+        : storageFormatted;
+
+      // Onboard user in Local Storage by default
+      const storageState = {
+        cookies: [],
+        origins: [
+          {
+            origin: config.use.baseURL,
+            localStorage: [
               {
-                origin: config.use.baseURL,
-                localStorage: [],
+                name: "persist:root",
+                value: JSON.stringify({
+                  userContext: JSON.stringify(userContext),
+                }),
               },
-            ],
+            ].concat(newStorage),
           },
-        });
-      }
+        ],
+      };
 
       // Create new page object with new context
-      const page = await context.newPage();
+      const newContext = await browser.newContext({ storageState });
+      const page = await newContext.newPage();
 
       // Logout user by default
       try {
@@ -212,103 +235,16 @@ export const defaultTest = (
         // Ignore since it means the user is already logged out
       }
 
-      // Login user if needed
-      if (loggedIn) {
-        // In CI we define a PRISMIC_URL env variable to fasten the tests
-        let prismicUrl = process.env["PRISMIC_URL"];
-
-        // In local we get the Prismic URL from the browser, it helps to avoid
-        // switching manually between Wroom and Prismic
-        if (!prismicUrl) {
-          await page.route(
-            "*/**/_manager",
-            async (route) => {
-              const postDataBuffer = route.request().postDataBuffer() as Buffer;
-              const postData = decode(postDataBuffer) as Record<
-                "procedurePath",
-                unknown[]
-              >;
-
-              if (postData.procedurePath[0] === "getState") {
-                const response = await route.fetch();
-                const existingBody = await response.body();
-                const existingData = (
-                  decode(existingBody) as Record<"data", unknown>
-                ).data as Record<
-                  "env",
-                  {
-                    endpoints: { PrismicWroom: string };
-                  }
-                >;
-
-                // Get Prismic URL from the response of the getState call
-                prismicUrl = existingData.env.endpoints.PrismicWroom;
-
-                await route.continue();
-              }
-            },
-            // Ensure only the first getState call is intercepted
-            {
-              times: 1,
-            },
-          );
-
-          // Visit the page to trigger the getState call and wait for it
-          await page.goto("/");
-          await page.waitForResponse("*/**/_manager");
-        }
-
-        const activeEnv = prismicUrl?.includes("wroom") ? "WROOM" : "PRISMIC";
-        const email = process.env[`${activeEnv}_EMAIL`];
-        const password = process.env[`${activeEnv}_PASSWORD`];
-
-        if (!prismicUrl) {
-          console.warn("Could not find Prismic URL.");
-        } else if (!email || !password) {
-          console.warn(
-            `Missing EMAIL or PASSWORD environment variables for ${activeEnv} environment.`,
-          );
-        } else {
-          // Do the authentication call
-          const res = await fetch(
-            new URL("./authentication/signin", prismicUrl).toString(),
-            {
-              method: "post",
-              body: JSON.stringify({
-                email,
-                password,
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            },
-          );
-
-          if (!res.headers.has("Set-Cookie")) {
-            // If the authentication fails, log the error
-            const reason = await res.text();
-            console.error(
-              "Could not authenticate to prismic. Please check the credentials.",
-              reason,
-            );
-          } else {
-            // If the authentication succeeded, save the cookies to persist it
-            await fs.writeFile(
-              path.join(os.homedir(), ".prismic"),
-              JSON.stringify({
-                base: new URL(prismicUrl).toString(),
-                cookies:
-                  res.headers.get("Set-Cookie")?.split(", ").join("; ") ?? "",
-              }),
-            );
-          }
-        }
-      }
-
       // Propagate the modified page to the test
       await use(page);
     },
   });
+
+  test.afterEach(async ({ page }) => {
+    await page.waitForResponse("*/**/_manager");
+  });
+
+  return test;
 };
 
 export const test = {
