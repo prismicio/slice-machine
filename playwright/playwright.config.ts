@@ -12,9 +12,6 @@ const config = {
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env["CI"],
 
-  // Retry on CI only.
-  retries: process.env["CI"] ? 2 : 0,
-
   // Configure projects for major browsers.
   projects: [
     {
@@ -24,6 +21,9 @@ const config = {
       },
     },
   ],
+
+  // Retry on CI only.
+  retries: process.env["CI"] ? 2 : 0,
 
   // Reporter to use.
   reporter: process.env["CI"]
@@ -65,8 +65,10 @@ const config = {
   webServer: [
     {
       cwd: "..",
-      command: "yarn dev",
-      url: `http://localhost:3000/`,
+      command: process.env["CI"] ? "yarn dev:e2e-next" : "yarn dev",
+      url: process.env["CI"]
+        ? "http://localhost:8000/"
+        : "http://localhost:3000/",
       reuseExistingServer: !process.env["CI"],
       stdout: "pipe",
       timeout: 120_000,
@@ -74,16 +76,12 @@ const config = {
     {
       cwd: "../e2e-projects/next",
       command: "yarn slicemachine:dev",
-      url: `http://localhost:9999/`,
+      url: "http://localhost:9999/",
       reuseExistingServer: !process.env["CI"],
       stdout: "pipe",
       timeout: 120_000,
     },
   ],
-
-  // Don't run tests in parallel due to the nature of
-  // Slice Machine modifying file in the file system.
-  workers: 1,
 } satisfies PlaywrightTestConfig;
 
 export default config;
