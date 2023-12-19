@@ -10,6 +10,12 @@ export class ChangesPage extends SliceMachinePage {
   readonly notLoggedInTitle: Locator;
   readonly notAuthorizedTitle: Locator;
   readonly blankSlateTitle: Locator;
+  readonly unknownErrorMessage: Locator;
+  readonly softLimitTitle: Locator;
+  readonly softLimitCheckbox: Locator;
+  readonly softLimitButton: Locator;
+  readonly hardLimitTitle: Locator;
+  readonly hardLimitButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -42,6 +48,29 @@ export class ChangesPage extends SliceMachinePage {
     this.blankSlateTitle = page.getByText("Everything up-to-date", {
       exact: true,
     });
+    this.unknownErrorMessage = page.getByText(
+      "Something went wrong when pushing your changes. Check your terminal logs.",
+      {
+        exact: true,
+      },
+    );
+    this.softLimitTitle = page.getByText("Confirm deletion", {
+      exact: true,
+    });
+    this.softLimitCheckbox = page.getByText("Delete these Documents", {
+      exact: true,
+    });
+    this.softLimitButton = page.getByRole("button", {
+      name: "Push changes",
+      exact: true,
+    });
+    this.hardLimitTitle = page.getByText("Manual action required", {
+      exact: true,
+    });
+    this.hardLimitButton = page.getByRole("button", {
+      name: "Try again",
+      exact: true,
+    });
   }
 
   /**
@@ -62,7 +91,14 @@ export class ChangesPage extends SliceMachinePage {
   async pushChanges() {
     await this.pushChangesButton.click();
     await expect(this.pushChangesButton).toBeDisabled();
-    await expect(this.pushedMessaged).toBeVisible();
+    await this.checkPushedMessage();
+  }
+
+  async confirmDeleteDocuments() {
+    await this.softLimitCheckbox.click();
+    await this.softLimitButton.click();
+    await expect(this.softLimitTitle).not.toBeVisible();
+    await this.checkPushedMessage();
   }
 
   /**
@@ -84,5 +120,10 @@ export class ChangesPage extends SliceMachinePage {
     await expect(
       this.getCustomType(id).getByText(status, { exact: true }),
     ).toBeVisible();
+  }
+
+  async checkPushedMessage() {
+    await expect(this.pushedMessaged).toBeVisible();
+    await expect(this.pushedMessaged).not.toBeVisible();
   }
 }
