@@ -1,0 +1,40 @@
+name: deploy-alpha-beta
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - '*'
+  pull_request:
+    types: [synchronize, opened, reopened]
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'release: ')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref || github.ref }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
+
+      - name: Install Dependencies
+        run: |
+          yarn install
+
+      - name: Build essentials
+        uses: ./.github/actions/build-essential
+
+      - name: Version And Publish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          yarn publish unstable --tolerate-republish
