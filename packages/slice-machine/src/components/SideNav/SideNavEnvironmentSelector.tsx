@@ -50,6 +50,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
             kind={activeEnvironment?.kind ?? "prod"}
             asStatus={true}
             className={styles.activeEnvironmentDot}
+            data-cy="active-environment-dot"
           />
         )}
       </Box>
@@ -185,7 +186,7 @@ type EnvironmentDotProps = {
 };
 
 const EnvironmentDot: FC<EnvironmentDotProps> = (props) => {
-  const { kind, asStatus = false, className } = props;
+  const { kind, asStatus = false, className, ...otherProps } = props;
 
   const humanReadableKind = humanReadableKindMap[kind];
 
@@ -193,6 +194,7 @@ const EnvironmentDot: FC<EnvironmentDotProps> = (props) => {
     <div
       className={clsx(styles.environmentDot[kind], className)}
       role={asStatus ? "status" : undefined}
+      {...otherProps}
     >
       {asStatus ? (
         <VisuallyHidden.Root>

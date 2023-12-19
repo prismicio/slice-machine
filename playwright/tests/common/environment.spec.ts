@@ -141,21 +141,21 @@ test.describe("Environment", () => {
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
-      await sliceMachinePage.menu.environmentSelector.checkSelectedEnvironmentKind(
+      await sliceMachinePage.menu.environmentSelector.checkHasSelectedEnvironmentDotKind(
         environments[0].kind,
       );
 
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
-      await sliceMachinePage.menu.environmentSelector.checkSelectedEnvironmentKind(
+      await sliceMachinePage.menu.environmentSelector.checkHasSelectedEnvironmentDotKind(
         environments[1].kind,
       );
 
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
-      await sliceMachinePage.menu.environmentSelector.checkSelectedEnvironmentKind(
+      await sliceMachinePage.menu.environmentSelector.checkHasSelectedEnvironmentDotKind(
         environments[2].kind,
       );
     },

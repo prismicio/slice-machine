@@ -49,14 +49,15 @@ export class EnvironmentSelector {
    * Assertions
    */
   // TODO(DT-1854): Type `kind` with `@slicemachine/manager`'s `Environment["kind"]`.
-  async checkSelectedEnvironmentKind(kind: "prod" | "stage" | "dev") {
+  async checkHasSelectedEnvironmentDotKind(kind: "prod" | "stage" | "dev") {
     const humanReadableKindMap = {
       prod: "Production",
       stage: "Staging",
       dev: "Development",
     } as const;
 
-    await expect(this.page.getByRole("status")).toHaveText(
+    await expect(this.page.getByTestId("active-environment-dot")).toBeVisible();
+    await expect(this.page.getByTestId("active-environment-dot")).toHaveText(
       `${humanReadableKindMap[kind]} environment`,
     );
   }
