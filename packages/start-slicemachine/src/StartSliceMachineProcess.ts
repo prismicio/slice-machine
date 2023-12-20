@@ -82,7 +82,13 @@ export class StartSliceMachineProcess {
 		const isTelemetryEnabled =
 			await this._sliceMachineManager.telemetry.checkIsTelemetryEnabled();
 		if (isTelemetryEnabled) {
-			setupSentry(this._sliceMachineManager);
+			try {
+				await setupSentry(this._sliceMachineManager);
+			} catch (error) {
+				// noop - We don't want to stop the user from using Slice Machine
+				// because of failed tracking set up. We probably couldn't determine the
+				// Sentry environment.
+			}
 		}
 
 		await this._sliceMachineManager.plugins.initPlugins();
