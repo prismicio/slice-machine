@@ -58,11 +58,21 @@ export type Framework = {
 	devDependencies: Record<string, string>;
 };
 
-const isPrerelease =
-	semver.prerelease(pkgVersion) !== null && process.env.NODE_ENV !== "test";
+const prereleaseComponents = semver.prerelease(pkgVersion);
+let npmDistributionTag;
+if (
+	prereleaseComponents !== null &&
+	prereleaseComponents.length >= 2 &&
+	process.env.NODE_ENV !== "test"
+) {
+	const prereleaseIdentifier = prereleaseComponents.slice(0, -1).join(".");
+	npmDistributionTag = prereleaseIdentifier;
+} else {
+	npmDistributionTag = "latest";
+}
 
 const DEFAULT_DEV_DEPENDENCIES: Record<string, string> = {
-	"slice-machine-ui": isPrerelease ? "alpha" : "latest",
+	"slice-machine-ui": npmDistributionTag,
 };
 
 /**
@@ -81,7 +91,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-nuxt2": isPrerelease ? "alpha" : "latest",
+			"@slicemachine/adapter-nuxt2": npmDistributionTag,
 		},
 	},
 	"nuxt-3": {
@@ -95,7 +105,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-nuxt": isPrerelease ? "alpha" : "latest",
+			"@slicemachine/adapter-nuxt": npmDistributionTag,
 		},
 	},
 	next: {
@@ -109,7 +119,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-next": isPrerelease ? "alpha" : "latest",
+			"@slicemachine/adapter-next": npmDistributionTag,
 		},
 	},
 	"sveltekit-1": {
@@ -123,7 +133,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-sveltekit": isPrerelease ? "alpha" : "latest",
+			"@slicemachine/adapter-sveltekit": npmDistributionTag,
 		},
 	},
 	"sveltekit-2": {
@@ -137,7 +147,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
-			"@slicemachine/adapter-sveltekit": isPrerelease ? "alpha" : "latest",
+			"@slicemachine/adapter-sveltekit": npmDistributionTag,
 		},
 	},
 } as const;
@@ -154,7 +164,7 @@ export const UNIVERSAL: Framework = {
 	compatibility: {},
 	devDependencies: {
 		...DEFAULT_DEV_DEPENDENCIES,
-		"@slicemachine/adapter-universal": isPrerelease ? "alpha" : "latest",
+		"@slicemachine/adapter-universal": npmDistributionTag,
 	},
 };
 
