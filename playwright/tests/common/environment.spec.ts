@@ -47,6 +47,46 @@ test.describe("Environment", () => {
   );
 
   test.run()(
+    'I can see "Production" environment when an invalid environment is set',
+    async ({ sliceMachinePage }) => {
+      let didMockFetchActiveEnvironmentOnce = false;
+      await mockManagerProcedures({
+        page: sliceMachinePage.page,
+        procedures: [
+          {
+            path: "prismicRepository.fetchEnvironments",
+            data: () => ({
+              environments,
+            }),
+            execute: false,
+          },
+          {
+            path: "prismicRepository.fetchActiveEnvironment",
+            data: (data) => {
+              if (didMockFetchActiveEnvironmentOnce) {
+                return data;
+              }
+
+              didMockFetchActiveEnvironmentOnce = true;
+
+              const error = new Error();
+              error.name = "SMInvalidActiveEnvironmentError";
+
+              throw error;
+            },
+            execute: didMockFetchActiveEnvironmentOnce,
+          },
+        ],
+      });
+
+      await sliceMachinePage.gotoDefaultPage();
+      await expect(
+        sliceMachinePage.menu.environmentSelector.environmentName,
+      ).toHaveText("Production");
+    },
+  );
+
+  test.run()(
     "I can see my current environment if I have one selected",
     async ({ sliceMachinePage }) => {
       await mockManagerProcedures({
@@ -58,8 +98,8 @@ test.describe("Environment", () => {
             execute: false,
           },
           {
-            path: "project.readEnvironment",
-            data: () => ({ environment: environments[1].domain }),
+            path: "project.fetchActiveEnvironment",
+            data: () => ({ activeEnvironment: environments[1] }),
             execute: false,
           },
         ],
@@ -75,6 +115,7 @@ test.describe("Environment", () => {
   test.run()(
     "I can change my current environment",
     async ({ sliceMachinePage }) => {
+      let activeEnvironmentDomain: string | undefined = undefined;
       await mockManagerProcedures({
         page: sliceMachinePage.page,
         procedures: [
@@ -83,12 +124,33 @@ test.describe("Environment", () => {
             data: () => ({ environments }),
             execute: false,
           },
+          {
+            path: "project.updateEnvironment",
+            data: (_data, args) => {
+              activeEnvironmentDomain = (
+                args[0] as { environment: string | undefined }
+              ).environment;
+            },
+          },
+          {
+            path: "project.fetchActiveEnvironment",
+            data: () => {
+              return {
+                activeEnvironment: environments.find((environment) =>
+                  activeEnvironmentDomain === undefined
+                    ? environment.kind === "prod"
+                    : environment.domain === activeEnvironmentDomain,
+                ),
+              };
+            },
+            execute: false,
+          },
         ],
       });
 
       await sliceMachinePage.gotoDefaultPage();
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
-        environments[0].name,
+        environments[1].name,
       );
     },
   );
@@ -101,15 +163,18 @@ test.describe("Environment", () => {
         procedures: [
           {
             path: "prismicRepository.fetchEnvironments",
-            data: () => ({
-              error: { name: "UnauthorizedError" },
-            }),
+            data: () => {
+              const error = new Error();
+              error.name = "SMUnauthorizedError";
+              throw error;
+            },
             execute: false,
           },
         ],
       });
 
       await sliceMachinePage.gotoDefaultPage();
+      await expect(sliceMachinePage.menu.menu).toBeVisible();
       await expect(
         sliceMachinePage.menu.environmentSelector.loginTextButton,
       ).not.toBeVisible();
@@ -125,12 +190,34 @@ test.describe("Environment", () => {
   test.run()(
     "I can see the dot on the logo depending on the environment",
     async ({ sliceMachinePage }) => {
+      let activeEnvironmentDomain: string | undefined = undefined;
       await mockManagerProcedures({
         page: sliceMachinePage.page,
         procedures: [
           {
             path: "prismicRepository.fetchEnvironments",
             data: () => ({ environments }),
+            execute: false,
+          },
+          {
+            path: "project.updateEnvironment",
+            data: (_data, args) => {
+              activeEnvironmentDomain = (
+                args[0] as { environment: string | undefined }
+              ).environment;
+            },
+          },
+          {
+            path: "project.fetchActiveEnvironment",
+            data: () => {
+              return {
+                activeEnvironment: environments.find((environment) =>
+                  activeEnvironmentDomain === undefined
+                    ? environment.kind === "prod"
+                    : environment.domain === activeEnvironmentDomain,
+                ),
+              };
+            },
             execute: false,
           },
         ],
@@ -164,12 +251,34 @@ test.describe("Environment", () => {
   test.run()(
     "I can see the window top border depending on the environment",
     async ({ sliceMachinePage }) => {
+      let activeEnvironmentDomain: string | undefined = undefined;
       await mockManagerProcedures({
         page: sliceMachinePage.page,
         procedures: [
           {
             path: "prismicRepository.fetchEnvironments",
             data: () => ({ environments }),
+            execute: false,
+          },
+          {
+            path: "project.updateEnvironment",
+            data: (_data, args) => {
+              activeEnvironmentDomain = (
+                args[0] as { environment: string | undefined }
+              ).environment;
+            },
+          },
+          {
+            path: "project.fetchActiveEnvironment",
+            data: () => {
+              return {
+                activeEnvironment: environments.find((environment) =>
+                  activeEnvironmentDomain === undefined
+                    ? environment.kind === "prod"
+                    : environment.domain === activeEnvironmentDomain,
+                ),
+              };
+            },
             execute: false,
           },
         ],

@@ -14,7 +14,6 @@ import {
 	UnauthenticatedError,
 	UnauthorizedError,
 	UnexpectedDataError,
-	isUnauthenticatedError,
 } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
@@ -67,12 +66,19 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 };
 
 type PrismicRepositoryManagerFetchEnvironmentsArgs = {
-	includeAllPersonalEnvironments?: boolean;
+	/**
+	 * If set to `true`, all environments are returned regardless of the user's
+	 * permission level.
+	 *
+	 * If set to `false`, only environments the user can access are returned.
+	 *
+	 * @defaultValue `false`
+	 */
+	includeAll?: boolean;
 };
 
 type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
 	environments?: Environment[];
-	error?: unknown;
 };
 
 export class PrismicRepositoryManager extends BaseManager {
@@ -451,20 +457,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
 		url.searchParams.set("repository", repositoryName);
 
-		let res;
-		try {
-			res = await this._fetch({ url });
-		} catch (error) {
-			if (isUnauthenticatedError(error)) {
-				return { error };
-			}
-
-			return {
-				error: new UnexpectedDataError(
-					"Unexpected Error while fetching Environments",
-				),
-			};
-		}
+		const res = await this._fetch({ url });
 
 		if (res.ok) {
 			const json = await res.json();
@@ -482,44 +475,20 @@ export class PrismicRepositoryManager extends BaseManager {
 			);
 
 			if (error) {
-				return {
-					error: new UnexpectedDataError(
-						`Failed to decode environments: ${error.errors.join(", ")}`,
-					),
-				};
+				throw new UnexpectedDataError(
+					`Failed to decode environments: ${error.errors.join(", ")}`,
+				);
 			}
 
 			if ("results" in value) {
 				let environments = value.results;
 
-				// Only include the user's personal environment
-				// by default. We must filter in the manager
-				// because the API returns all personal
-				// environments.
-				if (!args?.includeAllPersonalEnvironments) {
-					try {
-						const profile = await this.user.getProfile();
+				if (!args?.includeAll) {
+					const profile = await this.user.getProfile();
 
-						environments = environments.filter((environment) => {
-							if (environment.kind === "dev") {
-								return environment.users.some(
-									(user) => user.id === profile.shortId,
-								);
-							}
-
-							return true;
-						});
-					} catch (e) {
-						if (isUnauthenticatedError(error)) {
-							return { error };
-						}
-
-						return {
-							error: new UnexpectedDataError(
-								"Unexpected Error while fetching Environments",
-							),
-						};
-					}
+					environments = environments.filter((environment) =>
+						environment.users.some((user) => user.id === profile.shortId),
+					);
 				}
 
 				return { environments: sortEnvironments(environments) };
@@ -529,11 +498,11 @@ export class PrismicRepositoryManager extends BaseManager {
 		switch (res.status) {
 			case 400:
 			case 401:
-				return { error: new UnauthenticatedError() };
+				throw new UnauthenticatedError();
 			case 403:
-				return { error: new UnauthorizedError() };
+				throw new UnauthorizedError();
 			default:
-				return { error: new Error("Failed to fetch environments.") };
+				throw new Error("Failed to fetch environments.");
 		}
 	}
 

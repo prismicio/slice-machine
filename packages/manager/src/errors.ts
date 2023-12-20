@@ -1,30 +1,29 @@
 import { HookError } from "@slicemachine/plugin-kit";
 
 export class SliceMachineError extends Error {
-	_sliceMachineError = true;
-	name = "SliceMachineError";
+	name = "SMSliceMachineError";
 }
 export class UnauthorizedError extends SliceMachineError {
-	name = "UnauthorizedError";
+	name = "SMUnauthorizedError" as const;
 }
 export class UnauthenticatedError extends SliceMachineError {
-	name = "UnauthenticatedError";
+	name = "SMUnauthenticatedError" as const;
 	message = "Authenticate before trying again.";
 }
 export class NotFoundError extends SliceMachineError {
-	name = "NotFoundError";
+	name = "SMNotFoundError" as const;
 }
 export class UnexpectedDataError extends SliceMachineError {
-	name = "UnexpectedDataError";
+	name = "SMUnexpectedDataError" as const;
 }
 export class InternalError extends SliceMachineError {
-	name = "InternalError";
+	name = "SMInternalError" as const;
 }
 export class PluginError extends SliceMachineError {
-	name = "PluginError";
+	name = "SMPluginError" as const;
 }
 export class PluginHookResultError extends SliceMachineError {
-	name = "PluginHookResultError";
+	name = "SMPluginHookResultError" as const;
 
 	constructor(errors: HookError[]) {
 		super(
@@ -37,49 +36,74 @@ export class PluginHookResultError extends SliceMachineError {
 		);
 	}
 }
+export class InvalidActiveEnvironmentError extends Error {
+	name = "SMInvalidActiveEnvironmentError" as const;
+}
 
-export const isSliceMachineError = (
+type SliceMachineErrorNames =
+	| "SMSliceMachineError"
+	| UnauthorizedError["name"]
+	| UnauthenticatedError["name"]
+	| NotFoundError["name"]
+	| UnexpectedDataError["name"]
+	| InternalError["name"]
+	| PluginError["name"]
+	| PluginHookResultError["name"]
+	| InvalidActiveEnvironmentError["name"];
+
+type ShallowSliceMachineError<TName extends SliceMachineErrorNames> = Error & {
+	name: TName;
+};
+
+export const isSliceMachineError = <TName extends SliceMachineErrorNames>(
 	error: unknown,
-): error is SliceMachineError => {
-	// TODO: Discuss a stronger way to serialize error for the client to detect with r19
-	// @ts-expect-error We don't want to add "dom" to tsconfig "lib" because of the TODO
-	if (typeof window !== "undefined") {
-		return typeof error === "object" && error !== null;
-	} else {
-		return (
-			typeof error === "object" &&
-			error !== null &&
-			"_sliceMachineError" in error
-		);
-	}
+	name?: TName,
+): error is TName extends string ? ShallowSliceMachineError<TName> : Error => {
+	const isErrorInstance = error instanceof Error;
+
+	return name === undefined
+		? isErrorInstance && error.name.startsWith("SM")
+		: isErrorInstance && error.name === name;
 };
 
 export const isUnauthorizedError = (
 	error: unknown,
-): error is UnauthorizedError => {
-	return isSliceMachineError(error) && error.name === UnauthorizedError.name;
+): error is ShallowSliceMachineError<"SMUnauthorizedError"> => {
+	return isSliceMachineError(error, "SMUnauthorizedError");
 };
 
 export const isUnauthenticatedError = (
 	error: unknown,
-): error is UnauthenticatedError => {
-	return isSliceMachineError(error) && error.name === UnauthenticatedError.name;
+): error is ShallowSliceMachineError<"SMUnauthenticatedError"> => {
+	return isSliceMachineError(error, "SMUnauthenticatedError");
 };
 
-export const isNotFoundError = (error: unknown): error is NotFoundError => {
-	return isSliceMachineError(error) && error.name === NotFoundError.name;
+export const isNotFoundError = (
+	error: unknown,
+): error is ShallowSliceMachineError<"SMNotFoundError"> => {
+	return isSliceMachineError(error, "SMNotFoundError");
 };
 
 export const isUnexpectedDataError = (
 	error: unknown,
-): error is UnexpectedDataError => {
-	return isSliceMachineError(error) && error.name === UnexpectedDataError.name;
+): error is ShallowSliceMachineError<"SMUnexpectedDataError"> => {
+	return isSliceMachineError(error, "SMUnexpectedDataError");
 };
 
-export const isInternalError = (error: unknown): error is InternalError => {
-	return isSliceMachineError(error) && error.name === InternalError.name;
+export const isInternalError = (
+	error: unknown,
+): error is ShallowSliceMachineError<"SMInternalError"> => {
+	return isSliceMachineError(error, "SMInternalError");
 };
 
-export const isPluginError = (error: unknown): error is PluginError => {
-	return isSliceMachineError(error) && error.name === PluginError.name;
+export const isPluginError = (
+	error: unknown,
+): error is ShallowSliceMachineError<"SMPluginError"> => {
+	return isSliceMachineError(error, "SMPluginError");
+};
+
+export const isInvalidActiveEnvironmentError = (
+	error: unknown,
+): error is ShallowSliceMachineError<"SMInvalidActiveEnvironmentError"> => {
+	return isSliceMachineError(error, "SMInvalidActiveEnvironmentError");
 };

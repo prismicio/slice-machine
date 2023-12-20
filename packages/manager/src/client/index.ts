@@ -21,7 +21,7 @@ export {
 	NotFoundError,
 	SliceMachineError,
 	UnauthenticatedError,
-	UnauthorizedError,
+	UnauthorizedError as UnauthorizedError,
 	UnexpectedDataError,
 	isInternalError,
 	isNotFoundError,
@@ -30,6 +30,7 @@ export {
 	isUnauthenticatedError,
 	isUnauthorizedError,
 	isUnexpectedDataError,
+	isInvalidActiveEnvironmentError,
 } from "../errors";
 
 export { DecodeError } from "../lib/DecodeError";

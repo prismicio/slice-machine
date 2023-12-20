@@ -2,8 +2,11 @@ import { managerClient } from "@src/managerClient";
 
 export async function getEnvironments() {
   try {
-    return await managerClient.prismicRepository.fetchEnvironments();
+    const { environments } =
+      await managerClient.prismicRepository.fetchEnvironments();
+
+    return { environments };
   } catch (error) {
-    throw error;
+    return { error };
   }
 }

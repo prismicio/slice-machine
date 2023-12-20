@@ -19,7 +19,7 @@ type MockManagerProceduresArgs = {
     /**
      * Function that takes the existing data and returns the data to return.
      */
-    data?: (data: Record<string, unknown>) => Record<string, unknown>;
+    data?: (data: unknown, args: unknown[]) => unknown;
 
     /**
      * Whether to execute the procedure or not. Defaults to true.
@@ -37,7 +37,7 @@ export async function mockManagerProcedures(args: MockManagerProceduresArgs) {
   await page.route("*/**/_manager", async (route) => {
     const postDataBuffer = route.request().postDataBuffer() as Buffer;
     const postData = decode(postDataBuffer) as Record<
-      "procedurePath",
+      "procedurePath" | "procedureArgs",
       unknown[]
     >;
 
@@ -48,33 +48,36 @@ export async function mockManagerProcedures(args: MockManagerProceduresArgs) {
     if (procedure) {
       const { data, execute = true } = procedure;
 
-      let newBody = Buffer.from(
-        encode(
-          data
-            ? {
-                data: data({}),
-              }
-            : {},
-        ),
-      );
-
+      let existingData: unknown = undefined;
       if (execute) {
         const response = await route.fetch();
         const existingBody = await response.body();
-        const existingData = (decode(existingBody) as Record<"data", unknown>)
+        existingData = (decode(existingBody) as Record<"data", unknown>)
           .data as Record<string, unknown>;
+      }
 
-        if (data) {
-          newBody = Buffer.from(
-            encode({
-              data: data(existingData),
-            }),
-          );
+      let newBodyContents: Record<string, unknown> = { data: existingData };
+      if (data) {
+        try {
+          newBodyContents = {
+            data: data(existingData, postData.procedureArgs),
+          };
+        } catch (error) {
+          newBodyContents = {
+            error:
+              error instanceof Error
+                ? {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack,
+                  }
+                : error,
+          };
         }
       }
 
       await route.fulfill({
-        body: newBody,
+        body: Buffer.from(encode(newBodyContents)),
       });
     } else {
       await route.continue();
