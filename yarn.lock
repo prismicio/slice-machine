@@ -8018,7 +8018,7 @@ __metadata:
     prettier-plugin-jsdoc: 1.1.1
     prismic-ts-codegen: ^0.1.17
     react: 18.2.0
-    rollup-plugin-preserve-directives: 0.1.1
+    rollup-plugin-preserve-directives: 0.2.0
     size-limit: 8.2.4
     typescript: 4.9.5
     vite: 4.3.9
@@ -29087,14 +29087,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-preserve-directives@npm:0.1.1":
-  version: 0.1.1
-  resolution: "rollup-plugin-preserve-directives@npm:0.1.1"
+"rollup-plugin-preserve-directives@npm:0.2.0":
+  version: 0.2.0
+  resolution: "rollup-plugin-preserve-directives@npm:0.2.0"
   dependencies:
     magic-string: ^0.30.0
   peerDependencies:
     rollup: 2.x || 3.x
-  checksum: 07c0863fb21740b4f8d872bec5bb07b6b9e240e90c743b23e414aa86d46cc6c78ae56a32ee744c353b712053ce94c46330f2ea1cd711bdcaf3bad2b9f3d35d46
+  checksum: 7560a77ef8d49661b616a868ef2b140b069f4016a24c948d0b1d7db973a7e5258197054f64db5398baa88ce879c76dd0ee28656f4b81a2761b3a3750f909834e
   languageName: node
   linkType: hard
 
