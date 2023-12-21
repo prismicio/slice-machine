@@ -36,7 +36,7 @@ export class PluginHookResultError extends SliceMachineError {
 		);
 	}
 }
-export class InvalidActiveEnvironmentError extends Error {
+export class InvalidActiveEnvironmentError extends SliceMachineError {
 	name = "SMInvalidActiveEnvironmentError" as const;
 }
 
