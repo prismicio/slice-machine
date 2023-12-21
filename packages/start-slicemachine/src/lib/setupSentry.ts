@@ -1,7 +1,10 @@
 import * as Sentry from "@sentry/node";
+import {
+	PrismicUserProfile,
+	SliceMachineManager,
+	getEnvironmentInfo,
+} from "@slicemachine/manager";
 
-import semver from "semver";
-import { PrismicUserProfile, SliceMachineManager } from "@slicemachine/manager";
 import { SENTRY_EXPRESS_DSN } from "../constants";
 import { checkIsSentryEnabled } from "./checkIsSentryEnabled";
 
@@ -24,16 +27,15 @@ export const setupSentry = async (
 		// User is not logged in, it doesn't matter
 	}
 
-	const isStableVersion =
-		semver.prerelease(sliceMachineVersion) === null &&
-		semver.lte("0.1.0", sliceMachineVersion);
+	const { environment, release } = getEnvironmentInfo({
+		name: "slice-machine-ui",
+		version: sliceMachineVersion,
+	});
 
 	Sentry.init({
 		dsn: SENTRY_EXPRESS_DSN,
-		release: sliceMachineVersion,
-		environment: isStableVersion
-			? import.meta.env.MODE || "production"
-			: "alpha",
+		release,
+		environment,
 		// Increase the default truncation length of 250 to 2500 (x10)
 		// to have enough details in Sentry
 		maxValueLength: 2_500,

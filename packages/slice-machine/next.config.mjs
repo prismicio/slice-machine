@@ -1,30 +1,35 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as url from "node:url";
 import { withSentryConfig } from "@sentry/nextjs";
 import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
 import semver from "semver";
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+import pkg from "./package.json" assert { type: "json" };
 
-/** @type {{ version: string }} */
-const pkg = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "package.json"), "utf8"),
-);
+const parsedPkgVersion = semver.parse(pkg.version);
+if (parsedPkgVersion === null) {
+  throw new Error(
+    `Package \`${pkg.name}\` has an invalid version \`${pkg.version}\` in its manifest.`,
+  );
+}
 
-/** @type string */
-
-const RELEASE_NUMBER = pkg.version;
-const isStableVersion =
-  /^\d+\.\d+\.\d+$/.test(RELEASE_NUMBER) && semver.lte("0.1.0", RELEASE_NUMBER);
+let sentryEnvironment;
+if (parsedPkgVersion.prerelease.length === 0) {
+  sentryEnvironment = process.env.NODE_ENV;
+} else if (
+  parsedPkgVersion.prerelease[0] === "alpha" ||
+  parsedPkgVersion.prerelease[0] === "beta"
+) {
+  sentryEnvironment = parsedPkgVersion.prerelease[0];
+} else {
+  throw new Error(
+    `Invalid package version: \`${pkg.name}@${parsedPkgVersion.version}\`. The first prerelease component \`${parsedPkgVersion.prerelease[0]}\` must be either \`alpha\` or \`beta\`.`,
+  );
+}
 
 /** @type {import("next").NextConfig} */
 let nextConfig = {
   experimental: { newNextLinkBehavior: true },
   swcMinify: true,
-  publicRuntimeConfig: {
-    sentryEnvironment: isStableVersion ? process.env.NODE_ENV : "alpha",
-  },
+  publicRuntimeConfig: { sentryEnvironment },
 };
 
 if (process.env.NODE_ENV !== "development") {
@@ -50,7 +55,7 @@ if (process.env.NODE_ENV !== "development") {
       // The Sentry webpack plugin always ignores some files when uploading sourcemaps
       // We actually need them (because of the static export?) to get the complete trace in Sentry
       ignore: [],
-      release: RELEASE_NUMBER,
+      release: parsedPkgVersion.version,
 
       configFile: "sentry-next.properties",
     };
