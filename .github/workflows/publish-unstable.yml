@@ -1,0 +1,33 @@
+name: Publish unstable
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: main
+  workflow_dispatch:
+jobs:
+  publish-unstable:
+    name: Publish unstable
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, 'release:') && !github.event.pull_request.draft }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
+      - name: Use Node.js
+        uses: ./.github/actions/setup-node
+      - name: Install dependencies
+        run: yarn install
+      - name: Run publish script
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          git config user.email dev-tools-engineering@prismic.io
+          git config user.name "Slice Machine Bot"
+          echo 1
+          git tag --list --points-at
+          echo 2
+          yarn publish unstable --tolerate-republish

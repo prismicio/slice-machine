@@ -12,7 +12,6 @@ import {
 import {
   readCurrentBranchHeadTags,
   readCurrentBranchName,
-  readDefaultBranchName,
 } from "./utils/gitUtils";
 import {
   fetchPackageVersionHistory,
@@ -22,8 +21,12 @@ import {
 
 publish();
 
-async function publish(): Promise<void> {
+type Options = { defaultBranchName?: string };
+
+async function publish(options?: Options): Promise<void> {
   process.on("uncaughtException", handleUncaughtException);
+
+  const defaultBranchName = options?.defaultBranchName ?? "main";
 
   // Parse the command-line arguments.
   const args = mri<{ "dry-run": boolean; "tolerate-republish": boolean }>(
@@ -118,12 +121,6 @@ async function publish(): Promise<void> {
   ) {
     throw new CommandError(
       `Invalid current branch name: \`${currentBranchName}\`. It must use GitHub's safe set of characters (see https://docs.github.com/en/get-started/using-git/dealing-with-special-characters-in-branch-and-tag-names#naming-branches-and-tags).`,
-    );
-  }
-  const defaultBranchName = await readDefaultBranchName();
-  if (defaultBranchName === undefined) {
-    throw new CommandError(
-      "There's no default branch set for the `origin` remote.",
     );
   }
   const isOnDefaultBranch = currentBranchName === defaultBranchName;
