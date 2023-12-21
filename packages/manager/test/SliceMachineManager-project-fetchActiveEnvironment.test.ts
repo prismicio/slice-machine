@@ -10,7 +10,7 @@ import { mockSliceMachineAPI } from "./__testutils__/mockSliceMachineAPI";
 import {
 	createSliceMachineManager,
 	Environment,
-	SMInvalidSelectedEnvironmentError,
+	InvalidActiveEnvironmentError,
 } from "../src";
 
 it("returns the active environment", async (ctx) => {
@@ -132,5 +132,5 @@ it("throws SMInvalidSelectedEnvironmentError if the active environment is invali
 
 	await expect(async () => {
 		await manager.project.fetchActiveEnvironment();
-	}).rejects.toThrow(SMInvalidSelectedEnvironmentError);
+	}).rejects.toThrow(InvalidActiveEnvironmentError);
 });

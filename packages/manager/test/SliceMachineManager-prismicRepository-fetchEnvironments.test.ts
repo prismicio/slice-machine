@@ -235,11 +235,9 @@ it("throws if the repository API call was unsuccessful", async (ctx) => {
 		},
 	});
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({
-		error: new Error("Failed to fetch environments."),
-	});
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(/failed to fetch environments/i);
 });
 
 it("throws if the API response was invalid", async (ctx) => {
@@ -272,11 +270,9 @@ it("throws if the API response was invalid", async (ctx) => {
 		},
 	});
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({
-		error: new Error("Failed to fetch environments."),
-	});
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(/failed to fetch environments/i);
 });
 
 it("throws UnauthenticatedError if the API returns 400", async (ctx) => {
@@ -305,9 +301,9 @@ it("throws UnauthenticatedError if the API returns 400", async (ctx) => {
 		),
 	);
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthenticatedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthenticatedError);
 });
 
 it("throws UnauthenticatedError if the API returns 401", async (ctx) => {
@@ -336,9 +332,9 @@ it("throws UnauthenticatedError if the API returns 401", async (ctx) => {
 		),
 	);
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthenticatedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthenticatedError);
 });
 
 it("throws UnauthorizedError if the API returns 403", async (ctx) => {
@@ -367,9 +363,9 @@ it("throws UnauthorizedError if the API returns 403", async (ctx) => {
 		),
 	);
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthorizedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthorizedError);
 });
 
 it("throws if not logged in", async () => {
@@ -382,7 +378,7 @@ it("throws if not logged in", async () => {
 
 	await manager.user.logout();
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthenticatedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthenticatedError);
 });
