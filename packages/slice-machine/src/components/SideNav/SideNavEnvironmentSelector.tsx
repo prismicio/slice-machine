@@ -11,7 +11,8 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { Environment } from "@slicemachine/manager/client";
-import type { FC } from "react";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { FC } from "react";
 import clsx from "clsx";
 
 import LogoIcon from "@src/icons/LogoIcon";
@@ -44,10 +45,12 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
     <Box alignItems="center" gap={16}>
       <Box position="relative">
         <LogoIcon className={styles.logo} />
-        {activeEnvironment !== undefined && environments.length > 1 && (
+        {environments.length > 1 && (
           <EnvironmentDot
-            kind={activeEnvironment.kind}
+            kind={activeEnvironment?.kind ?? "prod"}
+            asStatus={true}
             className={styles.activeEnvironmentDot}
+            data-cy="active-environment-dot"
           />
         )}
       </Box>
@@ -68,7 +71,11 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
         ) : undefined}
 
         {variant === "default" ? (
-          <Text component="span" className={styles.activeEnvironmentName}>
+          <Text
+            component="span"
+            className={styles.activeEnvironmentName}
+            data-cy="active-environment-name"
+          >
             {isProductionEnvironmentActive || activeEnvironment === undefined
               ? "Production"
               : activeEnvironment?.name}
@@ -80,6 +87,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           <IconButton
             icon={<LoginIcon className={styles.loginIcon} />}
             onClick={onLogInClick}
+            data-cy="environment-login-icon-button"
           />
         ) : undefined}
 
@@ -106,7 +114,7 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
   return (
     <DropdownMenu modal>
       <DropdownMenuTrigger disabled={environments.length < 2}>
-        <IconButton icon="unfoldMore" />
+        <IconButton icon="unfoldMore" data-cy="environment-dropdown-button" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" minWidth={256}>
         {/*
@@ -165,13 +173,34 @@ const EnvironmentDropdownMenuItem: FC<EnvironmentDropdownMenuItemProps> = (
   );
 };
 
+const humanReadableKindMap = {
+  prod: "Production",
+  stage: "Staging",
+  dev: "Development",
+} as const;
+
 type EnvironmentDotProps = {
   kind: Environment["kind"];
+  asStatus?: boolean;
   className?: string;
 };
 
 const EnvironmentDot: FC<EnvironmentDotProps> = (props) => {
-  const { kind, className } = props;
+  const { kind, asStatus = false, className, ...otherProps } = props;
 
-  return <div className={clsx(styles.environmentDot[kind], className)} />;
+  const humanReadableKind = humanReadableKindMap[kind];
+
+  return (
+    <div
+      className={clsx(styles.environmentDot[kind], className)}
+      role={asStatus ? "status" : undefined}
+      {...otherProps}
+    >
+      {asStatus ? (
+        <VisuallyHidden.Root>
+          {humanReadableKind} environment
+        </VisuallyHidden.Root>
+      ) : null}
+    </div>
+  );
 };

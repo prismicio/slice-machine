@@ -12,11 +12,11 @@ export const PageLayout: FC<PageLayoutProps> = ({
   children,
   ...otherProps
 }) => (
-  <div {...otherProps} className={styles.root}>
+  <div
+    {...otherProps}
+    className={clsx([styles.root, styles.borderTopColor[borderTopColor]])}
+  >
     {children}
-    <div
-      className={clsx(styles.borderTop, styles.borderTopColor[borderTopColor])}
-    />
   </div>
 );
 

@@ -1,8 +1,11 @@
 import { Locator, Page } from "@playwright/test";
 
+import { EnvironmentSelector } from "./EnvironmentSelector";
+
 export class Menu {
   readonly page: Page;
   readonly menu: Locator;
+  readonly environmentSelector: EnvironmentSelector;
   readonly pageTypesLink: Locator;
   readonly customTypesLink: Locator;
   readonly slicesLink: Locator;
@@ -20,6 +23,7 @@ export class Menu {
     /**
      * Static locators
      */
+    this.environmentSelector = new EnvironmentSelector(page);
     this.menu = page.getByRole("navigation");
     this.pageTypesLink = this.menu.getByRole("link", {
       name: "Page types",
