@@ -189,7 +189,7 @@ this.customTypesLink = this.menu.getByText("Custom types", {
 > [!NOTE]
 > This preference can be ignored if the targeted element is hidden.
 
-If the element is purposely hidden, use
+If the element is purposely hidden, use `.toBeHidden()` or `.toBeAttached()`, depending on your use case.
 
 ### Don't use `.locator()`
 
