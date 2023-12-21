@@ -39,6 +39,8 @@ export {
 	InvalidActiveEnvironmentError,
 } from "./errors";
 
+export { getEnvironmentInfo } from "./getEnvironmentInfo";
+
 export { DecodeError } from "./lib/DecodeError";
 
 export type { SliceMachineConfig, PackageManager } from "./types";

@@ -6,7 +6,7 @@ import { LoginDialog } from "./components/LoginDialog";
 
 export class SliceMachinePage {
   readonly page: Page;
-  readonly topBorder: Locator;
+  readonly appLayout: Locator;
   readonly menu: Menu;
   readonly inAppGuideDialog: InAppGuideDialog;
   readonly loginDialog: LoginDialog;
@@ -26,7 +26,7 @@ export class SliceMachinePage {
      * Static locators
      */
     this.body = page.getByRole("main");
-    this.topBorder = page.getByTestId("top-border");
+    this.appLayout = page.getByTestId("app-layout");
     this.breadcrumb = page.getByLabel("Breadcrumb");
   }
 

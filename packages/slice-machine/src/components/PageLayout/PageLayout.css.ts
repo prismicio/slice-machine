@@ -12,8 +12,11 @@ export const root = style([
     overflowY: "auto",
     position: "absolute",
     width: "100%",
+    borderStyle: "solid",
   }),
   {
+    borderWidth: 0,
+    borderTopWidth: 2,
     gridTemplateAreas: `
     "pane header"
     "pane content"
@@ -23,19 +26,10 @@ export const root = style([
   },
 ]);
 
-export const borderTop = sprinkles({
-  all: "unset",
-  display: "revert",
-  height: 2,
-  position: "fixed",
-  top: 0,
-  width: "100%",
-});
-
 export const borderTopColor = {
-  purple: sprinkles({ backgroundColor: colors.purple9 }),
-  indigo: sprinkles({ backgroundColor: colors.indigo10 }),
-  amber: sprinkles({ backgroundColor: colors.amber10 }),
+  purple: sprinkles({ borderTopColor: colors.purple9 }),
+  indigo: sprinkles({ borderTopColor: colors.indigo10 }),
+  amber: sprinkles({ borderTopColor: colors.amber10 }),
 };
 
 export const pane = style([

@@ -248,8 +248,8 @@ test.describe("Environment", () => {
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
-      await expect(sliceMachinePage.topBorder).toHaveCSS(
-        "background-color",
+      await expect(sliceMachinePage.appLayout).toHaveCSS(
+        "border-top-color",
         "rgb(109, 84, 207)",
       );
 
@@ -263,8 +263,8 @@ test.describe("Environment", () => {
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
-      await expect(sliceMachinePage.topBorder).toHaveCSS(
-        "background-color",
+      await expect(sliceMachinePage.appLayout).toHaveCSS(
+        "border-top-color",
         "rgb(56, 91, 204)",
       );
 
@@ -278,8 +278,8 @@ test.describe("Environment", () => {
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
-      await expect(sliceMachinePage.topBorder).toHaveCSS(
-        "background-color",
+      await expect(sliceMachinePage.appLayout).toHaveCSS(
+        "border-top-color",
         "rgb(255, 159, 26)",
       );
     },
