@@ -33,7 +33,7 @@ test.describe("Changes", () => {
           {
             path: "getState",
             data: (data) => ({
-              ...data,
+              ...(data as Record<string, unknown>),
               clientError: {
                 status: 403,
               },
@@ -57,7 +57,7 @@ test.describe("Changes", () => {
           {
             path: "getState",
             data: (data) => ({
-              ...data,
+              ...(data as Record<string, unknown>),
               libraries: emptyLibraries,
               customTypes: [],
               remoteCustomTypes: [],
@@ -82,7 +82,7 @@ test.describe("Changes", () => {
           {
             path: "getState",
             data: (data) => ({
-              ...data,
+              ...(data as Record<string, unknown>),
               libraries: emptyLibraries,
               customTypes: [simpleCustomType],
               remoteCustomTypes: [],
@@ -112,7 +112,7 @@ test.describe("Changes", () => {
           {
             path: "getState",
             data: (data) => ({
-              ...data,
+              ...(data as Record<string, unknown>),
               libraries: emptyLibraries,
               customTypes: [simpleCustomType],
               remoteCustomTypes: [],
