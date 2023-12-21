@@ -21,7 +21,7 @@ export {
 	NotFoundError,
 	SliceMachineError,
 	UnauthenticatedError,
-	UnauthorizedError as UnauthorizedError,
+	UnauthorizedError,
 	UnexpectedDataError,
 	isInternalError,
 	isNotFoundError,
