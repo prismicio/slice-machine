@@ -9,12 +9,3 @@ export async function readCurrentBranchName(): Promise<string | undefined> {
   const { stdout } = await exec("git", ["branch", "--show-current"]);
   return stdout.length > 0 ? stdout : undefined;
 }
-
-export async function readDefaultBranchName(): Promise<string | undefined> {
-  const namespace = "refs/remotes/origin";
-  const { stdout } = await exec("git", [
-    ...["rev-parse", "--quiet", "--symbolic-full-name", "--verify"],
-    `${namespace}/HEAD`,
-  ]);
-  return stdout.length > 0 ? stdout.replace(`${namespace}/`, "") : undefined;
-}
