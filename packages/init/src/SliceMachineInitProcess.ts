@@ -137,7 +137,13 @@ export class SliceMachineInitProcess {
 				appName: pkg.name,
 				appVersion: pkg.version,
 			});
-			await setupSentry();
+			try {
+				await setupSentry();
+			} catch (error) {
+				// noop - We don't want to stop the user from using Slice Machine
+				// because of failed tracking set up. We probably couldn't determine the
+				// Sentry environment.
+			}
 			await this.manager.telemetry.track({
 				event: "command:init:start",
 				repository: this.options.repository,
