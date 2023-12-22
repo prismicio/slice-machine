@@ -16,6 +16,7 @@ import { ChangelogPage } from "../pages/ChangelogPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
 import config from "../playwright.config";
+import { MockManagerProcedures } from "../utils";
 
 dotenv.config({ path: `.env.local` });
 
@@ -41,6 +42,11 @@ export type DefaultFixtures = {
   reusableCustomType: { name: string };
   singleCustomType: { name: string };
   slice: { name: string };
+
+  /**
+   * Mocks
+   */
+  procedures: MockManagerProcedures;
 };
 
 /**
@@ -307,6 +313,13 @@ export const defaultTest = (
 
       // Propagate the modified page to the test
       await use(page);
+    },
+
+    /**
+     * Mocks
+     */
+    procedures: async ({ page }, use) => {
+      await use(await MockManagerProcedures.init(page));
     },
   });
 };
