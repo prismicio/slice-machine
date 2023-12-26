@@ -10,13 +10,6 @@ _Install browsers and OS dependencies for Playwright._
 yarn test:e2e:install
 ```
 
-- Create a `.env.local` file
-
-Copy-paste `playwright/.env.local.example` in `playwright/.env.local` and update `EMAIL` and `PASSWORD` values.
-
-Having both Wroom and Prismic values will help you run Slice Machine in dev or prod mode without having to take care of the correct email or password.
-Wroom or Prismic values will be used depending on the Prismic URL.
-
 - Install the VS Code extension (optional)
 
 Playwright Test extension was created specifically to accommodate the needs of e2e testing. [Install Playwright Test for VSCode by reading this page](https://playwright.dev/docs/getting-started-vscode). It will help you to debug a problem in tests if needed.
@@ -70,19 +63,17 @@ yarn test:e2e:report
 
 To open a downloaded CI test report from anywhere in your computer:
 
-```bash
-npx playwright show-report name-of-my-extracted-playwright-report
-```
+- Copy-paste the content of the download report in a `playwright-report` folder within `playwright` folder
+- Execute the same command as above
 
 ## Creating tests
 
 ### `test.run()`
 
 Use `test.run()` to create a test. `run` function take an optional object parameter `options` that let you configure how you want to run the test.
-You can configure if you want a logged in test and also an onboarded test.
-Default is not logged in and onboarded.
+You can configure if you want an onboarded test. Default is onboarded.
 
-Example for a logged in user not onboarded:
+Example for user not onboarded:
 
 ```ts
 test.run({ loggedIn: true, onboarded: false })(
@@ -93,7 +84,33 @@ test.run({ loggedIn: true, onboarded: false })(
 );
 ```
 
-Warning: Only use `loggedIn: true` when it's necessary for your test, it increases local test time (not in CI) by some seconds (≃ 3 secs).
+You can also override default storage values:
+
+Example (redux):
+```ts
+test.run({
+  onboarded: false,
+  reduxStorage: {
+    lastSyncChange: new Date().getTime(),
+  },
+})("I can ...", async ({ sliceBuilderPage, slicesListPage }) => {
+  // Test content
+});
+```
+
+Example (new way):
+```ts
+test.run({ 
+  onboarded: false, 
+  storage: {
+    isInAppGuideOpen: true,
+  },
+})("I can ...", 
+  async ({ sliceBuilderPage, slicesListPage }) => {
+    // Test content
+  },
+);
+```
 
 ### Mocking with `procedures.mock`
 
@@ -175,7 +192,8 @@ This approach has several benefits:
 - Readability: Tests become more readable and easier to understand.
 - Reusability: You can reuse code across different test cases.
 
-**Warning**: Never use a locator directly in a test file (getBy...). Always use the Page Object Model design pattern for that.
+> [!WARNING]
+> Never use a locator directly in a test file (getBy...). Always use the Page Object Model design pattern for that.
 
 ### Always try to do an exact matching with locators
 
@@ -250,6 +268,42 @@ test.run()("I can create a slice", async () => {
   // Test content
 });
 ```
+
+### Always check that at least one locator is visible before checking if another locator is not visible
+
+Directly checking that a locator is not visible is not correct if the page is currently loading. The loading blank page will not contain your locator and it will always pass.
+
+Example (bad):
+
+```ts
+test.run()(
+    "I cannot see the updates available warning",
+    async ({ pageTypesTablePage }) => {
+      await pageTypesTablePage.goto();
+      await expect(
+        pageTypesTablePage.menu.updatesAvailableTitle,
+      ).not.toBeVisible();
+    },
+);
+```
+
+Example (good):
+
+```ts
+test.run()(
+    "I cannot see the updates available warning",
+    async ({ pageTypesTablePage }) => {
+      await pageTypesTablePage.goto();
+      await expect(pageTypesTablePage.menu.appVersion).toBeVisible();
+      await expect(
+        pageTypesTablePage.menu.updatesAvailableTitle,
+      ).not.toBeVisible();
+    },
+);
+```
+
+> [!NOTE]
+> Include the check within the goto function so you don't need to do it manually every time.
 
 ### Write your own best practice for the team here...
 
