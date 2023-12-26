@@ -95,40 +95,74 @@ test.run({ loggedIn: true, onboarded: false })(
 
 Warning: Only use `loggedIn: true` when it's necessary for your test, it increases local test time (not in CI) by some seconds (≃ 3 secs).
 
-### Mocking with `mockManagerProcedures`
+### Mocking with `procedures.mock`
 
-Use `mockManagerProcedures` function when you need to mock a manager procedure response.
-With the way playwright intercept requests you need to give an array of procedures to mock.
-You will have the possibility to return fake data on top of the existing one.
-If you don't need to return data and / or let the manager execute the procedure at all, you can disable it with `execute` property, it will return an empty object to the UI.
-
-Example:
+Use the `procedures` fixture to mock manager procedure responses:
 
 ```ts
-await mockManagerProcedures({
-  page: changesPage.page,
-  procedures: [
-    {
-      path: "getState",
-      data: (data) => ({
-        ...data,
-        libraries: emptyLibraries,
-        customTypes: [],
-        remoteCustomTypes: [],
-        remoteSlices: [],
-      }),
-    },
-    {
-      path: "prismicRepository.pushChanges",
-      execute: false,
-    },
-  ],
+test.run()("I can ...", async ({ procedures }) => {
+  await procedures.mock("getState", ({ data }) => {
+    return {
+      ...data,
+      customTypes: [],
+    };
+  });
 });
 ```
 
-Warning: Only mock when it's necessary because the state of Slice Machine or the remote repository can change.
-We want to ensure test can be launched on any state of Slice Machine and any state of repository. Mocking will help you do that.
-In theory, we want to avoid mocking while doing e2e tests. Smoke tests don't have any mocking but standalone tests can when it's necessary. It improves the DX and reduce the necessary setup that we can have for Smoke tests.
+`data` contains the unmocked procedure's response. You can use it in your mocked response.
+
+If you don't need the unmocked procedure's data or don't want the manager to execute the procedure at all, you can disable the unmocked procedure with `execute` option:
+
+```ts
+test.run()(
+  "I can ...",
+  async ({ procedures }) => {
+    await procedures.mock("project.checkIsTypeScript", () => false);
+  },
+  {
+    execute: false,
+  },
+);
+```
+
+If you only want the procedure to be mocked a set number of times, set the `times` option to the number of times you want it to be mocked:
+
+```ts
+test.run()("I can ...", async ({ procedures }) => {
+  await procedures.mock(
+    "getState",
+    ({ data }) => {
+      return {
+        ...data,
+        customTypes: [],
+      };
+    },
+    { times: 1 },
+  );
+});
+```
+
+You may stack `procedure.mock` calls as many times and anywhere you want. The most recent mock for a procedure will be used first.
+
+```ts
+test.run()("I can ...", async ({ procedures }) => {
+  await procedures.mock("project.checkIsTypeScript", () => false);
+  // `project.checkIsTypeScript` will return `false`
+
+  // Perform actions...
+
+  await procedures.mock("project.checkIsTypeScript", () => true);
+  // `project.checkIsTypeScript` will now return `true`
+});
+```
+
+> [!CAUTION]
+> Only mock when it's necessary because the state of Slice Machine or the remote repository can change.
+>
+> We want to ensure tests can be launched on any state of Slice Machine and any state of repository. Mocking will help you do that.
+>
+> In theory, we want to avoid mocking while doing e2e tests. Smoke tests don't have any mocking but standalone tests can when it's necessary. It improves the DX and reduce the necessary setup that we can have for Smoke tests.
 
 ## Best practices
 
