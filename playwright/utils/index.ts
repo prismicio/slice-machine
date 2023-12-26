@@ -1,2 +1,2 @@
 export { generateRandomId } from "./generateRandomId";
-export { MockManagerProcedures } from "./mockManagerProcedures";
+export { MockManagerProcedures } from "./MockManagerProcedures";
