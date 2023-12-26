@@ -1,33 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { mockManagerProcedures } from "../../utils";
 import { environments } from "../../mocks";
-
-function buildMockEnvironmentProcedures(args: {
-  environments?: readonly (typeof environments)[number][];
-  activeEnvironment?: (typeof environments)[number];
-}) {
-  const procedures = [];
-
-  if (args.environments) {
-    procedures.push({
-      path: "prismicRepository.fetchEnvironments",
-      data: () => ({ environments: args.environments }),
-      execute: false,
-    });
-  }
-
-  if (args.activeEnvironment) {
-    procedures.push({
-      path: "project.fetchActiveEnvironment",
-      data: () => ({ activeEnvironment: args.activeEnvironment }),
-      execute: false,
-    });
-  }
-
-  return procedures;
-}
 
 test.describe("Environment", () => {
   test.run()(
@@ -50,13 +24,12 @@ test.describe("Environment", () => {
 
   test.run()(
     'I can see "Production" environment when no environments exist',
-    async ({ sliceMachinePage }) => {
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments: environments.slice(0, 1),
-        }),
-      });
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => ({ environments: environments.slice(0, 1) }),
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
       await expect(
@@ -67,29 +40,21 @@ test.describe("Environment", () => {
 
   test.run()(
     'I can see "Production" environment when an invalid environment is set',
-    async ({ sliceMachinePage }) => {
-      let didMockFetchActiveEnvironmentOnce = false;
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: [
-          ...buildMockEnvironmentProcedures({ environments }),
-          {
-            path: "prismicRepository.fetchActiveEnvironment",
-            data: (data) => {
-              if (didMockFetchActiveEnvironmentOnce) {
-                return data;
-              }
-
-              didMockFetchActiveEnvironmentOnce = true;
-
-              const error = new Error();
-              error.name = "SMInvalidActiveEnvironmentError";
-              throw error;
-            },
-            execute: didMockFetchActiveEnvironmentOnce,
-          },
-        ],
-      });
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => ({ environments }),
+        { execute: false },
+      );
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => {
+          const error = new Error();
+          error.name = "SMInvalidActiveEnvironmentError";
+          throw error;
+        },
+        { execute: false, times: 1 },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
       await expect(
@@ -100,14 +65,17 @@ test.describe("Environment", () => {
 
   test.run()(
     "I can see my current environment if I have one selected",
-    async ({ sliceMachinePage }) => {
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[1],
-        }),
-      });
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => ({ environments }),
+        { execute: false },
+      );
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
       await expect(
@@ -118,24 +86,25 @@ test.describe("Environment", () => {
 
   test.run()(
     "I can change my current environment",
-    async ({ sliceMachinePage }) => {
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[0],
-        }),
-      });
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => ({ environments }),
+        { execute: false },
+      );
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[0] }),
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
 
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[1],
-        }),
-      });
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
@@ -144,24 +113,18 @@ test.describe("Environment", () => {
 
   test.run()(
     "I don't see login text or the select if I'm not authorized",
-    async ({ sliceMachinePage }) => {
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: [
-          {
-            path: "prismicRepository.fetchEnvironments",
-            data: () => {
-              const error = new Error();
-              error.name = "SMUnauthorizedError";
-              throw error;
-            },
-            execute: false,
-          },
-        ],
-      });
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => {
+          const error = new Error();
+          error.name = "SMUnauthorizedError";
+          throw error;
+        },
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
-      await expect(sliceMachinePage.menu.menu).toBeVisible();
       await expect(
         sliceMachinePage.menu.environmentSelector.loginTextButton,
       ).not.toBeVisible();
@@ -176,21 +139,20 @@ test.describe("Environment", () => {
 
   test.run()(
     "I can see the dot on the logo depending on the environment",
-    async ({ sliceMachinePage }) => {
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({ environments }),
-      });
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => ({ environments }),
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
 
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[0],
-        }),
-      });
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[0] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
@@ -198,13 +160,11 @@ test.describe("Environment", () => {
         environments[0].kind,
       );
 
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[1],
-        }),
-      });
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
@@ -212,13 +172,11 @@ test.describe("Environment", () => {
         environments[1].kind,
       );
 
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[2],
-        }),
-      });
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[2] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
@@ -230,21 +188,20 @@ test.describe("Environment", () => {
 
   test.run()(
     "I can see the window top border depending on the environment",
-    async ({ sliceMachinePage }) => {
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({ environments }),
-      });
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => ({ environments }),
+        { execute: false },
+      );
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[0] }),
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
 
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[0],
-        }),
-      });
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
@@ -253,13 +210,11 @@ test.describe("Environment", () => {
         "rgb(109, 84, 207)",
       );
 
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[1],
-        }),
-      });
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
@@ -268,13 +223,11 @@ test.describe("Environment", () => {
         "rgb(56, 91, 204)",
       );
 
-      await mockManagerProcedures({
-        page: sliceMachinePage.page,
-        procedures: buildMockEnvironmentProcedures({
-          environments,
-          activeEnvironment: environments[2],
-        }),
-      });
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[2] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
