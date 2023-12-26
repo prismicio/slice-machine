@@ -6,7 +6,6 @@ import { LoginDialog } from "./components/LoginDialog";
 
 export class SliceMachinePage {
   readonly page: Page;
-  readonly appLayout: Locator;
   readonly menu: Menu;
   readonly inAppGuideDialog: InAppGuideDialog;
   readonly loginDialog: LoginDialog;
@@ -26,7 +25,6 @@ export class SliceMachinePage {
      * Static locators
      */
     this.body = page.getByRole("main");
-    this.appLayout = page.getByTestId("app-layout");
     this.breadcrumb = page.getByLabel("Breadcrumb");
   }
 
@@ -35,6 +33,10 @@ export class SliceMachinePage {
    */
   getBreadcrumbLabel(name: string) {
     return this.breadcrumb.getByText(name, { exact: true });
+  }
+
+  getPageLayoutByTopBorderColor(color: string) {
+    return this.page.getByTestId(`app-layout-top-border-color-${color}`);
   }
 
   /**
