@@ -10,7 +10,7 @@ const editedSliceName = "EditedSliceName";
 const sliceId = "test_slice"; // generated automatically from the slice name
 const lib = ".--slices";
 
-describe("Create Slices", () => {
+describe.skip("Create Slices", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();

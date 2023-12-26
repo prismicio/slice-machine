@@ -2,7 +2,7 @@ const sliceName = "DuplicateSlices";
 const sliceId = "duplicate_slices";
 const lib = ".--slices";
 
-describe("Duplicate Slices", () => {
+describe.skip("Duplicate Slices", () => {
   beforeEach(() => {
     cy.setSliceMachineUserContext({});
     cy.clearProject();

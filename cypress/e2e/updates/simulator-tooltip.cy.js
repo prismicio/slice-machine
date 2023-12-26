@@ -20,7 +20,7 @@ describe("simulator tooltip", () => {
 
     cy.contains("Simulate your slices").should("exist");
 
-    cy.contains("Got It").click();
+    cy.contains("Got it").click();
 
     cy.contains("Simulate your slices").should("not.exist");
 
