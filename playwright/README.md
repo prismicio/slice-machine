@@ -112,7 +112,7 @@ test.run()("I can ...", async ({ procedures }) => {
 
 `data` contains the unmocked procedure's response. You can use it in your mocked response.
 
-If you don't need the unmocked procedure's data or don't want the manager to execute the procedure at all, you can disable the unmocked procedure with `execute` option:
+If you don't need the unmocked procedure's data or don't want the manager to execute the procedure at all, you can disable the unmocked procedure with the `execute` option:
 
 ```ts
 test.run()(
@@ -120,9 +120,7 @@ test.run()(
   async ({ procedures }) => {
     await procedures.mock("project.checkIsTypeScript", () => false);
   },
-  {
-    execute: false,
-  },
+  { execute: false },
 );
 ```
 
