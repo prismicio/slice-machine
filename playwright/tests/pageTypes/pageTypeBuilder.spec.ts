@@ -33,4 +33,26 @@ test.describe("Page types builder", () => {
       ).toBeVisible();
     },
   );
+
+  test.run()(
+    "I cannot add slices in SEO & Metadata tab by default",
+    async ({ pageTypesBuilderPage, reusablePageType }) => {
+      await pageTypesBuilderPage.goto(reusablePageType.name);
+      await pageTypesBuilderPage.openTab("SEO & Metadata");
+
+      await expect(pageTypesBuilderPage.sliceZoneSwitch).not.toBeChecked();
+    },
+  );
+
+  test.run()(
+    "I cannot add slices in a new tab by default",
+    async ({ pageTypesBuilderPage, reusablePageType }) => {
+      await pageTypesBuilderPage.goto(reusablePageType.name);
+      await pageTypesBuilderPage.addTabButton.click();
+      await pageTypesBuilderPage.addTabDialog.createTab("New tab");
+      await pageTypesBuilderPage.checkIfTabIsActive("New tab");
+
+      await expect(pageTypesBuilderPage.sliceZoneSwitch).not.toBeChecked();
+    },
+  );
 });
