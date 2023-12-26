@@ -71,10 +71,16 @@ export class MockManagerProcedures {
 
     let existingData: unknown = undefined;
     if (procedure.config.execute ?? true) {
-      const response = await route.fetch();
-      const existingBody = await response.body();
-      existingData = (decode(existingBody) as Record<"data", unknown>)
-        .data as Record<string, unknown>;
+      try {
+        const response = await route.fetch();
+        const existingBody = await response.body();
+        existingData = (decode(existingBody) as Record<"data", unknown>)
+          .data as Record<string, unknown>;
+      } catch (_) {
+        // noop: when a test end, it can happen that a route is still pending and
+        // the request is aborted. Without this protection, if a request is
+        // made after the context is closed, the CI will fail.
+      }
     }
 
     let newBodyContents: Record<string, unknown> = { data: existingData };

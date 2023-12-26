@@ -13,6 +13,10 @@ export class Menu {
   readonly tutorialLink: Locator;
   readonly changelogLink: Locator;
   readonly appVersion: Locator;
+  readonly updatesAvailableTitle: Locator;
+  readonly updatesAvailableButton: Locator;
+  readonly tutorialVideoTooltipTitle: Locator;
+  readonly tutorialVideoTooltipCloseButton: Locator;
 
   constructor(page: Page) {
     /**
@@ -47,12 +51,22 @@ export class Menu {
       exact: false,
     });
     this.appVersion = this.menu.getByTestId("slicemachine-version");
+    this.updatesAvailableTitle = this.menu.getByText("Updates Available", {
+      exact: true,
+    });
+    this.updatesAvailableButton = this.menu.getByText("Learn more", {
+      exact: true,
+    });
+    this.tutorialVideoTooltipTitle = page.getByText("Need Help?");
+    this.tutorialVideoTooltipCloseButton = page.getByText("Got it");
   }
 
   /**
    * Dynamic locators
    */
-  // Handle dynamic locators here
+  getAppVersion(appVersion: string) {
+    return this.appVersion.getByText(`v${appVersion}`, { exact: true });
+  }
 
   /**
    * Actions

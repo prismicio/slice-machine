@@ -58,7 +58,7 @@ export const ChangesListItem: FC = () => {
         When you click Save, your changes are saved locally. Then, you can push
         your models to Prismic from the Changes page.
       </HoverCardDescription>
-      <HoverCardCloseButton>Got It</HoverCardCloseButton>
+      <HoverCardCloseButton>Got it</HoverCardCloseButton>
     </HoverCard>
   );
 };
