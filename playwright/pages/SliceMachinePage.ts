@@ -1,6 +1,7 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 
 import { Menu } from "./components/Menu";
+import { ReviewDialog } from "./components/ReviewDialog";
 import { InAppGuideDialog } from "./components/InAppGuideDialog";
 import { LoginDialog } from "./components/LoginDialog";
 
@@ -8,6 +9,7 @@ export class SliceMachinePage {
   readonly page: Page;
   readonly appLayout: Locator;
   readonly menu: Menu;
+  readonly reviewDialog: ReviewDialog;
   readonly inAppGuideDialog: InAppGuideDialog;
   readonly loginDialog: LoginDialog;
   readonly body: Locator;
@@ -19,6 +21,7 @@ export class SliceMachinePage {
      */
     this.page = page;
     this.menu = new Menu(page);
+    this.reviewDialog = new ReviewDialog(page);
     this.inAppGuideDialog = new InAppGuideDialog(page);
     this.loginDialog = new LoginDialog(page);
 
@@ -42,6 +45,7 @@ export class SliceMachinePage {
    */
   async gotoDefaultPage() {
     await this.page.goto("/");
+    await expect(this.breadcrumb).toBeVisible();
   }
 
   /**
