@@ -5,6 +5,7 @@ import { Dialog } from "./Dialog";
 export class CreateSliceDialog extends Dialog {
   readonly createdMessage: Locator;
   readonly nameInput: Locator;
+  readonly sliceAlreadyExistMessage: Locator;
 
   constructor(page: Page) {
     super(page, {
@@ -24,6 +25,10 @@ export class CreateSliceDialog extends Dialog {
       exact: false,
     });
     this.nameInput = this.dialog.getByTestId("slice-name-input");
+    this.sliceAlreadyExistMessage = this.dialog.getByText(
+      "Slice name is already taken.",
+      { exact: true },
+    );
   }
 
   /**

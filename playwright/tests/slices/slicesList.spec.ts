@@ -49,6 +49,23 @@ test.describe("Slices list", () => {
   );
 
   test.run()(
+    "I cannot create a slice with a name that already exists",
+    async ({ slicesListPage, slice }) => {
+      await slicesListPage.goto();
+      await slicesListPage.openCreateDialog();
+
+      const { nameInput, submitButton } = slicesListPage.createSliceDialog;
+
+      await nameInput.fill(slice.name);
+      await expect(submitButton).toBeDisabled();
+      await submitButton.click({ force: true });
+      await expect(
+        slicesListPage.createSliceDialog.sliceAlreadyExistMessage,
+      ).toBeVisible();
+    },
+  );
+
+  test.run()(
     "I can rename a slice",
     async ({ slice, sliceBuilderPage, slicesListPage }) => {
       await slicesListPage.goto();
