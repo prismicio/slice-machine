@@ -22,7 +22,6 @@ describe("UnauthenticatedError", () => {
 	it("identifies a UnauthenticatedError", async () => {
 		const error = new UnauthenticatedError();
 		expect(isUnauthenticatedError(error)).toBe(true);
-		expect(error._sliceMachineError).toBe(true);
 	});
 
 	it("does not confuse a SliceMachineError", async () => {

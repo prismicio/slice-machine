@@ -4,7 +4,7 @@ import { Environment } from "@slicemachine/manager/client";
 import { getLegacySliceMachineState } from "@src/features/legacyState/actions/getLegacySliceMachineState";
 import { managerClient } from "@src/managerClient";
 
-import { getActiveEnvironmentDomain } from "./getActiveEnvironmentDomain";
+import { getActiveEnvironment } from "./getActiveEnvironment";
 
 export async function setEnvironment(
   environment: Pick<Environment, "domain">,
@@ -13,6 +13,6 @@ export async function setEnvironment(
     environment: environment.domain,
   });
 
-  revalidateData(getActiveEnvironmentDomain, []);
+  revalidateData(getActiveEnvironment, []);
   revalidateData(getLegacySliceMachineState, []);
 }

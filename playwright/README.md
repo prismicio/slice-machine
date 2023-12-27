@@ -214,14 +214,11 @@ this.customTypesLink = this.menu.getByText("Custom types", {
 });
 ```
 
-### Prefer using `.toBeVisible()` when testing the presense of visble elements
+### Prefer using `.toBeVisible()` when testing the presence of elements
 
 `.toBeVisible()` ensures the element is present and visible to users. Explicitly checking for visibility prevents a false-positive test where the element is in the DOM, but cannot be seen or interacted by the user.
 
-> [!NOTE]
-> This preference can be ignored if the targeted element is hidden.
-
-If the element is purposely hidden, use `.toBeHidden()` or `.toBeAttached()`, depending on your use case.
+If the element is purposely hidden, use `.not.toBeVisible()`.
 
 ### Don't use `.locator()`
 

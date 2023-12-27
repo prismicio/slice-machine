@@ -89,7 +89,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
             </AppLayout>
           }
         >
-          <AppLayout data-cy="app-layout">
+          <AppLayout>
             <AppLayoutHeader>
               <AppLayoutBreadcrumb
                 folder={customTypesMessages.name({

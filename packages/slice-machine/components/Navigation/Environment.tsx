@@ -1,4 +1,8 @@
-import { Environment as EnvironmentType } from "@slicemachine/manager/client";
+import {
+  Environment as EnvironmentType,
+  isUnauthenticatedError,
+  isUnauthorizedError,
+} from "@slicemachine/manager/client";
 
 import { telemetry } from "@src/apiClient";
 import { useEnvironments } from "@src/features/environments/useEnvironments";
@@ -43,16 +47,13 @@ export function Environment() {
   }
 
   if (
-    typeof useEnvironmentsError === "object" &&
-    useEnvironmentsError !== null &&
-    "name" in useEnvironmentsError &&
-    (useEnvironmentsError.name === "UnauthenticatedError" ||
-      useEnvironmentsError.name === "UnauthorizedError")
+    isUnauthenticatedError(useEnvironmentsError) ||
+    isUnauthorizedError(useEnvironmentsError)
   ) {
     return (
       <SideNavEnvironmentSelector
         variant={
-          useEnvironmentsError.name === "UnauthenticatedError"
+          isUnauthenticatedError(useEnvironmentsError)
             ? "unauthenticated"
             : "unauthorized"
         }

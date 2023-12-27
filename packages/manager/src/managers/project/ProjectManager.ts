@@ -30,7 +30,7 @@ import {
 	SliceMachineError,
 	InternalError,
 	PluginError,
-	UnexpectedDataError,
+	InvalidActiveEnvironmentError,
 } from "../../errors";
 
 import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
@@ -472,11 +472,7 @@ export class ProjectManager extends BaseManager {
 		);
 
 		if (!activeEnvironment) {
-			throw new UnexpectedDataError(
-				`The active environment (${
-					activeEnvironmentDomain ?? "Production"
-				}) does not match one of the repository's environments.`,
-			);
+			throw new InvalidActiveEnvironmentError();
 		}
 
 		return { activeEnvironment };

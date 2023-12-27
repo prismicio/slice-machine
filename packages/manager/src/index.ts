@@ -36,6 +36,7 @@ export {
 	InternalError,
 	PluginError,
 	PluginHookResultError,
+	InvalidActiveEnvironmentError,
 } from "./errors";
 
 export { getEnvironmentInfo } from "./getEnvironmentInfo";

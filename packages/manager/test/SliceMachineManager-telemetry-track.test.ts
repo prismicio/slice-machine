@@ -178,7 +178,7 @@ it("logs a warning to the console if Segment returns an error", async () => {
 it("sends the environment kind when configured and authenticated", async (ctx) => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("project:environment:read", () => ({ environment: "foo" }));
+			hook("project:environment:read", () => ({ environment: "bar" }));
 			hook("project:environment:update", () => void 0);
 		},
 	});
@@ -195,7 +195,15 @@ it("sends the environment kind when configured and authenticated", async (ctx) =
 		appVersion: "0.0.1-test",
 	});
 
-	mockPrismicUserAPI(ctx);
+	const shortId = "user-foo";
+
+	mockPrismicUserAPI(ctx, {
+		profileEndpoint: {
+			profile: {
+				shortId,
+			},
+		},
+	});
 	mockPrismicAuthAPI(ctx);
 
 	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
@@ -206,15 +214,21 @@ it("sends the environment kind when configured and authenticated", async (ctx) =
 	const environments: Environment[] = [
 		{
 			kind: "prod",
-			domain: "example",
-			name: "example-name",
-			users: [{ id: "id" }],
+			domain: "foo",
+			name: "Foo",
+			users: [{ id: shortId }],
 		},
 		{
 			kind: "stage",
-			domain: "foo",
-			name: "foo-name",
-			users: [{ id: "id" }],
+			domain: "bar",
+			name: "Bar",
+			users: [{ id: shortId }],
+		},
+		{
+			kind: "dev",
+			domain: "baz",
+			name: "Baz",
+			users: [{ id: shortId }],
 		},
 	];
 
@@ -244,7 +258,7 @@ it("sends the environment kind when configured and authenticated", async (ctx) =
 it("sends an unknown environment kind when configured and the environment cannot be determined", async (ctx) => {
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("project:environment:read", () => ({ environment: "non-existent" }));
+			hook("project:environment:read", () => ({ environment: "foo" }));
 			hook("project:environment:update", () => void 0);
 		},
 	});
@@ -261,7 +275,15 @@ it("sends an unknown environment kind when configured and the environment cannot
 		appVersion: "0.0.1-test",
 	});
 
-	mockPrismicUserAPI(ctx);
+	const shortId = "user-foo";
+
+	mockPrismicUserAPI(ctx, {
+		profileEndpoint: {
+			profile: {
+				shortId,
+			},
+		},
+	});
 	mockPrismicAuthAPI(ctx);
 
 	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
@@ -269,20 +291,11 @@ it("sends an unknown environment kind when configured and the environment cannot
 
 	const authenticationToken = await manager.user.getAuthenticationToken();
 
-	const environments: Environment[] = [
-		{
-			kind: "prod",
-			domain: "example",
-			name: "example-name",
-			users: [{ id: "id" }],
-		},
-	];
-
 	mockSliceMachineAPI(ctx, {
 		environmentsV1Endpoint: {
 			expectedAuthenticationToken: authenticationToken,
 			expectedCookies: prismicAuthLoginResponse.cookies,
-			environments,
+			environments: [],
 		},
 	});
 

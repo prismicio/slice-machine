@@ -4,11 +4,11 @@ import clsx from "clsx";
 import * as styles from "./PageLayout.css";
 
 type PageLayoutProps = PropsWithChildren<{
-  borderTopColor?: keyof typeof styles.borderTopColor;
+  borderTopColor: keyof typeof styles.borderTopColor;
 }>;
 
 export const PageLayout: FC<PageLayoutProps> = ({
-  borderTopColor = "purple",
+  borderTopColor,
   children,
   ...otherProps
 }) => (

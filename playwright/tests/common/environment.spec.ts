@@ -39,6 +39,31 @@ test.describe("Environment", () => {
   );
 
   test.run()(
+    'I can see "Production" environment when an invalid environment is set',
+    async ({ sliceMachinePage, procedures }) => {
+      procedures.mock(
+        "prismicRepository.fetchEnvironments",
+        () => ({ environments }),
+        { execute: false },
+      );
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => {
+          const error = new Error();
+          error.name = "SMInvalidActiveEnvironmentError";
+          throw error;
+        },
+        { execute: false, times: 1 },
+      );
+
+      await sliceMachinePage.gotoDefaultPage();
+      await expect(
+        sliceMachinePage.menu.environmentSelector.environmentName,
+      ).toHaveText("Production");
+    },
+  );
+
+  test.run()(
     "I can see my current environment if I have one selected",
     async ({ sliceMachinePage, procedures }) => {
       procedures.mock(
@@ -47,8 +72,8 @@ test.describe("Environment", () => {
         { execute: false },
       );
       procedures.mock(
-        "project.readEnvironment",
-        () => ({ environment: environments[1].domain }),
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
         { execute: false },
       );
 
@@ -67,10 +92,21 @@ test.describe("Environment", () => {
         () => ({ environments }),
         { execute: false },
       );
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[0] }),
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
+
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
-        environments[0].name,
+        environments[1].name,
       );
     },
   );
@@ -80,7 +116,11 @@ test.describe("Environment", () => {
     async ({ sliceMachinePage, procedures }) => {
       procedures.mock(
         "prismicRepository.fetchEnvironments",
-        () => ({ error: { name: "UnauthorizedError" } }),
+        () => {
+          const error = new Error();
+          error.name = "SMUnauthorizedError";
+          throw error;
+        },
         { execute: false },
       );
 
@@ -108,6 +148,11 @@ test.describe("Environment", () => {
 
       await sliceMachinePage.gotoDefaultPage();
 
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[0] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
@@ -115,6 +160,11 @@ test.describe("Environment", () => {
         environments[0].kind,
       );
 
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
@@ -122,6 +172,11 @@ test.describe("Environment", () => {
         environments[1].kind,
       );
 
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[2] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
@@ -139,32 +194,44 @@ test.describe("Environment", () => {
         () => ({ environments }),
         { execute: false },
       );
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[0] }),
+        { execute: false },
+      );
 
       await sliceMachinePage.gotoDefaultPage();
 
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[0].name,
       );
-      await expect(sliceMachinePage.appLayout).toHaveCSS(
-        "border-top-color",
-        "rgb(109, 84, 207)",
-      );
+      await expect(
+        sliceMachinePage.getPageLayoutByTopBorderColor("purple"),
+      ).toBeVisible();
 
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[1] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[1].name,
       );
-      await expect(sliceMachinePage.appLayout).toHaveCSS(
-        "border-top-color",
-        "rgb(56, 91, 204)",
-      );
+      await expect(
+        sliceMachinePage.getPageLayoutByTopBorderColor("indigo"),
+      ).toBeVisible();
 
+      procedures.mock(
+        "project.fetchActiveEnvironment",
+        () => ({ activeEnvironment: environments[2] }),
+        { execute: false },
+      );
       await sliceMachinePage.menu.environmentSelector.selectEnvironment(
         environments[2].name,
       );
-      await expect(sliceMachinePage.appLayout).toHaveCSS(
-        "border-top-color",
-        "rgb(255, 159, 26)",
-      );
+      await expect(
+        sliceMachinePage.getPageLayoutByTopBorderColor("amber"),
+      ).toBeVisible();
     },
   );
 });

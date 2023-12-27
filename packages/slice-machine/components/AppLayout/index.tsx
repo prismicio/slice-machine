@@ -43,12 +43,16 @@ const PageLayoutWithActiveEnvironment: FC<PropsWithChildren> = ({
 }) => {
   const { activeEnvironment } = useActiveEnvironment();
 
-  const maybeBorderColor = activeEnvironment
+  const borderTopColor = activeEnvironment
     ? environmentTopBorderColorMap[activeEnvironment.kind]
-    : undefined;
+    : "purple";
 
   return (
-    <PageLayout borderTopColor={maybeBorderColor} {...otherProps}>
+    <PageLayout
+      borderTopColor={borderTopColor}
+      data-cy={`app-layout-top-border-color-${borderTopColor}`}
+      {...otherProps}
+    >
       {children}
     </PageLayout>
   );

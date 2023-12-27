@@ -45,25 +45,19 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 			kind: "prod",
 			domain: repositoryName,
 			name: repositoryName,
-			users: [{ id: "id" }],
+			users: [{ id: shortId }],
 		},
 		{
 			kind: "stage",
 			domain: `${repositoryName}-foo`,
 			name: "foo",
-			users: [{ id: "id" }],
+			users: [{ id: shortId }],
 		},
 		{
 			kind: "dev",
 			domain: `${repositoryName}-bar`,
 			name: "bar",
 			users: [{ id: shortId }],
-		},
-		{
-			kind: "dev",
-			domain: `${repositoryName}-baz`,
-			name: "baz",
-			users: [{ id: "user-baz" }],
 		},
 	];
 
@@ -88,7 +82,7 @@ it("returns a list of environments for the Prismic repository", async (ctx) => {
 	});
 });
 
-it("excludes personal environments that are not the user's by default", async (ctx) => {
+it("excludes environments that are not the user's by default", async (ctx) => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -113,6 +107,12 @@ it("excludes personal environments that are not the user's by default", async (c
 	const authenticationToken = await manager.user.getAuthenticationToken();
 	const repositoryName = await manager.project.getRepositoryName();
 
+	const productionEnvironment: Environment = {
+		kind: "prod",
+		domain: repositoryName,
+		name: repositoryName,
+		users: [{ id: shortId }],
+	};
 	const thisUsersEnvironment: Environment = {
 		kind: "dev",
 		domain: `${repositoryName}-bar`,
@@ -125,7 +125,11 @@ it("excludes personal environments that are not the user's by default", async (c
 		name: "baz",
 		users: [{ id: "user-baz" }],
 	};
-	const environments = [thisUsersEnvironment, someoneElsesEnvironment];
+	const environments: Environment[] = [
+		productionEnvironment,
+		thisUsersEnvironment,
+		someoneElsesEnvironment,
+	];
 
 	mockSliceMachineAPI(ctx, {
 		environmentsV1Endpoint: {
@@ -138,11 +142,11 @@ it("excludes personal environments that are not the user's by default", async (c
 	const res = await manager.prismicRepository.fetchEnvironments();
 
 	expect(res).toStrictEqual({
-		environments: [thisUsersEnvironment],
+		environments: [productionEnvironment, thisUsersEnvironment],
 	});
 });
 
-it("includes all personal environments if configured", async (ctx) => {
+it("includes all environments if configured", async (ctx) => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -167,6 +171,12 @@ it("includes all personal environments if configured", async (ctx) => {
 	const authenticationToken = await manager.user.getAuthenticationToken();
 	const repositoryName = await manager.project.getRepositoryName();
 
+	const productionEnvironment: Environment = {
+		kind: "prod",
+		domain: repositoryName,
+		name: repositoryName,
+		users: [{ id: shortId }],
+	};
 	const thisUsersEnvironment: Environment = {
 		kind: "dev",
 		domain: `${repositoryName}-bar`,
@@ -179,7 +189,11 @@ it("includes all personal environments if configured", async (ctx) => {
 		name: "baz",
 		users: [{ id: "user-baz" }],
 	};
-	const environments = [thisUsersEnvironment, someoneElsesEnvironment];
+	const environments: Environment[] = [
+		productionEnvironment,
+		thisUsersEnvironment,
+		someoneElsesEnvironment,
+	];
 
 	mockSliceMachineAPI(ctx, {
 		environmentsV1Endpoint: {
@@ -190,7 +204,7 @@ it("includes all personal environments if configured", async (ctx) => {
 	});
 
 	const res = await manager.prismicRepository.fetchEnvironments({
-		includeAllPersonalEnvironments: true,
+		includeAll: true,
 	});
 
 	expect(res).toStrictEqual({ environments });
@@ -221,11 +235,9 @@ it("throws if the repository API call was unsuccessful", async (ctx) => {
 		},
 	});
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({
-		error: new Error("Failed to fetch environments."),
-	});
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(/failed to fetch environments/i);
 });
 
 it("throws if the API response was invalid", async (ctx) => {
@@ -258,11 +270,9 @@ it("throws if the API response was invalid", async (ctx) => {
 		},
 	});
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({
-		error: new Error("Failed to fetch environments."),
-	});
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(/failed to fetch environments/i);
 });
 
 it("throws UnauthenticatedError if the API returns 400", async (ctx) => {
@@ -291,9 +301,9 @@ it("throws UnauthenticatedError if the API returns 400", async (ctx) => {
 		),
 	);
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthenticatedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthenticatedError);
 });
 
 it("throws UnauthenticatedError if the API returns 401", async (ctx) => {
@@ -322,9 +332,9 @@ it("throws UnauthenticatedError if the API returns 401", async (ctx) => {
 		),
 	);
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthenticatedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthenticatedError);
 });
 
 it("throws UnauthorizedError if the API returns 403", async (ctx) => {
@@ -353,9 +363,9 @@ it("throws UnauthorizedError if the API returns 403", async (ctx) => {
 		),
 	);
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthorizedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthorizedError);
 });
 
 it("throws if not logged in", async () => {
@@ -368,7 +378,7 @@ it("throws if not logged in", async () => {
 
 	await manager.user.logout();
 
-	const res = await manager.prismicRepository.fetchEnvironments();
-
-	expect(res).toStrictEqual({ error: new UnauthenticatedError() });
+	await expect(async () => {
+		await manager.prismicRepository.fetchEnvironments();
+	}).rejects.toThrow(UnauthenticatedError);
 });
