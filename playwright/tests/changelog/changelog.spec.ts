@@ -61,4 +61,64 @@ test.describe("Changelog", () => {
       await expect(changelogPage.breakingChangesWarning).not.toBeVisible();
     },
   );
+
+  test.run()(
+    "I can see the yarn latest update command",
+    async ({ changelogPage, procedures }) => {
+      const packageManager = "yarn";
+      const adapterName = "@slicemachine/adapter-next";
+      procedures.mock("project.getAdapterName", () => adapterName, {
+        execute: false,
+      });
+      procedures.mock("getState", ({ data }) => ({
+        ...(data as Record<string, unknown>),
+        env: {
+          ...((data as Record<string, unknown>)["env"] as Record<
+            string,
+            unknown
+          >),
+          packageManager,
+        },
+      }));
+
+      await changelogPage.goto();
+      await expect(
+        changelogPage.getUpdateCommand({
+          packageManager,
+          adapterName,
+          version: "latest",
+        }),
+      ).toBeVisible();
+    },
+  );
+
+  test.run()(
+    "I can see the npm latest update command",
+    async ({ changelogPage, procedures }) => {
+      const packageManager = "npm";
+      const adapterName = "@slicemachine/adapter-next";
+      procedures.mock("project.getAdapterName", () => adapterName, {
+        execute: false,
+      });
+      procedures.mock("getState", ({ data }) => ({
+        ...(data as Record<string, unknown>),
+        env: {
+          ...((data as Record<string, unknown>)["env"] as Record<
+            string,
+            unknown
+          >),
+          packageManager,
+        },
+      }));
+
+      await changelogPage.goto();
+      await expect(
+        changelogPage.getUpdateCommand({
+          packageManager,
+          adapterName,
+          version: "latest",
+        }),
+      ).toBeVisible();
+    },
+  );
 });

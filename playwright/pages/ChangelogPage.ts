@@ -29,7 +29,20 @@ export class ChangelogPage extends SliceMachinePage {
   /**
    * Dynamic locators
    */
-  // Handle dynamic locators here
+  getUpdateCommand(args: {
+    packageManager: string;
+    adapterName: string;
+    version: string;
+  }) {
+    const { packageManager, adapterName, version } = args;
+    let updateCommand;
+    if (packageManager == "yarn") {
+      updateCommand = `yarn add --dev slice-machine-ui@${version} ${adapterName}@${version}`;
+    } else {
+      updateCommand = `npm install --save-dev slice-machine-ui@${version} ${adapterName}@${version}`;
+    }
+    return this.body.getByText(updateCommand, { exact: true });
+  }
 
   /**
    * Actions
