@@ -20,11 +20,15 @@ export class EnvironmentSelector {
       name: "Login required",
       exact: true,
     });
-    // TODO(DT-1874): Replace with `getByRole` once `<IconButton>` supports labels.
-    this.loginIconButton = page.getByTestId("environment-login-icon-button");
+    this.loginIconButton = page.getByRole("button", {
+      name: "Log in to enable environments",
+      exact: true,
+    });
     this.environmentName = page.getByTestId("active-environment-name");
-    // TODO(DT-1874): Replace with `getByRole` once `<IconButton>` supports labels.
-    this.dropdownTrigger = page.getByTestId("environment-dropdown-button");
+    this.dropdownTrigger = page.getByRole("button", {
+      name: "Select environment",
+      exact: true,
+    });
   }
 
   /**

@@ -161,7 +161,7 @@ export const HoverCardCloseButton: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <div className={styles.closeButtonContainer}>
-      <Button className={styles.closeButton} onClick={handleClose}>
+      <Button sx={{ width: "100%" }} onClick={handleClose}>
         {children}
       </Button>
     </div>

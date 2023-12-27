@@ -42,7 +42,7 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
     <Dialog
       size="small"
       trigger={
-        <Button variant="secondary" onClick={trackOpenSnippet} startIcon="code">
+        <Button color="grey" onClick={trackOpenSnippet} startIcon="code">
           Page snippet
         </Button>
       }
@@ -75,7 +75,7 @@ export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
       <ErrorBoundary>
         <Suspense
           fallback={
-            <Button variant="secondary" startIcon="code">
+            <Button color="grey" startIcon="code">
               Page snippet
             </Button>
           }

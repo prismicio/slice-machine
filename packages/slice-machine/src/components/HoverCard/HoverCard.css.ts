@@ -103,12 +103,3 @@ export const closeButtonContainer = style([
     paddingInline: 16,
   }),
 ]);
-
-export const closeButton = style([
-  blockWithDisplayRevert,
-  sprinkles({
-    boxShadow: 1,
-    textAlign: "center",
-    width: "100%",
-  }),
-]);

@@ -73,7 +73,9 @@ export class TypesTablePage extends SliceMachinePage {
   }
 
   async openActionMenu(name: string, action: "Rename" | "Delete") {
-    await this.getRow(name).locator('[data-testid="editDropdown"]').click();
+    await this.getRow(name)
+      .getByRole("button", { name: "Custom type actions", exact: true })
+      .click();
     await this.page
       .getByRole("menuitem", { name: action, exact: true })
       .click();

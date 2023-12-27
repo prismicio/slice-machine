@@ -83,7 +83,7 @@ export const AppLayoutBackButton: FC<AppLayoutBackButtonProps> = ({
         void router.push(url);
       }}
       startIcon="arrowBack"
-      variant="secondary"
+      color="grey"
     />
   );
 };

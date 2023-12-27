@@ -18,7 +18,7 @@ const ZoneEmptyState = ({
     </Box>
     <Box sx={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
       <Button
-        variant="secondary"
+        color="grey"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         onClick={() => onEnterSelectMode()}
         data-cy={`add-${zoneName}-field`}

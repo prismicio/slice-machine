@@ -87,7 +87,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           <IconButton
             icon={<LoginIcon className={styles.loginIcon} />}
             onClick={onLogInClick}
-            data-cy="environment-login-icon-button"
+            hiddenLabel="Log in to enable environments"
           />
         ) : undefined}
 
@@ -114,7 +114,7 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
   return (
     <DropdownMenu modal>
       <DropdownMenuTrigger disabled={environments.length < 2}>
-        <IconButton icon="unfoldMore" data-cy="environment-dropdown-button" />
+        <IconButton icon="unfoldMore" hiddenLabel="Select environment" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" minWidth={256}>
         {/*

@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Icon,
-  Button,
+  IconButton,
 } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 
@@ -72,11 +72,13 @@ export const EditDropdown: FC<EditDropdownProps> = ({
     <>
       <DropdownMenu modal>
         <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
-          <Button
-            loading={isCustomTypeBeingConverted}
-            startIcon="moreVert"
-            variant="secondary"
+          <IconButton
+            color="grey"
             data-testid="editDropdown"
+            hiddenLabel="Custom type actions"
+            icon="moreVert"
+            loading={isCustomTypeBeingConverted}
+            variant="solid"
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

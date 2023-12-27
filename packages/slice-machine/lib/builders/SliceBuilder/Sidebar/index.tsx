@@ -94,7 +94,7 @@ export const Sidebar: FC<SidebarProps> = (props) => {
             // Set `position` to `relative` to position `Button` on top of
             // `Gradient`.
             sx={{ position: "relative" }}
-            variant="secondary"
+            color="grey"
           >
             Add a new variation
           </Button>

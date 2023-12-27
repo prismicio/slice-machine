@@ -68,7 +68,7 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
                       </label>
                       <Select
                         size="medium"
-                        variant="secondary"
+                        color="grey"
                         startIcon="viewDay"
                         flexContent={true}
                         value={formik.values.path}

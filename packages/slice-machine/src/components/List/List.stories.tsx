@@ -23,7 +23,7 @@ export const Default = {
                 Show code snippets?
               </Text>
               <Switch size="small" />
-              <Button startIcon="add" variant="secondary">
+              <Button startIcon="add" color="grey">
                 Add
               </Button>
             </>
@@ -35,7 +35,7 @@ export const Default = {
         <ListItem />
         <ListHeader
           actions={
-            <Button startIcon="add" variant="secondary">
+            <Button startIcon="add" color="grey">
               Add
             </Button>
           }
