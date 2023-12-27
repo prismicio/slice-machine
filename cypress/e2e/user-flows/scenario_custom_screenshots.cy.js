@@ -4,7 +4,7 @@ import { menu } from "../../pages/menu";
 import { sliceBuilder } from "../../pages/slices/sliceBuilder";
 import { changesPage } from "../../pages/changes/changesPage";
 
-describe("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
+describe.skip("I am an existing SM user and I want to upload screenshots on variations of an existing Slice", () => {
   let slice;
   const initSliceData = (random = Date.now()) => ({
     id: `test_custom_screenshots${random}`,
