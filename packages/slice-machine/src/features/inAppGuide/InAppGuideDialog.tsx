@@ -72,13 +72,7 @@ export const InAppGuideDialog: FC = () => {
                     {content.title}
                   </Text>
                 </Box>
-                <Video
-                  src={content.videoUrl}
-                  sizing="contain"
-                  autoPlay
-                  controls
-                  loop
-                />
+                <Video src={content.videoUrl} sizing="contain" autoPlay loop />
                 <Text>{content.description}</Text>
               </Box>
 

@@ -112,7 +112,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
                       </label>
                       <Select
                         size="medium"
-                        variant="secondary"
+                        color="grey"
                         startIcon="folder"
                         flexContent={true}
                         value={formik.values.from}

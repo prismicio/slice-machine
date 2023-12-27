@@ -163,7 +163,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
           ) : action.type === "menu" ? (
             <DropdownMenu modal>
               <DropdownMenuTrigger disabled={disabled}>
-                <IconButton data-cy="slice-action-icon" icon="moreVert" />
+                <IconButton hiddenLabel="Slice actions" icon="moreVert" />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
@@ -250,7 +250,7 @@ const UpdateScreenshotButton: FC<UpdateScreenshotButtonProps> = (props) => (
     renderStartIcon={() => (
       <AddPhotoAlternateIcon color={tokens.color.greyLight11} />
     )}
-    variant="secondary"
+    color="grey"
   >
     Update screenshot
   </Button>

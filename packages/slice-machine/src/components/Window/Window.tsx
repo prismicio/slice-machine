@@ -46,7 +46,7 @@ export const WindowTabsList: FC<WindowTabsListProps> = ({
   <Tabs.List {...otherProps} className={styles.tabsList}>
     {children}
     <div className={styles.newTabButton}>
-      <IconButton icon="add" onClick={onAddNewTab} data-cy="add-tab-button" />
+      <IconButton icon="add" onClick={onAddNewTab} hiddenLabel="Add new tab" />
     </div>
   </Tabs.List>
 );

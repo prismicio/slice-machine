@@ -185,7 +185,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
             startIcon="refresh"
             endIcon="arrowDropDown"
             size="medium"
-            variant="secondary"
+            color="grey"
           >
             Migrate legacy slice
           </Button>

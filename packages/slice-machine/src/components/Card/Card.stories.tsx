@@ -41,7 +41,7 @@ export const Default = {
         <CardMedia overlay={<></>} />
         <CardActions />
         <CardFooter
-          action={<Button variant="secondary">Action</Button>}
+          action={<Button color="grey">Action</Button>}
           subtitle="Subtitle"
           title="Title"
         />
@@ -66,7 +66,7 @@ export const SolidWithImg = {
                 renderStartIcon={() => (
                   <AddPhotoAlternateIcon color={tokens.color.greyLight11} />
                 )}
-                variant="secondary"
+                color="grey"
               >
                 Update screenshot
               </Button>
@@ -109,7 +109,7 @@ export const SolidWithDiv = {
             renderStartIcon={() => (
               <SyncAltIcon color={tokens.color.greyLight11} />
             )}
-            variant="secondary"
+            color="grey"
           >
             Turn into shared Slice
           </Button>

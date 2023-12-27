@@ -32,7 +32,7 @@ export const Image = {
     children: (
       <>
         <HoverCardTitle>Prismic Academy©</HoverCardTitle>
-        <HoverCardMedia component="image" src="phil.png" />
+        <HoverCardMedia component="image" src="prismic-academy-101.png" />
         <HoverCardDescription>
           Lorem ipsum dolor sit amet consectetur. Aenean purus aliquam vel eget
           vitae etiam

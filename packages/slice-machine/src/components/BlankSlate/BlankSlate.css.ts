@@ -79,8 +79,11 @@ export const desc = style({
 
 export const actions = style([
   sprinkles({
-    gap: 16,
+    all: "unset",
     alignItems: "center",
+    boxSizing: "border-box",
+    display: "flex",
+    gap: 16,
     marginTop: 16,
   }),
   {

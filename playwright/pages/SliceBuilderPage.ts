@@ -98,7 +98,7 @@ export class SliceBuilderPage extends BuilderPage {
     action: "Rename" | "Delete",
   ) {
     await this.getVariationCard(name, variation)
-      .getByTestId("slice-action-icon")
+      .getByRole("button", { name: "Slice actions", exact: true })
       .click();
     await this.page
       .getByTestId("slice-action-icon-dropdown")

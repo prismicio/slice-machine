@@ -93,7 +93,7 @@ const Zone = ({
                 }-field`}
                 onClick={enterSelectMode}
                 startIcon="add"
-                variant="secondary"
+                grey="grey"
               >
                 Add a new field
               </Button>

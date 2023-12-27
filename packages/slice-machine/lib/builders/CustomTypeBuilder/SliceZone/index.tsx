@@ -213,7 +213,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             sliceZone ? (
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Button variant="secondary" startIcon="add">
+                  <Button color="grey" startIcon="add">
                     Add slices
                   </Button>
                 </DropdownMenuTrigger>

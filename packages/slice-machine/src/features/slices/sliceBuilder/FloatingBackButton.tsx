@@ -52,7 +52,7 @@ const BackButton: FC<BackButtonProps> = ({ sourceCustomTypeId }) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const url = CUSTOM_TYPES_CONFIG[format!].getBuilderPagePathname(id);
     return (
-      <ButtonGroup density="compact" variant="tertiary">
+      <ButtonGroup density="compact" color="dark">
         <Button
           onClick={() => {
             void router.push(url);
