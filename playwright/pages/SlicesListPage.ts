@@ -64,7 +64,9 @@ export class SlicesListPage extends SliceMachinePage {
   }
 
   async openActionMenu(name: string, action: "Rename" | "Delete") {
-    await this.getCard(name).getByTestId("slice-action-icon").click();
+    await this.getCard(name)
+      .getByRole("button", { name: "slice action icon", exact: true })
+      .click();
     await this.page
       .getByTestId("slice-action-icon-dropdown")
       .getByText(action, { exact: true })

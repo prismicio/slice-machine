@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { ButtonGroup, Text } from "@prismicio/editor-ui";
+import { Text } from "@prismicio/editor-ui";
 import type { CSSProperties, FC, PropsWithChildren } from "react";
 
 import * as styles from "./BlankSlate.css";
@@ -46,10 +46,5 @@ export const BlankSlateDescription: FC<PropsWithChildren> = (props) => (
 );
 
 export const BlankSlateActions: FC<PropsWithChildren> = (props) => (
-  <ButtonGroup
-    {...props}
-    className={styles.actions}
-    size="medium"
-    variant="secondary"
-  />
+  <div {...props} className={styles.actions} color="grey" />
 );

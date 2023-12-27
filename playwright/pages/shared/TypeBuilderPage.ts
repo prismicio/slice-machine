@@ -66,8 +66,10 @@ export class TypeBuilderPage extends BuilderPage {
     // Tabs
     this.tabList = page.getByRole("tablist");
     this.tab = this.tabList.getByRole("tab");
-    // TODO(DT-1874): Replace with `getByRole` once `<IconButton>` supports labels.
-    this.addTabButton = this.tabList.getByTestId("add-tab-button");
+    this.addTabButton = this.tabList.getByRole("button", {
+      name: "add tab button",
+      exact: true,
+    });
     // Static zone
     this.staticZone = page.getByTestId("ct-static-zone");
     this.staticZonePlaceholder = this.staticZone.getByText(

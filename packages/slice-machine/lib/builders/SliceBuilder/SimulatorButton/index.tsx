@@ -155,7 +155,7 @@ const SimulatorButton: React.FC<{
               width={tokens.size[24]}
             />
           )}
-          variant="secondary"
+          color="grey"
         >
           Simulate
         </Button>
