@@ -21,7 +21,14 @@ import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
 import ListItem from "@components/ListItem";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { CustomTypes } from "@lib/models/common/CustomType";
+import {
+  addGroupField,
+  deleteGroupField,
+  reorderGroupField,
+  updateGroupField,
+} from "@src/domain/customType";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -40,12 +47,8 @@ const CustomListItem = ({
   const [selectMode, setSelectMode] = useState(false);
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
-  const {
-    addFieldIntoGroup,
-    deleteFieldIntoGroup,
-    replaceFieldIntoGroup,
-    reorderFieldIntoGroup,
-  } = useSliceMachineActions();
+  const { customType, setCustomType } = useCustomTypeState();
+  const customTypeSM = CustomTypes.toSM(customType);
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -68,8 +71,14 @@ const CustomListItem = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
     const newWidget = widget.create(label);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
-    addFieldIntoGroup(tabId, groupItem.key, id, newWidget);
+    const newCustomType = addGroupField({
+      customType: customTypeSM,
+      sectionId: tabId,
+      groupItem,
+      newField: newWidget,
+      newFieldId: id,
+    });
+    setCustomType(CustomTypes.fromSM(newCustomType));
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {
@@ -77,8 +86,16 @@ const CustomListItem = ({
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
-    replaceFieldIntoGroup(tabId, groupItem.key, previousKey, newKey, value);
+
+    const newCustomType = updateGroupField({
+      customType: customTypeSM,
+      sectionId: tabId,
+      groupItem,
+      previousKey,
+      newKey,
+      value,
+    });
+    setCustomType(CustomTypes.fromSM(newCustomType));
   };
 
   const onDragEnd = (result) => {
@@ -87,21 +104,32 @@ const CustomListItem = ({
       return;
     }
 
-    reorderFieldIntoGroup(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      tabId,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      groupItem.key,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      result.source.index,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      result.destination.index,
-    );
+    const { source, destination } = result;
+    if (!destination) {
+      return;
+    }
+
+    const { index: sourceIndex } = source;
+    const { index: destinationIndex } = destination;
+
+    const newCustomType = reorderGroupField({
+      customType: customTypeSM,
+      sectionId: tabId,
+      groupItem,
+      sourceIndex,
+      destinationIndex,
+    });
+    setCustomType(CustomTypes.fromSM(newCustomType));
   };
 
   const onDeleteItem = (key) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    deleteFieldIntoGroup(tabId, groupItem.key, key);
+    const newCustomType = deleteGroupField({
+      customType: customTypeSM,
+      sectionId: tabId,
+      groupItem,
+      fieldKey: key,
+    });
+    setCustomType(CustomTypes.fromSM(newCustomType));
   };
 
   const enterEditMode = (field) => {
@@ -172,6 +200,7 @@ const CustomListItem = ({
                             `data.${groupItem.key}.${key}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                           draggableId: `group-${groupItem.key}-${item.key}-${index}`,
+                          dataCy: `list-item-group-${groupItem.key}-${item.key}`,
                         };
 
                         const HintElement = (

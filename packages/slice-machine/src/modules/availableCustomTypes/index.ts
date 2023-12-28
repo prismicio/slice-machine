@@ -21,7 +21,6 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@lib/models/common/normalizers/customType";
-import { saveCustomTypeCreator } from "../selectedCustomType/actions";
 import { omit } from "lodash";
 import { deleteSliceCreator } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
@@ -36,6 +35,12 @@ import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { CustomTypes } from "@lib/models/common/CustomType";
 import { ToastMessageWithPath } from "@components/ToasterContainer";
+
+export const saveCustomTypeCreator = createAsyncAction(
+  "CUSTOM_TYPE/SAVE.REQUEST",
+  "CUSTOM_TYPE/SAVE.RESPONSE",
+  "CUSTOM_TYPE/SAVE.FAILURE",
+)<undefined, { customType: CustomTypeSM }>();
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
