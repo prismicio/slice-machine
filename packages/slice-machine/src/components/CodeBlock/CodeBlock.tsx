@@ -82,6 +82,7 @@ const Copy = ({ code, onCopy }: { code: string; onCopy?: () => void }) => {
       size="small"
       onClick={copy}
       icon={isCopied ? "check" : "contentCopy"}
+      hiddenLabel={isCopied ? "Code successfully copied" : "Copy code"}
     />
   );
 };

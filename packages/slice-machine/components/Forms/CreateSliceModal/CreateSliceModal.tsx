@@ -15,10 +15,7 @@ import { InputBox } from "../components/InputBox";
 
 type CreateSliceModalProps = {
   onClose: () => void;
-  onSuccess: (
-    newSlice: SharedSlice,
-    libraryName: string,
-  ) => Promise<void> | void;
+  onSuccess: (newSlice: SharedSlice, libraryName: string) => void;
   localLibraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;
 };
@@ -49,7 +46,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         // Update Redux store
         createSliceSuccess(serverState.libraries);
 
-        await onSuccess(newSlice, libraryName);
+        onSuccess(newSlice, libraryName);
       },
     });
   };
