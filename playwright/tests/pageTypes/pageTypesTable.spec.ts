@@ -17,7 +17,7 @@ test.run()(
     await pageTypesBuilderPage.goto(name);
 
     await expect(pageTypesBuilderPage.sliceZoneBlankSlateTitle).toBeVisible();
-    await pageTypesBuilderPage.sliceZoneUseTemplateAction.click();
+    await pageTypesBuilderPage.sliceZoneBlankSlateUseTemplateAction.click();
     await pageTypesBuilderPage.useTemplateSlicesDialog.useTemplates([
       "Hero",
       "CustomerLogos",
@@ -39,11 +39,9 @@ test.run()(
     await expect(pageTypesBuilderPage.getTab("SEO & Metadata")).toBeVisible();
 
     await expect(pageTypesBuilderPage.staticZoneListItem).toHaveCount(1);
+    await expect(pageTypesBuilderPage.getListItemFieldId("uid")).toBeVisible();
     await expect(
-      pageTypesBuilderPage.getStaticZoneListItemFieldName("UID"),
-    ).toBeVisible();
-    await expect(
-      pageTypesBuilderPage.getStaticZoneListItemFieldId("data.uid"),
+      pageTypesBuilderPage.getListItemFieldName("uid", "UID"),
     ).toBeVisible();
 
     await expect(pageTypesBuilderPage.sliceZoneSwitch).not.toBeVisible();
@@ -64,7 +62,7 @@ test.run()(
     await pageTypesBuilderPage.goto(name);
 
     await expect(pageTypesBuilderPage.sliceZoneBlankSlateTitle).toBeVisible();
-    await pageTypesBuilderPage.sliceZoneUseTemplateAction.click();
+    await pageTypesBuilderPage.sliceZoneBlankSlateUseTemplateAction.click();
     await pageTypesBuilderPage.useTemplateSlicesDialog.useTemplates([
       "AlternateGrid",
       "CallToAction",
