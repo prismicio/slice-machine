@@ -1,8 +1,12 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
+import { PageSnippetDialog } from "./components/PageSnippetDialog";
 import { TypeBuilderPage } from "./shared/TypeBuilderPage";
 
 export class PageTypeBuilderPage extends TypeBuilderPage {
+  readonly pageSnippetDialog: PageSnippetDialog;
+  readonly pageSnippetButton: Locator;
+
   constructor(page: Page) {
     super(page, {
       format: "page",
@@ -11,12 +15,15 @@ export class PageTypeBuilderPage extends TypeBuilderPage {
     /**
      * Components
      */
-    // Handle components here
+    this.pageSnippetDialog = new PageSnippetDialog(page);
 
     /**
      * Static locators
      */
-    // Handle static locators here
+    this.pageSnippetButton = this.page.getByRole("button", {
+      name: "Page snippet",
+      exact: true,
+    });
   }
 
   /**

@@ -2,9 +2,14 @@ import { expect, Locator, Page } from "@playwright/test";
 
 import { CreateTypeDialog } from "../components/CreateTypeDialog";
 import { RenameTypeDialog } from "../components/RenameTypeDialog";
+import { DeleteTypeDialog } from "../components/DeleteTypeDialog";
 import { UseTemplateSlicesDialog } from "../components/UseTemplateSlicesDialog";
 import { SelectExistingSlicesDialog } from "../components/SelectExistingSlicesDialog";
 import { AddTabDialog } from "../components/AddTabDialog";
+import { RenameTabDialog } from "../components/RenameTabDialog";
+import { DeleteTabDialog } from "../components/DeleteTabDialog";
+import { CreateSliceDialog } from "../components/CreateSliceDialog";
+import { DeleteSliceZoneDialog } from "../components/DeleteSliceZoneDialog";
 import { CustomTypesTablePage } from "../CustomTypesTablePage";
 import { PageTypesTablePage } from "../PageTypesTablePage";
 import { BuilderPage } from "./BuilderPage";
@@ -12,25 +17,34 @@ import { BuilderPage } from "./BuilderPage";
 export class TypeBuilderPage extends BuilderPage {
   readonly createTypeDialog: CreateTypeDialog;
   readonly renameTypeDialog: RenameTypeDialog;
+  readonly deleteTypeDialog: DeleteTypeDialog;
   readonly useTemplateSlicesDialog: UseTemplateSlicesDialog;
   readonly selectExistingSlicesDialog: SelectExistingSlicesDialog;
+  readonly createSliceDialog: CreateSliceDialog;
   readonly addTabDialog: AddTabDialog;
+  readonly renameTabDialog: RenameTabDialog;
+  readonly deleteTabDialog: DeleteTabDialog;
   readonly customTypeTablePage: CustomTypesTablePage;
   readonly pageTypeTablePage: PageTypesTablePage;
+  readonly deleteSliceZoneDialog: DeleteSliceZoneDialog;
   readonly format: "page" | "custom";
-  readonly savedMessage: Locator;
   readonly tab: Locator;
   readonly tabList: Locator;
   readonly addTabButton: Locator;
-  readonly staticZone: Locator;
-  readonly staticZonePlaceholder: Locator;
-  readonly staticZoneListItem: Locator;
+  readonly renameTabButton: Locator;
+  readonly deleteTabButton: Locator;
   readonly sliceZoneSwitch: Locator;
   readonly sliceZoneBlankSlate: Locator;
   readonly sliceZoneBlankSlateTitle: Locator;
-  readonly sliceZoneUseTemplateAction: Locator;
-  readonly sliceZoneSelectExistingAction: Locator;
   readonly sliceZoneSharedSliceCard: Locator;
+  readonly sliceZoneBlankSlateUseTemplateAction: Locator;
+  readonly sliceZoneBlankSlateSelectExistingAction: Locator;
+  readonly sliceZoneBlankSlateCreateNewAction: Locator;
+  readonly sliceZoneAddDropdown: Locator;
+  readonly sliceZoneAddDropdownUseTemplateAction: Locator;
+  readonly sliceZoneAddDropdownSelectExistingAction: Locator;
+  readonly sliceZoneAddDropdownCreateNewAction: Locator;
+  readonly removeSliceButton: Locator;
 
   constructor(
     page: Page,
@@ -46,23 +60,22 @@ export class TypeBuilderPage extends BuilderPage {
      */
     this.createTypeDialog = new CreateTypeDialog(page, format);
     this.renameTypeDialog = new RenameTypeDialog(page, format);
+    this.deleteTypeDialog = new DeleteTypeDialog(page, format);
     this.useTemplateSlicesDialog = new UseTemplateSlicesDialog(page);
     this.selectExistingSlicesDialog = new SelectExistingSlicesDialog(page);
+    this.createSliceDialog = new CreateSliceDialog(page);
     this.customTypeTablePage = new CustomTypesTablePage(page);
     this.pageTypeTablePage = new PageTypesTablePage(page);
     this.addTabDialog = new AddTabDialog(page);
+    this.renameTabDialog = new RenameTabDialog(page);
+    this.deleteTabDialog = new DeleteTabDialog(page);
+    this.deleteSliceZoneDialog = new DeleteSliceZoneDialog(page);
 
     /**
      * Static locators
      */
     // Global
     this.format = format;
-    this.savedMessage = page.getByText(
-      `${format.charAt(0).toUpperCase()}${format.slice(
-        1,
-      )} type saved successfully`,
-      { exact: true },
-    );
     // Tabs
     this.tabList = page.getByRole("tablist");
     this.tab = this.tabList.getByRole("tab");
@@ -70,13 +83,12 @@ export class TypeBuilderPage extends BuilderPage {
       name: "Add new tab",
       exact: true,
     });
-    // Static zone
-    this.staticZone = page.getByTestId("ct-static-zone");
-    this.staticZonePlaceholder = this.staticZone.getByText(
-      "Add a field to your Static Zone",
-      { exact: true },
-    );
-    this.staticZoneListItem = this.staticZone.getByRole("listitem");
+    this.renameTabButton = page
+      .getByRole("menu")
+      .getByText("Rename", { exact: true });
+    this.deleteTabButton = page
+      .getByRole("menu")
+      .getByText("Remove", { exact: true });
     // Slice zone
     this.sliceZoneSwitch = page.getByTestId("slice-zone-switch");
     this.sliceZoneBlankSlate = page.getByTestId("slice-zone-blank-slate");
@@ -86,36 +98,54 @@ export class TypeBuilderPage extends BuilderPage {
         exact: true,
       },
     );
-    this.sliceZoneUseTemplateAction = page.getByText("Use template", {
-      exact: true,
-    });
-    this.sliceZoneSelectExistingAction = page.getByText("Select existing", {
-      exact: true,
-    });
     this.sliceZoneSharedSliceCard = page.getByTestId("shared-slice-card");
+    this.sliceZoneBlankSlateUseTemplateAction =
+      this.sliceZoneBlankSlate.getByText("Use template", {
+        exact: true,
+      });
+    this.sliceZoneBlankSlateSelectExistingAction =
+      this.sliceZoneBlankSlate.getByText("Select existing", {
+        exact: true,
+      });
+    this.sliceZoneBlankSlateCreateNewAction =
+      this.sliceZoneBlankSlate.getByText("Create new", {
+        exact: true,
+      });
+    this.sliceZoneAddDropdown = page.getByRole("button", {
+      name: "Add slices",
+      exact: true,
+    });
+    this.sliceZoneAddDropdownUseTemplateAction = page
+      .getByRole("menu")
+      .getByText("Use template", { exact: true });
+    this.sliceZoneAddDropdownSelectExistingAction = page
+      .getByRole("menu")
+      .getByText("Select existing", { exact: true });
+    this.sliceZoneAddDropdownCreateNewAction = page
+      .getByRole("menu")
+      .getByText("Create new", { exact: true });
+    this.removeSliceButton = page.getByRole("button", {
+      name: "Remove slice",
+      exact: true,
+    });
   }
 
   /**
    * Dynamic locators
    */
-  getStaticZoneListItemFieldName(name: string) {
-    return this.staticZoneListItem
-      .getByTestId("field-name")
-      .getByText(name, { exact: true });
-  }
-
-  getStaticZoneListItemFieldId(name: string) {
-    return this.staticZoneListItem
-      .getByTestId("field-id")
-      .getByText(name, { exact: true });
-  }
-
   getTab(name: string) {
     return this.tabList.getByRole("tab", { name, exact: true });
   }
 
   getSliceZoneSharedSliceCard(name: string) {
     return this.sliceZoneSharedSliceCard.getByText(name, { exact: false });
+  }
+
+  getTabMenuButton(name: string) {
+    return this.getTab(name).getByRole("button", {
+      name: `tab-${name}-menu-button`,
+      exact: true,
+    });
   }
 
   /**
@@ -129,6 +159,7 @@ export class TypeBuilderPage extends BuilderPage {
     await typePage.goto();
     await expect(typePage.getRow(name)).toBeVisible();
     await typePage.getRow(name).click();
+    await expect(this.getBreadcrumbLabel(name)).toBeVisible();
   }
 
   async openTab(name: string) {
@@ -137,14 +168,18 @@ export class TypeBuilderPage extends BuilderPage {
     await this.checkIfTabIsActive(name);
   }
 
+  async openActionMenu(action: "Rename" | "Remove") {
+    await this.page
+      .getByRole("button", { name: "Custom type actions", exact: true })
+      .click();
+    await this.page
+      .getByRole("menuitem", { name: action, exact: true })
+      .click();
+  }
+
   /**
    *  Assertions
    */
-  async checkSavedMessage() {
-    await expect(this.savedMessage).toBeVisible();
-    await expect(this.savedMessage).not.toBeVisible();
-  }
-
   async checkIfTabIsActive(name: string) {
     await expect(this.getTab(name)).toHaveAttribute("aria-selected", "true");
   }

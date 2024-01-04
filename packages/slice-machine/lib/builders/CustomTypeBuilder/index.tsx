@@ -1,8 +1,7 @@
 import { DropdownMenuItem, Icon } from "@prismicio/editor-ui";
-import { type FC, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 
-import type { CustomTypeSM } from "@lib/models/common/CustomType";
 import {
   Window,
   WindowFrame,
@@ -11,33 +10,35 @@ import {
   WindowTabsList,
   WindowTabsTrigger,
 } from "@src/components/Window";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { CustomTypes } from "@lib/models/common/CustomType";
+import {
+  createSection,
+  deleteSection,
+  renameSection,
+} from "@src/domain/customType";
 
 import CreateModal from "./TabModal/create";
 import DeleteModal from "./TabModal/delete";
 import UpdateModal from "./TabModal/update";
 import TabZone from "./TabZone";
 
-type CustomTypeBuilderProps = { customType: CustomTypeSM };
-
 type DialogState =
-  | { type: "CREATE_CUSTOM_TYPE" }
-  | { type: "UPDATE_CUSTOM_TYPE"; tabKey: string }
-  | { type: "DELETE_CUSTOM_TYPE"; tabKey: string }
+  | { type: "CREATE_CUSTOM_TYPE_TAB" }
+  | { type: "UPDATE_CUSTOM_TYPE_TAB"; tabKey: string }
+  | { type: "DELETE_CUSTOM_TYPE_TAB"; tabKey: string }
   | undefined;
 
-export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
-  const { customType } = props;
-
-  const [tabValue, setTabValue] = useState(customType.tabs[0]?.key);
+export const CustomTypeBuilder = () => {
+  const { customType, setCustomType } = useCustomTypeState();
+  const customTypeSM = CustomTypes.toSM(customType);
+  const [tabValue, setTabValue] = useState(customTypeSM.tabs[0]?.key);
 
   const [dialog, setDialog] = useState<DialogState>();
-  const { createCustomTypeTab, updateCustomTypeTab, deleteCustomTypeTab } =
-    useSliceMachineActions();
 
   const { query } = useRouter();
   const sliceZoneEmpty =
-    customType.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
+    customTypeSM.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
       .length === 0;
 
   return (
@@ -45,20 +46,15 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
       <Window style={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
         {customType.format === "page" ? <WindowFrame /> : undefined}
         {query.newPageType === "true" ? (
-          <TabZone
-            customType={customType}
-            fields={customType.tabs[0].value}
-            sliceZone={customType.tabs[0].sliceZone}
-            tabId={customType.tabs[0].key}
-          />
+          <TabZone tabId={customTypeSM.tabs[0].key} />
         ) : (
           <WindowTabs onValueChange={setTabValue} value={tabValue}>
             <WindowTabsList
               onAddNewTab={() => {
-                setDialog({ type: "CREATE_CUSTOM_TYPE" });
+                setDialog({ type: "CREATE_CUSTOM_TYPE_TAB" });
               }}
             >
-              {customType.tabs.map((tab) => (
+              {customTypeSM.tabs.map((tab) => (
                 <WindowTabsTrigger
                   key={tab.key}
                   menu={
@@ -66,7 +62,7 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
                       <DropdownMenuItem
                         onSelect={() => {
                           setDialog({
-                            type: "UPDATE_CUSTOM_TYPE",
+                            type: "UPDATE_CUSTOM_TYPE_TAB",
                             tabKey: tab.key,
                           });
                         }}
@@ -76,10 +72,10 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         color="tomato"
-                        disabled={customType.tabs.length <= 1}
+                        disabled={customTypeSM.tabs.length <= 1}
                         onSelect={() => {
                           setDialog({
-                            type: "DELETE_CUSTOM_TYPE",
+                            type: "DELETE_CUSTOM_TYPE_TAB",
                             tabKey: tab.key,
                           });
                         }}
@@ -95,57 +91,58 @@ export const CustomTypeBuilder: FC<CustomTypeBuilderProps> = (props) => {
                 </WindowTabsTrigger>
               ))}
             </WindowTabsList>
-            {customType.tabs.map((tab) => (
+            {customTypeSM.tabs.map((tab) => (
               <WindowTabsContent key={tab.key} value={tab.key}>
-                <TabZone
-                  customType={customType}
-                  fields={tab.value}
-                  sliceZone={tab.sliceZone}
-                  tabId={tab.key}
-                />
+                <TabZone tabId={tab.key} />
               </WindowTabsContent>
             ))}
           </WindowTabs>
         )}
       </Window>
-      {dialog?.type === "CREATE_CUSTOM_TYPE" ? (
+      {dialog?.type === "CREATE_CUSTOM_TYPE_TAB" ? (
         <CreateModal
           close={() => {
             setDialog(undefined);
           }}
           isOpen
           onSubmit={({ id }) => {
-            createCustomTypeTab(id);
+            const newCustomType = createSection(customType, id);
+            setCustomType(newCustomType);
             setTabValue(id);
           }}
-          tabIds={customType.tabs.map((tab) => tab.key.toLowerCase())}
+          tabIds={customTypeSM.tabs.map((tab) => tab.key.toLowerCase())}
         />
       ) : undefined}
-      {dialog?.type === "UPDATE_CUSTOM_TYPE" ? (
+      {dialog?.type === "UPDATE_CUSTOM_TYPE_TAB" ? (
         <UpdateModal
           close={() => {
             setDialog(undefined);
           }}
+          initialTabKey={dialog.tabKey}
           isOpen
           onSubmit={({ id }) => {
-            updateCustomTypeTab(dialog.tabKey, id);
+            const newCustomType = renameSection(customType, dialog.tabKey, id);
+            setCustomType(newCustomType);
+
             if (tabValue === dialog.tabKey) setTabValue(id);
           }}
-          tabIds={customType.tabs
+          tabIds={customTypeSM.tabs
             .filter((tab) => tab.key !== dialog.tabKey)
             .map((tab) => tab.key.toLowerCase())}
         />
       ) : undefined}
-      {dialog?.type === "DELETE_CUSTOM_TYPE" ? (
+      {dialog?.type === "DELETE_CUSTOM_TYPE_TAB" ? (
         <DeleteModal
           close={() => {
             setDialog(undefined);
           }}
           isOpen
           onSubmit={() => {
-            deleteCustomTypeTab(dialog.tabKey);
+            const newCustomType = deleteSection(customType, dialog.tabKey);
+            setCustomType(newCustomType);
+
             if (tabValue === dialog.tabKey) {
-              const otherTabValue = customType.tabs.find(
+              const otherTabValue = customTypeSM.tabs.find(
                 (tab) => tab.key !== dialog.tabKey,
               )?.key;
               if (otherTabValue !== undefined) setTabValue(otherTabValue);

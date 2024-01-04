@@ -25,12 +25,14 @@ type EditDropdownProps = {
   isChangesLocal: boolean;
   format: CustomTypeFormat;
   customType: CustomType;
+  setLocalCustomType?: (customType: CustomType) => void;
 };
 
 export const EditDropdown: FC<EditDropdownProps> = ({
   format,
   customType,
   isChangesLocal,
+  setLocalCustomType,
 }) => {
   const router = useRouter();
   const { saveCustomTypeSuccess } = useSliceMachineActions();
@@ -123,6 +125,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({
           customType={customType}
           isChangesLocal={isChangesLocal}
           onClose={() => setIsRenameCustomTypeModalOpen(false)}
+          setLocalCustomType={setLocalCustomType}
         />
       ) : null}
     </>

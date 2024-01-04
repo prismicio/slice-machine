@@ -206,6 +206,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
             <IconButton
               icon="close"
               onClick={() => !disabled && action.onRemove()}
+              hiddenLabel="Remove slice"
             />
           ) : action.type === "status" ? (
             <StatusBadge
