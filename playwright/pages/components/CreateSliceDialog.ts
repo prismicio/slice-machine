@@ -3,7 +3,8 @@ import { expect, Locator, Page } from "@playwright/test";
 import { Dialog } from "./Dialog";
 
 export class CreateSliceDialog extends Dialog {
-  readonly createdMessage: Locator;
+  readonly createdMessageFromTable: Locator;
+  readonly createdMessageFromSliceZone: Locator;
   readonly nameInput: Locator;
   readonly sliceAlreadyExistMessage: Locator;
 
@@ -21,9 +22,13 @@ export class CreateSliceDialog extends Dialog {
     /**
      * Static locators
      */
-    this.createdMessage = page.getByText("Slice saved successfully", {
+    this.createdMessageFromTable = page.getByText("Slice saved successfully", {
       exact: false,
     });
+    this.createdMessageFromSliceZone = page.getByText(
+      "New slice added to slice zone",
+      { exact: false },
+    );
     this.nameInput = this.dialog.getByTestId("slice-name-input");
     this.sliceAlreadyExistMessage = this.dialog.getByText(
       "Slice name is already taken.",
@@ -39,19 +44,24 @@ export class CreateSliceDialog extends Dialog {
   /**
    * Actions
    */
-  async createSlice(name: string) {
+  async createSlice(name: string, from: "table" | "sliceZone" = "table") {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(name);
     await this.submitButton.click();
-    await this.checkCreatedMessage();
+    await this.checkCreatedMessage(from);
     await expect(this.title).not.toBeVisible();
   }
 
   /**
    * Assertions
    */
-  async checkCreatedMessage() {
-    await expect(this.createdMessage).toBeVisible();
-    await expect(this.createdMessage).not.toBeVisible();
+  async checkCreatedMessage(from: "table" | "sliceZone" = "table") {
+    if (from === "table") {
+      await expect(this.createdMessageFromTable).toBeVisible();
+      await expect(this.createdMessageFromTable).not.toBeVisible();
+    } else {
+      await expect(this.createdMessageFromSliceZone).toBeVisible();
+      await expect(this.createdMessageFromSliceZone).not.toBeVisible();
+    }
   }
 }
