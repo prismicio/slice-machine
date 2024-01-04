@@ -1,4 +1,5 @@
 import { Fragment, useState } from "react";
+import { flushSync } from "react-dom";
 
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -21,7 +22,14 @@ import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
 import ListItem from "@components/ListItem";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { TabFieldsModel } from "@lib/models/common/CustomType";
+import {
+  addGroupField,
+  deleteGroupField,
+  reorderGroupField,
+  updateGroupField,
+} from "@src/domain/customType";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -40,12 +48,7 @@ const CustomListItem = ({
   const [selectMode, setSelectMode] = useState(false);
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
-  const {
-    addFieldIntoGroup,
-    deleteFieldIntoGroup,
-    replaceFieldIntoGroup,
-    reorderFieldIntoGroup,
-  } = useSliceMachineActions();
+  const { customType, setCustomType } = useCustomTypeState();
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -68,8 +71,16 @@ const CustomListItem = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
     const newWidget = widget.create(label);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
-    addFieldIntoGroup(tabId, groupItem.key, id, newWidget);
+    const newField = TabFieldsModel.fromSM(newWidget);
+    const newCustomType = addGroupField({
+      customType,
+      sectionId: tabId,
+      groupFieldId: groupItem.key,
+      newField,
+      newFieldId: id,
+    });
+
+    setCustomType(newCustomType);
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {
@@ -77,8 +88,18 @@ const CustomListItem = ({
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
-    replaceFieldIntoGroup(tabId, groupItem.key, previousKey, newKey, value);
+
+    const newField = TabFieldsModel.fromSM(value);
+    const newCustomType = updateGroupField({
+      customType,
+      sectionId: tabId,
+      groupFieldId: groupItem.key,
+      previousFieldId: previousKey,
+      newFieldId: newKey,
+      newField,
+    });
+
+    setCustomType(newCustomType);
   };
 
   const onDragEnd = (result) => {
@@ -87,21 +108,37 @@ const CustomListItem = ({
       return;
     }
 
-    reorderFieldIntoGroup(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      tabId,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      groupItem.key,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      result.source.index,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      result.destination.index,
-    );
+    const { source, destination } = result;
+    if (!destination) {
+      return;
+    }
+
+    const { index: sourceIndex } = source;
+    const { index: destinationIndex } = destination;
+
+    const newCustomType = reorderGroupField({
+      customType,
+      sectionId: tabId,
+      groupFieldId: groupItem.key,
+      sourceIndex,
+      destinationIndex,
+    });
+
+    // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
+    // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
+    // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
+    flushSync(() => setCustomType(newCustomType));
   };
 
   const onDeleteItem = (key) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    deleteFieldIntoGroup(tabId, groupItem.key, key);
+    const newCustomType = deleteGroupField({
+      customType,
+      sectionId: tabId,
+      groupFieldId: groupItem.key,
+      fieldId: key,
+    });
+
+    setCustomType(newCustomType);
   };
 
   const enterEditMode = (field) => {
@@ -172,6 +209,7 @@ const CustomListItem = ({
                             `data.${groupItem.key}.${key}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                           draggableId: `group-${groupItem.key}-${item.key}-${index}`,
+                          dataCy: `list-item-group-${groupItem.key}-${item.key}`,
                         };
 
                         const HintElement = (

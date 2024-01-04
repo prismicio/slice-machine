@@ -10,7 +10,7 @@ import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes
 import { refreshStateCreator } from "@src/modules/environment";
 
 import { dummyServerState } from "../__fixtures__/serverState";
-import { saveCustomType } from "@src/apiClient";
+import { updateCustomType } from "@src/apiClient";
 import { createCustomType } from "@src/features/customTypes/customTypesTable/createCustomType";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
@@ -231,7 +231,7 @@ describe("[Available Custom types module]", () => {
         createCustomTypeCreator.request(actionPayload),
       );
 
-      saga.next().call(saveCustomType, customTypeCreated);
+      saga.next().call(updateCustomType, CustomTypes.fromSM(customTypeCreated));
       saga
         .next()
         .put(
@@ -266,20 +266,18 @@ describe("[Available Custom types module]", () => {
         repeatable: true,
         format: "custom" as const,
       };
-      const customTypeCreated = CustomTypes.toSM(
-        createCustomType(
-          actionPayload.id,
-          actionPayload.label,
-          actionPayload.repeatable,
-          actionPayload.format,
-        ),
+      const customTypeCreated = createCustomType(
+        actionPayload.id,
+        actionPayload.label,
+        actionPayload.repeatable,
+        actionPayload.format,
       );
       const saga = testSaga(
         createCustomTypeSaga,
         createCustomTypeCreator.request(actionPayload),
       );
 
-      saga.next().call(saveCustomType, customTypeCreated);
+      saga.next().call(updateCustomType, customTypeCreated);
       saga.throw(new Error()).put(
         openToasterCreator({
           content: "Internal Error: Custom type not saved",

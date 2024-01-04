@@ -59,10 +59,12 @@ type WindowTabsTriggerProps = Pick<
 export const WindowTabsTrigger: FC<WindowTabsTriggerProps> = ({
   children,
   menu,
+  value,
   ...otherProps
 }) => (
   <Tabs.Trigger
     {...otherProps}
+    aria-label={value}
     asChild
     onMouseDown={(event) => {
       const target = event.target as HTMLElement;
@@ -81,6 +83,7 @@ export const WindowTabsTrigger: FC<WindowTabsTriggerProps> = ({
         });
       }
     }}
+    value={value}
   >
     <div className={styles.tabsTrigger}>
       <Text
@@ -96,7 +99,10 @@ export const WindowTabsTrigger: FC<WindowTabsTriggerProps> = ({
         <div className={styles.tabsTriggerMenu}>
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <IconButton icon="moreVert" />
+              <IconButton
+                icon="moreVert"
+                hiddenLabel={`tab-${value}-menu-button`}
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">{menu}</DropdownMenuContent>
           </DropdownMenu>
