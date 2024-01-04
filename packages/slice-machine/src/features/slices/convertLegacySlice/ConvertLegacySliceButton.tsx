@@ -11,7 +11,6 @@ import {
 
 import { NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
 import { ComponentUI } from "@models/common/ComponentUI";
-import { CustomTypes } from "@models/common/CustomType";
 import { getLibraries } from "@src/modules/slices";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { managerClient } from "@src/managerClient";
@@ -19,6 +18,7 @@ import { getState, telemetry } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ToasterType } from "@src/modules/toaster";
 import { getFieldMappingFingerprint } from "@src/domain/slice";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
 
 import { NonSharedSliceCardProps } from "../sliceCards/NonSharedSliceCard";
 import { ConvertLegacySliceAsNewSliceDialog } from "./ConvertLegacySliceAsNewSliceDialog";
@@ -36,15 +36,11 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
   slice,
   path,
 }) => {
-  const {
-    refreshState,
-    openToaster,
-    initCustomTypeStore,
-    saveCustomTypeSuccess,
-  } = useSliceMachineActions();
+  const { refreshState, openToaster } = useSliceMachineActions();
 
   const [isLoading, setIsLoading] = useState(false);
   const [dialog, setDialog] = useState<LegacySliceConversionType | undefined>();
+  const { setCustomType } = useCustomTypeState();
 
   const { libraries: allLibraries } = useSelector(
     (store: SliceMachineStoreType) => ({
@@ -159,9 +155,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
         break;
     }
 
-    const customTypeSM = CustomTypes.toSM(customType);
-    initCustomTypeStore(customTypeSM, customTypeSM);
-    saveCustomTypeSuccess(customType);
+    setCustomType(customType);
   };
 
   const formProps = {

@@ -21,36 +21,13 @@ import {
   createCustomTypeCreator,
   deleteCustomTypeCreator,
   renameAvailableCustomType,
+  saveCustomTypeCreator,
 } from "./availableCustomTypes";
 import { createSlice, deleteSliceCreator, renameSliceCreator } from "./slices";
 import { UserContextStoreType, UserReviewType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
-import {
-  initCustomTypeStoreCreator,
-  createTabCreator,
-  deleteTabCreator,
-  updateTabCreator,
-  addFieldCreator,
-  deleteFieldCreator,
-  reorderFieldCreator,
-  replaceFieldCreator,
-  deleteSharedSliceCreator,
-  createSliceZoneCreator,
-  deleteSliceZoneCreator,
-  saveCustomTypeCreator,
-  addFieldIntoGroupCreator,
-  deleteFieldIntoGroupCreator,
-  reorderFieldIntoGroupCreator,
-  replaceFieldIntoGroupCreator,
-  cleanupCustomTypeStoreCreator,
-  renameSelectedCustomTypeLabel,
-} from "./selectedCustomType";
 import type { SliceBuilderState } from "@builders/SliceBuilder";
-import {
-  CustomTypeSM,
-  CustomTypes,
-  TabField,
-} from "@lib/models/common/CustomType";
+import { CustomTypes } from "@lib/models/common/CustomType";
 import {
   CustomType,
   NestableWidget,
@@ -163,15 +140,6 @@ const useSliceMachineActions = () => {
       createCustomTypeCreator.request({ id, label, repeatable, format }),
     );
 
-  // Custom type module
-  const initCustomTypeStore = (
-    model: CustomTypeSM,
-    remoteModel: CustomTypeSM | undefined,
-  ) => dispatch(initCustomTypeStoreCreator({ model, remoteModel }));
-  const cleanupCustomTypeStore = () =>
-    dispatch(cleanupCustomTypeStoreCreator());
-  const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
-
   /**
    * Success actions = sync store state from external actions. If its name
    * contains "Creator", it means it is still used in a saga and that `.request`
@@ -199,72 +167,6 @@ const useSliceMachineActions = () => {
     );
 
   /** End of sucess actions */
-
-  const createCustomTypeTab = (tabId: string) =>
-    dispatch(createTabCreator({ tabId }));
-  const deleteCustomTypeTab = (tabId: string) =>
-    dispatch(deleteTabCreator({ tabId }));
-  const updateCustomTypeTab = (tabId: string, newTabId: string) =>
-    dispatch(updateTabCreator({ tabId, newTabId }));
-  const addCustomTypeField = (
-    tabId: string,
-    fieldId: string,
-    field: TabField,
-  ) => dispatch(addFieldCreator({ tabId, fieldId, field }));
-  const deleteCustomTypeField = (tabId: string, fieldId: string) =>
-    dispatch(deleteFieldCreator({ tabId, fieldId }));
-  const reorderCustomTypeField = (tabId: string, start: number, end: number) =>
-    dispatch(reorderFieldCreator({ tabId, start, end }));
-  const renameSelectedCustomType = (newLabel: string) =>
-    dispatch(renameSelectedCustomTypeLabel({ newLabel }));
-  const replaceCustomTypeField = (
-    tabId: string,
-    previousFieldId: string,
-    newFieldId: string,
-    value: TabField,
-  ) =>
-    dispatch(
-      replaceFieldCreator({ tabId, previousFieldId, newFieldId, value }),
-    );
-  const createSliceZone = (tabId: string) =>
-    dispatch(createSliceZoneCreator({ tabId }));
-  const deleteSliceZone = (tabId: string) =>
-    dispatch(deleteSliceZoneCreator({ tabId }));
-  const deleteCustomTypeSharedSlice = (tabId: string, sliceId: string) =>
-    dispatch(deleteSharedSliceCreator({ tabId, sliceId }));
-  const addFieldIntoGroup = (
-    tabId: string,
-    groupId: string,
-    fieldId: string,
-    field: NestableWidget,
-  ) => dispatch(addFieldIntoGroupCreator({ tabId, groupId, fieldId, field }));
-  const deleteFieldIntoGroup = (
-    tabId: string,
-    groupId: string,
-    fieldId: string,
-  ) => dispatch(deleteFieldIntoGroupCreator({ tabId, groupId, fieldId }));
-  const reorderFieldIntoGroup = (
-    tabId: string,
-    groupId: string,
-    start: number,
-    end: number,
-  ) => dispatch(reorderFieldIntoGroupCreator({ tabId, groupId, start, end }));
-  const replaceFieldIntoGroup = (
-    tabId: string,
-    groupId: string,
-    previousFieldId: string,
-    newFieldId: string,
-    value: NestableWidget,
-  ) =>
-    dispatch(
-      replaceFieldIntoGroupCreator({
-        tabId,
-        groupId,
-        previousFieldId,
-        newFieldId,
-        value,
-      }),
-    );
 
   // Slice module
   const initSliceStore = (component: ComponentUI) =>
@@ -472,27 +374,9 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
-    renameSelectedCustomType,
     deleteCustomTypeSuccess,
     renameAvailableCustomTypeSuccess,
-    initCustomTypeStore,
-    cleanupCustomTypeStore,
-    saveCustomType,
     saveCustomTypeSuccess,
-    createCustomTypeTab,
-    updateCustomTypeTab,
-    deleteCustomTypeTab,
-    addCustomTypeField,
-    deleteCustomTypeField,
-    reorderCustomTypeField,
-    replaceCustomTypeField,
-    createSliceZone,
-    deleteSliceZone,
-    deleteCustomTypeSharedSlice,
-    addFieldIntoGroup,
-    deleteFieldIntoGroup,
-    reorderFieldIntoGroup,
-    replaceFieldIntoGroup,
     initSliceStore,
     addSliceWidget,
     replaceSliceWidget,
