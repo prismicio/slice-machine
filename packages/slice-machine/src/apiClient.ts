@@ -1,3 +1,6 @@
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
+
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 import {
@@ -6,8 +9,7 @@ import {
   type VariationSM,
   Variations,
 } from "@lib/models/common/Slice";
-import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
-
+import { CustomTypes } from "@lib/models/common/CustomType";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import ServerState from "@models/server/ServerState";
 import { CustomScreenshotRequest } from "@lib/models/common/Screenshots";
@@ -15,7 +17,6 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 /** State Routes * */
 
@@ -70,11 +71,11 @@ export const getState = async (): Promise<ServerState> => {
 
 /** Custom Type Routes * */
 
-export const saveCustomType = async (
-  customType: CustomTypeSM,
+export const updateCustomType = async (
+  customType: CustomType,
 ): ReturnType<SliceMachineManagerClient["customTypes"]["updateCustomType"]> => {
   return await managerClient.customTypes.updateCustomType({
-    model: CustomTypes.fromSM(customType),
+    model: customType,
   });
 };
 

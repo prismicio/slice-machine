@@ -11,7 +11,7 @@ export class Dialog {
   constructor(
     page: Page,
     options: {
-      title: string | RegExp;
+      title: string | RegExp | Locator;
       submitName?: string;
     },
   ) {
@@ -26,7 +26,10 @@ export class Dialog {
      * Static locators
      */
     this.dialog = page.getByRole("dialog");
-    this.title = this.dialog.getByText(title, { exact: true });
+    this.title =
+      title instanceof RegExp || typeof title === "string"
+        ? this.dialog.getByText(title, { exact: true })
+        : title;
     this.closeButton = this.dialog.getByRole("button", {
       name: "Close",
       exact: true,

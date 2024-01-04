@@ -11,14 +11,10 @@ export class SliceBuilderPage extends BuilderPage {
   readonly addVariationDialog: AddVariationDialog;
   readonly renameVariationDialog: RenameVariationDialog;
   readonly deleteVariationDialog: DeleteVariationDialog;
-  readonly savedMessage: Locator;
   readonly simulateTooltipTitle: Locator;
   readonly simulateTooltipCloseButton: Locator;
   readonly variationCards: Locator;
   readonly addVariationButton: Locator;
-  readonly staticZone: Locator;
-  readonly staticZonePlaceholder: Locator;
-  readonly staticZoneListItem: Locator;
   readonly repeatableZone: Locator;
   readonly repeatableZonePlaceholder: Locator;
   readonly repeatableZoneListItem: Locator;
@@ -38,9 +34,6 @@ export class SliceBuilderPage extends BuilderPage {
      * Static locators
      */
     // Global
-    this.savedMessage = page.getByText("Slice saved successfully", {
-      exact: false,
-    });
     this.simulateTooltipTitle = page.getByText("Simulate your slices");
     this.simulateTooltipCloseButton = page.getByText("Got it");
     // Variations
@@ -51,13 +44,6 @@ export class SliceBuilderPage extends BuilderPage {
     this.addVariationButton = page.getByText("Add a new variation", {
       exact: true,
     });
-    // Static zone
-    this.staticZone = page.getByTestId("slice-non-repeatable-zone");
-    this.staticZonePlaceholder = page.getByText(
-      "Add a field to your Static Zone",
-      { exact: true },
-    );
-    this.staticZoneListItem = this.staticZone.getByRole("listitem");
     // Repeatable zone
     this.repeatableZone = page.getByTestId("slice-repeatable-zone");
     this.repeatableZonePlaceholder = page.getByText(
@@ -113,8 +99,5 @@ export class SliceBuilderPage extends BuilderPage {
   /**
    * Assertions
    */
-  async checkSavedMessage() {
-    await expect(this.savedMessage).toBeVisible();
-    await expect(this.savedMessage).not.toBeVisible();
-  }
+  // Handle assertions here
 }
