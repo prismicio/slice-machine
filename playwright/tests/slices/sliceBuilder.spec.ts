@@ -66,11 +66,11 @@ test.run()(
 
     await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
 
-    await sliceBuilderPage.addStaticField(
-      "Rich Text",
-      "Description",
-      "description",
-    );
+    await sliceBuilderPage.addStaticField({
+      type: "Rich Text",
+      name: "My Rich Text",
+      expectedId: "my_rich_text",
+    });
 
     await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(1);
   },

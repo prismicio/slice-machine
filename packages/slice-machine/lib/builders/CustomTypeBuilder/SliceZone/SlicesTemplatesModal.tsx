@@ -18,7 +18,7 @@ import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 interface UpdateSliceModalProps {
   formId: string;
   close: () => void;
-  onSuccess: (slices: SharedSlice[]) => Promise<void>;
+  onSuccess: (slices: SharedSlice[]) => void;
   availableSlicesTemplates: SliceTemplate[];
   localLibraries: readonly LibraryUI[];
 }
@@ -69,7 +69,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
                 ) as Promise<SharedSlice>[],
             );
 
-            await onSuccess(slices);
+            onSuccess(slices);
           },
         });
       }}

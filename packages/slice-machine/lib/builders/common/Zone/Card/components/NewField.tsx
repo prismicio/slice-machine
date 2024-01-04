@@ -1,8 +1,9 @@
 import { Ref, SetStateAction, useEffect, useRef, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import { Input, Flex, Text, Button, useThemeUI } from "theme-ui";
+import { Input, Flex, Text, useThemeUI } from "theme-ui";
 import * as CSS from "csstype";
 import { AnyObjectSchema } from "yup";
+import { Button } from "@prismicio/editor-ui";
 
 import { validateId } from "@lib/forms/defaults";
 import { createInitialValues, createValidationSchema } from "@lib/forms";
@@ -118,7 +119,7 @@ const NewField: React.FC<NewField> = ({
       validationSchema={validationSchema}
       initialValues={initialValues}
     >
-      {({ errors, values, setValues, setFieldValue }) => (
+      {({ errors, values, setValues, setFieldValue, submitForm }) => (
         <Form data-cy="new-field-form">
           <Flex
             as="li"
@@ -162,6 +163,11 @@ const NewField: React.FC<NewField> = ({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleLabelChange(e, values, setValues)
                 }
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter") {
+                    void submitForm();
+                  }
+                }}
                 name="label"
                 placeholder="Field Name"
                 type="text"
@@ -206,6 +212,11 @@ const NewField: React.FC<NewField> = ({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleIdChange(e, setFieldValue)
                 }
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter") {
+                    void submitForm();
+                  }
+                }}
                 name="id"
                 placeholder="e.g. buttonLink"
                 type="text"
@@ -237,23 +248,13 @@ const NewField: React.FC<NewField> = ({
               <ErrorTooltip error={errors.id} />
             </Flex>
             <Flex sx={{ gap: 2 }}>
-              <Button
-                onClick={onCancelNewField}
-                variant="secondary"
-                type="button"
-              >
+              <Button onClick={onCancelNewField} color="grey">
                 Cancel
               </Button>
               <Button
-                sx={{
-                  fontWeight: "400",
-                  paddingBlock: "8px",
-                  paddingInline: "16px",
-                  fontSize: "14px",
-                  borderRadius: "4px",
-                  lineHeight: "21px",
+                onClick={() => {
+                  void submitForm();
                 }}
-                type="submit"
               >
                 Add
               </Button>

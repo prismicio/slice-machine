@@ -85,6 +85,7 @@ const Zone = ({
                 size="small"
                 // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
                 style={{ flexShrink: 0 }}
+                data-cy="code-snippets-switch"
               />
               <Button
                 data-cy={`add-${
@@ -93,7 +94,8 @@ const Zone = ({
                 }-field`}
                 onClick={enterSelectMode}
                 startIcon="add"
-                grey="grey"
+                color="grey"
+                disabled={newFieldData !== null}
               >
                 Add a new field
               </Button>

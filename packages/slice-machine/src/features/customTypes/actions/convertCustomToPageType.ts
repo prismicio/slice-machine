@@ -3,7 +3,7 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { convertToPageType } from "@src/domain/customType";
-import { managerClient } from "@src/managerClient";
+import { updateCustomType } from "@src/apiClient";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
@@ -16,9 +16,7 @@ export async function convertCustomToPageType(
 
   try {
     const newCustomType = convertToPageType(customType);
-    await managerClient.customTypes.updateCustomType({
-      model: newCustomType,
-    });
+    await updateCustomType(newCustomType);
 
     // Update the custom type in the redux store
     saveCustomType(newCustomType);
