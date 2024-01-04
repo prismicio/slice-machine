@@ -141,7 +141,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.primary${transformKeyAccessor(key)}`
         }
-        dataCy="slice-non-repeatable-zone"
+        dataCy="static-zone-content"
         isRepeatableCustomType={undefined}
       />
       <Zone

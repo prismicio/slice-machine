@@ -10,11 +10,13 @@ const UpdateCustomTypeForm = ({
   onSubmit,
   close,
   tabIds,
+  initialTabKey,
 }: {
   isOpen: boolean;
   onSubmit: (values: { id: string }) => void;
   close: () => void;
   tabIds: ReadonlyArray<string>;
+  initialTabKey: string;
 }) => {
   return (
     <ModalFormCard
@@ -29,7 +31,7 @@ const UpdateCustomTypeForm = ({
         close();
       }}
       initialValues={{
-        id: "",
+        id: initialTabKey,
       }}
       validate={({ id }) => {
         if (!id) {

@@ -1,8 +1,7 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { telemetry } from "@src/apiClient";
-import { managerClient } from "@src/managerClient";
-import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export type AddSlicesToSliceZoneArgs = {
   customType: CustomTypeSM;
@@ -10,7 +9,7 @@ export type AddSlicesToSliceZoneArgs = {
   slices: SharedSlice[];
 };
 
-export async function addSlicesToSliceZone({
+export function addSlicesToSliceZone({
   customType,
   tabId,
   slices,
@@ -38,10 +37,6 @@ export async function addSlicesToSliceZone({
           : tab,
       ),
     };
-  });
-
-  await managerClient.customTypes.updateCustomType({
-    model: CustomTypes.fromSM(newCustomType),
   });
 
   void telemetry.track({

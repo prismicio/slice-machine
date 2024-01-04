@@ -12,8 +12,20 @@ type MockManagerProcedureHandler = (args: {
 }) => unknown | Promise<unknown>;
 
 type MockManagerProcedureConfig = {
+  /**
+   * Whether to execute the procedure or not. Defaults to true.
+   */
   execute?: boolean;
+
+  /**
+   * Number of times the procedure should be executed. Defaults to unlimited.
+   */
   times?: number;
+
+  /**
+   * Delay in milliseconds before returning the data.
+   */
+  delay?: number;
 };
 
 const FORCE_INIT = Symbol();
@@ -112,8 +124,23 @@ export class MockManagerProcedures {
       }
     }
 
-    await route.fulfill({
-      body: Buffer.from(encode(newBodyContents)),
-    });
+    const newBody = Buffer.from(encode(newBodyContents));
+
+    if (procedure.config.delay) {
+      await new Promise((resolve, reject) =>
+        setTimeout(() => {
+          route
+            .fulfill({
+              body: newBody,
+            })
+            .then(resolve)
+            .catch(reject);
+        }, procedure.config.delay),
+      );
+    } else {
+      await route.fulfill({
+        body: newBody,
+      });
+    }
   }
 }
