@@ -11,7 +11,7 @@ import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { saveCustomType } from "@src/apiClient";
+import { updateCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/features/customTypes/customTypesTable/createCustomType";
@@ -21,7 +21,6 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@lib/models/common/normalizers/customType";
-import { saveCustomTypeCreator } from "../selectedCustomType/actions";
 import { omit } from "lodash";
 import { deleteSliceCreator } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
@@ -36,6 +35,12 @@ import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { CustomTypes } from "@lib/models/common/CustomType";
 import { ToastMessageWithPath } from "@components/ToasterContainer";
+
+export const saveCustomTypeCreator = createAsyncAction(
+  "CUSTOM_TYPE/SAVE.REQUEST",
+  "CUSTOM_TYPE/SAVE.RESPONSE",
+  "CUSTOM_TYPE/SAVE.FAILURE",
+)<undefined, { customType: CustomTypeSM }>();
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -240,7 +245,7 @@ export function* createCustomTypeSaga({
         payload.format,
       ),
     );
-    yield call(saveCustomType, newCustomType);
+    yield call(updateCustomType, CustomTypes.fromSM(newCustomType));
     yield put(createCustomTypeCreator.success({ newCustomType }));
     yield put(modalCloseCreator());
     yield put(

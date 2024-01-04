@@ -23,10 +23,10 @@ test.run()(
 
     await expect(customTypesBuilderPage.staticZoneListItem).toHaveCount(1);
     await expect(
-      customTypesBuilderPage.getStaticZoneListItemFieldName("UID"),
+      customTypesBuilderPage.getListItemFieldId("uid"),
     ).toBeVisible();
     await expect(
-      customTypesBuilderPage.getStaticZoneListItemFieldId("data.uid"),
+      customTypesBuilderPage.getListItemFieldName("uid", "UID"),
     ).toBeVisible();
 
     await expect(customTypesBuilderPage.sliceZoneSwitch).not.toBeChecked();
