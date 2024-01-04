@@ -34,6 +34,7 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   CustomEditElements?: JSX.Element[];
   widget: Widget<F, S>;
   draggableId: string;
+  dataCy: string;
   isRepeatableCustomType?: boolean;
   children: React.ReactNode;
 }
@@ -50,6 +51,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
   CustomEditElements,
   widget,
   draggableId,
+  dataCy,
   isRepeatableCustomType,
   children,
 }: ListItemProps<F, S>): JSX.Element {
@@ -66,6 +68,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
         {(provided) => (
           <Fragment>
             <Li
+              data-cy={dataCy}
               ref={provided.innerRef}
               {...provided.draggableProps}
               Component={Box}
@@ -117,7 +120,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                         <SliceMachineIconButton
                           size={22}
                           Icon={AiOutlineEdit}
-                          label="Edit slice field"
+                          label="Edit field"
                           sx={{ cursor: "pointer", color: theme.colors?.icons }}
                           onClick={() =>
                             enterEditMode(
@@ -134,7 +137,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                           <Menu>
                             <MenuButton
                               className="sliceMenuButton"
-                              data-cy="slice-menu-button"
+                              data-cy="field-menu-button"
                               style={{
                                 padding: "0",
                                 cursor: "pointer",
