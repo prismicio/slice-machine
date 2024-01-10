@@ -8,23 +8,21 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { Formik } from "formik";
-import type { Dispatch, FC, SetStateAction } from "react";
+import { useState, type FC } from "react";
 
-import type { SliceBuilderState } from "@builders/SliceBuilder";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
 import { renameVariation } from "@src/features/slices/sliceBuilder/actions/renameVariation";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import * as styles from "./RenameVariationModal.css";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 
 type RenameVariationModalProps = {
   isOpen: boolean;
   onClose: () => void;
   slice: ComponentUI;
   variation: VariationSM | undefined;
-  sliceBuilderState: SliceBuilderState;
-  setSliceBuilderState: Dispatch<SetStateAction<SliceBuilderState>>;
 };
 
 export const RenameVariationModal: FC<RenameVariationModalProps> = ({
@@ -32,10 +30,11 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
   onClose,
   slice,
   variation,
-  sliceBuilderState,
-  setSliceBuilderState,
 }) => {
-  const { updateAndSaveSlice } = useSliceMachineActions();
+  const [isRenaming, setRenaming] = useState(false);
+  const { setSlice } = useSliceState();
+  const { saveSliceSuccess } = useSliceMachineActions();
+
   return (
     <>
       <Dialog
@@ -56,15 +55,17 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
             }}
             onSubmit={async (values) => {
               if (!variation) return;
+              setRenaming(true);
               try {
-                await renameVariation({
+                const newSlice = await renameVariation({
                   component: slice,
-                  setSliceBuilderState,
-                  updateAndSaveSlice,
+                  saveSliceSuccess,
                   variation,
                   variationName: values.variationName.trim(),
                 });
+                setSlice(newSlice);
               } catch {}
+              setRenaming(false);
               onClose();
             }}
           >
@@ -102,7 +103,7 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
                   ok={{
                     text: "Rename",
                     onClick: () => void formik.submitForm(),
-                    loading: sliceBuilderState.loading,
+                    loading: isRenaming,
                     disabled: !formik.isValid,
                   }}
                   cancel={{ text: "Cancel" }}

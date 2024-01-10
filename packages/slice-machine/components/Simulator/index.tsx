@@ -1,4 +1,5 @@
 import {
+  FC,
   Suspense,
   useCallback,
   useEffect,
@@ -34,7 +35,6 @@ import useThrottle from "@src/hooks/useThrottle";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import IframeRenderer from "./components/IframeRenderer";
-import { ComponentWithSliceProps } from "@src/layouts/WithSlice";
 import {
   selectIframeStatus,
   selectIsWaitingForIFrameCheck,
@@ -44,7 +44,8 @@ import {
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
 import SetupModal from "./components/SetupModal";
-import { Slices } from "@lib/models/common/Slice";
+import { Slices, VariationSM } from "@lib/models/common/Slice";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 export enum UiState {
   LOADING_SETUP = "LOADING_SETUP",
@@ -54,7 +55,12 @@ export enum UiState {
   SUCCESS = "SUCCESS",
 }
 
-const Simulator: ComponentWithSliceProps = ({ slice, variation }) => {
+type SimulatorProps = {
+  slice: ComponentUI;
+  variation: VariationSM;
+};
+
+const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
   const { checkSimulatorSetup, connectToSimulatorIframe, saveSliceMock } =
     useSliceMachineActions();
   const {
