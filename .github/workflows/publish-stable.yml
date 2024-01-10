@@ -1,0 +1,106 @@
+name: Publish stable
+
+on:
+    workflow_dispatch:
+        inputs:
+          slicemachine/adapter-next:
+            description: slicemachine/adapter-next
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+          slicemachine/adapter-nuxt:
+            description: slicemachine/adapter-nuxt
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+          slicemachine/adapter-nuxt2:
+            description: slicemachine/adapter-nuxt2
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+          slicemachine/init:
+            description: slicemachine/init
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+          slicemachine/manager:
+            description: slicemachine/manager
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+          slicemachine/plugin-kit:
+            description: slicemachine/plugin-kit
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+          slice-machine-ui:
+            description: slice-machine-ui
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+          start-slicemachine:
+            description: start-slicemachine
+            default: 'None'
+            type: choice
+            options:
+              - patch
+              - minor
+              - major
+              - "None"
+jobs:
+  publish-stable:
+    name: Publish stable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
+      - name: Use Node.js
+        uses: ./.github/actions/setup-node
+      - name: Install dependencies
+        run: yarn install
+      - name: Build essentials
+        uses: ./.github/actions/build-essential
+      - name: Run publish script
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          package=$(echo '${{ toJSON(github.event.inputs) }}' | jq -c)
+          keys=$(echo $package | jq -r 'keys | .[]')
+          package_output=""
+          for key in $keys; do
+            value=$(echo $package | jq -r --arg k "$key" '.[$k]')
+            package_output+="@$key:$value "
+          done
+          yarn publish stable --dry-run $package_output
