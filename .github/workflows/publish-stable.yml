@@ -76,7 +76,7 @@ on:
           - decline
 jobs:
   publish-stable:
-    if: 'startsWith(github.ref, ''refs/heads/main'')'
+    if: ${{ startsWith(github.ref, 'refs/heads/main')}}
     name: Publish stable
     runs-on: ubuntu-latest
     steps:
@@ -90,19 +90,18 @@ jobs:
         uses: ./.github/actions/build-essential
       - name: Run publish script
         env:
-          SENTRY_AUTH_TOKEN: '${{ secrets.SENTRY_AUTH_TOKEN }}'
-          YARN_NPM_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}'
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           inputs=$(echo '${{ toJSON(github.event.inputs) }}' | jq -c)
           package_names=$(echo $inputs | jq -r 'keys | .[]')
           specifiers=""
           for package in $package_names; do
-            package_release_type=$(echo $inputs | jq -r --arg k "$package" '.[$k]')
-            if 
-            if ["$package_name == slicemachine/*" && "package_release_type" != "decline"]; then 
+          package_release_type=$(echo $inputs | jq -r --arg k "$package" '.[$k]')
+          if [[ $package == "slicemachine/"* && $package_release_type != "decline" ]]; then 
               specifiers+="@$package:$package_release_type "
-            elif [ "package_release_type" != "decline" ]; then
+          elif [ $package_release_type != "decline" ]; then
               specifiers+="$package:$package_release_type "
-            fi
+          fi
           done
-          yarn publish stable --dry-run $specifiers
+          echo yarn publish stable --dry-run $specifiers
