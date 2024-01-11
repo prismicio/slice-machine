@@ -106,4 +106,4 @@ jobs:
               specifiers+="$package_name:$package_release_type "
             fi
           done
-          yarn publish stable --dry-run $specifiers
+          yarn publish stable $specifiers
