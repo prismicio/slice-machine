@@ -93,15 +93,17 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git config user.name "${GITHUB_ACTOR}"
           inputs=$(echo '${{ toJSON(github.event.inputs) }}' | jq -c)
           package_names=$(echo $inputs | jq -r 'keys | .[]')
           specifiers=""
-          for package in $package_names; do
-          package_release_type=$(echo $inputs | jq -r --arg k "$package" '.[$k]')
-          if [[ $package == "slicemachine/"* && $package_release_type != "decline" ]]; then 
-              specifiers+="@$package:$package_release_type "
-          elif [ $package_release_type != "decline" ]; then
-              specifiers+="$package:$package_release_type "
-          fi
+          for package_name in $package_names; do
+            package_release_type=$(echo $inputs | jq -r --arg k "$package_name" '.[$k]')
+            if [[ $package_name == "slicemachine/"* && $package_release_type != "decline" ]]; then
+              specifiers+="@$package_name:$package_release_type "
+            elif [ $package_release_type != "decline" ]; then
+              specifiers+="$package_name:$package_release_type "
+            fi
           done
-          echo yarn publish stable --dry-run $specifiers
+          yarn publish stable --dry-run $specifiers
