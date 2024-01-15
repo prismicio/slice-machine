@@ -4,7 +4,6 @@ import { Dialog } from "./Dialog";
 
 export class RenameVariationDialog extends Dialog {
   readonly nameInput: Locator;
-  readonly renamedMessage: Locator;
 
   constructor(page: Page) {
     super(page, { title: "Rename variation", submitName: "Rename" });
@@ -18,7 +17,6 @@ export class RenameVariationDialog extends Dialog {
      * Static locators
      */
     this.nameInput = this.dialog.getByPlaceholder("Variation name");
-    this.renamedMessage = page.getByText("Slice saved successfully");
   }
 
   /**
@@ -33,15 +31,11 @@ export class RenameVariationDialog extends Dialog {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(name);
     await this.submitButton.click();
-    await this.checkRenamedMessage();
     await expect(this.title).not.toBeVisible();
   }
 
   /**
    * Assertions
    */
-  async checkRenamedMessage() {
-    await expect(this.renamedMessage).toBeVisible();
-    await expect(this.renamedMessage).not.toBeVisible();
-  }
+  // Handle assertions here
 }

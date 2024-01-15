@@ -8,7 +8,10 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useIsFirstRender } from "@prismicio/editor-support/React";
+import {
+  useIsFirstRender,
+  useStableCallback,
+} from "@prismicio/editor-support/React";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -47,6 +50,7 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
     errorMessage: customTypeMessages.autoSaveFailed,
   });
   const { saveCustomTypeSuccess } = useSliceMachineActions();
+  const stableSaveCustomTypeSuccess = useStableCallback(saveCustomTypeSuccess);
 
   useEffect(
     () => {
@@ -60,13 +64,12 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
           }
 
           // Update available custom types store with new custom type
-          saveCustomTypeSuccess(customType);
+          stableSaveCustomTypeSuccess(customType);
         });
       }
     },
-    // Prevent saveCustomTypeSuccess from triggering an infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customType, setNextSave],
+    [customType, setNextSave, stableSaveCustomTypeSuccess],
   );
 
   const contextValue: CustomTypeContext = useMemo(

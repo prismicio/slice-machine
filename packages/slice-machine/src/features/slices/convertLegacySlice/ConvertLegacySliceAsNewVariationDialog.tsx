@@ -1,5 +1,6 @@
 import { useState, type FC } from "react";
 import { Formik } from "formik";
+import { camelCase } from "lodash";
 import {
   Box,
   Dialog,
@@ -13,7 +14,6 @@ import {
   SelectItem,
 } from "@prismicio/editor-ui";
 
-import { Variation } from "@models/common/Variation";
 import { LibraryUI } from "@models/common/LibraryUI";
 
 import * as styles from "./ConvertLegacySliceButton.css";
@@ -51,7 +51,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
           initialValues={{
             libraryID: localSharedSlices[0]?.from,
             sliceID: localSharedSlices[0]?.model.id,
-            variationID: Variation.generateId(slice.key),
+            variationID: camelCase(slice.key),
             variationName: sliceName,
           }}
           validate={(values) => {
@@ -136,7 +136,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
                           };
 
                           if (inferIDFromName) {
-                            values.variationID = Variation.generateId(
+                            values.variationID = camelCase(
                               values.variationName,
                             );
                           }
@@ -156,14 +156,14 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
                         ) : null}
                       </label>
                       <FormInput
-                        placeholder={Variation.generateId(slice.key)}
+                        placeholder={camelCase(slice.key)}
                         error={typeof formik.errors.variationID === "string"}
                         value={formik.values.variationID}
                         onValueChange={(value) => {
                           setInferIDFromName(false);
                           void formik.setFieldValue(
                             "variationID",
-                            Variation.generateId(value.slice(0, 30)),
+                            camelCase(value.slice(0, 30)),
                           );
                         }}
                         data-cy="variation-id-input"
