@@ -1,19 +1,33 @@
 import Head from "next/head";
-import SliceBuilder from "lib/builders/SliceBuilder";
-import useCurrentSlice from "@src/hooks/useCurrentSlice";
-import { createComponentWithSlice } from "@src/layouts/WithSlice";
+import { useRouter } from "next/router";
 
-const SliceBuilderWithSlice = createComponentWithSlice(SliceBuilder);
+import SliceBuilder from "@lib/builders/SliceBuilder";
+import { SliceBuilderProvider } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
+import useCurrentSlice from "@src/hooks/useCurrentSlice";
 
 export default function SlicePage() {
-  const { slice } = useCurrentSlice();
+  const router = useRouter();
+  const { slice: initialSlice, variation: defaultVariation } =
+    useCurrentSlice();
+
+  if (initialSlice === undefined || defaultVariation === undefined) {
+    void router.replace("/");
+
+    return null;
+  }
 
   return (
-    <>
-      <Head>
-        {slice ? <title>{slice.model.name} - Slice Machine</title> : null}
-      </Head>
-      <SliceBuilderWithSlice />
-    </>
+    <SliceBuilderProvider initialSlice={initialSlice}>
+      {({ slice }) => {
+        return (
+          <>
+            <Head>
+              <title>{slice.model.name} - Slice Machine</title>
+            </Head>
+            <SliceBuilder />
+          </>
+        );
+      }}
+    </SliceBuilderProvider>
   );
 }
