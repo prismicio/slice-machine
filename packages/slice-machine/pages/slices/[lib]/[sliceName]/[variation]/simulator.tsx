@@ -1,22 +1,25 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
+
 import Simulator from "@components/Simulator";
 import useCurrentSlice from "@src/hooks/useCurrentSlice";
-import { createComponentWithSlice } from "@src/layouts/WithSlice";
-
-const SimulatorWithSlice = createComponentWithSlice(Simulator);
 
 export default function SimulatorPage() {
-  const { slice } = useCurrentSlice();
+  const router = useRouter();
+  const { slice, variation } = useCurrentSlice();
+
+  if (slice === undefined || variation === undefined) {
+    void router.replace("/");
+
+    return null;
+  }
 
   return (
     <>
       <Head>
-        <title>
-          {slice ? `Simulator: ${slice.model.name}` : "Simulator"} - Slice
-          Machine
-        </title>
+        <title>{`Simulator: ${slice.model.name} - Slice Machine`}</title>
       </Head>
-      <SimulatorWithSlice />
+      <Simulator slice={slice} variation={variation} />
     </>
   );
 }

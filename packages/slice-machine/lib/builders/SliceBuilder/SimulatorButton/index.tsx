@@ -70,24 +70,10 @@ const SimulatorOnboardingTooltip: React.FC<
   );
 };
 
-const NeedToSaveTooltip: React.FC = () => (
-  <ReactTooltipPortal>
-    <ReactTooltip
-      clickable
-      place="bottom"
-      effect="solid"
-      delayHide={500}
-      id="simulator-button-tooltip"
-    >
-      Save your work in order to simulate
-    </ReactTooltip>
-  </ReactTooltipPortal>
-);
-
 const SimulatorButton: React.FC<{
   isSimulatorAvailableForFramework: boolean;
-  isTouched: boolean;
-}> = ({ isSimulatorAvailableForFramework, isTouched }) => {
+  disabled: boolean;
+}> = ({ isSimulatorAvailableForFramework, disabled }) => {
   const router = useRouter();
 
   const ref = useRef<HTMLButtonElement | null>(null);
@@ -115,15 +101,8 @@ const SimulatorButton: React.FC<{
     }
   };
 
-  const disabled = !isSimulatorAvailableForFramework || isTouched;
-
   const shouldShowSimulatorTooltip =
     isSimulatorAvailableForFramework && !hasSeenSimulatorTooltip;
-
-  const shouldShowNeedToSaveTooltip =
-    isSimulatorAvailableForFramework &&
-    shouldShowSimulatorTooltip === false &&
-    isTouched;
 
   return (
     <span
@@ -146,7 +125,7 @@ const SimulatorButton: React.FC<{
           disabled={disabled}
           renderStartIcon={() => (
             <PlayCircleIcon
-              color={tokens.color.greyLight11}
+              color={tokens.color.greyLight1}
               height={tokens.size[24]}
               style={{
                 // TODO(DT-1538): our icons should have a `viewBox` of 24px.
@@ -155,16 +134,13 @@ const SimulatorButton: React.FC<{
               width={tokens.size[24]}
             />
           )}
-          color="grey"
         >
           Simulate
         </Button>
       </SimulatorOnboardingTooltip>
       {isSimulatorAvailableForFramework === false ? (
         <SimulatorNotSupportedTooltip />
-      ) : shouldShowNeedToSaveTooltip ? (
-        <NeedToSaveTooltip />
-      ) : null}
+      ) : undefined}
     </span>
   );
 };

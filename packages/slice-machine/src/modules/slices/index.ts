@@ -25,13 +25,10 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import {
-  updateAndSaveSliceCreator,
-  updateSliceCreator,
-} from "../selectedSlice/actions";
-import { generateSliceCustomScreenshotCreator } from "../screenshots/actions";
-import { selectSliceById } from "../selectedSlice/selectors";
 import { SlicesStoreType } from "./types";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { selectSliceById } from "./selector";
+import { ScreenshotGenerationMethod } from "@lib/models/common/Screenshots";
 
 // Action Creators
 export const createSlice = createAction("SLICES/CREATE_SLICE")<{
@@ -70,6 +67,35 @@ export const deleteSliceCreator = createAsyncAction(
     libName: string;
   }
 >();
+
+export const updateSliceCreator = createAsyncAction(
+  "SLICE/UPDATE.REQUEST",
+  "SLICE/UPDATE.RESPONSE",
+  "SLICE/UPDATE.FAILURE",
+)<
+  {
+    component: ComponentUI;
+    setSliceBuilderState: () => void;
+  },
+  {
+    component: ComponentUI;
+  }
+>();
+
+export const generateSliceCustomScreenshotCreator = createAsyncAction(
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT.REQUEST",
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT.RESPONSE",
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT.FAILURE",
+)<
+  {
+    variationId: string;
+    component: ComponentUI;
+    file: Blob;
+    method: ScreenshotGenerationMethod;
+  },
+  { variationId: string; screenshot: ScreenshotUI; component: ComponentUI }
+>();
+
 export const updateSliceMock =
   createAction("SLICE/UPDATE_MOCK")<SaveSliceMockRequest>();
 
@@ -79,7 +105,6 @@ type SlicesActions =
   | ActionType<typeof renameSliceCreator>
   | ActionType<typeof deleteSliceCreator>
   | ActionType<typeof updateSliceCreator>
-  | ActionType<typeof updateAndSaveSliceCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof updateSliceMock>;
 
@@ -160,24 +185,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       });
 
       return { ...state, libraries: newLibraries };
-    }
-    case getType(updateAndSaveSliceCreator): {
-      const { component: newComponent } = action.payload;
-      return {
-        ...state,
-        libraries: state.libraries.map((library) =>
-          library.name === newComponent.from
-            ? {
-                ...library,
-                components: library.components.map((component) =>
-                  component.model.id === newComponent.model.id
-                    ? newComponent
-                    : component,
-                ),
-              }
-            : library,
-        ),
-      };
     }
     case getType(generateSliceCustomScreenshotCreator.success): {
       const { component, screenshot, variationId } = action.payload;

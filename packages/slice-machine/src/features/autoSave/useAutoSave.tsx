@@ -4,6 +4,7 @@ import {
   useEffect,
   SetStateAction,
   Dispatch,
+  useMemo,
 } from "react";
 import { uniqueId } from "lodash";
 import { toast } from "react-toastify";
@@ -65,12 +66,6 @@ export const useAutoSave = (
           await nextSave();
 
           setAutoSaveStatusActual("saved");
-          // We reset the pending save only in case of a success because
-          // we keep the pending save in case of a failure for the retry.
-          setAutoSaveStack((prevState) => ({
-            ...prevState,
-            pendingSave: undefined,
-          }));
         } catch (error) {
           setAutoSaveStatusActual("failed");
           console.error(errorMessage, error);
@@ -80,6 +75,7 @@ export const useAutoSave = (
             retryDelay,
             retryMessage,
             setAutoSaveStatusActual,
+            setAutoSaveStack,
           });
         }
       }
@@ -88,19 +84,11 @@ export const useAutoSave = (
   );
 
   useEffect(() => {
-    // When status is saved we want to trigger a save if necessary.
-    // 'pendingSave' is only set when a save failed and the user clicked on retry.
-    if (
-      autoSaveStatusActual === "saved" &&
-      (autoSaveStack.nextSave || autoSaveStack.pendingSave)
-    ) {
-      // We prefer to use nextSave if it's defined to ensure even with a retry
-      // we take the latest data to save.
-      const nextSave = autoSaveStack.nextSave ?? autoSaveStack.pendingSave;
-      void executeSave(nextSave);
+    if (autoSaveStatusActual === "saved" && autoSaveStack.nextSave) {
+      void executeSave(autoSaveStack.nextSave);
 
       setAutoSaveStack({
-        pendingSave: nextSave,
+        pendingSave: autoSaveStack.nextSave,
         nextSave: undefined,
       });
     }
@@ -122,7 +110,13 @@ export const useAutoSave = (
     return;
   }, [autoSaveStatusActual, autoSaveStatusDelay]);
 
-  return { autoSaveStatus: autoSaveStatusDelayed, setNextSave };
+  return useMemo(
+    () => ({
+      autoSaveStatus: autoSaveStatusDelayed,
+      setNextSave,
+    }),
+    [autoSaveStatusDelayed, setNextSave],
+  );
 };
 
 type ToastErrorArgs = {
@@ -130,11 +124,17 @@ type ToastErrorArgs = {
   retryDelay: number;
   retryMessage: string;
   setAutoSaveStatusActual: Dispatch<SetStateAction<AutoSaveStatus>>;
+  setAutoSaveStack: Dispatch<SetStateAction<AutoSaveStack>>;
 };
 
 function toastError(args: ToastErrorArgs) {
-  const { errorMessage, retryDelay, retryMessage, setAutoSaveStatusActual } =
-    args;
+  const {
+    errorMessage,
+    retryDelay,
+    retryMessage,
+    setAutoSaveStatusActual,
+    setAutoSaveStack,
+  } = args;
   const toastId = uniqueId();
 
   toast.error(
@@ -149,11 +149,17 @@ function toastError(args: ToastErrorArgs) {
           onClick={() => {
             toast.dismiss(toastId);
 
+            // Ensure saving is directly propagated before waiting for the retry
             setAutoSaveStatusActual("saving");
+
             setTimeout(() => {
               // By setting the status to saved, the save effect will be triggered
               // with the latest data to save.
               setAutoSaveStatusActual("saved");
+              setAutoSaveStack((prevState) => ({
+                nextSave: prevState.nextSave ?? prevState.pendingSave,
+                pendingSave: undefined,
+              }));
             }, retryDelay);
           }}
         >
