@@ -1,6 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
-
-import type { SliceBuilderState } from "@builders/SliceBuilder";
 import { SliceToastMessage } from "@components/ToasterContainer";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
@@ -10,20 +7,18 @@ import {
   renameSliceVariation,
   updateSlice,
 } from "@src/apiClient";
+import { toast } from "react-toastify";
 
 type RenameVariationArgs = {
   component: ComponentUI;
-  setSliceBuilderState: Dispatch<SetStateAction<SliceBuilderState>>;
-  updateAndSaveSlice: (component: ComponentUI) => void;
+  saveSliceSuccess: (component: ComponentUI) => void;
   variation: VariationSM;
   variationName: string;
 };
 
 export async function renameVariation(
   args: RenameVariationArgs,
-): Promise<void> {
-  args.setSliceBuilderState({ loading: true, done: false });
-
+): Promise<ComponentUI> {
   try {
     // The slice may have been edited so we need to update the file system.
     const { errors: updateSliceErrors } = await updateSlice(args.component);
@@ -53,27 +48,20 @@ export async function renameVariation(
       libraryID: args.component.from,
       sliceID: args.component.model.id,
     });
-    args.updateAndSaveSlice({ ...args.component, model: slice, mocks });
+
+    const newComponent = { ...args.component, model: slice, mocks };
+    args.saveSliceSuccess(newComponent);
 
     // Finally, display a success toast.
     const path = `${args.component.from}/${args.component.model.name}/model.json`;
-    args.setSliceBuilderState({
-      loading: false,
-      done: true,
-      error: false,
-      message: SliceToastMessage({ path }),
-    });
+    toast.success(SliceToastMessage({ path }));
+
+    return newComponent;
   } catch (error) {
     const message = `Could not rename variation \`${args.variation.name}\``;
     console.error(message, error);
 
-    // Display a failure toast.
-    args.setSliceBuilderState({
-      loading: false,
-      done: true,
-      error: true,
-      message,
-    });
+    toast.error(message);
 
     throw error;
   }

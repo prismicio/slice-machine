@@ -70,24 +70,10 @@ const SimulatorOnboardingTooltip: React.FC<
   );
 };
 
-const NeedToSaveTooltip: React.FC = () => (
-  <ReactTooltipPortal>
-    <ReactTooltip
-      clickable
-      place="bottom"
-      effect="solid"
-      delayHide={500}
-      id="simulator-button-tooltip"
-    >
-      Save your work in order to simulate
-    </ReactTooltip>
-  </ReactTooltipPortal>
-);
-
 const SimulatorButton: React.FC<{
   isSimulatorAvailableForFramework: boolean;
-  isTouched: boolean;
-}> = ({ isSimulatorAvailableForFramework, isTouched }) => {
+  disabled: boolean;
+}> = ({ isSimulatorAvailableForFramework, disabled }) => {
   const router = useRouter();
 
   const ref = useRef<HTMLButtonElement | null>(null);
@@ -115,15 +101,8 @@ const SimulatorButton: React.FC<{
     }
   };
 
-  const disabled = !isSimulatorAvailableForFramework || isTouched;
-
   const shouldShowSimulatorTooltip =
     isSimulatorAvailableForFramework && !hasSeenSimulatorTooltip;
-
-  const shouldShowNeedToSaveTooltip =
-    isSimulatorAvailableForFramework &&
-    shouldShowSimulatorTooltip === false &&
-    isTouched;
 
   return (
     <span
@@ -162,9 +141,7 @@ const SimulatorButton: React.FC<{
       </SimulatorOnboardingTooltip>
       {isSimulatorAvailableForFramework === false ? (
         <SimulatorNotSupportedTooltip />
-      ) : shouldShowNeedToSaveTooltip ? (
-        <NeedToSaveTooltip />
-      ) : null}
+      ) : undefined}
     </span>
   );
 };

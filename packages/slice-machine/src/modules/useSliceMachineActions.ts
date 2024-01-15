@@ -23,34 +23,21 @@ import {
   renameAvailableCustomType,
   saveCustomTypeCreator,
 } from "./availableCustomTypes";
-import { createSlice, deleteSliceCreator, renameSliceCreator } from "./slices";
+import {
+  createSlice,
+  deleteSliceCreator,
+  generateSliceCustomScreenshotCreator,
+  renameSliceCreator,
+  updateSliceCreator,
+} from "./slices";
 import { UserContextStoreType, UserReviewType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
-import type { SliceBuilderState } from "@builders/SliceBuilder";
 import { CustomTypes } from "@lib/models/common/CustomType";
-import {
-  CustomType,
-  NestableWidget,
-} from "@prismicio/types-internal/lib/customtypes";
-import {
-  addSliceWidgetCreator,
-  copyVariationSliceCreator,
-  deleteSliceWidgetMockCreator,
-  initSliceStoreCreator,
-  removeSliceWidgetCreator,
-  reorderSliceWidgetCreator,
-  replaceSliceWidgetCreator,
-  updateAndSaveSliceCreator,
-  updateSliceCreator,
-  updateSliceWidgetMockCreator,
-} from "./selectedSlice/actions";
-import { generateSliceCustomScreenshotCreator } from "./screenshots/actions";
-import { ComponentUI } from "../../lib/models/common/ComponentUI";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { ComponentUI, ScreenshotUI } from "../../lib/models/common/ComponentUI";
 import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
-import type { ScreenshotGenerationMethod } from "@lib/models/common/Screenshots";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
-import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 
@@ -169,138 +156,26 @@ const useSliceMachineActions = () => {
   /** End of sucess actions */
 
   // Slice module
-  const initSliceStore = (component: ComponentUI) =>
-    dispatch(initSliceStoreCreator(component));
-
-  const addSliceWidget = (
-    variationId: string,
-    widgetsArea: WidgetsArea,
-    key: string,
-    value: NestableWidget,
-  ) => {
-    dispatch(addSliceWidgetCreator({ variationId, widgetsArea, key, value }));
-  };
-
-  const replaceSliceWidget = (
-    variationId: string,
-    widgetsArea: WidgetsArea,
-    previousKey: string,
-    newKey: string,
-    value: NestableWidget,
-  ) => {
+  const saveSliceSuccess = (component: ComponentUI) => {
     dispatch(
-      replaceSliceWidgetCreator({
-        variationId,
-        widgetsArea,
-        previousKey,
-        newKey,
-        value,
-      }),
-    );
-  };
-
-  const reorderSliceWidget = (
-    variationId: string,
-    widgetsArea: WidgetsArea,
-    start: number,
-    end: number | undefined,
-  ) => {
-    dispatch(
-      reorderSliceWidgetCreator({
-        variationId,
-        widgetsArea,
-        start,
-        end,
-      }),
-    );
-  };
-
-  const removeSliceWidget = (
-    variationId: string,
-    widgetsArea: WidgetsArea,
-    key: string,
-  ) => {
-    dispatch(
-      removeSliceWidgetCreator({
-        variationId,
-        widgetsArea,
-        key,
-      }),
-    );
-  };
-
-  const deleteSliceWidgetMock = (
-    variationId: string,
-    widgetArea: WidgetsArea,
-    newKey: string,
-  ) => {
-    dispatch(
-      deleteSliceWidgetMockCreator({
-        variationId,
-        widgetArea,
-        newKey,
-      }),
-    );
-  };
-
-  const updateSliceWidgetMock = (
-    variationId: string,
-    widgetArea: WidgetsArea,
-    previousKey: string,
-    newKey: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mockValue: any,
-  ) => {
-    dispatch(
-      updateSliceWidgetMockCreator({
-        variationId,
-        widgetArea,
-        previousKey,
-        newKey,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        mockValue,
-      }),
-    );
-  };
-
-  const generateSliceCustomScreenshot = (
-    variationId: string,
-    component: ComponentUI,
-    file: Blob,
-    method: ScreenshotGenerationMethod,
-  ) => {
-    dispatch(
-      generateSliceCustomScreenshotCreator.request({
-        variationId,
+      updateSliceCreator.success({
         component,
-        file,
-        method,
       }),
     );
   };
 
-  const updateSlice = (
+  const saveSliceCustomScreenshotSuccess = (
+    variationId: string,
+    screenshot: ScreenshotUI,
     component: ComponentUI,
-    setSliceBuilderState: (sliceBuilderState: SliceBuilderState) => void,
   ) => {
     dispatch(
-      updateSliceCreator.request({
+      generateSliceCustomScreenshotCreator.success({
+        variationId,
+        screenshot,
         component,
-        setSliceBuilderState,
       }),
     );
-  };
-
-  const updateAndSaveSlice = (component: ComponentUI) => {
-    dispatch(updateAndSaveSliceCreator({ component }));
-  };
-
-  const copyVariationSlice = (
-    key: string,
-    name: string,
-    copied: VariationSM,
-  ) => {
-    dispatch(copyVariationSliceCreator({ key, name, copied }));
   };
 
   const createSliceSuccess = (libraries: readonly LibraryUI[]) =>
@@ -377,17 +252,8 @@ const useSliceMachineActions = () => {
     deleteCustomTypeSuccess,
     renameAvailableCustomTypeSuccess,
     saveCustomTypeSuccess,
-    initSliceStore,
-    addSliceWidget,
-    replaceSliceWidget,
-    reorderSliceWidget,
-    removeSliceWidget,
-    updateSliceWidgetMock,
-    deleteSliceWidgetMock,
-    generateSliceCustomScreenshot,
-    updateSlice,
-    updateAndSaveSlice,
-    copyVariationSlice,
+    saveSliceSuccess,
+    saveSliceCustomScreenshotSuccess,
     createSliceSuccess,
     renameSlice,
     deleteSlice,
