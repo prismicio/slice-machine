@@ -14,11 +14,13 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { uploadSliceScreenshot } from "@src/features/slices/actions/uploadSliceScreenshot";
 
 interface DropZoneProps {
   imageTypes?: string[];
   variationID: string;
   slice: ComponentUI;
+  onUploadSuccess?: (newSlice: ComponentUI) => void;
 }
 
 const DragActiveView = () => {
@@ -79,6 +81,7 @@ const DropZone: React.FC<DropZoneProps> = ({
   variationID,
   slice,
   imageTypes = acceptedImagesTypes,
+  onUploadSuccess,
 }) => {
   const maybeScreenshot = slice.screenshots[variationID];
 
@@ -90,7 +93,7 @@ const DropZone: React.FC<DropZoneProps> = ({
     slice,
   ]);
 
-  const { generateSliceCustomScreenshot } = useSliceMachineActions();
+  const { saveSliceCustomScreenshotSuccess } = useSliceMachineActions();
 
   const { isLoadingScreenshot } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -102,25 +105,44 @@ const DropZone: React.FC<DropZoneProps> = ({
   );
 
   const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
-    onHandleFile: (file: File, isDragActive: boolean) => {
-      generateSliceCustomScreenshot(
-        variationID,
+    onHandleFile: async (file: File, isDragActive: boolean) => {
+      const newSlice = await uploadSliceScreenshot({
         slice,
         file,
-        isDragActive ? "dragAndDrop" : "upload",
-      );
+        method: isDragActive ? "dragAndDrop" : "upload",
+        variationId: variationID,
+      });
       setIsHover(false);
+
+      const screenshot = newSlice?.screenshots[variationID];
+      if (screenshot) {
+        // Sync with redux store
+        saveSliceCustomScreenshotSuccess(variationID, screenshot, newSlice);
+        onUploadSuccess && onUploadSuccess(newSlice);
+      }
     },
   });
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
     if (file.size > 128000000) {
       return openToaster(
         "File is too big. Max file size: 128Mb.",
         ToasterType.ERROR,
       );
     }
-    generateSliceCustomScreenshot(variationID, slice, file, "dragAndDrop");
+    const newSlice = await uploadSliceScreenshot({
+      slice,
+      file,
+      method: "dragAndDrop",
+      variationId: variationID,
+    });
+
+    const screenshot = newSlice?.screenshots[variationID];
+    if (screenshot) {
+      // Sync with redux store
+      saveSliceCustomScreenshotSuccess(variationID, screenshot, newSlice);
+      onUploadSuccess && onUploadSuccess(newSlice);
+    }
   };
 
   const supportsClipboardRead = typeof navigator.clipboard.read === "function";
@@ -149,7 +171,7 @@ const DropZone: React.FC<DropZoneProps> = ({
     const maybeFile = event.dataTransfer.files?.[0];
     if (maybeFile !== undefined) {
       if (imageTypes.some((t) => `image/${t}` === maybeFile.type)) {
-        return handleFile(maybeFile);
+        return void handleFile(maybeFile);
       }
       return openToaster(
         `Only files of type ${imageTypes.join(", ")} are accepted.`,
