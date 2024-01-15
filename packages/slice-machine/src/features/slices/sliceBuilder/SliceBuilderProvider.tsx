@@ -1,0 +1,109 @@
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+import { useStableCallback } from "@prismicio/editor-support/React";
+import { useRouter } from "next/router";
+
+import {
+  AutoSaveStatus,
+  useAutoSave,
+} from "@src/features/autoSave/useAutoSave";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { readSliceMocks, updateSlice } from "@src/apiClient";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { VariationSM } from "@lib/models/common/Slice";
+
+type SliceContext = {
+  slice: ComponentUI;
+  autoSaveStatus: AutoSaveStatus;
+  setSlice: (slice: ComponentUI) => void;
+  variation: VariationSM;
+};
+
+type SliceBuilderProviderProps = {
+  children: ReactNode | ((value: SliceContext) => ReactNode);
+  initialSlice: ComponentUI;
+};
+
+const SliceContextValue = createContext<SliceContext | undefined>(undefined);
+
+export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
+  const { children, initialSlice } = props;
+
+  const router = useRouter();
+  const [slice, setSliceState] = useState(initialSlice);
+  const { autoSaveStatus, setNextSave } = useAutoSave({
+    errorMessage: "Failed to save slice, check console logs.",
+  });
+  const { saveSliceSuccess } = useSliceMachineActions();
+  const stableSaveSliceSuccess = useStableCallback(saveSliceSuccess);
+
+  const variation = useMemo(() => {
+    const variationName = router.query.variation;
+    const v = slice.model.variations.find(
+      (variation) => variation.id === variationName,
+    );
+
+    if (v) {
+      return v;
+    }
+
+    throw new Error("Variation not found");
+  }, [slice, router]);
+
+  const setSlice = useCallback(
+    (slice: ComponentUI) => {
+      setSliceState(slice);
+      setNextSave(async () => {
+        const { errors: updateSliceErrors } = await updateSlice(slice);
+
+        if (updateSliceErrors.length > 0) {
+          throw updateSliceErrors;
+        }
+
+        const { errors: readSliceMockErrors, mocks } = await readSliceMocks({
+          libraryID: slice.from,
+          sliceID: slice.model.id,
+        });
+
+        if (readSliceMockErrors.length > 0) {
+          throw readSliceMockErrors;
+        }
+
+        stableSaveSliceSuccess({ ...slice, mocks });
+      });
+    },
+    [setNextSave, stableSaveSliceSuccess],
+  );
+
+  const contextValue: SliceContext = useMemo(
+    () => ({
+      autoSaveStatus,
+      slice,
+      setSlice,
+      variation,
+    }),
+    [autoSaveStatus, slice, setSlice, variation],
+  );
+
+  return (
+    <SliceContextValue.Provider value={contextValue}>
+      {typeof children === "function" ? children(contextValue) : children}
+    </SliceContextValue.Provider>
+  );
+}
+
+export function useSliceState() {
+  const sliceState = useContext(SliceContextValue);
+
+  if (!sliceState) {
+    throw new Error("SliceBuilderProvider not found");
+  }
+
+  return sliceState;
+}

@@ -4,7 +4,6 @@ import { Dialog } from "./Dialog";
 
 export class AddVariationDialog extends Dialog {
   readonly nameInput: Locator;
-  readonly addedMessage: Locator;
 
   constructor(page: Page) {
     super(page, { title: "Add new Variation" });
@@ -18,7 +17,6 @@ export class AddVariationDialog extends Dialog {
      * Static locators
      */
     this.nameInput = this.dialog.getByLabel("Variation name*");
-    this.addedMessage = page.getByText("Slice saved successfully");
   }
 
   /**
@@ -33,15 +31,11 @@ export class AddVariationDialog extends Dialog {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(name);
     await this.submitButton.click();
-    await this.checkAddedMessage();
     await expect(this.title).not.toBeVisible();
   }
 
   /**
    * Assertions
    */
-  async checkAddedMessage() {
-    await expect(this.addedMessage).toBeVisible();
-    await expect(this.addedMessage).not.toBeVisible();
-  }
+  // Handle assertions here
 }

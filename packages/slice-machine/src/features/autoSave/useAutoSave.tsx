@@ -4,6 +4,7 @@ import {
   useEffect,
   SetStateAction,
   Dispatch,
+  useMemo,
 } from "react";
 import { uniqueId } from "lodash";
 import { toast } from "react-toastify";
@@ -122,7 +123,13 @@ export const useAutoSave = (
     return;
   }, [autoSaveStatusActual, autoSaveStatusDelay]);
 
-  return { autoSaveStatus: autoSaveStatusDelayed, setNextSave };
+  return useMemo(
+    () => ({
+      autoSaveStatus: autoSaveStatusDelayed,
+      setNextSave,
+    }),
+    [autoSaveStatusDelayed, setNextSave],
+  );
 };
 
 type ToastErrorArgs = {

@@ -58,18 +58,4 @@ export const ComponentUI = {
       return component.model.variations[0];
     }
   },
-
-  updateVariation(component: ComponentUI, variationId: string) {
-    return (mutateCallbackFn: (v: VariationSM) => VariationSM): ComponentUI => {
-      const variations = component.model.variations.map((v) => {
-        if (v.id === variationId) return mutateCallbackFn(v);
-        else return v;
-      });
-
-      return {
-        ...component,
-        model: { ...component.model, variations },
-      };
-    };
-  },
 };
