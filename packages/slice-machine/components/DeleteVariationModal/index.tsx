@@ -7,21 +7,19 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import type { Dispatch, FC, PropsWithChildren, SetStateAction } from "react";
+import { useState, type FC, type PropsWithChildren } from "react";
 
-import type { SliceBuilderState } from "@builders/SliceBuilder";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
 import { deleteVariation } from "@src/features/slices/sliceBuilder/actions/deleteVariation";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 
 type DeleteVariationModalProps = {
   isOpen: boolean;
   onClose: () => void;
   slice: ComponentUI;
   variation: VariationSM | undefined;
-  sliceBuilderState: SliceBuilderState;
-  setSliceBuilderState: Dispatch<SetStateAction<SliceBuilderState>>;
 };
 
 export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
@@ -29,11 +27,12 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
   onClose,
   slice,
   variation,
-  sliceBuilderState,
-  setSliceBuilderState,
 }) => {
   const router = useRouter();
-  const { updateAndSaveSlice } = useSliceMachineActions();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { saveSliceSuccess } = useSliceMachineActions();
+  const { setSlice } = useSliceState();
+
   return (
     <Dialog
       open={isOpen}
@@ -56,19 +55,21 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
               onClick: () => {
                 if (!variation) return;
                 void (async () => {
+                  setIsDeleting(true);
                   try {
-                    await deleteVariation({
+                    const newSlice = await deleteVariation({
                       component: slice,
                       router,
-                      setSliceBuilderState,
-                      updateAndSaveSlice,
+                      saveSliceSuccess,
                       variation,
                     });
+                    setSlice(newSlice);
                   } catch {}
+                  setIsDeleting(false);
                   onClose();
                 })();
               },
-              loading: sliceBuilderState.loading,
+              loading: isDeleting,
             }}
             cancel={{ text: "Cancel" }}
             size="medium"
