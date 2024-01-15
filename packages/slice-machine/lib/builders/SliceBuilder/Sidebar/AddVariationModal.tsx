@@ -1,13 +1,13 @@
-import { Variation } from "@models/common/Variation";
-import { VariationSM } from "@lib/models/common/Slice";
 import React, { useEffect, useState } from "react";
-import { Formik, Form, Field } from "formik";
-import SliceMachineModal from "@components/SliceMachineModal";
-
-import Card from "@components/Card/Default";
 import Select from "react-select";
+import { Formik, Form, Field } from "formik";
+import { Button, Box } from "@prismicio/editor-ui";
+import { Text, Label, Input } from "theme-ui";
+import { camelCase } from "lodash";
 
-import { Text, Box, Button, Label, Input, Flex } from "theme-ui";
+import SliceMachineModal from "@components/SliceMachineModal";
+import Card from "@components/Card/Default";
+import { VariationSM } from "@lib/models/common/Slice";
 
 const Error = ({ msg }: { msg?: string }) => (
   <Text as="span" sx={{ fontSize: 12, color: "error", mt: "5px", ml: 2 }}>
@@ -17,9 +17,14 @@ const Error = ({ msg }: { msg?: string }) => (
 );
 const AddVariationModal: React.FunctionComponent<{
   isOpen: boolean;
+  loading?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClose: () => any;
-  onSubmit: (id: string, name: string, copiedVariation: VariationSM) => void;
+  onSubmit: (
+    id: string,
+    name: string,
+    copiedVariation: VariationSM,
+  ) => Promise<void>;
   initialVariation: VariationSM;
   variations: ReadonlyArray<VariationSM>;
 }> = ({ isOpen, onClose, onSubmit, initialVariation, variations }) => {
@@ -31,6 +36,7 @@ const AddVariationModal: React.FunctionComponent<{
     value: initialVariation.id,
     label: initialVariation.name,
   });
+  const [isAddingVariation, setIsAddingVariation] = useState(false);
 
   function validateForm({
     id,
@@ -70,7 +76,7 @@ const AddVariationModal: React.FunctionComponent<{
   }
 
   function generateId(str: string) {
-    const slug = Variation.generateId(str);
+    const slug = camelCase(str);
     setGeneratedId(slug);
   }
 
@@ -110,7 +116,9 @@ const AddVariationModal: React.FunctionComponent<{
     else {
       const copiedVariation = variations.find((v) => v.id === origin.value);
       if (copiedVariation) {
-        onSubmit(generatedId, name, copiedVariation);
+        setIsAddingVariation(true);
+        await onSubmit(generatedId, name, copiedVariation);
+        setIsAddingVariation(false);
         handleClose();
       }
     }
@@ -148,16 +156,16 @@ const AddVariationModal: React.FunctionComponent<{
               sx={{ textAlign: "left" }}
               HeaderContent={<Text as="h2">Add new Variation</Text>}
               FooterContent={
-                <Flex sx={{ justifyContent: "flex-end" }}>
-                  <Button onClick={handleClose} mr={2} variant="secondary">
+                <Box gap={16} alignItems="center">
+                  <Button onClick={handleClose} color="grey">
                     Cancel
                   </Button>
-                  <Button type="submit">Submit</Button>
-                </Flex>
+                  <Button loading={isAddingVariation}>Submit</Button>
+                </Box>
               }
               close={handleClose}
             >
-              <Box sx={{ pb: 4, mt: 4 }}>
+              <Box flexDirection="column" padding={{ block: 16 }}>
                 <Label htmlFor="name" sx={{ mb: 1 }}>
                   Variation name*
                   {errors.name ? <Error msg={errors.name} /> : ""}
@@ -179,7 +187,7 @@ const AddVariationModal: React.FunctionComponent<{
                   in Prismic
                 </Text>
               </Box>
-              <Box sx={{ pb: 4 }}>
+              <Box flexDirection="column" padding={{ bottom: 16 }}>
                 <Label htmlFor="id" sx={{ mb: 1 }}>
                   Variation ID*{errors.id ? <Error msg={errors.id} /> : ""}
                 </Label>
@@ -201,7 +209,7 @@ const AddVariationModal: React.FunctionComponent<{
                 </Text>
               </Box>
 
-              <Box sx={{ pb: 4 }}>
+              <Box flexDirection="column" padding={{ bottom: 8 }}>
                 <Label htmlFor="origin" sx={{ mb: 1 }}>
                   Duplicate from
                 </Label>

@@ -1,44 +1,35 @@
 import { Box, Button, Gradient } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import { type Dispatch, type FC, type SetStateAction, useState } from "react";
+import { type FC, useState } from "react";
+import { toast } from "react-toastify";
 
 import AddVariationModal from "@builders/SliceBuilder/Sidebar/AddVariationModal";
-import type { SliceBuilderState } from "@builders/SliceBuilder";
 import { DeleteVariationModal } from "@components/DeleteVariationModal";
 import { RenameVariationModal } from "@components/Forms/RenameVariationModal";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
-import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
-import { Variation } from "@lib/models/common/Variation";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { updateSlice } from "@src/apiClient";
+import { copySliceVariation } from "@src/domain/slice";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
-type SidebarProps = {
-  slice: ComponentUI;
-  variation: VariationSM;
-  sliceBuilderState: SliceBuilderState;
-  setSliceBuilderState: Dispatch<SetStateAction<SliceBuilderState>>;
-};
-
 type DialogState =
-  | { type: "ADD_VARIATION"; variation?: undefined }
-  | { type: "RENAME_VARIATION"; variation: VariationSM }
-  | { type: "DELETE_VARIATION"; variation: VariationSM }
+  | { type: "ADD_VARIATION"; variation?: undefined; loading?: boolean }
+  | { type: "RENAME_VARIATION"; variation: VariationSM; loading?: boolean }
+  | { type: "DELETE_VARIATION"; variation: VariationSM; loading?: boolean }
   | undefined;
 
-export const Sidebar: FC<SidebarProps> = (props) => {
-  const { slice, variation, sliceBuilderState, setSliceBuilderState } = props;
-
+export const Sidebar: FC = () => {
+  const { slice, variation, setSlice } = useSliceState();
   const [dialog, setDialog] = useState<DialogState>();
-
   const screenshotChangesModal = useScreenshotChangesModal();
-  const { sliceFilterFn, defaultVariationSelector } =
+  const { sliceFilterFn, defaultVariationSelector, onUploadSuccess } =
     screenshotChangesModal.modalPayload;
-
-  const { copyVariationSlice, updateSlice } = useSliceMachineActions();
   const router = useRouter();
+  const { saveSliceSuccess } = useSliceMachineActions();
 
   return (
     <>
@@ -48,10 +39,16 @@ export const Sidebar: FC<SidebarProps> = (props) => {
             action={{
               type: "menu",
               onRename: () => {
-                setDialog({ type: "RENAME_VARIATION", variation: v });
+                setDialog({
+                  type: "RENAME_VARIATION",
+                  variation: v,
+                });
               },
               onRemove: () => {
-                setDialog({ type: "DELETE_VARIATION", variation: v });
+                setDialog({
+                  type: "DELETE_VARIATION",
+                  variation: v,
+                });
               },
               removeDisabled: slice.model.variations.length <= 1,
             }}
@@ -63,6 +60,9 @@ export const Sidebar: FC<SidebarProps> = (props) => {
                 defaultVariationSelector: {
                   sliceID: slice.model.id,
                   variationID: v.id,
+                },
+                onUploadSuccess: (newSlice) => {
+                  setSlice(newSlice);
                 },
               });
             }}
@@ -103,6 +103,7 @@ export const Sidebar: FC<SidebarProps> = (props) => {
       <ScreenshotChangesModal
         slices={sliceFilterFn([slice])}
         defaultVariationSelector={defaultVariationSelector}
+        onUploadSuccess={onUploadSuccess}
       />
       <RenameVariationModal
         isOpen={dialog?.type === "RENAME_VARIATION"}
@@ -111,8 +112,6 @@ export const Sidebar: FC<SidebarProps> = (props) => {
         }}
         slice={slice}
         variation={dialog?.variation}
-        sliceBuilderState={sliceBuilderState}
-        setSliceBuilderState={setSliceBuilderState}
       />
       <DeleteVariationModal
         isOpen={dialog?.type === "DELETE_VARIATION"}
@@ -121,8 +120,6 @@ export const Sidebar: FC<SidebarProps> = (props) => {
         }}
         slice={slice}
         variation={dialog?.variation}
-        sliceBuilderState={sliceBuilderState}
-        setSliceBuilderState={setSliceBuilderState}
       />
       <AddVariationModal
         initialVariation={variation}
@@ -130,27 +127,28 @@ export const Sidebar: FC<SidebarProps> = (props) => {
         onClose={() => {
           setDialog(undefined);
         }}
-        onSubmit={(id, name, copiedVariation) => {
-          copyVariationSlice(id, name, copiedVariation);
+        onSubmit={async (id, name, copiedVariation) => {
+          try {
+            const { slice: newSlice, variation: newVariation } =
+              copySliceVariation({ slice, id, name, copiedVariation });
 
-          // We have to immediately save the new variation to prevent an
-          // infinite loop related to screenshots handling.
-          const newVariation = Variation.copyValue(copiedVariation, id, name);
-          const newSlice = {
-            ...slice,
-            model: {
-              ...slice.model,
-              variations: [...slice.model.variations, newVariation],
-            },
-          };
-          updateSlice(newSlice, setSliceBuilderState);
+            await updateSlice(newSlice);
+            saveSliceSuccess(newSlice);
+            setSlice(newSlice);
 
-          const url = SLICES_CONFIG.getBuilderPagePathname({
-            libraryName: newSlice.href,
-            sliceName: newSlice.model.name,
-            variationId: newVariation.id,
-          });
-          void router.replace(url);
+            const url = SLICES_CONFIG.getBuilderPagePathname({
+              libraryName: newSlice.href,
+              sliceName: newSlice.model.name,
+              variationId: newVariation.id,
+            });
+
+            void router.replace(url);
+          } catch (error) {
+            const message = `Could not add variation \`${name}\``;
+            console.error(message, error);
+
+            toast.error(message);
+          }
         }}
         variations={slice.model.variations}
       />
