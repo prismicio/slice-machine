@@ -26,7 +26,6 @@ import { updateSliceMock } from "@src/modules/slices";
 import { modalOpenCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { checkSimulatorSetup, getSimulatorSetupSteps } from "@src/apiClient";
-import { updateSelectedSliceMocks } from "@src/modules/selectedSlice/actions";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
 import { createSliceMachineManager } from "@slicemachine/manager";
@@ -284,7 +283,6 @@ describe("[Simulator module]", () => {
           }),
         )
         .put(updateSliceMock(payload.payload))
-        .put(updateSelectedSliceMocks({ mocks: payload.payload.mocks }))
         .put(saveSliceMockCreator.success())
         .run();
 
