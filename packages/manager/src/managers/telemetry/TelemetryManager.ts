@@ -1,5 +1,5 @@
+import { Experiment, ExperimentClient } from "@amplitude/experiment-js-client";
 import { randomUUID } from "node:crypto";
-
 import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 
 import { readPrismicrc } from "../../lib/prismicrc";
@@ -58,6 +58,7 @@ export class TelemetryManager extends BaseManager {
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
 	private _context: TelemetryManagerContext | undefined = undefined;
+	private _experiment: ExperimentClient | undefined = undefined;
 
 	async initTelemetry(args: TelemetryManagerInitTelemetryArgs): Promise<void> {
 		const isTelemetryEnabled = await this.checkIsTelemetryEnabled();
@@ -81,6 +82,11 @@ export class TelemetryManager extends BaseManager {
 
 			return analytics;
 		};
+
+		if (isTelemetryEnabled) {
+			// Start Amplitude Experiment
+			this.startExperiment();
+		}
 
 		this._anonymousID = randomUUID();
 		this._context = { app: { name: args.appName, version: args.appVersion } };
@@ -267,5 +273,35 @@ export class TelemetryManager extends BaseManager {
 		}
 
 		return readPrismicrc(root).telemetry !== false;
+	}
+
+	async startExperiment(): Promise<void> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		this._experiment = Experiment.initialize(API_TOKENS.AmplitudeKey, {
+			pollOnStart: false,
+		});
+
+		await this._experiment
+			.start({
+				user_properties: {
+					Repository: repositoryName,
+				},
+			})
+			.catch((error) => {
+				console.error("Error starting experiment", error);
+			});
+	}
+
+	async getExperimentValue(variantName: string): Promise<string | undefined> {
+		if (this._experiment) {
+			await this._experiment.fetch(undefined, {
+				flagKeys: [variantName],
+			});
+
+			return this._experiment.variant(variantName).value;
+		}
+
+		return undefined;
 	}
 }
