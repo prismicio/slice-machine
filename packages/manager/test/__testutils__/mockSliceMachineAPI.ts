@@ -11,6 +11,12 @@ type MockSliceMachineAPIConfig = {
 		expectedCookies: string[];
 		environments: Environment[];
 	};
+	gitGitHubCreateAuthStateV1Endpoint?: {
+		isSuccessful?: boolean;
+		expectedAuthenticationToken: string;
+		key: string;
+		expiresAt: Date;
+	};
 };
 
 export const mockSliceMachineAPI = (
@@ -37,6 +43,38 @@ export const mockSliceMachineAPI = (
 							return res(
 								ctx.json({
 									results: config.environmentsV1Endpoint?.environments,
+								}),
+								ctx.status(200),
+							);
+						} else {
+							return res(ctx.status(418));
+						}
+					} else {
+						return res(ctx.status(418));
+					}
+				},
+			),
+		);
+	}
+
+	if (config.gitGitHubCreateAuthStateV1Endpoint) {
+		ctx.msw.use(
+			rest.get(
+				new URL(`./git/github/create-auth-state`, endpoint).toString(),
+				(req, res, ctx) => {
+					if (
+						config.gitGitHubCreateAuthStateV1Endpoint &&
+						(config.gitGitHubCreateAuthStateV1Endpoint.isSuccessful ?? true)
+					) {
+						if (
+							req.headers.get("Authorization") ===
+							`Bearer ${config.gitGitHubCreateAuthStateV1Endpoint.expectedAuthenticationToken}`
+						) {
+							return res(
+								ctx.json({
+									key: config.gitGitHubCreateAuthStateV1Endpoint.key,
+									expiresAt:
+										config.gitGitHubCreateAuthStateV1Endpoint.expiresAt,
 								}),
 								ctx.status(200),
 							);

@@ -293,7 +293,7 @@ it("throws UnauthenticatedError if the API returns 400", async (ctx) => {
 		rest.get(
 			new URL(
 				"./environments",
-				manager.getAPIEndpoints().SliceMachineV1,
+				manager.getAPIEndpoints().SliceMachineEnvironmentsV1,
 			).toString(),
 			(_req, res, ctx) => {
 				return res(ctx.status(400));
@@ -324,7 +324,7 @@ it("throws UnauthenticatedError if the API returns 401", async (ctx) => {
 		rest.get(
 			new URL(
 				"./environments",
-				manager.getAPIEndpoints().SliceMachineV1,
+				manager.getAPIEndpoints().SliceMachineEnvironmentsV1,
 			).toString(),
 			(_req, res, ctx) => {
 				return res(ctx.status(401));
@@ -355,7 +355,7 @@ it("throws UnauthorizedError if the API returns 403", async (ctx) => {
 		rest.get(
 			new URL(
 				"./environments",
-				manager.getAPIEndpoints().SliceMachineV1,
+				manager.getAPIEndpoints().SliceMachineEnvironmentsV1,
 			).toString(),
 			(_req, res, ctx) => {
 				return res(ctx.status(403));

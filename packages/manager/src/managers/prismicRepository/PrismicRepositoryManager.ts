@@ -454,7 +454,10 @@ export class PrismicRepositoryManager extends BaseManager {
 	): Promise<PrismicRepositoryManagerFetchEnvironmentsReturnType> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
+		const url = new URL(
+			`./environments`,
+			API_ENDPOINTS.SliceMachineEnvironmentsV1,
+		);
 		url.searchParams.set("repository", repositoryName);
 
 		const res = await this._fetch({ url });

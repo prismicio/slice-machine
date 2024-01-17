@@ -24,22 +24,23 @@ const defineOmits = <TObj>() => {
 const omitProcedures = defineOmits<SliceMachineManager>()([
 	"_sliceMachinePluginRunner",
 	"_prismicAuthManager",
+	"getSliceMachinePluginRunner",
+	"getPrismicAuthManager",
 
 	"customTypes._sliceMachineManager",
+	"documentation._sliceMachineManager",
+	"git._sliceMachineManager",
 	"plugins._sliceMachineManager",
 	"prismicRepository._sliceMachineManager",
 	"project._sliceMachineManager",
 	"screenshots._sliceMachineManager",
 	"simulator._sliceMachineManager",
+	"sliceTemplateLibrary._sliceMachineManager",
 	"slices._sliceMachineManager",
 	"snippets._sliceMachineManager",
 	"telemetry._sliceMachineManager",
 	"user._sliceMachineManager",
 	"versions._sliceMachineManager",
-	"documentation._sliceMachineManager",
-	"sliceTemplateLibrary._sliceMachineManager",
-	"getSliceMachinePluginRunner",
-	"getPrismicAuthManager",
 ]);
 
 export type SliceMachineManagerMiddleware = RPCMiddleware<
