@@ -5,7 +5,7 @@
   },
   "packageManager": "yarn@3.6.0",
   "scripts": {
-    "clean": "rimraf --glob '{e2e-projects/*/{.next,.svelte-kit},packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz,storybook-static},playwright/{playwright-report,test-results}}'",
+    "clean": "rimraf --glob '{e2e-projects/*/{.next,.svelte-kit},packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz,src/**/*.module.css.d.ts,storybook-static},playwright/{playwright-report,test-results}}'",
     "dev": "concurrently --prefix-colors auto \"yarn:dev:*\"",
     "dev:manager": "yarn workspace @slicemachine/manager dev",
     "dev:start-slicemachine": "yarn workspace start-slicemachine dev",
@@ -20,6 +20,7 @@
     "build-essential": "yarn workspace @slicemachine/plugin-kit build && yarn workspace @slicemachine/manager build",
     "audit": "yarn workspaces foreach --parallel --verbose run audit",
     "lint": "yarn workspaces foreach --verbose run lint",
+    "stylelint": "yarn workspaces foreach --verbose run stylelint",
     "lint-staged": "lint-staged",
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
@@ -65,6 +66,10 @@
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
       "prettier --write --ignore-unknown",
       "yarn workspace slice-machine-ui lint:precommit"
+    ],
+    "**/packages/slice-machine/**/*.module.css": [
+      "prettier --write --ignore-unknown",
+      "yarn workspace slice-machine-ui stylelint:precommit"
     ]
   },
   "resolutions": {

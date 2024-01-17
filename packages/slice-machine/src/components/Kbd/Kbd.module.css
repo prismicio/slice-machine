@@ -1,0 +1,10 @@
+.root {
+  background-color: var(--grey2);
+  border-color: var(--grey6);
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- The component has a border radius of 3 px in Figma. */
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  color: var(--grey11);
+  padding-inline: 4px;
+}
