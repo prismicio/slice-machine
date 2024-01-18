@@ -83,7 +83,11 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
         </Code>
       </Flex>
       <Box>
-        <Button onClick={copy} variant="textButton">
+        <Button
+          aria-label={isCopied ? "Code snippet copied" : "Copy code snippet"}
+          onClick={copy}
+          variant="textButton"
+        >
           {isCopied ? (
             <MdCheck
               size={16}

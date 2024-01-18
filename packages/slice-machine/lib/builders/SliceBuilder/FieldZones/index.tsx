@@ -1,18 +1,24 @@
+import { FC } from "react";
+import { flushSync } from "react-dom";
+import { DropResult } from "react-beautiful-dnd";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
-
-import Zone from "../../common/Zone";
-import EditModal from "../../common/EditModal";
-
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
-
-import { DropResult } from "react-beautiful-dnd";
 import { List } from "@src/components/List";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
-
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+import { WidgetsArea } from "@lib/models/common/Slice";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
+import {
+  addField,
+  deleteField,
+  reorderField,
+  updateField,
+} from "@src/domain/slice";
+import Zone from "@lib/builders/common/Zone";
+import EditModal from "@lib/builders/common/EditModal";
+import { AnyWidget } from "@lib/models/common/widgets/Widget";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -22,24 +28,18 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
   of fields that you want to be able to repeat an<br/>
   indeterminate number of times, like FAQs`;
 
-type FieldZonesProps = {
-  variation: VariationSM;
-};
+const FieldZones: FC = () => {
+  const { slice, setSlice, variation } = useSliceState();
 
-const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
-  variation,
-}) => {
-  const {
-    addSliceWidget,
-    replaceSliceWidget,
-    reorderSliceWidget,
-    removeSliceWidget,
-    updateSliceWidgetMock,
-    deleteSliceWidgetMock,
-  } = useSliceMachineActions();
   const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
-    deleteSliceWidgetMock(variation.id, widgetArea, key);
-    removeSliceWidget(variation.id, widgetArea, key);
+    const newSlice = deleteField({
+      slice,
+      variationId: variation.id,
+      widgetArea,
+      fieldId: key,
+    });
+
+    setSlice(newSlice);
   };
 
   const _onSave =
@@ -48,30 +48,23 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       apiId: previousKey,
       newKey,
       value,
-      mockValue,
     }: {
       apiId: string;
       newKey: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value: any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockValue: any;
     }) => {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (mockValue) {
-        updateSliceWidgetMock(
-          variation.id,
-          widgetArea,
-          previousKey,
-          newKey,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          mockValue,
-        );
-      } else {
-        deleteSliceWidgetMock(variation.id, widgetArea, newKey);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      replaceSliceWidget(variation.id, widgetArea, previousKey, newKey, value);
+      const newSlice = updateField({
+        slice,
+        variationId: variation.id,
+        widgetArea,
+        previousFieldId: previousKey,
+        newFieldId: newKey,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        newField: value,
+      });
+
+      setSlice(newSlice);
     };
 
   const _onSaveNewField =
@@ -96,24 +89,56 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         );
       }
 
-      addSliceWidget(
-        variation.id,
-        widgetArea,
-        id,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      const newField = widget.create(label) as NestableWidget;
+
+      if (
+        newField.type === "Range" ||
+        newField.type === "IntegrationFields" ||
+        newField.type === "Separator"
+      ) {
+        throw new Error(`Unsupported Field Type: ${newField.type}`);
+      }
+
+      try {
+        const CurrentWidget: AnyWidget = Widgets[newField.type];
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        widget.create(label) as NestableWidget,
-      );
+        CurrentWidget.schema.validateSync(newField, { stripUnknown: false });
+      } catch (error) {
+        throw new Error(`Model is invalid for widget "${newField.type}".`);
+      }
+
+      const newSlice = addField({
+        slice,
+        variationId: variation.id,
+        widgetArea,
+        newFieldId: id,
+        newField,
+      });
+
+      setSlice(newSlice);
     };
 
   const _onDragEnd = (widgetArea: WidgetsArea) => (result: DropResult) => {
     if (ensureDnDDestination(result)) return;
 
-    reorderSliceWidget(
-      variation.id,
+    const { source, destination } = result;
+    if (!destination) {
+      return;
+    }
+
+    const newSlice = reorderField({
+      slice,
+      variationId: variation.id,
       widgetArea,
-      result.source.index,
-      result.destination?.index ?? undefined,
-    );
+      sourceIndex: source.index,
+      destinationIndex: destination.index,
+    });
+
+    // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
+    // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
+    // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
+    flushSync(() => setSlice(newSlice));
   };
 
   return (
@@ -141,7 +166,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.primary${transformKeyAccessor(key)}`
         }
-        dataCy="slice-non-repeatable-zone"
+        dataCy="static-zone-content"
         isRepeatableCustomType={undefined}
       />
       <Zone

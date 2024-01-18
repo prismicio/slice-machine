@@ -171,9 +171,11 @@ const variationSetter = (
 const ScreenshotChangesModal = ({
   slices,
   defaultVariationSelector,
+  onUploadSuccess,
 }: {
   slices: ComponentUI[];
   defaultVariationSelector?: SliceVariationSelector;
+  onUploadSuccess?: (newSlice: ComponentUI) => void;
 }) => {
   const { closeModals } = useSliceMachineActions();
 
@@ -275,6 +277,7 @@ const ScreenshotChangesModal = ({
                 <VariationDropZone
                   variationID={variationSelector.variationID}
                   slice={slice}
+                  onUploadSuccess={onUploadSuccess}
                 />
               ) : null;
             })()}

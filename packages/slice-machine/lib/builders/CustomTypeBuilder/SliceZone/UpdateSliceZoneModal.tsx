@@ -9,7 +9,7 @@ import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 interface UpdateSliceModalProps {
   formId: string;
   close: () => void;
-  onSubmit: (slices: SharedSlice[]) => Promise<void>;
+  onSubmit: (slices: SharedSlice[]) => void;
   availableSlices: ReadonlyArray<ComponentUI>;
 }
 
@@ -37,7 +37,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
               availableSlices.find((s) => s.model.id === sliceKey)?.model,
           )
           .filter((slice) => slice !== undefined) as SharedSlice[];
-        void onSubmit(slices);
+        onSubmit(slices);
       }}
       initialValues={{
         sliceKeys: [],

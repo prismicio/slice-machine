@@ -32,7 +32,6 @@ import { updateSliceMock } from "../slices";
 
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
-import { updateSelectedSliceMocks } from "../selectedSlice/actions";
 
 export const initialState: SimulatorStoreType = {
   setupSteps: null,
@@ -266,7 +265,6 @@ export function* saveSliceMockSaga({
     );
     yield put(updateSliceMock(payload));
 
-    yield put(updateSelectedSliceMocks({ mocks: payload.mocks }));
     yield put(saveSliceMockCreator.success());
   } catch (error) {
     yield put(
