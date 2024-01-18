@@ -10,10 +10,8 @@ import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
 import { simulatorReducer } from "@src/modules/simulator";
 import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
-import { selectedCustomTypeReducer } from "@src/modules/selectedCustomType";
 import { slicesReducer } from "@src/modules/slices";
 import { routerReducer } from "connected-next-router";
-import { selectedSliceReducer } from "@src/modules/selectedSlice/reducer";
 import { pushChangesReducer } from "@src/modules/pushChangesSaga";
 
 /** Creates the main reducer */
@@ -25,9 +23,7 @@ const createReducer = (): Reducer =>
     environment: environmentReducer,
     simulator: simulatorReducer,
     availableCustomTypes: availableCustomTypesReducer,
-    selectedCustomType: selectedCustomTypeReducer,
     slices: slicesReducer,
-    selectedSlice: selectedSliceReducer,
     router: routerReducer,
     pushChanges: pushChangesReducer,
   });

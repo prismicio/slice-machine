@@ -20,11 +20,14 @@ export const OfflinePage = () => {
             lineHeight: "32px",
             mb: "8px",
             mt: "2px",
+            textAlign: "center",
           }}
         >
           No internet connection
         </Text>
-        <Text sx={{ fontSize: "13px", lineHeight: "24px" }}>
+        <Text
+          sx={{ fontSize: "13px", lineHeight: "24px", textAlign: "center" }}
+        >
           You need a stable internet connection to review and push changes
         </Text>
       </Flex>

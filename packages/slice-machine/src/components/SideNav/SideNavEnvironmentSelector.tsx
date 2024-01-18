@@ -105,11 +105,20 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
 
 type EnvironmentDropdownMenuProps = Pick<
   SideNavEnvironmentSelectorProps,
-  "environments" | "activeEnvironment" | "onSelect"
->;
+  "activeEnvironment" | "onSelect"
+> & {
+  environments: Environment[];
+};
 
 const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
-  const { environments = [], activeEnvironment, onSelect } = props;
+  const { environments, activeEnvironment, onSelect } = props;
+
+  const nonPersonalEnvironments = environments.filter(
+    (environment) => environment.kind !== "dev",
+  );
+  const personalEnvironment = environments.find(
+    (environment) => environment.kind === "dev",
+  );
 
   return (
     <DropdownMenu modal>
@@ -117,30 +126,31 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
         <IconButton icon="unfoldMore" hiddenLabel="Select environment" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" minWidth={256}>
-        {/*
-          TODO: Add this line when Dev envs are supported
+        {personalEnvironment ? (
           <DropdownMenuLabel>Regular Environments</DropdownMenuLabel>
-        */}
-        {environments.map((environment) =>
-          environment.kind !== "dev" ? (
+        ) : undefined}
+        {nonPersonalEnvironments.map((environment) => (
+          <EnvironmentDropdownMenuItem
+            key={environment.domain}
+            environment={environment}
+            onSelect={onSelect}
+            isActive={environment.domain === activeEnvironment?.domain}
+          />
+        ))}
+
+        {personalEnvironment ? (
+          <>
+            <DropdownMenuLabel>Personal Environment</DropdownMenuLabel>
             <EnvironmentDropdownMenuItem
-              key={environment.domain}
-              environment={environment}
+              key={personalEnvironment.domain}
+              environment={personalEnvironment}
               onSelect={onSelect}
-              isActive={environment.domain === activeEnvironment?.domain}
+              isActive={
+                personalEnvironment.domain === activeEnvironment?.domain
+              }
             />
-          ) : (
-            <>
-              <DropdownMenuLabel>Personal Environment</DropdownMenuLabel>
-              <EnvironmentDropdownMenuItem
-                key={environment.domain}
-                environment={environment}
-                onSelect={onSelect}
-                isActive={environment.domain === activeEnvironment?.domain}
-              />
-            </>
-          ),
-        )}
+          </>
+        ) : undefined}
       </DropdownMenuContent>
     </DropdownMenu>
   );

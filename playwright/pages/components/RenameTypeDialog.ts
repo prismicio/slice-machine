@@ -35,12 +35,15 @@ export class RenameTypeDialog extends Dialog {
   /**
    * Actions
    */
-  async renameType(newName: string) {
+  async renameType(newName: string, from: "table" | "builder" = "table") {
     await expect(this.title).toBeVisible();
     await this.nameInput.fill(newName);
     await this.submitButton.click();
-    await this.checkRenamedMessage();
     await expect(this.title).not.toBeVisible();
+
+    if (from === "table") {
+      await this.checkRenamedMessage();
+    }
   }
 
   /**

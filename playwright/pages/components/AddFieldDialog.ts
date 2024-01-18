@@ -1,7 +1,23 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { FieldType } from "../shared/BuilderPage";
 import { Dialog } from "./Dialog";
+
+export type FieldTypeLabel =
+  | "Rich Text"
+  | "Image"
+  | "Link"
+  | "Link to media"
+  | "Content Relationship"
+  | "Select"
+  | "Boolean"
+  | "Date"
+  | "Timestamp"
+  | "Embed"
+  | "Number"
+  | "GeoPoint"
+  | "Color"
+  | "Key Text"
+  | "Group";
 
 export class AddFieldDialog extends Dialog {
   constructor(page: Page) {
@@ -23,7 +39,7 @@ export class AddFieldDialog extends Dialog {
   /**
    * Dynamic locators
    */
-  getField(fieldType: FieldType): Locator {
+  getField(fieldType: FieldTypeLabel): Locator {
     return this.dialog.getByRole("heading", {
       name: fieldType,
       exact: true,
@@ -33,7 +49,7 @@ export class AddFieldDialog extends Dialog {
   /**
    * Actions
    */
-  async selectField(fieldType: FieldType) {
+  async selectField(fieldType: FieldTypeLabel) {
     await this.getField(fieldType).click();
     await expect(this.title).not.toBeVisible();
   }

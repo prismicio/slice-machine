@@ -6,8 +6,8 @@ import { InputBox } from "../components/InputBox";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FormikErrors } from "formik";
-import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 
+import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
@@ -19,6 +19,7 @@ interface RenameCustomTypeModalProps {
   customType: CustomType;
   format: CustomTypeFormat;
   onClose: () => void;
+  setLocalCustomType?: (customType: CustomType) => void;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
@@ -26,18 +27,21 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   customType,
   format,
   onClose,
+  setLocalCustomType,
 }) => {
   const customTypeName = customType?.label ?? "";
   const customTypeId = customType?.id ?? "";
-  const { renameAvailableCustomTypeSuccess, renameSelectedCustomType } =
-    useSliceMachineActions();
+  const { renameAvailableCustomTypeSuccess } = useSliceMachineActions();
 
   const [isRenaming, setIsRenaming] = useState(false);
 
   const handleOnSubmit = async (values: { customTypeName: string }) => {
     setIsRenaming(true);
-    if (isChangesLocal) {
-      renameSelectedCustomType(values.customTypeName);
+    if (isChangesLocal && setLocalCustomType) {
+      setLocalCustomType({
+        ...customType,
+        label: values.customTypeName,
+      });
     } else {
       await renameCustomType({
         model: customType,

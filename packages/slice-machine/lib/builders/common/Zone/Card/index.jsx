@@ -86,6 +86,8 @@ const FieldZone = ({
                   draggableId: `list-item-${item.key}`,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   isRepeatableCustomType,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+                  dataCy: `list-item-${item.key}`,
                 };
 
                 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
