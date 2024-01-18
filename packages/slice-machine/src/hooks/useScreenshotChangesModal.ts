@@ -6,6 +6,7 @@ import { SliceVariationSelector } from "@components/ScreenshotChangesModal";
 type ModalPayload = {
   sliceFilterFn: (s: ComponentUI[]) => ComponentUI[];
   defaultVariationSelector?: SliceVariationSelector;
+  onUploadSuccess?: (newSlice: ComponentUI) => void;
 };
 
 type Payload = {

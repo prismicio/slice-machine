@@ -12,7 +12,6 @@ import { simulatorReducer } from "@src/modules/simulator";
 import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
 import { slicesReducer } from "@src/modules/slices";
 import { routerReducer } from "connected-next-router";
-import { selectedSliceReducer } from "@src/modules/selectedSlice/reducer";
 import { pushChangesReducer } from "@src/modules/pushChangesSaga";
 
 /** Creates the main reducer */
@@ -25,7 +24,6 @@ const createReducer = (): Reducer =>
     simulator: simulatorReducer,
     availableCustomTypes: availableCustomTypesReducer,
     slices: slicesReducer,
-    selectedSlice: selectedSliceReducer,
     router: routerReducer,
     pushChanges: pushChangesReducer,
   });

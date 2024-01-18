@@ -6,11 +6,11 @@ import { acceptedImagesTypes } from "@lib/consts";
 type HandleFileProp = {
   inputFile: React.RefObject<HTMLInputElement>;
   children?: React.ReactNode;
-  handleFile: (file: File | undefined, isDragActive: boolean) => void;
+  handleFile: (file: File | undefined, isDragActive: boolean) => Promise<void>;
   isDragActive: boolean;
 };
 type CustomScreenshotProps = {
-  onHandleFile: (file: File, isDragActive: boolean) => void;
+  onHandleFile: (file: File, isDragActive: boolean) => Promise<void>;
 };
 
 const FileInputRenderer: React.FC<HandleFileProp> = ({
@@ -43,7 +43,7 @@ const FileInputRenderer: React.FC<HandleFileProp> = ({
       style={{ display: "none" }}
       accept={acceptedImagesTypes.map((type) => `image/${type}`).join(",")}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-        handleFile(e.target.files?.[0], isDragActive);
+        void handleFile(e.target.files?.[0], isDragActive);
       }}
     />
   </>
@@ -63,9 +63,9 @@ export default function useCustomScreenshot({
   onHandleFile,
 }: CustomScreenshotProps): CustomScreenshotPayload {
   const inputFile = useRef<HTMLInputElement>(null);
-  const handleFile = (file: File | undefined, isDragActive: boolean) => {
+  const handleFile = async (file: File | undefined, isDragActive: boolean) => {
     if (file) {
-      onHandleFile(file, isDragActive);
+      await onHandleFile(file, isDragActive);
       if (inputFile?.current) {
         inputFile.current.value = "";
       }

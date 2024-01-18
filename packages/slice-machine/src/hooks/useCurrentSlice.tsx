@@ -1,18 +1,15 @@
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { VariationSM } from "@lib/models/common/Slice";
-import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { selectCurrentSlice } from "@src/modules/slices/selector";
 import { SliceMachineStoreType } from "@src/redux/type";
-
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 
 type UseCurrentSliceRet = { slice?: ComponentUI; variation?: VariationSM };
 
 const useCurrentSlice = (): UseCurrentSliceRet => {
   const router = useRouter();
-  const { initSliceStore } = useSliceMachineActions();
 
   const { slice } = useSelector((store: SliceMachineStoreType) => ({
     slice: selectCurrentSlice(
@@ -21,14 +18,6 @@ const useCurrentSlice = (): UseCurrentSliceRet => {
       router.query.sliceName as string,
     ),
   }));
-
-  useEffect(() => {
-    if (slice) {
-      initSliceStore(slice);
-    } else {
-      void router.replace("/");
-    }
-  }, [initSliceStore, slice, router]);
 
   if (!slice) {
     return {};
@@ -39,7 +28,6 @@ const useCurrentSlice = (): UseCurrentSliceRet => {
   );
 
   if (!variation) {
-    void router.replace("/");
     return {};
   }
 

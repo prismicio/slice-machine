@@ -1,15 +1,13 @@
 import {
-  Dispatch,
   ReactNode,
-  SetStateAction,
   createContext,
+  useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
-import { useIsFirstRender } from "@prismicio/editor-support/React";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { useStableCallback } from "@prismicio/editor-support/React";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
@@ -24,7 +22,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 type CustomTypeContext = {
   customType: CustomType;
   autoSaveStatus: AutoSaveStatus;
-  setCustomType: Dispatch<SetStateAction<CustomType>>;
+  setCustomType: (customType: CustomType) => void;
 };
 
 type CustomTypeProviderProps = {
@@ -39,34 +37,30 @@ const CustomTypeContextValue = createContext<CustomTypeContext | undefined>(
 export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const { children, initialCustomType } = props;
 
-  const isFirstRender = useIsFirstRender();
-  const [customType, setCustomType] = useState(initialCustomType);
+  const [customType, setCustomTypeState] = useState(initialCustomType);
   const format = getFormat(customType);
   const customTypeMessages = CUSTOM_TYPES_MESSAGES[format];
   const { autoSaveStatus, setNextSave } = useAutoSave({
     errorMessage: customTypeMessages.autoSaveFailed,
   });
   const { saveCustomTypeSuccess } = useSliceMachineActions();
+  const stableSaveCustomTypeSuccess = useStableCallback(saveCustomTypeSuccess);
 
-  useEffect(
-    () => {
-      // Prevent a save to be triggered on first render
-      if (!isFirstRender) {
-        setNextSave(async () => {
-          const { errors } = await updateCustomType(customType);
+  const setCustomType = useCallback(
+    (customType: CustomType) => {
+      setCustomTypeState(customType);
+      setNextSave(async () => {
+        const { errors } = await updateCustomType(customType);
 
-          if (errors.length > 0) {
-            throw errors;
-          }
+        if (errors.length > 0) {
+          throw errors;
+        }
 
-          // Update available custom types store with new custom type
-          saveCustomTypeSuccess(customType);
-        });
-      }
+        // Update available custom types store with new custom type
+        stableSaveCustomTypeSuccess(customType);
+      });
     },
-    // Prevent saveCustomTypeSuccess from triggering an infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customType, setNextSave],
+    [setNextSave, stableSaveCustomTypeSuccess],
   );
 
   const contextValue: CustomTypeContext = useMemo(
