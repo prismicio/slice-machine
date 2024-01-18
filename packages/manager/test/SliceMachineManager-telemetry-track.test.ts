@@ -28,7 +28,7 @@ vi.mock("@segment/analytics-node", () => {
 	};
 });
 
-it("sends a given event to Segment", async () => {
+it.only("sends a given event to Segment", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({

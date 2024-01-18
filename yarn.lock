@@ -8420,7 +8420,7 @@ __metadata:
     eslint-plugin-prettier: 5.0.1
     eslint-plugin-tsdoc: 0.2.17
     execa: ^7.1.1
-    express: 4.18.2
+    express: ^1.0.0
     file-type: ^18.2.1
     fp-ts: ^2.13.1
     get-port: ^6.1.2
@@ -14877,6 +14877,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"connect@npm:>= 0.5.0 < 1.0.0":
+  version: 0.5.10
+  resolution: "connect@npm:0.5.10"
+  dependencies:
+    qs: ">= 0.0.6"
+  checksum: 53c9fe4b4db07dfe4aad7835e44af43fa8d7f2543a4cbc59c27e44dfd78edfd468988eb9ef6f36c89b1dca4ac4560d81c7f537876653e0e6ddac1d6f5b523253
+  languageName: node
+  linkType: hard
+
 "connect@npm:^3.7.0":
   version: 3.7.0
   resolution: "connect@npm:3.7.0"
@@ -17958,7 +17967,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:4.18.2, express@npm:^4.17.3, express@npm:^4.18.2":
+"express@npm:^1.0.0":
+  version: 1.0.8
+  resolution: "express@npm:1.0.8"
+  dependencies:
+    connect: ">= 0.5.0 < 1.0.0"
+    qs: ">= 0.0.5"
+  bin:
+    express: ./bin/express
+  checksum: 419e150c47a019d262bad79d9ea81ee3a339a2711fe51f6bfd579ba9b6042b088e364625a4f83a38d5dd4093734a154dfbcfebe78803baf4f96f6f518a6cc383
+  languageName: node
+  linkType: hard
+
+"express@npm:^4.17.3, express@npm:^4.18.2":
   version: 4.18.2
   resolution: "express@npm:4.18.2"
   dependencies:
@@ -27958,7 +27979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.10.0, qs@npm:^6.11.0":
+"qs@npm:>= 0.0.5, qs@npm:>= 0.0.6, qs@npm:^6.10.0, qs@npm:^6.11.0":
   version: 6.11.2
   resolution: "qs@npm:6.11.2"
   dependencies:

@@ -42,6 +42,7 @@ it("retains existing cookies in the auth state file", async (ctx) => {
 
 	mockPrismicUserAPI(ctx);
 
+	await manager.user.logout();
 	await manager.user.login({
 		email: "name@example.com",
 		cookies: ["foo=bar"],

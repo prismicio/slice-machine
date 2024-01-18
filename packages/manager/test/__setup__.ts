@@ -4,12 +4,18 @@ import { createMockFactory, MockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
+import { createSliceMachineManager, SliceMachineManager } from "../src";
+import { createTestPlugin } from "./__testutils__/createTestPlugin";
+import { createTestProject } from "./__testutils__/createTestProject";
+import { APIFixture, createAPIFixture } from "./__testutils__/createAPIFixture";
 
 declare module "vitest" {
 	export interface TestContext {
 		mockPrismic: MockFactory;
 		msw: SetupServer;
 		sliceMachineUIDirectory: string;
+		manager: SliceMachineManager;
+		api: APIFixture;
 	}
 }
 
@@ -137,7 +143,7 @@ beforeAll(() => {
 });
 
 beforeEach(async (ctx) => {
-	ctx.mockPrismic = createMockFactory({ seed: ctx.meta.name });
+	ctx.mockPrismic = createMockFactory({ seed: ctx.task.name });
 	ctx.msw = mswServer;
 
 	ctx.msw.resetHandlers();
@@ -151,6 +157,43 @@ beforeEach(async (ctx) => {
 	ctx.sliceMachineUIDirectory = path.dirname(
 		MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH,
 	);
+
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+	await manager.plugins.initPlugins();
+
+	ctx.manager = manager;
+
+	const api = createAPIFixture({ manager, mswServer });
+	api.mockPrismicUser(
+		"./profile",
+		{
+			userId: "userId",
+			shortId: "shortId",
+			intercomHash: "intercomHash",
+			email: "email",
+			firstName: "firstName",
+			lastName: "lastName",
+		},
+		{ checkAuthentication: false },
+	);
+	api.mockPrismicAuthentication("./validate", undefined, {
+		checkAuthentication: false,
+	});
+	api.mockPrismicAuthentication("./refreshtoken", undefined, {
+		checkAuthentication: false,
+	});
+
+	ctx.api = api;
+
+	await manager.user.login({
+		email: `name@example.com`,
+		cookies: ["prismic-auth=token", "SESSION=session"],
+	});
 });
 
 afterAll(() => {

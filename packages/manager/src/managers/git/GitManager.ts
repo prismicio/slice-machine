@@ -22,7 +22,7 @@ type GitManagerFetchOwnersReturnType = Namespace[];
 type GitManagerFetchReposReturnType = GitRepo[];
 
 type GitManagerFetchReposArgs = {
-	platform: "gitHub";
+	provider: "gitHub";
 	owner: string;
 	query?: string;
 	page?: number;
@@ -109,14 +109,16 @@ export class GitManager extends BaseManager {
 
 		const json = await res.json();
 		const { value, error } = decode(
-			t.array(
-				t.type({
-					platform: t.literal("gitHub"),
-					id: t.string,
-					name: t.string,
-					type: t.union([t.literal("user"), t.literal("team"), t.null]),
-				}),
-			),
+			t.type({
+				owners: t.array(
+					t.type({
+						provider: t.literal("gitHub"),
+						id: t.string,
+						name: t.string,
+						type: t.union([t.literal("user"), t.literal("team"), t.null]),
+					}),
+				),
+			}),
 			json,
 		);
 
@@ -127,14 +129,14 @@ export class GitManager extends BaseManager {
 			);
 		}
 
-		return value;
+		return value.owners;
 	}
 
 	async fetchRepos(
 		args: GitManagerFetchReposArgs,
 	): Promise<GitManagerFetchReposReturnType> {
 		const url = new URL("./git/repos", API_ENDPOINTS.SliceMachineV1);
-		url.searchParams.set("platform", args.platform);
+		url.searchParams.set("provider", args.provider);
 		url.searchParams.set("owner", args.owner);
 		if (args.query) {
 			url.searchParams.set("q", args.query);
@@ -156,16 +158,18 @@ export class GitManager extends BaseManager {
 
 		const json = await res.json();
 		const { value, error } = decode(
-			t.array(
-				t.type({
-					platform: t.literal("gitHub"),
-					id: t.string,
-					owner: t.string,
-					name: t.string,
-					url: t.string,
-					pushedAt: tt.DateFromISOString,
-				}),
-			),
+			t.type({
+				repos: t.array(
+					t.type({
+						provider: t.literal("gitHub"),
+						id: t.string,
+						owner: t.string,
+						name: t.string,
+						url: t.string,
+						pushedAt: tt.DateFromISOString,
+					}),
+				),
+			}),
 			json,
 		);
 
@@ -176,7 +180,7 @@ export class GitManager extends BaseManager {
 			);
 		}
 
-		return value;
+		return value.repos;
 	}
 
 	async fetchLinkedRepos(
@@ -199,7 +203,7 @@ export class GitManager extends BaseManager {
 		const json = await res.json();
 		const { value, error } = decode(
 			t.type({
-				gitHubRepos: t.array(
+				repos: t.array(
 					t.type({
 						provider: t.literal("gitHub"),
 						owner: t.string,
@@ -217,14 +221,14 @@ export class GitManager extends BaseManager {
 			);
 		}
 
-		return value.gitHubRepos;
+		return value.repos;
 	}
 
 	async linkRepo(args: GitManagerLinkRepoArgs): Promise<void> {
 		const url = new URL("./git/linked-repos", API_ENDPOINTS.SliceMachineV1);
 		const res = await this.#fetch(url, {
 			method: "PUT",
-			body: JSON.stringify({
+			body: {
 				prismic: {
 					domain: args.prismic.domain,
 				},
@@ -233,7 +237,7 @@ export class GitManager extends BaseManager {
 					owner: args.git.owner,
 					name: args.git.name,
 				},
-			}),
+			},
 		});
 
 		if (!res.ok) {
@@ -250,7 +254,7 @@ export class GitManager extends BaseManager {
 		const url = new URL("./git/linked-repos", API_ENDPOINTS.SliceMachineV1);
 		const res = await this.#fetch(url, {
 			method: "DELETE",
-			body: JSON.stringify({
+			body: {
 				prismic: {
 					domain: args.prismic.domain,
 				},
@@ -259,7 +263,7 @@ export class GitManager extends BaseManager {
 					owner: args.git.owner,
 					name: args.git.name,
 				},
-			}),
+			},
 		});
 
 		if (!res.ok) {
