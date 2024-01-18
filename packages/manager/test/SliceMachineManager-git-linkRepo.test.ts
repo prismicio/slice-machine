@@ -4,6 +4,7 @@ import { UnauthenticatedError, UnauthorizedError } from "../src";
 it("links a Git repository to a Prismic repository", async ({
 	manager,
 	api,
+	login,
 }) => {
 	api.mockSliceMachineV1("./git/linked-repos", undefined, {
 		method: "put",
@@ -13,6 +14,7 @@ it("links a Git repository to a Prismic repository", async ({
 		},
 	});
 
+	await login();
 	await expect(
 		manager.git.linkRepo({
 			prismic: { domain: "domain" },
@@ -24,12 +26,14 @@ it("links a Git repository to a Prismic repository", async ({
 it("throws UnauthorizedError if the API returns 403", async ({
 	manager,
 	api,
+	login,
 }) => {
 	api.mockSliceMachineV1("./git/linked-repos", undefined, {
 		method: "put",
 		statusCode: 403,
 	});
 
+	await login();
 	await expect(() =>
 		manager.git.linkRepo({
 			prismic: { domain: "domain" },

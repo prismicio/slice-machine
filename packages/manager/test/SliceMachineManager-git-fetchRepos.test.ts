@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import { UnauthenticatedError, UnauthorizedError } from "../src";
 
-it("returns a list of repos for an owner", async ({ manager, api }) => {
+it("returns a list of repos for an owner", async ({ manager, api, login }) => {
 	const repos = [
 		{
 			provider: "gitHub",
@@ -19,6 +19,7 @@ it("returns a list of repos for an owner", async ({ manager, api }) => {
 		{ searchParams: { provider: "gitHub", owner: "owner" } },
 	);
 
+	await login();
 	const res = await manager.git.fetchRepos({
 		provider: "gitHub",
 		owner: "owner",
@@ -30,9 +31,11 @@ it("returns a list of repos for an owner", async ({ manager, api }) => {
 it("throws UnauthorizedError if the API returns 403", async ({
 	manager,
 	api,
+	login,
 }) => {
 	api.mockSliceMachineV1("./git/repos", undefined, { statusCode: 403 });
 
+	await login();
 	await expect(() =>
 		manager.git.fetchRepos({
 			provider: "gitHub",

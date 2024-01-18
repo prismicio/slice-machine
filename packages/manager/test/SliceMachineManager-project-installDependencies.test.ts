@@ -6,18 +6,6 @@ import { watchStd } from "./__testutils__/watchStd";
 
 import { createSliceMachineManager } from "../src";
 
-vi.mock("execa", async () => {
-	const execa: typeof import("execa") = await vi.importActual("execa");
-
-	return {
-		...execa,
-		execaCommand: ((command: string, options: Record<string, unknown>) => {
-			// Replace command with simple `echo`
-			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
-		}) as typeof execa.execaCommand,
-	};
-});
-
 it("installs dependencies", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });

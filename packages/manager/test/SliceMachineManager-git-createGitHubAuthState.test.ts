@@ -2,7 +2,7 @@ import { expect, it } from "vitest";
 
 import { UnauthenticatedError, UnauthorizedError } from "../src";
 
-it("returns a GitHub auth state token", async ({ manager, api }) => {
+it("returns a GitHub auth state token", async ({ manager, api, login }) => {
 	const key = "foo";
 	const expiresAt = new Date();
 
@@ -12,6 +12,7 @@ it("returns a GitHub auth state token", async ({ manager, api }) => {
 		{ checkAuthentication: true },
 	);
 
+	await login();
 	const res = await manager.git.createGitHubAuthState();
 
 	expect(res).toStrictEqual({ key, expiresAt });
@@ -20,11 +21,13 @@ it("returns a GitHub auth state token", async ({ manager, api }) => {
 it("throws UnauthorizedError if the API returns 401", async ({
 	manager,
 	api,
+	login,
 }) => {
 	api.mockSliceMachineV1("./git/github/create-auth-state", undefined, {
 		statusCode: 401,
 	});
 
+	await login();
 	await expect(() => manager.git.createGitHubAuthState()).rejects.toThrow(
 		UnauthorizedError,
 	);

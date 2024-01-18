@@ -16,6 +16,7 @@ declare module "vitest" {
 		sliceMachineUIDirectory: string;
 		manager: SliceMachineManager;
 		api: APIFixture;
+		login: () => Promise<void>;
 	}
 }
 
@@ -136,6 +137,53 @@ vi.mock("module", async () => {
 	} as typeof actual;
 });
 
+vi.mock("@segment/analytics-node", async () => {
+	const { Analytics }: typeof import("@segment/analytics-node") =
+		await vi.importActual("@segment/analytics-node");
+
+	Analytics.prototype.track = vi.fn(
+		(_message: unknown, callback?: (error?: unknown) => void) => {
+			if (callback) {
+				callback();
+			}
+		},
+	);
+
+	Analytics.prototype.identify = vi.fn(
+		(_message: unknown, callback?: (error?: unknown) => void) => {
+			if (callback) {
+				callback();
+			}
+		},
+	);
+
+	Analytics.prototype.group = vi.fn(
+		(_message: unknown, callback?: (error?: unknown) => void) => {
+			if (callback) {
+				callback();
+			}
+		},
+	);
+
+	Analytics.prototype.on = vi.fn();
+
+	return {
+		Analytics,
+	};
+});
+
+vi.mock("execa", async () => {
+	const execa: typeof import("execa") = await vi.importActual("execa");
+
+	return {
+		...execa,
+		execaCommand: ((command: string, options: Record<string, unknown>) => {
+			// Replace command with simple `echo`
+			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
+		}) as typeof execa.execaCommand,
+	};
+});
+
 const mswServer = setupServer();
 
 beforeAll(() => {
@@ -167,6 +215,12 @@ beforeEach(async (ctx) => {
 	await manager.plugins.initPlugins();
 
 	ctx.manager = manager;
+	ctx.login = async () => {
+		await manager.user.login({
+			email: `name@example.com`,
+			cookies: ["prismic-auth=token", "SESSION=session"],
+		});
+	};
 
 	const api = createAPIFixture({ manager, mswServer });
 	api.mockPrismicUser(
@@ -189,11 +243,6 @@ beforeEach(async (ctx) => {
 	});
 
 	ctx.api = api;
-
-	await manager.user.login({
-		email: `name@example.com`,
-		cookies: ["prismic-auth=token", "SESSION=session"],
-	});
 });
 
 afterAll(() => {
