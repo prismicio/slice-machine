@@ -22,21 +22,23 @@ export const AuthErrorPage: FC<AuthErrorPageProps> = (props) => {
     >
       {authStatus === AuthStatus.FORBIDDEN ? (
         <>
-          <Text variant="h3">It seems like you are logged out</Text>
-          <Text>Log in to connect to your repository.</Text>
+          <Text variant="h3" align="center">
+            It seems like you are logged out
+          </Text>
+          <Text align="center">Log in to connect to your repository.</Text>
         </>
       ) : (
         <>
-          <Text variant="h3">
+          <Text variant="h3" align="center">
             It seems like you don't have access to this repository
           </Text>
-          <Text>
+          <Text align="center">
             Check that the repository name is correct, then contact your
             repository administrator.
           </Text>
         </>
       )}
-      <Text>
+      <Text align="center">
         If that doesn't work, it's possible that Slice Machine is having trouble
         accessing Prismic's servers.{" "}
         <TextLink href="https://community.prismic.io/">
