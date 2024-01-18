@@ -110,7 +110,7 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
-		"express": "^1.0.0",
+		"express": "4.0.0",
 		"hook-std": "3.0.0",
 		"memfs": "3.4.13",
 		"msw": "1.1.0",
