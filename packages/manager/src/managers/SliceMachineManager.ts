@@ -10,7 +10,6 @@ import {
 } from "@slicemachine/plugin-kit";
 
 import { createContentDigest } from "../lib/createContentDigest";
-import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
 
 import { PackageManager, SliceMachineConfig } from "../types";
 import {
@@ -21,20 +20,25 @@ import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
 import { API_ENDPOINTS, APIEndpoints } from "../constants/API_ENDPOINTS";
 
-import { CustomTypesManager } from "./customTypes/CustomTypesManager";
-import { DocumentationManager } from "./documentation/DocumentationManager";
-import { GitManager } from "./git/GitManager";
-import { PluginsManager } from "./plugins/PluginsManager";
+import { UserManager } from "./user/UserManager";
 import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
+
+import { PluginsManager } from "./plugins/PluginsManager";
+
 import { ProjectManager } from "./project/ProjectManager";
-import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
-import { SimulatorManager } from "./simulator/SimulatorManager";
-import { SliceTemplateLibraryManager } from "./sliceTemplateLibrary/SliceTemplateLibraryManager";
+import { CustomTypesManager } from "./customTypes/CustomTypesManager";
 import { SlicesManager } from "./slices/SlicesManager";
 import { SnippetsManager } from "./snippets/SnippetsManager";
-import { TelemetryManager } from "./telemetry/TelemetryManager";
-import { UserManager } from "./user/UserManager";
+import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
+import { SimulatorManager } from "./simulator/SimulatorManager";
+
 import { VersionsManager } from "./versions/VersionsManager";
+
+import { TelemetryManager } from "./telemetry/TelemetryManager";
+import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
+import { DocumentationManager } from "./documentation/DocumentationManager";
+import { SliceTemplateLibraryManager } from "./sliceTemplateLibrary/SliceTemplateLibraryManager";
+import { GitManager } from "./git/GitManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -101,19 +105,19 @@ export class SliceMachineManager {
 	cwd: string;
 
 	customTypes: CustomTypesManager;
-	documentation: DocumentationManager;
-	git: GitManager;
 	plugins: PluginsManager;
 	prismicRepository: PrismicRepositoryManager;
 	project: ProjectManager;
 	screenshots: ScreenshotsManager;
 	simulator: SimulatorManager;
-	sliceTemplateLibrary: SliceTemplateLibraryManager;
 	slices: SlicesManager;
 	snippets: SnippetsManager;
+	documentation: DocumentationManager;
+	sliceTemplateLibrary: SliceTemplateLibraryManager;
 	telemetry: TelemetryManager;
 	user: UserManager;
 	versions: VersionsManager;
+	git: GitManager;
 
 	constructor(args?: SliceMachineManagerConstructorArgs) {
 		// _prismicAuthManager must be set at least before UserManager
@@ -121,22 +125,27 @@ export class SliceMachineManager {
 		// authentication-related methods.
 		this._prismicAuthManager = createPrismicAuthManager();
 
-		this.customTypes = new CustomTypesManager(this);
-		this.documentation = new DocumentationManager(this);
-		this.git = new GitManager(this);
+		this.user = new UserManager(this);
+		this.prismicRepository = new PrismicRepositoryManager(this);
+
 		this.plugins = new PluginsManager(this, {
 			nativePlugins: args?.nativePlugins,
 		});
-		this.prismicRepository = new PrismicRepositoryManager(this);
+
 		this.project = new ProjectManager(this);
-		this.screenshots = new ScreenshotsManager(this);
-		this.simulator = new SimulatorManager(this);
-		this.sliceTemplateLibrary = new SliceTemplateLibraryManager(this);
+		this.customTypes = new CustomTypesManager(this);
 		this.slices = new SlicesManager(this);
 		this.snippets = new SnippetsManager(this);
-		this.telemetry = new TelemetryManager(this);
-		this.user = new UserManager(this);
+		this.screenshots = new ScreenshotsManager(this);
+		this.simulator = new SimulatorManager(this);
+		this.documentation = new DocumentationManager(this);
+		this.sliceTemplateLibrary = new SliceTemplateLibraryManager(this);
+
 		this.versions = new VersionsManager(this);
+
+		this.telemetry = new TelemetryManager(this);
+
+		this.git = new GitManager(this);
 
 		this.cwd = args?.cwd ?? process.cwd();
 	}
