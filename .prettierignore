@@ -1,6 +1,7 @@
 # Ignore artifacts:
 .github/
 /.yarn
+/packages/*/src/**/*.module.css.d.ts
 /packages/*/storybook-static
 /.pnp.*
 packages/slice-machine/.next
