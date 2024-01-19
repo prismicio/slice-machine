@@ -98,12 +98,12 @@ export const useAutoSave = (
     if (autoSaveStatusActual === "saving") {
       setAutoSaveStatusDelayed("saving");
     } else {
-      const debounceTimeout = setTimeout(() => {
+      const delayedTimeout = setTimeout(() => {
         setAutoSaveStatusDelayed(autoSaveStatusActual);
       }, autoSaveStatusDelay);
 
       return () => {
-        clearTimeout(debounceTimeout);
+        clearTimeout(delayedTimeout);
       };
     }
 
