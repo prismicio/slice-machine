@@ -88,15 +88,25 @@ jobs:
         run: yarn workspace ${{ matrix.package }} depcheck
 
       - name: Audit dependencies
+        if: matrix.package != '@slicemachine/e2e'
         run: yarn workspace ${{ matrix.package }} audit
 
       - name: Lint
         run: yarn workspace ${{ matrix.package }} lint
 
+      - name: Stylelint
+        if: matrix.package == 'slice-machine-ui'
+        run: yarn workspace ${{ matrix.package }} stylelint
+
+      - name: Generate TypeScript definition files from CSS Modules
+        if: matrix.package == 'slice-machine-ui'
+        run: yarn workspace ${{ matrix.package }} typed-css-modules
+
       - name: Types
         run: yarn workspace ${{ matrix.package }} types
 
       - name: Unit
+        if: matrix.package != '@slicemachine/e2e'
         run: yarn workspace ${{ matrix.package }} unit
         env:
           EMAIL: ${{ secrets.EMAIL }}
@@ -125,7 +135,7 @@ jobs:
           - "@slicemachine/adapter-nuxt"
           - "@slicemachine/adapter-nuxt2"
           - "@slicemachine/adapter-sveltekit"
-          - "@slicemachine/e2e"
+          # - "@slicemachine/e2e" # Commented as there are no unit tests for `@slicemachine/e2e`.
 
     steps:
       - name: Checkout
