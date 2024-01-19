@@ -141,17 +141,29 @@ const Navigation: FC = () => {
       )}
 
       <SideNavList position="bottom">
-        <SideNavLink
-          title="Invite team"
-          href={`${repositoryUrl}/settings/users`}
-          Icon={(props) => <MathPlusIcon {...props} />}
-          onClick={() => {
-            void telemetry.track({
-              event: "users-invite-button-clicked",
-            });
-          }}
-          target="_blank"
-        />
+        <SideNavListItem>
+          <SideNavLink
+            title="Settings"
+            href="/settings"
+            Icon={(props) => <MathPlusIcon {...props} />}
+            active={router.asPath.startsWith("/settings")}
+            component={Link}
+          />
+        </SideNavListItem>
+
+        <SideNavListItem>
+          <SideNavLink
+            title="Invite team"
+            href={`${repositoryUrl}/settings/users`}
+            Icon={(props) => <MathPlusIcon {...props} />}
+            onClick={() => {
+              void telemetry.track({
+                event: "users-invite-button-clicked",
+              });
+            }}
+            target="_blank"
+          />
+        </SideNavListItem>
 
         <ErrorBoundary>
           <Suspense>

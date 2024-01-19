@@ -9,7 +9,7 @@ it("returns a GitHub auth state token", async ({ manager, api, login }) => {
 	api.mockSliceMachineV1(
 		"./git/github/create-auth-state",
 		{ key, expiresAt: expiresAt.toISOString() },
-		{ checkAuthentication: true },
+		{ method: "post", checkAuthentication: true },
 	);
 
 	await login();
@@ -24,6 +24,7 @@ it("throws UnauthorizedError if the API returns 401", async ({
 	login,
 }) => {
 	api.mockSliceMachineV1("./git/github/create-auth-state", undefined, {
+		method: "post",
 		statusCode: 401,
 	});
 
