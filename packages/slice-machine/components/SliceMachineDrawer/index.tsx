@@ -1,7 +1,6 @@
 import React from "react";
 import Drawer from "rc-drawer";
 import { Close, Flex, Heading } from "theme-ui";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Card from "@components/Card";
 
 export const SliceMachineDrawerUI: React.FunctionComponent<{
@@ -9,15 +8,14 @@ export const SliceMachineDrawerUI: React.FunctionComponent<{
   title: string;
   footer: React.ReactNode;
   explanations: React.ReactNode;
-}> = ({ isOpen, title, footer, explanations }) => {
-  const { closeModals } = useSliceMachineActions();
-
+  onClose: () => void;
+}> = ({ isOpen, title, footer, explanations, onClose }) => {
   return (
     <Drawer
       placement="right"
       open={isOpen}
       level={null}
-      onClose={closeModals}
+      onClose={onClose}
       width={496}
     >
       <Card
@@ -54,7 +52,7 @@ export const SliceMachineDrawerUI: React.FunctionComponent<{
                 {title}
               </Heading>
             </Flex>
-            <Close type="button" onClick={() => closeModals()} />
+            <Close type="button" onClick={() => onClose()} />
           </Flex>
         )}
         Footer={() => (

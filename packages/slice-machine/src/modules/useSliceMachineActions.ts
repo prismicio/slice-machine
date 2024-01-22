@@ -10,6 +10,7 @@ import {
   hasSeenTutorialsToolTipCreator,
   hasSeenSimulatorToolTipCreator,
   hasSeenChangesToolTipCreator,
+  changesPushSuccessCreator,
 } from "./userContext";
 import { getChangelogCreator, refreshStateCreator } from "./environment";
 import {
@@ -35,7 +36,6 @@ import { GenericToastTypes, openToasterCreator } from "./toaster";
 import { CustomTypes } from "@lib/models/common/CustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { ComponentUI, ScreenshotUI } from "../../lib/models/common/ComponentUI";
-import { ChangesPushSagaPayload, changesPushCreator } from "./pushChangesSaga";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { CustomTypeFormat } from "@slicemachine/manager";
@@ -70,18 +70,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
   const openDeleteSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
-  const openDeleteDocumentsDrawer = () =>
-    dispatch(
-      modalOpenCreator({
-        modalKey: ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
-      }),
-    );
-  const openDeleteDocumentsDrawerOverLimit = () =>
-    dispatch(
-      modalOpenCreator({
-        modalKey: ModalKeysEnum.HARD_DELETE_DOCUMENTS_DRAWER,
-      }),
-    );
   const openSimulatorSetupModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
@@ -203,8 +191,7 @@ const useSliceMachineActions = () => {
       }),
     );
 
-  const pushChanges = (payload: ChangesPushSagaPayload) =>
-    dispatch(changesPushCreator.request(payload));
+  const pushChangesSuccess = () => dispatch(changesPushSuccessCreator());
 
   // Toaster store
   const openToaster = (
@@ -238,8 +225,6 @@ const useSliceMachineActions = () => {
     checkSimulatorSetup,
     connectToSimulatorFailure,
     connectToSimulatorSuccess,
-    openDeleteDocumentsDrawer,
-    openDeleteDocumentsDrawerOverLimit,
     connectToSimulatorIframe,
     refreshState,
     openScreenshotsModal,
@@ -270,9 +255,9 @@ const useSliceMachineActions = () => {
     openRenameSliceModal,
     closeModals,
     openToaster,
-    pushChanges,
     saveSliceMock,
     getChangelog,
+    pushChangesSuccess,
   };
 };
 

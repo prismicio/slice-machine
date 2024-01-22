@@ -90,6 +90,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
               tabIndex={0}
               className="disabled"
               data-cy={`custom-type-${customType.remote.id}`}
+              key={customType.remote.id}
             >
               <CustomTypeChangeRow
                 ct={customType.remote}

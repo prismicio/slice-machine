@@ -1,9 +1,8 @@
 import { Button } from "@prismicio/editor-ui";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import Head from "next/head";
 import { BaseStyles } from "theme-ui";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "../src/redux/type";
 import {
   AppLayout,
   AppLayoutActions,
@@ -18,19 +17,19 @@ import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
 
 import { AuthStatus } from "@src/modules/userContext/types";
 import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   SoftDeleteDocumentsDrawer,
   HardDeleteDocumentsDrawer,
-  ReferencesErrorDrawer,
 } from "@components/DeleteDocumentsDrawer";
 import { hasLocal } from "@lib/models/common/ModelData";
 import {
   ChangedCustomType,
   ChangedSlice,
 } from "@lib/models/common/ModelStatus";
+import { Limit } from "@slicemachine/manager";
+import { pushChanges } from "@src/features/changes/actions/pushChanges";
+import { getState } from "@src/apiClient";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -59,28 +58,57 @@ const Changes: React.FunctionComponent = () => {
     return { changedSlices, changedCustomTypes };
   }, [unSyncedSlices, unSyncedCustomTypes, modelsStatuses]);
 
-  const { pushChanges, closeModals } = useSliceMachineActions();
-
-  const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
-    isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
-  }));
-
-  useEffect(() => {
-    return () => {
-      closeModals();
-    };
-    // Do not remote the eslint disable, fixing the eslint warning creates a bug that prevent from opening all modals
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { pushChangesSuccess, refreshState } = useSliceMachineActions();
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [openModalData, setOpenModalData] = useState<Limit | undefined>(
+    undefined,
+  );
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
-  const onPush = (confirmDeleteDocuments: boolean) =>
-    pushChanges({
-      confirmDeleteDocuments: confirmDeleteDocuments,
-      changedSlices,
-      changedCustomTypes,
-    });
+  const onPush = async (confirmDeleteDocuments: boolean) => {
+    try {
+      setIsSyncing(true);
+      setOpenModalData(undefined);
+
+      const limit = await pushChanges({
+        confirmDeleteDocuments,
+        changedSlices,
+        changedCustomTypes,
+      });
+
+      if (limit !== undefined) {
+        setOpenModalData(limit);
+      } else {
+        // TODO(DT-1737): Remove the use of global getState
+        const serverState = await getState();
+        refreshState({
+          env: serverState.env,
+          remoteCustomTypes: serverState.remoteCustomTypes,
+          customTypes: serverState.customTypes,
+          libraries: serverState.libraries,
+          remoteSlices: serverState.remoteSlices,
+          clientError: serverState.clientError,
+        });
+
+        // Update last sync value in local storage
+        pushChangesSuccess();
+
+        toast.success("All slices and types have been pushed");
+      }
+    } catch (error) {
+      console.error(
+        "Something went wrong when manually pushing your changes",
+        error,
+      );
+
+      toast.error(
+        "Something went wrong when pushing your changes. Check your terminal logs.",
+      );
+    }
+
+    setIsSyncing(false);
+  };
 
   const PageContent = useMemo(() => {
     if (!isOnline) {
@@ -123,7 +151,7 @@ const Changes: React.FunctionComponent = () => {
           <AppLayoutBreadcrumb folder="Changes" />
           <AppLayoutActions>
             <Button
-              onClick={() => onPush(false)} // not deleting documents by default
+              onClick={() => void onPush(false)} // not deleting documents by default
               loading={isSyncing}
               disabled={
                 numberOfChanges === 0 ||
@@ -141,9 +169,20 @@ const Changes: React.FunctionComponent = () => {
         <AppLayoutContent>
           <BaseStyles sx={{ display: "flex", flexDirection: "column" }}>
             {PageContent}
-            <SoftDeleteDocumentsDrawer pushChanges={onPush} />
-            <HardDeleteDocumentsDrawer pushChanges={onPush} />
-            <ReferencesErrorDrawer pushChanges={onPush} />
+            <SoftDeleteDocumentsDrawer
+              pushChanges={(confirmDeleteDocuments) =>
+                void onPush(confirmDeleteDocuments)
+              }
+              modalData={openModalData}
+              onClose={() => setOpenModalData(undefined)}
+            />
+            <HardDeleteDocumentsDrawer
+              pushChanges={(confirmDeleteDocuments) =>
+                void onPush(confirmDeleteDocuments)
+              }
+              modalData={openModalData}
+              onClose={() => setOpenModalData(undefined)}
+            />
           </BaseStyles>
         </AppLayoutContent>
       </AppLayout>
