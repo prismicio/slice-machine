@@ -10,14 +10,14 @@ import { UnauthorizedError, UnexpectedDataError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
-import { GitRepo, GitRepoSpcifier, Namespace } from "./types";
+import { GitRepo, GitRepoSpcifier, Owner } from "./types";
 
 type CreateGitHubAuthStateReturnType = {
 	key: string;
 	expiresAt: Date;
 };
 
-type GitManagerFetchOwnersReturnType = Namespace[];
+type GitManagerFetchOwnersReturnType = Owner[];
 
 type GitManagerFetchReposReturnType = GitRepo[];
 
