@@ -6,18 +6,23 @@ import { decode } from "../../lib/decode";
 
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 
-import { UnauthorizedError, UnexpectedDataError } from "../../errors";
+import {
+	UnauthenticatedError,
+	UnauthorizedError,
+	UnexpectedDataError,
+} from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
-import { GitRepo, GitRepoSpcifier, Namespace } from "./types";
+import { GitRepo, GitRepoSpecifier, Owner } from "./types";
+import { buildGitRepoSpecifier } from "./buildGitRepoSpecifier";
 
 type CreateGitHubAuthStateReturnType = {
 	key: string;
 	expiresAt: Date;
 };
 
-type GitManagerFetchOwnersReturnType = Namespace[];
+type GitManagerFetchOwnersReturnType = Owner[];
 
 type GitManagerFetchReposReturnType = GitRepo[];
 
@@ -34,7 +39,7 @@ type GitManagerFetchLinkedReposArgs = {
 	};
 };
 
-type GitManagerFetchLinkedReposReturnType = GitRepoSpcifier[];
+type GitManagerFetchLinkedReposReturnType = GitRepoSpecifier[];
 
 type GitManagerLinkRepoArgs = {
 	prismic: {
@@ -48,6 +53,40 @@ type GitManagerLinkRepoArgs = {
 };
 
 type GitManagerUnlinkRepoArgs = {
+	prismic: {
+		domain: string;
+	};
+	git: {
+		provider: "gitHub";
+		owner: string;
+		name: string;
+	};
+};
+
+type CheckHasWriteAPITokenArgs = {
+	prismic: {
+		domain: string;
+	};
+	git: {
+		provider: "gitHub";
+		owner: string;
+		name: string;
+	};
+};
+
+type UpdateWriteAPITokenArgs = {
+	prismic: {
+		domain: string;
+	};
+	git: {
+		provider: "gitHub";
+		owner: string;
+		name: string;
+	};
+	token: string;
+};
+
+type DeleteWriteAPITokenArgs = {
 	prismic: {
 		domain: string;
 	};
@@ -272,6 +311,117 @@ export class GitManager extends BaseManager {
 					throw new UnauthorizedError();
 				default:
 					throw new Error("Failed to ulink repos.");
+			}
+		}
+	}
+
+	async checkHasWriteAPIToken(
+		args: CheckHasWriteAPITokenArgs,
+	): Promise<boolean> {
+		const url = new URL(
+			"./git/linked-repos/write-api-token",
+			API_ENDPOINTS.SliceMachineV1,
+		);
+		url.searchParams.set("repository", args.prismic.domain);
+		url.searchParams.set(
+			"git",
+			buildGitRepoSpecifier({
+				provider: args.git.provider,
+				owner: args.git.owner,
+				name: args.git.name,
+			}),
+		);
+
+		const res = await this.#fetch(url);
+
+		if (!res.ok) {
+			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
+				case 403:
+					throw new UnauthorizedError();
+				default:
+					throw new Error("Failed to check Prismic Write API token.");
+			}
+		}
+
+		const json = await res.json();
+		const { value, error } = decode(
+			t.type({
+				hasWriteAPIToken: t.boolean,
+			}),
+			json,
+		);
+
+		if (error) {
+			throw new UnexpectedDataError(
+				`Failed to decode: ${error.errors.join(", ")}`,
+				{ cause: error },
+			);
+		}
+
+		return value.hasWriteAPIToken;
+	}
+
+	async updateWriteAPIToken(args: UpdateWriteAPITokenArgs): Promise<void> {
+		const url = new URL(
+			"./git/linked-repos/write-api-token",
+			API_ENDPOINTS.SliceMachineV1,
+		);
+		const res = await this.#fetch(url, {
+			method: "PUT",
+			body: {
+				prismic: {
+					domain: args.prismic.domain,
+				},
+				git: {
+					provider: args.git.provider,
+					owner: args.git.owner,
+					name: args.git.name,
+				},
+				token: args.token,
+			},
+		});
+
+		if (!res.ok) {
+			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
+				case 403:
+					throw new UnauthorizedError();
+				default:
+					throw new Error("Failed to update Prismic Write API token.");
+			}
+		}
+	}
+
+	async deleteWriteAPIToken(args: DeleteWriteAPITokenArgs): Promise<void> {
+		const url = new URL(
+			"./git/linked-repos/write-api-token",
+			API_ENDPOINTS.SliceMachineV1,
+		);
+		const res = await this.#fetch(url, {
+			method: "DELETE",
+			body: {
+				prismic: {
+					domain: args.prismic.domain,
+				},
+				git: {
+					provider: args.git.provider,
+					owner: args.git.owner,
+					name: args.git.name,
+				},
+			},
+		});
+
+		if (!res.ok) {
+			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
+				case 403:
+					throw new UnauthorizedError();
+				default:
+					throw new Error("Failed to delete Prismic Write API token.");
 			}
 		}
 	}
