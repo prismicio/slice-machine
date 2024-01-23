@@ -9,11 +9,11 @@ import { isRemoteOnly } from "@lib/models/common/ModelData";
 import { getModelId } from "@lib/models/common/ModelData";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
-import { Limit } from "@slicemachine/manager";
+import { PushChangesLimit } from "@slicemachine/manager";
 
 export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
   pushChanges: (confirmDeleteDocuments: boolean) => void;
-  modalData?: Limit;
+  modalData?: PushChangesLimit;
   onClose: () => void;
 }> = ({ pushChanges, modalData, onClose }) => {
   const { remoteOnlyCustomTypes } = useSelector(

@@ -8,7 +8,7 @@ import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { getModelId } from "@lib/models/common/ModelData";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
-import { Limit } from "@slicemachine/manager";
+import { PushChangesLimit } from "@slicemachine/manager";
 
 const ConfirmationDialogue: React.FC<{
   isConfirmed: boolean;
@@ -40,7 +40,7 @@ const ConfirmationDialogue: React.FC<{
 
 export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
   pushChanges: (confirmDeleteDocuments: boolean) => void;
-  modalData?: Limit;
+  modalData?: PushChangesLimit;
   onClose: () => void;
 }> = ({ pushChanges, modalData, onClose }) => {
   const [confirmDeleteDocuments, setConfirmDeleteDocuments] = useState(false);
