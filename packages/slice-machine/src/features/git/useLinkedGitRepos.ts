@@ -1,9 +1,8 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
+import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
 import { managerClient } from "@src/managerClient";
 
-type PrismicRepoSpecifier = {
-  domain: string;
-};
+import { PrismicRepoSpecifier } from "./types";
 
 type UseLinkedGitReposReturnType =
   | {
@@ -25,6 +24,10 @@ export const getLinkedGitRepos = async (args: {
   }
 };
 
-export const useLinkedGitRepos = (args: { prismic: PrismicRepoSpecifier }) => {
-  return useRequest(getLinkedGitRepos, [args]);
+export const useLinkedGitRepos = () => {
+  const [config] = useSliceMachineConfig();
+
+  return useRequest(getLinkedGitRepos, [
+    { prismic: { domain: config.repositoryName } },
+  ]);
 };

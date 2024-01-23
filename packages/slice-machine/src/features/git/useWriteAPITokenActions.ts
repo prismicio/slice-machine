@@ -4,35 +4,35 @@ import { managerClient } from "@src/managerClient";
 
 import { GitRepoSpecifier } from "./types";
 import { getHasWriteAPIToken } from "./useHasWriteAPIToken";
-import { getLinkedGitRepos } from "./useLinkedGitRepos";
 
-export const useLinkedGitReposActions = () => {
+export const useWriteAPITokenActions = (args: { git: GitRepoSpecifier }) => {
   const [config] = useSliceMachineConfig();
 
   return {
-    linkRepo: async (git: GitRepoSpecifier) => {
-      await managerClient.git.linkRepo({
+    updateToken: async (token: string) => {
+      await managerClient.git.updateWriteAPIToken({
         prismic: { domain: config.repositoryName },
-        git,
+        git: args.git,
+        token,
       });
 
-      revalidateData(getLinkedGitRepos, [
-        { prismic: { domain: config.repositoryName } },
-      ]);
-    },
-    unlinkRepo: async (git: GitRepoSpecifier) => {
-      await managerClient.git.unlinkRepo({
-        prismic: { domain: config.repositoryName },
-        git,
-      });
-
-      revalidateData(getLinkedGitRepos, [
-        { prismic: { domain: config.repositoryName } },
-      ]);
       revalidateData(getHasWriteAPIToken, [
         {
           prismic: { domain: config.repositoryName },
-          git,
+          git: args.git,
+        },
+      ]);
+    },
+    deleteToken: async () => {
+      await managerClient.git.deleteWriteAPIToken({
+        prismic: { domain: config.repositoryName },
+        git: args.git,
+      });
+
+      revalidateData(getHasWriteAPIToken, [
+        {
+          prismic: { domain: config.repositoryName },
+          git: args.git,
         },
       ]);
     },

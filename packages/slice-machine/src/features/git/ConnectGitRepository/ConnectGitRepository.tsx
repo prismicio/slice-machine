@@ -1,7 +1,10 @@
 import { PropsWithChildren, Suspense, useState } from "react";
 import {
   Button,
+  ButtonGroup,
   ErrorBoundary,
+  Form,
+  FormInput,
   ProgressCircle,
   Select,
   SelectItem,
@@ -14,13 +17,14 @@ import {
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { managerClient } from "@src/managerClient";
-import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
 import { useUser } from "@src/hooks/useUser";
 
 import { useGitOwners } from "../useGitOwners";
 import { useGitRepos } from "../useGitRepos";
+import { useHasWriteAPIToken } from "../useHasWriteAPIToken";
 import { useLinkedGitRepos } from "../useLinkedGitRepos";
 import { useLinkedGitReposActions } from "../useLinkedGitReposActions";
+import { useWriteAPITokenActions } from "../useWriteAPITokenActions";
 
 import * as styles from "./ConnectGitRepository.module.css";
 
@@ -188,11 +192,8 @@ function SelectRepo(props: SelectRepoBaseProps) {
 }
 
 function RepoSelector() {
-  const [config] = useSliceMachineConfig();
   const owners = useGitOwners();
-  const { linkRepo } = useLinkedGitReposActions({
-    prismic: { domain: config.repositoryName },
-  });
+  const { linkRepo } = useLinkedGitReposActions();
 
   const [selectedOwner, setSelectedOwner] = useState<GitOwner>();
 
@@ -220,14 +221,115 @@ function RepoSelector() {
   );
 }
 
+type UpdateOrDeleteWriteAPIFormProps = {
+  repo: {
+    provider: "gitHub";
+    owner: string;
+    name: string;
+  };
+};
+
+function UpdateOrDeleteWriteAPIForm(props: UpdateOrDeleteWriteAPIFormProps) {
+  const { repo } = props;
+
+  const { deleteToken } = useWriteAPITokenActions({ git: repo });
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  return isUpdating ? (
+    <UpdateWriteAPIForm
+      repo={repo}
+      withCancel={true}
+      onCancel={() => setIsUpdating(false)}
+    />
+  ) : (
+    <div>
+      You have a Write API token saved.
+      <ButtonGroup>
+        <Button onClick={() => void deleteToken()}>Delete</Button>
+        <Button onClick={() => setIsUpdating(true)}>Update</Button>
+      </ButtonGroup>
+    </div>
+  );
+}
+
+type UpdateWriteAPIFormProps = {
+  repo: {
+    provider: "gitHub";
+    owner: string;
+    name: string;
+  };
+  withCancel?: boolean;
+  onCancel?: () => void | Promise<void>;
+};
+
+function UpdateWriteAPIForm(props: UpdateWriteAPIFormProps) {
+  const { repo, withCancel, onCancel } = props;
+
+  const { updateToken } = useWriteAPITokenActions({ git: repo });
+
+  const [token, setToken] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const onSubmit = async () => {
+    if (token) {
+      setIsSubmitting(true);
+      await updateToken(token);
+    }
+  };
+
+  return (
+    <div>
+      <Form onSubmit={() => void onSubmit()}>
+        <FormInput
+          size="large"
+          label="Write API Token"
+          value={token}
+          onValueChange={setToken}
+        />
+        <Button loading={isSubmitting} disabled={isSubmitting}>
+          Save Write API Token
+        </Button>
+        {withCancel === true ? (
+          <Button onClick={onCancel} color="grey">
+            Cancel
+          </Button>
+        ) : null}
+      </Form>
+    </div>
+  );
+}
+
+type LinkedRepositoryProps = {
+  linkedRepo: {
+    provider: "gitHub";
+    owner: string;
+    name: string;
+  };
+};
+
+function LinkedRepository(props: LinkedRepositoryProps) {
+  const { linkedRepo } = props;
+
+  const { unlinkRepo } = useLinkedGitReposActions();
+  const hasWriteAPIToken = useHasWriteAPIToken({ git: linkedRepo });
+
+  return (
+    <div>
+      <div>
+        Linked: [{linkedRepo.provider}] {linkedRepo.owner}/{linkedRepo.name}
+        <Button onClick={() => void unlinkRepo(linkedRepo)}>Disconnect</Button>
+      </div>
+      {hasWriteAPIToken ? (
+        <UpdateOrDeleteWriteAPIForm repo={linkedRepo} />
+      ) : (
+        <UpdateWriteAPIForm repo={linkedRepo} />
+      )}
+    </div>
+  );
+}
+
 function LoggedInContents() {
-  const [config] = useSliceMachineConfig();
-  const linkedGitRepos = useLinkedGitRepos({
-    prismic: { domain: config.repositoryName },
-  });
-  const { unlinkRepo } = useLinkedGitReposActions({
-    prismic: { domain: config.repositoryName },
-  });
+  const linkedGitRepos = useLinkedGitRepos();
 
   if ("error" in linkedGitRepos) {
     return <div>TODO: Handle error</div>;
@@ -239,12 +341,7 @@ function LoggedInContents() {
 
   const linkedRepo = linkedGitRepos.repos[0];
 
-  return (
-    <div>
-      Linked: [{linkedRepo.provider}] {linkedRepo.owner}/{linkedRepo.name}
-      <Button onClick={() => void unlinkRepo(linkedRepo)}>Disconnect</Button>
-    </div>
-  );
+  return <LinkedRepository linkedRepo={linkedRepo} />;
 }
 
 function LoggedOutContents() {
