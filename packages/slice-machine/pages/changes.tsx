@@ -27,7 +27,7 @@ import {
   ChangedCustomType,
   ChangedSlice,
 } from "@lib/models/common/ModelStatus";
-import { Limit } from "@slicemachine/manager";
+import { PushChangesLimit } from "@slicemachine/manager";
 import { pushChanges } from "@src/features/changes/actions/pushChanges";
 import { getState } from "@src/apiClient";
 
@@ -60,9 +60,9 @@ const Changes: React.FunctionComponent = () => {
 
   const { pushChangesSuccess, refreshState } = useSliceMachineActions();
   const [isSyncing, setIsSyncing] = useState(false);
-  const [openModalData, setOpenModalData] = useState<Limit | undefined>(
-    undefined,
-  );
+  const [openModalData, setOpenModalData] = useState<
+    PushChangesLimit | undefined
+  >(undefined);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 

@@ -3,7 +3,7 @@ import {
   ChangedCustomType,
   ChangedSlice,
 } from "@lib/models/common/ModelStatus";
-import { Limit } from "@slicemachine/manager";
+import { PushChangesLimit } from "@slicemachine/manager";
 
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
 
@@ -15,7 +15,7 @@ type PushChangesArgs = {
 
 export async function pushChanges(
   args: PushChangesArgs,
-): Promise<Limit | undefined> {
+): Promise<PushChangesLimit | undefined> {
   const {
     changedSlices,
     changedCustomTypes,

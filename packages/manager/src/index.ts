@@ -13,7 +13,11 @@ export { createSliceMachineManager } from "./managers/createSliceMachineManager"
 export { createSliceMachineManagerMiddleware } from "./managers/createSliceMachineManagerMiddleware";
 export type { CreateSliceMachineManagerMiddlewareArgs } from "./managers/createSliceMachineManagerMiddleware";
 
-export type { Environment, Limit } from "./managers/prismicRepository/types";
+export {
+	type Environment,
+	type PushChangesLimit,
+	PushChangesLimitType,
+} from "./managers/prismicRepository/types";
 
 export type {
 	PrismicAuthManager,
