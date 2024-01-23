@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { Icon, Button, Image, tokens } from "@prismicio/editor-ui";
+import { Icon, Button, Image, tokens, Box, Text } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 
 import {
@@ -30,6 +30,7 @@ import {
   BlankSlateContent,
 } from "@src/components/BlankSlate";
 import { EditDropdown } from "../EditDropdown";
+import { useExperimentValue } from "@src/hooks/useExperimentValue";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
@@ -50,6 +51,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   );
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
+  const testXavierExperiment = useExperimentValue("test-xavier");
 
   useCustomTypesAutoRevalidation(customTypes, format, updateCustomTypes);
 
@@ -81,6 +83,36 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
 
   return (
     <>
+      <Box
+        padding={16}
+        borderRadius={6}
+        border={{ bottom: true, left: true, right: true, top: true }}
+        justifyContent="center"
+        alignItems="center"
+        width={400}
+        gap={24}
+        backgroundColor="grey1"
+      >
+        {testXavierExperiment === "on" ? (
+          <>
+            <Icon name="check" size="large" color="green11" />
+            <Text>
+              This experiment is only displayed because repository name contain
+              "xru" on it!
+            </Text>
+          </>
+        ) : (
+          <>
+            <Icon name="close" size="large" color="tomato11" />
+            <Text>
+              Not part of the experiment because repository name don't contain
+              "xru" on it!
+            </Text>
+          </>
+        )}
+      </Box>
+      <Box padding={{ top: 16 }} />
+
       <Table>
         <TableHead>
           <TableRow>
