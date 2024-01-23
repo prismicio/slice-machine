@@ -14,7 +14,7 @@ export type GitRepo = {
 	pushedAt: Date;
 };
 
-export type GitRepoSpcifier = {
+export type GitRepoSpecifier = {
 	provider: "gitHub";
 	owner: string;
 	name: string;
