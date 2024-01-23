@@ -84,8 +84,7 @@ export class TelemetryManager extends BaseManager {
 		};
 
 		if (isTelemetryEnabled) {
-			// Start Amplitude Experiment
-			this.startExperiment();
+			await this.initExperiment();
 		}
 
 		this._anonymousID = randomUUID();
@@ -275,41 +274,54 @@ export class TelemetryManager extends BaseManager {
 		return readPrismicrc(root).telemetry !== false;
 	}
 
-	async startExperiment(): Promise<void> {
-		const repositoryName = await this.project.getRepositoryName();
+	private async initExperiment(): Promise<void> {
+		try {
+			const repositoryName = await this.project.getRepositoryName();
 
-		this._experiment = Experiment.initialize(API_TOKENS.AmplitudeKey, {
-			pollOnStart: false,
-		});
-
-		await this._experiment
-			.start({
-				user_properties: {
-					Repository: repositoryName,
-				},
-			})
-			.catch((error) => {
-				console.error("Error starting experiment", error);
+			this._experiment = Experiment.initialize(API_TOKENS.AmplitudeKey, {
+				pollOnStart: false,
+				fetchOnStart: false,
 			});
+
+			await this._experiment
+				.start({
+					user_properties: {
+						Repository: repositoryName,
+					},
+				})
+				.catch((error) => {
+					console.error("Error starting experiment", error);
+				});
+		} catch (error) {
+			if (import.meta.env.DEV) {
+				console.error("Error initializing experiment", error);
+			}
+		}
 	}
 
-	async getExperimentValue(variantName: string): Promise<string | undefined> {
+	async experimentVariant(variantName: string): Promise<string | undefined> {
+		console.log("experimentVariant start variantName", variantName);
 		if (this._experiment) {
-			const isLoggedIn = await this.prismicAuthManager.checkIsLoggedIn();
-			const userProfile = isLoggedIn
-				? await this.prismicAuthManager.getProfile()
-				: undefined;
+			console.log("experimentVariant INSIDE");
 
 			await this._experiment.fetch(
-				userProfile ? { user_id: userProfile.shortId } : undefined,
+				{ user_id: this._userID ?? this._anonymousID },
 				{
 					flagKeys: [variantName],
 				},
 			);
 
+			console.log("experimentVariant just before return");
+
 			return this._experiment.variant(variantName).value;
 		}
 
 		return undefined;
+	}
+
+	async experimentExposure(variantName: string): Promise<void> {
+		if (this._experiment) {
+			await this._experiment.exposure(variantName);
+		}
 	}
 }

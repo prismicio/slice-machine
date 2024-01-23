@@ -1,4 +1,5 @@
 import { beforeAll, expect, it } from "vitest";
+import { ExperimentClient } from "@amplitude/experiment-js-client";
 import { Analytics } from "@segment/analytics-node";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -43,7 +44,7 @@ it("creates a reusable Segment client", async () => {
 	expect(manager.telemetry._segmentClient()._publisher._disable).toBe(false);
 });
 
-it("disables the Segment client if .prismicrc is configured to disable telemery", async () => {
+it("disables the Segment client if .prismicrc is configured to disable telemetry", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
@@ -60,4 +61,43 @@ it("disables the Segment client if .prismicrc is configured to disable telemery"
 
 	// @ts-expect-error - Accessing an internal private property
 	expect(manager.telemetry._segmentClient()._publisher._disable).toBe(true);
+});
+
+it("creates a reusable Experiment client", async () => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	// @ts-expect-error - Accessing an internal private property
+	expect(manager.telemetry._experiment).toBeUndefined();
+
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
+
+	// @ts-expect-error - Accessing an internal private property
+	expect(manager.telemetry._experiment).toBeInstanceOf(ExperimentClient);
+});
+
+it("disables the Experiment client if .prismicrc is configured to disable telemetry", async () => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await fs.writeFile(path.join(os.homedir(), ".prismicrc"), "telemetry=false");
+
+	await manager.telemetry.initTelemetry({
+		appName: "slice-machine-ui",
+		appVersion: "0.0.1-test",
+	});
+
+	// @ts-expect-error - Accessing an internal private property
+	expect(manager.telemetry._experiment).toBeUndefined();
 });

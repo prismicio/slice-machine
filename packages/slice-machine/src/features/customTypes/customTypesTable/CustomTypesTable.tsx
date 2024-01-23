@@ -30,7 +30,7 @@ import {
   BlankSlateContent,
 } from "@src/components/BlankSlate";
 import { EditDropdown } from "../EditDropdown";
-import { useExperimentValue } from "@src/hooks/useExperimentValue";
+import { useExperimentVariant } from "@src/hooks/useExperimentVariant";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
@@ -51,8 +51,8 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   );
   const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
-  const testXavierExperiment = useExperimentValue("test-xavier");
-
+  const testXavierExperiment = useExperimentVariant("test-xavier");
+  console.log("testXavierExperiment", testXavierExperiment);
   useCustomTypesAutoRevalidation(customTypes, format, updateCustomTypes);
 
   if (sortedCustomTypes.length === 0) {
