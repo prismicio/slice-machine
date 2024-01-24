@@ -287,15 +287,11 @@ export class TelemetryManager extends BaseManager {
 				fetchOnStart: false,
 			});
 
-			await this._experiment
-				.start({
-					user_properties: {
-						Repository: repositoryName,
-					},
-				})
-				.catch((error) => {
-					console.error("Error starting experiment", error);
-				});
+			await this._experiment.start({
+				user_properties: {
+					Repository: repositoryName,
+				},
+			});
 		} catch (error) {
 			if (import.meta.env.DEV) {
 				console.error("Error initializing experiment", error);
