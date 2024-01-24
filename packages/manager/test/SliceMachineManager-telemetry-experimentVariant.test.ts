@@ -48,7 +48,7 @@ it("get the experiment 'on' value for a specific variant", async () => {
 	const experimentVariant =
 		await manager.telemetry.experimentVariant("test-variant-on");
 
-	expect(experimentVariant).toBe("on");
+	expect(experimentVariant).toEqual({ value: "on" });
 });
 
 it("get the experiment 'off' value for a specific variant", async () => {
@@ -67,5 +67,5 @@ it("get the experiment 'off' value for a specific variant", async () => {
 	const experimentVariant =
 		await manager.telemetry.experimentVariant("test-variant-off");
 
-	expect(experimentVariant).toBe("off");
+	expect(experimentVariant).toEqual({ value: "off" });
 });
