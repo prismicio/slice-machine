@@ -14,7 +14,7 @@ import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 
-import { JoinBetaExperiment } from "./JoinBetaExperiment";
+import { DevCollaborationExperiment } from "./DevCollaborationExperiment";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: LocalOrRemoteCustomType[];
@@ -151,7 +151,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
 
         <ErrorBoundary>
           <Suspense>
-            <JoinBetaExperiment />
+            <DevCollaborationExperiment />
           </Suspense>
         </ErrorBoundary>
       </Box>

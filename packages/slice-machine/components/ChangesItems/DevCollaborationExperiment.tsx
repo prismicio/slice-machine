@@ -12,17 +12,32 @@ import {
 import { useExperimentVariant } from "@src/hooks/useExperimentVariant";
 import { telemetry } from "@src/apiClient";
 
-export function JoinBetaExperiment() {
-  const joinBetaExperiment = useExperimentVariant("test-xavier");
+type DevCollaborationExperimentPayload = {
+  cardButtonLabel: string;
+  cardDescription: string;
+  cardTitle: string;
+  dialogButtonLabel: string;
+  dialogButtonLink: string;
+  dialogDescription: string;
+  dialogTitle: string;
+};
+
+export function DevCollaborationExperiment() {
+  const devCollaborationExperiment = useExperimentVariant(
+    "slicemachine-dev-collaboration",
+  );
   const [isExperimentDialogOpen, setIsExperimentDialogOpen] = useState(false);
+  const payload = devCollaborationExperiment?.payload as
+    | DevCollaborationExperimentPayload
+    | undefined;
 
   useEffect(() => {
-    if (joinBetaExperiment === "on") {
-      void telemetry.track({ event: "experiment:join-beta-displayed" });
+    if (devCollaborationExperiment?.value === "on" || payload === undefined) {
+      void telemetry.track({ event: "dev-collab:workflow-stub-displayed" });
     }
-  }, [joinBetaExperiment]);
+  }, [devCollaborationExperiment, payload]);
 
-  if (joinBetaExperiment !== "on") {
+  if (devCollaborationExperiment?.value !== "on" || payload === undefined) {
     return null;
   }
 
@@ -40,23 +55,21 @@ export function JoinBetaExperiment() {
         width={320}
       >
         <Box flexDirection="column" gap={2}>
-          <Text variant="smallBold">Dev Collaboration Workflow</Text>
+          <Text variant="smallBold">{payload.cardTitle}</Text>
           <Text color="grey11" variant="small">
-            Test and preview seamlessly, collaborate with GIT branches, push
-            models with code, and safeguard against overwrites—all without
-            affecting your live website.
+            {payload.cardDescription}
           </Text>
         </Box>
         <Button
           color="grey"
           onClick={() => {
             void telemetry.track({
-              event: "experiment:join-beta-dialog-opened",
+              event: "dev-collab:set-up-workflow-opened",
             });
             setIsExperimentDialogOpen(true);
           }}
         >
-          Set up workflow
+          {payload.cardButtonLabel}
         </Button>
       </Box>
       <Dialog
@@ -68,25 +81,21 @@ export function JoinBetaExperiment() {
         open={isExperimentDialogOpen}
         size={{ height: "auto", width: 448 }}
       >
-        <DialogHeader title="Hello! This feature is in the works." />
+        <DialogHeader title={payload.dialogTitle} />
         <DialogContent>
           <Box flexDirection="column">
             <Box flexDirection="column" padding={16}>
-              <Text>
-                We're working hard to bring this to all Slice Machine users. If
-                you'd like to get a sneak peek, sign up below for our beta
-                program.
-              </Text>
+              <Text>{payload.dialogDescription}</Text>
             </Box>
             <DialogActions
               cancel={{ text: "Cancel" }}
               ok={{
-                text: "Join Beta",
+                text: payload.dialogButtonLabel,
                 onClick: () => {
                   void telemetry.track({
-                    event: "experiment:join-beta-clicked",
+                    event: "dev-collab:join-beta-clicked",
                   });
-                  window.open("https://forms.gle/zkYcc7ERd7zmAq5SA", "_blank");
+                  window.open(payload.dialogButtonLink, "_blank");
                   setIsExperimentDialogOpen(false);
                 },
               }}

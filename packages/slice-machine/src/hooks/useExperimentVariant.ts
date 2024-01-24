@@ -1,5 +1,6 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 
+import { Variant } from "@slicemachine/manager";
 import { managerClient } from "@src/managerClient";
 
 async function experimentVariant(variantName: string) {
@@ -11,6 +12,6 @@ async function experimentVariant(variantName: string) {
   }
 }
 
-export function useExperimentVariant(variantName: string): string | undefined {
+export function useExperimentVariant(variantName: string): Variant | undefined {
   return useRequest(experimentVariant, [variantName]);
 }

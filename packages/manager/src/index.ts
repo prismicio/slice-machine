@@ -47,3 +47,5 @@ export type { SliceMachineConfig, PackageManager } from "./types";
 export type { APIEndpoints } from "./constants/API_ENDPOINTS";
 
 export { REPOSITORY_NAME_VALIDATION } from "./constants/REPOSITORY_NAME_VALIDATION";
+
+export type { Variant } from "./managers/telemetry/types";

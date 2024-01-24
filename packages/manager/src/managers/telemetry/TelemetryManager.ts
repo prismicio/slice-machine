@@ -1,4 +1,8 @@
-import { Experiment, ExperimentClient } from "@amplitude/experiment-js-client";
+import {
+	Experiment,
+	ExperimentClient,
+	Variant,
+} from "@amplitude/experiment-js-client";
 import { randomUUID } from "node:crypto";
 import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 
@@ -299,16 +303,16 @@ export class TelemetryManager extends BaseManager {
 		}
 	}
 
-	async experimentVariant(variantName: string): Promise<string | undefined> {
+	async experimentVariant(variantKey: string): Promise<Variant | undefined> {
 		if (this._experiment) {
 			await this._experiment.fetch(
 				this._userID ? { user_id: this._userID } : undefined,
 				{
-					flagKeys: [variantName],
+					flagKeys: [variantKey],
 				},
 			);
 
-			return this._experiment.variant(variantName).value;
+			return this._experiment.variant(variantKey);
 		}
 
 		return undefined;

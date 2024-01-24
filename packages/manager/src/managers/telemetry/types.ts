@@ -1,6 +1,8 @@
 import { CustomTypeFormat } from "../customTypes/types";
 import type { LimitType } from "../prismicRepository/types";
 
+export type { Variant } from "@amplitude/experiment-js-client";
+
 export const SegmentEventType = {
 	command_init_start: "command:init:start",
 	command_init_identify: "command:init:identify",
@@ -26,9 +28,9 @@ export const SegmentEventType = {
 	open_page_snippet: "page-type:open-snippet",
 	copy_page_snippet: "page-type:copy-snippet",
 	switch_environment: "environment:switch",
-	experiment_joinBetaClicked: "experiment:join-beta-clicked",
-	experiment_joinBetaDialogOpened: "experiment:join-beta-dialog-opened",
-	experiment_joinBetaDisplayed: "experiment:join-beta-displayed",
+	devCollab_joinBetaClicked: "dev-collab:join-beta-clicked",
+	devCollab_setUpWorkflowOpened: "dev-collab:set-up-workflow-opened",
+	devCollab_workflowStubDisplayed: "dev-collab:workflow-stub-displayed",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -66,12 +68,12 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.copy_page_snippet]:
 		"Slice Machine page code snippet copied",
 	[SegmentEventType.switch_environment]: "SliceMachine environment switch",
-	[SegmentEventType.experiment_joinBetaClicked]:
-		"SliceMachine Join Beta Clicked",
-	[SegmentEventType.experiment_joinBetaDialogOpened]:
-		"SliceMachine Join Beta Dialog Opened",
-	[SegmentEventType.experiment_joinBetaDisplayed]:
-		"SliceMachine Join Beta Displayed",
+	[SegmentEventType.devCollab_joinBetaClicked]:
+		"SliceMachine Dev Collab Join Beta Clicked",
+	[SegmentEventType.devCollab_setUpWorkflowOpened]:
+		"SliceMachine Dev Collab Set Up Workflow Opened",
+	[SegmentEventType.devCollab_workflowStubDisplayed]:
+		"SliceMachine Dev Collab Workflow Stub Displayed",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -265,16 +267,16 @@ type EditorWidgetUsedSegmentEvent = SegmentEvent<
 	{ sliceId: string }
 >;
 
-type ExperimentJoinBetaClickedSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.experiment_joinBetaClicked
+type DevCollabJoinBetaClicked = SegmentEvent<
+	typeof SegmentEventType.devCollab_joinBetaClicked
 >;
 
-type ExperimentJoinBetaDialogOpenedSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.experiment_joinBetaDialogOpened
+type DevCollabSetUpWorkflowOpened = SegmentEvent<
+	typeof SegmentEventType.devCollab_setUpWorkflowOpened
 >;
 
-type ExperimentJoinBetaDisplayedSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.experiment_joinBetaDisplayed
+type DevCollabWorkflowStubDisplayed = SegmentEvent<
+	typeof SegmentEventType.devCollab_workflowStubDisplayed
 >;
 
 export type SegmentEvents =
@@ -302,6 +304,6 @@ export type SegmentEvents =
 	| CopyPageSnippetSegmentEvent
 	| UsersInviteButtonClickedSegmentEvent
 	| SwitchEnvironmentSegmentEvent
-	| ExperimentJoinBetaClickedSegmentEvent
-	| ExperimentJoinBetaDialogOpenedSegmentEvent
-	| ExperimentJoinBetaDisplayedSegmentEvent;
+	| DevCollabJoinBetaClicked
+	| DevCollabSetUpWorkflowOpened
+	| DevCollabWorkflowStubDisplayed;
