@@ -16,9 +16,7 @@ export const useLinkedGitReposActions = () => {
         git,
       });
 
-      revalidateData(getLinkedGitRepos, [
-        { prismic: { domain: config.repositoryName } },
-      ]);
+      revalidateData(getLinkedGitRepos, [config.repositoryName]);
     },
     unlinkRepo: async (git: GitRepoSpecifier) => {
       await managerClient.git.unlinkRepo({
@@ -26,14 +24,12 @@ export const useLinkedGitReposActions = () => {
         git,
       });
 
-      revalidateData(getLinkedGitRepos, [
-        { prismic: { domain: config.repositoryName } },
-      ]);
+      revalidateData(getLinkedGitRepos, [config.repositoryName]);
       revalidateData(getHasWriteAPIToken, [
-        {
-          prismic: { domain: config.repositoryName },
-          git,
-        },
+        config.repositoryName,
+        git.provider,
+        git.owner,
+        git.name,
       ]);
     },
   };

@@ -17,10 +17,10 @@ export const useWriteAPITokenActions = (args: { git: GitRepoSpecifier }) => {
       });
 
       revalidateData(getHasWriteAPIToken, [
-        {
-          prismic: { domain: config.repositoryName },
-          git: args.git,
-        },
+        config.repositoryName,
+        args.git.provider,
+        args.git.owner,
+        args.git.name,
       ]);
     },
     deleteToken: async () => {
@@ -30,10 +30,10 @@ export const useWriteAPITokenActions = (args: { git: GitRepoSpecifier }) => {
       });
 
       revalidateData(getHasWriteAPIToken, [
-        {
-          prismic: { domain: config.repositoryName },
-          git: args.git,
-        },
+        config.repositoryName,
+        args.git.provider,
+        args.git.owner,
+        args.git.name,
       ]);
     },
   };

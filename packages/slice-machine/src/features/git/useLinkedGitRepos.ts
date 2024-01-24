@@ -2,8 +2,6 @@ import { useRequest } from "@prismicio/editor-support/Suspense";
 import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
 import { managerClient } from "@src/managerClient";
 
-import { PrismicRepoSpecifier } from "./types";
-
 type UseLinkedGitReposReturnType =
   | {
       repos: Awaited<
@@ -12,11 +10,13 @@ type UseLinkedGitReposReturnType =
     }
   | { error: unknown };
 
-export const getLinkedGitRepos = async (args: {
-  prismic: PrismicRepoSpecifier;
-}): Promise<UseLinkedGitReposReturnType> => {
+export const getLinkedGitRepos = async (
+  prismicDomain: string,
+): Promise<UseLinkedGitReposReturnType> => {
   try {
-    const repos = await managerClient.git.fetchLinkedRepos(args);
+    const repos = await managerClient.git.fetchLinkedRepos({
+      prismic: { domain: prismicDomain },
+    });
 
     return { repos };
   } catch (error) {
@@ -27,7 +27,5 @@ export const getLinkedGitRepos = async (args: {
 export const useLinkedGitRepos = () => {
   const [config] = useSliceMachineConfig();
 
-  return useRequest(getLinkedGitRepos, [
-    { prismic: { domain: config.repositoryName } },
-  ]);
+  return useRequest(getLinkedGitRepos, [config.repositoryName]);
 };

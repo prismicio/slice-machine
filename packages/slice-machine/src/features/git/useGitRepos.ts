@@ -1,16 +1,26 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 import { managerClient } from "@src/managerClient";
 
-type UseGitReposArgs = Parameters<typeof managerClient.git.fetchRepos>[0];
-
-const getGitRepos = async (args?: UseGitReposArgs) => {
-  if (!args) {
+async function getGitRepos(
+  provider?: "gitHub",
+  owner?: string,
+  query?: string,
+  page?: number,
+) {
+  if (provider === undefined || owner === undefined) {
     return;
   }
 
-  return await managerClient.git.fetchRepos(args);
-};
+  return await managerClient.git.fetchRepos({ provider, owner, query, page });
+}
 
-export const useGitRepos = (args?: UseGitReposArgs) => {
-  return useRequest(getGitRepos, [args]);
+export const useGitRepos = (
+  args?: Parameters<typeof managerClient.git.fetchRepos>[0],
+) => {
+  return useRequest(getGitRepos, [
+    args?.provider,
+    args?.owner,
+    args?.query,
+    args?.page,
+  ]);
 };
