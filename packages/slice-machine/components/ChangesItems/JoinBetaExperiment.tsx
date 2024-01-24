@@ -34,16 +34,19 @@ export function JoinBetaExperiment() {
         borderRadius={6}
         borderStyle="dashed"
         flexDirection="column"
+        flexShrink={0}
         gap={8}
-        maxWidth={360}
         padding={16}
+        width={320}
       >
-        <Text variant="bold">Dev Collaboration Workflow</Text>
-        <Text color="grey11">
-          Test and preview seamlessly, collaborate with GIT branches, push
-          models with code, and safeguard against overwrites—all without
-          affecting your live website.
-        </Text>
+        <Box flexDirection="column" gap={2}>
+          <Text variant="smallBold">Dev Collaboration Workflow</Text>
+          <Text color="grey11" variant="small">
+            Test and preview seamlessly, collaborate with GIT branches, push
+            models with code, and safeguard against overwrites—all without
+            affecting your live website.
+          </Text>
+        </Box>
         <Button
           color="grey"
           onClick={() => {
