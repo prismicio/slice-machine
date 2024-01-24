@@ -1,6 +1,6 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 
-import { Variant } from "@slicemachine/manager";
+import type { Variant } from "@slicemachine/manager";
 import { managerClient } from "@src/managerClient";
 
 async function getExperimentVariant(variantName: string) {

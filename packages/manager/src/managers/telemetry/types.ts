@@ -1,7 +1,7 @@
 import { CustomTypeFormat } from "../customTypes/types";
 import type { LimitType } from "../prismicRepository/types";
 
-export type { Variant } from "@amplitude/experiment-js-client";
+export type { Variant } from "@amplitude/experiment-node-server";
 
 export const SegmentEventType = {
 	command_init_start: "command:init:start",
