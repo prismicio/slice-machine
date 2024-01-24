@@ -1,5 +1,5 @@
 import { beforeAll, expect, it } from "vitest";
-import { ExperimentClient } from "@amplitude/experiment-js-client";
+import { RemoteEvaluationClient } from "@amplitude/experiment-node-server";
 import { Analytics } from "@segment/analytics-node";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -80,7 +80,7 @@ it("creates a reusable Experiment client", async () => {
 	});
 
 	// @ts-expect-error - Accessing an internal private property
-	expect(manager.telemetry._experiment).toBeInstanceOf(ExperimentClient);
+	expect(manager.telemetry._experiment).toBeInstanceOf(RemoteEvaluationClient);
 });
 
 it("disables the Experiment client if .prismicrc is configured to disable telemetry", async () => {

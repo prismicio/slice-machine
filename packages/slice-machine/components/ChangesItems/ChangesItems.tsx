@@ -39,7 +39,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   return (
     <>
       <Box gap={16} alignItems="flex-start">
-        <Box flexDirection="column">
+        <Box flexDirection="column" flexGrow={1}>
           {unSyncedCustomTypes.length > 0 && (
             <Box flexDirection="column">
               <ChangesSectionHeader>

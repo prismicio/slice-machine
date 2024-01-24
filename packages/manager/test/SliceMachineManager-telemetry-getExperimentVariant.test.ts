@@ -5,30 +5,27 @@ import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-vi.mock("@amplitude/experiment-js-client", () => {
+vi.mock("@amplitude/experiment-node-server", () => {
 	const MockAmplitudeClient = {
-		start: vi.fn(() => Promise.resolve()),
-		fetch: vi.fn(),
-		variant: vi.fn((variant: string) => {
-			if (variant === "test-variant-on") {
-				return {
+		fetchV2: vi.fn(() => {
+			return {
+				"test-variant-on": {
 					value: "on",
-				};
-			} else {
-				return {
+				},
+				"test-variant-off": {
 					value: "off",
-				};
-			}
+				},
+			};
 		}),
 	};
 
 	const MockExperiment = {
-		initialize: vi.fn(() => MockAmplitudeClient),
+		initializeRemote: vi.fn(() => MockAmplitudeClient),
 	};
 
 	return {
 		Experiment: MockExperiment,
-		ExperimentClient: MockAmplitudeClient,
+		RemoteEvaluationClient: MockAmplitudeClient,
 	};
 });
 
@@ -46,7 +43,7 @@ it("get the experiment 'on' value for a specific variant", async () => {
 	});
 
 	const experimentVariant =
-		await manager.telemetry.experimentVariant("test-variant-on");
+		await manager.telemetry.getExperimentVariant("test-variant-on");
 
 	expect(experimentVariant).toEqual({ value: "on" });
 });
@@ -65,7 +62,7 @@ it("get the experiment 'off' value for a specific variant", async () => {
 	});
 
 	const experimentVariant =
-		await manager.telemetry.experimentVariant("test-variant-off");
+		await manager.telemetry.getExperimentVariant("test-variant-off");
 
 	expect(experimentVariant).toEqual({ value: "off" });
 });

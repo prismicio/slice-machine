@@ -1,8 +1,8 @@
 import {
 	Experiment,
-	ExperimentClient,
+	RemoteEvaluationClient,
 	Variant,
-} from "@amplitude/experiment-js-client";
+} from "@amplitude/experiment-node-server";
 import { randomUUID } from "node:crypto";
 import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 
@@ -62,7 +62,7 @@ export class TelemetryManager extends BaseManager {
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
 	private _context: TelemetryManagerContext | undefined = undefined;
-	private _experiment: ExperimentClient | undefined = undefined;
+	private _experiment: RemoteEvaluationClient | undefined = undefined;
 
 	async initTelemetry(args: TelemetryManagerInitTelemetryArgs): Promise<void> {
 		const isTelemetryEnabled = await this.checkIsTelemetryEnabled();
@@ -280,18 +280,7 @@ export class TelemetryManager extends BaseManager {
 
 	private async initExperiment(): Promise<void> {
 		try {
-			const repositoryName = await this.project.getRepositoryName();
-
-			this._experiment = Experiment.initialize(API_TOKENS.AmplitudeKey, {
-				pollOnStart: false,
-				fetchOnStart: false,
-			});
-
-			await this._experiment.start({
-				user_properties: {
-					Repository: repositoryName,
-				},
-			});
+			this._experiment = Experiment.initializeRemote(API_TOKENS.AmplitudeKey);
 		} catch (error) {
 			if (import.meta.env.DEV) {
 				console.error("Error initializing experiment", error);
@@ -299,16 +288,23 @@ export class TelemetryManager extends BaseManager {
 		}
 	}
 
-	async experimentVariant(variantKey: string): Promise<Variant | undefined> {
+	async getExperimentVariant(variantKey: string): Promise<Variant | undefined> {
 		if (this._experiment) {
-			await this._experiment.fetch(
-				this._userID ? { user_id: this._userID } : undefined,
-				{
-					flagKeys: [variantKey],
-				},
-			);
+			try {
+				const repositoryName = await this.project.getRepositoryName();
+				const variants = await this._experiment.fetchV2({
+					user_id: this._userID,
+					user_properties: {
+						Repository: repositoryName,
+					},
+				});
 
-			return this._experiment.variant(variantKey);
+				return variants[variantKey];
+			} catch (error) {
+				if (import.meta.env.DEV) {
+					console.error("Error fetching experiment variant", error);
+				}
+			}
 		}
 
 		return undefined;
