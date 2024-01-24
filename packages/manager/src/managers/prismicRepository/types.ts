@@ -85,7 +85,7 @@ export interface BulkBody extends Record<string, unknown> {
 	changes: AllChangeTypes[];
 }
 
-export const RawLimit = t.type({
+export const PushChangesRawLimit = t.type({
 	details: t.type({
 		customTypes: t.array(
 			t.type({
@@ -96,13 +96,13 @@ export const RawLimit = t.type({
 		),
 	}),
 });
-export type RawLimit = t.TypeOf<typeof RawLimit>;
-export enum LimitType {
+export type PushChangesRawLimit = t.TypeOf<typeof PushChangesRawLimit>;
+export enum PushChangesLimitType {
 	SOFT = "SOFT",
 	HARD = "HARD",
 }
-export type Limit = RawLimit & {
-	type: LimitType;
+export type PushChangesLimit = PushChangesRawLimit & {
+	type: PushChangesLimitType;
 };
 
 export interface ClientError {
@@ -130,7 +130,7 @@ export type TransactionalMergeArgs = {
 	changes: (CustomTypeChange | SliceChange)[];
 };
 
-export type TransactionalMergeReturnType = Limit | null;
+export type TransactionalMergeReturnType = PushChangesLimit | null;
 
 /**
  * Framework id sent to Segment from wroom. Property used for the "framework"

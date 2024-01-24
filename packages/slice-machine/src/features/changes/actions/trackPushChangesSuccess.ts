@@ -1,17 +1,21 @@
-import { ChangesPushSagaPayload } from ".";
+import {
+  ChangedCustomType,
+  ChangedSlice,
+  ModelStatus,
+} from "@lib/models/common/ModelStatus";
 import { telemetry } from "@src/apiClient";
 import { countMissingScreenshots } from "@src/domain/slice";
-import { ModelStatus } from "@lib/models/common/ModelStatus";
 
-type trackingParameters = ChangesPushSagaPayload & { startTime: number };
+type TrackPushChangesSuccessArgs = {
+  changedSlices: ReadonlyArray<ChangedSlice>;
+  changedCustomTypes: ReadonlyArray<ChangedCustomType>;
+  hasDeletedDocuments: boolean;
+  startTime: number;
+};
 
-export function trackPushChangesSuccess(params: trackingParameters) {
-  const {
-    startTime,
-    confirmDeleteDocuments,
-    changedCustomTypes,
-    changedSlices,
-  } = params;
+export function trackPushChangesSuccess(args: TrackPushChangesSuccessArgs) {
+  const { startTime, hasDeletedDocuments, changedCustomTypes, changedSlices } =
+    args;
 
   const customTypesStats = changedCustomTypes.reduce<{
     customTypesCreated: number;
@@ -80,14 +84,14 @@ export function trackPushChangesSuccess(params: trackingParameters) {
   );
   const duration = Date.now() - startTime;
 
-  return telemetry.track({
+  void telemetry.track({
     event: "changes:pushed",
     ...customTypesStats,
     ...slicesStats,
     total: total,
     missingScreenshots,
     duration: duration,
-    hasDeletedDocuments: confirmDeleteDocuments,
+    hasDeletedDocuments,
     _includeEnvironmentKind: true,
   });
 }

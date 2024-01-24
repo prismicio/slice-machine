@@ -9,7 +9,6 @@ import {
 } from "@src/modules/userContext/types";
 import { refreshStateCreator } from "../environment";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
-import { changesPushCreator } from "../pushChangesSaga";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
@@ -54,6 +53,10 @@ export const hasSeenChangesToolTipCreator = createAction(
   "USER_CONTEXT/VIEW_CHANGES_TOOL_TIP",
 )();
 
+export const changesPushSuccessCreator = createAction(
+  "USER_CONTEXT/CHANGES_PUSH_SUCCESS",
+)();
+
 type userContextActions = ActionType<
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
@@ -62,7 +65,7 @@ type userContextActions = ActionType<
   | typeof hasSeenSimulatorToolTipCreator
   | typeof hasSeenChangesToolTipCreator
   | typeof refreshStateCreator
-  | typeof changesPushCreator.success
+  | typeof changesPushSuccessCreator
 >;
 
 // Selectors
@@ -137,7 +140,7 @@ export const userContextReducer: Reducer<
         authStatus: getAuthStatus(action.payload.clientError),
       };
     }
-    case getType(changesPushCreator.success): {
+    case getType(changesPushSuccessCreator): {
       return {
         ...state,
         lastSyncChange: Date.now(),

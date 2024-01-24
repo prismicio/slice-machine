@@ -76,7 +76,9 @@ export class TelemetryManager extends BaseManager {
 				// failed. Some users or networks intentionally
 				// block Segment, so we can't block the app if
 				// a tracking event is unsuccessful.
-				console.error(`An error occurred with Segment`, error);
+				if (import.meta.env.DEV) {
+					console.error(`An error occurred with Segment`, error);
+				}
 			});
 
 			return analytics;
