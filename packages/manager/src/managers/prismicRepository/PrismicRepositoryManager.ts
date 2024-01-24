@@ -23,13 +23,13 @@ import {
 	BulkBody,
 	ChangeTypes,
 	ClientError,
-	Limit,
-	LimitType,
+	PushChangesLimit,
+	PushChangesLimitType,
 	PrismicRepository,
 	PrismicRepositoryRole,
 	PrismicRepositoryUserAgent,
 	PrismicRepositoryUserAgents,
-	RawLimit,
+	PushChangesRawLimit,
 	TransactionalMergeArgs,
 	TransactionalMergeReturnType,
 	FrameworkWroomTelemetryID,
@@ -421,7 +421,7 @@ export class PrismicRepositoryManager extends BaseManager {
 					return this._decodeLimitOrThrow(
 						await response.json(),
 						response.status,
-						LimitType.SOFT,
+						PushChangesLimitType.SOFT,
 					);
 				case 204:
 					return null;
@@ -431,7 +431,7 @@ export class PrismicRepositoryManager extends BaseManager {
 					return this._decodeLimitOrThrow(
 						await response.json(),
 						response.status,
-						LimitType.HARD,
+						PushChangesLimitType.HARD,
 					);
 				case 400:
 					const text = await response.text();
@@ -509,9 +509,9 @@ export class PrismicRepositoryManager extends BaseManager {
 	private _decodeLimitOrThrow(
 		potentialLimit: unknown,
 		statusCode: number,
-		limitType: LimitType,
-	): Limit | null {
-		return fold<t.Errors, RawLimit, Limit | null>(
+		limitType: PushChangesLimitType,
+	): PushChangesLimit | null {
+		return fold<t.Errors, PushChangesRawLimit, PushChangesLimit | null>(
 			() => {
 				const error: ClientError = {
 					status: statusCode,
@@ -521,12 +521,12 @@ export class PrismicRepositoryManager extends BaseManager {
 				};
 				throw error;
 			},
-			(rawLimit: RawLimit) => {
+			(rawLimit: PushChangesRawLimit) => {
 				const limit = { ...rawLimit, type: limitType };
 
 				return limit;
 			},
-		)(RawLimit.decode(potentialLimit));
+		)(PushChangesRawLimit.decode(potentialLimit));
 	}
 
 	private async _fetch(args: {

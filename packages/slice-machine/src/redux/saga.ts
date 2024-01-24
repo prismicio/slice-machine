@@ -4,7 +4,6 @@ import { watchSimulatorSagas } from "@src/modules/simulator";
 import { watchAvailableCustomTypesSagas } from "@src/modules/availableCustomTypes";
 import { watchSliceSagas } from "@src/modules/slices";
 import { watchToasterSagas } from "@src/modules/toaster";
-import { watchChangesPushSagas } from "@src/modules/pushChangesSaga";
 import { watchChangelogSagas } from "@src/modules/environment";
 
 // Single entry point to start all Sagas at once
@@ -13,6 +12,5 @@ export default function* rootSaga() {
   yield fork(watchAvailableCustomTypesSagas);
   yield fork(watchSliceSagas);
   yield fork(watchToasterSagas);
-  yield fork(watchChangesPushSagas);
   yield fork(watchChangelogSagas);
 }
