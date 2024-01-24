@@ -28,6 +28,8 @@ import { useWriteAPITokenActions } from "../useWriteAPITokenActions";
 
 import * as styles from "./ConnectGitRepository.module.css";
 
+const GITHUB_APP_SLUG = "prismic-prod-internal-test";
+
 // TODO: Export types from `@slicemachine/manager`
 type GitOwner = Awaited<
   ReturnType<(typeof managerClient)["git"]["fetchOwners"]>
@@ -54,7 +56,7 @@ function ConnectButton(props: ConnectButtonBaseProps) {
         const state = await managerClient.git.createGitHubAuthState();
 
         const url = new URL(
-          "https://github.com/apps/prismic-push-models-poc/installations/new",
+          `https://github.com/apps/${GITHUB_APP_SLUG}/installations/new`,
         );
         url.searchParams.set("state", state.key);
 
@@ -240,6 +242,7 @@ function UpdateOrDeleteWriteAPIForm(props: UpdateOrDeleteWriteAPIFormProps) {
       repo={repo}
       withCancel={true}
       onCancel={() => setIsUpdating(false)}
+      onSuccess={() => setIsUpdating(false)}
     />
   ) : (
     <div>
@@ -260,10 +263,11 @@ type UpdateWriteAPIFormProps = {
   };
   withCancel?: boolean;
   onCancel?: () => void | Promise<void>;
+  onSuccess?: () => void | Promise<void>;
 };
 
 function UpdateWriteAPIForm(props: UpdateWriteAPIFormProps) {
-  const { repo, withCancel, onCancel } = props;
+  const { repo, withCancel, onCancel, onSuccess } = props;
 
   const { updateToken } = useWriteAPITokenActions({ git: repo });
 
@@ -274,6 +278,7 @@ function UpdateWriteAPIForm(props: UpdateWriteAPIFormProps) {
     if (token) {
       setIsSubmitting(true);
       await updateToken(token);
+      await onSuccess?.();
     }
   };
 
