@@ -26,6 +26,9 @@ export const SegmentEventType = {
 	open_page_snippet: "page-type:open-snippet",
 	copy_page_snippet: "page-type:copy-snippet",
 	switch_environment: "environment:switch",
+	experiment_joinBetaClicked: "experiment:join-beta-clicked",
+	experiment_joinBetaDialogOpened: "experiment:join-beta-dialog-opened",
+	experiment_joinBetaDisplayed: "experiment:join-beta-displayed",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -63,6 +66,12 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.copy_page_snippet]:
 		"Slice Machine page code snippet copied",
 	[SegmentEventType.switch_environment]: "SliceMachine environment switch",
+	[SegmentEventType.experiment_joinBetaClicked]:
+		"SliceMachine Join Beta Clicked",
+	[SegmentEventType.experiment_joinBetaDialogOpened]:
+		"SliceMachine Join Beta Dialog Opened",
+	[SegmentEventType.experiment_joinBetaDisplayed]:
+		"SliceMachine Join Beta Displayed",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -256,6 +265,18 @@ type EditorWidgetUsedSegmentEvent = SegmentEvent<
 	{ sliceId: string }
 >;
 
+type ExperimentJoinBetaClickedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.experiment_joinBetaClicked
+>;
+
+type ExperimentJoinBetaDialogOpenedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.experiment_joinBetaDialogOpened
+>;
+
+type ExperimentJoinBetaDisplayedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.experiment_joinBetaDisplayed
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -280,4 +301,7 @@ export type SegmentEvents =
 	| OpenPageSnippetSegmentEvent
 	| CopyPageSnippetSegmentEvent
 	| UsersInviteButtonClickedSegmentEvent
-	| SwitchEnvironmentSegmentEvent;
+	| SwitchEnvironmentSegmentEvent
+	| ExperimentJoinBetaClickedSegmentEvent
+	| ExperimentJoinBetaDialogOpenedSegmentEvent
+	| ExperimentJoinBetaDisplayedSegmentEvent;

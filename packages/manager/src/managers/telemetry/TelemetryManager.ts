@@ -300,28 +300,17 @@ export class TelemetryManager extends BaseManager {
 	}
 
 	async experimentVariant(variantName: string): Promise<string | undefined> {
-		console.log("experimentVariant start variantName", variantName);
 		if (this._experiment) {
-			console.log("experimentVariant INSIDE");
-
 			await this._experiment.fetch(
-				{ user_id: this._userID ?? this._anonymousID },
+				this._userID ? { user_id: this._userID } : undefined,
 				{
 					flagKeys: [variantName],
 				},
 			);
 
-			console.log("experimentVariant just before return");
-
 			return this._experiment.variant(variantName).value;
 		}
 
 		return undefined;
-	}
-
-	async experimentExposure(variantName: string): Promise<void> {
-		if (this._experiment) {
-			await this._experiment.exposure(variantName);
-		}
 	}
 }
