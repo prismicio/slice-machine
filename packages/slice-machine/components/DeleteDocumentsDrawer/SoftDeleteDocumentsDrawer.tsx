@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { Flex, Text, Checkbox, ThemeUIStyleObject, Label } from "theme-ui";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Button } from "@components/Button";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { isModalOpen } from "@src/modules/modal";
 import { isRemoteOnly } from "@lib/models/common/ModelData";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { ToasterType } from "@src/modules/toaster";
 import { getModelId } from "@lib/models/common/ModelData";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
+import { PushChangesLimit } from "@slicemachine/manager";
 
 const ConfirmationDialogue: React.FC<{
   isConfirmed: boolean;
@@ -43,27 +40,18 @@ const ConfirmationDialogue: React.FC<{
 
 export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
   pushChanges: (confirmDeleteDocuments: boolean) => void;
-}> = ({ pushChanges }) => {
+  modalData?: PushChangesLimit;
+  onClose: () => void;
+}> = ({ pushChanges, modalData, onClose }) => {
   const [confirmDeleteDocuments, setConfirmDeleteDocuments] = useState(false);
 
-  const { isDeleteDocumentsDrawerOpen, remoteOnlyCustomTypes, modalData } =
-    useSelector((store: SliceMachineStoreType) => ({
-      isDeleteDocumentsDrawerOpen: isModalOpen(
-        store,
-        ModalKeysEnum.SOFT_DELETE_DOCUMENTS_DRAWER,
-      ),
+  const { remoteOnlyCustomTypes } = useSelector(
+    (store: SliceMachineStoreType) => ({
       remoteOnlyCustomTypes: selectAllCustomTypes(store).filter(isRemoteOnly),
-      modalData: store.pushChanges,
-    }));
+    }),
+  );
 
-  const { closeModals, openToaster } = useSliceMachineActions();
-
-  if (!isDeleteDocumentsDrawerOpen) return null;
-
-  if (modalData?.type !== "SOFT") {
-    openToaster("No change data", ToasterType.ERROR);
-    return null;
-  }
+  if (modalData?.type !== "SOFT") return null;
 
   const associatedDocumentsCards = modalData.details.customTypes.map(
     (customTypeDetail) => {
@@ -86,8 +74,9 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
 
   return (
     <SliceMachineDrawerUI
-      isOpen={isDeleteDocumentsDrawerOpen}
+      isOpen={modalData.type === "SOFT"}
       title="Confirm deletion"
+      onClose={onClose}
       footer={
         <>
           <ConfirmationDialogue
@@ -101,7 +90,6 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
             label="Push changes"
             variant="primary"
             onClick={() => {
-              closeModals();
               pushChanges(confirmDeleteDocuments);
             }}
             disabled={!confirmDeleteDocuments}

@@ -128,9 +128,13 @@ test.run()(
       remoteSlices: [],
       clientError: undefined,
     }));
-    procedures.mock("prismicRepository.pushChanges", () => new Error("Error"), {
-      execute: false,
-    });
+    procedures.mock(
+      "prismicRepository.pushChanges",
+      () => {
+        throw new Error("Error");
+      },
+      { execute: false },
+    );
 
     await changesPage.goto();
     await expect(changesPage.loginButton).not.toBeVisible();

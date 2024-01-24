@@ -1,5 +1,5 @@
 import { CustomTypeFormat } from "../customTypes/types";
-import type { LimitType } from "../prismicRepository/types";
+import type { PushChangesLimitType } from "../prismicRepository/types";
 
 export const SegmentEventType = {
 	command_init_start: "command:init:start",
@@ -248,7 +248,7 @@ type ChangesPushedSegmentEvent = SegmentEvent<
 
 type ChangesLimitReachSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.changes_limitReach,
-	{ limitType: LimitType }
+	{ limitType: PushChangesLimitType }
 >;
 
 type EditorWidgetUsedSegmentEvent = SegmentEvent<
