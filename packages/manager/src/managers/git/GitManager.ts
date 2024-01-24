@@ -103,7 +103,7 @@ export class GitManager extends BaseManager {
 			"./git/github/create-auth-state",
 			API_ENDPOINTS.SliceMachineV1,
 		);
-		const res = await this.#fetch(url);
+		const res = await this.#fetch(url, { method: "POST" });
 
 		if (!res.ok) {
 			switch (res.status) {
