@@ -11,18 +11,13 @@ type MockOptions = {
 	body?: SerializableValue;
 };
 
-export type SerializableValueObject = { [Key in string]: SerializableValue } & {
+type SerializableValueObject = { [Key in string]: SerializableValue } & {
 	[Key in string]?: SerializableValue | undefined;
 };
-export type SerializableValueArray =
+type SerializableValueArray =
 	| SerializableValue[]
 	| readonly SerializableValue[];
-export type SerializableValuePrimitive =
-	| string
-	| number
-	| boolean
-	| Date
-	| null;
+type SerializableValuePrimitive = string | number | boolean | Date | null;
 export type SerializableValue =
 	| SerializableValuePrimitive
 	| SerializableValueObject
@@ -54,7 +49,7 @@ export const createAPIFixture = (args: {
 			const handler = rest[method](
 				new URL(path, apiEndpoint).toString(),
 				async (req, res, ctx) => {
-					// TODO: Enable by default after fixing "Error [ERR_STREAM_PREMATURE_CLOSE]: Premature close" error.
+					// TODO(DT-1919): Enable by default after fixing "Error [ERR_STREAM_PREMATURE_CLOSE]: Premature close" error.
 					if (options?.checkAuthentication) {
 						const authenticationToken =
 							await args.manager.user.getAuthenticationToken();

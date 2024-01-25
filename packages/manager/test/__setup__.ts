@@ -138,38 +138,32 @@ vi.mock("module", async () => {
 });
 
 vi.mock("@segment/analytics-node", async () => {
-	const { Analytics }: typeof import("@segment/analytics-node") =
+	const actual: typeof import("@segment/analytics-node") =
 		await vi.importActual("@segment/analytics-node");
 
-	Analytics.prototype.track = vi.fn(
-		(_message: unknown, callback?: (error?: unknown) => void) => {
-			if (callback) {
-				callback();
-			}
+	vi.spyOn(actual.Analytics.prototype, "track").mockImplementation(
+		(_params, callback) => {
+			callback?.();
 		},
 	);
 
-	Analytics.prototype.identify = vi.fn(
-		(_message: unknown, callback?: (error?: unknown) => void) => {
-			if (callback) {
-				callback();
-			}
+	vi.spyOn(actual.Analytics.prototype, "identify").mockImplementation(
+		(_params, callback) => {
+			callback?.();
 		},
 	);
 
-	Analytics.prototype.group = vi.fn(
-		(_message: unknown, callback?: (error?: unknown) => void) => {
-			if (callback) {
-				callback();
-			}
+	vi.spyOn(actual.Analytics.prototype, "group").mockImplementation(
+		(_params, callback) => {
+			callback?.();
 		},
 	);
 
-	Analytics.prototype.on = vi.fn();
+	vi.spyOn(actual.Analytics.prototype, "on").mockImplementation(
+		() => actual.Analytics.prototype,
+	);
 
-	return {
-		Analytics,
-	};
+	return actual;
 });
 
 vi.mock("execa", async () => {

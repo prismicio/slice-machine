@@ -17,7 +17,7 @@ import { BaseManager } from "../BaseManager";
 import { GitRepo, GitRepoSpecifier, Owner } from "./types";
 import { buildGitRepoSpecifier } from "./buildGitRepoSpecifier";
 
-type CreateGitHubAuthStateReturnType = {
+type GitManagerCreateGitHubAuthStateReturnType = {
 	key: string;
 	expiresAt: Date;
 };
@@ -98,7 +98,7 @@ type DeleteWriteAPITokenArgs = {
 };
 
 export class GitManager extends BaseManager {
-	async createGitHubAuthState(): Promise<CreateGitHubAuthStateReturnType> {
+	async createGitHubAuthState(): Promise<GitManagerCreateGitHubAuthStateReturnType> {
 		const url = new URL(
 			"./git/github/create-auth-state",
 			API_ENDPOINTS.SliceMachineV1,
@@ -110,7 +110,7 @@ export class GitManager extends BaseManager {
 				case 401:
 					throw new UnauthorizedError();
 				default:
-					throw new Error("Failed to create GutHub auth state.");
+					throw new Error("Failed to create GitHub auth state.");
 			}
 		}
 
@@ -139,6 +139,8 @@ export class GitManager extends BaseManager {
 
 		if (!res.ok) {
 			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
 				case 403:
 					throw new UnauthorizedError();
 				default:
@@ -180,7 +182,7 @@ export class GitManager extends BaseManager {
 		if (args.query) {
 			url.searchParams.set("q", args.query);
 		}
-		if (args.page) {
+		if (args.page && args.page > 0) {
 			url.searchParams.set("page", args.page.toString());
 		}
 
@@ -188,6 +190,8 @@ export class GitManager extends BaseManager {
 
 		if (!res.ok) {
 			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
 				case 403:
 					throw new UnauthorizedError();
 				default:
@@ -232,6 +236,8 @@ export class GitManager extends BaseManager {
 
 		if (!res.ok) {
 			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
 				case 403:
 					throw new UnauthorizedError();
 				default:
@@ -281,6 +287,8 @@ export class GitManager extends BaseManager {
 
 		if (!res.ok) {
 			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
 				case 403:
 					throw new UnauthorizedError();
 				default:
@@ -307,10 +315,12 @@ export class GitManager extends BaseManager {
 
 		if (!res.ok) {
 			switch (res.status) {
+				case 401:
+					throw new UnauthenticatedError();
 				case 403:
 					throw new UnauthorizedError();
 				default:
-					throw new Error("Failed to ulink repos.");
+					throw new Error("Failed to unlink repos.");
 			}
 		}
 	}
@@ -437,7 +447,7 @@ export class GitManager extends BaseManager {
 
 		return await fetch(url, {
 			method: config?.method,
-			body: config?.body ? JSON.stringify(config?.body) : undefined,
+			body: config?.body ? JSON.stringify(config.body) : undefined,
 			headers: {
 				Authorization: `Bearer ${authenticationToken}`,
 			},
