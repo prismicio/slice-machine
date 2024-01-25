@@ -1,6 +1,8 @@
 import { CustomTypeFormat } from "../customTypes/types";
 import type { PushChangesLimitType } from "../prismicRepository/types";
 
+export type { Variant } from "@amplitude/experiment-node-server";
+
 export const SegmentEventType = {
 	command_init_start: "command:init:start",
 	command_init_identify: "command:init:identify",
@@ -26,6 +28,9 @@ export const SegmentEventType = {
 	open_page_snippet: "page-type:open-snippet",
 	copy_page_snippet: "page-type:copy-snippet",
 	switch_environment: "environment:switch",
+	devCollab_joinBetaClicked: "dev-collab:join-beta-clicked",
+	devCollab_setUpWorkflowOpened: "dev-collab:set-up-workflow-opened",
+	devCollab_workflowStubDisplayed: "dev-collab:workflow-stub-displayed",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -63,6 +68,12 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.copy_page_snippet]:
 		"Slice Machine page code snippet copied",
 	[SegmentEventType.switch_environment]: "SliceMachine environment switch",
+	[SegmentEventType.devCollab_joinBetaClicked]:
+		"SliceMachine Dev Collab Join Beta Clicked",
+	[SegmentEventType.devCollab_setUpWorkflowOpened]:
+		"SliceMachine Dev Collab Set Up Workflow Opened",
+	[SegmentEventType.devCollab_workflowStubDisplayed]:
+		"SliceMachine Dev Collab Workflow Stub Displayed",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -256,6 +267,18 @@ type EditorWidgetUsedSegmentEvent = SegmentEvent<
 	{ sliceId: string }
 >;
 
+type DevCollabJoinBetaClicked = SegmentEvent<
+	typeof SegmentEventType.devCollab_joinBetaClicked
+>;
+
+type DevCollabSetUpWorkflowOpened = SegmentEvent<
+	typeof SegmentEventType.devCollab_setUpWorkflowOpened
+>;
+
+type DevCollabWorkflowStubDisplayed = SegmentEvent<
+	typeof SegmentEventType.devCollab_workflowStubDisplayed
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -280,4 +303,7 @@ export type SegmentEvents =
 	| OpenPageSnippetSegmentEvent
 	| CopyPageSnippetSegmentEvent
 	| UsersInviteButtonClickedSegmentEvent
-	| SwitchEnvironmentSegmentEvent;
+	| SwitchEnvironmentSegmentEvent
+	| DevCollabJoinBetaClicked
+	| DevCollabSetUpWorkflowOpened
+	| DevCollabWorkflowStubDisplayed;

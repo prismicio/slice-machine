@@ -15,6 +15,7 @@ export const ChangesSectionHeader: FC<Props> = ({ children }) => {
         bg: "grey02",
         borderRadius: 4,
         padding: "12px 16px",
+        width: "100%",
       }}
     >
       {children}
