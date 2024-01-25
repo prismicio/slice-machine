@@ -32,7 +32,7 @@ export function DevCollaborationExperiment() {
     | undefined;
 
   useEffect(() => {
-    if (devCollaborationExperiment?.value === "on" || payload === undefined) {
+    if (devCollaborationExperiment?.value === "on" && payload !== undefined) {
       void telemetry.track({ event: "dev-collab:workflow-stub-displayed" });
     }
   }, [devCollaborationExperiment, payload]);
