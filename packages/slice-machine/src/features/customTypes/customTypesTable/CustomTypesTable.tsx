@@ -80,50 +80,48 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   }
 
   return (
-    <>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Icon name="notes" size="medium" />
-            </TableCell>
-            <TableCell>Label</TableCell>
-            <TableCell>API ID</TableCell>
-            <TableCell>Limit</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sortedCustomTypes.map((customType: CustomType) => {
-            const { repeatable, label, id } = customType;
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>
+            <Icon name="notes" size="medium" />
+          </TableCell>
+          <TableCell>Label</TableCell>
+          <TableCell>API ID</TableCell>
+          <TableCell>Limit</TableCell>
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {sortedCustomTypes.map((customType: CustomType) => {
+          const { repeatable, label, id } = customType;
 
-            return (
-              <TableRow
-                key={id}
-                onClick={() => {
-                  void router.push(
-                    CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id),
-                  );
-                }}
-              >
-                <TableCell>
-                  {repeatable ? <ReusableIcon /> : <UniqueIcon />}
-                </TableCell>
-                <TableCell>{label}</TableCell>
-                <TableCell>{id}</TableCell>
-                <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
-                <TableCell>
-                  <EditDropdown
-                    isChangesLocal={false}
-                    format={format}
-                    customType={customType}
-                  />
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </>
+          return (
+            <TableRow
+              key={id}
+              onClick={() => {
+                void router.push(
+                  CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id),
+                );
+              }}
+            >
+              <TableCell>
+                {repeatable ? <ReusableIcon /> : <UniqueIcon />}
+              </TableCell>
+              <TableCell>{label}</TableCell>
+              <TableCell>{id}</TableCell>
+              <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
+              <TableCell>
+                <EditDropdown
+                  isChangesLocal={false}
+                  format={format}
+                  customType={customType}
+                />
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 };
