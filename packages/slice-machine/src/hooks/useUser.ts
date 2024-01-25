@@ -1,14 +1,14 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
+
 import { managerClient } from "@src/managerClient";
 
-const getUser = async () => {
-  const isLoggedIn = await managerClient.user.checkIsLoggedIn();
+type User = { isLoggedIn: boolean };
 
-  return {
-    isLoggedIn,
-  };
-};
-
-export const useUser = () => {
+export function useUser(): User {
   return useRequest(getUser, []);
-};
+}
+
+async function getUser(): Promise<User> {
+  const isLoggedIn = await managerClient.user.checkIsLoggedIn();
+  return { isLoggedIn };
+}

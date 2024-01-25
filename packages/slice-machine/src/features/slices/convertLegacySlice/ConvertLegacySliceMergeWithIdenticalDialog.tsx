@@ -31,7 +31,6 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
       <DialogHeader title="Merge with an existing slice" />
       <DialogContent>
         <Formik
-          validateOnChange
           initialValues={{
             path: identicalSlices[0]?.path ?? "",
           }}

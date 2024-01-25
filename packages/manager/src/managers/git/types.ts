@@ -1,4 +1,4 @@
-export type Owner = {
+export type GitOwner = {
 	provider: "gitHub";
 	id: string;
 	name: string;
