@@ -1,9 +1,9 @@
 import * as yup from "yup";
-import { DefaultFields } from "@lib/forms/defaults";
 import { MdPlaylistAdd } from "react-icons/md";
 import { Widget } from "../Widget";
 import CustomListItem from "./ListItem";
 import { GroupSM } from "@lib/models/common/Group";
+import Form, { FormFields } from "./Form";
 
 const Meta = {
   icon: MdPlaylistAdd,
@@ -20,18 +20,20 @@ const schema = yup.object().shape({
     fields: yup.array(),
     label: yup.string(),
     placeholder: yup.string(),
+    repeat: yup.boolean().optional(),
   }),
 });
 
 export const GroupWidget: Widget<GroupSM, typeof schema> = {
   Meta,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  FormFields: DefaultFields,
+  Form,
+  FormFields,
   schema,
   create: (label: string) => ({
     type: "Group",
     config: {
       label,
+      repeat: true,
       fields: [],
     },
   }),
