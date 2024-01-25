@@ -1,5 +1,9 @@
+import {
+	Experiment,
+	RemoteEvaluationClient,
+	Variant,
+} from "@amplitude/experiment-node-server";
 import { randomUUID } from "node:crypto";
-
 import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 
 import { readPrismicrc } from "../../lib/prismicrc";
@@ -58,6 +62,7 @@ export class TelemetryManager extends BaseManager {
 	private _anonymousID: string | undefined = undefined;
 	private _userID: string | undefined = undefined;
 	private _context: TelemetryManagerContext | undefined = undefined;
+	private _experiment: RemoteEvaluationClient | undefined = undefined;
 
 	async initTelemetry(args: TelemetryManagerInitTelemetryArgs): Promise<void> {
 		const isTelemetryEnabled = await this.checkIsTelemetryEnabled();
@@ -83,6 +88,10 @@ export class TelemetryManager extends BaseManager {
 
 			return analytics;
 		};
+
+		if (isTelemetryEnabled) {
+			await this.initExperiment();
+		}
 
 		this._anonymousID = randomUUID();
 		this._context = { app: { name: args.appName, version: args.appVersion } };
@@ -269,5 +278,37 @@ export class TelemetryManager extends BaseManager {
 		}
 
 		return readPrismicrc(root).telemetry !== false;
+	}
+
+	private async initExperiment(): Promise<void> {
+		try {
+			this._experiment = Experiment.initializeRemote(API_TOKENS.AmplitudeKey);
+		} catch (error) {
+			if (import.meta.env.DEV) {
+				console.error("Error initializing experiment", error);
+			}
+		}
+	}
+
+	async getExperimentVariant(variantKey: string): Promise<Variant | undefined> {
+		if (this._experiment) {
+			try {
+				const repositoryName = await this.project.getRepositoryName();
+				const variants = await this._experiment.fetchV2({
+					user_id: this._userID,
+					user_properties: {
+						Repository: repositoryName,
+					},
+				});
+
+				return variants[variantKey];
+			} catch (error) {
+				if (import.meta.env.DEV) {
+					console.error("Error fetching experiment variant", error);
+				}
+			}
+		}
+
+		return undefined;
 	}
 }

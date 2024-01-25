@@ -19,6 +19,54 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@amplitude/analytics-core@npm:^1.2.5":
+  version: 1.2.5
+  resolution: "@amplitude/analytics-core@npm:1.2.5"
+  dependencies:
+    "@amplitude/analytics-types": ^1.3.4
+    tslib: ^2.4.1
+  checksum: e0ad121360d21acb811aa7b8728479cbe177948dbfa875b6234b127d3a25fa67bdcc96c42ae20ce20adef34de49ea1db743e47ff1ecefe50273e6a3db8d12dbd
+  languageName: node
+  linkType: hard
+
+"@amplitude/analytics-node@npm:^1.3.4":
+  version: 1.3.5
+  resolution: "@amplitude/analytics-node@npm:1.3.5"
+  dependencies:
+    "@amplitude/analytics-core": ^1.2.5
+    "@amplitude/analytics-types": ^1.3.4
+    tslib: ^2.4.1
+  checksum: 700b19e2fadaa974760cea999212e793c9849007afdf4855d48c465f21775a26cbd07d5c93cafe57a43541e990a340fe93b1d0ff3e9544c6bb68abf7012a30d8
+  languageName: node
+  linkType: hard
+
+"@amplitude/analytics-types@npm:^1.3.1, @amplitude/analytics-types@npm:^1.3.4":
+  version: 1.3.4
+  resolution: "@amplitude/analytics-types@npm:1.3.4"
+  checksum: 664ea9ab68f834680d9b91d7b867798e5823ee8977ee9d4d351977c023d9e3507d73bcdc601d1aa332b62052c97fe45cef06a4d225753dd215eab6e6b8776eb2
+  languageName: node
+  linkType: hard
+
+"@amplitude/experiment-core@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "@amplitude/experiment-core@npm:0.7.1"
+  dependencies:
+    js-base64: ^3.7.5
+  checksum: a4a7f1a2db8e94e35c2ff3af2f58686d8aebfcd748a70e41b0751f7b569dc95a9b9670b5185d432b130351f8725696d8c1fcac6e08451e2fdb9e62bc5590c5a7
+  languageName: node
+  linkType: hard
+
+"@amplitude/experiment-node-server@npm:1.8.1":
+  version: 1.8.1
+  resolution: "@amplitude/experiment-node-server@npm:1.8.1"
+  dependencies:
+    "@amplitude/analytics-node": ^1.3.4
+    "@amplitude/analytics-types": ^1.3.1
+    "@amplitude/experiment-core": ^0.7.1
+  checksum: 5c0fef31cd1e01b24e6adcb710cd38eea36fb4e96bffe844c6de29b18c968469e9a5c76c822d08a8ee5d42c13651cbd7bacbc87da3a8dd5c9b117e0854d015d6
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.2.0, @ampproject/remapping@npm:^2.2.1":
   version: 2.2.1
   resolution: "@ampproject/remapping@npm:2.2.1"
@@ -8433,6 +8481,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/manager@workspace:packages/manager"
   dependencies:
+    "@amplitude/experiment-node-server": 1.8.1
     "@antfu/ni": ^0.20.0
     "@prismicio/custom-types-client": ^1.2.0
     "@prismicio/mock": 0.2.0
@@ -21654,6 +21703,13 @@ __metadata:
     "@sideway/formula": ^3.0.1
     "@sideway/pinpoint": ^2.0.0
   checksum: 8c3709849293411c524e5a679dba7b42598a29a663478941767b8d5b06288611dece58803c468a2c7320cc2429a3e71e3d94337fe47aefcf6c22174dbd90b601
+  languageName: node
+  linkType: hard
+
+"js-base64@npm:^3.7.5":
+  version: 3.7.5
+  resolution: "js-base64@npm:3.7.5"
+  checksum: 67a78c8b1c47b73f1c6fba1957e9fe6fd9dc78ac93ac46cc2e43472dcb9cf150d126fb0e593192e88e0497354fa634d17d255add7cc6ee3c7b4d29870faa8e18
   languageName: node
   linkType: hard
 

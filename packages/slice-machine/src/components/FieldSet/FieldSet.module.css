@@ -1,0 +1,92 @@
+.flex {
+  all: unset;
+  display: flex;
+}
+
+.column {
+  composes: flex;
+  flex-direction: column;
+}
+
+.root {
+  composes: column;
+  border-color: var(--grey6);
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: var(--box-shadow-1);
+  overflow-x: hidden;
+}
+
+.row {
+  composes: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+  padding-inline: 16px;
+}
+
+.borderBottom {
+  box-sizing: border-box;
+  &:not(:last-child) {
+    border-bottom-color: var(--grey6);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+  }
+}
+
+.legend {
+  composes: row borderBottom;
+  background-color: var(--grey2);
+  height: 48px;
+  order: 0;
+}
+
+.header {
+  composes: row borderBottom;
+  background-color: var(--grey2);
+  height: 72px;
+  order: 1;
+}
+
+.content {
+  composes: column;
+  background-color: var(--grey1);
+  order: 2;
+  padding: 16px;
+}
+
+.list {
+  composes: column;
+  max-height: 256px;
+  order: 2;
+  overflow-y: auto;
+}
+
+.listItem {
+  composes: row borderBottom;
+  background-color: var(--grey1);
+  flex-shrink: 0;
+  height: 64px;
+}
+
+.listItemText {
+  flex-grow: 1;
+}
+
+.borderTop:not(:first-child) {
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- Displays a 1 px top border outside the element. */
+  box-shadow: 0 -1px 0 0 var(--grey6);
+}
+
+.footer {
+  composes: row borderTop;
+  background-color: var(--grey1);
+  height: 48px;
+  order: 3;
+  padding-right: 8px;
+}
+
+.footerText {
+  flex-grow: 1;
+}

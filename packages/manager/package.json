@@ -97,6 +97,7 @@
 		"unified": "^10.1.2"
 	},
 	"devDependencies": {
+		"@amplitude/experiment-node-server": "1.8.1",
 		"@prismicio/mock": "0.2.0",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/cookie": "0.5.1",
