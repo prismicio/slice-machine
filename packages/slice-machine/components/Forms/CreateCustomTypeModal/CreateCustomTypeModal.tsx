@@ -21,6 +21,7 @@ import {
 } from "@src/features/customTypes/actions/createCustomType";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import { getFormat } from "@src/domain/customType";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 import { InputBox } from "../components/InputBox";
 import { SelectRepeatable } from "../components/SelectRepeatable";
@@ -58,6 +59,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   );
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
   const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
+  const { syncChanges } = useAutoSync();
   const router = useRouter();
 
   const onSubmit = async ({ id, label, repeatable }: FormValues) => {
@@ -86,6 +88,8 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
                 }
               : undefined,
         });
+
+        syncChanges();
       },
     });
 

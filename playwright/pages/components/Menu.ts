@@ -41,7 +41,9 @@ export class Menu {
       name: "Slices",
       exact: true,
     });
-    this.changesLink = this.menu.getByRole("link", { name: "Changes" });
+    this.changesLink = this.menu.getByRole("button", {
+      name: "Review changes",
+    });
     this.tutorialLink = this.menu.getByRole("link", {
       name: "Tutorials",
       exact: true,

@@ -60,7 +60,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
         overflow="hidden"
         alignItems="flex-start"
       >
-        {variant === "default" || variant === "unauthenticated" ? (
+        {variant === "default" ? (
           <Text component="span" variant="small" color="grey11">
             Environment
           </Text>
@@ -68,6 +68,12 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
 
         {variant === "unauthenticated" ? (
           <InvisibleButton buttonText="Login required" onClick={onLogInClick} />
+        ) : undefined}
+
+        {variant === "offline" ? (
+          <Text component="span" variant="bold">
+            Offline
+          </Text>
         ) : undefined}
 
         {variant === "default" ? (

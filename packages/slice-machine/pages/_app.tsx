@@ -34,9 +34,9 @@ import type { Persistor } from "redux-persist/es/types";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
-import { AppLayout, AppLayoutContent } from "@components/AppLayout";
 import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
 import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
+import { AutoSyncProvider } from "@src/features/sync/AutoSyncProvider";
 
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
@@ -140,39 +140,41 @@ function App({
                           );
                         }}
                         renderError={() => (
-                          <AppLayout>
-                            <AppLayoutContent>
-                              <Box alignItems="center" justifyContent="center">
-                                <DefaultErrorMessage
-                                  title="Error"
-                                  description="An error occurred while rendering the app."
-                                />
-                              </Box>
-                            </AppLayoutContent>
-                          </AppLayout>
+                          <Box
+                            justifyContent="center"
+                            width="100%"
+                            padding={80}
+                          >
+                            <DefaultErrorMessage
+                              title="Error"
+                              description="An error occurred while rendering the app."
+                            />
+                          </Box>
                         )}
                       >
-                        <InAppGuideProvider>
-                          <RouteChangeProvider>
-                            <Suspense fallback={<LoadingPage />}>
-                              <ComponentLayout>
-                                <Component {...pageProps} />
-                              </ComponentLayout>
-                            </Suspense>
-                          </RouteChangeProvider>
-                          <ErrorBoundary
-                            onError={(error) => {
-                              console.error(
-                                `An error occurred while rendering the in-app guide`,
-                                error,
-                              );
-                            }}
-                          >
-                            <Suspense>
-                              <InAppGuideDialog />
-                            </Suspense>
-                          </ErrorBoundary>
-                        </InAppGuideProvider>
+                        <Suspense fallback={<LoadingPage />}>
+                          <AutoSyncProvider>
+                            <InAppGuideProvider>
+                              <RouteChangeProvider>
+                                <ComponentLayout>
+                                  <Component {...pageProps} />
+                                </ComponentLayout>
+                              </RouteChangeProvider>
+                              <ErrorBoundary
+                                onError={(error) => {
+                                  console.error(
+                                    `An error occurred while rendering the in-app guide`,
+                                    error,
+                                  );
+                                }}
+                              >
+                                <Suspense>
+                                  <InAppGuideDialog />
+                                </Suspense>
+                              </ErrorBoundary>
+                            </InAppGuideProvider>
+                          </AutoSyncProvider>
+                        </Suspense>
                       </ErrorBoundary>
                     </PersistGate>
                   </ConnectedRouter>
