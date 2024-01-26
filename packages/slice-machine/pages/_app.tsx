@@ -37,6 +37,7 @@ import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 import { AppLayout, AppLayoutContent } from "@components/AppLayout";
 import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
 import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
+import { AutoSyncProvider } from "@src/features/changes/AutoSyncProvider";
 
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
@@ -152,27 +153,29 @@ function App({
                           </AppLayout>
                         )}
                       >
-                        <InAppGuideProvider>
-                          <RouteChangeProvider>
-                            <Suspense fallback={<LoadingPage />}>
-                              <ComponentLayout>
-                                <Component {...pageProps} />
-                              </ComponentLayout>
-                            </Suspense>
-                          </RouteChangeProvider>
-                          <ErrorBoundary
-                            onError={(error) => {
-                              console.error(
-                                `An error occurred while rendering the in-app guide`,
-                                error,
-                              );
-                            }}
-                          >
-                            <Suspense>
-                              <InAppGuideDialog />
-                            </Suspense>
-                          </ErrorBoundary>
-                        </InAppGuideProvider>
+                        <AutoSyncProvider>
+                          <InAppGuideProvider>
+                            <RouteChangeProvider>
+                              <Suspense fallback={<LoadingPage />}>
+                                <ComponentLayout>
+                                  <Component {...pageProps} />
+                                </ComponentLayout>
+                              </Suspense>
+                            </RouteChangeProvider>
+                            <ErrorBoundary
+                              onError={(error) => {
+                                console.error(
+                                  `An error occurred while rendering the in-app guide`,
+                                  error,
+                                );
+                              }}
+                            >
+                              <Suspense>
+                                <InAppGuideDialog />
+                              </Suspense>
+                            </ErrorBoundary>
+                          </InAppGuideProvider>
+                        </AutoSyncProvider>
                       </ErrorBoundary>
                     </PersistGate>
                   </ConnectedRouter>

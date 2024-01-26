@@ -1,4 +1,4 @@
-import { ErrorBoundary } from "@prismicio/editor-ui";
+import { Box, ErrorBoundary, Icon, ProgressCircle } from "@prismicio/editor-ui";
 import { Suspense, type FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -27,6 +27,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getChangelog } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
+import { useAutoSync } from "@src/features/changes/AutoSyncProvider";
 
 import { ChangesListItem } from "./ChangesListItem";
 import { Environment } from "./Environment";
@@ -45,6 +46,9 @@ const Navigation: FC = () => {
     useSliceMachineActions();
   const { repositoryName, repositoryDomain, repositoryUrl } =
     useRepositoryInformation();
+  const { autoSyncStatus } = useAutoSync();
+
+  console.log("autoSyncStatus:", autoSyncStatus);
 
   return (
     <SideNav>
@@ -60,6 +64,45 @@ const Navigation: FC = () => {
           <Environment />
         </Suspense>
       </ErrorBoundary>
+
+      <Divider
+        variant="edgeFaded"
+        color="grey6"
+        className={styles.environmentDivider}
+      />
+
+      <Box alignItems="center" gap={8}>
+        {autoSyncStatus === "syncing" && (
+          <>
+            SYNCING
+            <ProgressCircle />
+          </>
+        )}
+        {autoSyncStatus === "synced" && (
+          <>
+            SYNCED
+            <Icon size="medium" name="check" color="green11" />
+          </>
+        )}
+        {autoSyncStatus === "failed" && (
+          <>
+            FAILED
+            <Icon size="medium" name="close" color="tomato11" />
+          </>
+        )}
+        {autoSyncStatus === "offline" && (
+          <>
+            OFFLINE
+            <Icon size="medium" name="linkOff" color="grey11" />
+          </>
+        )}
+        {autoSyncStatus === "not-logged-in" && (
+          <>
+            NOT LOGGED IN
+            <Icon size="medium" name="block" color="grey11" />
+          </>
+        )}
+      </Box>
 
       <Divider
         variant="edgeFaded"

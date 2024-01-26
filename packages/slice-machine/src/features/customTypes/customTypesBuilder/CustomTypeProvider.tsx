@@ -10,6 +10,7 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { useStableCallback } from "@prismicio/editor-support/React";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useAutoSync } from "@src/features/changes/AutoSyncProvider";
 import {
   AutoSaveStatus,
   useAutoSave,
@@ -45,6 +46,7 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   });
   const { saveCustomTypeSuccess } = useSliceMachineActions();
   const stableSaveCustomTypeSuccess = useStableCallback(saveCustomTypeSuccess);
+  const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
     (customType: CustomType) => {
@@ -58,9 +60,11 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
         // Update available custom types store with new custom type
         stableSaveCustomTypeSuccess(customType);
+
+        syncChanges();
       });
     },
-    [setNextSave, stableSaveCustomTypeSuccess],
+    [setNextSave, stableSaveCustomTypeSuccess, syncChanges],
   );
 
   const contextValue: CustomTypeContext = useMemo(

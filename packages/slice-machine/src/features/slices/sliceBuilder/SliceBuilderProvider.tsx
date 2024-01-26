@@ -17,6 +17,7 @@ import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { readSliceMocks, updateSlice } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@lib/models/common/Slice";
+import { useAutoSync } from "@src/features/changes/AutoSyncProvider";
 
 type SliceContext = {
   slice: ComponentUI;
@@ -43,6 +44,7 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
   });
   const { saveSliceSuccess } = useSliceMachineActions();
   const stableSaveSliceSuccess = useStableCallback(saveSliceSuccess);
+  const { syncChanges } = useAutoSync();
 
   const variation = useMemo(() => {
     const variationName = router.query.variation;
@@ -77,9 +79,11 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
         }
 
         stableSaveSliceSuccess({ ...slice, mocks });
+
+        syncChanges();
       });
     },
-    [setNextSave, stableSaveSliceSuccess],
+    [setNextSave, stableSaveSliceSuccess, syncChanges],
   );
 
   const contextValue: SliceContext = useMemo(
