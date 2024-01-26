@@ -173,10 +173,14 @@ export const UpdateInfo: FC<UpdateInfoProps> = ({
       Some updates of Slice Machine are available.
     </p>
 
-    {createElement(
-      component,
-      { ...{ className: styles.updateInfoLink, onClick }, href },
-      "Learn more",
-    )}
+    {
+      // TODO(DT-1942): This should be a Button with a link component for
+      // accessibility
+      createElement(
+        component,
+        { ...{ className: styles.updateInfoLink, onClick }, href },
+        "Learn more",
+      )
+    }
   </div>
 );

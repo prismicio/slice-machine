@@ -21,7 +21,7 @@ import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderPro
 import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
 
 export const SliceBuilder: FC = () => {
-  const { slice, autoSaveStatus } = useSliceState();
+  const { slice, actionQueueStatus } = useSliceState();
 
   const isSimulatorAvailableForFramework = useSelector(
     selectIsSimulatorAvailableForFramework,
@@ -33,10 +33,10 @@ export const SliceBuilder: FC = () => {
         <AppLayoutBackButton url="/slices" />
         <AppLayoutBreadcrumb folder="Slices" page={slice.model.name} />
         <AppLayoutActions>
-          <AutoSaveStatusIndicator status={autoSaveStatus} />
+          <AutoSaveStatusIndicator status={actionQueueStatus} />
           <SimulatorButton
             isSimulatorAvailableForFramework={isSimulatorAvailableForFramework}
-            disabled={autoSaveStatus !== "saved"}
+            disabled={actionQueueStatus !== "done"}
           />
         </AppLayoutActions>
       </AppLayoutHeader>

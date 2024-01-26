@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import {
@@ -10,18 +9,26 @@ import {
 } from "@lib/models/common/ModelData";
 import { StatusBadge } from "@src/features/changes/StatusBadge";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { AuthStatus } from "@src/modules/userContext/types";
+import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
 
-interface CustomTypeTableProps extends ModelStatusInformation {
+interface CustomTypeTableProps {
   customTypes: LocalOrRemoteCustomType[];
+  modelsStatuses: ModelsStatuses;
+  authStatus: AuthStatus;
+  isOnline: boolean;
 }
 
 const firstColumnWidth = "40%";
 const secondColumnWidth = "40%";
 const thirdColumnWidth = "20%";
 
-const CustomTypeChangeRow: React.FC<
-  { ct: CustomTypeSM; status: ModelStatus } & ModelStatusInformation
-> = ({ ct, status, authStatus, isOnline }) => {
+const CustomTypeChangeRow: React.FC<{
+  ct: CustomTypeSM;
+  status: ModelStatus;
+  authStatus: AuthStatus;
+  isOnline: boolean;
+}> = ({ ct, status, authStatus, isOnline }) => {
   return (
     <>
       <Box as={"td"} style={{ width: firstColumnWidth }}>
@@ -80,7 +87,6 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
                   status={modelsStatuses.customTypes[customType.local.id]}
                   authStatus={authStatus}
                   isOnline={isOnline}
-                  modelsStatuses={modelsStatuses}
                   key={customType.local.id}
                 />
               </tr>
@@ -97,7 +103,6 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
                 status={modelsStatuses.customTypes[customType.remote.id]}
                 authStatus={authStatus}
                 isOnline={isOnline}
-                modelsStatuses={modelsStatuses}
                 key={customType.remote.id}
               />
             </tr>
