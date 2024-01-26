@@ -15,10 +15,9 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { FC } from "react";
 import clsx from "clsx";
 
-import LogoIcon from "@src/icons/LogoIcon";
-
 import * as styles from "./SideNavEnvironmentSelector.css";
 import { LoginIcon } from "@src/icons/LoginIcon";
+import { AutoSyncStatusIndicator } from "@src/features/sync/AutoSyncStatusIndicator";
 
 type SideNavEnvironmentSelectorProps = {
   variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
@@ -44,7 +43,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
   return (
     <Box alignItems="center" gap={16}>
       <Box position="relative">
-        <LogoIcon className={styles.logo} />
+        <AutoSyncStatusIndicator />
         {environments.length > 1 && (
           <EnvironmentDot
             kind={activeEnvironment?.kind ?? "prod"}

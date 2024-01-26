@@ -6,19 +6,23 @@ import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
 import Grid from "@components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/domain/slice";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
+import { AuthStatus } from "@src/modules/userContext/types";
+import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
 
 import { DevCollaborationExperiment } from "./DevCollaborationExperiment";
 
-interface ChangesItemsProps extends ModelStatusInformation {
+interface ChangesItemsProps {
   unSyncedCustomTypes: LocalOrRemoteCustomType[];
   unSyncedSlices: ComponentUI[];
+  modelsStatuses: ModelsStatuses;
+  authStatus: AuthStatus;
+  isOnline: boolean;
 }
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({

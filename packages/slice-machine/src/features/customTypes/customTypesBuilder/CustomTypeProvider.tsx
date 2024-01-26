@@ -10,18 +10,16 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { useStableCallback } from "@prismicio/editor-support/React";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {
-  AutoSaveStatus,
-  useAutoSave,
-} from "@src/features/autoSave/useAutoSave";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 import { getFormat } from "@src/domain/customType";
 import { updateCustomType } from "@src/apiClient";
+import { ActionQueueStatus, useActionQueue } from "@src/hooks/useActionQueue";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
 type CustomTypeContext = {
   customType: CustomType;
-  autoSaveStatus: AutoSaveStatus;
+  actionQueueStatus: ActionQueueStatus;
   setCustomType: (customType: CustomType) => void;
 };
 
@@ -40,16 +38,17 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const [customType, setCustomTypeState] = useState(initialCustomType);
   const format = getFormat(customType);
   const customTypeMessages = CUSTOM_TYPES_MESSAGES[format];
-  const { autoSaveStatus, setNextSave } = useAutoSave({
+  const { actionQueueStatus, setNextAction } = useActionQueue({
     errorMessage: customTypeMessages.autoSaveFailed,
   });
   const { saveCustomTypeSuccess } = useSliceMachineActions();
   const stableSaveCustomTypeSuccess = useStableCallback(saveCustomTypeSuccess);
+  const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
     (customType: CustomType) => {
       setCustomTypeState(customType);
-      setNextSave(async () => {
+      setNextAction(async () => {
         const { errors } = await updateCustomType(customType);
 
         if (errors.length > 0) {
@@ -58,18 +57,20 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
         // Update available custom types store with new custom type
         stableSaveCustomTypeSuccess(customType);
+
+        syncChanges();
       });
     },
-    [setNextSave, stableSaveCustomTypeSuccess],
+    [setNextAction, stableSaveCustomTypeSuccess, syncChanges],
   );
 
   const contextValue: CustomTypeContext = useMemo(
     () => ({
-      autoSaveStatus,
+      actionQueueStatus,
       customType,
       setCustomType,
     }),
-    [autoSaveStatus, customType, setCustomType],
+    [actionQueueStatus, customType, setCustomType],
   );
 
   return (

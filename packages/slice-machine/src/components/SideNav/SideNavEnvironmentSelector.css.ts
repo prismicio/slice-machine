@@ -1,16 +1,6 @@
 import { colors, sprinkles } from "@prismicio/editor-ui";
 import { style, styleVariants } from "@vanilla-extract/css";
 
-export const logo = style([
-  sprinkles({
-    height: 40,
-    width: 40,
-  }),
-  {
-    display: "block",
-  },
-]);
-
 const environmentDotBase = style([
   sprinkles({
     flexShrink: 0,
