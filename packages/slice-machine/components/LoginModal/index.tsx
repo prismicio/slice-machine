@@ -11,7 +11,7 @@ import {
   Text,
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { checkAuthStatus, startAuth } from "@src/apiClient";
+import { checkAuthStatus, getState, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@lib/prismic/endpoints";
 import { startPolling } from "@lib/utils/poll";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
@@ -25,6 +25,12 @@ import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import preferWroomBase from "@lib/utils/preferWroomBase";
 import { ToasterType } from "@src/modules/toaster";
+import { getUnSyncedChanges } from "@src/features/sync/getUnSyncChanges";
+import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
+import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
+import { AuthStatus } from "@src/modules/userContext/types";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
+import { getActiveEnvironment } from "@src/features/environments/actions/getActiveEnvironment";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";
@@ -42,7 +48,7 @@ const LoginModal: React.FunctionComponent = () => {
       env: getEnvironment(store),
     }),
   );
-
+  const { syncChanges } = useAutoSync();
   const { closeModals, startLoadingLogin, stopLoadingLogin, openToaster } =
     useSliceMachineActions();
 
@@ -72,6 +78,38 @@ const LoginModal: React.FunctionComponent = () => {
       openToaster("Logged in", ToasterType.SUCCESS);
       stopLoadingLogin();
       closeModals();
+
+      const serverState = await getState();
+      const slices = normalizeFrontendSlices(
+        serverState.libraries,
+        serverState.remoteSlices,
+      );
+      const customTypes = Object.values(
+        normalizeFrontendCustomTypes(
+          serverState.customTypes,
+          serverState.remoteCustomTypes,
+        ),
+      );
+      const { changedCustomTypes, changedSlices } = getUnSyncedChanges({
+        authStatus: AuthStatus.AUTHORIZED,
+        customTypes,
+        isOnline: true,
+        libraries: serverState.libraries,
+        slices,
+      });
+      const { activeEnvironment } = await getActiveEnvironment();
+
+      if (
+        activeEnvironment?.kind === "dev" &&
+        (changedCustomTypes.length > 0 || changedSlices.length > 0)
+      ) {
+        syncChanges({
+          environment: activeEnvironment,
+          loggedIn: true,
+          changedCustomTypes,
+          changedSlices,
+        });
+      }
     } catch (e) {
       stopLoadingLogin();
       openToaster("Login failed", ToasterType.ERROR);

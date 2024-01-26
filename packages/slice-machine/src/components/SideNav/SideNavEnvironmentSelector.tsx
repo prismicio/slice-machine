@@ -8,6 +8,7 @@ import {
   Icon,
   IconButton,
   InvisibleButton,
+  ProgressCircle,
   Text,
 } from "@prismicio/editor-ui";
 import { Environment } from "@slicemachine/manager/client";
@@ -21,22 +22,26 @@ import * as styles from "./SideNavEnvironmentSelector.css";
 import { LoginIcon } from "@src/icons/LoginIcon";
 
 type SideNavEnvironmentSelectorProps = {
-  variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
-  environments?: Environment[];
   activeEnvironment?: Environment;
-  onSelect?: (environment: Environment) => void | Promise<void>;
+  disabled?: boolean;
+  environments?: Environment[];
+  loading?: boolean;
+  variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
   onLogInClick?: () => void;
+  onSelect?: (environment: Environment) => void | Promise<void>;
 };
 
 export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
   props,
 ) => {
   const {
-    variant = "default",
-    environments = [],
     activeEnvironment,
-    onSelect,
+    disabled = false,
+    environments = [],
+    loading = false,
+    variant = "default",
     onLogInClick,
+    onSelect,
   } = props;
 
   const isProductionEnvironmentActive = activeEnvironment?.kind === "prod";
@@ -60,7 +65,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
         overflow="hidden"
         alignItems="flex-start"
       >
-        {variant === "default" || variant === "unauthenticated" ? (
+        {variant === "default" ? (
           <Text component="span" variant="small" color="grey11">
             Environment
           </Text>
@@ -68,6 +73,12 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
 
         {variant === "unauthenticated" ? (
           <InvisibleButton buttonText="Login required" onClick={onLogInClick} />
+        ) : undefined}
+
+        {variant === "offline" ? (
+          <Text component="span" variant="bold">
+            Offline
+          </Text>
         ) : undefined}
 
         {variant === "default" ? (
@@ -93,8 +104,10 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
 
         {environments.length > 1 ? (
           <EnvironmentDropdownMenu
-            environments={environments}
             activeEnvironment={activeEnvironment}
+            disabled={disabled}
+            environments={environments}
+            loading={loading}
             onSelect={onSelect}
           />
         ) : undefined}
@@ -107,11 +120,14 @@ type EnvironmentDropdownMenuProps = Pick<
   SideNavEnvironmentSelectorProps,
   "activeEnvironment" | "onSelect"
 > & {
+  disabled: boolean;
   environments: Environment[];
+  loading: boolean;
 };
 
 const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
-  const { environments, activeEnvironment, onSelect } = props;
+  const { activeEnvironment, disabled, environments, loading, onSelect } =
+    props;
 
   const nonPersonalEnvironments = environments.filter(
     (environment) => environment.kind !== "dev",
@@ -122,8 +138,18 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
 
   return (
     <DropdownMenu modal>
-      <DropdownMenuTrigger disabled={environments.length < 2}>
-        <IconButton icon="unfoldMore" hiddenLabel="Select environment" />
+      <DropdownMenuTrigger disabled={disabled}>
+        {loading ? (
+          <Box padding={8}>
+            <ProgressCircle color="grey11" />
+          </Box>
+        ) : (
+          <IconButton
+            icon="unfoldMore"
+            hiddenLabel="Select environment"
+            disabled={disabled}
+          />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" minWidth={256}>
         {personalEnvironment ? (

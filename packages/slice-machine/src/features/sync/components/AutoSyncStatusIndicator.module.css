@@ -1,0 +1,19 @@
+.root {
+  align-items: center;
+  border-radius: 6px;
+  border: solid 1px transparent;
+  border-image: linear-gradient(
+      to right,
+      hsla(300, 4%, 89%, 0) 0%,
+      hsla(300, 4%, 89%, 0.24) 25%,
+      hsla(300, 4%, 89%, 1) 50%,
+      hsla(300, 4%, 89%, 0.23) 75%,
+      hsla(300, 4%, 89%, 0) 100%
+    )
+    1 stretch;
+  display: flex;
+  gap: 4px;
+  height: 32px;
+  justify-content: center;
+  width: 100%;
+}
