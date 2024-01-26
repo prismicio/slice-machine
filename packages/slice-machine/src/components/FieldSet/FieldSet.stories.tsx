@@ -3,11 +3,14 @@ import {
   Button,
   ButtonGroup,
   IconButton,
+  Select,
+  SelectItem,
   Skeleton,
   Text,
   tokens,
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
+import type { ReactNode } from "react";
 
 import { BitbucketIcon } from "../../icons/BitbucketIcon";
 import { GitHubIcon } from "../../icons/GitHubIcon";
@@ -105,7 +108,9 @@ export const LoadingWithHeaderAndList = {
     children: (
       <>
         <FieldSetLegend>Connected Git Repository</FieldSetLegend>
-        <FieldSetHeader />
+        <FieldSetHeader>
+          <OwnerSelect disabled />
+        </FieldSetHeader>
         <FieldSetList>
           {[...Array(4).keys()].map((index) => (
             <FieldSetListItem
@@ -137,7 +142,9 @@ export const WithHeaderAndListOverflow = {
     children: (
       <>
         <FieldSetLegend>Connected Git Repository</FieldSetLegend>
-        <FieldSetHeader />
+        <FieldSetHeader>
+          <OwnerSelect />
+        </FieldSetHeader>
         <FieldSetList>
           {[...Array(100).keys()].map((index) => (
             <FieldSetListItem
@@ -177,12 +184,15 @@ export const WithSingleListItem = {
   parameters: { controls: { hideNoControlsWarning: true, include: [] } },
 };
 
-export const WithBoxContent = {
+export const WithHeaderAndBoxContent = {
   args: {
     ...Default.args,
     children: (
       <>
         <FieldSetLegend>Connected Git Repository</FieldSetLegend>
+        <FieldSetHeader>
+          <OwnerSelect />
+        </FieldSetHeader>
         <FieldSetContent>
           {/*
            * TODO: these `padding` values actually don't match Figma, but they
@@ -206,3 +216,27 @@ export const WithBoxContent = {
   },
   parameters: { controls: { hideNoControlsWarning: true, include: [] } },
 };
+
+type OwnerSelectProps = { disabled?: boolean };
+
+function OwnerSelect(props: OwnerSelectProps): ReactNode {
+  return (
+    <Select
+      {...props}
+      color="grey"
+      constrainContentWidth
+      flexContent
+      placeholder="Owner"
+      renderStartIcon={() => <GitHubIcon color={tokens.color.greyLight11} />}
+      size="large"
+      sx={{ width: "calc(50% - 8px)" }}
+    >
+      <SelectItem size="large" value="owner-1">
+        Owner
+      </SelectItem>
+      <SelectItem size="large" value="owner-2">
+        Owner
+      </SelectItem>
+    </Select>
+  );
+}
