@@ -6,6 +6,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSlice } from "@src/features/slices/actions/renameSlice";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 import { InputBox } from "../components/InputBox";
 import ModalFormCard from "../../ModalFormCard";
@@ -24,6 +25,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
   onClose,
 }) => {
   const { renameSliceSuccess } = useSliceMachineActions();
+  const { syncChanges } = useAutoSync();
   const { localLibs, remoteLibs } = useSelector(
     (store: SliceMachineStoreType) => ({
       localLibs: getLibraries(store),
@@ -39,6 +41,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
         newSliceName: values.sliceName,
         onSuccess: (renamedSlice) => {
           renameSliceSuccess(renamedSlice.from, renamedSlice.model);
+          syncChanges();
         },
       });
 

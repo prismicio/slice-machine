@@ -7,6 +7,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Card from "@components/Card";
 import { Button } from "@components/Button";
 import { deleteSlice } from "@src/features/slices/actions/deleteSlice";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 type DeleteSliceModalProps = {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export const DeleteSliceModal: React.FunctionComponent<
 > = ({ sliceId, sliceName, libName, isOpen, onClose }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteSliceSuccess } = useSliceMachineActions();
+  const { syncChanges } = useAutoSync();
   const { theme } = useThemeUI();
 
   const onDelete = async () => {
@@ -32,6 +34,7 @@ export const DeleteSliceModal: React.FunctionComponent<
       libraryID: libName,
       onSuccess: () => {
         deleteSliceSuccess(sliceId, libName);
+        syncChanges();
       },
     });
 
