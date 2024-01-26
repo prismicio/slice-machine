@@ -1,8 +1,8 @@
 import { revalidateData } from "@prismicio/editor-support/Suspense";
-import { Environment } from "@slicemachine/manager/client";
 
-import { getLegacySliceMachineState } from "@src/features/legacyState/actions/getLegacySliceMachineState";
+import { Environment } from "@slicemachine/manager/client";
 import { managerClient } from "@src/managerClient";
+import { getState } from "@src/apiClient";
 
 import { getActiveEnvironment } from "./getActiveEnvironment";
 
@@ -14,5 +14,5 @@ export async function setEnvironment(
   });
 
   void revalidateData(getActiveEnvironment, []);
-  void revalidateData(getLegacySliceMachineState, []);
+  void revalidateData(getState, []);
 }

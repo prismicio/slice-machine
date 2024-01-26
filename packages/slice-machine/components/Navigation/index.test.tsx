@@ -131,10 +131,8 @@ describe("Side Navigation", () => {
   test.skip.each([
     ["Page types", "/"],
     ["Custom types", "/custom-types"],
-    ["Changes", "/changes"],
-
-    ["Changelog", "/changelog"],
     ["Slices", "/slices"],
+    ["Changelog", "/changelog"],
     // TODO: once we have a plan fo how to display individual libraries change this
     // ["Slices/a", "/slices#slices/a"],
     // ["Slices/b", "/slices#slices/b"]
@@ -156,93 +154,15 @@ describe("Side Navigation", () => {
     },
   );
 
-  test("should display the number of changes on the 'Changes' item", async () => {
+  test("should display the number of changes on the 'Review changes' item", async () => {
     renderSideNavigation({ canUpdate: true, hasChanges: true });
 
-    expect(await screen.findByText("Changes")).toBeVisible();
+    expect(await screen.findByText("Review changes")).toBeVisible();
     const changesItem = screen
-      .getByText("Changes")
-      .closest("a") as HTMLAnchorElement;
+      .getByText("Review changes")
+      .closest("button") as HTMLButtonElement;
 
     expect(within(changesItem).getByText("1")).toBeVisible();
-  });
-
-  test("should not display the number of changes or 'Disconnect' on the 'Changes' item", async () => {
-    renderSideNavigation({ canUpdate: true, hasChanges: false });
-
-    expect(await screen.findByText("Changes")).toBeVisible();
-    const changesItem = screen
-      .getByText("Changes")
-      .closest("a") as HTMLAnchorElement;
-
-    expect(within(changesItem).queryByText("1")).not.toBeInTheDocument();
-    expect(
-      within(changesItem).queryByText("Logged out"),
-    ).not.toBeInTheDocument();
-  });
-
-  test("should display the information that user is disconnected on the 'Changes' item when unauthorized", async () => {
-    renderSideNavigation({
-      canUpdate: true,
-      hasChanges: true,
-      authStatus: AuthStatus.UNAUTHORIZED,
-    });
-
-    expect(await screen.findByText("Changes")).toBeVisible();
-    const changesItem = screen
-      .getByText("Changes")
-      .closest("a") as HTMLAnchorElement;
-
-    expect(within(changesItem).getByText("Logged out")).toBeVisible();
-  });
-
-  test("should display the information that user is disconnected on the 'Changes' item when forbidden", async () => {
-    renderSideNavigation({
-      canUpdate: true,
-      hasChanges: true,
-      authStatus: AuthStatus.FORBIDDEN,
-    });
-
-    expect(await screen.findByText("Changes")).toBeVisible();
-    const changesItem = screen
-      .getByText("Changes")
-      .closest("a") as HTMLAnchorElement;
-
-    expect(within(changesItem).getByText("Logged out")).toBeVisible();
-  });
-
-  test("should display the information that user is disconnected on the 'Changes' item when offline", async () => {
-    vi.spyOn(navigator, "onLine", "get").mockReturnValueOnce(false);
-
-    renderSideNavigation({
-      canUpdate: true,
-      hasChanges: true,
-    });
-
-    expect(await screen.findByText("Changes")).toBeVisible();
-    const changesItem = screen
-      .getByText("Changes")
-      .closest("a") as HTMLAnchorElement;
-
-    expect(within(changesItem).getByText("Logged out")).toBeVisible();
-  });
-
-  test("should not display the information that user is disconnected when user is online", async () => {
-    vi.spyOn(navigator, "onLine", "get").mockReturnValueOnce(true);
-
-    renderSideNavigation({
-      canUpdate: true,
-      hasChanges: true,
-    });
-
-    expect(await screen.findByText("Changes")).toBeVisible();
-    const changesItem = screen
-      .getByText("Changes")
-      .closest("a") as HTMLAnchorElement;
-
-    expect(
-      within(changesItem).queryByText("Logged out"),
-    ).not.toBeInTheDocument();
   });
 
   test("Video Item with next", async (ctx) => {
