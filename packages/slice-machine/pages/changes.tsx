@@ -1,8 +1,10 @@
 import { Button } from "@prismicio/editor-ui";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import Head from "next/head";
 import { BaseStyles } from "theme-ui";
+import { useRouter } from "next/router";
+
 import {
   AppLayout,
   AppLayoutActions,
@@ -12,59 +14,51 @@ import {
 } from "@components/AppLayout";
 import { ChangesItems } from "@components/ChangesItems";
 import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
-
 import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
-
 import { AuthStatus } from "@src/modules/userContext/types";
-import { unSyncStatuses, useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   SoftDeleteDocumentsDrawer,
   HardDeleteDocumentsDrawer,
 } from "@components/DeleteDocumentsDrawer";
-import { hasLocal } from "@lib/models/common/ModelData";
-import {
-  ChangedCustomType,
-  ChangedSlice,
-} from "@lib/models/common/ModelStatus";
 import { PushChangesLimit } from "@slicemachine/manager";
-import { pushChanges } from "@src/features/changes/actions/pushChanges";
 import { getState } from "@src/apiClient";
+import { pushChanges } from "@src/features/sync/actions/pushChanges";
+import { useUnSyncChanges } from "@src/features/sync/useUnSyncChanges";
+import { useNetwork } from "@src/hooks/useNetwork";
+import { useAuthStatus } from "@src/hooks/useAuthStatus";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 const Changes: React.FunctionComponent = () => {
   const {
     unSyncedSlices,
     unSyncedCustomTypes,
+    changedCustomTypes,
+    changedSlices,
     modelsStatuses,
-    authStatus,
-    isOnline,
   } = useUnSyncChanges();
-
-  const { changedSlices, changedCustomTypes } = useMemo(() => {
-    const changedSlices = unSyncedSlices
-      .map((s) => ({
-        slice: s,
-        status: modelsStatuses.slices[s.model.id],
-      }))
-      .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status)); // TODO can we sync unSyncStatuses and ChangedSlice?
-    const changedCustomTypes = unSyncedCustomTypes
-      .map((model) => (hasLocal(model) ? model.local : model.remote))
-      .map((ct) => ({
-        customType: ct,
-        status: modelsStatuses.customTypes[ct.id],
-      }))
-      .filter((c): c is ChangedCustomType => unSyncStatuses.includes(c.status));
-
-    return { changedSlices, changedCustomTypes };
-  }, [unSyncedSlices, unSyncedCustomTypes, modelsStatuses]);
-
+  const isOnline = useNetwork();
+  const authStatus = useAuthStatus();
   const { pushChangesSuccess, refreshState } = useSliceMachineActions();
   const [isSyncing, setIsSyncing] = useState(false);
   const [openModalData, setOpenModalData] = useState<
     PushChangesLimit | undefined
   >(undefined);
+  const { autoSyncStatus } = useAutoSync();
+  const router = useRouter();
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+
+  // Changes page should not be accessible when the autoSyncStatus is syncing, synced or failed
+  useEffect(() => {
+    if (
+      autoSyncStatus === "synced" ||
+      autoSyncStatus === "failed" ||
+      autoSyncStatus === "syncing"
+    ) {
+      void router.push("/");
+    }
+  }, [autoSyncStatus, router]);
 
   const onPush = async (confirmDeleteDocuments: boolean) => {
     try {
@@ -73,23 +67,15 @@ const Changes: React.FunctionComponent = () => {
 
       const limit = await pushChanges({
         confirmDeleteDocuments,
-        changedSlices,
         changedCustomTypes,
+        changedSlices,
       });
 
       if (limit !== undefined) {
         setOpenModalData(limit);
       } else {
-        // TODO(DT-1737): Remove the use of global getState
         const serverState = await getState();
-        refreshState({
-          env: serverState.env,
-          remoteCustomTypes: serverState.remoteCustomTypes,
-          customTypes: serverState.customTypes,
-          libraries: serverState.libraries,
-          remoteSlices: serverState.remoteSlices,
-          clientError: serverState.clientError,
-        });
+        refreshState(serverState);
 
         // Update last sync value in local storage
         pushChangesSuccess();

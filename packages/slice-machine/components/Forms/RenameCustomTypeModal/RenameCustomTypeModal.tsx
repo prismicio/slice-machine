@@ -13,6 +13,7 @@ import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 
 import { renameCustomType } from "@src/features/customTypes/actions/renameCustomType";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 interface RenameCustomTypeModalProps {
   isChangesLocal: boolean;
@@ -32,6 +33,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   const customTypeName = customType?.label ?? "";
   const customTypeId = customType?.id ?? "";
   const { renameCustomTypeSuccess } = useSliceMachineActions();
+  const { syncChanges } = useAutoSync();
 
   const [isRenaming, setIsRenaming] = useState(false);
 
@@ -46,7 +48,10 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
       await renameCustomType({
         model: customType,
         newLabel: values.customTypeName,
-        onSuccess: renameCustomTypeSuccess,
+        onSuccess: (renamedCustomType) => {
+          renameCustomTypeSuccess(renamedCustomType);
+          syncChanges();
+        },
       });
     }
     setIsRenaming(false);

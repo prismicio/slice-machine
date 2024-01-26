@@ -9,6 +9,7 @@ import ModalFormCard from "@components/ModalFormCard";
 import { createSlice } from "@src/features/slices/actions/createSlice";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getState } from "@src/apiClient";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 import { validateSliceModalValues } from "../formsValidator";
 import { InputBox } from "../components/InputBox";
@@ -30,6 +31,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
 }) => {
   const { createSliceSuccess } = useSliceMachineActions();
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
+  const { syncChanges } = useAutoSync();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
@@ -45,8 +47,8 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         const serverState = await getState();
         // Update Redux store
         createSliceSuccess(serverState.libraries);
-
         onSuccess(newSlice, libraryName);
+        syncChanges();
       },
     });
   };
