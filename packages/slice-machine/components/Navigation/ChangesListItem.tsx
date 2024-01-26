@@ -1,13 +1,9 @@
-import { type FC, useState } from "react";
+import { type FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { useSelector } from "react-redux";
 
 import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
 import { RadarIcon } from "@src/icons/RadarIcon";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
   HoverCard,
   HoverCardCloseButton,
@@ -15,11 +11,8 @@ import {
   HoverCardMedia,
   HoverCardTitle,
 } from "@src/components/HoverCard";
-import {
-  userHasSeenChangesToolTip,
-  userHasSeenSimulatorToolTip,
-} from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+
 import { ChangesRightElement } from "./ChangesRightElement";
 
 export const ChangesListItem: FC = () => {
@@ -63,30 +56,19 @@ export const ChangesListItem: FC = () => {
   );
 };
 
+// TODO(DT-1925): Reactivate this feature
 const useOpenChangesHoverCard = () => {
-  const {
-    hasSeenChangesToolTip,
-    hasSeenSimulatorToolTip,
-    isSavingCustomType,
-    isSavingSlice,
-  } = useSelector((store: SliceMachineStoreType) => ({
-    hasSeenChangesToolTip: userHasSeenChangesToolTip(store),
-    hasSeenSimulatorToolTip: userHasSeenSimulatorToolTip(store),
-    isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
-    isSavingSlice: isLoading(store, LoadingKeysEnum.SAVE_SLICE),
-  }));
+  // const { hasSeenChangesToolTip, hasSeenSimulatorToolTip } = useSelector(
+  //   (store: SliceMachineStoreType) => ({
+  //     hasSeenChangesToolTip: userHasSeenChangesToolTip(store),
+  //     hasSeenSimulatorToolTip: userHasSeenSimulatorToolTip(store),
+  //   }),
+  // );
 
-  const isSaving = isSavingCustomType || isSavingSlice;
-  const [prevIsSaving, setPrevIsSaving] = useState(isSaving);
+  // return (
+  //   !hasSeenChangesToolTip &&
+  //   hasSeenSimulatorToolTip
+  // );
 
-  if (!prevIsSaving && isSaving) {
-    setPrevIsSaving(isSaving);
-  }
-
-  return (
-    !hasSeenChangesToolTip &&
-    hasSeenSimulatorToolTip &&
-    !isSaving &&
-    prevIsSaving
-  );
+  return false;
 };
