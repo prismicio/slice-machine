@@ -6,6 +6,7 @@ export class EnvironmentSelector {
   readonly loginIconButton: Locator;
   readonly environmentName: Locator;
   readonly dropdownTrigger: Locator;
+  readonly loadingIcon: Locator;
 
   constructor(page: Page) {
     /**
@@ -29,6 +30,7 @@ export class EnvironmentSelector {
       name: "Select environment",
       exact: true,
     });
+    this.loadingIcon = page.getByTestId("environment-dropdown-loading");
   }
 
   /**

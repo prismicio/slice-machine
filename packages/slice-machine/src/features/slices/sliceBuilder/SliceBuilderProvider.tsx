@@ -9,18 +9,16 @@ import {
 import { useStableCallback } from "@prismicio/editor-support/React";
 import { useRouter } from "next/router";
 
-import {
-  AutoSaveStatus,
-  useAutoSave,
-} from "@src/features/autoSave/useAutoSave";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { readSliceMocks, updateSlice } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@lib/models/common/Slice";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
+import { ActionQueueStatus, useActionQueue } from "@src/hooks/useActionQueue";
 
 type SliceContext = {
   slice: ComponentUI;
-  autoSaveStatus: AutoSaveStatus;
+  actionQueueStatus: ActionQueueStatus;
   setSlice: (slice: ComponentUI) => void;
   variation: VariationSM;
 };
@@ -37,12 +35,13 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
 
   const router = useRouter();
   const [slice, setSliceState] = useState(initialSlice);
-  const { autoSaveStatus, setNextSave } = useAutoSave({
+  const { actionQueueStatus, setNextAction } = useActionQueue({
     errorMessage:
       "Failed to save slice. Check your browser's console for more information.",
   });
   const { saveSliceSuccess } = useSliceMachineActions();
   const stableSaveSliceSuccess = useStableCallback(saveSliceSuccess);
+  const { syncChanges } = useAutoSync();
 
   const variation = useMemo(() => {
     const variationName = router.query.variation;
@@ -60,7 +59,7 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
   const setSlice = useCallback(
     (slice: ComponentUI) => {
       setSliceState(slice);
-      setNextSave(async () => {
+      setNextAction(async () => {
         const { errors: updateSliceErrors } = await updateSlice(slice);
 
         if (updateSliceErrors.length > 0) {
@@ -76,20 +75,23 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
           throw readSliceMockErrors;
         }
 
+        // Update slices store with new slice
         stableSaveSliceSuccess({ ...slice, mocks });
+
+        syncChanges();
       });
     },
-    [setNextSave, stableSaveSliceSuccess],
+    [setNextAction, stableSaveSliceSuccess, syncChanges],
   );
 
   const contextValue: SliceContext = useMemo(
     () => ({
-      autoSaveStatus,
+      actionQueueStatus,
       slice,
       setSlice,
       variation,
     }),
-    [autoSaveStatus, slice, setSlice, variation],
+    [actionQueueStatus, slice, setSlice, variation],
   );
 
   return (
