@@ -10,7 +10,7 @@ import {
   hasSeenTutorialsToolTipCreator,
   hasSeenSimulatorToolTipCreator,
   hasSeenChangesToolTipCreator,
-  changesPushSuccessCreator,
+  changesPushSuccess,
 } from "./userContext";
 import { getChangelogCreator, refreshStateCreator } from "./environment";
 import {
@@ -19,10 +19,10 @@ import {
 } from "./simulator";
 import ServerState from "@models/server/ServerState";
 import {
-  createCustomTypeCreator,
-  deleteCustomTypeCreator,
-  renameAvailableCustomType,
-  saveCustomTypeCreator,
+  customTypeCreateSuccess,
+  customTypeDeleteSuccess,
+  customTypeRenameSuccess,
+  customTypeSaveSuccess,
 } from "./availableCustomTypes";
 import {
   createSlice,
@@ -38,7 +38,6 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { ComponentUI, ScreenshotUI } from "../../lib/models/common/ComponentUI";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
-import { CustomTypeFormat } from "@slicemachine/manager";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 const useSliceMachineActions = () => {
@@ -64,8 +63,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const openRenameSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
-  const openCreateCustomTypeModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
   const openDeleteSliceModal = () =>
@@ -104,71 +101,6 @@ const useSliceMachineActions = () => {
     dispatch(hasSeenTutorialsToolTipCreator());
   const setSeenChangesToolTip = () => dispatch(hasSeenChangesToolTipCreator());
 
-  // Custom types module
-  const createCustomType = (
-    id: string,
-    label: string,
-    repeatable: boolean,
-    format: CustomTypeFormat,
-  ) =>
-    dispatch(
-      createCustomTypeCreator.request({ id, label, repeatable, format }),
-    );
-
-  /**
-   * Success actions = sync store state from external actions. If its name
-   * contains "Creator", it means it is still used in a saga and that `.request`
-   * and `.failure` need to be preserved
-   */
-  const saveCustomTypeSuccess = (customType: CustomType) =>
-    dispatch(
-      saveCustomTypeCreator.success({
-        customType: CustomTypes.toSM(customType),
-      }),
-    );
-
-  const deleteCustomTypeSuccess = (id: string) =>
-    dispatch(
-      deleteCustomTypeCreator.success({
-        customTypeId: id,
-      }),
-    );
-
-  const renameAvailableCustomTypeSuccess = (customType: CustomType) =>
-    dispatch(
-      renameAvailableCustomType({
-        renamedCustomType: CustomTypes.toSM(customType),
-      }),
-    );
-
-  /** End of sucess actions */
-
-  // Slice module
-  const saveSliceSuccess = (component: ComponentUI) => {
-    dispatch(
-      updateSliceCreator.success({
-        component,
-      }),
-    );
-  };
-
-  const saveSliceCustomScreenshotSuccess = (
-    variationId: string,
-    screenshot: ScreenshotUI,
-    component: ComponentUI,
-  ) => {
-    dispatch(
-      generateSliceCustomScreenshotCreator.success({
-        variationId,
-        screenshot,
-        component,
-      }),
-    );
-  };
-
-  const createSliceSuccess = (libraries: readonly LibraryUI[]) =>
-    dispatch(createSlice({ libraries }));
-
   const renameSlice = (
     libName: string,
     sliceId: string,
@@ -190,8 +122,6 @@ const useSliceMachineActions = () => {
         libName,
       }),
     );
-
-  const pushChangesSuccess = () => dispatch(changesPushSuccessCreator());
 
   // Toaster store
   const openToaster = (
@@ -221,6 +151,71 @@ const useSliceMachineActions = () => {
     dispatch(getChangelogCreator.request());
   };
 
+  /**
+   * Success actions = sync store state from external actions. If its name
+   * contains "Creator", it means it is still used in a saga and that `.request`
+   * and `.failure` need to be preserved
+   */
+
+  /**
+   * Custom Type module
+   */
+  const createCustomTypeSuccess = (newCustomType: CustomType) =>
+    dispatch(
+      customTypeCreateSuccess({
+        newCustomType: CustomTypes.toSM(newCustomType),
+      }),
+    );
+  const saveCustomTypeSuccess = (customType: CustomType) =>
+    dispatch(
+      customTypeSaveSuccess({
+        newCustomType: CustomTypes.toSM(customType),
+      }),
+    );
+  const deleteCustomTypeSuccess = (id: string) =>
+    dispatch(
+      customTypeDeleteSuccess({
+        customTypeId: id,
+      }),
+    );
+  const renameCustomTypeSuccess = (customType: CustomType) =>
+    dispatch(
+      customTypeRenameSuccess({
+        renamedCustomType: CustomTypes.toSM(customType),
+      }),
+    );
+
+  /**
+   * Slice module
+   */
+  const saveSliceSuccess = (component: ComponentUI) => {
+    dispatch(
+      updateSliceCreator.success({
+        component,
+      }),
+    );
+  };
+  const saveSliceCustomScreenshotSuccess = (
+    variationId: string,
+    screenshot: ScreenshotUI,
+    component: ComponentUI,
+  ) => {
+    dispatch(
+      generateSliceCustomScreenshotCreator.success({
+        variationId,
+        screenshot,
+        component,
+      }),
+    );
+  };
+  const createSliceSuccess = (libraries: readonly LibraryUI[]) =>
+    dispatch(createSlice({ libraries }));
+
+  /**
+   * Changes module
+   */
+  const pushChangesSuccess = () => dispatch(changesPushSuccess());
+
   return {
     checkSimulatorSetup,
     connectToSimulatorFailure,
@@ -233,9 +228,8 @@ const useSliceMachineActions = () => {
     stopLoadingLogin,
     stopLoadingReview,
     startLoadingReview,
-    createCustomType,
     deleteCustomTypeSuccess,
-    renameAvailableCustomTypeSuccess,
+    renameCustomTypeSuccess,
     saveCustomTypeSuccess,
     saveSliceSuccess,
     saveSliceCustomScreenshotSuccess,
@@ -248,7 +242,6 @@ const useSliceMachineActions = () => {
     setSeenTutorialsToolTip,
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
-    openCreateCustomTypeModal,
     openScreenshotPreviewModal,
     openDeleteSliceModal,
     openSimulatorSetupModal,
@@ -258,6 +251,7 @@ const useSliceMachineActions = () => {
     saveSliceMock,
     getChangelog,
     pushChangesSuccess,
+    createCustomTypeSuccess,
   };
 };
 

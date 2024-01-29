@@ -11,16 +11,9 @@ import {
 } from "@src/components/Table";
 import { ReusableIcon } from "@src/icons/ReusableIcon";
 import { UniqueIcon } from "@src/icons/UniqueIcon";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { type CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
-import {
-  useCustomTypes,
-  useCustomTypesAutoRevalidation,
-} from "./useCustomTypes";
-
 import {
   BlankSlate,
   BlankSlateImage,
@@ -29,18 +22,25 @@ import {
   BlankSlateActions,
   BlankSlateContent,
 } from "@src/components/BlankSlate";
+
+import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { EditDropdown } from "../EditDropdown";
+import {
+  useCustomTypes,
+  useCustomTypesAutoRevalidation,
+} from "./useCustomTypes";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
   isCreatingCustomType: boolean;
+  openCreateCustomTypeModal: () => void;
 };
 
 export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   format,
   isCreatingCustomType,
+  openCreateCustomTypeModal,
 }) => {
-  const { openCreateCustomTypeModal } = useSliceMachineActions();
   const router = useRouter();
   const { customTypes, updateCustomTypes } = useCustomTypes(format);
   const sortedCustomTypes = customTypes.sort(

@@ -31,7 +31,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
 }) => {
   const customTypeName = customType?.label ?? "";
   const customTypeId = customType?.id ?? "";
-  const { renameAvailableCustomTypeSuccess } = useSliceMachineActions();
+  const { renameCustomTypeSuccess } = useSliceMachineActions();
 
   const [isRenaming, setIsRenaming] = useState(false);
 
@@ -46,7 +46,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
       await renameCustomType({
         model: customType,
         newLabel: values.customTypeName,
-        onSuccess: renameAvailableCustomTypeSuccess,
+        onSuccess: renameCustomTypeSuccess,
       });
     }
     setIsRenaming(false);

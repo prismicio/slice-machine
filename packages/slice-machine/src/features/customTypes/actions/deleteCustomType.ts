@@ -1,8 +1,10 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { managerClient } from "@src/managerClient";
-import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
-import { CustomTypeFormat } from "@slicemachine/manager/*";
 import { toast } from "react-toastify";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+
+import { managerClient } from "@src/managerClient";
+import { CustomTypeFormat } from "@slicemachine/manager";
+
+import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
 type DeleteCustomTypeArgs = {
   customType: CustomType;
@@ -17,7 +19,13 @@ export async function deleteCustomType({
     CUSTOM_TYPES_MESSAGES[customType.format as CustomTypeFormat];
 
   try {
-    await managerClient.customTypes.deleteCustomType({ id: customType.id });
+    const { errors } = await managerClient.customTypes.deleteCustomType({
+      id: customType.id,
+    });
+
+    if (errors.length > 0) {
+      throw errors;
+    }
 
     onSuccess();
 
@@ -32,6 +40,8 @@ export async function deleteCustomType({
       start: true,
       plural: false,
     })} could not be deleted`;
+
     console.error(errorMessage, e);
+    toast.error(errorMessage);
   }
 }
