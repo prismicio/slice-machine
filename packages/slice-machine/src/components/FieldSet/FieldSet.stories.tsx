@@ -3,6 +3,8 @@ import {
   Button,
   ButtonGroup,
   IconButton,
+  Select,
+  SelectItem,
   Skeleton,
   Text,
   tokens,
@@ -105,7 +107,9 @@ export const LoadingWithHeaderAndList = {
     children: (
       <>
         <FieldSetLegend>Connected Git Repository</FieldSetLegend>
-        <FieldSetHeader />
+        <FieldSetHeader>
+          <OwnerSelect disabled />
+        </FieldSetHeader>
         <FieldSetList>
           {[...Array(4).keys()].map((index) => (
             <FieldSetListItem
@@ -137,7 +141,9 @@ export const WithHeaderAndListOverflow = {
     children: (
       <>
         <FieldSetLegend>Connected Git Repository</FieldSetLegend>
-        <FieldSetHeader />
+        <FieldSetHeader>
+          <OwnerSelect />
+        </FieldSetHeader>
         <FieldSetList>
           {[...Array(100).keys()].map((index) => (
             <FieldSetListItem
@@ -177,12 +183,15 @@ export const WithSingleListItem = {
   parameters: { controls: { hideNoControlsWarning: true, include: [] } },
 };
 
-export const WithBoxContent = {
+export const WithHeaderAndBoxContent = {
   args: {
     ...Default.args,
     children: (
       <>
         <FieldSetLegend>Connected Git Repository</FieldSetLegend>
+        <FieldSetHeader>
+          <OwnerSelect />
+        </FieldSetHeader>
         <FieldSetContent>
           {/*
            * TODO: these `padding` values actually don't match Figma, but they
@@ -206,3 +215,27 @@ export const WithBoxContent = {
   },
   parameters: { controls: { hideNoControlsWarning: true, include: [] } },
 };
+
+type OwnerSelectProps = { disabled?: boolean };
+
+function OwnerSelect(props: OwnerSelectProps) {
+  return (
+    <Select
+      {...props}
+      color="grey"
+      constrainContentWidth
+      flexContent
+      placeholder="Owner"
+      renderStartIcon={() => <GitHubIcon color={tokens.color.greyLight11} />}
+      size="large"
+      sx={{ width: "calc(50% - 8px)" }}
+    >
+      <SelectItem size="large" value="owner-1">
+        Owner
+      </SelectItem>
+      <SelectItem size="large" value="owner-2">
+        Owner
+      </SelectItem>
+    </Select>
+  );
+}
