@@ -10,7 +10,6 @@ import {
   tokens,
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
-import type { ReactNode } from "react";
 
 import { BitbucketIcon } from "../../icons/BitbucketIcon";
 import { GitHubIcon } from "../../icons/GitHubIcon";
@@ -219,7 +218,7 @@ export const WithHeaderAndBoxContent = {
 
 type OwnerSelectProps = { disabled?: boolean };
 
-function OwnerSelect(props: OwnerSelectProps): ReactNode {
+function OwnerSelect(props: OwnerSelectProps) {
   return (
     <Select
       {...props}
