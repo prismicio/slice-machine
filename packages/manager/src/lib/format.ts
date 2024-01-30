@@ -1,4 +1,4 @@
-import prettier from "prettier";
+import type prettier from "prettier";
 import { stripIndent } from "common-tags";
 
 type FormatOptions = {
@@ -16,6 +16,8 @@ export const format = async (
 	filePath: string,
 	options?: FormatOptions,
 ): Promise<string> => {
+	const prettier = await import("prettier");
+
 	let formatted = stripIndent(source);
 
 	const prettierOptions = await prettier.resolveConfig(filePath);

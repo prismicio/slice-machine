@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import * as fs from "node:fs/promises";
 
-import prettier from "prettier";
+import type prettier from "prettier";
 import { stripIndent } from "common-tags";
 
 import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
@@ -105,6 +105,8 @@ export class SliceMachineHelpers {
 		filePath?: string,
 		options?: FormatOptions,
 	): Promise<string> => {
+		const prettier = await import("prettier");
+
 		let formatted = stripIndent(source);
 
 		const prettierOptions = await prettier.resolveConfig(
