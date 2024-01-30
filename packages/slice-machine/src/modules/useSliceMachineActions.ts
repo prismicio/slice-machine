@@ -25,11 +25,11 @@ import {
   customTypeSaveSuccess,
 } from "./availableCustomTypes";
 import {
-  createSlice,
-  deleteSliceCreator,
-  generateSliceCustomScreenshotCreator,
+  sliceCreateSuccess,
+  sliceDeleteSuccess,
+  sliceGenerateCustomScreenshotSuccess,
   renameSliceCreator,
-  updateSliceCreator,
+  sliceUpdateSuccess,
 } from "./slices";
 import { UserContextStoreType, UserReviewType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
@@ -65,8 +65,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-  const openDeleteSliceModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.DELETE_SLICE }));
   const openSimulatorSetupModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
@@ -110,15 +108,6 @@ const useSliceMachineActions = () => {
       renameSliceCreator.request({
         sliceId,
         newSliceName,
-        libName,
-      }),
-    );
-
-  const deleteSlice = (sliceId: string, sliceName: string, libName: string) =>
-    dispatch(
-      deleteSliceCreator.request({
-        sliceId,
-        sliceName,
         libName,
       }),
     );
@@ -190,7 +179,7 @@ const useSliceMachineActions = () => {
    */
   const saveSliceSuccess = (component: ComponentUI) => {
     dispatch(
-      updateSliceCreator.success({
+      sliceUpdateSuccess({
         component,
       }),
     );
@@ -201,7 +190,7 @@ const useSliceMachineActions = () => {
     component: ComponentUI,
   ) => {
     dispatch(
-      generateSliceCustomScreenshotCreator.success({
+      sliceGenerateCustomScreenshotSuccess({
         variationId,
         screenshot,
         component,
@@ -209,7 +198,14 @@ const useSliceMachineActions = () => {
     );
   };
   const createSliceSuccess = (libraries: readonly LibraryUI[]) =>
-    dispatch(createSlice({ libraries }));
+    dispatch(sliceCreateSuccess({ libraries }));
+  const deleteSliceSuccess = (sliceId: string, libName: string) =>
+    dispatch(
+      sliceDeleteSuccess({
+        sliceId,
+        libName,
+      }),
+    );
 
   /**
    * Changes module
@@ -235,7 +231,7 @@ const useSliceMachineActions = () => {
     saveSliceCustomScreenshotSuccess,
     createSliceSuccess,
     renameSlice,
-    deleteSlice,
+    deleteSliceSuccess,
     sendAReview,
     skipReview,
     setUpdatesViewed,
@@ -243,7 +239,6 @@ const useSliceMachineActions = () => {
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
     openScreenshotPreviewModal,
-    openDeleteSliceModal,
     openSimulatorSetupModal,
     openRenameSliceModal,
     closeModals,

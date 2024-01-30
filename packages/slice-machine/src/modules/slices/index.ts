@@ -4,14 +4,7 @@ import {
   createAsyncAction,
   getType,
 } from "typesafe-actions";
-import {
-  call,
-  fork,
-  put,
-  SagaReturnType,
-  select,
-  takeLatest,
-} from "redux-saga/effects";
+import { call, fork, put, select, takeLatest } from "redux-saga/effects";
 import { Reducer } from "redux";
 
 import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
@@ -20,7 +13,7 @@ import { SliceSM } from "@lib/models/common/Slice";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { deleteSlice, renameSlice, SaveSliceMockRequest } from "@src/apiClient";
+import { renameSlice, SaveSliceMockRequest } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -28,10 +21,9 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { SlicesStoreType } from "./types";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { selectSliceById } from "./selector";
-import { ScreenshotGenerationMethod } from "@lib/models/common/Screenshots";
 
 // Action Creators
-export const createSlice = createAction("SLICES/CREATE_SLICE")<{
+export const sliceCreateSuccess = createAction("SLICES/CREATE_SUCCESS")<{
   libraries: Readonly<LibraryUI[]>;
 }>();
 
@@ -51,61 +43,29 @@ export const renameSliceCreator = createAsyncAction(
   }
 >();
 
-export const deleteSliceCreator = createAsyncAction(
-  "SLICES/DELETE.REQUEST",
-  "SLICES/DELETE.RESPONSE",
-  "SLICES/DELETE.FAILURE",
-)<
-  {
-    sliceId: string;
-    sliceName: string;
-    libName: string;
-  },
-  {
-    sliceId: string;
-    sliceName: string;
-    libName: string;
-  }
->();
+export const sliceDeleteSuccess = createAction("SLICES/DELETE_SUCCESS")<{
+  sliceId: string;
+  libName: string;
+}>();
 
-export const updateSliceCreator = createAsyncAction(
-  "SLICE/UPDATE.REQUEST",
-  "SLICE/UPDATE.RESPONSE",
-  "SLICE/UPDATE.FAILURE",
-)<
-  {
-    component: ComponentUI;
-    setSliceBuilderState: () => void;
-  },
-  {
-    component: ComponentUI;
-  }
->();
+export const sliceUpdateSuccess = createAction("SLICE/UPDATE_SUCCESS")<{
+  component: ComponentUI;
+}>();
 
-export const generateSliceCustomScreenshotCreator = createAsyncAction(
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT.REQUEST",
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT.RESPONSE",
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT.FAILURE",
-)<
-  {
-    variationId: string;
-    component: ComponentUI;
-    file: Blob;
-    method: ScreenshotGenerationMethod;
-  },
-  { variationId: string; screenshot: ScreenshotUI; component: ComponentUI }
->();
+export const sliceGenerateCustomScreenshotSuccess = createAction(
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT_SUCCESS",
+)<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
 
 export const updateSliceMock =
   createAction("SLICE/UPDATE_MOCK")<SaveSliceMockRequest>();
 
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
-  | ActionType<typeof createSlice>
+  | ActionType<typeof sliceCreateSuccess>
   | ActionType<typeof renameSliceCreator>
-  | ActionType<typeof deleteSliceCreator>
-  | ActionType<typeof updateSliceCreator>
-  | ActionType<typeof generateSliceCustomScreenshotCreator>
+  | ActionType<typeof sliceDeleteSuccess>
+  | ActionType<typeof sliceUpdateSuccess>
+  | ActionType<typeof sliceGenerateCustomScreenshotSuccess>
   | ActionType<typeof updateSliceMock>;
 
 // Selectors
@@ -143,7 +103,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: action.payload.libraries,
         remoteSlices: action.payload.remoteSlices,
       };
-    case getType(createSlice):
+    case getType(sliceCreateSuccess):
       return {
         ...state,
         libraries: action.payload.libraries,
@@ -169,7 +129,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: newLibs,
       };
     }
-    case getType(updateSliceCreator.success): {
+    case getType(sliceUpdateSuccess): {
       const newComponentUI = action.payload.component;
 
       const newLibraries = state.libraries.map((library) => {
@@ -186,7 +146,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(generateSliceCustomScreenshotCreator.success): {
+    case getType(sliceGenerateCustomScreenshotSuccess): {
       const { component, screenshot, variationId } = action.payload;
 
       const newLibraries = state.libraries.map((library) => {
@@ -209,7 +169,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(deleteSliceCreator.success): {
+    case getType(sliceDeleteSuccess): {
       const { libName, sliceId } = action.payload;
       const newLibs = state.libraries.map((library) => {
         if (library.name !== libName) return library;
@@ -303,48 +263,9 @@ function* watchRenameSlice() {
   );
 }
 
-export function* deleteSliceSaga({
-  payload,
-}: ReturnType<typeof deleteSliceCreator.request>) {
-  const { libName, sliceId, sliceName } = payload;
-  try {
-    const result = (yield call(
-      deleteSlice,
-      sliceId,
-      libName,
-    )) as SagaReturnType<typeof deleteSlice>;
-    if (result.errors.length > 0) {
-      throw result.errors;
-    }
-    yield put(deleteSliceCreator.success(payload));
-    yield put(
-      openToasterCreator({
-        content: `Successfully deleted Slice “${sliceName}”`,
-        type: ToasterType.SUCCESS,
-      }),
-    );
-  } catch (e) {
-    yield put(
-      openToasterCreator({
-        content: "An unexpected error happened while deleting your slice.",
-        type: ToasterType.ERROR,
-      }),
-    );
-  }
-  yield put(modalCloseCreator());
-}
-
-function* watchDeleteSlice() {
-  yield takeLatest(
-    getType(deleteSliceCreator.request),
-    withLoader(deleteSliceSaga, LoadingKeysEnum.DELETE_SLICE),
-  );
-}
-
 // Saga Exports
 export function* watchSliceSagas() {
   yield fork(watchRenameSlice);
-  yield fork(watchDeleteSlice);
 }
 
 type RenameSliceModelArgs = {
