@@ -9,7 +9,7 @@ import {
   normalizeFrontendCustomTypes,
 } from "@lib/models/common/normalizers/customType";
 import { omit } from "lodash";
-import { deleteSliceCreator } from "../slices";
+import { sliceDeleteSuccess } from "../slices";
 import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
 import {
   LocalOrRemoteCustomType,
@@ -47,7 +47,7 @@ type CustomTypesActions =
   | ActionType<typeof customTypeRenameSuccess>
   | ActionType<typeof customTypeSaveSuccess>
   | ActionType<typeof customTypeDeleteSuccess>
-  | ActionType<typeof deleteSliceCreator.success>;
+  | ActionType<typeof sliceDeleteSuccess>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -152,7 +152,7 @@ export const availableCustomTypesReducer: Reducer<
       return state;
     }
 
-    case getType(deleteSliceCreator.success): {
+    case getType(sliceDeleteSuccess): {
       const sliceId = action.payload.sliceId;
 
       const customTypesUpdated: AvailableCustomTypesStoreType = Object.entries(

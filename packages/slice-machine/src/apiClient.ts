@@ -99,12 +99,6 @@ export const renameSlice = async (
   });
 };
 
-export const deleteSlice = async (sliceId: string, libName: string) =>
-  await managerClient.slices.deleteSlice({
-    libraryID: libName,
-    sliceID: sliceId,
-  });
-
 export const renameSliceVariation = async (
   slice: ComponentUI,
   variation: VariationSM,
