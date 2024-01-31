@@ -24,7 +24,6 @@ import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 import { DeleteSliceModal } from "@components/DeleteSliceModal";
 import { SliceMachineStoreType } from "@src/redux/type";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
@@ -33,8 +32,6 @@ import { SliceToastMessage } from "@components/ToasterContainer";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();
-  const { openRenameSliceModal } = useSliceMachineActions();
-
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
@@ -47,6 +44,7 @@ const SlicesIndex: React.FunctionComponent = () => {
   );
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isDeleteSliceModalOpen, setIsDeleteSliceModalOpen] = useState(false);
+  const [isRenameSliceModalOpen, setIsRenameSliceModalOpen] = useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -67,6 +65,10 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const openDeleteSliceModal = () => {
     setIsDeleteSliceModalOpen(true);
+  };
+
+  const openRenameSliceModal = () => {
+    setIsRenameSliceModalOpen(true);
   };
 
   return (
@@ -241,9 +243,11 @@ const SlicesIndex: React.FunctionComponent = () => {
             />
           )}
           <RenameSliceModal
-            sliceId={sliceForEdit?.model.id ?? ""}
-            sliceName={sliceForEdit?.model.name ?? ""}
-            libName={sliceForEdit?.from ?? ""}
+            isOpen={isRenameSliceModalOpen}
+            slice={sliceForEdit}
+            onClose={() => {
+              setIsRenameSliceModalOpen(false);
+            }}
             data-cy="rename-slice-modal"
           />
           <DeleteSliceModal
