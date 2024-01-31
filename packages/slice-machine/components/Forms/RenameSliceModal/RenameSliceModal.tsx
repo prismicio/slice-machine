@@ -1,50 +1,65 @@
 import { Box } from "theme-ui";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import ModalFormCard from "../../ModalFormCard";
-import { InputBox } from "../components/InputBox";
 import { useSelector } from "react-redux";
+
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { renameSlice } from "@src/features/slices/actions/renameSlice";
+
+import { InputBox } from "../components/InputBox";
+import ModalFormCard from "../../ModalFormCard";
 import { SliceModalValues } from "../formsTypes";
 import { validateSliceModalValues } from "../formsValidator";
 
 interface RenameSliceModalProps {
-  sliceName: string;
-  sliceId: string;
-  libName: string;
+  isOpen: boolean;
+  slice?: ComponentUI;
+  onClose: () => void;
 }
 
 export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
-  sliceName,
-  sliceId,
-  libName,
+  slice,
+  isOpen,
+  onClose,
 }) => {
-  const { renameSlice, closeModals } = useSliceMachineActions();
-  const { isRenameSliceModalOpen, localLibs, remoteLibs } = useSelector(
+  const { renameSliceSuccess } = useSliceMachineActions();
+  const { localLibs, remoteLibs } = useSelector(
     (store: SliceMachineStoreType) => ({
-      isRenameSliceModalOpen: isModalOpen(store, ModalKeysEnum.RENAME_SLICE),
       localLibs: getLibraries(store),
       remoteLibs: getRemoteSlices(store),
     }),
   );
 
-  const handleOnSubmit = (values: SliceModalValues) => {
-    renameSlice(libName, sliceId, values.sliceName);
+  const handleOnSubmit = async (values: SliceModalValues) => {
+    if (slice) {
+      await renameSlice({
+        slice,
+        newSliceName: values.sliceName,
+        onSuccess: (renamedSlice) => {
+          renameSliceSuccess(
+            renamedSlice.from,
+            renamedSlice.model.id,
+            renamedSlice.model,
+          );
+        },
+      });
+
+      onClose();
+    }
   };
 
   return (
     <ModalFormCard<SliceModalValues>
       dataCy="rename-slice-modal"
-      isOpen={isRenameSliceModalOpen}
+      isOpen={isOpen}
       widthInPx="530px"
-      formId={`rename-slice-modal-${sliceId}`}
-      close={closeModals}
+      formId={`rename-slice-modal-${slice?.model.id ?? ""}`}
+      close={onClose}
       buttonLabel="Rename"
-      onSubmit={handleOnSubmit}
+      onSubmit={(values) => void handleOnSubmit(values)}
       initialValues={{
-        sliceName: sliceName,
+        sliceName: slice?.model.name ?? "",
       }}
       content={{
         title: "Rename a slice",

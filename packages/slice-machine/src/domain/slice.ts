@@ -271,3 +271,13 @@ export function buildEmptySliceModel(sliceName: string): SharedSlice {
     ],
   };
 }
+
+export function rename(slice: ComponentUI, newSliceName: string): ComponentUI {
+  return {
+    ...slice,
+    model: {
+      ...slice.model,
+      name: newSliceName,
+    },
+  };
+}

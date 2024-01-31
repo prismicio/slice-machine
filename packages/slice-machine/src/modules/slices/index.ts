@@ -1,47 +1,26 @@
-import {
-  ActionType,
-  createAction,
-  createAsyncAction,
-  getType,
-} from "typesafe-actions";
-import { call, fork, put, select, takeLatest } from "redux-saga/effects";
+import { ActionType, createAction, getType } from "typesafe-actions";
 import { Reducer } from "redux";
 
 import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
 import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
 import { SliceSM } from "@lib/models/common/Slice";
 import { LibraryUI } from "@models/common/LibraryUI";
-import { withLoader } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { renameSlice, SaveSliceMockRequest } from "@src/apiClient";
-import { modalCloseCreator } from "@src/modules/modal";
+import { SaveSliceMockRequest } from "@src/apiClient";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { SlicesStoreType } from "./types";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { selectSliceById } from "./selector";
 
 // Action Creators
 export const sliceCreateSuccess = createAction("SLICES/CREATE_SUCCESS")<{
   libraries: Readonly<LibraryUI[]>;
 }>();
 
-export const renameSliceCreator = createAsyncAction(
-  "SLICES/RENAME.REQUEST",
-  "SLICES/RENAME.RESPONSE",
-  "SLICES/RENAME.FAILURE",
-)<
-  {
-    libName: string;
-    sliceId: string;
-    newSliceName: string;
-  },
-  {
-    libName: string;
-    renamedSlice: SliceSM;
-  }
->();
+export const sliceRenameSuccess = createAction("SLICES/RENAME_SUCCESS")<{
+  libName: string;
+  sliceId: string;
+  renamedSlice: SliceSM;
+}>();
 
 export const sliceDeleteSuccess = createAction("SLICES/DELETE_SUCCESS")<{
   sliceId: string;
@@ -62,7 +41,7 @@ export const updateSliceMock =
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof sliceCreateSuccess>
-  | ActionType<typeof renameSliceCreator>
+  | ActionType<typeof sliceRenameSuccess>
   | ActionType<typeof sliceDeleteSuccess>
   | ActionType<typeof sliceUpdateSuccess>
   | ActionType<typeof sliceGenerateCustomScreenshotSuccess>
@@ -108,7 +87,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         ...state,
         libraries: action.payload.libraries,
       };
-    case getType(renameSliceCreator.success): {
+    case getType(sliceRenameSuccess): {
       const { libName, renamedSlice } = action.payload;
       const newLibs = state.libraries.map((library) => {
         if (library.name !== libName) return library;
@@ -214,68 +193,3 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       return state;
   }
 };
-
-// Sagas
-
-export function* renameSliceSaga({
-  payload,
-}: ReturnType<typeof renameSliceCreator.request>) {
-  const { libName, sliceId, newSliceName } = payload;
-  try {
-    const slice = (yield select((store: SliceMachineStoreType) =>
-      selectSliceById(store, libName, sliceId),
-    )) as ReturnType<typeof selectSliceById>;
-    if (!slice) {
-      throw new Error(
-        `Slice "${payload.sliceId} in the "${payload.libName}" library not found.`,
-      );
-    }
-
-    const renamedSlice = renameSliceModel({
-      slice: slice.model,
-      newName: newSliceName,
-    });
-
-    yield call(renameSlice, renamedSlice, libName);
-    yield put(renameSliceCreator.success({ libName, renamedSlice }));
-
-    yield put(modalCloseCreator());
-    yield put(
-      openToasterCreator({
-        content: "Slice name updated",
-        type: ToasterType.SUCCESS,
-      }),
-    );
-  } catch (e) {
-    yield put(
-      openToasterCreator({
-        content: "Internal Error: Slice name not saved",
-        type: ToasterType.ERROR,
-      }),
-    );
-  }
-}
-
-function* watchRenameSlice() {
-  yield takeLatest(
-    getType(renameSliceCreator.request),
-    withLoader(renameSliceSaga, LoadingKeysEnum.RENAME_SLICE),
-  );
-}
-
-// Saga Exports
-export function* watchSliceSagas() {
-  yield fork(watchRenameSlice);
-}
-
-type RenameSliceModelArgs = {
-  slice: SliceSM;
-  newName: string;
-};
-
-export function renameSliceModel(args: RenameSliceModelArgs): SliceSM {
-  return {
-    ...args.slice,
-    name: args.newName,
-  };
-}
