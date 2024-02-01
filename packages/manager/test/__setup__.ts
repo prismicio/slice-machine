@@ -167,8 +167,8 @@ vi.mock("@segment/analytics-node", async () => {
 });
 
 vi.mock("@amplitude/experiment-node-server", () => {
-	const MockAmplitudeClient = {
-		fetchV2: vi.fn(() => {
+	class RemoteEvaluationClient {
+		fetchV2() {
 			return {
 				"test-variant-on": {
 					value: "on",
@@ -177,16 +177,16 @@ vi.mock("@amplitude/experiment-node-server", () => {
 					value: "off",
 				},
 			};
-		}),
-	};
+		}
+	}
 
-	const MockExperiment = {
-		initializeRemote: vi.fn(() => MockAmplitudeClient),
+	const Experiment = {
+		initializeRemote: vi.fn(() => new RemoteEvaluationClient()),
 	};
 
 	return {
-		Experiment: MockExperiment,
-		RemoteEvaluationClient: MockAmplitudeClient,
+		Experiment,
+		RemoteEvaluationClient,
 	};
 });
 
