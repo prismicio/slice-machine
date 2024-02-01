@@ -124,6 +124,9 @@ export class StartSliceMachineProcess {
 				userID: profile.shortId,
 				intercomHash: profile.intercomHash,
 			});
+			try {
+				await this._setDevEnvAsActiveEnvironment();
+			} catch (_) {}
 		}
 
 		if (profile) {
@@ -133,6 +136,18 @@ export class StartSliceMachineProcess {
 				// noop - We'll try again before uploading a screenshot.
 				this._sliceMachineManager.screenshots.initS3ACL(),
 			]);
+		}
+	}
+
+	private async _setDevEnvAsActiveEnvironment(): Promise<void> {
+		const { environments } =
+			await this._sliceMachineManager.prismicRepository.fetchEnvironments();
+
+		const maybeDevEnvironment = environments?.find((env) => env.kind === "dev");
+		if (maybeDevEnvironment !== undefined) {
+			this._sliceMachineManager.project.updateEnvironment({
+				environment: maybeDevEnvironment?.domain,
+			});
 		}
 	}
 
