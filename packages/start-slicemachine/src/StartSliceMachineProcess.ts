@@ -126,7 +126,11 @@ export class StartSliceMachineProcess {
 			});
 			try {
 				await this._setDevEnvAsActiveEnvironment();
-			} catch (_) {}
+			} catch (_) {
+				if (import.meta.env.DEV) {
+					console.error("Could not set dev env as active environment");
+				}
+			}
 		}
 
 		if (profile) {
@@ -146,7 +150,7 @@ export class StartSliceMachineProcess {
 		const maybeDevEnvironment = environments?.find((env) => env.kind === "dev");
 		if (maybeDevEnvironment !== undefined) {
 			await this._sliceMachineManager.project.updateEnvironment({
-				environment: maybeDevEnvironment?.domain,
+				environment: maybeDevEnvironment.domain,
 			});
 		}
 	}
