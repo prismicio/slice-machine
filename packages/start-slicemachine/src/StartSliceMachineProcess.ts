@@ -145,7 +145,7 @@ export class StartSliceMachineProcess {
 
 		const maybeDevEnvironment = environments?.find((env) => env.kind === "dev");
 		if (maybeDevEnvironment !== undefined) {
-			this._sliceMachineManager.project.updateEnvironment({
+			await this._sliceMachineManager.project.updateEnvironment({
 				environment: maybeDevEnvironment?.domain,
 			});
 		}
