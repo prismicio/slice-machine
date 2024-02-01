@@ -1,33 +1,9 @@
-import { expect, it, vi } from "vitest";
+import { expect, it } from "vitest";
 
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
-
-vi.mock("@amplitude/experiment-node-server", () => {
-	const MockAmplitudeClient = {
-		fetchV2: vi.fn(() => {
-			return {
-				"test-variant-on": {
-					value: "on",
-				},
-				"test-variant-off": {
-					value: "off",
-				},
-			};
-		}),
-	};
-
-	const MockExperiment = {
-		initializeRemote: vi.fn(() => MockAmplitudeClient),
-	};
-
-	return {
-		Experiment: MockExperiment,
-		RemoteEvaluationClient: MockAmplitudeClient,
-	};
-});
 
 it("get the experiment 'on' value for a specific variant", async () => {
 	const adapter = createTestPlugin();
