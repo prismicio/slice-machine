@@ -13,6 +13,7 @@ it("returns global Slice Machine state", async () => {
 		},
 	});
 	await manager.plugins.initPlugins();
+	await manager.user.logout();
 	const result = await manager.getState();
 
 	expect(result.env.endpoints).toStrictEqual({

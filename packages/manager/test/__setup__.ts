@@ -4,12 +4,19 @@ import { createMockFactory, MockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
+import { createSliceMachineManager, SliceMachineManager } from "../src";
+import { createTestPlugin } from "./__testutils__/createTestPlugin";
+import { createTestProject } from "./__testutils__/createTestProject";
+import { APIFixture, createAPIFixture } from "./__testutils__/createAPIFixture";
 
 declare module "vitest" {
 	export interface TestContext {
 		mockPrismic: MockFactory;
 		msw: SetupServer;
 		sliceMachineUIDirectory: string;
+		manager: SliceMachineManager;
+		api: APIFixture;
+		login: () => Promise<void>;
 	}
 }
 
@@ -130,6 +137,71 @@ vi.mock("module", async () => {
 	} as typeof actual;
 });
 
+vi.mock("@segment/analytics-node", async () => {
+	const actual: typeof import("@segment/analytics-node") =
+		await vi.importActual("@segment/analytics-node");
+
+	vi.spyOn(actual.Analytics.prototype, "track").mockImplementation(
+		(_params, callback) => {
+			callback?.();
+		},
+	);
+
+	vi.spyOn(actual.Analytics.prototype, "identify").mockImplementation(
+		(_params, callback) => {
+			callback?.();
+		},
+	);
+
+	vi.spyOn(actual.Analytics.prototype, "group").mockImplementation(
+		(_params, callback) => {
+			callback?.();
+		},
+	);
+
+	vi.spyOn(actual.Analytics.prototype, "on").mockImplementation(
+		() => actual.Analytics.prototype,
+	);
+
+	return actual;
+});
+
+vi.mock("@amplitude/experiment-node-server", () => {
+	class RemoteEvaluationClient {
+		fetchV2() {
+			return {
+				"test-variant-on": {
+					value: "on",
+				},
+				"test-variant-off": {
+					value: "off",
+				},
+			};
+		}
+	}
+
+	const Experiment = {
+		initializeRemote: vi.fn(() => new RemoteEvaluationClient()),
+	};
+
+	return {
+		Experiment,
+		RemoteEvaluationClient,
+	};
+});
+
+vi.mock("execa", async () => {
+	const execa: typeof import("execa") = await vi.importActual("execa");
+
+	return {
+		...execa,
+		execaCommand: ((command: string, options: Record<string, unknown>) => {
+			// Replace command with simple `echo`
+			return execa.execaCommand(`echo 'mock command ran: ${command}'`, options);
+		}) as typeof execa.execaCommand,
+	};
+});
+
 const mswServer = setupServer();
 
 beforeAll(() => {
@@ -137,7 +209,7 @@ beforeAll(() => {
 });
 
 beforeEach(async (ctx) => {
-	ctx.mockPrismic = createMockFactory({ seed: ctx.meta.name });
+	ctx.mockPrismic = createMockFactory({ seed: ctx.task.name });
 	ctx.msw = mswServer;
 
 	ctx.msw.resetHandlers();
@@ -151,6 +223,44 @@ beforeEach(async (ctx) => {
 	ctx.sliceMachineUIDirectory = path.dirname(
 		MOCK_SLICE_MACHINE_PACKAGE_JSON_PATH,
 	);
+
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+	await manager.plugins.initPlugins();
+
+	ctx.manager = manager;
+	ctx.login = async () => {
+		await manager.user.login({
+			email: `name@example.com`,
+			cookies: ["prismic-auth=token", "SESSION=session"],
+		});
+	};
+
+	const api = createAPIFixture({ manager, mswServer });
+	api.mockPrismicUser(
+		"./profile",
+		{
+			userId: "userId",
+			shortId: "shortId",
+			intercomHash: "intercomHash",
+			email: "email",
+			firstName: "firstName",
+			lastName: "lastName",
+		},
+		{ checkAuthentication: false },
+	);
+	api.mockPrismicAuthentication("./validate", undefined, {
+		checkAuthentication: false,
+	});
+	api.mockPrismicAuthentication("./refreshtoken", undefined, {
+		checkAuthentication: false,
+	});
+
+	ctx.api = api;
 });
 
 afterAll(() => {

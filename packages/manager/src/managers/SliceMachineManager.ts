@@ -38,6 +38,7 @@ import { TelemetryManager } from "./telemetry/TelemetryManager";
 import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
 import { DocumentationManager } from "./documentation/DocumentationManager";
 import { SliceTemplateLibraryManager } from "./sliceTemplateLibrary/SliceTemplateLibraryManager";
+import { GitManager } from "./git/GitManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -116,6 +117,7 @@ export class SliceMachineManager {
 	telemetry: TelemetryManager;
 	user: UserManager;
 	versions: VersionsManager;
+	git: GitManager;
 
 	constructor(args?: SliceMachineManagerConstructorArgs) {
 		// _prismicAuthManager must be set at least before UserManager
@@ -142,6 +144,8 @@ export class SliceMachineManager {
 		this.versions = new VersionsManager(this);
 
 		this.telemetry = new TelemetryManager(this);
+
+		this.git = new GitManager(this);
 
 		this.cwd = args?.cwd ?? process.cwd();
 	}

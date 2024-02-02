@@ -10,24 +10,6 @@ import { mockSliceMachineAPI } from "./__testutils__/mockSliceMachineAPI";
 
 import { createSliceMachineManager, Environment } from "../src";
 
-vi.mock("@segment/analytics-node", () => {
-	const MockSegmentClient = vi.fn();
-
-	MockSegmentClient.prototype.track = vi.fn(
-		(_message: unknown, callback?: (error?: unknown) => void) => {
-			if (callback) {
-				callback();
-			}
-		},
-	);
-
-	MockSegmentClient.prototype.on = vi.fn();
-
-	return {
-		Analytics: MockSegmentClient,
-	};
-});
-
 it("sends a given event to Segment", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });

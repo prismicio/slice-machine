@@ -6,24 +6,6 @@ import { createTestProject } from "./__testutils__/createTestProject";
 
 import { createSliceMachineManager } from "../src";
 
-vi.mock("@segment/analytics-node", () => {
-	const MockSegmentClient = vi.fn();
-
-	MockSegmentClient.prototype.group = vi.fn(
-		(_message: unknown, callback?: (error?: unknown) => void) => {
-			if (callback) {
-				callback();
-			}
-		},
-	);
-
-	MockSegmentClient.prototype.on = vi.fn();
-
-	return {
-		Analytics: MockSegmentClient,
-	};
-});
-
 it("sends a group payload to Segment", async () => {
 	const adapter = createTestPlugin();
 	const cwd = await createTestProject({ adapter });
