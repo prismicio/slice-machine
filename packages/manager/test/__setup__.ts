@@ -166,6 +166,30 @@ vi.mock("@segment/analytics-node", async () => {
 	return actual;
 });
 
+vi.mock("@amplitude/experiment-node-server", () => {
+	class RemoteEvaluationClient {
+		fetchV2() {
+			return {
+				"test-variant-on": {
+					value: "on",
+				},
+				"test-variant-off": {
+					value: "off",
+				},
+			};
+		}
+	}
+
+	const Experiment = {
+		initializeRemote: vi.fn(() => new RemoteEvaluationClient()),
+	};
+
+	return {
+		Experiment,
+		RemoteEvaluationClient,
+	};
+});
+
 vi.mock("execa", async () => {
 	const execa: typeof import("execa") = await vi.importActual("execa");
 
