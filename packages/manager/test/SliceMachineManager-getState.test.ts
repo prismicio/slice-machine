@@ -25,8 +25,7 @@ it("returns global Slice Machine state", async () => {
 		PrismicUser: "https://user-service.prismic.io/",
 		PrismicWroom: "https://prismic.io/",
 		PrismicUnsplash: "https://unsplash.prismic.io",
-		SliceMachineV1:
-			"https://21vvgrh0s6.execute-api.us-east-1.amazonaws.com/v1/",
+		SliceMachineV1: "https://sm-api.prismic.io/v1/",
 	});
 	expect(result.clientError).toStrictEqual({
 		message: "__stub__",

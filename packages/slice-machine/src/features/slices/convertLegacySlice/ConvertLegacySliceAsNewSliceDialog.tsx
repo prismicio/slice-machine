@@ -43,7 +43,6 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
       <DialogHeader title="Upgrade slice" />
       <DialogContent>
         <Formik
-          validateOnChange
           validateOnMount
           initialValues={{
             from: libraries[0]?.name,
