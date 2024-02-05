@@ -79,7 +79,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				PrismicOembed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io",
 				SliceMachineV1:
-					"https://21vvgrh0s6.execute-api.us-east-1.amazonaws.com/v1/",
+					"https://rrvzk2wqlh.execute-api.us-east-1.amazonaws.com/v1/",
 			};
 		}
 	}

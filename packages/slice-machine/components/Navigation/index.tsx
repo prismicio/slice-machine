@@ -8,6 +8,7 @@ import { telemetry } from "@src/apiClient";
 import VideoItem from "@components/Navigation/VideoItem";
 import { LightningIcon } from "@src/icons/Lightning";
 import { MathPlusIcon } from "@src/icons/MathPlusIcon";
+import { SettingsIcon } from "@src/icons/SettingsIcon";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import {
   SideNavSeparator,
@@ -141,17 +142,19 @@ const Navigation: FC = () => {
       )}
 
       <SideNavList position="bottom">
-        <SideNavLink
-          title="Invite team"
-          href={`${repositoryUrl}/settings/users`}
-          Icon={(props) => <MathPlusIcon {...props} />}
-          onClick={() => {
-            void telemetry.track({
-              event: "users-invite-button-clicked",
-            });
-          }}
-          target="_blank"
-        />
+        <SideNavListItem>
+          <SideNavLink
+            title="Invite team"
+            href={`${repositoryUrl}/settings/users`}
+            Icon={MathPlusIcon}
+            onClick={() => {
+              void telemetry.track({
+                event: "users-invite-button-clicked",
+              });
+            }}
+            target="_blank"
+          />
+        </SideNavListItem>
 
         <ErrorBoundary>
           <Suspense>
@@ -164,9 +167,19 @@ const Navigation: FC = () => {
 
         <SideNavListItem>
           <SideNavLink
+            title="Settings"
+            href="/settings"
+            Icon={SettingsIcon}
+            active={router.asPath.startsWith("/settings")}
+            component={Link}
+          />
+        </SideNavListItem>
+
+        <SideNavListItem>
+          <SideNavLink
             title="Changelog"
             href="/changelog"
-            Icon={(props) => <LightningIcon {...props} />}
+            Icon={LightningIcon}
             active={router.asPath.startsWith("/changelog")}
             component={Link}
             RightElement={
