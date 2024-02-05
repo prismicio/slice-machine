@@ -1,4 +1,4 @@
-# Git: Unauthorized Github access
+# Git: Unauthorized GitHub access
 
 The GitHub app tried to make a request to GitHub, but failed due to unauthorized access.
 

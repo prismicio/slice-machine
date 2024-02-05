@@ -6,7 +6,7 @@ Any of the following issues could cause this error:
 
 - Missing required properties, such as `repositoryName` and `adapter`.
 - Invalid values given to configuration properties.
-- Invalid JSON with incorrect syntax
+- Invalid JSON with incorrect syntax.
 
 ## How to fix the issue
 

@@ -4,9 +4,9 @@ The Slice Machine project uses an adapter that is not supported in the GitHub ap
 
 The following adapters are supported:
 
-- [`@slicemachine/adapter-next`](https://github.com/prismicio/slice-machine/tree/main/packages/adapter-next#readme): Next.js projects
-- [`@slicemachine/adapter-nuxt`](https://github.com/prismicio/slice-machine/tree/main/packages/adapter-nuxt#readme): Nuxt projects
-- [`@slicemachine/adapter-sveltekit`](https://github.com/prismicio/slice-machine/tree/main/packages/adapter-sveltekit#readme): SvelteKit projects
+- [`@slicemachine/adapter-next`](https://github.com/prismicio/slice-machine/tree/main/packages/adapter-next#readme): Next.js projects.
+- [`@slicemachine/adapter-nuxt`](https://github.com/prismicio/slice-machine/tree/main/packages/adapter-nuxt#readme): Nuxt projects.
+- [`@slicemachine/adapter-sveltekit`](https://github.com/prismicio/slice-machine/tree/main/packages/adapter-sveltekit#readme): SvelteKit projects.
 
 ### How to fix the issue
 
@@ -16,7 +16,7 @@ You can verify which adapter your project uses by checking the `adapter` propert
 
 A basic Slice Machine configuration file looks like this:
 
-```json
+```jsonc
 // slicemachine.config.json
 
 {
