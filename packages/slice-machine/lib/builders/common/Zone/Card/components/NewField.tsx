@@ -114,7 +114,6 @@ const NewField: React.FC<NewField> = ({
 
   return (
     <Formik
-      validateOnChange
       onSubmit={onSave}
       validationSchema={validationSchema}
       initialValues={initialValues}

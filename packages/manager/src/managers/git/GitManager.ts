@@ -14,15 +14,14 @@ import {
 
 import { BaseManager } from "../BaseManager";
 
-import { GitRepo, GitRepoSpecifier, Owner } from "./types";
-import { buildGitRepoSpecifier } from "./buildGitRepoSpecifier";
+import { GitOwner, GitRepo, GitRepoSpecifier } from "./types";
 
 type GitManagerCreateGitHubAuthStateReturnType = {
 	key: string;
 	expiresAt: Date;
 };
 
-type GitManagerFetchOwnersReturnType = Owner[];
+type GitManagerFetchOwnersReturnType = GitOwner[];
 
 type GitManagerFetchReposReturnType = GitRepo[];
 
@@ -53,17 +52,6 @@ type GitManagerLinkRepoArgs = {
 };
 
 type GitManagerUnlinkRepoArgs = {
-	prismic: {
-		domain: string;
-	};
-	git: {
-		provider: "gitHub";
-		owner: string;
-		name: string;
-	};
-};
-
-type CheckHasWriteAPITokenArgs = {
 	prismic: {
 		domain: string;
 	};
@@ -323,54 +311,6 @@ export class GitManager extends BaseManager {
 					throw new Error("Failed to unlink repos.");
 			}
 		}
-	}
-
-	async checkHasWriteAPIToken(
-		args: CheckHasWriteAPITokenArgs,
-	): Promise<boolean> {
-		const url = new URL(
-			"./git/linked-repos/write-api-token",
-			API_ENDPOINTS.SliceMachineV1,
-		);
-		url.searchParams.set("repository", args.prismic.domain);
-		url.searchParams.set(
-			"git",
-			buildGitRepoSpecifier({
-				provider: args.git.provider,
-				owner: args.git.owner,
-				name: args.git.name,
-			}),
-		);
-
-		const res = await this.#fetch(url);
-
-		if (!res.ok) {
-			switch (res.status) {
-				case 401:
-					throw new UnauthenticatedError();
-				case 403:
-					throw new UnauthorizedError();
-				default:
-					throw new Error("Failed to check Prismic Write API token.");
-			}
-		}
-
-		const json = await res.json();
-		const { value, error } = decode(
-			t.type({
-				hasWriteAPIToken: t.boolean,
-			}),
-			json,
-		);
-
-		if (error) {
-			throw new UnexpectedDataError(
-				`Failed to decode: ${error.errors.join(", ")}`,
-				{ cause: error },
-			);
-		}
-
-		return value.hasWriteAPIToken;
 	}
 
 	async updateWriteAPIToken(args: UpdateWriteAPITokenArgs): Promise<void> {
