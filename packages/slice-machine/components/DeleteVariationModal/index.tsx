@@ -52,6 +52,7 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
           <DialogActions
             ok={{
               text: "Delete",
+              color: "tomato",
               onClick: () => {
                 if (!variation) return;
                 void (async () => {

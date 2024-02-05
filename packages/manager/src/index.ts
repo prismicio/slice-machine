@@ -13,6 +13,8 @@ export { createSliceMachineManager } from "./managers/createSliceMachineManager"
 export { createSliceMachineManagerMiddleware } from "./managers/createSliceMachineManagerMiddleware";
 export type { CreateSliceMachineManagerMiddlewareArgs } from "./managers/createSliceMachineManagerMiddleware";
 
+export type { GitOwner, GitRepo, GitRepoSpecifier } from "./managers/git/types";
+
 export type {
 	Environment,
 	PushChangesLimit,
