@@ -47,7 +47,6 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
       <DialogHeader title="Convert to slice variation" />
       <DialogContent>
         <Formik
-          validateOnChange
           initialValues={{
             libraryID: localSharedSlices[0]?.from,
             sliceID: localSharedSlices[0]?.model.id,
