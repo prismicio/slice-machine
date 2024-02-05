@@ -17,10 +17,7 @@ export const mockSliceMachineAPI = (
 	ctx: TestContext,
 	config: MockSliceMachineAPIConfig,
 ): void => {
-	// TODO: Update the default endpoint to the correct deployed URL.
-	const endpoint =
-		config.endpoint ??
-		"https://21vvgrh0s6.execute-api.us-east-1.amazonaws.com/v1/";
+	const endpoint = config.endpoint ?? "https://sm-api.prismic.io/v1/";
 
 	if (config.environmentsV1Endpoint) {
 		ctx.msw.use(
