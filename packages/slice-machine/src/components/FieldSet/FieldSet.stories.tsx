@@ -193,11 +193,14 @@ export const WithHeaderAndBoxContent = {
           <OwnerSelect />
         </FieldSetHeader>
         <FieldSetContent>
-          {/*
-           * TODO: these `padding` values actually don't match Figma, but they
-           * are the closest allowed by the `Box` component.
-           */}
-          <Box flexDirection="column" padding={{ block: 72, inline: 100 }}>
+          <Box
+            flexDirection="column"
+            /*
+             * TODO: these `padding` values actually don't match Figma, but they
+             * are the closest allowed by the `Box` component.
+             */
+            padding={{ block: 72, inline: 100 }}
+          >
             <Text align="center" variant="emphasized">
               No Results Found
             </Text>
@@ -230,12 +233,18 @@ function OwnerSelect(props: OwnerSelectProps) {
       size="large"
       sx={{ width: "calc(50% - 8px)" }}
     >
-      <SelectItem size="large" value="owner-1">
-        Owner
-      </SelectItem>
-      <SelectItem size="large" value="owner-2">
-        Owner
-      </SelectItem>
+      {[...Array(2).keys()].map((index) => (
+        <SelectItem
+          key={index}
+          renderStartIcon={() => (
+            <GitHubIcon color={tokens.color.greyLight11} />
+          )}
+          size="large"
+          value={`owner-${index}`}
+        >
+          Owner
+        </SelectItem>
+      ))}
     </Select>
   );
 }

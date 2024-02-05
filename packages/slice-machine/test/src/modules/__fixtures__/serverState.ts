@@ -36,8 +36,7 @@ export const dummyServerState: Pick<
         "https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
       PrismicOembed: "https://oembed.prismic.io",
       PrismicUnsplash: "https://unsplash.prismic.io",
-      SliceMachineV1:
-        "https://21vvgrh0s6.execute-api.us-east-1.amazonaws.com/v1/",
+      SliceMachineV1: "https://sm-api.prismic.io/v1/",
     },
     shortId: "shortId",
     supportsSliceSimulator: true,

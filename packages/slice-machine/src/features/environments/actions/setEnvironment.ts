@@ -13,6 +13,6 @@ export async function setEnvironment(
     environment: environment.domain,
   });
 
-  revalidateData(getActiveEnvironment, []);
-  revalidateData(getLegacySliceMachineState, []);
+  void revalidateData(getActiveEnvironment, []);
+  void revalidateData(getLegacySliceMachineState, []);
 }
