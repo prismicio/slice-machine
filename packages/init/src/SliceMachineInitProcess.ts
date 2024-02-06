@@ -133,10 +133,7 @@ export class SliceMachineInitProcess {
 					)}\n`,
 				);
 			}
-			await this.manager.telemetry.initTelemetry({
-				appName: pkg.name,
-				appVersion: pkg.version,
-			});
+
 			try {
 				await setupSentry();
 			} catch (error) {
@@ -144,6 +141,12 @@ export class SliceMachineInitProcess {
 				// because of failed tracking set up. We probably couldn't determine the
 				// Sentry environment.
 			}
+
+			await this.manager.telemetry.initTelemetry({
+				appName: pkg.name,
+				appVersion: pkg.version,
+			});
+
 			await this.manager.telemetry.track({
 				event: "command:init:start",
 				repository: this.options.repository,
