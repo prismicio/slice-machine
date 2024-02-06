@@ -112,6 +112,13 @@ export class SliceMachineInitProcess {
 		);
 
 		try {
+			try {
+				await setupSentry();
+			} catch (error) {
+				// noop - We don't want to stop the user from using Slice Machine
+				// because of failed tracking set up. We probably couldn't determine the
+				// Sentry environment.
+			}
 			if (this.options.starter) {
 				await this.copyStarter();
 			} else if (this.options.directoryName) {
@@ -132,14 +139,6 @@ export class SliceMachineInitProcess {
 						"https://prismic.dev/slice-machine/telemetry",
 					)}\n`,
 				);
-			}
-
-			try {
-				await setupSentry();
-			} catch (error) {
-				// noop - We don't want to stop the user from using Slice Machine
-				// because of failed tracking set up. We probably couldn't determine the
-				// Sentry environment.
 			}
 
 			await this.manager.telemetry.initTelemetry({

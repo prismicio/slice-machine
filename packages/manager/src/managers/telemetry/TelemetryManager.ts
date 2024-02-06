@@ -278,7 +278,7 @@ export class TelemetryManager extends BaseManager {
 
 			return readPrismicrc(root).telemetry !== false;
 		} catch {
-			return false;
+			return true;
 		}
 	}
 
