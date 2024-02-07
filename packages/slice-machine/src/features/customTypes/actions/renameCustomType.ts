@@ -1,8 +1,10 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { managerClient } from "@src/managerClient";
-import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
-import { CustomTypeFormat } from "@slicemachine/manager";
 import { toast } from "react-toastify";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+
+import { managerClient } from "@src/managerClient";
+import { CustomTypeFormat } from "@slicemachine/manager";
+
+import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
 type RenameCustomTypeArgs = {
   model: CustomType;
@@ -23,9 +25,13 @@ export async function renameCustomType({
       label: newLabel,
     };
 
-    await managerClient.customTypes.renameCustomType({
+    const { errors } = await managerClient.customTypes.renameCustomType({
       model: renamedCustomType,
     });
+
+    if (errors.length > 0) {
+      throw errors;
+    }
 
     onSuccess(renamedCustomType);
 
@@ -40,8 +46,8 @@ export async function renameCustomType({
       start: true,
       plural: false,
     })} could not be renamed`;
-    console.error(errorMessage, e);
 
+    console.error(errorMessage, e);
     toast.error(errorMessage);
   }
 }

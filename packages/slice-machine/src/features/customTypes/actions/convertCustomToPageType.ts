@@ -9,17 +9,20 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
 export async function convertCustomToPageType(
   customType: CustomType,
-  saveCustomType: (customType: CustomType) => void,
+  onSuccess: (newCustomType: CustomType) => void,
 ) {
   const customTypesMessages =
     CUSTOM_TYPES_MESSAGES[customType.format as CustomTypeFormat];
 
   try {
     const newCustomType = convertToPageType(customType);
-    await updateCustomType(newCustomType);
+    const { errors } = await updateCustomType(newCustomType);
 
-    // Update the custom type in the redux store
-    saveCustomType(newCustomType);
+    if (errors.length > 0) {
+      throw errors;
+    }
+
+    onSuccess(newCustomType);
 
     toast.success(
       `${customTypesMessages.name({
@@ -28,11 +31,12 @@ export async function convertCustomToPageType(
       })} converted to page type`,
     );
   } catch (e) {
-    toast.error(
-      `Internal Error: ${customTypesMessages.name({
-        start: true,
-        plural: false,
-      })} not converted to page type`,
-    );
+    const errorMessage = `Internal Error: ${customTypesMessages.name({
+      start: true,
+      plural: false,
+    })} not converted to page type`;
+
+    console.error(errorMessage, e);
+    toast.error(errorMessage);
   }
 }

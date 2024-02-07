@@ -1,4 +1,4 @@
-import { type FC, Suspense } from "react";
+import { type FC, Suspense, useState } from "react";
 import {
   Button,
   ErrorBoundary,
@@ -7,7 +7,6 @@ import {
   DefaultErrorMessage,
 } from "@prismicio/editor-ui";
 import Head from "next/head";
-import { useSelector } from "react-redux";
 
 import {
   AppLayout,
@@ -16,13 +15,10 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { isLoading } from "@src/modules/loading";
-import { type SliceMachineStoreType } from "@src/redux/type";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import type { CustomTypeFormat } from "@slicemachine/manager";
+
 import { CustomTypesTable } from "./CustomTypesTable";
 
 type CustomTypesTablePageProps = {
@@ -33,15 +29,9 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
   format,
 }) => {
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
-  const { openCreateCustomTypeModal } = useSliceMachineActions();
-  const { isCreatingCustomType } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isCreatingCustomType: isLoading(
-        store,
-        LoadingKeysEnum.CREATE_CUSTOM_TYPE,
-      ),
-    }),
-  );
+  const [isCreatingCustomType, setIsCreatingCustomType] = useState(false);
+  const [isCreateCustomTypeModalOpen, setIsCreateCustomTypeModalOpen] =
+    useState(false);
 
   return (
     <>
@@ -101,7 +91,9 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                 <Button
                   data-cy="create-ct"
                   loading={isCreatingCustomType}
-                  onClick={openCreateCustomTypeModal}
+                  onClick={() => {
+                    setIsCreateCustomTypeModalOpen(true);
+                  }}
                   startIcon="add"
                 >
                   Create
@@ -113,8 +105,17 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
                 <CustomTypesTable
                   format={format}
                   isCreatingCustomType={isCreatingCustomType}
+                  openCreateCustomTypeModal={() => {
+                    setIsCreateCustomTypeModalOpen(true);
+                  }}
                 />
-                <CreateCustomTypeModal format={format} />
+                <CreateCustomTypeModal
+                  format={format}
+                  isCreating={isCreatingCustomType}
+                  isOpen={isCreateCustomTypeModalOpen}
+                  onCreateChange={setIsCreatingCustomType}
+                  onOpenChange={setIsCreateCustomTypeModalOpen}
+                />
               </Box>
             </AppLayoutContent>
           </AppLayout>
