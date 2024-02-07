@@ -33,8 +33,7 @@ import { SliceToastMessage } from "@components/ToasterContainer";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();
-  const { openRenameSliceModal, openDeleteSliceModal } =
-    useSliceMachineActions();
+  const { openRenameSliceModal } = useSliceMachineActions();
 
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
 
@@ -47,6 +46,7 @@ const SlicesIndex: React.FunctionComponent = () => {
     }),
   );
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
+  const [isDeleteSliceModalOpen, setIsDeleteSliceModalOpen] = useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -64,6 +64,10 @@ const SlicesIndex: React.FunctionComponent = () => {
   const sliceCount = slices.length;
 
   const [sliceForEdit, setSliceForEdit] = useState<ComponentUI>();
+
+  const openDeleteSliceModal = () => {
+    setIsDeleteSliceModalOpen(true);
+  };
 
   return (
     <>
@@ -243,9 +247,13 @@ const SlicesIndex: React.FunctionComponent = () => {
             data-cy="rename-slice-modal"
           />
           <DeleteSliceModal
+            isOpen={isDeleteSliceModalOpen}
+            libName={sliceForEdit?.from ?? ""}
             sliceId={sliceForEdit?.model.id ?? ""}
             sliceName={sliceForEdit?.model.name ?? ""}
-            libName={sliceForEdit?.from ?? ""}
+            onClose={() => {
+              setIsDeleteSliceModalOpen(false);
+            }}
           />
         </AppLayoutContent>
       </AppLayout>

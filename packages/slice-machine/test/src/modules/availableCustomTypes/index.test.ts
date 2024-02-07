@@ -3,8 +3,6 @@ import { describe, expect, it } from "vitest";
 import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
 import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes/types";
 import { refreshStateCreator } from "@src/modules/environment";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
-import { deleteSliceCreator } from "@src/modules/slices";
 
 import { dummyServerState } from "../__fixtures__/serverState";
 
@@ -44,93 +42,6 @@ describe("[Available Custom types module]", () => {
         ...dummyCustomTypesState,
         about: {
           local: dummyServerState.customTypes[0],
-        },
-      });
-    });
-
-    it("should update the custom types state given SLICES/DELETE.SUCCESS action", () => {
-      const sliceToDeleteId = "slice_id";
-      const mockCustomTypeToUpdate: CustomTypeSM = {
-        id: "id",
-        label: "lama",
-        repeatable: false,
-        status: true,
-        format: "custom",
-        tabs: [
-          {
-            key: "Main",
-            value: [],
-            sliceZone: {
-              key: "slices",
-              value: [
-                {
-                  key: sliceToDeleteId,
-                  value: {
-                    type: "SharedSlice",
-                  },
-                },
-                {
-                  key: "slice_2",
-                  value: {
-                    type: "SharedSlice",
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      };
-
-      const originalState = { ...dummyCustomTypesState };
-
-      originalState["id"] = {
-        local: mockCustomTypeToUpdate,
-        remote: mockCustomTypeToUpdate,
-      };
-      const action = deleteSliceCreator.success({
-        sliceId: sliceToDeleteId,
-        sliceName: "slice_name",
-        libName: "lib",
-      });
-
-      const result = availableCustomTypesReducer(
-        originalState,
-        action,
-      ) as AvailableCustomTypesStoreType;
-
-      expect(
-        Object.values(result).flatMap((localAndRemote) => {
-          return Object.values(localAndRemote);
-        }),
-      ).not.toContain(undefined);
-
-      expect(result).toEqual({
-        id: {
-          local: {
-            id: "id",
-            label: "lama",
-            repeatable: false,
-            status: true,
-            format: "custom",
-            tabs: [
-              {
-                key: "Main",
-                value: [],
-                sliceZone: {
-                  key: "slices",
-                  value: [
-                    {
-                      key: "slice_2",
-                      value: {
-                        type: "SharedSlice",
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          remote: mockCustomTypeToUpdate,
         },
       });
     });
