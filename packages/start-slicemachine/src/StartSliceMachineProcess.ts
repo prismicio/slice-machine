@@ -126,9 +126,9 @@ export class StartSliceMachineProcess {
 			});
 			try {
 				await this._setDevEnvAsActiveEnvironment();
-			} catch (_) {
+			} catch (error) {
 				if (import.meta.env.DEV) {
-					console.error("Could not set dev env as active environment");
+					console.error("Could not set dev env as active environment", error);
 				}
 			}
 		}
