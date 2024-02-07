@@ -37,6 +37,10 @@ export class EditFieldDialog extends Dialog {
     return this.title.getByText(name, { exact: true });
   }
 
+  getFieldByLabel(label: string) {
+    return this.dialog.getByLabel(label, { exact: true });
+  }
+
   /**
    * Actions
    */
