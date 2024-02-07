@@ -51,7 +51,7 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
       label,
       placeholder: "",
       allowTargetBlank: true,
-      single: optionValues.join(","),
+      multi: optionValues.join(","),
     },
   }),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
