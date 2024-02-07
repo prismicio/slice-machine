@@ -28,8 +28,8 @@ import {
   sliceCreateSuccess,
   sliceDeleteSuccess,
   sliceGenerateCustomScreenshotSuccess,
-  renameSliceCreator,
   sliceUpdateSuccess,
+  sliceRenameSuccess,
 } from "./slices";
 import { UserContextStoreType, UserReviewType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
@@ -39,6 +39,7 @@ import { ComponentUI, ScreenshotUI } from "../../lib/models/common/ComponentUI";
 import { saveSliceMockCreator } from "./simulator";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { SliceSM } from "@lib/models/common/Slice";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -61,8 +62,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openScreenshotsModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
-  const openRenameSliceModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
   const openSimulatorSetupModal = () =>
@@ -98,19 +97,6 @@ const useSliceMachineActions = () => {
   const setSeenTutorialsToolTip = () =>
     dispatch(hasSeenTutorialsToolTipCreator());
   const setSeenChangesToolTip = () => dispatch(hasSeenChangesToolTipCreator());
-
-  const renameSlice = (
-    libName: string,
-    sliceId: string,
-    newSliceName: string,
-  ) =>
-    dispatch(
-      renameSliceCreator.request({
-        sliceId,
-        newSliceName,
-        libName,
-      }),
-    );
 
   // Toaster store
   const openToaster = (
@@ -206,6 +192,13 @@ const useSliceMachineActions = () => {
         libName,
       }),
     );
+  const renameSliceSuccess = (libName: string, renamedSlice: SliceSM) =>
+    dispatch(
+      sliceRenameSuccess({
+        renamedSlice,
+        libName,
+      }),
+    );
 
   /**
    * Changes module
@@ -230,7 +223,7 @@ const useSliceMachineActions = () => {
     saveSliceSuccess,
     saveSliceCustomScreenshotSuccess,
     createSliceSuccess,
-    renameSlice,
+    renameSliceSuccess,
     deleteSliceSuccess,
     sendAReview,
     skipReview,
@@ -240,7 +233,6 @@ const useSliceMachineActions = () => {
     setSeenChangesToolTip,
     openScreenshotPreviewModal,
     openSimulatorSetupModal,
-    openRenameSliceModal,
     closeModals,
     openToaster,
     saveSliceMock,
