@@ -27,6 +27,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getChangelog } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
 import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
 import { ChangesListItem } from "./ChangesListItem";
@@ -46,6 +47,7 @@ const Navigation: FC = () => {
     useSliceMachineActions();
   const { repositoryName, repositoryDomain, repositoryUrl } =
     useRepositoryInformation();
+  const gitIntegrationExperiment = useGitIntegrationExperiment();
 
   return (
     <SideNav>
@@ -165,15 +167,17 @@ const Navigation: FC = () => {
           </Suspense>
         </ErrorBoundary>
 
-        <SideNavListItem>
-          <SideNavLink
-            title="Settings"
-            href="/settings"
-            Icon={SettingsIcon}
-            active={router.asPath.startsWith("/settings")}
-            component={Link}
-          />
-        </SideNavListItem>
+        {gitIntegrationExperiment.eligible ? (
+          <SideNavListItem>
+            <SideNavLink
+              title="Settings"
+              href="/settings"
+              Icon={SettingsIcon}
+              active={router.asPath.startsWith("/settings")}
+              component={Link}
+            />
+          </SideNavListItem>
+        ) : undefined}
 
         <SideNavListItem>
           <SideNavLink

@@ -8,7 +8,8 @@ import {
   // isUnauthenticatedError,
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
-import { type FC, type ReactNode, Suspense } from "react";
+import { useRouter } from "next/router";
+import { type FC, type ReactNode, Suspense, useEffect } from "react";
 
 import {
   FieldSet,
@@ -23,30 +24,41 @@ import {
   GitRepositoriesSearch,
   GitRepositoriesSearchSkeleton,
 } from "@src/features/settings/git/GitRepositoriesSearch";
+import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
 import { useGitOwners } from "@src/features/settings/git/useGitOwners";
 import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
 import { useUser } from "@src/hooks/useUser";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
-export const ConnectGitRepository: FC = () => (
-  <FieldSet>
-    <FieldSetLegend>Connected Git Repository</FieldSetLegend>
-    <ErrorBoundary renderError={renderError}>
-      <Suspense fallback={<GitRepositoriesSearchSkeleton gitOwnerSelect />}>
-        <Content />
-      </Suspense>
-    </ErrorBoundary>
-    <FieldSetFooter
-      action={
-        <Tooltip content="Documentation is coming soon." side="bottom">
-          <IconButton disabled icon="openInNew" />
-        </Tooltip>
-      }
-    >
-      Learn more about Prismic for Git
-    </FieldSetFooter>
-  </FieldSet>
-);
+export const ConnectGitRepository: FC = () => {
+  const gitIntegrationExperiment = useGitIntegrationExperiment();
+  const router = useRouter();
+  // TODO(DT-1801): implement a 404 page.
+  useEffect(() => {
+    if (!gitIntegrationExperiment.eligible) {
+      void router.replace("/");
+    }
+  }, [gitIntegrationExperiment.eligible, router]);
+  return gitIntegrationExperiment.eligible ? (
+    <FieldSet>
+      <FieldSetLegend>Connected Git Repository</FieldSetLegend>
+      <ErrorBoundary renderError={renderError}>
+        <Suspense fallback={<GitRepositoriesSearchSkeleton gitOwnerSelect />}>
+          <Content />
+        </Suspense>
+      </ErrorBoundary>
+      <FieldSetFooter
+        action={
+          <Tooltip content="Documentation is coming soon." side="bottom">
+            <IconButton disabled icon="openInNew" />
+          </Tooltip>
+        }
+      >
+        Learn more about Prismic for Git
+      </FieldSetFooter>
+    </FieldSet>
+  ) : null;
+};
 
 const Content: FC = () => {
   // TODO(TD-1952): the `useUser` hook should be replaced with a mechanism that
