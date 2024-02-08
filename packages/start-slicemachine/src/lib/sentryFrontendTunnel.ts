@@ -13,8 +13,10 @@ export const sentryFrontendTunnel: RequestHandler = async (req, res) => {
 			const pieces = envelope.split("\n");
 			const header = JSON.parse(pieces[0]);
 			const { host, pathname } = new URL(header.dsn);
-			const projectId =
-				(pathname?.endsWith("/") ? pathname.slice(0, -1) : pathname) ?? "";
+
+			// Remove start or end slashes from the pathname
+			const projectId = pathname?.replace(/^\/|\/$/g, "") ?? "";
+
 			const sentryUrl = `https://${host}/api/${projectId}/envelope/`;
 
 			const response = await fetch(sentryUrl, {
