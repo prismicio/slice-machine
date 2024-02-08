@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { Box, Icon, ProgressCircle, Text } from "@prismicio/editor-ui";
 
-import { AutoSaveStatus } from "./useAutoSave";
+import { ActionQueueStatus } from "@src/hooks/useActionQueue";
 
 type AutoSaveStatusIndicatorProps = {
-  status: AutoSaveStatus;
+  status: ActionQueueStatus;
 };
 
 export const AutoSaveStatusIndicator: FC<AutoSaveStatusIndicatorProps> = (
@@ -14,7 +14,7 @@ export const AutoSaveStatusIndicator: FC<AutoSaveStatusIndicatorProps> = (
   let autoSaveStatusInfo;
 
   switch (status) {
-    case "saving":
+    case "pending":
       autoSaveStatusInfo = {
         icon: <ProgressCircle color="grey11" />,
         text: "Saving...",
@@ -26,7 +26,7 @@ export const AutoSaveStatusIndicator: FC<AutoSaveStatusIndicatorProps> = (
         text: "Failed to save",
       };
       break;
-    case "saved":
+    case "done":
       autoSaveStatusInfo = {
         icon: <Icon name="check" color="green11" size="medium" />,
         text: "Auto-saved",

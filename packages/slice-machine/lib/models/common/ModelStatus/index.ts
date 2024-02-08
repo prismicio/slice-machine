@@ -117,3 +117,28 @@ export function computeModelStatus(
     : compareCustomTypeLocalToRemote(model);
   return { status, model };
 }
+
+export function computeStatuses(
+  models: LocalOrRemoteCustomType[],
+  userHasAccessToModels: boolean,
+): { [sliceId: string]: ModelStatus };
+export function computeStatuses(
+  models: LocalOrRemoteSlice[],
+  userHasAccessToModels: boolean,
+): { [sliceId: string]: ModelStatus };
+export function computeStatuses(
+  models: LocalOrRemoteModel[],
+  userHasAccessToModels: boolean,
+) {
+  return models.reduce<{ [id: string]: ModelStatus }>(
+    (acc, model) => {
+      const { status } = computeModelStatus(model, userHasAccessToModels);
+
+      return {
+        ...acc,
+        [hasLocal(model) ? model.local.id : model.remote.id]: status,
+      };
+    },
+    {} as { [sliceId: string]: ModelStatus },
+  );
+}
