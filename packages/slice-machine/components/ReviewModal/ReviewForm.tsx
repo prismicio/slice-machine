@@ -94,7 +94,6 @@ export const ReviewForm: FC<ReviewFormProps> = (props) => {
     >
       <Formik
         validateOnMount
-        validateOnChange
         initialValues={{
           rating: 0,
           comment: "",

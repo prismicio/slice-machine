@@ -14,7 +14,7 @@ import {
 
 import { BaseManager } from "../BaseManager";
 
-import { GitRepo, GitRepoSpecifier, Owner } from "./types";
+import { GitOwner, GitRepo, GitRepoSpecifier } from "./types";
 import { buildGitRepoSpecifier } from "./buildGitRepoSpecifier";
 
 type GitManagerCreateGitHubAuthStateReturnType = {
@@ -22,7 +22,7 @@ type GitManagerCreateGitHubAuthStateReturnType = {
 	expiresAt: Date;
 };
 
-type GitManagerFetchOwnersReturnType = Owner[];
+type GitManagerFetchOwnersReturnType = GitOwner[];
 
 type GitManagerFetchReposReturnType = GitRepo[];
 

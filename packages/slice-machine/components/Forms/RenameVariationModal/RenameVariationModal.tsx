@@ -45,7 +45,6 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
         <DialogHeader icon="edit" title="Rename variation" />
         <DialogContent>
           <Formik
-            validateOnChange
             validateOnMount
             initialValues={{ variationName: variation?.name ?? "" }}
             validate={(values) => {
