@@ -227,38 +227,3 @@ jobs:
           name: html-report--attempt-${{ github.run_attempt }}
           path: playwright/playwright-report
           retention-days: 14
-
-  e2e-cypress:
-    needs: prepare
-    runs-on: [ubuntu-latest]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Restore cache
-        uses: ./.github/actions/restore-cache
-
-      - name: Set up Node
-        uses: ./.github/actions/setup-node
-
-      - name: Build Slice Machine UI, next-adapter, init and start scripts
-        run: yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/init,slice-machine-ui,start-slicemachine}' --topological --verbose run build
-
-      - name: Running End to End tests
-        run: yarn cypress
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          PRISMIC_URL: ${{ secrets.PRISMIC_URL }}
-          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
-          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
-          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
-          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
-          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
-
-      - name: Upload End to End screenshots
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: e2e-tests-screenshots-cypress
-          path: cypress/screenshots/
