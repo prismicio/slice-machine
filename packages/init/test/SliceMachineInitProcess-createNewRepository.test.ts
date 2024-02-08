@@ -61,19 +61,23 @@ const mockPrismicAPIs = async (
 	return { prismicAuthLoginResponse };
 };
 
-const loginWithStdin = async (
+const loginAndCreateRepositoryWithStdin = async (
 	prismicAuthLoginResponse: PrismicAuthLoginResponse,
 ) => {
 	const stdin = mockStdin();
 
+	// @ts-expect-error - Accessing protected method
+	const promise = initProcess.createNewRepository();
+
 	await new Promise((res) => setTimeout(res, 50));
-	expect(spiedManager.prismicRepository.create).toHaveBeenCalledOnce();
 
 	stdin.send("o").restore();
+
 	await new Promise((res) => setTimeout(res, 50));
 
 	const port: number =
 		spiedManager.user.getLoginSessionInfo.mock.results[0].value.port;
+
 	const body = JSON.stringify(prismicAuthLoginResponse);
 
 	// We use low-level `http` because node-fetch has some issue with 127.0.0.1 on CIs
@@ -89,7 +93,8 @@ const loginWithStdin = async (
 	});
 	request.write(body);
 	request.end();
-	await new Promise((res) => setTimeout(res, 50));
+
+	return promise;
 };
 
 it("create repository from context", async (ctx) => {
@@ -119,9 +124,7 @@ it("creates repository with a retry after a first fail", async (ctx) => {
 	});
 
 	await watchStd(async () => {
-		// @ts-expect-error - Accessing protected method
-		initProcess.createNewRepository();
-		await loginWithStdin(prismicAuthLoginResponse);
+		await loginAndCreateRepositoryWithStdin(prismicAuthLoginResponse);
 	});
 
 	expect(spiedManager.prismicRepository.create).toHaveBeenCalledTimes(2);
@@ -138,11 +141,9 @@ it("fail to create repository after a second fail", async (ctx) => {
 	});
 
 	await watchStd(async () => {
-		// @ts-expect-error - Accessing protected method
-		expect(initProcess.createNewRepository()).rejects.toThrow(
-			"Failed to create repository",
-		);
-		await loginWithStdin(prismicAuthLoginResponse);
+		await expect(
+			loginAndCreateRepositoryWithStdin(prismicAuthLoginResponse),
+		).rejects.toThrow("Failed to create repository");
 	});
 
 	expect(spiedManager.prismicRepository.create).toHaveBeenCalledTimes(2);
