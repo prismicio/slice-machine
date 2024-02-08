@@ -370,15 +370,32 @@ export function renameSection(
 
 export function addField(args: AddFieldArgs): CustomType {
   const { customType, sectionId, newField, newFieldId } = args;
+  const sectionJson = customType.json[sectionId];
+  const maybeSliceZoneEntry = getSectionSliceZoneEntry(customType, sectionId);
+
+  // Separate the fields into slices and non-slices
+  const sectionFields = Object.fromEntries(
+    Object.entries(sectionJson).filter(
+      ([_, value]) => value.type !== SlicesFieldType,
+    ),
+  );
+
+  const updatedSection = {
+    ...sectionFields,
+    // Add the new field to the section
+    [newFieldId]: newField,
+  };
+
+  // Merge the SlicesFieldType field back into the section, if it exists
+  if (maybeSliceZoneEntry !== undefined) {
+    const [sliceZoneKey, sliceZoneField] = maybeSliceZoneEntry;
+    updatedSection[sliceZoneKey] = sliceZoneField;
+  }
 
   const newCustomType = updateSection({
     customType,
     sectionId,
-    updatedSection: {
-      ...customType.json[sectionId],
-      // Add the new field to the section
-      [newFieldId]: newField,
-    },
+    updatedSection,
   });
 
   return newCustomType;

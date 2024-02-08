@@ -393,32 +393,39 @@ describe("CustomTypeModel test suite", () => {
 
   it("addField should return the given custom type with the field added to the section", () => {
     expect(
-      CustomTypeModel.addField({
-        customType: mockCustomType,
-        sectionId: "mainSection",
-        newFieldId: "newField",
-        newField: {
-          config: {
-            label: "NewField",
-          },
-          type: "UID",
-        },
-      }),
-    ).toEqual({
-      ...mockCustomType,
-      json: {
-        ...mockCustomType.json,
-        mainSection: {
-          ...mainSection,
+      JSON.stringify(
+        CustomTypeModel.addField({
+          customType: mockCustomType,
+          sectionId: "mainSection",
+          newFieldId: "newField",
           newField: {
             config: {
               label: "NewField",
             },
             type: "UID",
           },
+        }),
+      ),
+    ).toEqual(
+      JSON.stringify({
+        ...mockCustomType,
+        json: {
+          ...mockCustomType.json,
+          mainSection: {
+            uid: mainSection.uid,
+            booleanField: mainSection.booleanField,
+            groupField: mainSection.groupField,
+            newField: {
+              config: {
+                label: "NewField",
+              },
+              type: "UID",
+            },
+            slices: mainSection.slices,
+          },
         },
-      },
-    });
+      }),
+    );
   });
 
   it("deleteField should return the given custom type without the field", () => {
