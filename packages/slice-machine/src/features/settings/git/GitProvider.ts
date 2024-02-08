@@ -5,16 +5,12 @@ import { managerClient } from "@src/managerClient";
 
 export type GitProvider = keyof typeof gitProviderToConfig;
 
-const GITHUB_APP_SLUG = "prismic-io";
-
 export const gitProviderToConfig = {
   gitHub: {
     connect: async () => {
-      const state = await managerClient.git.createGitHubAuthState();
-      const url = new URL(
-        `https://github.com/apps/${GITHUB_APP_SLUG}/installations/new`,
-      );
-      url.searchParams.set("state", state.key);
+      const url = await managerClient.git.getProviderAppInstallURL({
+        provider: "gitHub",
+      });
       window.open(url, "git-hub-app-installation");
     },
     Icon: GitHubIcon,

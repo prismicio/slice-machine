@@ -39,6 +39,9 @@ export class PluginHookResultError extends SliceMachineError {
 export class InvalidActiveEnvironmentError extends SliceMachineError {
 	name = "SMInvalidActiveEnvironmentError" as const;
 }
+export class UnsupportedError extends SliceMachineError {
+	name = "SMUnsupportedError" as const;
+}
 
 type SliceMachineErrorNames =
 	| "SMSliceMachineError"
@@ -49,7 +52,8 @@ type SliceMachineErrorNames =
 	| InternalError["name"]
 	| PluginError["name"]
 	| PluginHookResultError["name"]
-	| InvalidActiveEnvironmentError["name"];
+	| InvalidActiveEnvironmentError["name"]
+	| UnsupportedError["name"];
 
 type ShallowSliceMachineError<TName extends SliceMachineErrorNames> = Error & {
 	name: TName;
@@ -106,4 +110,10 @@ export const isInvalidActiveEnvironmentError = (
 	error: unknown,
 ): error is ShallowSliceMachineError<"SMInvalidActiveEnvironmentError"> => {
 	return isSliceMachineError(error, "SMInvalidActiveEnvironmentError");
+};
+
+export const isUnsupportedError = (
+	error: unknown,
+): error is ShallowSliceMachineError<"SMUnsupportedError"> => {
+	return isSliceMachineError(error, "SMUnsupportedError");
 };

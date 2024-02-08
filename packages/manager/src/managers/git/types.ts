@@ -1,5 +1,10 @@
+export const GitProvider = {
+	GitHub: "gitHub",
+} as const;
+export type GitProvider = (typeof GitProvider)[keyof typeof GitProvider];
+
 export type GitOwner = {
-	provider: "gitHub";
+	provider: GitProvider;
 	id: string;
 	name: string;
 	// If type is null, the owner's type could not be determined. This can
@@ -9,7 +14,7 @@ export type GitOwner = {
 };
 
 export type GitRepo = {
-	provider: "gitHub";
+	provider: GitProvider;
 	id: string;
 	owner: string;
 	name: string;
@@ -18,7 +23,7 @@ export type GitRepo = {
 };
 
 export type GitRepoSpecifier = {
-	provider: "gitHub";
+	provider: GitProvider;
 	owner: string;
 	name: string;
 };
