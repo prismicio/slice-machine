@@ -1,11 +1,13 @@
 import type {
   CompositeSlice,
   LegacySlice,
+  SharedSlice,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import { pascalize, snakelize } from "@lib/utils/str";
 
 type CopySliceVariationArgs = {
   copiedVariation: VariationSM;
@@ -45,6 +47,8 @@ type ReorderFieldArgs = {
   sourceIndex: number;
   destinationIndex: number;
 };
+
+const DEFAULT_VARIATION_ID = "default";
 
 export function countMissingScreenshots(slice: ComponentUI): number {
   return slice.model.variations.length - Object.keys(slice.screenshots).length;
@@ -240,6 +244,40 @@ export function reorderField(args: ReorderFieldArgs): ComponentUI {
         }
         return v;
       }),
+    },
+  };
+}
+
+export function buildEmptySliceModel(sliceName: string): SharedSlice {
+  return {
+    id: snakelize(sliceName),
+    type: "SharedSlice",
+    name: sliceName,
+    description: sliceName,
+    variations: [
+      {
+        id: DEFAULT_VARIATION_ID,
+        name: pascalize(DEFAULT_VARIATION_ID),
+        // Property not used yet. Fallback to "...".
+        docURL: "...",
+        // "initial" is fine here as default value.
+        version: "initial",
+        description: pascalize(DEFAULT_VARIATION_ID),
+        // Empty string is fine, we don't want to save imageUrl.
+        // We don't want to compare local and remote image with imageUrl.
+        // It will be striped anyway when doing the comparison.
+        imageUrl: "",
+      },
+    ],
+  };
+}
+
+export function rename(slice: ComponentUI, newSliceName: string): ComponentUI {
+  return {
+    ...slice,
+    model: {
+      ...slice.model,
+      name: newSliceName,
     },
   };
 }

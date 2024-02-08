@@ -39,7 +39,9 @@ export const CustomTypesBuilderPage: FC = () => {
   );
 
   useEffect(() => {
-    // TODO(DT-1801): When creating a custom type, don't redirect to the builder page until the custom type is created
+    // This is a fallback in case the user try to directly access a custom type
+    // that don't exist
+    // TODO(DT-1801): Implement a 404 page
     if (!selectedCustomType || !hasLocal(selectedCustomType)) {
       void router.replace("/");
     }

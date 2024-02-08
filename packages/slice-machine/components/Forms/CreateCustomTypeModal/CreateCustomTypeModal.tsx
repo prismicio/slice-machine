@@ -2,25 +2,28 @@ import { SetStateAction, useState } from "react";
 import { Box } from "theme-ui";
 import { FormikErrors } from "formik";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 import ModalFormCard from "@components/ModalFormCard";
-import { InputBox } from "../components/InputBox";
-import { SelectRepeatable } from "../components/SelectRepeatable";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
   selectAllCustomTypeIds,
   selectAllCustomTypeLabels,
 } from "@src/modules/availableCustomTypes";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { telemetry } from "@src/apiClient";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import {
+  CustomTypeOrigin,
+  createCustomType,
+} from "@src/features/customTypes/actions/createCustomType";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { getFormat } from "@src/domain/customType";
+
+import { InputBox } from "../components/InputBox";
+import { SelectRepeatable } from "../components/SelectRepeatable";
 
 interface FormValues {
   id: string;
@@ -30,46 +33,64 @@ interface FormValues {
 
 type CreateCustomTypeModalProps = {
   format: CustomTypeFormat;
-  origin?: "onboarding" | "table";
+  isCreating: boolean;
+  isOpen: boolean;
+  origin?: CustomTypeOrigin;
+  onCreateChange: (isCreating: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   format,
+  isCreating,
+  isOpen,
   origin = "table",
+  onCreateChange,
+  onOpenChange,
 }) => {
-  const { createCustomType, closeModals } = useSliceMachineActions();
+  const { createCustomTypeSuccess } = useSliceMachineActions();
 
-  const {
-    customTypeIds,
-    isCreateCustomTypeModalOpen,
-    isCreatingCustomType,
-    customTypeLabels,
-  } = useSelector((store: SliceMachineStoreType) => ({
-    customTypeIds: selectAllCustomTypeIds(store),
-    customTypeLabels: selectAllCustomTypeLabels(store),
-    isCreateCustomTypeModalOpen: isModalOpen(
-      store,
-      ModalKeysEnum.CREATE_CUSTOM_TYPE,
-    ),
-    isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
-  }));
+  const { customTypeIds, customTypeLabels } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      customTypeIds: selectAllCustomTypeIds(store),
+      customTypeLabels: selectAllCustomTypeLabels(store),
+    }),
+  );
   const customTypesMessages = CUSTOM_TYPES_MESSAGES[format];
   const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
+  const router = useRouter();
 
-  const createCustomTypeAndTrack = ({ id, label, repeatable }: FormValues) => {
-    const name = label || id;
+  const onSubmit = async ({ id, label, repeatable }: FormValues) => {
+    onCreateChange(true);
 
-    void telemetry.track({
-      event: "custom-type:created",
-      id,
-      name,
+    await createCustomType({
       format,
-      type: repeatable ? "repeatable" : "single",
+      id,
+      label,
       origin,
+      repeatable,
+      onSuccess: async (newCustomType) => {
+        createCustomTypeSuccess(newCustomType);
+
+        const format = getFormat(newCustomType);
+        const customTypesConfig = CUSTOM_TYPES_CONFIG[format];
+
+        setIsIdFieldPristine(true);
+
+        await router.push({
+          pathname: customTypesConfig.getBuilderPagePathname(id),
+          query:
+            newCustomType.format === "page"
+              ? {
+                  newPageType: true,
+                }
+              : undefined,
+        });
+      },
     });
-    createCustomType(id, name, repeatable, format);
-    closeModals();
-    setIsIdFieldPristine(true);
+
+    onCreateChange(false);
+    onOpenChange(false);
   };
 
   const handleLabelChange = (
@@ -106,16 +127,18 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   return (
     <ModalFormCard
       dataCy="create-ct-modal"
-      isOpen={isCreateCustomTypeModalOpen}
+      isOpen={isOpen}
       widthInPx="530px"
       formId="create-custom-type"
       buttonLabel={"Create"}
       close={() => {
-        closeModals();
+        onOpenChange(false);
         setIsIdFieldPristine(true);
       }}
-      onSubmit={createCustomTypeAndTrack}
-      isLoading={isCreatingCustomType}
+      onSubmit={(values) => {
+        void onSubmit(values);
+      }}
+      isLoading={isCreating}
       initialValues={{
         repeatable: true,
         id: "",

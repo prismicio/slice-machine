@@ -3,12 +3,7 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
-import {
-  type SliceSM,
-  Slices,
-  type VariationSM,
-  Variations,
-} from "@lib/models/common/Slice";
+import { Slices, type VariationSM, Variations } from "@lib/models/common/Slice";
 import { CustomTypes } from "@lib/models/common/CustomType";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import ServerState from "@models/server/ServerState";
@@ -88,22 +83,6 @@ export const readSlice = async (libraryID: string, sliceID: string) => {
   });
   return { slice: model ? Slices.toSM(model) : undefined, errors };
 };
-
-export const renameSlice = async (
-  slice: SliceSM,
-  libName: string,
-): ReturnType<SliceMachineManagerClient["slices"]["renameSlice"]> => {
-  return await managerClient.slices.renameSlice({
-    libraryID: libName,
-    model: Slices.fromSM(slice),
-  });
-};
-
-export const deleteSlice = async (sliceId: string, libName: string) =>
-  await managerClient.slices.deleteSlice({
-    libraryID: libName,
-    sliceID: sliceId,
-  });
 
 export const renameSliceVariation = async (
   slice: ComponentUI,

@@ -53,7 +53,7 @@ export const hasSeenChangesToolTipCreator = createAction(
   "USER_CONTEXT/VIEW_CHANGES_TOOL_TIP",
 )();
 
-export const changesPushSuccessCreator = createAction(
+export const changesPushSuccess = createAction(
   "USER_CONTEXT/CHANGES_PUSH_SUCCESS",
 )();
 
@@ -65,7 +65,7 @@ type userContextActions = ActionType<
   | typeof hasSeenSimulatorToolTipCreator
   | typeof hasSeenChangesToolTipCreator
   | typeof refreshStateCreator
-  | typeof changesPushSuccessCreator
+  | typeof changesPushSuccess
 >;
 
 // Selectors
@@ -140,7 +140,7 @@ export const userContextReducer: Reducer<
         authStatus: getAuthStatus(action.payload.clientError),
       };
     }
-    case getType(changesPushSuccessCreator): {
+    case getType(changesPushSuccess): {
       return {
         ...state,
         lastSyncChange: Date.now(),

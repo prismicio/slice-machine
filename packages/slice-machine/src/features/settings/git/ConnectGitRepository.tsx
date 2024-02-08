@@ -4,10 +4,7 @@ import {
   IconButton,
   Tooltip,
 } from "@prismicio/editor-ui";
-import {
-  isUnauthenticatedError,
-  isUnauthorizedError,
-} from "@slicemachine/manager/client";
+import { isUnauthorizedError } from "@slicemachine/manager/client";
 import { type FC, type ReactNode, Suspense } from "react";
 
 import {
@@ -25,6 +22,7 @@ import {
 } from "@src/features/settings/git/GitRepositoriesSearch";
 import { useGitOwners } from "@src/features/settings/git/useGitOwners";
 import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
+import { useUser } from "@src/hooks/useUser";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 export const ConnectGitRepository: FC = () => (
@@ -48,6 +46,13 @@ export const ConnectGitRepository: FC = () => (
 );
 
 const Content: FC = () => {
+  // TODO(TD-1952): this hook isn't necessary and changes to the Redux
+  // authentication status should reset the Suspense cache.
+  const { isLoggedIn } = useUser();
+  return isLoggedIn ? <LoggedInContent /> : <UnauthenticatedErrorContent />;
+};
+
+const LoggedInContent: FC = () => {
   const { linkedGitRepos } = useLinkedGitRepos();
   return linkedGitRepos.length > 0 ? (
     <GitRepositoriesList mode="unlink" repos={linkedGitRepos} />
@@ -68,9 +73,7 @@ const UnlinkedRepositoryContent: FC = () => {
 };
 
 function renderError(error: unknown, reset: () => void): ReactNode {
-  if (isUnauthenticatedError(error)) {
-    return <UnauthenticatedErrorContent />;
-  } else if (isUnauthorizedError(error)) {
+  if (isUnauthorizedError(error)) {
     return <UnauthorizedErrorContent />;
   } else {
     return <UnknownErrorContent reset={reset} />;

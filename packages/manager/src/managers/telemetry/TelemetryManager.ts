@@ -90,7 +90,7 @@ export class TelemetryManager extends BaseManager {
 		};
 
 		if (isTelemetryEnabled) {
-			await this.initExperiment();
+			this.initExperiment();
 		}
 
 		this._anonymousID = randomUUID();
@@ -272,15 +272,17 @@ export class TelemetryManager extends BaseManager {
 	async checkIsTelemetryEnabled(): Promise<boolean> {
 		let root: string;
 		try {
-			root = await this.project.getRoot();
-		} catch {
-			root = await this.project.suggestRoot();
-		}
+			root = await this.project
+				.getRoot()
+				.catch(() => this.project.suggestRoot());
 
-		return readPrismicrc(root).telemetry !== false;
+			return readPrismicrc(root).telemetry !== false;
+		} catch {
+			return true;
+		}
 	}
 
-	private async initExperiment(): Promise<void> {
+	private initExperiment(): void {
 		try {
 			this._experiment = Experiment.initializeRemote(API_TOKENS.AmplitudeKey);
 		} catch (error) {

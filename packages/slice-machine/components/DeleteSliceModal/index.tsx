@@ -1,46 +1,54 @@
-import SliceMachineModal from "@components/SliceMachineModal";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { Close, Flex, Heading, Paragraph, Text, useThemeUI } from "theme-ui";
-import Card from "@components/Card";
+import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
+import { Close, Flex, Heading, Paragraph, Text, useThemeUI } from "theme-ui";
+
+import SliceMachineModal from "@components/SliceMachineModal";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import Card from "@components/Card";
 import { Button } from "@components/Button";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { isLoading } from "@src/modules/loading";
+import { deleteSlice } from "@src/features/slices/actions/deleteSlice";
 
 type DeleteSliceModalProps = {
+  isOpen: boolean;
+  libName: string;
   sliceId: string;
   sliceName: string;
-  libName: string;
+  onClose: () => void;
 };
 
 export const DeleteSliceModal: React.FunctionComponent<
   DeleteSliceModalProps
-> = ({ sliceId, sliceName, libName }) => {
-  const { isSliceModalOpen, isDeletingSlice } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isSliceModalOpen: isModalOpen(store, ModalKeysEnum.DELETE_SLICE),
-      isDeletingSlice: isLoading(store, LoadingKeysEnum.DELETE_SLICE),
-    }),
-  );
-
-  const { closeModals, deleteSlice } = useSliceMachineActions();
-
+> = ({ sliceId, sliceName, libName, isOpen, onClose }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { deleteSliceSuccess } = useSliceMachineActions();
   const { theme } = useThemeUI();
+
+  const onDelete = async () => {
+    setIsDeleting(true);
+
+    await deleteSlice({
+      sliceID: sliceId,
+      sliceName,
+      libraryID: libName,
+      onSuccess: () => {
+        deleteSliceSuccess(sliceId, libName);
+      },
+    });
+
+    onClose();
+    setIsDeleting(false);
+  };
 
   return (
     <SliceMachineModal
-      isOpen={isSliceModalOpen}
+      isOpen={isOpen}
       shouldCloseOnOverlayClick={true}
       style={{
         content: {
           maxWidth: 612,
         },
       }}
-      onRequestClose={closeModals}
+      onRequestClose={onClose}
     >
       <Card
         bodySx={{
@@ -79,7 +87,7 @@ export const DeleteSliceModal: React.FunctionComponent<
                 Delete Slice
               </Heading>
             </Flex>
-            <Close type="button" onClick={closeModals} />
+            <Close type="button" onClick={onClose} />
           </Flex>
         )}
         Footer={() => (
@@ -96,7 +104,7 @@ export const DeleteSliceModal: React.FunctionComponent<
             <Button
               label="Cancel"
               variant="secondary"
-              onClick={() => closeModals()}
+              onClick={onClose}
               sx={{
                 mr: "10px",
                 fontWeight: "bold",
@@ -107,9 +115,11 @@ export const DeleteSliceModal: React.FunctionComponent<
             <Button
               label="Delete"
               variant="danger"
-              isLoading={isDeletingSlice}
+              isLoading={isDeleting}
               sx={{ minHeight: 39, minWidth: 78 }}
-              onClick={() => deleteSlice(sliceId, sliceName, libName)}
+              onClick={() => {
+                void onDelete();
+              }}
             />
           </Flex>
         )}
