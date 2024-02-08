@@ -5,7 +5,7 @@ import { managerClient } from "@src/managerClient";
 
 export type GitProvider = keyof typeof gitProviderToConfig;
 
-const GITHUB_APP_SLUG = "prismic-prod-internal-test";
+const GITHUB_APP_SLUG = "prismic-io";
 
 export const gitProviderToConfig = {
   gitHub: {
