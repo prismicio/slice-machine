@@ -41,7 +41,7 @@ export const CustomTypesBuilderPage: FC = () => {
   useEffect(() => {
     // This is a fallback in case the user try to directly access a custom type
     // that don't exist
-    // TODO(DT-1801): Implement a 404 page
+    // TODO(DT-1801): implement a 404 page.
     if (!selectedCustomType || !hasLocal(selectedCustomType)) {
       void router.replace("/");
     }
