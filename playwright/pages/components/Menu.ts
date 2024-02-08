@@ -17,6 +17,11 @@ export class Menu {
   readonly updatesAvailableButton: Locator;
   readonly tutorialVideoTooltipTitle: Locator;
   readonly tutorialVideoTooltipCloseButton: Locator;
+  readonly autoSyncSyncing: Locator;
+  readonly autoSyncSynced: Locator;
+  readonly autoSyncFailed: Locator;
+  readonly autoSyncFailedMessage: Locator;
+  readonly autoSyncFailedRetry: Locator;
 
   constructor(page: Page) {
     /**
@@ -41,7 +46,9 @@ export class Menu {
       name: "Slices",
       exact: true,
     });
-    this.changesLink = this.menu.getByRole("link", { name: "Changes" });
+    this.changesLink = this.menu.getByRole("button", {
+      name: "Review changes",
+    });
     this.tutorialLink = this.menu.getByRole("link", {
       name: "Tutorials",
       exact: true,
@@ -59,6 +66,14 @@ export class Menu {
     });
     this.tutorialVideoTooltipTitle = page.getByText("Need Help?");
     this.tutorialVideoTooltipCloseButton = page.getByText("Got it");
+    this.autoSyncSyncing = page.getByText("Syncing...", { exact: true });
+    this.autoSyncSynced = page.getByText("Synced", { exact: true });
+    this.autoSyncFailed = page.getByText("Sync failed", { exact: true });
+    this.autoSyncFailedMessage = page.getByText(
+      "Failed to sync changes. Check your browser's console for more information.",
+      { exact: true },
+    );
+    this.autoSyncFailedRetry = page.getByRole("button", { name: "Retry" });
   }
 
   /**

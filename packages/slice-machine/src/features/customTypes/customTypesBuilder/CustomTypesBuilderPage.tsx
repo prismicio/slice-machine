@@ -78,7 +78,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
       <CustomTypeProvider
         initialCustomType={CustomTypes.fromSM(customTypeFromStore)}
       >
-        {({ autoSaveStatus, customType, setCustomType }) => {
+        {({ actionQueueStatus, customType, setCustomType }) => {
           const format = getFormat(customType);
           const config = CUSTOM_TYPES_CONFIG[customTypeFromStore.format];
           const messages = CUSTOM_TYPES_MESSAGES[customTypeFromStore.format];
@@ -92,7 +92,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
                   page={customType.label ?? customType.id}
                 />
                 <AppLayoutActions>
-                  <AutoSaveStatusIndicator status={autoSaveStatus} />
+                  <AutoSaveStatusIndicator status={actionQueueStatus} />
                   {customType.format === "page" ? (
                     <PageSnippetDialog model={customType} />
                   ) : undefined}

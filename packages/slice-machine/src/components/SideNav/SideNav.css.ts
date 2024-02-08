@@ -54,7 +54,7 @@ export const repository = style([
   sprinkles({
     display: "flex",
     justifyContent: "space-between",
-    marginBottom: 32,
+    marginBottom: 16,
   }),
 ]);
 

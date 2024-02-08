@@ -11,7 +11,6 @@ import { MathPlusIcon } from "@src/icons/MathPlusIcon";
 import { SettingsIcon } from "@src/icons/SettingsIcon";
 import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import {
-  SideNavSeparator,
   SideNavLink,
   SideNavListItem,
   SideNavList,
@@ -30,7 +29,7 @@ import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMess
 import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
 import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
-import { ChangesListItem } from "./ChangesListItem";
+import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
 
 import * as styles from "./index.css";
@@ -76,6 +75,8 @@ const Navigation: FC = () => {
         href={repositoryUrl}
       />
 
+      <ChangesItem />
+
       <SideNavList>
         <SideNavListItem>
           <SideNavLink
@@ -106,12 +107,6 @@ const Navigation: FC = () => {
             Icon={CUSTOM_TYPES_CONFIG.custom.Icon}
           />
         </SideNavListItem>
-
-        <SideNavSeparator />
-
-        <ChangesListItem />
-
-        <SideNavSeparator />
 
         <SideNavListItem>
           <SideNavLink

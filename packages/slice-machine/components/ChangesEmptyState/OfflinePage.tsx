@@ -28,7 +28,7 @@ export const OfflinePage = () => {
         <Text
           sx={{ fontSize: "13px", lineHeight: "24px", textAlign: "center" }}
         >
-          You need a stable internet connection to review and push changes
+          Connect to the internet to sync your changes.
         </Text>
       </Flex>
     </Flex>
