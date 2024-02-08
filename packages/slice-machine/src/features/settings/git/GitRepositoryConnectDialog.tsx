@@ -63,8 +63,7 @@ export const GitRepositoryConnectDialog: FC<
                   value={formikProps.values.writeAPIToken}
                 />
                 <Text color="grey11">
-                  Required to sync models from ${providerConfig.name} to
-                  Prismic.
+                  Required to sync models from {providerConfig.name} to Prismic.
                 </Text>
               </Box>
               <DialogActions
