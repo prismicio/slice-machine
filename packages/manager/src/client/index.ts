@@ -31,6 +31,7 @@ export {
 	isUnauthorizedError,
 	isUnexpectedDataError,
 	isInvalidActiveEnvironmentError,
+	isUnsupportedError,
 } from "../errors";
 
 export { DecodeError } from "../lib/DecodeError";

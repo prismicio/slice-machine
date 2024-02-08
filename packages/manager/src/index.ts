@@ -42,6 +42,7 @@ export {
 	PluginError,
 	PluginHookResultError,
 	InvalidActiveEnvironmentError,
+	UnsupportedError,
 } from "./errors";
 
 export { getEnvironmentInfo } from "./getEnvironmentInfo";
