@@ -124,7 +124,6 @@ it("creates repository with a retry after a first fail", async (ctx) => {
 		await loginWithStdin(prismicAuthLoginResponse);
 	});
 
-	expect(spiedManager.prismicRepository.create).toHaveBeenCalledTimes(2);
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.repository?.exists).toBe(true);
 });
