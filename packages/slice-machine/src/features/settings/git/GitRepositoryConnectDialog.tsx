@@ -6,6 +6,7 @@ import {
   DialogHeader,
   FormInput,
   Text,
+  TextLink,
 } from "@prismicio/editor-ui";
 import type { GitRepo, GitRepoSpecifier } from "@slicemachine/manager";
 import { Formik } from "formik";
@@ -14,6 +15,7 @@ import { toast } from "react-toastify";
 
 import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
 import { useWriteAPIToken } from "@src/features/settings/git/useWriteAPIToken";
+import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
 type GitRepositoryConnectDialogProps = {
   linkRepo: (repo: GitRepoSpecifier) => Promise<void>;
@@ -26,6 +28,7 @@ export const GitRepositoryConnectDialog: FC<
 > = ({ linkRepo, repo, trigger }) => {
   const providerConfig = gitProviderToConfig[repo.provider];
   const { updateToken } = useWriteAPIToken({ git: repo });
+  const { repositoryUrl } = useRepositoryInformation();
   return (
     <Dialog size={{ width: 448, height: "auto" }} trigger={trigger}>
       <DialogHeader title="Prismic Write API token required" />
@@ -59,7 +62,6 @@ export const GitRepositoryConnectDialog: FC<
                     void formikProps.setFieldValue("writeAPIToken", value);
                   }}
                   placeholder="Write API token"
-                  size="large"
                   value={formikProps.values.writeAPIToken}
                 />
                 <Text color="grey11">
@@ -68,6 +70,13 @@ export const GitRepositoryConnectDialog: FC<
               </Box>
               <DialogActions
                 cancel={{ text: "Cancel" }}
+                link={
+                  <TextLink
+                    href={new URL("/settings/apps", repositoryUrl).href}
+                  >
+                    Create a Prismic Write API token
+                  </TextLink>
+                }
                 ok={{
                   disabled: !formikProps.isValid,
                   loading: formikProps.isSubmitting,
