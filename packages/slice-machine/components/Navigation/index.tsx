@@ -1,4 +1,3 @@
-import { ErrorBoundary } from "@prismicio/editor-ui";
 import { Suspense, type FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,6 +27,7 @@ import { getChangelog } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
 import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
@@ -50,14 +50,7 @@ const Navigation: FC = () => {
 
   return (
     <SideNav>
-      <ErrorBoundary
-        onError={(error) => {
-          console.error(
-            `An error occurred while rendering the environments switch`,
-            error,
-          );
-        }}
-      >
+      <ErrorBoundary>
         <Suspense>
           <Environment />
         </Suspense>

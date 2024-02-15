@@ -1,10 +1,5 @@
 import { type FC, ReactNode, Suspense } from "react";
-import {
-  ErrorBoundary,
-  Box,
-  ProgressCircle,
-  DefaultErrorMessage,
-} from "@prismicio/editor-ui";
+import { Box, ProgressCircle, DefaultErrorMessage } from "@prismicio/editor-ui";
 import Head from "next/head";
 
 import {
@@ -13,6 +8,7 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import { LabsList } from "./LabsList";
 

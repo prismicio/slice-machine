@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, ErrorBoundary } from "@prismicio/editor-ui";
+import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type FC, Suspense, useState } from "react";
 
@@ -11,6 +11,7 @@ import {
 import { type Route, useRouteChange } from "@src/hooks/useRouteChange";
 import { CloseIcon } from "@src/icons/CloseIcon";
 import { UndoIcon } from "@src/icons/UndoIcon";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 export const FloatingBackButton: FC = () => {
   const { source } = useRouteChange();
