@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
-import { DefaultErrorMessage, ErrorBoundary } from "@prismicio/editor-ui";
+import { DefaultErrorMessage } from "@prismicio/editor-ui";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
@@ -40,6 +40,7 @@ import {
   selectIsWaitingForIFrameCheck,
   selectSetupStatus,
 } from "@src/modules/simulator";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
@@ -308,10 +309,6 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
                 overflowY: "auto",
               }}
             >
-              {/*
-                The editor warn us it's recommended to wrap  SharedSliceEditor in a Suspense and an ErrorBoundary.
-                Warning: It is not recommended to use editor-support->Suspense without a editor-ui->ErrorBoundary above it
-              */}
               <ErrorBoundary
                 renderError={() => (
                   <DefaultErrorMessage
