@@ -1,12 +1,12 @@
 import { render as rtlRender, RenderOptions } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Store, AnyAction } from "redux";
-import { ErrorBoundary } from "@prismicio/editor-ui";
 
 import { Provider } from "react-redux";
 import type { SliceMachineStoreType } from "../../src/redux/type";
 import configureStore from "../../src/redux/store";
 import theme from "../../src/theme";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 import { ThemeProvider as ThemeUIThemeProvider, BaseStyles } from "theme-ui";
 
 export type RenderArgs = Partial<
