@@ -14,8 +14,6 @@ import {
   SideNavLink,
   SideNavListItem,
   SideNavList,
-  UpdateInfo,
-  RightElement,
   SideNav,
   SideNavRepository,
 } from "@src/components/SideNav/SideNav";
@@ -24,26 +22,25 @@ import { FolderIcon } from "@src/icons/FolderIcon";
 import { userHasSeenTutorialsToolTip } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { getChangelog } from "@src/modules/environment";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
 import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
+import { RunningVersion } from "./RunningVersion";
+import { UpdateBox } from "./UpdateBox";
 
 import * as styles from "./index.css";
 
 const Navigation: FC = () => {
-  const { changelog, hasSeenTutorialsToolTip } = useSelector(
+  const { hasSeenTutorialsToolTip } = useSelector(
     (store: SliceMachineStoreType) => ({
-      changelog: getChangelog(store),
       hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
     }),
   );
   const router = useRouter();
-  const { setUpdatesViewed, setSeenTutorialsToolTip } =
-    useSliceMachineActions();
+  const { setSeenTutorialsToolTip } = useSliceMachineActions();
   const { repositoryName, repositoryDomain, repositoryUrl } =
     useRepositoryInformation();
   const gitIntegrationExperiment = useGitIntegrationExperiment();
@@ -119,24 +116,11 @@ const Navigation: FC = () => {
         </SideNavListItem>
       </SideNavList>
 
-      {(changelog.sliceMachine.updateAvailable ||
-        changelog.adapter.updateAvailable) && (
-        <UpdateInfo
-          href="/changelog"
-          onClick={() => {
-            const latestVersion =
-              changelog.sliceMachine.versions.length > 0
-                ? changelog.sliceMachine.versions?.[0]
-                : null;
-            setUpdatesViewed({
-              latest: latestVersion && latestVersion.versionNumber,
-              latestNonBreaking:
-                changelog.sliceMachine.latestNonBreakingVersion,
-            });
-          }}
-          component={Link}
-        />
-      )}
+      <ErrorBoundary>
+        <Suspense>
+          <UpdateBox />
+        </Suspense>
+      </ErrorBoundary>
 
       <SideNavList position="bottom">
         <SideNavListItem>
@@ -182,10 +166,11 @@ const Navigation: FC = () => {
             active={router.asPath.startsWith("/changelog")}
             component={Link}
             RightElement={
-              <RightElement data-cy="slicemachine-version">
-                {changelog.sliceMachine.currentVersion &&
-                  `v${changelog.sliceMachine.currentVersion}`}
-              </RightElement>
+              <ErrorBoundary>
+                <Suspense>
+                  <RunningVersion />
+                </Suspense>
+              </ErrorBoundary>
             }
           />
         </SideNavListItem>

@@ -1,16 +1,15 @@
-import { managerClient } from "@src/managerClient";
-
 import { useRequest } from "@prismicio/editor-support/Suspense";
+
+import { managerClient } from "@src/managerClient";
 
 async function getAdapterName() {
   try {
     return await managerClient.project.getAdapterName();
   } catch (e) {
-    console.error("Error while trying to get adapter name", e);
-    return undefined;
+    throw new Error("Error while trying to get adapter name");
   }
 }
 
-export function useAdapterName(): string | undefined {
+export function useAdapterName(): string {
   return useRequest(getAdapterName, []);
 }

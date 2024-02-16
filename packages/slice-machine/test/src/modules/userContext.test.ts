@@ -4,7 +4,6 @@ import {
   userContextReducer,
   sendAReviewCreator,
   skipReviewCreator,
-  updatesViewedCreator,
 } from "@src/modules/userContext";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 
@@ -26,10 +25,6 @@ describe("[UserContext module]", () => {
         userReview: {
           onboarding: false,
           advancedRepository: false,
-        },
-        updatesViewed: {
-          latest: null,
-          latestNonBreaking: null,
         },
       };
 
@@ -55,10 +50,6 @@ describe("[UserContext module]", () => {
           onboarding: false,
           advancedRepository: false,
         },
-        updatesViewed: {
-          latest: null,
-          latestNonBreaking: null,
-        },
       };
 
       const action = skipReviewCreator({
@@ -71,28 +62,6 @@ describe("[UserContext module]", () => {
           onboarding: true,
           advancedRepository: false,
         },
-      };
-
-      expect(userContextReducer(initialState, action)).toEqual(expectedState);
-    });
-
-    it("should update dismissedUpdate to the value of the update dismissed", () => {
-      // @ts-expect-error TS(2739) FIXME: Type '{ hasSendAReview: false;... Remove this comment to see the full error message
-      const initialState: UserContextStoreType = {
-        hasSendAReview: false,
-        updatesViewed: {
-          latest: null,
-          latestNonBreaking: null,
-        },
-      };
-
-      const versions = { latestNonBreaking: "0.1.0", latest: "1.0.0" };
-
-      const action = updatesViewedCreator(versions);
-
-      const expectedState = {
-        ...initialState,
-        updatesViewed: versions,
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);

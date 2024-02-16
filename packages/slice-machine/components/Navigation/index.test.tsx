@@ -25,16 +25,15 @@ const mockRouter = vi.mocked(Router);
 vi.mock("next/router", () => import("next-router-mock"));
 
 type renderSideNavigationArgs = {
-  canUpdate: boolean;
   hasChanges?: boolean;
   authStatus?: AuthStatus;
 };
 
-function renderSideNavigation({
-  canUpdate,
-  hasChanges = false,
-  authStatus = AuthStatus.AUTHORIZED,
-}: renderSideNavigationArgs): RenderReturnType {
+function renderSideNavigation(
+  args: renderSideNavigationArgs = {},
+): RenderReturnType {
+  const { hasChanges = false, authStatus = AuthStatus.AUTHORIZED } = args;
+
   return render(<SideNavigation />, {
     preloadedState: {
       availableCustomTypes: {},
@@ -80,19 +79,6 @@ function renderSideNavigation({
         manifest: {
           apiEndpoint: "https://foo.cdn.prismic.io/api/v2",
         },
-        changelog: {
-          sliceMachine: {
-            currentVersion: "",
-            updateAvailable: canUpdate,
-            latestNonBreakingVersion: null,
-            versions: [],
-          },
-          adapter: {
-            name: "",
-            updateAvailable: canUpdate,
-            versions: [],
-          },
-        },
       } as unknown as FrontEndEnvironment,
       userContext: {
         hasSeenTutorialsToolTip: false,
@@ -109,7 +95,7 @@ describe("Side Navigation", () => {
   });
 
   test("Logo and repo area", async () => {
-    renderSideNavigation({ canUpdate: true });
+    renderSideNavigation();
     expect(await screen.findByText("foo")).toBeVisible();
     expect(await screen.findByText("foo.prismic.io")).toBeVisible();
     const link = await screen.findByTitle("Open prismic repository");
@@ -118,12 +104,12 @@ describe("Side Navigation", () => {
   });
 
   test("Update box when update is available", async () => {
-    renderSideNavigation({ canUpdate: true });
+    renderSideNavigation();
     expect(await screen.findByText("Updates Available")).toBeVisible();
   });
 
   test("Update box when there are no updates", async () => {
-    renderSideNavigation({ canUpdate: false });
+    renderSideNavigation();
     const element = await act(() => screen.queryByText("Updates Available"));
     expect(element).toBeNull();
   });
@@ -139,7 +125,7 @@ describe("Side Navigation", () => {
   ])(
     "internal navigation links: when clicking title %s it should navigate to %s",
     async (title, path) => {
-      const { user } = renderSideNavigation({ canUpdate: true });
+      const { user } = renderSideNavigation();
 
       await act(() => mockRouter.push("/"));
 
@@ -155,7 +141,7 @@ describe("Side Navigation", () => {
   );
 
   test("should display the number of changes on the 'Review changes' item", async () => {
-    renderSideNavigation({ canUpdate: true, hasChanges: true });
+    renderSideNavigation({ hasChanges: true });
 
     expect(await screen.findByText("Review changes")).toBeVisible();
     const changesItem = screen
@@ -188,7 +174,7 @@ describe("Side Navigation", () => {
       }),
     );
 
-    renderSideNavigation({ canUpdate: true });
+    renderSideNavigation();
 
     const link = (await screen.findByText("Academy")).parentElement
       ?.parentElement as HTMLElement;
@@ -204,7 +190,7 @@ describe("Side Navigation", () => {
   });
 
   test("Video Item not next", async () => {
-    renderSideNavigation({ canUpdate: true });
+    renderSideNavigation();
 
     const link = (await screen.findByText("Tutorial")).parentElement
       ?.parentElement as HTMLElement;

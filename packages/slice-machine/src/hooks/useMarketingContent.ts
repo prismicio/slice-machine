@@ -57,9 +57,6 @@ const DEFAULT_CONTENT: MarketingContent = {
 
 export function useMarketingContent(): MarketingContent {
   const adapterName = useAdapterName();
-  if (adapterName === undefined) {
-    return DEFAULT_CONTENT;
-  }
 
   return CONTENT_BY_ADAPTER[adapterName] ?? DEFAULT_CONTENT;
 }
