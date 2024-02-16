@@ -54,3 +54,6 @@ export type { APIEndpoints } from "./constants/API_ENDPOINTS";
 export { REPOSITORY_NAME_VALIDATION } from "./constants/REPOSITORY_NAME_VALIDATION";
 
 export type { Variant } from "./managers/telemetry/types";
+
+export { VERSION_KIND } from "./constants/VERSION_KIND";
+export type { Version, VersionKind } from "./managers/versions/types";

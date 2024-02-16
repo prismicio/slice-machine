@@ -1,7 +1,13 @@
-import { tokens } from "@prismicio/editor-ui";
 import React from "react";
 import { Flex, Text } from "theme-ui";
-import { PackageChangelog, PackageVersion } from "@models/common/versions";
+import { tokens } from "@prismicio/editor-ui";
+
+import { Version } from "@slicemachine/manager";
+import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
+import { useSliceMachineLatestNonBreakingVersion } from "@src/features/changelog/useSliceMachineLatestNonBreakingVersion";
+import { useSliceMachineRunningVersion } from "@src/hooks/useSliceMachineRunningVersion";
+import { useUpdateAvailable } from "@src/hooks/useUpdateAvailable";
+
 import { VersionBadge } from "./VersionBadge";
 
 export enum VersionTags {
@@ -11,21 +17,21 @@ export enum VersionTags {
 }
 
 interface NavigationProps {
-  changelog: PackageChangelog;
-  selectedVersion: PackageVersion | undefined;
-  selectVersion: (version: PackageVersion) => void;
+  selectedVersion: Version | undefined;
+  selectVersion: (version: Version) => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
-  changelog,
   selectedVersion,
   selectVersion,
 }) => {
-  const latestVersion: string | undefined =
-    changelog.sliceMachine.versions[0]?.versionNumber;
-  const hasUpToDateVersions =
-    !changelog.adapter.updateAvailable &&
-    !changelog.sliceMachine.updateAvailable;
+  const versions = useSliceMachineVersions();
+  const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =
+    useUpdateAvailable();
+  const latestNonBreakingVersion = useSliceMachineLatestNonBreakingVersion();
+  const runningVersion = useSliceMachineRunningVersion();
+
+  const latestVersion: string | undefined = versions[0]?.version;
 
   function findVersionTags(versionNumber: string): VersionTags[] {
     const tags = [];
@@ -33,14 +39,12 @@ export const Navigation: React.FC<NavigationProps> = ({
     // Display Latest or LatestNonBreaking tag
     if (versionNumber === latestVersion) {
       tags.push(VersionTags.Latest);
-    } else if (
-      versionNumber === changelog.sliceMachine.latestNonBreakingVersion
-    ) {
+    } else if (versionNumber === latestNonBreakingVersion) {
       tags.push(VersionTags.LatestNonBreaking);
     }
 
     // Display Current tag
-    if (versionNumber === changelog.sliceMachine.currentVersion) {
+    if (versionNumber === runningVersion) {
       tags.push(VersionTags.Current);
     }
 
@@ -93,16 +97,16 @@ export const Navigation: React.FC<NavigationProps> = ({
           overflow: "auto",
         }}
       >
-        {changelog.sliceMachine.versions.map((version, index) => (
+        {versions.map((packageVersion, index) => (
           <VersionBadge
-            key={`versionBadge-${version.versionNumber}-${index}`}
-            isSelected={
-              selectedVersion?.versionNumber === version.versionNumber
+            key={`versionBadge-${packageVersion.version}-${index}`}
+            isSelected={selectedVersion?.version === packageVersion.version}
+            onClick={() => selectVersion(packageVersion)}
+            versionNumber={packageVersion.version}
+            tags={findVersionTags(packageVersion.version)}
+            hasUpToDateVersions={
+              !sliceMachineUpdateAvailable && !adapterUpdateAvailable
             }
-            onClick={() => selectVersion(version)}
-            versionNumber={version.versionNumber}
-            tags={findVersionTags(version.versionNumber)}
-            hasUpToDateVersions={hasUpToDateVersions}
           />
         ))}
       </Flex>

@@ -1,21 +1,22 @@
-import { tokens } from "@prismicio/editor-ui";
 import React from "react";
 import { Flex, Text } from "theme-ui";
-import type { PackageManager } from "@slicemachine/manager";
-import { PackageChangelog, PackageVersion } from "@models/common/versions";
-import { VersionKindLabel } from "./VersionKindLabel";
-import { ReleaseNoteDetails } from "./ReleaseNoteDetails";
-import { UpdateCommandBox } from "./UpdateCommandBox";
 import { AiFillWarning } from "react-icons/ai";
+import { tokens } from "@prismicio/editor-ui";
+
+import type { PackageManager, Version } from "@slicemachine/manager";
+import { useSliceMachineReleaseNotes } from "@src/features/changelog/useSliceMachineReleaseNotes";
+
+import { VersionKindLabel } from "./VersionKindLabel";
+import { ReleaseNotesDetails } from "./ReleaseNotesDetails";
+import { UpdateCommandBox } from "./UpdateCommandBox";
 
 interface VersionDetailsProps {
-  changelog: PackageChangelog;
-  selectedVersion: PackageVersion;
+  selectedVersion: Version;
   packageManager: PackageManager;
 }
 
 export const ReleaseWarning = () => (
-  <div>
+  <Flex sx={{ paddingLeft: "32px" }}>
     Could not fetch release notes.{" "}
     <a
       href="https://github.com/prismicio/slice-machine/releases"
@@ -24,14 +25,15 @@ export const ReleaseWarning = () => (
     >
       Find out more on GitHub
     </a>
-  </div>
+  </Flex>
 );
 
 export const VersionDetails: React.FC<VersionDetailsProps> = ({
-  changelog,
   selectedVersion,
   packageManager,
 }) => {
+  const releaseNotes = useSliceMachineReleaseNotes(selectedVersion.version);
+
   return (
     <Flex sx={{ flexDirection: "column" }}>
       <Flex
@@ -50,7 +52,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
             lineHeight: "32px",
           }}
         >
-          {`Version ${selectedVersion.versionNumber}`}
+          {`Version ${selectedVersion.version}`}
         </Text>
         {!!selectedVersion.kind && (
           <VersionKindLabel versionKind={selectedVersion.kind} />
@@ -65,7 +67,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
         }}
       >
         {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
-        {selectedVersion.releaseNote?.includes("# Breaking Change") && (
+        {releaseNotes?.includes("# Breaking Change") && (
           <Flex
             sx={{
               padding: "16px",
@@ -85,13 +87,12 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
         )}
 
         <UpdateCommandBox
-          changelog={changelog}
           selectedVersion={selectedVersion}
           packageManager={packageManager}
         />
-        {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
-        {selectedVersion?.releaseNote ? (
-          <ReleaseNoteDetails releaseNote={selectedVersion.releaseNote} />
+
+        {releaseNotes !== undefined ? (
+          <ReleaseNotesDetails releaseNotes={releaseNotes} />
         ) : (
           <ReleaseWarning />
         )}

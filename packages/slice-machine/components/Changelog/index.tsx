@@ -1,65 +1,54 @@
-import { ProgressCircle } from "@prismicio/editor-ui";
-import { BaseStyles, Flex } from "theme-ui";
+import { Suspense, useEffect, useState } from "react";
+import { BaseStyles } from "theme-ui";
 import { useSelector } from "react-redux";
+import { ErrorBoundary, ProgressCircle } from "@prismicio/editor-ui";
+
+import { Version } from "@slicemachine/manager";
+import { AppLayout, AppLayoutContent } from "@components/AppLayout";
+import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getChangelog, getPackageManager } from "@src/modules/environment";
-import { useEffect, useState } from "react";
-import { PackageVersion } from "@models/common/versions";
+import { getPackageManager } from "@src/modules/environment";
+
 import { Navigation } from "./navigation";
 import { VersionDetails, ReleaseWarning } from "./versionDetails";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { AppLayout, AppLayoutContent } from "@components/AppLayout";
 
 export default function Changelog() {
-  const { changelog, packageManager, isChangelogLoading } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      changelog: getChangelog(store),
-      packageManager: getPackageManager(store),
-      isChangelogLoading: isLoading(store, LoadingKeysEnum.CHANGELOG),
-    }),
+  const { packageManager } = useSelector((store: SliceMachineStoreType) => ({
+    packageManager: getPackageManager(store),
+  }));
+  const versions = useSliceMachineVersions();
+  const latestVersion = versions[0];
+
+  const [selectedVersion, setSelectedVersion] = useState<Version | undefined>(
+    latestVersion ?? undefined,
   );
-
-  const latestVersion = changelog.sliceMachine.versions[0];
-
-  const [selectedVersion, setSelectedVersion] = useState<
-    PackageVersion | undefined
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  >(latestVersion || undefined);
 
   useEffect(() => {
     setSelectedVersion(latestVersion);
   }, [latestVersion]);
 
-  const showReleaseWarning =
-    changelog.sliceMachine.versions.length === 0 || !selectedVersion;
+  const showReleaseWarning = versions.length === 0 || !selectedVersion;
 
   return (
     <AppLayout>
       <AppLayoutContent>
         <BaseStyles sx={{ display: "flex", minWidth: 0 }}>
-          {!isChangelogLoading ? (
-            <>
-              <Navigation
-                changelog={changelog}
-                selectedVersion={selectedVersion}
-                selectVersion={(version) => setSelectedVersion(version)}
-              />
+          <Navigation
+            selectedVersion={selectedVersion}
+            selectVersion={(version) => setSelectedVersion(version)}
+          />
 
-              {showReleaseWarning ? (
-                <Flex sx={{ paddingLeft: "32px" }}>
-                  <ReleaseWarning />
-                </Flex>
-              ) : (
+          {showReleaseWarning ? (
+            <ReleaseWarning />
+          ) : (
+            <ErrorBoundary renderError={() => <ReleaseWarning />}>
+              <Suspense fallback={<ProgressCircle />}>
                 <VersionDetails
-                  changelog={changelog}
                   selectedVersion={selectedVersion}
                   packageManager={packageManager}
                 />
-              )}
-            </>
-          ) : (
-            <ProgressCircle />
+              </Suspense>
+            </ErrorBoundary>
           )}
         </BaseStyles>
       </AppLayoutContent>
