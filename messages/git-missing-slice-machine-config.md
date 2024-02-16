@@ -8,7 +8,7 @@ Add a `slicemachine.config.json` file to the Git repository.
 
 A basic Slice Machine configuration file looks like this:
 
-```json
+```jsonc
 // slicemachine.config.json
 
 {
