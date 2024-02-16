@@ -14,19 +14,6 @@ export const dummyServerState: Pick<
       localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
     },
     packageManager: "npm",
-    changelog: {
-      sliceMachine: {
-        currentVersion: "0.2.0",
-        latestNonBreakingVersion: "0.1.2",
-        updateAvailable: false,
-        versions: [],
-      },
-      adapter: {
-        name: "test-adapter",
-        updateAvailable: false,
-        versions: [],
-      },
-    },
     endpoints: {
       PrismicWroom: "https://prismic.io/",
       PrismicAuthentication: "https://auth.prismic.io/",

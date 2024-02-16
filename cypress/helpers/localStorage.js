@@ -5,10 +5,6 @@ import "cypress-localstorage-commands";
  *
  * @param {{
  *   hasSendAReview: boolean;
- *   updatesViewed: {
- *     latest: number | null;
- *     latestNonBreaking: number | null;
- *   };
  *   hasSeenTutorialsToolTip: boolean;
  *   hasSeenSimulatorToolTip: boolean;
  *   lastSyncChange: number | null;
@@ -16,7 +12,6 @@ import "cypress-localstorage-commands";
  */
 export function setSliceMachineUserContext({
   hasSendAReview = true,
-  updatesViewed = { latest: null, latestNonBreaking: null },
   hasSeenTutorialsToolTip = true,
   hasSeenSimulatorToolTip = true,
   lastSyncChange = null,
@@ -26,7 +21,6 @@ export function setSliceMachineUserContext({
     JSON.stringify({
       userContext: JSON.stringify({
         hasSendAReview,
-        updatesViewed,
         hasSeenTutorialsToolTip,
         lastSyncChange,
         hasSeenSimulatorToolTip,

@@ -33,12 +33,10 @@ const MarkdownCodeBlock = (props: CodeProps) => {
   })();
 
   const onCopy = () => {
-    if (adapter !== undefined) {
-      void telemetry.track({
-        event: "page-type:copy-snippet",
-        framework: adapter,
-      });
-    }
+    void telemetry.track({
+      event: "page-type:copy-snippet",
+      framework: adapter,
+    });
   };
 
   return (

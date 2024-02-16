@@ -10,7 +10,6 @@ import useServerState from "@src/hooks/useServerState";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
 import useSMTracker from "@src/hooks/useSMTracker";
-import { useChangelog } from "@src/hooks/useChangelog";
 
 type Props = Readonly<{
   children?: ReactNode;
@@ -23,7 +22,6 @@ const SliceMachineApp: FC<Props> = ({ children }) => {
 
   useSMTracker();
   useServerState();
-  useChangelog();
 
   return (
     <>

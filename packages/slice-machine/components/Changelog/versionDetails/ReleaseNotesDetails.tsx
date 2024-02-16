@@ -2,12 +2,12 @@ import React from "react";
 import { Text } from "theme-ui";
 import { marked } from "marked";
 
-interface ReleaseNoteDetailsProps {
-  releaseNote: string;
+interface ReleaseNotesDetailsProps {
+  releaseNotes: string;
 }
 
-export const ReleaseNoteDetails: React.FC<ReleaseNoteDetailsProps> = ({
-  releaseNote,
+export const ReleaseNotesDetails: React.FC<ReleaseNotesDetailsProps> = ({
+  releaseNotes,
 }) => {
   return (
     <Text
@@ -37,7 +37,7 @@ export const ReleaseNoteDetails: React.FC<ReleaseNoteDetailsProps> = ({
         },
       }}
       dangerouslySetInnerHTML={{
-        __html: marked.parse(releaseNote),
+        __html: marked.parse(releaseNotes),
       }}
     />
   );

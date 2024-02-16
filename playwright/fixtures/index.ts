@@ -162,10 +162,6 @@ export const defaultTest = (
               onboarding: false,
               advancedRepository: true,
             },
-            updatesViewed: {
-              latest: null,
-              latestNonBreaking: null,
-            },
             hasSeenChangesToolTip: true,
             hasSeenSimulatorToolTip: true,
             hasSeenTutorialsToolTip: true,
@@ -177,10 +173,6 @@ export const defaultTest = (
             userReview: {
               onboarding: onboarded,
               advancedRepository: false,
-            },
-            updatesViewed: {
-              latest: null,
-              latestNonBreaking: null,
             },
             hasSeenChangesToolTip: false,
             hasSeenSimulatorToolTip: false,

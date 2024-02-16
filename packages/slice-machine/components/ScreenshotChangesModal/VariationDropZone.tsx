@@ -8,10 +8,6 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
 import useCustomScreenshot from "./useCustomScreenshot";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { uploadSliceScreenshot } from "@src/features/slices/actions/uploadSliceScreenshot";
@@ -85,33 +81,28 @@ const DropZone: React.FC<DropZoneProps> = ({
 }) => {
   const maybeScreenshot = slice.screenshots[variationID];
 
-  const { openToaster } = useSliceMachineActions();
+  const { openToaster, saveSliceCustomScreenshotSuccess } =
+    useSliceMachineActions();
   const [isDragActive, setIsDragActive] = useState(false);
   const [isHover, setIsHover] = useState(false);
+  const [isUploadingScreenshot, setIsUploadingScreenshot] = useState(false);
+
   useHotkeys(["meta+v", "ctrl+v"], () => void handlePaste(), [
     variationID,
     slice,
   ]);
 
-  const { saveSliceCustomScreenshotSuccess } = useSliceMachineActions();
-
-  const { isLoadingScreenshot } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      isLoadingScreenshot: isLoading(
-        state,
-        LoadingKeysEnum.GENERATE_SLICE_CUSTOM_SCREENSHOT,
-      ),
-    }),
-  );
-
   const { FileInputRenderer, fileInputProps } = useCustomScreenshot({
     onHandleFile: async (file: File, isDragActive: boolean) => {
+      setIsUploadingScreenshot(true);
+
       const newSlice = await uploadSliceScreenshot({
         slice,
         file,
         method: isDragActive ? "dragAndDrop" : "upload",
         variationId: variationID,
       });
+
       setIsHover(false);
 
       const screenshot = newSlice?.screenshots[variationID];
@@ -120,6 +111,8 @@ const DropZone: React.FC<DropZoneProps> = ({
         saveSliceCustomScreenshotSuccess(variationID, screenshot, newSlice);
         onUploadSuccess && onUploadSuccess(newSlice);
       }
+
+      setIsUploadingScreenshot(false);
     },
   });
 
@@ -130,6 +123,9 @@ const DropZone: React.FC<DropZoneProps> = ({
         ToasterType.ERROR,
       );
     }
+
+    setIsUploadingScreenshot(true);
+
     const newSlice = await uploadSliceScreenshot({
       slice,
       file,
@@ -143,6 +139,8 @@ const DropZone: React.FC<DropZoneProps> = ({
       saveSliceCustomScreenshotSuccess(variationID, screenshot, newSlice);
       onUploadSuccess && onUploadSuccess(newSlice);
     }
+
+    setIsUploadingScreenshot(false);
   };
 
   const supportsClipboardRead = typeof navigator.clipboard.read === "function";
@@ -165,6 +163,7 @@ const DropZone: React.FC<DropZoneProps> = ({
       console.error("Could not paste file", e);
     }
   };
+
   const handleDrop = (event: React.DragEvent<HTMLInputElement>) => {
     event.preventDefault();
     setIsDragActive(false);
@@ -210,13 +209,13 @@ const DropZone: React.FC<DropZoneProps> = ({
       onSubmit={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      {isLoadingScreenshot ? (
+      {isUploadingScreenshot ? (
         <>
           <Spinner />
           <Text sx={{ my: 2 }}>Uploading file ...</Text>
         </>
       ) : null}
-      {!isLoadingScreenshot && maybeScreenshot !== undefined ? (
+      {!isUploadingScreenshot && maybeScreenshot !== undefined ? (
         <ScreenshotPreview
           src={maybeScreenshot.url}
           sx={{
@@ -227,7 +226,7 @@ const DropZone: React.FC<DropZoneProps> = ({
           }}
         />
       ) : null}
-      {!isLoadingScreenshot ? (
+      {!isUploadingScreenshot ? (
         <Flex
           sx={{
             p: 2,

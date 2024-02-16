@@ -17,10 +17,6 @@ const initialState: UserContextStoreType = {
     onboarding: false,
     advancedRepository: false,
   },
-  updatesViewed: {
-    latest: null,
-    latestNonBreaking: null,
-  },
   hasSeenTutorialsToolTip: false,
   hasSeenSimulatorToolTip: false,
   hasSeenChangesToolTip: false,
@@ -36,10 +32,6 @@ export const sendAReviewCreator = createAction("USER_CONTEXT/SEND_REVIEW")<{
 export const skipReviewCreator = createAction("USER_CONTEXT/SKIP_REVIEW")<{
   reviewType: UserReviewType;
 }>();
-
-export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
-  UserContextStoreType["updatesViewed"]
->();
 
 export const hasSeenTutorialsToolTipCreator = createAction(
   "USER_CONTEXT/VIEW_TUTORIALS_TOOL_TIP",
@@ -60,7 +52,6 @@ export const changesPushSuccess = createAction(
 type userContextActions = ActionType<
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
-  | typeof updatesViewedCreator
   | typeof hasSeenTutorialsToolTipCreator
   | typeof hasSeenSimulatorToolTipCreator
   | typeof hasSeenChangesToolTipCreator
@@ -74,10 +65,6 @@ export const getUserReview = (state: SliceMachineStoreType): UserReviewState =>
     onboarding: state.userContext.hasSendAReview ?? false,
     advancedRepository: false,
   };
-
-export const getUpdatesViewed = (
-  state: SliceMachineStoreType,
-): UserContextStoreType["updatesViewed"] => state.userContext.updatesViewed;
 
 export const userHasSeenTutorialsToolTip = (
   state: SliceMachineStoreType,
@@ -110,12 +97,6 @@ export const userContextReducer: Reducer<
           [action.payload.reviewType]: true,
         },
       };
-    case getType(updatesViewedCreator): {
-      return {
-        ...state,
-        updatesViewed: action.payload,
-      };
-    }
     case getType(hasSeenTutorialsToolTipCreator): {
       return {
         ...state,
