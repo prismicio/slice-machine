@@ -6,13 +6,12 @@ import { startLoadingActionCreator, stopLoadingActionCreator } from "./loading";
 import {
   sendAReviewCreator,
   skipReviewCreator,
-  updatesViewedCreator,
   hasSeenTutorialsToolTipCreator,
   hasSeenSimulatorToolTipCreator,
   hasSeenChangesToolTipCreator,
   changesPushSuccess,
 } from "./userContext";
-import { getChangelogCreator, refreshStateCreator } from "./environment";
+import { refreshStateCreator } from "./environment";
 import {
   checkSimulatorSetupCreator,
   connectToSimulatorIframeCreator,
@@ -31,7 +30,7 @@ import {
   sliceUpdateSuccess,
   sliceRenameSuccess,
 } from "./slices";
-import { UserContextStoreType, UserReviewType } from "./userContext/types";
+import { UserReviewType } from "./userContext/types";
 import { GenericToastTypes, openToasterCreator } from "./toaster";
 import { CustomTypes } from "@lib/models/common/CustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
@@ -90,8 +89,6 @@ const useSliceMachineActions = () => {
         reviewType,
       }),
     );
-  const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
-    dispatch(updatesViewedCreator(versions));
   const setSeenSimulatorToolTip = () =>
     dispatch(hasSeenSimulatorToolTipCreator());
   const setSeenTutorialsToolTip = () =>
@@ -120,10 +117,6 @@ const useSliceMachineActions = () => {
         clientError: serverState.clientError,
       }),
     );
-  };
-
-  const getChangelog = () => {
-    dispatch(getChangelogCreator.request());
   };
 
   /**
@@ -227,7 +220,6 @@ const useSliceMachineActions = () => {
     deleteSliceSuccess,
     sendAReview,
     skipReview,
-    setUpdatesViewed,
     setSeenTutorialsToolTip,
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
@@ -236,7 +228,6 @@ const useSliceMachineActions = () => {
     closeModals,
     openToaster,
     saveSliceMock,
-    getChangelog,
     pushChangesSuccess,
     createCustomTypeSuccess,
   };

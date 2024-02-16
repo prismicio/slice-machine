@@ -1,36 +1,40 @@
 import React from "react";
 import { Button, Flex, Text } from "theme-ui";
 import { AiFillWarning } from "react-icons/ai";
-import type { PackageManager } from "@slicemachine/manager";
-import { PackageChangelog, PackageVersion } from "@models/common/versions";
+
+import type { PackageManager, Version } from "@slicemachine/manager";
+import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
 import CodeBlock from "@components/CodeBlock";
+import { useAdapterName } from "@src/hooks/useAdapterName";
+import { useUpdateAvailable } from "@src/hooks/useUpdateAvailable";
 
 interface UpdateCommandBoxProps {
-  changelog: PackageChangelog;
-  selectedVersion: PackageVersion;
+  selectedVersion: Version;
   packageManager: PackageManager;
 }
 
 export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
-  changelog,
   selectedVersion,
   packageManager,
 }) => {
+  const versions = useSliceMachineVersions();
+  const adapterName = useAdapterName();
+  const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =
+    useUpdateAvailable();
+
   const isLatestSliceMachineVersion =
-    selectedVersion.versionNumber ===
-    changelog.sliceMachine.versions[0].versionNumber;
+    selectedVersion.version === versions[0].version;
   const sliceMachineVersionToInstall = isLatestSliceMachineVersion
     ? "latest"
-    : selectedVersion.versionNumber;
+    : selectedVersion.version;
   const packagesSpecs = getPackagesSpecs({
     sliceMachineVersionToInstall,
     isLatestSliceMachineVersion,
-    adapterName: changelog.adapter.name,
+    adapterName,
   });
   const installCommand = getInstallCommand(packageManager, packagesSpecs);
   const isOnlyAdapterUpdate =
-    changelog.adapter.updateAvailable &&
-    !changelog.sliceMachine.updateAvailable;
+    adapterUpdateAvailable && !sliceMachineUpdateAvailable;
 
   return (
     <>
