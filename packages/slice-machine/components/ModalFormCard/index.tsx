@@ -8,7 +8,11 @@ import {
   FormikValues,
   FormikProps,
 } from "formik";
-import { SetStateAction } from "react";
+import type {
+  ComponentPropsWithoutRef,
+  ReactNode,
+  SetStateAction,
+} from "react";
 import { Flex, Heading, Close, Button as ThemeButton } from "theme-ui";
 
 import { Button } from "@components/Button";
@@ -41,13 +45,11 @@ type ModalCardProps<T extends FormikValues> = {
   onSubmit: (values: T) => void;
   initialValues: T;
   content: { title: string };
-  cardProps?: React.ComponentProps<typeof Card>;
+  cardProps?: ComponentPropsWithoutRef<typeof Card>;
   omitFooter?: boolean;
   isLoading?: boolean;
   dataCy?: string;
-  actionMessage?:
-    | ((props: FormikProps<T>) => React.ReactNode)
-    | React.ReactNode;
+  actionMessage?: ((props: FormikProps<T>) => ReactNode) | ReactNode;
 };
 
 function ModalCard<Values extends FormikValues>({
