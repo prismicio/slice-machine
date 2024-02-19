@@ -3,16 +3,20 @@ import {
   isUnauthenticatedError,
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
-import { type ComponentProps, type FC, useCallback, useRef } from "react";
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  useCallback,
+  useRef,
+} from "react";
 
 import { useAuthStatus } from "@src/hooks/useAuthStatus";
 
 type ErrorBoundaryProps = Pick<
-  EditorUiErrorBoundaryProps,
+  // TODO(DT-1979): Export the `ErrorBoundaryProps` type from `@prismicio/editor-ui`.
+  ComponentPropsWithoutRef<typeof EditorUiErrorBoundary>,
   "children" | "renderError"
 >;
-// TODO(DT-1979): Export the `ErrorBoundaryProps` type from `@prismicio/editor-ui`.
-type EditorUiErrorBoundaryProps = ComponentProps<typeof EditorUiErrorBoundary>;
 
 export const ErrorBoundary: FC<ErrorBoundaryProps> = (props) => {
   const errorRef = useRef<unknown>();
