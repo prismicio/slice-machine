@@ -1,6 +1,6 @@
 import { keys } from "@prismicio/editor-support/Object";
 import { Button, ButtonGroup, Text, tokens } from "@prismicio/editor-ui";
-import { type ComponentProps, type FC, useState } from "react";
+import { type ComponentPropsWithoutRef, type FC, useState } from "react";
 import { toast } from "react-toastify";
 
 import {
@@ -60,4 +60,4 @@ const GitProviderConnectButton: FC<GitProviderConnectButtonProps> = ({
 };
 
 // TODO(DT-1928): export the `SX` type from `@prismicio/editor-ui`.
-type SX = ComponentProps<typeof Button>["sx"];
+type SX = ComponentPropsWithoutRef<typeof Button>["sx"];

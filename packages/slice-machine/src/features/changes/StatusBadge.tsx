@@ -1,5 +1,5 @@
 import { Badge, Tooltip } from "@prismicio/editor-ui";
-import type { ComponentProps, FC } from "react";
+import type { ComponentPropsWithoutRef, FC } from "react";
 
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
@@ -26,7 +26,7 @@ type GetStatusBadgeContentArgs = {
 type ModelType = "CustomType" | "Slice";
 
 type StatusBadgeContent = {
-  badgeColor: ComponentProps<typeof Badge>["color"];
+  badgeColor: ComponentPropsWithoutRef<typeof Badge>["color"];
   badgeTitle: string;
   tooltipContent: string;
 };
