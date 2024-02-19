@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
-import { Box, Button, ErrorBoundary, Text } from "@prismicio/editor-ui";
+import { Box, Button, Text } from "@prismicio/editor-ui";
 
 import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
@@ -14,6 +14,7 @@ import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import { DevCollaborationExperiment } from "./DevCollaborationExperiment";
 
