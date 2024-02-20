@@ -12,7 +12,7 @@ export type {
 	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
 } from "../managers/simulator/SimulatorManager";
 
-export { GitProvider } from "../managers/git/types";
+export { GIT_PROVIDER, type GitProvider } from "../constants/GIT_PROVIDER";
 
 export type { Environment } from "../managers/prismicRepository/types";
 

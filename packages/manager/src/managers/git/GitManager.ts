@@ -5,9 +5,7 @@ import fetch from "../../lib/fetch";
 import { decode } from "../../lib/decode";
 
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-import { APPLICATION_MODE } from "../../constants/APPLICATION_MODE";
-import { GITHUB_APP_PRODUCTION_SLUG } from "../../constants/GITHUB_APP_PRODUCTION_SLUG";
-import { GITHUB_APP_STAGING_SLUG } from "../../constants/GITHUB_APP_STAGING_SLUG";
+import { GitProvider, GIT_PROVIDER } from "../../constants/GIT_PROVIDER";
 
 import {
 	UnauthenticatedError,
@@ -18,8 +16,9 @@ import {
 
 import { BaseManager } from "../BaseManager";
 
-import { GitOwner, GitProvider, GitRepo, GitRepoSpecifier } from "./types";
+import { GitOwner, GitRepo, GitRepoSpecifier } from "./types";
 import { buildGitRepoSpecifier } from "./buildGitRepoSpecifier";
+import { GIT_PROVIDER_APP_SLUGS } from "../../constants/GIT_PROVIDER_APP_SLUGS";
 
 type GitManagerCreateGitHubAuthStateReturnType = {
 	key: string;
@@ -157,7 +156,7 @@ export class GitManager extends BaseManager {
 			t.type({
 				owners: t.array(
 					t.type({
-						provider: t.literal(GitProvider.GitHub),
+						provider: t.literal(GIT_PROVIDER.GitHub),
 						id: t.string,
 						name: t.string,
 						type: t.union([t.literal("user"), t.literal("team"), t.null]),
@@ -208,7 +207,7 @@ export class GitManager extends BaseManager {
 			t.type({
 				repos: t.array(
 					t.type({
-						provider: t.literal(GitProvider.GitHub),
+						provider: t.literal(GIT_PROVIDER.GitHub),
 						id: t.string,
 						owner: t.string,
 						name: t.string,
@@ -254,7 +253,7 @@ export class GitManager extends BaseManager {
 			t.type({
 				repos: t.array(
 					t.type({
-						provider: t.literal(GitProvider.GitHub),
+						provider: t.literal(GIT_PROVIDER.GitHub),
 						owner: t.string,
 						name: t.string,
 					}),
@@ -443,15 +442,10 @@ export class GitManager extends BaseManager {
 	async getProviderAppInstallURL(args: {
 		provider: GitProvider;
 	}): Promise<string> {
-		const mode = this.getMode();
+		const appSlug = GIT_PROVIDER_APP_SLUGS[args.provider];
 
 		switch (args.provider) {
-			case GitProvider.GitHub: {
-				const appSlug =
-					mode === APPLICATION_MODE.Production
-						? GITHUB_APP_PRODUCTION_SLUG
-						: GITHUB_APP_STAGING_SLUG;
-
+			case GIT_PROVIDER.GitHub: {
 				const state = await this.createGitHubAuthState();
 
 				const url = new URL(

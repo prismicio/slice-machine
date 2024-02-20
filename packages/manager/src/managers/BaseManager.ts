@@ -52,10 +52,6 @@ export abstract class BaseManager {
 		return this._sliceMachineManager.cwd;
 	}
 
-	protected getMode(): string {
-		return this._sliceMachineManager.getMode();
-	}
-
 	// Protected instance prevents circular intellisense
 	// e.g. sliceMachineManager.user.user.user
 	protected get user(): UserManager {

@@ -19,9 +19,6 @@ import {
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 
 import { API_ENDPOINTS, APIEndpoints } from "../constants/API_ENDPOINTS";
-import { APPLICATION_MODE } from "../constants/APPLICATION_MODE";
-
-import { UnexpectedDataError } from "../errors";
 
 import { UserManager } from "./user/UserManager";
 import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
@@ -173,20 +170,6 @@ export class SliceMachineManager {
 
 	getAPIEndpoints(): APIEndpoints {
 		return API_ENDPOINTS;
-	}
-
-	getMode(): (typeof APPLICATION_MODE)[keyof typeof APPLICATION_MODE] {
-		const mode = process.env.SM_ENV || APPLICATION_MODE.Production;
-
-		if (
-			mode !== APPLICATION_MODE.Production &&
-			mode !== APPLICATION_MODE.Staging &&
-			mode !== APPLICATION_MODE.Development
-		) {
-			throw new UnexpectedDataError(`Invalid application mode: ${mode}`);
-		}
-
-		return mode;
 	}
 
 	// TODO: Remove this global-state method. It is expensive and a
