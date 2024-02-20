@@ -6,10 +6,8 @@ import { decode } from "../../lib/decode";
 
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { APPLICATION_MODE } from "../../constants/APPLICATION_MODE";
-import {
-	GITHUB_APP_PRODUCTION_SLUG,
-	GITHUB_APP_STAGING_SLUG,
-} from "./constants";
+import { GITHUB_APP_PRODUCTION_SLUG } from "../../constants/GITHUB_APP_PRODUCTION_SLUG";
+import { GITHUB_APP_STAGING_SLUG } from "../../constants/GITHUB_APP_STAGING_SLUG";
 
 import {
 	UnauthenticatedError,
