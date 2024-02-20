@@ -14,7 +14,7 @@ Update the project's Slice Machine configuration file, fixing any syntax errors 
 
 A basic Slice Machine configuration file looks like this:
 
-```json
+```jsonc
 // slicemachine.config.json
 
 {

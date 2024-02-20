@@ -1,4 +1,4 @@
-import { Box, ErrorBoundary, ProgressCircle } from "@prismicio/editor-ui";
+import { Box, ProgressCircle } from "@prismicio/editor-ui";
 import { FC, Suspense } from "react";
 import { flushSync } from "react-dom";
 import type { DropResult } from "react-beautiful-dnd";
@@ -28,6 +28,7 @@ import {
   reorderField,
   updateField,
 } from "@src/domain/customType";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";

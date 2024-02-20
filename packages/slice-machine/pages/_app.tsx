@@ -17,7 +17,6 @@ import "@src/styles/toaster.css";
 import {
   Box,
   DefaultErrorMessage,
-  ErrorBoundary,
   ThemeProvider,
   TooltipProvider,
 } from "@prismicio/editor-ui";
@@ -37,6 +36,7 @@ import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
 import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
 import { AutoSyncProvider } from "@src/features/sync/AutoSyncProvider";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
@@ -133,12 +133,6 @@ function App({
                   <ConnectedRouter Router={Router}>
                     <PersistGate loading={null} persistor={smStore.persistor}>
                       <ErrorBoundary
-                        onError={(error) => {
-                          console.error(
-                            "An error occurred while rendering the app",
-                            error,
-                          );
-                        }}
                         renderError={() => (
                           <Box
                             justifyContent="center"
@@ -160,14 +154,7 @@ function App({
                                   <Component {...pageProps} />
                                 </ComponentLayout>
                               </RouteChangeProvider>
-                              <ErrorBoundary
-                                onError={(error) => {
-                                  console.error(
-                                    `An error occurred while rendering the in-app guide`,
-                                    error,
-                                  );
-                                }}
-                              >
+                              <ErrorBoundary>
                                 <Suspense>
                                   <InAppGuideDialog />
                                 </Suspense>
