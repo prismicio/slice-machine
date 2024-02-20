@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, ErrorBoundary } from "@prismicio/editor-ui";
+import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { FC, PropsWithChildren, Suspense } from "react";
 
@@ -12,6 +12,7 @@ import {
   PageLayoutHeader,
   PageLayoutPane,
 } from "@src/components/PageLayout";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 export const AppLayout: FC<PropsWithChildren> = ({
   children,

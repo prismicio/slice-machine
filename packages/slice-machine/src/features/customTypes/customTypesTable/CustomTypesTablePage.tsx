@@ -1,7 +1,6 @@
 import { type FC, Suspense, useState } from "react";
 import {
   Button,
-  ErrorBoundary,
   Box,
   ProgressCircle,
   DefaultErrorMessage,
@@ -17,6 +16,7 @@ import {
 } from "@components/AppLayout";
 import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 
 import { CustomTypesTable } from "./CustomTypesTable";
