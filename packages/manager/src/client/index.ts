@@ -12,6 +12,8 @@ export type {
 	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
 } from "../managers/simulator/SimulatorManager";
 
+export { GIT_PROVIDER, type GitProvider } from "../constants/GIT_PROVIDER";
+
 export type { Environment } from "../managers/prismicRepository/types";
 
 export type { SliceMachineManagerPushSliceReturnType } from "../managers/slices/SlicesManager";
@@ -31,6 +33,7 @@ export {
 	isUnauthorizedError,
 	isUnexpectedDataError,
 	isInvalidActiveEnvironmentError,
+	isUnsupportedError,
 } from "../errors";
 
 export { DecodeError } from "../lib/DecodeError";

@@ -5,17 +5,20 @@ import fetch from "../../lib/fetch";
 import { decode } from "../../lib/decode";
 
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { GitProvider, GIT_PROVIDER } from "../../constants/GIT_PROVIDER";
 
 import {
 	UnauthenticatedError,
 	UnauthorizedError,
 	UnexpectedDataError,
+	UnsupportedError,
 } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
 import { GitOwner, GitRepo, GitRepoSpecifier } from "./types";
 import { buildGitRepoSpecifier } from "./buildGitRepoSpecifier";
+import { GIT_PROVIDER_APP_SLUGS } from "../../constants/GIT_PROVIDER_APP_SLUGS";
 
 type GitManagerCreateGitHubAuthStateReturnType = {
 	key: string;
@@ -27,7 +30,7 @@ type GitManagerFetchOwnersReturnType = GitOwner[];
 type GitManagerFetchReposReturnType = GitRepo[];
 
 type GitManagerFetchReposArgs = {
-	provider: "gitHub";
+	provider: GitProvider;
 	owner: string;
 	query?: string;
 	page?: number;
@@ -46,7 +49,7 @@ type GitManagerLinkRepoArgs = {
 		domain: string;
 	};
 	git: {
-		provider: "gitHub";
+		provider: GitProvider;
 		owner: string;
 		name: string;
 	};
@@ -57,7 +60,7 @@ type GitManagerUnlinkRepoArgs = {
 		domain: string;
 	};
 	git: {
-		provider: "gitHub";
+		provider: GitProvider;
 		owner: string;
 		name: string;
 	};
@@ -68,7 +71,7 @@ type CheckHasWriteAPITokenArgs = {
 		domain: string;
 	};
 	git: {
-		provider: "gitHub";
+		provider: GitProvider;
 		owner: string;
 		name: string;
 	};
@@ -79,7 +82,7 @@ type UpdateWriteAPITokenArgs = {
 		domain: string;
 	};
 	git: {
-		provider: "gitHub";
+		provider: GitProvider;
 		owner: string;
 		name: string;
 	};
@@ -91,7 +94,7 @@ type DeleteWriteAPITokenArgs = {
 		domain: string;
 	};
 	git: {
-		provider: "gitHub";
+		provider: GitProvider;
 		owner: string;
 		name: string;
 	};
@@ -153,7 +156,7 @@ export class GitManager extends BaseManager {
 			t.type({
 				owners: t.array(
 					t.type({
-						provider: t.literal("gitHub"),
+						provider: t.literal(GIT_PROVIDER.GitHub),
 						id: t.string,
 						name: t.string,
 						type: t.union([t.literal("user"), t.literal("team"), t.null]),
@@ -204,7 +207,7 @@ export class GitManager extends BaseManager {
 			t.type({
 				repos: t.array(
 					t.type({
-						provider: t.literal("gitHub"),
+						provider: t.literal(GIT_PROVIDER.GitHub),
 						id: t.string,
 						owner: t.string,
 						name: t.string,
@@ -250,7 +253,7 @@ export class GitManager extends BaseManager {
 			t.type({
 				repos: t.array(
 					t.type({
-						provider: t.literal("gitHub"),
+						provider: t.literal(GIT_PROVIDER.GitHub),
 						owner: t.string,
 						name: t.string,
 					}),
@@ -432,6 +435,31 @@ export class GitManager extends BaseManager {
 					throw new UnauthorizedError();
 				default:
 					throw new Error("Failed to delete Prismic Write API token.");
+			}
+		}
+	}
+
+	async getProviderAppInstallURL(args: {
+		provider: GitProvider;
+	}): Promise<string> {
+		const appSlug = GIT_PROVIDER_APP_SLUGS[args.provider];
+
+		switch (args.provider) {
+			case GIT_PROVIDER.GitHub: {
+				const state = await this.createGitHubAuthState();
+
+				const url = new URL(
+					`https://github.com/apps/${appSlug}/installations/new`,
+				);
+				url.searchParams.set("state", state.key);
+
+				return url.toString();
+			}
+
+			default: {
+				throw new UnsupportedError(
+					`Git provider not supported: ${args.provider}.`,
+				);
 			}
 		}
 	}
