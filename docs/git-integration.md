@@ -1,8 +1,12 @@
-# Git integration
+# Git integration (beta)
 
 Slice Machine allows developers to link a Prismic repository to a hosted Git repository. Linking repositories enables developer workflow features, like automatically pushing content models to Prismic upon pushing to the Git repository.
 
 Today, GitHub is supported, with plans to support other Git providers in the future.
+
+## Beta
+
+**The Git integration is currently in beta**. The feature is hidden behind a repository-level feature flag. Only Collaboration Beta program participants may access the feature.
 
 ## Backend
 
