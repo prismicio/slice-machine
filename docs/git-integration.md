@@ -12,8 +12,8 @@ The Git integration requires private API endpoints. See the [`prismicio/sm-api`]
 
 Prismic has two GitHub apps to support the integration, both under the `prismicio` organization:
 
-- **Production**: [Prismic.io](https://github.com/organizations/prismicio/settings/apps/prismic-io)
-- **Staging**: [Prismic.io (Staging)](https://github.com/organizations/prismicio/settings/apps/prismic-io-staging)
+- **Production**: [Prismic.io](https://github.com/apps/prismic-io)
+- **Staging**: [Prismic.io (Staging)](https://github.com/apps/prismic-io-staging)
 
 Slice Machine will switch to the correct app automatically based on the `SM_ENV` variable.
 
