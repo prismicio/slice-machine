@@ -3,10 +3,7 @@ import { Button, ButtonGroup, Text, tokens } from "@prismicio/editor-ui";
 import { type ComponentProps, type FC, useState } from "react";
 import { toast } from "react-toastify";
 
-import {
-  type GitProvider,
-  gitProviderToConfig,
-} from "@src/features/settings/git/GitProvider";
+import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
 
 export const GitProviderConnectButtons: FC = () => (
   <ButtonGroup>
@@ -20,7 +17,10 @@ export const GitProviderConnectButtons: FC = () => (
   </ButtonGroup>
 );
 
-type GitProviderConnectButtonProps = { provider: GitProvider; sx?: SX };
+type GitProviderConnectButtonProps = {
+  provider: keyof typeof gitProviderToConfig;
+  sx?: SX;
+};
 
 const GitProviderConnectButton: FC<GitProviderConnectButtonProps> = ({
   provider,
