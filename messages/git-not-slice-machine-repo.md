@@ -1,4 +1,4 @@
-# Git: Not a Slice Machine Repository
+# Git: Not a Slice Machine repository
 
 The Git repository was linked to a Prismic repository in Slice Machine, but the Git repository does not contain Slice Machine.
 

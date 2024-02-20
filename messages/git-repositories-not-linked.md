@@ -6,7 +6,7 @@ The Prismic repository configured in `slicemachine.config.json` should match the
 
 ## How to fix the issue
 
-Update the project's `slicemachine.config.json`'s `repositoryName` property with the correct Prismic repository.
+Update the `repositoryName` property of the project's `slicemachine.config.json` file with the correct Prismic repository.
 
 A basic Slice Machine configuration file looks like this:
 

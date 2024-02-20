@@ -1,6 +1,6 @@
 # Git: Missing Slice Machine config
 
-The Git repository was missing a Slice Machine configuration file (`slicemachine.config.json`)
+The Git repository was missing a Slice Machine configuration file (`slicemachine.config.json`).
 
 ## How to fix the issue
 

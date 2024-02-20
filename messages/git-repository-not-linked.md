@@ -6,7 +6,7 @@ A Git repository must be linked to a Prismic repository before the GitHub app ca
 
 ## How to fix the issue
 
-Connect the Git repository to the Prismic repository:
+Connect the Git repository to the project's Prismic repository:
 
 1. Navigate to Slice Machine's Settings page.
 1. Connect the GitHub repository.
