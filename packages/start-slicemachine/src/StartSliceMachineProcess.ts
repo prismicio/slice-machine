@@ -3,6 +3,7 @@
 import type { AddressInfo } from "node:net";
 import chalk from "chalk";
 import open from "open";
+import os from "node:os";
 
 import {
 	PrismicUserProfile,
@@ -15,6 +16,7 @@ import { setupSentry } from "./lib/setupSentry";
 import { migrateSMJSON } from "./legacyMigrations/migrateSMJSON";
 import { migrateAssets } from "./legacyMigrations/migrateAssets";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
+import { safelyExecute } from "./lib/safelyExecute";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -124,15 +126,21 @@ export class StartSliceMachineProcess {
 				userID: profile.shortId,
 				intercomHash: profile.intercomHash,
 			});
-		}
 
-		if (profile) {
 			await Promise.allSettled([
 				// noop - We'll try again when needed.
 				this._sliceMachineManager.user.refreshAuthenticationToken(),
 				// noop - We'll try again before uploading a screenshot.
 				this._sliceMachineManager.screenshots.initS3ACL(),
 			]);
+		}
+
+		try {
+			this._trackStart();
+		} catch (error) {
+			if (import.meta.env.DEV) {
+				console.error("Error tracking Slice Machine start event:", error);
+			}
 		}
 	}
 
@@ -211,5 +219,71 @@ export class StartSliceMachineProcess {
 		if (isLoggedIn) {
 			return await this._sliceMachineManager.user.getProfile();
 		}
+	}
+
+	/**
+	 * Tracks the start of Slice Machine.
+	 *
+	 * This method is called after Slice Machine has started and so it will not
+	 * cause the process to wait for the tracking to complete.
+	 */
+	private async _trackStart(): Promise<void> {
+		const [
+			adapter,
+			customTypes,
+			gitProvider,
+			isAdapterUpdateAvailable,
+			isLoggedIn,
+			isSliceMachineUpdateAvailable,
+			isTypeScriptProject,
+			packageManager,
+			runningAdapterVersion,
+			runningSliceMachineVersion,
+			simulatorUrl,
+			slices,
+		] = await Promise.all([
+			safelyExecute(this._sliceMachineManager.project.getAdapterName()),
+			safelyExecute(this._sliceMachineManager.customTypes.readAllCustomTypes()),
+			safelyExecute(this._sliceMachineManager.git.detectGitProvider()),
+			safelyExecute(
+				this._sliceMachineManager.versions.checkIsAdapterUpdateAvailable(),
+			),
+			safelyExecute(this._sliceMachineManager.user.checkIsLoggedIn()),
+			safelyExecute(
+				this._sliceMachineManager.versions.checkIsSliceMachineUpdateAvailable(),
+			),
+			safelyExecute(this._sliceMachineManager.project.checkIsTypeScript()),
+			safelyExecute(this._sliceMachineManager.project.detectPackageManager()),
+			safelyExecute(
+				this._sliceMachineManager.versions.getRunningAdapterVersion(),
+			),
+			safelyExecute(
+				this._sliceMachineManager.versions.getRunningSliceMachineVersion(),
+			),
+			safelyExecute(
+				this._sliceMachineManager.simulator.getLocalSliceSimulatorURL(),
+			),
+			safelyExecute(this._sliceMachineManager.slices.readAllSlices()),
+		]);
+
+		this._sliceMachineManager.telemetry.track({
+			event: "slice-machine:start",
+			_includeEnvironmentKind: true,
+			adapter,
+			adapterVersion: runningAdapterVersion,
+			gitProvider,
+			isAdapterUpdateAvailable,
+			isLoggedIn,
+			isSliceMachineUpdateAvailable,
+			isTypeScriptProject,
+			nodeVersion: process.versions.node,
+			numberOfCustomTypes: customTypes?.models.length,
+			numberOfSlices: slices?.models.length,
+			osPlatform: os.platform(),
+			// Ensure we escape the "@" character to prevent it from being interpreted as an email address.
+			packageManager: packageManager?.replace("@", "[at]"),
+			projectPort: simulatorUrl ? new URL(simulatorUrl).port : undefined,
+			sliceMachineVersion: runningSliceMachineVersion,
+		});
 	}
 }

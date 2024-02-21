@@ -100,7 +100,7 @@ export class TelemetryManager extends BaseManager {
 	// TODO: Should `userId` be automatically populated by the logged in
 	// user? We already have their info via UserRepository.
 	async track(args: TelemetryManagerTrackArgs): Promise<void> {
-		const { event, repository, ...properties } = args;
+		const { event, repository, _includeEnvironmentKind, ...properties } = args;
 		let repositoryName = repository;
 
 		if (repositoryName === undefined) {
@@ -113,7 +113,7 @@ export class TelemetryManager extends BaseManager {
 
 		let environmentKind: Environment["kind"] | "_unknown" | undefined =
 			undefined;
-		if (args._includeEnvironmentKind) {
+		if (_includeEnvironmentKind) {
 			if (this.project.checkSupportsEnvironments()) {
 				try {
 					const { activeEnvironment } =
@@ -143,7 +143,6 @@ export class TelemetryManager extends BaseManager {
 		} = {
 			event: HumanSegmentEventType[event],
 			properties: {
-				nodeVersion: process.versions.node,
 				environmentKind,
 				...properties,
 			},
