@@ -1,5 +1,6 @@
 import * as t from "io-ts";
 import * as tt from "io-ts-types";
+import { execaCommandSync } from "execa";
 
 import fetch from "../../lib/fetch";
 import { decode } from "../../lib/decode";
@@ -461,6 +462,23 @@ export class GitManager extends BaseManager {
 					`Git provider not supported: ${args.provider}.`,
 				);
 			}
+		}
+	}
+
+	async detectGitProvider(): Promise<string> {
+		try {
+			const remoteUrl = execaCommandSync("git remote get-url origin");
+			const domainRegex = /(?:https?:\/\/|git@)([^:/]+)[/:]/i;
+			const match = remoteUrl.stdout.match(domainRegex);
+			const domain = match && match.length > 0 ? match[1] : "";
+
+			return domain;
+		} catch (error) {
+			if (import.meta.env.DEV) {
+				console.error("Failed to detect Git provider:", error);
+			}
+
+			return "_unknown";
 		}
 	}
 
