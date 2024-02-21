@@ -15,7 +15,7 @@ export function useGitRepos(args: UseGitReposArgs): GitRepo[] {
 }
 
 async function getGitRepos(
-  provider: "gitHub",
+  provider: "gitHub" | "gitLab" | "bitbucket",
   owner: string,
   query?: string,
   page?: number,
