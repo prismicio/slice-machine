@@ -9,7 +9,6 @@ import { CheckAuthStatusResponse } from "@models/common/Auth";
 import ServerState from "@models/server/ServerState";
 import { CustomScreenshotRequest } from "@lib/models/common/Screenshots";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { PackageChangelog } from "@lib/models/common/versions";
 
 import { managerClient } from "./managerClient";
 
@@ -207,55 +206,6 @@ export const saveSliceMock = async (
     sliceID: payload.sliceID,
     mocks: payload.mocks,
   });
-};
-
-export const getChangelog = async (): Promise<PackageChangelog> => {
-  const [
-    currentVersion,
-    latestNonBreakingVersion,
-    sliceMachineUpdateAvailable,
-    sliceMachineVersionWithKind,
-    adapterUpdateAvailable,
-    adapterVersions,
-    adapterName,
-  ] = await Promise.all([
-    managerClient.versions.getRunningSliceMachineVersion(),
-    managerClient.versions.getLatestNonBreakingSliceMachineVersion(),
-    managerClient.versions.checkIsSliceMachineUpdateAvailable(),
-    managerClient.versions.getAllStableSliceMachineVersionsWithKind(),
-    managerClient.versions.checkIsAdapterUpdateAvailable(),
-    managerClient.versions.getAllStableAdapterVersions(),
-    managerClient.project.getAdapterName(),
-  ]);
-
-  const sliceMachineVersionsWithMetadata = await Promise.all(
-    sliceMachineVersionWithKind.map(async (versionWithKind) => {
-      const releaseNotes =
-        await managerClient.versions.getSliceMachineReleaseNotesForVersion({
-          version: versionWithKind.version,
-        });
-
-      return {
-        versionNumber: versionWithKind.version,
-        releaseNote: releaseNotes ?? null,
-        kind: versionWithKind.kind,
-      };
-    }),
-  );
-
-  return {
-    sliceMachine: {
-      currentVersion,
-      latestNonBreakingVersion: latestNonBreakingVersion ?? null,
-      updateAvailable: sliceMachineUpdateAvailable,
-      versions: sliceMachineVersionsWithMetadata,
-    },
-    adapter: {
-      name: adapterName,
-      updateAvailable: adapterUpdateAvailable,
-      versions: adapterVersions,
-    },
-  };
 };
 
 export const telemetry = {
