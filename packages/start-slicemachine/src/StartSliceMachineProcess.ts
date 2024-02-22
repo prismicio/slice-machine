@@ -3,6 +3,7 @@
 import type { AddressInfo } from "node:net";
 import chalk from "chalk";
 import open from "open";
+import os from "node:os";
 
 import {
 	PrismicUserProfile,
@@ -15,6 +16,7 @@ import { setupSentry } from "./lib/setupSentry";
 import { migrateSMJSON } from "./legacyMigrations/migrateSMJSON";
 import { migrateAssets } from "./legacyMigrations/migrateAssets";
 import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
+import { safelyExecute } from "./lib/safelyExecute";
 
 const DEFAULT_SERVER_PORT = 9999;
 
@@ -88,6 +90,10 @@ export class StartSliceMachineProcess {
 				// noop - We don't want to stop the user from using Slice Machine
 				// because of failed tracking set up. We probably couldn't determine the
 				// Sentry environment.
+
+				if (import.meta.env.DEV) {
+					console.error("Error setting up Sentry:", error);
+				}
 			}
 		}
 
@@ -97,6 +103,19 @@ export class StartSliceMachineProcess {
 		await migrateAssets(this._sliceMachineManager);
 
 		await this._validateProject();
+
+		if (isTelemetryEnabled) {
+			try {
+				this._trackStart();
+			} catch (error) {
+				// noop - We don't want to stop the user from using Slice Machine
+				// because of failed start event tracking.
+
+				if (import.meta.env.DEV) {
+					console.error("Error tracking start event:", error);
+				}
+			}
+		}
 
 		const app = await createSliceMachineExpressApp({
 			sliceMachineManager: this._sliceMachineManager,
@@ -124,9 +143,7 @@ export class StartSliceMachineProcess {
 				userID: profile.shortId,
 				intercomHash: profile.intercomHash,
 			});
-		}
 
-		if (profile) {
 			await Promise.allSettled([
 				// noop - We'll try again when needed.
 				this._sliceMachineManager.user.refreshAuthenticationToken(),
@@ -211,5 +228,83 @@ export class StartSliceMachineProcess {
 		if (isLoggedIn) {
 			return await this._sliceMachineManager.user.getProfile();
 		}
+	}
+
+	/**
+	 * Tracks the start of Slice Machine.
+	 *
+	 * This method is called after Slice Machine has started and so it will not
+	 * cause the process to wait for the tracking to complete.
+	 */
+	private async _trackStart(): Promise<void> {
+		const [
+			adapter,
+			adapterVersion,
+			customTypes,
+			gitProvider,
+			isAdapterUpdateAvailable,
+			isLoggedIn,
+			isSliceMachineUpdateAvailable,
+			isTypeScriptProject,
+			packageManager,
+			simulatorUrl,
+			sliceMachineVersion,
+			slices,
+			versionControlSystem,
+		] = await Promise.all([
+			safelyExecute(() => this._sliceMachineManager.project.getAdapterName()),
+			safelyExecute(() =>
+				this._sliceMachineManager.versions.getRunningAdapterVersion(),
+			),
+			safelyExecute(() =>
+				this._sliceMachineManager.customTypes.readAllCustomTypes(),
+			),
+			safelyExecute(() => this._sliceMachineManager.git.detectGitProvider()),
+			safelyExecute(() =>
+				this._sliceMachineManager.versions.checkIsAdapterUpdateAvailable(),
+			),
+			safelyExecute(() => this._sliceMachineManager.user.checkIsLoggedIn()),
+			safelyExecute(() =>
+				this._sliceMachineManager.versions.checkIsSliceMachineUpdateAvailable(),
+			),
+			safelyExecute(() =>
+				this._sliceMachineManager.project.checkIsTypeScript(),
+			),
+			safelyExecute(() =>
+				this._sliceMachineManager.project.detectPackageManager(),
+			),
+			safelyExecute(() =>
+				this._sliceMachineManager.simulator.getLocalSliceSimulatorURL(),
+			),
+			safelyExecute(() =>
+				this._sliceMachineManager.versions.getRunningSliceMachineVersion(),
+			),
+			safelyExecute(() => this._sliceMachineManager.slices.readAllSlices()),
+			safelyExecute(() =>
+				this._sliceMachineManager.project.detectVersionControlSystem(),
+			),
+		]);
+
+		this._sliceMachineManager.telemetry.track({
+			event: "slice-machine:start",
+			_includeEnvironmentKind: true,
+			adapter,
+			adapterVersion,
+			gitProvider,
+			isAdapterUpdateAvailable,
+			isLoggedIn,
+			isSliceMachineUpdateAvailable,
+			isTypeScriptProject,
+			nodeVersion: process.versions.node,
+			numberOfCustomTypes: customTypes?.models.length,
+			numberOfSlices: slices?.models.length,
+			osPlatform: os.platform(),
+			// Ensure we escape the "@" character to prevent it from being interpreted
+			// as an email address and being considered sensitive and stripped off.
+			packageManager: packageManager?.replace("@", "[at]"),
+			projectPort: simulatorUrl ? new URL(simulatorUrl).port : undefined,
+			sliceMachineVersion,
+			versionControlSystem,
+		});
 	}
 }

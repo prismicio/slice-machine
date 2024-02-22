@@ -478,6 +478,34 @@ export class ProjectManager extends BaseManager {
 		return { activeEnvironment };
 	}
 
+	async detectVersionControlSystem(): Promise<string | "_unknown"> {
+		try {
+			const projectRoot = await this.getRoot();
+
+			if (existsSync(path.join(projectRoot, ".git"))) {
+				return "Git";
+			}
+
+			if (existsSync(path.join(projectRoot, ".svn"))) {
+				return "SVN";
+			}
+
+			if (existsSync(path.join(projectRoot, ".hg"))) {
+				return "Mercurial";
+			}
+
+			if (existsSync(path.join(projectRoot, "CVS"))) {
+				return "CVS";
+			}
+		} catch (error) {
+			if (import.meta.env.DEV) {
+				console.error("Failed to detect Version Control System:", error);
+			}
+		}
+
+		return "_unknown";
+	}
+
 	private async _assertAdapterSupportsEnvironments(): Promise<void> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 

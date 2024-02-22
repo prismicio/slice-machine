@@ -31,6 +31,7 @@ export const SegmentEventType = {
 	devCollab_joinBetaClicked: "dev-collab:join-beta-clicked",
 	devCollab_setUpWorkflowOpened: "dev-collab:set-up-workflow-opened",
 	devCollab_workflowStubDisplayed: "dev-collab:workflow-stub-displayed",
+	sliceMachine_start: "slice-machine:start",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -74,6 +75,7 @@ export const HumanSegmentEventType = {
 		"SliceMachine Dev Collab Set Up Workflow Opened",
 	[SegmentEventType.devCollab_workflowStubDisplayed]:
 		"SliceMachine Dev Collab Workflow Stub Displayed",
+	[SegmentEventType.sliceMachine_start]: "SliceMachine Start",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -279,6 +281,27 @@ type DevCollabWorkflowStubDisplayed = SegmentEvent<
 	typeof SegmentEventType.devCollab_workflowStubDisplayed
 >;
 
+type SliceMachineStart = SegmentEvent<
+	typeof SegmentEventType.sliceMachine_start,
+	{
+		adapter?: string;
+		adapterVersion?: string;
+		gitProvider?: string;
+		isAdapterUpdateAvailable?: boolean;
+		isLoggedIn?: boolean;
+		isSliceMachineUpdateAvailable?: boolean;
+		isTypeScriptProject?: boolean;
+		nodeVersion?: string;
+		numberOfCustomTypes?: number;
+		numberOfSlices?: number;
+		osPlatform?: string;
+		packageManager?: string;
+		projectPort?: string;
+		sliceMachineVersion?: string;
+		versionControlSystem?: string;
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -306,4 +329,5 @@ export type SegmentEvents =
 	| SwitchEnvironmentSegmentEvent
 	| DevCollabJoinBetaClicked
 	| DevCollabSetUpWorkflowOpened
-	| DevCollabWorkflowStubDisplayed;
+	| DevCollabWorkflowStubDisplayed
+	| SliceMachineStart;
