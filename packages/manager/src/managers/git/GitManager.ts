@@ -470,7 +470,7 @@ export class GitManager extends BaseManager {
 			const remoteUrl = execaCommandSync("git remote get-url origin");
 			const domainRegex = /(?:https?:\/\/|git@)([^:/]+)[/:]/i;
 			const match = remoteUrl.stdout.match(domainRegex);
-			const domain = match && match.length > 0 ? match[1] : "";
+			const domain = match?.[1] ?? "";
 
 			return domain;
 		} catch (error) {
