@@ -17,7 +17,13 @@ import { generateRandomId } from "../utils/generateRandomId";
 import config from "../playwright.config";
 import { MockManagerProcedures } from "../utils";
 
-export type DefaultFixtures = {
+type Options = {
+  onboarded: boolean;
+  reduxStorage: Record<string, unknown>;
+  storage: Record<string, unknown>;
+};
+
+type Fixtures = {
   /**
    * Pages
    */
@@ -47,211 +53,199 @@ export type DefaultFixtures = {
   procedures: MockManagerProcedures;
 };
 
-/**
- * Default test fixture
- */
-export const defaultTest = (
-  options: {
-    onboarded?: boolean;
-    reduxStorage?: Record<string, unknown>;
-    storage?: Record<string, unknown>;
-  } = {},
-) => {
-  const { onboarded = true, reduxStorage = {}, storage = {} } = options;
+export const test = baseTest.extend<Options & Fixtures>({
+  onboarded: [true, { option: true }],
+  reduxStorage: [{}, { option: true }],
+  storage: [{}, { option: true }],
 
-  return baseTest.extend<DefaultFixtures>({
-    /**
-     * Pages
-     */
-    sliceMachinePage: async ({ page }, use) => {
-      await use(new SliceMachinePage(page));
-    },
-    pageTypesTablePage: async ({ page }, use) => {
-      await use(new PageTypesTablePage(page));
-    },
-    pageTypesBuilderPage: async ({ page }, use) => {
-      await use(new PageTypeBuilderPage(page));
-    },
-    customTypesTablePage: async ({ page }, use) => {
-      await use(new CustomTypesTablePage(page));
-    },
-    customTypesBuilderPage: async ({ page }, use) => {
-      await use(new CustomTypesBuilderPage(page));
-    },
-    slicesListPage: async ({ page }, use) => {
-      await use(new SlicesListPage(page));
-    },
-    sliceBuilderPage: async ({ page }, use) => {
-      await use(new SliceBuilderPage(page));
-    },
-    changesPage: async ({ page }, use) => {
-      await use(new ChangesPage(page));
-    },
-    settingsPage: async ({ page }, use) => {
-      await use(new SettingsPage(page));
-    },
-    changelogPage: async ({ page }, use) => {
-      await use(new ChangelogPage(page));
-    },
+  /**
+   * Pages
+   */
+  sliceMachinePage: async ({ page }, use) => {
+    await use(new SliceMachinePage(page));
+  },
+  pageTypesTablePage: async ({ page }, use) => {
+    await use(new PageTypesTablePage(page));
+  },
+  pageTypesBuilderPage: async ({ page }, use) => {
+    await use(new PageTypeBuilderPage(page));
+  },
+  customTypesTablePage: async ({ page }, use) => {
+    await use(new CustomTypesTablePage(page));
+  },
+  customTypesBuilderPage: async ({ page }, use) => {
+    await use(new CustomTypesBuilderPage(page));
+  },
+  slicesListPage: async ({ page }, use) => {
+    await use(new SlicesListPage(page));
+  },
+  sliceBuilderPage: async ({ page }, use) => {
+    await use(new SliceBuilderPage(page));
+  },
+  changesPage: async ({ page }, use) => {
+    await use(new ChangesPage(page));
+  },
+  settingsPage: async ({ page }, use) => {
+    await use(new SettingsPage(page));
+  },
+  changelogPage: async ({ page }, use) => {
+    await use(new ChangelogPage(page));
+  },
 
-    /**
-     * Data
-     */
-    reusablePageType: async ({ pageTypesTablePage }, use) => {
-      await pageTypesTablePage.goto();
-      await pageTypesTablePage.openCreateDialog();
+  /**
+   * Data
+   */
+  reusablePageType: async ({ pageTypesTablePage }, use) => {
+    await pageTypesTablePage.goto();
+    await pageTypesTablePage.openCreateDialog();
 
-      const pageTypeName = "Page Type " + generateRandomId();
-      await pageTypesTablePage.createTypeDialog.createType(
-        pageTypeName,
-        "reusable",
-      );
+    const pageTypeName = "Page Type " + generateRandomId();
+    await pageTypesTablePage.createTypeDialog.createType(
+      pageTypeName,
+      "reusable",
+    );
 
-      await use({ name: pageTypeName });
-    },
-    singlePageType: async ({ pageTypesTablePage }, use) => {
-      await pageTypesTablePage.goto();
-      await pageTypesTablePage.openCreateDialog();
+    await use({ name: pageTypeName });
+  },
+  singlePageType: async ({ pageTypesTablePage }, use) => {
+    await pageTypesTablePage.goto();
+    await pageTypesTablePage.openCreateDialog();
 
-      const pageTypeName = "Page Type " + generateRandomId();
-      await pageTypesTablePage.createTypeDialog.createType(
-        pageTypeName,
-        "single",
-      );
+    const pageTypeName = "Page Type " + generateRandomId();
+    await pageTypesTablePage.createTypeDialog.createType(
+      pageTypeName,
+      "single",
+    );
 
-      await use({ name: pageTypeName });
-    },
-    reusableCustomType: async ({ customTypesTablePage }, use) => {
-      await customTypesTablePage.goto();
-      await customTypesTablePage.openCreateDialog();
+    await use({ name: pageTypeName });
+  },
+  reusableCustomType: async ({ customTypesTablePage }, use) => {
+    await customTypesTablePage.goto();
+    await customTypesTablePage.openCreateDialog();
 
-      const customTypeName = "Custom Type " + generateRandomId();
-      await customTypesTablePage.createTypeDialog.createType(
-        customTypeName,
-        "reusable",
-      );
+    const customTypeName = "Custom Type " + generateRandomId();
+    await customTypesTablePage.createTypeDialog.createType(
+      customTypeName,
+      "reusable",
+    );
 
-      await use({ name: customTypeName });
-    },
-    singleCustomType: async ({ customTypesTablePage }, use) => {
-      await customTypesTablePage.goto();
-      await customTypesTablePage.openCreateDialog();
+    await use({ name: customTypeName });
+  },
+  singleCustomType: async ({ customTypesTablePage }, use) => {
+    await customTypesTablePage.goto();
+    await customTypesTablePage.openCreateDialog();
 
-      const customTypeName = "Custom Type " + generateRandomId();
-      await customTypesTablePage.createTypeDialog.createType(
-        customTypeName,
-        "single",
-      );
+    const customTypeName = "Custom Type " + generateRandomId();
+    await customTypesTablePage.createTypeDialog.createType(
+      customTypeName,
+      "single",
+    );
 
-      await use({ name: customTypeName });
-    },
-    slice: async ({ slicesListPage }, use) => {
-      await slicesListPage.goto();
-      await expect(slicesListPage.breadcrumbLabel).toBeVisible();
-      await slicesListPage.openCreateDialog();
+    await use({ name: customTypeName });
+  },
+  slice: async ({ slicesListPage }, use) => {
+    await slicesListPage.goto();
+    await expect(slicesListPage.breadcrumbLabel).toBeVisible();
+    await slicesListPage.openCreateDialog();
 
-      const sliceName = "Slice" + generateRandomId();
-      await slicesListPage.createSliceDialog.createSlice(sliceName);
+    const sliceName = "Slice" + generateRandomId();
+    await slicesListPage.createSliceDialog.createSlice(sliceName);
 
-      await use({ name: sliceName });
-    },
+    await use({ name: sliceName });
+  },
 
-    /**
-     * Page
-     */
-    page: async ({ browser }, use) => {
-      // Create redux storage state
-      const userContext = onboarded
-        ? {
-            userReview: {
-              onboarding: false,
-              advancedRepository: true,
-            },
-            hasSeenChangesToolTip: true,
-            hasSeenSimulatorToolTip: true,
-            hasSeenTutorialsToolTip: true,
-            authStatus: "unknown",
-            lastSyncChange: null,
-            ...reduxStorage,
-          }
-        : {
-            userReview: {
-              onboarding: onboarded,
-              advancedRepository: false,
-            },
-            hasSeenChangesToolTip: false,
-            hasSeenSimulatorToolTip: false,
-            hasSeenTutorialsToolTip: false,
-            authStatus: "unknown",
-            lastSyncChange: null,
-            ...reduxStorage,
-          };
-
-      // Create new storage state
-      const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
-      const storageFormatted = Object.entries(storage).map(([key, value]) => ({
-        name: `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`,
-        value: JSON.stringify(value),
-      }));
-      const newStorage = onboarded
-        ? [
-            {
-              name: `${SLICE_MACHINE_STORAGE_PREFIX}_isInAppGuideOpen`,
-              value: "false",
-            },
-          ]
-            .filter(
-              (item) =>
-                storageFormatted.findIndex(
-                  (formattedItem) => formattedItem.name === item.name,
-                ) === -1,
-            )
-            .concat(storageFormatted)
-        : storageFormatted;
-
-      // Onboard user in Local Storage by default
-      const storageState = {
-        cookies: [],
-        origins: [
-          {
-            origin: config.use.baseURL,
-            localStorage: [
-              {
-                name: "persist:root",
-                value: JSON.stringify({
-                  userContext: JSON.stringify(userContext),
-                }),
-              },
-            ].concat(newStorage),
+  /**
+   * Page
+   */
+  page: async ({ browser, onboarded, reduxStorage, storage }, use) => {
+    // Create redux storage state
+    const userContext = onboarded
+      ? {
+          userReview: {
+            onboarding: false,
+            advancedRepository: true,
           },
-        ],
-      };
+          hasSeenChangesToolTip: true,
+          hasSeenSimulatorToolTip: true,
+          hasSeenTutorialsToolTip: true,
+          authStatus: "unknown",
+          lastSyncChange: null,
+          ...reduxStorage,
+        }
+      : {
+          userReview: {
+            onboarding: onboarded,
+            advancedRepository: false,
+          },
+          hasSeenChangesToolTip: false,
+          hasSeenSimulatorToolTip: false,
+          hasSeenTutorialsToolTip: false,
+          authStatus: "unknown",
+          lastSyncChange: null,
+          ...reduxStorage,
+        };
 
-      // Create new page object with new context
-      const newContext = await browser.newContext({ storageState });
-      const page = await newContext.newPage();
+    // Create new storage state
+    const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
+    const storageFormatted = Object.entries(storage).map(([key, value]) => ({
+      name: `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`,
+      value: JSON.stringify(value),
+    }));
+    const newStorage = onboarded
+      ? [
+          {
+            name: `${SLICE_MACHINE_STORAGE_PREFIX}_isInAppGuideOpen`,
+            value: "false",
+          },
+        ]
+          .filter(
+            (item) =>
+              storageFormatted.findIndex(
+                (formattedItem) => formattedItem.name === item.name,
+              ) === -1,
+          )
+          .concat(storageFormatted)
+      : storageFormatted;
 
-      // Logout user by default
-      try {
-        await fs.rm(path.join(os.homedir(), ".prismic"));
-      } catch (error) {
-        // Ignore since it means the user is already logged out
-      }
+    // Onboard user in Local Storage by default
+    const storageState = {
+      cookies: [],
+      origins: [
+        {
+          origin: config.use.baseURL,
+          localStorage: [
+            {
+              name: "persist:root",
+              value: JSON.stringify({
+                userContext: JSON.stringify(userContext),
+              }),
+            },
+          ].concat(newStorage),
+        },
+      ],
+    };
 
-      // Propagate the modified page to the test
-      await use(page);
-    },
+    // Create new page object with new context
+    const newContext = await browser.newContext({ storageState });
+    const page = await newContext.newPage();
 
-    /**
-     * Mocks
-     */
-    procedures: async ({ page }, use) => {
-      await use(await MockManagerProcedures.init(page));
-    },
-  });
-};
+    // Logout user by default
+    try {
+      await fs.rm(path.join(os.homedir(), ".prismic"));
+    } catch (error) {
+      // Ignore since it means the user is already logged out
+    }
 
-export const test = {
-  ...baseTest,
-  run: defaultTest,
-};
+    // Propagate the modified page to the test
+    await use(page);
+
+    await newContext.close();
+  },
+
+  /**
+   * Mocks
+   */
+  procedures: async ({ page }, use) => {
+    await use(await MockManagerProcedures.init(page));
+  },
+});
