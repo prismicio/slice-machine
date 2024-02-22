@@ -10,6 +10,7 @@ import { CustomTypesBuilderPage } from "../pages/CustomTypesBuilderPage";
 import { SlicesListPage } from "../pages/SlicesListPage";
 import { SliceBuilderPage } from "../pages/SliceBuilderPage";
 import { ChangesPage } from "../pages/ChangesPage";
+import { SettingsPage } from "../pages/SettingsPage";
 import { ChangelogPage } from "../pages/ChangelogPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
@@ -28,6 +29,7 @@ export type DefaultFixtures = {
   slicesListPage: SlicesListPage;
   sliceBuilderPage: SliceBuilderPage;
   changesPage: ChangesPage;
+  settingsPage: SettingsPage;
   changelogPage: ChangelogPage;
 
   /**
@@ -84,6 +86,9 @@ export const defaultTest = (
     },
     changesPage: async ({ page }, use) => {
       await use(new ChangesPage(page));
+    },
+    settingsPage: async ({ page }, use) => {
+      await use(new SettingsPage(page));
     },
     changelogPage: async ({ page }, use) => {
       await use(new ChangelogPage(page));
