@@ -1,8 +1,8 @@
 export async function safelyExecute<T>(
-	operation: Promise<T>,
+	operation: () => Promise<T>,
 ): Promise<T | undefined> {
 	try {
-		return await operation;
+		return await operation();
 	} catch {
 		return undefined;
 	}

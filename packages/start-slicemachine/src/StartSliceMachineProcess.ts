@@ -90,6 +90,21 @@ export class StartSliceMachineProcess {
 				// noop - We don't want to stop the user from using Slice Machine
 				// because of failed tracking set up. We probably couldn't determine the
 				// Sentry environment.
+
+				if (import.meta.env.DEV) {
+					console.error("Error setting up Sentry:", error);
+				}
+			}
+
+			try {
+				this._trackStart();
+			} catch (error) {
+				// noop - We don't want to stop the user from using Slice Machine
+				// because of failed start event tracking.
+
+				if (import.meta.env.DEV) {
+					console.error("Error tracking start event:", error);
+				}
 			}
 		}
 
@@ -133,14 +148,6 @@ export class StartSliceMachineProcess {
 				// noop - We'll try again before uploading a screenshot.
 				this._sliceMachineManager.screenshots.initS3ACL(),
 			]);
-		}
-
-		try {
-			this._trackStart();
-		} catch (error) {
-			if (import.meta.env.DEV) {
-				console.error("Error tracking Slice Machine start event:", error);
-			}
 		}
 	}
 
@@ -242,28 +249,34 @@ export class StartSliceMachineProcess {
 			simulatorUrl,
 			slices,
 		] = await Promise.all([
-			safelyExecute(this._sliceMachineManager.project.getAdapterName()),
-			safelyExecute(this._sliceMachineManager.customTypes.readAllCustomTypes()),
-			safelyExecute(this._sliceMachineManager.git.detectGitProvider()),
-			safelyExecute(
+			safelyExecute(() => this._sliceMachineManager.project.getAdapterName()),
+			safelyExecute(() =>
+				this._sliceMachineManager.customTypes.readAllCustomTypes(),
+			),
+			safelyExecute(() => this._sliceMachineManager.git.detectGitProvider()),
+			safelyExecute(() =>
 				this._sliceMachineManager.versions.checkIsAdapterUpdateAvailable(),
 			),
-			safelyExecute(this._sliceMachineManager.user.checkIsLoggedIn()),
-			safelyExecute(
+			safelyExecute(() => this._sliceMachineManager.user.checkIsLoggedIn()),
+			safelyExecute(() =>
 				this._sliceMachineManager.versions.checkIsSliceMachineUpdateAvailable(),
 			),
-			safelyExecute(this._sliceMachineManager.project.checkIsTypeScript()),
-			safelyExecute(this._sliceMachineManager.project.detectPackageManager()),
-			safelyExecute(
+			safelyExecute(() =>
+				this._sliceMachineManager.project.checkIsTypeScript(),
+			),
+			safelyExecute(() =>
+				this._sliceMachineManager.project.detectPackageManager(),
+			),
+			safelyExecute(() =>
 				this._sliceMachineManager.versions.getRunningAdapterVersion(),
 			),
-			safelyExecute(
+			safelyExecute(() =>
 				this._sliceMachineManager.versions.getRunningSliceMachineVersion(),
 			),
-			safelyExecute(
+			safelyExecute(() =>
 				this._sliceMachineManager.simulator.getLocalSliceSimulatorURL(),
 			),
-			safelyExecute(this._sliceMachineManager.slices.readAllSlices()),
+			safelyExecute(() => this._sliceMachineManager.slices.readAllSlices()),
 		]);
 
 		this._sliceMachineManager.telemetry.track({
@@ -280,7 +293,8 @@ export class StartSliceMachineProcess {
 			numberOfCustomTypes: customTypes?.models.length,
 			numberOfSlices: slices?.models.length,
 			osPlatform: os.platform(),
-			// Ensure we escape the "@" character to prevent it from being interpreted as an email address.
+			// Ensure we escape the "@" character to prevent it from being interpreted
+			// as an email address and being considered sensitive and stripped off.
 			packageManager: packageManager?.replace("@", "[at]"),
 			projectPort: simulatorUrl ? new URL(simulatorUrl).port : undefined,
 			sliceMachineVersion: runningSliceMachineVersion,
