@@ -298,6 +298,7 @@ type SliceMachineStart = SegmentEvent<
 		packageManager?: string;
 		projectPort?: string;
 		sliceMachineVersion?: string;
+		versionControlSystem?: string;
 	}
 >;
 

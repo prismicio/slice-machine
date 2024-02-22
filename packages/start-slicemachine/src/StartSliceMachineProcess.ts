@@ -250,6 +250,7 @@ export class StartSliceMachineProcess {
 			simulatorUrl,
 			sliceMachineVersion,
 			slices,
+			versionControlSystem,
 		] = await Promise.all([
 			safelyExecute(() => this._sliceMachineManager.project.getAdapterName()),
 			safelyExecute(() =>
@@ -279,6 +280,9 @@ export class StartSliceMachineProcess {
 				this._sliceMachineManager.versions.getRunningSliceMachineVersion(),
 			),
 			safelyExecute(() => this._sliceMachineManager.slices.readAllSlices()),
+			safelyExecute(() =>
+				this._sliceMachineManager.project.detectVersionControlSystem(),
+			),
 		]);
 
 		this._sliceMachineManager.telemetry.track({
@@ -300,6 +304,7 @@ export class StartSliceMachineProcess {
 			packageManager: packageManager?.replace("@", "[at]"),
 			projectPort: simulatorUrl ? new URL(simulatorUrl).port : undefined,
 			sliceMachineVersion,
+			versionControlSystem,
 		});
 	}
 }
