@@ -95,7 +95,16 @@ export class StartSliceMachineProcess {
 					console.error("Error setting up Sentry:", error);
 				}
 			}
+		}
 
+		await this._sliceMachineManager.plugins.initPlugins();
+
+		// TODO: MIGRATION - Move this to the Migration Manager
+		await migrateAssets(this._sliceMachineManager);
+
+		await this._validateProject();
+
+		if (isTelemetryEnabled) {
 			try {
 				this._trackStart();
 			} catch (error) {
@@ -107,13 +116,6 @@ export class StartSliceMachineProcess {
 				}
 			}
 		}
-
-		await this._sliceMachineManager.plugins.initPlugins();
-
-		// TODO: MIGRATION - Move this to the Migration Manager
-		await migrateAssets(this._sliceMachineManager);
-
-		await this._validateProject();
 
 		const app = await createSliceMachineExpressApp({
 			sliceMachineManager: this._sliceMachineManager,
@@ -237,6 +239,7 @@ export class StartSliceMachineProcess {
 	private async _trackStart(): Promise<void> {
 		const [
 			adapter,
+			adapterVersion,
 			customTypes,
 			gitProvider,
 			isAdapterUpdateAvailable,
@@ -244,12 +247,14 @@ export class StartSliceMachineProcess {
 			isSliceMachineUpdateAvailable,
 			isTypeScriptProject,
 			packageManager,
-			runningAdapterVersion,
-			runningSliceMachineVersion,
 			simulatorUrl,
+			sliceMachineVersion,
 			slices,
 		] = await Promise.all([
 			safelyExecute(() => this._sliceMachineManager.project.getAdapterName()),
+			safelyExecute(() =>
+				this._sliceMachineManager.versions.getRunningAdapterVersion(),
+			),
 			safelyExecute(() =>
 				this._sliceMachineManager.customTypes.readAllCustomTypes(),
 			),
@@ -268,13 +273,10 @@ export class StartSliceMachineProcess {
 				this._sliceMachineManager.project.detectPackageManager(),
 			),
 			safelyExecute(() =>
-				this._sliceMachineManager.versions.getRunningAdapterVersion(),
+				this._sliceMachineManager.simulator.getLocalSliceSimulatorURL(),
 			),
 			safelyExecute(() =>
 				this._sliceMachineManager.versions.getRunningSliceMachineVersion(),
-			),
-			safelyExecute(() =>
-				this._sliceMachineManager.simulator.getLocalSliceSimulatorURL(),
 			),
 			safelyExecute(() => this._sliceMachineManager.slices.readAllSlices()),
 		]);
@@ -283,7 +285,7 @@ export class StartSliceMachineProcess {
 			event: "slice-machine:start",
 			_includeEnvironmentKind: true,
 			adapter,
-			adapterVersion: runningAdapterVersion,
+			adapterVersion,
 			gitProvider,
 			isAdapterUpdateAvailable,
 			isLoggedIn,
@@ -297,7 +299,7 @@ export class StartSliceMachineProcess {
 			// as an email address and being considered sensitive and stripped off.
 			packageManager: packageManager?.replace("@", "[at]"),
 			projectPort: simulatorUrl ? new URL(simulatorUrl).port : undefined,
-			sliceMachineVersion: runningSliceMachineVersion,
+			sliceMachineVersion,
 		});
 	}
 }
