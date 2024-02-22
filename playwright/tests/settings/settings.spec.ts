@@ -14,7 +14,7 @@ import {
   UnauthorizedError,
 } from "../../utils";
 
-test.run()(
+test.run(
   "I can install the GitHub app",
   async ({ procedures, settingsPage }) => {
     procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
@@ -39,7 +39,7 @@ test.run()(
   },
 );
 
-test.run()(
+test.run(
   "I can connect a GitHub repository to my Prismic repository",
   async ({ procedures, settingsPage }) => {
     procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
@@ -69,7 +69,7 @@ test.run()(
   },
 );
 
-test.run()(
+test.run(
   "I can disconnect a GitHub repository from my Prismic repository",
   async ({ procedures, settingsPage }) => {
     procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
@@ -98,7 +98,7 @@ test.run()(
   },
 );
 
-test.run()(
+test.run(
   "I can see a specific error message when I'm unauthenticated",
   async ({ procedures, settingsPage }) => {
     procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
@@ -118,7 +118,7 @@ test.run()(
   },
 );
 
-test.run()(
+test.run(
   "I can see a specific error message when I'm unauthorized",
   async ({ procedures, settingsPage }) => {
     procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
@@ -138,7 +138,7 @@ test.run()(
   },
 );
 
-test.run()(
+test.run(
   "I can see a generic error message when something unexpected happened",
   async ({ procedures, settingsPage }) => {
     procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
@@ -158,7 +158,7 @@ test.run()(
   },
 );
 
-test.run()(
+test.run(
   "I can't navigate to the settings page if I'm not eligible to the `slicemachine-git-integration` experiment",
   async ({ procedures, sliceMachinePage }) => {
     procedures.mock("telemetry.getExperimentVariant", () => undefined, {
