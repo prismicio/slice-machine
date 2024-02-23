@@ -231,6 +231,9 @@ export const defaultTest = (
       const newContext = await browser.newContext({ storageState });
       const page = await newContext.newPage();
 
+      // Hide Next.js's error overlay so that it doesn't hide our own UI
+      await page.addStyleTag({ content: "nextjs-portal { display: none; }" });
+
       // Logout user by default
       try {
         await fs.rm(path.join(os.homedir(), ".prismic"));

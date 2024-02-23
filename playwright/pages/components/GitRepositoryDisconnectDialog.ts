@@ -9,19 +9,23 @@ export class GitRepositoryDisconnectDialog extends Dialog {
     /**
      * Components
      */
+    // Handle components here
 
     /**
      * Static locators
      */
+    // Handle static locators here
   }
 
   /**
    * Dynamic locators
    */
+  // Handle dynamic locators here
 
   /**
    * Actions
    */
+  // Handle actions here
   async disconnect() {
     await expect(this.title).toBeVisible();
     await this.submitButton.click();
@@ -31,4 +35,5 @@ export class GitRepositoryDisconnectDialog extends Dialog {
   /**
    * Assertions
    */
+  // Handle assertions here
 }

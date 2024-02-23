@@ -14,10 +14,12 @@ export class GitRepositoryConnectDialog extends Dialog {
     /**
      * Components
      */
+    // Handle components here
 
     /**
      * Static locators
      */
+    // Handle static locators here
     this.writeAPITokenInput = page.getByPlaceholder("Write API token", {
       exact: true,
     });
@@ -26,10 +28,12 @@ export class GitRepositoryConnectDialog extends Dialog {
   /**
    * Dynamic locators
    */
+  // Handle dynamic locators here
 
   /**
    * Actions
    */
+  // Handle actions here
   async connect(writeAPIToken: string) {
     await expect(this.title).toBeVisible();
     await this.writeAPITokenInput.fill(writeAPIToken);
@@ -40,4 +44,5 @@ export class GitRepositoryConnectDialog extends Dialog {
   /**
    * Assertions
    */
+  // Handle assertions here
 }
