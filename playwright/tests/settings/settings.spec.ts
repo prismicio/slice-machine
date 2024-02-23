@@ -31,6 +31,7 @@ test.run()(
     await settingsPage.installGitHubButton.click();
     const gitHubPage = await gitHubPagePromise;
     await gitHubPage.waitForLoadState();
+    expect(gitHubPage.title()).toBe("Installing Prismic.io");
   },
 );
 

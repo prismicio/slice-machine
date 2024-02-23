@@ -27,7 +27,7 @@ export const FieldSetContent: FC<PropsWithChildren> = (props) => (
 );
 
 export const FieldSetList: FC<PropsWithChildren> = (props) => (
-  <div {...props} className={styles.list} />
+  <ul {...props} className={styles.list} />
 );
 
 type FieldSetListItemProps = PropsWithChildren<{ action?: ReactNode }>;
@@ -37,7 +37,7 @@ export const FieldSetListItem: FC<FieldSetListItemProps> = ({
   children,
   ...otherProps
 }) => (
-  <div {...otherProps} className={styles.listItem}>
+  <li {...otherProps} className={styles.listItem}>
     <Text
       className={styles.listItemText}
       component="span"
@@ -47,7 +47,7 @@ export const FieldSetListItem: FC<FieldSetListItemProps> = ({
       {children}
     </Text>
     {action}
-  </div>
+  </li>
 );
 
 type FieldSetFooterProps = PropsWithChildren<{ action?: ReactNode }>;
