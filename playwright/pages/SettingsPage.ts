@@ -5,10 +5,10 @@ import { GitRepositoryDisconnectDialog } from "./components/GitRepositoryDisconn
 import { SliceMachinePage } from "./SliceMachinePage";
 
 export class SettingsPage extends SliceMachinePage {
-  readonly breadcrumbLabel: Locator;
-  readonly installGitHubButton: Locator;
   readonly gitRepositoryConnectDialog: GitRepositoryConnectDialog;
   readonly gitRepositoryDisconnectDialog: GitRepositoryDisconnectDialog;
+  readonly breadcrumbLabel: Locator;
+  readonly installGitHubButton: Locator;
   readonly unauthenticatedErrorTitle: Locator;
   readonly unauthorizedErrorTitle: Locator;
   readonly unknownErrorTitle: Locator;
@@ -19,10 +19,16 @@ export class SettingsPage extends SliceMachinePage {
     /**
      * Components
      */
+    // Handle components here
+    this.gitRepositoryConnectDialog = new GitRepositoryConnectDialog(page);
+    this.gitRepositoryDisconnectDialog = new GitRepositoryDisconnectDialog(
+      page,
+    );
 
     /**
      * Static locators
      */
+    // Handle static locators here
     this.breadcrumbLabel = this.breadcrumb.getByText("Settings", {
       exact: true,
     });
@@ -30,10 +36,6 @@ export class SettingsPage extends SliceMachinePage {
       name: "GitHub",
       exact: true,
     });
-    this.gitRepositoryConnectDialog = new GitRepositoryConnectDialog(page);
-    this.gitRepositoryDisconnectDialog = new GitRepositoryDisconnectDialog(
-      page,
-    );
     this.unauthenticatedErrorTitle = page.getByText(
       "It seems like you are logged out",
       { exact: true },
@@ -50,21 +52,25 @@ export class SettingsPage extends SliceMachinePage {
   /**
    * Dynamic locators
    */
+  // Handle dynamic locators here
   getConnectGitRepoButton(name: string): Locator {
     return this.page
-      .locator("div", { hasText: name })
+      .getByRole("listitem")
+      .filter({ hasText: name })
       .getByRole("button", { name: "Connect", exact: true });
   }
 
   getDisconnectGitRepoButton(name: string): Locator {
     return this.page
-      .locator("div", { hasText: name })
+      .getByRole("listitem")
+      .filter({ hasText: name })
       .getByRole("button", { name: "Disconnect", exact: true });
   }
 
   /**
    * Actions
    */
+  // Handle actions here
   async goto() {
     await this.page.goto("/settings");
     await expect(this.breadcrumbLabel).toBeVisible();
@@ -73,4 +79,5 @@ export class SettingsPage extends SliceMachinePage {
   /**
    * Assertions
    */
+  // Handle assertions here
 }
