@@ -55,7 +55,7 @@ const config = {
     baseURL: "http://localhost:9999",
 
     // Collect trace when retrying the failed test.
-    trace: "on-first-retry",
+    trace: "on",
 
     // Setup the test id attribute to be `data-cy` for `getByTestId`.
     testIdAttribute: "data-cy",
