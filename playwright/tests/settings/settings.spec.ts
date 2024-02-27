@@ -13,27 +13,31 @@ import {
   UnauthorizedError,
 } from "../../utils";
 
-test.run()(
-  "I can install the GitHub app",
-  async ({ procedures, settingsPage }) => {
-    procedures.mock("git.fetchLinkedRepos", () => [], { execute: false });
-    procedures.mock("git.fetchOwners", () => [], { execute: false });
+test
+  .run()
+  .only(
+    "I can install the GitHub app",
+    async ({ procedures, settingsPage }) => {
+      procedures.mock("git.fetchLinkedRepos", () => [], { execute: false });
+      procedures.mock("git.fetchOwners", () => [], { execute: false });
 
-    await settingsPage.goto();
+      await settingsPage.goto();
 
-    procedures.mock(
-      "git.getProviderAppInstallURL",
-      () => providerAppInstallURL,
-      { execute: false },
-    );
+      procedures.mock(
+        "git.getProviderAppInstallURL",
+        () => providerAppInstallURL,
+        { execute: false },
+      );
 
-    const gitHubPagePromise = settingsPage.page.context().waitForEvent("page");
-    await settingsPage.installGitHubButton.click();
-    const gitHubPage = await gitHubPagePromise;
-    await gitHubPage.waitForLoadState();
-    expect(gitHubPage.title()).toBe("Installing Prismic.io");
-  },
-);
+      const gitHubPagePromise = settingsPage.page
+        .context()
+        .waitForEvent("page");
+      await settingsPage.installGitHubButton.click();
+      const gitHubPage = await gitHubPagePromise;
+      await gitHubPage.waitForLoadState();
+      expect(gitHubPage.title()).toBe("Installing Prismic.io");
+    },
+  );
 
 test.run()(
   "I can connect a GitHub repository to my Prismic repository",

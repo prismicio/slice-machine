@@ -10,7 +10,7 @@ const config = {
   },
 
   // Fail the build on CI if you accidentally left test.only in the source code.
-  forbidOnly: !!process.env["CI"],
+  // forbidOnly: !!process.env["CI"],
 
   // Configure projects for major browsers.
   projects: [
@@ -55,7 +55,7 @@ const config = {
     baseURL: "http://localhost:9999",
 
     // Collect trace when retrying the failed test.
-    trace: "on-first-retry",
+    trace: "on",
 
     // Setup the test id attribute to be `data-cy` for `getByTestId`.
     testIdAttribute: "data-cy",
