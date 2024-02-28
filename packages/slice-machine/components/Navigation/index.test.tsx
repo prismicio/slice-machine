@@ -165,7 +165,7 @@ describe("Side Navigation", () => {
 
     renderSideNavigation();
 
-    const link = (await screen.findByText("Academy")).parentElement
+    const link = (await screen.findByText("Learn Prismic")).parentElement
       ?.parentElement as HTMLElement;
 
     await waitFor(() =>
@@ -181,7 +181,7 @@ describe("Side Navigation", () => {
   test("Video Item not next", async () => {
     renderSideNavigation();
 
-    const link = (await screen.findByText("Tutorial")).parentElement
+    const link = (await screen.findByText("Learn Prismic")).parentElement
       ?.parentElement as HTMLElement;
     expect(link).toHaveAttribute(
       "href",

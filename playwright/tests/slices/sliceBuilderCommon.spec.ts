@@ -59,7 +59,7 @@ test("I can delete a variation", async ({ slice, sliceBuilderPage }) => {
   ).not.toBeVisible();
 });
 
-test.describe(() => {
+test.describe("Simulator tooltip", () => {
   test.use({ onboarded: false });
 
   test("I can close the simulator tooltip and it stays close", async ({
