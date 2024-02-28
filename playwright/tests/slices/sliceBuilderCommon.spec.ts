@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { generateRandomId } from "../../utils/generateRandomId";
 
-test.run()("I can add a new variation", async ({ slice, sliceBuilderPage }) => {
+test("I can add a new variation", async ({ slice, sliceBuilderPage }) => {
   await sliceBuilderPage.goto(slice.name);
   await expect(sliceBuilderPage.variationCards).toHaveCount(1);
 
@@ -17,7 +17,7 @@ test.run()("I can add a new variation", async ({ slice, sliceBuilderPage }) => {
   ).toBeVisible();
 });
 
-test.run()("I can rename a variation", async ({ slice, sliceBuilderPage }) => {
+test("I can rename a variation", async ({ slice, sliceBuilderPage }) => {
   await sliceBuilderPage.goto(slice.name);
 
   const defaultVariationName = "Default";
@@ -40,7 +40,7 @@ test.run()("I can rename a variation", async ({ slice, sliceBuilderPage }) => {
   ).toBeVisible();
 });
 
-test.run()("I can delete a variation", async ({ slice, sliceBuilderPage }) => {
+test("I can delete a variation", async ({ slice, sliceBuilderPage }) => {
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.openAddVariationDialog();
   const variationName = `Variation ${generateRandomId()}`;
@@ -59,9 +59,13 @@ test.run()("I can delete a variation", async ({ slice, sliceBuilderPage }) => {
   ).not.toBeVisible();
 });
 
-test.run({ onboarded: false })(
-  "I can close the simulator tooltip and it stays close",
-  async ({ slice, sliceBuilderPage }) => {
+test.describe(() => {
+  test.use({ onboarded: false });
+
+  test("I can close the simulator tooltip and it stays close", async ({
+    slice,
+    sliceBuilderPage,
+  }) => {
     await sliceBuilderPage.goto(slice.name);
 
     // Simulator tooltip should open automatically
@@ -73,89 +77,89 @@ test.run({ onboarded: false })(
     await expect(sliceBuilderPage.getBreadcrumbLabel(slice.name)).toBeVisible();
 
     await expect(sliceBuilderPage.simulateTooltipTitle).not.toBeVisible();
-  },
-);
+  });
+});
 
-test.run()(
-  "I can see my changes auto-saved",
-  async ({ sliceBuilderPage, slice }) => {
-    await sliceBuilderPage.goto(slice.name);
-    await sliceBuilderPage.addField({
-      type: "Rich Text",
-      name: "My Rich Text",
-      expectedId: "my_rich_text",
-      zoneType: "static",
-    });
+test("I can see my changes auto-saved", async ({ sliceBuilderPage, slice }) => {
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Rich Text",
+    expectedId: "my_rich_text",
+    zoneType: "static",
+  });
 
-    await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
-    await sliceBuilderPage.page.reload();
-    await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
-  },
-);
+  await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
+  await sliceBuilderPage.page.reload();
+  await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
+});
 
-test.run()(
-  "I can see my changes being saved",
-  async ({ sliceBuilderPage, slice, procedures }) => {
-    procedures.mock("slices.updateSlice", ({ data }) => data, {
-      delay: 2000,
-    });
+test("I can see my changes being saved", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock("slices.updateSlice", ({ data }) => data, {
+    delay: 2000,
+  });
 
-    await sliceBuilderPage.goto(slice.name);
-    await sliceBuilderPage.addField({
-      type: "Rich Text",
-      name: "My Rich Text",
-      expectedId: "my_rich_text",
-      zoneType: "static",
-    });
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Rich Text",
+    expectedId: "my_rich_text",
+    zoneType: "static",
+  });
 
-    await expect(sliceBuilderPage.autoSaveStatusSaving).toBeVisible();
-    await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
-    await sliceBuilderPage.page.reload();
-    await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
-  },
-);
+  await expect(sliceBuilderPage.autoSaveStatusSaving).toBeVisible();
+  await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
+  await sliceBuilderPage.page.reload();
+  await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
+});
 
-test.run()(
-  "I can see that my changes failed to save and I can retry",
-  async ({ sliceBuilderPage, slice, procedures }) => {
-    procedures.mock("slices.updateSlice", () => ({ errors: [{}] }), {
-      execute: false,
-      times: 1,
-    });
+test("I can see that my changes failed to save and I can retry", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock("slices.updateSlice", () => ({ errors: [{}] }), {
+    execute: false,
+    times: 1,
+  });
 
-    await sliceBuilderPage.goto(slice.name);
-    await sliceBuilderPage.addField({
-      type: "Rich Text",
-      name: "My Rich Text",
-      expectedId: "my_rich_text",
-      zoneType: "static",
-    });
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Rich Text",
+    expectedId: "my_rich_text",
+    zoneType: "static",
+  });
 
-    await expect(sliceBuilderPage.autoSaveStatusError).toBeVisible();
-    await sliceBuilderPage.autoSaveRetryButton.click();
-    await expect(sliceBuilderPage.autoSaveStatusSaving).toBeVisible();
-    await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
-    await sliceBuilderPage.page.reload();
-    await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
-  },
-);
+  await expect(sliceBuilderPage.autoSaveStatusError).toBeVisible();
+  await sliceBuilderPage.autoSaveRetryButton.click();
+  await expect(sliceBuilderPage.autoSaveStatusSaving).toBeVisible();
+  await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
+  await sliceBuilderPage.page.reload();
+  await expect(sliceBuilderPage.autoSaveStatusSaved).toBeVisible();
+});
 
-test.run()(
-  "I cannot see a save happening when I first load the page",
-  async ({ sliceBuilderPage, slice, procedures }) => {
-    procedures.mock("slices.updateSlice", ({ data }) => data, {
-      delay: 2000,
-    });
+test("I cannot see a save happening when I first load the page", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock("slices.updateSlice", ({ data }) => data, {
+    delay: 2000,
+  });
 
-    await sliceBuilderPage.goto(slice.name);
-    await expect(sliceBuilderPage.autoSaveStatusSaving).not.toBeVisible({
-      // As soon as it's visible it's a problem
-      timeout: 1,
-    });
-  },
-);
+  await sliceBuilderPage.goto(slice.name);
+  await expect(sliceBuilderPage.autoSaveStatusSaving).not.toBeVisible({
+    // As soon as it's visible it's a problem
+    timeout: 1,
+  });
+});
 
-test.run()("I can add a screenshot", async ({ slice, sliceBuilderPage }) => {
+test("I can add a screenshot", async ({ slice, sliceBuilderPage }) => {
   await sliceBuilderPage.goto(slice.name);
 
   await expect(sliceBuilderPage.noScreenshotMessage).toBeVisible();
