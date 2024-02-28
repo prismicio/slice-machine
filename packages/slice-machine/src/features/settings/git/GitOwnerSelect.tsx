@@ -1,6 +1,6 @@
 import { Select, SelectItem, tokens } from "@prismicio/editor-ui";
 import type { GitOwner } from "@slicemachine/manager";
-import type { ComponentProps, FC } from "react";
+import type { ComponentPropsWithoutRef, FC } from "react";
 
 import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
 
@@ -68,4 +68,4 @@ function parseGitOwnerKey(key: string): string[] {
 }
 
 // TODO(DT-1928): export the `SX` type from `@prismicio/editor-ui`.
-type SX = ComponentProps<typeof Select>["sx"];
+type SX = ComponentPropsWithoutRef<typeof Select>["sx"];
