@@ -1,18 +1,28 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { generateLibraries, generateTypes } from "../../mocks";
+import {
+  experimentVariant,
+  generateLibraries,
+  generateTypes,
+} from "../../mocks";
 
 test.run()(
   "I can navigate through all menu entries",
   async ({
+    procedures,
     sliceMachinePage,
     pageTypesTablePage,
     customTypesTablePage,
     slicesListPage,
     changesPage,
+    settingsPage,
     changelogPage,
   }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
+      execute: false,
+    });
+
     await sliceMachinePage.gotoDefaultPage();
 
     await pageTypesTablePage.menu.pageTypesLink.click();
@@ -37,6 +47,12 @@ test.run()(
     await expect(changesPage.breadcrumbLabel).toBeVisible();
     expect(await sliceMachinePage.page.title()).toContain(
       "Changes - Slice Machine",
+    );
+
+    await settingsPage.menu.settingsLink.click();
+    await expect(settingsPage.breadcrumbLabel).toBeVisible();
+    expect(await sliceMachinePage.page.title()).toContain(
+      "Settings - Slice Machine",
     );
 
     await changelogPage.menu.changelogLink.click();
