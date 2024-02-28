@@ -2,11 +2,11 @@ import { deleteModal } from "../DeleteModal";
 
 class SlicesList {
   get emptyStateButton() {
-    return cy.get("[data-cy=empty-state-main-button]");
+    return cy.get("[data-testid=empty-state-main-button]");
   }
 
   getOptionDopDownButton(sliceName) {
-    return this.getSliceCard(sliceName).get(`[data-cy=slice-action-icon]`);
+    return this.getSliceCard(sliceName).get(`[data-testid=slice-action-icon]`);
   }
 
   getSliceCard(sliceName) {
@@ -14,7 +14,7 @@ class SlicesList {
   }
 
   get optionDopDownMenu() {
-    return cy.get('[data-cy="slice-action-icon-dropdown"]');
+    return cy.get('[data-testid="slice-action-icon-dropdown"]');
   }
 
   get deleteButton() {

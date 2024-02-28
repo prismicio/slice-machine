@@ -134,7 +134,7 @@ export function getWidgetFieldMenu(name) {
   return cy
     .contains("div", name)
     .parent()
-    .find("[data-cy='slice-menu-button']");
+    .find("[data-testid='slice-menu-button']");
 }
 
 /**

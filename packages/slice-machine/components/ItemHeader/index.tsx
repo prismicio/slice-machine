@@ -22,7 +22,7 @@ const ItemHeader: React.FC<{
     />
     <Text
       as="p"
-      data-cy="item-header-text"
+      data-testid="item-header-text"
       sx={{
         py: 0,
         px: 1,

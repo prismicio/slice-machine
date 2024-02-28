@@ -45,7 +45,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
       content={{
         title: "Select existing slices",
       }}
-      dataCy="update-slices-modal"
+      testId="update-slices-modal"
       validate={(values) => {
         if (values.sliceKeys.length === 0) {
           return {

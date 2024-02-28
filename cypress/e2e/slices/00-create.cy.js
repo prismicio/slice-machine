@@ -30,9 +30,9 @@ describe.skip("Create Slices", () => {
     cy.get("#variation-add").submit();
 
     // remove widget
-    cy.get('[data-cy="slice-menu-button"]').first().click();
+    cy.get('[data-testid="slice-menu-button"]').first().click();
     cy.contains("Delete field").click();
-    cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
+    cy.get('[data-testid="builder-save-button"]').should("not.be.disabled");
 
     cy.contains("button", "Simulate").should("have.attr", "disabled");
     cy.contains("button", "Simulate").realHover();
@@ -65,7 +65,7 @@ describe.skip("Create Slices", () => {
     cy.getInputByLabel("Description").first().clear();
     cy.getInputByLabel("Description").first().type("👋");
 
-    cy.get("[data-cy=save-mock]").click();
+    cy.get("[data-testid=save-mock]").click();
 
     cy.wait(1000);
 
@@ -77,7 +77,7 @@ describe.skip("Create Slices", () => {
     cy.getInputByLabel("Description").first().clear();
     cy.getInputByLabel("Description").first().type("🎉");
 
-    cy.get("[data-cy=save-mock]").click();
+    cy.get("[data-testid=save-mock]").click();
 
     cy.wait(1000);
 
@@ -110,7 +110,7 @@ describe.skip("Create Slices", () => {
     sliceBuilder.addNewWidgetField("Title", "Key Text");
     sliceBuilder.addNewWidgetField("Description", "Rich Text");
 
-    cy.get('ul[data-cy="slice-non-repeatable-zone"] > li')
+    cy.get('ul[data-testid="slice-non-repeatable-zone"] > li')
       .eq(1)
       .contains("Description");
 
@@ -124,7 +124,7 @@ describe.skip("Create Slices", () => {
       .wait(1 * 1000)
       .trigger("keydown", { keyCode: 32, force: true });
 
-    cy.get('ul[data-cy="slice-non-repeatable-zone"] > li')
+    cy.get('ul[data-testid="slice-non-repeatable-zone"] > li')
       .eq(0)
       .contains("Description");
   });

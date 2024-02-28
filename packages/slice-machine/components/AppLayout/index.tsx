@@ -51,7 +51,7 @@ const PageLayoutWithActiveEnvironment: FC<PropsWithChildren> = ({
   return (
     <PageLayout
       borderTopColor={borderTopColor}
-      data-cy={`app-layout-top-border-color-${borderTopColor}`}
+      data-testid={`app-layout-top-border-color-${borderTopColor}`}
       {...otherProps}
     >
       {children}

@@ -130,7 +130,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
 
   return (
     <ModalFormCard
-      dataCy="create-ct-modal"
+      testId="create-ct-modal"
       isOpen={isOpen}
       widthInPx="530px"
       formId="create-custom-type"
@@ -204,7 +204,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
               start: true,
               plural: false,
             })} Name`}
-            dataCy="ct-name-input"
+            testId="ct-name-input"
             placeholder={`A display name for the ${customTypesMessages.name({
               start: false,
               plural: false,
@@ -215,7 +215,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           />
           <InputBox
             name="id"
-            dataCy="ct-id-input"
+            testId="ct-id-input"
             label={`${customTypesMessages.name({
               start: true,
               plural: false,

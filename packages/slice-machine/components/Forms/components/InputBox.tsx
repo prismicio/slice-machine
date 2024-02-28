@@ -7,7 +7,7 @@ type InputBoxProps = {
   label: string;
   placeholder: string;
   error?: string;
-  dataCy?: string;
+  testId?: string;
   onChange?: (input: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -16,7 +16,7 @@ export const InputBox: React.FunctionComponent<InputBoxProps> = ({
   label,
   placeholder,
   error,
-  dataCy,
+  testId,
   onChange,
 }) => (
   <Box mb={3}>
@@ -31,13 +31,13 @@ export const InputBox: React.FunctionComponent<InputBoxProps> = ({
       autoComplete="off"
       {...(onChange ? { onChange } : null)}
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      {...(dataCy ? { "data-cy": dataCy } : null)}
+      {...(testId ? { "data-testid": testId } : null)}
     />
     {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
     {error ? (
       <Text
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        data-cy={dataCy ? `${dataCy}-error` : "input-error"}
+        data-testid={testId ? `${testId}-error` : "input-error"}
         sx={{ color: "error", mt: 1 }}
       >
         {error}

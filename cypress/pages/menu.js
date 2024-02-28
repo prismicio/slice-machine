@@ -1,6 +1,6 @@
 class Menu {
   changesNumber(options = {}) {
-    return cy.get("[data-cy=changes-number]", options);
+    return cy.get("[data-testid=changes-number]", options);
   }
 
   /**

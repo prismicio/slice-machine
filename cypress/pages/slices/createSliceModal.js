@@ -1,10 +1,10 @@
 class CreateSliceModal {
   get root() {
-    return cy.get("[data-cy=create-slice-modal]");
+    return cy.get("[data-testid=create-slice-modal]");
   }
 
   get nameInput() {
-    return cy.get("input[data-cy=slice-name-input]");
+    return cy.get("input[data-testid=slice-name-input]");
   }
 
   get submitButton() {
