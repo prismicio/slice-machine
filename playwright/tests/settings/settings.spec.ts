@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
 import {
+  experimentVariant,
   gitOwners,
   gitRepos,
   linkedRepos,
@@ -16,6 +17,9 @@ import {
 test.run()(
   "I can install the GitHub app",
   async ({ procedures, settingsPage }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
+      execute: false,
+    });
     procedures.mock("git.fetchLinkedRepos", () => [], { execute: false });
     procedures.mock("git.fetchOwners", () => [], { execute: false });
 
@@ -31,13 +35,16 @@ test.run()(
     await settingsPage.installGitHubButton.click();
     const gitHubPage = await gitHubPagePromise;
     await gitHubPage.waitForLoadState();
-    expect(gitHubPage.title()).toBe("Installing Prismic.io");
+    expect(await gitHubPage.title()).toBe("Sign in to GitHub · GitHub");
   },
 );
 
 test.run()(
   "I can connect a GitHub repository to my Prismic repository",
   async ({ procedures, settingsPage }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
+      execute: false,
+    });
     procedures.mock("git.fetchLinkedRepos", () => [], { execute: false });
     procedures.mock("git.fetchOwners", () => gitOwners, { execute: false });
     procedures.mock("git.fetchRepos", () => gitRepos, { execute: false });
@@ -65,6 +72,9 @@ test.run()(
 test.run()(
   "I can disconnect a GitHub repository from my Prismic repository",
   async ({ procedures, settingsPage }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
+      execute: false,
+    });
     procedures.mock("git.fetchLinkedRepos", () => linkedRepos, {
       execute: false,
     });
@@ -91,6 +101,9 @@ test.run()(
 test.run()(
   "I can see a specific error message when I'm unauthenticated",
   async ({ procedures, settingsPage }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
+      execute: false,
+    });
     procedures.mock(
       "git.fetchLinkedRepos",
       () => {
@@ -108,6 +121,9 @@ test.run()(
 test.run()(
   "I can see a specific error message when I'm unauthorized",
   async ({ procedures, settingsPage }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
+      execute: false,
+    });
     procedures.mock(
       "git.fetchLinkedRepos",
       () => {
@@ -125,6 +141,9 @@ test.run()(
 test.run()(
   "I can see a generic error message when something unexpected happened",
   async ({ procedures, settingsPage }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
+      execute: false,
+    });
     procedures.mock(
       "git.fetchLinkedRepos",
       () => {
@@ -136,5 +155,18 @@ test.run()(
     await settingsPage.goto();
 
     await expect(settingsPage.unknownErrorTitle).toBeVisible();
+  },
+);
+
+test.run()(
+  "I can't navigate to the settings page if I'm not eligible to the `slicemachine-git-integration` experiment",
+  async ({ procedures, sliceMachinePage }) => {
+    procedures.mock("telemetry.getExperimentVariant", () => undefined, {
+      execute: false,
+    });
+
+    await sliceMachinePage.gotoDefaultPage();
+
+    await expect(sliceMachinePage.menu.settingsLink).not.toBeVisible();
   },
 );
