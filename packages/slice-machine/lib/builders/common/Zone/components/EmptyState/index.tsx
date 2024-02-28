@@ -21,7 +21,7 @@ const ZoneEmptyState = ({
         color="grey"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         onClick={() => onEnterSelectMode()}
-        data-cy={`add-${zoneName}-field`}
+        data-testid={`add-${zoneName}-field`}
         startIcon="add"
       >
         Add a new field

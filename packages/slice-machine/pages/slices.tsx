@@ -83,7 +83,6 @@ const SlicesIndex: React.FunctionComponent = () => {
             <AppLayoutActions>
               <Button
                 data-testid="create-slice"
-                data-cy="create-slice"
                 onClick={() => {
                   setIsCreateSliceModalOpen(true);
                 }}
@@ -248,7 +247,7 @@ const SlicesIndex: React.FunctionComponent = () => {
             onClose={() => {
               setIsRenameSliceModalOpen(false);
             }}
-            data-cy="rename-slice-modal"
+            data-testid="rename-slice-modal"
           />
           <DeleteSliceModal
             isOpen={isDeleteSliceModalOpen}

@@ -94,7 +94,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
                             value.slice(0, 30),
                           )
                         }
-                        data-cy="slice-name-input"
+                        data-testid="slice-name-input"
                       />
                       <Text variant="normal" color="grey11">
                         A display name for the slice

@@ -89,7 +89,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
               />
               <AppLayoutActions>
                 <Button
-                  data-cy="create-ct"
+                  data-testid="create-ct"
                   loading={isCreatingCustomType}
                   onClick={() => {
                     setIsCreateCustomTypeModalOpen(true);

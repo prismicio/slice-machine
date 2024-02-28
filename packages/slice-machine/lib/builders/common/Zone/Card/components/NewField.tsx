@@ -119,7 +119,7 @@ const NewField: React.FC<NewField> = ({
       initialValues={initialValues}
     >
       {({ errors, values, setValues, setFieldValue, submitForm }) => (
-        <Form data-cy="new-field-form">
+        <Form data-testid="new-field-form">
           <Flex
             as="li"
             sx={{
@@ -192,7 +192,7 @@ const NewField: React.FC<NewField> = ({
                   width: "initial",
                 }}
                 aria-label="label-input"
-                data-cy="new-field-name-input"
+                data-testid="new-field-name-input"
               />
               <ErrorTooltip error={errors.label} />
             </Flex>
@@ -242,7 +242,7 @@ const NewField: React.FC<NewField> = ({
                   minWidth: "128px",
                   width: "initial",
                 }}
-                data-cy="new-field-id-input"
+                data-testid="new-field-id-input"
               />
               <ErrorTooltip error={errors.id} />
             </Flex>

@@ -21,7 +21,7 @@ const FieldZone = ({
   newField,
   renderHintBase,
   isRepeatable,
-  dataCy,
+  testId,
   isRepeatableCustomType,
 }) => {
   return (
@@ -39,7 +39,7 @@ const FieldZone = ({
             ref={provided.innerRef}
             {...provided.droppableProps}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            data-cy={dataCy}
+            data-testid={testId}
             sx={{ paddingInline: "16px !important" }}
           >
             {
@@ -87,7 +87,7 @@ const FieldZone = ({
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   isRepeatableCustomType,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-                  dataCy: `list-item-${item.key}`,
+                  testId: `list-item-${item.key}`,
                 };
 
                 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

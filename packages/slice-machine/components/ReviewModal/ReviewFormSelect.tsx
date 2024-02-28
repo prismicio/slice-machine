@@ -25,7 +25,7 @@ export const ReviewFormSelect: FC<FieldProps> = (props) => {
               color: "white",
             },
           }}
-          data-cy={`review-form-score-${rating}`}
+          data-testid={`review-form-score-${rating}`}
         >
           {rating}
         </Button>

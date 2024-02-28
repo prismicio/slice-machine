@@ -6,7 +6,7 @@ class ReferencesErrorDrawer extends BaseDrawer {
   }
 
   getCustomTypeReferencesCard(ctName) {
-    return this.root.get(`[data-cy='CustomTypesReferencesCard-${ctName}']`);
+    return this.root.get(`[data-testid='CustomTypesReferencesCard-${ctName}']`);
   }
 }
 

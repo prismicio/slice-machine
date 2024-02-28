@@ -21,7 +21,7 @@ export const SelectRepeatable: FC<SelectRepeatableProps> = ({ format }) => {
           checked={field.value}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           onChange={() => {}}
-          data-cy="repeatable-type-radio-btn"
+          data-testid="repeatable-type-radio-btn"
         />
         <Box
           sx={{
@@ -39,7 +39,7 @@ export const SelectRepeatable: FC<SelectRepeatableProps> = ({ format }) => {
           checked={!field.value}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           onChange={() => {}}
-          data-cy="single-type-radio-btn"
+          data-testid="single-type-radio-btn"
         />
         <Box
           sx={{

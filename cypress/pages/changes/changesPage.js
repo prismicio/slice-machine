@@ -2,7 +2,7 @@ import { menu } from "../menu";
 
 class ChangesPage {
   get pushButton() {
-    return cy.get("[data-cy=push-changes]");
+    return cy.get("[data-testid=push-changes]");
   }
 
   get screenshotsButton() {

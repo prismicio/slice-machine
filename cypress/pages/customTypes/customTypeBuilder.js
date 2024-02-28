@@ -2,7 +2,7 @@ import { BaseBuilder } from "../BaseBuilder";
 
 class CustomTypeBuilder extends BaseBuilder {
   get renameButton() {
-    return cy.get('[data-cy="edit-custom-type"]');
+    return cy.get('[data-testid="edit-custom-type"]');
   }
 
   get updateSliceZoneButton() {
@@ -10,11 +10,11 @@ class CustomTypeBuilder extends BaseBuilder {
   }
 
   get headerCustomTypeName() {
-    return cy.get('[data-cy="custom-type-secondary-breadcrumb"]');
+    return cy.get('[data-testid="custom-type-secondary-breadcrumb"]');
   }
 
   get staticZone() {
-    return cy.get("[data-cy=ct-static-zone]");
+    return cy.get("[data-testid=ct-static-zone]");
   }
 
   get successToast() {
@@ -31,8 +31,8 @@ class CustomTypeBuilder extends BaseBuilder {
   async addSliceToSliceZone(sliceId) {
     await cy.findAllByText(/Add slices/)[0].click();
     this.updateSliceZoneButton.click();
-    cy.get(`[data-cy=shared-slice-card-${sliceId}]`).click();
-    cy.get("[data-cy=update-slices-modal]").submit();
+    cy.get(`[data-testid=shared-slice-card-${sliceId}]`).click();
+    cy.get("[data-testid=update-slices-modal]").submit();
     return this;
   }
 

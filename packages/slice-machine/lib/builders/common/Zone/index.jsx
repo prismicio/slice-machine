@@ -26,7 +26,7 @@ const Zone = ({
   dataTip /* text info to display as tip */,
   renderHintBase /* render base (eg. path to slice) content for hints */,
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
-  dataCy,
+  testId,
   isRepeatableCustomType,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -85,10 +85,10 @@ const Zone = ({
                 size="small"
                 // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
                 style={{ flexShrink: 0 }}
-                data-cy="code-snippets-switch"
+                data-testid="code-snippets-switch"
               />
               <Button
-                data-cy={`add-${
+                data-testid={`add-${
                   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                   isRepeatable ? "Repeatable" : "Static"
                 }-field`}
@@ -141,7 +141,7 @@ const Zone = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               onDeleteItem={onDeleteItem}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              dataCy={dataCy}
+              testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               isRepeatableCustomType={isRepeatableCustomType}
               newField={

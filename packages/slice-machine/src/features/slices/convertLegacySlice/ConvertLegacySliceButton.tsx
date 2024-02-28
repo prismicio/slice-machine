@@ -175,7 +175,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Button
-            data-cy="convert-legacy-slice"
+            data-testid="convert-legacy-slice"
             startIcon="refresh"
             endIcon="arrowDropDown"
             size="medium"
