@@ -255,7 +255,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   }
                 }}
                 size="small"
-                data-cy="slice-zone-switch"
+                data-testid="slice-zone-switch"
               />
             ) : undefined
           }

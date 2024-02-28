@@ -2,27 +2,27 @@ import { BaseBuilder } from "../BaseBuilder";
 
 class SliceBuilder extends BaseBuilder {
   get renameButton() {
-    return cy.get('[data-cy="edit-slice-name"]');
+    return cy.get('[data-testid="edit-slice-name"]');
   }
 
   get headerSliceNameAndVariation() {
-    return cy.get('[data-cy="slice-and-variation-name-header"]');
+    return cy.get('[data-testid="slice-and-variation-name-header"]');
   }
 
   get staticZone() {
-    return cy.get("[data-cy=slice-non-repeatable-zone]");
+    return cy.get("[data-testid=slice-non-repeatable-zone]");
   }
 
   get addStaticFieldButton() {
-    return cy.get("[data-cy=add-Static-field]");
+    return cy.get("[data-testid=add-Static-field]");
   }
 
   get repeatableZone() {
-    return cy.get("[data-cy=slice-repeatable-zone]");
+    return cy.get("[data-testid=slice-repeatable-zone]");
   }
 
   get addRepeatableFieldButton() {
-    return cy.get("[data-cy=add-Repeatable-field]");
+    return cy.get("[data-testid=add-Repeatable-field]");
   }
 
   get addVariationButton() {
@@ -96,12 +96,12 @@ class SliceBuilder extends BaseBuilder {
    * @param {string} type Type of the widget.
    */
   addNewWidgetField(name, type) {
-    cy.get("[data-cy='add-Static-field']").click();
+    cy.get("[data-testid='add-Static-field']").click();
     cy.get("[aria-label='Widget Form Modal']").should("be.visible");
 
     cy.contains("div", type).click();
 
-    const nameInput = '[data-cy="new-field-name-input"]';
+    const nameInput = '[data-testid="new-field-name-input"]';
 
     cy.get(nameInput).clear();
     cy.get(nameInput).type(name).blur();
@@ -142,7 +142,7 @@ class SliceBuilder extends BaseBuilder {
   deleteWidgetField(name) {
     cy.contains("div", name)
       .parent()
-      .find("[data-cy='slice-menu-button']")
+      .find("[data-testid='slice-menu-button']")
       .click();
 
     cy.contains("div", "Delete field").click({ force: true });

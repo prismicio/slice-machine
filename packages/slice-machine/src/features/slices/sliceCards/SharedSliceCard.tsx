@@ -115,7 +115,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
     <Card
       aria-label={`${slice.model.name} ${variation.name} slice card`}
       checked={selected}
-      data-cy="shared-slice-card"
+      data-testid="shared-slice-card"
       data-testid="shared-slice-card"
       {...modeProps}
       {...variantProps}
@@ -167,7 +167,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                data-cy="slice-action-icon-dropdown"
+                data-testid="slice-action-icon-dropdown"
               >
                 {canUpdateScreenshot && disableOverlay ? (
                   <DropdownMenuItem

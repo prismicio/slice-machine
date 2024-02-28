@@ -81,7 +81,10 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
               key={customType.local.id}
               legacyBehavior
             >
-              <tr tabIndex={0} data-cy={`custom-type-${customType.local.id}`}>
+              <tr
+                tabIndex={0}
+                data-testid={`custom-type-${customType.local.id}`}
+              >
                 <CustomTypeChangeRow
                   ct={customType.local}
                   status={modelsStatuses.customTypes[customType.local.id]}
@@ -95,7 +98,7 @@ export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
             <tr
               tabIndex={0}
               className="disabled"
-              data-cy={`custom-type-${customType.remote.id}`}
+              data-testid={`custom-type-${customType.remote.id}`}
               key={customType.remote.id}
             >
               <CustomTypeChangeRow

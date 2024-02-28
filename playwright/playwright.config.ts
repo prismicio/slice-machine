@@ -57,9 +57,6 @@ const config = {
     // Collect trace when retrying the failed test.
     trace: "on-first-retry",
 
-    // Setup the test id attribute to be `data-cy` for `getByTestId`.
-    testIdAttribute: "data-cy",
-
     // Configure the browser permissions to access the clipboard API.
     permissions: ["clipboard-read", "clipboard-write"],
   },

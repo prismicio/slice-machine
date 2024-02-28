@@ -6,7 +6,7 @@ class HardDeleteDocumentsDrawer extends BaseDrawer {
   }
 
   getAssociatedDocuments(ctName) {
-    return this.root.get(`[data-cy='AssociatedDocumentsCard-${ctName}']`);
+    return this.root.get(`[data-testid='AssociatedDocumentsCard-${ctName}']`);
   }
 }
 

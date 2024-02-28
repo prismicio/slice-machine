@@ -1,6 +1,6 @@
 class AddFieldModal {
   fieldTypeButton(fieldType) {
-    return cy.get(`[data-cy='${fieldType}']`);
+    return cy.get(`[data-testid='${fieldType}']`);
   }
 
   pickField(fieldType) {

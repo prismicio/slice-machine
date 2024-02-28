@@ -37,7 +37,7 @@ export function createSlice(lib, id, name) {
  */
 export function renameSlice(actualName, newName) {
   slicesList.goTo();
-  cy.waitUntil(() => cy.get("[data-cy=slice-action-icon]"));
+  cy.waitUntil(() => cy.get("[data-testid=slice-action-icon]"));
 
   slicesList.getOptionDopDownButton(actualName).click();
 

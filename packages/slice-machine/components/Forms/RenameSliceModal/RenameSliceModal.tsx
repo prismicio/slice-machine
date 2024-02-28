@@ -73,7 +73,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
           <InputBox
             name="sliceName"
             label="Slice Name"
-            data-cy="slice-name-input"
+            data-testid="slice-name-input"
             placeholder="Pascalised Slice API ID (e.g. TextBlock)"
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}

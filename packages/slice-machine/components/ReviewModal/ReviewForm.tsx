@@ -157,7 +157,7 @@ export const ReviewForm: FC<ReviewFormProps> = (props) => {
                   as={Textarea}
                   autoComplete="off"
                   sx={{ height: 80, mb: 3 }}
-                  data-cy="review-form-comment"
+                  data-testid="review-form-comment"
                 />
                 <Button
                   form={"review-form"}

@@ -39,7 +39,7 @@ const FieldZone = ({
             ref={provided.innerRef}
             {...provided.droppableProps}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            data-cy={dataCy}
+            data-testid={dataCy}
             sx={{ paddingInline: "16px !important" }}
           >
             {

@@ -146,7 +146,7 @@ const Changes: React.FunctionComponent = () => {
                 authStatus === AuthStatus.FORBIDDEN ||
                 isSyncing
               }
-              data-cy="push-changes"
+              data-testid="push-changes"
             >
               Push Changes
             </Button>

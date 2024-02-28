@@ -142,7 +142,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
 
                           formik.setValues(values, true);
                         }}
-                        data-cy="variation-name-input"
+                        data-testid="variation-name-input"
                       />
                     </Box>
                     <Box display="flex" flexDirection="column" gap={4}>
@@ -165,7 +165,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
                             camelCase(value.slice(0, 30)),
                           );
                         }}
-                        data-cy="variation-id-input"
+                        data-testid="variation-id-input"
                       />
                     </Box>
                   </ScrollArea>

@@ -68,7 +68,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
         {(provided) => (
           <Fragment>
             <Li
-              data-cy={dataCy}
+              data-testid={dataCy}
               ref={provided.innerRef}
               {...provided.draggableProps}
               Component={Box}
@@ -137,7 +137,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                           <Menu>
                             <MenuButton
                               className="sliceMenuButton"
-                              data-cy="field-menu-button"
+                              data-testid="field-menu-button"
                               style={{
                                 padding: "0",
                                 cursor: "pointer",

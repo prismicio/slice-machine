@@ -1,14 +1,14 @@
 class CreateCustomTypeModal {
   get root() {
-    return cy.get("[data-cy=create-ct-modal]");
+    return cy.get("[data-testid=create-ct-modal]");
   }
 
   get nameInput() {
-    return cy.get("input[data-cy=ct-name-input]");
+    return cy.get("input[data-testid=ct-name-input]");
   }
 
   get idInput() {
-    return cy.get("input[data-cy=ct-id-input]");
+    return cy.get("input[data-testid=ct-id-input]");
   }
 
   submit() {

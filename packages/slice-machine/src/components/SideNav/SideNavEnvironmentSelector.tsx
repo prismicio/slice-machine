@@ -55,7 +55,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
             kind={activeEnvironment?.kind ?? "prod"}
             asStatus={true}
             className={styles.activeEnvironmentDot}
-            data-cy="active-environment-dot"
+            data-testid="active-environment-dot"
           />
         )}
       </Box>
@@ -85,7 +85,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           <Text
             component="span"
             className={styles.activeEnvironmentName}
-            data-cy="active-environment-name"
+            data-testid="active-environment-name"
           >
             {isProductionEnvironmentActive || activeEnvironment === undefined
               ? "Production"

@@ -104,7 +104,7 @@ function ModalCard<Values extends FormikValues>({
           return (
             <Form
               id={formId}
-              {...(dataCy != null ? { "data-cy": dataCy } : null)}
+              {...(dataCy != null ? { "data-testid": dataCy } : null)}
             >
               <Card
                 borderFooter

@@ -1,10 +1,10 @@
 class UpdateSliceZoneModal {
   get root() {
-    return cy.get("[data-cy=update-slices-modal]");
+    return cy.get("[data-testid=update-slices-modal]");
   }
 
   selectSlice(sliceId) {
-    cy.get(`[data-cy=shared-slice-card-${sliceId}]`).click();
+    cy.get(`[data-testid=shared-slice-card-${sliceId}]`).click();
     return this;
   }
 

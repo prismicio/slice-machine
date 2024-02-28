@@ -337,13 +337,17 @@ describe("slices", () => {
       },
     });
 
-    const createOneButton = document.querySelector('[data-cy="create-slice"]');
+    const createOneButton = document.querySelector(
+      '[data-testid="create-slice"]',
+    );
     await act(async () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.click(createOneButton);
     });
 
-    const nameInput = document.querySelector('[data-cy="slice-name-input"]');
+    const nameInput = document.querySelector(
+      '[data-testid="slice-name-input"]',
+    );
     await act(async () => {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(nameInput, { target: { value: "FooBar" } });

@@ -7,7 +7,7 @@ export const RunningVersion: FC = () => {
   const sliceMachineRunningVersion = useSliceMachineRunningVersion();
 
   return (
-    <RightElement data-cy="slicemachine-version">
+    <RightElement data-testid="slicemachine-version">
       v{sliceMachineRunningVersion}
     </RightElement>
   );

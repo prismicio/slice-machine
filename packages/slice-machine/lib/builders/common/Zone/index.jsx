@@ -85,10 +85,10 @@ const Zone = ({
                 size="small"
                 // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
                 style={{ flexShrink: 0 }}
-                data-cy="code-snippets-switch"
+                data-testid="code-snippets-switch"
               />
               <Button
-                data-cy={`add-${
+                data-testid={`add-${
                   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                   isRepeatable ? "Repeatable" : "Static"
                 }-field`}

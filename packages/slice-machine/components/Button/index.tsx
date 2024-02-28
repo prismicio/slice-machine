@@ -7,7 +7,7 @@ export interface SmButtonProps extends ButtonProps {
   label: string;
   Icon?: IconType;
   isLoading?: boolean;
-  "data-cy"?: string;
+  "data-testid"?: string;
   iconSize?: number;
   iconFill?: string;
 }
@@ -72,7 +72,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
           <Spinner
             size={iconSize}
             color={spinnerColor(variant)}
-            data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
+            data-testid={cyIdBuilder(rest["data-testid"], "spinner")}
           />
           {Icon && label}
         </>
@@ -82,7 +82,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
             <Icon
               size={iconSize}
               fill={iconFill}
-              data-cy={cyIdBuilder(rest["data-cy"], "icon")}
+              data-testid={cyIdBuilder(rest["data-testid"], "icon")}
             />
           )}
           {label}

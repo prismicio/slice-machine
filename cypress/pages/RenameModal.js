@@ -25,8 +25,8 @@ class RenameModal {
 class CustomTypeRenameModal extends RenameModal {
   constructor() {
     super(
-      "[data-cy=rename-custom-type-modal]",
-      '[data-cy="custom-type-name-input"]',
+      "[data-testid=rename-custom-type-modal]",
+      '[data-testid="custom-type-name-input"]',
     );
   }
 }
@@ -35,7 +35,10 @@ export const customTypeRenameModal = new CustomTypeRenameModal();
 
 class SliceRenameModal extends RenameModal {
   constructor() {
-    super("[data-cy=rename-slice-modal]", '[data-cy="slice-name-input"]');
+    super(
+      "[data-testid=rename-slice-modal]",
+      '[data-testid="slice-name-input"]',
+    );
   }
 }
 
