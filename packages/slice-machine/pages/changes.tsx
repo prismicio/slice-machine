@@ -1,4 +1,3 @@
-import { Button } from "@prismicio/editor-ui";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import Head from "next/head";
@@ -15,6 +14,7 @@ import {
 import { ChangesItems } from "@components/ChangesItems";
 import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
 import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
+import { PushChangesButton } from "@src/features/changes/PushChangesButton";
 import { AuthStatus } from "@src/modules/userContext/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
@@ -136,9 +136,7 @@ const Changes: React.FunctionComponent = () => {
         <AppLayoutHeader>
           <AppLayoutBreadcrumb folder="Changes" />
           <AppLayoutActions>
-            <Button
-              onClick={() => void onPush(false)} // not deleting documents by default
-              loading={isSyncing}
+            <PushChangesButton
               disabled={
                 numberOfChanges === 0 ||
                 !isOnline ||
@@ -146,10 +144,11 @@ const Changes: React.FunctionComponent = () => {
                 authStatus === AuthStatus.FORBIDDEN ||
                 isSyncing
               }
-              data-testid="push-changes"
-            >
-              Push Changes
-            </Button>
+              loading={isSyncing}
+              onClick={() => {
+                void onPush(false); // not deleting documents by default
+              }}
+            />
           </AppLayoutActions>
         </AppLayoutHeader>
         <AppLayoutContent>

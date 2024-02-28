@@ -68,48 +68,49 @@ To open a downloaded CI test report from anywhere in your computer:
 
 ## Creating tests
 
-### `test.run()`
+### `test()`
 
-Use `test.run()` to create a test. `run` function take an optional object parameter `options` that let you configure how you want to run the test.
-You can configure if you want an onboarded test. Default is onboarded.
+Use `test()` to create a test. Optionally call `test.use()` to specify options to use in a single test file or a `test.describe()` group.
+With `test.use()`, you can configure if you want an onboarded test. Default is onboarded.
 
 Example for user not onboarded:
 
 ```ts
-test.run({ loggedIn: true, onboarded: false })(
-  "I can ...",
-  async ({ sliceBuilderPage, slicesListPage }) => {
-    // Test content
-  },
-);
+test.use({ loggedIn: true, onboarded: false });
+
+test("I can ...", async ({ sliceBuilderPage, slicesListPage }) => {
+  // Test content
+});
 ```
 
 You can also override default storage values:
 
 Example (redux):
 ```ts
-test.run({
+test.use({
   onboarded: false,
   reduxStorage: {
     lastSyncChange: new Date().getTime(),
   },
-})("I can ...", async ({ sliceBuilderPage, slicesListPage }) => {
+});
+
+test("I can ...", async ({ sliceBuilderPage, slicesListPage }) => {
   // Test content
 });
 ```
 
 Example (new way):
 ```ts
-test.run({ 
-  onboarded: false, 
+test.use({
+  onboarded: false,
   storage: {
     isInAppGuideOpen: true,
   },
-})("I can ...", 
-  async ({ sliceBuilderPage, slicesListPage }) => {
-    // Test content
-  },
-);
+});
+
+test("I can ...", async ({ sliceBuilderPage, slicesListPage }) => {
+  // Test content
+});
 ```
 
 ### Mocking with `procedures.mock`
@@ -117,7 +118,7 @@ test.run({
 Use the `procedures` fixture to mock manager procedure responses:
 
 ```ts
-test.run()("I can ...", async ({ procedures }) => {
+test("I can ...", async ({ procedures }) => {
   await procedures.mock("getState", ({ data }) => {
     return {
       ...data,
@@ -132,7 +133,7 @@ test.run()("I can ...", async ({ procedures }) => {
 If you don't need the unmocked procedure's data or don't want the manager to execute the procedure at all, you can disable the unmocked procedure with the `execute` option:
 
 ```ts
-test.run()(
+test(
   "I can ...",
   async ({ procedures }) => {
     await procedures.mock("project.checkIsTypeScript", () => false);
@@ -144,7 +145,7 @@ test.run()(
 If you only want the procedure to be mocked a set number of times, set the `times` option to the number of times you want it to be mocked:
 
 ```ts
-test.run()("I can ...", async ({ procedures }) => {
+test("I can ...", async ({ procedures }) => {
   await procedures.mock(
     "getState",
     ({ data }) => {
@@ -161,7 +162,7 @@ test.run()("I can ...", async ({ procedures }) => {
 You may stack `procedure.mock` calls as many times and anywhere you want. The most recent mock for a procedure will be used first.
 
 ```ts
-test.run()("I can ...", async ({ procedures }) => {
+test("I can ...", async ({ procedures }) => {
   await procedures.mock("project.checkIsTypeScript", () => false);
   // `project.checkIsTypeScript` will return `false`
 
@@ -264,7 +265,7 @@ Start the test name with "I" so you prevent yourself testing implementation deta
 Example:
 
 ```ts
-test.run()("I can create a slice", async () => {
+test("I can create a slice", async () => {
   // Test content
 });
 ```
@@ -276,30 +277,24 @@ Directly checking that a locator is not visible is not correct if the page is cu
 Example (bad):
 
 ```ts
-test.run()(
-    "I cannot see the updates available warning",
-    async ({ pageTypesTablePage }) => {
-      await pageTypesTablePage.goto();
-      await expect(
-        pageTypesTablePage.menu.updatesAvailableTitle,
-      ).not.toBeVisible();
-    },
-);
+test("I cannot see the updates available warning", async ({
+  pageTypesTablePage,
+}) => {
+  await pageTypesTablePage.goto();
+  await expect(pageTypesTablePage.menu.updatesAvailableTitle).not.toBeVisible();
+});
 ```
 
 Example (good):
 
 ```ts
-test.run()(
-    "I cannot see the updates available warning",
-    async ({ pageTypesTablePage }) => {
-      await pageTypesTablePage.goto();
-      await expect(pageTypesTablePage.menu.appVersion).toBeVisible();
-      await expect(
-        pageTypesTablePage.menu.updatesAvailableTitle,
-      ).not.toBeVisible();
-    },
-);
+test("I cannot see the updates available warning", async ({
+  pageTypesTablePage,
+}) => {
+  await pageTypesTablePage.goto();
+  await expect(pageTypesTablePage.menu.appVersion).toBeVisible();
+  await expect(pageTypesTablePage.menu.updatesAvailableTitle).not.toBeVisible();
+});
 ```
 
 > [!NOTE]

@@ -33,7 +33,7 @@ export class ChangesPage extends SliceMachinePage {
     this.loginButton = this.body.getByText("Log in to Prismic", {
       exact: true,
     });
-    this.pushChangesButton = page.getByText("Push Changes", { exact: true });
+    this.pushChangesButton = page.getByText("Push", { exact: true });
     this.pushedMessaged = page.getByText(
       "All slices and types have been pushed",
       { exact: true },
