@@ -140,13 +140,20 @@ test.run()(
 );
 
 test.run()(
-  "I can see the blank slate message when I don't have any custom types",
+  "I can see the blank slate message when I don't have any page types",
   async ({ pageTypesTablePage, procedures }) => {
-    procedures.mock(
-      "customTypes.readAllCustomTypes",
-      () => ({ models: [], errors: [] }),
-      { execute: false },
+    procedures.mock("getState", ({ data }) => ({
+      ...(data as Record<string, unknown>),
+      customTypes: [],
+    }));
+    await pageTypesTablePage.goto();
+
+    await pageTypesTablePage.checkBlankSlateContainsText(
+      "Page types are models that your editors will use to create website pages in the Page Builder.",
     );
+    await expect(pageTypesTablePage.blankSlateCreateAction).toBeVisible();
+  },
+);
     await pageTypesTablePage.goto();
 
     await expect(pageTypesTablePage.blankSlate).toBeVisible();

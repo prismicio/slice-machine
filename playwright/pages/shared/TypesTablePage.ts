@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 import { CreateTypeDialog } from "../components/CreateTypeDialog";
 import { RenameTypeDialog } from "../components/RenameTypeDialog";
@@ -14,6 +14,7 @@ export class TypesTablePage extends SliceMachinePage {
   readonly createButton: Locator;
   readonly actionIcon: Locator;
   readonly blankSlate: Locator;
+  readonly blankSlateCreateAction: Locator;
 
   protected constructor(
     page: Page,
@@ -49,6 +50,10 @@ export class TypesTablePage extends SliceMachinePage {
       );
     this.actionIcon = page.getByTestId("ct-action-icon");
     this.blankSlate = page.getByTestId("blank-slate");
+    this.blankSlateCreateAction = this.blankSlate.getByRole("button", {
+      name: "Create",
+      exact: true,
+    });
   }
 
   /**
@@ -89,5 +94,7 @@ export class TypesTablePage extends SliceMachinePage {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkBlankSlateContainsText(text: string) {
+    await expect(this.blankSlate).toContainText(text);
+  }
 }
