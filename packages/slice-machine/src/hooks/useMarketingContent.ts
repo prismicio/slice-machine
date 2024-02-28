@@ -23,7 +23,7 @@ const CONTENT_BY_ADAPTER: Record<string, MarketingContent> = {
   "@slicemachine/adapter-next": {
     tutorial: {
       link: {
-        title: "Academy",
+        title: "Learn Prismic",
         url: "https://prismic.io/academy/prismic-and-nextjs",
       },
       tooltip: {
@@ -44,7 +44,7 @@ const CONTENT_BY_ADAPTER: Record<string, MarketingContent> = {
 const DEFAULT_CONTENT: MarketingContent = {
   tutorial: {
     link: {
-      title: "Tutorial",
+      title: "Learn Prismic",
       url: "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH",
     },
     tooltip: {
