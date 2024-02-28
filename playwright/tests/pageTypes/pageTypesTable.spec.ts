@@ -154,8 +154,25 @@ test.run()(
     await expect(pageTypesTablePage.blankSlateCreateAction).toBeVisible();
   },
 );
-    await pageTypesTablePage.goto();
 
-    await expect(pageTypesTablePage.blankSlate).toBeVisible();
+test.run()(
+  "I can create a new page type from the blank slate",
+  async ({ pageTypesTablePage, pageTypesBuilderPage, procedures }) => {
+    procedures.mock("getState", ({ data }) => ({
+      ...(data as Record<string, unknown>),
+      customTypes: [],
+    }));
+    await pageTypesTablePage.goto();
+    await pageTypesTablePage.blankSlateCreateAction.click();
+
+    const name = "Page Type " + generateRandomId();
+    await pageTypesTablePage.createTypeDialog.createType(name, "reusable");
+
+    // TODO(DT-1801): Production BUG - When creating a page type, don't redirect
+    // to the builder page until the page type is created
+    procedures.unmock("getState");
+    await pageTypesBuilderPage.goto(name);
+
+    await expect(pageTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
   },
 );
