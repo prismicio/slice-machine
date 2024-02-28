@@ -116,7 +116,6 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
       aria-label={`${slice.model.name} ${variation.name} slice card`}
       checked={selected}
       data-testid="shared-slice-card"
-      data-testid="shared-slice-card"
       {...modeProps}
       {...variantProps}
     >

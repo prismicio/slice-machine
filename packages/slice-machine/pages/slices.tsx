@@ -83,7 +83,6 @@ const SlicesIndex: React.FunctionComponent = () => {
             <AppLayoutActions>
               <Button
                 data-testid="create-slice"
-                data-testid="create-slice"
                 onClick={() => {
                   setIsCreateSliceModalOpen(true);
                 }}
