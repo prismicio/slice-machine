@@ -13,10 +13,6 @@ test("I can create a reusable page type", async ({
   const name = "Page Type " + generateRandomId();
   await pageTypesTablePage.createTypeDialog.createType(name, "reusable");
 
-  // TODO(DT-1801): Production BUG - When creating a page type, don't redirect
-  // to the builder page until the page type is created
-  await pageTypesBuilderPage.goto(name);
-
   await expect(pageTypesBuilderPage.sliceZoneBlankSlateTitle).toBeVisible();
   await pageTypesBuilderPage.sliceZoneBlankSlateUseTemplateAction.click();
   await pageTypesBuilderPage.useTemplateSlicesDialog.useTemplates([
@@ -55,10 +51,6 @@ test("I can create a single page type", async ({
 
   const name = "Page Type " + generateRandomId();
   await pageTypesTablePage.createTypeDialog.createType(name, "single");
-
-  // TODO(DT-1801): Production BUG - When creating a page type, don't redirect
-  // to the builder page until the page type is created
-  await pageTypesBuilderPage.goto(name);
 
   await expect(pageTypesBuilderPage.sliceZoneBlankSlateTitle).toBeVisible();
   await pageTypesBuilderPage.sliceZoneBlankSlateUseTemplateAction.click();
@@ -163,11 +155,6 @@ test("I can create a new page type from the blank slate", async ({
 
   const name = "Page Type " + generateRandomId();
   await pageTypesTablePage.createTypeDialog.createType(name, "reusable");
-
-  // TODO(DT-1801): Production BUG - When creating a page type, don't redirect
-  // to the builder page until the page type is created
-  procedures.unmock("getState");
-  await pageTypesBuilderPage.goto(name);
 
   await expect(pageTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
 });

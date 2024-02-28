@@ -13,10 +13,6 @@ test("I can create a reusable custom type", async ({
   const name = "Custom Type " + generateRandomId();
   await customTypesTablePage.createTypeDialog.createType(name, "reusable");
 
-  // TODO(DT-1801): Production BUG - When creating a custom type, don't redirect
-  // to the builder page until the custom  type is created
-  await customTypesBuilderPage.goto(name);
-
   await expect(customTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
 
   await expect(customTypesBuilderPage.tab).toHaveCount(1);
@@ -40,10 +36,6 @@ test("I can create a single custom type", async ({
 
   const name = "Custom Type " + generateRandomId();
   await customTypesTablePage.createTypeDialog.createType(name, "single");
-
-  // TODO(DT-1801): Production BUG - When creating a custom type, don't redirect
-  // to the builder page until the custom  type is created
-  await customTypesBuilderPage.goto(name);
 
   await expect(customTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
 
