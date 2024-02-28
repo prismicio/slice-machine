@@ -120,3 +120,35 @@ test.run()(
     await expect(pageTypesTablePage.getRow(newPageTypeName)).toBeVisible();
   },
 );
+
+test.run()(
+  "I can delete a page type",
+  async ({ pageTypesTablePage, reusablePageType }) => {
+    await pageTypesTablePage.goto();
+    await pageTypesTablePage.openActionMenu(reusablePageType.name, "Remove");
+
+    await pageTypesTablePage.deleteTypeDialog.deleteType();
+
+    await expect(
+      pageTypesTablePage.getRow(reusablePageType.name),
+    ).not.toBeVisible();
+    await pageTypesTablePage.page.reload();
+    await expect(
+      pageTypesTablePage.getRow(reusablePageType.name),
+    ).not.toBeVisible();
+  },
+);
+
+test.run()(
+  "I can see the blank slate message when I don't have any custom types",
+  async ({ pageTypesTablePage, procedures }) => {
+    procedures.mock(
+      "customTypes.readAllCustomTypes",
+      () => ({ models: [], errors: [] }),
+      { execute: false },
+    );
+    await pageTypesTablePage.goto();
+
+    await expect(pageTypesTablePage.blankSlate).toBeVisible();
+  },
+);
