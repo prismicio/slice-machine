@@ -13,7 +13,7 @@ export interface SmButtonProps extends ButtonProps {
 }
 
 // Small helper to allow us to target spinner and icon in the CY
-const cyIdBuilder = (dataCy: string | undefined, id: string) => {
+const testIdBuilder = (dataCy: string | undefined, id: string) => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (dataCy) return `${dataCy}-${id}`;
   return "";
@@ -72,7 +72,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
           <Spinner
             size={iconSize}
             color={spinnerColor(variant)}
-            data-testid={cyIdBuilder(rest["data-testid"], "spinner")}
+            data-testid={testIdBuilder(rest["data-testid"], "spinner")}
           />
           {Icon && label}
         </>
@@ -82,7 +82,7 @@ export const Button = forwardRef<HTMLButtonElement, SmButtonProps>(
             <Icon
               size={iconSize}
               fill={iconFill}
-              data-testid={cyIdBuilder(rest["data-testid"], "icon")}
+              data-testid={testIdBuilder(rest["data-testid"], "icon")}
             />
           )}
           {label}
