@@ -67,7 +67,7 @@ export class MockManagerProcedures {
   }
 
   unmock(path: string) {
-    this.procedures.set(path, []);
+    this.procedures.delete(path);
   }
 
   async #handleRoute(route: Route) {
