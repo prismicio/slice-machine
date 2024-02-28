@@ -13,9 +13,9 @@ export interface SmButtonProps extends ButtonProps {
 }
 
 // Small helper to allow us to target spinner and icon in the CY
-const testIdBuilder = (dataCy: string | undefined, id: string) => {
+const testIdBuilder = (testId: string | undefined, id: string) => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (dataCy) return `${dataCy}-${id}`;
+  if (testId) return `${testId}-${id}`;
   return "";
 };
 

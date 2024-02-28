@@ -67,7 +67,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   return (
     <ModalFormCard
       isOpen
-      dataCy="rename-custom-type-modal"
+      testId="rename-custom-type-modal"
       widthInPx="530px"
       formId={`rename-custom-type-modal-${customTypeId}`}
       buttonLabel="Rename"
@@ -119,7 +119,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
               plural: false,
             })}`}
             error={errors.customTypeName}
-            dataCy="custom-type-name-input"
+            testId="custom-type-name-input"
           />
         </Box>
       )}

@@ -51,7 +51,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
 
   return (
     <ModalFormCard<SliceModalValues>
-      dataCy="rename-slice-modal"
+      testId="rename-slice-modal"
       isOpen={isOpen}
       widthInPx="530px"
       formId={`rename-slice-modal-${slice?.model.id ?? ""}`}
@@ -77,7 +77,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
             placeholder="Pascalised Slice API ID (e.g. TextBlock)"
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}
-            dataCy="slice-name-input"
+            testId="slice-name-input"
           />
         </Box>
       )}

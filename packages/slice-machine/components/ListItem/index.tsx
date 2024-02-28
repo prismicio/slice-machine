@@ -34,7 +34,7 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   CustomEditElements?: JSX.Element[];
   widget: Widget<F, S>;
   draggableId: string;
-  dataCy: string;
+  testId: string;
   isRepeatableCustomType?: boolean;
   children: React.ReactNode;
 }
@@ -51,7 +51,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
   CustomEditElements,
   widget,
   draggableId,
-  dataCy,
+  testId,
   isRepeatableCustomType,
   children,
 }: ListItemProps<F, S>): JSX.Element {
@@ -68,7 +68,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
         {(provided) => (
           <Fragment>
             <Li
-              data-testid={dataCy}
+              data-testid={testId}
               ref={provided.innerRef}
               {...provided.draggableProps}
               Component={Box}

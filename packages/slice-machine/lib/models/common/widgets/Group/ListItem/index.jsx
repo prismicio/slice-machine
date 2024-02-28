@@ -209,7 +209,7 @@ const CustomListItem = ({
                             `data.${groupItem.key}.${key}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                           draggableId: `group-${groupItem.key}-${item.key}-${index}`,
-                          dataCy: `list-item-group-${groupItem.key}-${item.key}`,
+                          testId: `list-item-group-${groupItem.key}-${item.key}`,
                         };
 
                         const HintElement = (

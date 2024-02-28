@@ -26,7 +26,7 @@ const Zone = ({
   dataTip /* text info to display as tip */,
   renderHintBase /* render base (eg. path to slice) content for hints */,
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
-  dataCy,
+  testId,
   isRepeatableCustomType,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -141,7 +141,7 @@ const Zone = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               onDeleteItem={onDeleteItem}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              dataCy={dataCy}
+              testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               isRepeatableCustomType={isRepeatableCustomType}
               newField={

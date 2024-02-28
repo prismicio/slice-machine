@@ -48,7 +48,7 @@ type ModalCardProps<T extends FormikValues> = {
   cardProps?: ComponentPropsWithoutRef<typeof Card>;
   omitFooter?: boolean;
   isLoading?: boolean;
-  dataCy?: string;
+  testId?: string;
   actionMessage?: ((props: FormikProps<T>) => ReactNode) | ReactNode;
 };
 
@@ -66,7 +66,7 @@ function ModalCard<Values extends FormikValues>({
   omitFooter = false,
   isLoading = false,
   buttonLabel = "Save",
-  dataCy,
+  testId,
   actionMessage,
 }: ModalCardProps<Values>): JSX.Element {
   Modal.setAppElement("#__next");
@@ -106,7 +106,7 @@ function ModalCard<Values extends FormikValues>({
           return (
             <Form
               id={formId}
-              {...(dataCy != null ? { "data-testid": dataCy } : null)}
+              {...(testId != null ? { "data-testid": testId } : null)}
             >
               <Card
                 borderFooter

@@ -237,7 +237,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
                 `data${transformKeyAccessor(key)}`
               }
-              dataCy="static-zone-content"
+              testId="static-zone-content"
               isRepeatableCustomType={customType.repeatable}
             />
           ) : undefined}

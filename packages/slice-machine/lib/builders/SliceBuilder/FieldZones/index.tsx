@@ -166,7 +166,7 @@ const FieldZones: FC = () => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.primary${transformKeyAccessor(key)}`
         }
-        dataCy="static-zone-content"
+        testId="static-zone-content"
         isRepeatableCustomType={undefined}
       />
       <Zone
@@ -191,7 +191,7 @@ const FieldZones: FC = () => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.items[i]${transformKeyAccessor(key)}`
         }
-        dataCy="slice-repeatable-zone"
+        testId="slice-repeatable-zone"
         isRepeatableCustomType={undefined}
       />
     </List>

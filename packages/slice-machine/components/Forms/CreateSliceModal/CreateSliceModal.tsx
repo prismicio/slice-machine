@@ -55,7 +55,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
 
   return (
     <ModalFormCard
-      dataCy="create-slice-modal"
+      testId="create-slice-modal"
       isOpen
       widthInPx="530px"
       isLoading={isCreatingSlice}
@@ -84,7 +84,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
             placeholder="Pascalised Slice API ID (e.g. TextBlock)"
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}
-            dataCy="slice-name-input"
+            testId="slice-name-input"
           />
           <Label htmlFor="from" sx={{ mb: 2 }}>
             Target Library
