@@ -66,6 +66,10 @@ export class MockManagerProcedures {
     ]);
   }
 
+  unmock(path: string) {
+    this.procedures.set(path, []);
+  }
+
   async #handleRoute(route: Route) {
     const postDataBuffer = route.request().postDataBuffer() as Buffer;
     const postData = decode(postDataBuffer) as {
