@@ -1,16 +1,20 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 import { CreateTypeDialog } from "../components/CreateTypeDialog";
 import { RenameTypeDialog } from "../components/RenameTypeDialog";
+import { DeleteTypeDialog } from "../components/DeleteTypeDialog";
 import { SliceMachinePage } from "../SliceMachinePage";
 
 export class TypesTablePage extends SliceMachinePage {
   readonly createTypeDialog: CreateTypeDialog;
   readonly renameTypeDialog: RenameTypeDialog;
+  readonly deleteTypeDialog: DeleteTypeDialog;
   readonly path: string;
   readonly breadcrumbLabel: Locator;
   readonly createButton: Locator;
   readonly actionIcon: Locator;
+  readonly blankSlate: Locator;
+  readonly blankSlateCreateAction: Locator;
 
   protected constructor(
     page: Page,
@@ -28,6 +32,7 @@ export class TypesTablePage extends SliceMachinePage {
      */
     this.createTypeDialog = new CreateTypeDialog(page, format);
     this.renameTypeDialog = new RenameTypeDialog(page, format);
+    this.deleteTypeDialog = new DeleteTypeDialog(page, format);
 
     /**
      * Static locators
@@ -44,6 +49,11 @@ export class TypesTablePage extends SliceMachinePage {
           .getByRole("button", { name: "Create", exact: true }),
       );
     this.actionIcon = page.getByTestId("ct-action-icon");
+    this.blankSlate = page.getByTestId("blank-slate");
+    this.blankSlateCreateAction = this.blankSlate.getByRole("button", {
+      name: "Create",
+      exact: true,
+    });
   }
 
   /**
@@ -72,7 +82,7 @@ export class TypesTablePage extends SliceMachinePage {
     await this.createButton.first().click();
   }
 
-  async openActionMenu(name: string, action: "Rename" | "Delete") {
+  async openActionMenu(name: string, action: "Rename" | "Remove") {
     await this.getRow(name)
       .getByRole("button", { name: "Custom type actions", exact: true })
       .click();
@@ -84,5 +94,7 @@ export class TypesTablePage extends SliceMachinePage {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkBlankSlateContainsText(text: string) {
+    await expect(this.blankSlate).toContainText(text);
+  }
 }

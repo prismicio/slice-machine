@@ -13,10 +13,6 @@ test("I can create a reusable page type", async ({
   const name = "Page Type " + generateRandomId();
   await pageTypesTablePage.createTypeDialog.createType(name, "reusable");
 
-  // TODO(DT-1801): Production BUG - When creating a page type, don't redirect
-  // to the builder page until the page type is created
-  await pageTypesBuilderPage.goto(name);
-
   await expect(pageTypesBuilderPage.sliceZoneBlankSlateTitle).toBeVisible();
   await pageTypesBuilderPage.sliceZoneBlankSlateUseTemplateAction.click();
   await pageTypesBuilderPage.useTemplateSlicesDialog.useTemplates([
@@ -55,10 +51,6 @@ test("I can create a single page type", async ({
 
   const name = "Page Type " + generateRandomId();
   await pageTypesTablePage.createTypeDialog.createType(name, "single");
-
-  // TODO(DT-1801): Production BUG - When creating a page type, don't redirect
-  // to the builder page until the page type is created
-  await pageTypesBuilderPage.goto(name);
 
   await expect(pageTypesBuilderPage.sliceZoneBlankSlateTitle).toBeVisible();
   await pageTypesBuilderPage.sliceZoneBlankSlateUseTemplateAction.click();
@@ -113,4 +105,56 @@ test("I can rename a page type", async ({
   await pageTypesTablePage.page.reload();
 
   await expect(pageTypesTablePage.getRow(newPageTypeName)).toBeVisible();
+});
+
+test("I can delete a page type", async ({
+  pageTypesTablePage,
+  reusablePageType,
+}) => {
+  await pageTypesTablePage.goto();
+  await pageTypesTablePage.openActionMenu(reusablePageType.name, "Remove");
+
+  await pageTypesTablePage.deleteTypeDialog.deleteType();
+
+  await expect(
+    pageTypesTablePage.getRow(reusablePageType.name),
+  ).not.toBeVisible();
+  await pageTypesTablePage.page.reload();
+  await expect(
+    pageTypesTablePage.getRow(reusablePageType.name),
+  ).not.toBeVisible();
+});
+
+test("I can see the blank slate message when I don't have any page types", async ({
+  pageTypesTablePage,
+  procedures,
+}) => {
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    customTypes: [],
+  }));
+  await pageTypesTablePage.goto();
+
+  await pageTypesTablePage.checkBlankSlateContainsText(
+    "Page types are models that your editors will use to create website pages in the Page Builder.",
+  );
+  await expect(pageTypesTablePage.blankSlateCreateAction).toBeVisible();
+});
+
+test("I can create a new page type from the blank slate", async ({
+  pageTypesTablePage,
+  pageTypesBuilderPage,
+  procedures,
+}) => {
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    customTypes: [],
+  }));
+  await pageTypesTablePage.goto();
+  await pageTypesTablePage.blankSlateCreateAction.click();
+
+  const name = "Page Type " + generateRandomId();
+  await pageTypesTablePage.createTypeDialog.createType(name, "reusable");
+
+  await expect(pageTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
 });
