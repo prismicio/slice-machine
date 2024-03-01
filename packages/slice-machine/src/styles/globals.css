@@ -5,3 +5,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Hide Next.js's error overlay so that it doesn't hide our own UI. */
+nextjs-portal {
+  display: none;
+}
