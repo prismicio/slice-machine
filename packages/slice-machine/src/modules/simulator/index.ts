@@ -8,17 +8,11 @@ import {
   put,
   select,
   takeLeading,
-  takeLatest,
   race,
   take,
   delay,
 } from "redux-saga/effects";
-import {
-  checkSimulatorSetup,
-  getSimulatorSetupSteps,
-  saveSliceMock,
-  SaveSliceMockRequest,
-} from "@src/apiClient";
+import { checkSimulatorSetup, getSimulatorSetupSteps } from "@src/apiClient";
 import {
   selectIsSimulatorAvailableForFramework,
   updateManifestCreator,
@@ -26,9 +20,6 @@ import {
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
-
-import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { updateSliceMock } from "../slices";
 
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
@@ -40,7 +31,6 @@ export const initialState: SimulatorStoreType = {
     manifest: null,
   },
   isWaitingForIframeCheck: false,
-  savingMock: false,
 };
 
 export const checkSimulatorSetupCreator = createAsyncAction(
@@ -67,20 +57,11 @@ export const connectToSimulatorIframeCreator = createAsyncAction(
   "SIMULATOR/CONNECT_TO_SIMULATOR_IFRAME.FAILURE",
 )<undefined, undefined, undefined>();
 
-export const saveSliceMockCreator = createAsyncAction(
-  "SIMULATOR/SAVE_MOCK.REQUEST",
-  "SIMULATOR/SAVE_MOCK.SUCCESS",
-  "SIMULATOR/SAVE_MOCK.FAILURE",
-)<SaveSliceMockRequest, undefined, undefined>();
-
 type SimulatorActions = ActionType<
   | typeof connectToSimulatorIframeCreator.success
   | typeof connectToSimulatorIframeCreator.request
   | typeof connectToSimulatorIframeCreator.failure
   | typeof checkSimulatorSetupCreator.success
-  | typeof saveSliceMockCreator.request
-  | typeof saveSliceMockCreator.success
-  | typeof saveSliceMockCreator.failure
   | typeof checkSimulatorSetupCreator.failure
 >;
 
@@ -101,9 +82,6 @@ export const selectIframeStatus = (
 export const selectSetupSteps = (
   state: SliceMachineStoreType,
 ): SimulatorStoreType["setupSteps"] => state.simulator.setupSteps;
-
-export const selectSavingMock = (state: SliceMachineStoreType): boolean =>
-  state.simulator.savingMock;
 
 // Reducer
 export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
@@ -148,26 +126,6 @@ export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
           manifest: "ok",
         },
       };
-    case getType(saveSliceMockCreator.request): {
-      return {
-        ...state,
-        savingMock: true,
-      };
-    }
-
-    case getType(saveSliceMockCreator.success): {
-      return {
-        ...state,
-        savingMock: false,
-      };
-    }
-
-    case getType(saveSliceMockCreator.failure): {
-      return {
-        ...state,
-        savingMock: false,
-      };
-    }
     default:
       return state;
   }
@@ -247,36 +205,6 @@ export function* failCheckSetupSaga({
   yield put(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 }
 
-export function* saveSliceMockSaga({
-  payload,
-}: ReturnType<typeof saveSliceMockCreator.request>): Generator {
-  try {
-    const { errors } = (yield call(saveSliceMock, payload)) as Awaited<
-      ReturnType<typeof saveSliceMock>
-    >;
-    if (errors.length) {
-      throw errors;
-    }
-    yield put(
-      openToasterCreator({
-        type: ToasterType.SUCCESS,
-        content: "Saved",
-      }),
-    );
-    yield put(updateSliceMock(payload));
-
-    yield put(saveSliceMockCreator.success());
-  } catch (error) {
-    yield put(
-      openToasterCreator({
-        type: ToasterType.ERROR,
-        content: "Error saving content",
-      }),
-    );
-    yield put(saveSliceMockCreator.failure());
-  }
-}
-
 // Saga watchers
 function* watchCheckSetup() {
   yield takeLeading(
@@ -295,16 +223,8 @@ function* watchIframeCheck() {
   );
 }
 
-function* watchSaveSliceMock() {
-  yield takeLatest(
-    getType(saveSliceMockCreator.request),
-    withLoader(saveSliceMockSaga, LoadingKeysEnum.SIMULATOR_SAVE_MOCK),
-  );
-}
-
 // Saga Exports
 export function* watchSimulatorSagas() {
   yield fork(watchCheckSetup);
-  yield fork(watchSaveSliceMock);
   yield fork(watchIframeCheck);
 }

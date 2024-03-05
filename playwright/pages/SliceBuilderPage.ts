@@ -16,6 +16,7 @@ export class SliceBuilderPage extends BuilderPage {
   readonly renameVariationDialog: RenameVariationDialog;
   readonly deleteVariationDialog: DeleteVariationDialog;
   readonly updateScreenshotDialog: UpdateScreenshotDialog;
+  readonly simulateButton: Locator;
   readonly simulateTooltipTitle: Locator;
   readonly simulateTooltipCloseButton: Locator;
   readonly variationCards: Locator;
@@ -42,6 +43,7 @@ export class SliceBuilderPage extends BuilderPage {
      * Static locators
      */
     // Global
+    this.simulateButton = page.getByText("Simulate", { exact: true });
     this.simulateTooltipTitle = page.getByText("Simulate your slices");
     this.simulateTooltipCloseButton = page.getByText("Got it");
     // Variations
