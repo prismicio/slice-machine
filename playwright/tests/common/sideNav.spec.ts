@@ -108,7 +108,7 @@ test("I cannot see the updates available warning", async ({
   await expect(pageTypesTablePage.menu.updatesAvailableTitle).not.toBeVisible();
 });
 
-test.describe(() => {
+test.describe("Tutorial tooltip", () => {
   test.use({
     onboarded: false,
     reduxStorage: {
@@ -152,4 +152,18 @@ test.describe(() => {
       sliceMachinePage.menu.tutorialVideoTooltipTitle,
     ).not.toBeVisible();
   });
+});
+
+test('I can access the Academy from the "Learn Prismic" link', async ({
+  sliceMachinePage,
+}) => {
+  await sliceMachinePage.gotoDefaultPage();
+  await expect(sliceMachinePage.menu.learnPrismicLink).toBeVisible();
+
+  await sliceMachinePage.menu.learnPrismicLink.click();
+
+  const newTab = await sliceMachinePage.page.waitForEvent("popup");
+  await newTab.waitForLoadState();
+
+  await expect(newTab).toHaveTitle(/Prismic Academy/);
 });

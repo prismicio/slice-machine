@@ -10,7 +10,7 @@ export class Menu {
   readonly customTypesLink: Locator;
   readonly slicesLink: Locator;
   readonly changesLink: Locator;
-  readonly tutorialLink: Locator;
+  readonly learnPrismicLink: Locator;
   readonly settingsLink: Locator;
   readonly changelogLink: Locator;
   readonly appVersion: Locator;
@@ -50,8 +50,8 @@ export class Menu {
     this.changesLink = this.menu.getByRole("button", {
       name: "Review changes",
     });
-    this.tutorialLink = this.menu.getByRole("link", {
-      name: "Tutorials",
+    this.learnPrismicLink = this.menu.getByRole("link", {
+      name: "Learn Prismic",
       exact: true,
     });
     this.settingsLink = this.menu.getByRole("link", {
