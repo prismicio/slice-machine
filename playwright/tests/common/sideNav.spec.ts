@@ -160,9 +160,10 @@ test('I can access the Academy from the "Learn Prismic" link', async ({
   await sliceMachinePage.gotoDefaultPage();
   await expect(sliceMachinePage.menu.learnPrismicLink).toBeVisible();
 
+  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
   await sliceMachinePage.menu.learnPrismicLink.click();
 
-  const newTab = await sliceMachinePage.page.waitForEvent("popup");
+  const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
   await expect(newTab).toHaveTitle(/Prismic Academy/);
