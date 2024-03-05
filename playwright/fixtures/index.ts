@@ -12,6 +12,7 @@ import { SliceBuilderPage } from "../pages/SliceBuilderPage";
 import { ChangesPage } from "../pages/ChangesPage";
 import { SettingsPage } from "../pages/SettingsPage";
 import { ChangelogPage } from "../pages/ChangelogPage";
+import { SimulatorPage } from "../pages/SimulatorPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
 import config from "../playwright.config";
@@ -37,6 +38,7 @@ type Fixtures = {
   changesPage: ChangesPage;
   settingsPage: SettingsPage;
   changelogPage: ChangelogPage;
+  simulatorPage: SimulatorPage;
 
   /**
    * Data
@@ -90,6 +92,9 @@ export const test = baseTest.extend<Options & Fixtures>({
   },
   changelogPage: async ({ page }, use) => {
     await use(new ChangelogPage(page));
+  },
+  simulatorPage: async ({ page }, use) => {
+    await use(new SimulatorPage(page));
   },
 
   /**

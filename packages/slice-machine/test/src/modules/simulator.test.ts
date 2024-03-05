@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { describe, test, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   initialState,
@@ -8,8 +8,6 @@ import {
   connectToSimulatorIframeCreator,
   checkSimulatorSetupCreator,
   failCheckSetupSaga,
-  saveSliceMockSaga,
-  saveSliceMockCreator,
 } from "@src/modules/simulator";
 import { select } from "redux-saga/effects";
 import { testSaga, expectSaga } from "redux-saga-test-plan";
@@ -20,16 +18,10 @@ import {
   selectIsSimulatorAvailableForFramework,
   updateManifestCreator,
 } from "@src/modules/environment";
-import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { updateSliceMock } from "@src/modules/slices";
 
 import { modalOpenCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { checkSimulatorSetup, getSimulatorSetupSteps } from "@src/apiClient";
-import { createTestPlugin } from "test/__testutils__/createTestPlugin";
-import { createTestProject } from "test/__testutils__/createTestProject";
-import { createSliceMachineManager } from "@slicemachine/manager";
-import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
 const dummySimulatorState: SimulatorStoreType = initialState;
 
@@ -242,105 +234,6 @@ describe("[Simulator module]", () => {
 
       saga.next().select(selectIsSimulatorAvailableForFramework);
       saga.next(false).isDone();
-    });
-  });
-
-  describe("save mocks saga", () => {
-    test("success", async (ctx) => {
-      const adapter = createTestPlugin({
-        setup: ({ hook }) => {
-          hook("slice:asset:update", () => void 0);
-        },
-      });
-      const cwd = await createTestProject({ adapter });
-      const manager = createSliceMachineManager({
-        nativePlugins: { [adapter.meta.name]: adapter },
-        cwd,
-      });
-
-      await manager.plugins.initPlugins();
-
-      ctx.msw.use(
-        createSliceMachineManagerMSWHandler({
-          url: "http://localhost:3000/_manager",
-          sliceMachineManager: manager,
-        }),
-      );
-
-      const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
-
-      const payload = saveSliceMockCreator.request({
-        libraryID: "slices",
-        sliceID: "MySlice",
-        mocks: [],
-      });
-
-      await expectSaga(saveSliceMockSaga, payload)
-        .put(
-          openToasterCreator({
-            type: ToasterType.SUCCESS,
-            content: "Saved",
-          }),
-        )
-        .put(updateSliceMock(payload.payload))
-        .put(saveSliceMockCreator.success())
-        .run();
-
-      await new Promise(process.nextTick);
-
-      expect(updateSliceMocksSpy).toHaveBeenCalledWith({
-        libraryID: "slices",
-        sliceID: "MySlice",
-        mocks: [],
-      });
-    });
-
-    test("failure", async (ctx) => {
-      const adapter = createTestPlugin({
-        setup: ({ hook }) => {
-          hook("slice:asset:update", () => {
-            throw new Error("forced failure");
-          });
-        },
-      });
-      const cwd = await createTestProject({ adapter });
-      const manager = createSliceMachineManager({
-        nativePlugins: { [adapter.meta.name]: adapter },
-        cwd,
-      });
-
-      await manager.plugins.initPlugins();
-
-      ctx.msw.use(
-        createSliceMachineManagerMSWHandler({
-          url: "http://localhost:3000/_manager",
-          sliceMachineManager: manager,
-        }),
-      );
-
-      const updateSliceMocksSpy = vi.spyOn(manager.slices, "updateSliceMocks");
-
-      const payload = saveSliceMockCreator.request({
-        libraryID: "slices",
-        sliceID: "MySlice",
-        mocks: [],
-      });
-
-      const errorMessage = "Error saving content";
-
-      await expectSaga(saveSliceMockSaga, payload)
-        .put(
-          openToasterCreator({
-            type: ToasterType.ERROR,
-            content: errorMessage,
-          }),
-        )
-        .put(saveSliceMockCreator.failure())
-        .run();
-
-      await new Promise(process.nextTick);
-
-      expect(updateSliceMocksSpy).toHaveBeenCalled();
     });
   });
 });
