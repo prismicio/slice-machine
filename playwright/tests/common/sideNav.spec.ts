@@ -154,16 +154,16 @@ test.describe("Tutorial tooltip", () => {
   });
 });
 
-test("I can access the Academy from the 'Learn Prismic' link", async ({
-  pageTypesTablePage,
+test('I can access the Academy from the "Learn Prismic" link', async ({
+  sliceMachinePage,
 }) => {
-  await pageTypesTablePage.goto();
-  await expect(pageTypesTablePage.menu.learnPrismicLink).toBeVisible();
+  await sliceMachinePage.gotoDefaultPage();
+  await expect(sliceMachinePage.menu.learnPrismicLink).toBeVisible();
 
-  await pageTypesTablePage.menu.learnPrismicLink.click();
+  await sliceMachinePage.menu.learnPrismicLink.click();
 
-  const newTab = await pageTypesTablePage.page.waitForEvent("popup");
+  const newTab = await sliceMachinePage.page.waitForEvent("popup");
   await newTab.waitForLoadState();
 
-  await expect(newTab).toHaveURL(/https:\/\/prismic.io\/academy*/);
+  await expect(newTab).toHaveTitle(/Prismic Academy/);
 });
