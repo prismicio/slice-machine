@@ -8,6 +8,7 @@ import {
   Icon,
   Button,
 } from "@prismicio/editor-ui";
+import { toast } from "react-toastify";
 
 import { NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
 import { ComponentUI } from "@models/common/ComponentUI";
@@ -16,7 +17,6 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { managerClient } from "@src/managerClient";
 import { getState, telemetry } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { ToasterType } from "@src/modules/toaster";
 import { getFieldMappingFingerprint } from "@src/domain/slice";
 import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
 
@@ -36,7 +36,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
   slice,
   path,
 }) => {
-  const { refreshState, openToaster } = useSliceMachineActions();
+  const { refreshState } = useSliceMachineActions();
 
   const [isLoading, setIsLoading] = useState(false);
   const [dialog, setDialog] = useState<LegacySliceConversionType | undefined>();
@@ -97,10 +97,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
     if (errors.length) {
       console.error(`Could not convert slice \`${sliceName}\``, errors);
 
-      openToaster(
-        `Could not convert slice \`${sliceName}\``,
-        ToasterType.ERROR,
-      );
+      toast.error(`Could not convert slice \`${sliceName}\``);
 
       throw errors;
     }
@@ -116,9 +113,8 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
         customTypeReadErrors,
       );
 
-      openToaster(
+      toast.error(
         `Could not refresh custom type view \`${path.customTypeID}\``,
-        ToasterType.ERROR,
       );
 
       return;
@@ -133,24 +129,21 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
     setDialog(undefined);
     switch (dialog) {
       case "as_new_slice":
-        openToaster(
+        toast.success(
           `${sliceName} has been upgraded to a new slice ${args.libraryID} > ${args.sliceID}`,
-          ToasterType.SUCCESS,
         );
         break;
 
       case "as_new_variation":
-        openToaster(
+        toast.success(
           `${sliceName} has been converted as a variation of ${args.libraryID} > ${args.sliceID}`,
-          ToasterType.SUCCESS,
         );
         break;
 
       case "merge_with_identical":
       default:
-        openToaster(
+        toast.success(
           `${sliceName} has been merged with ${args.libraryID} > ${args.sliceID}`,
-          ToasterType.SUCCESS,
         );
         break;
     }

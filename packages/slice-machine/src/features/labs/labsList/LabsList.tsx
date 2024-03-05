@@ -1,8 +1,6 @@
 import type { FC } from "react";
 import { Box, Text } from "@prismicio/editor-ui";
-
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { ToasterType } from "@src/modules/toaster";
+import { toast } from "react-toastify";
 
 import { LabsListItem } from "./LabsListItem";
 import { type UseLabArgs, type UseLabReturnType, useLab } from "./useLab";
@@ -44,25 +42,22 @@ export const LabsList: FC = () => {
 };
 
 function useLabWithToast(key: UseLabArgs, name: string): UseLabReturnType {
-  const { openToaster } = useSliceMachineActions();
   const [lab, setLab] = useLab(key);
 
   const setLabWithToast = async (enabled: boolean) => {
     try {
       await setLab(enabled);
 
-      openToaster(
+      toast.success(
         enabled ? `Labs: enabled ${name}` : `Labs: disabled ${name}`,
-        ToasterType.SUCCESS,
       );
     } catch (error) {
       console.error(error);
 
-      openToaster(
+      toast.error(
         enabled
           ? `Labs: failed to enable ${name}`
           : `Labs: failed to disable ${name}`,
-        ToasterType.ERROR,
       );
     }
   };
