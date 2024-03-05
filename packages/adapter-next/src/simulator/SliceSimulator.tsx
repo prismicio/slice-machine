@@ -1,30 +1,27 @@
 "use client";
 
-import * as React from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
 	SimulatorManager,
 	SliceSimulatorState,
 	StateEventType,
-	disableEventHandler,
 	getDefaultMessage,
-	getDefaultProps,
 	getDefaultSlices,
-	onClickHandler,
-	simulatorClass,
-	simulatorRootClass,
 } from "@prismicio/simulator/kit";
 
-const simulatorManager = new SimulatorManager();
+import { SliceSimulatorWrapper } from "./SliceSimulatorWrapper";
 
 export type SliceSimulatorSliceZoneProps = {
 	slices: SliceSimulatorState["slices"];
 };
 
-export type SliceSimulatorProps = {
+export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
 	/**
-	 * React component to render simulated Slices.
+	 * React component to render simulated Slices. Recommended only in the Pages
+	 * Router. If you are using the App Router, consider using the `children`
+	 * method instead with the `getSlices()` helper.
 	 *
 	 * @example
 	 *
@@ -41,9 +38,10 @@ export type SliceSimulatorProps = {
 	 * />;
 	 * ```
 	 */
-	sliceZone: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
+	sliceZone?: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
+	children?: ReactNode;
 	className?: string;
-} & Omit<BaseSliceSimulatorProps, "state">;
+};
 
 export const SliceSimulator = ({
 	sliceZone: SliceZoneComp,
@@ -51,70 +49,45 @@ export const SliceSimulator = ({
 	zIndex,
 	className,
 }: SliceSimulatorProps): JSX.Element => {
-	const defaultProps = getDefaultProps();
+	const simulatorManager = useRef(new SimulatorManager());
+	const [slices, setSlices] = useState(() => getDefaultSlices());
+	const [message, setMessage] = useState(() => getDefaultMessage());
 
-	const [slices, setSlices] = React.useState(() => getDefaultSlices());
-	const [message, setMessage] = React.useState(() => getDefaultMessage());
-
-	React.useEffect(() => {
-		simulatorManager.state.on(
+	useEffect(() => {
+		simulatorManager.current.state.on(
 			StateEventType.Slices,
-			(_slices) => {
-				setSlices(_slices);
-			},
+			(newSlices) => setSlices(newSlices),
 			"simulator-slices",
 		);
-		simulatorManager.state.on(
+		simulatorManager.current.state.on(
 			StateEventType.Message,
-			(_message) => {
-				setMessage(_message);
-			},
+			(newMessage) => setMessage(newMessage),
 			"simulator-message",
 		);
 
-		simulatorManager.init();
+		simulatorManager.current.init();
 
 		return () => {
-			simulatorManager.state.off(StateEventType.Slices, "simulator-slices");
-
-			simulatorManager.state.off(StateEventType.Message, "simulator-message");
+			simulatorManager.current.state.off(
+				StateEventType.Slices,
+				"simulator-slices",
+			);
+			simulatorManager.current.state.off(
+				StateEventType.Message,
+				"simulator-message",
+			);
 		};
 	}, []);
 
 	return (
-		<div
-			className={[simulatorClass, className].filter(Boolean).join(" ")}
-			style={{
-				zIndex:
-					typeof zIndex === "undefined"
-						? defaultProps.zIndex
-						: zIndex ?? undefined,
-				position: "fixed",
-				top: 0,
-				left: 0,
-				width: "100%",
-				height: "100vh",
-				overflow: "auto",
-				background:
-					typeof background === "undefined"
-						? defaultProps.background
-						: background ?? undefined,
-			}}
+		<SliceSimulatorWrapper
+			message={message}
+			hasSlices={slices.length > 0}
+			background={background}
+			zIndex={zIndex}
+			className={className}
 		>
-			{message ? (
-				<article dangerouslySetInnerHTML={{ __html: message }} />
-			) : slices.length ? (
-				<div
-					id="root"
-					className={simulatorRootClass}
-					onClickCapture={onClickHandler as unknown as React.MouseEventHandler}
-					onSubmitCapture={
-						disableEventHandler as unknown as React.FormEventHandler
-					}
-				>
-					<SliceZoneComp slices={slices} />
-				</div>
-			) : null}
-		</div>
+			{SliceZoneComp ? <SliceZoneComp slices={slices} /> : null}
+		</SliceSimulatorWrapper>
 	);
 };
