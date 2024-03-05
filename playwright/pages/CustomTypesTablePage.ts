@@ -1,8 +1,10 @@
-import { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 
 import { TypesTablePage } from "./shared/TypesTablePage";
 
 export class CustomTypesTablePage extends TypesTablePage {
+  readonly convertedMessage: Locator;
+
   constructor(page: Page) {
     super(page, {
       format: "custom",
@@ -19,6 +21,10 @@ export class CustomTypesTablePage extends TypesTablePage {
      * Static locators
      */
     // Handle static locators here
+    this.convertedMessage = page.getByText(
+      "Custom type converted to page type",
+      { exact: true },
+    );
   }
 
   /**

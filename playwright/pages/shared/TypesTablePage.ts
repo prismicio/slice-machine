@@ -82,7 +82,10 @@ export class TypesTablePage extends SliceMachinePage {
     await this.createButton.first().click();
   }
 
-  async openActionMenu(name: string, action: "Rename" | "Remove") {
+  async openActionMenu(
+    name: string,
+    action: "Rename" | "Convert to page type" | "Remove",
+  ) {
     await this.getRow(name)
       .getByRole("button", { name: "Custom type actions", exact: true })
       .click();

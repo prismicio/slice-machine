@@ -78,3 +78,74 @@ test("I can rename a custom type", async ({
 
   await expect(customTypesTablePage.getRow(newCustomTypeName)).toBeVisible();
 });
+
+test("I can delete a custom type", async ({
+  customTypesTablePage,
+  reusableCustomType,
+}) => {
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openActionMenu(reusableCustomType.name, "Remove");
+
+  await customTypesTablePage.deleteTypeDialog.deleteType();
+
+  await expect(
+    customTypesTablePage.getRow(reusableCustomType.name),
+  ).not.toBeVisible();
+  await customTypesTablePage.page.reload();
+  await expect(
+    customTypesTablePage.getRow(reusableCustomType.name),
+  ).not.toBeVisible();
+});
+
+test("I can convert a custom type to a page type", async ({
+  customTypesTablePage,
+  pageTypesTablePage,
+  reusableCustomType,
+}) => {
+  await customTypesTablePage.goto();
+
+  await customTypesTablePage.openActionMenu(
+    reusableCustomType.name,
+    "Convert to page type",
+  );
+  await expect(customTypesTablePage.convertedMessage).toBeVisible();
+
+  await pageTypesTablePage.goto();
+  await expect(
+    pageTypesTablePage.getRow(reusableCustomType.name),
+  ).toBeVisible();
+});
+
+test("I can see the blank slate message when I don't have any custom types", async ({
+  customTypesTablePage,
+  procedures,
+}) => {
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    customTypes: [],
+  }));
+  await customTypesTablePage.goto();
+
+  await customTypesTablePage.checkBlankSlateContainsText(
+    "Custom types are models that your editors can use to create menus or objects in the Page Builder.",
+  );
+  await expect(customTypesTablePage.blankSlateCreateAction).toBeVisible();
+});
+
+test("I can create a new custom type from the blank slate", async ({
+  customTypesTablePage,
+  customTypesBuilderPage,
+  procedures,
+}) => {
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    customTypes: [],
+  }));
+  await customTypesTablePage.goto();
+  await customTypesTablePage.blankSlateCreateAction.click();
+
+  const name = "Custom Type " + generateRandomId();
+  await customTypesTablePage.createTypeDialog.createType(name, "reusable");
+
+  await expect(customTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
+});
