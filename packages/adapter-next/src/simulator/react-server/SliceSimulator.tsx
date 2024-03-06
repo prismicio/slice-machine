@@ -15,6 +15,32 @@ import { getSlices } from "./getSlices";
 
 const STATE_PARAMS_KEY = "state";
 
+const throttle =
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	<TArgs extends [...any]>(fn: (...args: TArgs) => unknown, wait: number) => {
+		let timeoutId: ReturnType<typeof setTimeout>;
+		let lastCallTime = 0;
+
+		return function throttled(...args: TArgs) {
+			clearTimeout(timeoutId);
+
+			const now = Date.now();
+			const timeSinceLastCall = now - lastCallTime;
+			const delayForNextCall = wait - timeSinceLastCall;
+
+			if (delayForNextCall <= 0) {
+				lastCallTime = now;
+				fn(...args);
+			} else {
+				timeoutId = setTimeout(() => {
+					lastCallTime = Date.now();
+					fn(...args);
+				}, delayForNextCall);
+			}
+		};
+	};
+const throttledRevalidateData = throttle(revalidateData, 300);
+
 export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
 	children: React.ReactNode;
 	className?: string;
@@ -47,7 +73,7 @@ export const SliceSimulator = ({
 				window.history.pushState(null, "", url);
 
 				const path = window.location.pathname;
-				requestIdleCallback(() => revalidateData(path), { timeout: 100 });
+				setTimeout(() => throttledRevalidateData(path), 0);
 			},
 			"simulator-slices",
 		);
