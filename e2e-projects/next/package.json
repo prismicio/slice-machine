@@ -16,7 +16,7 @@
     "@prismicio/helpers": "^2.3.9",
     "@prismicio/next": "^1.1.0",
     "@prismicio/react": "^2.6.0",
-    "next": "^14.1.2",
+    "next": "^13.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.1.11"
