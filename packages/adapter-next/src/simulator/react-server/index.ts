@@ -1,2 +1,2 @@
 export { SliceSimulator } from "./SliceSimulator";
-export { getSlices } from "./actions";
+export { getSlices } from "./getSlices";

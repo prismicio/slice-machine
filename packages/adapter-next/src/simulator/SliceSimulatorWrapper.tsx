@@ -1,7 +1,6 @@
-import * as React from "react";
-
+import { ReactNode } from "react";
 import {
-	SliceSimulatorProps as BaseSliceSimulatorProps,
+	SliceSimulatorProps,
 	disableEventHandler,
 	getDefaultProps,
 	onClickHandler,
@@ -10,11 +9,11 @@ import {
 } from "@prismicio/simulator/kit";
 
 type SliceSimulatorWrapperProps = {
-	children: React.ReactNode;
+	children: ReactNode;
 	className?: string;
 	message?: string;
 	hasSlices: boolean;
-} & Omit<BaseSliceSimulatorProps, "state">;
+} & Omit<SliceSimulatorProps, "state">;
 
 export const SliceSimulatorWrapper = ({
 	className,

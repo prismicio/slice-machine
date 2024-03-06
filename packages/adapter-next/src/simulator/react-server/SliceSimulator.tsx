@@ -6,48 +6,14 @@ import {
 	SimulatorManager,
 	StateEventType,
 	getDefaultMessage,
-	getDefaultSlices,
 } from "@prismicio/simulator/kit";
+import { compressToEncodedURIComponent } from "lz-string";
 
 import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
-import { persistSlices } from "./actions";
+import { revalidateData } from "./actions";
+import { getSlices } from "./getSlices";
 
-const SESSION_SEARCH_PARAM_KEY = "session";
-
-const debounce =
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	<TArgs extends [...any]>(
-		callback: (...args: TArgs) => void,
-		wait: number,
-	) => {
-		let timeoutId: ReturnType<typeof setTimeout>;
-
-		return (...args: TArgs) => {
-			clearTimeout(timeoutId);
-			timeoutId = setTimeout(() => callback(...args), wait);
-		};
-	};
-const debouncedPersistSlices = debounce(persistSlices, 500);
-
-const getSessionID = () => {
-	const sessionID = new URL(window.location.href).searchParams.get(
-		SESSION_SEARCH_PARAM_KEY,
-	);
-
-	if (sessionID) {
-		return sessionID;
-	}
-
-	const newSessionID = window.crypto
-		.getRandomValues(new BigUint64Array(1))[0]
-		.toString();
-
-	const url = new URL(window.location.href);
-	url.searchParams.set(SESSION_SEARCH_PARAM_KEY, newSessionID);
-	window.history.replaceState({}, "", url);
-
-	return newSessionID;
-};
+const STATE_PARAMS_KEY = "state";
 
 export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
 	children: React.ReactNode;
@@ -61,22 +27,27 @@ export const SliceSimulator = ({
 	className,
 }: SliceSimulatorProps): JSX.Element => {
 	const simulatorManager = useRef(new SimulatorManager());
-	const [slices, setSlices] = useState(() => getDefaultSlices());
 	const [message, setMessage] = useState(() => getDefaultMessage());
 
-	useEffect(() => {
-		getSessionID();
+	const state =
+		typeof window !== "undefined"
+			? new URL(window.location.href).searchParams.get(STATE_PARAMS_KEY)
+			: undefined;
+	const hasSlices = getSlices(state).length > 0;
 
+	useEffect(() => {
 		simulatorManager.current.state.on(
 			StateEventType.Slices,
 			(newSlices) => {
-				const sessionID = getSessionID();
+				const url = new URL(window.location.href);
+				url.searchParams.set(
+					STATE_PARAMS_KEY,
+					compressToEncodedURIComponent(JSON.stringify(newSlices)),
+				);
+				window.history.pushState(null, "", url);
 
-				process.env.NODE_ENV === "development"
-					? persistSlices(sessionID, newSlices)
-					: debouncedPersistSlices(sessionID, newSlices);
-
-				setSlices(newSlices);
+				const path = window.location.pathname;
+				requestIdleCallback(() => revalidateData(path), { timeout: 100 });
 			},
 			"simulator-slices",
 		);
@@ -103,7 +74,7 @@ export const SliceSimulator = ({
 	return (
 		<SliceSimulatorWrapper
 			message={message}
-			hasSlices={slices.length > 0}
+			hasSlices={hasSlices}
 			background={background}
 			zIndex={zIndex}
 			className={className}

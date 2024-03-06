@@ -8643,6 +8643,7 @@ __metadata:
     fp-ts: ^2.13.1
     io-ts: ^2.2.20
     io-ts-types: ^0.5.19
+    lz-string: 1.5.0
     monocle-ts: ^2.3.13
     newtype-ts: ^0.3.5
     next: 14.1.2
@@ -23985,7 +23986,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lz-string@npm:^1.5.0":
+"lz-string@npm:1.5.0, lz-string@npm:^1.5.0":
   version: 1.5.0
   resolution: "lz-string@npm:1.5.0"
   bin:

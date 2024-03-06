@@ -4,6 +4,5 @@ export type {
 	SliceSimulatorSliceZoneProps,
 } from "./SliceSimulator";
 
-export { getSlices } from "./actions";
-
+export { getSlices } from "./getSlices";
 export type { SliceSimulatorParams } from "./types";
