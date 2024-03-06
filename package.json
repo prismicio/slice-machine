@@ -80,7 +80,6 @@
     "e2e-projects/next",
     "e2e-projects/sveltekit",
     "e2e-projects/next-upgrade",
-    "e2e-projects/next-simulator",
     "playwright",
     "packages/*"
   ]
