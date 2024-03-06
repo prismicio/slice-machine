@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 export const metadata = {
   title: "Next.js Simulator Test",
 };

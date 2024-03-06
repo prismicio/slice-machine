@@ -1,6 +1,5 @@
 import { Content } from "@prismicio/client";
 import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
-import { cookies } from "next/headers";
 
 /**
  * Props for `Text`.
@@ -17,7 +16,6 @@ export default function Text({ slice }: TextProps): JSX.Element {
       data-slice-variation={slice.variation}
     >
       <PrismicRichText field={slice.primary.text} />
-      {JSON.stringify(cookies().getAll(), null, 4)}
     </section>
   );
 }

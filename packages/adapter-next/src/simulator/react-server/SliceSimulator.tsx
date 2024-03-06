@@ -11,7 +11,6 @@ import {
 
 import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
 import { persistSlices } from "./actions";
-import { revalidatePath } from "next/cache";
 
 const SESSION_SEARCH_PARAM_KEY = "session";
 
@@ -45,7 +44,7 @@ const getSessionID = () => {
 
 	const url = new URL(window.location.href);
 	url.searchParams.set(SESSION_SEARCH_PARAM_KEY, newSessionID);
-	window.history.pushState({}, "", url);
+	window.history.replaceState({}, "", url);
 
 	return newSessionID;
 };
@@ -66,6 +65,8 @@ export const SliceSimulator = ({
 	const [message, setMessage] = useState(() => getDefaultMessage());
 
 	useEffect(() => {
+		getSessionID();
+
 		simulatorManager.current.state.on(
 			StateEventType.Slices,
 			(newSlices) => {

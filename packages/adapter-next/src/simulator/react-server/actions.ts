@@ -1,30 +1,36 @@
 "use server";
 
-import { SliceZone } from "@prismicio/client";
-import { getDefaultSlices } from "@prismicio/simulator/kit";
-import { revalidatePath } from "next/cache";
+import {
+	getDefaultSlices,
+	StateEvents,
+	StateEventType,
+} from "@prismicio/simulator/kit";
+import { revalidateTag, unstable_cache } from "next/cache";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 
 const FILE_PATH = path.join(os.tmpdir(), "prismic-simulator", "data.json");
 
-let memory: Partial<Record<string, SliceZone>> = {};
+let memory: Partial<Record<string, StateEvents[StateEventType.Slices]>> = {};
 
-export async function getSlices(sessionID?: string): Promise<SliceZone> {
-	if (!sessionID) {
-		return getDefaultSlices();
-	}
+export const getSlices = unstable_cache(
+	async (sessionID?: string): Promise<StateEvents[StateEventType.Slices]> => {
+		if (!sessionID) {
+			return getDefaultSlices();
+		}
 
-	const contents = await readContents();
+		const contents = await readContents();
 
-	return contents[sessionID] ?? getDefaultSlices();
-}
+		return contents[sessionID] ?? getDefaultSlices();
+	},
+	["prismic-slice-simulator"],
+	{ tags: ["prismic-slice-simulator"] },
+);
 
 export async function persistSlices(
 	sessionID: string,
-	slices: SliceZone,
-	simulatorPath = "/slice-simulator",
+	slices: StateEvents[StateEventType.Slices],
 ): Promise<void> {
 	const contents = await readContents();
 
@@ -33,23 +39,20 @@ export async function persistSlices(
 		[sessionID]: slices,
 	});
 
-	revalidatePath(simulatorPath);
+	revalidateTag("prismic-slice-simulator");
 }
 
-export async function cleanUpSession(
-	sessionID: string,
-	simulatorPath = "/slice-simulator",
-): Promise<void> {
+export async function cleanUpSession(sessionID: string): Promise<void> {
 	const contents = await readContents();
 
 	delete contents[sessionID];
 
 	await writeContents(contents);
 
-	revalidatePath(simulatorPath);
+	revalidateTag("prismic-slice-simulator");
 }
 
-async function readContents(): Promise<Partial<Record<string, SliceZone>>> {
+async function readContents() {
 	if (process.env.NODE_ENV === "development") {
 		try {
 			const rawContents = await fs.readFile(FILE_PATH, "utf8");
@@ -64,7 +67,7 @@ async function readContents(): Promise<Partial<Record<string, SliceZone>>> {
 }
 
 async function writeContents(
-	contents: Partial<Record<string, SliceZone>>,
+	contents: Partial<Record<string, StateEvents[StateEventType.Slices]>>,
 ): Promise<void> {
 	if (process.env.NODE_ENV === "development") {
 		await fs.mkdir(path.dirname(FILE_PATH), { recursive: true });
