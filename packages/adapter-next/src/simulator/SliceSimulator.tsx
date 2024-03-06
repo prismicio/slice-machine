@@ -43,6 +43,10 @@ export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
 	className?: string;
 };
 
+/**
+ * Simulate slices in isolation. The slice simulator enables live slice
+ * development in Slice Machine and live previews in the Page Builder.
+ */
 export const SliceSimulator = ({
 	sliceZone: SliceZoneComp,
 	background,

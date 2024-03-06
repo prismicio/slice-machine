@@ -15,6 +15,10 @@ type SliceSimulatorWrapperProps = {
 	hasSlices: boolean;
 } & Omit<SliceSimulatorProps, "state">;
 
+/**
+ * A wrapper for the slice simulator that isolates the given children from the
+ * page's layout.
+ */
 export const SliceSimulatorWrapper = ({
 	className,
 	children,

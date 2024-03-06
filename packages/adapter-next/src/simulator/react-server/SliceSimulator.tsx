@@ -1,3 +1,5 @@
+// This `<SliceSimulator>` is only accessible from Server Components.
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +12,7 @@ import {
 import { compressToEncodedURIComponent } from "lz-string";
 
 import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
-import { revalidateData } from "./actions";
+import { revalidatePath } from "./actions";
 import { getSlices } from "./getSlices";
 
 const STATE_PARAMS_KEY = "state";
@@ -39,7 +41,7 @@ const throttle =
 			}
 		};
 	};
-const throttledRevalidateData = throttle(revalidateData, 300);
+const throttledRevalidatePath = throttle(revalidatePath, 300);
 
 export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
 	children: React.ReactNode;
@@ -72,8 +74,11 @@ export const SliceSimulator = ({
 				);
 				window.history.pushState(null, "", url);
 
+				// A 0 ms timeout is needed to prevent a bug
+				// where the path is revalidated before the URL
+				// is updated with the new state.
 				const path = window.location.pathname;
-				setTimeout(() => throttledRevalidateData(path), 0);
+				setTimeout(() => throttledRevalidatePath(path), 0);
 			},
 			"simulator-slices",
 		);

@@ -1,3 +1,5 @@
+// This `getSlices` is only accessible from Server Components.
+
 import {
 	getDefaultSlices,
 	StateEvents,

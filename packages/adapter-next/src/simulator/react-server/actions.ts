@@ -1,7 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath as baseRevalidatePath } from "next/cache";
 
-export async function revalidateData(path: string): Promise<void> {
-	revalidatePath(path);
+export async function revalidatePath(path: string): Promise<void> {
+	baseRevalidatePath(path);
 }
