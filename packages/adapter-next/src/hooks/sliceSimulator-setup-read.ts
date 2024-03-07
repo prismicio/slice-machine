@@ -10,6 +10,7 @@ import fetch, { Response } from "node-fetch";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 
 import type { PluginOptions } from "../types";
+import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 
 const REQUIRED_DEPENDENCIES = ["@prismicio/react"];
 
@@ -79,29 +80,78 @@ const createStep2 = async ({
 	helpers,
 	options,
 }: Args): Promise<SliceSimulatorSetupStep> => {
+	const hasAppRouter = await checkHasAppRouter({ helpers });
+
 	const extension = await getJSFileExtension({ helpers, options, jsx: true });
+
+	if (hasAppRouter) {
+		const fileName = `page.${extension}`;
+		const filePath = helpers.joinPathFromRoot(
+			"app",
+			"slice-simulator",
+			fileName,
+		);
+
+		const fileContents = await helpers.format(
+			source`
+				import {
+					SliceSimulator,
+					SliceSimulatorParams,
+					getSlices,
+				} from "@slicemachine/adapter-next/simulator";
+				import { SliceZone } from "@prismicio/react";
+
+				import { components } from "../../slices";
+
+				export default function SliceSimulatorPage({
+					searchParams,
+				}: SliceSimulatorParams) {
+					const slices = getSlices(searchParams.state);
+
+					return (
+						<SliceSimulator>
+							<SliceZone slices={slices} components={components} />
+						</SliceSimulator>
+					);
+				}
+			`,
+			filePath,
+			{ includeNewlineAtEnd: false },
+		);
+
+		return {
+			title: "Create a page for the simulator",
+			description: `In your \`app\` directory, create a file called \`slice-simulator/${fileName}\` containing this code.`,
+			body: source`
+				In your \`app\` directory, create a file called \`slice-simulator/${fileName}\` and add the following code. This route will be used to simulate and develop your components.
+
+			~~~tsx
+			${fileContents}
+			~~~
+		`,
+		};
+	}
+
 	const fileName = `slice-simulator.${extension}`;
 	const filePath = helpers.joinPathFromRoot("pages", fileName);
 
 	const fileContents = await helpers.format(
 		source`
-			import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-			import { SliceZone } from "@prismicio/react";
+				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+				import { SliceZone } from "@prismicio/react";
 
-			import { components } from "../slices";
+				import { components } from "../slices";
 
-			export default function SliceSimulatorPage() {
-				return (
-					<SliceSimulator
-						sliceZone={(props) => <SliceZone {...props} components={components} />}
-					/>
-				);
-			}
-		`,
+				export default function SliceSimulatorPage() {
+					return (
+						<SliceSimulator
+							sliceZone={(props) => <SliceZone {...props} components={components} />}
+						/>
+					);
+				}
+			`,
 		filePath,
-		{
-			includeNewlineAtEnd: false,
-		},
+		{ includeNewlineAtEnd: false },
 	);
 
 	return {
