@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import * as React from "react";
 
 import {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
@@ -13,75 +13,95 @@ import {
 
 import { SliceSimulatorWrapper } from "./SliceSimulatorWrapper";
 
+const simulatorManager = new SimulatorManager();
+
 export type SliceSimulatorSliceZoneProps = {
 	slices: SliceSimulatorState["slices"];
 };
 
-export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
-	/**
-	 * React component to render simulated Slices. Recommended only in the Pages
-	 * Router. If you are using the App Router, consider using the `children`
-	 * method instead with the `getSlices()` helper.
-	 *
-	 * @example
-	 *
-	 * ```tsx
-	 * import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-	 * import { SliceZone } from "@prismicio/react";
-	 *
-	 * import { components } from "../slices";
-	 *
-	 * <SliceSimulator
-	 * 	sliceZone={({ slices }) => (
-	 * 		<SliceZone slices={slices} components={components} />
-	 * 	)}
-	 * />;
-	 * ```
-	 */
-	sliceZone?: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
-	children?: ReactNode;
+export type SliceSimulatorProps = {
 	className?: string;
-};
+} & Omit<BaseSliceSimulatorProps, "state"> &
+	(
+		| {
+				/**
+				 * React component to render simulated Slices.
+				 *
+				 * @example
+				 *
+				 * ```tsx
+				 * import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+				 * import { SliceZone } from "@prismicio/react";
+				 *
+				 * import { components } from "../slices";
+				 *
+				 * <SliceSimulator
+				 * 	sliceZone={({ slices }) => (
+				 * 		<SliceZone slices={slices} components={components} />
+				 * 	)}
+				 * />;
+				 * ```
+				 */
+				sliceZone: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
+		  }
+		| {
+				children?: React.ReactNode;
+		  }
+	);
 
 /**
  * Simulate slices in isolation. The slice simulator enables live slice
  * development in Slice Machine and live previews in the Page Builder.
  */
 export const SliceSimulator = ({
-	sliceZone: SliceZoneComp,
 	background,
 	zIndex,
 	className,
+	...restProps
 }: SliceSimulatorProps): JSX.Element => {
-	const simulatorManager = useRef(new SimulatorManager());
-	const [slices, setSlices] = useState(() => getDefaultSlices());
-	const [message, setMessage] = useState(() => getDefaultMessage());
+	const [slices, setSlices] = React.useState(() => getDefaultSlices());
+	const [message, setMessage] = React.useState(() => getDefaultMessage());
 
-	useEffect(() => {
-		simulatorManager.current.state.on(
+	React.useEffect(() => {
+		simulatorManager.state.on(
 			StateEventType.Slices,
-			(newSlices) => setSlices(newSlices),
+			(_slices) => {
+				setSlices(_slices);
+			},
 			"simulator-slices",
 		);
-		simulatorManager.current.state.on(
+		simulatorManager.state.on(
 			StateEventType.Message,
-			(newMessage) => setMessage(newMessage),
+			(_message) => {
+				setMessage(_message);
+			},
 			"simulator-message",
 		);
 
-		simulatorManager.current.init();
+		simulatorManager.init();
 
 		return () => {
-			simulatorManager.current.state.off(
-				StateEventType.Slices,
-				"simulator-slices",
-			);
-			simulatorManager.current.state.off(
-				StateEventType.Message,
-				"simulator-message",
-			);
+			simulatorManager.state.off(StateEventType.Slices, "simulator-slices");
+
+			simulatorManager.state.off(StateEventType.Message, "simulator-message");
 		};
 	}, []);
+
+	if ("sliceZone" in restProps) {
+		const SliceZoneComp = restProps.sliceZone;
+
+		return (
+			<SliceSimulatorWrapper
+				message={message}
+				hasSlices={slices.length > 0}
+				background={background}
+				zIndex={zIndex}
+				className={className}
+			>
+				<SliceZoneComp slices={slices} />
+			</SliceSimulatorWrapper>
+		);
+	}
 
 	return (
 		<SliceSimulatorWrapper
@@ -91,7 +111,7 @@ export const SliceSimulator = ({
 			zIndex={zIndex}
 			className={className}
 		>
-			{SliceZoneComp ? <SliceZoneComp slices={slices} /> : null}
+			{restProps.children}
 		</SliceSimulatorWrapper>
 	);
 };

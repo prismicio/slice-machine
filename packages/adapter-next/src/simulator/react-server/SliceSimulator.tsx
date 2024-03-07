@@ -2,7 +2,8 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import * as React from "react";
+
 import {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
 	SimulatorManager,
@@ -23,7 +24,7 @@ const throttle =
 		let timeoutId: ReturnType<typeof setTimeout>;
 		let lastCallTime = 0;
 
-		return function throttled(...args: TArgs) {
+		return (...args: TArgs) => {
 			clearTimeout(timeoutId);
 
 			const now = Date.now();
@@ -43,6 +44,8 @@ const throttle =
 	};
 const throttledRevalidatePath = throttle(revalidatePath, 300);
 
+const simulatorManager = new SimulatorManager();
+
 export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
 	children: React.ReactNode;
 	className?: string;
@@ -54,8 +57,7 @@ export const SliceSimulator = ({
 	zIndex,
 	className,
 }: SliceSimulatorProps): JSX.Element => {
-	const simulatorManager = useRef(new SimulatorManager());
-	const [message, setMessage] = useState(() => getDefaultMessage());
+	const [message, setMessage] = React.useState(() => getDefaultMessage());
 
 	const state =
 		typeof window !== "undefined"
@@ -63,8 +65,8 @@ export const SliceSimulator = ({
 			: undefined;
 	const hasSlices = getSlices(state).length > 0;
 
-	useEffect(() => {
-		simulatorManager.current.state.on(
+	React.useEffect(() => {
+		simulatorManager.state.on(
 			StateEventType.Slices,
 			(newSlices) => {
 				const url = new URL(window.location.href);
@@ -82,23 +84,18 @@ export const SliceSimulator = ({
 			},
 			"simulator-slices",
 		);
-		simulatorManager.current.state.on(
+		simulatorManager.state.on(
 			StateEventType.Message,
 			(newMessage) => setMessage(newMessage),
 			"simulator-message",
 		);
 
-		simulatorManager.current.init();
+		simulatorManager.init();
 
 		return () => {
-			simulatorManager.current.state.off(
-				StateEventType.Slices,
-				"simulator-slices",
-			);
-			simulatorManager.current.state.off(
-				StateEventType.Message,
-				"simulator-message",
-			);
+			simulatorManager.state.off(StateEventType.Slices, "simulator-slices");
+
+			simulatorManager.state.off(StateEventType.Message, "simulator-message");
 		};
 	}, []);
 
