@@ -45,7 +45,7 @@ export type SliceSimulatorProps = {
 				sliceZone: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
 		  }
 		| {
-				children?: React.ReactNode;
+				children: React.ReactNode;
 		  }
 	);
 
@@ -59,6 +59,12 @@ export const SliceSimulator = ({
 	className,
 	...restProps
 }: SliceSimulatorProps): JSX.Element => {
+	if (!("sliceZone" in restProps)) {
+		throw new Error(
+			"A sliceZone prop must be provided when <SliceZone> is rendered in a Client Component. Add a sliceZone prop or convert your simulator a Server Component with the getSlices helper.",
+		);
+	}
+
 	const [slices, setSlices] = React.useState(() => getDefaultSlices());
 	const [message, setMessage] = React.useState(() => getDefaultMessage());
 
@@ -87,21 +93,7 @@ export const SliceSimulator = ({
 		};
 	}, []);
 
-	if ("sliceZone" in restProps) {
-		const SliceZoneComp = restProps.sliceZone;
-
-		return (
-			<SliceSimulatorWrapper
-				message={message}
-				hasSlices={slices.length > 0}
-				background={background}
-				zIndex={zIndex}
-				className={className}
-			>
-				<SliceZoneComp slices={slices} />
-			</SliceSimulatorWrapper>
-		);
-	}
+	const SliceZoneComp = restProps.sliceZone;
 
 	return (
 		<SliceSimulatorWrapper
@@ -111,7 +103,7 @@ export const SliceSimulator = ({
 			zIndex={zIndex}
 			className={className}
 		>
-			{restProps.children}
+			<SliceZoneComp slices={slices} />
 		</SliceSimulatorWrapper>
 	);
 };
