@@ -61,7 +61,7 @@ export const SliceSimulator = ({
 }: SliceSimulatorProps): JSX.Element => {
 	if (!("sliceZone" in restProps)) {
 		throw new Error(
-			"A sliceZone prop must be provided when <SliceZone> is rendered in a Client Component. Add a sliceZone prop or convert your simulator a Server Component with the getSlices helper.",
+			"A sliceZone prop must be provided when <SliceZone> is rendered in a Client Component. Add a sliceZone prop or convert your simulator to a Server Component with the getSlices helper.",
 		);
 	}
 
