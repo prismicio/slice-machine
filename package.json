@@ -28,7 +28,8 @@
     "cypress-setup": "./cypress-setup.sh",
     "cypress": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
     "cypress:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
-    "publish": "tsx scripts/publish.ts"
+    "publish": "tsx scripts/publish.ts",
+    "playground": "tsx scripts/create-playground.ts"
   },
   "dependenciesMeta": {
     "@sentry/cli": {
@@ -80,6 +81,7 @@
     "e2e-projects/next",
     "e2e-projects/sveltekit",
     "e2e-projects/next-upgrade",
+    "playgrounds/*",
     "playwright",
     "packages/*"
   ]
