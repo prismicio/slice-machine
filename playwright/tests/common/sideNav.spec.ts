@@ -60,6 +60,28 @@ test("I can navigate through all menu entries", async ({
   );
 });
 
+test("I can access the repository using the open icon", async ({
+  sliceMachinePage,
+  procedures,
+}) => {
+  procedures.mock("getState", ({ data }) => {
+    const result = data as { env: { manifest: { apiEndpoint: string } } };
+    result.env.manifest.apiEndpoint =
+      "https://example-prismic-repo.cdn.prismic.io/api/v2";
+    return result;
+  });
+
+  await sliceMachinePage.gotoDefaultPage();
+  await expect(sliceMachinePage.menu.repositoryLink).toBeVisible();
+
+  await sliceMachinePage.menu.repositoryLink.click();
+
+  const newTab = await sliceMachinePage.page.waitForEvent("popup");
+  await newTab.waitForLoadState();
+
+  await expect(newTab).toHaveTitle("prismic.io - Example Prismic Repo");
+});
+
 test("I access the changelog from Slice Machine version", async ({
   pageTypesTablePage,
   changelogPage,
@@ -166,4 +188,29 @@ test('I can access the Academy from the "Learn Prismic" link', async ({
   await newTab.waitForLoadState();
 
   await expect(newTab).toHaveTitle(/Prismic Academy/);
+});
+
+test('I can access the repository\'s users page from the "Invite team" link', async ({
+  sliceMachinePage,
+  procedures,
+}) => {
+  procedures.mock("getState", ({ data }) => {
+    const result = data as { env: { manifest: { apiEndpoint: string } } };
+    result.env.manifest.apiEndpoint =
+      "https://example-prismic-repo.cdn.prismic.io/api/v2";
+    return result;
+  });
+
+  await sliceMachinePage.gotoDefaultPage();
+  await expect(sliceMachinePage.menu.inviteTeamLink).toBeVisible();
+
+  await sliceMachinePage.menu.inviteTeamLink.click();
+
+  const newTab = await sliceMachinePage.page.waitForEvent("popup");
+  await newTab.waitForLoadState();
+
+  // We cannot test the title since it only contains the repository's name.
+  await expect(newTab).toHaveURL(
+    "https://example-prismic-repo.prismic.io/settings/users",
+  );
 });

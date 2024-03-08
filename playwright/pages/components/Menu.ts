@@ -6,10 +6,12 @@ export class Menu {
   readonly page: Page;
   readonly menu: Locator;
   readonly environmentSelector: EnvironmentSelector;
+  readonly repositoryLink: Locator;
   readonly pageTypesLink: Locator;
   readonly customTypesLink: Locator;
   readonly slicesLink: Locator;
   readonly changesLink: Locator;
+  readonly inviteTeamLink: Locator;
   readonly learnPrismicLink: Locator;
   readonly settingsLink: Locator;
   readonly changelogLink: Locator;
@@ -35,6 +37,10 @@ export class Menu {
      */
     this.environmentSelector = new EnvironmentSelector(page);
     this.menu = page.getByRole("navigation");
+    this.repositoryLink = this.menu.getByRole("link", {
+      name: "Open Prismic repository",
+      exact: true,
+    });
     this.pageTypesLink = this.menu.getByRole("link", {
       name: "Page types",
       exact: true,
@@ -49,6 +55,10 @@ export class Menu {
     });
     this.changesLink = this.menu.getByRole("button", {
       name: "Review changes",
+    });
+    this.inviteTeamLink = this.menu.getByRole("link", {
+      name: "Invite team",
+      exact: true,
     });
     this.learnPrismicLink = this.menu.getByRole("link", {
       name: "Learn Prismic",
