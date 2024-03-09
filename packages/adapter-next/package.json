@@ -21,9 +21,16 @@
 			"import": "./dist/index.js"
 		},
 		"./simulator": {
-			"types": "./dist/simulator/index.d.ts",
-			"require": "./dist/simulator.cjs",
-			"import": "./dist/simulator.js"
+			"react-server": {
+				"types": "./dist/simulator/react-server/index.d.ts",
+				"require": "./dist/simulator/react-server.cjs",
+				"import": "./dist/simulator/react-server.js"
+			},
+			"default": {
+				"types": "./dist/simulator/index.d.ts",
+				"require": "./dist/simulator.cjs",
+				"import": "./dist/simulator.js"
+			}
 		},
 		"./package.json": "./package.json"
 	},
@@ -66,6 +73,7 @@
 		"fp-ts": "^2.13.1",
 		"io-ts": "^2.2.20",
 		"io-ts-types": "^0.5.19",
+		"lz-string": "1.5.0",
 		"monocle-ts": "^2.3.13",
 		"newtype-ts": "^0.3.5",
 		"node-fetch": "^3.3.1",
@@ -86,6 +94,7 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
+		"next": "14.1.3",
 		"prettier": "3.0.3",
 		"prettier-plugin-jsdoc": "1.1.1",
 		"react": "18.2.0",
