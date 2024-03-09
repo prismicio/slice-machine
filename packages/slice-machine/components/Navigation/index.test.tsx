@@ -98,7 +98,7 @@ describe("Side Navigation", () => {
     renderSideNavigation();
     expect(await screen.findByText("foo")).toBeVisible();
     expect(await screen.findByText("foo.prismic.io")).toBeVisible();
-    const link = await screen.findByTitle("Open prismic repository");
+    const link = await screen.findByTitle("Open Prismic repository");
     expect(link).toHaveAttribute("href", "https://foo.prismic.io");
     expect(link).toHaveAttribute("target", "_blank");
   });
