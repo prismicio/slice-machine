@@ -74,9 +74,9 @@ test("I can access the repository using the open icon", async ({
   await sliceMachinePage.gotoDefaultPage();
   await expect(sliceMachinePage.menu.repositoryLink).toBeVisible();
 
+  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
   await sliceMachinePage.menu.repositoryLink.click();
-
-  const newTab = await sliceMachinePage.page.waitForEvent("popup");
+  const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
   await expect(newTab).toHaveTitle("prismic.io - Example Prismic Repo");
@@ -182,9 +182,9 @@ test('I can access the Academy from the "Learn Prismic" link', async ({
   await sliceMachinePage.gotoDefaultPage();
   await expect(sliceMachinePage.menu.learnPrismicLink).toBeVisible();
 
+  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
   await sliceMachinePage.menu.learnPrismicLink.click();
-
-  const newTab = await sliceMachinePage.page.waitForEvent("popup");
+  const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
   await expect(newTab).toHaveTitle(/Prismic Academy/);
@@ -204,9 +204,9 @@ test('I can access the repository\'s users page from the "Invite team" link', as
   await sliceMachinePage.gotoDefaultPage();
   await expect(sliceMachinePage.menu.inviteTeamLink).toBeVisible();
 
+  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
   await sliceMachinePage.menu.inviteTeamLink.click();
-
-  const newTab = await sliceMachinePage.page.waitForEvent("popup");
+  const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
   // We cannot test the title since it only contains the repository's name.
