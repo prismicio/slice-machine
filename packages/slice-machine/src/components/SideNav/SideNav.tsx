@@ -53,7 +53,7 @@ export const SideNavRepository: FC<SideNavRepositoryProps> = ({
         className={styles.repositoryLinkIcon}
         href={href}
         target="_blank"
-        title="Open prismic repository"
+        title="Open Prismic repository"
       >
         <OpenIcon />
       </a>
