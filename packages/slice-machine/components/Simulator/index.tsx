@@ -39,20 +39,16 @@ import IframeRenderer from "./components/IframeRenderer";
 import {
   selectIframeStatus,
   selectIsWaitingForIFrameCheck,
-  selectSetupStatus,
 } from "@src/modules/simulator";
 import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
-import SetupModal from "./components/SetupModal";
 import { Slices, VariationSM } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 export enum UiState {
-  LOADING_SETUP = "LOADING_SETUP",
   LOADING_IFRAME = "LOADING_IFRAME",
-  FAILED_SETUP = "FAILED_SETUP",
   FAILED_CONNECT = "FAILED_CONNECT",
   SUCCESS = "SUCCESS",
 }
@@ -63,24 +59,15 @@ type SimulatorProps = {
 };
 
 const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
-  const {
-    checkSimulatorSetup,
-    connectToSimulatorIframe,
-    updateSliceMockSuccess,
-  } = useSliceMachineActions();
-  const {
-    simulatorUrl,
-    iframeStatus,
-    manifestStatus,
-    isWaitingForIFrameCheck,
-    endpoints,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    simulatorUrl: selectSimulatorUrl(state),
-    iframeStatus: selectIframeStatus(state),
-    manifestStatus: selectSetupStatus(state).manifest,
-    isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
-    endpoints: selectEndpoints(state),
-  }));
+  const { connectToSimulatorIframe, updateSliceMockSuccess } =
+    useSliceMachineActions();
+  const { simulatorUrl, iframeStatus, isWaitingForIFrameCheck, endpoints } =
+    useSelector((state: SliceMachineStoreType) => ({
+      simulatorUrl: selectSimulatorUrl(state),
+      iframeStatus: selectIframeStatus(state),
+      isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
+      endpoints: selectEndpoints(state),
+    }));
 
   const editorConfig: EditorConfig = useMemo(
     () => ({
@@ -91,12 +78,7 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
     [endpoints.PrismicOembed, endpoints.PrismicUnsplash],
   );
 
-  const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
-
   useEffect(() => {
-    checkSimulatorSetup();
     void telemetry.track({ event: "slice-simulator:open" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -114,41 +96,20 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
   };
 
   const currentState: UiState = (() => {
-    if (manifestStatus === "ko") {
-      return UiState.FAILED_SETUP;
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (isWaitingForIFrameCheck || !iframeStatus) {
+      return UiState.LOADING_IFRAME;
     }
-    if (manifestStatus === "ok") {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (isWaitingForIFrameCheck || !iframeStatus) {
-        return UiState.LOADING_IFRAME;
-      }
-      if (iframeStatus !== "ok") {
-        return UiState.FAILED_CONNECT;
-      }
-      return UiState.SUCCESS;
+    if (iframeStatus !== "ok") {
+      return UiState.FAILED_CONNECT;
     }
-    return UiState.LOADING_SETUP;
+    return UiState.SUCCESS;
   })();
 
   useEffect(() => {
-    if (currentState === UiState.FAILED_SETUP && !setupIntervalId.current) {
-      const id = setInterval(() => {
-        checkSimulatorSetupCb();
-      }, 3000);
-      setupIntervalId.current = id;
-    }
+    connectToSimulatorIframe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentState]);
-
-  useEffect(() => {
-    if (manifestStatus === "ok") {
-      if (setupIntervalId.current) {
-        clearInterval(setupIntervalId.current);
-      }
-      connectToSimulatorIframe();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [manifestStatus]);
+  }, []);
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
@@ -255,7 +216,6 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
-      <SetupModal isOpen={currentState === UiState.FAILED_SETUP} />
       <Header
         slice={slice}
         variation={variation}

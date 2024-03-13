@@ -172,12 +172,6 @@ export const checkSimulatorSetup =
     };
   };
 
-export const getSimulatorSetupSteps = async (): ReturnType<
-  typeof managerClient.simulator.readSliceSimulatorSetupSteps
-> => {
-  return await managerClient.simulator.readSliceSimulatorSetupSteps();
-};
-
 export type SaveSliceMockRequest = {
   libraryID: string;
   sliceID: string;

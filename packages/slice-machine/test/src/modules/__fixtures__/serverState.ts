@@ -26,7 +26,6 @@ export const dummyServerState: Pick<
       SliceMachineV1: "https://sm-api.prismic.io/v1/",
     },
     shortId: "shortId",
-    supportsSliceSimulator: true,
   },
   customTypes: [
     {

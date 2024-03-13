@@ -12,10 +12,7 @@ import {
   changesPushSuccess,
 } from "./userContext";
 import { refreshStateCreator } from "./environment";
-import {
-  checkSimulatorSetupCreator,
-  connectToSimulatorIframeCreator,
-} from "./simulator";
+import { connectToSimulatorIframeCreator } from "./simulator";
 import ServerState from "@models/server/ServerState";
 import {
   customTypeCreateSuccess,
@@ -42,9 +39,6 @@ import { SaveSliceMockRequest } from "@src/apiClient";
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
 
-  const checkSimulatorSetup = (callback?: () => void) =>
-    dispatch(checkSimulatorSetupCreator.request({ callback }));
-
   const connectToSimulatorIframe = () =>
     dispatch(connectToSimulatorIframeCreator.request());
   const connectToSimulatorFailure = () =>
@@ -62,8 +56,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-  const openSimulatorSetupModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -190,7 +182,6 @@ const useSliceMachineActions = () => {
   const pushChangesSuccess = () => dispatch(changesPushSuccess());
 
   return {
-    checkSimulatorSetup,
     connectToSimulatorFailure,
     connectToSimulatorSuccess,
     connectToSimulatorIframe,
@@ -215,7 +206,6 @@ const useSliceMachineActions = () => {
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
     openScreenshotPreviewModal,
-    openSimulatorSetupModal,
     closeModals,
     pushChangesSuccess,
     createCustomTypeSuccess,
