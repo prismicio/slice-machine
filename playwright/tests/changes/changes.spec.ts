@@ -1,7 +1,4 @@
-import {
-  CustomType,
-  SharedSlice,
-} from "@prismicio/types-internal/lib/customtypes";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
@@ -106,6 +103,7 @@ test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
     remoteSlices: [],
     clientError: undefined,
   }));
+  // Necessary to ensure the page is not logged out.
   procedures.mock("git.fetchLinkedRepos", () => []);
 
   await changesPage.goto();
