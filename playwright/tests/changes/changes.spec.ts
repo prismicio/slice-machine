@@ -1,4 +1,7 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import {
+  CustomType,
+  SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
@@ -94,6 +97,22 @@ test("I can see the changes I have to push", async ({
   );
   await changesPage.checkCustomTypeApiId(customType.id);
   await changesPage.checkCustomTypeStatus(customType.id, "New");
+});
+
+test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    remoteCustomTypes: [],
+    remoteSlices: [],
+    clientError: undefined,
+  }));
+  procedures.mock("git.fetchLinkedRepos", () => []);
+
+  await changesPage.goto();
+  await changesPage.updateSliceScreenshot(
+    slice.name,
+    "slice-screenshot-imageLeft",
+  );
 });
 
 test("I can push the changes I have", async ({ changesPage, procedures }) => {

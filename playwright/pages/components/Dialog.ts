@@ -52,7 +52,9 @@ export class Dialog {
   /**
    * Actions
    */
-  // Handle actions here
+  close() {
+    return this.closeButton.click();
+  }
 
   /**
    * Assertions
