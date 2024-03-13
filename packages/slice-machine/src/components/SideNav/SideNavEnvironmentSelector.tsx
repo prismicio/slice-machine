@@ -11,15 +11,15 @@ import {
   ProgressCircle,
   Text,
 } from "@prismicio/editor-ui";
-import { Environment } from "@slicemachine/manager/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { FC } from "react";
-import clsx from "clsx";
+import type { Environment } from "@slicemachine/manager/client";
+import { clsx } from "clsx";
+import type { FC } from "react";
 
+import { LoginIcon } from "@src/icons/LoginIcon";
 import LogoIcon from "@src/icons/LogoIcon";
 
 import * as styles from "./SideNavEnvironmentSelector.css";
-import { LoginIcon } from "@src/icons/LoginIcon";
 
 type SideNavEnvironmentSelectorProps = {
   activeEnvironment?: Environment;
