@@ -59,7 +59,6 @@ export const ADAPTER_ONLY_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:read",
 	"custom-type:asset:read",
 	"custom-type-library:read",
-	"slice-simulator:setup:read",
 	"project:environment:read",
 ];
 

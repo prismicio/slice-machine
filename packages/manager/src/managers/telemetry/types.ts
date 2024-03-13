@@ -8,7 +8,6 @@ export const SegmentEventType = {
 	command_init_identify: "command:init:identify",
 	command_init_end: "command:init:end",
 	review: "review",
-	sliceSimulator_setup: "slice-simulator:setup",
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
 	pageView: "page-view",
@@ -41,7 +40,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.command_init_identify]: "SliceMachine Init Identify",
 	[SegmentEventType.command_init_end]: "SliceMachine Init End",
 	[SegmentEventType.review]: "SliceMachine Review",
-	[SegmentEventType.sliceSimulator_setup]: "SliceMachine Slice Simulator Setup",
 	[SegmentEventType.sliceSimulator_open]: "SliceMachine Slice Simulator Open",
 	[SegmentEventType.sliceSimulator_isNotRunning]:
 		"SliceMachine Slice Simulator is not running",
@@ -114,10 +112,6 @@ type ReviewSegmentEvent = SegmentEvent<
 		comment: string;
 		type: "onboarding" | "advanced repository";
 	}
->;
-
-type SliceSimulatorSetupSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.sliceSimulator_setup
 >;
 
 type SliceSimulatorOpenSegmentEvent = SegmentEvent<
@@ -307,7 +301,6 @@ export type SegmentEvents =
 	| CommandInitIdentifySegmentEvent
 	| CommandInitEndSegmentEvent
 	| ReviewSegmentEvent
-	| SliceSimulatorSetupSegmentEvent
 	| SliceSimulatorOpenSegmentEvent
 	| SliceSimulatorIsNotRunningSegmentEvent
 	| PageViewSegmentEvent

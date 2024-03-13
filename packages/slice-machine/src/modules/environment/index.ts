@@ -49,12 +49,6 @@ export const getApiEndpoint = (store: SliceMachineStoreType): string =>
 export const selectEndpoints = (store: SliceMachineStoreType): APIEndpoints =>
   store.environment.endpoints;
 
-export const selectIsSimulatorAvailableForFramework = (
-  store: SliceMachineStoreType,
-): boolean => {
-  return store.environment.supportsSliceSimulator;
-};
-
 export const getPackageManager = (
   store: SliceMachineStoreType,
 ): PackageManager => {

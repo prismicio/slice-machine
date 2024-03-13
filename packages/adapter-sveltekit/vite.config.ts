@@ -5,7 +5,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 export default defineConfig({
 	plugins: [
 		sdk({
-			internalDependencies: ["fp-ts", "node-fetch"],
+			internalDependencies: ["fp-ts"],
 		}),
 		svelte({ hot: false }),
 	],
