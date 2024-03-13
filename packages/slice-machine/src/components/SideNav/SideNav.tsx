@@ -17,7 +17,7 @@ import LogoIcon from "@src/icons/LogoIcon";
 import OpenIcon from "@src/icons/OpenIcon";
 
 import { Divider } from "../Divider";
-import * as styles from "./SideNav.css";
+import styles from "./SideNav.module.css";
 
 type SideNavProps = PropsWithChildren<{ style?: CSSProperties }>;
 

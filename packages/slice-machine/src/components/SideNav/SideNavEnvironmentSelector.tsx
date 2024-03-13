@@ -19,7 +19,7 @@ import type { FC } from "react";
 import { LoginIcon } from "@src/icons/LoginIcon";
 import LogoIcon from "@src/icons/LogoIcon";
 
-import * as styles from "./SideNavEnvironmentSelector.css";
+import styles from "./SideNavEnvironmentSelector.module.css";
 
 type SideNavEnvironmentSelectorProps = {
   activeEnvironment?: Environment;
@@ -222,7 +222,7 @@ const EnvironmentDot: FC<EnvironmentDotProps> = (props) => {
 
   return (
     <div
-      className={clsx(styles.environmentDot[kind], className)}
+      className={clsx(styles[`environmentDot-${kind}`], className)}
       role={asStatus ? "status" : undefined}
       {...otherProps}
     >
