@@ -1,22 +1,25 @@
 import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
 
-import * as styles from "./PageLayout.css";
+import styles from "./PageLayout.module.css";
 
 type PageLayoutProps = PropsWithChildren<{
-  borderTopColor: keyof typeof styles.borderTopColor;
+  borderTopColor?: "amber" | "indigo" | "purple";
 }>;
 
 export const PageLayout: FC<PageLayoutProps> = ({
-  borderTopColor,
+  borderTopColor = "purple",
   children,
   ...otherProps
 }) => (
-  <div
-    {...otherProps}
-    className={clsx([styles.root, styles.borderTopColor[borderTopColor]])}
-  >
+  <div {...otherProps} className={styles.root}>
     {children}
+    <div
+      className={clsx(
+        styles.borderTop,
+        styles[`borderTopColor-${borderTopColor}`],
+      )}
+    />
   </div>
 );
 
