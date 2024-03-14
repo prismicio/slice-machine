@@ -30,24 +30,70 @@ async function createPlayground(): Promise<void> {
   const projectName = appendRandomHash(args._[0] || createProjectName());
   const projectRoot = getProjectRoot(projectName);
 
+  await fs.mkdir(projectRoot, { recursive: true });
+
   switch (args.framework) {
     case "next": {
-      await createProject({
-        projectName,
-        npxCommand: [
-          "create-next-app@latest",
-          projectName,
-          "--typescript",
-          "--eslint",
-          "--no-tailwind",
-          "--import-alias=@/*",
-          "--app",
-          "--src-dir",
-          "--use-yarn",
+      await exec(
+        "npx",
+        [
+          "@slicemachine/init@latest",
+          `--repository="${projectName}"`,
+          '--starter="nextjs-starter-prismic-minimal-ts"',
+          `--directory-name=.`,
+          "--no-push",
+          "--no-start-slicemachine",
         ],
-        adapterName: "@slicemachine/adapter-next",
-        dryRun: args["dry-run"],
-      });
+        {
+          cwd: projectRoot,
+          env: {
+            // Use wroom.io
+            SM_ENV: "staging",
+          },
+          stdio: "inherit",
+          dryRun: args["dry-run"],
+        },
+      );
+
+      await fs.rm(path.join(projectRoot, "node_modules"), { recursive: true });
+      await fs.rm(path.join(projectRoot, "package-lock.json"));
+
+      await fs.writeFile(path.join(projectRoot, "yarn.lock"), "");
+
+      await exec(
+        "yarn",
+        [
+          "add",
+          "-D",
+          "slice-machine-ui@link:../../packages/slice-machine",
+          `@slicemachine/adapter-next@link:../../packages/adapter-next`,
+          "concurrently",
+        ],
+        {
+          cwd: projectRoot,
+          dryRun: args["dry-run"],
+        },
+      );
+
+      await patchPackageJSON(projectRoot, { dryRun: args["dry-run"] });
+      await patchSliceMachineConfig(projectRoot, { dryRun: args["dry-run"] });
+
+      // await createProject({
+      //   projectName,
+      //   npxCommand: [
+      //     "create-next-app@latest",
+      //     ".",
+      //     "--typescript",
+      //     "--eslint",
+      //     "--no-tailwind",
+      //     "--import-alias=@/*",
+      //     "--app",
+      //     "--src-dir",
+      //     "--use-yarn",
+      //   ],
+      //   adapterName: "@slicemachine/adapter-next",
+      //   dryRun: args["dry-run"],
+      // });
       break;
     }
 
@@ -57,25 +103,25 @@ async function createPlayground(): Promise<void> {
     }
   }
 
-  await patchPackageJSON(projectRoot, { dryRun: args["dry-run"] });
-  await patchSliceMachineConfig(projectRoot, { dryRun: args["dry-run"] });
+  // await patchPackageJSON(projectRoot, { dryRun: args["dry-run"] });
+  // await patchSliceMachineConfig(projectRoot, { dryRun: args["dry-run"] });
 
   console.info();
   console.info("Ready to play!");
   console.info(chalk.magenta(`cd playgrounds/${projectName} && yarn dev`));
 
-  if (args.start) {
-    console.info();
-    await exec("yarn", ["dev"], {
-      cwd: projectRoot,
-      env: {
-        // Use wroom.io
-        SM_ENV: "staging",
-      },
-      dryRun: args["dry-run"],
-      stdio: "inherit",
-    });
-  }
+  // if (args.start) {
+  //   console.info();
+  //   await exec("yarn", ["dev"], {
+  //     cwd: projectRoot,
+  //     env: {
+  //       // Use wroom.io
+  //       SM_ENV: "staging",
+  //     },
+  //     dryRun: args["dry-run"],
+  //     stdio: "inherit",
+  //   });
+  // }
 }
 
 /**
@@ -93,16 +139,19 @@ async function createProject(args: {
 }) {
   const projectRoot = getProjectRoot(args.projectName);
 
-  console.info(
-    `[1/3] Creating ${chalk.magenta(args.projectName)} using ${chalk.magenta(
-      args.npxCommand[0],
-    )}.`,
-  );
+  // await fs.mkdir(projectRoot, { recursive: true });
+  // await fs.writeFile(path.join(projectRoot, "yarn.lock"), "");
 
-  await exec("npx", args.npxCommand, {
-    cwd: PLAYGROUNDS_ROOT,
-    dryRun: args.dryRun,
-  });
+  // console.info(
+  //   `[1/3] Creating ${chalk.magenta(args.projectName)} using ${chalk.magenta(
+  //     args.npxCommand[0],
+  //   )}.`,
+  // );
+
+  // await exec("npx", args.npxCommand, {
+  //   cwd: projectRoot,
+  //   dryRun: args.dryRun,
+  // });
 
   console.info(
     `[2/3] Creating the ${chalk.magenta(
@@ -114,15 +163,15 @@ async function createProject(args: {
     dryRun: args.dryRun,
   });
 
-  console.info(
-    `[3/3] Linking ${chalk.magenta("slice-machine-ui")} and ${chalk.magenta(
-      args.adapterName,
-    )}.`,
-  );
-  await linkSliceMachinePackages(projectRoot, {
-    adapterName: args.adapterName,
-    dryRun: args.dryRun,
-  });
+  // console.info(
+  //   `[3/3] Linking ${chalk.magenta("slice-machine-ui")} and ${chalk.magenta(
+  //     args.adapterName,
+  //   )}.`,
+  // );
+  // await linkSliceMachinePackages(projectRoot, {
+  //   adapterName: args.adapterName,
+  //   dryRun: args.dryRun,
+  // });
 }
 
 /**
@@ -145,6 +194,8 @@ async function initSliceMachine(
     [
       "@slicemachine/init@latest",
       `--repository="${options.projectName}"`,
+      '--starter="nextjs-starter-prismic-minimal-ts"',
+      '--directory-name="."',
       "--no-push",
       "--no-start-slicemachine",
     ],
@@ -176,8 +227,8 @@ async function linkSliceMachinePackages(
     [
       "add",
       "-D",
-      "slice-machine-ui@workspace:*",
-      `${options.adapterName}@workspace:*`,
+      "slice-machine-ui@link:../../packages/slice-machine",
+      `${options.adapterName}@link:../../packages/adapter-next`,
       "concurrently",
     ],
     {
@@ -212,9 +263,9 @@ async function patchPackageJSON(
   const newPackageJSON = JSON.parse(originalPackageJSON);
   newPackageJSON.scripts = {
     ...newPackageJSON.scripts,
-    dev: 'concurrently --prefix-colors auto "yarn:dev:*"',
-    "dev:website": `${newPackageJSON.scripts.dev} --port=8001`,
-    "dev:slicemachine": `SM_ENV=staging yarn slicemachine`,
+    dev: 'concurrently --prefix-colors auto "yarn:dev:website" "yarn:dev:slicemachine"',
+    "dev:website": `next dev --port=8001`,
+    "dev:slicemachine": `SM_ENV=staging start-slicemachine`,
   };
   await fs.writeFile(
     path.join(projectRoot, "package.json"),

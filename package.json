@@ -81,7 +81,6 @@
     "e2e-projects/next",
     "e2e-projects/sveltekit",
     "e2e-projects/next-upgrade",
-    "playgrounds/*",
     "playwright",
     "packages/*"
   ]
