@@ -25,16 +25,10 @@
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "yarn workspaces foreach --parallel --topological-dev --verbose run test",
-    "cypress-setup": "./cypress-setup.sh",
-    "cypress": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=development VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress run'",
-    "cypress:dev": "yarn cypress-setup && start-server-and-test 'npm run dev --prefix e2e-projects/cypress-next-app' http://localhost:3000 'SM_ENV=staging VITE_ENABLE_SENTRY=false npm run slicemachine --prefix e2e-projects/cypress-next-app' http://localhost:9999 'cypress open'",
     "publish": "tsx scripts/publish.ts"
   },
   "dependenciesMeta": {
     "@sentry/cli": {
-      "built": true
-    },
-    "cypress": {
       "built": true
     },
     "esbuild": {
@@ -48,10 +42,6 @@
     "@types/semver": "7.3.13",
     "chalk": "4.1.2",
     "concurrently": "7.6.0",
-    "cypress": "12.8.0",
-    "cypress-localstorage-commands": "2.2.2",
-    "cypress-real-events": "1.7.6",
-    "cypress-wait-until": "1.7.2",
     "execa": "7.1.1",
     "husky": "8.0.3",
     "lint-staged": "13.2.0",

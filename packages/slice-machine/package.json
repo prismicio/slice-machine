@@ -14,7 +14,6 @@
   "scripts": {
     "build": "yarn typed-css-modules && cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
     "dev": "concurrently \"yarn typed-css-modules:watch\" \"next dev\" --names \"typed-css-modules,next\" --prefix-colors auto",
-    "dev-cypress": "concurrently \"yarn typed-css-modules:watch\" \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\" --names \"typed-css-modules,next,cypress-next-app\" --prefix-colors auto",
     "lint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx .",
     "stylelint": "stylelint --max-warnings 0 \"src/**/*.module.css\"",
     "prepack": "$npm_execpath run build",
