@@ -83,8 +83,10 @@ export class ChangesPage extends SliceMachinePage {
     return this.page.getByTestId(`custom-type-${id}`);
   }
 
-  getSlice(name: string) {
-    return this.page.getByLabel(new RegExp(`^${name} .* slice card$`));
+  getSliceCard(name: string, variation = "Default") {
+    return this.page.getByLabel(`${name} ${variation} slice card`, {
+      exact: true,
+    });
   }
 
   /**
@@ -108,23 +110,10 @@ export class ChangesPage extends SliceMachinePage {
     await this.checkPushedMessage();
   }
 
-  async updateSliceScreenshot(name: string, fileName: string) {
-    await this.getSlice(name)
-      .getByRole("button", {
-        name: "Update screenshot",
-        exact: true,
-      })
+  async openUpdateSliceScreenshotDialog(name: string, variation?: string) {
+    await this.getSliceCard(name, variation)
+      .getByRole("button", { name: "Update screenshot", exact: true })
       .click();
-
-    await expect(
-      this.updateScreenshotDialog.screenshotPlaceholder,
-    ).toBeVisible();
-    await this.updateScreenshotDialog.updateScreenshot(fileName);
-    await expect(
-      this.updateScreenshotDialog.screenshotPlaceholder,
-    ).not.toBeVisible();
-
-    await this.updateScreenshotDialog.close();
   }
 
   /**

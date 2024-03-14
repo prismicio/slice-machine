@@ -99,18 +99,23 @@ test("I can see the changes I have to push", async ({
 test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
-    remoteCustomTypes: [],
-    remoteSlices: [],
     clientError: undefined,
   }));
   // Necessary to ensure the page is not logged out.
   procedures.mock("git.fetchLinkedRepos", () => []);
 
   await changesPage.goto();
-  await changesPage.updateSliceScreenshot(
-    slice.name,
+  await changesPage.openUpdateSliceScreenshotDialog(slice.name);
+
+  await expect(
+    changesPage.updateScreenshotDialog.screenshotPlaceholder,
+  ).toBeVisible();
+  await changesPage.updateScreenshotDialog.updateScreenshot(
     "slice-screenshot-imageLeft",
   );
+  await expect(
+    changesPage.updateScreenshotDialog.screenshotPlaceholder,
+  ).not.toBeVisible();
 });
 
 test("I can push the changes I have", async ({ changesPage, procedures }) => {
