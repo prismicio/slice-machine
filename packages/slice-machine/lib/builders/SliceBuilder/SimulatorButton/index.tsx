@@ -1,6 +1,5 @@
 import { Button, tokens } from "@prismicio/editor-ui";
 import React, { PropsWithChildren, useEffect, useRef } from "react";
-import { Text } from "theme-ui";
 
 import { SIMULATOR_WINDOW_ID, VIDEO_SIMULATOR_TOOLTIP } from "@lib/consts";
 import { useRouter } from "next/router";
@@ -13,7 +12,6 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { telemetry } from "@src/apiClient";
 
-import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
 import {
   HoverCard,
   HoverCardCloseButton,
@@ -21,21 +19,6 @@ import {
   HoverCardMedia,
   HoverCardTitle,
 } from "@src/components/HoverCard";
-
-const SimulatorNotSupportedTooltip: React.FC = () => (
-  <ReactTooltipPortal>
-    <ReactTooltip
-      clickable
-      place="bottom"
-      effect="solid"
-      delayHide={500}
-      id="simulator-button-tooltip"
-    >
-      <Text as="b">Framework not supported</Text>
-      <Text as="p">Slice Simulator does not support your framework yet.</Text>
-    </ReactTooltip>
-  </ReactTooltipPortal>
-);
 
 const SimulatorOnboardingTooltip: React.FC<
   PropsWithChildren<{
@@ -71,9 +54,8 @@ const SimulatorOnboardingTooltip: React.FC<
 };
 
 const SimulatorButton: React.FC<{
-  isSimulatorAvailableForFramework: boolean;
   disabled: boolean;
-}> = ({ isSimulatorAvailableForFramework, disabled }) => {
+}> = ({ disabled }) => {
   const router = useRouter();
 
   const ref = useRef<HTMLButtonElement | null>(null);
@@ -88,10 +70,10 @@ const SimulatorButton: React.FC<{
 
   useEffect(() => {
     const node = ref.current;
-    if (node && isSimulatorAvailableForFramework && !hasSeenSimulatorTooltip) {
+    if (node && !hasSeenSimulatorTooltip) {
       setTimeout(() => ReactTooltip.show(node), 5000);
     }
-  }, [isSimulatorAvailableForFramework, hasSeenSimulatorTooltip]);
+  }, [hasSeenSimulatorTooltip]);
 
   const onCloseToolTip = () => {
     setSeenSimulatorToolTip();
@@ -101,8 +83,7 @@ const SimulatorButton: React.FC<{
     }
   };
 
-  const shouldShowSimulatorTooltip =
-    isSimulatorAvailableForFramework && !hasSeenSimulatorTooltip;
+  const shouldShowSimulatorTooltip = !hasSeenSimulatorTooltip;
 
   return (
     <span
@@ -138,9 +119,6 @@ const SimulatorButton: React.FC<{
           Simulate
         </Button>
       </SimulatorOnboardingTooltip>
-      {isSimulatorAvailableForFramework === false ? (
-        <SimulatorNotSupportedTooltip />
-      ) : undefined}
     </span>
   );
 };

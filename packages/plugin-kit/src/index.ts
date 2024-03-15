@@ -169,15 +169,6 @@ export type {
 	Snippet,
 } from "./hooks/snippet-read";
 
-// slice-simulator-setup:read
-export type {
-	SliceSimulatorSetupReadHook,
-	SliceSimulatorSetupReadHookData,
-	SliceSimulatorSetupReadHookReturnType,
-	SliceSimulatorSetupStep,
-	SliceSimulatorSetupStepValidationMessage,
-} from "./hooks/sliceSimulator-setup-read";
-
 // project:environment:read
 export type {
 	ProjectEnvironmentReadHook,

@@ -4,8 +4,6 @@ import { type FC } from "react";
 import FieldZones from "./FieldZones";
 import { Sidebar } from "./Sidebar";
 
-import { useSelector } from "react-redux";
-
 import SimulatorButton from "@builders/SliceBuilder/SimulatorButton";
 import {
   AppLayout,
@@ -16,16 +14,11 @@ import {
   AppLayoutHeader,
 } from "@components/AppLayout";
 import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
-import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
 import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
 
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
-
-  const isSimulatorAvailableForFramework = useSelector(
-    selectIsSimulatorAvailableForFramework,
-  );
 
   return (
     <AppLayout>
@@ -34,10 +27,7 @@ export const SliceBuilder: FC = () => {
         <AppLayoutBreadcrumb folder="Slices" page={slice.model.name} />
         <AppLayoutActions>
           <AutoSaveStatusIndicator status={actionQueueStatus} />
-          <SimulatorButton
-            isSimulatorAvailableForFramework={isSimulatorAvailableForFramework}
-            disabled={actionQueueStatus !== "done"}
-          />
+          <SimulatorButton disabled={actionQueueStatus !== "done"} />
         </AppLayoutActions>
       </AppLayoutHeader>
       <AppLayoutContent>
