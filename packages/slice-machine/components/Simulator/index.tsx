@@ -9,6 +9,7 @@ import {
 } from "react";
 import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 import { DefaultErrorMessage } from "@prismicio/editor-ui";
+import { toast } from "react-toastify";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
@@ -16,7 +17,7 @@ import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
-import { telemetry } from "@src/apiClient";
+import { saveSliceMock, telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { selectEndpoints, selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -62,8 +63,11 @@ type SimulatorProps = {
 };
 
 const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
-  const { checkSimulatorSetup, connectToSimulatorIframe, saveSliceMock } =
-    useSliceMachineActions();
+  const {
+    checkSimulatorSetup,
+    connectToSimulatorIframe,
+    updateSliceMockSuccess,
+  } = useSliceMachineActions();
   const {
     simulatorUrl,
     iframeStatus,
@@ -218,6 +222,36 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
   ]);
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(false);
+  const [isSavingMock, setIsSavingMock] = useState(false);
+
+  const saveMock = async () => {
+    if (editorState) {
+      setIsSavingMock(true);
+
+      try {
+        const payload = {
+          libraryID: slice.from,
+          sliceID: slice.model.id,
+          mocks: (slice.mocks ?? [])
+            .filter((mock) => mock.variation !== editorState.variation)
+            .concat(editorState),
+        };
+        const { errors } = await saveSliceMock(payload);
+
+        if (errors.length > 0) {
+          throw errors;
+        }
+
+        updateSliceMockSuccess(payload);
+        toast.success("Saved");
+      } catch (error) {
+        console.error("Error while saving mock", error);
+        toast.error("Error saving content");
+      }
+
+      setIsSavingMock(false);
+    }
+  };
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
@@ -228,17 +262,8 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
         isDisplayEditor={isDisplayEditor}
         actionsDisabled={currentState !== UiState.SUCCESS}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
-        onSaveMock={() =>
-          editorState &&
-          saveSliceMock({
-            libraryID: slice.from,
-            sliceID: slice.model.id,
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            mocks: (slice.mocks || [])
-              .filter((mock) => mock.variation !== editorState.variation)
-              .concat(editorState),
-          })
-        }
+        onSaveMock={() => void saveMock()}
+        isSavingMock={isSavingMock}
       />
       <Box
         sx={{

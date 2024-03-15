@@ -34,8 +34,9 @@ export const sliceGenerateCustomScreenshotSuccess = createAction(
   "SLICE/GENERATE_CUSTOM_SCREENSHOT_SUCCESS",
 )<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
 
-export const updateSliceMock =
-  createAction("SLICE/UPDATE_MOCK")<SaveSliceMockRequest>();
+export const sliceUpdateMockSuccess = createAction(
+  "SLICE/UPDATE_MOCK_SUCCESS",
+)<SaveSliceMockRequest>();
 
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
@@ -44,7 +45,7 @@ type SlicesActions =
   | ActionType<typeof sliceDeleteSuccess>
   | ActionType<typeof sliceUpdateSuccess>
   | ActionType<typeof sliceGenerateCustomScreenshotSuccess>
-  | ActionType<typeof updateSliceMock>;
+  | ActionType<typeof sliceUpdateMockSuccess>;
 
 // Selectors
 export const getLibraries = (
@@ -164,7 +165,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       };
     }
 
-    case getType(updateSliceMock): {
+    case getType(sliceUpdateMockSuccess): {
       const { libraryID, sliceID, mocks } = action.payload;
       const libraries = state.libraries.map((lib) => {
         if (lib.name !== libraryID) return lib;

@@ -8,5 +8,4 @@ export type SimulatorStoreType = {
     manifest: "ok" | "ko" | null;
   };
   isWaitingForIframeCheck: boolean;
-  savingMock: boolean;
 };
