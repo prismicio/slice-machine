@@ -47,7 +47,13 @@
   overflow-y: auto;
   position: sticky;
   top: 0;
-  width: 320px;
+  width: 288px;
+}
+
+@media screen and (max-width: 767px) {
+  .pane {
+    width: 80px;
+  }
 }
 
 .header {

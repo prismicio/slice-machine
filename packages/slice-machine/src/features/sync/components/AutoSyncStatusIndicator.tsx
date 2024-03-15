@@ -46,10 +46,12 @@ export const AutoSyncStatusIndicator: FC<AutoSyncStatusIndicatorProps> = (
   }
 
   return autoSaveStatusInfo.tooltipText !== undefined ? (
-    <Tooltip content={autoSaveStatusInfo.tooltipText} side="bottom">
+    <Tooltip content={autoSaveStatusInfo.tooltipText} side="right">
       <div className={styles.root}>
         {autoSaveStatusInfo.icon}
-        <Text color="grey11">{autoSaveStatusInfo.text}</Text>
+        <Text className={styles.text} color="grey11">
+          {autoSaveStatusInfo.text}
+        </Text>
       </div>
     </Tooltip>
   ) : (

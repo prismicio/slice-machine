@@ -11,7 +11,7 @@
 
 .interactiveElement {
   transition-duration: 200ms;
-  transition-property: background-color, border-color, boxShadow, fill, color;
+  transition-property: background-color, border-color, boxShadow, color;
   transition-timing-function: ease-out;
 }
 
@@ -21,8 +21,10 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding-inline: 32px;
-  padding-top: 16px;
+  padding: 16px;
+  padding-bottom: 0px;
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- Accounts for the 1 px right border of the `PageLayoutPane` component. */
+  padding-right: calc(16px - 1px);
 }
 
 .logo {
@@ -73,7 +75,7 @@
   border-radius: 6px;
   border-style: solid;
   border-width: 1px;
-  color: var(--grey12);
+  color: var(--grey11);
   cursor: pointer;
   display: flex;
   height: 32px;
@@ -97,7 +99,7 @@
   composes: blockWithDisplayRevert;
   list-style-type: none;
   &:last-child {
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
 }
 
@@ -182,11 +184,11 @@
   composes: blockWithDisplayRevert;
   /* Not Active */
   .link:not([data-active="true"]) & {
-    fill: var(--grey11);
+    color: var(--grey11);
   }
   /* Active */
   .link[data-active="true"] & {
-    fill: var(--purple10);
+    color: var(--purple10);
   }
 }
 
@@ -294,5 +296,23 @@
   &:focus {
     border-color: var(--purple10);
     box-shadow: var(--box-shadow-purple-focus);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .repository {
+    align-self: center;
+    padding-bottom: 16px;
+  }
+
+  .repositoryInfo,
+  .listTitle,
+  .linkContent,
+  .updateInfo {
+    display: none;
+  }
+
+  .link {
+    padding-right: 8px;
   }
 }
