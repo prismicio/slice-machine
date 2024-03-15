@@ -1,6 +1,14 @@
 import { type FC } from "react";
 import { useRouter } from "next/router";
-import { Box, Button, Text } from "@prismicio/editor-ui";
+import { useMediaQuery } from "@prismicio/editor-support/React";
+import {
+  Box,
+  Button,
+  IconButton,
+  Text,
+  Tooltip,
+  breakpoints,
+} from "@prismicio/editor-ui";
 
 import {
   HoverCard,
@@ -13,6 +21,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useNetwork } from "@src/hooks/useNetwork";
 import { useAuthStatus } from "@src/hooks/useAuthStatus";
 import { useUnSyncChanges } from "@src/features/sync/useUnSyncChanges";
+import { ChangesIcon } from "@src/icons/ChangesIcon";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 import { AutoSyncStatusIndicator } from "@src/features/sync/components/AutoSyncStatusIndicator";
@@ -22,6 +31,7 @@ export const ChangesItem: FC = () => {
   const open = useOpenChangesHoverCard();
   const router = useRouter();
   const { autoSyncStatus } = useAutoSync();
+  const isSmall = useMediaQuery(breakpoints.small);
 
   const onClose = () => {
     setSeenChangesToolTip();
@@ -29,18 +39,42 @@ export const ChangesItem: FC = () => {
 
   return (
     <HoverCard
+      align="start"
       open={open}
       openDelay={3000}
       onClose={onClose}
       side="right"
       sideOffset={24}
-      collisionPadding={280}
       trigger={
-        <Box padding={{ bottom: 24 }}>
+        <Box alignItems={isSmall ? "center" : undefined} flexDirection="column">
           {autoSyncStatus === "failed" ||
           autoSyncStatus === "synced" ||
           autoSyncStatus === "syncing" ? (
             <AutoSyncStatusIndicator autoSyncStatus={autoSyncStatus} />
+          ) : isSmall ? (
+            <Tooltip content="Review changes" side="right">
+              <Box position="relative">
+                {/*
+                 * TODO(DT-1942): This should be an IconButton with a link
+                 * component for accessibility
+                 */}
+                <IconButton
+                  icon={<ChangesIcon />}
+                  onClick={() => {
+                    void router.push("/changes");
+                  }}
+                  variant="solid"
+                />
+                <Box
+                  left="100%"
+                  position="absolute"
+                  top={0}
+                  transform="translate(-50%, -50%)"
+                >
+                  <ChangesCount color="purple" />
+                </Box>
+              </Box>
+            </Tooltip>
           ) : (
             // TODO(DT-1942): This should be a Button with a link component for
             // accessibility
@@ -52,7 +86,8 @@ export const ChangesItem: FC = () => {
               sx={{ width: "100%" }}
             >
               <Box alignItems="center" gap={4}>
-                <Text variant="bold">Review changes</Text> <ChangesCount />
+                <Text variant="bold">Review changes</Text>{" "}
+                <ChangesCount color="grey" />
               </Box>
             </Button>
           )}
@@ -70,7 +105,9 @@ export const ChangesItem: FC = () => {
   );
 };
 
-export const ChangesCount: FC = () => {
+type ChangesCountProps = { color: "grey" | "purple" };
+
+export const ChangesCount: FC<ChangesCountProps> = ({ color }) => {
   const isOnline = useNetwork();
   const authStatus = useAuthStatus();
   const { unSyncedSlices, unSyncedCustomTypes } = useUnSyncChanges();
@@ -91,8 +128,12 @@ export const ChangesCount: FC = () => {
   const formattedNumberOfChanges = numberOfChanges > 9 ? "+9" : numberOfChanges;
 
   return (
-    <Box padding={{ inline: 6 }} borderRadius={10} backgroundColor="grey5">
-      <Text color="grey11" variant="small">
+    <Box
+      padding={{ inline: 6 }}
+      borderRadius={10}
+      backgroundColor={color === "grey" ? "grey5" : "purple9"}
+    >
+      <Text color={color === "grey" ? "grey11" : "grey1"} variant="small">
         {formattedNumberOfChanges}
       </Text>
     </Box>

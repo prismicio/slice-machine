@@ -1,9 +1,10 @@
+import { useMediaQuery } from "@prismicio/editor-support/React";
+import { Tooltip, breakpoints } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import type { UrlObject } from "node:url";
 import {
   createElement,
   forwardRef,
-  type CSSProperties,
   type FC,
   type HTMLAttributes,
   type LiHTMLAttributes,
@@ -13,15 +14,13 @@ import {
   type SVGProps,
 } from "react";
 
-import LogoIcon from "@src/icons/LogoIcon";
+import { LogoIcon } from "@src/icons/LogoIcon";
 import OpenIcon from "@src/icons/OpenIcon";
 
 import { Divider } from "../Divider";
 import styles from "./SideNav.module.css";
 
-type SideNavProps = PropsWithChildren<{ style?: CSSProperties }>;
-
-export const SideNav: FC<SideNavProps> = (props) => (
+export const SideNav: FC<PropsWithChildren> = (props) => (
   <nav {...props} className={styles.root} />
 );
 
@@ -48,14 +47,16 @@ export const SideNavRepository: FC<SideNavRepositoryProps> = ({
         <h2 className={styles.repositoryDomain}>{repositoryDomain}</h2>
       </div>
 
-      <a
-        className={styles.repositoryLinkIcon}
-        href={href}
-        target="_blank"
-        title="Open Prismic repository"
-      >
-        <OpenIcon />
-      </a>
+      <Tooltip content="Open Prismic repository" side="right">
+        <a
+          className={styles.repositoryLinkIcon}
+          data-testid="prismic-repository-link"
+          href={href}
+          target="_blank"
+        >
+          <OpenIcon />
+        </a>
+      </Tooltip>
     </div>
   );
 };
@@ -117,18 +118,24 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   active,
   component = "a",
   ...otherProps
-}) =>
-  createElement(
-    component,
-    { ...otherProps, ...{ className: styles.link, "data-active": active } },
-    <>
-      <Icon className={styles.linkIcon} />
-      <div className={styles.linkContent}>
-        <span className={styles.linkText}>{title}</span>
-        {RightElement}
-      </div>
-    </>,
+}) => {
+  const isSmall = useMediaQuery(breakpoints.small);
+  return (
+    <Tooltip content={title} side="right" visible={isSmall}>
+      {createElement(
+        component,
+        { ...otherProps, ...{ className: styles.link, "data-active": active } },
+        <>
+          <Icon className={styles.linkIcon} />
+          <div className={styles.linkContent}>
+            <span className={styles.linkText}>{title}</span>
+            {RightElement}
+          </div>
+        </>,
+      )}
+    </Tooltip>
   );
+};
 
 type RightElementProps = PropsWithChildren<
   {

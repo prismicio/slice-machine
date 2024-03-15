@@ -1,7 +1,11 @@
 .logo {
   display: block;
   height: 40px;
+  margin-left: 4px;
   width: 40px;
+  &[aria-haspopup="menu"]:not([data-disabled]) {
+    cursor: pointer;
+  }
 }
 
 .environmentDotBase {

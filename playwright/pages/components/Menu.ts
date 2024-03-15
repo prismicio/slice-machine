@@ -37,10 +37,7 @@ export class Menu {
      */
     this.environmentSelector = new EnvironmentSelector(page);
     this.menu = page.getByRole("navigation");
-    this.repositoryLink = this.menu.getByRole("link", {
-      name: "Open Prismic repository",
-      exact: true,
-    });
+    this.repositoryLink = this.menu.getByTestId("prismic-repository-link");
     this.pageTypesLink = this.menu.getByRole("link", {
       name: "Page types",
       exact: true,

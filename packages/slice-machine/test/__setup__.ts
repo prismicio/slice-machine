@@ -191,6 +191,21 @@ vi.stubGlobal(
   }),
 );
 
+// Adapted from: https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom.
+vi.stubGlobal(
+  "matchMedia",
+  vi.fn((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+);
+
 vi.stubGlobal(
   "ResizeObserver",
   vi.fn(() => {
