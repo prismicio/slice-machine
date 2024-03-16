@@ -101,8 +101,6 @@ test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
     ...(data as Record<string, unknown>),
     clientError: undefined,
   }));
-  // Necessary to ensure the page is not logged out.
-  procedures.mock("git.fetchLinkedRepos", () => []);
 
   await changesPage.goto();
   await changesPage.openUpdateSliceScreenshotDialog(slice.name);
