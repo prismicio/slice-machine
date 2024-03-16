@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 
 import Grid from "@components/Grid";
 import {
@@ -6,8 +7,6 @@ import {
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { ToasterType } from "@src/modules/toaster";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { NonSharedSliceCard } from "@src/features/slices/sliceCards/NonSharedSliceCard";
@@ -36,24 +35,20 @@ export const SlicesList: React.FC<SlicesListProps> = ({
 
   const [legacySliceUpgraderLab] = useLab("legacySliceUpgrader");
 
-  const { openToaster } = useSliceMachineActions();
-
   useEffect(() => {
     if (hasLegacySlices)
       legacySliceUpgraderLab.enabled
-        ? openToaster(
+        ? toast.info(
             `This ${customTypesMessages.name({
               start: false,
               plural: false,
             })} contains legacy slices that can be upgraded.`,
-            ToasterType.INFO,
           )
-        : openToaster(
+        : toast.warning(
             `This ${customTypesMessages.name({
               start: false,
               plural: false,
             })} contains slices that are incompatible.`,
-            ToasterType.WARNING,
           );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLegacySlices]);

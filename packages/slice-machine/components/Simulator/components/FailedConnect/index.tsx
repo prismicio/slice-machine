@@ -41,7 +41,7 @@ const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => (
       <br /> If that doesn't work, see the&nbsp;
       <Link
         target="_blank"
-        href="https://prismic.io/docs/slice-machine"
+        href="https://prismic.io/docs/slice-machine#simulate-slices"
         sx={{
           color: "link",
         }}

@@ -12,10 +12,7 @@ import {
   changesPushSuccess,
 } from "./userContext";
 import { refreshStateCreator } from "./environment";
-import {
-  checkSimulatorSetupCreator,
-  connectToSimulatorIframeCreator,
-} from "./simulator";
+import { connectToSimulatorIframeCreator } from "./simulator";
 import ServerState from "@models/server/ServerState";
 import {
   customTypeCreateSuccess,
@@ -29,22 +26,18 @@ import {
   sliceGenerateCustomScreenshotSuccess,
   sliceUpdateSuccess,
   sliceRenameSuccess,
+  sliceUpdateMockSuccess,
 } from "./slices";
 import { UserReviewType } from "./userContext/types";
-import { GenericToastTypes, openToasterCreator } from "./toaster";
 import { CustomTypes } from "@lib/models/common/CustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { ComponentUI, ScreenshotUI } from "../../lib/models/common/ComponentUI";
-import { saveSliceMockCreator } from "./simulator";
-import { SaveSliceMockRequest } from "@src/apiClient";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { SliceSM } from "@lib/models/common/Slice";
+import { SaveSliceMockRequest } from "@src/apiClient";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
-
-  const checkSimulatorSetup = (callback?: () => void) =>
-    dispatch(checkSimulatorSetupCreator.request({ callback }));
 
   const connectToSimulatorIframe = () =>
     dispatch(connectToSimulatorIframeCreator.request());
@@ -63,8 +56,6 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const openScreenshotPreviewModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
-  const openSimulatorSetupModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SIMULATOR_SETUP }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -94,16 +85,6 @@ const useSliceMachineActions = () => {
   const setSeenTutorialsToolTip = () =>
     dispatch(hasSeenTutorialsToolTipCreator());
   const setSeenChangesToolTip = () => dispatch(hasSeenChangesToolTipCreator());
-
-  // Toaster store
-  const openToaster = (
-    content: string | React.ReactNode,
-    type: GenericToastTypes,
-  ) => dispatch(openToasterCreator({ content, type }));
-
-  // Simulator
-  const saveSliceMock = (payload: SaveSliceMockRequest) =>
-    dispatch(saveSliceMockCreator.request(payload));
 
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {
@@ -192,6 +173,8 @@ const useSliceMachineActions = () => {
         libName,
       }),
     );
+  const updateSliceMockSuccess = (args: SaveSliceMockRequest) =>
+    dispatch(sliceUpdateMockSuccess(args));
 
   /**
    * Changes module
@@ -199,7 +182,6 @@ const useSliceMachineActions = () => {
   const pushChangesSuccess = () => dispatch(changesPushSuccess());
 
   return {
-    checkSimulatorSetup,
     connectToSimulatorFailure,
     connectToSimulatorSuccess,
     connectToSimulatorIframe,
@@ -224,12 +206,10 @@ const useSliceMachineActions = () => {
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
     openScreenshotPreviewModal,
-    openSimulatorSetupModal,
     closeModals,
-    openToaster,
-    saveSliceMock,
     pushChangesSuccess,
     createCustomTypeSuccess,
+    updateSliceMockSuccess,
   };
 };
 

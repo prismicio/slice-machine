@@ -155,7 +155,7 @@ test("I can add a slice with an existing slice from the blank slate", async ({
   ).toBeVisible();
 });
 
-test("I can add a slice by creating a new slice the blank slate", async ({
+test("I can add a slice by creating a new slice from the blank slate", async ({
   pageTypesBuilderPage,
   reusablePageType,
 }) => {

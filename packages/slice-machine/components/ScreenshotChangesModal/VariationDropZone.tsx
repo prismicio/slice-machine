@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Flex, Text, Spinner } from "theme-ui";
 import { useHotkeys } from "react-hotkeys-hook";
-
-import { acceptedImagesTypes } from "@lib/consts";
-import { ToasterType } from "@src/modules/toaster";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { toast } from "react-toastify";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
-import useCustomScreenshot from "./useCustomScreenshot";
+import { acceptedImagesTypes } from "@lib/consts";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { uploadSliceScreenshot } from "@src/features/slices/actions/uploadSliceScreenshot";
+
+import useCustomScreenshot from "./useCustomScreenshot";
 
 interface DropZoneProps {
   imageTypes?: string[];
@@ -81,8 +81,7 @@ const DropZone: React.FC<DropZoneProps> = ({
 }) => {
   const maybeScreenshot = slice.screenshots[variationID];
 
-  const { openToaster, saveSliceCustomScreenshotSuccess } =
-    useSliceMachineActions();
+  const { saveSliceCustomScreenshotSuccess } = useSliceMachineActions();
   const [isDragActive, setIsDragActive] = useState(false);
   const [isHover, setIsHover] = useState(false);
   const [isUploadingScreenshot, setIsUploadingScreenshot] = useState(false);
@@ -118,10 +117,7 @@ const DropZone: React.FC<DropZoneProps> = ({
 
   const handleFile = async (file: File) => {
     if (file.size > 128000000) {
-      return openToaster(
-        "File is too big. Max file size: 128Mb.",
-        ToasterType.ERROR,
-      );
+      return toast.error("File is too big. Max file size: 128Mb.");
     }
 
     setIsUploadingScreenshot(true);
@@ -172,9 +168,8 @@ const DropZone: React.FC<DropZoneProps> = ({
       if (imageTypes.some((t) => `image/${t}` === maybeFile.type)) {
         return void handleFile(maybeFile);
       }
-      return openToaster(
+      return toast.error(
         `Only files of type ${imageTypes.join(", ")} are accepted.`,
-        ToasterType.ERROR,
       );
     }
   };

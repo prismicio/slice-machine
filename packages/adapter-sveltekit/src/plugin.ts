@@ -38,7 +38,6 @@ import {
 import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
-import { sliceSimulatorSetupRead } from "./hooks/sliceSimulator-setup-read";
 import { snippetRead } from "./hooks/snippet-read";
 
 import * as Hero from "./sliceTemplates/Hero";
@@ -322,11 +321,5 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("documentation:read", documentationRead);
-
-		////////////////////////////////////////////////////////////////
-		// slice-simulator:*
-		////////////////////////////////////////////////////////////////
-
-		hook("slice-simulator:setup:read", sliceSimulatorSetupRead);
 	},
 });

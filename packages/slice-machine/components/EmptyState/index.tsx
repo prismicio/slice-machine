@@ -18,6 +18,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
   buttonText,
   documentationComponent,
   videoPublicIdUrl,
+  ...restProps
 }) => (
   <Box
     sx={{
@@ -26,6 +27,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
       flexWrap: "wrap",
       justifyContent: "center",
     }}
+    {...restProps}
   >
     <Box
       sx={(theme) => ({

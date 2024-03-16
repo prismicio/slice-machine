@@ -7,11 +7,6 @@ export type {
 	SliceMachineManagerClient,
 } from "../managers/createSliceMachineManagerClient";
 
-export type {
-	SimulatorManagerReadSliceSimulatorSetupStep,
-	SimulatorManagerReadSliceSimulatorSetupStepsReturnType,
-} from "../managers/simulator/SimulatorManager";
-
 export { GIT_PROVIDER, type GitProvider } from "../constants/GIT_PROVIDER";
 
 export type { Environment } from "../managers/prismicRepository/types";
