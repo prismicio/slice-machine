@@ -19,6 +19,7 @@ import {
 import Zone from "@lib/builders/common/Zone";
 import EditModal from "@lib/builders/common/EditModal";
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
+import { telemetry } from "@src/apiClient";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -117,6 +118,15 @@ const FieldZones: FC = () => {
       });
 
       setSlice(newSlice);
+
+      void telemetry.track({
+        event: "field:added",
+        id,
+        name: label,
+        type: widgetTypeName,
+        isInAGroup: false,
+        contentType: "slice",
+      });
     };
 
   const _onDragEnd = (widgetArea: WidgetsArea) => (result: DropResult) => {

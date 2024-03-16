@@ -30,6 +30,7 @@ import {
   reorderGroupField,
   updateGroupField,
 } from "@src/domain/customType";
+import { telemetry } from "@src/apiClient";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -81,6 +82,15 @@ const CustomListItem = ({
     });
 
     setCustomType(newCustomType);
+
+    void telemetry.track({
+      event: "field:added",
+      id,
+      name: label,
+      type: widgetTypeName,
+      isInAGroup: true,
+      contentType: customType.format === "page" ? "page type" : "custom type",
+    });
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {

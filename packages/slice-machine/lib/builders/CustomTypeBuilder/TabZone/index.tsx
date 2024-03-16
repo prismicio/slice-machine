@@ -119,12 +119,12 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
 
     void telemetry.track({
-      event: "custom-type:field-added",
+      event: "field:added",
       id,
-      name: customType.id,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-      type: widget.TYPE_NAME,
-      zone: "static",
+      name: label,
+      type: widgetTypeName,
+      isInAGroup: false,
+      contentType: customType.format === "page" ? "page type" : "custom type",
     });
   };
 
