@@ -137,7 +137,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                           .
                         </>
                       }
-                      data-testid="blank-slate"
+                      data-testid="slices-table-blank-slate"
                     />
                   </Flex>
                 ) : (

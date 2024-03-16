@@ -38,7 +38,7 @@ export class SlicesListPage extends SliceMachinePage {
     this.createButton = this.header
       .getByRole("button", { name: "Create one", exact: true })
       .or(page.getByRole("button", { name: "Create", exact: true }));
-    this.blankSlate = page.getByTestId("blank-slate");
+    this.blankSlate = page.getByTestId("slices-table-blank-slate");
     this.blankSlateCreateAction = this.blankSlate.getByRole("button", {
       name: "Create one",
       exact: true,
