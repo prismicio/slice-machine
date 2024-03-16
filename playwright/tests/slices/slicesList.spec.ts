@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
+import { generateLibraries } from "../../mocks";
 import { generateRandomId } from "../../utils/generateRandomId";
 
 test("I can create a slice", async ({ sliceBuilderPage, slicesListPage }) => {
@@ -16,7 +17,7 @@ test("I can create a slice", async ({ sliceBuilderPage, slicesListPage }) => {
   await expect(sliceBuilderPage.repeatableZoneListItem).toHaveCount(0);
 });
 
-// See: See: https://github.com/prismicio/slice-machine/issues/599
+// See: https://github.com/prismicio/slice-machine/issues/599
 test("I can only create a slice by using Pascal case for the slice name", async ({
   slicesListPage,
 }) => {
@@ -118,4 +119,103 @@ test("I can delete a slice", async ({ slice, slicesListPage }) => {
   await expect(slicesListPage.getCard(slice.name)).not.toBeVisible();
   await slicesListPage.page.reload();
   await expect(slicesListPage.getCard(slice.name)).not.toBeVisible();
+});
+
+test("I cannot create a slice with a name starting with a number", async ({
+  slicesListPage,
+}) => {
+  await slicesListPage.goto();
+  await slicesListPage.openCreateDialog();
+
+  const sliceName = "1Slice" + generateRandomId();
+  await expect(slicesListPage.createSliceDialog.title).toBeVisible();
+  await slicesListPage.createSliceDialog.nameInput.fill(sliceName);
+
+  await expect(slicesListPage.createSliceDialog.submitButton).toBeDisabled();
+});
+
+test("I cannot rename a slice with a name starting with a number", async ({
+  slice,
+  slicesListPage,
+}) => {
+  await slicesListPage.goto();
+  await slicesListPage.openActionMenu(slice.name, "Rename");
+
+  const newSliceName = `1${slice.name}Renamed`;
+  await expect(slicesListPage.renameSliceDialog.title).toBeVisible();
+  await slicesListPage.renameSliceDialog.nameInput.fill(newSliceName);
+  await expect(slicesListPage.renameSliceDialog.submitButton).toBeDisabled();
+});
+
+test("I cannot create two slices with the same name", async ({
+  sliceBuilderPage,
+  slicesListPage,
+}) => {
+  await slicesListPage.goto();
+  await slicesListPage.openCreateDialog();
+
+  const sliceName = "Slice" + generateRandomId();
+  await slicesListPage.createSliceDialog.createSlice(sliceName);
+  await expect(sliceBuilderPage.getBreadcrumbLabel(sliceName)).toBeVisible();
+
+  await slicesListPage.goto();
+  await slicesListPage.openCreateDialog();
+  await expect(slicesListPage.createSliceDialog.title).toBeVisible();
+  await slicesListPage.createSliceDialog.nameInput.fill(sliceName);
+  await expect(slicesListPage.createSliceDialog.submitButton).toBeDisabled();
+});
+
+test("I can see the empty state when there are no slices", async ({
+  slicesListPage,
+  procedures,
+}) => {
+  const libraries = generateLibraries({ slicesCount: 0 });
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, string>),
+    libraries,
+  }));
+
+  await slicesListPage.goto();
+  await expect(slicesListPage.blankSlate).toBeVisible();
+});
+
+test("I can create a slice from the empty state", async ({
+  slicesListPage,
+  sliceBuilderPage,
+  procedures,
+}) => {
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, string>),
+    libraries: [
+      {
+        ...(data as { libraries: Record<string, unknown>[] }).libraries[0],
+        components: [],
+      },
+    ],
+  }));
+
+  await slicesListPage.goto();
+  await expect(slicesListPage.blankSlate).toBeVisible();
+  await slicesListPage.blankSlateCreateAction.click();
+
+  const sliceName = "Slice" + generateRandomId();
+  procedures.unmock("getState");
+  await slicesListPage.createSliceDialog.createSlice(sliceName);
+
+  await expect(sliceBuilderPage.getBreadcrumbLabel(sliceName)).toBeVisible();
+});
+
+test("I can update the screenshot", async ({ slicesListPage, slice }) => {
+  await slicesListPage.goto();
+  await slicesListPage.openUpdateScreenshotDialog(slice.name);
+
+  await expect(
+    slicesListPage.updateScreenshotDialog.screenshotPlaceholder,
+  ).toBeVisible();
+  await slicesListPage.updateScreenshotDialog.updateScreenshot(
+    "slice-screenshot-imageLeft",
+  );
+  await expect(
+    slicesListPage.updateScreenshotDialog.screenshotPlaceholder,
+  ).not.toBeVisible();
 });
