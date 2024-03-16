@@ -10,7 +10,6 @@ runs:
         path: |
           node_modules
           */*/node_modules
-          ~/.cache/Cypress
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-dependencies
     - name: Cache artifacts
       id: cache-artifacts
