@@ -124,7 +124,6 @@
     "react-tooltip": "4.5.1",
     "redux": "4.2.1",
     "redux-persist": "6.0.0",
-    "redux-saga": "1.2.2",
     "remark-gfm": "3.0.1",
     "semver": "7.3.8",
     "storybook": "7.0.10",
