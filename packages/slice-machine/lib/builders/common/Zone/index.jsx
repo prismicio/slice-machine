@@ -4,6 +4,8 @@ import { useState } from "react";
 import { BaseStyles } from "theme-ui";
 
 import { ListHeader } from "@src/components/List";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { telemetry } from "@src/apiClient";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import NewField from "./Card/components/NewField";
@@ -47,10 +49,22 @@ const Zone = ({
   const [editModalData, setEditModalData] = useState({ isOpen: false });
   const [selectModalData, setSelectModalData] = useState({ isOpen: false });
   const [newFieldData, setNewFieldData] = useState(null);
+  const { customType } = useCustomTypeState();
 
+  /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
   const enterEditMode = (field) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     setEditModalData({ isOpen: true, field });
+
+    const [id, model] = field;
+    void telemetry.track({
+      event: "field:settings-opened",
+      id,
+      name: model.config.label,
+      type: model.type,
+      isInAGroup: false,
+      contentType: customType.format === "page" ? "page type" : "custom type",
+    });
   };
   const enterSelectMode = () => {
     setSelectModalData({ isOpen: true });
