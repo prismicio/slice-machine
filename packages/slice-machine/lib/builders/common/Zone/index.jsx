@@ -65,9 +65,9 @@ const Zone = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       contentType:
         zoneType === "customType"
-          ? zoneTypeFormat === "custom"
-            ? "custom type"
-            : "page type"
+          ? zoneTypeFormat === "page"
+            ? "page type"
+            : "custom type"
           : zoneType,
     });
   };
