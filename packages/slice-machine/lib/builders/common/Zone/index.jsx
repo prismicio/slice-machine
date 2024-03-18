@@ -4,7 +4,6 @@ import { useState } from "react";
 import { BaseStyles } from "theme-ui";
 
 import { ListHeader } from "@src/components/List";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { telemetry } from "@src/apiClient";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
@@ -14,6 +13,7 @@ import EmptyState from "./components/EmptyState";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
+  zoneTypeFormat /* format of the zone: custom or page (or undefined if not a custom type) */,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -49,7 +49,6 @@ const Zone = ({
   const [editModalData, setEditModalData] = useState({ isOpen: false });
   const [selectModalData, setSelectModalData] = useState({ isOpen: false });
   const [newFieldData, setNewFieldData] = useState(null);
-  const { customType } = useCustomTypeState();
 
   /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
   const enterEditMode = (field) => {
@@ -63,7 +62,12 @@ const Zone = ({
       name: model.config.label,
       type: model.type,
       isInAGroup: false,
-      contentType: customType.format === "page" ? "page type" : "custom type",
+      contentType:
+        zoneType === "customType"
+          ? zoneTypeFormat === "custom"
+            ? "custom type"
+            : "page type"
+          : zoneType,
     });
   };
   const enterSelectMode = () => {
