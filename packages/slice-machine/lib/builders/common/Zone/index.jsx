@@ -62,7 +62,6 @@ const Zone = ({
       name: model.config.label,
       type: model.type,
       isInAGroup: false,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       contentType:
         zoneType === "customType"
           ? zoneTypeFormat === "page"
