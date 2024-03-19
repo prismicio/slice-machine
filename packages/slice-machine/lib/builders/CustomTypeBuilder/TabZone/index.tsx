@@ -35,6 +35,7 @@ import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
 import SliceZone from "../SliceZone";
 import {
+  FieldType,
   Group,
   NestableWidget,
   UID,
@@ -79,7 +80,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   }: {
     id: string;
     label: string;
-    widgetTypeName: string;
+    widgetTypeName: FieldType;
   }) => {
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {

@@ -1,3 +1,5 @@
+import { FieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
+
 import { CustomTypeFormat } from "../customTypes/types";
 import type { PushChangesLimitType } from "../prismicRepository/types";
 
@@ -176,7 +178,7 @@ type FieldAddedSegmentEvent = SegmentEvent<
 	{
 		id: string;
 		name: string;
-		type: string;
+		type: FieldType;
 		isInAGroup: boolean;
 		contentType: "page type" | "custom type" | "slice";
 	}
@@ -187,7 +189,7 @@ type FieldSettingsOpenedSegmentEvent = SegmentEvent<
 	{
 		id: string;
 		name: string;
-		type: string;
+		type: FieldType;
 		isInAGroup: boolean;
 		contentType: "page type" | "custom type" | "slice";
 	}

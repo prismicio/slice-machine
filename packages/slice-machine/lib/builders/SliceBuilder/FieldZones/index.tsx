@@ -1,7 +1,10 @@
 import { FC } from "react";
 import { flushSync } from "react-dom";
 import { DropResult } from "react-beautiful-dnd";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+import {
+  FieldType,
+  NestableWidget,
+} from "@prismicio/types-internal/lib/customtypes";
 
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
@@ -77,7 +80,7 @@ const FieldZones: FC = () => {
     }: {
       id: string;
       label: string;
-      widgetTypeName: string;
+      widgetTypeName: FieldType;
     }) => {
       // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

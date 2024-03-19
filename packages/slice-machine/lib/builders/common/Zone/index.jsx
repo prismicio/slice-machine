@@ -68,7 +68,7 @@ const Zone = ({
           ? zoneTypeFormat === "page"
             ? "page type"
             : "custom type"
-          : zoneType,
+          : "slice",
     });
   };
   const enterSelectMode = () => {
