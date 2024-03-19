@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@prismicio/editor-support/React";
 import {
   Box,
   DropdownMenu,
@@ -10,16 +11,18 @@ import {
   InvisibleButton,
   ProgressCircle,
   Text,
+  Tooltip,
+  breakpoints,
 } from "@prismicio/editor-ui";
-import { Environment } from "@slicemachine/manager/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { FC } from "react";
-import clsx from "clsx";
+import type { Environment } from "@slicemachine/manager/client";
+import { clsx } from "clsx";
+import type { FC, ReactNode } from "react";
 
-import LogoIcon from "@src/icons/LogoIcon";
-
-import * as styles from "./SideNavEnvironmentSelector.css";
 import { LoginIcon } from "@src/icons/LoginIcon";
+import { LogoIcon } from "@src/icons/LogoIcon";
+
+import styles from "./SideNavEnvironmentSelector.module.css";
 
 type SideNavEnvironmentSelectorProps = {
   activeEnvironment?: Environment;
@@ -44,12 +47,24 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
     onSelect,
   } = props;
 
+  const isSmall = useMediaQuery(breakpoints.small);
+
   const isProductionEnvironmentActive = activeEnvironment?.kind === "prod";
 
   return (
     <Box alignItems="center" gap={16}>
       <Box position="relative">
-        <LogoIcon className={styles.logo} />
+        {isSmall && environments.length > 1 ? (
+          <EnvironmentDropdownMenu
+            activeEnvironment={activeEnvironment}
+            disabled={disabled || loading}
+            environments={environments}
+            onSelect={onSelect}
+            trigger={<LogoIcon className={styles.logo} />}
+          />
+        ) : (
+          <LogoIcon className={styles.logo} />
+        )}
         {environments.length > 1 && (
           <EnvironmentDot
             kind={activeEnvironment?.kind ?? "prod"}
@@ -59,59 +74,74 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           />
         )}
       </Box>
-      <Box
-        flexGrow={1}
-        flexDirection="column"
-        overflow="hidden"
-        alignItems="flex-start"
-      >
-        {variant === "default" ? (
-          <Text component="span" variant="small" color="grey11">
-            Environment
-          </Text>
-        ) : undefined}
-
-        {variant === "unauthenticated" ? (
-          <InvisibleButton buttonText="Login required" onClick={onLogInClick} />
-        ) : undefined}
-
-        {variant === "offline" ? (
-          <Text component="span" variant="bold">
-            Offline
-          </Text>
-        ) : undefined}
-
-        {variant === "default" ? (
-          <Text
-            component="span"
-            className={styles.activeEnvironmentName}
-            data-testid="active-environment-name"
+      {!isSmall && (
+        <>
+          <Box
+            flexGrow={1}
+            flexDirection="column"
+            overflow="hidden"
+            alignItems="flex-start"
           >
-            {isProductionEnvironmentActive || activeEnvironment === undefined
-              ? "Production"
-              : activeEnvironment?.name}
-          </Text>
-        ) : undefined}
-      </Box>
-      <Box flexShrink={0}>
-        {variant === "unauthenticated" ? (
-          <IconButton
-            icon={<LoginIcon className={styles.loginIcon} />}
-            onClick={onLogInClick}
-            hiddenLabel="Log in to enable environments"
-          />
-        ) : undefined}
+            {variant === "default" ? (
+              <Text component="span" variant="small" color="grey11">
+                Environment
+              </Text>
+            ) : undefined}
 
-        {environments.length > 1 ? (
-          <EnvironmentDropdownMenu
-            activeEnvironment={activeEnvironment}
-            disabled={disabled}
-            environments={environments}
-            loading={loading}
-            onSelect={onSelect}
-          />
-        ) : undefined}
-      </Box>
+            {variant === "unauthenticated" ? (
+              <InvisibleButton
+                buttonText="Login required"
+                onClick={onLogInClick}
+              />
+            ) : undefined}
+
+            {variant === "offline" ? (
+              <Text component="span" variant="bold">
+                Offline
+              </Text>
+            ) : undefined}
+
+            {variant === "default" ? (
+              <Text
+                component="span"
+                className={styles.activeEnvironmentName}
+                data-testid="active-environment-name"
+              >
+                {isProductionEnvironmentActive ||
+                activeEnvironment === undefined
+                  ? "Production"
+                  : activeEnvironment?.name}
+              </Text>
+            ) : undefined}
+          </Box>
+          <Box flexShrink={0}>
+            {variant === "unauthenticated" ? (
+              <Tooltip content="Log in" side="right">
+                <IconButton
+                  icon={<LoginIcon className={styles.loginIcon} />}
+                  onClick={onLogInClick}
+                  hiddenLabel="Log in to enable environments"
+                />
+              </Tooltip>
+            ) : undefined}
+
+            {environments.length > 1 ? (
+              <EnvironmentDropdownMenu
+                activeEnvironment={activeEnvironment}
+                disabled={disabled}
+                environments={environments}
+                onSelect={onSelect}
+                trigger={
+                  <IconButton
+                    icon={loading ? <ProgressCircle /> : "unfoldMore"}
+                    hiddenLabel="Select environment"
+                  />
+                }
+              />
+            ) : undefined}
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
@@ -122,11 +152,11 @@ type EnvironmentDropdownMenuProps = Pick<
 > & {
   disabled: boolean;
   environments: Environment[];
-  loading: boolean;
+  trigger: ReactNode;
 };
 
 const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
-  const { activeEnvironment, disabled, environments, loading, onSelect } =
+  const { activeEnvironment, disabled, environments, onSelect, trigger } =
     props;
 
   const nonPersonalEnvironments = environments.filter(
@@ -138,13 +168,14 @@ const EnvironmentDropdownMenu: FC<EnvironmentDropdownMenuProps> = (props) => {
 
   return (
     <DropdownMenu modal>
-      <DropdownMenuTrigger disabled={disabled}>
-        <IconButton
-          icon={loading ? <ProgressCircle /> : "unfoldMore"}
-          hiddenLabel="Select environment"
-          disabled={disabled}
-        />
-      </DropdownMenuTrigger>
+      <Tooltip
+        content="Select environment"
+        side="right"
+        stableMount
+        visible={!disabled}
+      >
+        <DropdownMenuTrigger disabled={disabled}>{trigger}</DropdownMenuTrigger>
+      </Tooltip>
       <DropdownMenuContent align="end" minWidth={256}>
         {personalEnvironment ? (
           <DropdownMenuLabel>Regular Environments</DropdownMenuLabel>
@@ -222,7 +253,7 @@ const EnvironmentDot: FC<EnvironmentDotProps> = (props) => {
 
   return (
     <div
-      className={clsx(styles.environmentDot[kind], className)}
+      className={clsx(styles[`environmentDot-${kind}`], className)}
       role={asStatus ? "status" : undefined}
       {...otherProps}
     >

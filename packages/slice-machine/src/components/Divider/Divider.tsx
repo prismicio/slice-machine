@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { colors, sprinkles } from "@prismicio/editor-ui";
-import clsx from "clsx";
+import { clsx } from "clsx";
+import type { FC } from "react";
 
 import * as styles from "./Divider.css";
 

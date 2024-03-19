@@ -1,28 +1,25 @@
+import { useMediaQuery } from "@prismicio/editor-support/React";
+import { Tooltip, breakpoints } from "@prismicio/editor-ui";
+import { clsx } from "clsx";
+import type { UrlObject } from "node:url";
 import {
-  HTMLAttributes,
-  type CSSProperties,
+  forwardRef,
   type FC,
+  type HTMLAttributes,
   type LiHTMLAttributes,
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   type SVGProps,
-  createElement,
-  forwardRef,
 } from "react";
-import clsx from "clsx";
-import type { UrlObject } from "node:url";
 
-import LogoIcon from "@src/icons/LogoIcon";
+import { LogoIcon } from "@src/icons/LogoIcon";
 import OpenIcon from "@src/icons/OpenIcon";
 
 import { Divider } from "../Divider";
+import styles from "./SideNav.module.css";
 
-import * as styles from "./SideNav.css";
-
-type SideNavProps = PropsWithChildren<{ style?: CSSProperties }>;
-
-export const SideNav: FC<SideNavProps> = (props) => (
+export const SideNav: FC<PropsWithChildren> = (props) => (
   <nav {...props} className={styles.root} />
 );
 
@@ -49,14 +46,16 @@ export const SideNavRepository: FC<SideNavRepositoryProps> = ({
         <h2 className={styles.repositoryDomain}>{repositoryDomain}</h2>
       </div>
 
-      <a
-        className={styles.repositoryLinkIcon}
-        href={href}
-        target="_blank"
-        title="Open Prismic repository"
-      >
-        <OpenIcon />
-      </a>
+      <Tooltip content="Open Prismic repository" side="right">
+        <a
+          className={styles.repositoryLinkIcon}
+          data-testid="prismic-repository-link"
+          href={href}
+          target="_blank"
+        >
+          <OpenIcon />
+        </a>
+      </Tooltip>
     </div>
   );
 };
@@ -116,20 +115,22 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   RightElement,
   Icon,
   active,
-  component = "a",
+  component: Comp = "a",
   ...otherProps
-}) =>
-  createElement(
-    component,
-    { ...otherProps, ...{ className: styles.link, "data-active": active } },
-    <>
-      <Icon className={styles.linkIcon} />
-      <div className={styles.linkContent}>
-        <span className={styles.linkText}>{title}</span>
-        {RightElement}
-      </div>
-    </>,
+}) => {
+  const isSmall = useMediaQuery(breakpoints.small);
+  return (
+    <Tooltip content={title} side="right" visible={isSmall}>
+      <Comp {...otherProps} className={styles.link} data-active={active}>
+        <Icon className={styles.linkIcon} />
+        <div className={styles.linkContent}>
+          <span className={styles.linkText}>{title}</span>
+          {RightElement}
+        </div>
+      </Comp>
+    </Tooltip>
   );
+};
 
 type RightElementProps = PropsWithChildren<
   {
@@ -164,7 +165,7 @@ type UpdateInfoProps = {
 export const UpdateInfo: FC<UpdateInfoProps> = ({
   href,
   onClick,
-  component = "a",
+  component: Comp = "a",
 }) => (
   <div className={styles.updateInfo}>
     <h3 className={styles.updateInfoTitle}>Updates Available</h3>
@@ -176,11 +177,9 @@ export const UpdateInfo: FC<UpdateInfoProps> = ({
     {
       // TODO(DT-1942): This should be a Button with a link component for
       // accessibility
-      createElement(
-        component,
-        { ...{ className: styles.updateInfoLink, onClick }, href },
-        "Learn more",
-      )
     }
+    <Comp className={styles.updateInfoLink} href={href} onClick={onClick}>
+      Learn more
+    </Comp>
   </div>
 );

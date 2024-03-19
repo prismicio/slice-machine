@@ -6,20 +6,17 @@ import {
   PageLayoutHeader,
   PageLayoutPane,
 } from "./PageLayout";
-import { borderTopColor } from "./PageLayout.css";
 
 type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: PageLayout,
   argTypes: {
-    children: {
-      control: { disable: true },
-    },
     borderTopColor: {
-      control: { type: "select" },
-      options: [...Object.keys(borderTopColor), undefined],
+      control: "select",
+      options: ["amber", "indigo", "purple"],
     },
+    children: { control: { disable: true } },
   },
   parameters: {
     docs: { story: { height: 256, inline: false } },

@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@prismicio/editor-ui";
 import { render as rtlRender, RenderOptions } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Store, AnyAction } from "redux";
@@ -43,11 +44,13 @@ function render(
   }) {
     return (
       <ThemeUIThemeProvider theme={theme}>
-        <BaseStyles>
-          <Provider store={store}>
-            <ErrorBoundary>{children}</ErrorBoundary>
-          </Provider>
-        </BaseStyles>
+        <TooltipProvider>
+          <BaseStyles>
+            <Provider store={store}>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </Provider>
+          </BaseStyles>
+        </TooltipProvider>
       </ThemeUIThemeProvider>
     );
   }

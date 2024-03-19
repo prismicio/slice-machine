@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { RadarIcon } from "@src/icons/RadarIcon";
 import { LightningIcon } from "@src/icons/Lightning";
 
+import { PageLayout, PageLayoutPane } from "../PageLayout";
 import {
   SideNav,
   SideNavList,
@@ -21,6 +22,15 @@ type Story = StoryObj<typeof meta>;
 const meta = {
   component: SideNav,
   argTypes: { children: { control: { disable: true } } },
+  decorators: [
+    (Story) => (
+      <PageLayout>
+        <PageLayoutPane>
+          <Story />
+        </PageLayoutPane>
+      </PageLayout>
+    ),
+  ],
   parameters: {
     docs: { story: { height: 256, inline: false } },
     layout: "fullscreen",
@@ -157,6 +167,5 @@ export const Default = {
         </SideNavList>
       </>
     ),
-    style: { minHeight: "100vh", width: "320px" },
   },
 } satisfies Story;

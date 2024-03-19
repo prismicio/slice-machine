@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import { Text } from "@prismicio/editor-ui";
+import { clsx } from "clsx";
 import type { CSSProperties, FC, PropsWithChildren } from "react";
 
 import * as styles from "./BlankSlate.css";

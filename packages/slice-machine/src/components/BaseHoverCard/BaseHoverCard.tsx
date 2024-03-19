@@ -1,5 +1,6 @@
-import { FC, useMemo, type PropsWithChildren, type ReactNode } from "react";
+import { theme } from "@prismicio/editor-ui";
 import * as RadixHoverCard from "@radix-ui/react-hover-card";
+import { FC, useMemo, type PropsWithChildren, type ReactNode } from "react";
 
 import * as styles from "./BaseHoverCard.css";
 
@@ -20,7 +21,7 @@ export const BaseHoverCard: FC<BaseHoverCardProps> = ({
   alignOffset,
   arrowSize = 12,
   children,
-  collisionPadding,
+  collisionPadding = parseFloat(theme.space[16]),
   side,
   sideOffset = 4,
   trigger,
