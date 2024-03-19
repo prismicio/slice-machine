@@ -86,6 +86,7 @@ test("I can ...", async ({ sliceBuilderPage, slicesListPage }) => {
 You can also override default storage values:
 
 Example (redux):
+
 ```ts
 test.use({
   onboarded: false,
@@ -100,6 +101,7 @@ test("I can ...", async ({ sliceBuilderPage, slicesListPage }) => {
 ```
 
 Example (new way):
+
 ```ts
 test.use({
   onboarded: false,
@@ -299,6 +301,22 @@ test("I cannot see the updates available warning", async ({
 
 > [!NOTE]
 > Include the check within the goto function so you don't need to do it manually every time.
+
+### Enable Amplitude experiments as needed
+
+All Amplitude experiments are disabled by default to prevent unexpected test results. Tests should be pass regardless of the configured Prismic repository.
+
+To run tests with an experiment, enable the experiment in the test directly:
+
+```ts
+test("does something when the experiment is on", async ({ procedures }) => {
+  procedures.mock("getExperimentVariant", ({ data }) => {
+    if (data === "example-experiment-name") {
+      return { value: "on" };
+    }
+  });
+});
+```
 
 ### Write your own best practice for the team here...
 
