@@ -251,6 +251,11 @@ export const test = baseTest.extend<Options & Fixtures>({
    * Mocks
    */
   procedures: async ({ page }, use) => {
-    await use(await MockManagerProcedures.init(page));
+    const procedures = await MockManagerProcedures.init(page);
+
+    // Disable all experiments by default. Enable them in tests as needed.
+    procedures.mock("getExperimentVariant", () => undefined);
+
+    await use(procedures);
   },
 });

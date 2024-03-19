@@ -96,6 +96,26 @@ test("I can see the changes I have to push", async ({
   await changesPage.checkCustomTypeStatus(customType.id, "New");
 });
 
+test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    clientError: undefined,
+  }));
+
+  await changesPage.goto();
+  await changesPage.openUpdateSliceScreenshotDialog(slice.name);
+
+  await expect(
+    changesPage.updateScreenshotDialog.screenshotPlaceholder,
+  ).toBeVisible();
+  await changesPage.updateScreenshotDialog.updateScreenshot(
+    "slice-screenshot-imageLeft",
+  );
+  await expect(
+    changesPage.updateScreenshotDialog.screenshotPlaceholder,
+  ).not.toBeVisible();
+});
+
 test("I can push the changes I have", async ({ changesPage, procedures }) => {
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
