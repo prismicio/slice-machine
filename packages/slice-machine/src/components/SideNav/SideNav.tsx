@@ -3,7 +3,6 @@ import { Tooltip, breakpoints } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import type { UrlObject } from "node:url";
 import {
-  createElement,
   forwardRef,
   type FC,
   type HTMLAttributes,
@@ -116,23 +115,19 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   RightElement,
   Icon,
   active,
-  component = "a",
+  component: Comp = "a",
   ...otherProps
 }) => {
   const isSmall = useMediaQuery(breakpoints.small);
   return (
     <Tooltip content={title} side="right" visible={isSmall}>
-      {createElement(
-        component,
-        { ...otherProps, ...{ className: styles.link, "data-active": active } },
-        <>
-          <Icon className={styles.linkIcon} />
-          <div className={styles.linkContent}>
-            <span className={styles.linkText}>{title}</span>
-            {RightElement}
-          </div>
-        </>,
-      )}
+      <Comp {...otherProps} className={styles.link} data-active={active}>
+        <Icon className={styles.linkIcon} />
+        <div className={styles.linkContent}>
+          <span className={styles.linkText}>{title}</span>
+          {RightElement}
+        </div>
+      </Comp>
     </Tooltip>
   );
 };
@@ -170,7 +165,7 @@ type UpdateInfoProps = {
 export const UpdateInfo: FC<UpdateInfoProps> = ({
   href,
   onClick,
-  component = "a",
+  component: Comp = "a",
 }) => (
   <div className={styles.updateInfo}>
     <h3 className={styles.updateInfoTitle}>Updates Available</h3>
@@ -182,11 +177,9 @@ export const UpdateInfo: FC<UpdateInfoProps> = ({
     {
       // TODO(DT-1942): This should be a Button with a link component for
       // accessibility
-      createElement(
-        component,
-        { ...{ className: styles.updateInfoLink, onClick }, href },
-        "Learn more",
-      )
     }
+    <Comp className={styles.updateInfoLink} href={href} onClick={onClick}>
+      Learn more
+    </Comp>
   </div>
 );
