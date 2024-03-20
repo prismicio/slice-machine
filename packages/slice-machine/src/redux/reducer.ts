@@ -8,7 +8,6 @@ import { modalReducer } from "@src/modules/modal";
 import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
-import { simulatorReducer } from "@src/modules/simulator";
 import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
 import { slicesReducer } from "@src/modules/slices";
 import { routerReducer } from "connected-next-router";
@@ -20,7 +19,6 @@ const createReducer = (): Reducer =>
     loading: loadingReducer,
     userContext: userContextReducer,
     environment: environmentReducer,
-    simulator: simulatorReducer,
     availableCustomTypes: availableCustomTypesReducer,
     slices: slicesReducer,
     router: routerReducer,

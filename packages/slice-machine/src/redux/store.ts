@@ -1,12 +1,10 @@
 import { createStore, compose, applyMiddleware, Store } from "redux";
 import createReducer from "./reducer";
 import { persistStore, persistReducer } from "redux-persist";
-import createSagaMiddleware from "redux-saga";
 import storage from "redux-persist/lib/storage";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Persistor } from "redux-persist/es/types"; // defaults to localStorage for web
 import { createRouterMiddleware } from "connected-next-router";
-import rootSaga from "./saga";
 
 const persistConfig = {
   key: "root",
@@ -15,7 +13,6 @@ const persistConfig = {
 };
 
 const routerMiddleware = createRouterMiddleware();
-const sagaMiddleware = createSagaMiddleware();
 
 declare const window: {
   // eslint-disable-next-line
@@ -25,7 +22,7 @@ declare const window: {
 export default function configureStore(
   preloadedState: Partial<SliceMachineStoreType> = {},
 ): { store: Store<SliceMachineStoreType>; persistor: Persistor } {
-  const middlewares = [sagaMiddleware, routerMiddleware];
+  const middlewares = [routerMiddleware];
   const enhancers = [applyMiddleware(...middlewares)];
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -51,7 +48,6 @@ export default function configureStore(
     composeEnhancers(...enhancers),
   );
   const persistor = persistStore(store);
-  sagaMiddleware.run(rootSaga);
 
   return { store, persistor };
 }
