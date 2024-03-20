@@ -21,7 +21,7 @@ const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
     <Box
       sx={{
         mt: 2,
-        alignItems: "center",
+        alignItems: "flex-start",
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         ...(formField.type === FormTypes.CHECKBOX
           ? {

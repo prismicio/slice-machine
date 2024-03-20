@@ -16,6 +16,7 @@ import {
   ConstraintForm,
 } from "./components";
 import { TabFields } from "@lib/models/common/CustomType";
+import { CheckBox } from "@lib/forms/fields";
 
 const nullableNumberSchema = () => {
   return yup
@@ -30,6 +31,7 @@ const nullableNumberSchema = () => {
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
+  allowCaption: CheckBox("Allow caption"),
   constraint: {
     validate: () =>
       yup.object().defined().shape({
@@ -103,6 +105,7 @@ type FieldValues = {
       height?: number;
     };
     thumbnails: Array<Thumbnail>;
+    allowCaption?: boolean;
   };
 };
 
@@ -129,16 +132,22 @@ const Form: React.FC<FormProps> = (props) => {
 
   return (
     <FlexGrid>
-      {Object.entries(FormFields).map(([key, field]) => (
-        <Col key={key}>
-          <WidgetFormField
-            fieldName={createFieldNameFromKey(key)}
-            formField={field}
-            fields={fields}
-            initialValues={initialValues}
-          />
-        </Col>
-      ))}
+      <Col>
+        <WidgetFormField
+          fieldName={createFieldNameFromKey("label")}
+          formField={FormFields.label}
+          fields={fields}
+          initialValues={initialValues}
+        />
+      </Col>
+      <Col>
+        <WidgetFormField
+          fieldName={createFieldNameFromKey("id")}
+          formField={FormFields.id}
+          fields={fields}
+          initialValues={initialValues}
+        />
+      </Col>
       <Col>
         <Label
           htmlFor="thumbnails"
@@ -209,6 +218,24 @@ const Form: React.FC<FormProps> = (props) => {
             )}
           />
         </Card>
+      </Col>
+      <Col>
+        <Label
+          variant="label.primary"
+          sx={{
+            mt: 1,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          Caption
+        </Label>
+        <WidgetFormField
+          fieldName={createFieldNameFromKey("allowCaption")}
+          formField={FormFields.allowCaption}
+          fields={fields}
+          initialValues={initialValues}
+        />
       </Col>
     </FlexGrid>
   );
