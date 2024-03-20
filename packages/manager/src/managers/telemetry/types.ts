@@ -1,3 +1,5 @@
+import { FieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
+
 import { CustomTypeFormat } from "../customTypes/types";
 import type { PushChangesLimitType } from "../prismicRepository/types";
 
@@ -13,8 +15,9 @@ export const SegmentEventType = {
 	pageView: "page-view",
 	users_invite_button_clicked: "users-invite-button-clicked",
 	openVideoTutorials: "open-video-tutorials",
+	field_added: "field:added",
+	field_settingsOpened: "field:settings-opened",
 	customType_created: "custom-type:created",
-	customType_fieldAdded: "custom-type:field-added",
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
 	customType_openAddFromTemplates: "custom-type:open-add-from-templates",
 	customType_saved: "custom-type:saved",
@@ -47,9 +50,9 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.users_invite_button_clicked]:
 		"Slice Machine Users Invite Button Clicked",
 	[SegmentEventType.openVideoTutorials]: "SliceMachine Open Video Tutorials",
+	[SegmentEventType.field_added]: "SliceMachine Field Added",
+	[SegmentEventType.field_settingsOpened]: "SliceMachine Field Settings Opened",
 	[SegmentEventType.customType_created]: "SliceMachine Custom Type Created",
-	[SegmentEventType.customType_fieldAdded]:
-		"SliceMachine Custom Type Field Added",
 	[SegmentEventType.customType_sliceZoneUpdated]:
 		"SliceMachine Slicezone Updated",
 	[SegmentEventType.customType_openAddFromTemplates]:
@@ -170,6 +173,28 @@ type OpenVideoTutorialsSegmentEvent = SegmentEvent<
 	{ video: string }
 >;
 
+type FieldAddedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.field_added,
+	{
+		id: string;
+		name: string;
+		type: FieldType;
+		isInAGroup: boolean;
+		contentType: "page type" | "custom type" | "slice";
+	}
+>;
+
+type FieldSettingsOpenedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.field_settingsOpened,
+	{
+		id: string;
+		name: string;
+		type: FieldType;
+		isInAGroup: boolean;
+		contentType: "page type" | "custom type" | "slice";
+	}
+>;
+
 type CustomTypeCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.customType_created,
 	{
@@ -178,16 +203,6 @@ type CustomTypeCreatedSegmentEvent = SegmentEvent<
 		format: CustomTypeFormat;
 		type: "repeatable" | "single";
 		origin: "onboarding" | "table";
-	}
->;
-
-type CustomTypeFieldAddedSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.customType_fieldAdded,
-	{
-		id: string; // field id
-		name: string; // custom type id
-		zone: "static" | "repeatable";
-		type: string;
 	}
 >;
 
@@ -305,8 +320,9 @@ export type SegmentEvents =
 	| SliceSimulatorIsNotRunningSegmentEvent
 	| PageViewSegmentEvent
 	| OpenVideoTutorialsSegmentEvent
+	| FieldAddedSegmentEvent
+	| FieldSettingsOpenedSegmentEvent
 	| CustomTypeCreatedSegmentEvent
-	| CustomTypeFieldAddedSegmentEvent
 	| CustomTypeSliceZoneUpdatedSegmentEvent
 	| CustomTypeOpenAddFromTemplatesEvent
 	| CustomTypeSavedSegmentEvent

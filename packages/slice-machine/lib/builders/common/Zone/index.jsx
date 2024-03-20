@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BaseStyles } from "theme-ui";
 
 import { ListHeader } from "@src/components/List";
+import { telemetry } from "@src/apiClient";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import NewField from "./Card/components/NewField";
@@ -12,6 +13,7 @@ import EmptyState from "./components/EmptyState";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
+  zoneTypeFormat /* format of the zone: custom or page (or undefined if not a custom type) */,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -48,9 +50,25 @@ const Zone = ({
   const [selectModalData, setSelectModalData] = useState({ isOpen: false });
   const [newFieldData, setNewFieldData] = useState(null);
 
+  /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
   const enterEditMode = (field) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     setEditModalData({ isOpen: true, field });
+
+    const [id, model] = field;
+    void telemetry.track({
+      event: "field:settings-opened",
+      id,
+      name: model.config.label,
+      type: model.type,
+      isInAGroup: false,
+      contentType:
+        zoneType === "customType"
+          ? zoneTypeFormat === "page"
+            ? "page type"
+            : "custom type"
+          : "slice",
+    });
   };
   const enterSelectMode = () => {
     setSelectModalData({ isOpen: true });
