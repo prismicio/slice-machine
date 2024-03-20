@@ -31,7 +31,7 @@ const nullableNumberSchema = () => {
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
-  allowCaption: CheckBox("Allow caption"),
+  allowCaption: CheckBox("Allow caption", false, false),
   constraint: {
     validate: () =>
       yup.object().defined().shape({
