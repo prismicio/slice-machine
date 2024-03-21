@@ -24,7 +24,8 @@ import { Image } from "@prismicio/types-internal/lib/customtypes/widgets/nestabl
           "height": 500
         }
       ],
-      "label": "Icon Image"
+      "label": "Icon Image",
+      "allowCaption": true
     }
   } */
 
@@ -55,6 +56,7 @@ export const ImageWidget: Widget<Image, typeof schema> = {
       label,
       constraint: {},
       thumbnails: [],
+      allowCaption: false,
     },
   }),
   FormFields,

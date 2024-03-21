@@ -46,7 +46,7 @@
     "@prismicio/editor-ui": "0.4.25",
     "@prismicio/mocks": "2.0.0-alpha.2",
     "@prismicio/simulator": "0.1.4",
-    "@prismicio/types-internal": "2.2.0",
+    "@prismicio/types-internal": "2.4.0-alpha.0",
     "@radix-ui/react-hover-card": "1.0.6",
     "@radix-ui/react-tabs": "1.0.4",
     "@reach/menu-button": "0.18.0",
