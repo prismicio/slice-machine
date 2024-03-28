@@ -62,7 +62,7 @@ const BarePushChangesButton = forwardRef<
   ElementRef<typeof Button>,
   BarePushChangesButtonProps
 >((props, ref) => (
-  <Button {...props} data-cy="push-changes" ref={ref} startIcon="upload">
+  <Button {...props} ref={ref} startIcon="upload">
     Push
   </Button>
 ));

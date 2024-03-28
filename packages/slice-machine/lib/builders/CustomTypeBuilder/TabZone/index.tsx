@@ -35,6 +35,7 @@ import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
 import SliceZone from "../SliceZone";
 import {
+  FieldType,
   Group,
   NestableWidget,
   UID,
@@ -79,7 +80,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   }: {
     id: string;
     label: string;
-    widgetTypeName: string;
+    widgetTypeName: FieldType;
   }) => {
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
@@ -119,12 +120,12 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
 
     void telemetry.track({
-      event: "custom-type:field-added",
+      event: "field:added",
       id,
-      name: customType.id,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-      type: widget.TYPE_NAME,
-      zone: "static",
+      name: label,
+      type: widgetTypeName,
+      isInAGroup: false,
+      contentType: customType.format === "page" ? "page type" : "custom type",
     });
   };
 
@@ -213,6 +214,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           {query.newPageType === undefined ? (
             <Zone
               zoneType="customType"
+              zoneTypeFormat={customType.format}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               tabId={tabId}
               title="Static Zone"

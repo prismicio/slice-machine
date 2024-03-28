@@ -17,6 +17,5 @@ export interface FrontEndEnvironment {
   manifest: Manifest;
   repo: string;
   packageManager: PackageManager;
-  supportsSliceSimulator: boolean;
   endpoints: APIEndpoints;
 }

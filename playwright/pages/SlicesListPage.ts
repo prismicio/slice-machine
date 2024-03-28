@@ -3,16 +3,20 @@ import { Locator, Page } from "@playwright/test";
 import { CreateSliceDialog } from "./components/CreateSliceDialog";
 import { RenameSliceDialog } from "./components/RenameSliceDialog";
 import { DeleteSliceDialog } from "./components/DeleteSliceDialog";
+import { UpdateScreenshotDialog } from "./components/UpdateScreenshotDialog";
 import { SliceMachinePage } from "./SliceMachinePage";
 
 export class SlicesListPage extends SliceMachinePage {
   readonly createSliceDialog: CreateSliceDialog;
   readonly renameSliceDialog: RenameSliceDialog;
   readonly deleteSliceDialog: DeleteSliceDialog;
+  readonly updateScreenshotDialog: UpdateScreenshotDialog;
   readonly path: string;
   readonly header: Locator;
   readonly breadcrumbLabel: Locator;
   readonly createButton: Locator;
+  readonly blankSlate: Locator;
+  readonly blankSlateCreateAction: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -23,6 +27,7 @@ export class SlicesListPage extends SliceMachinePage {
     this.createSliceDialog = new CreateSliceDialog(page);
     this.renameSliceDialog = new RenameSliceDialog(page);
     this.deleteSliceDialog = new DeleteSliceDialog(page);
+    this.updateScreenshotDialog = new UpdateScreenshotDialog(page);
 
     /**
      * Static locators
@@ -33,6 +38,11 @@ export class SlicesListPage extends SliceMachinePage {
     this.createButton = this.header
       .getByRole("button", { name: "Create one", exact: true })
       .or(page.getByRole("button", { name: "Create", exact: true }));
+    this.blankSlate = page.getByTestId("slices-table-blank-slate");
+    this.blankSlateCreateAction = this.blankSlate.getByRole("button", {
+      name: "Create one",
+      exact: true,
+    });
   }
 
   /**
@@ -70,6 +80,15 @@ export class SlicesListPage extends SliceMachinePage {
     await this.page
       .getByTestId("slice-action-icon-dropdown")
       .getByText(action, { exact: true })
+      .click();
+  }
+
+  async openUpdateScreenshotDialog(name: string) {
+    await this.getCard(name)
+      .getByRole("button", {
+        name: "Update screenshot",
+        exact: true,
+      })
       .click();
   }
 

@@ -18,9 +18,6 @@ Thumbs.db
 
 e2e-projects/**/.next
 
-cypress/videos/**
-cypress/screenshots/**
-
 # IDE Specific
 nbproject
 .~lock.*
@@ -55,5 +52,3 @@ dist
 .vercel
 
 .env
-
-e2e-projects/cypress-next-app

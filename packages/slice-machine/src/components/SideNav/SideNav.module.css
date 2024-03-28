@@ -1,0 +1,318 @@
+.block {
+  all: unset;
+  box-sizing: border-box;
+  font-family: var(--font-family-body);
+}
+
+.blockWithDisplayRevert {
+  composes: block;
+  display: revert;
+}
+
+.interactiveElement {
+  transition-duration: 200ms;
+  transition-property: background-color, border-color, boxShadow, color;
+  transition-timing-function: ease-out;
+}
+
+.root {
+  composes: block;
+  background-color: var(--grey2);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 16px;
+  padding-bottom: 0px;
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- Accounts for the 1 px right border of the `PageLayoutPane` component. */
+  padding-right: calc(16px - 1px);
+}
+
+.logo {
+  composes: blockWithDisplayRevert;
+  height: 32px;
+  margin-bottom: 32px;
+  width: 32px;
+}
+
+.repository {
+  composes: block;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.repositoryInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.repositoryName {
+  composes: blockWithDisplayRevert;
+  color: var(--grey12);
+  font-size: calc(18rem / 16);
+  font-weight: 500;
+  line-height: calc(32rem / 16);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.repositoryDomain {
+  composes: blockWithDisplayRevert;
+  color: var(--grey11);
+  font-size: calc(12rem / 16);
+  line-height: calc(16rem / 16);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.repositoryLinkIcon {
+  composes: block interactiveElement;
+  align-items: center;
+  background-color: var(--grey2);
+  border-color: transparent;
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
+  color: var(--grey11);
+  cursor: pointer;
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+  &:hover {
+    background-color: var(--grey4);
+    border-color: var(--grey7);
+  }
+  &:focus-visible {
+    background-color: var(--grey2);
+    border-color: var(--purple8);
+  }
+  &:focus {
+    border-color: var(--purple10);
+    box-shadow: var(--box-shadow-purple-focus);
+  }
+}
+
+.list {
+  composes: blockWithDisplayRevert;
+  list-style-type: none;
+  &:last-child {
+    margin-bottom: 16px;
+  }
+}
+
+.listBottom {
+  margin-top: auto;
+  padding-top: 48px;
+}
+
+.listItem {
+  composes: blockWithDisplayRevert;
+  margin-top: 8px;
+  &:first-child {
+    margin-top: 0px;
+  }
+}
+
+.listTitle {
+  composes: blockWithDisplayRevert;
+  color: var(--grey11);
+  font-size: calc(12rem / 16);
+  font-weight: 600;
+  line-height: calc(16rem / 16);
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+
+.separator {
+  margin-top: 8px;
+}
+
+.link {
+  composes: block interactiveElement;
+  align-items: center;
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  display: flex;
+  font-size: calc(14rem / 16);
+  gap: 8px;
+  height: 48px;
+  line-height: calc(24rem / 16);
+  padding: 8px;
+  padding-right: 16px;
+  &:focus {
+    box-shadow: var(--box-shadow-purple-focus);
+  }
+  /* Not Active & Default */
+  &:not([data-active="true"]) {
+    border-color: transparent;
+    background-color: var(--grey2);
+    color: var(--grey12);
+  }
+  /* Parent list item is open */
+  [data-state="open"] > &,
+  [data-state="open"] > &:hover {
+    border-color: var(--purple10);
+    box-shadow: var(--box-shadow-purple-focus);
+  }
+  /* Not Active & Hover */
+  &:not([data-active="true"]):hover {
+    border-color: var(--grey7);
+    background-color: var(--grey4);
+  }
+  /* Not Active & Focus */
+  &:not([data-active="true"]):focus {
+    border-color: var(--purple10);
+  }
+  /* Active & Default */
+  &[data-active="true"] {
+    background-color: var(--purple3);
+    border-color: var(--purple10);
+    color: var(--purple10);
+  }
+  /* Active & Hover */
+  &[data-active="true"]:hover {
+    background-color: var(--grey1);
+  }
+}
+
+.linkIcon {
+  composes: blockWithDisplayRevert;
+  /* Not Active */
+  .link:not([data-active="true"]) & {
+    color: var(--grey11);
+  }
+  /* Active */
+  .link[data-active="true"] & {
+    color: var(--purple10);
+  }
+}
+
+.linkContent {
+  composes: block;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.linkText {
+  composes: blockWithDisplayRevert;
+  align-self: baseline;
+}
+
+.rightElementPill {
+  composes: block;
+  align-items: center;
+  align-self: center;
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- The component has a border radius of 32 px in Figma. */
+  border-radius: 32px;
+  border-style: solid;
+  border-width: 1px;
+  display: flex;
+  font-size: calc(12rem / 16);
+  font-weight: 500;
+  height: 20px;
+  justify-content: center;
+  line-height: calc(16rem / 16);
+  min-width: 20px;
+  padding-block: 0px;
+  padding-inline: 4px;
+  /* Not Active */
+  .link:not([data-active="true"]) & {
+    background-color: var(--purple9);
+    border-color: var(--purple10);
+    color: var(--purple3);
+  }
+  /* Active */
+  .link[data-active="true"] & {
+    border-color: transparent;
+    color: var(--grey11);
+  }
+}
+
+.rightElementText {
+  composes: blockWithDisplayRevert;
+  align-self: baseline;
+  color: var(--grey11);
+  font-size: calc(12rem / 16);
+  line-height: calc(16rem / 16);
+  max-width: 82px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.updateInfo {
+  composes: blockWithDisplayRevert;
+  background-color: var(--grey3);
+  border-radius: 6px;
+  margin-top: 32px;
+  padding: 16px;
+}
+
+.updateInfoTitle {
+  composes: blockWithDisplayRevert;
+  color: var(--grey12);
+  font-size: calc(12rem / 16);
+  font-weight: 600;
+  line-height: calc(20rem / 16);
+}
+
+.updateInfoText {
+  composes: blockWithDisplayRevert;
+  color: var(--grey11);
+  font-size: calc(12rem / 16);
+  line-height: calc(20rem / 16);
+}
+
+.updateInfoLink {
+  composes: block interactiveElement;
+  align-items: center;
+  background-color: var(--grey1);
+  border-color: var(--grey6);
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
+  color: var(--grey12);
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  font-size: calc(14rem / 16);
+  font-weight: 600;
+  justify-content: center;
+  line-height: calc(24rem / 16);
+  margin-top: 16px;
+  padding-block: 4px;
+  padding-inline: 16px;
+  width: 100%;
+  &:hover {
+    background-color: var(--grey3);
+    border-color: var(--grey7);
+  }
+  &:focus {
+    border-color: var(--purple10);
+    box-shadow: var(--box-shadow-purple-focus);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .repository {
+    align-self: center;
+    padding-bottom: 16px;
+  }
+
+  .repositoryInfo,
+  .listTitle,
+  .linkContent,
+  .updateInfo {
+    display: none;
+  }
+
+  .link {
+    padding-right: 8px;
+  }
+}

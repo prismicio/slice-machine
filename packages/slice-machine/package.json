@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "1.24.1",
+  "version": "1.26.0",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -14,7 +14,6 @@
   "scripts": {
     "build": "yarn typed-css-modules && cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
     "dev": "concurrently \"yarn typed-css-modules:watch\" \"next dev\" --names \"typed-css-modules,next\" --prefix-colors auto",
-    "dev-cypress": "concurrently \"yarn typed-css-modules:watch\" \"next dev\" \"npm run dev --prefix ../../e2e-projects/cypress-next-app\" --names \"typed-css-modules,next,cypress-next-app\" --prefix-colors auto",
     "lint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx .",
     "stylelint": "stylelint --max-warnings 0 \"src/**/*.module.css\"",
     "prepack": "$npm_execpath run build",
@@ -91,7 +90,6 @@
     "formik": "2.4.1",
     "fp-ts": "2.13.1",
     "highlight.js": "11.7.0",
-    "html-react-parser": "3.0.12",
     "io-ts": "2.2.20",
     "io-ts-types": "0.5.19",
     "jsdom": "21.1.1",
@@ -126,7 +124,6 @@
     "redux": "4.2.1",
     "redux-persist": "6.0.0",
     "redux-saga": "1.2.2",
-    "redux-saga-test-plan": "4.0.6",
     "remark-gfm": "3.0.1",
     "semver": "7.3.8",
     "storybook": "7.0.10",

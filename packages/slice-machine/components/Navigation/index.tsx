@@ -1,3 +1,4 @@
+import { Box } from "@prismicio/editor-ui";
 import { Suspense, type FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -65,7 +66,9 @@ const Navigation: FC = () => {
         href={repositoryUrl}
       />
 
-      <ChangesItem />
+      <Box flexDirection="column" padding={{ bottom: 24 }}>
+        <ChangesItem />
+      </Box>
 
       <SideNavList>
         <SideNavListItem>

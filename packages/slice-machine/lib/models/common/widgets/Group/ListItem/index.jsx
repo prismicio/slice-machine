@@ -30,6 +30,7 @@ import {
   reorderGroupField,
   updateGroupField,
 } from "@src/domain/customType";
+import { telemetry } from "@src/apiClient";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -81,6 +82,15 @@ const CustomListItem = ({
     });
 
     setCustomType(newCustomType);
+
+    void telemetry.track({
+      event: "field:added",
+      id,
+      name: label,
+      type: widgetTypeName,
+      isInAGroup: true,
+      contentType: customType.format === "page" ? "page type" : "custom type",
+    });
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {
@@ -141,9 +151,20 @@ const CustomListItem = ({
     setCustomType(newCustomType);
   };
 
+  /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
   const enterEditMode = (field) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     setEditModalData({ isOpen: true, field });
+
+    const [id, model] = field;
+    void telemetry.track({
+      event: "field:settings-opened",
+      id,
+      name: model.config.label,
+      type: model.type,
+      isInAGroup: true,
+      contentType: customType.format === "page" ? "page type" : "custom type",
+    });
   };
   return (
     <Fragment>

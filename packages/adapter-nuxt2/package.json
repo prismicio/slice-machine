@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt2",
-	"version": "0.3.36",
+	"version": "0.3.38",
 	"description": "Slice Machine adapter for Nuxt 2.",
 	"keywords": [
 		"typescript",
@@ -69,7 +69,6 @@
 		"magicast": "^0.2.1",
 		"monocle-ts": "^2.3.13",
 		"newtype-ts": "^0.3.5",
-		"node-fetch": "^3.3.1",
 		"pascal-case": "^3.1.2",
 		"prismic-ts-codegen": "^0.1.17"
 	},

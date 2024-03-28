@@ -9,6 +9,7 @@ import {
 } from "react";
 import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 import { DefaultErrorMessage } from "@prismicio/editor-ui";
+import { toast } from "react-toastify";
 
 import { defaultSharedSliceContent } from "@src/utils/editor";
 
@@ -16,7 +17,7 @@ import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
 import Header from "./components/Header";
 
-import { telemetry } from "@src/apiClient";
+import { saveSliceMock, telemetry } from "@src/apiClient";
 import { useSelector } from "react-redux";
 import { selectEndpoints, selectSimulatorUrl } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -38,20 +39,16 @@ import IframeRenderer from "./components/IframeRenderer";
 import {
   selectIframeStatus,
   selectIsWaitingForIFrameCheck,
-  selectSetupStatus,
 } from "@src/modules/simulator";
 import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import FullPage from "./components/FullPage";
 import FailedConnect from "./components/FailedConnect";
-import SetupModal from "./components/SetupModal";
 import { Slices, VariationSM } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 export enum UiState {
-  LOADING_SETUP = "LOADING_SETUP",
   LOADING_IFRAME = "LOADING_IFRAME",
-  FAILED_SETUP = "FAILED_SETUP",
   FAILED_CONNECT = "FAILED_CONNECT",
   SUCCESS = "SUCCESS",
 }
@@ -62,21 +59,15 @@ type SimulatorProps = {
 };
 
 const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
-  const { checkSimulatorSetup, connectToSimulatorIframe, saveSliceMock } =
+  const { connectToSimulatorIframe, updateSliceMockSuccess } =
     useSliceMachineActions();
-  const {
-    simulatorUrl,
-    iframeStatus,
-    manifestStatus,
-    isWaitingForIFrameCheck,
-    endpoints,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    simulatorUrl: selectSimulatorUrl(state),
-    iframeStatus: selectIframeStatus(state),
-    manifestStatus: selectSetupStatus(state).manifest,
-    isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
-    endpoints: selectEndpoints(state),
-  }));
+  const { simulatorUrl, iframeStatus, isWaitingForIFrameCheck, endpoints } =
+    useSelector((state: SliceMachineStoreType) => ({
+      simulatorUrl: selectSimulatorUrl(state),
+      iframeStatus: selectIframeStatus(state),
+      isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
+      endpoints: selectEndpoints(state),
+    }));
 
   const editorConfig: EditorConfig = useMemo(
     () => ({
@@ -87,12 +78,7 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
     [endpoints.PrismicOembed, endpoints.PrismicUnsplash],
   );
 
-  const setupIntervalId = useRef<NodeJS.Timeout | null>(null);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const checkSimulatorSetupCb = useCallback(() => checkSimulatorSetup(), []);
-
   useEffect(() => {
-    checkSimulatorSetup();
     void telemetry.track({ event: "slice-simulator:open" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -110,41 +96,20 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
   };
 
   const currentState: UiState = (() => {
-    if (manifestStatus === "ko") {
-      return UiState.FAILED_SETUP;
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (isWaitingForIFrameCheck || !iframeStatus) {
+      return UiState.LOADING_IFRAME;
     }
-    if (manifestStatus === "ok") {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (isWaitingForIFrameCheck || !iframeStatus) {
-        return UiState.LOADING_IFRAME;
-      }
-      if (iframeStatus !== "ok") {
-        return UiState.FAILED_CONNECT;
-      }
-      return UiState.SUCCESS;
+    if (iframeStatus !== "ok") {
+      return UiState.FAILED_CONNECT;
     }
-    return UiState.LOADING_SETUP;
+    return UiState.SUCCESS;
   })();
 
   useEffect(() => {
-    if (currentState === UiState.FAILED_SETUP && !setupIntervalId.current) {
-      const id = setInterval(() => {
-        checkSimulatorSetupCb();
-      }, 3000);
-      setupIntervalId.current = id;
-    }
+    connectToSimulatorIframe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentState]);
-
-  useEffect(() => {
-    if (manifestStatus === "ok") {
-      if (setupIntervalId.current) {
-        clearInterval(setupIntervalId.current);
-      }
-      connectToSimulatorIframe();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [manifestStatus]);
+  }, []);
 
   useEffect(() => {
     if (currentState === UiState.FAILED_CONNECT) {
@@ -218,27 +183,47 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
   ]);
 
   const [isDisplayEditor, toggleIsDisplayEditor] = useState(false);
+  const [isSavingMock, setIsSavingMock] = useState(false);
+
+  const saveMock = async () => {
+    if (editorState) {
+      setIsSavingMock(true);
+
+      try {
+        const payload = {
+          libraryID: slice.from,
+          sliceID: slice.model.id,
+          mocks: (slice.mocks ?? [])
+            .filter((mock) => mock.variation !== editorState.variation)
+            .concat(editorState),
+        };
+        const { errors } = await saveSliceMock(payload);
+
+        if (errors.length > 0) {
+          throw errors;
+        }
+
+        updateSliceMockSuccess(payload);
+        toast.success("Saved");
+      } catch (error) {
+        console.error("Error while saving mock", error);
+        toast.error("Error saving content");
+      }
+
+      setIsSavingMock(false);
+    }
+  };
 
   return (
     <Flex sx={{ flexDirection: "column", height: "100vh" }}>
-      <SetupModal isOpen={currentState === UiState.FAILED_SETUP} />
       <Header
         slice={slice}
         variation={variation}
         isDisplayEditor={isDisplayEditor}
         actionsDisabled={currentState !== UiState.SUCCESS}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
-        onSaveMock={() =>
-          editorState &&
-          saveSliceMock({
-            libraryID: slice.from,
-            sliceID: slice.model.id,
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            mocks: (slice.mocks || [])
-              .filter((mock) => mock.variation !== editorState.variation)
-              .concat(editorState),
-          })
-        }
+        onSaveMock={() => void saveMock()}
+        isSavingMock={isSavingMock}
       />
       <Box
         sx={{

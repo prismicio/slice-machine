@@ -7,14 +7,11 @@ import {
 	SimulatorManager,
 	SliceSimulatorState,
 	StateEventType,
-	disableEventHandler,
 	getDefaultMessage,
-	getDefaultProps,
 	getDefaultSlices,
-	onClickHandler,
-	simulatorClass,
-	simulatorRootClass,
 } from "@prismicio/simulator/kit";
+
+import { SliceSimulatorWrapper } from "./SliceSimulatorWrapper";
 
 const simulatorManager = new SimulatorManager();
 
@@ -23,35 +20,50 @@ export type SliceSimulatorSliceZoneProps = {
 };
 
 export type SliceSimulatorProps = {
-	/**
-	 * React component to render simulated Slices.
-	 *
-	 * @example
-	 *
-	 * ```tsx
-	 * import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-	 * import { SliceZone } from "@prismicio/react";
-	 *
-	 * import { components } from "../slices";
-	 *
-	 * <SliceSimulator
-	 * 	sliceZone={({ slices }) => (
-	 * 		<SliceZone slices={slices} components={components} />
-	 * 	)}
-	 * />;
-	 * ```
-	 */
-	sliceZone: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
 	className?: string;
-} & Omit<BaseSliceSimulatorProps, "state">;
+} & Omit<BaseSliceSimulatorProps, "state"> &
+	(
+		| {
+				/**
+				 * React component to render simulated Slices.
+				 *
+				 * @example
+				 *
+				 * ```tsx
+				 * import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+				 * import { SliceZone } from "@prismicio/react";
+				 *
+				 * import { components } from "../slices";
+				 *
+				 * <SliceSimulator
+				 * 	sliceZone={({ slices }) => (
+				 * 		<SliceZone slices={slices} components={components} />
+				 * 	)}
+				 * />;
+				 * ```
+				 */
+				sliceZone: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
+		  }
+		| {
+				children: React.ReactNode;
+		  }
+	);
 
+/**
+ * Simulate slices in isolation. The slice simulator enables live slice
+ * development in Slice Machine and live previews in the Page Builder.
+ */
 export const SliceSimulator = ({
-	sliceZone: SliceZoneComp,
 	background,
 	zIndex,
 	className,
+	...restProps
 }: SliceSimulatorProps): JSX.Element => {
-	const defaultProps = getDefaultProps();
+	if (!("sliceZone" in restProps)) {
+		throw new Error(
+			"A sliceZone prop must be provided when <SliceZone> is rendered in a Client Component. Add a sliceZone prop or convert your simulator to a Server Component with the getSlices helper.",
+		);
+	}
 
 	const [slices, setSlices] = React.useState(() => getDefaultSlices());
 	const [message, setMessage] = React.useState(() => getDefaultMessage());
@@ -81,40 +93,17 @@ export const SliceSimulator = ({
 		};
 	}, []);
 
+	const SliceZoneComp = restProps.sliceZone;
+
 	return (
-		<div
-			className={[simulatorClass, className].filter(Boolean).join(" ")}
-			style={{
-				zIndex:
-					typeof zIndex === "undefined"
-						? defaultProps.zIndex
-						: zIndex ?? undefined,
-				position: "fixed",
-				top: 0,
-				left: 0,
-				width: "100%",
-				height: "100vh",
-				overflow: "auto",
-				background:
-					typeof background === "undefined"
-						? defaultProps.background
-						: background ?? undefined,
-			}}
+		<SliceSimulatorWrapper
+			message={message}
+			hasSlices={slices.length > 0}
+			background={background}
+			zIndex={zIndex}
+			className={className}
 		>
-			{message ? (
-				<article dangerouslySetInnerHTML={{ __html: message }} />
-			) : slices.length ? (
-				<div
-					id="root"
-					className={simulatorRootClass}
-					onClickCapture={onClickHandler as unknown as React.MouseEventHandler}
-					onSubmitCapture={
-						disableEventHandler as unknown as React.FormEventHandler
-					}
-				>
-					<SliceZoneComp slices={slices} />
-				</div>
-			) : null}
-		</div>
+			<SliceZoneComp slices={slices} />
+		</SliceSimulatorWrapper>
 	);
 };

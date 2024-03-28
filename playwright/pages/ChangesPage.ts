@@ -1,8 +1,10 @@
 import { Locator, Page, expect } from "@playwright/test";
 
 import { SliceMachinePage } from "./SliceMachinePage";
+import { UpdateScreenshotDialog } from "./components/UpdateScreenshotDialog";
 
 export class ChangesPage extends SliceMachinePage {
+  readonly updateScreenshotDialog: UpdateScreenshotDialog;
   readonly breadcrumbLabel: Locator;
   readonly loginButton: Locator;
   readonly pushChangesButton: Locator;
@@ -23,6 +25,7 @@ export class ChangesPage extends SliceMachinePage {
     /**
      * Components
      */
+    this.updateScreenshotDialog = new UpdateScreenshotDialog(page);
 
     /**
      * Static locators
@@ -80,6 +83,12 @@ export class ChangesPage extends SliceMachinePage {
     return this.page.getByTestId(`custom-type-${id}`);
   }
 
+  getSliceCard(name: string, variation = "Default") {
+    return this.page.getByLabel(`${name} ${variation} slice card`, {
+      exact: true,
+    });
+  }
+
   /**
    * Actions
    */
@@ -99,6 +108,12 @@ export class ChangesPage extends SliceMachinePage {
     await this.softLimitButton.click();
     await expect(this.softLimitTitle).not.toBeVisible();
     await this.checkPushedMessage();
+  }
+
+  async openUpdateSliceScreenshotDialog(name: string, variation?: string) {
+    await this.getSliceCard(name, variation)
+      .getByRole("button", { name: "Update screenshot", exact: true })
+      .click();
   }
 
   /**

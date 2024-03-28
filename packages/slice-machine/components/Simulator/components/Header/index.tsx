@@ -5,10 +5,6 @@ import { Button } from "@components/Button";
 import VariationsPopover from "@components/Simulator/components/Header/VariationsPopover";
 import * as Links from "@components/Simulator/components/Header/links";
 import SliceMachineLogo from "@src/icons/SliceMachineLogo";
-import { useSelector } from "react-redux";
-import { selectSavingMock } from "@src/modules/simulator";
-
-import { SliceMachineStoreType } from "@src/redux/type";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { VariationSM } from "@lib/models/common/Slice";
 
@@ -37,6 +33,7 @@ type PropTypes = {
   toggleIsDisplayEditor: () => void;
   onSaveMock: () => void;
   actionsDisabled: boolean;
+  isSavingMock: boolean;
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
@@ -46,10 +43,8 @@ const Header: React.FunctionComponent<PropTypes> = ({
   toggleIsDisplayEditor,
   onSaveMock,
   actionsDisabled,
+  isSavingMock,
 }) => {
-  const { savingMock } = useSelector((state: SliceMachineStoreType) => ({
-    savingMock: selectSavingMock(state),
-  }));
   return (
     <Flex
       sx={{
@@ -113,7 +108,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
           data-testid="save-mock"
           onClick={onSaveMock}
           label="Save mock content"
-          disabled={savingMock || actionsDisabled}
+          disabled={isSavingMock || actionsDisabled}
           variant="primary"
           sx={{
             borderRadius: "6px",

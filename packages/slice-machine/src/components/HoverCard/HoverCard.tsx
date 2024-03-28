@@ -1,22 +1,22 @@
-import clsx from "clsx";
-import { Video } from "cloudinary-react";
-import React, {
-  useState,
-  FC,
-  PropsWithChildren,
-  useCallback,
-  createContext,
-  useContext,
-  createElement,
-  VideoHTMLAttributes,
-  ImgHTMLAttributes,
-} from "react";
 import { Button } from "@prismicio/editor-ui";
+import { Video } from "cloudinary-react";
+import { clsx } from "clsx";
+import {
+  createContext,
+  createElement,
+  type FC,
+  type ImgHTMLAttributes,
+  type PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+  type VideoHTMLAttributes,
+} from "react";
 
 import { useDelayedAction } from "@src/hooks/useDelayedAction";
 import { CloseIcon } from "@src/icons/CloseIcon";
-import { BaseHoverCard, BaseHoverCardProps } from "../BaseHoverCard";
 
+import { BaseHoverCard, type BaseHoverCardProps } from "../BaseHoverCard";
 import * as styles from "./HoverCard.css";
 
 type HoverCardProps = PropsWithChildren<{
