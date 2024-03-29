@@ -19,14 +19,11 @@ type Args = {
   framework?: "next" | "nuxt" | "sveltekit" | (string & {});
 };
 
-type PackageJSON = {
-  name: string;
-  scripts: Record<string, string>;
-};
-
-type SliceMachineConfig = {
-  localSliceSimulatorURL?: string;
-  apiEndpoint?: string;
+type DryRunOption = {
+  /**
+   * If `true`, commands are not executed.
+   */
+  dryRun?: boolean;
 };
 
 /**
@@ -36,7 +33,7 @@ async function run(): Promise<void> {
   const args = mri<Args>(process.argv.slice(2), {
     boolean: ["dry-run", "start", "new"],
     string: ["framework"],
-    alias: { n: "dry-run", f: "framework", s: "start" },
+    alias: { n: "dry-run", f: "framework" },
     default: { "dry-run": false, start: true, new: false },
   });
 
@@ -85,6 +82,11 @@ async function run(): Promise<void> {
   } else {
     console.log(`Creating a new playground: ${chalk.blue(playgroundName)}`);
 
+    // Ensure dependencies are isolated from the monorepo.
+    if (!(await pathExists(path.join(PLAYGROUNDS_ROOT, "yarn.lock")))) {
+      await fs.writeFile(path.join(PLAYGROUNDS_ROOT, "yarn.lock"), "");
+    }
+
     await createPlayground(playgroundName, playgroundRoot, {
       framework: args.framework ?? DEFAULT_FRAMEWORK,
       dryRun: args["dry-run"],
@@ -110,16 +112,11 @@ async function run(): Promise<void> {
 async function createPlayground(
   name: string,
   root: string,
-  options: {
+  options: DryRunOption & {
     /**
      * The framework used to bootstrap the playground.
      */
     framework: Args["framework"];
-
-    /**
-     * If `true`, commands are not executed.
-     */
-    dryRun?: boolean;
   },
 ) {
   switch (options.framework ?? "next") {
@@ -130,9 +127,15 @@ async function createPlayground(
         { dryRun: options.dryRun },
       );
 
-      await updateJSONFile<PackageJSON>(
-        path.join(root, "package.json"),
-        { scripts: { "dev:website": "next dev --port=8001" } },
+      await updatePackageJSON(
+        root,
+        { scripts: { "next:dev": "next dev --port=8001" } },
+        { dryRun: options.dryRun },
+      );
+
+      await updateSliceMachineConfig(
+        root,
+        { localSliceSimulatorURL: "http://localhost:8001/slice-simulator" },
         { dryRun: options.dryRun },
       );
 
@@ -143,12 +146,6 @@ async function createPlayground(
       await cloneGitRepo(
         "https://github.com/prismicio-community/sveltekit-starter-prismic-minimal.git",
         root,
-        { dryRun: options.dryRun },
-      );
-
-      await updateJSONFile<PackageJSON>(
-        path.join(root, "package.json"),
-        { scripts: { "dev:website": "vite dev --port=8001" } },
         { dryRun: options.dryRun },
       );
 
@@ -166,32 +163,27 @@ async function createPlayground(
     await fs.rm(path.join(root, "package-lock.json"));
   }
 
-  await exec("yarn", ["add", "--dev", "concurrently"], {
+  await exec("yarn", ["add", "--dev", "cross-env"], {
     cwd: root,
     stdio: "inherit",
     dryRun: options.dryRun,
   });
 
-  await updateJSONFile<PackageJSON>(
-    path.join(root, "package.json"),
+  await updatePackageJSON(
+    root,
     {
       name,
       scripts: {
-        dev: 'concurrently --prefix-colors auto "yarn:dev:website" "yarn:dev:slicemachine"',
-        "dev:slicemachine": `SM_ENV=staging ../../packages/start-slicemachine/bin/start-slicemachine.js`,
         slicemachine:
-          "../../packages/start-slicemachine/bin/start-slicemachine.js",
+          "cross-env SM_ENV=staging ../../packages/start-slicemachine/bin/start-slicemachine.js",
       },
     },
     { dryRun: options.dryRun },
   );
 
-  await updateJSONFile<SliceMachineConfig>(
-    path.join(root, "slicemachine.config.json"),
-    {
-      localSliceSimulatorURL: "http://localhost:8001/slice-simulator",
-      apiEndpoint: `https://${name}.cdn.wroom.io/api/v2`,
-    },
+  await updateSliceMachineConfig(
+    root,
+    { apiEndpoint: `https://${name}.cdn.wroom.io/api/v2` },
     { dryRun: options.dryRun },
   );
 
@@ -217,7 +209,7 @@ async function createPlayground(
 async function cloneGitRepo(
   url: string,
   dir: string,
-  options?: { dryRun?: boolean },
+  options?: DryRunOption,
 ): Promise<void> {
   await exec("git", ["clone", "--depth=1", url, dir], {
     stdio: "inherit",
@@ -344,15 +336,40 @@ async function pathExists(path: string): Promise<boolean> {
   }
 }
 
+type PackageJSON = {
+  name: string;
+  scripts: Record<string, string>;
+};
+
+async function updatePackageJSON(
+  root: string,
+  contents: Partial<PackageJSON>,
+  options?: DryRunOption,
+) {
+  await updateJSONFile(path.join(root, "package.json"), contents, options);
+}
+
+type SliceMachineConfig = {
+  localSliceSimulatorURL?: string;
+  apiEndpoint?: string;
+};
+
+async function updateSliceMachineConfig(
+  root: string,
+  contents: Partial<SliceMachineConfig>,
+  options?: DryRunOption,
+) {
+  await updateJSONFile(
+    path.join(root, "slicemachine.config.json"),
+    contents,
+    options,
+  );
+}
+
 async function updateJSONFile<TSchema extends Record<string, unknown>>(
   filePath: string,
   contents: Partial<TSchema>,
-  options?: {
-    /**
-     * If `true`, commands are not executed.
-     */
-    dryRun?: boolean;
-  },
+  options?: DryRunOption,
 ) {
   if (options?.dryRun) {
     console.info(`Update ${filePath} with ${JSON.stringify(contents)}`);
