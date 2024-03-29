@@ -58,8 +58,8 @@ async function run(): Promise<void> {
     }
   }
 
-  const playgroundRoot = new URL(`./${playgroundName}/`, PLAYGROUNDS_ROOT);
-  const playgroundExists = await pathExists(playgroundRoot);
+  const playgroundDir = new URL(`./${playgroundName}/`, PLAYGROUNDS_ROOT);
+  const playgroundExists = await pathExists(playgroundDir);
 
   if (playgroundExists) {
     if (args.new) {
@@ -92,7 +92,7 @@ async function run(): Promise<void> {
       await fs.writeFile(new URL("./yarn.lock", PLAYGROUNDS_ROOT), "");
     }
 
-    await createPlayground(playgroundName, playgroundRoot, {
+    await createPlayground(playgroundName, playgroundDir, {
       framework: args.framework ?? DEFAULT_FRAMEWORK,
       dryRun: args["dry-run"],
     });
@@ -100,7 +100,7 @@ async function run(): Promise<void> {
 
   if (args.start) {
     await exec("yarn", ["dev"], {
-      cwd: playgroundRoot,
+      cwd: playgroundDir,
       stdio: "inherit",
       dryRun: args["dry-run"],
     });
