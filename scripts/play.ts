@@ -130,11 +130,11 @@ async function createPlayground(
         { dryRun: options.dryRun },
       );
 
-      await updateJSONFile<PackageJSON>(path.join(root, "package.json"), {
-        scripts: {
-          "dev:website": "next dev --port=8001",
-        },
-      });
+      await updateJSONFile<PackageJSON>(
+        path.join(root, "package.json"),
+        { scripts: { "dev:website": "next dev --port=8001" } },
+        { dryRun: options.dryRun },
+      );
 
       break;
     }
@@ -146,11 +146,11 @@ async function createPlayground(
         { dryRun: options.dryRun },
       );
 
-      await updateJSONFile<PackageJSON>(path.join(root, "package.json"), {
-        scripts: {
-          "dev:website": "vite dev --port=8001",
-        },
-      });
+      await updateJSONFile<PackageJSON>(
+        path.join(root, "package.json"),
+        { scripts: { "dev:website": "vite dev --port=8001" } },
+        { dryRun: options.dryRun },
+      );
 
       break;
     }
@@ -172,15 +172,19 @@ async function createPlayground(
     dryRun: options.dryRun,
   });
 
-  await updateJSONFile<PackageJSON>(path.join(root, "package.json"), {
-    name,
-    scripts: {
-      dev: 'concurrently --prefix-colors auto "yarn:dev:website" "yarn:dev:slicemachine"',
-      "dev:slicemachine": `SM_ENV=staging ../../packages/start-slicemachine/bin/start-slicemachine.js`,
-      slicemachine:
-        "../../packages/start-slicemachine/bin/start-slicemachine.js",
+  await updateJSONFile<PackageJSON>(
+    path.join(root, "package.json"),
+    {
+      name,
+      scripts: {
+        dev: 'concurrently --prefix-colors auto "yarn:dev:website" "yarn:dev:slicemachine"',
+        "dev:slicemachine": `SM_ENV=staging ../../packages/start-slicemachine/bin/start-slicemachine.js`,
+        slicemachine:
+          "../../packages/start-slicemachine/bin/start-slicemachine.js",
+      },
     },
-  });
+    { dryRun: options.dryRun },
+  );
 
   await updateJSONFile<SliceMachineConfig>(
     path.join(root, "slicemachine.config.json"),
@@ -188,6 +192,7 @@ async function createPlayground(
       localSliceSimulatorURL: "http://localhost:8001/slice-simulator",
       apiEndpoint: `https://${name}.cdn.wroom.io/api/v2`,
     },
+    { dryRun: options.dryRun },
   );
 
   await exec(
