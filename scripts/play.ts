@@ -1,13 +1,17 @@
 import mri from "mri";
 import chalk from "chalk";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import * as fs from "node:fs/promises";
 import * as fsSync from "node:fs";
-import * as path from "node:path";
 import * as crypto from "node:crypto";
 
-import { exec } from "./utils/commandUtils";
+import {
+  CommandError,
+  exec,
+  handleUncaughtException,
+} from "./utils/commandUtils";
 
-const PLAYGROUNDS_ROOT = path.join(process.cwd(), "playgrounds");
+const PLAYGROUNDS_ROOT = new URL("../playgrounds/", import.meta.url);
 const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
 
 run();
@@ -30,6 +34,8 @@ type DryRunOption = {
  * The root command.
  */
 async function run(): Promise<void> {
+  process.on("uncaughtException", handleUncaughtException);
+
   const args = mri<Args>(process.argv.slice(2), {
     boolean: ["dry-run", "start", "new"],
     string: ["framework"],
@@ -52,22 +58,21 @@ async function run(): Promise<void> {
     }
   }
 
-  const playgroundRoot = path.join(PLAYGROUNDS_ROOT, playgroundName);
+  const playgroundRoot = new URL(`./${playgroundName}/`, PLAYGROUNDS_ROOT);
   const playgroundExists = await pathExists(playgroundRoot);
 
   if (playgroundExists) {
     if (args.new) {
-      console.error(
-        chalk.red`A playground named ${playgroundName} already exists. Exiting.`,
+      throw new CommandError(
+        `A playground named ${playgroundName} already exists. Exiting.`,
       );
-      process.exit(1);
     }
 
     if (didProvidePlaygroundName) {
-      console.info(`Using playground: ${chalk.blue(playgroundName)}`);
+      console.info(`Using playground: ${chalk.green(playgroundName)}`);
     } else {
       console.info(
-        `Reusing most recent playground: ${chalk.blue(playgroundName)}`,
+        `Reusing most recent playground: ${chalk.green(playgroundName)}`,
       );
     }
 
@@ -80,11 +85,11 @@ async function run(): Promise<void> {
       );
     }
   } else {
-    console.log(`Creating a new playground: ${chalk.blue(playgroundName)}`);
+    console.log(`Creating a new playground: ${chalk.green(playgroundName)}`);
 
     // Ensure dependencies are isolated from the monorepo.
-    if (!(await pathExists(path.join(PLAYGROUNDS_ROOT, "yarn.lock")))) {
-      await fs.writeFile(path.join(PLAYGROUNDS_ROOT, "yarn.lock"), "");
+    if (!(await pathExists(new URL("./yarn.lock", PLAYGROUNDS_ROOT)))) {
+      await fs.writeFile(new URL("./yarn.lock", PLAYGROUNDS_ROOT), "");
     }
 
     await createPlayground(playgroundName, playgroundRoot, {
@@ -100,18 +105,20 @@ async function run(): Promise<void> {
       dryRun: args["dry-run"],
     });
   }
+
+  process.off("uncaughtException", handleUncaughtException);
 }
 
 /**
  * Creates a new playground.
  *
  * @param name - The name of the playground. It must be unique.
- * @param root - The directory of the playground. It must be unique.
+ * @param dir - The directory of the playground. It must be unique.
  * @param options - Options that determine the function's behavior.
  */
 async function createPlayground(
   name: string,
-  root: string,
+  dir: URL,
   options: DryRunOption & {
     /**
      * The framework used to bootstrap the playground.
@@ -123,18 +130,18 @@ async function createPlayground(
     case "next": {
       await cloneGitRepo(
         "https://github.com/prismicio-community/nextjs-starter-prismic-minimal-ts.git",
-        root,
+        dir,
         { dryRun: options.dryRun },
       );
 
       await updatePackageJSON(
-        root,
+        dir,
         { scripts: { "next:dev": "next dev --port=8001" } },
         { dryRun: options.dryRun },
       );
 
       await updateSliceMachineConfig(
-        root,
+        dir,
         { localSliceSimulatorURL: "http://localhost:8001/slice-simulator" },
         { dryRun: options.dryRun },
       );
@@ -145,7 +152,7 @@ async function createPlayground(
     case "sveltekit": {
       await cloneGitRepo(
         "https://github.com/prismicio-community/sveltekit-starter-prismic-minimal.git",
-        root,
+        dir,
         { dryRun: options.dryRun },
       );
 
@@ -159,18 +166,18 @@ async function createPlayground(
   }
 
   if (!options.dryRun) {
-    await fs.rm(path.join(root, ".git"), { recursive: true });
-    await fs.rm(path.join(root, "package-lock.json"));
+    await fs.rm(new URL("./.git", dir), { recursive: true });
+    await fs.rm(new URL("package-lock.json", dir));
   }
 
   await exec("yarn", ["add", "--dev", "cross-env"], {
-    cwd: root,
+    cwd: dir,
     stdio: "inherit",
     dryRun: options.dryRun,
   });
 
   await updatePackageJSON(
-    root,
+    dir,
     {
       name,
       scripts: {
@@ -182,20 +189,22 @@ async function createPlayground(
   );
 
   await updateSliceMachineConfig(
-    root,
+    dir,
     { apiEndpoint: `https://${name}.cdn.wroom.io/api/v2` },
     { dryRun: options.dryRun },
   );
 
   await exec(
-    "npx",
+    "yarn",
     [
+      "dlx",
+      "--quiet",
       "@slicemachine/init@latest",
       `--repository="${name}"`,
       "--no-start-slicemachine",
     ],
     {
-      cwd: root,
+      cwd: dir,
       env: {
         // Use wroom.io
         SM_ENV: "staging",
@@ -208,10 +217,10 @@ async function createPlayground(
 
 async function cloneGitRepo(
   url: string,
-  dir: string,
+  dir: URL,
   options?: DryRunOption,
 ): Promise<void> {
-  await exec("git", ["clone", "--depth=1", url, dir], {
+  await exec("git", ["clone", "--depth=1", url, fileURLToPath(dir)], {
     stdio: "inherit",
     dryRun: options?.dryRun,
   });
@@ -265,23 +274,19 @@ function createRandomName() {
   const adjective = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
   const pastry = PASTRIES[Math.floor(Math.random() * PASTRIES.length)];
 
-  return appendRandomHash(`${adjective}-${pastry}`);
+  return `${adjective}-${pastry}-${generateRandomHash()}`;
 }
 
 /**
- * Appends a random 7 digit hash to a string.
- *
- * @param input - The string to which the hash is appended.
+ * Generates a random 7 digit hash.
  */
-function appendRandomHash(input: string) {
-  const hash = crypto
+function generateRandomHash() {
+  return crypto
     .createHash("sha1")
     .update(crypto.randomUUID())
     .digest("hex")
     .toString()
     .slice(-7);
-
-  return `${input}-${hash}`;
 }
 
 /**
@@ -291,7 +296,7 @@ function appendRandomHash(input: string) {
  * @param options - Options that determine the function's behavior.
  */
 async function getLastModifiedEntry(
-  dir: string,
+  dir: URL,
   options?: {
     /**
      * A list of file or directory names to exclude.
@@ -320,13 +325,13 @@ async function getLastModifiedEntry(
 
   return entries.sort((a, b) => {
     return (
-      fsSync.statSync(path.join(b.path, b.name)).mtimeMs -
-      fsSync.statSync(path.join(a.path, a.name)).mtimeMs
+      fsSync.statSync(new URL(b.name, pathToFileURL(b.path))).mtimeMs -
+      fsSync.statSync(new URL(a.name, pathToFileURL(a.path))).mtimeMs
     );
   })[0].name;
 }
 
-async function pathExists(path: string): Promise<boolean> {
+async function pathExists(path: URL): Promise<boolean> {
   try {
     await fs.access(path);
 
@@ -338,15 +343,15 @@ async function pathExists(path: string): Promise<boolean> {
 
 type PackageJSON = {
   name: string;
-  scripts: Record<string, string>;
+  scripts: Partial<Record<string, string>>;
 };
 
 async function updatePackageJSON(
-  root: string,
+  dir: URL,
   contents: Partial<PackageJSON>,
   options?: DryRunOption,
 ) {
-  await updateJSONFile(path.join(root, "package.json"), contents, options);
+  await updateJSONFile(new URL("package.json", dir), contents, options);
 }
 
 type SliceMachineConfig = {
@@ -355,19 +360,19 @@ type SliceMachineConfig = {
 };
 
 async function updateSliceMachineConfig(
-  root: string,
+  dir: URL,
   contents: Partial<SliceMachineConfig>,
   options?: DryRunOption,
 ) {
   await updateJSONFile(
-    path.join(root, "slicemachine.config.json"),
+    new URL("slicemachine.config.json", dir),
     contents,
     options,
   );
 }
 
 async function updateJSONFile<TSchema extends Record<string, unknown>>(
-  filePath: string,
+  filePath: URL,
   contents: Partial<TSchema>,
   options?: DryRunOption,
 ) {
