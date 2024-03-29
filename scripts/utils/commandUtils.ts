@@ -30,8 +30,13 @@ export function exec(
 export async function exec(
   file: string,
   args?: string[],
-  options?: ExecaOptions & { dryRun: boolean },
+  options?: ExecaOptions & { dryRun?: true },
 ): Promise<void>;
+export async function exec(
+  file: string,
+  args?: string[],
+  options?: ExecaOptions & { dryRun?: boolean },
+): Promise<ExecaReturnValue | void>;
 export async function exec(
   file: string,
   args?: string[],

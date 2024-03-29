@@ -1,2 +1,14 @@
+# Ignore all playgrounds.
 *
+
+# Ignore node_modules
+node_modules
+
+# The following files are necessary to isolate playgrounds from the monorepo.
 !.gitignore
+!yarnrc.yml
+!package.json
+
+# We want to keep yarn.lock in the project and ignore changes to it.
+# It must remain as an empty file to Git.
+yarn.lock
