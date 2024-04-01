@@ -2,9 +2,9 @@ import { FC, PropsWithChildren } from "react";
 
 import { FlowerBackgroundIcon } from "@src/icons/FlowerBackgroundIcon";
 
-import * as styles from "./Counter.css";
+import styles from "./Count.module.css";
 
-export const Counter: FC<PropsWithChildren> = (props) => {
+export const Count: FC<PropsWithChildren> = (props) => {
   const { children } = props;
 
   return (

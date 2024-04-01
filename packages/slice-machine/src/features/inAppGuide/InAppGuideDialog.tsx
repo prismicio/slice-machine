@@ -11,7 +11,7 @@ import {
   Video,
 } from "@prismicio/editor-ui";
 
-import { Counter } from "@src/components/Counter";
+import { Count } from "@src/components/Count";
 import { HelpIcon } from "@src/icons/HelpIcon";
 import { useIsEmptyProject } from "@src/hooks/useIsEmptyProject";
 
@@ -67,7 +67,7 @@ export const InAppGuideDialog: FC = () => {
             <Box key={index} flexDirection="column">
               <Box flexDirection="column" padding={16} gap={8}>
                 <Box alignItems="center" gap={8}>
-                  <Counter>{index + 1}</Counter>
+                  <Count>{index + 1}</Count>
                   <Text component="h3" variant="bold">
                     {content.title}
                   </Text>

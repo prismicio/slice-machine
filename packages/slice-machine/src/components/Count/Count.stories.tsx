@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Counter } from "./Counter";
+import { Count } from "./Count";
 
 type Story = StoryObj<typeof meta>;
 
 const meta = {
-  component: Counter,
-} satisfies Meta<typeof Counter>;
+  component: Count,
+} satisfies Meta<typeof Count>;
 
 export default meta;
 
