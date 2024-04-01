@@ -5,7 +5,7 @@ import { FC, PropsWithChildren, Suspense } from "react";
 import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
 
 import Navigation from "@components/Navigation";
-import { Breadcrumb, type BreadcrumbProps } from "@src/components/Breadcrumb";
+import { Breadcrumb, BreadcrumbItem } from "@src/components/Breadcrumb";
 import {
   PageLayout,
   PageLayoutContent,
@@ -89,11 +89,27 @@ export const AppLayoutBackButton: FC<AppLayoutBackButtonProps> = ({
   );
 };
 
-export const AppLayoutBreadcrumb: FC<BreadcrumbProps> = (props) => (
-  <Box flexGrow={1}>
-    <Breadcrumb {...props} />
-  </Box>
-);
+type AppLayoutBreadcrumbProps = {
+  folder: string;
+  page?: string;
+};
+
+export const AppLayoutBreadcrumb: FC<AppLayoutBreadcrumbProps> = (props) => {
+  const { folder, page, ...otherProps } = props;
+
+  return (
+    <Box flexGrow={1}>
+      <Breadcrumb
+        activeItem={
+          Boolean(page) ? <BreadcrumbItem>{page}</BreadcrumbItem> : undefined
+        }
+        {...otherProps}
+      >
+        <BreadcrumbItem>{folder}</BreadcrumbItem>
+      </Breadcrumb>
+    </Box>
+  );
+};
 
 export const AppLayoutActions: FC<PropsWithChildren> = (props) => (
   <ButtonGroup {...props} />

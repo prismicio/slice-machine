@@ -1,0 +1,11 @@
+.activeItemContainer {
+  font-weight: 600;
+}
+
+.item {
+  &:not(:last-child)::after {
+    content: "/";
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+}

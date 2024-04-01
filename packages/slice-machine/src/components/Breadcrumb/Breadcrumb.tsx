@@ -1,35 +1,33 @@
 import { Text } from "@prismicio/editor-ui";
-import { FC } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
-import * as styles from "./Breadcrumb.css";
+import styles from "./Breadcrumb.module.css";
 
-export type BreadcrumbProps = {
-  folder: string;
-  page?: string;
-  separator?: string;
-};
+type BreadcrumbProps = PropsWithChildren<{
+  activeItem?: ReactNode;
+}>;
 
-export const Breadcrumb: FC<BreadcrumbProps> = ({
-  folder,
-  page,
-  separator = "/",
-}) => {
+export function Breadcrumb(props: BreadcrumbProps) {
+  const { activeItem, children, ...restProps } = props;
+
   return (
-    <div
-      aria-label="Breadcrumb"
-      data-testid={`breadcrumb-${folder}-${page ?? ""}`}
-    >
-      <Text color="grey11">
-        {folder}
-        {page !== undefined ? (
-          <>
-            &nbsp;{separator}&nbsp;
-            <Text className={styles.pageSpan} component="span" color="grey12">
-              {page}
-            </Text>
-          </>
-        ) : null}
+    <div aria-label="Breadcrumb" {...restProps} className={styles.breadcrumb}>
+      <Text component="span" color="grey11">
+        {children}
       </Text>
+      {Boolean(activeItem) ? (
+        <Text
+          component="span"
+          color="grey12"
+          className={styles.activeItemContainer}
+        >
+          {activeItem}
+        </Text>
+      ) : null}
     </div>
   );
-};
+}
+
+export function BreadcrumbItem(props: PropsWithChildren) {
+  return <span {...props} className={styles.item} />;
+}
