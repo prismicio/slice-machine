@@ -12,7 +12,6 @@ import {
   changesPushSuccess,
 } from "./userContext";
 import { refreshStateCreator } from "./environment";
-import { connectToSimulatorIframeCreator } from "./simulator";
 import ServerState from "@models/server/ServerState";
 import {
   customTypeCreateSuccess,
@@ -38,13 +37,6 @@ import { SaveSliceMockRequest } from "@src/apiClient";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
-
-  const connectToSimulatorIframe = () =>
-    dispatch(connectToSimulatorIframeCreator.request());
-  const connectToSimulatorFailure = () =>
-    dispatch(connectToSimulatorIframeCreator.failure());
-  const connectToSimulatorSuccess = () =>
-    dispatch(connectToSimulatorIframeCreator.success());
 
   // Modal module
   const closeModals = () => {
@@ -101,9 +93,7 @@ const useSliceMachineActions = () => {
   };
 
   /**
-   * Success actions = sync store state from external actions. If its name
-   * contains "Creator", it means it is still used in a saga and that `.request`
-   * and `.failure` need to be preserved
+   * Success actions = sync store state from external actions.
    */
 
   /**
@@ -182,9 +172,6 @@ const useSliceMachineActions = () => {
   const pushChangesSuccess = () => dispatch(changesPushSuccess());
 
   return {
-    connectToSimulatorFailure,
-    connectToSimulatorSuccess,
-    connectToSimulatorIframe,
     refreshState,
     openScreenshotsModal,
     openLoginModal,

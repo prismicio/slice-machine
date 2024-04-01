@@ -4,7 +4,6 @@ import { Flex } from "theme-ui";
 
 import { SimulatorClient } from "@prismicio/simulator";
 import { useElementSize } from "@src/hooks/useElementSize";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 function useSimulatorClient(): readonly [
@@ -52,6 +51,7 @@ type IframeRendererProps = {
   simulatorUrl: string | undefined;
   dryRun?: boolean;
   isScreenshot?: boolean;
+  handleSimulatorConnectionResult: (result: "successful" | "failed") => void;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
@@ -60,16 +60,14 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   simulatorUrl,
   dryRun = false,
   isScreenshot = false,
+  handleSimulatorConnectionResult,
 }) => {
   const [client, iframeRef] = useSimulatorClient();
-
-  const { connectToSimulatorSuccess, connectToSimulatorFailure } =
-    useSliceMachineActions();
 
   useEffect((): void => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!simulatorUrl) {
-      connectToSimulatorFailure();
+      handleSimulatorConnectionResult("failed");
       return;
     }
     if (client === undefined) {
@@ -77,7 +75,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
 
     if (!client.connected) {
-      connectToSimulatorFailure();
+      handleSimulatorConnectionResult("failed");
       console.warn("Trying to use a disconnected simulator client.");
       return;
     }
@@ -89,10 +87,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
 
     updateSliceZone()
       .then(() => {
-        connectToSimulatorSuccess();
+        handleSimulatorConnectionResult("successful");
       })
       .catch(() => {
-        connectToSimulatorFailure();
+        handleSimulatorConnectionResult("failed");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client, apiContent, simulatorUrl]);
