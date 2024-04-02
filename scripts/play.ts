@@ -13,18 +13,18 @@ import {
 
 const PLAYGROUNDS_ROOT = new URL("../playgrounds/", import.meta.url);
 const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
-const DEFAULT_STAGE = "staging" satisfies Args["stage"];
+const DEFAULT_ENVIRONMENT = "staging" satisfies Args["environment"];
 const START_SLICEMACHINE_SCRIPT =
   "../../packages/start-slicemachine/bin/start-slicemachine.js";
 
-run();
+main();
 
 type Args = {
   "dry-run": boolean;
   start: boolean;
   new: boolean;
   framework?: "next" | "nuxt" | "sveltekit";
-  stage: "staging" | "prod" | "development";
+  environment: "staging" | "prod" | "development";
   help: boolean;
 };
 
@@ -36,9 +36,9 @@ type DryRunOption = {
 };
 
 /**
- * The root command.
+ * Runs the command.
  */
-async function run(): Promise<void> {
+async function main(): Promise<void> {
   process.on("uncaughtException", handleUncaughtException);
 
   // Ensure dependencies are isolated from the monorepo.
@@ -48,13 +48,13 @@ async function run(): Promise<void> {
 
   const args = mri<Args>(process.argv.slice(2), {
     boolean: ["help", "dry-run", "start", "new"],
-    string: ["framework", "stage"],
+    string: ["framework", "environment"],
     alias: { h: "help", n: "dry-run", f: "framework" },
     default: {
       "dry-run": false,
       start: true,
       new: false,
-      stage: DEFAULT_STAGE,
+      environment: DEFAULT_ENVIRONMENT,
     },
   });
 
@@ -65,12 +65,12 @@ Usage:
     yarn play [options...] [name]
 
 Options:
-    --new            Create a new playground
-    --framework, -f  Specify the playground's framework (next, nuxt, sveltekit) (default: next)
-    --stage          Specify the playground's stage (staging, prod, development) (default: staging)
-    --no-start       Do not start Slice Machine and the website
-    --dry-run, -n    Show what would have happened
-    --help, -h       Show help text
+    --new              Create a new playground
+    --framework, -f    Specify the playground's framework (next, nuxt, sveltekit) (default: next)
+    --environment, -e  Specify the playground's environment (staging, production, development) (default: staging)
+    --no-start         Do not start Slice Machine and the website
+    --dry-run, -n      Show what would have happened
+    --help, -h         Show help text
 
 Arguments:
     [name]           The name of the playground to create or start
@@ -80,8 +80,8 @@ Arguments:
     return;
   }
 
-  if (!["prod", "staging", "development"].includes(args.stage)) {
-    throw new CommandError(`Unsupported stage: ${args.stage}`);
+  if (!["prod", "staging", "development"].includes(args.environment)) {
+    throw new CommandError(`Unsupported environment: ${args.environment}`);
   }
 
   if (
@@ -141,7 +141,7 @@ Arguments:
 
     await createPlayground(playgroundName, playgroundDir, {
       framework: args.framework ?? DEFAULT_FRAMEWORK,
-      stage: args.stage,
+      environment: args.environment,
       dryRun: args["dry-run"],
     });
   }
@@ -174,11 +174,9 @@ async function createPlayground(
   dir: URL,
   options: DryRunOption & {
     /**
-     * The stage on which the playground is run.
-     *
-     * @defaultValue `"staging"`
+     * The environment on which the playground is run.
      */
-    stage?: Args["stage"];
+    environment?: Args["environment"];
 
     /**
      * The framework used to bootstrap the playground.
@@ -255,8 +253,8 @@ async function createPlayground(
 
   await updatePackageJSON(dir, { name }, { dryRun: options.dryRun });
 
-  // Update scripts to support the monorepo and the given stage.
-  if (options.stage === "prod") {
+  // Update scripts to support the monorepo and the given environment.
+  if (options.environment === "prod") {
     await updatePackageJSON(
       dir,
       { scripts: { slicemachine: START_SLICEMACHINE_SCRIPT } },
@@ -273,7 +271,7 @@ async function createPlayground(
       dir,
       {
         scripts: {
-          slicemachine: `cross-env SM_ENV=${options.stage} ${START_SLICEMACHINE_SCRIPT}`,
+          slicemachine: `cross-env SM_ENV=${options.environment} ${START_SLICEMACHINE_SCRIPT}`,
         },
       },
       { dryRun: options.dryRun },
@@ -281,13 +279,13 @@ async function createPlayground(
   }
 
   // Update Slice Machine configuration with the correct API endpoint (if needed).
-  if (options.stage === "staging") {
+  if (options.environment === "staging") {
     await updateSliceMachineConfig(
       dir,
       { apiEndpoint: `https://${name}.cdn.wroom.io/api/v2` },
       { dryRun: options.dryRun },
     );
-  } else if (options.stage === "development") {
+  } else if (options.environment === "development") {
     const apiEndpoint = new URL(
       "./api/v2",
       process.env.wroom_endpoint ?? "https://cdn.wroom.io",
@@ -311,7 +309,8 @@ async function createPlayground(
     {
       cwd: dir,
       env: {
-        SM_ENV: options.stage === "prod" ? undefined : options.stage,
+        SM_ENV:
+          options.environment === "prod" ? undefined : options.environment,
       },
       stdio: "inherit",
       dryRun: options.dryRun,
@@ -319,7 +318,7 @@ async function createPlayground(
   );
 
   // The Nuxt adapter edits the `endpoint` option as part of `@slicemachine/init`.
-  // We need to change it to the API endpoint to support different stages.
+  // We need to change it to the API endpoint to support different environments.
   if (options.framework === "nuxt") {
     const sliceMachineConfig: SliceMachineConfig = JSON.parse(
       await fs.readFile(new URL("./slicemachine.config.json", dir), "utf8"),
