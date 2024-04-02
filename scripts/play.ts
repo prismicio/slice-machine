@@ -256,7 +256,10 @@ async function createPlayground(
   await updatePackageJSON(dir, { name }, { dryRun: options.dryRun });
 
   // Prevent pushing changes to the starters.
-  await exec("git", ["remote", "remove", "origin"]);
+  await exec("git", ["remote", "remove", "origin"], {
+    cwd: dir,
+    dryRun: options.dryRun,
+  });
 
   // Ensure Yarn is used. `@slicemachine/init` will use npm if
   // `package-lock.json` is present.
@@ -347,6 +350,12 @@ async function createPlayground(
       await fs.writeFile(nuxtConfigPath, newNuxtConfig);
     }
   }
+
+  // Commit all changes so new changes are reflected in Git.
+  await exec("git", ["commit", "-am", "chore: init playground"], {
+    cwd: dir,
+    dryRun: options.dryRun,
+  });
 }
 
 /**
