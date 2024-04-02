@@ -206,6 +206,28 @@ async function createPlayground(
       break;
     }
 
+    case "nuxt": {
+      await cloneGitRepo(
+        "https://github.com/prismicio-community/nuxt-starter-prismic-minimal.git",
+        dir,
+        { dryRun: options.dryRun },
+      );
+
+      await updatePackageJSON(
+        dir,
+        { scripts: { "nuxt:dev": "nuxt dev --port=8001" } },
+        { dryRun: options.dryRun },
+      );
+
+      await updateSliceMachineConfig(
+        dir,
+        { localSliceSimulatorURL: "http://localhost:8001/slice-simulator" },
+        { dryRun: options.dryRun },
+      );
+
+      break;
+    }
+
     case "sveltekit": {
       await cloneGitRepo(
         "https://github.com/prismicio-community/sveltekit-starter-prismic-minimal.git",
