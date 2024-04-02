@@ -149,6 +149,9 @@ Arguments:
   if (args.start) {
     await exec("yarn", ["dev"], {
       cwd: playgroundDir,
+      env: {
+        CONCURRENTLY_PREFIX: `${chalk.white.dim(playgroundName)} [{name}]`,
+      },
       stdio: "inherit",
       dryRun: args["dry-run"],
     });
