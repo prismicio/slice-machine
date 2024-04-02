@@ -20,18 +20,31 @@ const START_SLICEMACHINE_SCRIPT =
 main();
 
 type Args = {
-  "dry-run": boolean;
+  help: boolean;
   start: boolean;
   new: boolean;
-  framework?: "next" | "nuxt" | "sveltekit";
-  environment: "staging" | "prod" | "development";
-  help: boolean;
-};
 
-type DryRunOption = {
+  /**
+   * The framework used to bootstrap the playground.
+   *
+   * @defaultValue `"next"`
+   */
+  framework: "next" | "nuxt" | "sveltekit";
+
+  /**
+   * The environment on which the playground is run.
+   *
+   * @defaultValue `"staging"`
+   */
+  environment: "staging" | "prod" | "development";
+
   /**
    * If `true`, commands are not executed.
    */
+  "dry-run": boolean;
+};
+
+type DryRunOption = {
   dryRun?: Args["dry-run"];
 };
 
@@ -54,6 +67,7 @@ async function main(): Promise<void> {
       "dry-run": false,
       start: true,
       new: false,
+      framework: "next",
       environment: DEFAULT_ENVIRONMENT,
     },
   });
@@ -84,16 +98,11 @@ Arguments:
     throw new CommandError(`Unsupported environment: ${args.environment}`);
   }
 
-  if (
-    args.framework &&
-    !["next", "nuxt", "sveltekit"].includes(args.framework)
-  ) {
+  if (!["next", "nuxt", "sveltekit"].includes(args.framework)) {
     throw new CommandError(`Unsupported framework: ${args.framework}`);
   }
 
   let [playgroundName] = args._;
-  const didProvidePlaygroundName = Boolean(playgroundName);
-
   if (!playgroundName) {
     if (args.new) {
       playgroundName = createRandomName();
@@ -120,7 +129,7 @@ Arguments:
       );
     }
 
-    if (didProvidePlaygroundName) {
+    if (didProvideArgument(["--playground", "-p"], process.argv.slice(2))) {
       console.info(`Using playground: ${chalk.green(playgroundName)}`);
     } else {
       console.info(
@@ -131,9 +140,15 @@ Arguments:
     console.info('  (Use "--new" to create a new playground)');
     console.info();
 
-    if (args.framework) {
+    if (didProvideArgument(["--framework", "-f"], process.argv.slice(2))) {
       console.warn(
         chalk.yellow`The --framework/-f argument is ignored when a playground already exists.`,
+      );
+    }
+
+    if (didProvideArgument(["--environment", "-e"], process.argv.slice(2))) {
+      console.warn(
+        chalk.yellow`The --environment/-e argument is ignored when a playground already exists.`,
       );
     }
   } else {
@@ -172,19 +187,7 @@ Arguments:
 async function createPlayground(
   name: string,
   dir: URL,
-  options: DryRunOption & {
-    /**
-     * The environment on which the playground is run.
-     */
-    environment?: Args["environment"];
-
-    /**
-     * The framework used to bootstrap the playground.
-     *
-     * @defaultValue `"next"`
-     */
-    framework?: Args["framework"];
-  } = {},
+  options: DryRunOption & Partial<Pick<Args, "framework" | "environment">> = {},
 ) {
   switch (options.framework ?? "next") {
     case "next": {
@@ -528,4 +531,16 @@ function deepMerge(a: any, b: any): Record<PropertyKey, unknown> {
   }
 
   return result;
+}
+
+/**
+ * Determines if a CLI argument was provided.
+ *
+ * @param key - The key or an array of keys to search for.
+ * @param args - An array of arguments to search.
+ */
+function didProvideArgument(key: string | string[], args: string[]): boolean {
+  return args.some((arg) =>
+    [key].flat().some((key) => new RegExp(`^${key}=?`).test(arg)),
+  );
 }
