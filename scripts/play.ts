@@ -362,25 +362,6 @@ async function cloneGitRepo(
  * @see {@link appendRandomHash}
  */
 function createRandomName() {
-  const ADJECTIVES = [
-    "adorable",
-    "beautiful",
-    "charming",
-    "cloudy",
-    "delightful",
-    "focused",
-    "honest",
-    "inspiring",
-    "lovable",
-    "melodious",
-    "pleasant",
-    "pretty",
-    "shiny",
-    "sugary",
-    "tall",
-    "valliant",
-  ];
-
   const PASTRIES = [
     "baguette",
     "briouat",
@@ -400,16 +381,15 @@ function createRandomName() {
     "toast",
   ];
 
-  const adjective = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
   const pastry = PASTRIES[Math.floor(Math.random() * PASTRIES.length)];
   const hash = crypto
     .createHash("sha1")
     .update(crypto.randomUUID())
     .digest("hex")
     .toString()
-    .slice(-7);
+    .slice(-4);
 
-  return `${adjective}-${pastry}-${hash}`;
+  return `${pastry}-${hash}`;
 }
 
 /**
