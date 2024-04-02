@@ -312,6 +312,24 @@ async function createPlayground(
       dryRun: options.dryRun,
     },
   );
+
+  // The Nuxt adapter edits the `endpoint` option as part of `@slicemachine/init`.
+  // We need to change it to the API endpoint to support different stages.
+  if (options.framework === "nuxt") {
+    const sliceMachineConfig: SliceMachineConfig = JSON.parse(
+      await fs.readFile(new URL("./slicemachine.config.json", dir), "utf8"),
+    );
+
+    if (sliceMachineConfig.apiEndpoint) {
+      const nuxtConfigPath = new URL("./nuxt.config.ts", dir);
+      const nuxtConfig = await fs.readFile(nuxtConfigPath, "utf8");
+      const newNuxtConfig = nuxtConfig.replace(
+        /endpoint: '.*',/,
+        `endpoint: '${sliceMachineConfig.apiEndpoint}',`,
+      );
+      await fs.writeFile(nuxtConfigPath, newNuxtConfig);
+    }
+  }
 }
 
 /**
