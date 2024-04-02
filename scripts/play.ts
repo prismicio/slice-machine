@@ -49,7 +49,7 @@ async function main(): Promise<void> {
   const args = mri<Args>(process.argv.slice(2), {
     boolean: ["help", "dry-run", "start", "new"],
     string: ["framework", "environment"],
-    alias: { h: "help", n: "dry-run", f: "framework" },
+    alias: { h: "help", n: "dry-run", f: "framework", e: "environment" },
     default: {
       "dry-run": false,
       start: true,
