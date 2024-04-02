@@ -150,7 +150,9 @@ Arguments:
     await exec("yarn", ["dev"], {
       cwd: playgroundDir,
       env: {
-        CONCURRENTLY_PREFIX: `${chalk.white.dim(playgroundName)} [{name}]`,
+        CONCURRENTLY_PREFIX: `${chalk.grey(
+          playgroundName.replace(/^play-/, ""),
+        )} [{name}]`,
       },
       stdio: "inherit",
       dryRun: args["dry-run"],
