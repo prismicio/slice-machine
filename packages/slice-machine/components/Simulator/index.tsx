@@ -36,10 +36,6 @@ import useThrottle from "@src/hooks/useThrottle";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import IframeRenderer from "./components/IframeRenderer";
-import {
-  selectIframeStatus,
-  selectIsWaitingForIFrameCheck,
-} from "@src/modules/simulator";
 import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import FullPage from "./components/FullPage";
@@ -47,27 +43,21 @@ import FailedConnect from "./components/FailedConnect";
 import { Slices, VariationSM } from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-export enum UiState {
-  LOADING_IFRAME = "LOADING_IFRAME",
-  FAILED_CONNECT = "FAILED_CONNECT",
-  SUCCESS = "SUCCESS",
-}
-
 type SimulatorProps = {
   slice: ComponentUI;
   variation: VariationSM;
 };
 
+const IFRAME_CONNECTION_TIMEOUT = 20000;
+
 const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
-  const { connectToSimulatorIframe, updateSliceMockSuccess } =
-    useSliceMachineActions();
-  const { simulatorUrl, iframeStatus, isWaitingForIFrameCheck, endpoints } =
-    useSelector((state: SliceMachineStoreType) => ({
+  const { updateSliceMockSuccess } = useSliceMachineActions();
+  const { simulatorUrl, endpoints } = useSelector(
+    (state: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(state),
-      iframeStatus: selectIframeStatus(state),
-      isWaitingForIFrameCheck: selectIsWaitingForIFrameCheck(state),
       endpoints: selectEndpoints(state),
-    }));
+    }),
+  );
 
   const editorConfig: EditorConfig = useMemo(
     () => ({
@@ -95,36 +85,36 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
     void telemetry.track({ event: "editor:widget-used", sliceId });
   };
 
-  const currentState: UiState = (() => {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (isWaitingForIFrameCheck || !iframeStatus) {
-      return UiState.LOADING_IFRAME;
-    }
-    if (iframeStatus !== "ok") {
-      return UiState.FAILED_CONNECT;
-    }
-    return UiState.SUCCESS;
-  })();
+  const [iframeConnectionStatus, setIframeConnectionStatus] = useState<
+    "waiting" | "successful" | "failed"
+  >("waiting");
 
   useEffect(() => {
-    connectToSimulatorIframe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (iframeConnectionStatus === "waiting") {
+      const timer = setTimeout(() => {
+        setIframeConnectionStatus("failed");
+      }, IFRAME_CONNECTION_TIMEOUT);
 
-  useEffect(() => {
-    if (currentState === UiState.FAILED_CONNECT) {
+      return () => clearTimeout(timer);
+    }
+  }, [iframeConnectionStatus]);
+
+  const handleSimulatorConnectionResult = (result: "successful" | "failed") => {
+    if (iframeConnectionStatus !== "waiting") {
+      return;
+    }
+
+    if (result === "failed") {
       void telemetry.track({ event: "slice-simulator:is-not-running" });
-    }
-  }, [currentState]);
-
-  useEffect(() => {
-    if (currentState === UiState.SUCCESS) {
+    } else {
       toggleIsDisplayEditor(true);
     }
-  }, [currentState]);
+
+    setIframeConnectionStatus(result);
+  };
 
   const onRetrigger = () => {
-    connectToSimulatorIframe();
+    setIframeConnectionStatus("waiting");
   };
 
   const [screenDimensions, setScreenDimensions] = useState<ScreenDimensions>(
@@ -220,7 +210,7 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
         slice={slice}
         variation={variation}
         isDisplayEditor={isDisplayEditor}
-        actionsDisabled={currentState !== UiState.SUCCESS}
+        actionsDisabled={iframeConnectionStatus !== "successful"}
         toggleIsDisplayEditor={() => toggleIsDisplayEditor(!isDisplayEditor)}
         onSaveMock={() => void saveMock()}
         isSavingMock={isSavingMock}
@@ -256,20 +246,23 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
             <Toolbar
               handleScreenSizeChange={setScreenDimensions}
               screenDimensions={screenDimensions}
-              actionsDisabled={currentState !== UiState.SUCCESS}
+              actionsDisabled={iframeConnectionStatus !== "successful"}
             />
-            {currentState === UiState.FAILED_CONNECT ? (
+            {iframeConnectionStatus === "failed" ? (
               <FailedConnect onRetrigger={onRetrigger} />
             ) : null}
-            {currentState === UiState.SUCCESS ? (
+            {iframeConnectionStatus === "successful" ? (
               <IframeRenderer
                 apiContent={apiContent}
                 screenDimensions={screenDimensions}
                 simulatorUrl={simulatorUrl}
+                handleSimulatorConnectionResult={
+                  handleSimulatorConnectionResult
+                }
               />
             ) : (
               <>
-                {currentState === UiState.LOADING_IFRAME ? (
+                {iframeConnectionStatus === "waiting" ? (
                   <FullPage>
                     <Spinner variant="styles.spinner" />
                     <IframeRenderer
@@ -277,13 +270,16 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
                       screenDimensions={screenDimensions}
                       simulatorUrl={simulatorUrl}
                       dryRun
+                      handleSimulatorConnectionResult={
+                        handleSimulatorConnectionResult
+                      }
                     />
                   </FullPage>
                 ) : null}
               </>
             )}
           </BaseStyles>
-          {currentState === UiState.SUCCESS && isDisplayEditor ? (
+          {iframeConnectionStatus === "successful" && isDisplayEditor ? (
             <Flex
               className="editor"
               sx={{
