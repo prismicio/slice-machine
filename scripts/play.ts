@@ -13,6 +13,9 @@ import {
 
 const PLAYGROUNDS_ROOT = new URL("../playgrounds/", import.meta.url);
 const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
+const DEFAULT_STAGE = "staging" satisfies Args["stage"];
+const START_SLICEMACHINE_SCRIPT =
+  "../../packages/start-slicemachine/bin/start-slicemachine.js";
 
 run();
 
@@ -20,14 +23,16 @@ type Args = {
   "dry-run": boolean;
   start: boolean;
   new: boolean;
-  framework?: "next" | "nuxt" | "sveltekit" | (string & {});
+  framework?: "next" | "nuxt" | "sveltekit";
+  stage: "staging" | "prod" | "development";
+  help: boolean;
 };
 
 type DryRunOption = {
   /**
    * If `true`, commands are not executed.
    */
-  dryRun?: boolean;
+  dryRun?: Args["dry-run"];
 };
 
 /**
@@ -36,12 +41,55 @@ type DryRunOption = {
 async function run(): Promise<void> {
   process.on("uncaughtException", handleUncaughtException);
 
+  // Ensure dependencies are isolated from the monorepo.
+  if (!(await pathExists(new URL("./yarn.lock", PLAYGROUNDS_ROOT)))) {
+    await fs.writeFile(new URL("./yarn.lock", PLAYGROUNDS_ROOT), "");
+  }
+
   const args = mri<Args>(process.argv.slice(2), {
-    boolean: ["dry-run", "start", "new"],
-    string: ["framework"],
-    alias: { n: "dry-run", f: "framework" },
-    default: { "dry-run": false, start: true, new: false },
+    boolean: ["help", "dry-run", "start", "new"],
+    string: ["framework", "stage"],
+    alias: { h: "help", n: "dry-run", f: "framework" },
+    default: {
+      "dry-run": false,
+      start: true,
+      new: false,
+      stage: DEFAULT_STAGE,
+    },
   });
+
+  if (args.help) {
+    console.info(
+      `
+Usage:
+    yarn play [options...] [name]
+
+Options:
+    --new            Create a new playground
+    --framework, -f  Specify the playground's framework (next, nuxt, sveltekit) (default: next)
+    --stage          Specify the playground's stage (staging, prod, development) (default: staging)
+    --no-start       Do not start Slice Machine and the website
+    --dry-run, -n    Show what would have happened
+    --help, -h       Show help text
+
+Arguments:
+    [name]           The name of the playground to create or start
+`.trim(),
+    );
+
+    return;
+  }
+
+  if (!["prod", "staging", "development"].includes(args.stage)) {
+    throw new CommandError(`Unsupported stage: ${args.stage}`);
+  }
+
+  if (
+    args.framework &&
+    !["next", "nuxt", "sveltekit"].includes(args.framework)
+  ) {
+    throw new CommandError(`Unsupported framework: ${args.framework}`);
+  }
 
   let [playgroundName] = args._;
   const didProvidePlaygroundName = Boolean(playgroundName);
@@ -52,10 +100,14 @@ async function run(): Promise<void> {
     } else {
       playgroundName =
         (await getLastModifiedEntry(PLAYGROUNDS_ROOT, {
-          exclude: [".yarn", "node_modules"],
           dirOnly: true,
+          exclude: [".yarn", "node_modules"],
         })) ?? createRandomName();
     }
+  }
+
+  if (!playgroundName.startsWith("play-")) {
+    playgroundName = `play-${playgroundName}`;
   }
 
   const playgroundDir = new URL(`./${playgroundName}/`, PLAYGROUNDS_ROOT);
@@ -87,13 +139,9 @@ async function run(): Promise<void> {
   } else {
     console.log(`Creating a new playground: ${chalk.green(playgroundName)}`);
 
-    // Ensure dependencies are isolated from the monorepo.
-    if (!(await pathExists(new URL("./yarn.lock", PLAYGROUNDS_ROOT)))) {
-      await fs.writeFile(new URL("./yarn.lock", PLAYGROUNDS_ROOT), "");
-    }
-
     await createPlayground(playgroundName, playgroundDir, {
       framework: args.framework ?? DEFAULT_FRAMEWORK,
+      stage: args.stage,
       dryRun: args["dry-run"],
     });
   }
@@ -121,10 +169,19 @@ async function createPlayground(
   dir: URL,
   options: DryRunOption & {
     /**
-     * The framework used to bootstrap the playground.
+     * The stage on which the playground is run.
+     *
+     * @defaultValue `"staging"`
      */
-    framework: Args["framework"];
-  },
+    stage?: Args["stage"];
+
+    /**
+     * The framework used to bootstrap the playground.
+     *
+     * @defaultValue `"next"`
+     */
+    framework?: Args["framework"];
+  } = {},
 ) {
   switch (options.framework ?? "next") {
     case "next": {
@@ -160,8 +217,7 @@ async function createPlayground(
     }
 
     default: {
-      console.error(chalk.red`Framework not supported: ${options.framework}`);
-      process.exit(1);
+      throw new CommandError(`Unsupported framework: ${options.framework}`);
     }
   }
 
@@ -170,35 +226,57 @@ async function createPlayground(
     await fs.rm(new URL("package-lock.json", dir));
   }
 
-  await exec("yarn", ["add", "--dev", "cross-env"], {
-    cwd: dir,
-    stdio: "inherit",
-    dryRun: options.dryRun,
-  });
+  await updatePackageJSON(dir, { name }, { dryRun: options.dryRun });
 
-  await updatePackageJSON(
-    dir,
-    {
-      name,
-      scripts: {
-        slicemachine:
-          "cross-env SM_ENV=staging ../../packages/start-slicemachine/bin/start-slicemachine.js",
+  // Update scripts to support the monorepo and the given stage.
+  if (options.stage === "prod") {
+    await updatePackageJSON(
+      dir,
+      { scripts: { slicemachine: START_SLICEMACHINE_SCRIPT } },
+      { dryRun: options.dryRun },
+    );
+  } else {
+    await exec("yarn", ["add", "--dev", "cross-env"], {
+      cwd: dir,
+      stdio: "inherit",
+      dryRun: options.dryRun,
+    });
+
+    await updatePackageJSON(
+      dir,
+      {
+        scripts: {
+          slicemachine: `cross-env SM_ENV=${options.stage} ${START_SLICEMACHINE_SCRIPT}`,
+        },
       },
-    },
-    { dryRun: options.dryRun },
-  );
+      { dryRun: options.dryRun },
+    );
+  }
 
-  await updateSliceMachineConfig(
-    dir,
-    { apiEndpoint: `https://${name}.cdn.wroom.io/api/v2` },
-    { dryRun: options.dryRun },
-  );
+  // Update Slice Machine configuration with the correct API endpoint (if needed).
+  if (options.stage === "staging") {
+    await updateSliceMachineConfig(
+      dir,
+      { apiEndpoint: `https://${name}.cdn.wroom.io/api/v2` },
+      { dryRun: options.dryRun },
+    );
+  } else if (options.stage === "development") {
+    const apiEndpoint = new URL(
+      "./api/v2",
+      process.env.wroom_endpoint ?? "https://cdn.wroom.io",
+    );
+    apiEndpoint.hostname = `${name}.${apiEndpoint.hostname}`;
+
+    await updateSliceMachineConfig(
+      dir,
+      { apiEndpoint: apiEndpoint.toString() },
+      { dryRun: options.dryRun },
+    );
+  }
 
   await exec(
-    "yarn",
+    "npx",
     [
-      "dlx",
-      "--quiet",
       "@slicemachine/init@latest",
       `--repository="${name}"`,
       "--no-start-slicemachine",
@@ -206,23 +284,29 @@ async function createPlayground(
     {
       cwd: dir,
       env: {
-        // Use wroom.io
-        SM_ENV: "staging",
+        SM_ENV: options.stage === "prod" ? undefined : options.stage,
       },
       stdio: "inherit",
-      dryRun: options?.dryRun,
+      dryRun: options.dryRun,
     },
   );
 }
 
+/**
+ * Clones a Git repository.
+ *
+ * @param url - The Git repository's URL.
+ * @param dir - The directory in which the repository is cloned.
+ * @param options - Options that determine the function's behavior.
+ */
 async function cloneGitRepo(
   url: string,
   dir: URL,
-  options?: DryRunOption,
+  options: DryRunOption = {},
 ): Promise<void> {
   await exec("git", ["clone", "--depth=1", url, fileURLToPath(dir)], {
     stdio: "inherit",
-    dryRun: options?.dryRun,
+    dryRun: options.dryRun,
   });
 }
 
@@ -273,20 +357,14 @@ function createRandomName() {
 
   const adjective = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
   const pastry = PASTRIES[Math.floor(Math.random() * PASTRIES.length)];
-
-  return `${adjective}-${pastry}-${generateRandomHash()}`;
-}
-
-/**
- * Generates a random 7 digit hash.
- */
-function generateRandomHash() {
-  return crypto
+  const hash = crypto
     .createHash("sha1")
     .update(crypto.randomUUID())
     .digest("hex")
     .toString()
     .slice(-7);
+
+  return `${adjective}-${pastry}-${hash}`;
 }
 
 /**
@@ -297,7 +375,7 @@ function generateRandomHash() {
  */
 async function getLastModifiedEntry(
   dir: URL,
-  options?: {
+  options: {
     /**
      * A list of file or directory names to exclude.
      */
@@ -307,15 +385,15 @@ async function getLastModifiedEntry(
      * Determines if only directories are considered.
      */
     dirOnly?: boolean;
-  },
+  } = {},
 ): Promise<string | undefined> {
   let entries = await fs.readdir(dir, { withFileTypes: true });
 
-  if (options?.exclude) {
+  if (options.exclude) {
     entries = entries.filter((entry) => !options.exclude?.includes(entry.name));
   }
 
-  if (options?.dirOnly) {
+  if (options.dirOnly) {
     entries = entries.filter((entry) => entry.isDirectory());
   }
 
@@ -331,6 +409,11 @@ async function getLastModifiedEntry(
   })[0].name;
 }
 
+/**
+ * Determines if a given file path exists.
+ *
+ * @param path - The file path.
+ */
 async function pathExists(path: URL): Promise<boolean> {
   try {
     await fs.access(path);
@@ -346,12 +429,19 @@ type PackageJSON = {
   scripts: Partial<Record<string, string>>;
 };
 
+/**
+ * Updates a project's `package.json` file.
+ *
+ * @param dir - The project's directory.
+ * @param contents - The `package.json` changes.
+ * @param options - Options that determine the function's behavior.
+ */
 async function updatePackageJSON(
   dir: URL,
   contents: Partial<PackageJSON>,
-  options?: DryRunOption,
+  options: DryRunOption = {},
 ) {
-  await updateJSONFile(new URL("package.json", dir), contents, options);
+  await updateJSONFile(new URL("./package.json", dir), contents, options);
 }
 
 type SliceMachineConfig = {
@@ -359,24 +449,39 @@ type SliceMachineConfig = {
   apiEndpoint?: string;
 };
 
+/**
+ * Updates a project's Slice Machine configuration file.
+ *
+ * @param dir - The project's directory.
+ * @param contents - The Slice Machine configuration changes.
+ * @param options - Options that determine the function's behavior.
+ */
 async function updateSliceMachineConfig(
   dir: URL,
   contents: Partial<SliceMachineConfig>,
-  options?: DryRunOption,
+  options: DryRunOption = {},
 ) {
   await updateJSONFile(
-    new URL("slicemachine.config.json", dir),
+    new URL("./slicemachine.config.json", dir),
     contents,
     options,
   );
 }
 
+/**
+ * Updates a JSON file with a set of contents. The contents are merged with the
+ * existing contents.
+ *
+ * @param filePath - The path to the JSON file.
+ * @param contents - Contents to add to the JSON file.
+ * @param options - Options that determine the function's behavior.
+ */
 async function updateJSONFile<TSchema extends Record<string, unknown>>(
   filePath: URL,
   contents: Partial<TSchema>,
-  options?: DryRunOption,
+  options: DryRunOption = {},
 ) {
-  if (options?.dryRun) {
+  if (options.dryRun) {
     console.info(`Update ${filePath} with ${JSON.stringify(contents)}`);
 
     return;
