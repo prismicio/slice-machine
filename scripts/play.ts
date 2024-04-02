@@ -14,6 +14,7 @@ import {
 const PLAYGROUNDS_ROOT = new URL("../playgrounds/", import.meta.url);
 const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
 const DEFAULT_ENVIRONMENT = "staging" satisfies Args["environment"];
+const DEFAULT_WROOM_URL = "https://cdn.wroom.io";
 const START_SLICEMACHINE_SCRIPT =
   "../../packages/start-slicemachine/bin/start-slicemachine.js";
 
@@ -36,7 +37,7 @@ type Args = {
    *
    * @defaultValue `"staging"`
    */
-  environment: "staging" | "prod" | "development";
+  environment: "staging" | "production" | "development";
 
   /**
    * If `true`, commands are not executed.
@@ -65,6 +66,7 @@ async function main(): Promise<void> {
     alias: { h: "help", n: "dry-run", f: "framework", e: "environment" },
     default: {
       "dry-run": false,
+      help: false,
       start: true,
       new: false,
       framework: "next",
@@ -94,7 +96,7 @@ Arguments:
     return;
   }
 
-  if (!["prod", "staging", "development"].includes(args.environment)) {
+  if (!["production", "staging", "development"].includes(args.environment)) {
     throw new CommandError(`Unsupported environment: ${args.environment}`);
   }
 
@@ -103,15 +105,17 @@ Arguments:
   }
 
   let [playgroundName] = args._;
+  const didProvidePlaygroundName = Boolean(playgroundName);
+
   if (!playgroundName) {
     if (args.new) {
       playgroundName = createRandomName();
     } else {
-      playgroundName =
-        (await getLastModifiedEntry(PLAYGROUNDS_ROOT, {
-          dirOnly: true,
-          exclude: [".yarn", "node_modules"],
-        })) ?? createRandomName();
+      const mostRecentPlaygroundName = await getLastModifiedEntryName(
+        PLAYGROUNDS_ROOT,
+        { dirOnly: true, exclude: [".yarn", "node_modules"] },
+      );
+      playgroundName = mostRecentPlaygroundName ?? createRandomName();
     }
   }
 
@@ -125,11 +129,11 @@ Arguments:
   if (playgroundExists) {
     if (args.new) {
       throw new CommandError(
-        `A playground named ${playgroundName} already exists. Exiting.`,
+        `A playground named ${playgroundName} already exists.`,
       );
     }
 
-    if (didProvideArgument(["--playground", "-p"], process.argv.slice(2))) {
+    if (didProvidePlaygroundName) {
       console.info(`Using playground: ${chalk.green(playgroundName)}`);
     } else {
       console.info(
@@ -155,7 +159,7 @@ Arguments:
     console.log(`Creating a new playground: ${chalk.green(playgroundName)}`);
 
     await createPlayground(playgroundName, playgroundDir, {
-      framework: args.framework ?? DEFAULT_FRAMEWORK,
+      framework: args.framework,
       environment: args.environment,
       dryRun: args["dry-run"],
     });
@@ -189,7 +193,7 @@ async function createPlayground(
   dir: URL,
   options: DryRunOption & Partial<Pick<Args, "framework" | "environment">> = {},
 ) {
-  switch (options.framework ?? "next") {
+  switch (options.framework ?? DEFAULT_FRAMEWORK) {
     case "next": {
       await cloneGitRepo(
         "https://github.com/prismicio-community/nextjs-starter-prismic-minimal-ts.git",
@@ -249,15 +253,19 @@ async function createPlayground(
     }
   }
 
+  await updatePackageJSON(dir, { name }, { dryRun: options.dryRun });
+
+  // Prevent pushing changes to the starters.
+  await exec("git", ["remote", "remove", "origin"]);
+
+  // Ensure Yarn is used. `@slicemachine/init` will use npm if
+  // `package-lock.json` is present.
   if (!options.dryRun) {
-    await fs.rm(new URL("./.git", dir), { recursive: true });
     await fs.rm(new URL("package-lock.json", dir));
   }
 
-  await updatePackageJSON(dir, { name }, { dryRun: options.dryRun });
-
   // Update scripts to support the monorepo and the given environment.
-  if (options.environment === "prod") {
+  if (options.environment === "production") {
     await updatePackageJSON(
       dir,
       { scripts: { slicemachine: START_SLICEMACHINE_SCRIPT } },
@@ -291,7 +299,7 @@ async function createPlayground(
   } else if (options.environment === "development") {
     const apiEndpoint = new URL(
       "./api/v2",
-      process.env.wroom_endpoint ?? "https://cdn.wroom.io",
+      process.env.wroom_endpoint ?? DEFAULT_WROOM_URL,
     );
     apiEndpoint.hostname = `${name}.${apiEndpoint.hostname}`;
 
@@ -313,7 +321,9 @@ async function createPlayground(
       cwd: dir,
       env: {
         SM_ENV:
-          options.environment === "prod" ? undefined : options.environment,
+          options.environment === "production"
+            ? undefined
+            : options.environment,
       },
       stdio: "inherit",
       dryRun: options.dryRun,
@@ -358,10 +368,8 @@ async function cloneGitRepo(
 }
 
 /**
- * Returns a random project name. The name is not guaranteed to be unique. Use
- * `appendRandomHash` to virtually guarantee uniqueness.
- *
- * @see {@link appendRandomHash}
+ * Returns a random project name. A random 4-character hash is appended to the
+ * name to prevent name collisions.
  */
 function createRandomName() {
   const PASTRIES = [
@@ -400,7 +408,7 @@ function createRandomName() {
  * @param dir - The directory to search.
  * @param options - Options that determine the function's behavior.
  */
-async function getLastModifiedEntry(
+async function getLastModifiedEntryName(
   dir: URL,
   options: {
     /**
@@ -520,7 +528,13 @@ async function updateJSONFile<TSchema extends Record<string, unknown>>(
   await fs.writeFile(filePath, JSON.stringify(newContents, null, 2));
 }
 
-function deepMerge(a: any, b: any): Record<PropertyKey, unknown> {
+/**
+ * Deeply merged two objects.
+ *
+ * @param a - The destination object.
+ * @param b - The object to merge into `a`. It takes priority over `a`.
+ */
+function deepMerge(a: object, b: object): Record<PropertyKey, unknown> {
   const result = { ...a, ...b };
 
   for (const key of Object.keys(result)) {
