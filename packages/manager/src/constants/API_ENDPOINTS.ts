@@ -41,11 +41,11 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 
 			if (missingAPIEndpoints.length > 0) {
 				console.error(
-					`You are running Slice Machine in development mode (SM_ENV=${APPLICATION_MODE.Development}) where API endpoints are configured via environment variables.
+					`You are running Slice Machine in development mode (SM_ENV=${
+						APPLICATION_MODE.Development
+					}) where API endpoints are configured via environment variables.
 
-The following endpoints were not configured: ${missingAPIEndpoints.join(
-						", ",
-					)}.
+The following endpoints were not configured: ${missingAPIEndpoints.join(", ")}.
 
 Configure them before continuing.`,
 				);
@@ -53,10 +53,14 @@ Configure them before continuing.`,
 				process.exit(1);
 			}
 
-			console.warn(`You are running Slice Machine in development mode (SM_ENV=${APPLICATION_MODE.Development}).
+			console.warn(`You are running Slice Machine in development mode (SM_ENV=${
+				APPLICATION_MODE.Development
+			}).
 
 The following API endpoints were configured via environment variables:
-${Object.entries(apiEndpoints).map(([name, endpoint]) => `  - ${name}: ${endpoint}`).join("\n")}
+${Object.entries(apiEndpoints)
+	.map(([name, endpoint]) => `  - ${name}: ${endpoint}`)
+	.join("\n")}
 
 If you didn't intend to run Slice Machine this way stop it immediately and unset the SM_ENV environment variable.`);
 
