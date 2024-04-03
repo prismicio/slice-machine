@@ -3,6 +3,7 @@ import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
 import { FormData } from "formdata-polyfill/esm.min";
 import { setupServer, SetupServer } from "msw/node";
 import { cleanup } from "@testing-library/react";
+import { rest } from "msw";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
@@ -20,7 +21,11 @@ declare module "vitest" {
   }
 }
 
-const mswServer = setupServer();
+const mswServer = setupServer(
+  rest.get("https://api.lab.amplitude.com/sdk/v2/vardata", (_req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+);
 
 beforeAll(() => {
   mswServer.listen({ onUnhandledRequest: "error" });
