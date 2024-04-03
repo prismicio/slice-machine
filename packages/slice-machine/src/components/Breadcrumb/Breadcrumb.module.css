@@ -1,11 +1,23 @@
-.activeItemContainer {
-  font-weight: 600;
+.items {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
 }
 
 .item {
-  &:not(:last-child)::after {
-    content: "/";
-    margin-left: 4px;
-    margin-right: 4px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  &:last-child {
+    .separator {
+      display: none;
+    }
+  }
+
+  .active {
+    font-weight: 500;
   }
 }

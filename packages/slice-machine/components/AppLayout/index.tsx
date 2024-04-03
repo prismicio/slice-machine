@@ -99,13 +99,9 @@ export const AppLayoutBreadcrumb: FC<AppLayoutBreadcrumbProps> = (props) => {
 
   return (
     <Box flexGrow={1}>
-      <Breadcrumb
-        activeItem={
-          Boolean(page) ? <BreadcrumbItem>{page}</BreadcrumbItem> : undefined
-        }
-        {...otherProps}
-      >
+      <Breadcrumb {...otherProps}>
         <BreadcrumbItem>{folder}</BreadcrumbItem>
+        {Boolean(page) ? <BreadcrumbItem active>{page}</BreadcrumbItem> : null}
       </Breadcrumb>
     </Box>
   );

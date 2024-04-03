@@ -7,7 +7,7 @@ type Story = StoryObj<typeof meta>;
 const meta: Meta<typeof Breadcrumb> = {
   component: Breadcrumb,
   argTypes: {
-    activeItem: { control: { disable: true } },
+    separator: { control: { disable: true } },
     children: { control: { disable: true } },
   },
 };
@@ -28,11 +28,24 @@ export const Default = {
 
 export const WithActiveItem = {
   args: {
-    activeItem: <BreadcrumbItem>Baz</BreadcrumbItem>,
     children: (
       <>
         <BreadcrumbItem>Foo</BreadcrumbItem>
         <BreadcrumbItem>Bar</BreadcrumbItem>
+        <BreadcrumbItem active>Baz</BreadcrumbItem>
+      </>
+    ),
+  },
+} satisfies Story;
+
+export const WithCustomSeparator = {
+  args: {
+    separator: ">",
+    children: (
+      <>
+        <BreadcrumbItem>Foo</BreadcrumbItem>
+        <BreadcrumbItem>Bar</BreadcrumbItem>
+        <BreadcrumbItem active>Baz</BreadcrumbItem>
       </>
     ),
   },
