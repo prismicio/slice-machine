@@ -73,7 +73,7 @@ export class SliceBuilderPage extends BuilderPage {
    * Dynamic locators
    */
   override getBreadcrumbLabel(sliceName: string) {
-    return this.breadcrumb.getByText(`Slices / ${sliceName}`, { exact: true });
+    return this.breadcrumb.getByText(sliceName, { exact: true });
   }
 
   getVariationCard(name: string, variation: string): Locator {
