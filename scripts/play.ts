@@ -15,6 +15,10 @@ const PLAYGROUNDS_ROOT = new URL("../playgrounds/", import.meta.url);
 const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
 const DEFAULT_ENVIRONMENT = "staging" satisfies Args["environment"];
 const DEFAULT_WROOM_URL = "https://cdn.wroom.io";
+const SLICEMACHINE_INIT_SCRIPT = new URL(
+  "../packages/init/bin/slicemachine-init.js",
+  import.meta.url,
+);
 const START_SLICEMACHINE_SCRIPT =
   "../../packages/start-slicemachine/bin/start-slicemachine.js";
 
@@ -314,12 +318,8 @@ async function createPlayground(
   }
 
   await exec(
-    "npx",
-    [
-      "@slicemachine/init@latest",
-      `--repository="${name}"`,
-      "--no-start-slicemachine",
-    ],
+    fileURLToPath(SLICEMACHINE_INIT_SCRIPT),
+    [`--repository="${name}"`, "--no-start-slicemachine"],
     {
       cwd: dir,
       env: {
