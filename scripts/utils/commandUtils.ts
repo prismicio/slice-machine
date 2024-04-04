@@ -30,7 +30,7 @@ export function exec(
 export async function exec(
   file: string,
   args?: string[],
-  options?: ExecaOptions & { dryRun?: true },
+  options?: ExecaOptions & { dryRun: true },
 ): Promise<void>;
 export async function exec(
   file: string,
