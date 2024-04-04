@@ -62,7 +62,9 @@ ${Object.entries(apiEndpoints)
 	.map(([name, endpoint]) => `  - ${name}: ${endpoint}`)
 	.join("\n")}
 
-If you didn't intend to run Slice Machine this way stop it immediately and unset the SM_ENV environment variable.`);
+These endpoints are different than Slice Machine's normal endpoints and are not trusted.
+
+If you didn't intend to run Slice Machine this way, stop it immediately and unset the SM_ENV environment variable.`);
 
 			return apiEndpoints as APIEndpoints;
 		}
