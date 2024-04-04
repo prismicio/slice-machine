@@ -19,6 +19,7 @@ const SLICEMACHINE_INIT_SCRIPT = new URL(
   "../packages/init/bin/slicemachine-init.js",
   import.meta.url,
 );
+// A path relative to the playground is used to make the playground portable.
 const START_SLICEMACHINE_SCRIPT =
   "../../packages/start-slicemachine/bin/start-slicemachine.js";
 
@@ -73,7 +74,7 @@ async function main(): Promise<void> {
       help: false,
       start: true,
       new: false,
-      framework: "next",
+      framework: DEFAULT_FRAMEWORK,
       environment: DEFAULT_ENVIRONMENT,
     },
   });
@@ -86,8 +87,8 @@ Usage:
 
 Options:
     --new              Create a new playground
-    --framework, -f    Specify the playground's framework (next, nuxt, sveltekit) (default: next)
-    --environment, -e  Specify the playground's environment (staging, production, development) (default: staging)
+    --framework, -f    Specify the playground's framework (next, nuxt, sveltekit) (default: ${DEFAULT_FRAMEWORK})
+    --environment, -e  Specify the playground's environment (staging, production, development) (default: ${DEFAULT_ENVIRONMENT})
     --no-start         Do not start Slice Machine and the website
     --dry-run, -n      Show what would have happened
     --help, -h         Show help text
