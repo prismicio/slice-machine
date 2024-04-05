@@ -25,7 +25,8 @@
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "yarn workspaces foreach --parallel --topological-dev --verbose run test",
-    "publish": "tsx scripts/publish.ts"
+    "publish": "tsx scripts/publish.ts",
+    "play": "tsx scripts/play.ts"
   },
   "dependenciesMeta": {
     "@sentry/cli": {
