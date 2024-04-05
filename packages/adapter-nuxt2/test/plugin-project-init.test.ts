@@ -35,12 +35,12 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"import config from \\"./slicemachine.config.json\\";
+			"import { apiEndpoint, repositoryName } from \\"./slicemachine.config.json\\";
 			export default {
 			  buildModules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: config.apiEndpoint || config.repositoryName,
+			    endpoint: apiEndpoint || repositoryName,
 			    modern: true,
 			  },
 			};
@@ -62,12 +62,12 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"import config from \\"./slicemachine.config.json\\";
+			"import { apiEndpoint, repositoryName } from \\"./slicemachine.config.json\\";
 			export default {
 			  buildModules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: config.apiEndpoint || config.repositoryName,
+			    endpoint: apiEndpoint || repositoryName,
 			    modern: true,
 			  },
 			};
