@@ -35,14 +35,16 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"export default {
+			"import config from \\"./slicemachine.config.json\\";
+			export default {
 			  buildModules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: \\"https://qwerty.cdn.prismic.io/api/v2\\",
-			    modern: true
-			  }
-			};"
+			    endpoint: config.apiEndpoint || config.repositoryName,
+			    modern: true,
+			  },
+			};
+			"
 		`);
 	});
 
@@ -60,14 +62,16 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"export default {
+			"import config from \\"./slicemachine.config.json\\";
+			export default {
 			  buildModules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: \\"https://qwerty.cdn.prismic.io/api/v2\\",
-			    modern: true
-			  }
-			};"
+			    endpoint: config.apiEndpoint || config.repositoryName,
+			    modern: true,
+			  },
+			};
+			"
 		`);
 	});
 
@@ -83,7 +87,7 @@ describe("Prismic module", () => {
 			.mockImplementation(() => undefined);
 
 		const nuxtConfigPath = path.join(ctx.project.root, "nuxt.config.ts");
-		await fs.writeFile(nuxtConfigPath, "export default () => ({})");
+		await fs.writeFile(nuxtConfigPath, "module.exports = () => ({})");
 
 		await ctx.pluginRunner.callHook("project:init", {
 			log,

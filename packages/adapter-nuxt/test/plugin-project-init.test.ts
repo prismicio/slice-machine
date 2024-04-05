@@ -35,13 +35,15 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"export default defineNuxtConfig({
+			"import config from \\"./slicemachine.config.json\\";
+			export default defineNuxtConfig({
 			  modules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: \\"qwerty\\"
-			  }
-			})"
+			    endpoint: config.apiEndpoint || config.repositoryName,
+			  },
+			});
+			"
 		`);
 	});
 
@@ -59,13 +61,15 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"export default defineNuxtConfig({
+			"import config from \\"./slicemachine.config.json\\";
+			export default defineNuxtConfig({
 			  modules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: \\"qwerty\\"
-			  }
-			})"
+			    endpoint: config.apiEndpoint || config.repositoryName,
+			  },
+			});
+			"
 		`);
 	});
 });

@@ -9,7 +9,7 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import { loadFile, writeFile, type ASTNode } from "magicast";
+import { builders, generateCode, loadFile } from "magicast";
 
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
@@ -37,6 +37,7 @@ type ConfigurePrismicModuleArgs = SliceMachineContext<PluginOptions>;
 
 const configurePrismicModule = async ({
 	helpers,
+	options,
 	project,
 }: ConfigurePrismicModuleArgs) => {
 	let nuxtConfigFilename = "nuxt.config.js";
@@ -109,18 +110,41 @@ const configurePrismicModule = async ({
 		config.buildModules.push(NUXT_PRISMIC);
 	}
 
+	// Append Prismic module configuration
+	const ENDPOINT_REPLACE_KEY = "___prismicEndpoint___";
+	const ENDPOINT_REPLACE_VALUE = "apiEndpoint || repositoryName";
 	if (!hasInlinedConfiguration) {
+		// Import Slice Machine configuration
+		mod.imports.$add({
+			from: "./slicemachine.config.json",
+			imported: "apiEndpoint",
+		});
+		mod.imports.$add({
+			from: "./slicemachine.config.json",
+			imported: "repositoryName",
+		});
+
+		// Add inline configuration
 		if (config.prismic) {
-			config.prismic.endpoint = endpoint;
+			config.prismic.endpoint = builders.raw(ENDPOINT_REPLACE_KEY);
 		} else {
 			config.prismic = {
-				endpoint,
+				endpoint: builders.raw(ENDPOINT_REPLACE_KEY),
 				modern: true,
 			};
 		}
 	}
 
-	await writeFile(mod as unknown as ASTNode, nuxtConfigPath);
+	const ast = "$ast" in mod ? mod.$ast : mod;
+	let { code } = generateCode(ast);
+	// This is a workaround to magicast not supporting "LogicalExpression" node type
+	code = code.replace(ENDPOINT_REPLACE_KEY, ENDPOINT_REPLACE_VALUE);
+	await writeProjectFile({
+		filename: nuxtConfigFilename,
+		contents: code,
+		format: options.format,
+		helpers,
+	});
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
