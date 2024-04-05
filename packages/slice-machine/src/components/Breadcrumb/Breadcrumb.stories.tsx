@@ -15,24 +15,20 @@ export default meta;
 
 export const Default = {
   args: {
-    children: (
-      <>
-        <BreadcrumbItem>Foo</BreadcrumbItem>
-        <BreadcrumbItem>Bar</BreadcrumbItem>
-        <BreadcrumbItem>Baz</BreadcrumbItem>
-      </>
-    ),
+    children: [
+      <BreadcrumbItem>Foo</BreadcrumbItem>,
+      <BreadcrumbItem>Bar</BreadcrumbItem>,
+      <BreadcrumbItem>Baz</BreadcrumbItem>,
+    ],
   },
 } satisfies Story;
 
 export const WithActiveItem = {
   args: {
-    children: (
-      <>
-        <BreadcrumbItem>Foo</BreadcrumbItem>
-        <BreadcrumbItem>Bar</BreadcrumbItem>
-        <BreadcrumbItem active>Baz</BreadcrumbItem>
-      </>
-    ),
+    children: [
+      <BreadcrumbItem>Foo</BreadcrumbItem>,
+      <BreadcrumbItem>Bar</BreadcrumbItem>,
+      <BreadcrumbItem active>Baz</BreadcrumbItem>,
+    ],
   },
 } satisfies Story;
