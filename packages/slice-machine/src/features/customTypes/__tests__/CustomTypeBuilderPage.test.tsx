@@ -178,10 +178,9 @@ async function renderCustomTypesBuilderPage({
 
   const folder = customType.format === "page" ? "Page types" : "Custom types";
   const breadcrumb = await screen.findByLabelText("Breadcrumb");
-  expect(await within(breadcrumb).findByText(folder)).toBeVisible();
-  expect(
-    await within(breadcrumb).findByText(customType.label as string),
-  ).toBeVisible();
+  expect(breadcrumb).toHaveTextContent(
+    `${folder}/${customType.label as string}`,
+  );
 
   return renderResults;
 }
