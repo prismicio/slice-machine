@@ -11,7 +11,7 @@ test("I can create a slice", async ({ sliceBuilderPage, slicesListPage }) => {
   const sliceName = "Slice" + generateRandomId();
   await slicesListPage.createSliceDialog.createSlice(sliceName);
 
-  await expect(sliceBuilderPage.getBreadcrumbLabel(sliceName)).toBeVisible();
+  await sliceBuilderPage.checkBreadcrumb(sliceName);
 
   await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
   await expect(sliceBuilderPage.repeatableZoneListItem).toHaveCount(0);
@@ -77,7 +77,7 @@ test("I can rename a slice", async ({
   await expect(slicesListPage.getCard(newSliceName)).toBeVisible();
   await slicesListPage.clickCard(newSliceName);
 
-  await expect(sliceBuilderPage.getBreadcrumbLabel(newSliceName)).toBeVisible();
+  await sliceBuilderPage.checkBreadcrumb(newSliceName);
 });
 
 // See: https://github.com/prismicio/slice-machine/issues/791
@@ -156,7 +156,7 @@ test("I cannot create two slices with the same name", async ({
 
   const sliceName = "Slice" + generateRandomId();
   await slicesListPage.createSliceDialog.createSlice(sliceName);
-  await expect(sliceBuilderPage.getBreadcrumbLabel(sliceName)).toBeVisible();
+  await sliceBuilderPage.checkBreadcrumb(sliceName);
 
   await slicesListPage.goto();
   await slicesListPage.openCreateDialog();
@@ -202,7 +202,7 @@ test("I can create a slice from the empty state", async ({
   procedures.unmock("getState");
   await slicesListPage.createSliceDialog.createSlice(sliceName);
 
-  await expect(sliceBuilderPage.getBreadcrumbLabel(sliceName)).toBeVisible();
+  await sliceBuilderPage.checkBreadcrumb(sliceName);
 });
 
 test("I can update the screenshot", async ({ slicesListPage, slice }) => {

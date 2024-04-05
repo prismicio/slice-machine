@@ -13,7 +13,7 @@ test("I can create a reusable custom type", async ({
   const name = "Custom Type " + generateRandomId();
   await customTypesTablePage.createTypeDialog.createType(name, "reusable");
 
-  await expect(customTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
+  await customTypesBuilderPage.checkBreadcrumb(name);
 
   await expect(customTypesBuilderPage.tab).toHaveCount(1);
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
@@ -37,7 +37,7 @@ test("I can create a single custom type", async ({
   const name = "Custom Type " + generateRandomId();
   await customTypesTablePage.createTypeDialog.createType(name, "single");
 
-  await expect(customTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
+  await customTypesBuilderPage.checkBreadcrumb(name);
 
   await expect(customTypesBuilderPage.tab).toHaveCount(1);
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
@@ -147,5 +147,5 @@ test("I can create a new custom type from the blank slate", async ({
   const name = "Custom Type " + generateRandomId();
   await customTypesTablePage.createTypeDialog.createType(name, "reusable");
 
-  await expect(customTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
+  await customTypesBuilderPage.checkBreadcrumb(name);
 });

@@ -11,6 +11,7 @@ import {
 import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import { LabsList } from "./LabsList";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
 
 export const LabsPage: FC = () => {
   return (
@@ -58,7 +59,9 @@ const LabsPageLayout: FC<LabsPageLayoutProps> = ({
   <AppLayout>
     {withHeader ? (
       <AppLayoutHeader>
-        <AppLayoutBreadcrumb folder="Labs" />
+        <AppLayoutBreadcrumb>
+          <BreadcrumbItem>Labs</BreadcrumbItem>
+        </AppLayoutBreadcrumb>
       </AppLayoutHeader>
     ) : null}
     <AppLayoutContent>{children}</AppLayoutContent>

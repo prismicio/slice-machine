@@ -23,6 +23,7 @@ import EmptyState from "@components/EmptyState";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 import { DeleteSliceModal } from "@components/DeleteSliceModal";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
@@ -78,7 +79,9 @@ const SlicesIndex: React.FunctionComponent = () => {
       </Head>
       <AppLayout>
         <AppLayoutHeader>
-          <AppLayoutBreadcrumb folder="Slices" />
+          <AppLayoutBreadcrumb>
+            <BreadcrumbItem>Slices</BreadcrumbItem>
+          </AppLayoutBreadcrumb>
           {localLibraries?.length !== 0 && sliceCount !== 0 ? (
             <AppLayoutActions>
               <Button

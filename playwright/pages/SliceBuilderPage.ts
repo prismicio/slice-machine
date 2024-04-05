@@ -72,10 +72,6 @@ export class SliceBuilderPage extends BuilderPage {
   /**
    * Dynamic locators
    */
-  override getBreadcrumbLabel(sliceName: string) {
-    return this.breadcrumb.getByText(sliceName, { exact: true });
-  }
-
   getVariationCard(name: string, variation: string): Locator {
     return this.page.getByRole("link", {
       name: `${name} ${variation} slice card`,
@@ -134,7 +130,7 @@ export class SliceBuilderPage extends BuilderPage {
     await this.slicesListPage.page
       .getByText(sliceName, { exact: true })
       .click();
-    await expect(this.getBreadcrumbLabel(sliceName)).toBeVisible();
+    await this.checkBreadcrumb(sliceName);
   }
 
   async openVariationActionMenu(
@@ -213,5 +209,7 @@ export class SliceBuilderPage extends BuilderPage {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkBreadcrumb(sliceName: string) {
+    await this.checkBreadcrumbItems(["Slices", sliceName]);
+  }
 }

@@ -1,50 +1,36 @@
 import { Text } from "@prismicio/editor-ui";
 import clsx from "clsx";
-import {
-  createContext,
-  PropsWithChildren,
-  ReactNode,
-  useContext,
-  useMemo,
-} from "react";
+import { PropsWithChildren, Children, FC } from "react";
 
 import styles from "./Breadcrumb.module.css";
 
-type BreadcrumbContext = {
-  separator?: ReactNode;
-};
-
-const BreadcrumbContext = createContext<BreadcrumbContext>({});
-
-type BreadcrumbProps = PropsWithChildren<{
-  separator?: ReactNode;
-}>;
-
-export function Breadcrumb(props: BreadcrumbProps) {
-  const { separator = "/", children, ...restProps } = props;
-  const contextValue = useMemo(() => ({ separator }), [separator]);
+export const Breadcrumb: FC<PropsWithChildren> = (props) => {
+  const { children, ...otherProps } = props;
+  const childrenCount = Children.count(children);
 
   return (
-    <nav aria-label="Breadcrumb" {...restProps}>
+    <nav aria-label="Breadcrumb" {...otherProps}>
       <ol className={styles.items}>
-        <BreadcrumbContext.Provider value={contextValue}>
-          {children}
-        </BreadcrumbContext.Provider>
+        {Children.map(children, (child, index) => (
+          <>
+            {child}
+            {index < childrenCount - 1 ? <BreadcrumbSeparator /> : null}
+          </>
+        ))}
       </ol>
     </nav>
   );
-}
+};
 
 type BreadcrumbItemProps = PropsWithChildren<{
   active?: boolean;
 }>;
 
-export function BreadcrumbItem(props: BreadcrumbItemProps) {
+export const BreadcrumbItem: FC<BreadcrumbItemProps> = (props) => {
   const { active = false, children, ...otherProps } = props;
-  const { separator } = useContext(BreadcrumbContext);
 
   return (
-    <li {...otherProps} className={styles.item}>
+    <li {...otherProps}>
       <Text
         component="span"
         color={active ? "grey12" : "grey11"}
@@ -52,11 +38,16 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
       >
         {children}
       </Text>
-      <div role="presentation" className={styles.separator}>
-        <Text component="span" color="grey11">
-          {separator}
-        </Text>
-      </div>
     </li>
   );
-}
+};
+
+const BreadcrumbSeparator: FC = () => {
+  return (
+    <li aria-hidden={true}>
+      <Text component="span" color="grey11">
+        /
+      </Text>
+    </li>
+  );
+};

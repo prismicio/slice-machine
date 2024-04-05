@@ -205,7 +205,7 @@ export class TypeBuilderPage extends BuilderPage {
     await typePage.goto();
     await expect(typePage.getRow(name)).toBeVisible();
     await typePage.getRow(name).click();
-    await expect(this.getBreadcrumbLabel(name)).toBeVisible();
+    await this.checkBreadcrumb(name);
   }
 
   async openTab(name: string) {
@@ -288,5 +288,12 @@ export class TypeBuilderPage extends BuilderPage {
    */
   async checkIfTabIsActive(name: string) {
     await expect(this.getTab(name)).toHaveAttribute("aria-selected", "true");
+  }
+
+  async checkBreadcrumb(name: string) {
+    await this.checkBreadcrumbItems([
+      this.format === "page" ? "Page types" : "Custom types",
+      name,
+    ]);
   }
 }

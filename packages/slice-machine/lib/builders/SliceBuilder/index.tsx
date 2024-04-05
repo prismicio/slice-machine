@@ -13,6 +13,7 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
 import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
 import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
@@ -24,7 +25,10 @@ export const SliceBuilder: FC = () => {
     <AppLayout>
       <AppLayoutHeader>
         <AppLayoutBackButton url="/slices" />
-        <AppLayoutBreadcrumb folder="Slices" page={slice.model.name} />
+        <AppLayoutBreadcrumb>
+          <BreadcrumbItem>Slices</BreadcrumbItem>
+          <BreadcrumbItem active>{slice.model.name}</BreadcrumbItem>
+        </AppLayoutBreadcrumb>
         <AppLayoutActions>
           <AutoSaveStatusIndicator status={actionQueueStatus} />
           <SimulatorButton disabled={actionQueueStatus !== "done"} />

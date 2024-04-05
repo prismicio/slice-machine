@@ -27,7 +27,7 @@ test("I can create a reusable page type", async ({
     pageTypesBuilderPage.getSliceZoneSharedSliceCard("CustomerLogos"),
   ).toBeVisible();
 
-  await expect(pageTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
+  await pageTypesBuilderPage.checkBreadcrumb(name);
 
   await expect(pageTypesBuilderPage.tab).toHaveCount(2);
   await expect(pageTypesBuilderPage.getTab("Main")).toBeVisible();
@@ -66,7 +66,7 @@ test("I can create a single page type", async ({
     pageTypesBuilderPage.getSliceZoneSharedSliceCard("CallToAction"),
   ).toBeVisible();
 
-  await expect(pageTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
+  await pageTypesBuilderPage.checkBreadcrumb(name);
 
   await expect(pageTypesBuilderPage.tab).toHaveCount(2);
   await expect(pageTypesBuilderPage.getTab("Main")).toBeVisible();
@@ -156,5 +156,5 @@ test("I can create a new page type from the blank slate", async ({
   const name = "Page Type " + generateRandomId();
   await pageTypesTablePage.createTypeDialog.createType(name, "reusable");
 
-  await expect(pageTypesBuilderPage.getBreadcrumbLabel(name)).toBeVisible();
+  await pageTypesBuilderPage.checkBreadcrumb(name);
 });

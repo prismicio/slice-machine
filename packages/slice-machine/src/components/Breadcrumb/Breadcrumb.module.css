@@ -6,18 +6,6 @@
   padding: 0px;
 }
 
-.item {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-
-  &:last-child {
-    .separator {
-      display: none;
-    }
-  }
-
-  .active {
-    font-weight: 500;
-  }
+.active {
+  font-weight: 500;
 }

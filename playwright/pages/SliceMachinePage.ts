@@ -34,10 +34,6 @@ export class SliceMachinePage {
   /**
    * Dynamic locators
    */
-  getBreadcrumbLabel(name: string) {
-    return this.breadcrumb.getByText(name, { exact: true });
-  }
-
   getPageLayoutByTopBorderColor(color: string) {
     return this.page.getByTestId(`app-layout-top-border-color-${color}`);
   }
@@ -53,5 +49,8 @@ export class SliceMachinePage {
   /**
    * Assertions
    */
-  // Handle assertions here
+  async checkBreadcrumbItems(items: string[]) {
+    await expect(this.breadcrumb).toBeVisible();
+    await expect(this.breadcrumb).toHaveText(items.join("/"));
+  }
 }
