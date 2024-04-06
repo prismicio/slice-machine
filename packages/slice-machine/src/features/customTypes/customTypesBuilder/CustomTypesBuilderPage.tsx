@@ -26,6 +26,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { EditDropdown } from "../EditDropdown";
 import { PageSnippetDialog } from "./PageSnippetDialog";
 import { CustomTypeProvider } from "./CustomTypeProvider";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
 
 export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
@@ -87,10 +88,14 @@ const CustomTypesBuilderPageWithProvider: React.FC<
             <>
               <AppLayoutHeader>
                 <AppLayoutBackButton url={config.tablePagePathname} />
-                <AppLayoutBreadcrumb
-                  folder={messages.name({ start: true, plural: true })}
-                  page={customType.label ?? customType.id}
-                />
+                <AppLayoutBreadcrumb>
+                  <BreadcrumbItem>
+                    {messages.name({ start: true, plural: true })}
+                  </BreadcrumbItem>
+                  <BreadcrumbItem active>
+                    {customType.label ?? customType.id}
+                  </BreadcrumbItem>
+                </AppLayoutBreadcrumb>
                 <AppLayoutActions>
                   <AutoSaveStatusIndicator status={actionQueueStatus} />
                   {customType.format === "page" ? (

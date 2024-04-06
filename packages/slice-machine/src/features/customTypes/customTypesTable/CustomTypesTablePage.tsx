@@ -20,6 +20,7 @@ import { ErrorBoundary } from "@src/ErrorBoundary";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 
 import { CustomTypesTable } from "./CustomTypesTable";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
 
 type CustomTypesTablePageProps = {
   format: CustomTypeFormat;
@@ -61,12 +62,11 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
           fallback={
             <AppLayout>
               <AppLayoutHeader>
-                <AppLayoutBreadcrumb
-                  folder={customTypesMessages.name({
-                    start: true,
-                    plural: true,
-                  })}
-                />
+                <AppLayoutBreadcrumb>
+                  <BreadcrumbItem>
+                    {customTypesMessages.name({ start: true, plural: true })}
+                  </BreadcrumbItem>
+                </AppLayoutBreadcrumb>
                 <AppLayoutActions>
                   <Button disabled startIcon="add">
                     Create
@@ -81,12 +81,11 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
         >
           <AppLayout>
             <AppLayoutHeader>
-              <AppLayoutBreadcrumb
-                folder={customTypesMessages.name({
-                  start: true,
-                  plural: true,
-                })}
-              />
+              <AppLayoutBreadcrumb>
+                <BreadcrumbItem>
+                  {customTypesMessages.name({ start: true, plural: true })}
+                </BreadcrumbItem>
+              </AppLayoutBreadcrumb>
               <AppLayoutActions>
                 <Button
                   data-testid="create-ct"

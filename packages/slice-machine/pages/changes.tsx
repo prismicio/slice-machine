@@ -13,6 +13,7 @@ import {
 } from "@components/AppLayout";
 import { ChangesItems } from "@components/ChangesItems";
 import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
 import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
 import { PushChangesButton } from "@src/features/changes/PushChangesButton";
 import { AuthStatus } from "@src/modules/userContext/types";
@@ -134,7 +135,9 @@ const Changes: React.FunctionComponent = () => {
       </Head>
       <AppLayout>
         <AppLayoutHeader>
-          <AppLayoutBreadcrumb folder="Changes" />
+          <AppLayoutBreadcrumb>
+            <BreadcrumbItem>Changes</BreadcrumbItem>
+          </AppLayoutBreadcrumb>
           <AppLayoutActions>
             <PushChangesButton
               disabled={

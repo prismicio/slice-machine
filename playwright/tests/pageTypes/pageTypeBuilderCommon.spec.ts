@@ -194,9 +194,7 @@ test("I can rename the custom type", async ({
     "builder",
   );
 
-  await expect(
-    pageTypesBuilderPage.getBreadcrumbLabel(newPageTypeName),
-  ).toBeVisible();
+  await pageTypesBuilderPage.checkBreadcrumb(newPageTypeName);
 });
 
 test("I can delete the custom type", async ({

@@ -74,7 +74,7 @@ test.describe("Simulator tooltip", () => {
     await expect(sliceBuilderPage.simulateTooltipTitle).not.toBeVisible();
 
     await sliceBuilderPage.page.reload();
-    await expect(sliceBuilderPage.getBreadcrumbLabel(slice.name)).toBeVisible();
+    await sliceBuilderPage.checkBreadcrumb(slice.name);
 
     await expect(sliceBuilderPage.simulateTooltipTitle).not.toBeVisible();
   });

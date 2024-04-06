@@ -1,35 +1,53 @@
 import { Text } from "@prismicio/editor-ui";
-import { FC } from "react";
+import clsx from "clsx";
+import { PropsWithChildren, Children, FC } from "react";
 
-import * as styles from "./Breadcrumb.css";
+import styles from "./Breadcrumb.module.css";
 
-export type BreadcrumbProps = {
-  folder: string;
-  page?: string;
-  separator?: string;
+export const Breadcrumb: FC<PropsWithChildren> = (props) => {
+  const { children, ...otherProps } = props;
+  const childrenCount = Children.count(children);
+
+  return (
+    <nav aria-label="Breadcrumb" {...otherProps}>
+      <ol className={styles.items}>
+        {Children.map(children, (child, index) => (
+          <>
+            {child}
+            {index < childrenCount - 1 ? <BreadcrumbSeparator /> : null}
+          </>
+        ))}
+      </ol>
+    </nav>
+  );
 };
 
-export const Breadcrumb: FC<BreadcrumbProps> = ({
-  folder,
-  page,
-  separator = "/",
-}) => {
+type BreadcrumbItemProps = PropsWithChildren<{
+  active?: boolean;
+}>;
+
+export const BreadcrumbItem: FC<BreadcrumbItemProps> = (props) => {
+  const { active = false, children, ...otherProps } = props;
+
   return (
-    <div
-      aria-label="Breadcrumb"
-      data-testid={`breadcrumb-${folder}-${page ?? ""}`}
-    >
-      <Text color="grey11">
-        {folder}
-        {page !== undefined ? (
-          <>
-            &nbsp;{separator}&nbsp;
-            <Text className={styles.pageSpan} component="span" color="grey12">
-              {page}
-            </Text>
-          </>
-        ) : null}
+    <li {...otherProps}>
+      <Text
+        component="span"
+        color={active ? "grey12" : "grey11"}
+        className={clsx(active && styles.active)}
+      >
+        {children}
       </Text>
-    </div>
+    </li>
+  );
+};
+
+const BreadcrumbSeparator: FC = () => {
+  return (
+    <li aria-hidden={true}>
+      <Text component="span" color="grey11">
+        /
+      </Text>
+    </li>
   );
 };

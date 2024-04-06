@@ -11,6 +11,7 @@ import {
 } from "@components/AppLayout";
 import { ConnectGitRepository } from "@src/features/settings/git/ConnectGitRepository";
 import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
 
 export const SettingsPage: FC = () => {
   const gitIntegrationExperiment = useGitIntegrationExperiment();
@@ -34,7 +35,9 @@ export const SettingsPage: FC = () => {
       </Head>
       <AppLayout>
         <AppLayoutHeader>
-          <AppLayoutBreadcrumb folder="Settings" />
+          <AppLayoutBreadcrumb>
+            <BreadcrumbItem>Settings</BreadcrumbItem>
+          </AppLayoutBreadcrumb>
         </AppLayoutHeader>
         <AppLayoutContent>
           <Box flexDirection="column" maxWidth={600}>

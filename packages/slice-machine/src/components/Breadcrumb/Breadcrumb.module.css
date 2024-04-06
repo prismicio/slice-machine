@@ -1,0 +1,11 @@
+.items {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.active {
+  font-weight: 500;
+}
