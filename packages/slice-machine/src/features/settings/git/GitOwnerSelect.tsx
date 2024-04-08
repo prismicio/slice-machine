@@ -1,8 +1,7 @@
 import { Select, SelectItem, tokens } from "@prismicio/editor-ui";
 import type { GitOwner } from "@slicemachine/manager";
-import type { ComponentPropsWithoutRef, FC } from "react";
-
 import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
+import type { ComponentPropsWithoutRef, FC } from "react";
 
 type GitOwnerSelectProps = {
   disabled?: boolean;

@@ -1,7 +1,7 @@
 import { DropDownMenu } from "@components/DropDownSelector";
-import { RiCloseLine } from "react-icons/ri";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { useState } from "react";
-
+import { RiCloseLine } from "react-icons/ri";
 import { Flex } from "theme-ui";
 
 import {
@@ -9,8 +9,6 @@ import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "./ScreensizeInput";
-
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 type ToolbarProps = {
   handleScreenSizeChange: (screenDimensions: ScreenDimensions) => void;

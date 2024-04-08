@@ -1,12 +1,12 @@
+import Card from "@components/Card";
+import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { useSelector } from "react-redux";
 import { Button, Close, Flex, Heading } from "theme-ui";
-import Card from "@components/Card";
-import { ScreenshotPreview } from "@components/ScreenshotPreview";
 
 type ScreenshotModalProps = {
   sliceName: string;

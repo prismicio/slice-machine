@@ -1,10 +1,10 @@
-import * as t from "io-ts";
-
 import {
   SharedSlice,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes";
 import { getOrElseW } from "fp-ts/lib/Either";
+import * as t from "io-ts";
+
 import { FieldsSM } from "./Fields";
 
 const IMAGE_PLACEHOLDER_URL =

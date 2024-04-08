@@ -1,5 +1,5 @@
 import { Field } from "formik";
-import { Box, Label, Input, Text } from "theme-ui";
+import { Box, Input, Label, Text } from "theme-ui";
 
 export const InputBox = ({
   name,

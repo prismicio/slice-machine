@@ -1,15 +1,14 @@
 import { IconButton, Text } from "@prismicio/editor-ui";
-import { type ReactNode, useEffect, useState } from "react";
-import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
-import markup from "react-syntax-highlighter/dist/cjs/languages/prism/markup";
-import { prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
-
 import { CodeIcon } from "@src/icons/CodeIcon";
 import { JavaScript } from "@src/icons/JavaScript";
+import { Svelte } from "@src/icons/Svelte";
 import { TypeScript } from "@src/icons/TypeScript";
 import { Vue } from "@src/icons/Vue";
-import { Svelte } from "@src/icons/Svelte";
+import { type ReactNode, useEffect, useState } from "react";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import markup from "react-syntax-highlighter/dist/cjs/languages/prism/markup";
+import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
+import { prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import * as styles from "./CodeBlock.css";
 

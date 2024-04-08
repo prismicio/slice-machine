@@ -1,5 +1,5 @@
-import Modal from "react-modal";
 import * as React from "react";
+import Modal from "react-modal";
 
 const SliceMachineModal: React.FunctionComponent<Modal.Props> = (props) => {
   const modalStyle = {

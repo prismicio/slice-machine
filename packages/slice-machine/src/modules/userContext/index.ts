@@ -1,14 +1,15 @@
-import { Reducer } from "redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { ActionType, createAction, getType } from "typesafe-actions";
+import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import {
   AuthStatus,
   UserContextStoreType,
   UserReviewState,
   UserReviewType,
 } from "@src/modules/userContext/types";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { Reducer } from "redux";
+import { ActionType, createAction, getType } from "typesafe-actions";
+
 import { refreshStateCreator } from "../environment";
-import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 

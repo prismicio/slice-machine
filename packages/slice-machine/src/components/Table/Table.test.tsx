@@ -1,7 +1,5 @@
 // @vitest-environment jsdom
 
-import { describe, test, vi } from "vitest";
-
 import {
   Table,
   TableBody,
@@ -10,6 +8,7 @@ import {
   TableRow,
 } from "@src/components/Table";
 import { render, screen } from "test/__testutils__";
+import { describe, test, vi } from "vitest";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 vi.mock("next/router", () => require("next-router-mock"));

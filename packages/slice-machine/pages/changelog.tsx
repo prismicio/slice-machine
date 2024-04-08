@@ -1,6 +1,5 @@
-import Head from "next/head";
-
 import Changelog from "@components/Changelog";
+import Head from "next/head";
 
 export default function ChangelogPage() {
   return (

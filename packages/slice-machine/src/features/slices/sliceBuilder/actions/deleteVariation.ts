@@ -1,6 +1,3 @@
-import type { NextRouter } from "next/router";
-import { toast } from "react-toastify";
-
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
 import {
@@ -10,6 +7,8 @@ import {
   updateSlice,
 } from "@src/apiClient";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
+import type { NextRouter } from "next/router";
+import { toast } from "react-toastify";
 
 type DeleteVariationArgs = {
   component: ComponentUI;

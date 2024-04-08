@@ -1,14 +1,13 @@
-import { useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
-
+import { CustomTypes } from "@lib/models/common/CustomType";
+import { hasLocal } from "@lib/models/common/ModelData";
 import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 import { managerClient } from "@src/managerClient";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import type { SliceMachineStoreType } from "@src/redux/type";
-import { hasLocal } from "@lib/models/common/ModelData";
-import { CustomTypes } from "@lib/models/common/CustomType";
+import { useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 type UseCustomTypesReturnType = {
   customTypes: CustomType[];

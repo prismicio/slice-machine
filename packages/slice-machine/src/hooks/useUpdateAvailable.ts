@@ -1,5 +1,4 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
-
 import { managerClient } from "@src/managerClient";
 
 async function getIsUpdateAvailable() {

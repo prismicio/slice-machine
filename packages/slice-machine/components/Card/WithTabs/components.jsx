@@ -1,5 +1,5 @@
-import { Box, useThemeUI } from "theme-ui";
 import { Tab } from "react-tabs";
+import { Box, useThemeUI } from "theme-ui";
 
 export const CustomTabList = ({ children, ...otherProps }) => (
   <Box

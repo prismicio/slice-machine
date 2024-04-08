@@ -1,12 +1,3 @@
-import { type FC, Suspense, useState } from "react";
-import {
-  Button,
-  Box,
-  ProgressCircle,
-  DefaultErrorMessage,
-} from "@prismicio/editor-ui";
-import Head from "next/head";
-
 import {
   AppLayout,
   AppLayoutActions,
@@ -15,12 +6,20 @@ import {
   AppLayoutHeader,
 } from "@components/AppLayout";
 import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { ErrorBoundary } from "@src/ErrorBoundary";
+import {
+  Box,
+  Button,
+  DefaultErrorMessage,
+  ProgressCircle,
+} from "@prismicio/editor-ui";
 import type { CustomTypeFormat } from "@slicemachine/manager";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
+import { ErrorBoundary } from "@src/ErrorBoundary";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import Head from "next/head";
+import { type FC, Suspense, useState } from "react";
 
 import { CustomTypesTable } from "./CustomTypesTable";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
 
 type CustomTypesTablePageProps = {
   format: CustomTypeFormat;

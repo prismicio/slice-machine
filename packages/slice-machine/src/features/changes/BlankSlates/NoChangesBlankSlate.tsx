@@ -1,23 +1,19 @@
-import router from "next/router";
-
+import { createDocumentsListEndpointFromRepoName } from "@lib/utils/repo";
+import { Button, Image, tokens } from "@prismicio/editor-ui";
 import {
   BlankSlate,
-  BlankSlateImage,
-  BlankSlateTitle,
-  BlankSlateDescription,
   BlankSlateActions,
   BlankSlateContent,
+  BlankSlateDescription,
+  BlankSlateImage,
+  BlankSlateTitle,
 } from "@src/components/BlankSlate";
-
-import { Button, Image, tokens } from "@prismicio/editor-ui";
-
-import { FiExternalLink } from "react-icons/fi";
 import { TextLink } from "@src/components/TextLink";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { getRepoName } from "@src/modules/environment";
-
-import { createDocumentsListEndpointFromRepoName } from "@lib/utils/repo";
+import { SliceMachineStoreType } from "@src/redux/type";
+import router from "next/router";
+import { FiExternalLink } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 export const NoChangesBlankSlate = () => {
   const { repoName } = useSelector((state: SliceMachineStoreType) => ({

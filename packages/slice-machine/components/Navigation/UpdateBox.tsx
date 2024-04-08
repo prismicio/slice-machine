@@ -1,8 +1,7 @@
-import { FC } from "react";
-import Link from "next/link";
-
-import { useUpdateAvailable } from "@src/hooks/useUpdateAvailable";
 import { UpdateInfo } from "@src/components/SideNav";
+import { useUpdateAvailable } from "@src/hooks/useUpdateAvailable";
+import Link from "next/link";
+import { FC } from "react";
 
 export const UpdateBox: FC = () => {
   const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =

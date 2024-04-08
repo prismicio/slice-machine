@@ -1,12 +1,10 @@
+import { VariationSM } from "@lib/models/common/Slice";
 import React, { useEffect, useState } from "react";
+import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { Popover } from "react-tiny-popover";
+import { Box, Button, ThemeUICSSObject, ThemeUIStyleObject } from "theme-ui";
 
 import MenuList from "./MenuList";
-
-import { Button, Box, ThemeUICSSObject, ThemeUIStyleObject } from "theme-ui";
-
-import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
-import { VariationSM } from "@lib/models/common/Slice";
 
 const VarationsPopover: React.FunctionComponent<{
   buttonSx?: ThemeUICSSObject;

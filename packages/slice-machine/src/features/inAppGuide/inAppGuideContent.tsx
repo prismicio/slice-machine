@@ -1,5 +1,4 @@
-import { TextLink, Text } from "@prismicio/editor-ui";
-
+import { Text, TextLink } from "@prismicio/editor-ui";
 import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
 
 export function useInAppGuideContent() {

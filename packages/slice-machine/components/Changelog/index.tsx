@@ -1,16 +1,15 @@
-import { Suspense, useEffect, useState } from "react";
-import { BaseStyles } from "theme-ui";
-import { useSelector } from "react-redux";
-import { ErrorBoundary, ProgressCircle } from "@prismicio/editor-ui";
-
-import { Version } from "@slicemachine/manager";
 import { AppLayout, AppLayoutContent } from "@components/AppLayout";
+import { ErrorBoundary, ProgressCircle } from "@prismicio/editor-ui";
+import { Version } from "@slicemachine/manager";
 import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { getPackageManager } from "@src/modules/environment";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { Suspense, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { BaseStyles } from "theme-ui";
 
 import { Navigation } from "./navigation";
-import { VersionDetails, ReleaseWarning } from "./versionDetails";
+import { ReleaseWarning, VersionDetails } from "./versionDetails";
 
 export default function Changelog() {
   const { packageManager } = useSelector((store: SliceMachineStoreType) => ({

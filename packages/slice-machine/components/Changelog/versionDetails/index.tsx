@@ -1,14 +1,13 @@
-import React from "react";
-import { Flex, Text } from "theme-ui";
-import { AiFillWarning } from "react-icons/ai";
 import { tokens } from "@prismicio/editor-ui";
-
 import type { PackageManager, Version } from "@slicemachine/manager";
 import { useSliceMachineReleaseNotes } from "@src/features/changelog/useSliceMachineReleaseNotes";
+import React from "react";
+import { AiFillWarning } from "react-icons/ai";
+import { Flex, Text } from "theme-ui";
 
-import { VersionKindLabel } from "./VersionKindLabel";
 import { ReleaseNotesDetails } from "./ReleaseNotesDetails";
 import { UpdateCommandBox } from "./UpdateCommandBox";
+import { VersionKindLabel } from "./VersionKindLabel";
 
 interface VersionDetailsProps {
   selectedVersion: Version;

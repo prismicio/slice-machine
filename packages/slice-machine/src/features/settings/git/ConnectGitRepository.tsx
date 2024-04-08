@@ -3,14 +3,13 @@ import {
   isUnauthenticatedError,
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
-import { type FC, type ReactNode, Suspense } from "react";
-
 import {
   FieldSet,
   FieldSetContent,
   FieldSetFooter,
   FieldSetLegend,
 } from "@src/components/FieldSet";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 import { ConnectGitRepositoryBlankSlate } from "@src/features/settings/git/ConnectGitRepositoryBlankSlate";
 import { GitProviderConnectButtons } from "@src/features/settings/git/GitProviderConnectButtons";
 import { GitRepositoriesList } from "@src/features/settings/git/GitRepositoriesList";
@@ -21,7 +20,7 @@ import {
 import { useGitOwners } from "@src/features/settings/git/useGitOwners";
 import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { ErrorBoundary } from "@src/ErrorBoundary";
+import { type FC, type ReactNode, Suspense } from "react";
 
 export const ConnectGitRepository: FC = () => (
   <FieldSet>

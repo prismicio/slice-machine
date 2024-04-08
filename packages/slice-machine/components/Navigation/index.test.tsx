@@ -1,24 +1,26 @@
 // @vitest-environment jsdom
-import { describe, test, expect, vi } from "vitest";
+import { FrontEndEnvironment } from "@lib/models/common/Environment";
+import { cache } from "@prismicio/editor-support/Suspense";
+import { createSliceMachineManager } from "@slicemachine/manager";
+import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
+import {
+  AuthStatus,
+  UserContextStoreType,
+} from "@src/modules/userContext/types";
 import Router from "next/router";
 import { act } from "react-dom/test-utils";
-import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
-import { createSliceMachineManager } from "@slicemachine/manager";
-
-import { FrontEndEnvironment } from "@lib/models/common/Environment";
-import { UserContextStoreType } from "@src/modules/userContext/types";
-import { AuthStatus } from "@src/modules/userContext/types";
-import { createTestPlugin } from "test/__testutils__/createTestPlugin";
-import { createTestProject } from "test/__testutils__/createTestProject";
 import {
   render,
-  within,
-  screen,
   type RenderReturnType,
+  screen,
   waitFor,
+  within,
 } from "test/__testutils__";
+import { createTestPlugin } from "test/__testutils__/createTestPlugin";
+import { createTestProject } from "test/__testutils__/createTestProject";
+import { describe, expect, test, vi } from "vitest";
+
 import SideNavigation from "./index";
-import { cache } from "@prismicio/editor-support/Suspense";
 
 const mockRouter = vi.mocked(Router);
 

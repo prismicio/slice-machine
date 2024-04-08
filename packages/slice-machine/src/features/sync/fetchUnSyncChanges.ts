@@ -3,7 +3,7 @@ import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
 import { getState } from "@src/apiClient";
 import { AuthStatus } from "@src/modules/userContext/types";
 
-import { UnSyncedChanges, getUnSyncedChanges } from "./getUnSyncChanges";
+import { getUnSyncedChanges, UnSyncedChanges } from "./getUnSyncChanges";
 
 type FetchUnSyncChangesArgs = {
   isOnline: boolean;

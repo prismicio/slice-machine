@@ -1,22 +1,21 @@
-import { useState } from "react";
+import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
+import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
 import {
   Environment as EnvironmentType,
   isUnauthenticatedError,
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
-
 import { getState, telemetry } from "@src/apiClient";
-import { useEnvironments } from "@src/features/environments/useEnvironments";
+import { SideNavEnvironmentSelector } from "@src/components/SideNav";
 import { setEnvironment } from "@src/features/environments/actions/setEnvironment";
 import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SideNavEnvironmentSelector } from "@src/components/SideNav";
-import { useNetwork } from "@src/hooks/useNetwork";
+import { useEnvironments } from "@src/features/environments/useEnvironments";
 import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
-import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
 import { getUnSyncedChanges } from "@src/features/sync/getUnSyncChanges";
 import { useAuthStatus } from "@src/hooks/useAuthStatus";
+import { useNetwork } from "@src/hooks/useNetwork";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useState } from "react";
 
 export function Environment() {
   const { environments, error: useEnvironmentsError } = useEnvironments();

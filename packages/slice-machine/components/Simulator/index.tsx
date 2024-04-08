@@ -1,3 +1,18 @@
+import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { Slices, VariationSM } from "@lib/models/common/Slice";
+import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
+import { DefaultErrorMessage } from "@prismicio/editor-ui";
+import { renderSliceMock } from "@prismicio/mocks";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
+import { saveSliceMock, telemetry } from "@src/apiClient";
+import { ErrorBoundary } from "@src/ErrorBoundary";
+import useThrottle from "@src/hooks/useThrottle";
+import { selectEndpoints, selectSimulatorUrl } from "@src/modules/environment";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { defaultSharedSliceContent } from "@src/utils/editor";
 import {
   FC,
   Suspense,
@@ -7,41 +22,19 @@ import {
   useRef,
   useState,
 } from "react";
-import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
-import { DefaultErrorMessage } from "@prismicio/editor-ui";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-
-import { defaultSharedSliceContent } from "@src/utils/editor";
-
 import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
+import FailedConnect from "./components/FailedConnect";
+import FullPage from "./components/FullPage";
 import Header from "./components/Header";
-
-import { saveSliceMock, telemetry } from "@src/apiClient";
-import { useSelector } from "react-redux";
-import { selectEndpoints, selectSimulatorUrl } from "@src/modules/environment";
-import { SliceMachineStoreType } from "@src/redux/type";
+import IframeRenderer from "./components/IframeRenderer";
 import { Toolbar } from "./components/Toolbar";
 import {
   ScreenSizeOptions,
   ScreenSizes,
 } from "./components/Toolbar/ScreensizeInput";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
-import { renderSliceMock } from "@prismicio/mocks";
-
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-
-import useThrottle from "@src/hooks/useThrottle";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-
-import IframeRenderer from "./components/IframeRenderer";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-
-import FullPage from "./components/FullPage";
-import FailedConnect from "./components/FailedConnect";
-import { Slices, VariationSM } from "@lib/models/common/Slice";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 type SimulatorProps = {
   slice: ComponentUI;

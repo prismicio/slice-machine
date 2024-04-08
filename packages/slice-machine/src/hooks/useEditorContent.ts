@@ -1,9 +1,9 @@
-import { useMemo } from "react";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { defaultSharedSliceContent } from "@src/utils/editor";
+import { Slices } from "@lib/models/common/Slice";
 import { renderSliceMock } from "@prismicio/mocks";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { Slices } from "@lib/models/common/Slice";
+import { defaultSharedSliceContent } from "@src/utils/editor";
+import { useMemo } from "react";
 
 function useEditorContentOnce({
   variationID,

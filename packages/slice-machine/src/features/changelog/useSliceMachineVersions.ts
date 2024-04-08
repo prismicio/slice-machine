@@ -1,5 +1,4 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
-
 import type { Version } from "@slicemachine/manager";
 import { managerClient } from "@src/managerClient";
 

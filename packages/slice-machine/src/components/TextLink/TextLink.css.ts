@@ -1,6 +1,5 @@
-import { style, styleVariants } from "@vanilla-extract/css";
-
 import { colors, selectors, sprinkles } from "@prismicio/editor-ui";
+import { style, styleVariants } from "@vanilla-extract/css";
 
 export const root = style([
   sprinkles({

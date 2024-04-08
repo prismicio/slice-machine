@@ -1,6 +1,6 @@
-import React from "react";
 import { Field } from "formik";
-import { Box, Label, Input, Text } from "theme-ui";
+import React from "react";
+import { Box, Input, Label, Text } from "theme-ui";
 
 type InputBoxProps = {
   name: string;

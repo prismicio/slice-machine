@@ -1,6 +1,6 @@
 import { theme } from "@prismicio/editor-ui";
 import * as RadixHoverCard from "@radix-ui/react-hover-card";
-import { FC, useMemo, type PropsWithChildren, type ReactNode } from "react";
+import { FC, type PropsWithChildren, type ReactNode, useMemo } from "react";
 
 import * as styles from "./BaseHoverCard.css";
 

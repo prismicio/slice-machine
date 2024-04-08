@@ -1,8 +1,7 @@
-import React from "react";
-import { type ThemeUIStyleObject, Text } from "theme-ui";
-import { transparentize } from "@theme-ui/color";
-
 import { VersionKind } from "@slicemachine/manager";
+import { transparentize } from "@theme-ui/color";
+import React from "react";
+import { Text, type ThemeUIStyleObject } from "theme-ui";
 
 interface VersionKindLabelProps {
   versionKind: VersionKind;

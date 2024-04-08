@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Flex, Text, Checkbox, ThemeUIStyleObject, Label } from "theme-ui";
 import { Button } from "@components/Button";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { isRemoteOnly } from "@lib/models/common/ModelData";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { getModelId } from "@lib/models/common/ModelData";
-import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
+import { getModelId, isRemoteOnly } from "@lib/models/common/ModelData";
 import { PushChangesLimit } from "@slicemachine/manager";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { SliceMachineStoreType } from "@src/redux/type";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { Checkbox, Flex, Label, Text, ThemeUIStyleObject } from "theme-ui";
+
+import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 
 const ConfirmationDialogue: React.FC<{
   isConfirmed: boolean;

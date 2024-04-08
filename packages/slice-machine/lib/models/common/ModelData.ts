@@ -1,6 +1,6 @@
 import type { CustomTypeSM } from "@lib/models/common/CustomType";
-import type { SliceSM } from "@lib/models/common/Slice";
 import type { Screenshot } from "@lib/models/common/Library";
+import type { SliceSM } from "@lib/models/common/Slice";
 
 // Generics
 

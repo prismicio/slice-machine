@@ -1,7 +1,6 @@
-import ReactTooltip from "react-tooltip";
-import { FaRegQuestionCircle } from "react-icons/fa";
-
 import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
+import { FaRegQuestionCircle } from "react-icons/fa";
+import ReactTooltip from "react-tooltip";
 
 interface ErrorTooltip {
   error?: string;

@@ -1,3 +1,5 @@
+import type { ComponentUI } from "@lib/models/common/ComponentUI";
+import type { VariationSM } from "@lib/models/common/Slice";
 import {
   Box,
   Dialog,
@@ -7,16 +9,13 @@ import {
   FormInput,
   Text,
 } from "@prismicio/editor-ui";
-import { Formik } from "formik";
-import { useState, type FC } from "react";
-
-import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import type { VariationSM } from "@lib/models/common/Slice";
 import { renameVariation } from "@src/features/slices/sliceBuilder/actions/renameVariation";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { Formik } from "formik";
+import { type FC, useState } from "react";
 
 import * as styles from "./RenameVariationModal.css";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 
 type RenameVariationModalProps = {
   isOpen: boolean;

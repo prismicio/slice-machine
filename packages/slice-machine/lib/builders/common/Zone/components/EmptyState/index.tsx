@@ -1,5 +1,5 @@
-import { Box, Text, Heading } from "theme-ui";
 import { Button } from "@prismicio/editor-ui";
+import { Box, Heading, Text } from "theme-ui";
 
 const ZoneEmptyState = ({
   onEnterSelectMode,

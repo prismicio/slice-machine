@@ -1,5 +1,5 @@
-import type { LibraryMeta, Library, Component } from "./Library";
 import { ComponentUI } from "./ComponentUI";
+import type { Component, Library, LibraryMeta } from "./Library";
 
 const LibraryUIMeta = {
   build(isLocal: boolean, libMeta?: LibraryMeta) {

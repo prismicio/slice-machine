@@ -1,5 +1,5 @@
-import { LibraryUI } from "@models/common/LibraryUI";
 import { ComponentUI } from "@models/common/ComponentUI";
+import { LibraryUI } from "@models/common/LibraryUI";
 
 import { NonSharedSliceCardProps } from "../sliceCards/NonSharedSliceCard";
 

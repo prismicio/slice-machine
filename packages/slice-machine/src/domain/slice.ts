@@ -1,13 +1,12 @@
+import type { ComponentUI } from "@lib/models/common/ComponentUI";
+import type { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import { pascalize, snakelize } from "@lib/utils/str";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import type {
   CompositeSlice,
   LegacySlice,
   SharedSlice,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
-
-import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import type { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
-import { pascalize, snakelize } from "@lib/utils/str";
 
 type CopySliceVariationArgs = {
   copiedVariation: VariationSM;

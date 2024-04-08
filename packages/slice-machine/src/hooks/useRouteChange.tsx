@@ -1,8 +1,8 @@
 import { type NextRouter, useRouter } from "next/router";
 import {
+  createContext,
   type FC,
   type PropsWithChildren,
-  createContext,
   useContext,
   useState,
 } from "react";

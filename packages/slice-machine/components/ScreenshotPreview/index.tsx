@@ -1,6 +1,6 @@
 import React, { memo } from "react";
-import { Flex, Image, Text, ThemeUIStyleObject } from "theme-ui";
 import { MdInfoOutline } from "react-icons/md";
+import { Flex, Image, Text, ThemeUIStyleObject } from "theme-ui";
 
 const MemoedImage = memo<{ src: string | undefined }>(({ src }) => (
   <Image src={src} alt="Preview image" sx={{ maxHeight: "100%" }} />

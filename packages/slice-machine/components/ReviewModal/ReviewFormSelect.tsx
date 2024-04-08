@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { FieldProps } from "formik";
+import { FC } from "react";
 import { Box, Button } from "theme-ui";
 
 const ratingSelectable = [1, 2, 3, 4, 5];

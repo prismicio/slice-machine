@@ -1,8 +1,7 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-
 import Simulator from "@components/Simulator";
 import useCurrentSlice from "@src/hooks/useCurrentSlice";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function SimulatorPage() {
   const router = useRouter();

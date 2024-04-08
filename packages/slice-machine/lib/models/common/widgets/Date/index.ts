@@ -1,8 +1,8 @@
-import { MdDateRange } from "react-icons/md";
-import { createDefaultWidgetValues } from "../../../../utils";
-
-import { Widget } from "../Widget";
 import { Date } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { MdDateRange } from "react-icons/md";
+
+import { createDefaultWidgetValues } from "../../../../utils";
+import { Widget } from "../Widget";
 
 /** {
   "type" : "Date",

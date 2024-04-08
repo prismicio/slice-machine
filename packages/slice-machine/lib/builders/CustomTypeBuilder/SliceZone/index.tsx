@@ -1,44 +1,43 @@
-import {
-  Button,
-  Switch,
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  Icon,
-  Badge,
-} from "@prismicio/editor-ui";
-import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import { BaseStyles } from "theme-ui";
-import { useRouter } from "next/router";
-import { toast } from "react-toastify";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-
-import { CustomTypeSM, CustomTypes } from "@lib/models/common/CustomType";
 import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-import type { SliceZoneSlice } from "@lib/models/common/CustomType/sliceZone";
+import { ToastMessageWithPath } from "@components/ToasterContainer";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
+import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
+import type { SliceZoneSlice } from "@lib/models/common/CustomType/sliceZone";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
 import type { SlicesSM } from "@lib/models/common/Slices";
-import { ListHeader } from "@src/components/List";
-import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
+import {
+  Badge,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Icon,
+  Switch,
+} from "@prismicio/editor-ui";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { telemetry } from "@src/apiClient";
+import { ListHeader } from "@src/components/List";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
+import { addSlicesToSliceZone } from "@src/features/slices/actions/addSlicesToSliceZone";
+import { useSlicesTemplates } from "@src/features/slicesTemplates/useSlicesTemplates";
 import {
   getFrontendSlices,
   getLibraries,
   getRemoteSlices,
 } from "@src/modules/slices";
 import type { SliceMachineStoreType } from "@src/redux/type";
-import { useSlicesTemplates } from "@src/features/slicesTemplates/useSlicesTemplates";
-import { addSlicesToSliceZone } from "@src/features/slices/actions/addSlicesToSliceZone";
-import { ToastMessageWithPath } from "@components/ToasterContainer";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { BaseStyles } from "theme-ui";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
-import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
-import { SlicesTemplatesModal } from "./SlicesTemplatesModal";
 import { SlicesList } from "./List";
+import { SlicesTemplatesModal } from "./SlicesTemplatesModal";
+import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,

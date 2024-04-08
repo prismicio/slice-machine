@@ -1,11 +1,11 @@
-import * as t from "io-ts";
-import { getOrElseW } from "fp-ts/lib/Either";
 import {
   CompositeSlice,
   LegacySlice,
   SharedSliceRef,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes/widgets/slices/Slices";
+import { getOrElseW } from "fp-ts/lib/Either";
+import * as t from "io-ts";
 
 export const SlicesSM = t.type({
   key: t.string,

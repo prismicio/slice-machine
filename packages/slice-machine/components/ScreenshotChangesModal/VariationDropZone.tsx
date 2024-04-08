@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { Flex, Text, Spinner } from "theme-ui";
-import { useHotkeys } from "react-hotkeys-hook";
-import { toast } from "react-toastify";
-import { AiOutlineCloudUpload } from "react-icons/ai";
-
-import { acceptedImagesTypes } from "@lib/consts";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ScreenshotPreview } from "@components/ScreenshotPreview";
+import { acceptedImagesTypes } from "@lib/consts";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { uploadSliceScreenshot } from "@src/features/slices/actions/uploadSliceScreenshot";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { AiOutlineCloudUpload } from "react-icons/ai";
+import { toast } from "react-toastify";
+import { Flex, Spinner, Text } from "theme-ui";
 
 import useCustomScreenshot from "./useCustomScreenshot";
 

@@ -1,36 +1,26 @@
-import { Fragment, useState } from "react";
-import { flushSync } from "react-dom";
-
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
-
-import { Box, Button } from "theme-ui";
-
-import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
-
-import { transformKeyAccessor } from "@utils/str";
-
-import SelectFieldTypeModal from "@lib/builders/common/SelectFieldTypeModal";
-import NewField from "@lib/builders/common/Zone/Card/components/NewField";
-import EditModal from "@lib/builders/common/EditModal";
-
 import { findWidgetByConfigOrType } from "@builders/utils";
-
-import * as Widgets from "@lib/models/common/widgets";
-
-import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
-
-import Hint from "@lib/builders/common/Zone/Card/components/Hints";
-
 import ListItem from "@components/ListItem";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import EditModal from "@lib/builders/common/EditModal";
+import SelectFieldTypeModal from "@lib/builders/common/SelectFieldTypeModal";
+import Hint from "@lib/builders/common/Zone/Card/components/Hints";
+import NewField from "@lib/builders/common/Zone/Card/components/NewField";
 import { TabFieldsModel } from "@lib/models/common/CustomType";
+import * as Widgets from "@lib/models/common/widgets";
+import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
+import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
+import { telemetry } from "@src/apiClient";
 import {
   addGroupField,
   deleteGroupField,
   reorderGroupField,
   updateGroupField,
 } from "@src/domain/customType";
-import { telemetry } from "@src/apiClient";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { transformKeyAccessor } from "@utils/str";
+import { Fragment, useState } from "react";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { flushSync } from "react-dom";
+import { Box, Button } from "theme-ui";
 
 /* eslint-disable */
 const CustomListItem = ({

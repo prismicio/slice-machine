@@ -1,5 +1,5 @@
-import { IconButton, useThemeUI } from "theme-ui";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { IconButton, useThemeUI } from "theme-ui";
 
 const InputDeleteIcon = ({ sx, size = 22, ...rest }) => {
   const { theme } = useThemeUI();

@@ -1,6 +1,7 @@
 import { useMediaQuery } from "@prismicio/editor-support/React";
 import {
   Box,
+  breakpoints,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -12,15 +13,13 @@ import {
   ProgressCircle,
   Text,
   Tooltip,
-  breakpoints,
 } from "@prismicio/editor-ui";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import type { Environment } from "@slicemachine/manager/client";
-import { clsx } from "clsx";
-import type { FC, ReactNode } from "react";
-
 import { LoginIcon } from "@src/icons/LoginIcon";
 import { LogoIcon } from "@src/icons/LogoIcon";
+import { clsx } from "clsx";
+import type { FC, ReactNode } from "react";
 
 import styles from "./SideNavEnvironmentSelector.module.css";
 

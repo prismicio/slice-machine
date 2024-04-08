@@ -1,10 +1,9 @@
-import { toast } from "react-toastify";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-
 import { ToastMessageWithPath } from "@components/ToasterContainer";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { telemetry, updateCustomType } from "@src/apiClient";
 import { create } from "@src/domain/customType";
+import { toast } from "react-toastify";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 

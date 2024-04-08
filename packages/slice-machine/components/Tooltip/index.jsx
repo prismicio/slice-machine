@@ -1,7 +1,6 @@
-import { useThemeUI } from "theme-ui";
-import ReactTooltip from "react-tooltip";
-
 import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
+import ReactTooltip from "react-tooltip";
+import { useThemeUI } from "theme-ui";
 
 const Tooltip = (props) => {
   const { theme, colorMode } = useThemeUI();

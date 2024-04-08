@@ -1,19 +1,18 @@
+import { useStableCallback } from "@prismicio/editor-support/React";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { updateCustomType } from "@src/apiClient";
+import { getFormat } from "@src/domain/customType";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
+import { ActionQueueStatus, useActionQueue } from "@src/hooks/useActionQueue";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
-  ReactNode,
   createContext,
+  ReactNode,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from "react";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { useStableCallback } from "@prismicio/editor-support/React";
-
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { getFormat } from "@src/domain/customType";
-import { updateCustomType } from "@src/apiClient";
-import { ActionQueueStatus, useActionQueue } from "@src/hooks/useActionQueue";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 

@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import type { VariationSM } from "@lib/models/common/Slice";
 import {
@@ -8,6 +6,7 @@ import {
   renameSliceVariation,
   updateSlice,
 } from "@src/apiClient";
+import { toast } from "react-toastify";
 
 type RenameVariationArgs = {
   component: ComponentUI;

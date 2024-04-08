@@ -1,4 +1,5 @@
-import { Flex, Box, Close } from "theme-ui";
+import { Box, Close, Flex } from "theme-ui";
+
 import Card from "./";
 
 const DefaultCard = ({

@@ -1,12 +1,11 @@
-import React from "react";
-import { Button, Flex, Text } from "theme-ui";
-import { AiFillWarning } from "react-icons/ai";
-
+import CodeBlock from "@components/CodeBlock";
 import type { PackageManager, Version } from "@slicemachine/manager";
 import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
-import CodeBlock from "@components/CodeBlock";
 import { useAdapterName } from "@src/hooks/useAdapterName";
 import { useUpdateAvailable } from "@src/hooks/useUpdateAvailable";
+import React from "react";
+import { AiFillWarning } from "react-icons/ai";
+import { Button, Flex, Text } from "theme-ui";
 
 interface UpdateCommandBoxProps {
   selectedVersion: Version;
