@@ -41,10 +41,8 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
 
   const maybeWidget = findWidgetByConfigOrType(
     Widgets,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    initialModelValues.config,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    initialModelValues.type,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    initialModelValues,
   );
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

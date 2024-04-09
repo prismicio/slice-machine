@@ -1,15 +1,16 @@
-import * as yup from "yup";
-import { MdPlaylistAdd } from "react-icons/md";
-import { Widget } from "../Widget";
-import CustomListItem from "./ListItem";
 import { GroupSM } from "@lib/models/common/Group";
-import Form from "./Form";
+import { MdPlaylistAdd } from "react-icons/md";
+import * as yup from "yup";
+
 import { DefaultFields } from "../../../../forms/defaults";
+import { Widget } from "../Widget";
+import Form from "./Form";
+import CustomListItem from "./ListItem";
 
 const Meta = {
   icon: MdPlaylistAdd,
-  title: "Group",
-  description: "A group of Prismic fields",
+  title: "Repeatable Group",
+  description: "A repeatable group of Prismic fields",
 };
 
 const schema = yup.object().shape({
@@ -21,11 +22,11 @@ const schema = yup.object().shape({
     fields: yup.array(),
     label: yup.string(),
     placeholder: yup.string(),
-    repeat: yup.boolean().isFalse(),
+    repeat: yup.bool().optional(),
   }),
 });
 
-export const GroupWidget: Widget<GroupSM, typeof schema> = {
+export const RepeatableGroupWidget: Widget<GroupSM, typeof schema> = {
   Meta,
   Form,
   FormFields: DefaultFields,
@@ -34,10 +35,11 @@ export const GroupWidget: Widget<GroupSM, typeof schema> = {
     type: "Group",
     config: {
       label,
-      repeat: false,
+      repeat: true,
       fields: [],
     },
   }),
   CustomListItem,
   TYPE_NAME: "Group",
+  CUSTOM_NAME: "RepeatableGroup",
 };

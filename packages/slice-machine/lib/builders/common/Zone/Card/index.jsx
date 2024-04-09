@@ -47,10 +47,10 @@ const FieldZone = ({
               fields.map((item, index) => {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 const {
-                  value: { config, type },
+                  value: { type },
                 } = item;
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-                const widget = findWidgetByConfigOrType(Widgets, config, type);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                const widget = findWidgetByConfigOrType(Widgets, item.value);
                 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 if (!widget) {
                   return (
@@ -108,7 +108,7 @@ const FieldZone = ({
                     renderHintBase={renderHintBase}
                     Widgets={Widgets}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
-                    typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
+                    typeName={widget.CUSTOM_NAME ?? widget.TYPE_NAME}
                   />
                 );
                 return <ListItem {...props} HintElement={HintElement} />;

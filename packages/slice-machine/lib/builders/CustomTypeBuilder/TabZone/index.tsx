@@ -13,7 +13,6 @@ import {
   CustomTypes,
   TabFieldsModel,
 } from "@lib/models/common/CustomType";
-import type { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
 import { List } from "@src/components/List";
 import { telemetry } from "@src/apiClient";
@@ -86,6 +85,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }
+
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
@@ -100,11 +100,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       throw new Error(`Unsupported Field Type: ${field.type}`);
     }
 
-    const CurrentWidget: AnyWidget = Widgets[field.type];
-
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      CurrentWidget.schema.validateSync(field, { stripUnknown: false });
+      widget.schema.validateSync(field, { stripUnknown: false });
     } catch (error) {
       throw new Error(`Add field: Model is invalid for field "${field.type}".`);
     }

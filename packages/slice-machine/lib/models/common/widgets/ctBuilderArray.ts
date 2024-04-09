@@ -3,6 +3,7 @@ import * as Widgets from "./withGroup";
 export default [
   Widgets.UID,
   Widgets.Group,
+  Widgets.RepeatableGroup,
   Widgets.StructuredText,
   Widgets.Image,
   Widgets.Link,

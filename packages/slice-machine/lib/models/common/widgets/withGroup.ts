@@ -15,6 +15,7 @@ export { Timestamp } from ".";
 export { UID } from ".";
 
 export { GroupWidget as Group } from "./Group";
+export { RepeatableGroupWidget as RepeatableGroup } from "./RepeatableGroup";
 
 export const SharedSlice = null;
 export const SliceZone = null;
