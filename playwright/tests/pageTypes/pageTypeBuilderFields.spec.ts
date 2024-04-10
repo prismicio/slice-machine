@@ -100,6 +100,49 @@ test("I can delete a field", async ({
   ).not.toBeVisible();
 });
 
+test("I can add a group field", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_group", { fieldType: "Group" }),
+  ).toBeVisible();
+  await expect(
+    pageTypesBuilderPage.getListItemFieldName("my_group", "My Group"),
+  ).toBeVisible();
+});
+
+test("I can add a repeatable group field", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Repeatable Group",
+    name: "My Repeatable Group",
+    expectedId: "my_repeatable_group",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_repeatable_group", {
+      fieldType: "Group",
+    }),
+  ).toBeVisible();
+  await expect(
+    pageTypesBuilderPage.getListItemFieldName(
+      "my_repeatable_group",
+      "My Repeatable Group",
+    ),
+  ).toBeVisible();
+});
+
 test("I can add a sub field within a group field", async ({
   pageTypesBuilderPage,
   reusablePageType,
@@ -118,7 +161,9 @@ test("I can add a sub field within a group field", async ({
   });
 
   await expect(
-    pageTypesBuilderPage.getListItemFieldId("my_sub_field", "my_group"),
+    pageTypesBuilderPage.getListItemFieldId("my_sub_field", {
+      parentGroupFieldId: "my_group",
+    }),
   ).toBeVisible();
   await expect(
     pageTypesBuilderPage.getListItemFieldName(
@@ -156,7 +201,9 @@ test("I can edit a sub field within a group field", async ({
   });
 
   await expect(
-    pageTypesBuilderPage.getListItemFieldId("my_sub_field_renamed", "my_group"),
+    pageTypesBuilderPage.getListItemFieldId("my_sub_field_renamed", {
+      parentGroupFieldId: "my_group",
+    }),
   ).toBeVisible();
   await expect(
     pageTypesBuilderPage.getListItemFieldName(
@@ -187,7 +234,9 @@ test("I can delete a sub field within a group field", async ({
   await pageTypesBuilderPage.deleteField("my_sub_field", "my_group");
 
   await expect(
-    pageTypesBuilderPage.getListItemFieldId("my_sub_field", "my_group"),
+    pageTypesBuilderPage.getListItemFieldId("my_sub_field", {
+      parentGroupFieldId: "my_group",
+    }),
   ).not.toBeVisible();
 });
 

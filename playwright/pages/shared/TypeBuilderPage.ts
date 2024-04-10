@@ -182,16 +182,27 @@ export class TypeBuilderPage extends BuilderPage {
     );
   }
 
-  getListItemFieldId(fieldId: string, groupFieldId?: string) {
-    if (groupFieldId) {
-      return this.getListItem(fieldId, groupFieldId)
-        .getByTestId("field-id")
-        .getByText(`data.${groupFieldId}.${fieldId}`, { exact: true });
+  getListItemFieldId(
+    fieldId: string,
+    config: { parentGroupFieldId?: string; fieldType?: FieldTypeLabel } = {},
+  ) {
+    const dataPath = ["data"];
+    if (config.parentGroupFieldId) {
+      dataPath.push(config.parentGroupFieldId);
+    }
+    dataPath.push(fieldId);
+    if (
+      config.fieldType === "Group" ||
+      config.fieldType === "Repeatable Group"
+    ) {
+      dataPath.push("[...]");
     }
 
-    return this.getListItem(fieldId)
+    return this.getListItem(fieldId, config.parentGroupFieldId)
       .getByTestId("field-id")
-      .getByText(`data.${fieldId}`, { exact: true });
+      .getByText(dataPath.join("."), {
+        exact: true,
+      });
   }
 
   /**

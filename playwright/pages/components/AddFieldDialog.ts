@@ -17,7 +17,8 @@ export type FieldTypeLabel =
   | "GeoPoint"
   | "Color"
   | "Key Text"
-  | "Group";
+  | "Group"
+  | "Repeatable Group";
 
 export class AddFieldDialog extends Dialog {
   constructor(page: Page) {
