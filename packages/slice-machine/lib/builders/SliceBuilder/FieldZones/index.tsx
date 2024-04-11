@@ -31,6 +31,7 @@ import Zone from "@lib/builders/common/Zone";
 import EditModal from "@lib/builders/common/EditModal";
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { telemetry } from "@src/apiClient";
+import { useGroupsInSlicesExperiment } from "@src/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -46,6 +47,7 @@ const FieldZones: FC = () => {
     isDeleteRepeatableZoneDialogOpen,
     setIsDeleteRepeatableZoneDialogOpen,
   ] = useState(false);
+  const groupsInSlicesExperiment = useGroupsInSlicesExperiment();
 
   // We won't show the Repeatable Zone if no items are configured.
   const hasItems = Boolean(
@@ -54,6 +56,7 @@ const FieldZones: FC = () => {
 
   const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
     if (
+      groupsInSlicesExperiment.eligible &&
       widgetArea === WidgetsArea.Items &&
       variation.items &&
       Object.keys(variation.items).length <= 1
@@ -216,7 +219,7 @@ const FieldZones: FC = () => {
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
       />
-      {hasItems ? (
+      {!groupsInSlicesExperiment.eligible || hasItems ? (
         <Zone
           zoneType="slice"
           zoneTypeFormat={undefined}
@@ -257,8 +260,8 @@ const FieldZones: FC = () => {
               {slice.model.name} slice.
             </strong>
             <div>
-              If you need repeatable fields again, use a group field in place of
-              the repeatable zone.
+              If you need repeatable fields again, use a repeatable group field
+              in place of the repeatable zone.
             </div>
           </Box>
           <DialogActions
