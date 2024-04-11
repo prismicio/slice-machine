@@ -187,7 +187,9 @@ export const test = baseTest.extend<Options & Fixtures>({
     const config = await manager.project.getSliceMachineConfig();
     const libraryID = config.libraries?.[0];
     if (!libraryID) {
-      throw new Error("At least one library is required.");
+      throw new Error(
+        "At least one library is required in `slicemachine.config.json`.",
+      );
     }
 
     await use({ id: libraryID });
