@@ -53,6 +53,8 @@ type Fixtures = {
   reusableCustomType: { name: string };
   singleCustomType: { name: string };
   slice: { name: string };
+  repeatableZoneSlice: { name: string };
+  sliceLibrary: { id: string };
 
   /**
    * Manager
@@ -169,6 +171,27 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use({ name: sliceName });
   },
+  repeatableZoneSlice: async ({ sliceLibrary, manager, createMock }, use) => {
+    const variation = createMock.model.sharedSliceVariation({
+      itemsFields: {
+        existing_field: createMock.model.richText(),
+      },
+    });
+    const model = createMock.model.sharedSlice({ variations: [variation] });
+
+    await manager.slices.createSlice({ libraryID: sliceLibrary.id, model });
+
+    await use({ name: model.name });
+  },
+  sliceLibrary: async ({ manager }, use) => {
+    const config = await manager.project.getSliceMachineConfig();
+    const libraryID = config.libraries?.[0];
+    if (!libraryID) {
+      throw new Error("At least one library is required.");
+    }
+
+    await use({ id: libraryID });
+  },
 
   /**
    * Page
@@ -281,7 +304,6 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use(procedures);
   },
-
   createMock: async ({ page: _page }, use, { title }) => {
     const mock = createMockFactory({ seed: title });
 

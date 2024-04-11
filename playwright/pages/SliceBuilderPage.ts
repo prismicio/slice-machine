@@ -176,17 +176,9 @@ export class SliceBuilderPage extends BuilderPage {
     await expect(this.addFieldDialog.title).not.toBeVisible();
   }
 
-  async deleteField(
-    fieldId: string,
-    zoneType: ZoneType,
-    options: { isLastField?: boolean } = {},
-  ) {
+  async deleteField(fieldId: string, zoneType: ZoneType) {
     await this.getFieldMenuButton(fieldId, zoneType).click();
     await this.page.getByRole("menuitem", { name: "Delete field" }).click();
-
-    if (zoneType === "repeatable" && options.isLastField) {
-      await this.deleteRepeatableZoneDialog.deleteRepeatableZone();
-    }
   }
 
   async copyCodeSnippet(fieldId: string, zoneType: ZoneType) {
