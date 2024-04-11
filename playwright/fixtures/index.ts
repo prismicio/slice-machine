@@ -54,7 +54,7 @@ type Fixtures = {
   singleCustomType: { name: string };
   slice: { name: string };
   repeatableZoneSlice: { name: string };
-  sliceLibrary: { id: string };
+  firstSliceLibrary: { id: string };
 
   /**
    * Manager
@@ -171,7 +171,10 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use({ name: sliceName });
   },
-  repeatableZoneSlice: async ({ sliceLibrary, manager, createMock }, use) => {
+  repeatableZoneSlice: async (
+    { firstSliceLibrary, manager, createMock },
+    use,
+  ) => {
     const variation = createMock.model.sharedSliceVariation({
       itemsFields: {
         existing_field: createMock.model.richText(),
@@ -179,11 +182,14 @@ export const test = baseTest.extend<Options & Fixtures>({
     });
     const model = createMock.model.sharedSlice({ variations: [variation] });
 
-    await manager.slices.createSlice({ libraryID: sliceLibrary.id, model });
+    await manager.slices.createSlice({
+      libraryID: firstSliceLibrary.id,
+      model,
+    });
 
     await use({ name: model.name });
   },
-  sliceLibrary: async ({ manager }, use) => {
+  firstSliceLibrary: async ({ manager }, use) => {
     const config = await manager.project.getSliceMachineConfig();
     const libraryID = config.libraries?.[0];
     if (!libraryID) {
