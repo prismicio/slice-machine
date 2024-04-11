@@ -287,10 +287,9 @@ export const test = baseTest.extend<Options & Fixtures>({
    * Manager
    */
   // eslint-disable-next-line no-empty-pattern
-  manager: async ({}, use) => {
+  manager: async ({}, use, config) => {
     const client = createSliceMachineManagerClient({
-      // TODO: Experiment with config.webServer.url (config is the third parameter of a fixture function)
-      serverURL: "http://localhost:9999/_manager",
+      serverURL: new URL("./_manager", config.project.use.baseURL).toString(),
     });
 
     await use(client);
