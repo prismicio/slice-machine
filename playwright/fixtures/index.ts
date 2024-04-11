@@ -284,7 +284,8 @@ export const test = baseTest.extend<Options & Fixtures>({
   /**
    * Manager
    */
-  manager: async ({ page: _page }, use) => {
+  // eslint-disable-next-line no-empty-pattern
+  manager: async ({}, use) => {
     const client = createSliceMachineManagerClient({
       // TODO: Experiment with config.webServer.url (config is the third parameter of a fixture function)
       serverURL: "http://localhost:9999/_manager",
@@ -304,7 +305,8 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use(procedures);
   },
-  createMock: async ({ page: _page }, use, { title }) => {
+  // eslint-disable-next-line no-empty-pattern
+  createMock: async ({}, use, { title }) => {
     const mock = createMockFactory({ seed: title });
 
     await use(mock);
