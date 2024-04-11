@@ -140,6 +140,35 @@ test("I can delete a field in the repeatable zone", async ({
   ).not.toBeVisible();
 });
 
+test.extend({
+  slice: async ({ manager, createMock }, use) => {
+    const config = await manager.project.getSliceMachineConfig();
+    const libraryID = config.libraries?.[0];
+    if (!libraryID) {
+      throw new Error("At least one library is required.");
+    }
+
+    const variation = createMock.model.sharedSliceVariation({
+      itemsFields: { my_rich_text: createMock.model.richText() },
+    });
+    const model = createMock.model.sharedSlice({ variations: [variation] });
+    await manager.slices.createSlice({ libraryID, model });
+
+    await use({ name: model.name });
+  },
+})(
+  "I can delete the repeatable zone by deleting the zone's last field",
+  async ({ sliceBuilderPage, slice }) => {
+    await sliceBuilderPage.goto(slice.name);
+
+    await sliceBuilderPage.deleteField("my_rich_text", "repeatable", {
+      isLastField: true,
+    });
+
+    await expect(sliceBuilderPage.repeatableZone).not.toBeVisible();
+  },
+);
+
 test("I can see and copy the code snippets", async ({
   sliceBuilderPage,
   slice,

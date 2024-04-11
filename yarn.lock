@@ -5294,6 +5294,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/client@npm:7.4.0":
+  version: 7.4.0
+  resolution: "@prismicio/client@npm:7.4.0"
+  dependencies:
+    imgix-url-builder: ^0.0.4
+  checksum: 78838d4d67a33ffd975be36b0068e5ab2b2a6e4b4abfce160982d5ab8c87fb324c0c143274e3ff22ca40bd623026a6da70dd966fdb718d718a8fec8636c3f83a
+  languageName: node
+  linkType: hard
+
 "@prismicio/client@npm:^6.7.3":
   version: 6.8.0
   resolution: "@prismicio/client@npm:6.8.0"
@@ -5476,6 +5485,17 @@ __metadata:
     "@prismicio/types": ^0.2.4
     change-case: ^4.1.2
   checksum: 2da6f9e99495ba2c8cb6380e1244c1d4a709b6a7714b71896ec6ec55c5a4d73c608f01642d71155321c10e6001eed40b7ba90012f306ae50e1e7ab5d1fd93e80
+  languageName: node
+  linkType: hard
+
+"@prismicio/mock@npm:0.3.1":
+  version: 0.3.1
+  resolution: "@prismicio/mock@npm:0.3.1"
+  dependencies:
+    change-case: ^4.1.2
+  peerDependencies:
+    "@prismicio/client": ^7
+  checksum: 2b377beaf9c0d3b6413ea8e1d58cb3613a84479e8a9285abd356f3782764c0d2140b8031275cf6783356d1b5aeb08b39fb61e4bd204304f25d33f4331d0d5cb9
   languageName: node
   linkType: hard
 
@@ -8784,7 +8804,10 @@ __metadata:
   dependencies:
     "@msgpack/msgpack": 2.8.0
     "@playwright/test": 1.39.0
+    "@prismicio/client": 7.4.0
+    "@prismicio/mock": 0.3.1
     "@prismicio/types-internal": 2.2.0
+    "@slicemachine/manager": "workspace:*"
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
     depcheck: 1.4.3

@@ -2,6 +2,7 @@ import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
 import { test as baseTest, expect } from "@playwright/test";
+import { createMockFactory, MockFactory } from "@prismicio/mock";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
 import { PageTypeBuilderPage } from "../pages/PageTypesBuilderPage";
@@ -17,6 +18,10 @@ import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
 import config from "../playwright.config";
 import { MockManagerProcedures } from "../utils";
+import {
+  createSliceMachineManagerClient,
+  SliceMachineManagerClient,
+} from "@slicemachine/manager/client";
 
 type Options = {
   onboarded: boolean;
@@ -50,9 +55,15 @@ type Fixtures = {
   slice: { name: string };
 
   /**
+   * Manager
+   */
+  manager: SliceMachineManagerClient;
+
+  /**
    * Mocks
    */
   procedures: MockManagerProcedures;
+  createMock: MockFactory;
 };
 
 export const test = baseTest.extend<Options & Fixtures>({
@@ -248,6 +259,18 @@ export const test = baseTest.extend<Options & Fixtures>({
   },
 
   /**
+   * Manager
+   */
+  manager: async ({ page: _page }, use) => {
+    const client = createSliceMachineManagerClient({
+      // TODO: Experiment with config.webServer.url (config is the third parameter of a fixture function)
+      serverURL: "http://localhost:9999/_manager",
+    });
+
+    await use(client);
+  },
+
+  /**
    * Mocks
    */
   procedures: async ({ page }, use) => {
@@ -257,5 +280,11 @@ export const test = baseTest.extend<Options & Fixtures>({
     procedures.mock("getExperimentVariant", () => undefined);
 
     await use(procedures);
+  },
+
+  createMock: async ({ page: _page }, use, { title }) => {
+    const mock = createMockFactory({ seed: title });
+
+    await use(mock);
   },
 });

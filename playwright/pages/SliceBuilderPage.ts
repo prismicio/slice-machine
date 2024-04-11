@@ -7,6 +7,7 @@ import { BuilderPage } from "./shared/BuilderPage";
 import { SlicesListPage } from "./SlicesListPage";
 import { FieldTypeLabel } from "./components/AddFieldDialog";
 import { UpdateScreenshotDialog } from "./components/UpdateScreenshotDialog";
+import { DeleteRepeatableZoneDialog } from "./components/DeleteRepeatableZoneDialog";
 
 type ZoneType = "static" | "repeatable";
 
@@ -16,6 +17,7 @@ export class SliceBuilderPage extends BuilderPage {
   readonly renameVariationDialog: RenameVariationDialog;
   readonly deleteVariationDialog: DeleteVariationDialog;
   readonly updateScreenshotDialog: UpdateScreenshotDialog;
+  readonly deleteRepeatableZoneDialog: DeleteRepeatableZoneDialog;
   readonly simulateButton: Locator;
   readonly simulateTooltipTitle: Locator;
   readonly simulateTooltipCloseButton: Locator;
@@ -38,6 +40,7 @@ export class SliceBuilderPage extends BuilderPage {
     this.renameVariationDialog = new RenameVariationDialog(page);
     this.deleteVariationDialog = new DeleteVariationDialog(page);
     this.updateScreenshotDialog = new UpdateScreenshotDialog(page);
+    this.deleteRepeatableZoneDialog = new DeleteRepeatableZoneDialog(page);
 
     /**
      * Static locators
@@ -173,9 +176,17 @@ export class SliceBuilderPage extends BuilderPage {
     await expect(this.addFieldDialog.title).not.toBeVisible();
   }
 
-  async deleteField(fieldId: string, zoneType: ZoneType) {
+  async deleteField(
+    fieldId: string,
+    zoneType: ZoneType,
+    options: { isLastField?: boolean } = {},
+  ) {
     await this.getFieldMenuButton(fieldId, zoneType).click();
     await this.page.getByRole("menuitem", { name: "Delete field" }).click();
+
+    if (zoneType === "repeatable" && options.isLastField) {
+      await this.deleteRepeatableZoneDialog.deleteRepeatableZone();
+    }
   }
 
   async copyCodeSnippet(fieldId: string, zoneType: ZoneType) {
