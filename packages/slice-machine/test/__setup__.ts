@@ -3,6 +3,7 @@ import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
 import { FormData } from "formdata-polyfill/esm.min";
 import { setupServer, SetupServer } from "msw/node";
 import { cleanup } from "@testing-library/react";
+import { createMockFactory, MockFactory } from "@prismicio/mock";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
@@ -17,6 +18,7 @@ import { createTestProject } from "./__testutils__/createTestProject";
 declare module "vitest" {
   export interface TestContext {
     msw: SetupServer;
+    createMock: MockFactory;
   }
 }
 
@@ -28,6 +30,7 @@ beforeAll(() => {
 
 beforeEach(async (ctx) => {
   ctx.msw = mswServer;
+  ctx.createMock = createMockFactory({ seed: ctx.task.id });
 
   const adapter = createTestPlugin();
   const cwd = await createTestProject({ adapter });
