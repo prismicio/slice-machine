@@ -1,2 +1,4 @@
-ignores: []
+ignores: [
+    "@prismicio/client"
+]
 skip - missing: true
