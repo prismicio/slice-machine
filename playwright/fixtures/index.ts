@@ -2,7 +2,12 @@ import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
 import { test as baseTest, expect } from "@playwright/test";
-// import { createMockFactory, MockFactory } from "@prismicio/mock";
+// import {
+//   createSliceMachineManagerClient,
+//   SliceMachineManagerClient,
+// } from "@slicemachine/manager/client";
+// import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { createMockFactory, MockFactory } from "@prismicio/mock";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
 import { PageTypeBuilderPage } from "../pages/PageTypesBuilderPage";
@@ -18,11 +23,6 @@ import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
 import config from "../playwright.config";
 import { MockManagerProcedures } from "../utils";
-import {
-  createSliceMachineManagerClient,
-  SliceMachineManagerClient,
-} from "@slicemachine/manager/client";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 type Options = {
   onboarded: boolean;
@@ -60,13 +60,13 @@ type Fixtures = {
   /**
    * Manager
    */
-  manager: SliceMachineManagerClient;
+  // manager: SliceMachineManagerClient;
 
   /**
    * Mocks
    */
   procedures: MockManagerProcedures;
-  // createMock: MockFactory;
+  createMock: MockFactory;
 };
 
 export const test = baseTest.extend<Options & Fixtures>({
@@ -174,50 +174,52 @@ export const test = baseTest.extend<Options & Fixtures>({
   },
   repeatableZoneSlice: async (
     // { firstSliceLibrary, manager, createMock },
-    { firstSliceLibrary, manager },
+    { createMock },
     use,
   ) => {
-    // const variation = createMock.model.sharedSliceVariation({
-    //   itemsFields: {
-    //     existing_field: createMock.model.richText(),
-    //   },
-    // });
-    // const model = createMock.model.sharedSlice({ variations: [variation] });
-    const sliceName = "Slice" + generateRandomId();
-    const model: SharedSlice = {
-      id: sliceName,
-      name: sliceName,
-      type: "SharedSlice",
-      variations: [
-        {
-          id: "default",
-          name: "Default",
-          docURL: "...",
-          version: "version",
-          imageUrl: "imageUrl",
-          description: "description",
-          items: { boolean: { type: "Boolean" } },
-        },
-      ],
-    };
-
-    await manager.slices.createSlice({
-      libraryID: firstSliceLibrary.id,
-      model,
+    const variation = createMock.model.sharedSliceVariation({
+      itemsFields: {
+        existing_field: createMock.model.richText(),
+      },
     });
+    const model = createMock.model.sharedSlice({ variations: [variation] });
+    // const sliceName = "Slice" + generateRandomId();
+    // const model: SharedSlice = {
+    //   id: sliceName,
+    //   name: sliceName,
+    //   type: "SharedSlice",
+    //   variations: [
+    //     {
+    //       id: "default",
+    //       name: "Default",
+    //       docURL: "...",
+    //       version: "version",
+    //       imageUrl: "imageUrl",
+    //       description: "description",
+    //       items: { boolean: { type: "Boolean" } },
+    //     },
+    //   ],
+    // };
+
+    // await manager.slices.createSlice({
+    //   libraryID: firstSliceLibrary.id,
+    //   model,
+    // });
 
     await use({ name: model.name });
   },
-  firstSliceLibrary: async ({ manager }, use) => {
-    const config = await manager.project.getSliceMachineConfig();
-    const libraryID = config.libraries?.[0];
-    if (!libraryID) {
-      throw new Error(
-        "At least one library is required in `slicemachine.config.json`.",
-      );
-    }
-
-    await use({ id: libraryID });
+  // eslint-disable-next-line no-empty-pattern
+  firstSliceLibrary: async ({}, use) => {
+    // const config = await manager.project.getSliceMachineConfig();
+    // const libraryID = config.libraries?.[0];
+    // if (!libraryID) {
+    //   throw new Error(
+    //     "At least one library is required in `slicemachine.config.json`.",
+    //   );
+    // }
+    //
+    // await use({ id: libraryID });
+    await use({ id: "./src/slices" });
   },
 
   /**
@@ -311,14 +313,14 @@ export const test = baseTest.extend<Options & Fixtures>({
   /**
    * Manager
    */
-  // eslint-disable-next-line no-empty-pattern
-  manager: async ({}, use, config) => {
-    const client = createSliceMachineManagerClient({
-      serverURL: new URL("./_manager", config.project.use.baseURL).toString(),
-    });
-
-    await use(client);
-  },
+  // // eslint-disable-next-line no-empty-pattern
+  // manager: async ({}, use, config) => {
+  //   const client = createSliceMachineManagerClient({
+  //     serverURL: new URL("./_manager", config.project.use.baseURL).toString(),
+  //   });
+  //
+  //   await use(client);
+  // },
 
   /**
    * Mocks
@@ -331,10 +333,10 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use(procedures);
   },
-  // // eslint-disable-next-line no-empty-pattern
-  // createMock: async ({}, use, { title }) => {
-  //   const mock = createMockFactory({ seed: title });
-  //
-  //   await use(mock);
-  // },
+  // eslint-disable-next-line no-empty-pattern
+  createMock: async ({}, use, { title }) => {
+    const mock = createMockFactory({ seed: title });
+
+    await use(mock);
+  },
 });
