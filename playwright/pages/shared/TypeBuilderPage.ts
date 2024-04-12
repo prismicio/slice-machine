@@ -200,9 +200,7 @@ export class TypeBuilderPage extends BuilderPage {
 
     return this.getListItem(fieldId, config.parentGroupFieldId)
       .getByTestId("field-id")
-      .getByText(dataPath.join("."), {
-        exact: true,
-      });
+      .getByText(dataPath.join("."), { exact: true });
   }
 
   /**
