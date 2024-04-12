@@ -143,7 +143,15 @@ test("I can delete a field in the repeatable zone", async ({
 test("I can delete the repeatable zone by deleting the zone's last field", async ({
   sliceBuilderPage,
   repeatableZoneSlice,
+  procedures,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await sliceBuilderPage.goto(repeatableZoneSlice.name);
   await sliceBuilderPage.deleteField("existing_field", "repeatable");
   await sliceBuilderPage.deleteRepeatableZoneDialog.deleteRepeatableZone();
