@@ -4,8 +4,8 @@ import * as yup from "yup";
 
 import { DefaultFields } from "../../../../forms/defaults";
 import { Widget } from "../Widget";
-import Form from "./Form";
-import CustomListItem from "./ListItem";
+import Form from "../Group/Form";
+import CustomListItem from "../Group/ListItem";
 
 const Meta = {
   icon: MdPlaylistAdd,
