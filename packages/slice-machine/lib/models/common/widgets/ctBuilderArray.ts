@@ -1,9 +1,9 @@
 import * as Widgets from "./withGroup";
 
 export default [
-  Widgets.UID,
   Widgets.Group,
   Widgets.RepeatableGroup,
+  Widgets.UID,
   Widgets.StructuredText,
   Widgets.Image,
   Widgets.Link,
