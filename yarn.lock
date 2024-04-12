@@ -2973,7 +2973,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esbuild/android-arm@npm:0.17.19, @esbuild/android-arm@npm:^0.17.10":
+"@esbuild/android-arm@npm:0.17.19":
   version: 0.17.19
   resolution: "@esbuild/android-arm@npm:0.17.19"
   conditions: os=android & cpu=arm
@@ -5294,7 +5294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:7.4.0":
+"@prismicio/client@npm:7.4.0, @prismicio/client@npm:^7.4.0":
   version: 7.4.0
   resolution: "@prismicio/client@npm:7.4.0"
   dependencies:
@@ -5303,43 +5303,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:^6.7.3":
-  version: 6.8.0
-  resolution: "@prismicio/client@npm:6.8.0"
-  dependencies:
-    "@prismicio/helpers": ^2.3.8
-    "@prismicio/types": ^0.2.7
-  checksum: f9743934de1b57dccf98338708819948100480f96892d584b7f2b469ed23343842f4e9384be7a4fe4975ffdc9429339d4ef018b1e9de70fdbc1dd0e00e2e9c04
-  languageName: node
-  linkType: hard
-
-"@prismicio/client@npm:^7.0.0, @prismicio/client@npm:^7.1.0":
+"@prismicio/client@npm:^7.1.0":
   version: 7.1.0
   resolution: "@prismicio/client@npm:7.1.0"
   dependencies:
     "@prismicio/richtext": ^2.1.5
     imgix-url-builder: ^0.0.3
   checksum: ab27d401dbd79d9fbda26df939249f4e960c448795aaf8217937df15f5ffe9e2d3ae3e7f5948226cf26f8c082a37b3bc5028716f951f45f0a6fb8f29772826e0
-  languageName: node
-  linkType: hard
-
-"@prismicio/client@npm:^7.1.1":
-  version: 7.1.1
-  resolution: "@prismicio/client@npm:7.1.1"
-  dependencies:
-    "@prismicio/richtext": ^2.1.5
-    imgix-url-builder: ^0.0.4
-  checksum: c867c5fe35d8f6095c196d04cea56a9c24e0f24a1b2773d31fe31b3c0bcf3b318418957477aca4f36e9970a557e862e1a2ba9d0260ecbd85fe955497332e93d4
-  languageName: node
-  linkType: hard
-
-"@prismicio/client@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@prismicio/client@npm:7.2.0"
-  dependencies:
-    "@prismicio/richtext": ^2.1.5
-    imgix-url-builder: ^0.0.4
-  checksum: 1f7d18df1a402880eb685513cb4796172778f90183f3e52a3edf52c59f81cc5ce088dce293377e8d060e09700f4ed4730b06cde02462d6d04c4317fcb7528a26
   languageName: node
   linkType: hard
 
@@ -5467,7 +5437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/helpers@npm:^2.3.8, @prismicio/helpers@npm:^2.3.9":
+"@prismicio/helpers@npm:^2.3.9":
   version: 2.3.9
   resolution: "@prismicio/helpers@npm:2.3.9"
   dependencies:
@@ -5603,15 +5573,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/richtext@npm:^2.2.0-alpha.0":
-  version: 2.2.0-alpha.0
-  resolution: "@prismicio/richtext@npm:2.2.0-alpha.0"
-  dependencies:
-    "@prismicio/types": ^0.2.7
-  checksum: 9c7b82ae4febefbe0338a147d6eee7494c6793d64719917079e9521b80a3eb06dcffe598f2251c16c33cd9266342501f8cddd307b23b2ffc11699f6e8642e9d3
-  languageName: node
-  linkType: hard
-
 "@prismicio/simulator@npm:0.1.4, @prismicio/simulator@npm:^0.1.4":
   version: 0.1.4
   resolution: "@prismicio/simulator@npm:0.1.4"
@@ -5623,20 +5584,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/svelte@npm:^0.0.11":
-  version: 0.0.11
-  resolution: "@prismicio/svelte@npm:0.0.11"
+"@prismicio/svelte@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@prismicio/svelte@npm:1.1.1"
   dependencies:
-    "@esbuild/android-arm": ^0.17.10
-    "@prismicio/client": ^6.7.3
-    "@prismicio/helpers": ^2.3.9
-    "@prismicio/richtext": ^2.2.0-alpha.0
-    "@sveltejs/kit": ^1.8.3
-    svelte: ^3.55.1
-  dependenciesMeta:
-    "@esbuild/android-arm":
+    "@prismicio/richtext": ^2.1.5
+    esm-env: ^1.0.0
+  peerDependencies:
+    "@prismicio/client": ">=7"
+    "@sveltejs/kit": ">=1"
+    svelte: ">=4"
+  peerDependenciesMeta:
+    "@sveltejs/kit":
       optional: true
-  checksum: a6c79c76e47a8f99efbb745afb1e48583d0f464dc37f18602b0115f84831f758da5aeeaea4dbe165675d8fd405e8ae3e26fc847736d5c6f179f4c6ff0ab1510d
+  checksum: 077aa1f97d4069eb70ad99f029671f9618e2ff15f66bf5ae315bdb2ad1b175e8e3c19dd038cfda437e4c2c478508461edbbdab7ec80f0ab3f356e199d62505f9
   languageName: node
   linkType: hard
 
@@ -9983,31 +9944,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/kit@npm:^1.8.3":
-  version: 1.22.6
-  resolution: "@sveltejs/kit@npm:1.22.6"
-  dependencies:
-    "@sveltejs/vite-plugin-svelte": ^2.4.1
-    "@types/cookie": ^0.5.1
-    cookie: ^0.5.0
-    devalue: ^4.3.1
-    esm-env: ^1.0.0
-    kleur: ^4.1.5
-    magic-string: ^0.30.0
-    mime: ^3.0.0
-    sade: ^1.8.1
-    set-cookie-parser: ^2.6.0
-    sirv: ^2.0.2
-    undici: ~5.23.0
-  peerDependencies:
-    svelte: ^3.54.0 || ^4.0.0-next.0
-    vite: ^4.0.0
-  bin:
-    svelte-kit: svelte-kit.js
-  checksum: d7c1306b652b164c806c6366d11174162a0d0293f0720c06dcd0214f89304ed3da148475574caa09f0f481c5eef65a2643cdb4d0a3317a1be21739d67788db7c
-  languageName: node
-  linkType: hard
-
 "@sveltejs/package@npm:2.2.1":
   version: 2.2.1
   resolution: "@sveltejs/package@npm:2.2.1"
@@ -10022,19 +9958,6 @@ __metadata:
   bin:
     svelte-package: svelte-package.js
   checksum: 9eecf522ef0ca3584710d4b18a8aef36976be02f13b111c9f189315b6efd725cad8c39557deb1142ea0d7fe23ec53d8c5af82e1b1b9f42374a12e9a9cec3959c
-  languageName: node
-  linkType: hard
-
-"@sveltejs/vite-plugin-svelte-inspector@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@sveltejs/vite-plugin-svelte-inspector@npm:1.0.3"
-  dependencies:
-    debug: ^4.3.4
-  peerDependencies:
-    "@sveltejs/vite-plugin-svelte": ^2.2.0
-    svelte: ^3.54.0 || ^4.0.0
-    vite: ^4.0.0
-  checksum: 868574e32974196a49670137c171e788f95610548d8ff090267d4a6e92fd2d5e3ab862e0c367e69268d57ab6edd972e3ba5139926d7e2e7f995f23336d8d53be
   languageName: node
   linkType: hard
 
@@ -10066,24 +9989,6 @@ __metadata:
     svelte: ^4.0.0 || ^5.0.0-next.0
     vite: ^5.0.0
   checksum: 3a6b3a1bae74bf8e5ed5cb979c2e4d663fcecffb17941de70a44f8e58efdaa58adbd234efbaa4b537cf745ad6a66062f6f2fdc5f94e83592728f5d9b05737760
-  languageName: node
-  linkType: hard
-
-"@sveltejs/vite-plugin-svelte@npm:^2.4.1":
-  version: 2.4.5
-  resolution: "@sveltejs/vite-plugin-svelte@npm:2.4.5"
-  dependencies:
-    "@sveltejs/vite-plugin-svelte-inspector": ^1.0.3
-    debug: ^4.3.4
-    deepmerge: ^4.3.1
-    kleur: ^4.1.5
-    magic-string: ^0.30.2
-    svelte-hmr: ^0.15.3
-    vitefu: ^0.2.4
-  peerDependencies:
-    svelte: ^3.54.0 || ^4.0.0
-    vite: ^4.0.0
-  checksum: 6a30b526fc1d18f3c37e2f00dd678a69910c800ed059aa68bb3f68fc176e715709c6fa2f2b106a6f2007e08bec16f09dddd5e7173a6b3874fc5c5827ff2d699c
   languageName: node
   linkType: hard
 
@@ -10632,7 +10537,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cookie@npm:0.5.1, @types/cookie@npm:^0.5.1":
+"@types/cookie@npm:0.5.1":
   version: 0.5.1
   resolution: "@types/cookie@npm:0.5.1"
   checksum: 9a8d60fc84797122bc399d6bd330fe5780dc7aab032321de705049ea925339f74658bfa418de483a625d51858770efef58df633ff2e20f1bdf7fbd74a52847e2
@@ -14159,7 +14064,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"busboy@npm:1.6.0, busboy@npm:^1.6.0":
+"busboy@npm:1.6.0":
   version: 1.6.0
   resolution: "busboy@npm:1.6.0"
   dependencies:
@@ -14695,7 +14600,7 @@ __metadata:
   dependencies:
     "@headlessui/react": ^1.5.0
     "@heroicons/react": ^1.0.6
-    "@prismicio/client": ^7.0.0
+    "@prismicio/client": ^7.4.0
     "@prismicio/helpers": ^2.3.9
     "@prismicio/next": ^1.1.0
     "@prismicio/react": ^2.6.0
@@ -16608,7 +16513,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devalue@npm:^4.3.1, devalue@npm:^4.3.2":
+"devalue@npm:^4.3.2":
   version: 4.3.2
   resolution: "devalue@npm:4.3.2"
   checksum: 034530e3910a096e528ca6481cd80ab2a21f4a5b813fb896d421eadf52dc969dfbbd5677aa06d28a6448a0f2f7e7d91d9ed88cd9aaa497f4b34e427d80c2a8a5
@@ -22583,15 +22488,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:^0.30.2":
-  version: 0.30.2
-  resolution: "magic-string@npm:0.30.2"
-  dependencies:
-    "@jridgewell/sourcemap-codec": ^1.4.15
-  checksum: c0bbb9b27b2772e6bfaa5d0f6452d47c462d588ae7c43fbaac062b07836d3ec0140fcdd42a57aa53ed990abafcdd0fc17907813921b5df04eccf43e67674bc57
-  languageName: node
-  linkType: hard
-
 "magic-string@npm:^0.30.5":
   version: 0.30.5
   resolution: "magic-string@npm:0.30.5"
@@ -24392,7 +24288,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "next-upgrade@workspace:e2e-projects/next-upgrade"
   dependencies:
-    "@prismicio/client": ^7.2.0
+    "@prismicio/client": ^7.4.0
     "@prismicio/next": ^1.3.6
     "@prismicio/react": ^2.7.3
     "@slicemachine/adapter-next": "workspace:*"
@@ -30479,7 +30375,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sirv@npm:^2.0.2, sirv@npm:^2.0.3":
+"sirv@npm:^2.0.3":
   version: 2.0.3
   resolution: "sirv@npm:2.0.3"
   dependencies:
@@ -31832,19 +31728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte@npm:^3.55.1":
-  version: 3.59.2
-  resolution: "svelte@npm:3.59.2"
-  checksum: 3e9d770292ab5a0061ff2d3a6f77b323014399de7458371ab507465f9860d04d0c8c7a50239d15c78b920cd42065953e3c4a36abb69a2285c52c825017621444
-  languageName: node
-  linkType: hard
-
 "sveltekit@workspace:e2e-projects/sveltekit":
   version: 0.0.0-use.local
   resolution: "sveltekit@workspace:e2e-projects/sveltekit"
   dependencies:
-    "@prismicio/client": ^7.1.1
-    "@prismicio/svelte": ^0.0.11
+    "@prismicio/client": ^7.4.0
+    "@prismicio/svelte": ^1.1.1
     "@slicemachine/adapter-sveltekit": "workspace:*"
     "@sveltejs/adapter-auto": ^3.0.0
     "@sveltejs/kit": ^2.0.0
@@ -32861,15 +32750,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:~5.23.0":
-  version: 5.23.0
-  resolution: "undici@npm:5.23.0"
-  dependencies:
-    busboy: ^1.6.0
-  checksum: 906ca4fb1d47163d2cee2ecbbc664a1d92508a2cdf1558146621109f525c983a83597910b36e6ba468240e95259be5939cea6babc99fc0c36360b16630f66784
-  languageName: node
-  linkType: hard
-
 "unenv@npm:^1.2.2, unenv@npm:^1.3.1":
   version: 1.5.1
   resolution: "unenv@npm:1.5.1"
@@ -33859,18 +33739,6 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 5e7cf9242b1b89915b17e8d062391de271dc4597212be6ba8e5b1c72ef63e3184add27a12ebde8591dbab77b476abec59e760a90fa99522347e89f1629a9bc29
-  languageName: node
-  linkType: hard
-
-"vitefu@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "vitefu@npm:0.2.4"
-  peerDependencies:
-    vite: ^3.0.0 || ^4.0.0
-  peerDependenciesMeta:
-    vite:
-      optional: true
-  checksum: 4add282ffec4f27388aa75df2cd7db9a674d51bf9471907441ca23ff5ac70fc9540344dbf3a53af0aa53685f1d7b8c756da5f9749afe91aac66c82a25ade7821
   languageName: node
   linkType: hard
 

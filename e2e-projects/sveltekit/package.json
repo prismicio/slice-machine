@@ -33,7 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@prismicio/client": "^7.1.1",
-		"@prismicio/svelte": "^0.0.11"
+		"@prismicio/client": "^7.4.0",
+		"@prismicio/svelte": "^1.1.1"
 	}
 }
