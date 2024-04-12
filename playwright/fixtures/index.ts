@@ -2,7 +2,7 @@ import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
 import { test as baseTest, expect } from "@playwright/test";
-import { createMockFactory, MockFactory } from "@prismicio/mock";
+// import { createMockFactory, MockFactory } from "@prismicio/mock";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
 import { PageTypeBuilderPage } from "../pages/PageTypesBuilderPage";
@@ -22,6 +22,7 @@ import {
   createSliceMachineManagerClient,
   SliceMachineManagerClient,
 } from "@slicemachine/manager/client";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 type Options = {
   onboarded: boolean;
@@ -65,7 +66,7 @@ type Fixtures = {
    * Mocks
    */
   procedures: MockManagerProcedures;
-  createMock: MockFactory;
+  // createMock: MockFactory;
 };
 
 export const test = baseTest.extend<Options & Fixtures>({
@@ -172,15 +173,33 @@ export const test = baseTest.extend<Options & Fixtures>({
     await use({ name: sliceName });
   },
   repeatableZoneSlice: async (
-    { firstSliceLibrary, manager, createMock },
+    // { firstSliceLibrary, manager, createMock },
+    { firstSliceLibrary, manager },
     use,
   ) => {
-    const variation = createMock.model.sharedSliceVariation({
-      itemsFields: {
-        existing_field: createMock.model.richText(),
-      },
-    });
-    const model = createMock.model.sharedSlice({ variations: [variation] });
+    // const variation = createMock.model.sharedSliceVariation({
+    //   itemsFields: {
+    //     existing_field: createMock.model.richText(),
+    //   },
+    // });
+    // const model = createMock.model.sharedSlice({ variations: [variation] });
+    const sliceName = "Slice" + generateRandomId();
+    const model: SharedSlice = {
+      id: sliceName,
+      name: sliceName,
+      type: "SharedSlice",
+      variations: [
+        {
+          id: "default",
+          name: "Default",
+          docURL: "...",
+          version: "version",
+          imageUrl: "imageUrl",
+          description: "description",
+          items: { boolean: { type: "Boolean" } },
+        },
+      ],
+    };
 
     await manager.slices.createSlice({
       libraryID: firstSliceLibrary.id,
@@ -312,10 +331,10 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use(procedures);
   },
-  // eslint-disable-next-line no-empty-pattern
-  createMock: async ({}, use, { title }) => {
-    const mock = createMockFactory({ seed: title });
-
-    await use(mock);
-  },
+  // // eslint-disable-next-line no-empty-pattern
+  // createMock: async ({}, use, { title }) => {
+  //   const mock = createMockFactory({ seed: title });
+  //
+  //   await use(mock);
+  // },
 });
