@@ -5469,17 +5469,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mock@npm:0.3.4":
-  version: 0.3.4
-  resolution: "@prismicio/mock@npm:0.3.4"
-  dependencies:
-    change-case: ^5.4.4
-  peerDependencies:
-    "@prismicio/client": ^7
-  checksum: 3926f3125470329a51db7a7b31e6da6600d55cac5b0f8c373613840c3d6a2c3f1f329d454b59d1f03dcc896ffc445ca91541696a9e137128a643182dc9cfc1e4
-  languageName: node
-  linkType: hard
-
 "@prismicio/mocks@npm:2.0.0":
   version: 2.0.0
   resolution: "@prismicio/mocks@npm:2.0.0"
@@ -8776,8 +8765,6 @@ __metadata:
   dependencies:
     "@msgpack/msgpack": 2.8.0
     "@playwright/test": 1.39.0
-    "@prismicio/client": 7.4.1
-    "@prismicio/mock": 0.3.4
     "@prismicio/types-internal": 2.2.0
     "@slicemachine/manager": "workspace:*"
     "@typescript-eslint/eslint-plugin": 5.55.0

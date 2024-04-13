@@ -2,11 +2,11 @@ import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
 import { test as baseTest, expect } from "@playwright/test";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import {
   createSliceMachineManagerClient,
   SliceMachineManagerClient,
 } from "@slicemachine/manager/client";
-import { createMockFactory, MockFactory } from "@prismicio/mock";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
 import { PageTypeBuilderPage } from "../pages/PageTypesBuilderPage";
@@ -65,7 +65,6 @@ type Fixtures = {
    * Mocks
    */
   procedures: MockManagerProcedures;
-  createMock: MockFactory;
 };
 
 export const test = baseTest.extend<Options & Fixtures>({
@@ -171,16 +170,24 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use({ name: sliceName });
   },
-  repeatableZoneSlice: async (
-    { firstSliceLibrary, manager, createMock },
-    use,
-  ) => {
-    const variation = createMock.model.sharedSliceVariation({
-      itemsFields: {
-        existing_field: createMock.model.richText(),
-      },
-    });
-    const model = createMock.model.sharedSlice({ variations: [variation] });
+  repeatableZoneSlice: async ({ firstSliceLibrary, manager }, use) => {
+    const sliceName = "Slice" + generateRandomId();
+    const model = {
+      id: sliceName,
+      name: sliceName,
+      type: "SharedSlice",
+      variations: [
+        {
+          id: "default",
+          name: "Default",
+          description: "description",
+          imageUrl: "imageUrl",
+          version: "version",
+          docURL: "docURL",
+          items: { existing_field: { type: "Boolean" } },
+        },
+      ],
+    } satisfies SharedSlice;
 
     await manager.slices.createSlice({
       libraryID: firstSliceLibrary.id,
@@ -311,11 +318,5 @@ export const test = baseTest.extend<Options & Fixtures>({
     procedures.mock("getExperimentVariant", () => undefined);
 
     await use(procedures);
-  },
-  // eslint-disable-next-line no-empty-pattern
-  createMock: async ({}, use, { title }) => {
-    const mock = createMockFactory({ seed: title });
-
-    await use(mock);
   },
 });
