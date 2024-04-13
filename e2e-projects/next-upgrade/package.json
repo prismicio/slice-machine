@@ -9,7 +9,7 @@
     "slicemachine": "NODE_ENV=development SM_ENV=staging start-slicemachine"
   },
   "dependencies": {
-    "@prismicio/client": "7.2.0",
+    "@prismicio/client": "^7.2.0",
     "@prismicio/next": "^1.3.6",
     "@prismicio/react": "^2.7.3",
     "next": "^13.5.4",

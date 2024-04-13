@@ -5308,16 +5308,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:7.4.0":
-  version: 7.4.0
-  resolution: "@prismicio/client@npm:7.4.0"
-  dependencies:
-    imgix-url-builder: ^0.0.4
-  checksum: 78838d4d67a33ffd975be36b0068e5ab2b2a6e4b4abfce160982d5ab8c87fb324c0c143274e3ff22ca40bd623026a6da70dd966fdb718d718a8fec8636c3f83a
-  languageName: node
-  linkType: hard
-
-"@prismicio/client@npm:7.4.1":
+"@prismicio/client@npm:7.4.1, @prismicio/client@npm:^7.0.0, @prismicio/client@npm:^7.1.1, @prismicio/client@npm:^7.2.0":
   version: 7.4.1
   resolution: "@prismicio/client@npm:7.4.1"
   dependencies:
@@ -14713,7 +14704,7 @@ __metadata:
   dependencies:
     "@headlessui/react": ^1.5.0
     "@heroicons/react": ^1.0.6
-    "@prismicio/client": 7.4.0
+    "@prismicio/client": ^7.0.0
     "@prismicio/helpers": ^2.3.9
     "@prismicio/next": ^1.1.0
     "@prismicio/react": ^2.6.0
@@ -24417,7 +24408,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "next-upgrade@workspace:e2e-projects/next-upgrade"
   dependencies:
-    "@prismicio/client": 7.4.0
+    "@prismicio/client": ^7.2.0
     "@prismicio/next": ^1.3.6
     "@prismicio/react": ^2.7.3
     "@slicemachine/adapter-next": "workspace:*"
@@ -31879,7 +31870,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sveltekit@workspace:e2e-projects/sveltekit"
   dependencies:
-    "@prismicio/client": 7.4.0
+    "@prismicio/client": ^7.1.1
     "@prismicio/svelte": ^0.0.11
     "@slicemachine/adapter-sveltekit": "workspace:*"
     "@sveltejs/adapter-auto": ^3.0.0
