@@ -1,2 +1,5 @@
-ignores: []
+ignores:
+  [
+    "@slicemachine/manager"
+  ]
 skip - missing: true

@@ -1,10 +1,17 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { flushSync } from "react-dom";
 import { DropResult } from "react-beautiful-dnd";
 import {
   FieldType,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogHeader,
+} from "@prismicio/editor-ui";
 
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
@@ -16,6 +23,7 @@ import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderPro
 import {
   addField,
   deleteField,
+  deleteRepeatableZone,
   reorderField,
   updateField,
 } from "@src/domain/slice";
@@ -23,6 +31,7 @@ import Zone from "@lib/builders/common/Zone";
 import EditModal from "@lib/builders/common/EditModal";
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { telemetry } from "@src/apiClient";
+import { useGroupsInSlicesExperiment } from "@src/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -34,8 +43,28 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
 
 const FieldZones: FC = () => {
   const { slice, setSlice, variation } = useSliceState();
+  const [
+    isDeleteRepeatableZoneDialogOpen,
+    setIsDeleteRepeatableZoneDialogOpen,
+  ] = useState(false);
+  const groupsInSlicesExperiment = useGroupsInSlicesExperiment();
+
+  // We won't show the Repeatable Zone if no items are configured.
+  const hasItems = Boolean(
+    variation.items && Object.keys(variation.items).length > 0,
+  );
 
   const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
+    if (
+      groupsInSlicesExperiment.eligible &&
+      widgetArea === WidgetsArea.Items &&
+      variation.items &&
+      Object.keys(variation.items).length <= 1
+    ) {
+      setIsDeleteRepeatableZoneDialogOpen(true);
+      return;
+    }
+
     const newSlice = deleteField({
       slice,
       variationId: variation.id,
@@ -154,13 +183,20 @@ const FieldZones: FC = () => {
     flushSync(() => setSlice(newSlice));
   };
 
+  const onDeleteRepeatableZone = () => {
+    const newSlice = deleteRepeatableZone({ slice, variationId: variation.id });
+
+    setSlice(newSlice);
+    setIsDeleteRepeatableZoneDialogOpen(false);
+  };
+
   return (
     <List>
       <Zone
         zoneType="slice"
         zoneTypeFormat={undefined}
         tabId={undefined}
-        title="Non-Repeatable Zone"
+        title="Fields"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.primary}
@@ -183,32 +219,61 @@ const FieldZones: FC = () => {
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
       />
-      <Zone
-        zoneType="slice"
-        zoneTypeFormat={undefined}
-        tabId={undefined}
-        isRepeatable
-        title="Repeatable Zone"
-        dataTip={dataTipText2}
-        widgetsArray={sliceBuilderWidgetsArray}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        fields={variation.items}
-        EditModal={EditModal}
-        onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
-        onSave={_onSave(WidgetsArea.Items)}
-        onSaveNewField={_onSaveNewField(WidgetsArea.Items)}
-        onDragEnd={_onDragEnd(WidgetsArea.Items)}
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        poolOfFieldsToCheck={variation.items || []}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
-        renderFieldAccessor={(key) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          `slice.items[i]${transformKeyAccessor(key)}`
-        }
-        testId="slice-repeatable-zone"
-        isRepeatableCustomType={undefined}
-      />
+      {!groupsInSlicesExperiment.eligible || hasItems ? (
+        <Zone
+          zoneType="slice"
+          zoneTypeFormat={undefined}
+          tabId={undefined}
+          isRepeatable
+          title="Repeatable Zone"
+          dataTip={dataTipText2}
+          widgetsArray={sliceBuilderWidgetsArray}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          fields={variation.items}
+          EditModal={EditModal}
+          onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
+          onSave={_onSave(WidgetsArea.Items)}
+          onSaveNewField={_onSaveNewField(WidgetsArea.Items)}
+          onDragEnd={_onDragEnd(WidgetsArea.Items)}
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          poolOfFieldsToCheck={variation.items || []}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+          renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
+          renderFieldAccessor={(key) =>
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            `slice.items[i]${transformKeyAccessor(key)}`
+          }
+          testId="slice-repeatable-zone"
+          isRepeatableCustomType={undefined}
+        />
+      ) : null}
+      <Dialog
+        size="small"
+        open={isDeleteRepeatableZoneDialogOpen}
+        onOpenChange={(open) => setIsDeleteRepeatableZoneDialogOpen(open)}
+      >
+        <DialogHeader icon="delete" title="Delete field" />
+        <DialogContent>
+          <Box padding={24} gap={12} flexDirection="column">
+            <strong>
+              This action will permanently remove the Repeatable Zone from the{" "}
+              {slice.model.name} slice.
+            </strong>
+            <div>
+              If you need repeatable fields again, use a repeatable group field
+              in place of the repeatable zone.
+            </div>
+          </Box>
+          <DialogActions
+            ok={{
+              text: "Delete",
+              color: "tomato",
+              onClick: () => onDeleteRepeatableZone(),
+            }}
+            cancel={{ text: "Cancel" }}
+          />
+        </DialogContent>
+      </Dialog>
     </List>
   );
 };

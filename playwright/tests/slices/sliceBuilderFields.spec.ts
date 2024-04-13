@@ -72,11 +72,11 @@ test("I can delete a field in the static zone", async ({
 
 test("I can add a rich text field in the repeatable zone", async ({
   sliceBuilderPage,
-  slice,
+  repeatableZoneSlice,
 }) => {
-  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.goto(repeatableZoneSlice.name);
 
-  await expect(sliceBuilderPage.repeatableZoneListItem).toHaveCount(0);
+  await expect(sliceBuilderPage.repeatableZoneListItem).toHaveCount(1);
 
   await sliceBuilderPage.addField({
     type: "Rich Text",
@@ -85,14 +85,14 @@ test("I can add a rich text field in the repeatable zone", async ({
     zoneType: "repeatable",
   });
 
-  await expect(sliceBuilderPage.repeatableZoneListItem).toHaveCount(1);
+  await expect(sliceBuilderPage.repeatableZoneListItem).toHaveCount(2);
 });
 
 test("I can edit a rich text field in the repeatable zone", async ({
   sliceBuilderPage,
-  slice,
+  repeatableZoneSlice,
 }) => {
-  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.goto(repeatableZoneSlice.name);
   await sliceBuilderPage.addField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -123,9 +123,9 @@ test("I can edit a rich text field in the repeatable zone", async ({
 
 test("I can delete a field in the repeatable zone", async ({
   sliceBuilderPage,
-  slice,
+  repeatableZoneSlice,
 }) => {
-  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.goto(repeatableZoneSlice.name);
   await sliceBuilderPage.addField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -140,6 +140,25 @@ test("I can delete a field in the repeatable zone", async ({
   ).not.toBeVisible();
 });
 
+test("I can delete the repeatable zone by deleting the zone's last field", async ({
+  sliceBuilderPage,
+  repeatableZoneSlice,
+  procedures,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(repeatableZoneSlice.name);
+  await sliceBuilderPage.deleteField("existing_field", "repeatable");
+  await sliceBuilderPage.deleteRepeatableZoneDialog.deleteRepeatableZone();
+
+  await expect(sliceBuilderPage.repeatableZone).not.toBeVisible();
+});
+
 test("I can see and copy the code snippets", async ({
   sliceBuilderPage,
   slice,
@@ -149,11 +168,11 @@ test("I can see and copy the code snippets", async ({
     type: "Rich Text",
     name: "My Rich Text",
     expectedId: "my_rich_text",
-    zoneType: "repeatable",
+    zoneType: "static",
   });
 
   await expect(sliceBuilderPage.codeSnippetsFieldSwitch).not.toBeChecked();
   await sliceBuilderPage.codeSnippetsFieldSwitch.click();
   await expect(sliceBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
-  await sliceBuilderPage.copyCodeSnippet("my_rich_text", "repeatable");
+  await sliceBuilderPage.copyCodeSnippet("my_rich_text", "static");
 });

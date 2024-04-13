@@ -13,7 +13,7 @@ const ZoneEmptyState = ({
     <Heading as="h5">Add a new field here</Heading>
     <Box sx={{ my: 2 }}>
       <Text sx={{ color: "textClear" }}>
-        Add a field to your {zoneName} Zone
+        Fields are inputs for content (e.g. text, images, links).
       </Text>
     </Box>
     <Box sx={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
