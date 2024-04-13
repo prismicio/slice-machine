@@ -6,7 +6,6 @@ import {
   createSliceMachineManagerClient,
   SliceMachineManagerClient,
 } from "@slicemachine/manager/client";
-// import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { createMockFactory, MockFactory } from "@prismicio/mock";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
@@ -21,8 +20,8 @@ import { ChangelogPage } from "../pages/ChangelogPage";
 import { SimulatorPage } from "../pages/SimulatorPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
-import config from "../playwright.config";
 import { MockManagerProcedures } from "../utils";
+import config from "../playwright.config";
 
 type Options = {
   onboarded: boolean;
@@ -173,8 +172,7 @@ export const test = baseTest.extend<Options & Fixtures>({
     await use({ name: sliceName });
   },
   repeatableZoneSlice: async (
-    // { firstSliceLibrary, manager, createMock },
-    { createMock },
+    { firstSliceLibrary, manager, createMock },
     use,
   ) => {
     const variation = createMock.model.sharedSliceVariation({
@@ -183,43 +181,24 @@ export const test = baseTest.extend<Options & Fixtures>({
       },
     });
     const model = createMock.model.sharedSlice({ variations: [variation] });
-    // const sliceName = "Slice" + generateRandomId();
-    // const model: SharedSlice = {
-    //   id: sliceName,
-    //   name: sliceName,
-    //   type: "SharedSlice",
-    //   variations: [
-    //     {
-    //       id: "default",
-    //       name: "Default",
-    //       docURL: "...",
-    //       version: "version",
-    //       imageUrl: "imageUrl",
-    //       description: "description",
-    //       items: { boolean: { type: "Boolean" } },
-    //     },
-    //   ],
-    // };
 
-    // await manager.slices.createSlice({
-    //   libraryID: firstSliceLibrary.id,
-    //   model,
-    // });
+    await manager.slices.createSlice({
+      libraryID: firstSliceLibrary.id,
+      model,
+    });
 
     await use({ name: model.name });
   },
-  // eslint-disable-next-line no-empty-pattern
-  firstSliceLibrary: async ({}, use) => {
-    // const config = await manager.project.getSliceMachineConfig();
-    // const libraryID = config.libraries?.[0];
-    // if (!libraryID) {
-    //   throw new Error(
-    //     "At least one library is required in `slicemachine.config.json`.",
-    //   );
-    // }
-    //
-    // await use({ id: libraryID });
-    await use({ id: "./src/slices" });
+  firstSliceLibrary: async ({ manager }, use) => {
+    const config = await manager.project.getSliceMachineConfig();
+    const libraryID = config.libraries?.[0];
+    if (!libraryID) {
+      throw new Error(
+        "At least one library is required in `slicemachine.config.json`.",
+      );
+    }
+
+    await use({ id: libraryID });
   },
 
   /**
