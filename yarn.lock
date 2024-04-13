@@ -5317,6 +5317,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/client@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@prismicio/client@npm:7.4.1"
+  dependencies:
+    imgix-url-builder: ^0.0.4
+  checksum: 03aec20afa085759369eab0f00673a4c4a3474bc933a5ff942c4cb430929ebca2b4ddfb024e50181bcd3f941f54e1396603151eaef5afa0eb6f0574e5dda9d7d
+  languageName: node
+  linkType: hard
+
 "@prismicio/client@npm:^6.7.3":
   version: 6.9.0
   resolution: "@prismicio/client@npm:6.9.0"
@@ -5482,14 +5491,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mock@npm:0.3.1":
-  version: 0.3.1
-  resolution: "@prismicio/mock@npm:0.3.1"
+"@prismicio/mock@npm:0.3.3":
+  version: 0.3.3
+  resolution: "@prismicio/mock@npm:0.3.3"
   dependencies:
-    change-case: ^4.1.2
+    change-case: ^5.4.4
   peerDependencies:
     "@prismicio/client": ^7
-  checksum: 2b377beaf9c0d3b6413ea8e1d58cb3613a84479e8a9285abd356f3782764c0d2140b8031275cf6783356d1b5aeb08b39fb61e4bd204304f25d33f4331d0d5cb9
+  checksum: 4bcb9a8ae5446b807627e759cde19991d555cc48ba16baaddfe62f466793369ad539bafe3c54264b24395eac6a05267c8b54dfff53b7430045ebece73fa3c704
   languageName: node
   linkType: hard
 
@@ -8798,9 +8807,10 @@ __metadata:
   dependencies:
     "@msgpack/msgpack": 2.8.0
     "@playwright/test": 1.39.0
-    "@prismicio/client": 7.4.0
-    "@prismicio/mock": 0.3.1
+    "@prismicio/client": 7.4.1
+    "@prismicio/mock": 0.3.3
     "@prismicio/types-internal": 2.2.0
+    "@slicemachine/manager": "workspace:*"
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
     depcheck: 1.4.3
@@ -14568,6 +14578,13 @@ __metadata:
     snake-case: ^3.0.4
     tslib: ^2.0.3
   checksum: e4bc4a093a1f7cce8b33896665cf9e456e3bc3cc0def2ad7691b1994cfca99b3188d0a513b16855b01a6bd20692fcde12a7d4d87a5615c4c515bbbf0e651f116
+  languageName: node
+  linkType: hard
+
+"change-case@npm:^5.4.4":
+  version: 5.4.4
+  resolution: "change-case@npm:5.4.4"
+  checksum: a22a25a763719658424ffbcd41e931d2d19cc22399cc765dca447fbe1eaf13e179d5e8ab1677af75f2e814dbddf74e42ffdecb526cd5bc906cc859f62aa154b2
   languageName: node
   linkType: hard
 
@@ -30591,11 +30608,11 @@ __metadata:
   dependencies:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
-    "@prismicio/client": 7.4.0
+    "@prismicio/client": 7.4.1
     "@prismicio/editor-fields": 0.4.25
     "@prismicio/editor-support": 0.4.25
     "@prismicio/editor-ui": 0.4.25
-    "@prismicio/mock": 0.3.1
+    "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.0.0-alpha.2
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 2.2.0

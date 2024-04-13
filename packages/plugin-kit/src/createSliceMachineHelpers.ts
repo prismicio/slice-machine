@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import * as fs from "node:fs/promises";
 
-import prettier from "prettier";
+import * as prettier from "prettier";
 import { stripIndent } from "common-tags";
 
 import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";

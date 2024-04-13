@@ -2,10 +2,10 @@ import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
 import { test as baseTest, expect } from "@playwright/test";
-// import {
-//   createSliceMachineManagerClient,
-//   SliceMachineManagerClient,
-// } from "@slicemachine/manager/client";
+import {
+  createSliceMachineManagerClient,
+  SliceMachineManagerClient,
+} from "@slicemachine/manager/client";
 // import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { createMockFactory, MockFactory } from "@prismicio/mock";
 
@@ -60,7 +60,7 @@ type Fixtures = {
   /**
    * Manager
    */
-  // manager: SliceMachineManagerClient;
+  manager: SliceMachineManagerClient;
 
   /**
    * Mocks
@@ -313,14 +313,14 @@ export const test = baseTest.extend<Options & Fixtures>({
   /**
    * Manager
    */
-  // // eslint-disable-next-line no-empty-pattern
-  // manager: async ({}, use, config) => {
-  //   const client = createSliceMachineManagerClient({
-  //     serverURL: new URL("./_manager", config.project.use.baseURL).toString(),
-  //   });
-  //
-  //   await use(client);
-  // },
+  // eslint-disable-next-line no-empty-pattern
+  manager: async ({}, use, config) => {
+    const client = createSliceMachineManagerClient({
+      serverURL: new URL("./_manager", config.project.use.baseURL).toString(),
+    });
+
+    await use(client);
+  },
 
   /**
    * Mocks
