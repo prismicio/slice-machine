@@ -80,7 +80,7 @@
 		"prismic-ts-codegen": "^0.1.17"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "0.2.0",
+		"@prismicio/mock": "0.3.4",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
 		"@types/react": "18.0.28",
