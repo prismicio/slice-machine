@@ -1,4 +1,5 @@
-ignores: [
-    "@prismicio/client"
-]
+ignores:
+  [
+    "@slicemachine/manager"
+  ]
 skip - missing: true
