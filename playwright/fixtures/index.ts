@@ -2,6 +2,11 @@ import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
 import { test as baseTest, expect } from "@playwright/test";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import {
+  createSliceMachineManagerClient,
+  SliceMachineManagerClient,
+} from "@slicemachine/manager/client";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
 import { PageTypeBuilderPage } from "../pages/PageTypesBuilderPage";
@@ -15,8 +20,8 @@ import { ChangelogPage } from "../pages/ChangelogPage";
 import { SimulatorPage } from "../pages/SimulatorPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
-import config from "../playwright.config";
 import { MockManagerProcedures } from "../utils";
+import config from "../playwright.config";
 
 type Options = {
   onboarded: boolean;
@@ -48,6 +53,13 @@ type Fixtures = {
   reusableCustomType: { name: string };
   singleCustomType: { name: string };
   slice: { name: string };
+  repeatableZoneSlice: { name: string };
+  firstSliceLibrary: { id: string };
+
+  /**
+   * Manager
+   */
+  manager: SliceMachineManagerClient;
 
   /**
    * Mocks
@@ -158,6 +170,43 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use({ name: sliceName });
   },
+  repeatableZoneSlice: async ({ firstSliceLibrary, manager }, use) => {
+    const sliceName = "Slice" + generateRandomId();
+    const model = {
+      id: sliceName,
+      name: sliceName,
+      type: "SharedSlice",
+      variations: [
+        {
+          id: "default",
+          name: "Default",
+          description: "description",
+          imageUrl: "imageUrl",
+          version: "version",
+          docURL: "docURL",
+          items: { existing_field: { type: "Boolean" } },
+        },
+      ],
+    } satisfies SharedSlice;
+
+    await manager.slices.createSlice({
+      libraryID: firstSliceLibrary.id,
+      model,
+    });
+
+    await use({ name: model.name });
+  },
+  firstSliceLibrary: async ({ manager }, use) => {
+    const config = await manager.project.getSliceMachineConfig();
+    const libraryID = config.libraries?.[0];
+    if (!libraryID) {
+      throw new Error(
+        "At least one library is required in `slicemachine.config.json`.",
+      );
+    }
+
+    await use({ id: libraryID });
+  },
 
   /**
    * Page
@@ -245,6 +294,18 @@ export const test = baseTest.extend<Options & Fixtures>({
     await use(page);
 
     await newContext.close();
+  },
+
+  /**
+   * Manager
+   */
+  // eslint-disable-next-line no-empty-pattern
+  manager: async ({}, use, config) => {
+    const client = createSliceMachineManagerClient({
+      serverURL: new URL("./_manager", config.project.use.baseURL).toString(),
+    });
+
+    await use(client);
   },
 
   /**

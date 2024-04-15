@@ -11,7 +11,7 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import { builders, generateCode, loadFile } from "magicast";
+import { builders, loadFile, writeFile } from "magicast";
 
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
@@ -51,7 +51,6 @@ type ConfigurePrismicModuleArgs = SliceMachineContext<PluginOptions>;
 
 const configurePrismicModule = async ({
 	helpers,
-	options,
 }: ConfigurePrismicModuleArgs) => {
 	let nuxtConfigFilename = "nuxt.config.js";
 
@@ -96,8 +95,6 @@ const configurePrismicModule = async ({
 	}
 
 	// Append Prismic module configuration
-	const ENDPOINT_REPLACE_KEY = "___prismicEndpoint___";
-	const ENDPOINT_REPLACE_VALUE = "apiEndpoint || repositoryName";
 	if (!hasInlinedConfiguration) {
 		// Import Slice Machine configuration
 		mod.imports.$add({
@@ -111,19 +108,10 @@ const configurePrismicModule = async ({
 
 		// Add inline configuration
 		config.prismic ||= {};
-		config.prismic.endpoint = builders.raw(ENDPOINT_REPLACE_KEY);
+		config.prismic.endpoint = builders.raw("apiEndpoint || repositoryName");
 	}
 
-	const ast = "$ast" in mod ? mod.$ast : mod;
-	let { code } = generateCode(ast);
-	// This is a workaround to magicast not supporting "LogicalExpression" node type
-	code = code.replace(ENDPOINT_REPLACE_KEY, ENDPOINT_REPLACE_VALUE);
-	await writeProjectFile({
-		filename: nuxtConfigFilename,
-		contents: code,
-		format: options.format,
-		helpers,
-	});
+	await writeFile(mod, nuxtConfigPath);
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;

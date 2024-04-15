@@ -40,10 +40,9 @@ describe("Prismic module", () => {
 			  modules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: apiEndpoint || repositoryName,
-			  },
-			});
-			"
+			    endpoint: apiEndpoint || repositoryName
+			  }
+			})"
 		`);
 	});
 
@@ -66,10 +65,9 @@ describe("Prismic module", () => {
 			  modules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: apiEndpoint || repositoryName,
-			  },
-			});
-			"
+			    endpoint: apiEndpoint || repositoryName
+			  }
+			})"
 		`);
 	});
 
@@ -85,8 +83,8 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/prismic"],
 
   prismic: {
-    endpoint: "example-prismic-repo",
-  },
+    endpoint: "example-prismic-repo"
+  }
 })
 `.trim(),
 		);
@@ -103,10 +101,9 @@ export default defineNuxtConfig({
 			  modules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: apiEndpoint || repositoryName,
-			  },
-			});
-			"
+			    endpoint: apiEndpoint || repositoryName
+			  }
+			})"
 		`);
 	});
 });

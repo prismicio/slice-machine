@@ -41,10 +41,9 @@ describe("Prismic module", () => {
 
 			  prismic: {
 			    endpoint: apiEndpoint || repositoryName,
-			    modern: true,
-			  },
-			};
-			"
+			    modern: true
+			  }
+			};"
 		`);
 	});
 
@@ -68,10 +67,9 @@ describe("Prismic module", () => {
 
 			  prismic: {
 			    endpoint: apiEndpoint || repositoryName,
-			    modern: true,
-			  },
-			};
-			"
+			    modern: true
+			  }
+			};"
 		`);
 	});
 
@@ -88,8 +86,8 @@ export default {
 
   prismic: {
     endpoint: "example-prismic-repo",
-		modern: true,
-  },
+    modern: true
+  }
 }
 `.trim(),
 		);
@@ -107,10 +105,9 @@ export default {
 
 			  prismic: {
 			    endpoint: apiEndpoint || repositoryName,
-			    modern: true,
-			  },
-			};
-			"
+			    modern: true
+			  }
+			}"
 		`);
 	});
 
