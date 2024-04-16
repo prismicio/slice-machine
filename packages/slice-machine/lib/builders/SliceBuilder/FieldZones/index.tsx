@@ -190,6 +190,11 @@ const FieldZones: FC = () => {
     setIsDeleteRepeatableZoneDialogOpen(false);
   };
 
+  console.log(sliceBuilderWidgetsArray);
+  const sliceBuilderWidgetsArrayWithoutGroups = sliceBuilderWidgetsArray.filter(
+    (widget) => widget.TYPE_NAME !== "Group",
+  );
+
   return (
     <List>
       <Zone
@@ -227,7 +232,7 @@ const FieldZones: FC = () => {
           isRepeatable
           title="Repeatable Zone"
           dataTip={dataTipText2}
-          widgetsArray={sliceBuilderWidgetsArray}
+          widgetsArray={sliceBuilderWidgetsArrayWithoutGroups}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           fields={variation.items}
           EditModal={EditModal}
