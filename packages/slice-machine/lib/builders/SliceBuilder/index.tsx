@@ -17,6 +17,7 @@ import { BreadcrumbItem } from "@src/components/Breadcrumb";
 import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
 import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
+import { ModelProvider } from "@src/features/models/ModelProvider";
 
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
@@ -42,7 +43,9 @@ export const SliceBuilder: FC = () => {
           gridTemplateColumns="320px 1fr"
         >
           <Sidebar />
-          <FieldZones />
+          <ModelProvider type="slice" model={slice}>
+            <FieldZones />
+          </ModelProvider>
         </Box>
         <FloatingBackButton />
       </AppLayoutContent>

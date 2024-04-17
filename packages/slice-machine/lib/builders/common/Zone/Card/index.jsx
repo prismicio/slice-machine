@@ -17,6 +17,7 @@ const FieldZone = ({
   onDragEnd,
   renderFieldAccessor,
   onDeleteItem,
+  onSave,
   showHints,
   newField,
   renderHintBase,
@@ -82,6 +83,8 @@ const FieldZone = ({
                   parentSnapshot: snapshot,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   deleteItem: onDeleteItem,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  saveItem: onSave,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
                   draggableId: `list-item-${item.key}`,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

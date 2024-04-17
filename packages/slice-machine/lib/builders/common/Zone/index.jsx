@@ -159,6 +159,8 @@ const Zone = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               onDeleteItem={onDeleteItem}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              onSave={onSave}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               isRepeatableCustomType={isRepeatableCustomType}

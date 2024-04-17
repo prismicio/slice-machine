@@ -8,6 +8,7 @@ import {
 import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
 import { GroupSM, Groups } from "./Group";
+import { TabFieldsModel } from "./CustomType";
 
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
@@ -61,12 +62,13 @@ export const Variations = {
     })(
       Variation.decode({
         ...variation,
-        primary: variation.primary?.reduce((acc, { key, value }) => {
-          return {
+        primary: variation.primary?.reduce(
+          (acc, { key, value }) => ({
             ...acc,
-            [key]: value.type === "Group" ? Groups.fromSM(value) : value,
-          };
-        }, {}),
+            [key]: TabFieldsModel.fromSM(value),
+          }),
+          {},
+        ),
         items: variation.items?.reduce(
           (acc, { key, value }) => ({ ...acc, [key]: value }),
           {},
@@ -89,7 +91,7 @@ export const Variations = {
         primary: Object.entries(variation.primary || {}).map(
           ([key, value]) => ({
             key,
-            value,
+            value: value.type === "Group" ? Groups.toSM(value) : value,
           }),
         ),
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

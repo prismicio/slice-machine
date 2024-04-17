@@ -5,7 +5,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { Box, Button } from "theme-ui";
 
-import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
+import { ensureDnDDestination } from "@lib/utils";
 
 import { transformKeyAccessor } from "@utils/str";
 
@@ -22,15 +22,14 @@ import groupBuilderArray from "@lib/models/common/widgets/groupBuilderArray";
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
 import ListItem from "@components/ListItem";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { TabFieldsModel } from "@lib/models/common/CustomType";
 import {
-  addGroupField,
-  deleteGroupField,
-  reorderGroupField,
-  updateGroupField,
-} from "@src/domain/customType";
+  addFieldToGroup,
+  deleteFieldFromGroup,
+  reorderFieldInGroup,
+  updateFieldInGroup,
+} from "@src/domain/group";
 import { telemetry } from "@src/apiClient";
+import { useModel } from "@src/features/models/ModelProvider";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -44,12 +43,13 @@ const CustomListItem = ({
   draggableId,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   renderFieldAccessor,
+  saveItem,
   ...rest
 }) => {
   const [selectMode, setSelectMode] = useState(false);
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
-  const { customType, setCustomType } = useCustomTypeState();
+  const currentModel = useModel();
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -66,22 +66,20 @@ const CustomListItem = ({
   };
 
   const onSaveNewField = ({ id, label, widgetTypeName }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const widget = Widgets[widgetTypeName];
+    const newField = widget.create(label);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-    const newWidget = widget.create(label);
-
-    const newField = TabFieldsModel.fromSM(newWidget);
-    const newCustomType = addGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
-      newField,
-      newFieldId: id,
+    const newGroupValue = addFieldToGroup({
+      group: groupItem.value,
+      fieldId: id,
+      field: newField,
     });
 
-    setCustomType(newCustomType);
+    saveItem({
+      apiId: groupItem.key,
+      newKey: groupItem.key,
+      value: newGroupValue,
+    });
 
     void telemetry.track({
       event: "field:added",
@@ -89,31 +87,31 @@ const CustomListItem = ({
       name: label,
       type: widgetTypeName,
       isInAGroup: true,
-      contentType: customType.format === "page" ? "page type" : "custom type",
+      contentType:
+        currentModel.type === "customType"
+          ? customType.format === "page"
+            ? "page type"
+            : "custom type"
+          : currentModel.type,
     });
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    if (ensureWidgetTypeExistence(Widgets, value.type)) {
-      return;
-    }
-
-    const newField = TabFieldsModel.fromSM(value);
-    const newCustomType = updateGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
+    const newGroupValue = updateFieldInGroup({
+      group: groupItem.value,
       previousFieldId: previousKey,
       newFieldId: newKey,
-      newField,
+      field: value,
     });
 
-    setCustomType(newCustomType);
+    saveItem({
+      apiId: groupItem.key,
+      newKey: groupItem.key,
+      value: newGroupValue,
+    });
   };
 
   const onDragEnd = (result) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (ensureDnDDestination(result)) {
       return;
     }
@@ -126,10 +124,8 @@ const CustomListItem = ({
     const { index: sourceIndex } = source;
     const { index: destinationIndex } = destination;
 
-    const newCustomType = reorderGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
+    const newGroupValue = reorderFieldInGroup({
+      group: groupItem.value,
       sourceIndex,
       destinationIndex,
     });
@@ -137,18 +133,26 @@ const CustomListItem = ({
     // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
     // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
     // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
-    flushSync(() => setCustomType(newCustomType));
+    flushSync(() => {
+      saveItem({
+        apiId: groupItem.key,
+        newKey: groupItem.key,
+        value: newGroupValue,
+      });
+    });
   };
 
   const onDeleteItem = (key) => {
-    const newCustomType = deleteGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
+    const newGroupValue = deleteFieldFromGroup({
+      group: groupItem.value,
       fieldId: key,
     });
 
-    setCustomType(newCustomType);
+    saveItem({
+      apiId: groupItem.key,
+      newKey: groupItem.key,
+      value: newGroupValue,
+    });
   };
 
   /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
@@ -163,9 +167,15 @@ const CustomListItem = ({
       name: model.config.label,
       type: model.type,
       isInAGroup: true,
-      contentType: customType.format === "page" ? "page type" : "custom type",
+      contentType:
+        currentModel.type === "customType"
+          ? customType.format === "page"
+            ? "page type"
+            : "custom type"
+          : currentModel.type,
     });
   };
+
   return (
     <Fragment>
       <ListItem
