@@ -184,7 +184,11 @@ const FieldZones: FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.primary}
         EditModal={EditModal}
-        widgetsArray={sliceBuilderWidgetsArray}
+        widgetsArray={
+          groupsInSlicesExperiment.eligible
+            ? sliceBuilderWidgetsArray
+            : groupBuilderWidgetsArray
+        }
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
         onSave={_onSave(WidgetsArea.Primary)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}

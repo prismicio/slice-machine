@@ -5318,15 +5318,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:^7.0.0, @prismicio/client@npm:^7.1.1, @prismicio/client@npm:^7.2.0":
-  version: 7.4.1
-  resolution: "@prismicio/client@npm:7.4.1"
-  dependencies:
-    imgix-url-builder: ^0.0.4
-  checksum: 03aec20afa085759369eab0f00673a4c4a3474bc933a5ff942c4cb430929ebca2b4ddfb024e50181bcd3f941f54e1396603151eaef5afa0eb6f0574e5dda9d7d
-  languageName: node
-  linkType: hard
-
 "@prismicio/client@npm:^7.1.0":
   version: 7.1.0
   resolution: "@prismicio/client@npm:7.1.0"
@@ -8570,7 +8561,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.2.0
+    "@prismicio/types-internal": ^2.4.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -8615,7 +8606,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.2.0
+    "@prismicio/types-internal": ^2.4.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@typescript-eslint/eslint-plugin": 5.55.0
@@ -8656,7 +8647,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.2.0
+    "@prismicio/types-internal": ^2.4.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -8698,7 +8689,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^2.2.0
+    "@prismicio/types-internal": ^2.4.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@sveltejs/kit": 2.0.0
@@ -14657,7 +14648,7 @@ __metadata:
   dependencies:
     "@headlessui/react": ^1.5.0
     "@heroicons/react": ^1.0.6
-    "@prismicio/client": ^7.0.0
+    "@prismicio/client": ^7.5.0-alpha.0
     "@prismicio/helpers": ^2.3.9
     "@prismicio/next": ^1.1.0
     "@prismicio/react": ^2.6.0
@@ -24361,7 +24352,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "next-upgrade@workspace:e2e-projects/next-upgrade"
   dependencies:
-    "@prismicio/client": ^7.2.0
+    "@prismicio/client": ^7.5.0-alpha.0
     "@prismicio/next": ^1.3.6
     "@prismicio/react": ^2.7.3
     "@slicemachine/adapter-next": "workspace:*"
@@ -31830,7 +31821,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sveltekit@workspace:e2e-projects/sveltekit"
   dependencies:
-    "@prismicio/client": ^7.1.1
+    "@prismicio/client": ^7.5.0-alpha.0
     "@prismicio/svelte": ^0.0.11
     "@slicemachine/adapter-sveltekit": "workspace:*"
     "@sveltejs/adapter-auto": ^3.0.0
