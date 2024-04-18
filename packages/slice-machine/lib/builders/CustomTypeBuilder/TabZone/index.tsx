@@ -82,7 +82,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     label: string;
     widgetTypeName: FieldType;
   }) => {
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }
@@ -161,7 +160,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     newKey: string;
     value: TabField;
   }) => {
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;

@@ -8,7 +8,6 @@ import {
 import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
 import { GroupSM, Groups } from "./Group";
-import { TabFieldsModel } from "./CustomType";
 
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
@@ -18,8 +17,11 @@ export enum WidgetsArea {
   Items = "items",
 }
 
+export const SlicePrimaryFieldSM = t.union([GroupSM, NestableWidget]);
+export type SlicePrimaryFieldSM = t.TypeOf<typeof SlicePrimaryFieldSM>;
+
 export const SlicePrimaryFieldsSM = t.array(
-  t.type({ key: t.string, value: t.union([GroupSM, NestableWidget]) }),
+  t.type({ key: t.string, value: SlicePrimaryFieldSM }),
 );
 export type SlicePrimaryFieldsSM = t.TypeOf<typeof SlicePrimaryFieldsSM>;
 
@@ -65,7 +67,7 @@ export const Variations = {
         primary: variation.primary?.reduce(
           (acc, { key, value }) => ({
             ...acc,
-            [key]: TabFieldsModel.fromSM(value),
+            [key]: value.type === "Group" ? Groups.fromSM(value) : value,
           }),
           {},
         ),

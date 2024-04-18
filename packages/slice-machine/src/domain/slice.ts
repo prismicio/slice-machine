@@ -2,12 +2,15 @@ import type {
   CompositeSlice,
   LegacySlice,
   SharedSlice,
-  SlicePrimaryWidget,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import { type VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import {
+  type VariationSM,
+  WidgetsArea,
+  SlicePrimaryFieldSM,
+} from "@lib/models/common/Slice";
 import { pascalize, snakelize } from "@lib/utils/str";
 
 type CopySliceVariationArgs = {
@@ -38,7 +41,7 @@ type AddFieldArgs = {
   variationId: string;
   widgetArea: WidgetsArea;
   newFieldId: string;
-  newField: SlicePrimaryWidget;
+  newField: SlicePrimaryFieldSM;
 };
 
 type ReorderFieldArgs = {

@@ -5625,41 +5625,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@prismicio/types-internal@npm:2.2.0"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-  peerDependencies:
-    "@types/uuid": ^9.0.2
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-    uuid: ^9.0.0
-  checksum: 4932343cde0ea93399509f62f3be9a7a48b52d3bda6811b60b4a7bd2fa629b7d128139739a5e137a2c95783d5b7d287d2cc29749f44902c5dd086f4fe3eb113f
-  languageName: node
-  linkType: hard
-
-"@prismicio/types-internal@npm:2.3.1":
-  version: 2.3.1
-  resolution: "@prismicio/types-internal@npm:2.3.1"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-  peerDependencies:
-    "@types/uuid": ^9.0.2
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-    uuid: ^9.0.0
-  checksum: 1763e28e68323defecdfc3b20fd329de4ccfcaeacfbbaa80cafcea2778b00967ba8b724d4a3d2939b54bd666dca261c58396c3347e912e5e85e3c38327e2aa1f
-  languageName: node
-  linkType: hard
-
-"@prismicio/types-internal@npm:2.4.0-alpha.4, @prismicio/types-internal@npm:^2.4.0-alpha.4":
+"@prismicio/types-internal@npm:2.4.0-alpha.4":
   version: 2.4.0-alpha.4
   resolution: "@prismicio/types-internal@npm:2.4.0-alpha.4"
   dependencies:

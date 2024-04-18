@@ -1,10 +1,7 @@
 import { FC, useState } from "react";
 import { flushSync } from "react-dom";
 import { DropResult } from "react-beautiful-dnd";
-import {
-  FieldType,
-  SlicePrimaryWidget,
-} from "@prismicio/types-internal/lib/customtypes";
+import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 import {
   Box,
   Dialog,
@@ -17,7 +14,7 @@ import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 import { List } from "@src/components/List";
-import { WidgetsArea } from "@lib/models/common/Slice";
+import { SlicePrimaryFieldSM, WidgetsArea } from "@lib/models/common/Slice";
 import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import {
   addField,
@@ -118,7 +115,7 @@ const FieldZones: FC = () => {
         throw new Error(`Unsupported Field Type: ${widgetTypeName}`);
       }
 
-      const newField = widget.create(label) as SlicePrimaryWidget;
+      const newField = widget.create(label) as SlicePrimaryFieldSM;
 
       try {
         widget.schema.validateSync(newField, { stripUnknown: false });
