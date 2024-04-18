@@ -3,7 +3,7 @@ import { flushSync } from "react-dom";
 import { DropResult } from "react-beautiful-dnd";
 import {
   FieldType,
-  NestableWidget,
+  SlicePrimaryWidget,
 } from "@prismicio/types-internal/lib/customtypes";
 import {
   Box,
@@ -15,7 +15,6 @@ import {
 
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
-import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 import { List } from "@src/components/List";
 import { WidgetsArea } from "@lib/models/common/Slice";
@@ -29,7 +28,6 @@ import {
 } from "@src/domain/slice";
 import Zone from "@lib/builders/common/Zone";
 import EditModal from "@lib/builders/common/EditModal";
-import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { telemetry } from "@src/apiClient";
 import { useGroupsInSlicesExperiment } from "@src/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
 
@@ -111,32 +109,19 @@ const FieldZones: FC = () => {
       label: string;
       widgetTypeName: FieldType;
     }) => {
-      // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const widget = Widgets[widgetTypeName];
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      const widget = sliceBuilderWidgetsArray.find(
+        (sliceBuilderWidget) =>
+          sliceBuilderWidget.CUSTOM_NAME === widgetTypeName ||
+          sliceBuilderWidget.TYPE_NAME === widgetTypeName,
+      );
       if (!widget) {
-        console.log(
-          `Could not find widget with type name "${widgetTypeName}". Please contact us!`,
-        );
+        throw new Error(`Unsupported Field Type: ${widgetTypeName}`);
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      const newField = widget.create(label) as NestableWidget;
-
-      if (
-        newField.type === "Range" ||
-        newField.type === "IntegrationFields" ||
-        newField.type === "Separator"
-      ) {
-        throw new Error(`Unsupported Field Type: ${newField.type}`);
-      }
+      const newField = widget.create(label) as SlicePrimaryWidget;
 
       try {
-        const CurrentWidget: AnyWidget = Widgets[newField.type];
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        CurrentWidget.schema.validateSync(newField, { stripUnknown: false });
+        widget.schema.validateSync(newField, { stripUnknown: false });
       } catch (error) {
         throw new Error(`Model is invalid for widget "${newField.type}".`);
       }
@@ -190,7 +175,6 @@ const FieldZones: FC = () => {
     setIsDeleteRepeatableZoneDialogOpen(false);
   };
 
-  console.log(sliceBuilderWidgetsArray);
   const sliceBuilderWidgetsArrayWithoutGroups = sliceBuilderWidgetsArray.filter(
     (widget) => widget.TYPE_NAME !== "Group",
   );

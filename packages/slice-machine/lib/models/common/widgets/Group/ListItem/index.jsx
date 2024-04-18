@@ -17,7 +17,7 @@ import { findWidgetByConfigOrType } from "@builders/utils";
 
 import * as Widgets from "@lib/models/common/widgets";
 
-import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
+import groupBuilderArray from "@lib/models/common/widgets/groupBuilderArray";
 
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
@@ -283,7 +283,7 @@ const CustomListItem = ({
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={sliceBuilderArray}
+        widgetsArray={groupBuilderArray}
       />
       <EditModal
         data={editModalData}

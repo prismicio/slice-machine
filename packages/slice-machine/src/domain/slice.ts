@@ -2,11 +2,12 @@ import type {
   CompositeSlice,
   LegacySlice,
   SharedSlice,
+  SlicePrimaryWidget,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import type { VariationSM, WidgetsArea } from "@lib/models/common/Slice";
+import { type VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 import { pascalize, snakelize } from "@lib/utils/str";
 
 type CopySliceVariationArgs = {
@@ -37,7 +38,7 @@ type AddFieldArgs = {
   variationId: string;
   widgetArea: WidgetsArea;
   newFieldId: string;
-  newField: NestableWidget;
+  newField: SlicePrimaryWidget;
 };
 
 type ReorderFieldArgs = {
@@ -207,18 +208,30 @@ export function addField(args: AddFieldArgs): ComponentUI {
     model: {
       ...slice.model,
       variations: slice.model.variations.map((v) => {
-        if (v.id === variationId) {
+        if (v.id !== variationId) {
+          return v;
+        }
+
+        if (widgetArea === WidgetsArea.Items) {
+          if (newField.type === "Group") {
+            return v;
+          }
+
           return {
             ...v,
             [widgetArea]: v[widgetArea]?.concat([
-              {
-                key: newFieldId,
-                value: newField,
-              },
+              { key: newFieldId, value: newField },
             ]),
           };
         }
-        return v;
+
+        // This code is duplicated to appease TypeScript.
+        return {
+          ...v,
+          [widgetArea]: v[widgetArea]?.concat([
+            { key: newFieldId, value: newField },
+          ]),
+        };
       }),
     },
   };

@@ -1,11 +1,13 @@
 import * as t from "io-ts";
 
 import {
+  NestableWidget,
   SharedSlice,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
+import { GroupSM, Groups } from "./Group";
 
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
@@ -14,6 +16,11 @@ export enum WidgetsArea {
   Primary = "primary",
   Items = "items",
 }
+
+export const SlicePrimaryFieldsSM = t.array(
+  t.type({ key: t.string, value: t.union([GroupSM, NestableWidget]) }),
+);
+export type SlicePrimaryFieldsSM = t.TypeOf<typeof SlicePrimaryFieldsSM>;
 
 export const VariationSM = t.intersection([
   t.type({
@@ -25,7 +32,7 @@ export const VariationSM = t.intersection([
   }),
   t.partial({
     imageUrl: t.string,
-    primary: FieldsSM,
+    primary: SlicePrimaryFieldsSM,
     items: FieldsSM,
     display: t.string,
   }),
@@ -54,10 +61,12 @@ export const Variations = {
     })(
       Variation.decode({
         ...variation,
-        primary: variation.primary?.reduce(
-          (acc, { key, value }) => ({ ...acc, [key]: value }),
-          {},
-        ),
+        primary: variation.primary?.reduce((acc, { key, value }) => {
+          return {
+            ...acc,
+            [key]: value.type === "Group" ? Groups.fromSM(value) : value,
+          };
+        }, {}),
         items: variation.items?.reduce(
           (acc, { key, value }) => ({ ...acc, [key]: value }),
           {},
