@@ -41,8 +41,6 @@ const CustomListItem = ({
   isRepeatable,
   item: groupItem,
   draggableId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  renderFieldAccessor,
   saveItem,
   ...rest
 }) => {
@@ -186,7 +184,6 @@ const CustomListItem = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
         draggableId={draggableId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unused-vars, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-        renderFieldAccessor={(key) => `data.${groupItem.key}.[...]`}
         {...rest}
         CustomEditElements={[
           <Button
@@ -236,8 +233,7 @@ const CustomListItem = ({
                           enterEditMode,
                           deleteItem: onDeleteItem,
                           renderFieldAccessor: (key) =>
-                            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-                            `data.${groupItem.key}.${key}`,
+                            `item${transformKeyAccessor(item.key)}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                           draggableId: `group-${groupItem.key}-${item.key}-${index}`,
                           testId: `list-item-group-${groupItem.key}-${item.key}`,
@@ -253,9 +249,7 @@ const CustomListItem = ({
                             isRepeatable={isRepeatable}
                             renderHintBase={({ item }) =>
                               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-                              `data.${groupItem.key}${transformKeyAccessor(
-                                item.key,
-                              )}`
+                              `item${transformKeyAccessor(item.key)}`
                             }
                             Widgets={Widgets}
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
