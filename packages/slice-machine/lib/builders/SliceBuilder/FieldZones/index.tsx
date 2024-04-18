@@ -13,6 +13,7 @@ import {
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
+import groupBuilderWidgetsArray from "@lib/models/common/widgets/groupBuilderArray";
 import { List } from "@src/components/List";
 import { SlicePrimaryFieldSM, WidgetsArea } from "@lib/models/common/Slice";
 import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
@@ -172,10 +173,6 @@ const FieldZones: FC = () => {
     setIsDeleteRepeatableZoneDialogOpen(false);
   };
 
-  const sliceBuilderWidgetsArrayWithoutGroups = sliceBuilderWidgetsArray.filter(
-    (widget) => widget.TYPE_NAME !== "Group",
-  );
-
   return (
     <List>
       <Zone
@@ -213,7 +210,7 @@ const FieldZones: FC = () => {
           isRepeatable
           title="Repeatable Zone"
           dataTip={dataTipText2}
-          widgetsArray={sliceBuilderWidgetsArrayWithoutGroups}
+          widgetsArray={groupBuilderWidgetsArray}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           fields={variation.items}
           EditModal={EditModal}
