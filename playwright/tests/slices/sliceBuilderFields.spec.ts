@@ -51,6 +51,159 @@ test("I can edit a rich text field in the static zone", async ({
   ).toBeVisible();
 });
 
+test("I can add a group field in the static zone", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+
+  await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
+
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+
+  await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(1);
+});
+
+test("I can add a sub field within a group field", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Sub Field",
+    expectedId: "my_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId("my_sub_field", "static", "my_group"),
+  ).toBeVisible();
+  await expect(
+    sliceBuilderPage.getListItemFieldName(
+      "my_sub_field",
+      "My Sub Field",
+      "static",
+      "my_group",
+    ),
+  ).toBeVisible();
+});
+
+test("I can edit a sub field within a group field", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Sub Field",
+    expectedId: "my_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+
+  await sliceBuilderPage
+    .getEditFieldButton("my_sub_field", "static", "my_group")
+    .click();
+  await sliceBuilderPage.editFieldDialog.editField({
+    name: "My Sub Field",
+    newName: "My Sub Field Renamed",
+    newId: "my_sub_field_renamed",
+  });
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId(
+      "my_sub_field_renamed",
+      "static",
+      "my_group",
+    ),
+  ).toBeVisible();
+  await expect(
+    sliceBuilderPage.getListItemFieldName(
+      "my_sub_field_renamed",
+      "My Sub Field Renamed",
+      "static",
+      "my_group",
+    ),
+  ).toBeVisible();
+});
+
+test("I can delete a sub field within a group field", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Sub Field",
+    expectedId: "my_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+
+  await sliceBuilderPage.deleteField("my_sub_field", "static", "my_group");
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId("my_sub_field", "static", "my_group"),
+  ).not.toBeVisible();
+});
+
 test("I can delete a field in the static zone", async ({
   sliceBuilderPage,
   slice,

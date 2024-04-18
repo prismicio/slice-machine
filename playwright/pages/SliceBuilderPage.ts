@@ -82,8 +82,14 @@ export class SliceBuilderPage extends BuilderPage {
     });
   }
 
-  getListItem(fieldId: string, zoneType: ZoneType) {
+  getListItem(fieldId: string, zoneType: ZoneType, groupFieldId?: string) {
     if (zoneType === "static") {
+      if (groupFieldId) {
+        return this.page
+          .getByTestId("static-zone-content")
+          .getByTestId(`list-item-group-${groupFieldId}-${fieldId}`);
+      }
+
       return this.page
         .getByTestId("static-zone-content")
         .getByTestId(`list-item-${fieldId}`);
@@ -94,30 +100,57 @@ export class SliceBuilderPage extends BuilderPage {
       .getByTestId(`list-item-${fieldId}`);
   }
 
-  getListItemFieldName(fieldId: string, fieldName: string, zoneType: ZoneType) {
-    return this.getListItem(fieldId, zoneType)
+  getListItemFieldName(
+    fieldId: string,
+    fieldName: string,
+    zoneType: ZoneType,
+    groupFieldId?: string,
+  ) {
+    return this.getListItem(fieldId, zoneType, groupFieldId)
       .getByTestId("field-name")
       .getByText(fieldName, { exact: true });
   }
 
-  getEditFieldButton(fieldId: string, zoneType: ZoneType) {
-    return this.getListItem(fieldId, zoneType).getByRole("button", {
-      name: "Edit field",
-      exact: true,
-    });
+  getEditFieldButton(
+    fieldId: string,
+    zoneType: ZoneType,
+    groupFieldId?: string,
+  ) {
+    return this.getListItem(fieldId, zoneType, groupFieldId).getByRole(
+      "button",
+      {
+        name: "Edit field",
+        exact: true,
+      },
+    );
   }
 
-  getFieldMenuButton(fieldId: string, zoneType: ZoneType) {
-    return this.getListItem(fieldId, zoneType).getByTestId("field-menu-button");
+  getFieldMenuButton(
+    fieldId: string,
+    zoneType: ZoneType,
+    groupFieldId?: string,
+  ) {
+    return this.getListItem(fieldId, zoneType, groupFieldId).getByTestId(
+      "field-menu-button",
+    );
   }
 
-  getListItemFieldId(fieldId: string, zoneType: ZoneType) {
+  getListItemFieldId(
+    fieldId: string,
+    zoneType: ZoneType,
+    groupFieldId?: string,
+  ) {
     let fieldSubId;
-
     if (zoneType === "static") {
       fieldSubId = "primary";
     } else {
       fieldSubId = "items[i]";
+    }
+
+    if (groupFieldId) {
+      return this.getListItem(fieldId, zoneType, groupFieldId)
+        .getByTestId("field-id")
+        .getByText(`item.${fieldId}`, { exact: true });
     }
 
     return this.getListItem(fieldId, zoneType)
@@ -154,16 +187,32 @@ export class SliceBuilderPage extends BuilderPage {
     await this.addVariationButton.click();
   }
 
-  async addField(args: {
-    type: FieldTypeLabel;
-    name: string;
-    expectedId: string;
-    zoneType: ZoneType;
-  }) {
-    const { type, name, expectedId, zoneType } = args;
+  async addField(
+    args: {
+      type: FieldTypeLabel;
+      name: string;
+      expectedId: string;
+    } & (
+      | {
+          zoneType: "static";
+          groupFieldId?: string;
+        }
+      | {
+          zoneType: Exclude<ZoneType, "static">;
+          groupFieldId?: never;
+        }
+    ),
+  ) {
+    const { type, name, expectedId, zoneType, groupFieldId } = args;
 
     if (zoneType === "static") {
-      await this.staticZoneAddFieldButton.click();
+      if (groupFieldId) {
+        await this.getListItem(groupFieldId, zoneType)
+          .getByRole("button", { name: "Add Field", exact: true })
+          .click();
+      } else {
+        await this.staticZoneAddFieldButton.click();
+      }
     } else {
       await this.repeatableZoneAddFieldButton.click();
     }
@@ -176,8 +225,12 @@ export class SliceBuilderPage extends BuilderPage {
     await expect(this.addFieldDialog.title).not.toBeVisible();
   }
 
-  async deleteField(fieldId: string, zoneType: ZoneType) {
-    await this.getFieldMenuButton(fieldId, zoneType).click();
+  async deleteField(
+    fieldId: string,
+    zoneType: ZoneType,
+    groupFieldId?: string,
+  ) {
+    await this.getFieldMenuButton(fieldId, zoneType, groupFieldId).click();
     await this.page.getByRole("menuitem", { name: "Delete field" }).click();
   }
 
