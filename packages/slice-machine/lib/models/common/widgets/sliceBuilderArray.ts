@@ -2,7 +2,6 @@ import * as Widgets from "./withGroup";
 
 export default [
   Widgets.Group,
-  Widgets.RepeatableGroup,
   Widgets.StructuredText,
   Widgets.Image,
   Widgets.Link,
