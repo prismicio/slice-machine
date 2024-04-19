@@ -15,7 +15,7 @@ import type { VariationSM } from "@lib/models/common/Slice";
 import { renameVariation } from "@src/features/slices/sliceBuilder/actions/renameVariation";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
-import * as styles from "./RenameVariationModal.css";
+import styles from "./RenameVariationModal.module.css";
 import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 
 type RenameVariationModalProps = {
