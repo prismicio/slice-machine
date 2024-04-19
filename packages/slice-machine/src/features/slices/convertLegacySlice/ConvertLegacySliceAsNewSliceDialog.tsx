@@ -19,7 +19,7 @@ import { getRemoteSlices } from "@src/modules/slices";
 import { pascalize } from "@lib/utils/str";
 import { validateSliceModalValues as validateAsNewSliceValues } from "@components/Forms/formsValidator";
 
-import * as styles from "./ConvertLegacySliceButton.css";
+import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";
 
 export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
