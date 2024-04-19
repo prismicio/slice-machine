@@ -2,7 +2,7 @@ import { Text } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import { type FC, type ReactNode, cloneElement, isValidElement } from "react";
 
-import * as styles from "./TextLink.css";
+import styles from "./TextLink.module.css";
 
 type IconProps = Readonly<{
   className?: string;
@@ -10,7 +10,7 @@ type IconProps = Readonly<{
 
 interface TextLinkProps {
   children: string;
-  color?: keyof typeof styles.colorVariant;
+  color?: "primary" | "secondary";
   endIcon?: ReactNode;
   href: string;
   textVariant?: "normal" | "smallBold" | "inherit";
@@ -32,7 +32,7 @@ export const TextLink: FC<TextLinkProps> = (props) => {
       target="_blank"
       rel="noreferrer"
       {...otherProps}
-      className={clsx(styles.root, styles.colorVariant[color])}
+      className={clsx(styles.root, styles[`color-${color}`])}
     >
       <Text component="span" color="inherit" variant={textVariant}>
         {children}
@@ -42,7 +42,7 @@ export const TextLink: FC<TextLinkProps> = (props) => {
             className: clsx(
               endIcon.props.className,
               styles.endIcon,
-              styles.iconVariant[textVariant],
+              styles[`icon-${textVariant}`],
             ),
           })
         : null}
