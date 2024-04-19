@@ -32,7 +32,7 @@ import { Environment } from "./Environment";
 import { RunningVersion } from "./RunningVersion";
 import { UpdateBox } from "./UpdateBox";
 
-import * as styles from "./index.css";
+import styles from "./index.module.css";
 
 const Navigation: FC = () => {
   const { hasSeenTutorialsToolTip } = useSelector(
