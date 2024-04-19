@@ -12,7 +12,7 @@ import {
   SelectItem,
 } from "@prismicio/editor-ui";
 
-import * as styles from "./ConvertLegacySliceButton.css";
+import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";
 
 export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
@@ -48,10 +48,7 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
             return (
               <form id="convert-legacy-slice-merge-with-identical-dialog">
                 <Box display="flex" flexDirection="column">
-                  <ScrollArea
-                    className={styles.scrollArea}
-                    style={{ width: 448 }}
-                  >
+                  <ScrollArea className={styles.scrollArea}>
                     <Text variant="normal" color="grey11">
                       If you have multiple identical slices, you can merge them.
                       All of your content will be remapped to the target slice.
