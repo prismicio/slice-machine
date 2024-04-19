@@ -25,24 +25,18 @@
   color: var(--grey11);
   cursor: pointer;
   padding-block: 8px;
-  position: relative;
 
   &:not(:last-child) {
     margin-right: 16px;
   }
 
   &[data-state="active"] {
+    /* stylelint-disable declaration-property-value-allowed-list -- very specific box shadow for this component */
+    box-shadow:
+      inset 0 -1px 0 0 currentColor,
+      0 1px 0 0 currentColor;
+    /* stylelint-end declaration-property-value-allowed-list */
     color: var(--purple9);
-
-    &::after {
-      content: "";
-      height: 2px;
-      background-color: currentColor;
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-    }
   }
 }
 
