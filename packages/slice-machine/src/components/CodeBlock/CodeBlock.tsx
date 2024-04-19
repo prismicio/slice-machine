@@ -11,7 +11,7 @@ import { TypeScript } from "@src/icons/TypeScript";
 import { Vue } from "@src/icons/Vue";
 import { Svelte } from "@src/icons/Svelte";
 
-import * as styles from "./CodeBlock.css";
+import styles from "./CodeBlock.module.css";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 SyntaxHighlighter.registerLanguage("markup", markup);
