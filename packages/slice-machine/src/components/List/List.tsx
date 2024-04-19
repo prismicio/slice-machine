@@ -1,7 +1,7 @@
 import { Text } from "@prismicio/editor-ui";
 import type { CSSProperties, FC, PropsWithChildren, ReactNode } from "react";
 
-import * as styles from "./List.css";
+import styles from "./List.module.css";
 
 type ListProps = PropsWithChildren<{
   style?: CSSProperties;
