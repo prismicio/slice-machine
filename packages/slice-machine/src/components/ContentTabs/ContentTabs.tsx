@@ -2,7 +2,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import type { CSSProperties, FC, ReactNode } from "react";
 import { ScrollArea, Text } from "@prismicio/editor-ui";
 
-import * as styles from "./ContentTabs.css";
+import styles from "./ContentTabs.module.css";
 
 type ContentTabsProps = {
   style?: CSSProperties;

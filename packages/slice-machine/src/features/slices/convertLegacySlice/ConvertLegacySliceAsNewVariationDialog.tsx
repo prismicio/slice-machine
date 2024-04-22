@@ -16,7 +16,7 @@ import {
 
 import { LibraryUI } from "@models/common/LibraryUI";
 
-import * as styles from "./ConvertLegacySliceButton.css";
+import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";
 
 type FormValues = {

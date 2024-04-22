@@ -1,0 +1,60 @@
+.flex {
+  all: unset;
+  display: flex;
+}
+
+.column {
+  composes: flex;
+  flex-direction: column;
+}
+
+.root {
+  composes: column;
+  background-color: var(--grey1);
+  min-height: 0;
+}
+
+.list {
+  composes: flex;
+  border-bottom: 1px solid var(--grey5);
+  padding-inline: 16px;
+}
+
+.trigger {
+  composes: column;
+  color: var(--grey11);
+  cursor: pointer;
+  padding-block: 8px;
+
+  &:not(:last-child) {
+    margin-right: 16px;
+  }
+
+  &[data-state="active"] {
+    /* stylelint-disable declaration-property-value-allowed-list -- very specific box shadow for this component */
+    box-shadow:
+      inset 0 -1px 0 0 currentColor,
+      0 1px 0 0 currentColor;
+    /* stylelint-end declaration-property-value-allowed-list */
+    color: var(--purple9);
+  }
+}
+
+.triggerText {
+  line-height: 32px;
+}
+
+.content {
+  composes: column;
+  min-height: 0;
+  outline: none;
+  flex: 1;
+
+  &[data-state="inactive"] {
+    display: none;
+  }
+}
+
+.scrollArea {
+  padding: 16px;
+}
