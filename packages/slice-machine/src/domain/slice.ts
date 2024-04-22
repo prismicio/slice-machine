@@ -2,16 +2,14 @@ import type {
   CompositeSlice,
   LegacySlice,
   SharedSlice,
+  SlicePrimaryWidget,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import {
-  type VariationSM,
-  WidgetsArea,
-  SlicePrimaryFieldSM,
-} from "@lib/models/common/Slice";
+import { type VariationSM, WidgetsArea } from "@lib/models/common/Slice";
 import { pascalize, snakelize } from "@lib/utils/str";
+import { Groups } from "@lib/models/common/Group";
 
 type CopySliceVariationArgs = {
   copiedVariation: VariationSM;
@@ -33,7 +31,7 @@ type UpdateFieldArgs = {
   widgetArea: WidgetsArea;
   previousFieldId: string;
   newFieldId: string;
-  newField: SlicePrimaryFieldSM;
+  newField: SlicePrimaryWidget;
 };
 
 type AddFieldArgs = {
@@ -41,7 +39,7 @@ type AddFieldArgs = {
   variationId: string;
   widgetArea: WidgetsArea;
   newFieldId: string;
-  newField: SlicePrimaryFieldSM;
+  newField: SlicePrimaryWidget;
 };
 
 type ReorderFieldArgs = {
@@ -215,11 +213,18 @@ export function addField(args: AddFieldArgs): ComponentUI {
           return v;
         }
 
-        if (widgetArea === WidgetsArea.Items) {
-          if (newField.type === GroupFieldType) {
+        if (newField.type === GroupFieldType) {
+          if (widgetArea === WidgetsArea.Items) {
             return v;
+          } else {
+            return {
+              ...v,
+              [widgetArea]: v[widgetArea]?.concat([
+                { key: newFieldId, value: Groups.toSM(newField) },
+              ]),
+            };
           }
-
+        } else {
           return {
             ...v,
             [widgetArea]: v[widgetArea]?.concat([
@@ -227,14 +232,6 @@ export function addField(args: AddFieldArgs): ComponentUI {
             ]),
           };
         }
-
-        // This code is duplicated to appease TypeScript.
-        return {
-          ...v,
-          [widgetArea]: v[widgetArea]?.concat([
-            { key: newFieldId, value: newField },
-          ]),
-        };
       }),
     },
   };

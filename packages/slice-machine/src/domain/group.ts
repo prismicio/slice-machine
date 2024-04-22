@@ -13,12 +13,12 @@ export function addFieldToGroup(args: {
   fieldId: string;
   field: NestableWidget;
 }): Group {
-  const group = structuredClone(args.group);
-  group.config ??= {};
-  group.config.fields ??= {};
-  group.config.fields[args.fieldId] = args.field;
+  const newGroup = structuredClone(args.group);
+  newGroup.config ??= {};
+  newGroup.config.fields ??= {};
+  newGroup.config.fields[args.fieldId] = args.field;
 
-  return group;
+  return newGroup;
 }
 
 /**
@@ -32,21 +32,21 @@ export function updateFieldInGroup(args: {
   newFieldId: string;
   field: NestableWidget;
 }): Group {
-  const group = structuredClone(args.group);
-  if (!group.config || !group.config.fields) {
-    return group;
+  const newGroup = structuredClone(args.group);
+  if (!newGroup.config?.fields || !args.group.config?.fields) {
+    return newGroup;
   }
 
-  group.config.fields = {};
-  for (const fieldId in args.group.config?.fields) {
+  newGroup.config.fields = {};
+  for (const fieldId in args.group.config.fields) {
     if (fieldId === args.previousFieldId) {
-      group.config.fields[args.newFieldId] = args.field;
+      newGroup.config.fields[args.newFieldId] = args.field;
     } else {
-      group.config.fields[fieldId] = args.group.config.fields[fieldId];
+      newGroup.config.fields[fieldId] = args.group.config.fields[fieldId];
     }
   }
 
-  return group;
+  return newGroup;
 }
 
 /**
@@ -59,18 +59,18 @@ export function reorderFieldInGroup(args: {
   sourceIndex: number;
   destinationIndex: number;
 }): Group {
-  const group = structuredClone(args.group);
-  if (!group.config || !group.config.fields) {
-    return group;
+  const newGroup = structuredClone(args.group);
+  if (!newGroup.config?.fields) {
+    return newGroup;
   }
 
-  const entries = Object.entries(group.config.fields);
+  const entries = Object.entries(newGroup.config.fields);
   const [removedEntry] = entries.splice(args.sourceIndex, 1);
   entries.splice(args.destinationIndex, 0, removedEntry);
 
-  group.config.fields = Object.fromEntries(entries);
+  newGroup.config.fields = Object.fromEntries(entries);
 
-  return group;
+  return newGroup;
 }
 
 /**
@@ -82,8 +82,8 @@ export function deleteFieldFromGroup(args: {
   group: Group;
   fieldId: string;
 }): Group {
-  const group = structuredClone(args.group);
-  delete group.config?.fields?.[args.fieldId];
+  const newGroup = structuredClone(args.group);
+  delete newGroup.config?.fields?.[args.fieldId];
 
-  return group;
+  return newGroup;
 }

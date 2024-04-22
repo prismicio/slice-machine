@@ -1,7 +1,10 @@
 import { FC, useState } from "react";
 import { flushSync } from "react-dom";
 import { DropResult } from "react-beautiful-dnd";
-import { FieldType } from "@prismicio/types-internal/lib/customtypes";
+import {
+  FieldType,
+  GroupFieldType,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
   Box,
   Dialog,
@@ -29,6 +32,7 @@ import EditModal from "@lib/builders/common/EditModal";
 import { telemetry } from "@src/apiClient";
 import { useGroupsInSlicesExperiment } from "@src/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
 import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking";
+import { Groups } from "@lib/models/common/Group";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -130,7 +134,8 @@ const FieldZones: FC = () => {
         variationId: variation.id,
         widgetArea,
         newFieldId: id,
-        newField,
+        newField:
+          newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
       });
 
       setSlice(newSlice);
