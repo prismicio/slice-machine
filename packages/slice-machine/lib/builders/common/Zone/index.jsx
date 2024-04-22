@@ -14,7 +14,6 @@ import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking"
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
-  zoneTypeFormat /* format of the zone: custom or page (or undefined if not a custom type) */,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
