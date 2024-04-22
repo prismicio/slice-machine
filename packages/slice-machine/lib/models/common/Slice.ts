@@ -1,6 +1,7 @@
 import * as t from "io-ts";
 
 import {
+  GroupFieldType,
   NestableWidget,
   SharedSlice,
   Variation,
@@ -67,7 +68,7 @@ export const Variations = {
         primary: variation.primary?.reduce(
           (acc, { key, value }) => ({
             ...acc,
-            [key]: value.type === "Group" ? Groups.fromSM(value) : value,
+            [key]: value.type === GroupFieldType ? Groups.fromSM(value) : value,
           }),
           {},
         ),
@@ -93,7 +94,7 @@ export const Variations = {
         primary: Object.entries(variation.primary || {}).map(
           ([key, value]) => ({
             key,
-            value: value.type === "Group" ? Groups.toSM(value) : value,
+            value: value.type === GroupFieldType ? Groups.toSM(value) : value,
           }),
         ),
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
