@@ -29,7 +29,6 @@ import {
   updateFieldInGroup,
 } from "@src/domain/group";
 import { telemetry } from "@src/apiClient";
-import { useModel } from "@src/features/models/ModelProvider";
 import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking";
 import { Groups } from "@lib/models/common/Group";
 
@@ -49,7 +48,6 @@ const CustomListItem = ({
   const [selectMode, setSelectMode] = useState(false);
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
-  const currentModel = useModel();
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

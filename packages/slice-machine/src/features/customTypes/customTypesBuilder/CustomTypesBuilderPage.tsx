@@ -27,7 +27,6 @@ import { EditDropdown } from "../EditDropdown";
 import { PageSnippetDialog } from "./PageSnippetDialog";
 import { CustomTypeProvider } from "./CustomTypeProvider";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { ModelProvider } from "@src/features/models/ModelProvider";
 
 export const CustomTypesBuilderPage: FC = () => {
   const router = useRouter();
@@ -112,9 +111,7 @@ const CustomTypesBuilderPageWithProvider: React.FC<
               </AppLayoutHeader>
               <AppLayoutContent>
                 <Box flexDirection="column" minWidth={0}>
-                  <ModelProvider type="customType" model={customType}>
-                    <CustomTypeBuilder />
-                  </ModelProvider>
+                  <CustomTypeBuilder />
                 </Box>
               </AppLayoutContent>
             </>
