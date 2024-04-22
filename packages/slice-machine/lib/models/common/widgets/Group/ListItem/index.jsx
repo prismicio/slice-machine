@@ -31,6 +31,7 @@ import {
 import { telemetry } from "@src/apiClient";
 import { useModel } from "@src/features/models/ModelProvider";
 import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking";
+import { Groups } from "@lib/models/common/Group";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -69,7 +70,7 @@ const CustomListItem = ({
     const newField = widget.create(label);
 
     const newGroupValue = addFieldToGroup({
-      group: groupItem.value,
+      group: Groups.fromSM(groupItem.value),
       fieldId: id,
       field: newField,
     });
@@ -77,7 +78,7 @@ const CustomListItem = ({
     saveItem({
       apiId: groupItem.key,
       newKey: groupItem.key,
-      value: newGroupValue,
+      value: Groups.toSM(newGroupValue),
     });
 
     void telemetry.track({
@@ -92,7 +93,7 @@ const CustomListItem = ({
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {
     const newGroupValue = updateFieldInGroup({
-      group: groupItem.value,
+      group: Groups.fromSM(groupItem.value),
       previousFieldId: previousKey,
       newFieldId: newKey,
       field: value,
@@ -101,7 +102,7 @@ const CustomListItem = ({
     saveItem({
       apiId: groupItem.key,
       newKey: groupItem.key,
-      value: newGroupValue,
+      value: Groups.toSM(newGroupValue),
     });
   };
 
@@ -119,7 +120,7 @@ const CustomListItem = ({
     const { index: destinationIndex } = destination;
 
     const newGroupValue = reorderFieldInGroup({
-      group: groupItem.value,
+      group: Groups.fromSM(groupItem.value),
       sourceIndex,
       destinationIndex,
     });
@@ -131,21 +132,21 @@ const CustomListItem = ({
       saveItem({
         apiId: groupItem.key,
         newKey: groupItem.key,
-        value: newGroupValue,
+        value: Groups.toSM(newGroupValue),
       });
     });
   };
 
   const onDeleteItem = (key) => {
     const newGroupValue = deleteFieldFromGroup({
-      group: groupItem.value,
+      group: Groups.fromSM(groupItem.value),
       fieldId: key,
     });
 
     saveItem({
       apiId: groupItem.key,
       newKey: groupItem.key,
-      value: newGroupValue,
+      value: Groups.toSM(newGroupValue),
     });
   };
 
