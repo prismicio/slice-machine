@@ -1,10 +1,7 @@
 import { FC, useState } from "react";
 import { flushSync } from "react-dom";
 import { DropResult } from "react-beautiful-dnd";
-import {
-  FieldType,
-  GroupFieldType,
-} from "@prismicio/types-internal/lib/customtypes";
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 import {
   Box,
   Dialog,
@@ -13,6 +10,7 @@ import {
   DialogHeader,
 } from "@prismicio/editor-ui";
 
+import * as Widgets from "@lib/models/common/widgets";
 import { ensureDnDDestination } from "@lib/utils";
 import { transformKeyAccessor } from "@utils/str";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
@@ -110,7 +108,7 @@ const FieldZones: FC = () => {
     }: {
       id: string;
       label: string;
-      widgetTypeName: FieldType;
+      widgetTypeName: keyof typeof Widgets;
     }) => {
       const widget = sliceBuilderWidgetsArray.find(
         (sliceBuilderWidget) =>
@@ -144,7 +142,7 @@ const FieldZones: FC = () => {
         event: "field:added",
         id,
         name: label,
-        type: widgetTypeName,
+        type: newField.type,
         isInAGroup: false,
         contentType: getContentTypeForTracking(window.location.pathname),
       });

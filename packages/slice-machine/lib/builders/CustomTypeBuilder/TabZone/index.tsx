@@ -35,7 +35,6 @@ import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
 import SliceZone from "../SliceZone";
 import {
-  FieldType,
   Group,
   NestableWidget,
   UID,
@@ -81,7 +80,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   }: {
     id: string;
     label: string;
-    widgetTypeName: FieldType;
+    widgetTypeName: keyof typeof Widgets;
   }) => {
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
@@ -123,7 +122,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       event: "field:added",
       id,
       name: label,
-      type: widgetTypeName,
+      type: newField.type,
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
     });

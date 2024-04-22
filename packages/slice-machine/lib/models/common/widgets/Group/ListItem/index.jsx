@@ -83,7 +83,7 @@ const CustomListItem = ({
       event: "field:added",
       id,
       name: label,
-      type: widgetTypeName,
+      type: newField.type,
       isInAGroup: true,
       contentType: getContentTypeForTracking(window.location.pathname),
     });
