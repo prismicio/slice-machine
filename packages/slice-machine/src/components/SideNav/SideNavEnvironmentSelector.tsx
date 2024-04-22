@@ -48,13 +48,15 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
   } = props;
 
   const isSmall = useMediaQuery(breakpoints.small);
+  let isMedium = useMediaQuery(breakpoints.medium);
+  isMedium = isMedium || isSmall;
 
   const isProductionEnvironmentActive = activeEnvironment?.kind === "prod";
 
   return (
     <Box alignItems="center" gap={16}>
       <Box position="relative">
-        {isSmall && environments.length > 1 ? (
+        {isMedium && environments.length > 1 ? (
           <EnvironmentDropdownMenu
             activeEnvironment={activeEnvironment}
             disabled={disabled || loading}
@@ -74,7 +76,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           />
         )}
       </Box>
-      {!isSmall && (
+      {!isMedium && (
         <>
           <Box
             flexGrow={1}

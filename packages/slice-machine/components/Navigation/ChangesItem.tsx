@@ -32,6 +32,8 @@ export const ChangesItem: FC = () => {
   const router = useRouter();
   const { autoSyncStatus } = useAutoSync();
   const isSmall = useMediaQuery(breakpoints.small);
+  let isMedium = useMediaQuery(breakpoints.medium);
+  isMedium = isMedium || isSmall;
 
   const onClose = () => {
     setSeenChangesToolTip();
@@ -46,12 +48,15 @@ export const ChangesItem: FC = () => {
       side="right"
       sideOffset={24}
       trigger={
-        <Box alignItems={isSmall ? "center" : undefined} flexDirection="column">
+        <Box
+          alignItems={isMedium ? "center" : undefined}
+          flexDirection="column"
+        >
           {autoSyncStatus === "failed" ||
           autoSyncStatus === "synced" ||
           autoSyncStatus === "syncing" ? (
             <AutoSyncStatusIndicator autoSyncStatus={autoSyncStatus} />
-          ) : isSmall ? (
+          ) : isMedium ? (
             <Tooltip content="Review changes" side="right">
               <Box position="relative">
                 {/*

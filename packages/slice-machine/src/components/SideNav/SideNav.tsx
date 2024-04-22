@@ -119,8 +119,10 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   ...otherProps
 }) => {
   const isSmall = useMediaQuery(breakpoints.small);
+  let isMedium = useMediaQuery(breakpoints.medium);
+  isMedium = isMedium || isSmall;
   return (
-    <Tooltip content={title} side="right" visible={isSmall}>
+    <Tooltip content={title} side="right" visible={isMedium}>
       <Comp {...otherProps} className={styles.link} data-active={active}>
         <Icon className={styles.linkIcon} />
         <div className={styles.linkContent}>
