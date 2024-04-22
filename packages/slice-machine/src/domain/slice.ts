@@ -3,7 +3,7 @@ import type {
   LegacySlice,
   SharedSlice,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import {
@@ -33,7 +33,7 @@ type UpdateFieldArgs = {
   widgetArea: WidgetsArea;
   previousFieldId: string;
   newFieldId: string;
-  newField: NestableWidget;
+  newField: SlicePrimaryFieldSM;
 };
 
 type AddFieldArgs = {
@@ -216,7 +216,7 @@ export function addField(args: AddFieldArgs): ComponentUI {
         }
 
         if (widgetArea === WidgetsArea.Items) {
-          if (newField.type === "Group") {
+          if (newField.type === GroupFieldType) {
             return v;
           }
 
