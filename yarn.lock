@@ -5308,6 +5308,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/client@npm:7.5.0-alpha.0, @prismicio/client@npm:^7.5.0-alpha.0":
+  version: 7.5.0-alpha.0
+  resolution: "@prismicio/client@npm:7.5.0-alpha.0"
+  dependencies:
+    imgix-url-builder: ^0.0.4
+  checksum: 979da91d867be96b9869bd7cbeca56b61b83a556a1b3c0eccc5f1f1a0a91186b6b7a76ceb4cd6ba9b0b92346cd7131c7d1825b9e09310ae97ee8bd5a026dd820
+  languageName: node
+  linkType: hard
+
 "@prismicio/client@npm:^6.7.3":
   version: 6.9.0
   resolution: "@prismicio/client@npm:6.9.0"
@@ -5325,15 +5334,6 @@ __metadata:
     "@prismicio/richtext": ^2.1.5
     imgix-url-builder: ^0.0.3
   checksum: ab27d401dbd79d9fbda26df939249f4e960c448795aaf8217937df15f5ffe9e2d3ae3e7f5948226cf26f8c082a37b3bc5028716f951f45f0a6fb8f29772826e0
-  languageName: node
-  linkType: hard
-
-"@prismicio/client@npm:^7.5.0-alpha.0":
-  version: 7.5.0-alpha.0
-  resolution: "@prismicio/client@npm:7.5.0-alpha.0"
-  dependencies:
-    imgix-url-builder: ^0.0.4
-  checksum: 979da91d867be96b9869bd7cbeca56b61b83a556a1b3c0eccc5f1f1a0a91186b6b7a76ceb4cd6ba9b0b92346cd7131c7d1825b9e09310ae97ee8bd5a026dd820
   languageName: node
   linkType: hard
 
@@ -30543,7 +30543,7 @@ __metadata:
   dependencies:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
-    "@prismicio/client": ^7.5.0-alpha.0
+    "@prismicio/client": 7.5.0-alpha.0
     "@prismicio/editor-fields": 0.4.25
     "@prismicio/editor-support": 0.4.25
     "@prismicio/editor-ui": 0.4.25
