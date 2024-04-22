@@ -30,6 +30,7 @@ import {
 } from "@src/domain/group";
 import { telemetry } from "@src/apiClient";
 import { useModel } from "@src/features/models/ModelProvider";
+import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -85,12 +86,7 @@ const CustomListItem = ({
       name: label,
       type: widgetTypeName,
       isInAGroup: true,
-      contentType:
-        currentModel.type === "customType"
-          ? customType.format === "page"
-            ? "page type"
-            : "custom type"
-          : currentModel.type,
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
 
@@ -165,12 +161,7 @@ const CustomListItem = ({
       name: model.config.label,
       type: model.type,
       isInAGroup: true,
-      contentType:
-        currentModel.type === "customType"
-          ? customType.format === "page"
-            ? "page type"
-            : "custom type"
-          : currentModel.type,
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
 

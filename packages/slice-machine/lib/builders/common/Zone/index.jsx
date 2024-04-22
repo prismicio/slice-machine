@@ -10,6 +10,7 @@ import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import NewField from "./Card/components/NewField";
 import Card from "./Card";
 import EmptyState from "./components/EmptyState";
+import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
@@ -62,12 +63,7 @@ const Zone = ({
       name: model.config.label,
       type: model.type,
       isInAGroup: false,
-      contentType:
-        zoneType === "customType"
-          ? zoneTypeFormat === "page"
-            ? "page type"
-            : "custom type"
-          : "slice",
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
   const enterSelectMode = () => {

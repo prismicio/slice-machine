@@ -40,6 +40,7 @@ import {
   NestableWidget,
   UID,
 } from "@prismicio/types-internal/lib/customtypes";
+import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking";
 
 interface TabZoneProps {
   tabId: string;
@@ -124,7 +125,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       name: label,
       type: widgetTypeName,
       isInAGroup: false,
-      contentType: customType.format === "page" ? "page type" : "custom type",
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
 

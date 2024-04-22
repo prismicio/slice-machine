@@ -28,6 +28,7 @@ import Zone from "@lib/builders/common/Zone";
 import EditModal from "@lib/builders/common/EditModal";
 import { telemetry } from "@src/apiClient";
 import { useGroupsInSlicesExperiment } from "@src/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
+import { getContentTypeForTracking } from "@src/utils/getContentTypeForTracking";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -140,7 +141,7 @@ const FieldZones: FC = () => {
         name: label,
         type: widgetTypeName,
         isInAGroup: false,
-        contentType: "slice",
+        contentType: getContentTypeForTracking(window.location.pathname),
       });
     };
 
