@@ -1,12 +1,4 @@
 import {
-  AppLayout,
-  AppLayoutActions,
-  AppLayoutBreadcrumb,
-  AppLayoutContent,
-  AppLayoutHeader,
-} from "@components/AppLayout";
-import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
-import {
   Box,
   Button,
   DefaultErrorMessage,
@@ -18,6 +10,15 @@ import { ErrorBoundary } from "@src/ErrorBoundary";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import Head from "next/head";
 import { type FC, Suspense, useState } from "react";
+
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@/legacy/components/AppLayout";
+import { CreateCustomTypeModal } from "@/legacy/components/Forms/CreateCustomTypeModal";
 
 import { CustomTypesTable } from "./CustomTypesTable";
 

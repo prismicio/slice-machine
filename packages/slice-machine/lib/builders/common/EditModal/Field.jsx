@@ -5,7 +5,8 @@ import { Box } from "theme-ui";
 import {
   FormFieldCheckbox,
   FormFieldInput,
-} from "../../../../components/FormFields";
+} from "@/legacy/components/FormFields";
+
 import { FormTypes } from "../../../forms/types";
 
 const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {

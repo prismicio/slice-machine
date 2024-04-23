@@ -1,4 +1,3 @@
-import Grid from "@components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import {
   NonSharedSliceInSliceZone,
@@ -11,6 +10,8 @@ import { NonSharedSliceCard } from "@src/features/slices/sliceCards/NonSharedSli
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
+
+import Grid from "@/legacy/components/Grid";
 
 interface SlicesListProps {
   format: CustomTypeFormat;

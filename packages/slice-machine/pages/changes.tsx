@@ -1,16 +1,3 @@
-import {
-  AppLayout,
-  AppLayoutActions,
-  AppLayoutBreadcrumb,
-  AppLayoutContent,
-  AppLayoutHeader,
-} from "@components/AppLayout";
-import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
-import { ChangesItems } from "@components/ChangesItems";
-import {
-  HardDeleteDocumentsDrawer,
-  SoftDeleteDocumentsDrawer,
-} from "@components/DeleteDocumentsDrawer";
 import { PushChangesLimit } from "@slicemachine/manager";
 import { getState } from "@src/apiClient";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
@@ -28,6 +15,23 @@ import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
+
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@/legacy/components/AppLayout";
+import {
+  AuthErrorPage,
+  OfflinePage,
+} from "@/legacy/components/ChangesEmptyState";
+import { ChangesItems } from "@/legacy/components/ChangesItems";
+import {
+  HardDeleteDocumentsDrawer,
+  SoftDeleteDocumentsDrawer,
+} from "@/legacy/components/DeleteDocumentsDrawer";
 
 const Changes: React.FunctionComponent = () => {
   const {

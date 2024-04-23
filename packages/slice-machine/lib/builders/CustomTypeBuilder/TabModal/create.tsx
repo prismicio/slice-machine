@@ -1,4 +1,5 @@
-import ModalFormCard from "../../../../components/ModalFormCard";
+import ModalFormCard from "@/legacy/components/ModalFormCard";
+
 import { InputBox } from "./InputBox";
 
 const formId = "create-tab";

@@ -1,7 +1,3 @@
-import {
-  getInputFieldStyles,
-  InputFieldStyles,
-} from "@components/FormFields/Input";
 import { createInitialValues, createValidationSchema } from "@lib/forms";
 import { validateId } from "@lib/forms/defaults";
 import { InputType } from "@lib/forms/fields";
@@ -14,6 +10,11 @@ import { Field, Form, Formik } from "formik";
 import { Ref, SetStateAction, useEffect, useRef, useState } from "react";
 import { Flex, Input, Text, useThemeUI } from "theme-ui";
 import { AnyObjectSchema } from "yup";
+
+import {
+  getInputFieldStyles,
+  InputFieldStyles,
+} from "@/legacy/components/FormFields/Input";
 
 import { ErrorTooltip } from "./ErrorTooltip";
 

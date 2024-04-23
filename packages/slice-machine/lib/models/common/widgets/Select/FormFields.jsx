@@ -1,11 +1,12 @@
-import {
-  FormFieldArray,
-  FormFieldCheckboxControl,
-} from "@components/FormFields";
 import { DefaultFields } from "@lib/forms/defaults";
 import { FormTypes } from "@lib/forms/types";
 import { useFormikContext } from "formik";
 import * as yup from "yup";
+
+import {
+  FormFieldArray,
+  FormFieldCheckboxControl,
+} from "@/legacy/components/FormFields";
 
 const label = (controlledValue) =>
   `use first value as default ${

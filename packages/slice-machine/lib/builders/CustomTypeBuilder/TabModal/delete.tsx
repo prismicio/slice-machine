@@ -1,6 +1,6 @@
 import { Box, Button, Heading, Text } from "theme-ui";
 
-import ModalFormCard from "../../../../components/ModalFormCard";
+import ModalFormCard from "@/legacy/components/ModalFormCard";
 
 const formId = "create-tab";
 

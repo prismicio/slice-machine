@@ -1,4 +1,11 @@
 import SimulatorButton from "@builders/SliceBuilder/SimulatorButton";
+import { Box } from "@prismicio/editor-ui";
+import { BreadcrumbItem } from "@src/components/Breadcrumb";
+import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
+import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
+import { type FC } from "react";
+
 import {
   AppLayout,
   AppLayoutActions,
@@ -6,13 +13,7 @@ import {
   AppLayoutBreadcrumb,
   AppLayoutContent,
   AppLayoutHeader,
-} from "@components/AppLayout";
-import { Box } from "@prismicio/editor-ui";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
-import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
-import { type FC } from "react";
+} from "@/legacy/components/AppLayout";
 
 import FieldZones from "./FieldZones";
 import { Sidebar } from "./Sidebar";
