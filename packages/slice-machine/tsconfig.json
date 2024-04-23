@@ -24,13 +24,7 @@
     "jsx": "preserve",
     "outDir": "./build",
     "paths": {
-      "@/*": ["./src/*"],
-      "@builders/*": ["lib/builders/*"],
-      "@components/*": ["components/*"],
-      "@lib/*": ["lib/*"],
-      "@models/*": ["lib/models/*"],
-      "@src/*": ["src/*"],
-      "@utils/*": ["lib/utils/*"]
+      "@/*": ["./src/*"]
     },
     "incremental": true
   },
