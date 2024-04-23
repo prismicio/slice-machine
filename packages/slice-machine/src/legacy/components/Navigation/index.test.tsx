@@ -4,17 +4,17 @@ import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import Router from "next/router";
 import { act } from "react-dom/test-utils";
+import { describe, expect, test, vi } from "vitest";
+
 import {
   render,
   type RenderReturnType,
   screen,
   waitFor,
   within,
-} from "test/__testutils__";
-import { createTestPlugin } from "test/__testutils__/createTestPlugin";
-import { createTestProject } from "test/__testutils__/createTestProject";
-import { describe, expect, test, vi } from "vitest";
-
+} from "@/../test/__testutils__";
+import { createTestPlugin } from "@/../test/__testutils__/createTestPlugin";
+import { createTestProject } from "@/../test/__testutils__/createTestProject";
 import { FrontEndEnvironment } from "@/legacy/lib/models/common/Environment";
 import { AuthStatus, UserContextStoreType } from "@/modules/userContext/types";
 

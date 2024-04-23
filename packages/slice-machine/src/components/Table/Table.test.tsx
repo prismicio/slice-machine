@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 
-import { render, screen } from "test/__testutils__";
 import { describe, test, vi } from "vitest";
 
+import { render, screen } from "@/../test/__testutils__";
 import {
   Table,
   TableBody,
