@@ -15,7 +15,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Formik } from "formik";
 import { type FC, useState } from "react";
 
-import * as styles from "./RenameVariationModal.css";
+import styles from "./RenameVariationModal.module.css";
 
 type RenameVariationModalProps = {
   isOpen: boolean;

@@ -18,7 +18,7 @@ import { Formik } from "formik";
 import type { FC } from "react";
 import { useSelector } from "react-redux";
 
-import * as styles from "./ConvertLegacySliceButton.css";
+import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";
 
 export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({

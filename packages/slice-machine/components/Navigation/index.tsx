@@ -28,7 +28,7 @@ import { useSelector } from "react-redux";
 
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
-import * as styles from "./index.css";
+import styles from "./index.module.css";
 import { RunningVersion } from "./RunningVersion";
 import { UpdateBox } from "./UpdateBox";
 

@@ -16,7 +16,7 @@ import {
 } from "react";
 
 import { BaseHoverCard, type BaseHoverCardProps } from "../BaseHoverCard";
-import * as styles from "./HoverCard.css";
+import styles from "./HoverCard.module.css";
 
 type HoverCardProps = PropsWithChildren<{
   align?: BaseHoverCardProps["align"];

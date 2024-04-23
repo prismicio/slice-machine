@@ -11,7 +11,7 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import { loadFile, writeFile, type ASTNode } from "magicast";
+import { builders, loadFile, writeFile } from "magicast";
 
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
@@ -51,7 +51,6 @@ type ConfigurePrismicModuleArgs = SliceMachineContext<PluginOptions>;
 
 const configurePrismicModule = async ({
 	helpers,
-	project,
 }: ConfigurePrismicModuleArgs) => {
 	let nuxtConfigFilename = "nuxt.config.js";
 
@@ -96,13 +95,23 @@ const configurePrismicModule = async ({
 	}
 
 	// Append Prismic module configuration
-	const endpoint = project.config.repositoryName;
 	if (!hasInlinedConfiguration) {
+		// Import Slice Machine configuration
+		mod.imports.$add({
+			from: "./slicemachine.config.json",
+			imported: "apiEndpoint",
+		});
+		mod.imports.$add({
+			from: "./slicemachine.config.json",
+			imported: "repositoryName",
+		});
+
+		// Add inline configuration
 		config.prismic ||= {};
-		config.prismic.endpoint = endpoint;
+		config.prismic.endpoint = builders.raw("apiEndpoint || repositoryName");
 	}
 
-	await writeFile(mod as unknown as ASTNode, nuxtConfigPath);
+	await writeFile(mod, nuxtConfigPath);
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;

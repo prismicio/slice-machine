@@ -15,7 +15,7 @@ import { Formik } from "formik";
 import { camelCase } from "lodash";
 import { type FC, useState } from "react";
 
-import * as styles from "./ConvertLegacySliceButton.css";
+import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";
 
 type FormValues = {

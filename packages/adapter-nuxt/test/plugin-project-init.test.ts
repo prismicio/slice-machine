@@ -35,11 +35,12 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"export default defineNuxtConfig({
+			"import { apiEndpoint, repositoryName } from \\"./slicemachine.config.json\\";
+			export default defineNuxtConfig({
 			  modules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: \\"qwerty\\"
+			    endpoint: apiEndpoint || repositoryName
 			  }
 			})"
 		`);
@@ -59,11 +60,48 @@ describe("Prismic module", () => {
 
 		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
 			.toMatchInlineSnapshot(`
-			"export default defineNuxtConfig({
+			"import { apiEndpoint, repositoryName } from \\"./slicemachine.config.json\\";
+			export default defineNuxtConfig({
 			  modules: [\\"@nuxtjs/prismic\\"],
 
 			  prismic: {
-			    endpoint: \\"qwerty\\"
+			    endpoint: apiEndpoint || repositoryName
+			  }
+			})"
+		`);
+	});
+
+	test("overwrites existing endpoint", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const nuxtConfigPath = path.join(ctx.project.root, "nuxt.config.js");
+		await fs.writeFile(
+			nuxtConfigPath,
+			`
+export default defineNuxtConfig({
+  modules: ["@nuxtjs/prismic"],
+
+  prismic: {
+    endpoint: "example-prismic-repo"
+  }
+})
+`.trim(),
+		);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		await expect(fs.readFile(nuxtConfigPath, "utf-8")).resolves
+			.toMatchInlineSnapshot(`
+			"import { apiEndpoint, repositoryName } from \\"./slicemachine.config.json\\";
+			export default defineNuxtConfig({
+			  modules: [\\"@nuxtjs/prismic\\"],
+
+			  prismic: {
+			    endpoint: apiEndpoint || repositoryName
 			  }
 			})"
 		`);

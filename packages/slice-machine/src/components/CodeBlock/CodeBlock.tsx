@@ -10,7 +10,7 @@ import markup from "react-syntax-highlighter/dist/cjs/languages/prism/markup";
 import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
 import { prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
-import * as styles from "./CodeBlock.css";
+import styles from "./CodeBlock.module.css";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 SyntaxHighlighter.registerLanguage("markup", markup);

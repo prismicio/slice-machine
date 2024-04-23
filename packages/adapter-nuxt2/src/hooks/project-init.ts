@@ -9,7 +9,7 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import { loadFile, writeFile, type ASTNode } from "magicast";
+import { builders, loadFile, writeFile } from "magicast";
 
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
@@ -109,18 +109,30 @@ const configurePrismicModule = async ({
 		config.buildModules.push(NUXT_PRISMIC);
 	}
 
+	// Append Prismic module configuration
 	if (!hasInlinedConfiguration) {
+		// Import Slice Machine configuration
+		mod.imports.$add({
+			from: "./slicemachine.config.json",
+			imported: "apiEndpoint",
+		});
+		mod.imports.$add({
+			from: "./slicemachine.config.json",
+			imported: "repositoryName",
+		});
+
+		// Add inline configuration
 		if (config.prismic) {
-			config.prismic.endpoint = endpoint;
+			config.prismic.endpoint = builders.raw("apiEndpoint || repositoryName");
 		} else {
 			config.prismic = {
-				endpoint,
+				endpoint: builders.raw("apiEndpoint || repositoryName"),
 				modern: true,
 			};
 		}
 	}
 
-	await writeFile(mod as unknown as ASTNode, nuxtConfigPath);
+	await writeFile(mod, nuxtConfigPath);
 };
 
 type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;

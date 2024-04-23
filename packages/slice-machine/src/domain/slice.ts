@@ -47,6 +47,11 @@ type ReorderFieldArgs = {
   destinationIndex: number;
 };
 
+type DeleteRepeatableZoneArgs = {
+  slice: ComponentUI;
+  variationId: string;
+};
+
 const DEFAULT_VARIATION_ID = "default";
 
 export function countMissingScreenshots(slice: ComponentUI): number {
@@ -277,6 +282,26 @@ export function rename(slice: ComponentUI, newSliceName: string): ComponentUI {
     model: {
       ...slice.model,
       name: newSliceName,
+    },
+  };
+}
+
+export function deleteRepeatableZone(args: DeleteRepeatableZoneArgs) {
+  const { slice, variationId } = args;
+
+  return {
+    ...slice,
+    model: {
+      ...slice.model,
+      variations: slice.model.variations.map((v) => {
+        if (v.id === variationId) {
+          const newVariation = { ...v };
+          delete newVariation.items;
+
+          return newVariation;
+        }
+        return v;
+      }),
     },
   };
 }
