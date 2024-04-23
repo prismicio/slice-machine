@@ -3,15 +3,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-tabs/style/react-tabs.css";
 import "react-toastify/dist/ReactToastify.css";
 import "rc-drawer/assets/index.css";
-import "@src/styles/drawer.css";
-import "@src/styles/globals.css";
-import "@src/styles/hljs.css";
-import "@src/styles/intercom.css";
-import "@src/styles/keyframes.css";
-import "@src/styles/modal.css";
-import "@src/styles/starry-night.css";
-import "@src/styles/tabs.css";
-import "@src/styles/toaster.css";
+import "@/styles/drawer.css";
+import "@/styles/globals.css";
+import "@/styles/hljs.css";
+import "@/styles/intercom.css";
+import "@/styles/keyframes.css";
+import "@/styles/modal.css";
+import "@/styles/starry-night.css";
+import "@/styles/tabs.css";
+import "@/styles/toaster.css";
 
 import {
   Box,
