@@ -11,6 +11,7 @@ export default defineConfig({
   plugins: [react(), vanillaExtractPlugin()],
   resolve: {
     alias: {
+      "@": path.resolve(__dirname, "./src"),
       "@builders": path.resolve(__dirname, "./lib/builders"),
       "@components": path.resolve(__dirname, "./components"),
       "@lib": path.resolve(__dirname, "./lib"),
