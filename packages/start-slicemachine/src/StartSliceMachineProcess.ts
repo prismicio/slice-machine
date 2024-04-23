@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 
-import type { AddressInfo } from "node:net";
 import chalk from "chalk";
 import open from "open";
 import os from "node:os";
@@ -19,6 +18,7 @@ import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "./constants";
 import { safelyExecute } from "./lib/safelyExecute";
 
 const DEFAULT_SERVER_PORT = 9999;
+const DEFAULT_DISPLAY_HOST = "localhost";
 
 type CreateStartSliceMachineProcessArgs = ConstructorParameters<
 	typeof StartSliceMachineProcess
@@ -33,6 +33,7 @@ export const createStartSliceMachineProcess = (
 export type StartSliceMachineProcessConstructorArgs = {
 	open: boolean;
 	port?: number;
+	host?: string;
 };
 
 /**
@@ -55,6 +56,11 @@ export class StartSliceMachineProcess {
 	port: number;
 
 	/**
+	 * The host on which to start the Slice Machine server.
+	 */
+	host: string | undefined;
+
+	/**
 	 * The Slice Machine manager used for the process.
 	 */
 	private _sliceMachineManager: SliceMachineManager;
@@ -64,6 +70,7 @@ export class StartSliceMachineProcess {
 
 		this.open = args.open ?? false;
 		this.port = args.port ?? DEFAULT_SERVER_PORT;
+		this.host = args.host;
 	}
 
 	/**
@@ -120,9 +127,10 @@ export class StartSliceMachineProcess {
 		const app = await createSliceMachineExpressApp({
 			sliceMachineManager: this._sliceMachineManager,
 		});
-		const server = app.listen(this.port);
-		const address = server.address() as AddressInfo;
-		const url = `http://localhost:${address.port}`;
+
+		this.host ? app.listen(this.port, this.host) : app.listen(this.port);
+
+		const url = `http://${this.host ?? DEFAULT_DISPLAY_HOST}:${this.port}`;
 
 		if (this.open) {
 			await open(url);

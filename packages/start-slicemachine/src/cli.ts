@@ -5,13 +5,14 @@ import * as pkg from "../package.json";
 type Args = {
 	open: boolean;
 	port: string;
+	host: string;
 	help: boolean;
 	version: boolean;
 };
 
 const args = mri<Args>(process.argv.slice(2), {
 	boolean: ["open", "help", "version"],
-	string: ["port"],
+	string: ["port", "host"],
 	alias: {
 		port: "p",
 		help: "h",
@@ -33,6 +34,7 @@ Usage:
 Options:
     --open         Open Slice Machine automatically
     --port, -p     Specify the port on which to run Slice Machine
+    --host         Specify the host on which to run Slice Machine
     --help, -h     Show help text
     --version, -v  Show version
 `.trim(),
@@ -63,6 +65,7 @@ import("./StartSliceMachineProcess").then(
 		const startSliceMachineProcess = createStartSliceMachineProcess({
 			open: args.open,
 			port,
+			host: args.host,
 		});
 
 		startSliceMachineProcess.run();
