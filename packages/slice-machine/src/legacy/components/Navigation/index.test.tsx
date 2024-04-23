@@ -16,10 +16,7 @@ import { createTestProject } from "test/__testutils__/createTestProject";
 import { describe, expect, test, vi } from "vitest";
 
 import { FrontEndEnvironment } from "@/legacy/lib/models/common/Environment";
-import {
-  AuthStatus,
-  UserContextStoreType,
-} from "@/modules/userContext/types";
+import { AuthStatus, UserContextStoreType } from "@/modules/userContext/types";
 
 import SideNavigation from "./index";
 
