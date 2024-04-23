@@ -186,7 +186,7 @@ export class TypeBuilderPage extends BuilderPage {
     if (groupFieldId) {
       return this.getListItem(fieldId, groupFieldId)
         .getByTestId("field-id")
-        .getByText(`data.${groupFieldId}.${fieldId}`, { exact: true });
+        .getByText(`item.${fieldId}`, { exact: true });
     }
 
     return this.getListItem(fieldId)

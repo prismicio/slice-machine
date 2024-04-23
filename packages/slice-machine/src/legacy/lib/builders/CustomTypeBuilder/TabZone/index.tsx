@@ -1,6 +1,5 @@
 import { Box, ProgressCircle } from "@prismicio/editor-ui";
 import {
-  FieldType,
   Group,
   NestableWidget,
   UID,
@@ -38,6 +37,7 @@ import {
   ensureWidgetTypeExistence,
 } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
+import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";
@@ -83,9 +83,8 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   }: {
     id: string;
     label: string;
-    widgetTypeName: FieldType;
+    widgetTypeName: keyof typeof Widgets;
   }) => {
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }
@@ -126,9 +125,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       event: "field:added",
       id,
       name: label,
-      type: widgetTypeName,
+      type: newField.type,
       isInAGroup: false,
-      contentType: customType.format === "page" ? "page type" : "custom type",
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
 
@@ -164,7 +163,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     newKey: string;
     value: TabField;
   }) => {
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
@@ -217,7 +215,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           {query.newPageType === undefined ? (
             <Zone
               zoneType="customType"
-              zoneTypeFormat={customType.format}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               tabId={tabId}
               title="Static Zone"

@@ -5,10 +5,7 @@ import {
   DialogContent,
   DialogHeader,
 } from "@prismicio/editor-ui";
-import {
-  FieldType,
-  NestableWidget,
-} from "@prismicio/types-internal/lib/customtypes";
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 import { FC, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
@@ -26,12 +23,17 @@ import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvid
 import { useGroupsInSlicesExperiment } from "@/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import Zone from "@/legacy/lib/builders/common/Zone";
-import { WidgetsArea } from "@/legacy/lib/models/common/Slice";
+import { Groups } from "@/legacy/lib/models/common/Group";
+import {
+  SlicePrimaryFieldSM,
+  WidgetsArea,
+} from "@/legacy/lib/models/common/Slice";
 import * as Widgets from "@/legacy/lib/models/common/widgets";
+import groupBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/groupBuilderArray";
 import sliceBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/sliceBuilderArray";
-import { AnyWidget } from "@/legacy/lib/models/common/widgets/Widget";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
+import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -109,34 +111,21 @@ const FieldZones: FC = () => {
     }: {
       id: string;
       label: string;
-      widgetTypeName: FieldType;
+      widgetTypeName: keyof typeof Widgets;
     }) => {
-      // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const widget = Widgets[widgetTypeName];
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      const widget = sliceBuilderWidgetsArray.find(
+        (sliceBuilderWidget) =>
+          sliceBuilderWidget.CUSTOM_NAME === widgetTypeName ||
+          sliceBuilderWidget.TYPE_NAME === widgetTypeName,
+      );
       if (!widget) {
-        console.log(
-          `Could not find widget with type name "${widgetTypeName}". Please contact us!`,
-        );
+        throw new Error(`Unsupported Field Type: ${widgetTypeName}`);
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      const newField = widget.create(label) as NestableWidget;
-
-      if (
-        newField.type === "Range" ||
-        newField.type === "IntegrationFields" ||
-        newField.type === "Separator"
-      ) {
-        throw new Error(`Unsupported Field Type: ${newField.type}`);
-      }
+      const newField = widget.create(label) as SlicePrimaryFieldSM;
 
       try {
-        const CurrentWidget: AnyWidget = Widgets[newField.type];
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        CurrentWidget.schema.validateSync(newField, { stripUnknown: false });
+        widget.schema.validateSync(newField, { stripUnknown: false });
       } catch (error) {
         throw new Error(`Model is invalid for widget "${newField.type}".`);
       }
@@ -146,7 +135,8 @@ const FieldZones: FC = () => {
         variationId: variation.id,
         widgetArea,
         newFieldId: id,
-        newField,
+        newField:
+          newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
       });
 
       setSlice(newSlice);
@@ -155,9 +145,9 @@ const FieldZones: FC = () => {
         event: "field:added",
         id,
         name: label,
-        type: widgetTypeName,
+        type: newField.type,
         isInAGroup: false,
-        contentType: "slice",
+        contentType: getContentTypeForTracking(window.location.pathname),
       });
     };
 
@@ -194,14 +184,17 @@ const FieldZones: FC = () => {
     <List>
       <Zone
         zoneType="slice"
-        zoneTypeFormat={undefined}
         tabId={undefined}
         title="Fields"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.primary}
         EditModal={EditModal}
-        widgetsArray={sliceBuilderWidgetsArray}
+        widgetsArray={
+          groupsInSlicesExperiment.eligible
+            ? sliceBuilderWidgetsArray
+            : groupBuilderWidgetsArray
+        }
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
         onSave={_onSave(WidgetsArea.Primary)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
@@ -222,12 +215,11 @@ const FieldZones: FC = () => {
       {!groupsInSlicesExperiment.eligible || hasItems ? (
         <Zone
           zoneType="slice"
-          zoneTypeFormat={undefined}
           tabId={undefined}
           isRepeatable
           title="Repeatable Zone"
           dataTip={dataTipText2}
-          widgetsArray={sliceBuilderWidgetsArray}
+          widgetsArray={groupBuilderWidgetsArray}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           fields={variation.items}
           EditModal={EditModal}

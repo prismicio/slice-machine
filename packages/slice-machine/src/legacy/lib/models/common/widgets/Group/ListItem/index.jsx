@@ -5,26 +5,23 @@ import { Box, Button } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
 import {
-  addGroupField,
-  deleteGroupField,
-  reorderGroupField,
-  updateGroupField,
-} from "@/domain/customType";
-import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+  addFieldToGroup,
+  deleteFieldFromGroup,
+  reorderFieldInGroup,
+  updateFieldInGroup,
+} from "@/domain/group";
 import ListItem from "@/legacy/components/ListItem";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import SelectFieldTypeModal from "@/legacy/lib/builders/common/SelectFieldTypeModal";
 import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
 import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
-import { TabFieldsModel } from "@/legacy/lib/models/common/CustomType";
+import { Groups } from "@/legacy/lib/models/common/Group";
 import * as Widgets from "@/legacy/lib/models/common/widgets";
-import sliceBuilderArray from "@/legacy/lib/models/common/widgets/sliceBuilderArray";
-import {
-  ensureDnDDestination,
-  ensureWidgetTypeExistence,
-} from "@/legacy/lib/utils";
+import groupBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/groupBuilderArray";
+import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
+import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -36,14 +33,12 @@ const CustomListItem = ({
   isRepeatable,
   item: groupItem,
   draggableId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  renderFieldAccessor,
+  saveItem,
   ...rest
 }) => {
   const [selectMode, setSelectMode] = useState(false);
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
-  const { customType, setCustomType } = useCustomTypeState();
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -60,54 +55,47 @@ const CustomListItem = ({
   };
 
   const onSaveNewField = ({ id, label, widgetTypeName }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const widget = Widgets[widgetTypeName];
+    const newField = widget.create(label);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-    const newWidget = widget.create(label);
-
-    const newField = TabFieldsModel.fromSM(newWidget);
-    const newCustomType = addGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
-      newField,
-      newFieldId: id,
+    const newGroupValue = addFieldToGroup({
+      group: Groups.fromSM(groupItem.value),
+      fieldId: id,
+      field: newField,
     });
 
-    setCustomType(newCustomType);
+    saveItem({
+      apiId: groupItem.key,
+      newKey: groupItem.key,
+      value: Groups.toSM(newGroupValue),
+    });
 
     void telemetry.track({
       event: "field:added",
       id,
       name: label,
-      type: widgetTypeName,
+      type: newField.type,
       isInAGroup: true,
-      contentType: customType.format === "page" ? "page type" : "custom type",
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    if (ensureWidgetTypeExistence(Widgets, value.type)) {
-      return;
-    }
-
-    const newField = TabFieldsModel.fromSM(value);
-    const newCustomType = updateGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
+    const newGroupValue = updateFieldInGroup({
+      group: Groups.fromSM(groupItem.value),
       previousFieldId: previousKey,
       newFieldId: newKey,
-      newField,
+      field: value,
     });
 
-    setCustomType(newCustomType);
+    saveItem({
+      apiId: groupItem.key,
+      newKey: groupItem.key,
+      value: Groups.toSM(newGroupValue),
+    });
   };
 
   const onDragEnd = (result) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (ensureDnDDestination(result)) {
       return;
     }
@@ -120,10 +108,8 @@ const CustomListItem = ({
     const { index: sourceIndex } = source;
     const { index: destinationIndex } = destination;
 
-    const newCustomType = reorderGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
+    const newGroupValue = reorderFieldInGroup({
+      group: Groups.fromSM(groupItem.value),
       sourceIndex,
       destinationIndex,
     });
@@ -131,18 +117,26 @@ const CustomListItem = ({
     // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
     // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
     // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
-    flushSync(() => setCustomType(newCustomType));
+    flushSync(() => {
+      saveItem({
+        apiId: groupItem.key,
+        newKey: groupItem.key,
+        value: Groups.toSM(newGroupValue),
+      });
+    });
   };
 
   const onDeleteItem = (key) => {
-    const newCustomType = deleteGroupField({
-      customType,
-      sectionId: tabId,
-      groupFieldId: groupItem.key,
+    const newGroupValue = deleteFieldFromGroup({
+      group: Groups.fromSM(groupItem.value),
       fieldId: key,
     });
 
-    setCustomType(newCustomType);
+    saveItem({
+      apiId: groupItem.key,
+      newKey: groupItem.key,
+      value: Groups.toSM(newGroupValue),
+    });
   };
 
   /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
@@ -157,9 +151,10 @@ const CustomListItem = ({
       name: model.config.label,
       type: model.type,
       isInAGroup: true,
-      contentType: customType.format === "page" ? "page type" : "custom type",
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
+
   return (
     <Fragment>
       <ListItem
@@ -170,7 +165,6 @@ const CustomListItem = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
         draggableId={draggableId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unused-vars, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-        renderFieldAccessor={(key) => `data.${groupItem.key}.[...]`}
         {...rest}
         CustomEditElements={[
           <Button
@@ -220,8 +214,7 @@ const CustomListItem = ({
                           enterEditMode,
                           deleteItem: onDeleteItem,
                           renderFieldAccessor: (key) =>
-                            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-                            `data.${groupItem.key}.${key}`,
+                            `item${transformKeyAccessor(item.key)}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                           draggableId: `group-${groupItem.key}-${item.key}-${index}`,
                           testId: `list-item-group-${groupItem.key}-${item.key}`,
@@ -237,9 +230,7 @@ const CustomListItem = ({
                             isRepeatable={isRepeatable}
                             renderHintBase={({ item }) =>
                               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-                              `data.${groupItem.key}${transformKeyAccessor(
-                                item.key,
-                              )}`
+                              `item${transformKeyAccessor(item.key)}`
                             }
                             Widgets={Widgets}
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -277,7 +268,7 @@ const CustomListItem = ({
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={sliceBuilderArray}
+        widgetsArray={groupBuilderWidgetsArray}
       />
       <EditModal
         data={editModalData}

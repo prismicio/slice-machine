@@ -1,7 +1,6 @@
 import {
   CustomType,
   DynamicSection,
-  Group,
 } from "@prismicio/types-internal/lib/customtypes";
 import { describe, expect } from "vitest";
 
@@ -506,153 +505,6 @@ describe("CustomTypeModel test suite", () => {
     );
   });
 
-  it("addGroupField should return the given custom type with the group field added", () => {
-    expect(
-      CustomTypeModel.addGroupField({
-        customType: mockCustomType,
-        sectionId: "mainSection",
-        groupFieldId: "groupField",
-        newFieldId: "newFieldId",
-        newField: {
-          config: {
-            label: "NewField",
-          },
-          type: "Boolean",
-        },
-      }),
-    ).toEqual({
-      ...mockCustomType,
-      json: {
-        ...mockCustomType.json,
-        mainSection: {
-          ...mainSection,
-          groupField: {
-            ...mainSection.groupField,
-            config: {
-              ...mainSection.groupField.config,
-              fields: {
-                ...(mainSection.groupField as Group).config?.fields,
-                newFieldId: {
-                  config: {
-                    label: "NewField",
-                  },
-                  type: "Boolean",
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-  });
-
-  it("deleteGroupField should return the given custom type without the group field", () => {
-    expect(
-      CustomTypeModel.deleteGroupField({
-        customType: mockCustomType,
-        sectionId: "mainSection",
-        groupFieldId: "groupField",
-        fieldId: "groupFieldBooleanField",
-      }),
-    ).toEqual({
-      ...mockCustomType,
-      json: {
-        ...mockCustomType.json,
-        mainSection: {
-          ...mainSection,
-          groupField: {
-            ...mainSection.groupField,
-            config: {
-              ...mainSection.groupField.config,
-              fields: {
-                groupFieldTextField: (mainSection.groupField as Group).config
-                  ?.fields?.groupFieldTextField,
-              },
-            },
-          },
-        },
-      },
-    });
-  });
-
-  it("updateGroupField should return the given custom type with the group field updated", () => {
-    expect(
-      CustomTypeModel.updateGroupField({
-        customType: mockCustomType,
-        sectionId: "mainSection",
-        groupFieldId: "groupField",
-        previousFieldId: "groupFieldBooleanField",
-        newFieldId: "newId",
-        newField: {
-          config: {
-            label: "newLabel",
-          },
-          type: "Boolean",
-        },
-      }),
-    ).toEqual({
-      ...mockCustomType,
-      json: {
-        ...mockCustomType.json,
-        mainSection: {
-          ...mainSection,
-          groupField: {
-            ...mainSection.groupField,
-            config: {
-              ...mainSection.groupField.config,
-              fields: {
-                newId: {
-                  config: {
-                    label: "newLabel",
-                  },
-                  type: "Boolean",
-                },
-                groupFieldTextField: (mainSection.groupField as Group).config
-                  ?.fields?.groupFieldTextField,
-              },
-            },
-          },
-        },
-      },
-    });
-  });
-
-  it("reorderGroupField should return the given custom type with the group field reordered", () => {
-    expect(
-      JSON.stringify(
-        CustomTypeModel.reorderGroupField({
-          customType: mockCustomType,
-          sectionId: "mainSection",
-          groupFieldId: "groupField",
-          sourceIndex: 0,
-          destinationIndex: 1,
-        }),
-      ),
-    ).toEqual(
-      JSON.stringify({
-        ...mockCustomType,
-        json: {
-          ...mockCustomType.json,
-          mainSection: {
-            ...mainSection,
-            groupField: {
-              ...mainSection.groupField,
-              config: {
-                ...mainSection.groupField.config,
-                fields: {
-                  groupFieldTextField: (mainSection.groupField as Group).config
-                    ?.fields?.groupFieldTextField,
-                  groupFieldBooleanField: (mainSection.groupField as Group)
-                    .config?.fields?.groupFieldBooleanField,
-                },
-              },
-            },
-          },
-        },
-      }),
-    );
-  });
-
   it("updateSection should return the given custom type with the section updated", () => {
     expect(
       CustomTypeModel.updateSection({
@@ -751,42 +603,6 @@ describe("CustomTypeModel test suite", () => {
         },
       }),
     );
-  });
-
-  it("getGroupField should return the group field matching the key", () => {
-    expect(
-      CustomTypeModel.getGroupField({
-        customType: mockCustomType,
-        sectionId: "mainSection",
-        groupFieldId: "groupField",
-      }),
-    ).toEqual(mainSection.groupField);
-  });
-
-  it("updateGroupFields should return the updated group fields", () => {
-    expect(
-      CustomTypeModel.updateGroupFields(mainSection.groupField as Group, {
-        groupFieldBooleanField: {
-          config: {
-            label: "GroupFieldBooleanField",
-          },
-          type: "Boolean",
-        },
-      }),
-    ).toEqual({
-      ...mainSection.groupField,
-      config: {
-        ...mainSection.groupField.config,
-        fields: {
-          groupFieldBooleanField: {
-            config: {
-              label: "GroupFieldBooleanField",
-            },
-            type: "Boolean",
-          },
-        },
-      },
-    });
   });
 
   it("should create a custom type with repeatable true", () => {

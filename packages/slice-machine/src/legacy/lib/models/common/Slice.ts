@@ -1,4 +1,6 @@
 import {
+  GroupFieldType,
+  NestableWidget,
   SharedSlice,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes";
@@ -6,6 +8,7 @@ import { getOrElseW } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
 import { FieldsSM } from "./Fields";
+import { Groups, GroupSM } from "./Group";
 
 const IMAGE_PLACEHOLDER_URL =
   "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
@@ -14,6 +17,14 @@ export enum WidgetsArea {
   Primary = "primary",
   Items = "items",
 }
+
+export const SlicePrimaryFieldSM = t.union([GroupSM, NestableWidget]);
+export type SlicePrimaryFieldSM = t.TypeOf<typeof SlicePrimaryFieldSM>;
+
+export const SlicePrimaryFieldsSM = t.array(
+  t.type({ key: t.string, value: SlicePrimaryFieldSM }),
+);
+export type SlicePrimaryFieldsSM = t.TypeOf<typeof SlicePrimaryFieldsSM>;
 
 export const VariationSM = t.intersection([
   t.type({
@@ -25,7 +36,7 @@ export const VariationSM = t.intersection([
   }),
   t.partial({
     imageUrl: t.string,
-    primary: FieldsSM,
+    primary: SlicePrimaryFieldsSM,
     items: FieldsSM,
     display: t.string,
   }),
@@ -55,7 +66,10 @@ export const Variations = {
       Variation.decode({
         ...variation,
         primary: variation.primary?.reduce(
-          (acc, { key, value }) => ({ ...acc, [key]: value }),
+          (acc, { key, value }) => ({
+            ...acc,
+            [key]: value.type === GroupFieldType ? Groups.fromSM(value) : value,
+          }),
           {},
         ),
         items: variation.items?.reduce(
@@ -80,7 +94,7 @@ export const Variations = {
         primary: Object.entries(variation.primary || {}).map(
           ([key, value]) => ({
             key,
-            value,
+            value: value.type === GroupFieldType ? Groups.toSM(value) : value,
           }),
         ),
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

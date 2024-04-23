@@ -5,6 +5,7 @@ import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
+import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import Card from "./Card";
@@ -13,7 +14,6 @@ import EmptyState from "./components/EmptyState";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
-  zoneTypeFormat /* format of the zone: custom or page (or undefined if not a custom type) */,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -62,12 +62,7 @@ const Zone = ({
       name: model.config.label,
       type: model.type,
       isInAGroup: false,
-      contentType:
-        zoneType === "customType"
-          ? zoneTypeFormat === "page"
-            ? "page type"
-            : "custom type"
-          : "slice",
+      contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
   const enterSelectMode = () => {
@@ -158,6 +153,8 @@ const Zone = ({
               onDragEnd={onDragEnd}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               onDeleteItem={onDeleteItem}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              onSave={onSave}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
