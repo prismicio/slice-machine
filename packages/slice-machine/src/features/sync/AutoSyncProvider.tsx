@@ -6,11 +6,6 @@ import {
   Environment,
   isUnauthenticatedError,
 } from "@slicemachine/manager/client";
-import { getState } from "@src/apiClient";
-import { useAuthStatus } from "@src/hooks/useAuthStatus";
-import { useNetwork } from "@src/hooks/useNetwork";
-import { AuthStatus } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   createContext,
   FC,
@@ -21,10 +16,15 @@ import {
   useMemo,
 } from "react";
 
+import { getState } from "@/apiClient";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
+import { useNetwork } from "@/hooks/useNetwork";
 import {
   ChangedCustomType,
   ChangedSlice,
 } from "@/legacy/lib/models/common/ModelStatus";
+import { AuthStatus } from "@/modules/userContext/types";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { ActionQueueStatus, useActionQueue } from "../../hooks/useActionQueue";
 import { useActiveEnvironment } from "../environments/useActiveEnvironment";

@@ -9,24 +9,18 @@ import {
   Switch,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { telemetry } from "@src/apiClient";
-import { ListHeader } from "@src/components/List";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { SliceZoneBlankSlate } from "@src/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
-import { addSlicesToSliceZone } from "@src/features/slices/actions/addSlicesToSliceZone";
-import { useSlicesTemplates } from "@src/features/slicesTemplates/useSlicesTemplates";
-import {
-  getFrontendSlices,
-  getLibraries,
-  getRemoteSlices,
-} from "@src/modules/slices";
-import type { SliceMachineStoreType } from "@src/redux/type";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
+import { telemetry } from "@/apiClient";
+import { ListHeader } from "@/components/List";
+import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
+import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
+import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplates";
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
@@ -34,6 +28,12 @@ import { CustomTypes, CustomTypeSM } from "@/legacy/lib/models/common/CustomType
 import type { SliceZoneSlice } from "@/legacy/lib/models/common/CustomType/sliceZone";
 import type { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import type { SlicesSM } from "@/legacy/lib/models/common/Slices";
+import {
+  getFrontendSlices,
+  getLibraries,
+  getRemoteSlices,
+} from "@/modules/slices";
+import type { SliceMachineStoreType } from "@/redux/type";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";

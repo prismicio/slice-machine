@@ -1,9 +1,10 @@
 import { tokens } from "@prismicio/editor-ui";
 import type { PackageManager, Version } from "@slicemachine/manager";
-import { useSliceMachineReleaseNotes } from "@src/features/changelog/useSliceMachineReleaseNotes";
 import React from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { Flex, Text } from "theme-ui";
+
+import { useSliceMachineReleaseNotes } from "@/features/changelog/useSliceMachineReleaseNotes";
 
 import { ReleaseNotesDetails } from "./ReleaseNotesDetails";
 import { UpdateCommandBox } from "./UpdateCommandBox";

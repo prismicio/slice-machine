@@ -1,6 +1,6 @@
-import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { FieldArray } from "formik";
 
+import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import Grid from "@/legacy/components/Grid";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 

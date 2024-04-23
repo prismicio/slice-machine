@@ -1,16 +1,16 @@
 import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
-import { Breadcrumb } from "@src/components/Breadcrumb";
+import { useRouter } from "next/router";
+import { FC, PropsWithChildren, Suspense } from "react";
+
+import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   PageLayout,
   PageLayoutContent,
   PageLayoutHeader,
   PageLayoutPane,
-} from "@src/components/PageLayout";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
-import { useRouter } from "next/router";
-import { FC, PropsWithChildren, Suspense } from "react";
-
+} from "@/components/PageLayout";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import Navigation from "@/legacy/components/Navigation";
 
 export const AppLayout: FC<PropsWithChildren> = ({

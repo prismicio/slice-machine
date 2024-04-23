@@ -1,6 +1,7 @@
-import { LightningIcon } from "@src/icons/Lightning";
-import { RadarIcon } from "@src/icons/RadarIcon";
 import type { Meta, StoryObj } from "@storybook/react";
+
+import { LightningIcon } from "@/icons/Lightning";
+import { RadarIcon } from "@/icons/RadarIcon";
 
 import { PageLayout, PageLayoutPane } from "../PageLayout";
 import {

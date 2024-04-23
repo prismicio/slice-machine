@@ -1,6 +1,7 @@
 import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
 import type { SliceMachineConfig } from "@slicemachine/manager";
-import { managerClient } from "@src/managerClient";
+
+import { managerClient } from "@/managerClient";
 
 type UseSliceMachineConfigReturnType = [
   config: SliceMachineConfig,

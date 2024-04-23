@@ -7,9 +7,10 @@ import {
   DialogHeader,
   Text,
 } from "@prismicio/editor-ui";
-import { telemetry } from "@src/apiClient";
-import { useExperimentVariant } from "@src/hooks/useExperimentVariant";
 import { useEffect, useState } from "react";
+
+import { telemetry } from "@/apiClient";
+import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 
 type DevCollaborationExperimentPayload = {
   cardButtonLabel: string;

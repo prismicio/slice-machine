@@ -10,14 +10,14 @@ import {
   SelectItem,
   Text,
 } from "@prismicio/editor-ui";
-import { getRemoteSlices } from "@src/modules/slices";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { Formik } from "formik";
 import type { FC } from "react";
 import { useSelector } from "react-redux";
 
 import { validateSliceModalValues as validateAsNewSliceValues } from "@/legacy/components/Forms/formsValidator";
 import { pascalize } from "@/legacy/lib/utils/str";
+import { getRemoteSlices } from "@/modules/slices";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";

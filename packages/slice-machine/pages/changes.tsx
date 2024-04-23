@@ -1,21 +1,19 @@
 import { PushChangesLimit } from "@slicemachine/manager";
-import { getState } from "@src/apiClient";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
-import { PushChangesButton } from "@src/features/changes/PushChangesButton";
-import { pushChanges } from "@src/features/sync/actions/pushChanges";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { useUnSyncChanges } from "@src/features/sync/useUnSyncChanges";
-import { useAuthStatus } from "@src/hooks/useAuthStatus";
-import { useNetwork } from "@src/hooks/useNetwork";
-import { AuthStatus } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
+import { getState } from "@/apiClient";
+import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { NoChangesBlankSlate } from "@/features/changes/BlankSlates";
+import { PushChangesButton } from "@/features/changes/PushChangesButton";
+import { pushChanges } from "@/features/sync/actions/pushChanges";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { useUnSyncChanges } from "@/features/sync/useUnSyncChanges";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
+import { useNetwork } from "@/hooks/useNetwork";
 import {
   AppLayout,
   AppLayoutActions,
@@ -32,6 +30,8 @@ import {
   HardDeleteDocumentsDrawer,
   SoftDeleteDocumentsDrawer,
 } from "@/legacy/components/DeleteDocumentsDrawer";
+import { AuthStatus } from "@/modules/userContext/types";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 const Changes: React.FunctionComponent = () => {
   const {

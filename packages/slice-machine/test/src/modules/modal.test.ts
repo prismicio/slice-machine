@@ -5,8 +5,8 @@ import {
   modalOpenCreator,
   modalCloseCreator,
   initialState as modalInitialState,
-} from "@src/modules/modal";
-import { ModalKeysEnum, ModalStoreType } from "@src/modules/modal/types";
+} from "@/modules/modal";
+import { ModalKeysEnum, ModalStoreType } from "@/modules/modal/types";
 
 describe("[Modal module]", () => {
   describe("[Reducer]", () => {

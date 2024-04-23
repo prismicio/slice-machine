@@ -1,27 +1,27 @@
 import type { CustomTypeFormat } from "@slicemachine/manager";
-import { getFormat } from "@src/domain/customType";
-import {
-  createCustomType,
-  CustomTypeOrigin,
-} from "@src/features/customTypes/actions/createCustomType";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import {
-  selectAllCustomTypeIds,
-  selectAllCustomTypeLabels,
-} from "@src/modules/availableCustomTypes";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { FormikErrors } from "formik";
 import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
 import { useSelector } from "react-redux";
 import { Box } from "theme-ui";
 
+import { getFormat } from "@/domain/customType";
+import {
+  createCustomType,
+  CustomTypeOrigin,
+} from "@/features/customTypes/actions/createCustomType";
+import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
+import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { API_ID_REGEX } from "@/legacy/lib/consts";
 import { slugify } from "@/legacy/lib/utils/str";
+import {
+  selectAllCustomTypeIds,
+  selectAllCustomTypeLabels,
+} from "@/modules/availableCustomTypes";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { InputBox } from "../components/InputBox";
 import { SelectRepeatable } from "../components/SelectRepeatable";

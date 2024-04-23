@@ -1,5 +1,3 @@
-import { refreshStateCreator } from "@src/modules/environment";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { omit } from "lodash";
 import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
@@ -16,6 +14,8 @@ import {
   normalizeFrontendCustomTypes,
 } from "@/legacy/lib/models/common/normalizers/customType";
 import { filterSliceFromCustomType } from "@/legacy/lib/utils/shared/customTypes";
+import { refreshStateCreator } from "@/modules/environment";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { sliceDeleteSuccess } from "../slices";
 import { AvailableCustomTypesStoreType } from "./types";

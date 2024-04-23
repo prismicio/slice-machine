@@ -1,31 +1,31 @@
 import { Box } from "@prismicio/editor-ui";
-import { telemetry } from "@src/apiClient";
-import { Divider } from "@src/components/Divider";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { type FC, Suspense } from "react";
+import { useSelector } from "react-redux";
+
+import { telemetry } from "@/apiClient";
+import { Divider } from "@/components/Divider";
 import {
   SideNav,
   SideNavLink,
   SideNavList,
   SideNavListItem,
   SideNavRepository,
-} from "@src/components/SideNav/SideNav";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
-import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
-import { FolderIcon } from "@src/icons/FolderIcon";
-import { LightningIcon } from "@src/icons/Lightning";
-import { MathPlusIcon } from "@src/icons/MathPlusIcon";
-import { SettingsIcon } from "@src/icons/SettingsIcon";
-import { userHasSeenTutorialsToolTip } from "@src/modules/userContext";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { type FC, Suspense } from "react";
-import { useSelector } from "react-redux";
-
+} from "@/components/SideNav/SideNav";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
+import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
+import { FolderIcon } from "@/icons/FolderIcon";
+import { LightningIcon } from "@/icons/Lightning";
+import { MathPlusIcon } from "@/icons/MathPlusIcon";
+import { SettingsIcon } from "@/icons/SettingsIcon";
 import VideoItem from "@/legacy/components/Navigation/VideoItem";
+import { userHasSeenTutorialsToolTip } from "@/modules/userContext";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";

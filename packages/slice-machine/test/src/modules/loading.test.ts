@@ -4,9 +4,9 @@ import {
   loadingReducer,
   startLoadingActionCreator,
   stopLoadingActionCreator,
-} from "@src/modules/loading";
-import { LoadingKeysEnum, LoadingStoreType } from "@src/modules/loading/types";
-import { initialState } from "@src/modules/loading";
+} from "@/modules/loading";
+import { LoadingKeysEnum, LoadingStoreType } from "@/modules/loading/types";
+import { initialState } from "@/modules/loading";
 
 const dummyLoadingState: LoadingStoreType = initialState;
 

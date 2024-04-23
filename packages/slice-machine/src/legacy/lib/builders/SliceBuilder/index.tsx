@@ -1,10 +1,10 @@
 import { Box } from "@prismicio/editor-ui";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
-import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import { type FC } from "react";
 
+import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { AutoSaveStatusIndicator } from "@/features/autoSave/AutoSaveStatusIndicator";
+import { FloatingBackButton } from "@/features/slices/sliceBuilder/FloatingBackButton";
+import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import {
   AppLayout,
   AppLayoutActions,

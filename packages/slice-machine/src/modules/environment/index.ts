@@ -1,5 +1,4 @@
 import type { APIEndpoints, PackageManager } from "@slicemachine/manager";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
@@ -8,6 +7,7 @@ import { FrontEndEnvironment } from "@/legacy/lib/models/common/Environment";
 import ErrorWithStatus from "@/legacy/lib/models/common/ErrorWithStatus";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { AuthStatus } from "../userContext/types";
 import { EnvironmentStoreType } from "./types";

@@ -16,10 +16,11 @@ import {
 } from "@prismicio/editor-ui";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import type { Environment } from "@slicemachine/manager/client";
-import { LoginIcon } from "@src/icons/LoginIcon";
-import { LogoIcon } from "@src/icons/LogoIcon";
 import { clsx } from "clsx";
 import type { FC, ReactNode } from "react";
+
+import { LoginIcon } from "@/icons/LoginIcon";
+import { LogoIcon } from "@/icons/LogoIcon";
 
 import styles from "./SideNavEnvironmentSelector.module.css";
 

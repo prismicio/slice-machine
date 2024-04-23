@@ -1,13 +1,12 @@
 import { Box, Button, Text } from "@prismicio/editor-ui";
-import { countMissingScreenshots } from "@src/domain/slice";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
-import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
-import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import { AuthStatus } from "@src/modules/userContext/types";
 import React, { Suspense } from "react";
 import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 
+import { countMissingScreenshots } from "@/domain/slice";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
+import { ModelsStatuses } from "@/features/sync/getUnSyncChanges";
+import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
 import { ChangesSectionHeader } from "@/legacy/components/ChangesSectionHeader";
 import { CustomTypeTable } from "@/legacy/components/CustomTypeTable/changesPage";
 import Grid from "@/legacy/components/Grid";
@@ -15,6 +14,7 @@ import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { LocalOrRemoteCustomType } from "@/legacy/lib/models/common/ModelData";
 import { ModelStatus } from "@/legacy/lib/models/common/ModelStatus";
+import { AuthStatus } from "@/modules/userContext/types";
 
 import { DevCollaborationExperiment } from "./DevCollaborationExperiment";
 

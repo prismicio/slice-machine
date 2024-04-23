@@ -1,8 +1,8 @@
-import { SliceBuilderProvider } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
-import useCurrentSlice from "@src/hooks/useCurrentSlice";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+import { SliceBuilderProvider } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
+import useCurrentSlice from "@/hooks/useCurrentSlice";
 import SliceBuilder from "@/legacy/lib/builders/SliceBuilder";
 
 export default function SlicePage() {

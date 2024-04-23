@@ -1,7 +1,8 @@
-import { telemetry } from "@src/apiClient";
 import { Video } from "cloudinary-react";
 import React from "react";
 import { Box, Button, Heading, Text } from "theme-ui";
+
+import { telemetry } from "@/apiClient";
 
 interface Props {
   title: string;

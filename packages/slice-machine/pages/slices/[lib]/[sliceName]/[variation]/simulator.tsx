@@ -1,7 +1,7 @@
-import useCurrentSlice from "@src/hooks/useCurrentSlice";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+import useCurrentSlice from "@/hooks/useCurrentSlice";
 import Simulator from "@/legacy/components/Simulator";
 
 export default function SimulatorPage() {

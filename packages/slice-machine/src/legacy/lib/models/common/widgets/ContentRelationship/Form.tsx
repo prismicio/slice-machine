@@ -1,4 +1,3 @@
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { FormikProps } from "formik";
 import { useSelector } from "react-redux";
 import Select from "react-select";
@@ -9,6 +8,7 @@ import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 import { hasLocal } from "../../ModelData";
 

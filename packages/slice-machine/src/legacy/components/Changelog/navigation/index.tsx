@@ -1,11 +1,12 @@
 import { tokens } from "@prismicio/editor-ui";
 import { Version } from "@slicemachine/manager";
-import { useSliceMachineLatestNonBreakingVersion } from "@src/features/changelog/useSliceMachineLatestNonBreakingVersion";
-import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
-import { useSliceMachineRunningVersion } from "@src/hooks/useSliceMachineRunningVersion";
-import { useUpdateAvailable } from "@src/hooks/useUpdateAvailable";
 import React from "react";
 import { Flex, Text } from "theme-ui";
+
+import { useSliceMachineLatestNonBreakingVersion } from "@/features/changelog/useSliceMachineLatestNonBreakingVersion";
+import { useSliceMachineVersions } from "@/features/changelog/useSliceMachineVersions";
+import { useSliceMachineRunningVersion } from "@/hooks/useSliceMachineRunningVersion";
+import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 
 import { VersionBadge } from "./VersionBadge";
 

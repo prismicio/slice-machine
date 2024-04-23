@@ -1,11 +1,11 @@
 import type { PackageManager, Version } from "@slicemachine/manager";
-import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
-import { useAdapterName } from "@src/hooks/useAdapterName";
-import { useUpdateAvailable } from "@src/hooks/useUpdateAvailable";
 import React from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { Button, Flex, Text } from "theme-ui";
 
+import { useSliceMachineVersions } from "@/features/changelog/useSliceMachineVersions";
+import { useAdapterName } from "@/hooks/useAdapterName";
+import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 import CodeBlock from "@/legacy/components/CodeBlock";
 
 interface UpdateCommandBoxProps {

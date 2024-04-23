@@ -1,13 +1,13 @@
 import { ErrorBoundary, ProgressCircle } from "@prismicio/editor-ui";
 import { Version } from "@slicemachine/manager";
-import { useSliceMachineVersions } from "@src/features/changelog/useSliceMachineVersions";
-import { getPackageManager } from "@src/modules/environment";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { Suspense, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
 
+import { useSliceMachineVersions } from "@/features/changelog/useSliceMachineVersions";
 import { AppLayout, AppLayoutContent } from "@/legacy/components/AppLayout";
+import { getPackageManager } from "@/modules/environment";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { Navigation } from "./navigation";
 import { ReleaseWarning, VersionDetails } from "./versionDetails";

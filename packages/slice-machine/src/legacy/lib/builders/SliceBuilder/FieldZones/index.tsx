@@ -9,21 +9,21 @@ import {
   FieldType,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
-import { telemetry } from "@src/apiClient";
-import { List } from "@src/components/List";
+import { FC, useState } from "react";
+import { DropResult } from "react-beautiful-dnd";
+import { flushSync } from "react-dom";
+
+import { telemetry } from "@/apiClient";
+import { List } from "@/components/List";
 import {
   addField,
   deleteField,
   deleteRepeatableZone,
   reorderField,
   updateField,
-} from "@src/domain/slice";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
-import { useGroupsInSlicesExperiment } from "@src/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
-import { FC, useState } from "react";
-import { DropResult } from "react-beautiful-dnd";
-import { flushSync } from "react-dom";
-
+} from "@/domain/slice";
+import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
+import { useGroupsInSlicesExperiment } from "@/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import Zone from "@/legacy/lib/builders/common/Zone";
 import { WidgetsArea } from "@/legacy/lib/models/common/Slice";

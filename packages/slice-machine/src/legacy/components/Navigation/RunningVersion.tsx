@@ -1,6 +1,7 @@
-import { RightElement } from "@src/components/SideNav";
-import { useSliceMachineRunningVersion } from "@src/hooks/useSliceMachineRunningVersion";
 import { FC } from "react";
+
+import { RightElement } from "@/components/SideNav";
+import { useSliceMachineRunningVersion } from "@/hooks/useSliceMachineRunningVersion";
 
 export const RunningVersion: FC = () => {
   const sliceMachineRunningVersion = useSliceMachineRunningVersion();

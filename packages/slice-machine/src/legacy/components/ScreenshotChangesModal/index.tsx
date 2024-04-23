@@ -1,19 +1,19 @@
-import { Kbd } from "@src/components/Kbd";
-import { FigmaIcon } from "@src/icons/FigmaIcon";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { getOS, OS } from "@src/utils/os";
 import { useEffect, useState } from "react";
 import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Box, Close, Flex, Heading, Text } from "theme-ui";
 
+import { Kbd } from "@/components/Kbd";
+import { FigmaIcon } from "@/icons/FigmaIcon";
 import Card from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { isModalOpen } from "@/modules/modal";
+import { ModalKeysEnum } from "@/modules/modal/types";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
+import { getOS, OS } from "@/utils/os";
 
 import VariationDropZone from "./VariationDropZone";
 

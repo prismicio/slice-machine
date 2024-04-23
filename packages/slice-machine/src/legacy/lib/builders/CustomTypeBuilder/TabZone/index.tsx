@@ -5,8 +5,14 @@ import {
   NestableWidget,
   UID,
 } from "@prismicio/types-internal/lib/customtypes";
-import { telemetry } from "@src/apiClient";
-import { List } from "@src/components/List";
+import { useRouter } from "next/router";
+import { FC, Suspense } from "react";
+import type { DropResult } from "react-beautiful-dnd";
+import { flushSync } from "react-dom";
+import type { AnyObjectSchema } from "yup";
+
+import { telemetry } from "@/apiClient";
+import { List } from "@/components/List";
 import {
   addField,
   createSectionSliceZone,
@@ -15,15 +21,9 @@ import {
   deleteSliceZoneSlice,
   reorderField,
   updateField,
-} from "@src/domain/customType";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { useRouter } from "next/router";
-import { FC, Suspense } from "react";
-import type { DropResult } from "react-beautiful-dnd";
-import { flushSync } from "react-dom";
-import type { AnyObjectSchema } from "yup";
-
+} from "@/domain/customType";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import {
   CustomTypes,
   type TabField,

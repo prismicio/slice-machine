@@ -7,14 +7,14 @@ import {
   FormInput,
   Text,
 } from "@prismicio/editor-ui";
-import { renameVariation } from "@src/features/slices/sliceBuilder/actions/renameVariation";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Formik } from "formik";
 import { type FC, useState } from "react";
 
+import { renameVariation } from "@/features/slices/sliceBuilder/actions/renameVariation";
+import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import type { VariationSM } from "@/legacy/lib/models/common/Slice";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import styles from "./RenameVariationModal.module.css";
 

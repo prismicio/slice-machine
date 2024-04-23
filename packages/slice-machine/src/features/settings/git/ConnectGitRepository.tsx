@@ -3,24 +3,25 @@ import {
   isUnauthenticatedError,
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
+import { type FC, type ReactNode, Suspense } from "react";
+
 import {
   FieldSet,
   FieldSetContent,
   FieldSetFooter,
   FieldSetLegend,
-} from "@src/components/FieldSet";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { ConnectGitRepositoryBlankSlate } from "@src/features/settings/git/ConnectGitRepositoryBlankSlate";
-import { GitProviderConnectButtons } from "@src/features/settings/git/GitProviderConnectButtons";
-import { GitRepositoriesList } from "@src/features/settings/git/GitRepositoriesList";
+} from "@/components/FieldSet";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { ConnectGitRepositoryBlankSlate } from "@/features/settings/git/ConnectGitRepositoryBlankSlate";
+import { GitProviderConnectButtons } from "@/features/settings/git/GitProviderConnectButtons";
+import { GitRepositoriesList } from "@/features/settings/git/GitRepositoriesList";
 import {
   GitRepositoriesSearch,
   GitRepositoriesSearchSkeleton,
-} from "@src/features/settings/git/GitRepositoriesSearch";
-import { useGitOwners } from "@src/features/settings/git/useGitOwners";
-import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { type FC, type ReactNode, Suspense } from "react";
+} from "@/features/settings/git/GitRepositoriesSearch";
+import { useGitOwners } from "@/features/settings/git/useGitOwners";
+import { useLinkedGitRepos } from "@/features/settings/git/useLinkedGitRepos";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 export const ConnectGitRepository: FC = () => (
   <FieldSet>

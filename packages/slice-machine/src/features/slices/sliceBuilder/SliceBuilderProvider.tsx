@@ -1,8 +1,4 @@
 import { useStableCallback } from "@prismicio/editor-support/React";
-import { readSliceMocks, updateSlice } from "@src/apiClient";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { ActionQueueStatus, useActionQueue } from "@src/hooks/useActionQueue";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
 import {
   createContext,
@@ -13,8 +9,12 @@ import {
   useState,
 } from "react";
 
+import { readSliceMocks, updateSlice } from "@/apiClient";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { VariationSM } from "@/legacy/lib/models/common/Slice";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 type SliceContext = {
   slice: ComponentUI;

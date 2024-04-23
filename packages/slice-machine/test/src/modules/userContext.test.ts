@@ -4,8 +4,8 @@ import {
   userContextReducer,
   sendAReviewCreator,
   skipReviewCreator,
-} from "@src/modules/userContext";
-import { UserContextStoreType } from "@src/modules/userContext/types";
+} from "@/modules/userContext";
+import { UserContextStoreType } from "@/modules/userContext/types";
 
 describe("[UserContext module]", () => {
   describe("[Reducer]", () => {

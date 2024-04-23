@@ -1,16 +1,16 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { getState } from "@src/apiClient";
-import { createSlicesTemplates } from "@src/features/slicesTemplates/actions/createSlicesTemplates";
-import { SliceTemplate } from "@src/features/slicesTemplates/useSlicesTemplates";
-import { managerClient } from "@src/managerClient";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { FC } from "react";
 import { Text } from "theme-ui";
 
+import { getState } from "@/apiClient";
+import { createSlicesTemplates } from "@/features/slicesTemplates/actions/createSlicesTemplates";
+import { SliceTemplate } from "@/features/slicesTemplates/useSlicesTemplates";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { Slices } from "@/legacy/lib/models/common/Slice";
+import { managerClient } from "@/managerClient";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";

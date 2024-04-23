@@ -1,14 +1,14 @@
-import { uploadSliceScreenshot } from "@src/features/slices/actions/uploadSliceScreenshot";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { Flex, Spinner, Text } from "theme-ui";
 
+import { uploadSliceScreenshot } from "@/features/slices/actions/uploadSliceScreenshot";
 import { ScreenshotPreview } from "@/legacy/components/ScreenshotPreview";
 import { acceptedImagesTypes } from "@/legacy/lib/consts";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import useCustomScreenshot from "./useCustomScreenshot";
 

@@ -1,15 +1,15 @@
-import useServerState from "@src/hooks/useServerState";
-import useSMTracker from "@src/hooks/useSMTracker";
-import { getLibraries } from "@src/modules/slices";
-import { SliceMachineStoreType } from "@src/redux/type";
 import type { FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { BaseStyles } from "theme-ui";
 
+import useServerState from "@/hooks/useServerState";
+import useSMTracker from "@/hooks/useSMTracker";
 import { AppLayout, AppLayoutContent } from "@/legacy/components/AppLayout";
 import LoginModal from "@/legacy/components/LoginModal";
 import { MissingLibraries } from "@/legacy/components/MissingLibraries";
 import { ReviewModal } from "@/legacy/components/ReviewModal";
+import { getLibraries } from "@/modules/slices";
+import { SliceMachineStoreType } from "@/redux/type";
 
 type Props = Readonly<{
   children?: ReactNode;

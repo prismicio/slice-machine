@@ -1,1 +1,1 @@
-export { LabsPage as default } from "@src/features/labs/labsList/LabsPage";
+export { LabsPage as default } from "@/features/labs/labsList/LabsPage";
