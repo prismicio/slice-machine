@@ -1,22 +1,24 @@
+import { omit } from "lodash";
 import { Reducer } from "redux";
-import { AvailableCustomTypesStoreType } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { refreshStateCreator } from "@src/modules/environment";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
+
+import { CustomTypeSM } from "@/legacy/lib/models/common/CustomType";
+import {
+  hasLocal,
+  hasLocalAndRemote,
+  LocalOrRemoteCustomType,
+  RemoteOnlyCustomType,
+} from "@/legacy/lib/models/common/ModelData";
 import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
-} from "@lib/models/common/normalizers/customType";
-import { omit } from "lodash";
+} from "@/legacy/lib/models/common/normalizers/customType";
+import { filterSliceFromCustomType } from "@/legacy/lib/utils/shared/customTypes";
+import { refreshStateCreator } from "@/modules/environment";
+import { SliceMachineStoreType } from "@/redux/type";
+
 import { sliceDeleteSuccess } from "../slices";
-import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
-import {
-  LocalOrRemoteCustomType,
-  RemoteOnlyCustomType,
-  hasLocal,
-  hasLocalAndRemote,
-} from "@lib/models/common/ModelData";
+import { AvailableCustomTypesStoreType } from "./types";
 
 // Action Creators
 export const customTypeSaveSuccess = createAction("CUSTOM_TYPE/SAVE_SUCCESS")<{

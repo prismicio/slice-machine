@@ -1,4 +1,3 @@
-import { FC } from "react";
 import {
   Box,
   Dialog,
@@ -10,10 +9,11 @@ import {
   Text,
   Video,
 } from "@prismicio/editor-ui";
+import { FC } from "react";
 
-import { Count } from "@src/components/Count";
-import { HelpIcon } from "@src/icons/HelpIcon";
-import { useIsEmptyProject } from "@src/hooks/useIsEmptyProject";
+import { Count } from "@/components/Count";
+import { useIsEmptyProject } from "@/hooks/useIsEmptyProject";
+import { HelpIcon } from "@/icons/HelpIcon";
 
 import { useInAppGuideContent } from "./inAppGuideContent";
 import { useInAppGuide } from "./InAppGuideContext";

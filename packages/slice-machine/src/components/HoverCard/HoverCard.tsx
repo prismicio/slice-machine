@@ -13,8 +13,8 @@ import {
   type VideoHTMLAttributes,
 } from "react";
 
-import { useDelayedAction } from "@src/hooks/useDelayedAction";
-import { CloseIcon } from "@src/icons/CloseIcon";
+import { useDelayedAction } from "@/hooks/useDelayedAction";
+import { CloseIcon } from "@/icons/CloseIcon";
 
 import { BaseHoverCard, type BaseHoverCardProps } from "../BaseHoverCard";
 import styles from "./HoverCard.module.css";

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
+import { createFriendlyFieldNameWithId } from "@/utils/fieldNameCreator";
 
 const dataProvider = [
   {

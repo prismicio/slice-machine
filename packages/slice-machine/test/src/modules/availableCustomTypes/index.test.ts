@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
-import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes/types";
-import { refreshStateCreator } from "@src/modules/environment";
+import { availableCustomTypesReducer } from "@/modules/availableCustomTypes";
+import { AvailableCustomTypesStoreType } from "@/modules/availableCustomTypes/types";
+import { refreshStateCreator } from "@/modules/environment";
 
 import { dummyServerState } from "../__fixtures__/serverState";
 

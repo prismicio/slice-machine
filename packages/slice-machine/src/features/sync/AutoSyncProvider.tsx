@@ -1,36 +1,36 @@
 import {
+  useOnChange,
+  useStableCallback,
+} from "@prismicio/editor-support/React";
+import {
+  Environment,
+  isUnauthenticatedError,
+} from "@slicemachine/manager/client";
+import {
+  createContext,
   FC,
   PropsWithChildren,
-  createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
 } from "react";
-import {
-  useOnChange,
-  useStableCallback,
-} from "@prismicio/editor-support/React";
 
-import { AuthStatus } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { getState } from "@src/apiClient";
-import {
-  Environment,
-  isUnauthenticatedError,
-} from "@slicemachine/manager/client";
-import { useNetwork } from "@src/hooks/useNetwork";
-import { useAuthStatus } from "@src/hooks/useAuthStatus";
+import { getState } from "@/apiClient";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
+import { useNetwork } from "@/hooks/useNetwork";
 import {
   ChangedCustomType,
   ChangedSlice,
-} from "@lib/models/common/ModelStatus";
+} from "@/legacy/lib/models/common/ModelStatus";
+import { AuthStatus } from "@/modules/userContext/types";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
-import { useActiveEnvironment } from "../environments/useActiveEnvironment";
 import { ActionQueueStatus, useActionQueue } from "../../hooks/useActionQueue";
+import { useActiveEnvironment } from "../environments/useActiveEnvironment";
 import { pushChanges } from "./actions/pushChanges";
-import { useUnSyncChanges } from "./useUnSyncChanges";
 import { fetchUnSyncChanges } from "./fetchUnSyncChanges";
+import { useUnSyncChanges } from "./useUnSyncChanges";
 
 export type AutoSyncStatus =
   | "not-active"

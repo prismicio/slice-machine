@@ -1,5 +1,6 @@
-import { describe, test, expect } from "vitest";
-import preferWroomBase from "../../../lib/utils/preferWroomBase";
+import { describe, expect, test } from "vitest";
+
+import preferWroomBase from "@/legacy/lib/utils/preferWroomBase";
 
 describe("src/utils/preferWroomBase", () => {
   test("when endpoint form env.manifest.apiEndpoint is not from wroom.io or wroom.test it should return the base in the from enn.prismicData.base (prismic config)", () => {

@@ -1,4 +1,4 @@
-import ServerState from "@models/server/ServerState";
+import ServerState from "@/legacy/lib/models/server/ServerState";
 
 export const dummyServerState: Pick<
   ServerState,

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
-import { getAuthStatus } from "@src/modules/environment";
-import { SliceMachineStoreType } from "@src/redux/type";
+import { getAuthStatus } from "@/modules/environment";
+import { SliceMachineStoreType } from "@/redux/type";
 
 export function useAuthStatus() {
   const { authStatus } = useSelector((store: SliceMachineStoreType) => ({

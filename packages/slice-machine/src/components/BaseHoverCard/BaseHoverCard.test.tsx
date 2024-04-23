@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, test, expect, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { render, screen } from "../../../test/__testutils__";
 import { BaseHoverCard } from "./BaseHoverCard";

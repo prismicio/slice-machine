@@ -1,7 +1,7 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 import type { GitOwner } from "@slicemachine/manager";
 
-import { managerClient } from "@src/managerClient";
+import { managerClient } from "@/managerClient";
 
 export function useGitOwners(): GitOwner[] {
   return useRequest(getGitOwners, []);

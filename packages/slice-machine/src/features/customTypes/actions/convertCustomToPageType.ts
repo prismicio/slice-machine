@@ -1,9 +1,9 @@
-import { toast } from "react-toastify";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-
 import { CustomTypeFormat } from "@slicemachine/manager";
-import { convertToPageType } from "@src/domain/customType";
-import { updateCustomType } from "@src/apiClient";
+import { toast } from "react-toastify";
+
+import { updateCustomType } from "@/apiClient";
+import { convertToPageType } from "@/domain/customType";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 

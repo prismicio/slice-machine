@@ -1,15 +1,18 @@
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 import type {
   CompositeSlice,
   LegacySlice,
   SharedSlice,
   SlicePrimaryWidget,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 
-import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import { type VariationSM, WidgetsArea } from "@lib/models/common/Slice";
-import { pascalize, snakelize } from "@lib/utils/str";
-import { Groups } from "@lib/models/common/Group";
+import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { Groups } from "@/legacy/lib/models/common/Group";
+import {
+  type VariationSM,
+  WidgetsArea,
+} from "@/legacy/lib/models/common/Slice";
+import { pascalize, snakelize } from "@/legacy/lib/utils/str";
 
 type CopySliceVariationArgs = {
   copiedVariation: VariationSM;

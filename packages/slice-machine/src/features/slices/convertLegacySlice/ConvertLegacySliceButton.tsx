@@ -1,24 +1,24 @@
-import { useMemo, useState, type FC } from "react";
-import { useSelector } from "react-redux";
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   Icon,
-  Button,
 } from "@prismicio/editor-ui";
+import { type FC, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
-import { ComponentUI } from "@models/common/ComponentUI";
-import { getLibraries } from "@src/modules/slices";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { managerClient } from "@src/managerClient";
-import { getState, telemetry } from "@src/apiClient";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { getFieldMappingFingerprint } from "@src/domain/slice";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { getState, telemetry } from "@/apiClient";
+import { getFieldMappingFingerprint } from "@/domain/slice";
+import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { NonSharedSliceInSliceZone } from "@/legacy/lib/models/common/CustomType/sliceZone";
+import { managerClient } from "@/managerClient";
+import { getLibraries } from "@/modules/slices";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { NonSharedSliceCardProps } from "../sliceCards/NonSharedSliceCard";
 import { ConvertLegacySliceAsNewSliceDialog } from "./ConvertLegacySliceAsNewSliceDialog";

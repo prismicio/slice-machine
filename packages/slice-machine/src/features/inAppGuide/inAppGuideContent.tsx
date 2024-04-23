@@ -1,6 +1,6 @@
-import { TextLink, Text } from "@prismicio/editor-ui";
+import { Text, TextLink } from "@prismicio/editor-ui";
 
-import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 
 export function useInAppGuideContent() {
   const { repositoryUrl } = useRepositoryInformation();

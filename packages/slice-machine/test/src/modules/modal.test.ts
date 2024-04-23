@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  modalReducer,
-  modalOpenCreator,
-  modalCloseCreator,
   initialState as modalInitialState,
-} from "@src/modules/modal";
-import { ModalKeysEnum, ModalStoreType } from "@src/modules/modal/types";
+  modalCloseCreator,
+  modalOpenCreator,
+  modalReducer,
+} from "@/modules/modal";
+import { ModalKeysEnum, ModalStoreType } from "@/modules/modal/types";
 
 describe("[Modal module]", () => {
   describe("[Reducer]", () => {

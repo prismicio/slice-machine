@@ -3,15 +3,15 @@ import {
   type ComponentPropsWithoutRef,
   type ElementRef,
   type FC,
+  forwardRef,
   type ReactNode,
   Suspense,
-  forwardRef,
 } from "react";
 
-import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
-import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
-import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
-import { ErrorBoundary } from "@src/ErrorBoundary";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { gitProviderToConfig } from "@/features/settings/git/GitProvider";
+import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
+import { useLinkedGitRepos } from "@/features/settings/git/useLinkedGitRepos";
 
 type PushChangesButtonProps = Required<BarePushChangesButtonProps>;
 

@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import { managerClient } from "@src/managerClient";
+import { managerClient } from "@/managerClient";
 
 type DeleteSliceArgs = {
   libraryID: string;

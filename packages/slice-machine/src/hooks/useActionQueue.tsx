@@ -1,14 +1,14 @@
-import {
-  useCallback,
-  useState,
-  useEffect,
-  SetStateAction,
-  Dispatch,
-  useMemo,
-} from "react";
-import { uniqueId } from "lodash";
-import { toast } from "react-toastify";
 import { Box, Button, Text } from "@prismicio/editor-ui";
+import { uniqueId } from "lodash";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { toast } from "react-toastify";
 
 export type ActionQueueStatus = "pending" | "done" | "failed";
 

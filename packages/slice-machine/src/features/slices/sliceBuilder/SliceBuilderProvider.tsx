@@ -1,20 +1,20 @@
+import { useStableCallback } from "@prismicio/editor-support/React";
+import { useRouter } from "next/router";
 import {
-  ReactNode,
   createContext,
+  ReactNode,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from "react";
-import { useStableCallback } from "@prismicio/editor-support/React";
-import { useRouter } from "next/router";
 
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { readSliceMocks, updateSlice } from "@src/apiClient";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { VariationSM } from "@lib/models/common/Slice";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { ActionQueueStatus, useActionQueue } from "@src/hooks/useActionQueue";
+import { readSliceMocks, updateSlice } from "@/apiClient";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { VariationSM } from "@/legacy/lib/models/common/Slice";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 type SliceContext = {
   slice: ComponentUI;

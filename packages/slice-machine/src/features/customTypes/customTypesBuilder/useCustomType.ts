@@ -1,7 +1,7 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
-import { managerClient } from "@src/managerClient";
+import { managerClient } from "@/managerClient";
 
 export function useCustomType(id: string): CustomType | undefined {
   return useRequest(readCustomType, [id]);

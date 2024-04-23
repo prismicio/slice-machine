@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  userContextReducer,
   sendAReviewCreator,
   skipReviewCreator,
-} from "@src/modules/userContext";
-import { UserContextStoreType } from "@src/modules/userContext/types";
+  userContextReducer,
+} from "@/modules/userContext";
+import { UserContextStoreType } from "@/modules/userContext/types";
 
 describe("[UserContext module]", () => {
   describe("[Reducer]", () => {

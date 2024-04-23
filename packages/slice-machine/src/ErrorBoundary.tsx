@@ -10,7 +10,7 @@ import {
   useRef,
 } from "react";
 
-import { useAuthStatus } from "@src/hooks/useAuthStatus";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 
 type ErrorBoundaryProps = Pick<
   // TODO(DT-1979): Export the `ErrorBoundaryProps` type from `@prismicio/editor-ui`.

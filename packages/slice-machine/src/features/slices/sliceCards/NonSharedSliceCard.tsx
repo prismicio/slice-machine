@@ -1,10 +1,10 @@
 import { Badge, Box, Text, Tooltip } from "@prismicio/editor-ui";
 import type { FC } from "react";
 
-import { type NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
-import { Card, CardActions, CardFooter, CardMedia } from "@src/components/Card";
-import { getNonSharedSliceLabel } from "@src/domain/slice";
-import { useLab } from "@src/features/labs/labsList/useLab";
+import { Card, CardActions, CardFooter, CardMedia } from "@/components/Card";
+import { getNonSharedSliceLabel } from "@/domain/slice";
+import { useLab } from "@/features/labs/labsList/useLab";
+import { type NonSharedSliceInSliceZone } from "@/legacy/lib/models/common/CustomType/sliceZone";
 
 import { ConvertLegacySliceButton } from "../convertLegacySlice/ConvertLegacySliceButton";
 

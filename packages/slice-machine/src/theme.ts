@@ -1,5 +1,4 @@
-import { darken, lighten, alpha } from "@theme-ui/color";
-
+import { alpha, darken, lighten } from "@theme-ui/color";
 import { Theme } from "theme-ui";
 
 const AppTheme = (): Theme =>

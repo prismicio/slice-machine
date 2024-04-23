@@ -1,12 +1,12 @@
 import { findFocusableAncestor } from "@prismicio/editor-support/DOM";
+import { clsx } from "clsx";
 import {
+  createContext,
   type FC,
   type MouseEventHandler,
   type PropsWithChildren,
-  createContext,
   useContext,
 } from "react";
-import { clsx } from "clsx";
 
 import * as styles from "./Table.css";
 

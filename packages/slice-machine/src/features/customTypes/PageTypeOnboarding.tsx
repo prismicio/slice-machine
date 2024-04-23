@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Box, Button, Text } from "@prismicio/editor-ui";
 import { cache } from "@prismicio/editor-support/Suspense";
+import { Box, Button, Text } from "@prismicio/editor-ui";
+import { useState } from "react";
 
-import { CreateCustomTypeModal } from "@components/Forms/CreateCustomTypeModal";
-import { BlankPageIcon } from "@src/icons/BlankPageIcon";
-import { getIsEmptyProject } from "@src/hooks/useIsEmptyProject";
+import { getIsEmptyProject } from "@/hooks/useIsEmptyProject";
+import { BlankPageIcon } from "@/icons/BlankPageIcon";
+import { CreateCustomTypeModal } from "@/legacy/components/Forms/CreateCustomTypeModal";
 
 export function PageTypeOnboarding() {
   const [isCreatingCustomType, setIsCreatingCustomType] = useState(false);

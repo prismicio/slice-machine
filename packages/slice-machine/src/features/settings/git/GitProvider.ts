@@ -1,9 +1,9 @@
 import { GIT_PROVIDER, GitProvider } from "@slicemachine/manager/client";
 
-import { BitbucketIcon } from "@src/icons/BitbucketIcon";
-import { GitHubIcon } from "@src/icons/GitHubIcon";
-import { GitLabIcon } from "@src/icons/GitLabIcon";
-import { managerClient } from "@src/managerClient";
+import { BitbucketIcon } from "@/icons/BitbucketIcon";
+import { GitHubIcon } from "@/icons/GitHubIcon";
+import { GitLabIcon } from "@/icons/GitLabIcon";
+import { managerClient } from "@/managerClient";
 
 export const gitProviderToConfig = {
   gitHub: {

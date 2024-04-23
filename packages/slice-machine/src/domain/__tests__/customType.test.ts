@@ -1,9 +1,8 @@
-import { describe, expect } from "vitest";
-
 import {
   CustomType,
   DynamicSection,
 } from "@prismicio/types-internal/lib/customtypes";
+import { describe, expect } from "vitest";
 
 import * as CustomTypeModel from "../customType";
 

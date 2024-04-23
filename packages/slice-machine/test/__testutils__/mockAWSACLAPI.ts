@@ -1,5 +1,5 @@
-import { TestContext } from "vitest";
 import { rest } from "msw";
+import { TestContext } from "vitest";
 
 import { readMSWFormData } from "./readMSWFormData";
 

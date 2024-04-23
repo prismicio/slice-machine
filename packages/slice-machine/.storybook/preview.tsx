@@ -1,5 +1,6 @@
-import { ThemeProvider, TooltipProvider } from "@prismicio/editor-ui";
 import "@prismicio/editor-ui/style.css";
+
+import { ThemeProvider, TooltipProvider } from "@prismicio/editor-ui";
 import type { Preview } from "@storybook/react";
 
 const preview: Preview = {
