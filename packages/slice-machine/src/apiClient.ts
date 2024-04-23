@@ -1,13 +1,18 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { CustomTypes } from "@lib/models/common/CustomType";
-import { CustomScreenshotRequest } from "@lib/models/common/Screenshots";
-import { Slices, Variations, type VariationSM } from "@lib/models/common/Slice";
-import { CheckAuthStatusResponse } from "@models/common/Auth";
-import { SimulatorCheckResponse } from "@models/common/Simulator";
-import ServerState from "@models/server/ServerState";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { SliceMachineManagerClient } from "@slicemachine/manager/client";
+
+import { CheckAuthStatusResponse } from "@/legacy/lib/models/common/Auth";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
+import { CustomScreenshotRequest } from "@/legacy/lib/models/common/Screenshots";
+import { SimulatorCheckResponse } from "@/legacy/lib/models/common/Simulator";
+import {
+  Slices,
+  Variations,
+  type VariationSM,
+} from "@/legacy/lib/models/common/Slice";
+import ServerState from "@/legacy/lib/models/server/ServerState";
 
 import { managerClient } from "./managerClient";
 

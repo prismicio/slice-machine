@@ -1,9 +1,10 @@
-import { pascalize } from "@lib/utils/str";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { telemetry } from "@src/apiClient";
 import { buildEmptySliceModel } from "@src/domain/slice";
 import { managerClient } from "@src/managerClient";
 import { toast } from "react-toastify";
+
+import { pascalize } from "@/legacy/lib/utils/str";
 
 type CreateSliceArgs = {
   sliceName: string;

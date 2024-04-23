@@ -1,4 +1,3 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSlice } from "@src/features/slices/actions/renameSlice";
 import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
@@ -6,6 +5,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
 import { Box } from "theme-ui";
+
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
 import ModalFormCard from "../../ModalFormCard";
 import { InputBox } from "../components/InputBox";

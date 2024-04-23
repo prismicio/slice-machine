@@ -1,6 +1,3 @@
-import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { Button } from "@prismicio/editor-ui";
 import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/customtypes";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
@@ -30,6 +27,9 @@ import { RenameSliceModal } from "@/legacy/components/Forms/RenameSliceModal";
 import Grid from "@/legacy/components/Grid";
 import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
 import { SliceToastMessage } from "@/legacy/components/ToasterContainer";
+import { VIDEO_WHAT_ARE_SLICES } from "@/legacy/lib/consts";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();

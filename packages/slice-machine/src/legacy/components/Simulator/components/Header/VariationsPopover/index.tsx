@@ -1,8 +1,9 @@
-import { VariationSM } from "@lib/models/common/Slice";
 import React, { useEffect, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { Popover } from "react-tiny-popover";
 import { Box, Button, ThemeUICSSObject, ThemeUIStyleObject } from "theme-ui";
+
+import { VariationSM } from "@/legacy/lib/models/common/Slice";
 
 import MenuList from "./MenuList";
 

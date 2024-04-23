@@ -1,4 +1,3 @@
-import { pascalize } from "@lib/utils/str";
 import {
   Box,
   Dialog,
@@ -18,6 +17,7 @@ import type { FC } from "react";
 import { useSelector } from "react-redux";
 
 import { validateSliceModalValues as validateAsNewSliceValues } from "@/legacy/components/Forms/formsValidator";
+import { pascalize } from "@/legacy/lib/utils/str";
 
 import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";

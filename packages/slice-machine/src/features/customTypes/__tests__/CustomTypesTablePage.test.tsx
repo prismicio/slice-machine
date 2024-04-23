@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-import { CustomTypes } from "@lib/models/common/CustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import {
   createSliceMachineManager,
@@ -12,6 +11,8 @@ import { render, screen, waitFor, within } from "test/__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
 import { describe, test, TestContext, vi } from "vitest";
+
+import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 
 import pkg from "../../../../package.json";
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";

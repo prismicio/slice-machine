@@ -1,8 +1,4 @@
 import {
-  ChangedCustomType,
-  ChangedSlice,
-} from "@lib/models/common/ModelStatus";
-import {
   useOnChange,
   useStableCallback,
 } from "@prismicio/editor-support/React";
@@ -24,6 +20,11 @@ import {
   useEffect,
   useMemo,
 } from "react";
+
+import {
+  ChangedCustomType,
+  ChangedSlice,
+} from "@/legacy/lib/models/common/ModelStatus";
 
 import { ActionQueueStatus, useActionQueue } from "../../hooks/useActionQueue";
 import { useActiveEnvironment } from "../environments/useActiveEnvironment";

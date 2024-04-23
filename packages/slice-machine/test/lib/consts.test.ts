@@ -1,5 +1,8 @@
 import { describe, test, expect } from "vitest";
-import { API_ID_REGEX, API_ID_RETRO_COMPATIBLE_REGEX } from "@lib/consts";
+import {
+  API_ID_REGEX,
+  API_ID_RETRO_COMPATIBLE_REGEX,
+} from "@/legacy/lib/consts";
 
 describe("Constant", () => {
   test("API_ID_REGEX should block special characters except _", () => {

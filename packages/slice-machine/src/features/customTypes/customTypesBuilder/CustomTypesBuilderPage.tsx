@@ -1,6 +1,3 @@
-import { CustomTypeBuilder } from "@lib/builders/CustomTypeBuilder";
-import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
-import { hasLocal } from "@lib/models/common/ModelData";
 import { Box } from "@prismicio/editor-ui";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
 import { getFormat } from "@src/domain/customType";
@@ -24,6 +21,12 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@/legacy/components/AppLayout";
+import { CustomTypeBuilder } from "@/legacy/lib/builders/CustomTypeBuilder";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@/legacy/lib/models/common/CustomType";
+import { hasLocal } from "@/legacy/lib/models/common/ModelData";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { EditDropdown } from "../EditDropdown";

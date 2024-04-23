@@ -1,13 +1,17 @@
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { LocalOrRemoteSlice } from "@lib/models/common/ModelData";
-import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
-import { SliceSM } from "@lib/models/common/Slice";
-import { LibraryUI } from "@models/common/LibraryUI";
 import { SaveSliceMockRequest } from "@src/apiClient";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
+
+import {
+  ComponentUI,
+  ScreenshotUI,
+} from "@/legacy/lib/models/common/ComponentUI";
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { LocalOrRemoteSlice } from "@/legacy/lib/models/common/ModelData";
+import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/slices";
+import { SliceSM } from "@/legacy/lib/models/common/Slice";
 
 import { SlicesStoreType } from "./types";
 

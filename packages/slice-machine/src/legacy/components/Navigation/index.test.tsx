@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import { cache } from "@prismicio/editor-support/Suspense";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
@@ -19,6 +18,8 @@ import {
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
 import { describe, expect, test, vi } from "vitest";
+
+import { FrontEndEnvironment } from "@/legacy/lib/models/common/Environment";
 
 import SideNavigation from "./index";
 

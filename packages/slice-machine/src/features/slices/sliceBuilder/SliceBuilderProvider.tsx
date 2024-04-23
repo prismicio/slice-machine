@@ -1,5 +1,3 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { VariationSM } from "@lib/models/common/Slice";
 import { useStableCallback } from "@prismicio/editor-support/React";
 import { readSliceMocks, updateSlice } from "@src/apiClient";
 import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
@@ -14,6 +12,9 @@ import {
   useMemo,
   useState,
 } from "react";
+
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { VariationSM } from "@/legacy/lib/models/common/Slice";
 
 type SliceContext = {
   slice: ComponentUI;

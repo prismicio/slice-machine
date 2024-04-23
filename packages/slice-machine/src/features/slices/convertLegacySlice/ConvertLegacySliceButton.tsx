@@ -1,5 +1,3 @@
-import { ComponentUI } from "@models/common/ComponentUI";
-import { NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
 import {
   Button,
   DropdownMenu,
@@ -18,6 +16,9 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { type FC, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { NonSharedSliceInSliceZone } from "@/legacy/lib/models/common/CustomType/sliceZone";
 
 import { NonSharedSliceCardProps } from "../sliceCards/NonSharedSliceCard";
 import { ConvertLegacySliceAsNewSliceDialog } from "./ConvertLegacySliceAsNewSliceDialog";

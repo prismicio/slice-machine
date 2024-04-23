@@ -1,6 +1,3 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
-import { Slices, VariationSM } from "@lib/models/common/Slice";
 import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 import { DefaultErrorMessage } from "@prismicio/editor-ui";
 import { renderSliceMock } from "@prismicio/mocks";
@@ -26,6 +23,9 @@ import { toast } from "react-toastify";
 import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
 import ScreenshotPreviewModal from "@/legacy/components/ScreenshotPreviewModal";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { ScreenDimensions } from "@/legacy/lib/models/common/Screenshots";
+import { Slices, VariationSM } from "@/legacy/lib/models/common/Slice";
 
 import FailedConnect from "./components/FailedConnect";
 import FullPage from "./components/FullPage";

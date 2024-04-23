@@ -1,4 +1,3 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 import {
   Box,
   Button,
@@ -23,6 +22,8 @@ import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { AddPhotoAlternateIcon } from "@src/icons/AddPhotoAlternateIcon";
 import Link from "next/link";
 import type { FC } from "react";
+
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
 type SharedSliceCardProps = {
   isComingSoon?: boolean;

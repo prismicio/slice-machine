@@ -1,4 +1,3 @@
-import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import {
   AuthStatus,
   UserContextStoreType,
@@ -8,6 +7,8 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
+
+import ErrorWithStatus from "@/legacy/lib/models/common/ErrorWithStatus";
 
 import { refreshStateCreator } from "../environment";
 

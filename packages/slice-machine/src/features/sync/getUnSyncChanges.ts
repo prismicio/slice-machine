@@ -1,5 +1,7 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { AuthStatus } from "@src/modules/userContext/types";
+
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import {
   getModelId,
   hasLocal,
@@ -7,14 +9,13 @@ import {
   LocalOrRemoteCustomType,
   LocalOrRemoteSlice,
   RemoteOnlySlice,
-} from "@lib/models/common/ModelData";
+} from "@/legacy/lib/models/common/ModelData";
 import {
   ChangedCustomType,
   ChangedSlice,
   computeStatuses,
   ModelStatus,
-} from "@lib/models/common/ModelStatus";
-import { AuthStatus } from "@src/modules/userContext/types";
+} from "@/legacy/lib/models/common/ModelStatus";
 
 type GetUnSyncedChangesArgs = {
   customTypes: LocalOrRemoteCustomType[];

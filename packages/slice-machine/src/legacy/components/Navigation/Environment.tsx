@@ -1,5 +1,3 @@
-import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
-import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
 import {
   Environment as EnvironmentType,
   isUnauthenticatedError,
@@ -16,6 +14,9 @@ import { useAuthStatus } from "@src/hooks/useAuthStatus";
 import { useNetwork } from "@src/hooks/useNetwork";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useState } from "react";
+
+import { normalizeFrontendCustomTypes } from "@/legacy/lib/models/common/normalizers/customType";
+import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/slices";
 
 export function Environment() {
   const { environments, error: useEnvironmentsError } = useEnvironments();

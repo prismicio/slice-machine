@@ -1,4 +1,3 @@
-import { createDocumentsListEndpointFromRepoName } from "@lib/utils/repo";
 import { Button, Image, tokens } from "@prismicio/editor-ui";
 import {
   BlankSlate,
@@ -14,6 +13,8 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import router from "next/router";
 import { FiExternalLink } from "react-icons/fi";
 import { useSelector } from "react-redux";
+
+import { createDocumentsListEndpointFromRepoName } from "@/legacy/lib/utils/repo";
 
 export const NoChangesBlankSlate = () => {
   const { repoName } = useSelector((state: SliceMachineStoreType) => ({

@@ -1,5 +1,3 @@
-import { TabField } from "@lib/models/common/CustomType";
-import { Widget } from "@lib/models/common/widgets/Widget";
 import { Menu, MenuButton, MenuItem, MenuList } from "@reach/menu-button";
 import React, { Fragment } from "react";
 import { Draggable } from "react-beautiful-dnd";
@@ -8,6 +6,9 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaBars } from "react-icons/fa";
 import { Box, Flex, useThemeUI } from "theme-ui";
 import { AnyObjectSchema } from "yup";
+
+import { TabField } from "@/legacy/lib/models/common/CustomType";
+import { Widget } from "@/legacy/lib/models/common/widgets/Widget";
 
 import Li from "../Li";
 import SliceMachineIconButton from "../SliceMachineIconButton";

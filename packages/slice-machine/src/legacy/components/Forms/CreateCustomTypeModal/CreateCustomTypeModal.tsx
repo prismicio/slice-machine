@@ -1,5 +1,3 @@
-import { API_ID_REGEX } from "@lib/consts";
-import { slugify } from "@lib/utils/str";
 import type { CustomTypeFormat } from "@slicemachine/manager";
 import { getFormat } from "@src/domain/customType";
 import {
@@ -22,6 +20,8 @@ import { useSelector } from "react-redux";
 import { Box } from "theme-ui";
 
 import ModalFormCard from "@/legacy/components/ModalFormCard";
+import { API_ID_REGEX } from "@/legacy/lib/consts";
+import { slugify } from "@/legacy/lib/utils/str";
 
 import { InputBox } from "../components/InputBox";
 import { SelectRepeatable } from "../components/SelectRepeatable";

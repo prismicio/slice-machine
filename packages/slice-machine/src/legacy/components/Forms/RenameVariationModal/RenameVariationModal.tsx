@@ -1,5 +1,3 @@
-import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import type { VariationSM } from "@lib/models/common/Slice";
 import {
   Box,
   Dialog,
@@ -14,6 +12,9 @@ import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderPro
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { Formik } from "formik";
 import { type FC, useState } from "react";
+
+import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import type { VariationSM } from "@/legacy/lib/models/common/Slice";
 
 import styles from "./RenameVariationModal.module.css";
 
