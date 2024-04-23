@@ -1,14 +1,13 @@
 import { Button, Switch, Text } from "@prismicio/editor-ui";
+import { telemetry } from "@src/apiClient";
+import { ListHeader } from "@src/components/List";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
 import { BaseStyles } from "theme-ui";
 
-import { ListHeader } from "@src/components/List";
-import { telemetry } from "@src/apiClient";
-
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
-import NewField from "./Card/components/NewField";
 import Card from "./Card";
+import NewField from "./Card/components/NewField";
 import EmptyState from "./components/EmptyState";
 
 const Zone = ({

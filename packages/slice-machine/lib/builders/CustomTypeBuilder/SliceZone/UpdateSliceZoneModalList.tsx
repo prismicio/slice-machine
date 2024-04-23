@@ -1,9 +1,9 @@
-import { FieldArray } from "formik";
-
 import Grid from "@components/Grid";
-import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
+import { FieldArray } from "formik";
+
+import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
 
 const UpdateSliceZoneModalList: React.FC<{
   availableSlices: ReadonlyArray<ComponentUI>;

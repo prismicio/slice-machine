@@ -1,7 +1,6 @@
-import { useSelector } from "react-redux";
-
-import { SliceMachineStoreType } from "@src/redux/type";
 import { getApiEndpoint, getRepoName } from "@src/modules/environment";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { useSelector } from "react-redux";
 
 // TODO: This hook should be extracted to a new manager endpoint
 export function useRepositoryInformation() {

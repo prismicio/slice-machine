@@ -1,6 +1,6 @@
+import { marked } from "marked";
 import React from "react";
 import { Text } from "theme-ui";
-import { marked } from "marked";
 
 interface ReleaseNotesDetailsProps {
   releaseNotes: string;

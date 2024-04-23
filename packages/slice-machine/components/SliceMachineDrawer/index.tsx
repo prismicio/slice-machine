@@ -1,7 +1,7 @@
-import React from "react";
-import Drawer from "rc-drawer";
-import { Close, Flex, Heading } from "theme-ui";
 import Card from "@components/Card";
+import Drawer from "rc-drawer";
+import React from "react";
+import { Close, Flex, Heading } from "theme-ui";
 
 export const SliceMachineDrawerUI: React.FunctionComponent<{
   isOpen: boolean;

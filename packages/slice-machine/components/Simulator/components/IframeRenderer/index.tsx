@@ -1,10 +1,8 @@
-import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
-
-import { Flex } from "theme-ui";
-
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { SimulatorClient } from "@prismicio/simulator";
 import { useElementSize } from "@src/hooks/useElementSize";
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
+import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
+import { Flex } from "theme-ui";
 
 function useSimulatorClient(): readonly [
   SimulatorClient | undefined,

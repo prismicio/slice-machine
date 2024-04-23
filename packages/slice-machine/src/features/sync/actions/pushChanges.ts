@@ -1,9 +1,9 @@
-import { pushChanges as pushChangesCall, telemetry } from "@src/apiClient";
 import {
   ChangedCustomType,
   ChangedSlice,
 } from "@lib/models/common/ModelStatus";
 import { PushChangesLimit } from "@slicemachine/manager";
+import { pushChanges as pushChangesCall, telemetry } from "@src/apiClient";
 
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
 

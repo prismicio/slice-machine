@@ -1,7 +1,7 @@
+import { Icon } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { TextLink } from "./TextLink";
-import { Icon } from "@prismicio/editor-ui";
 
 type Story = StoryObj<typeof meta>;
 

@@ -1,38 +1,36 @@
-import { Box } from "@prismicio/editor-ui";
-import { Suspense, type FC } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-
-import { telemetry } from "@src/apiClient";
 import VideoItem from "@components/Navigation/VideoItem";
-import { LightningIcon } from "@src/icons/Lightning";
-import { MathPlusIcon } from "@src/icons/MathPlusIcon";
-import { SettingsIcon } from "@src/icons/SettingsIcon";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { Box } from "@prismicio/editor-ui";
+import { telemetry } from "@src/apiClient";
+import { Divider } from "@src/components/Divider";
 import {
-  SideNavLink,
-  SideNavListItem,
-  SideNavList,
   SideNav,
+  SideNavLink,
+  SideNavList,
+  SideNavListItem,
   SideNavRepository,
 } from "@src/components/SideNav/SideNav";
-import { Divider } from "@src/components/Divider";
-import { FolderIcon } from "@src/icons/FolderIcon";
-import { userHasSeenTutorialsToolTip } from "@src/modules/userContext";
-import { SliceMachineStoreType } from "@src/redux/type";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { ErrorBoundary } from "@src/ErrorBoundary";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
 import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
-import { ErrorBoundary } from "@src/ErrorBoundary";
+import { FolderIcon } from "@src/icons/FolderIcon";
+import { LightningIcon } from "@src/icons/Lightning";
+import { MathPlusIcon } from "@src/icons/MathPlusIcon";
+import { SettingsIcon } from "@src/icons/SettingsIcon";
+import { userHasSeenTutorialsToolTip } from "@src/modules/userContext";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@src/redux/type";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { type FC, Suspense } from "react";
+import { useSelector } from "react-redux";
 
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
+import styles from "./index.module.css";
 import { RunningVersion } from "./RunningVersion";
 import { UpdateBox } from "./UpdateBox";
-
-import styles from "./index.module.css";
 
 const Navigation: FC = () => {
   const { hasSeenTutorialsToolTip } = useSelector(

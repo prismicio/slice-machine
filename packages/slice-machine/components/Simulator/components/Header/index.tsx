@@ -1,12 +1,11 @@
-import router from "next/router";
-import { Text, Flex, Switch, Label } from "theme-ui";
-
 import { Button } from "@components/Button";
-import VariationsPopover from "@components/Simulator/components/Header/VariationsPopover";
 import * as Links from "@components/Simulator/components/Header/links";
-import SliceMachineLogo from "@src/icons/SliceMachineLogo";
+import VariationsPopover from "@components/Simulator/components/Header/VariationsPopover";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { VariationSM } from "@lib/models/common/Slice";
+import SliceMachineLogo from "@src/icons/SliceMachineLogo";
+import router from "next/router";
+import { Flex, Label, Switch, Text } from "theme-ui";
 
 const redirect = (
   model: ComponentUI,

@@ -1,8 +1,8 @@
 export {
   BlankSlate,
   BlankSlateActions,
+  BlankSlateContent,
   BlankSlateDescription,
   BlankSlateImage,
   BlankSlateTitle,
-  BlankSlateContent,
 } from "./BlankSlate";

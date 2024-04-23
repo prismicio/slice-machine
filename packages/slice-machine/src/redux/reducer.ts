@@ -3,14 +3,14 @@
  * were to do this in store.js, reducers wouldn't be hot reloadable.
  */
 
-import { combineReducers, Reducer } from "redux";
-import { modalReducer } from "@src/modules/modal";
-import { loadingReducer } from "@src/modules/loading";
-import { userContextReducer } from "@src/modules/userContext";
-import { environmentReducer } from "@src/modules/environment";
 import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
+import { environmentReducer } from "@src/modules/environment";
+import { loadingReducer } from "@src/modules/loading";
+import { modalReducer } from "@src/modules/modal";
 import { slicesReducer } from "@src/modules/slices";
+import { userContextReducer } from "@src/modules/userContext";
 import { routerReducer } from "connected-next-router";
+import { combineReducers, Reducer } from "redux";
 
 /** Creates the main reducer */
 const createReducer = (): Reducer =>

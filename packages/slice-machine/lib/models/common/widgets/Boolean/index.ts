@@ -1,6 +1,10 @@
-import * as yup from "yup";
+import { BooleanField } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { BsToggleOn } from "react-icons/bs";
+import * as yup from "yup";
 
+import { createValidationSchema } from "../../../../forms";
+import { DefaultFields } from "../../../../forms/defaults";
+import { CheckBox, Input } from "../../../../forms/fields";
 /** {
     "type" : "Boolean",
     "config" : {
@@ -10,14 +14,8 @@ import { BsToggleOn } from "react-icons/bs";
       "label" : "bool"
     }
   } */
-
 import { removeProp } from "../../../../utils";
-import { createValidationSchema } from "../../../../forms";
-import { DefaultFields } from "../../../../forms/defaults";
-import { Input, CheckBox } from "../../../../forms/fields";
-
 import { Widget } from "../Widget";
-import { BooleanField } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const Meta = {
   icon: BsToggleOn,

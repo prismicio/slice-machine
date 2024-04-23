@@ -1,4 +1,5 @@
 import { Text } from "theme-ui";
+
 import { VersionTags } from ".";
 
 interface VersionTagProps {

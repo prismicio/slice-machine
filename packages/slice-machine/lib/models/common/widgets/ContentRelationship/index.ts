@@ -1,14 +1,13 @@
-import * as yup from "yup";
-import Form, { FormFields } from "./Form";
-
-import { MdSettingsEthernet } from "react-icons/md";
-
-import { Widget } from "../Widget";
-import { linkConfigSchema } from "../Link";
-import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { useSelector } from "react-redux";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { hasLocal } from "@lib/models/common/ModelData";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { MdSettingsEthernet } from "react-icons/md";
+import { useSelector } from "react-redux";
+import * as yup from "yup";
+
+import { linkConfigSchema } from "../Link";
+import { Widget } from "../Widget";
+import Form, { FormFields } from "./Form";
 
 /**
  * {

@@ -1,19 +1,18 @@
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { Slices } from "@lib/models/common/Slice";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { getState } from "@src/apiClient";
+import { createSlicesTemplates } from "@src/features/slicesTemplates/actions/createSlicesTemplates";
+import { SliceTemplate } from "@src/features/slicesTemplates/useSlicesTemplates";
+import { managerClient } from "@src/managerClient";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { FC } from "react";
 import { Text } from "theme-ui";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-
-import { SliceTemplate } from "@src/features/slicesTemplates/useSlicesTemplates";
-import { Slices } from "@lib/models/common/Slice";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { createSlicesTemplates } from "@src/features/slicesTemplates/actions/createSlicesTemplates";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { getState } from "@src/apiClient";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { managerClient } from "@src/managerClient";
 
 import ModalFormCard from "../../../../components/ModalFormCard";
-import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
+import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
 interface UpdateSliceModalProps {
   formId: string;

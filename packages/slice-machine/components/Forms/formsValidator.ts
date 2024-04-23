@@ -1,9 +1,10 @@
-import { SliceModalValues } from "./formsTypes";
-import { RESERVED_SLICE_NAME, API_ID_REGEX } from "@lib/consts";
+import { API_ID_REGEX, RESERVED_SLICE_NAME } from "@lib/consts";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { SliceSM } from "@lib/models/common/Slice";
 import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
+
+import { SliceModalValues } from "./formsTypes";
 
 type SliceModalValuesValidity =
   | {

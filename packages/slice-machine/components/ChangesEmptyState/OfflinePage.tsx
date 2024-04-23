@@ -1,6 +1,6 @@
 import React from "react";
-import { Flex, Text } from "theme-ui";
 import { IoCloudOfflineOutline } from "react-icons/io5";
+import { Flex, Text } from "theme-ui";
 
 export const OfflinePage = () => {
   return (

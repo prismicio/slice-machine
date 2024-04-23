@@ -1,11 +1,10 @@
-import { useEffect } from "react";
-
-import { telemetry } from "@src/apiClient";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { getLibraries } from "@src/modules/slices";
 import type { LibraryUI } from "@lib/models/common/LibraryUI";
+import { telemetry } from "@src/apiClient";
+import { getLibraries } from "@src/modules/slices";
+import { SliceMachineStoreType } from "@src/redux/type";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import { managerClient } from "../managerClient";
 

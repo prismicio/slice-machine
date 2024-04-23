@@ -1,4 +1,4 @@
-import { Flex, Box, Heading, Card } from "theme-ui";
+import { Box, Card, Flex, Heading } from "theme-ui";
 
 const PreviewCard = ({
   variant = "primary",

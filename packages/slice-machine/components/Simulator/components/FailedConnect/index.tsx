@@ -1,9 +1,8 @@
-import { Image, Link, Text } from "theme-ui";
-import FullPage from "../FullPage";
-
 import { Button } from "@components/Button";
-
 import { IoMdRefresh } from "react-icons/io";
+import { Image, Link, Text } from "theme-ui";
+
+import FullPage from "../FullPage";
 
 const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => (
   <FullPage>

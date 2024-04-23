@@ -1,10 +1,9 @@
-import { Checkbox, Label, Box } from "theme-ui";
-
 import { Col, Flex as FlexGrid } from "@components/Flex";
-import { DefaultFields } from "@lib/forms/defaults";
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
-import { CheckBox } from "@lib/forms/fields";
 import { createFieldNameFromKey } from "@lib/forms";
+import { DefaultFields } from "@lib/forms/defaults";
+import { CheckBox } from "@lib/forms/fields";
+import { Box, Checkbox, Label } from "theme-ui";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {

@@ -1,11 +1,10 @@
-import * as yup from "yup";
-
-import { Widget } from "../models/common/widgets/Widget";
-
-import { DefaultFields } from "../forms/defaults";
-import { createInitialValues, createValidationSchema } from "../forms";
 import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 import { DropResult } from "react-beautiful-dnd";
+import * as yup from "yup";
+
+import { createInitialValues, createValidationSchema } from "../forms";
+import { DefaultFields } from "../forms/defaults";
+import { Widget } from "../models/common/widgets/Widget";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

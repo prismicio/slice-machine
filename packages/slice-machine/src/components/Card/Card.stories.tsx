@@ -7,11 +7,10 @@ import {
   Text,
   tokens,
 } from "@prismicio/editor-ui";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { AddPhotoAlternateIcon } from "@src/icons/AddPhotoAlternateIcon";
 import { ArrowDropDownIcon } from "@src/icons/ArrowDropDownIcon";
 import { SyncAltIcon } from "@src/icons/SyncAltIcon";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Card, CardActions, CardFooter, CardMedia, CardStatus } from "./Card";
 

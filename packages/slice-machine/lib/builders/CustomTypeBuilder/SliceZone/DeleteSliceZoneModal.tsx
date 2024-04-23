@@ -1,9 +1,8 @@
-import { Close, Flex, Heading, Paragraph } from "theme-ui";
-import { FC } from "react";
-
 import { Button } from "@components/Button";
 import Card from "@components/Card";
 import SliceMachineModal from "@components/SliceMachineModal";
+import { FC } from "react";
+import { Close, Flex, Heading, Paragraph } from "theme-ui";
 
 type DeleteSliceZoneModalProps = {
   deleteSliceZone: () => void;

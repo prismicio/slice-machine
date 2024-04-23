@@ -1,15 +1,12 @@
-import { type FC } from "react";
-import { useRouter } from "next/router";
 import { useMediaQuery } from "@prismicio/editor-support/React";
 import {
   Box,
+  breakpoints,
   Button,
   IconButton,
   Text,
   Tooltip,
-  breakpoints,
 } from "@prismicio/editor-ui";
-
 import {
   HoverCard,
   HoverCardCloseButton,
@@ -17,14 +14,16 @@ import {
   HoverCardMedia,
   HoverCardTitle,
 } from "@src/components/HoverCard";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useNetwork } from "@src/hooks/useNetwork";
-import { useAuthStatus } from "@src/hooks/useAuthStatus";
-import { useUnSyncChanges } from "@src/features/sync/useUnSyncChanges";
-import { ChangesIcon } from "@src/icons/ChangesIcon";
-import { AuthStatus } from "@src/modules/userContext/types";
 import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 import { AutoSyncStatusIndicator } from "@src/features/sync/components/AutoSyncStatusIndicator";
+import { useUnSyncChanges } from "@src/features/sync/useUnSyncChanges";
+import { useAuthStatus } from "@src/hooks/useAuthStatus";
+import { useNetwork } from "@src/hooks/useNetwork";
+import { ChangesIcon } from "@src/icons/ChangesIcon";
+import { AuthStatus } from "@src/modules/userContext/types";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useRouter } from "next/router";
+import { type FC } from "react";
 
 export const ChangesItem: FC = () => {
   const { setSeenChangesToolTip } = useSliceMachineActions();

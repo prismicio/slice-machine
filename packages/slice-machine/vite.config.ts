@@ -1,8 +1,9 @@
-import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
-import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
-import * as url from "node:url";
 import * as path from "node:path";
+import * as url from "node:url";
+
+import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 

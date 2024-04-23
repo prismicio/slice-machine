@@ -1,3 +1,4 @@
+import { removeKey } from "@prismicio/editor-support/Object";
 import {
   CustomType,
   DynamicSection,
@@ -9,8 +10,6 @@ import {
   SlicesFieldType,
   UID,
 } from "@prismicio/types-internal/lib/customtypes";
-import { removeKey } from "@prismicio/editor-support/Object";
-
 import { CustomTypeFormat } from "@slicemachine/manager";
 
 type DeleteSliceZoneSliceArgs = {

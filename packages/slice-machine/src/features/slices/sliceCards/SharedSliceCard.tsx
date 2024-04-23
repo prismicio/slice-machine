@@ -1,3 +1,4 @@
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import {
   Box,
   Button,
@@ -9,13 +10,9 @@ import {
   Icon,
   IconButton,
   Text,
-  Tooltip,
   tokens,
+  Tooltip,
 } from "@prismicio/editor-ui";
-import Link from "next/link";
-import type { FC } from "react";
-
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Card, CardFooter, CardMedia, CardStatus } from "@src/components/Card";
 import { countMissingScreenshots, getScreenshotUrl } from "@src/domain/slice";
 import {
@@ -24,6 +21,8 @@ import {
 } from "@src/features/changes/StatusBadge";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { AddPhotoAlternateIcon } from "@src/icons/AddPhotoAlternateIcon";
+import Link from "next/link";
+import type { FC } from "react";
 
 type SharedSliceCardProps = {
   isComingSoon?: boolean;

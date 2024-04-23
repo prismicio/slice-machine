@@ -1,6 +1,9 @@
-import * as yup from "yup";
+import { Timestamp } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdDateRange } from "react-icons/md";
+import * as yup from "yup";
 
+import { createValidationSchema } from "../../../../forms";
+import { DefaultFields } from "../../../../forms/defaults";
 /** {
     "type" : "Timestamp",
     "config" : {
@@ -8,12 +11,8 @@ import { MdDateRange } from "react-icons/md";
       "placeholder" : "timestamp"
     }
   } */
-
 import { removeProp } from "../../../../utils";
-import { DefaultFields } from "../../../../forms/defaults";
-import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
-import { Timestamp } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = DefaultFields;

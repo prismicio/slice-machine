@@ -1,12 +1,11 @@
-import { FC } from "react";
-import { useSelector } from "react-redux";
-
-import { SliceMachineStoreType } from "@src/redux/type";
-import { getLastSyncChange, getUserReview } from "@src/modules/userContext";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { getLibraries } from "@src/modules/slices";
 import { hasLocal } from "@lib/models/common/ModelData";
 import { useInAppGuide } from "@src/features/inAppGuide/InAppGuideContext";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { getLibraries } from "@src/modules/slices";
+import { getLastSyncChange, getUserReview } from "@src/modules/userContext";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { FC } from "react";
+import { useSelector } from "react-redux";
 
 import { ReviewForm } from "./ReviewForm";
 

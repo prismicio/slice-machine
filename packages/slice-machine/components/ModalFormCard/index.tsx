@@ -1,21 +1,21 @@
-import Modal from "react-modal";
+import { Button } from "@components/Button";
 import SliceMachineModal from "@components/SliceMachineModal";
 import {
-  Formik,
   Form,
+  Formik,
   FormikErrors,
+  FormikProps,
   FormikTouched,
   FormikValues,
-  FormikProps,
 } from "formik";
 import type {
   ComponentPropsWithoutRef,
   ReactNode,
   SetStateAction,
 } from "react";
-import { Flex, Heading, Close, Button as ThemeButton } from "theme-ui";
+import Modal from "react-modal";
+import { Button as ThemeButton, Close, Flex, Heading } from "theme-ui";
 
-import { Button } from "@components/Button";
 import Card from "../Card";
 
 type ModalCardProps<T extends FormikValues> = {

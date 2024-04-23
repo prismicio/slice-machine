@@ -1,7 +1,7 @@
-import { useRouter } from "next/router";
-import { Box, Button, Text } from "theme-ui";
 import { SIMULATOR_WINDOW_ID } from "@lib/consts";
+import { useRouter } from "next/router";
 import { MdErrorOutline } from "react-icons/md";
+import { Box, Button, Text } from "theme-ui";
 
 export const DeprecatedMockConfigMessage = () => {
   const router = useRouter();

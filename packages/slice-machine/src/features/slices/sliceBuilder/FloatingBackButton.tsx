@@ -1,7 +1,5 @@
 import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
-import { useRouter } from "next/router";
-import { type FC, Suspense, useState } from "react";
-
+import { ErrorBoundary } from "@src/ErrorBoundary";
 import { useCustomType } from "@src/features/customTypes/customTypesBuilder/useCustomType";
 import {
   CUSTOM_TYPES_CONFIG,
@@ -11,7 +9,8 @@ import {
 import { type Route, useRouteChange } from "@src/hooks/useRouteChange";
 import { CloseIcon } from "@src/icons/CloseIcon";
 import { UndoIcon } from "@src/icons/UndoIcon";
-import { ErrorBoundary } from "@src/ErrorBoundary";
+import { useRouter } from "next/router";
+import { type FC, Suspense, useState } from "react";
 
 export const FloatingBackButton: FC = () => {
   const { source } = useRouteChange();

@@ -1,2 +1,2 @@
-export { SoftDeleteDocumentsDrawer } from "./SoftDeleteDocumentsDrawer";
 export { HardDeleteDocumentsDrawer } from "./HardDeleteDocumentsDrawer";
+export { SoftDeleteDocumentsDrawer } from "./SoftDeleteDocumentsDrawer";

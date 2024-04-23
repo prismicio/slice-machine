@@ -1,8 +1,7 @@
-import { toast } from "react-toastify";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-
-import { managerClient } from "@src/managerClient";
 import { CustomTypeFormat } from "@slicemachine/manager";
+import { managerClient } from "@src/managerClient";
+import { toast } from "react-toastify";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 

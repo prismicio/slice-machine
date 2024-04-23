@@ -1,14 +1,11 @@
-import * as yup from "yup";
+import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdDns } from "react-icons/md";
+import * as yup from "yup";
 
 import { createValidationSchema } from "../../../../forms";
-
 import { removeProp } from "../../../../utils";
-
-import FormFields from "./FormFields";
-
 import { Widget } from "../Widget";
-import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import FormFields from "./FormFields";
 
 /**
  * {

@@ -1,9 +1,9 @@
-import type { FC } from "react";
 import { Box, Text } from "@prismicio/editor-ui";
+import type { FC } from "react";
 import { toast } from "react-toastify";
 
 import { LabsListItem } from "./LabsListItem";
-import { type UseLabArgs, type UseLabReturnType, useLab } from "./useLab";
+import { useLab, type UseLabArgs, type UseLabReturnType } from "./useLab";
 
 export const LabsList: FC = () => {
   const [legacySliceUpgraderLab, setLegacySliceUpgraderLab] = useLabWithToast(

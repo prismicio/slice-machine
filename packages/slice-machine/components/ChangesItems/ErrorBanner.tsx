@@ -1,6 +1,6 @@
+import { alpha } from "@theme-ui/color";
 import React from "react";
 import { Flex, Text, ThemeUIStyleObject } from "theme-ui";
-import { alpha } from "@theme-ui/color";
 
 interface ErrorBannerProps {
   message: string;

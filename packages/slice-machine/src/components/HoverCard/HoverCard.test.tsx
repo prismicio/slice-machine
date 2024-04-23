@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import React from "react";
-import { describe, test, expect, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import { screen, render, waitFor } from "../../../test/__testutils__";
+import { render, screen, waitFor } from "../../../test/__testutils__";
 import { HoverCard, HoverCardCloseButton } from ".";
 
 vi.mock("next/router", () => import("next-router-mock"));

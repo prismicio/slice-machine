@@ -1,20 +1,17 @@
+import { TabField } from "@lib/models/common/CustomType";
+import { Widget } from "@lib/models/common/widgets/Widget";
+import { Menu, MenuButton, MenuItem, MenuList } from "@reach/menu-button";
 import React, { Fragment } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { MenuButton, Menu, MenuItem, MenuList } from "@reach/menu-button";
-
+import { AiOutlineEdit } from "react-icons/ai";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { FaBars } from "react-icons/fa";
 import { Box, Flex, useThemeUI } from "theme-ui";
+import { AnyObjectSchema } from "yup";
 
 import Li from "../Li";
 import SliceMachineIconButton from "../SliceMachineIconButton";
 import ItemHeader from "./Header";
-
-import { AiOutlineEdit } from "react-icons/ai";
-import { BsThreeDotsVertical } from "react-icons/bs";
-
-import { FaBars } from "react-icons/fa";
-import { Widget } from "@lib/models/common/widgets/Widget";
-import { AnyObjectSchema } from "yup";
-import { TabField } from "@lib/models/common/CustomType";
 
 type Item<F extends TabField> = { key: string; value: F };
 

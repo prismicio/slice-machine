@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@prismicio/editor-ui";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { BaseHoverCard } from "./BaseHoverCard";
 

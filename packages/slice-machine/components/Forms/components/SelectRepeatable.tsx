@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { useField } from "formik";
+import React, { FC } from "react";
 import { Box, Radio } from "theme-ui";
 
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { FlexCard } from "./FlexCard";
-import { CustomTypeFormat } from "@slicemachine/manager";
 
 type SelectRepeatableProps = {
   format: CustomTypeFormat;

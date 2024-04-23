@@ -1,10 +1,13 @@
-import { useMediaQuery } from "@prismicio/editor-support/React";
-import { Tooltip, breakpoints } from "@prismicio/editor-ui";
-import { clsx } from "clsx";
 import type { UrlObject } from "node:url";
+
+import { useMediaQuery } from "@prismicio/editor-support/React";
+import { breakpoints, Tooltip } from "@prismicio/editor-ui";
+import { LogoIcon } from "@src/icons/LogoIcon";
+import OpenIcon from "@src/icons/OpenIcon";
+import { clsx } from "clsx";
 import {
-  forwardRef,
   type FC,
+  forwardRef,
   type HTMLAttributes,
   type LiHTMLAttributes,
   type MouseEvent,
@@ -12,9 +15,6 @@ import {
   type ReactNode,
   type SVGProps,
 } from "react";
-
-import { LogoIcon } from "@src/icons/LogoIcon";
-import OpenIcon from "@src/icons/OpenIcon";
 
 import { Divider } from "../Divider";
 import styles from "./SideNav.module.css";
