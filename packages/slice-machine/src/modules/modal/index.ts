@@ -1,7 +1,8 @@
-import { SliceMachineStoreType } from "@src/redux/type";
 import mapValues from "lodash/mapValues";
 import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
+
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { ModalKeysEnum, ModalStoreType } from "./types";
 

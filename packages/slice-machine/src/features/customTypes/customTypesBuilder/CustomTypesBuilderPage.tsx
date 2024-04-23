@@ -1,3 +1,16 @@
+import { Box } from "@prismicio/editor-ui";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { type FC, useEffect } from "react";
+import { useSelector } from "react-redux";
+
+import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { getFormat } from "@/domain/customType";
+import { AutoSaveStatusIndicator } from "@/features/autoSave/AutoSaveStatusIndicator";
+import {
+  CUSTOM_TYPES_CONFIG,
+  readBuilderPageDynamicSegment,
+} from "@/features/customTypes/customTypesConfig";
 import {
   AppLayout,
   AppLayoutActions,
@@ -5,24 +18,15 @@ import {
   AppLayoutBreadcrumb,
   AppLayoutContent,
   AppLayoutHeader,
-} from "@components/AppLayout";
-import { CustomTypeBuilder } from "@lib/builders/CustomTypeBuilder";
-import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
-import { hasLocal } from "@lib/models/common/ModelData";
-import { Box } from "@prismicio/editor-ui";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { getFormat } from "@src/domain/customType";
-import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
+} from "@/legacy/components/AppLayout";
+import { CustomTypeBuilder } from "@/legacy/lib/builders/CustomTypeBuilder";
 import {
-  CUSTOM_TYPES_CONFIG,
-  readBuilderPageDynamicSegment,
-} from "@src/features/customTypes/customTypesConfig";
-import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
-import type { SliceMachineStoreType } from "@src/redux/type";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { type FC, useEffect } from "react";
-import { useSelector } from "react-redux";
+  CustomTypes,
+  CustomTypeSM,
+} from "@/legacy/lib/models/common/CustomType";
+import { hasLocal } from "@/legacy/lib/models/common/ModelData";
+import { selectCustomTypeById } from "@/modules/availableCustomTypes";
+import type { SliceMachineStoreType } from "@/redux/type";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { EditDropdown } from "../EditDropdown";

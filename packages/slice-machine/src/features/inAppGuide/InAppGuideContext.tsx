@@ -1,4 +1,3 @@
-import { usePersistedState } from "@src/hooks/usePersistedState";
 import {
   createContext,
   Dispatch,
@@ -8,6 +7,8 @@ import {
   useContext,
   useMemo,
 } from "react";
+
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 type InAppGuideContextValue = {
   isInAppGuideOpen: boolean;

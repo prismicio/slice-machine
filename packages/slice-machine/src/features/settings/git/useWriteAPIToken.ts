@@ -1,6 +1,7 @@
 import type { GitRepoSpecifier } from "@slicemachine/manager";
-import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
-import { managerClient } from "@src/managerClient";
+
+import { useSliceMachineConfig } from "@/hooks/useSliceMachineConfig";
+import { managerClient } from "@/managerClient";
 
 type UseWriteAPITokenReturnType = {
   updateToken: (token: string) => Promise<void>;

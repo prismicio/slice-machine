@@ -1,20 +1,21 @@
-import { CustomTypeSM } from "@lib/models/common/CustomType";
+import { omit } from "lodash";
+import { Reducer } from "redux";
+import { ActionType, createAction, getType } from "typesafe-actions";
+
+import { CustomTypeSM } from "@/legacy/lib/models/common/CustomType";
 import {
   hasLocal,
   hasLocalAndRemote,
   LocalOrRemoteCustomType,
   RemoteOnlyCustomType,
-} from "@lib/models/common/ModelData";
+} from "@/legacy/lib/models/common/ModelData";
 import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
-} from "@lib/models/common/normalizers/customType";
-import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
-import { refreshStateCreator } from "@src/modules/environment";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { omit } from "lodash";
-import { Reducer } from "redux";
-import { ActionType, createAction, getType } from "typesafe-actions";
+} from "@/legacy/lib/models/common/normalizers/customType";
+import { filterSliceFromCustomType } from "@/legacy/lib/utils/shared/customTypes";
+import { refreshStateCreator } from "@/modules/environment";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { sliceDeleteSuccess } from "../slices";
 import { AvailableCustomTypesStoreType } from "./types";

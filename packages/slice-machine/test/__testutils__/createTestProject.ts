@@ -1,10 +1,11 @@
-import { expect } from "vitest";
-import { SliceMachineConfig } from "@slicemachine/manager";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import * as os from "node:os";
 import * as crypto from "node:crypto";
+import * as fs from "node:fs/promises";
+import * as os from "node:os";
+import * as path from "node:path";
+
+import { SliceMachineConfig } from "@slicemachine/manager";
 import type { SliceMachinePlugin } from "@slicemachine/plugin-kit";
+import { expect } from "vitest";
 
 const sha1 = (data: crypto.BinaryLike): string => {
   return crypto.createHash("sha1").update(data).digest("hex");

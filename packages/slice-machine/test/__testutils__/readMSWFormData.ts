@@ -1,5 +1,5 @@
-import parseMultipartFormData from "parse-multipart-data";
 import { RestRequest } from "msw";
+import parseMultipartFormData from "parse-multipart-data";
 
 type FormDataField =
   | { data: Buffer; type: string; filename?: string }

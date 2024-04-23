@@ -1,7 +1,7 @@
-import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
-import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
-import { getState } from "@src/apiClient";
-import { AuthStatus } from "@src/modules/userContext/types";
+import { getState } from "@/apiClient";
+import { normalizeFrontendCustomTypes } from "@/legacy/lib/models/common/normalizers/customType";
+import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/slices";
+import { AuthStatus } from "@/modules/userContext/types";
 
 import { getUnSyncedChanges, UnSyncedChanges } from "./getUnSyncChanges";
 

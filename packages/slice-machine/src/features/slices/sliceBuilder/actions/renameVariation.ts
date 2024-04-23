@@ -1,12 +1,13 @@
-import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import type { VariationSM } from "@lib/models/common/Slice";
+import { toast } from "react-toastify";
+
 import {
   readSlice,
   readSliceMocks,
   renameSliceVariation,
   updateSlice,
-} from "@src/apiClient";
-import { toast } from "react-toastify";
+} from "@/apiClient";
+import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import type { VariationSM } from "@/legacy/lib/models/common/Slice";
 
 type RenameVariationArgs = {
   component: ComponentUI;

@@ -1,5 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { getScaling } from "@components/Simulator/components/IframeRenderer";
+import { describe, expect, it } from "vitest";
+
+import { getScaling } from "@/legacy/components/Simulator/components/IframeRenderer";
 
 const VIEWPORT_SIZE = { width: 100, height: 100 };
 

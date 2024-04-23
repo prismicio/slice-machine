@@ -1,5 +1,3 @@
-import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
-import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +8,12 @@ import {
 } from "@prismicio/editor-ui";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
 import { type FC, useState } from "react";
+
+import { DeleteCustomTypeModal } from "@/legacy/components/DeleteCTModal";
+import { RenameCustomTypeModal } from "@/legacy/components/Forms/RenameCustomTypeModal";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { convertCustomToPageType } from "./actions/convertCustomToPageType";
 import { CUSTOM_TYPES_CONFIG } from "./customTypesConfig";

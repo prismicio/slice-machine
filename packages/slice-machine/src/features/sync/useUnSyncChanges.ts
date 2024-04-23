@@ -1,9 +1,10 @@
-import { useAuthStatus } from "@src/hooks/useAuthStatus";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { getFrontendSlices, getLibraries } from "@src/modules/slices";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+
+import { useAuthStatus } from "@/hooks/useAuthStatus";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
+import { getFrontendSlices, getLibraries } from "@/modules/slices";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { useNetwork } from "../../hooks/useNetwork";
 import { getUnSyncedChanges, UnSyncedChanges } from "./getUnSyncChanges";

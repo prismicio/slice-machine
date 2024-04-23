@@ -1,6 +1,7 @@
-import { describe, expect, test } from "vitest";
-import { Slices, SliceSM } from "@lib/models/common/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { describe, expect, test } from "vitest";
+
+import { Slices, SliceSM } from "@/legacy/lib/models/common/Slice";
 
 const sliceObject = {
   id: "all_fields",

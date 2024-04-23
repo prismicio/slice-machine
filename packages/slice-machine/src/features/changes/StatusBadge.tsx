@@ -1,7 +1,8 @@
-import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { Badge, Tooltip } from "@prismicio/editor-ui";
-import { AuthStatus } from "@src/modules/userContext/types";
 import type { ComponentPropsWithoutRef, FC } from "react";
+
+import { ModelStatus } from "@/legacy/lib/models/common/ModelStatus";
+import { AuthStatus } from "@/modules/userContext/types";
 
 export type StatusBadgeProps = GetStatusBadgeContentArgs;
 

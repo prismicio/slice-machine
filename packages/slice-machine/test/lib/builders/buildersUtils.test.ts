@@ -1,7 +1,7 @@
-import { describe, test, expect } from "vitest";
+import { describe, expect, test } from "vitest";
 
-import * as Widgets from "@lib/models/common/widgets/withGroup";
-import { findWidgetByConfigOrType } from "@builders/utils";
+import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
+import * as Widgets from "@/legacy/lib/models/common/widgets/withGroup";
 
 const dumbConfig = {
   label: "",

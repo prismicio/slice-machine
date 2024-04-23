@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
 import { describe, expect, it } from "vitest";
-import { slicesReducer } from "@src/modules/slices";
-import { SlicesStoreType } from "@src/modules/slices/types";
+
+import { slicesReducer } from "@/modules/slices";
+import { SlicesStoreType } from "@/modules/slices/types";
 
 const dummySlicesState: SlicesStoreType = {
   libraries: [],

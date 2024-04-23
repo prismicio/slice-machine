@@ -1,7 +1,8 @@
 import { revalidateData } from "@prismicio/editor-support/Suspense";
 import { Environment } from "@slicemachine/manager/client";
-import { getState } from "@src/apiClient";
-import { managerClient } from "@src/managerClient";
+
+import { getState } from "@/apiClient";
+import { managerClient } from "@/managerClient";
 
 import { getActiveEnvironment } from "./getActiveEnvironment";
 

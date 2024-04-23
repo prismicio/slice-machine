@@ -1,6 +1,7 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { generateSliceCustomScreenshot, telemetry } from "@src/apiClient";
 import { toast } from "react-toastify";
+
+import { generateSliceCustomScreenshot, telemetry } from "@/apiClient";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
 type UploadSliceScreenshotArgs = {
   file: File;

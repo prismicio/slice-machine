@@ -1,11 +1,12 @@
 import { Text } from "@prismicio/editor-ui";
-import { telemetry } from "@src/apiClient";
-import { CodeBlock } from "@src/components/CodeBlock";
-import { useAdapterName } from "@src/hooks/useAdapterName";
 import { FC } from "react";
 import ReactMarkdown from "react-markdown";
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import remarkGfm from "remark-gfm";
+
+import { telemetry } from "@/apiClient";
+import { CodeBlock } from "@/components/CodeBlock";
+import { useAdapterName } from "@/hooks/useAdapterName";
 
 import * as styles from "./MarkdownRenderer.css";
 

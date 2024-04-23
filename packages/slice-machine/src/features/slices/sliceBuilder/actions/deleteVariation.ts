@@ -1,14 +1,15 @@
-import type { ComponentUI } from "@lib/models/common/ComponentUI";
-import type { VariationSM } from "@lib/models/common/Slice";
+import type { NextRouter } from "next/router";
+import { toast } from "react-toastify";
+
 import {
   deleteSliceVariation,
   readSlice,
   readSliceMocks,
   updateSlice,
-} from "@src/apiClient";
-import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
-import type { NextRouter } from "next/router";
-import { toast } from "react-toastify";
+} from "@/apiClient";
+import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
+import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import type { VariationSM } from "@/legacy/lib/models/common/Slice";
 
 type DeleteVariationArgs = {
   component: ComponentUI;

@@ -1,14 +1,15 @@
 import { TooltipProvider } from "@prismicio/editor-ui";
 import { render as rtlRender, RenderOptions } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Store, AnyAction } from "redux";
-
 import { Provider } from "react-redux";
-import type { SliceMachineStoreType } from "../../src/redux/type";
+import { AnyAction, Store } from "redux";
+import { BaseStyles, ThemeProvider as ThemeUIThemeProvider } from "theme-ui";
+
+import { ErrorBoundary } from "@/ErrorBoundary";
+
 import configureStore from "../../src/redux/store";
+import type { SliceMachineStoreType } from "../../src/redux/type";
 import theme from "../../src/theme";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { ThemeProvider as ThemeUIThemeProvider, BaseStyles } from "theme-ui";
 
 export type RenderArgs = Partial<
   {

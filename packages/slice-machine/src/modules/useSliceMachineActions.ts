@@ -1,12 +1,16 @@
-import { CustomTypes } from "@lib/models/common/CustomType";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { SliceSM } from "@lib/models/common/Slice";
-import ServerState from "@models/server/ServerState";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { SaveSliceMockRequest } from "@src/apiClient";
 import { useDispatch } from "react-redux";
 
-import { ComponentUI, ScreenshotUI } from "../../lib/models/common/ComponentUI";
+import { SaveSliceMockRequest } from "@/apiClient";
+import {
+  ComponentUI,
+  ScreenshotUI,
+} from "@/legacy/lib/models/common/ComponentUI";
+import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { SliceSM } from "@/legacy/lib/models/common/Slice";
+import ServerState from "@/legacy/lib/models/server/ServerState";
+
 import {
   customTypeCreateSuccess,
   customTypeDeleteSuccess,

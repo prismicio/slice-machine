@@ -1,6 +1,7 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { managerClient } from "@src/managerClient";
+
+import { managerClient } from "@/managerClient";
 
 type UseDocumentationArgs = {
   kind: "PageSnippet";
