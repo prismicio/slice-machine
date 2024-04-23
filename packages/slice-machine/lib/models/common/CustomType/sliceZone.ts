@@ -1,9 +1,8 @@
 import {
+  SlicesTypes,
   CompositeSlice,
   LegacySlice,
-  SlicesTypes,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-
 import { ComponentUI } from "../ComponentUI";
 
 export type NonSharedSliceInSliceZone = {

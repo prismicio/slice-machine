@@ -1,19 +1,20 @@
+import { Box, Button, Gradient } from "@prismicio/editor-ui";
+import { useRouter } from "next/router";
+import { type FC, useState } from "react";
+import { toast } from "react-toastify";
+
 import AddVariationModal from "@builders/SliceBuilder/Sidebar/AddVariationModal";
 import { DeleteVariationModal } from "@components/DeleteVariationModal";
 import { RenameVariationModal } from "@components/Forms/RenameVariationModal";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import type { VariationSM } from "@lib/models/common/Slice";
-import { Box, Button, Gradient } from "@prismicio/editor-ui";
-import { updateSlice } from "@src/apiClient";
-import { copySliceVariation } from "@src/domain/slice";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { updateSlice } from "@src/apiClient";
+import { copySliceVariation } from "@src/domain/slice";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useRouter } from "next/router";
-import { type FC, useState } from "react";
-import { toast } from "react-toastify";
 
 type DialogState =
   | { type: "ADD_VARIATION"; variation?: undefined; loading?: boolean }

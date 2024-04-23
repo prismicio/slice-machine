@@ -1,6 +1,6 @@
+import { IconButton } from "theme-ui";
 import { IconButtonProps } from "@theme-ui/components";
 import { IconType } from "react-icons/lib";
-import { IconButton } from "theme-ui";
 
 const defaultActiveSx = (active: boolean, hasError: boolean | null): object => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

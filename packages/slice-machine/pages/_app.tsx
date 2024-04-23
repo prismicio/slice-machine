@@ -3,6 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-tabs/style/react-tabs.css";
 import "react-toastify/dist/ReactToastify.css";
 import "rc-drawer/assets/index.css";
+
 import "@src/styles/drawer.css";
 import "@src/styles/globals.css";
 import "@src/styles/hljs.css";
@@ -19,31 +20,32 @@ import {
   ThemeProvider,
   TooltipProvider,
 } from "@prismicio/editor-ui";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
-import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
-import { AutoSyncProvider } from "@src/features/sync/AutoSyncProvider";
 import { ConnectedRouter } from "connected-next-router";
 import type { NextPage } from "next";
 import type { AppContext, AppInitialProps } from "next/app";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import Router from "next/router";
-import { type FC, type ReactNode, Suspense, useEffect, useState } from "react";
+import { type FC, type ReactNode, useEffect, useState, Suspense } from "react";
 import { Provider } from "react-redux";
 import type { Store } from "redux";
 import type { Persistor } from "redux-persist/es/types";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
+import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
+import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
+import { AutoSyncProvider } from "@src/features/sync/AutoSyncProvider";
+import { ErrorBoundary } from "@src/ErrorBoundary";
+
 import SliceMachineApp from "../components/App";
 import LoadingPage from "../components/LoadingPage";
 import ToastContainer from "../components/ToasterContainer";
 import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/customType";
 import type ServerState from "../lib/models/server/ServerState";
-import { getState } from "../src/apiClient";
 import { RouteChangeProvider } from "../src/hooks/useRouteChange";
 import configureStore from "../src/redux/store";
+import { getState } from "../src/apiClient";
 import theme from "../src/theme";
 
 type NextPageWithLayout = NextPage & {

@@ -1,13 +1,12 @@
-import { Button } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
-
 import {
   HoverCard,
-  HoverCardCloseButton,
   HoverCardDescription,
+  HoverCardCloseButton,
   HoverCardMedia,
   HoverCardTitle,
 } from "./HoverCard";
+import { Button } from "@prismicio/editor-ui";
 
 const meta = {
   component: HoverCard,

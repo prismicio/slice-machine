@@ -1,11 +1,10 @@
-import { CustomType as CustomTypeInternal } from "@prismicio/types-internal/lib/customtypes";
 import { StringOrNull } from "@prismicio/types-internal/lib/validators";
-import { getOrElseW } from "fp-ts/lib/Either";
-import * as t from "io-ts";
 import { withFallback } from "io-ts-types";
-
-import { SlicesSM } from "../Slices";
+import * as t from "io-ts";
 import { Tabs, TabSM } from "./tab";
+import { CustomType as CustomTypeInternal } from "@prismicio/types-internal/lib/customtypes";
+import { getOrElseW } from "fp-ts/lib/Either";
+import { SlicesSM } from "../Slices";
 
 export * from "./tab";
 

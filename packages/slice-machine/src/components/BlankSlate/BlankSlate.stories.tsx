@@ -1,5 +1,5 @@
-import { Button, Image } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
+import { Button, Image } from "@prismicio/editor-ui";
 
 import {
   BlankSlate,

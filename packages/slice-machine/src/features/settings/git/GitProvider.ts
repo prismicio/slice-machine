@@ -1,4 +1,5 @@
 import { GIT_PROVIDER, GitProvider } from "@slicemachine/manager/client";
+
 import { BitbucketIcon } from "@src/icons/BitbucketIcon";
 import { GitHubIcon } from "@src/icons/GitHubIcon";
 import { GitLabIcon } from "@src/icons/GitLabIcon";

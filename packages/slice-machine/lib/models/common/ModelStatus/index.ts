@@ -1,21 +1,20 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { CustomTypeSM } from "@lib/models/common/CustomType";
-
+import { compareCustomTypeLocalToRemote } from "./compareCustomTypeModels";
+import { compareSliceLocalToRemote } from "./compareSliceModels";
 import {
-  hasLocal,
-  hasRemote,
+  type LocalOrRemoteCustomType,
+  type LocalOrRemoteSlice,
+  type LocalOrRemoteModel,
   type LocalAndRemoteCustomType,
   type LocalAndRemoteSlice,
   type LocalOnlyCustomType,
   type LocalOnlySlice,
-  type LocalOrRemoteCustomType,
-  type LocalOrRemoteModel,
-  type LocalOrRemoteSlice,
   type RemoteOnlyCustomType,
   type RemoteOnlySlice,
+  hasLocal,
+  hasRemote,
 } from "../ModelData";
-import { compareCustomTypeLocalToRemote } from "./compareCustomTypeModels";
-import { compareSliceLocalToRemote } from "./compareSliceModels";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export enum ModelStatus {
   New = "NEW", // new model that does not exist in the repo

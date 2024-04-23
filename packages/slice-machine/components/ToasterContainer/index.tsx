@@ -1,11 +1,13 @@
 import React from "react";
-import { MdDangerous, MdDone, MdError, MdWarning } from "react-icons/md";
+
 import {
-  Slide,
-  toast,
   ToastContainer as ReactToastifyContainer,
+  toast,
   TypeOptions,
+  Slide,
 } from "react-toastify";
+
+import { MdDangerous, MdDone, MdError, MdWarning } from "react-icons/md";
 
 const getIconAccordingToasterType = ({
   type,

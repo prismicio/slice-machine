@@ -1,9 +1,6 @@
-import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { MdVpnKey } from "react-icons/md";
 import * as yup from "yup";
+import { MdVpnKey } from "react-icons/md";
 
-import { createValidationSchema } from "../../../../forms";
-import { DefaultFields } from "../../../../forms/defaults";
 /**
 * {
       "type": "UID",
@@ -13,8 +10,12 @@ import { DefaultFields } from "../../../../forms/defaults";
       }
     }
  */
+
 import { removeProp } from "../../../../utils";
+import { DefaultFields } from "../../../../forms/defaults";
+import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
+import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const FormFields = {
   label: DefaultFields.label,

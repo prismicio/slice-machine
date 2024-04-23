@@ -1,9 +1,9 @@
-import { Link } from "@prismicio/types-internal/lib/customtypes";
-import { FiLink2 } from "react-icons/fi";
 import * as yup from "yup";
+import Form, { FormFields } from "./Form";
+import { FiLink2 } from "react-icons/fi";
 
 import { Widget } from "../Widget";
-import Form, { FormFields } from "./Form";
+import { Link } from "@prismicio/types-internal/lib/customtypes";
 
 /**
 * {

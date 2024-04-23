@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,9 +8,9 @@ import {
   DialogHeader,
   Text,
 } from "@prismicio/editor-ui";
-import { telemetry } from "@src/apiClient";
+
 import { useExperimentVariant } from "@src/hooks/useExperimentVariant";
-import { useEffect, useState } from "react";
+import { telemetry } from "@src/apiClient";
 
 type DevCollaborationExperimentPayload = {
   cardButtonLabel: string;

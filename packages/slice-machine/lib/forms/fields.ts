@@ -1,5 +1,6 @@
-import { createValidationArgs } from ".";
 import { FormTypes } from "./types";
+
+import { createValidationArgs } from ".";
 
 export const CheckBox = (
   label: string,

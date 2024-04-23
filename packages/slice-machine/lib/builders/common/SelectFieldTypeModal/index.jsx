@@ -1,8 +1,10 @@
-import Card from "@components/Card";
-import { Col, Flex as FlexGrid } from "@components/Flex";
-import SliceMachineModal from "@components/SliceMachineModal";
 import Modal from "react-modal";
+import SliceMachineModal from "@components/SliceMachineModal";
+
 import { Close, Flex, Heading } from "theme-ui";
+
+import Card from "@components/Card";
+import { Flex as FlexGrid, Col } from "@components/Flex";
 
 import FieldTypeCard from "./FieldTypeCard";
 

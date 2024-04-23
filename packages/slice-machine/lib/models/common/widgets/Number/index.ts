@@ -1,8 +1,8 @@
-import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { AiOutlineFieldNumber } from "react-icons/ai";
-
 import { createDefaultWidgetValues } from "../../../../utils";
+
 import { Widget } from "../Widget";
+import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /** {
     "type" : "Number",

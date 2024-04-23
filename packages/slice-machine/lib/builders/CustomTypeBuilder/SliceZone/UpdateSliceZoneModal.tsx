@@ -1,6 +1,7 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { Text } from "theme-ui";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import ModalFormCard from "../../../../components/ModalFormCard";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";

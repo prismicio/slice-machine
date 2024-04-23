@@ -1,18 +1,19 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { CustomTypeFormat } from "@slicemachine/manager";
-import { renameCustomType } from "@src/features/customTypes/actions/renameCustomType";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { FormikErrors } from "formik";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Box } from "theme-ui";
-
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import ModalFormCard from "../../ModalFormCard";
 import { InputBox } from "../components/InputBox";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { FormikErrors } from "formik";
+
+import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+
+import { renameCustomType } from "@src/features/customTypes/actions/renameCustomType";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 interface RenameCustomTypeModalProps {
   isChangesLocal: boolean;

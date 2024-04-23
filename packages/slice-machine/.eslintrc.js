@@ -9,7 +9,7 @@ module.exports = {
     project: ["./tsconfig.json"],
     tsconfigRootDir: __dirname,
   },
-  plugins: ["@typescript-eslint", "simple-import-sort", "import"],
+  plugins: ["@typescript-eslint", "import"],
   extends: [
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
@@ -30,10 +30,5 @@ module.exports = {
     ],
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/strict-boolean-expressions": "warn",
-    "simple-import-sort/exports": "warn",
-    "simple-import-sort/imports": "warn",
-    "import/first": "error",
-    "import/newline-after-import": "error",
-    "import/no-duplicates": "error",
   },
 };

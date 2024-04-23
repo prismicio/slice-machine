@@ -1,5 +1,5 @@
 import { Field } from "formik";
-import { Checkbox, Label } from "theme-ui";
+import { Label, Checkbox } from "theme-ui";
 
 const FormFieldCheckbox = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

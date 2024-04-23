@@ -1,9 +1,8 @@
+import * as t from "io-ts";
 import { Group } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { StringOrNull } from "@prismicio/types-internal/lib/validators";
-import { getOrElseW } from "fp-ts/lib/Either";
-import * as t from "io-ts";
-
 import { FieldsSM } from "./Fields";
+import { getOrElseW } from "fp-ts/lib/Either";
 
 export const GroupConfig = t.exact(
   t.partial({

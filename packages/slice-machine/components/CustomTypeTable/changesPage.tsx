@@ -1,16 +1,16 @@
-import { CustomTypeSM } from "@lib/models/common/CustomType";
-import {
-  hasLocal,
-  LocalOrRemoteCustomType,
-} from "@lib/models/common/ModelData";
-import { ModelStatus } from "@lib/models/common/ModelStatus";
-import { StatusBadge } from "@src/features/changes/StatusBadge";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
-import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
-import { AuthStatus } from "@src/modules/userContext/types";
 import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
+import {
+  LocalOrRemoteCustomType,
+  hasLocal,
+} from "@lib/models/common/ModelData";
+import { StatusBadge } from "@src/features/changes/StatusBadge";
+import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
+import { AuthStatus } from "@src/modules/userContext/types";
+import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
 
 interface CustomTypeTableProps {
   customTypes: LocalOrRemoteCustomType[];

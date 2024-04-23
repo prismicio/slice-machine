@@ -1,5 +1,5 @@
-import { API_ID_REGEX } from "../consts";
 import { Input, InputType } from "./fields";
+import { API_ID_REGEX } from "../consts";
 
 export const validateId = ({
   value,

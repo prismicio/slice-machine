@@ -23,11 +23,11 @@ export {
   GeoPointWidget as GeoPoint,
   ImageWidget as Image,
   LinkWidget as Link,
-  LinkToMediaWidget as LinkToMedia,
   NumberWidget as Number,
   SelectWidget as Select,
   StructuredTextWidget as StructuredText,
   TextWidget as Text,
   TimestampWidget as Timestamp,
   UIDWidget as UID,
+  LinkToMediaWidget as LinkToMedia,
 };

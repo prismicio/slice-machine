@@ -1,10 +1,11 @@
-import { linkConfigSchema } from "@lib/models/common/widgets/Link";
-import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdAttachment } from "react-icons/md";
 import * as yup from "yup";
+import { MdAttachment } from "react-icons/md";
 
 import { Widget } from "../Widget";
+
+import { linkConfigSchema } from "@lib/models/common/widgets/Link";
 import Form, { FormFields } from "./Form";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const Meta = {
   icon: MdAttachment,

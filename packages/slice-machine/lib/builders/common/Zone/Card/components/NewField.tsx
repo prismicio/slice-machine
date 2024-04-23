@@ -1,21 +1,22 @@
+import { Ref, SetStateAction, useEffect, useRef, useState } from "react";
+import { Formik, Form, Field } from "formik";
+import { Input, Flex, Text, useThemeUI } from "theme-ui";
+import * as CSS from "csstype";
+import { AnyObjectSchema } from "yup";
+import { Button } from "@prismicio/editor-ui";
+
+import { validateId } from "@lib/forms/defaults";
+import { createInitialValues, createValidationSchema } from "@lib/forms";
+import * as Widgets from "@lib/models/common/widgets/withGroup";
+import { slugify } from "@lib/utils/str";
+import { AnyWidget } from "@lib/models/common/widgets/Widget";
+
+import { ErrorTooltip } from "./ErrorTooltip";
+import { InputType } from "@lib/forms/fields";
 import {
   getInputFieldStyles,
   InputFieldStyles,
 } from "@components/FormFields/Input";
-import { createInitialValues, createValidationSchema } from "@lib/forms";
-import { validateId } from "@lib/forms/defaults";
-import { InputType } from "@lib/forms/fields";
-import { AnyWidget } from "@lib/models/common/widgets/Widget";
-import * as Widgets from "@lib/models/common/widgets/withGroup";
-import { slugify } from "@lib/utils/str";
-import { Button } from "@prismicio/editor-ui";
-import * as CSS from "csstype";
-import { Field, Form, Formik } from "formik";
-import { Ref, SetStateAction, useEffect, useRef, useState } from "react";
-import { Flex, Input, Text, useThemeUI } from "theme-ui";
-import { AnyObjectSchema } from "yup";
-
-import { ErrorTooltip } from "./ErrorTooltip";
 
 interface NewField {
   widgetTypeName: string;

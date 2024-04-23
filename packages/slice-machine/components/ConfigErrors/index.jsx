@@ -1,6 +1,6 @@
+import { Box, Heading, Flex, Text } from "theme-ui";
 import Card from "@components/Card";
 import Li from "@components/Li";
-import { Box, Flex, Heading, Text } from "theme-ui";
 
 const ConfigErrors = ({ errors }) => (
   <Card

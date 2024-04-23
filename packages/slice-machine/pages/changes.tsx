@@ -1,3 +1,9 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import Head from "next/head";
+import { BaseStyles } from "theme-ui";
+import { useRouter } from "next/router";
+
 import {
   AppLayout,
   AppLayoutActions,
@@ -5,29 +11,24 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
-import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
 import { ChangesItems } from "@components/ChangesItems";
-import {
-  HardDeleteDocumentsDrawer,
-  SoftDeleteDocumentsDrawer,
-} from "@components/DeleteDocumentsDrawer";
-import { PushChangesLimit } from "@slicemachine/manager";
-import { getState } from "@src/apiClient";
+import { AuthErrorPage, OfflinePage } from "@components/ChangesEmptyState";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
 import { NoChangesBlankSlate } from "@src/features/changes/BlankSlates";
 import { PushChangesButton } from "@src/features/changes/PushChangesButton";
-import { pushChanges } from "@src/features/sync/actions/pushChanges";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { useUnSyncChanges } from "@src/features/sync/useUnSyncChanges";
-import { useAuthStatus } from "@src/hooks/useAuthStatus";
-import { useNetwork } from "@src/hooks/useNetwork";
 import { AuthStatus } from "@src/modules/userContext/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
-import { BaseStyles } from "theme-ui";
+import {
+  SoftDeleteDocumentsDrawer,
+  HardDeleteDocumentsDrawer,
+} from "@components/DeleteDocumentsDrawer";
+import { PushChangesLimit } from "@slicemachine/manager";
+import { getState } from "@src/apiClient";
+import { pushChanges } from "@src/features/sync/actions/pushChanges";
+import { useUnSyncChanges } from "@src/features/sync/useUnSyncChanges";
+import { useNetwork } from "@src/hooks/useNetwork";
+import { useAuthStatus } from "@src/hooks/useAuthStatus";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
 
 const Changes: React.FunctionComponent = () => {
   const {

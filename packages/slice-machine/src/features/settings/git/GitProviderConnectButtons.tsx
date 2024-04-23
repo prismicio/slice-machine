@@ -1,8 +1,9 @@
 import { keys } from "@prismicio/editor-support/Object";
 import { Button, ButtonGroup, Text, tokens } from "@prismicio/editor-ui";
-import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
 import { type ComponentPropsWithoutRef, type FC, useState } from "react";
 import { toast } from "react-toastify";
+
+import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
 
 export const GitProviderConnectButtons: FC = () => (
   <ButtonGroup>

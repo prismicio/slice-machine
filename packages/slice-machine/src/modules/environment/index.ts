@@ -1,15 +1,14 @@
-import { CustomTypeSM } from "@lib/models/common/CustomType";
-import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
-import { SliceSM } from "@lib/models/common/Slice";
+import { Reducer } from "redux";
+import { EnvironmentStoreType } from "./types";
+import { ActionType, createAction, getType } from "typesafe-actions";
+import type { PackageManager, APIEndpoints } from "@slicemachine/manager";
+import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
 import { LibraryUI } from "@models/common/LibraryUI";
-import type { APIEndpoints, PackageManager } from "@slicemachine/manager";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { Reducer } from "redux";
-import { ActionType, createAction, getType } from "typesafe-actions";
-
+import { SliceSM } from "@lib/models/common/Slice";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
+import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import { AuthStatus } from "../userContext/types";
-import { EnvironmentStoreType } from "./types";
 
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{

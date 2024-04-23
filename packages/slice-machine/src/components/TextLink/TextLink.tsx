@@ -1,6 +1,6 @@
 import { Text } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
-import { cloneElement, type FC, isValidElement, type ReactNode } from "react";
+import { type FC, type ReactNode, cloneElement, isValidElement } from "react";
 
 import styles from "./TextLink.module.css";
 

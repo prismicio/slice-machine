@@ -1,21 +1,21 @@
 // @vitest-environment jsdom
-import { CustomTypes } from "@lib/models/common/CustomType";
+import { describe, vi, test, TestContext } from "vitest";
+import mockRouter from "next-router-mock";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+
 import {
-  createSliceMachineManager,
   CustomTypeFormat,
+  createSliceMachineManager,
 } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import { CustomTypeReadHookData } from "@slicemachine/plugin-kit";
-import mockRouter from "next-router-mock";
+import { CustomTypes } from "@lib/models/common/CustomType";
 import { render, screen, waitFor, within } from "test/__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
-import { describe, test, TestContext, vi } from "vitest";
-
-import pkg from "../../../../package.json";
-import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { CustomTypesTablePage } from "../customTypesTable/CustomTypesTablePage";
+import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
+import pkg from "../../../../package.json";
 
 const formats = [
   {

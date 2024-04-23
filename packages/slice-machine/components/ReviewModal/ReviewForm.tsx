@@ -1,16 +1,5 @@
-import SliceMachineModal from "@components/SliceMachineModal";
-import { telemetry } from "@src/apiClient";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { UserReviewType } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { Field, Form, Formik } from "formik";
 import { FC } from "react";
-import Modal from "react-modal";
-import { useSelector } from "react-redux";
+import { Field, Form, Formik } from "formik";
 import {
   Box,
   Button,
@@ -21,6 +10,18 @@ import {
   Text,
   Textarea,
 } from "theme-ui";
+import Modal from "react-modal";
+import { useSelector } from "react-redux";
+
+import SliceMachineModal from "@components/SliceMachineModal";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isModalOpen } from "@src/modules/modal";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { telemetry } from "@src/apiClient";
+import { UserReviewType } from "@src/modules/userContext/types";
 
 import { ReviewFormSelect } from "./ReviewFormSelect";
 

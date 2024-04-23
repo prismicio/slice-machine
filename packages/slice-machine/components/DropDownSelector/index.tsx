@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { Popover } from "react-tiny-popover";
-import { Box, Button, ThemeUICSSObject } from "theme-ui";
 
 import MenuList from "./MenuList";
+
+import { Button, Box, ThemeUICSSObject } from "theme-ui";
+
+import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 
 type DropDownMenuProps = {
   options: string[];

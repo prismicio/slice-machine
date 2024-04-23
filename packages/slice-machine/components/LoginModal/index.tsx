@@ -1,26 +1,5 @@
-import SliceMachineModal from "@components/SliceMachineModal";
-import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
-import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
-import { buildEndpoints } from "@lib/prismic/endpoints";
-import { startPolling } from "@lib/utils/poll";
-import preferWroomBase from "@lib/utils/preferWroomBase";
-import { CheckAuthStatusResponse } from "@models/common/Auth";
-import { checkAuthStatus, getState, startAuth } from "@src/apiClient";
-import { getActiveEnvironment } from "@src/features/environments/actions/getActiveEnvironment";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { getUnSyncedChanges } from "@src/features/sync/getUnSyncChanges";
-import { getEnvironment } from "@src/modules/environment";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { AuthStatus } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import React from "react";
 import Modal from "react-modal";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import React from "react";
 import {
   Button,
   Card,
@@ -31,6 +10,28 @@ import {
   Spinner,
   Text,
 } from "theme-ui";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+
+import SliceMachineModal from "@components/SliceMachineModal";
+import { checkAuthStatus, getState, startAuth } from "@src/apiClient";
+import { buildEndpoints } from "@lib/prismic/endpoints";
+import { startPolling } from "@lib/utils/poll";
+import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { isModalOpen } from "@src/modules/modal";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { getEnvironment } from "@src/modules/environment";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import preferWroomBase from "@lib/utils/preferWroomBase";
+import { getUnSyncedChanges } from "@src/features/sync/getUnSyncChanges";
+import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
+import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
+import { AuthStatus } from "@src/modules/userContext/types";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
+import { getActiveEnvironment } from "@src/features/environments/actions/getActiveEnvironment";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";

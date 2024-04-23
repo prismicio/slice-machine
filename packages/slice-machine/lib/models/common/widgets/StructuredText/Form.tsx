@@ -1,17 +1,17 @@
+import { useEffect, useState } from "react";
+import * as yup from "yup";
+import { createFieldNameFromKey } from "@lib/forms";
+import { CheckBox as CheckBoxConstructor } from "@lib/forms/fields";
+import { DefaultFields } from "@lib/forms/defaults";
+import options, { optionValues } from "./options";
+import WidgetFormField from "@lib/builders/common/EditModal/Field";
+import { Text, Button, Label, Checkbox, Flex, Box } from "theme-ui";
 import { Col, Flex as FlexGrid } from "@components/Flex";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
-import WidgetFormField from "@lib/builders/common/EditModal/Field";
-import { createFieldNameFromKey } from "@lib/forms";
-import { DefaultFields } from "@lib/forms/defaults";
-import { CheckBox as CheckBoxConstructor } from "@lib/forms/fields";
-import { has } from "fp-ts/Record";
-import { isObject, isString } from "lodash";
-import { useEffect, useState } from "react";
-import { Box, Button, Checkbox, Flex, Label, Text } from "theme-ui";
-import * as yup from "yup";
-import { AnyObject } from "yup/lib/types";
 
-import options, { optionValues } from "./options";
+import { has } from "fp-ts/Record";
+import { AnyObject } from "yup/lib/types";
+import { isObject, isString } from "lodash";
 
 const isAllSet = (curr: Array<string>): boolean =>
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

@@ -1,8 +1,9 @@
-import { Color } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdColorLens } from "react-icons/md";
-
 import { createDefaultWidgetValues } from "../../../../utils";
+
 import { Widget } from "../Widget";
+
+import { Color } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /** {
   "type" : "Color",

@@ -1,17 +1,18 @@
-import ModalFormCard from "@components/ModalFormCard";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { SliceSM } from "@lib/models/common/Slice";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { getState } from "@src/apiClient";
-import { createSlice } from "@src/features/slices/actions/createSlice";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { Box, Label } from "theme-ui";
 import { FC, useState } from "react";
 import Select from "react-select";
-import { Box, Label } from "theme-ui";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
-import { InputBox } from "../components/InputBox";
+import { SliceSM } from "@lib/models/common/Slice";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import ModalFormCard from "@components/ModalFormCard";
+import { createSlice } from "@src/features/slices/actions/createSlice";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { getState } from "@src/apiClient";
+import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
+
 import { validateSliceModalValues } from "../formsValidator";
+import { InputBox } from "../components/InputBox";
 
 type CreateSliceModalProps = {
   onClose: () => void;

@@ -1,6 +1,6 @@
-import { managerClient } from "@src/managerClient";
 import React from "react";
 import useSWR from "swr";
+import { managerClient } from "@src/managerClient";
 
 import CodeBlock, { Item, RenderHintBaseFN } from "./CodeBlock";
 

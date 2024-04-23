@@ -1,16 +1,17 @@
+import React, { useEffect } from "react";
+import { toast } from "react-toastify";
+
 import Grid from "@components/Grid";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { CustomTypeFormat } from "@slicemachine/manager";
 import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { useLab } from "@src/features/labs/labsList/useLab";
 import { NonSharedSliceCard } from "@src/features/slices/sliceCards/NonSharedSliceCard";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
-import React, { useEffect } from "react";
-import { toast } from "react-toastify";
+import { useLab } from "@src/features/labs/labsList/useLab";
 
 interface SlicesListProps {
   format: CustomTypeFormat;

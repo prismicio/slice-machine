@@ -1,5 +1,4 @@
 import { Spinner } from "theme-ui";
-
 import FullPage from "../FullPage";
 
 const LoadingPage: React.FunctionComponent = () => (

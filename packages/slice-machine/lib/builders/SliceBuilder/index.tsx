@@ -1,3 +1,9 @@
+import { Box } from "@prismicio/editor-ui";
+import { type FC } from "react";
+
+import FieldZones from "./FieldZones";
+import { Sidebar } from "./Sidebar";
+
 import SimulatorButton from "@builders/SliceBuilder/SimulatorButton";
 import {
   AppLayout,
@@ -7,15 +13,10 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
-import { Box } from "@prismicio/editor-ui";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
 import { FloatingBackButton } from "@src/features/slices/sliceBuilder/FloatingBackButton";
 import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
-import { type FC } from "react";
-
-import FieldZones from "./FieldZones";
-import { Sidebar } from "./Sidebar";
+import { AutoSaveStatusIndicator } from "@src/features/autoSave/AutoSaveStatusIndicator";
 
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();

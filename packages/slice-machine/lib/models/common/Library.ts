@@ -1,7 +1,6 @@
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import * as t from "io-ts";
-
 import { SliceSM } from "./Slice";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 export const LibraryMeta = {
   reader: t.exact(

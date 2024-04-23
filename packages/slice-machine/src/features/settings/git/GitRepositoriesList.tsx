@@ -1,11 +1,12 @@
 import { Button, Skeleton, Text } from "@prismicio/editor-ui";
 import type { GitRepo, GitRepoSpecifier } from "@slicemachine/manager";
+import type { FC } from "react";
+
 import { FieldSetList, FieldSetListItem } from "@src/components/FieldSet";
 import { RelativeTime } from "@src/components/RelativeTime";
 import { GitRepositoryConnectDialog } from "@src/features/settings/git/GitRepositoryConnectDialog";
 import { GitRepositoryDisconnectDialog } from "@src/features/settings/git/GitRepositoryDisconnectDialog";
 import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
-import type { FC } from "react";
 
 type GitRepositoriesListProps =
   | { mode: "link"; repos: GitRepo[] }

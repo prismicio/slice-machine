@@ -1,5 +1,6 @@
 import { useRequest } from "@prismicio/editor-support/Suspense";
 import type { GitRepo } from "@slicemachine/manager";
+
 import { managerClient } from "@src/managerClient";
 
 type UseGitReposArgs = Parameters<typeof managerClient.git.fetchRepos>[0];

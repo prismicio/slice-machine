@@ -1,14 +1,14 @@
+import * as t from "io-ts";
 import {
-  DynamicSection,
-  DynamicSlices,
-  DynamicWidget,
-  Group,
   NestableWidget,
+  DynamicSection,
+  DynamicWidget,
+  DynamicSlices,
+  Group,
   UID,
 } from "@prismicio/types-internal/lib/customtypes";
-import * as t from "io-ts";
-
 import { Groups, GroupSM } from "../Group";
+
 import { SlicesSM, SliceZone } from "../Slices";
 
 export const TabFields = t.array(

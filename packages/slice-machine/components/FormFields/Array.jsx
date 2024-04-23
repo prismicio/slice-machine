@@ -1,6 +1,8 @@
+import { Fragment, useRef, useEffect, useState } from "react";
+
 import { FieldArray } from "formik";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Button, Flex, Input, Label, Text } from "theme-ui";
+
+import { Text, Label, Flex, Input, Button } from "theme-ui";
 
 const FormFieldArray = ({
   field,

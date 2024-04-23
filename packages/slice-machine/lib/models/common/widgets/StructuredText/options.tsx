@@ -1,6 +1,6 @@
-import React from "react";
+import { FiLink2, FiImage, FiCode, FiList } from "react-icons/fi";
 import { BsListOl } from "react-icons/bs";
-import { FiCode, FiImage, FiLink2, FiList } from "react-icons/fi";
+import React from "react";
 import { IconType } from "react-icons/lib";
 
 const Icon =

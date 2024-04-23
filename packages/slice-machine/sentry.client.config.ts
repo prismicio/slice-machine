@@ -2,8 +2,8 @@
 // The config you add here will be used whenever a page is visited.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import { nextConfig as sentryNextConfig } from "@lib/env/sentry";
 import * as Sentry from "@sentry/nextjs";
+import { nextConfig as sentryNextConfig } from "@lib/env/sentry";
 import getConfig from "next/config";
 
 const { publicRuntimeConfig } = getConfig() as {

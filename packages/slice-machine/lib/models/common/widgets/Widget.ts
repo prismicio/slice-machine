@@ -1,8 +1,7 @@
-import { TabField } from "@lib/models/common/CustomType";
 import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
-
+import { TabField } from "@lib/models/common/CustomType";
 export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   TYPE_NAME: FieldType;
   create: (label: string) => F;

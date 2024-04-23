@@ -1,5 +1,5 @@
-import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
+import { CustomTypeSM } from "@lib/models/common/CustomType";
 
 export const normalizeFrontendCustomType = (
   localCustomType: CustomTypeSM,

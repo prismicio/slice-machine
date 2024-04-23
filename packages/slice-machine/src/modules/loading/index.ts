@@ -1,9 +1,8 @@
-import mapValues from "lodash/mapValues";
 import { Reducer } from "redux";
+import mapValues from "lodash/mapValues";
 import { SliceMachineStoreType } from "src/redux/type";
+import { LoadingStoreType, LoadingKeysEnum } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
-
-import { LoadingKeysEnum, LoadingStoreType } from "./types";
 
 export const initialState: LoadingStoreType = {
   ...(mapValues(LoadingKeysEnum, () => false) as Record<

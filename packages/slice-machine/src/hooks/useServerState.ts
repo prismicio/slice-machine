@@ -1,9 +1,10 @@
-import ServerState from "@lib/models/server/ServerState";
+import { useEffect, useCallback } from "react";
 import * as Sentry from "@sentry/nextjs";
-import { getState } from "@src/apiClient";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useCallback, useEffect } from "react";
 import useSwr from "swr";
+
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import ServerState from "@lib/models/server/ServerState";
+import { getState } from "@src/apiClient";
 
 const useServerState = () => {
   const { refreshState } = useSliceMachineActions();

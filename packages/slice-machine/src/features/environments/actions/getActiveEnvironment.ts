@@ -2,6 +2,7 @@ import {
   Environment,
   isInvalidActiveEnvironmentError,
 } from "@slicemachine/manager/client";
+
 import { managerClient } from "@src/managerClient";
 
 type GetActiveEnvironmentReturnType =

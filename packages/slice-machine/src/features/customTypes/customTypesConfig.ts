@@ -1,6 +1,7 @@
+import type { NextRouter } from "next/router";
+
 import { DatabaseIcon } from "@src/icons/DatabaseIcon";
 import { PageStackIcon } from "@src/icons/PageStackIcon";
-import type { NextRouter } from "next/router";
 
 export const CUSTOM_TYPES_CONFIG = {
   page: {

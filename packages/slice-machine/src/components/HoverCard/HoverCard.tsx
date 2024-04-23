@@ -1,6 +1,4 @@
 import { Button } from "@prismicio/editor-ui";
-import { useDelayedAction } from "@src/hooks/useDelayedAction";
-import { CloseIcon } from "@src/icons/CloseIcon";
 import { Video } from "cloudinary-react";
 import { clsx } from "clsx";
 import {
@@ -14,6 +12,9 @@ import {
   useState,
   type VideoHTMLAttributes,
 } from "react";
+
+import { useDelayedAction } from "@src/hooks/useDelayedAction";
+import { CloseIcon } from "@src/icons/CloseIcon";
 
 import { BaseHoverCard, type BaseHoverCardProps } from "../BaseHoverCard";
 import styles from "./HoverCard.module.css";

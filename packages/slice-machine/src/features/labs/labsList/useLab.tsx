@@ -1,4 +1,5 @@
 import type { SliceMachineConfig } from "@slicemachine/manager";
+
 import { useSliceMachineConfig } from "@src/hooks/useSliceMachineConfig";
 
 export type UseLabArgs = keyof Required<SliceMachineConfig>["labs"];

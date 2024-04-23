@@ -1,12 +1,15 @@
-import { useField } from "formik";
 import { Fragment } from "react";
-import { Box } from "theme-ui";
+
+import { useField } from "formik";
 
 import {
   FormFieldCheckbox,
   FormFieldInput,
 } from "../../../../components/FormFields";
+
 import { FormTypes } from "../../../forms/types";
+
+import { Box } from "theme-ui";
 
 const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

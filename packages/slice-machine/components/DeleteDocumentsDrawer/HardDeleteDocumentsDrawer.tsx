@@ -1,14 +1,15 @@
-import { Button } from "@components/Button";
-import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
-import { getModelId, isRemoteOnly } from "@lib/models/common/ModelData";
-import { PushChangesLimit } from "@slicemachine/manager";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { SliceMachineStoreType } from "@src/redux/type";
 import React from "react";
-import { useSelector } from "react-redux";
-import { Text } from "theme-ui";
 
+import { Text } from "theme-ui";
+import { Button } from "@components/Button";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
+import { isRemoteOnly } from "@lib/models/common/ModelData";
+import { getModelId } from "@lib/models/common/ModelData";
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
+import { SliceMachineDrawerUI } from "@components/SliceMachineDrawer";
+import { PushChangesLimit } from "@slicemachine/manager";
 
 export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
   pushChanges: (confirmDeleteDocuments: boolean) => void;

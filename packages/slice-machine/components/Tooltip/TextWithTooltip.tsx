@@ -1,7 +1,8 @@
-import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
-import React, { ElementType, useEffect, useRef, useState } from "react";
 import ReactTooltip from "react-tooltip";
+import React, { ElementType, useEffect, useRef, useState } from "react";
 import { Text, ThemeUIStyleObject } from "theme-ui";
+
+import { ReactTooltipPortal } from "@components/ReactTooltipPortal";
 
 interface TextWithTooltipProps {
   text: string;

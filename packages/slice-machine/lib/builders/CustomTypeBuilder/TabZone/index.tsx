@@ -1,44 +1,45 @@
+import { Box, ProgressCircle } from "@prismicio/editor-ui";
+import { FC, Suspense } from "react";
+import { flushSync } from "react-dom";
+import type { DropResult } from "react-beautiful-dnd";
+import type { AnyObjectSchema } from "yup";
+import { useRouter } from "next/router";
+
+import ctBuilderArray from "@lib/models/common/widgets/ctBuilderArray";
 import {
-  CustomTypes,
+  TabSM,
   type TabField,
   type TabFields,
+  CustomTypes,
   TabFieldsModel,
-  TabSM,
 } from "@lib/models/common/CustomType";
-import ctBuilderArray from "@lib/models/common/widgets/ctBuilderArray";
 import type { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
-import { Box, ProgressCircle } from "@prismicio/editor-ui";
+import { List } from "@src/components/List";
+import { telemetry } from "@src/apiClient";
+import { transformKeyAccessor } from "@utils/str";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import {
+  createSectionSliceZone,
+  deleteSectionSliceZone,
+  deleteSliceZoneSlice,
+  addField,
+  deleteField,
+  reorderField,
+  updateField,
+} from "@src/domain/customType";
+import { ErrorBoundary } from "@src/ErrorBoundary";
+
+import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
+import EditModal from "../../common/EditModal";
+import Zone from "../../common/Zone";
+import SliceZone from "../SliceZone";
 import {
   FieldType,
   Group,
   NestableWidget,
   UID,
 } from "@prismicio/types-internal/lib/customtypes";
-import { telemetry } from "@src/apiClient";
-import { List } from "@src/components/List";
-import {
-  addField,
-  createSectionSliceZone,
-  deleteField,
-  deleteSectionSliceZone,
-  deleteSliceZoneSlice,
-  reorderField,
-  updateField,
-} from "@src/domain/customType";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { transformKeyAccessor } from "@utils/str";
-import { useRouter } from "next/router";
-import { FC, Suspense } from "react";
-import type { DropResult } from "react-beautiful-dnd";
-import { flushSync } from "react-dom";
-import type { AnyObjectSchema } from "yup";
-
-import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
-import EditModal from "../../common/EditModal";
-import Zone from "../../common/Zone";
-import SliceZone from "../SliceZone";
 
 interface TabZoneProps {
   tabId: string;

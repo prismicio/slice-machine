@@ -1,6 +1,5 @@
 import React from "react";
 import { Card as ThemeCard, ThemeUIStyleObject } from "theme-ui";
-
 import { CardBox, CardBoxProps } from "./CardBox";
 
 interface CardProps extends Omit<CardBoxProps, "withRadius"> {

@@ -1,12 +1,15 @@
-import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdTextFields } from "react-icons/md";
 import * as yup from "yup";
+import Form, { FormFields } from "./Form";
+
+import { MdTextFields } from "react-icons/md";
 
 import { createValidationSchema } from "../../../../forms";
+
 import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
-import Form, { FormFields } from "./Form";
+
 import { optionValues } from "./options";
+import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**
  * {

@@ -1,10 +1,8 @@
-import type { UrlObject } from "node:url";
-
 import { findFocusableAncestor } from "@prismicio/editor-support/DOM";
 import { Text } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
+import type { UrlObject } from "node:url";
 import {
-  createElement,
   type CSSProperties,
   type FC,
   type HTMLAttributes,
@@ -12,6 +10,7 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
+  createElement,
 } from "react";
 
 import * as styles from "./Card.css";

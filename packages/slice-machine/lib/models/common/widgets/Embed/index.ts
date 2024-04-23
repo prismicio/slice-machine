@@ -1,8 +1,8 @@
-import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { FiCode } from "react-icons/fi";
-
 import { createDefaultWidgetValues } from "../../../../utils";
+
 import { Widget } from "../Widget";
+import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**  {
   "type" : "Embed",

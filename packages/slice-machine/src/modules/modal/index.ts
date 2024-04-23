@@ -1,9 +1,8 @@
-import { SliceMachineStoreType } from "@src/redux/type";
 import mapValues from "lodash/mapValues";
 import { Reducer } from "redux";
+import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
-
-import { ModalKeysEnum, ModalStoreType } from "./types";
+import { ModalStoreType, ModalKeysEnum } from "./types";
 
 export const initialState: ModalStoreType = {
   ...(mapValues(ModalKeysEnum, () => false) as Record<ModalKeysEnum, boolean>),

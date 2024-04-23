@@ -1,22 +1,23 @@
-import { validateSliceModalValues as validateAsNewSliceValues } from "@components/Forms/formsValidator";
-import { pascalize } from "@lib/utils/str";
+import type { FC } from "react";
+import { useSelector } from "react-redux";
+import { Formik } from "formik";
 import {
   Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogHeader,
-  FormInput,
   ScrollArea,
+  FormInput,
+  Text,
   Select,
   SelectItem,
-  Text,
 } from "@prismicio/editor-ui";
-import { getRemoteSlices } from "@src/modules/slices";
+
 import { SliceMachineStoreType } from "@src/redux/type";
-import { Formik } from "formik";
-import type { FC } from "react";
-import { useSelector } from "react-redux";
+import { getRemoteSlices } from "@src/modules/slices";
+import { pascalize } from "@lib/utils/str";
+import { validateSliceModalValues as validateAsNewSliceValues } from "@components/Forms/formsValidator";
 
 import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";

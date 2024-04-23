@@ -1,5 +1,10 @@
-import Navigation from "@components/Navigation";
 import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
+import { useRouter } from "next/router";
+import { FC, PropsWithChildren, Suspense } from "react";
+
+import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
+
+import Navigation from "@components/Navigation";
 import { Breadcrumb } from "@src/components/Breadcrumb";
 import {
   PageLayout,
@@ -8,9 +13,6 @@ import {
   PageLayoutPane,
 } from "@src/components/PageLayout";
 import { ErrorBoundary } from "@src/ErrorBoundary";
-import { useActiveEnvironment } from "@src/features/environments/useActiveEnvironment";
-import { useRouter } from "next/router";
-import { FC, PropsWithChildren, Suspense } from "react";
 
 export const AppLayout: FC<PropsWithChildren> = ({
   children,

@@ -1,6 +1,6 @@
 import { Text } from "@prismicio/editor-ui";
 import clsx from "clsx";
-import { Children, FC, PropsWithChildren } from "react";
+import { PropsWithChildren, Children, FC } from "react";
 
 import styles from "./Breadcrumb.module.css";
 

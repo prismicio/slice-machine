@@ -1,5 +1,5 @@
-import { Component, Screenshot } from "./Library";
 import { VariationSM } from "./Slice";
+import { Component, Screenshot } from "./Library";
 
 export const createScreenshotUI = (screenshot: Screenshot): ScreenshotUI => ({
   hash: screenshot.hash,

@@ -1,7 +1,7 @@
-import type { APIEndpoints, PackageManager } from "@slicemachine/manager";
+import type { PackageManager, APIEndpoints } from "@slicemachine/manager";
 
-import type { Manifest } from "./Manifest";
 import PrismicData from "./PrismicData";
+import type { Manifest } from "./Manifest";
 
 export interface BackendEnvironment {
   cwd: string;

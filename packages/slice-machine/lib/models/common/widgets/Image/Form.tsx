@@ -1,18 +1,21 @@
-import { Col, Flex as FlexGrid } from "@components/Flex";
-import WidgetFormField from "@lib/builders/common/EditModal/Field";
-import { createFieldNameFromKey } from "@lib/forms";
-import { DefaultFields } from "@lib/forms/defaults";
-import { TabFields } from "@lib/models/common/CustomType";
-import { FieldArray } from "formik";
-import { Fragment, useEffect, useState } from "react";
-import { Card, Flex, Label } from "theme-ui";
 import * as yup from "yup";
+import { useEffect, useState, Fragment } from "react";
 
+import { DefaultFields } from "@lib/forms/defaults";
+import { createFieldNameFromKey } from "@lib/forms";
+
+import WidgetFormField from "@lib/builders/common/EditModal/Field";
+
+import { FieldArray } from "formik";
+
+import { Label, Card, Flex } from "theme-ui";
+import { Col, Flex as FlexGrid } from "@components/Flex";
 import {
+  ThumbnailButton,
   AddThumbnailButton,
   ConstraintForm,
-  ThumbnailButton,
 } from "./components";
+import { TabFields } from "@lib/models/common/CustomType";
 
 const nullableNumberSchema = () => {
   return yup

@@ -1,16 +1,17 @@
 import { Button, Skeleton, Tooltip } from "@prismicio/editor-ui";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
-import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
-import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
 import {
   type ComponentPropsWithoutRef,
   type ElementRef,
   type FC,
-  forwardRef,
   type ReactNode,
   Suspense,
+  forwardRef,
 } from "react";
+
+import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
+import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
+import { useLinkedGitRepos } from "@src/features/settings/git/useLinkedGitRepos";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 type PushChangesButtonProps = Required<BarePushChangesButtonProps>;
 

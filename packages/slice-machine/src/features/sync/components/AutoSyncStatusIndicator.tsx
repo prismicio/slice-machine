@@ -1,8 +1,9 @@
+import { FC } from "react";
 import { Text, Tooltip } from "@prismicio/editor-ui";
+
+import { Syncing } from "@src/icons/Syncing";
 import { Synced } from "@src/icons/Synced";
 import { SyncFailed } from "@src/icons/SyncFailed";
-import { Syncing } from "@src/icons/Syncing";
-import { FC } from "react";
 
 import styles from "./AutoSyncStatusIndicator.module.css";
 

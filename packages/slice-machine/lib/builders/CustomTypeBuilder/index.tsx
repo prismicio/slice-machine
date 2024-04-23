@@ -1,5 +1,7 @@
-import { CustomTypes } from "@lib/models/common/CustomType";
 import { DropdownMenuItem, Icon } from "@prismicio/editor-ui";
+import { useState } from "react";
+import { useRouter } from "next/router";
+
 import {
   Window,
   WindowFrame,
@@ -8,14 +10,13 @@ import {
   WindowTabsList,
   WindowTabsTrigger,
 } from "@src/components/Window";
+import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { CustomTypes } from "@lib/models/common/CustomType";
 import {
   createSection,
   deleteSection,
   renameSection,
 } from "@src/domain/customType";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { useRouter } from "next/router";
-import { useState } from "react";
 
 import CreateModal from "./TabModal/create";
 import DeleteModal from "./TabModal/delete";

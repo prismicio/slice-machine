@@ -1,3 +1,5 @@
+import type { FC } from "react";
+import { Formik } from "formik";
 import {
   Box,
   Dialog,
@@ -5,12 +7,10 @@ import {
   DialogContent,
   DialogHeader,
   ScrollArea,
+  Text,
   Select,
   SelectItem,
-  Text,
 } from "@prismicio/editor-ui";
-import { Formik } from "formik";
-import type { FC } from "react";
 
 import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";

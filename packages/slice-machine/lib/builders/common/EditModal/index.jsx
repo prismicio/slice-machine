@@ -1,18 +1,24 @@
-import Card from "@components/Card/WithTabs";
-import { Col, Flex as FlexGrid } from "@components/Flex";
-import ItemHeader from "@components/ItemHeader";
-import SliceMachineModal from "@components/SliceMachineModal";
-import { createFieldNameFromKey, createInitialValues } from "@lib/forms";
-import { DeprecatedMockConfigMessage } from "@lib/models/common/DeprecatedMockConfigMessage";
-import * as Widgets from "@lib/models/common/widgets/withGroup";
-import { removeProp } from "@lib/utils";
 import Modal from "react-modal";
-import { Box, Button, Close, Flex, useThemeUI } from "theme-ui";
+import SliceMachineModal from "@components/SliceMachineModal";
+
+import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
+
 import * as yup from "yup";
+import * as Widgets from "@lib/models/common/widgets/withGroup";
+
+import { createInitialValues, createFieldNameFromKey } from "@lib/forms";
+
+import Card from "@components/Card/WithTabs";
+import ItemHeader from "@components/ItemHeader";
+import { Flex as FlexGrid, Col } from "@components/Flex";
+
+import WidgetForm from "./Form";
+import WidgetFormField from "./Field";
 
 import { findWidgetByConfigOrType } from "../../utils";
-import WidgetFormField from "./Field";
-import WidgetForm from "./Form";
+import { removeProp } from "@lib/utils";
+
+import { DeprecatedMockConfigMessage } from "@lib/models/common/DeprecatedMockConfigMessage";
 
 if (process.env.NODE_ENV !== "test") {
   Modal.setAppElement("#__next");

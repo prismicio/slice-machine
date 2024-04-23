@@ -1,11 +1,13 @@
-import { Image } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { BsImage } from "react-icons/bs";
 import * as yup from "yup";
+import Form, { FormFields } from "./Form";
+import { BsImage } from "react-icons/bs";
 
 import { createValidationSchema } from "../../../../forms";
+
 import { removeProp } from "../../../../utils";
+
 import { Widget } from "../Widget";
-import Form, { FormFields } from "./Form";
+import { Image } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**
  * {

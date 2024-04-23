@@ -1,9 +1,8 @@
 import equal from "fast-deep-equal";
-
 import { Screenshot } from "../Library";
-import { LocalAndRemoteSlice } from "../ModelData";
 import { SliceSM } from "../Slice";
 import { ModelStatus } from ".";
+import { LocalAndRemoteSlice } from "../ModelData";
 
 export function compareSliceLocalToRemote(
   model: LocalAndRemoteSlice,

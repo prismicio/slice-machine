@@ -1,20 +1,22 @@
 // @vitest-environment jsdom
-import { CustomTypes } from "@lib/models/common/CustomType";
+import { describe, vi, test, TestContext } from "vitest";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+
+import mockRouter from "next-router-mock";
+
 import {
-  createSliceMachineManager,
   CustomTypeFormat,
+  createSliceMachineManager,
 } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
-import mockRouter from "next-router-mock";
-import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
+import { CustomTypes } from "@lib/models/common/CustomType";
 import { render, screen, within } from "test/__testutils__";
 import { createTestPlugin } from "test/__testutils__/createTestPlugin";
 import { createTestProject } from "test/__testutils__/createTestProject";
-import { describe, test, TestContext, vi } from "vitest";
-
-import pkg from "../../../../package.json";
 import { CustomTypesBuilderPage } from "../customTypesBuilder/CustomTypesBuilderPage";
+import pkg from "../../../../package.json";
+
+import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 
 mockRouter.useParser(
   createDynamicRouteParser([

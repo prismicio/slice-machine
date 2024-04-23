@@ -1,10 +1,10 @@
-import EditModal from "@lib/builders/common/EditModal";
-import Zone from "@lib/builders/common/Zone";
-import { WidgetsArea } from "@lib/models/common/Slice";
-import * as Widgets from "@lib/models/common/widgets";
-import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
-import { AnyWidget } from "@lib/models/common/widgets/Widget";
-import { ensureDnDDestination } from "@lib/utils";
+import { FC, useState } from "react";
+import { flushSync } from "react-dom";
+import { DropResult } from "react-beautiful-dnd";
+import {
+  FieldType,
+  NestableWidget,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
   Box,
   Dialog,
@@ -12,12 +12,14 @@ import {
   DialogContent,
   DialogHeader,
 } from "@prismicio/editor-ui";
-import {
-  FieldType,
-  NestableWidget,
-} from "@prismicio/types-internal/lib/customtypes";
-import { telemetry } from "@src/apiClient";
+
+import { ensureDnDDestination } from "@lib/utils";
+import { transformKeyAccessor } from "@utils/str";
+import * as Widgets from "@lib/models/common/widgets";
+import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 import { List } from "@src/components/List";
+import { WidgetsArea } from "@lib/models/common/Slice";
+import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
 import {
   addField,
   deleteField,
@@ -25,12 +27,11 @@ import {
   reorderField,
   updateField,
 } from "@src/domain/slice";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
+import Zone from "@lib/builders/common/Zone";
+import EditModal from "@lib/builders/common/EditModal";
+import { AnyWidget } from "@lib/models/common/widgets/Widget";
+import { telemetry } from "@src/apiClient";
 import { useGroupsInSlicesExperiment } from "@src/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
-import { transformKeyAccessor } from "@utils/str";
-import { FC, useState } from "react";
-import { DropResult } from "react-beautiful-dnd";
-import { flushSync } from "react-dom";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>

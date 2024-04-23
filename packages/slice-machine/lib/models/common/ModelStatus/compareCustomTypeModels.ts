@@ -1,7 +1,6 @@
 import equal from "fast-deep-equal";
-
-import { LocalAndRemoteCustomType } from "../ModelData";
 import { ModelStatus } from ".";
+import { LocalAndRemoteCustomType } from "../ModelData";
 
 export function compareCustomTypeLocalToRemote(
   model: LocalAndRemoteCustomType,

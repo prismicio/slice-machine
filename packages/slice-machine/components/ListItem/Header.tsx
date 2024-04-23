@@ -1,7 +1,7 @@
 import { TextWithTooltip } from "@components/Tooltip/TextWithTooltip";
-import * as CSS from "csstype";
 import { IconType } from "react-icons";
 import { Flex, Text, Theme } from "theme-ui";
+import * as CSS from "csstype";
 
 interface ItemHeaderProps {
   text: string;

@@ -1,3 +1,15 @@
+import { Button } from "@prismicio/editor-ui";
+import React, { useState } from "react";
+import Head from "next/head";
+import { BaseStyles, Flex, Text, Link } from "theme-ui";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/customtypes";
+
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
 import {
   AppLayout,
   AppLayoutActions,
@@ -5,30 +17,19 @@ import {
   AppLayoutContent,
   AppLayoutHeader,
 } from "@components/AppLayout";
-import { DeleteSliceModal } from "@components/DeleteSliceModal";
-import EmptyState from "@components/EmptyState";
 import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
 import Grid from "@components/Grid";
+import EmptyState from "@components/EmptyState";
 import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
-import { SliceToastMessage } from "@components/ToasterContainer";
-import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { Button } from "@prismicio/editor-ui";
-import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/customtypes";
+import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
+import { DeleteSliceModal } from "@components/DeleteSliceModal";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
-import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import { getLibraries, getRemoteSlices } from "@src/modules/slices";
-import { SliceMachineStoreType } from "@src/redux/type";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { BaseStyles, Flex, Link, Text } from "theme-ui";
+import { SliceToastMessage } from "@components/ToasterContainer";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();

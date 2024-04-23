@@ -8,9 +8,9 @@ import {
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ReusableIcon } from "../../icons/ReusableIcon";
+import { Table, TableBody, TableHead, TableCell, TableRow } from "./Table";
 import { UniqueIcon } from "../../icons/UniqueIcon";
-import { Table, TableBody, TableCell, TableHead, TableRow } from "./Table";
+import { ReusableIcon } from "../../icons/ReusableIcon";
 
 type Story = StoryObj<typeof meta>;
 

@@ -1,7 +1,7 @@
 export {
   HoverCard,
-  HoverCardCloseButton,
-  HoverCardDescription,
-  HoverCardMedia,
   HoverCardTitle,
+  HoverCardMedia,
+  HoverCardDescription,
+  HoverCardCloseButton,
 } from "./HoverCard";

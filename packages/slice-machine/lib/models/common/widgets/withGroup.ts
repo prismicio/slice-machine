@@ -1,3 +1,4 @@
+export { Boolean } from "./";
 export { Color } from ".";
 export { ContentRelationship } from ".";
 export { Date } from ".";
@@ -12,7 +13,7 @@ export { StructuredText } from ".";
 export { Text } from ".";
 export { Timestamp } from ".";
 export { UID } from ".";
-export { Boolean } from "./";
+
 export { GroupWidget as Group } from "./Group";
 
 export const SharedSlice = null;

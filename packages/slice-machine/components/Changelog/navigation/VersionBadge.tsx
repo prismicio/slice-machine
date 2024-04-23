@@ -1,6 +1,5 @@
-import { transparentize } from "@theme-ui/color";
 import { Flex, Text } from "theme-ui";
-
+import { transparentize } from "@theme-ui/color";
 import { VersionTags } from ".";
 import { VersionTag } from "./VersionTag";
 

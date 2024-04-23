@@ -1,4 +1,4 @@
-import { Flex, Heading, Text } from "theme-ui";
+import { Text, Flex, Heading } from "theme-ui";
 
 import Card from "../Card";
 

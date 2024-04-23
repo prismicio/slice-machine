@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Text } from "theme-ui";
+import { Button, Heading, Box, Text } from "theme-ui";
 
 import ModalFormCard from "../../../../components/ModalFormCard";
 

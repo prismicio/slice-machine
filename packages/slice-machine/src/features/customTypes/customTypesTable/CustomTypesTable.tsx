@@ -1,14 +1,7 @@
-import { Button, Icon, Image, tokens } from "@prismicio/editor-ui";
-import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { type CustomTypeFormat } from "@slicemachine/manager";
-import {
-  BlankSlate,
-  BlankSlateActions,
-  BlankSlateContent,
-  BlankSlateDescription,
-  BlankSlateImage,
-  BlankSlateTitle,
-} from "@src/components/BlankSlate";
+import { type FC } from "react";
+import { Icon, Button, Image, tokens } from "@prismicio/editor-ui";
+import { useRouter } from "next/router";
+
 import {
   Table,
   TableBody,
@@ -16,11 +9,19 @@ import {
   TableHead,
   TableRow,
 } from "@src/components/Table";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import { ReusableIcon } from "@src/icons/ReusableIcon";
 import { UniqueIcon } from "@src/icons/UniqueIcon";
-import { useRouter } from "next/router";
-import { type FC } from "react";
+import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { type CustomTypeFormat } from "@slicemachine/manager";
+import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
+import {
+  BlankSlate,
+  BlankSlateImage,
+  BlankSlateTitle,
+  BlankSlateDescription,
+  BlankSlateActions,
+  BlankSlateContent,
+} from "@src/components/BlankSlate";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { EditDropdown } from "../EditDropdown";

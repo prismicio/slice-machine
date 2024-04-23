@@ -1,7 +1,8 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { Slices } from "@lib/models/common/Slice";
+import { it, describe, expect } from "vitest";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { describe, expect, it } from "vitest";
+
+import { Slices } from "@lib/models/common/Slice";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 import { deleteRepeatableZone } from "../slice";
 

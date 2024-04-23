@@ -1,6 +1,6 @@
 import React from "react";
-import type { Theme } from "theme-ui";
 import { Flex, Text } from "theme-ui";
+import type { Theme } from "theme-ui";
 
 const ItemHeader: React.FC<{
   text: React.ReactNode;

@@ -1,19 +1,20 @@
+import React, { Suspense } from "react";
+import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
+import { Box, Button, Text } from "@prismicio/editor-ui";
+
 import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
 import Grid from "@components/Grid";
-import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
-import { ModelStatus } from "@lib/models/common/ModelStatus";
-import { Box, Button, Text } from "@prismicio/editor-ui";
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import { countMissingScreenshots } from "@src/domain/slice";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
-import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
 import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
+import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
+import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { AuthStatus } from "@src/modules/userContext/types";
-import React, { Suspense } from "react";
-import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
+import { ModelsStatuses } from "@src/features/sync/getUnSyncChanges";
+import { ErrorBoundary } from "@src/ErrorBoundary";
 
 import { DevCollaborationExperiment } from "./DevCollaborationExperiment";
 

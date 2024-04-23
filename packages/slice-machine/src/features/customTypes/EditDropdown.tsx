@@ -1,5 +1,4 @@
-import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
-import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
+import { type FC, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,14 +7,19 @@ import {
   Icon,
   IconButton,
 } from "@prismicio/editor-ui";
-import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { CustomTypeFormat } from "@slicemachine/manager";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
-import { type FC, useState } from "react";
+
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+
+import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import { convertCustomToPageType } from "./actions/convertCustomToPageType";
+
 import { CUSTOM_TYPES_CONFIG } from "./customTypesConfig";
+
+import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
+import { DeleteCustomTypeModal } from "@components/DeleteCTModal";
+import { CustomTypeFormat } from "@slicemachine/manager";
 
 type EditDropdownProps = {
   isChangesLocal: boolean;

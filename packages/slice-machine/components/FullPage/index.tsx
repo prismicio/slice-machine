@@ -1,4 +1,4 @@
-import { Flex, FlexProps } from "theme-ui";
+import { FlexProps, Flex } from "theme-ui";
 
 const FullPage: React.FunctionComponent<FlexProps> = ({ children }) => (
   <Flex

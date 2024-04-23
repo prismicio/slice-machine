@@ -1,9 +1,5 @@
-import { Text } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdTitle } from "react-icons/md";
 import * as yup from "yup";
-
-import { createValidationSchema } from "../../../../forms";
-import { DefaultFields } from "../../../../forms/defaults";
+import { MdTitle } from "react-icons/md";
 /**
 * {
      "type": "Text",
@@ -13,8 +9,12 @@ import { DefaultFields } from "../../../../forms/defaults";
     }
   }
  */
+
 import { removeProp } from "../../../../utils";
+import { DefaultFields } from "../../../../forms/defaults";
+import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
+import { Text } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = DefaultFields;

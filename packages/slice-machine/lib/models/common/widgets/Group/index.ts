@@ -1,10 +1,9 @@
-import { GroupSM } from "@lib/models/common/Group";
-import { MdPlaylistAdd } from "react-icons/md";
 import * as yup from "yup";
-
+import { MdPlaylistAdd } from "react-icons/md";
 import { Widget } from "../Widget";
-import Form, { FormFields } from "./Form";
 import CustomListItem from "./ListItem";
+import { GroupSM } from "@lib/models/common/Group";
+import Form, { FormFields } from "./Form";
 
 const Meta = {
   icon: MdPlaylistAdd,
