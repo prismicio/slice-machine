@@ -24,7 +24,10 @@ import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplate
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
-import { CustomTypes, CustomTypeSM } from "@/legacy/lib/models/common/CustomType";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@/legacy/lib/models/common/CustomType";
 import type { SliceZoneSlice } from "@/legacy/lib/models/common/CustomType/sliceZone";
 import type { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import type { SlicesSM } from "@/legacy/lib/models/common/Slices";
