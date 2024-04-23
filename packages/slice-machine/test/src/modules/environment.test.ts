@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   environmentReducer,
   refreshStateCreator,
-} from "@src/modules/environment";
-import { EnvironmentStoreType } from "@src/modules/environment/types";
+} from "@/modules/environment";
+import { EnvironmentStoreType } from "@/modules/environment/types";
 import { dummyServerState } from "./__fixtures__/serverState";
 
 const dummyEnvironmentState: EnvironmentStoreType = dummyServerState.env;

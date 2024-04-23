@@ -1,4 +1,4 @@
-import { SliceMachineStoreType } from "@src/redux/type";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { getLibraries } from "./index";
 

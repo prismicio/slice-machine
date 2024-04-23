@@ -1,9 +1,9 @@
-import { rename } from "@src/domain/slice";
-import { managerClient } from "@src/managerClient";
 import { toast } from "react-toastify";
 
+import { rename } from "@/domain/slice";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { Slices } from "@/legacy/lib/models/common/Slice";
+import { managerClient } from "@/managerClient";
 
 type DeleteSliceArgs = {
   newSliceName: string;

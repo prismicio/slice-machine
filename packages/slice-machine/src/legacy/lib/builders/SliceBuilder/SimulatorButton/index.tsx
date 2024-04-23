@@ -1,25 +1,25 @@
 import { Button, tokens } from "@prismicio/editor-ui";
-import { telemetry } from "@src/apiClient";
+import { useRouter } from "next/router";
+import React, { PropsWithChildren, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import ReactTooltip from "react-tooltip";
+
+import { telemetry } from "@/apiClient";
 import {
   HoverCard,
   HoverCardCloseButton,
   HoverCardDescription,
   HoverCardMedia,
   HoverCardTitle,
-} from "@src/components/HoverCard";
-import { PlayCircleIcon } from "@src/icons/PlayCircleIcon";
-import { userHasSeenSimulatorToolTip } from "@src/modules/userContext";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { useRouter } from "next/router";
-import React, { PropsWithChildren, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import ReactTooltip from "react-tooltip";
-
+} from "@/components/HoverCard";
+import { PlayCircleIcon } from "@/icons/PlayCircleIcon";
 import {
   SIMULATOR_WINDOW_ID,
   VIDEO_SIMULATOR_TOOLTIP,
 } from "@/legacy/lib/consts";
+import { userHasSeenSimulatorToolTip } from "@/modules/userContext";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
 
 const SimulatorOnboardingTooltip: React.FC<
   PropsWithChildren<{

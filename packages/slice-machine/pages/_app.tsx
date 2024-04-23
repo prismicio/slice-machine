@@ -19,10 +19,6 @@ import {
   ThemeProvider,
   TooltipProvider,
 } from "@prismicio/editor-ui";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import { InAppGuideProvider } from "@src/features/inAppGuide/InAppGuideContext";
-import { InAppGuideDialog } from "@src/features/inAppGuide/InAppGuideDialog";
-import { AutoSyncProvider } from "@src/features/sync/AutoSyncProvider";
 import { ConnectedRouter } from "connected-next-router";
 import type { NextPage } from "next";
 import type { AppContext, AppInitialProps } from "next/app";
@@ -37,6 +33,10 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { getState } from "@/apiClient";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { InAppGuideProvider } from "@/features/inAppGuide/InAppGuideContext";
+import { InAppGuideDialog } from "@/features/inAppGuide/InAppGuideDialog";
+import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
 import { RouteChangeProvider } from "@/hooks/useRouteChange";
 import SliceMachineApp from "@/legacy/components/App";
 import LoadingPage from "@/legacy/components/LoadingPage";

@@ -1,15 +1,15 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { CustomTypeFormat } from "@slicemachine/manager";
-import { deleteCustomType } from "@src/features/customTypes/actions/deleteCustomType";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 
+import { deleteCustomType } from "@/features/customTypes/actions/deleteCustomType";
+import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import { Button } from "@/legacy/components/Button";
 import Card from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 type DeleteCTModalProps = {
   customType: CustomType;

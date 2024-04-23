@@ -1,9 +1,10 @@
-import { SliceMachineStoreType } from "@src/redux/type";
 import { createRouterMiddleware } from "connected-next-router";
 import { applyMiddleware, compose, createStore, Store } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
 import { Persistor } from "redux-persist/es/types"; // defaults to localStorage for web
 import storage from "redux-persist/lib/storage";
+
+import { SliceMachineStoreType } from "@/redux/type";
 
 import createReducer from "./reducer";
 

@@ -2,8 +2,6 @@ import type { UrlObject } from "node:url";
 
 import { useMediaQuery } from "@prismicio/editor-support/React";
 import { breakpoints, Tooltip } from "@prismicio/editor-ui";
-import { LogoIcon } from "@src/icons/LogoIcon";
-import OpenIcon from "@src/icons/OpenIcon";
 import { clsx } from "clsx";
 import {
   type FC,
@@ -15,6 +13,9 @@ import {
   type ReactNode,
   type SVGProps,
 } from "react";
+
+import { LogoIcon } from "@/icons/LogoIcon";
+import OpenIcon from "@/icons/OpenIcon";
 
 import { Divider } from "../Divider";
 import styles from "./SideNav.module.css";

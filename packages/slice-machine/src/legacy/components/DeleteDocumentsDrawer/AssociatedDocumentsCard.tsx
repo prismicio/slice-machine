@@ -1,8 +1,9 @@
 import { CustomTypeFormat } from "@slicemachine/manager";
-import { CUSTOM_TYPES_CONFIG } from "@src/features/customTypes/customTypesConfig";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
 import React from "react";
 import { Card, Flex, Link, Text } from "theme-ui";
+
+import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
+import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 
 type AssociatedDocumentsCardProps = {
   ctName: string;

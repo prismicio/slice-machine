@@ -1,1 +1,1 @@
-export { CustomTypesBuilderPage as default } from "@src/features/customTypes/customTypesBuilder/CustomTypesBuilderPage";
+export { CustomTypesBuilderPage as default } from "@/features/customTypes/customTypesBuilder/CustomTypesBuilderPage";

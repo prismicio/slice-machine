@@ -1,16 +1,16 @@
-import { telemetry } from "@src/apiClient";
-import {
-  addGroupField,
-  deleteGroupField,
-  reorderGroupField,
-  updateGroupField,
-} from "@src/domain/customType";
-import { useCustomTypeState } from "@src/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { Fragment, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { Box, Button } from "theme-ui";
 
+import { telemetry } from "@/apiClient";
+import {
+  addGroupField,
+  deleteGroupField,
+  reorderGroupField,
+  updateGroupField,
+} from "@/domain/customType";
+import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import ListItem from "@/legacy/components/ListItem";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import SelectFieldTypeModal from "@/legacy/lib/builders/common/SelectFieldTypeModal";

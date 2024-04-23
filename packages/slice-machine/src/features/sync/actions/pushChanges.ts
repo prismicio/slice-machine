@@ -1,6 +1,6 @@
 import { PushChangesLimit } from "@slicemachine/manager";
-import { pushChanges as pushChangesCall, telemetry } from "@src/apiClient";
 
+import { pushChanges as pushChangesCall, telemetry } from "@/apiClient";
 import {
   ChangedCustomType,
   ChangedSlice,

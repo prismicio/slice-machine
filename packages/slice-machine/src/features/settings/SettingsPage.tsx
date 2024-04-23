@@ -1,11 +1,11 @@
 import { Box } from "@prismicio/editor-ui";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { ConnectGitRepository } from "@src/features/settings/git/ConnectGitRepository";
-import { useGitIntegrationExperiment } from "@src/features/settings/git/useGitIntegrationExperiment";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect } from "react";
 
+import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { ConnectGitRepository } from "@/features/settings/git/ConnectGitRepository";
+import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
 import {
   AppLayout,
   AppLayoutBreadcrumb,

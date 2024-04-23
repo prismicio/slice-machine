@@ -2,13 +2,6 @@ import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 import { DefaultErrorMessage } from "@prismicio/editor-ui";
 import { renderSliceMock } from "@prismicio/mocks";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { saveSliceMock, telemetry } from "@src/apiClient";
-import { ErrorBoundary } from "@src/ErrorBoundary";
-import useThrottle from "@src/hooks/useThrottle";
-import { selectEndpoints, selectSimulatorUrl } from "@src/modules/environment";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { defaultSharedSliceContent } from "@src/utils/editor";
 import {
   FC,
   Suspense,
@@ -22,10 +15,17 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
+import { saveSliceMock, telemetry } from "@/apiClient";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import useThrottle from "@/hooks/useThrottle";
 import ScreenshotPreviewModal from "@/legacy/components/ScreenshotPreviewModal";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { ScreenDimensions } from "@/legacy/lib/models/common/Screenshots";
 import { Slices, VariationSM } from "@/legacy/lib/models/common/Slice";
+import { selectEndpoints, selectSimulatorUrl } from "@/modules/environment";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
+import { defaultSharedSliceContent } from "@/utils/editor";
 
 import FailedConnect from "./components/FailedConnect";
 import FullPage from "./components/FullPage";

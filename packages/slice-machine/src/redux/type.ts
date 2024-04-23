@@ -1,10 +1,11 @@
-import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes/types";
-import { EnvironmentStoreType } from "@src/modules/environment/types";
-import { LoadingStoreType } from "@src/modules/loading/types";
-import { ModalStoreType } from "@src/modules/modal/types";
-import { SlicesStoreType } from "@src/modules/slices/types";
-import { UserContextStoreType } from "@src/modules/userContext/types";
 import { RouterState } from "connected-next-router/types";
+
+import { AvailableCustomTypesStoreType } from "@/modules/availableCustomTypes/types";
+import { EnvironmentStoreType } from "@/modules/environment/types";
+import { LoadingStoreType } from "@/modules/loading/types";
+import { ModalStoreType } from "@/modules/modal/types";
+import { SlicesStoreType } from "@/modules/slices/types";
+import { UserContextStoreType } from "@/modules/userContext/types";
 
 export type SliceMachineStoreType = {
   modal: ModalStoreType;

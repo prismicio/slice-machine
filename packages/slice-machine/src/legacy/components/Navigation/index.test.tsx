@@ -2,10 +2,6 @@
 import { cache } from "@prismicio/editor-support/Suspense";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
-import {
-  AuthStatus,
-  UserContextStoreType,
-} from "@src/modules/userContext/types";
 import Router from "next/router";
 import { act } from "react-dom/test-utils";
 import {
@@ -20,6 +16,10 @@ import { createTestProject } from "test/__testutils__/createTestProject";
 import { describe, expect, test, vi } from "vitest";
 
 import { FrontEndEnvironment } from "@/legacy/lib/models/common/Environment";
+import {
+  AuthStatus,
+  UserContextStoreType,
+} from "@/modules/userContext/types";
 
 import SideNavigation from "./index";
 

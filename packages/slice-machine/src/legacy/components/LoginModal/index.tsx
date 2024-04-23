@@ -1,15 +1,3 @@
-import { checkAuthStatus, getState, startAuth } from "@src/apiClient";
-import { getActiveEnvironment } from "@src/features/environments/actions/getActiveEnvironment";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import { getUnSyncedChanges } from "@src/features/sync/getUnSyncChanges";
-import { getEnvironment } from "@src/modules/environment";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { AuthStatus } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
 import React from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
@@ -25,6 +13,10 @@ import {
   Text,
 } from "theme-ui";
 
+import { checkAuthStatus, getState, startAuth } from "@/apiClient";
+import { getActiveEnvironment } from "@/features/environments/actions/getActiveEnvironment";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { getUnSyncedChanges } from "@/features/sync/getUnSyncChanges";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 import { CheckAuthStatusResponse } from "@/legacy/lib/models/common/Auth";
 import { normalizeFrontendCustomTypes } from "@/legacy/lib/models/common/normalizers/customType";
@@ -32,6 +24,14 @@ import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/
 import { buildEndpoints } from "@/legacy/lib/prismic/endpoints";
 import { startPolling } from "@/legacy/lib/utils/poll";
 import preferWroomBase from "@/legacy/lib/utils/preferWroomBase";
+import { getEnvironment } from "@/modules/environment";
+import { isLoading } from "@/modules/loading";
+import { LoadingKeysEnum } from "@/modules/loading/types";
+import { isModalOpen } from "@/modules/modal";
+import { ModalKeysEnum } from "@/modules/modal/types";
+import { AuthStatus } from "@/modules/userContext/types";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";

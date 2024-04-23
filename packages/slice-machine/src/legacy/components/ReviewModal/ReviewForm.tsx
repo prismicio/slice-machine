@@ -1,11 +1,3 @@
-import { telemetry } from "@src/apiClient";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { UserReviewType } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { Field, Form, Formik } from "formik";
 import { FC } from "react";
 import Modal from "react-modal";
@@ -21,7 +13,15 @@ import {
   Textarea,
 } from "theme-ui";
 
+import { telemetry } from "@/apiClient";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
+import { isLoading } from "@/modules/loading";
+import { LoadingKeysEnum } from "@/modules/loading/types";
+import { isModalOpen } from "@/modules/modal";
+import { ModalKeysEnum } from "@/modules/modal/types";
+import { UserReviewType } from "@/modules/userContext/types";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { ReviewFormSelect } from "./ReviewFormSelect";
 

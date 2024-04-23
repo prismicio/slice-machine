@@ -1,5 +1,3 @@
-import { AuthStatus } from "@src/modules/userContext/types";
-
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import {
@@ -16,6 +14,7 @@ import {
   computeStatuses,
   ModelStatus,
 } from "@/legacy/lib/models/common/ModelStatus";
+import { AuthStatus } from "@/modules/userContext/types";
 
 type GetUnSyncedChangesArgs = {
   customTypes: LocalOrRemoteCustomType[];

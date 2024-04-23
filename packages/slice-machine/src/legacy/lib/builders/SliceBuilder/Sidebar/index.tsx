@@ -1,20 +1,20 @@
 import { Box, Button, Gradient } from "@prismicio/editor-ui";
-import { updateSlice } from "@src/apiClient";
-import { copySliceVariation } from "@src/domain/slice";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
-import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
-import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
-import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
 import { type FC, useState } from "react";
 import { toast } from "react-toastify";
 
+import { updateSlice } from "@/apiClient";
+import { copySliceVariation } from "@/domain/slice";
+import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
+import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
+import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
+import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
 import { DeleteVariationModal } from "@/legacy/components/DeleteVariationModal";
 import { RenameVariationModal } from "@/legacy/components/Forms/RenameVariationModal";
 import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
 import AddVariationModal from "@/legacy/lib/builders/SliceBuilder/Sidebar/AddVariationModal";
 import type { VariationSM } from "@/legacy/lib/models/common/Slice";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 type DialogState =
   | { type: "ADD_VARIATION"; variation?: undefined; loading?: boolean }

@@ -1,6 +1,4 @@
 import { PushChangesLimit } from "@slicemachine/manager";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
-import { SliceMachineStoreType } from "@src/redux/type";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Checkbox, Flex, Label, Text, ThemeUIStyleObject } from "theme-ui";
@@ -8,6 +6,8 @@ import { Checkbox, Flex, Label, Text, ThemeUIStyleObject } from "theme-ui";
 import { Button } from "@/legacy/components/Button";
 import { SliceMachineDrawerUI } from "@/legacy/components/SliceMachineDrawer";
 import { getModelId, isRemoteOnly } from "@/legacy/lib/models/common/ModelData";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 

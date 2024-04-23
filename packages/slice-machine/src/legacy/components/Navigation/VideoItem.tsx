@@ -1,16 +1,3 @@
-import { telemetry } from "@src/apiClient";
-import {
-  HoverCard,
-  HoverCardCloseButton,
-  HoverCardDescription,
-  HoverCardMedia,
-  HoverCardTitle,
-} from "@src/components/HoverCard";
-import { SideNavLink, SideNavListItem } from "@src/components/SideNav";
-import { useMarketingContent } from "@src/hooks/useMarketingContent";
-import { PlayCircleIcon } from "@src/icons/PlayCircleIcon";
-import { getUserReview } from "@src/modules/userContext";
-import { SliceMachineStoreType } from "@src/redux/type";
 import {
   type FC,
   forwardRef,
@@ -24,7 +11,20 @@ import { useSelector } from "react-redux";
 import ReactTooltip from "react-tooltip";
 import { Close, Flex, Paragraph } from "theme-ui";
 
+import { telemetry } from "@/apiClient";
+import {
+  HoverCard,
+  HoverCardCloseButton,
+  HoverCardDescription,
+  HoverCardMedia,
+  HoverCardTitle,
+} from "@/components/HoverCard";
+import { SideNavLink, SideNavListItem } from "@/components/SideNav";
+import { useMarketingContent } from "@/hooks/useMarketingContent";
+import { PlayCircleIcon } from "@/icons/PlayCircleIcon";
 import { ReactTooltipPortal } from "@/legacy/components/ReactTooltipPortal";
+import { getUserReview } from "@/modules/userContext";
+import { SliceMachineStoreType } from "@/redux/type";
 
 import style from "./VideoItem.module.css";
 

@@ -1,9 +1,10 @@
 import { Button, Switch, Text } from "@prismicio/editor-ui";
-import { telemetry } from "@src/apiClient";
-import { ListHeader } from "@src/components/List";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
 import { BaseStyles } from "theme-ui";
+
+import { telemetry } from "@/apiClient";
+import { ListHeader } from "@/components/List";
 
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import Card from "./Card";

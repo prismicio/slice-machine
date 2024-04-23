@@ -1,9 +1,9 @@
 import { Box, DefaultErrorMessage, ProgressCircle } from "@prismicio/editor-ui";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { ErrorBoundary } from "@src/ErrorBoundary";
 import Head from "next/head";
 import { type FC, ReactNode, Suspense } from "react";
 
+import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { ErrorBoundary } from "@/ErrorBoundary";
 import {
   AppLayout,
   AppLayoutBreadcrumb,

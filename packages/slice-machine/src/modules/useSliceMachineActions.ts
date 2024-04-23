@@ -1,7 +1,7 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { SaveSliceMockRequest } from "@src/apiClient";
 import { useDispatch } from "react-redux";
 
+import { SaveSliceMockRequest } from "@/apiClient";
 import {
   ComponentUI,
   ScreenshotUI,

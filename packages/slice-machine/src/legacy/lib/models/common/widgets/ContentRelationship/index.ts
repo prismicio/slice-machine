@@ -1,10 +1,10 @@
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { MdSettingsEthernet } from "react-icons/md";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
 
 import { hasLocal } from "@/legacy/lib/models/common/ModelData";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 import { linkConfigSchema } from "../Link";
 import { Widget } from "../Widget";

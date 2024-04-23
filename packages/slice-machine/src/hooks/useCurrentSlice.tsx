@@ -1,10 +1,10 @@
-import { selectCurrentSlice } from "@src/modules/slices/selector";
-import { SliceMachineStoreType } from "@src/redux/type";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { VariationSM } from "@/legacy/lib/models/common/Slice";
+import { selectCurrentSlice } from "@/modules/slices/selector";
+import { SliceMachineStoreType } from "@/redux/type";
 
 type UseCurrentSliceRet = { slice?: ComponentUI; variation?: VariationSM };
 

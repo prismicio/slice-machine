@@ -1,11 +1,5 @@
 import { Button } from "@prismicio/editor-ui";
 import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/customtypes";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
-import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
-import { SLICES_CONFIG } from "@src/features/slices/slicesConfig";
-import { useScreenshotChangesModal } from "@src/hooks/useScreenshotChangesModal";
-import { getLibraries, getRemoteSlices } from "@src/modules/slices";
-import { SliceMachineStoreType } from "@src/redux/type";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -13,6 +7,10 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
+import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
+import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
+import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
 import {
   AppLayout,
   AppLayoutActions,
@@ -30,6 +28,8 @@ import { SliceToastMessage } from "@/legacy/components/ToasterContainer";
 import { VIDEO_WHAT_ARE_SLICES } from "@/legacy/lib/consts";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { getLibraries, getRemoteSlices } from "@/modules/slices";
+import { SliceMachineStoreType } from "@/redux/type";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();

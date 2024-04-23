@@ -1,7 +1,7 @@
-import SliceMachineLogo from "@src/icons/SliceMachineLogo";
 import router from "next/router";
 import { Flex, Label, Switch, Text } from "theme-ui";
 
+import SliceMachineLogo from "@/icons/SliceMachineLogo";
 import { Button } from "@/legacy/components/Button";
 import * as Links from "@/legacy/components/Simulator/components/Header/links";
 import VariationsPopover from "@/legacy/components/Simulator/components/Header/VariationsPopover";

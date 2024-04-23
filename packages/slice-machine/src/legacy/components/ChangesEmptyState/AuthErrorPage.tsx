@@ -1,7 +1,8 @@
 import { Box, Button, Text, TextLink } from "@prismicio/editor-ui";
-import { AuthStatus } from "@src/modules/userContext/types";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import React, { FC } from "react";
+
+import { AuthStatus } from "@/modules/userContext/types";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 export type AuthErrorPageProps = {
   authStatus: AuthStatus.UNAUTHORIZED | AuthStatus.FORBIDDEN;

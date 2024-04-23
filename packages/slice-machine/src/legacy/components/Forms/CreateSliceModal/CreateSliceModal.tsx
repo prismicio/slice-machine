@@ -1,15 +1,15 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { getState } from "@src/apiClient";
-import { createSlice } from "@src/features/slices/actions/createSlice";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { FC, useState } from "react";
 import Select from "react-select";
 import { Box, Label } from "theme-ui";
 
+import { getState } from "@/apiClient";
+import { createSlice } from "@/features/slices/actions/createSlice";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { InputBox } from "../components/InputBox";
 import { validateSliceModalValues } from "../formsValidator";

@@ -1,6 +1,7 @@
-import { telemetry } from "@src/apiClient";
-import { managerClient } from "@src/managerClient";
 import { toast } from "react-toastify";
+
+import { telemetry } from "@/apiClient";
+import { managerClient } from "@/managerClient";
 
 type CreateSlicesTemplatesArgs = {
   templateIDs: string[];

@@ -1,6 +1,5 @@
-import { telemetry } from "@src/apiClient";
-import { countMissingScreenshots } from "@src/domain/slice";
-
+import { telemetry } from "@/apiClient";
+import { countMissingScreenshots } from "@/domain/slice";
 import {
   ChangedCustomType,
   ChangedSlice,

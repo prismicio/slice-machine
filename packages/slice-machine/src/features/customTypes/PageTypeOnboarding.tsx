@@ -1,9 +1,9 @@
 import { cache } from "@prismicio/editor-support/Suspense";
 import { Box, Button, Text } from "@prismicio/editor-ui";
-import { getIsEmptyProject } from "@src/hooks/useIsEmptyProject";
-import { BlankPageIcon } from "@src/icons/BlankPageIcon";
 import { useState } from "react";
 
+import { getIsEmptyProject } from "@/hooks/useIsEmptyProject";
+import { BlankPageIcon } from "@/icons/BlankPageIcon";
 import { CreateCustomTypeModal } from "@/legacy/components/Forms/CreateCustomTypeModal";
 
 export function PageTypeOnboarding() {

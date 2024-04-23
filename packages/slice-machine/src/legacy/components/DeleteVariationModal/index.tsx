@@ -6,14 +6,14 @@ import {
   DialogHeader,
   Text,
 } from "@prismicio/editor-ui";
-import { deleteVariation } from "@src/features/slices/sliceBuilder/actions/deleteVariation";
-import { useSliceState } from "@src/features/slices/sliceBuilder/SliceBuilderProvider";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
 import { type FC, type PropsWithChildren, useState } from "react";
 
+import { deleteVariation } from "@/features/slices/sliceBuilder/actions/deleteVariation";
+import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import type { VariationSM } from "@/legacy/lib/models/common/Slice";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 type DeleteVariationModalProps = {
   isOpen: boolean;

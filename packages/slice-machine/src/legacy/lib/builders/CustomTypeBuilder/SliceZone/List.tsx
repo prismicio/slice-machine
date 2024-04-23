@@ -1,11 +1,11 @@
 import { CustomTypeFormat } from "@slicemachine/manager";
-import { CUSTOM_TYPES_MESSAGES } from "@src/features/customTypes/customTypesMessages";
-import { useLab } from "@src/features/labs/labsList/useLab";
-import { NonSharedSliceCard } from "@src/features/slices/sliceCards/NonSharedSliceCard";
-import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 
+import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { useLab } from "@/features/labs/labsList/useLab";
+import { NonSharedSliceCard } from "@/features/slices/sliceCards/NonSharedSliceCard";
+import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import Grid from "@/legacy/components/Grid";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import {

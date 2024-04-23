@@ -1,13 +1,13 @@
-import { deleteSlice } from "@src/features/slices/actions/deleteSlice";
-import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import { Close, Flex, Heading, Paragraph, Text, useThemeUI } from "theme-ui";
 
+import { deleteSlice } from "@/features/slices/actions/deleteSlice";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { Button } from "@/legacy/components/Button";
 import Card from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 type DeleteSliceModalProps = {
   isOpen: boolean;
